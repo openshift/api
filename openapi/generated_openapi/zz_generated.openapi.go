@@ -404,6 +404,10 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"github.com/openshift/api/config/v1.VSpherePlatformTopology":                                         schema_openshift_api_config_v1_VSpherePlatformTopology(ref),
 		"github.com/openshift/api/config/v1.VSpherePlatformVCenterSpec":                                      schema_openshift_api_config_v1_VSpherePlatformVCenterSpec(ref),
 		"github.com/openshift/api/config/v1.WebhookTokenAuthenticator":                                       schema_openshift_api_config_v1_WebhookTokenAuthenticator(ref),
+		"github.com/openshift/api/config/v1alpha1.AlertmanagerConfig":                                        schema_openshift_api_config_v1alpha1_AlertmanagerConfig(ref),
+		"github.com/openshift/api/config/v1alpha1.AlertmanagerContainerResources":                            schema_openshift_api_config_v1alpha1_AlertmanagerContainerResources(ref),
+		"github.com/openshift/api/config/v1alpha1.AlertmanagerDeployedConfig":                                schema_openshift_api_config_v1alpha1_AlertmanagerDeployedConfig(ref),
+		"github.com/openshift/api/config/v1alpha1.AlertmanagerNotDeployedConfig":                             schema_openshift_api_config_v1alpha1_AlertmanagerNotDeployedConfig(ref),
 		"github.com/openshift/api/config/v1alpha1.Backup":                                                    schema_openshift_api_config_v1alpha1_Backup(ref),
 		"github.com/openshift/api/config/v1alpha1.BackupList":                                                schema_openshift_api_config_v1alpha1_BackupList(ref),
 		"github.com/openshift/api/config/v1alpha1.BackupSpec":                                                schema_openshift_api_config_v1alpha1_BackupSpec(ref),
@@ -419,6 +423,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"github.com/openshift/api/config/v1alpha1.EtcdBackupSpec":                                            schema_openshift_api_config_v1alpha1_EtcdBackupSpec(ref),
 		"github.com/openshift/api/config/v1alpha1.FulcioCAWithRekor":                                         schema_openshift_api_config_v1alpha1_FulcioCAWithRekor(ref),
 		"github.com/openshift/api/config/v1alpha1.GatherConfig":                                              schema_openshift_api_config_v1alpha1_GatherConfig(ref),
+		"github.com/openshift/api/config/v1alpha1.HugePageResource":                                          schema_openshift_api_config_v1alpha1_HugePageResource(ref),
 		"github.com/openshift/api/config/v1alpha1.ImagePolicy":                                               schema_openshift_api_config_v1alpha1_ImagePolicy(ref),
 		"github.com/openshift/api/config/v1alpha1.ImagePolicyList":                                           schema_openshift_api_config_v1alpha1_ImagePolicyList(ref),
 		"github.com/openshift/api/config/v1alpha1.ImagePolicySpec":                                           schema_openshift_api_config_v1alpha1_ImagePolicySpec(ref),
@@ -438,6 +443,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"github.com/openshift/api/config/v1alpha1.PolicyMatchRemapIdentity":                                  schema_openshift_api_config_v1alpha1_PolicyMatchRemapIdentity(ref),
 		"github.com/openshift/api/config/v1alpha1.PolicyRootOfTrust":                                         schema_openshift_api_config_v1alpha1_PolicyRootOfTrust(ref),
 		"github.com/openshift/api/config/v1alpha1.PublicKey":                                                 schema_openshift_api_config_v1alpha1_PublicKey(ref),
+		"github.com/openshift/api/config/v1alpha1.ResourceSpec":                                              schema_openshift_api_config_v1alpha1_ResourceSpec(ref),
 		"github.com/openshift/api/config/v1alpha1.RetentionNumberConfig":                                     schema_openshift_api_config_v1alpha1_RetentionNumberConfig(ref),
 		"github.com/openshift/api/config/v1alpha1.RetentionPolicy":                                           schema_openshift_api_config_v1alpha1_RetentionPolicy(ref),
 		"github.com/openshift/api/config/v1alpha1.RetentionSizeConfig":                                       schema_openshift_api_config_v1alpha1_RetentionSizeConfig(ref),
@@ -20444,6 +20450,216 @@ func schema_openshift_api_config_v1_WebhookTokenAuthenticator(ref common.Referen
 	}
 }
 
+func schema_openshift_api_config_v1alpha1_AlertmanagerConfig(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "alertmanagerMainConfig provides configuration options for the default Alertmanager instance that runs in the `openshift-monitoring` namespace. Use this configuration to control whether the default Alertmanager is deployed, how it logs, and how its pods are scheduled.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"deploymentMode": {
+						SchemaProps: spec.SchemaProps{
+							Description: "deploymentMode determines whether the default Alertmanager instance should be deployed as part of the monitoring stack. Allowed values are Deployed and NotDeployed When set to Deployed, the Cluster Monitoring Operator ensures that an Alertmanager instance is created and managed in the `openshift-monitoring` namespace. When set to NotDeployed, the operator will not deploy the Alertmanager instance. Use this field if you want to explicitly opt in or out of running a platform-level Alertmanager.\n\nThis filed is required Allowed values are Deployed and NotDeployed.",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"deployed": {
+						SchemaProps: spec.SchemaProps{
+							Description: "deployed contains configuration options for the deployed Alertmanager instance.",
+							Ref:         ref("github.com/openshift/api/config/v1alpha1.AlertmanagerDeployedConfig"),
+						},
+					},
+					"notDeployed": {
+						SchemaProps: spec.SchemaProps{
+							Description: "notDeployed is an empty struct used to indicate that the Alertmanager should not be deployed.",
+							Ref:         ref("github.com/openshift/api/config/v1alpha1.AlertmanagerNotDeployedConfig"),
+						},
+					},
+				},
+				Required: []string{"deploymentMode"},
+			},
+			VendorExtensible: spec.VendorExtensible{
+				Extensions: spec.Extensions{
+					"x-kubernetes-unions": []interface{}{
+						map[string]interface{}{
+							"discriminator": "deploymentMode",
+							"fields-to-discriminateBy": map[string]interface{}{
+								"deployed":    "Deployed",
+								"notDeployed": "NotDeployed",
+							},
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"github.com/openshift/api/config/v1alpha1.AlertmanagerDeployedConfig", "github.com/openshift/api/config/v1alpha1.AlertmanagerNotDeployedConfig"},
+	}
+}
+
+func schema_openshift_api_config_v1alpha1_AlertmanagerContainerResources(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "AlertmanagerContainerResources defines simplified resource requirements for a container.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"cpu": {
+						SchemaProps: spec.SchemaProps{
+							Description: "cpu defines the CPU resource limits and requests. This filed is optional",
+							Ref:         ref("github.com/openshift/api/config/v1alpha1.ResourceSpec"),
+						},
+					},
+					"memory": {
+						SchemaProps: spec.SchemaProps{
+							Description: "memory defines the memory resource limits and requests. This filed is optional",
+							Ref:         ref("github.com/openshift/api/config/v1alpha1.ResourceSpec"),
+						},
+					},
+					"hugepages": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-map-keys": []interface{}{
+									"size",
+								},
+								"x-kubernetes-list-type": "map",
+							},
+						},
+						SchemaProps: spec.SchemaProps{
+							Description: "hugepages is a list of hugepage resource specifications by page size. defines an optional list of unique configurations identified by their `size` field. A maximum of 10 items is allowed. The list is treated as a map, using `size` as the key, which simplifies updates and replacements of individual entries.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("github.com/openshift/api/config/v1alpha1.HugePageResource"),
+									},
+								},
+							},
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"github.com/openshift/api/config/v1alpha1.HugePageResource", "github.com/openshift/api/config/v1alpha1.ResourceSpec"},
+	}
+}
+
+func schema_openshift_api_config_v1alpha1_AlertmanagerDeployedConfig(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "alertmanagerMainConfig provides configuration options for the default Alertmanager instance that runs in the `openshift-monitoring` namespace. Use this configuration to control whether the default Alertmanager is deployed, how it logs, and how its pods are scheduled.\n\nRequired: This field must be specified.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"userMode": {
+						SchemaProps: spec.SchemaProps{
+							Description: "userMode controls whether Alertmanager should process configurations from user-defined (non-platform) namespaces for AlertmanagerConfig lookups. Alertmanager will search for AlertmanagerConfig resources in user-defined namespaces. This field is only effective when the user workload Alertmanager instance is not enabled. If the user workload monitoring Alertmanager is enabled, this field is ignored. userMode is required. Allowed values are Selectable and None Default value is None",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"logLevel": {
+						SchemaProps: spec.SchemaProps{
+							Description: "logLevel defines the verbosity of logs emitted by Alertmanager. This field allows users to control the amount and severity of logs generated, which can be useful for debugging issues or reducing noise in production environments. Allowed values are Error, Warn, Info, Debug, and omitted. When set to Error,  only errors will be logged. When set to Warn, both warnings and errors will be logged. When set to Info, general information, warnings, and errors will all be logged. When set to Debug, detailed debugging information will be logged. When omitted, this means no opinion and the platform is left to choose a default that is subject to change over time. Currently, the default is Info.",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"nodeSelector": {
+						SchemaProps: spec.SchemaProps{
+							Description: "nodeSelector is the node selector applied to network diagnostics components nodeSelector is optional.\n\nWhen omitted, this means the user has no opinion and the platform is left to choose reasonable defaults. These defaults are subject to change over time. The current default is `kubernetes.io/os: linux` so that Pods can be scheduled onto any available node.",
+							Type:        []string{"object"},
+							AdditionalProperties: &spec.SchemaOrBool{
+								Allows: true,
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: "",
+										Type:    []string{"string"},
+										Format:  "",
+									},
+								},
+							},
+						},
+					},
+					"resources": {
+						SchemaProps: spec.SchemaProps{
+							Description: "resources defines the compute resource requests and limits for the Alertmanager container. This includes CPU, memory and HugePages constraints to help control scheduling and resource usage. When not specified, defaults are used by the platform. Requests cannot exceed limits. This field is optional. More info: https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/ This is a simplified API that maps to Kubernetes ResourceRequirements.",
+							Ref:         ref("github.com/openshift/api/config/v1alpha1.AlertmanagerContainerResources"),
+						},
+					},
+					"secrets": {
+						SchemaProps: spec.SchemaProps{
+							Description: "secrets Defines a list of secrets that need to be mounted into the Alertmanager. The secrets must reside within the same namespace as the Alertmanager object. They will be added as volumes named secret-<secret-name> and mounted at /etc/alertmanager/secrets/<secret-name> within the 'alertmanager' container of the Alertmanager Pods. This field is optional. Maximum length for this list is 10",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: "",
+										Type:    []string{"string"},
+										Format:  "",
+									},
+								},
+							},
+						},
+					},
+					"tolerations": {
+						SchemaProps: spec.SchemaProps{
+							Description: "tolerations is a list of tolerations applied to network diagnostics components tolerations is optional.\n\nWhen omitted, this means the user has no opinion and the platform is left to choose reasonable defaults. These defaults are subject to change over time. The current default is `- operator: \"Exists\"` which means that all taints are tolerated. Maximum length for this list is 10",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("k8s.io/api/core/v1.Toleration"),
+									},
+								},
+							},
+						},
+					},
+					"topologySpreadConstraints": {
+						SchemaProps: spec.SchemaProps{
+							Description: "topologySpreadConstraints defines rules for how Alertmanager Pods should be distributed across topology domains such as zones, nodes, or other user-defined labels. topologySpreadConstraints is optional. This helps improve high availability and resource efficiency by avoiding placing too many replicas in the same failure domain.\n\nWhen omitted, this means no opinion and the platform is left to choose a default, which is subject to change over time. This field maps directly to the `topologySpreadConstraints` field in the Pod spec. Maximum length for this list is 10",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("k8s.io/api/core/v1.TopologySpreadConstraint"),
+									},
+								},
+							},
+						},
+					},
+					"volumeClaimTemplate": {
+						SchemaProps: spec.SchemaProps{
+							Description: "volumeClaimTemplate Defines persistent storage for Alertmanager. Use this setting to configure the persistent volume claim, including storage class, volume size, and name. If omitted, the Pod uses ephemeral storage and alert data will not persist across restarts. // This field is optional.",
+							Ref:         ref("k8s.io/api/core/v1.PersistentVolumeClaim"),
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"github.com/openshift/api/config/v1alpha1.AlertmanagerContainerResources", "k8s.io/api/core/v1.PersistentVolumeClaim", "k8s.io/api/core/v1.Toleration", "k8s.io/api/core/v1.TopologySpreadConstraint"},
+	}
+}
+
+func schema_openshift_api_config_v1alpha1_AlertmanagerNotDeployedConfig(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+			},
+		},
+	}
+}
+
 func schema_openshift_api_config_v1alpha1_Backup(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -20867,17 +21083,24 @@ func schema_openshift_api_config_v1alpha1_ClusterMonitoringSpec(ref common.Refer
 				Properties: map[string]spec.Schema{
 					"userDefined": {
 						SchemaProps: spec.SchemaProps{
-							Description: "userDefined set the deployment mode for user-defined monitoring in addition to the default platform monitoring.",
+							Description: "userDefined set the deployment mode for user-defined monitoring in addition to the default platform monitoring. userDefined is optional.",
 							Default:     map[string]interface{}{},
 							Ref:         ref("github.com/openshift/api/config/v1alpha1.UserDefinedMonitoring"),
 						},
 					},
+					"alertmanagerMainConfig": {
+						SchemaProps: spec.SchemaProps{
+							Description: "alertmanagerMainConfig allows users to configure how the default Alertmanager instance should be deployed in the `openshift-monitoring` namespace. alertmanagerMainConfig is optional.",
+							Default:     map[string]interface{}{},
+							Ref:         ref("github.com/openshift/api/config/v1alpha1.AlertmanagerConfig"),
+						},
+					},
 				},
-				Required: []string{"userDefined"},
+				Required: []string{"userDefined", "alertmanagerMainConfig"},
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/config/v1alpha1.UserDefinedMonitoring"},
+			"github.com/openshift/api/config/v1alpha1.AlertmanagerConfig", "github.com/openshift/api/config/v1alpha1.UserDefinedMonitoring"},
 	}
 }
 
@@ -21015,6 +21238,41 @@ func schema_openshift_api_config_v1alpha1_GatherConfig(ref common.ReferenceCallb
 		},
 		Dependencies: []string{
 			"github.com/openshift/api/config/v1alpha1.Storage"},
+	}
+}
+
+func schema_openshift_api_config_v1alpha1_HugePageResource(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "HugePageResource describes hugepages resources by page size (e.g. 2Mi, 1Gi).",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"size": {
+						SchemaProps: spec.SchemaProps{
+							Description: "size of the hugepage (e.g. \"2Mi\", \"1Gi\"). This filed is optional",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"request": {
+						SchemaProps: spec.SchemaProps{
+							Description: "request amount for this hugepage size. This filed is optional",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"limit": {
+						SchemaProps: spec.SchemaProps{
+							Description: "limit amount for this hugepage size. This filed is optional",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+				},
+			},
+		},
 	}
 }
 
@@ -21684,6 +21942,33 @@ func schema_openshift_api_config_v1alpha1_PublicKey(ref common.ReferenceCallback
 					},
 				},
 				Required: []string{"keyData"},
+			},
+		},
+	}
+}
+
+func schema_openshift_api_config_v1alpha1_ResourceSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "ResourceSpec defines the requested and limited value of a resource.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"request": {
+						SchemaProps: spec.SchemaProps{
+							Description: "request is the minimum amount of the resource required (e.g. \"2Mi\", \"1Gi\"). This filed is optional",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"limit": {
+						SchemaProps: spec.SchemaProps{
+							Description: "limit is the maximum amount of the resource allowed (e.g. \"2Mi\", \"1Gi\"). This filed is optional",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+				},
 			},
 		},
 	}

@@ -245,16 +245,16 @@ type Placement struct {
 	// +optional
 	Tenancy InstanceTenancy `json:"tenancy,omitempty"`
 
-	// dedicatedHostTenancy when tenancy is set to 'host', this defines the host ID and host affinty to apply
+	// DedicatedHosts when tenancy is set to 'host', this defines the host ID and host affinty to apply
 	// to associated machines.
 	// +openshift:enable:FeatureGate=AWSDedicatedHosts
 	// +optional
-	DedicatedHostTenancy *DedicatedHostTenancy `json:"dedicatedHostTenancy,omitempty"`
+	DedicatedHosts *DedicatedHosts `json:"dedicatedHosts,omitempty"`
 }
 
-// DedicatedHostTenancy describes the host tenancy configuration. This is used in scenarios where
+// DedicatedHosts describes the host tenancy configuration. This is used in scenarios where
 // hosts are to be deployed to specific dedicated hosts.
-type DedicatedHostTenancy struct {
+type DedicatedHosts struct {
 	// HostID specifies the Dedicated Host on which the instance should be launched.
 	// +optional
 	HostID *string `json:"hostId,omitempty"`
@@ -263,9 +263,8 @@ type DedicatedHostTenancy struct {
 	// When affinity is set to Host, an instance launched onto a specific host always restarts on the same host if stopped.
 	// +optional
 	// +kubebuilder:validation:Enum:=Defailt;Host
-	HostAffinity *string `json:"hostAffinity,omitempty"`	
+	HostAffinity *string `json:"hostAffinity,omitempty"`
 }
-
 
 // Filter is a filter used to identify an AWS resource
 type Filter struct {

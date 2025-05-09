@@ -21640,8 +21640,8 @@
         }
       }
     },
-    "com.github.openshift.api.machine.v1beta1.DedicatedHostTenancy": {
-      "description": "DedicatedHostTenancy describes the host tenancy configuration. This is used in scenarios where hosts are to be deployed to specific dedicated hosts.",
+    "com.github.openshift.api.machine.v1beta1.DedicatedHosts": {
+      "description": "DedicatedHosts describes the host tenancy configuration. This is used in scenarios where hosts are to be deployed to specific dedicated hosts.",
       "type": "object",
       "properties": {
         "hostAffinity": {
@@ -22898,9 +22898,9 @@
           "description": "availabilityZone is the availability zone of the instance",
           "type": "string"
         },
-        "dedicatedHostTenancy": {
-          "description": "dedicatedHostTenancy when tenancy is set to 'host', this defines the host ID and host affinty to apply to associated machines.",
-          "$ref": "#/definitions/com.github.openshift.api.machine.v1beta1.DedicatedHostTenancy"
+        "DedicatedHosts": {
+          "description": "DedicatedHosts when tenancy is set to 'host', this defines the host ID and host affinty to apply to associated machines.",
+          "$ref": "#/definitions/com.github.openshift.api.machine.v1beta1.DedicatedHosts"
         },
         "region": {
           "description": "region is the region to use to create the instance",

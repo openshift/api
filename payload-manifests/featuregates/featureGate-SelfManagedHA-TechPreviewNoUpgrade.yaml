@@ -54,6 +54,9 @@
                         "name": "AWSClusterHostedDNS"
                     },
                     {
+                        "name": "AWSDedicatedHosts"
+                    },
+                    {
                         "name": "AWSEFSDriverVolumeMetrics"
                     },
                     {

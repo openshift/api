@@ -30,6 +30,7 @@ authentications.config.openshift.io:
   Category: ""
   FeatureGates:
   - ExternalOIDC
+  - ExternalOIDCWithNewAuthConfigFields
   - ExternalOIDCWithUIDAndExtraClaimMappings
   FilenameOperatorName: config-operator
   FilenameOperatorOrdering: "01"

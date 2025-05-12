@@ -225,9 +225,6 @@
                     },
                     {
                         "name": "VolumeAttributesClass"
-                    },
-                    {
-                        "name": "VolumeGroupSnapshot"
                     }
                 ],
                 "enabled": [
@@ -326,6 +323,9 @@
                     },
                     {
                         "name": "VSphereMultiNetworks"
+                    },
+                    {
+                        "name": "VolumeGroupSnapshot"
                     }
                 ],
                 "version": ""

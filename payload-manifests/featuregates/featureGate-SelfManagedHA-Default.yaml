@@ -62,6 +62,9 @@
                         "name": "ExternalOIDC"
                     },
                     {
+                        "name": "ExternalOIDCWithNewAuthConfigFields"
+                    },
+                    {
                         "name": "ExternalOIDCWithUIDAndExtraClaimMappings"
                     },
                     {

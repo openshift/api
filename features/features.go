@@ -121,8 +121,16 @@ var (
 						contactPerson("jchaloup").
 						productScope(kubernetes).
 						enhancementPR("https://github.com/kubernetes/enhancements/issues/4381").
-						enableIn(configv1.DevPreviewNoUpgrade, configv1.TechPreviewNoUpgrade).
+						enableIn(configv1.Default, configv1.DevPreviewNoUpgrade, configv1.TechPreviewNoUpgrade).
 						mustRegister()
+
+	FeatureGateDRAAdminAccess = newFeatureGate("DRAAdminAccess").
+					reportProblemsToJiraComponent("scheduling").
+					contactPerson("jchaloup").
+					productScope(kubernetes).
+					enhancementPR("https://github.com/kubernetes/enhancements/issues/4381").
+					enableIn(configv1.Default, configv1.DevPreviewNoUpgrade, configv1.TechPreviewNoUpgrade).
+					mustRegister()
 
 	FeatureGateAzureWorkloadIdentity = newFeatureGate("AzureWorkloadIdentity").
 						reportProblemsToJiraComponent("cloud-credential-operator").

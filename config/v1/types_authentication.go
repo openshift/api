@@ -231,13 +231,14 @@ type OIDCProvider struct {
 	// +optional
 
 	//+listType=atomic
+	// +openshift:enable:FeatureGate=ExternalOIDCWithNewAuthConfigFields
 	UserValidationRules []TokenUserValidationRule `json:"userValidationRules,omitempty"`
 }
 
 // +kubebuilder:validation:MinLength=1
 type TokenAudience string
 
-// +kubebuilder:validation:XValidation:rule="self.discoveryURL.size() > 0 ? (self.url.size() == 0 || self.discoveryURL.find('^.+[^/]') != self.url.find('^.+[^/]')) : true",message="discoveryURL must be different from URL"
+// +openshift:validation:FeatureGateAwareXValidation:featureGate=ExternalOIDCWithNewAuthConfigFields,rule="self.discoveryURL.size() > 0 ? (self.issuerURL.size() == 0 || self.discoveryURL.find('^.+[^/]') != self.issuerURL.find('^.+[^/]')) : true",message="discoveryURL must be different from issuerURL"
 type TokenIssuer struct {
 	// URL is the serving URL of the token issuer.
 	// Must use the https:// scheme.
@@ -275,12 +276,12 @@ type TokenIssuer struct {
 	//
 	// +optional
 	// +kubebuilder:validation:XValidation:rule="self.size() > 0 ? isURL(self) : true",message="discoveryURL must be a valid URL"
-	// +kubebuilder:validation:XValidation:rule="self.size() > 0 ? url(self).scheme == 'https' : true",message="discoveryURL must use https scheme"
+	// +kubebuilder:validation:XValidation:rule="self.size() > 0 ? (isURL(self) && url(self).getScheme() == 'https') : true",message="discoveryURL must be a valid https URL"
 	// +kubebuilder:validation:XValidation:rule="self.size() > 0 ? url(self).query == '' : true",message="discoveryURL must not contain query parameters"
 	// +kubebuilder:validation:XValidation:rule="self.size() > 0 ? url(self).user == '' : true",message="discoveryURL must not contain user info"
 	// +kubebuilder:validation:XValidation:rule="self.size() > 0 ? url(self).fragment == '' : true",message="discoveryURL must not contain a fragment"
 	// +kubebuilder:validation:MaxLength=2048
-
+	// +openshift:enable:FeatureGate=ExternalOIDCWithNewAuthConfigFields
 	DiscoveryURL string `json:"discoveryURL,omitempty"`
 
 	// audienceMatchPolicy specifies how token audiences are matched.
@@ -289,6 +290,7 @@ type TokenIssuer struct {
 	// - "MatchAny": The token is accepted if any of its audiences match any of the configured audiences.
 	//
 	// +optional
+	// +openshift:enable:FeatureGate=ExternalOIDCWithNewAuthConfigFields
 	AudienceMatchPolicy AudienceMatchPolicy `json:"audienceMatchPolicy,omitempty"`
 }
 
@@ -646,6 +648,7 @@ type TokenClaimValidationRule struct {
 	// Must be set if type == "Expression".
 	//
 	// +optional
+	// +openshift:enable:FeatureGate=ExternalOIDCWithNewAuthConfigFields
 	ExpressionRule *TokenExpressionRule `json:"expressionRule,omitempty"`
 }
 

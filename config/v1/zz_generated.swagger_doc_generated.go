@@ -512,6 +512,7 @@ var map_TokenIssuer = map[string]string{
 	"issuerURL":                  "URL is the serving URL of the token issuer. Must use the https:// scheme.",
 	"audiences":                  "audiences is an array of audiences that the token was issued for. Valid tokens must include at least one of these values in their \"aud\" claim. Must be set to exactly one value.",
 	"issuerCertificateAuthority": "CertificateAuthority is a reference to a config map in the configuration namespace. The .data of the configMap must contain the \"ca-bundle.crt\" key. If unset, system trust is used instead.",
+	"discoveryURL":               "discoveryURL is an optional field that, if specified, overrides the default discovery endpoint used to retrieve OIDC configuration metadata. By default, the discovery URL is derived from `url` as \"{url}/.well-known/openid-configuration\".\n\nThe discoveryURL must:\n  - Be a valid absolute URL.\n  - Use the HTTPS scheme.\n  - Not contain query parameters, user info, or fragments.\n  - Be different from the value of `url` (ignoring trailing slashes)",
 	"audienceMatchPolicy":        "audienceMatchPolicy specifies how token audiences are matched. If omitted, the system applies a default policy. Valid values are: - \"MatchAny\": The token is accepted if any of its audiences match any of the configured audiences.",
 }
 

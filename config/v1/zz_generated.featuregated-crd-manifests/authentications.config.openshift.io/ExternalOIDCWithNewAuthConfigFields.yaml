@@ -256,14 +256,24 @@ spec:
                           type: array
                           x-kubernetes-list-type: set
                         discoveryURL:
+                          description: |-
+                            discoveryURL is an optional field that, if specified, overrides the default discovery endpoint
+                            used to retrieve OIDC configuration metadata. By default, the discovery URL is derived from `url`
+                            as "{url}/.well-known/openid-configuration".
+
+                            The discoveryURL must:
+                              - Be a valid absolute URL.
+                              - Use the HTTPS scheme.
+                              - Not contain query parameters, user info, or fragments.
+                              - Be different from the value of `url` (ignoring trailing slashes)
                           maxLength: 2048
                           type: string
                           x-kubernetes-validations:
                           - message: discoveryURL must be a valid URL
                             rule: 'self.size() > 0 ? isURL(self) : true'
-                          - message: discoveryURL must use https scheme
-                            rule: 'self.size() > 0 ? url(self).scheme == ''https''
-                              : true'
+                          - message: discoveryURL must be a valid https URL
+                            rule: 'self.size() > 0 ? (isURL(self) && url(self).getScheme()
+                              == ''https'') : true'
                           - message: discoveryURL must not contain query parameters
                             rule: 'self.size() > 0 ? url(self).query == '''' : true'
                           - message: discoveryURL must not contain user info
@@ -296,9 +306,9 @@ spec:
                       - issuerURL
                       type: object
                       x-kubernetes-validations:
-                      - message: discoveryURL must be different from URL
-                        rule: 'self.discoveryURL.size() > 0 ? (self.url.size() ==
-                          0 || self.discoveryURL.find(''^.+[^/]'') != self.url.find(''^.+[^/]''))
+                      - message: discoveryURL must be different from issuerURL
+                        rule: 'self.discoveryURL.size() > 0 ? (self.issuerURL.size()
+                          == 0 || self.discoveryURL.find(''^.+[^/]'') != self.issuerURL.find(''^.+[^/]''))
                           : true'
                     name:
                       description: name of the OIDC provider

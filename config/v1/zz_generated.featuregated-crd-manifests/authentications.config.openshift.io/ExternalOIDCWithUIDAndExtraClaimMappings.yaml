@@ -318,30 +318,6 @@ spec:
                         to validate token claims to authenticate users.
                       items:
                         properties:
-                          expressionRule:
-                            description: |-
-                              expressionRule contains the configuration for the "Expression" type.
-                              Must be set if type == "Expression".
-                            properties:
-                              expression:
-                                description: |-
-                                  Expression is a CEL expression evaluated against token claims.
-                                  The expression must be a non-empty string and no longer than 4096 characters.
-                                  This field is required.
-                                maxLength: 4096
-                                minLength: 1
-                                type: string
-                              message:
-                                description: |-
-                                  Message allows configuring the human-readable message that is returned
-                                  from the Kubernetes API server when a token fails validation based on
-                                  the CEL expression defined in 'expression'. This field is optional.
-                                maxLength: 256
-                                minLength: 1
-                                type: string
-                            required:
-                            - expression
-                            type: object
                           requiredClaim:
                             description: |-
                               requiredClaim allows configuring a required claim name and its expected value.
@@ -383,16 +359,6 @@ spec:
                     issuer:
                       description: issuer describes atributes of the OIDC token issuer
                       properties:
-                        audienceMatchPolicy:
-                          description: |-
-                            audienceMatchPolicy specifies how token audiences are matched.
-                            If omitted, the system applies a default policy.
-                            Valid values are:
-                            - "MatchAny": The token is accepted if any of its audiences match any of the configured audiences.
-                          enum:
-                          - MatchAny
-                          - ""
-                          type: string
                         audiences:
                           description: |-
                             audiences is an array of audiences that the token was issued for.
@@ -406,22 +372,6 @@ spec:
                           minItems: 1
                           type: array
                           x-kubernetes-list-type: set
-                        discoveryURL:
-                          maxLength: 2048
-                          type: string
-                          x-kubernetes-validations:
-                          - message: discoveryURL must be a valid URL
-                            rule: 'self.size() > 0 ? isURL(self) : true'
-                          - message: discoveryURL must use https scheme
-                            rule: 'self.size() > 0 ? url(self).scheme == ''https''
-                              : true'
-                          - message: discoveryURL must not contain query parameters
-                            rule: 'self.size() > 0 ? url(self).query == '''' : true'
-                          - message: discoveryURL must not contain user info
-                            rule: 'self.size() > 0 ? url(self).user == '''' : true'
-                          - message: discoveryURL must not contain a fragment
-                            rule: 'self.size() > 0 ? url(self).fragment == '''' :
-                              true'
                         issuerCertificateAuthority:
                           description: |-
                             CertificateAuthority is a reference to a config map in the
@@ -446,11 +396,6 @@ spec:
                       - audiences
                       - issuerURL
                       type: object
-                      x-kubernetes-validations:
-                      - message: discoveryURL must be different from URL
-                        rule: 'self.discoveryURL.size() > 0 ? (self.url.size() ==
-                          0 || self.discoveryURL.find(''^.+[^/]'') != self.url.find(''^.+[^/]''))
-                          : true'
                     name:
                       description: name of the OIDC provider
                       minLength: 1
@@ -510,34 +455,6 @@ spec:
                       - componentNamespace
                       - componentName
                       x-kubernetes-list-type: map
-                    userValidationRules:
-                      items:
-                        description: |-
-                          TokenUserValidationRule provides a CEL-based rule used to validate a token subject.
-                          Each rule contains a CEL expression that is evaluated against the token’s claims.
-                          If the expression evaluates to false, the token is rejected.
-                          See https://kubernetes.io/docs/reference/using-api/cel/ for CEL syntax.
-                          At least one rule must evaluate to true for the token to be considered valid.
-                        properties:
-                          expression:
-                            description: |-
-                              Expression is a CEL expression that must evaluate
-                              to true for the token to be accepted. The expression is evaluated against the token's
-                              user information (e.g., username, groups). This field must be non-empty and may not
-                              exceed 4096 characters.
-                            maxLength: 4096
-                            minLength: 1
-                            type: string
-                          message:
-                            description: |-
-                              Message is an optional, human-readable message returned by the API server when
-                              this validation rule fails. It can help clarify why a token was rejected.
-                            type: string
-                        required:
-                        - expression
-                        type: object
-                      type: array
-                      x-kubernetes-list-type: atomic
                   required:
                   - issuer
                   - name

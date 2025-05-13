@@ -19615,8 +19615,9 @@ func schema_openshift_api_config_v1_TokenIssuer(ref common.ReferenceCallback) co
 					},
 					"discoveryURL": {
 						SchemaProps: spec.SchemaProps{
-							Type:   []string{"string"},
-							Format: "",
+							Description: "discoveryURL is an optional field that, if specified, overrides the default discovery endpoint used to retrieve OIDC configuration metadata. By default, the discovery URL is derived from `url` as \"{url}/.well-known/openid-configuration\".\n\nThe discoveryURL must:\n  - Be a valid absolute URL.\n  - Use the HTTPS scheme.\n  - Not contain query parameters, user info, or fragments.\n  - Be different from the value of `url` (ignoring trailing slashes)",
+							Type:        []string{"string"},
+							Format:      "",
 						},
 					},
 					"audienceMatchPolicy": {

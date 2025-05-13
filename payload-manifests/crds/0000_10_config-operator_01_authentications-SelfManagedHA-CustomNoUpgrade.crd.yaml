@@ -425,12 +425,12 @@ spec:
                             rule: 'self.size() > 0 ? (isURL(self) && url(self).getScheme()
                               == ''https'') : true'
                           - message: discoveryURL must not contain query parameters
-                            rule: 'self.size() > 0 ? url(self).query == '''' : true'
+                            rule: 'self.size() > 0 ? self.find(''?'') == null : true'
                           - message: discoveryURL must not contain user info
-                            rule: 'self.size() > 0 ? url(self).user == '''' : true'
-                          - message: discoveryURL must not contain a fragment
-                            rule: 'self.size() > 0 ? url(self).fragment == '''' :
-                              true'
+                            rule: 'self.size() > 0 ? self.find(''://'') != null &&
+                              self.find(''@'') == null : true'
+                          - message: discoveryURL must not contain fragment
+                            rule: 'self.size() > 0 ? self.find(''#'') == null : true'
                         issuerCertificateAuthority:
                           description: |-
                             CertificateAuthority is a reference to a config map in the

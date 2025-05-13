@@ -316,9 +316,9 @@ type TokenIssuer struct {
 	// +optional
 	// +kubebuilder:validation:XValidation:rule="self.size() > 0 ? isURL(self) : true",message="discoveryURL must be a valid URL"
 	// +kubebuilder:validation:XValidation:rule="self.size() > 0 ? (isURL(self) && url(self).getScheme() == 'https') : true",message="discoveryURL must be a valid https URL"
-	// +kubebuilder:validation:XValidation:rule="self.size() > 0 ? url(self).query == '' : true",message="discoveryURL must not contain query parameters"
-	// +kubebuilder:validation:XValidation:rule="self.size() > 0 ? url(self).user == '' : true",message="discoveryURL must not contain user info"
-	// +kubebuilder:validation:XValidation:rule="self.size() > 0 ? url(self).fragment == '' : true",message="discoveryURL must not contain a fragment"
+	// +kubebuilder:validation:XValidation:rule="self.size() > 0 ? self.find('?') == null : true",message="discoveryURL must not contain query parameters"
+	// +kubebuilder:validation:XValidation:rule="self.size() > 0 ? self.find('://') != null && self.find('@') == null : true",message="discoveryURL must not contain user info"
+	// +kubebuilder:validation:XValidation:rule="self.size() > 0 ? self.find('#') == null : true",message="discoveryURL must not contain fragment"
 	// +kubebuilder:validation:MaxLength=2048
 	// +openshift:enable:FeatureGate=ExternalOIDCWithNewAuthConfigFields
 	DiscoveryURL string `json:"discoveryURL,omitempty"`

@@ -18,6 +18,7 @@ package v1alpha1
 
 import (
 	v1 "k8s.io/api/core/v1"
+	"k8s.io/apimachinery/pkg/api/resource"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
@@ -76,13 +77,13 @@ type ClusterMonitoringList struct {
 type ClusterMonitoringSpec struct {
 	// userDefined set the deployment mode for user-defined monitoring in addition to the default platform monitoring.
 	// userDefined is optional.
-	// +optional`
+	// +optional
 	UserDefined UserDefinedMonitoring `json:"userDefined"`
-	// alertmanagerMainConfig allows users to configure how the default Alertmanager instance
+	// alertmanagerConfig allows users to configure how the default Alertmanager instance
 	// should be deployed in the `openshift-monitoring` namespace.
-	// alertmanagerMainConfig is optional.
-	// +optional`
-	AlertmanagerMainConfig AlertmanagerConfig `json:"alertmanagerMainConfig"`
+	// alertmanagerConfig is optional.
+	// +optional
+	AlertmanagerConfig AlertmanagerConfig `json:"alertmanagerConfig"`
 }
 
 // UserDefinedMonitoring config for user-defined projects.
@@ -107,37 +108,33 @@ const (
 	UserDefinedNamespaceIsolated UserDefinedMode = "NamespaceIsolated"
 )
 
-// alertmanagerMainConfig provides configuration options for the default Alertmanager instance
+// alertmanagerConfig provides configuration options for the default Alertmanager instance
 // that runs in the `openshift-monitoring` namespace. Use this configuration to control
 // whether the default Alertmanager is deployed, how it logs, and how its pods are scheduled.
 //
 // +union
+// +kubebuilder:validation:XValidation:rule="self.deploymentMode == 'Deployed' ? has(self.deployed) : !has(self.deployed)",message="deployed must be set when deploymentMode is Deployed, and must be unset otherwise"
 type AlertmanagerConfig struct {
 	// deploymentMode determines whether the default Alertmanager instance should be deployed
 	// as part of the monitoring stack.
-	// Allowed values are Deployed and NotDeployed
+	// Allowed values are Deployed and NotDeployed.
 	// When set to Deployed, the Cluster Monitoring Operator
 	// ensures that an Alertmanager instance is created and managed in the `openshift-monitoring` namespace.
 	// When set to NotDeployed, the operator will not deploy the Alertmanager instance.
 	// Use this field if you want to explicitly opt in or out of running a platform-level Alertmanager.
 	//
-	// This filed is required
-	// Allowed values are Deployed and NotDeployed.
+	// deploymentMode is required.
 	// +unionDiscriminator
 	// +kubebuilder:validation:Enum=Deployed;NotDeployed
-	// +kubebuilder:validation:Required
+	// +required
 	DeploymentMode string `json:"deploymentMode"`
 
 	// deployed contains configuration options for the deployed Alertmanager instance.
 	// +optional
 	Deployed *AlertmanagerDeployedConfig `json:"deployed,omitempty"`
-
-	// notDeployed is an empty struct used to indicate that the Alertmanager should not be deployed.
-	// +optional
-	NotDeployed *AlertmanagerNotDeployedConfig `json:"notDeployed,omitempty"`
 }
 
-// alertmanagerMainConfig provides configuration options for the default Alertmanager instance
+// alertmanagerConfig provides configuration options for the default Alertmanager instance
 // that runs in the `openshift-monitoring` namespace. Use this configuration to control
 // whether the default Alertmanager is deployed, how it logs, and how its pods are scheduled.
 //
@@ -224,14 +221,10 @@ type AlertmanagerDeployedConfig struct {
 	VolumeClaimTemplate *v1.PersistentVolumeClaim `json:"volumeClaimTemplate,omitempty"`
 }
 
-type AlertmanagerNotDeployedConfig struct {
-	// Empty by design: Alertmanager will not be deployed.
-}
-
 // SecretName is a type that represents the name of a Secret in the same namespace.
-// It must be at most 256 characters in length.
+// It must be at most 253 characters in length.
 // +kubebuilder:validation:XValidation:rule="!format.dns1123Subdomain().validate(self).hasValue()",message="a lowercase RFC 1123 subdomain must consist of lower case alphanumeric characters, '-' or '.', and must start and end with an alphanumeric character."
-// +kubebuilder:validation:MaxLength=256
+// +kubebuilder:validation:MaxLength=253
 type SecretName string
 
 // AlertManagerDeployMode defines the deployment state of the platform Alertmanager instance.
@@ -259,36 +252,40 @@ type UserAlertManagerMode string
 const (
 	// UserAlertmanagerEnabled enables user-defined namespaces to be selected for `AlertmanagerConfig` lookups. This setting only
 	// applies if the user workload monitoring instance of Alertmanager is not enabled.
-	UserAlertManagerSelectable UserAlertManagerMode = "Selectable"
+	UserAlertManagerModeSelectable UserAlertManagerMode = "Selectable"
 	// UserAlertManagerDisabled disables user-defined namespaces to be selected for `AlertmanagerConfig` lookups. This setting only
 	// applies if the user workload monitoring instance of Alertmanager is not enabled.
-	UserAlertManagerNone UserAlertManagerMode = "None"
+	UserAlertManagerModeNone UserAlertManagerMode = "None"
 )
 
 // logLevel defines the verbosity of logs emitted by Alertmanager.
 // Valid values are Error, Warn, Info and Debug.
-// +kubebuilder:validation:Enum=Error;Warn;Info;Debug
+// +kubebuilder:validation:Enum="";Error;Warn;Info;Debug
 type LogLevel string
 
 const (
+	LogLevelEmpty LogLevel = ""
+	// Error only errors will be logged.
 	LogLevelError LogLevel = "Error"
-	LogLevelWarn  LogLevel = "Warn"
-	LogLevelInfo  LogLevel = "Info"
+	// Warn, both warnings and errors will be logged.
+	LogLevelWarn LogLevel = "Warn"
+	// Info, general information, warnings, and errors will all be logged.
+	LogLevelInfo LogLevel = "Info"
+	// Debug, detailed debugging information will be logged.
 	LogLevelDebug LogLevel = "Debug"
 )
 
 // ResourceSpec defines the requested and limited value of a resource.
 type ResourceSpec struct {
 	// request is the minimum amount of the resource required (e.g. "2Mi", "1Gi").
-	// +kubebuilder:validation:MaxLength=24
-	// This filed is optional
+	// This field is optional.
 	// +optional
-	Request string `json:"request,omitempty"`
+	Request resource.Quantity `json:"request,omitempty"`
+
 	// limit is the maximum amount of the resource allowed (e.g. "2Mi", "1Gi").
-	// +kubebuilder:validation:MaxLength=24
-	// This filed is optional
+	// This field is optional.
 	// +optional
-	Limit string `json:"limit,omitempty"`
+	Limit resource.Quantity `json:"limit,omitempty"`
 }
 
 // AlertmanagerContainerResources defines simplified resource requirements for a container.
@@ -306,8 +303,7 @@ type AlertmanagerContainerResources struct {
 	// hugepages is a list of hugepage resource specifications by page size.
 	// defines an optional list of unique configurations identified by their `size` field.
 	// A maximum of 10 items is allowed.
-	// The list is treated as a map, using `size` as the key, which simplifies updates and replacements
-	// of individual entries.
+	// The list is treated as a map, using `size` as the key
 	// +optional
 	// +listType=map
 	// +listMapKey=size
@@ -321,17 +317,15 @@ type HugePageResource struct {
 	// This filed is optional
 	// +kubebuilder:validation:MaxLength=8
 	// +optional
-	Size string `json:"size"`
+	Size resource.Quantity `json:"size,omitempty"`
 
 	// request amount for this hugepage size.
 	// This filed is optional
-	// +kubebuilder:validation:MaxLength=8
 	// +optional
-	Request string `json:"request,omitempty"`
+	Request resource.Quantity `json:"request,omitempty"`
 
 	// limit amount for this hugepage size.
 	// This filed is optional
-	// +kubebuilder:validation:MaxLength=8
 	// +optional
-	Limit string `json:"limit,omitempty"`
+	Limit resource.Quantity `json:"limit,omitempty"`
 }

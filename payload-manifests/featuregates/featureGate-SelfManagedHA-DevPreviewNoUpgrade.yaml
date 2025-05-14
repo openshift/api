@@ -60,9 +60,6 @@
                         "name": "AzureWorkloadIdentity"
                     },
                     {
-                        "name": "BareMetalLoadBalancer"
-                    },
-                    {
                         "name": "BootcNodeManagement"
                     },
                     {

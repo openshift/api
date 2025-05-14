@@ -220,9 +220,6 @@
                         "name": "AzureWorkloadIdentity"
                     },
                     {
-                        "name": "BareMetalLoadBalancer"
-                    },
-                    {
                         "name": "BuildCSIVolumes"
                     },
                     {

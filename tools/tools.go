@@ -7,7 +7,7 @@ import (
 	_ "github.com/gogo/protobuf/gogoproto"
 	_ "github.com/gogo/protobuf/proto"
 	_ "github.com/gogo/protobuf/sortkeys"
-	_ "github.com/golangci/golangci-lint/cmd/golangci-lint"
+	_ "github.com/golangci/golangci-lint/v2/cmd/golangci-lint"
 	_ "github.com/mikefarah/yq/v4"
 	_ "github.com/vmware-archive/yaml-patch/cmd/yaml-patch"
 	_ "k8s.io/code-generator"

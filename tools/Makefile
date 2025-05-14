@@ -105,7 +105,7 @@ $(OUTPUT_DIR)/go-to-protobuf: $(OUTPUT_DIR)/vendor-version
 	go build -mod=vendor -o $(OUTPUT_DIR)/go-to-protobuf ./vendor/k8s.io/code-generator/cmd/go-to-protobuf
 
 $(OUTPUT_DIR)/golangci-lint: $(OUTPUT_DIR)/vendor-version
-	go build -mod=vendor -o $(OUTPUT_DIR)/golangci-lint ./vendor/github.com/golangci/golangci-lint/cmd/golangci-lint
+	go build -mod=vendor -o $(OUTPUT_DIR)/golangci-lint ./vendor/github.com/golangci/golangci-lint/v2/cmd/golangci-lint
 
 # The golangci-lint custom command relies on finding a module, this uses a workaround to init the go.mod in the kal directory.
 $(OUTPUT_DIR)/golangci-kube-api-linter: $(OUTPUT_DIR)/vendor-version $(OUTPUT_DIR)/golangci-lint

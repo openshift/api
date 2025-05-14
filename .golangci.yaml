@@ -1,26 +1,45 @@
-linters-settings:
-  custom:
-    kubeapilinter:
-      type: "module"
-      description: kubeapilinter is the Kube-API-Linter and lints Kube like APIs based on API conventions and best practices.
-      settings:
-        linters:
-          enable:
-          - "maxlength"
-          - "nobools"
-          - "nomaps"
-          - "statussubresource"
-        lintersConfig:
-          conditions:
-            isFirstField: Warn
-            useProtobuf: Ignore
-            usePatchStrategy: Ignore
+version: "2"
 linters:
-  disable-all: true
+  default: none
   enable:
     - kubeapilinter
+  settings:
+    custom:
+      kubeapilinter:
+        type: module
+        description: kubeapilinter is the Kube-API-Linter and lints Kube like APIs based on API conventions and best practices.
+        settings:
+          linters:
+            enable:
+              - maxlength
+              - nobools
+              - nomaps
+              - statussubresource
+          lintersConfig:
+            conditions:
+              isFirstField: Warn
+              usePatchStrategy: Ignore
+              useProtobuf: Ignore
+  exclusions:
+    generated: lax
+    presets:
+      - comments
+      - common-false-positives
+      - legacy
+      - std-error-handling
+    paths:
+      - third_party$
+      - builtin$
+      - examples$
 issues:
   # We have a lot of existing issues.
   # Want to make sure that those adding new fields have an
   # opportunity to fix them when running the linter locally.
   max-issues-per-linter: 1000
+formatters:
+  exclusions:
+    generated: lax
+    paths:
+      - third_party$
+      - builtin$
+      - examples$

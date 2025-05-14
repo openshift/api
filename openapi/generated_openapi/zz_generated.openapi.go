@@ -407,7 +407,6 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"github.com/openshift/api/config/v1alpha1.AlertmanagerConfig":                                        schema_openshift_api_config_v1alpha1_AlertmanagerConfig(ref),
 		"github.com/openshift/api/config/v1alpha1.AlertmanagerContainerResources":                            schema_openshift_api_config_v1alpha1_AlertmanagerContainerResources(ref),
 		"github.com/openshift/api/config/v1alpha1.AlertmanagerDeployedConfig":                                schema_openshift_api_config_v1alpha1_AlertmanagerDeployedConfig(ref),
-		"github.com/openshift/api/config/v1alpha1.AlertmanagerNotDeployedConfig":                             schema_openshift_api_config_v1alpha1_AlertmanagerNotDeployedConfig(ref),
 		"github.com/openshift/api/config/v1alpha1.Backup":                                                    schema_openshift_api_config_v1alpha1_Backup(ref),
 		"github.com/openshift/api/config/v1alpha1.BackupList":                                                schema_openshift_api_config_v1alpha1_BackupList(ref),
 		"github.com/openshift/api/config/v1alpha1.BackupSpec":                                                schema_openshift_api_config_v1alpha1_BackupSpec(ref),
@@ -20490,12 +20489,12 @@ func schema_openshift_api_config_v1alpha1_AlertmanagerConfig(ref common.Referenc
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
-				Description: "alertmanagerMainConfig provides configuration options for the default Alertmanager instance that runs in the `openshift-monitoring` namespace. Use this configuration to control whether the default Alertmanager is deployed, how it logs, and how its pods are scheduled.",
+				Description: "alertmanagerConfig provides configuration options for the default Alertmanager instance that runs in the `openshift-monitoring` namespace. Use this configuration to control whether the default Alertmanager is deployed, how it logs, and how its pods are scheduled.",
 				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
 					"deploymentMode": {
 						SchemaProps: spec.SchemaProps{
-							Description: "deploymentMode determines whether the default Alertmanager instance should be deployed as part of the monitoring stack. Allowed values are Deployed and NotDeployed When set to Deployed, the Cluster Monitoring Operator ensures that an Alertmanager instance is created and managed in the `openshift-monitoring` namespace. When set to NotDeployed, the operator will not deploy the Alertmanager instance. Use this field if you want to explicitly opt in or out of running a platform-level Alertmanager.\n\nThis filed is required Allowed values are Deployed and NotDeployed.",
+							Description: "deploymentMode determines whether the default Alertmanager instance should be deployed as part of the monitoring stack. Allowed values are Deployed and NotDeployed. When set to Deployed, the Cluster Monitoring Operator ensures that an Alertmanager instance is created and managed in the `openshift-monitoring` namespace. When set to NotDeployed, the operator will not deploy the Alertmanager instance. Use this field if you want to explicitly opt in or out of running a platform-level Alertmanager.\n\ndeploymentMode is required.",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -20507,12 +20506,6 @@ func schema_openshift_api_config_v1alpha1_AlertmanagerConfig(ref common.Referenc
 							Ref:         ref("github.com/openshift/api/config/v1alpha1.AlertmanagerDeployedConfig"),
 						},
 					},
-					"notDeployed": {
-						SchemaProps: spec.SchemaProps{
-							Description: "notDeployed is an empty struct used to indicate that the Alertmanager should not be deployed.",
-							Ref:         ref("github.com/openshift/api/config/v1alpha1.AlertmanagerNotDeployedConfig"),
-						},
-					},
 				},
 				Required: []string{"deploymentMode"},
 			},
@@ -20522,8 +20515,7 @@ func schema_openshift_api_config_v1alpha1_AlertmanagerConfig(ref common.Referenc
 						map[string]interface{}{
 							"discriminator": "deploymentMode",
 							"fields-to-discriminateBy": map[string]interface{}{
-								"deployed":    "Deployed",
-								"notDeployed": "NotDeployed",
+								"deployed": "Deployed",
 							},
 						},
 					},
@@ -20531,7 +20523,7 @@ func schema_openshift_api_config_v1alpha1_AlertmanagerConfig(ref common.Referenc
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/config/v1alpha1.AlertmanagerDeployedConfig", "github.com/openshift/api/config/v1alpha1.AlertmanagerNotDeployedConfig"},
+			"github.com/openshift/api/config/v1alpha1.AlertmanagerDeployedConfig"},
 	}
 }
 
@@ -20564,7 +20556,7 @@ func schema_openshift_api_config_v1alpha1_AlertmanagerContainerResources(ref com
 							},
 						},
 						SchemaProps: spec.SchemaProps{
-							Description: "hugepages is a list of hugepage resource specifications by page size. defines an optional list of unique configurations identified by their `size` field. A maximum of 10 items is allowed. The list is treated as a map, using `size` as the key, which simplifies updates and replacements of individual entries.",
+							Description: "hugepages is a list of hugepage resource specifications by page size. defines an optional list of unique configurations identified by their `size` field. A maximum of 10 items is allowed. The list is treated as a map, using `size` as the key",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -20588,7 +20580,7 @@ func schema_openshift_api_config_v1alpha1_AlertmanagerDeployedConfig(ref common.
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
-				Description: "alertmanagerMainConfig provides configuration options for the default Alertmanager instance that runs in the `openshift-monitoring` namespace. Use this configuration to control whether the default Alertmanager is deployed, how it logs, and how its pods are scheduled.\n\nRequired: This field must be specified.",
+				Description: "alertmanagerConfig provides configuration options for the default Alertmanager instance that runs in the `openshift-monitoring` namespace. Use this configuration to control whether the default Alertmanager is deployed, how it logs, and how its pods are scheduled.\n\nRequired: This field must be specified.",
 				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
 					"userMode": {
@@ -20683,16 +20675,6 @@ func schema_openshift_api_config_v1alpha1_AlertmanagerDeployedConfig(ref common.
 		},
 		Dependencies: []string{
 			"github.com/openshift/api/config/v1alpha1.AlertmanagerContainerResources", "k8s.io/api/core/v1.PersistentVolumeClaim", "k8s.io/api/core/v1.Toleration", "k8s.io/api/core/v1.TopologySpreadConstraint"},
-	}
-}
-
-func schema_openshift_api_config_v1alpha1_AlertmanagerNotDeployedConfig(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Type: []string{"object"},
-			},
-		},
 	}
 }
 
@@ -21124,15 +21106,14 @@ func schema_openshift_api_config_v1alpha1_ClusterMonitoringSpec(ref common.Refer
 							Ref:         ref("github.com/openshift/api/config/v1alpha1.UserDefinedMonitoring"),
 						},
 					},
-					"alertmanagerMainConfig": {
+					"alertmanagerConfig": {
 						SchemaProps: spec.SchemaProps{
-							Description: "alertmanagerMainConfig allows users to configure how the default Alertmanager instance should be deployed in the `openshift-monitoring` namespace. alertmanagerMainConfig is optional.",
+							Description: "alertmanagerConfig allows users to configure how the default Alertmanager instance should be deployed in the `openshift-monitoring` namespace. alertmanagerConfig is optional.",
 							Default:     map[string]interface{}{},
 							Ref:         ref("github.com/openshift/api/config/v1alpha1.AlertmanagerConfig"),
 						},
 					},
 				},
-				Required: []string{"userDefined", "alertmanagerMainConfig"},
 			},
 		},
 		Dependencies: []string{
@@ -21287,28 +21268,26 @@ func schema_openshift_api_config_v1alpha1_HugePageResource(ref common.ReferenceC
 					"size": {
 						SchemaProps: spec.SchemaProps{
 							Description: "size of the hugepage (e.g. \"2Mi\", \"1Gi\"). This filed is optional",
-							Default:     "",
-							Type:        []string{"string"},
-							Format:      "",
+							Ref:         ref("k8s.io/apimachinery/pkg/api/resource.Quantity"),
 						},
 					},
 					"request": {
 						SchemaProps: spec.SchemaProps{
 							Description: "request amount for this hugepage size. This filed is optional",
-							Type:        []string{"string"},
-							Format:      "",
+							Ref:         ref("k8s.io/apimachinery/pkg/api/resource.Quantity"),
 						},
 					},
 					"limit": {
 						SchemaProps: spec.SchemaProps{
 							Description: "limit amount for this hugepage size. This filed is optional",
-							Type:        []string{"string"},
-							Format:      "",
+							Ref:         ref("k8s.io/apimachinery/pkg/api/resource.Quantity"),
 						},
 					},
 				},
 			},
 		},
+		Dependencies: []string{
+			"k8s.io/apimachinery/pkg/api/resource.Quantity"},
 	}
 }
 
@@ -21992,21 +21971,21 @@ func schema_openshift_api_config_v1alpha1_ResourceSpec(ref common.ReferenceCallb
 				Properties: map[string]spec.Schema{
 					"request": {
 						SchemaProps: spec.SchemaProps{
-							Description: "request is the minimum amount of the resource required (e.g. \"2Mi\", \"1Gi\"). This filed is optional",
-							Type:        []string{"string"},
-							Format:      "",
+							Description: "request is the minimum amount of the resource required (e.g. \"2Mi\", \"1Gi\"). This field is optional.",
+							Ref:         ref("k8s.io/apimachinery/pkg/api/resource.Quantity"),
 						},
 					},
 					"limit": {
 						SchemaProps: spec.SchemaProps{
-							Description: "limit is the maximum amount of the resource allowed (e.g. \"2Mi\", \"1Gi\"). This filed is optional",
-							Type:        []string{"string"},
-							Format:      "",
+							Description: "limit is the maximum amount of the resource allowed (e.g. \"2Mi\", \"1Gi\"). This field is optional.",
+							Ref:         ref("k8s.io/apimachinery/pkg/api/resource.Quantity"),
 						},
 					},
 				},
 			},
 		},
+		Dependencies: []string{
+			"k8s.io/apimachinery/pkg/api/resource.Quantity"},
 	}
 }
 

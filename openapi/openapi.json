@@ -11124,7 +11124,7 @@
       }
     },
     "com.github.openshift.api.config.v1alpha1.AlertmanagerConfig": {
-      "description": "alertmanagerMainConfig provides configuration options for the default Alertmanager instance that runs in the `openshift-monitoring` namespace. Use this configuration to control whether the default Alertmanager is deployed, how it logs, and how its pods are scheduled.",
+      "description": "alertmanagerConfig provides configuration options for the default Alertmanager instance that runs in the `openshift-monitoring` namespace. Use this configuration to control whether the default Alertmanager is deployed, how it logs, and how its pods are scheduled.",
       "type": "object",
       "required": [
         "deploymentMode"
@@ -11135,21 +11135,16 @@
           "$ref": "#/definitions/com.github.openshift.api.config.v1alpha1.AlertmanagerDeployedConfig"
         },
         "deploymentMode": {
-          "description": "deploymentMode determines whether the default Alertmanager instance should be deployed as part of the monitoring stack. Allowed values are Deployed and NotDeployed When set to Deployed, the Cluster Monitoring Operator ensures that an Alertmanager instance is created and managed in the `openshift-monitoring` namespace. When set to NotDeployed, the operator will not deploy the Alertmanager instance. Use this field if you want to explicitly opt in or out of running a platform-level Alertmanager.\n\nThis filed is required Allowed values are Deployed and NotDeployed.",
+          "description": "deploymentMode determines whether the default Alertmanager instance should be deployed as part of the monitoring stack. Allowed values are Deployed and NotDeployed. When set to Deployed, the Cluster Monitoring Operator ensures that an Alertmanager instance is created and managed in the `openshift-monitoring` namespace. When set to NotDeployed, the operator will not deploy the Alertmanager instance. Use this field if you want to explicitly opt in or out of running a platform-level Alertmanager.\n\ndeploymentMode is required.",
           "type": "string",
           "default": ""
-        },
-        "notDeployed": {
-          "description": "notDeployed is an empty struct used to indicate that the Alertmanager should not be deployed.",
-          "$ref": "#/definitions/com.github.openshift.api.config.v1alpha1.AlertmanagerNotDeployedConfig"
         }
       },
       "x-kubernetes-unions": [
         {
           "discriminator": "deploymentMode",
           "fields-to-discriminateBy": {
-            "deployed": "Deployed",
-            "notDeployed": "NotDeployed"
+            "deployed": "Deployed"
           }
         }
       ]
@@ -11163,7 +11158,7 @@
           "$ref": "#/definitions/com.github.openshift.api.config.v1alpha1.ResourceSpec"
         },
         "hugepages": {
-          "description": "hugepages is a list of hugepage resource specifications by page size. defines an optional list of unique configurations identified by their `size` field. A maximum of 10 items is allowed. The list is treated as a map, using `size` as the key, which simplifies updates and replacements of individual entries.",
+          "description": "hugepages is a list of hugepage resource specifications by page size. defines an optional list of unique configurations identified by their `size` field. A maximum of 10 items is allowed. The list is treated as a map, using `size` as the key",
           "type": "array",
           "items": {
             "default": {},
@@ -11181,7 +11176,7 @@
       }
     },
     "com.github.openshift.api.config.v1alpha1.AlertmanagerDeployedConfig": {
-      "description": "alertmanagerMainConfig provides configuration options for the default Alertmanager instance that runs in the `openshift-monitoring` namespace. Use this configuration to control whether the default Alertmanager is deployed, how it logs, and how its pods are scheduled.\n\nRequired: This field must be specified.",
+      "description": "alertmanagerConfig provides configuration options for the default Alertmanager instance that runs in the `openshift-monitoring` namespace. Use this configuration to control whether the default Alertmanager is deployed, how it logs, and how its pods are scheduled.\n\nRequired: This field must be specified.",
       "type": "object",
       "properties": {
         "logLevel": {
@@ -11235,9 +11230,6 @@
           "$ref": "#/definitions/io.k8s.api.core.v1.PersistentVolumeClaim"
         }
       }
-    },
-    "com.github.openshift.api.config.v1alpha1.AlertmanagerNotDeployedConfig": {
-      "type": "object"
     },
     "com.github.openshift.api.config.v1alpha1.Backup": {
       "description": "Backup provides configuration for performing backups of the openshift cluster.\n\nCompatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.",
@@ -11482,13 +11474,9 @@
     "com.github.openshift.api.config.v1alpha1.ClusterMonitoringSpec": {
       "description": "ClusterMonitoringSpec defines the desired state of Cluster Monitoring Operator",
       "type": "object",
-      "required": [
-        "userDefined",
-        "alertmanagerMainConfig"
-      ],
       "properties": {
-        "alertmanagerMainConfig": {
-          "description": "alertmanagerMainConfig allows users to configure how the default Alertmanager instance should be deployed in the `openshift-monitoring` namespace. alertmanagerMainConfig is optional.",
+        "alertmanagerConfig": {
+          "description": "alertmanagerConfig allows users to configure how the default Alertmanager instance should be deployed in the `openshift-monitoring` namespace. alertmanagerConfig is optional.",
           "default": {},
           "$ref": "#/definitions/com.github.openshift.api.config.v1alpha1.AlertmanagerConfig"
         },
@@ -11583,16 +11571,15 @@
       "properties": {
         "limit": {
           "description": "limit amount for this hugepage size. This filed is optional",
-          "type": "string"
+          "$ref": "#/definitions/io.k8s.apimachinery.pkg.api.resource.Quantity"
         },
         "request": {
           "description": "request amount for this hugepage size. This filed is optional",
-          "type": "string"
+          "$ref": "#/definitions/io.k8s.apimachinery.pkg.api.resource.Quantity"
         },
         "size": {
           "description": "size of the hugepage (e.g. \"2Mi\", \"1Gi\"). This filed is optional",
-          "type": "string",
-          "default": ""
+          "$ref": "#/definitions/io.k8s.apimachinery.pkg.api.resource.Quantity"
         }
       }
     },
@@ -12007,12 +11994,12 @@
       "type": "object",
       "properties": {
         "limit": {
-          "description": "limit is the maximum amount of the resource allowed (e.g. \"2Mi\", \"1Gi\"). This filed is optional",
-          "type": "string"
+          "description": "limit is the maximum amount of the resource allowed (e.g. \"2Mi\", \"1Gi\"). This field is optional.",
+          "$ref": "#/definitions/io.k8s.apimachinery.pkg.api.resource.Quantity"
         },
         "request": {
-          "description": "request is the minimum amount of the resource required (e.g. \"2Mi\", \"1Gi\"). This filed is optional",
-          "type": "string"
+          "description": "request is the minimum amount of the resource required (e.g. \"2Mi\", \"1Gi\"). This field is optional.",
+          "$ref": "#/definitions/io.k8s.apimachinery.pkg.api.resource.Quantity"
         }
       }
     },

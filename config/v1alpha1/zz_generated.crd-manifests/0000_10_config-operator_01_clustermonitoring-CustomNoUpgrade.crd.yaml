@@ -48,11 +48,11 @@ spec:
             description: spec holds user configuration for the Cluster Monitoring
               Operator
             properties:
-              alertmanagerMainConfig:
+              alertmanagerConfig:
                 description: |-
-                  alertmanagerMainConfig allows users to configure how the default Alertmanager instance
+                  alertmanagerConfig allows users to configure how the default Alertmanager instance
                   should be deployed in the `openshift-monitoring` namespace.
-                  alertmanagerMainConfig is optional.
+                  alertmanagerConfig is optional.
                 properties:
                   deployed:
                     description: deployed contains configuration options for the deployed
@@ -71,6 +71,7 @@ spec:
                           When omitted, this means no opinion and the platform is left to choose a default that is subject to change over time.
                           Currently, the default is Info.
                         enum:
+                        - ""
                         - Error
                         - Warn
                         - Info
@@ -102,47 +103,61 @@ spec:
                               This filed is optional
                             properties:
                               limit:
+                                anyOf:
+                                - type: integer
+                                - type: string
                                 description: |-
                                   limit is the maximum amount of the resource allowed (e.g. "2Mi", "1Gi").
-                                  This filed is optional
-                                maxLength: 24
-                                type: string
+                                  This field is optional.
+                                pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
+                                x-kubernetes-int-or-string: true
                               request:
+                                anyOf:
+                                - type: integer
+                                - type: string
                                 description: |-
                                   request is the minimum amount of the resource required (e.g. "2Mi", "1Gi").
-                                  This filed is optional
-                                maxLength: 24
-                                type: string
+                                  This field is optional.
+                                pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
+                                x-kubernetes-int-or-string: true
                             type: object
                           hugepages:
                             description: |-
                               hugepages is a list of hugepage resource specifications by page size.
                               defines an optional list of unique configurations identified by their `size` field.
                               A maximum of 10 items is allowed.
-                              The list is treated as a map, using `size` as the key, which simplifies updates and replacements
-                              of individual entries.
+                              The list is treated as a map, using `size` as the key
                             items:
                               description: HugePageResource describes hugepages resources
                                 by page size (e.g. 2Mi, 1Gi).
                               properties:
                                 limit:
+                                  anyOf:
+                                  - type: integer
+                                  - type: string
                                   description: |-
                                     limit amount for this hugepage size.
                                     This filed is optional
-                                  maxLength: 8
-                                  type: string
+                                  pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
+                                  x-kubernetes-int-or-string: true
                                 request:
+                                  anyOf:
+                                  - type: integer
+                                  - type: string
                                   description: |-
                                     request amount for this hugepage size.
                                     This filed is optional
-                                  maxLength: 8
-                                  type: string
+                                  pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
+                                  x-kubernetes-int-or-string: true
                                 size:
+                                  anyOf:
+                                  - type: integer
+                                  - type: string
                                   description: |-
                                     size of the hugepage (e.g. "2Mi", "1Gi").
                                     This filed is optional
-                                  maxLength: 8
-                                  type: string
+                                  pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
+                                  x-kubernetes-int-or-string: true
                               type: object
                             maxItems: 10
                             type: array
@@ -155,17 +170,23 @@ spec:
                               This filed is optional
                             properties:
                               limit:
+                                anyOf:
+                                - type: integer
+                                - type: string
                                 description: |-
                                   limit is the maximum amount of the resource allowed (e.g. "2Mi", "1Gi").
-                                  This filed is optional
-                                maxLength: 24
-                                type: string
+                                  This field is optional.
+                                pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
+                                x-kubernetes-int-or-string: true
                               request:
+                                anyOf:
+                                - type: integer
+                                - type: string
                                 description: |-
                                   request is the minimum amount of the resource required (e.g. "2Mi", "1Gi").
-                                  This filed is optional
-                                maxLength: 24
-                                type: string
+                                  This field is optional.
+                                pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
+                                x-kubernetes-int-or-string: true
                             type: object
                         type: object
                       secrets:
@@ -180,8 +201,8 @@ spec:
                         items:
                           description: |-
                             SecretName is a type that represents the name of a Secret in the same namespace.
-                            It must be at most 256 characters in length.
-                          maxLength: 256
+                            It must be at most 253 characters in length.
+                          maxLength: 253
                           type: string
                           x-kubernetes-validations:
                           - message: a lowercase RFC 1123 subdomain must consist of
@@ -872,25 +893,25 @@ spec:
                     description: |-
                       deploymentMode determines whether the default Alertmanager instance should be deployed
                       as part of the monitoring stack.
-                      Allowed values are Deployed and NotDeployed
+                      Allowed values are Deployed and NotDeployed.
                       When set to Deployed, the Cluster Monitoring Operator
                       ensures that an Alertmanager instance is created and managed in the `openshift-monitoring` namespace.
                       When set to NotDeployed, the operator will not deploy the Alertmanager instance.
                       Use this field if you want to explicitly opt in or out of running a platform-level Alertmanager.
 
-                      This filed is required
-                      Allowed values are Deployed and NotDeployed.
+                      deploymentMode is required.
                     enum:
                     - Deployed
                     - NotDeployed
                     type: string
-                  notDeployed:
-                    description: notDeployed is an empty struct used to indicate that
-                      the Alertmanager should not be deployed.
-                    type: object
                 required:
                 - deploymentMode
                 type: object
+                x-kubernetes-validations:
+                - message: deployed must be set when deploymentMode is Deployed, and
+                    must be unset otherwise
+                  rule: 'self.deploymentMode == ''Deployed'' ? has(self.deployed)
+                    : !has(self.deployed)'
               userDefined:
                 description: |-
                   userDefined set the deployment mode for user-defined monitoring in addition to the default platform monitoring.

@@ -315,7 +315,6 @@ type AlertmanagerContainerResources struct {
 type HugePageResource struct {
 	// size of the hugepage (e.g. "2Mi", "1Gi").
 	// This filed is optional
-	// +kubebuilder:validation:MaxLength=8
 	// +optional
 	Size resource.Quantity `json:"size,omitempty"`
 

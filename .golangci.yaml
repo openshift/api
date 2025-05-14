@@ -6,7 +6,7 @@ linters:
   settings:
     custom:
       kubeapilinter:
-        type: module
+        path: tools/_output/bin/kube-api-linter.so
         description: kubeapilinter is the Kube-API-Linter and lints Kube like APIs based on API conventions and best practices.
         settings:
           linters:

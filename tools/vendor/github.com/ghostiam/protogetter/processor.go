@@ -77,16 +77,60 @@ func (c *processor) process(n ast.Node) (*Result, error) {
 			}
 		}
 
-		f, ok := x.Fun.(*ast.SelectorExpr)
-		if !ok {
+		switch fun := x.Fun.(type) {
+		case *ast.Ident:
+			// Allow passing optional parameters to the function without getter.
+
+			if len(x.Args) == 0 {
+				return &Result{}, nil
+			}
+
+			if fun.Obj == nil || fun.Obj.Kind != ast.Fun {
+				return &Result{}, nil
+			}
+
+			decl, ok := fun.Obj.Decl.(*ast.FuncDecl)
+			if !ok || decl.Type == nil {
+				return &Result{}, nil
+			}
+
+			for _, arg := range x.Args {
+				a, ok := arg.(*ast.SelectorExpr)
+				if !ok {
+					continue
+				}
+
+				if !isProtoMessage(c.info, a.X) {
+					continue
+				}
+
+				// If the argument is not a pointer,
+				// then we should not skip the check for using the getter.
+				_, isPtrArg := c.info.TypeOf(a).Underlying().(*types.Pointer)
+				if !isPtrArg {
+					continue
+				}
+
+				// If the getter also have a pointer,
+				// then we should not skip the check for using the getter.
+				getterHasPointer, _ := getterResultHasPointer(c.info, a.X, a.Sel.Name)
+				if getterHasPointer {
+					continue
+				}
+
+				c.filter.AddPos(a.Sel.Pos())
+			}
+
+		case *ast.SelectorExpr:
+			if !isProtoMessage(c.info, fun.X) {
+				return &Result{}, nil
+			}
+
+			c.processInner(x)
+
+		default:
 			return &Result{}, nil
 		}
-
-		if !isProtoMessage(c.info, f.X) {
-			return &Result{}, nil
-		}
-
-		c.processInner(x)
 
 	case *ast.SelectorExpr:
 		if !isProtoMessage(c.info, x.X) {

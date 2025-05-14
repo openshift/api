@@ -2385,12 +2385,13 @@ sigs.k8s.io/controller-tools/pkg/webhook
 ## explicit; go 1.21
 sigs.k8s.io/json
 sigs.k8s.io/json/internal/golang/encoding/json
-# sigs.k8s.io/kube-api-linter v0.0.0-20250424114031-64417f625b7d
-## explicit; go 1.23.0
+# sigs.k8s.io/kube-api-linter v0.0.0-20250610122426-55d257d89b65
+## explicit; go 1.24.0
 sigs.k8s.io/kube-api-linter
 sigs.k8s.io/kube-api-linter/pkg/analysis
 sigs.k8s.io/kube-api-linter/pkg/analysis/commentstart
 sigs.k8s.io/kube-api-linter/pkg/analysis/conditions
+sigs.k8s.io/kube-api-linter/pkg/analysis/duplicatemarkers
 sigs.k8s.io/kube-api-linter/pkg/analysis/errors
 sigs.k8s.io/kube-api-linter/pkg/analysis/helpers/extractjsontags
 sigs.k8s.io/kube-api-linter/pkg/analysis/helpers/inspector
@@ -2402,11 +2403,16 @@ sigs.k8s.io/kube-api-linter/pkg/analysis/nobools
 sigs.k8s.io/kube-api-linter/pkg/analysis/nofloats
 sigs.k8s.io/kube-api-linter/pkg/analysis/nomaps
 sigs.k8s.io/kube-api-linter/pkg/analysis/nophase
+sigs.k8s.io/kube-api-linter/pkg/analysis/optionalfields
 sigs.k8s.io/kube-api-linter/pkg/analysis/optionalorrequired
 sigs.k8s.io/kube-api-linter/pkg/analysis/requiredfields
+sigs.k8s.io/kube-api-linter/pkg/analysis/statusoptional
 sigs.k8s.io/kube-api-linter/pkg/analysis/statussubresource
+sigs.k8s.io/kube-api-linter/pkg/analysis/uniquemarkers
 sigs.k8s.io/kube-api-linter/pkg/analysis/utils
 sigs.k8s.io/kube-api-linter/pkg/config
+sigs.k8s.io/kube-api-linter/pkg/markers
+sigs.k8s.io/kube-api-linter/pkg/plugin
 sigs.k8s.io/kube-api-linter/pkg/validation
 # sigs.k8s.io/structured-merge-diff/v4 v4.4.2
 ## explicit; go 1.13

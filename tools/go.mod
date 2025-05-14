@@ -1,6 +1,8 @@
 module github.com/openshift/api/tools
 
-go 1.23.0
+go 1.24.2
+
+toolchain go1.24.3
 
 require (
 	cloud.google.com/go/storage v1.49.0
@@ -28,7 +30,7 @@ require (
 	k8s.io/kube-openapi v0.0.0-20241105132330-32ad38e42d3f
 	k8s.io/utils v0.0.0-20241104100929-3ea5e8cea738
 	sigs.k8s.io/controller-tools v0.15.0
-	sigs.k8s.io/kube-api-linter v0.0.0-20250424114031-64417f625b7d
+	sigs.k8s.io/kube-api-linter v0.0.0-20250610122426-55d257d89b65
 	sigs.k8s.io/yaml v1.4.0
 )
 

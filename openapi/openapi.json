@@ -11205,7 +11205,7 @@
           }
         },
         "tolerations": {
-          "description": "tolerations is a list of tolerations applied to network diagnostics components tolerations is optional.\n\nWhen omitted, this means the user has no opinion and the platform is left to choose reasonable defaults. These defaults are subject to change over time. The current default is `- operator: \"Exists\"` which means that all taints are tolerated. Maximum length for this list is 10",
+          "description": "tolerations is a list of tolerations applied to network diagnostics components tolerations is optional.\n\nWhen omitted, this means the user has no opinion and the platform is left to choose reasonable defaults. These defaults are subject to change over time. Maximum length for this list is 10",
           "type": "array",
           "items": {
             "default": {},
@@ -11220,8 +11220,8 @@
             "$ref": "#/definitions/io.k8s.api.core.v1.TopologySpreadConstraint"
           }
         },
-        "userMode": {
-          "description": "userMode controls whether Alertmanager should process configurations from user-defined (non-platform) namespaces for AlertmanagerConfig lookups. Alertmanager will search for AlertmanagerConfig resources in user-defined namespaces. This field is only effective when the user workload Alertmanager instance is not enabled. If the user workload monitoring Alertmanager is enabled, this field is ignored. userMode is required. Allowed values are Selectable and None Default value is None",
+        "userModeConfig": {
+          "description": "userModeConfig controls whether Alertmanager should process configurations from user-defined (non-platform) namespaces for AlertmanagerConfig lookups. Alertmanager will search for AlertmanagerConfig resources in user-defined namespaces. This field is only effective when the user workload Alertmanager instance is not enabled. If the user workload monitoring Alertmanager is enabled, this field is ignored. userMode is required. Allowed values are Selectable and None Default value is None",
           "type": "string",
           "default": ""
         },

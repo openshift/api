@@ -140,7 +140,7 @@ type AlertmanagerConfig struct {
 //
 // Required: This field must be specified.
 type AlertmanagerDeployedConfig struct {
-	// userMode controls whether Alertmanager should process configurations from user-defined (non-platform)
+	// userModeConfig controls whether Alertmanager should process configurations from user-defined (non-platform)
 	// namespaces for AlertmanagerConfig lookups.
 	// Alertmanager will search for AlertmanagerConfig resources in user-defined namespaces.
 	// This field is only effective when the user workload Alertmanager instance is not enabled.
@@ -150,7 +150,7 @@ type AlertmanagerDeployedConfig struct {
 	// Default value is None
 	// +kubebuilder:validation:Enum="";Selectable;None
 	// +optional
-	UserMode UserAlertManagerMode `json:"userMode"`
+	UserModeConfig UserAlertManagerModeConfig `json:"userModeConfig"`
 	// logLevel defines the verbosity of logs emitted by Alertmanager.
 	// This field allows users to control the amount and severity of logs generated, which can be useful
 	// for debugging issues or reducing noise in production environments.
@@ -194,7 +194,6 @@ type AlertmanagerDeployedConfig struct {
 	//
 	// When omitted, this means the user has no opinion and the platform is left
 	// to choose reasonable defaults. These defaults are subject to change over time.
-	// The current default is `- operator: "Exists"` which means that all taints are tolerated.
 	// Maximum length for this list is 10
 	// +kubebuilder:validation:MaxItems=10
 	// +optional
@@ -242,20 +241,20 @@ const (
 	AlertManagerDeployModeNotDeployed AlertManagerDeployMode = "NotDeployed"
 )
 
-// UserAlertManagerMode defines mode for user-defines namespaced
+// UserAlertManagerModeConfig defines mode for user-defines namespaced
 //
 // Possible values:
 // - "Selectable": User-defined namespaces can be selected for AlertmanagerConfig lookups.
 // - "None": User-defined namespaces cannot be selected for AlertmanagerConfig lookups.
-type UserAlertManagerMode string
+type UserAlertManagerModeConfig string
 
 const (
 	// UserAlertmanagerEnabled enables user-defined namespaces to be selected for `AlertmanagerConfig` lookups. This setting only
 	// applies if the user workload monitoring instance of Alertmanager is not enabled.
-	UserAlertManagerModeSelectable UserAlertManagerMode = "Selectable"
+	UserAlertManagerModeSelectable UserAlertManagerModeConfig = "Selectable"
 	// UserAlertManagerDisabled disables user-defined namespaces to be selected for `AlertmanagerConfig` lookups. This setting only
 	// applies if the user workload monitoring instance of Alertmanager is not enabled.
-	UserAlertManagerModeNone UserAlertManagerMode = "None"
+	UserAlertManagerModeNone UserAlertManagerModeConfig = "None"
 )
 
 // logLevel defines the verbosity of logs emitted by Alertmanager.

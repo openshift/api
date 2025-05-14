@@ -20583,9 +20583,9 @@ func schema_openshift_api_config_v1alpha1_AlertmanagerDeployedConfig(ref common.
 				Description: "alertmanagerConfig provides configuration options for the default Alertmanager instance that runs in the `openshift-monitoring` namespace. Use this configuration to control whether the default Alertmanager is deployed, how it logs, and how its pods are scheduled.\n\nRequired: This field must be specified.",
 				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
-					"userMode": {
+					"userModeConfig": {
 						SchemaProps: spec.SchemaProps{
-							Description: "userMode controls whether Alertmanager should process configurations from user-defined (non-platform) namespaces for AlertmanagerConfig lookups. Alertmanager will search for AlertmanagerConfig resources in user-defined namespaces. This field is only effective when the user workload Alertmanager instance is not enabled. If the user workload monitoring Alertmanager is enabled, this field is ignored. userMode is required. Allowed values are Selectable and None Default value is None",
+							Description: "userModeConfig controls whether Alertmanager should process configurations from user-defined (non-platform) namespaces for AlertmanagerConfig lookups. Alertmanager will search for AlertmanagerConfig resources in user-defined namespaces. This field is only effective when the user workload Alertmanager instance is not enabled. If the user workload monitoring Alertmanager is enabled, this field is ignored. userMode is required. Allowed values are Selectable and None Default value is None",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -20638,7 +20638,7 @@ func schema_openshift_api_config_v1alpha1_AlertmanagerDeployedConfig(ref common.
 					},
 					"tolerations": {
 						SchemaProps: spec.SchemaProps{
-							Description: "tolerations is a list of tolerations applied to network diagnostics components tolerations is optional.\n\nWhen omitted, this means the user has no opinion and the platform is left to choose reasonable defaults. These defaults are subject to change over time. The current default is `- operator: \"Exists\"` which means that all taints are tolerated. Maximum length for this list is 10",
+							Description: "tolerations is a list of tolerations applied to network diagnostics components tolerations is optional.\n\nWhen omitted, this means the user has no opinion and the platform is left to choose reasonable defaults. These defaults are subject to change over time. Maximum length for this list is 10",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{

@@ -218,7 +218,6 @@ spec:
 
                           When omitted, this means the user has no opinion and the platform is left
                           to choose reasonable defaults. These defaults are subject to change over time.
-                          The current default is `- operator: "Exists"` which means that all taints are tolerated.
                           Maximum length for this list is 10
                         items:
                           description: |-
@@ -444,9 +443,9 @@ spec:
                           type: object
                         maxItems: 10
                         type: array
-                      userMode:
+                      userModeConfig:
                         description: |-
-                          userMode controls whether Alertmanager should process configurations from user-defined (non-platform)
+                          userModeConfig controls whether Alertmanager should process configurations from user-defined (non-platform)
                           namespaces for AlertmanagerConfig lookups.
                           Alertmanager will search for AlertmanagerConfig resources in user-defined namespaces.
                           This field is only effective when the user workload Alertmanager instance is not enabled.

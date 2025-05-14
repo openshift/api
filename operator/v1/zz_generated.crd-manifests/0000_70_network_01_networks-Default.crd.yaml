@@ -317,7 +317,7 @@ spec:
                                   OVN-Kubernetes as well as other networks used on the host. Additionally the subnet must
                                   be large enough to accommodate 6 IPs (maximum prefix length /29).
                                   When omitted, this means no opinion and the platform is left to choose a reasonable default which is subject to change over time.
-                                  The current default subnet is 169.254.169.0/29
+                                  The current default subnet is 169.254.0.0/17
                                   The value must be in proper IPV4 CIDR format
                                 maxLength: 18
                                 type: string
@@ -346,7 +346,7 @@ spec:
                                   OVN-Kubernetes as well as other networks used on the host. Additionally the subnet must
                                   be large enough to accommodate 6 IPs (maximum prefix length /125).
                                   When omitted, this means no opinion and the platform is left to choose a reasonable default which is subject to change over time.
-                                  The current default subnet is fd69::/125
+                                  The current default subnet is fd69::/112
                                   Note that IPV6 dual addresses are not permitted
                                 type: string
                                 x-kubernetes-validations:

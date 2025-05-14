@@ -640,7 +640,7 @@ type IPv4GatewayConfig struct {
 	// OVN-Kubernetes as well as other networks used on the host. Additionally the subnet must
 	// be large enough to accommodate 6 IPs (maximum prefix length /29).
 	// When omitted, this means no opinion and the platform is left to choose a reasonable default which is subject to change over time.
-	// The current default subnet is 169.254.169.0/29
+	// The current default subnet is 169.254.0.0/17
 	// The value must be in proper IPV4 CIDR format
 	// +kubebuilder:validation:MaxLength=18
 	// +kubebuilder:validation:XValidation:rule="isCIDR(self) && cidr(self).ip().family() == 4",message="Subnet must be in valid IPV4 CIDR format"
@@ -659,7 +659,7 @@ type IPv6GatewayConfig struct {
 	// OVN-Kubernetes as well as other networks used on the host. Additionally the subnet must
 	// be large enough to accommodate 6 IPs (maximum prefix length /125).
 	// When omitted, this means no opinion and the platform is left to choose a reasonable default which is subject to change over time.
-	// The current default subnet is fd69::/125
+	// The current default subnet is fd69::/112
 	// Note that IPV6 dual addresses are not permitted
 	// +kubebuilder:validation:XValidation:rule="isCIDR(self) && cidr(self).ip().family() == 6",message="Subnet must be in valid IPV6 CIDR format"
 	// +kubebuilder:validation:XValidation:rule="isCIDR(self) && cidr(self).prefixLength() <= 125",message="subnet must be in the range /0 to /125 inclusive"

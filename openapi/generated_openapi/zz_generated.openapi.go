@@ -16473,11 +16473,12 @@ func schema_openshift_api_config_v1_OIDCClientConfig(ref common.ReferenceCallbac
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
-				Type: []string{"object"},
+				Description: "OIDCClientConfig configures how platform clients interact with identity providers as an authentication method",
+				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
 					"componentName": {
 						SchemaProps: spec.SchemaProps{
-							Description: "componentName is the name of the component that is supposed to consume this client configuration",
+							Description: "componentName is a required field that specifies the name of the platform component being configured to use the identity provider as an authentication mode. It is used in combination with componentNamespace as a unique identifier.\n\ncomponentName must not be an empty string (\"\") and must not exceed 256 characters in length.",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -16485,7 +16486,7 @@ func schema_openshift_api_config_v1_OIDCClientConfig(ref common.ReferenceCallbac
 					},
 					"componentNamespace": {
 						SchemaProps: spec.SchemaProps{
-							Description: "componentNamespace is the namespace of the component that is supposed to consume this client configuration",
+							Description: "componentNamespace is a required field that specifies the namespace in which the platform component being configured to use the identity provider as an authentication mode is running. It is used in combination with componentName as a unique identifier.\n\ncomponentNamespace must not be an empty string (\"\") and must not exceed 63 characters in length.",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -16493,7 +16494,7 @@ func schema_openshift_api_config_v1_OIDCClientConfig(ref common.ReferenceCallbac
 					},
 					"clientID": {
 						SchemaProps: spec.SchemaProps{
-							Description: "clientID is the identifier of the OIDC client from the OIDC provider",
+							Description: "clientID is a required field that configures the client identifier, from the identity provider, that the platform component uses for authentication requests made to the identity provider. The identity provider must accept this identifier for platform components to be able to use the identity provider as an authentication mode.\n\nclientID must not be an empty string (\"\").",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -16501,7 +16502,7 @@ func schema_openshift_api_config_v1_OIDCClientConfig(ref common.ReferenceCallbac
 					},
 					"clientSecret": {
 						SchemaProps: spec.SchemaProps{
-							Description: "clientSecret refers to a secret in the `openshift-config` namespace that contains the client secret in the `clientSecret` key of the `.data` field",
+							Description: "clientSecret is an optional field that configures the client secret used by the platform component when making authentication requests to the identity provider.\n\nWhen not specified, no client secret will be used when making authentication requests to the identity provider.\n\nWhen specified, clientSecret references a Secret in the 'openshift-config' namespace that contains the client secret in the 'clientSecret' key of the '.data' field. The client secret will be used when making authentication requests to the identity provider.\n\nPublic clients do not require a client secret but private clients do require a client secret to work with the identity provider.",
 							Default:     map[string]interface{}{},
 							Ref:         ref("github.com/openshift/api/config/v1.SecretNameReference"),
 						},
@@ -16513,7 +16514,7 @@ func schema_openshift_api_config_v1_OIDCClientConfig(ref common.ReferenceCallbac
 							},
 						},
 						SchemaProps: spec.SchemaProps{
-							Description: "extraScopes is an optional set of scopes to request tokens with.",
+							Description: "extraScopes is an optional field that configures the extra scopes that should be requested by the platform component when making authentication requests to the identity provider. This is useful if you have configured claim mappings that requires specific scopes to be requested beyond the standard OIDC scopes.\n\nWhen omitted, no additional scopes are requested.",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -16527,7 +16528,7 @@ func schema_openshift_api_config_v1_OIDCClientConfig(ref common.ReferenceCallbac
 						},
 					},
 				},
-				Required: []string{"componentName", "componentNamespace", "clientID", "clientSecret", "extraScopes"},
+				Required: []string{"componentName", "componentNamespace", "clientID"},
 			},
 		},
 		Dependencies: []string{
@@ -16539,11 +16540,12 @@ func schema_openshift_api_config_v1_OIDCClientReference(ref common.ReferenceCall
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
-				Type: []string{"object"},
+				Description: "OIDCClientReference is a reference to a platform component client configuration.",
+				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
 					"oidcProviderName": {
 						SchemaProps: spec.SchemaProps{
-							Description: "OIDCName refers to the `name` of the provider from `oidcProviders`",
+							Description: "oidcProviderName is a required reference to the 'name' of the identity provider configured in 'oidcProviders' that this client is associated with.\n\noidcProviderName must not be an empty string (\"\").",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -16551,7 +16553,7 @@ func schema_openshift_api_config_v1_OIDCClientReference(ref common.ReferenceCall
 					},
 					"issuerURL": {
 						SchemaProps: spec.SchemaProps{
-							Description: "URL is the serving URL of the token issuer. Must use the https:// scheme.",
+							Description: "issuerURL is a required field that specifies the URL of the identity provider that this client is configured to make requests against.\n\nissuerURL must use the 'https' scheme.",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -16559,7 +16561,7 @@ func schema_openshift_api_config_v1_OIDCClientReference(ref common.ReferenceCall
 					},
 					"clientID": {
 						SchemaProps: spec.SchemaProps{
-							Description: "clientID is the identifier of the OIDC client from the OIDC provider",
+							Description: "clientID is a required field that specifies the client identifier, from the identity provider, that the platform component is using for authentication requests made to the identity provider.\n\nclientID must not be empty.",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -16576,11 +16578,12 @@ func schema_openshift_api_config_v1_OIDCClientStatus(ref common.ReferenceCallbac
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
-				Type: []string{"object"},
+				Description: "OIDCClientStatus represents the current state of platform components and how they interact with the configured identity providers.",
+				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
 					"componentName": {
 						SchemaProps: spec.SchemaProps{
-							Description: "componentName is the name of the component that will consume a client configuration.",
+							Description: "componentName is a required field that specifies the name of the platform component using the identity provider as an authentication mode. It is used in combination with componentNamespace as a unique identifier.\n\ncomponentName must not be an empty string (\"\") and must not exceed 256 characters in length.",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -16588,7 +16591,7 @@ func schema_openshift_api_config_v1_OIDCClientStatus(ref common.ReferenceCallbac
 					},
 					"componentNamespace": {
 						SchemaProps: spec.SchemaProps{
-							Description: "componentNamespace is the namespace of the component that will consume a client configuration.",
+							Description: "componentNamespace is a required field that specifies the namespace in which the platform component using the identity provider as an authentication mode is running. It is used in combination with componentName as a unique identifier.\n\ncomponentNamespace must not be an empty string (\"\") and must not exceed 63 characters in length.",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -16605,7 +16608,7 @@ func schema_openshift_api_config_v1_OIDCClientStatus(ref common.ReferenceCallbac
 							},
 						},
 						SchemaProps: spec.SchemaProps{
-							Description: "currentOIDCClients is a list of clients that the component is currently using.",
+							Description: "currentOIDCClients is an optional list of clients that the component is currently using. Entries must have unique issuerURL/clientID pairs.",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -16624,7 +16627,7 @@ func schema_openshift_api_config_v1_OIDCClientStatus(ref common.ReferenceCallbac
 							},
 						},
 						SchemaProps: spec.SchemaProps{
-							Description: "consumingUsers is a slice of ServiceAccounts that need to have read permission on the `clientSecret` secret.",
+							Description: "consumingUsers is an optional list of ServiceAccounts requiring read permissions on the `clientSecret` secret.\n\nconsumingUsers must not exceed 5 entries.",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -16660,7 +16663,7 @@ func schema_openshift_api_config_v1_OIDCClientStatus(ref common.ReferenceCallbac
 						},
 					},
 				},
-				Required: []string{"componentName", "componentNamespace", "currentOIDCClients", "consumingUsers"},
+				Required: []string{"componentName", "componentNamespace"},
 			},
 		},
 		Dependencies: []string{
@@ -16676,7 +16679,7 @@ func schema_openshift_api_config_v1_OIDCProvider(ref common.ReferenceCallback) c
 				Properties: map[string]spec.Schema{
 					"name": {
 						SchemaProps: spec.SchemaProps{
-							Description: "name of the OIDC provider",
+							Description: "name is a required field that configures the unique human-readable identifier associated with the identity provider. It is used to distinguish between multiple identity providers and has no impact on token validation or authentication mechanics.\n\nname must not be an empty string (\"\").",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -16684,7 +16687,7 @@ func schema_openshift_api_config_v1_OIDCProvider(ref common.ReferenceCallback) c
 					},
 					"issuer": {
 						SchemaProps: spec.SchemaProps{
-							Description: "issuer describes atributes of the OIDC token issuer",
+							Description: "issuer is a required field that configures how the platform interacts with the identity provider and how tokens issued from the identity provider are evaluated by the Kubernetes API server.",
 							Default:     map[string]interface{}{},
 							Ref:         ref("github.com/openshift/api/config/v1.TokenIssuer"),
 						},
@@ -16700,7 +16703,7 @@ func schema_openshift_api_config_v1_OIDCProvider(ref common.ReferenceCallback) c
 							},
 						},
 						SchemaProps: spec.SchemaProps{
-							Description: "oidcClients contains configuration for the platform's clients that need to request tokens from the issuer",
+							Description: "oidcClients is an optional field that configures how on-cluster, platform clients should request tokens from the identity provider. oidcClients must not exceed 20 entries and entries must have unique namespace/name pairs.",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -16714,7 +16717,7 @@ func schema_openshift_api_config_v1_OIDCProvider(ref common.ReferenceCallback) c
 					},
 					"claimMappings": {
 						SchemaProps: spec.SchemaProps{
-							Description: "claimMappings describes rules on how to transform information from an ID token into a cluster identity",
+							Description: "claimMappings is an optional field that configures the rules to be used by the Kubernetes API server for translating claims in a JWT token, issued by the identity provider, to a cluster identity.",
 							Default:     map[string]interface{}{},
 							Ref:         ref("github.com/openshift/api/config/v1.TokenClaimMappings"),
 						},
@@ -16726,7 +16729,7 @@ func schema_openshift_api_config_v1_OIDCProvider(ref common.ReferenceCallback) c
 							},
 						},
 						SchemaProps: spec.SchemaProps{
-							Description: "claimValidationRules are rules that are applied to validate token claims to authenticate users.",
+							Description: "claimValidationRules is an optional field that configures the rules to be used by the Kubernetes API server for validating the claims in a JWT token issued by the identity provider.\n\nValidation rules are joined via an AND operation.",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -16739,7 +16742,7 @@ func schema_openshift_api_config_v1_OIDCProvider(ref common.ReferenceCallback) c
 						},
 					},
 				},
-				Required: []string{"name", "issuer", "oidcClients", "claimMappings"},
+				Required: []string{"name", "issuer"},
 			},
 		},
 		Dependencies: []string{
@@ -17877,11 +17880,12 @@ func schema_openshift_api_config_v1_PrefixedClaimMapping(ref common.ReferenceCal
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
-				Type: []string{"object"},
+				Description: "PrefixedClaimMapping configures a claim mapping that allows for an optional prefix.",
+				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
 					"claim": {
 						SchemaProps: spec.SchemaProps{
-							Description: "claim is a JWT token claim to be used in the mapping",
+							Description: "claim is a required field that configures the JWT token claim whose value is assigned to the cluster identity field associated with this mapping.",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -17889,14 +17893,14 @@ func schema_openshift_api_config_v1_PrefixedClaimMapping(ref common.ReferenceCal
 					},
 					"prefix": {
 						SchemaProps: spec.SchemaProps{
-							Description: "prefix is a string to prefix the value from the token in the result of the claim mapping.\n\nBy default, no prefixing occurs.\n\nExample: if `prefix` is set to \"myoidc:\"\" and the `claim` in JWT contains an array of strings \"a\", \"b\" and  \"c\", the mapping will result in an array of string \"myoidc:a\", \"myoidc:b\" and \"myoidc:c\".",
+							Description: "prefix is an optional field that configures the prefix that will be applied to the cluster identity attribute during the process of mapping JWT claims to cluster identity attributes.\n\nWhen omitted (\"\"), no prefix is applied to the cluster identity attribute.\n\nExample: if `prefix` is set to \"myoidc:\" and the `claim` in JWT contains an array of strings \"a\", \"b\" and  \"c\", the mapping will result in an array of string \"myoidc:a\", \"myoidc:b\" and \"myoidc:c\".",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
 						},
 					},
 				},
-				Required: []string{"claim", "prefix"},
+				Required: []string{"claim"},
 			},
 		},
 	}
@@ -19368,11 +19372,12 @@ func schema_openshift_api_config_v1_TokenClaimMapping(ref common.ReferenceCallba
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
-				Type: []string{"object"},
+				Description: "TokenClaimMapping allows specifying a JWT token claim to be used when mapping claims from an authentication token to cluster identities.",
+				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
 					"claim": {
 						SchemaProps: spec.SchemaProps{
-							Description: "claim is a JWT token claim to be used in the mapping",
+							Description: "claim is a required field that configures the JWT token claim whose value is assigned to the cluster identity field associated with this mapping.",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -19393,14 +19398,14 @@ func schema_openshift_api_config_v1_TokenClaimMappings(ref common.ReferenceCallb
 				Properties: map[string]spec.Schema{
 					"username": {
 						SchemaProps: spec.SchemaProps{
-							Description: "username is a name of the claim that should be used to construct usernames for the cluster identity.\n\nDefault value: \"sub\"",
+							Description: "username is an optional field that configures how the username of a cluster identity should be constructed from the claims in a JWT token issued by the identity provider.",
 							Default:     map[string]interface{}{},
 							Ref:         ref("github.com/openshift/api/config/v1.UsernameClaimMapping"),
 						},
 					},
 					"groups": {
 						SchemaProps: spec.SchemaProps{
-							Description: "groups is a name of the claim that should be used to construct groups for the cluster identity. The referenced claim must use array of strings values.",
+							Description: "groups is an optional field that configures how the groups of a cluster identity should be constructed from the claims in a JWT token issued by the identity provider. When referencing a claim, if the claim is present in the JWT token, its value must be a list of groups separated by a comma (','). For example - '\"example\"' and '\"exampleOne\", \"exampleTwo\", \"exampleThree\"' are valid claim values.",
 							Default:     map[string]interface{}{},
 							Ref:         ref("github.com/openshift/api/config/v1.PrefixedClaimMapping"),
 						},
@@ -19476,20 +19481,21 @@ func schema_openshift_api_config_v1_TokenClaimValidationRule(ref common.Referenc
 				Properties: map[string]spec.Schema{
 					"type": {
 						SchemaProps: spec.SchemaProps{
-							Description: "type sets the type of the validation rule",
+							Description: "type is an optional field that configures the type of the validation rule.\n\nAllowed values are 'RequiredClaim' and omitted (not provided or an empty string).\n\nWhen set to 'RequiredClaim', the Kubernetes API server will be configured to validate that the incoming JWT contains the required claim and that its value matches the required value.\n\nDefaults to 'RequiredClaim'.",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
+							Enum:        []interface{}{},
 						},
 					},
 					"requiredClaim": {
 						SchemaProps: spec.SchemaProps{
-							Description: "requiredClaim allows configuring a required claim name and its expected value",
+							Description: "requiredClaim is an optional field that configures the required claim and value that the Kubernetes API server will use to validate if an incoming JWT is valid for this identity provider.",
 							Ref:         ref("github.com/openshift/api/config/v1.TokenRequiredClaim"),
 						},
 					},
 				},
-				Required: []string{"type", "requiredClaim"},
+				Required: []string{"type"},
 			},
 		},
 		Dependencies: []string{
@@ -19540,7 +19546,7 @@ func schema_openshift_api_config_v1_TokenIssuer(ref common.ReferenceCallback) co
 				Properties: map[string]spec.Schema{
 					"issuerURL": {
 						SchemaProps: spec.SchemaProps{
-							Description: "URL is the serving URL of the token issuer. Must use the https:// scheme.",
+							Description: "issuerURL is a required field that configures the URL used to issue tokens by the identity provider. The Kubernetes API server determines how authentication tokens should be handled by matching the 'iss' claim in the JWT to the issuerURL of configured identity providers.\n\nissuerURL must use the 'https' scheme.",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -19553,7 +19559,7 @@ func schema_openshift_api_config_v1_TokenIssuer(ref common.ReferenceCallback) co
 							},
 						},
 						SchemaProps: spec.SchemaProps{
-							Description: "audiences is an array of audiences that the token was issued for. Valid tokens must include at least one of these values in their \"aud\" claim. Must be set to exactly one value.",
+							Description: "audiences is a required field that configures the acceptable audiences the JWT token, issued by the identity provider, must be issued to. At least one of the entries must match the 'aud' claim in the JWT token.\n\naudiences must contain at least one entry and must not exceed ten entries.",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -19568,13 +19574,13 @@ func schema_openshift_api_config_v1_TokenIssuer(ref common.ReferenceCallback) co
 					},
 					"issuerCertificateAuthority": {
 						SchemaProps: spec.SchemaProps{
-							Description: "CertificateAuthority is a reference to a config map in the configuration namespace. The .data of the configMap must contain the \"ca-bundle.crt\" key. If unset, system trust is used instead.",
+							Description: "issuerCertificateAuthority is an optional field that configures the certificate authority, used by the Kubernetes API server, to validate the connection to the identity provider when fetching discovery information.\n\nWhen not specified, the system trust is used.\n\nWhen specified, it must reference a ConfigMap in the openshift-config namespace containing the PEM-encoded CA certificates under the 'ca-bundle.crt' key in the data field of the ConfigMap.",
 							Default:     map[string]interface{}{},
 							Ref:         ref("github.com/openshift/api/config/v1.ConfigMapNameReference"),
 						},
 					},
 				},
-				Required: []string{"issuerURL", "audiences", "issuerCertificateAuthority"},
+				Required: []string{"issuerURL", "audiences"},
 			},
 		},
 		Dependencies: []string{
@@ -19590,7 +19596,7 @@ func schema_openshift_api_config_v1_TokenRequiredClaim(ref common.ReferenceCallb
 				Properties: map[string]spec.Schema{
 					"claim": {
 						SchemaProps: spec.SchemaProps{
-							Description: "claim is a name of a required claim. Only claims with string values are supported.",
+							Description: "claim is a required field that configures the name of the required claim. When taken from the JWT claims, claim must be a string value.\n\nclaim must not be an empty string (\"\").",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -19598,7 +19604,7 @@ func schema_openshift_api_config_v1_TokenRequiredClaim(ref common.ReferenceCallb
 					},
 					"requiredValue": {
 						SchemaProps: spec.SchemaProps{
-							Description: "requiredValue is the required value for the claim.",
+							Description: "requiredValue is a required field that configures the value that 'claim' must have when taken from the incoming JWT claims. If the value in the JWT claims does not match, the token will be rejected for authentication.\n\nrequiredValue must not be an empty string (\"\").",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -19731,7 +19737,7 @@ func schema_openshift_api_config_v1_UsernameClaimMapping(ref common.ReferenceCal
 				Properties: map[string]spec.Schema{
 					"claim": {
 						SchemaProps: spec.SchemaProps{
-							Description: "claim is a JWT token claim to be used in the mapping",
+							Description: "claim is a required field that configures the JWT token claim whose value is assigned to the cluster identity field associated with this mapping.",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -19739,19 +19745,33 @@ func schema_openshift_api_config_v1_UsernameClaimMapping(ref common.ReferenceCal
 					},
 					"prefixPolicy": {
 						SchemaProps: spec.SchemaProps{
-							Description: "prefixPolicy specifies how a prefix should apply.\n\nBy default, claims other than `email` will be prefixed with the issuer URL to prevent naming clashes with other plugins.\n\nSet to \"NoPrefix\" to disable prefixing.\n\nExample:\n    (1) `prefix` is set to \"myoidc:\" and `claim` is set to \"username\".\n        If the JWT claim `username` contains value `userA`, the resulting\n        mapped value will be \"myoidc:userA\".\n    (2) `prefix` is set to \"myoidc:\" and `claim` is set to \"email\". If the\n        JWT `email` claim contains value \"userA@myoidc.tld\", the resulting\n        mapped value will be \"myoidc:userA@myoidc.tld\".\n    (3) `prefix` is unset, `issuerURL` is set to `https://myoidc.tld`,\n        the JWT claims include \"username\":\"userA\" and \"email\":\"userA@myoidc.tld\",\n        and `claim` is set to:\n        (a) \"username\": the mapped value will be \"https://myoidc.tld#userA\"\n        (b) \"email\": the mapped value will be \"userA@myoidc.tld\"",
+							Description: "prefixPolicy is an optional field that configures how a prefix should be applied to the value of the JWT claim specified in the 'claim' field.\n\nAllowed values are 'Prefix', 'NoPrefix', and omitted (not provided or an empty string).\n\nWhen set to 'Prefix', the value specified in the prefix field will be prepended to the value of the JWT claim. The prefix field must be set when prefixPolicy is 'Prefix'.\n\nWhen set to 'NoPrefix', no prefix will be prepended to the value of the JWT claim.\n\nWhen omitted, this means no opinion and the platform is left to choose any prefixes that are applied which is subject to change over time. Currently, the platform prepends `{issuerURL}#` to the value of the JWT claim when the claim is not 'email'. As an example, consider the following scenario:\n   `prefix` is unset, `issuerURL` is set to `https://myoidc.tld`,\n   the JWT claims include \"username\":\"userA\" and \"email\":\"userA@myoidc.tld\",\n   and `claim` is set to:\n   - \"username\": the mapped value will be \"https://myoidc.tld#userA\"\n   - \"email\": the mapped value will be \"userA@myoidc.tld\"",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
+							Enum:        []interface{}{},
 						},
 					},
 					"prefix": {
 						SchemaProps: spec.SchemaProps{
-							Ref: ref("github.com/openshift/api/config/v1.UsernamePrefix"),
+							Description: "prefix configures the prefix that should be prepended to the value of the JWT claim.\n\nprefix must be set when prefixPolicy is set to 'Prefix' and must be unset otherwise.",
+							Ref:         ref("github.com/openshift/api/config/v1.UsernamePrefix"),
 						},
 					},
 				},
-				Required: []string{"claim", "prefixPolicy", "prefix"},
+				Required: []string{"claim"},
+			},
+			VendorExtensible: spec.VendorExtensible{
+				Extensions: spec.Extensions{
+					"x-kubernetes-unions": []interface{}{
+						map[string]interface{}{
+							"discriminator": "prefixPolicy",
+							"fields-to-discriminateBy": map[string]interface{}{
+								"prefix": "Prefix",
+							},
+						},
+					},
+				},
 			},
 		},
 		Dependencies: []string{
@@ -19763,13 +19783,15 @@ func schema_openshift_api_config_v1_UsernamePrefix(ref common.ReferenceCallback)
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
-				Type: []string{"object"},
+				Description: "UsernamePrefix configures the string that should be used as a prefix for username claim mappings.",
+				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
 					"prefixString": {
 						SchemaProps: spec.SchemaProps{
-							Default: "",
-							Type:    []string{"string"},
-							Format:  "",
+							Description: "prefixString is a required field that configures the prefix that will be applied to cluster identity username attribute during the process of mapping JWT claims to cluster identity attributes.\n\nprefixString must not be an empty string (\"\").",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
 						},
 					},
 				},

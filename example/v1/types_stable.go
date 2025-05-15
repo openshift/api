@@ -115,7 +115,7 @@ type StringSet []SetValue
 type EvolvingUnion struct {
 	// type is the discriminator. It has different values for Default and for TechPreviewNoUpgrade
 	// +required
-	Type EvolvingDiscriminator `json:"type,omitempty"`
+	Type EvolvingDiscriminator `json:"type"`
 }
 
 // EvolvingDiscriminator defines the audit policy profile type.
@@ -139,7 +139,7 @@ type CELUnion struct {
 	// type determines which of the union members should be populated.
 	// +required
 	// +unionDiscriminator
-	Type CELUnionDiscriminator `json:"type,omitempty"`
+	Type CELUnionDiscriminator `json:"type"`
 
 	// requiredMember is a union member that is required.
 	// +unionMember

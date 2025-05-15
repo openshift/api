@@ -124,6 +124,7 @@ type OperatorStatus struct {
 	Version string `json:"version,omitempty"`
 
 	// readyReplicas indicates how many replicas are ready and at the desired state
+	// +optional
 	ReadyReplicas int32 `json:"readyReplicas"`
 
 	// latestAvailableRevision is the deploymentID of the most recent deployment

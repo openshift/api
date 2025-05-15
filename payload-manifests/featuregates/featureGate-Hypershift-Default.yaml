@@ -65,9 +65,6 @@
                         "name": "Example2"
                     },
                     {
-                        "name": "ExternalOIDCWithUIDAndExtraClaimMappings"
-                    },
-                    {
                         "name": "GCPClusterHostedDNS"
                     },
                     {
@@ -224,6 +221,9 @@
                     },
                     {
                         "name": "ExternalOIDC"
+                    },
+                    {
+                        "name": "ExternalOIDCWithUIDAndExtraClaimMappings"
                     },
                     {
                         "name": "GCPLabelsTags"

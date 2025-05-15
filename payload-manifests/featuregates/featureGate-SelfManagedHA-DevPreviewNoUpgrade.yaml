@@ -288,9 +288,6 @@
                         "name": "VSphereConfigurableMaxAllowedBlockVolumesPerNode"
                     },
                     {
-                        "name": "VSphereDriverConfiguration"
-                    },
-                    {
                         "name": "VSphereHostVMGroupZonal"
                     },
                     {

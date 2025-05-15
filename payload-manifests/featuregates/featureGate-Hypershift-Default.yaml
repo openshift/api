@@ -77,9 +77,6 @@
                         "name": "HighlyAvailableArbiter"
                     },
                     {
-                        "name": "ImageStreamImportMode"
-                    },
-                    {
                         "name": "IngressControllerDynamicConfigurationManager"
                     },
                     {
@@ -236,6 +233,9 @@
                     },
                     {
                         "name": "HardwareSpeed"
+                    },
+                    {
+                        "name": "ImageStreamImportMode"
                     },
                     {
                         "name": "IngressControllerLBSubnetsAWS"

@@ -1513,7 +1513,6 @@ spec:
                               - IAM
                               - ServiceUsage
                               - Storage
-                              - TagManager
                               type: string
                             url:
                               description: |-
@@ -1539,7 +1538,7 @@ spec:
                           - name
                           - url
                           type: object
-                        maxItems: 9
+                        maxItems: 8
                         type: array
                         x-kubernetes-list-map-keys:
                         - name

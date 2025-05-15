@@ -63,6 +63,17 @@ spec:
                       The audit field is optional.
                     properties:
                       profile:
+                        allOf:
+                        - enum:
+                          - none
+                          - metadata
+                          - request
+                          - requestresponse
+                        - enum:
+                          - metadata
+                          - request
+                          - requestresponse
+                          - none
                         description: |-
                           profile specifies the audit log level to use.
                           Valid values are:
@@ -70,17 +81,11 @@ spec:
                           - "request" - log metadata and request payloads
                           - "requestresponse" - log metadata, requests, and responses
                           - "none" - don't log requests
+                          The default audit log level is "metadata"
 
                           See: https://kubernetes.io/docs/tasks/debug-application-cluster/audit/#audit-policy
                           for more details about audit logging.
-                        enum:
-                        - metadata
-                        - request
-                        - requestresponse
-                        - none
                         type: string
-                    required:
-                    - profile
                     type: object
                   nodeSelector:
                     additionalProperties:
@@ -374,6 +379,7 @@ spec:
                             - Ignore: nodeAffinity/nodeSelector are ignored. All nodes are included in the calculations.
 
                             If this value is nil, the behavior is equivalent to the Honor policy.
+                            This is a beta-level feature default enabled by the NodeInclusionPolicyInPodTopologySpread feature flag.
                           type: string
                         nodeTaintsPolicy:
                           description: |-
@@ -384,6 +390,7 @@ spec:
                             - Ignore: node taints are ignored. All nodes are included.
 
                             If this value is nil, the behavior is equivalent to the Ignore policy.
+                            This is a beta-level feature default enabled by the NodeInclusionPolicyInPodTopologySpread feature flag.
                           type: string
                         topologyKey:
                           description: |-

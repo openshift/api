@@ -20,7 +20,6 @@ import (
 	v1 "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/api/resource"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	auditv1 "k8s.io/apiserver/pkg/apis/audit/v1"
 )
 
 // +genclient
@@ -173,15 +172,33 @@ type Audit struct {
 	// - "request" - log metadata and request payloads
 	// - "requestresponse" - log metadata, requests, and responses
 	// - "none" - don't log requests
+	// The default audit log level is "metadata"
 	//
 	// See: https://kubernetes.io/docs/tasks/debug-application-cluster/audit/#audit-policy
 	// for more details about audit logging.
 	//
-	// +kubebuilder:validation:Required
 	// +kubebuilder:validation:Enum=metadata;request;requestresponse;none
-	// +required
-	Profile auditv1.Level `json:"profile"`
+	// +optional
+	Profile AuditProfileType `json:"profile,omitempty"`
 }
+
+// AuditProfileType defines the audit policy profile type.
+// +kubebuilder:validation:Enum=none;metadata;request;requestresponse
+type AuditProfileType string
+
+const (
+	// None - don't log events that match this rule.
+	AuditProfileTypeNone AuditProfileType = "none"
+
+	// Metadata - log events with metadata (requesting user, timestamp, resource, verb, etc.) but not request or response body.
+	AuditProfileTypeMetadata AuditProfileType = "metadata"
+
+	// Request - log events with request metadata and body but not response body. This does not apply for non-resource requests.
+	AuditProfileTypeRequest AuditProfileType = "request"
+
+	// RequestResponse - log events with request metadata, request body and response body. This does not apply for non-resource requests.
+	AuditProfileTypeRequestResponse AuditProfileType = "requestresponse"
+)
 
 // ResourceSpec defines the requested and limited value of a resource.
 type ResourceSpec struct {

@@ -120,7 +120,7 @@ func (ClusterImagePolicyStatus) SwaggerDoc() map[string]string {
 
 var map_Audit = map[string]string{
 	"":        "Audit defines the configuration for Metrics Server audit logging.",
-	"profile": "profile specifies the audit log level to use. Valid values are: - \"metadata\" - log metadata about requests (default) - \"request\" - log metadata and request payloads - \"requestresponse\" - log metadata, requests, and responses - \"none\" - don't log requests\n\nSee: https://kubernetes.io/docs/tasks/debug-application-cluster/audit/#audit-policy for more details about audit logging.",
+	"profile": "profile specifies the audit log level to use. Valid values are: - \"metadata\" - log metadata about requests (default) - \"request\" - log metadata and request payloads - \"requestresponse\" - log metadata, requests, and responses - \"none\" - don't log requests The default audit log level is \"metadata\"\n\nSee: https://kubernetes.io/docs/tasks/debug-application-cluster/audit/#audit-policy for more details about audit logging.",
 }
 
 func (Audit) SwaggerDoc() map[string]string {

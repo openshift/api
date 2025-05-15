@@ -555,14 +555,6 @@ var (
 						enableIn(configv1.Default, configv1.DevPreviewNoUpgrade, configv1.TechPreviewNoUpgrade).
 						mustRegister()
 
-	FeatureGateVSphereDriverConfiguration = newFeatureGate("VSphereDriverConfiguration").
-						reportProblemsToJiraComponent("Storage / Kubernetes External Components").
-						contactPerson("rbednar").
-						productScope(ocpSpecific).
-						enhancementPR(legacyFeatureGateWithoutEnhancement).
-						enableIn(configv1.Default, configv1.DevPreviewNoUpgrade, configv1.TechPreviewNoUpgrade).
-						mustRegister()
-
 	FeatureGateClusterAPIInstallIBMCloud = newFeatureGate("ClusterAPIInstallIBMCloud").
 						reportProblemsToJiraComponent("Installer").
 						contactPerson("cjschaef").
@@ -814,7 +806,7 @@ var (
 					enhancementPR("https://github.com/openshift/enhancements/pull/1779").
 					enableIn(configv1.DevPreviewNoUpgrade, configv1.TechPreviewNoUpgrade).
 					mustRegister()
-					
+
 	FeatureGateAWSDedicatedHosts = newFeatureGate("AWSDedicatedHosts").
 					reportProblemsToJiraComponent("Installer").
 					contactPerson("faermanj").

@@ -301,9 +301,6 @@
                         "name": "UserNamespacesSupport"
                     },
                     {
-                        "name": "VSphereDriverConfiguration"
-                    },
-                    {
                         "name": "ValidatingAdmissionPolicy"
                     }
                 ],

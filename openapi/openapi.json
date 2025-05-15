@@ -11123,6 +11123,114 @@
         }
       }
     },
+    "com.github.openshift.api.config.v1alpha1.AlertmanagerConfig": {
+      "description": "alertmanagerConfig provides configuration options for the default Alertmanager instance that runs in the `openshift-monitoring` namespace. Use this configuration to control whether the default Alertmanager is deployed, how it logs, and how its pods are scheduled.",
+      "type": "object",
+      "required": [
+        "deploymentMode"
+      ],
+      "properties": {
+        "deployed": {
+          "description": "deployed contains configuration options for the deployed Alertmanager instance.",
+          "$ref": "#/definitions/com.github.openshift.api.config.v1alpha1.AlertmanagerDeployedConfig"
+        },
+        "deploymentMode": {
+          "description": "deploymentMode determines whether the default Alertmanager instance should be deployed as part of the monitoring stack. Allowed values are Deployed and NotDeployed. When set to Deployed, the Cluster Monitoring Operator ensures that an Alertmanager instance is created and managed in the `openshift-monitoring` namespace. When set to NotDeployed, the operator will not deploy the Alertmanager instance. Use this field if you want to explicitly opt in or out of running a platform-level Alertmanager.\n\ndeploymentMode is required.",
+          "type": "string",
+          "default": ""
+        }
+      },
+      "x-kubernetes-unions": [
+        {
+          "discriminator": "deploymentMode",
+          "fields-to-discriminateBy": {
+            "deployed": "Deployed"
+          }
+        }
+      ]
+    },
+    "com.github.openshift.api.config.v1alpha1.AlertmanagerContainerResources": {
+      "description": "AlertmanagerContainerResources defines simplified resource requirements for a container.",
+      "type": "object",
+      "properties": {
+        "cpu": {
+          "description": "cpu defines the CPU resource limits and requests. This filed is optional",
+          "$ref": "#/definitions/com.github.openshift.api.config.v1alpha1.ResourceSpec"
+        },
+        "hugepages": {
+          "description": "hugepages is a list of hugepage resource specifications by page size. defines an optional list of unique configurations identified by their `size` field. A maximum of 10 items is allowed. The list is treated as a map, using `size` as the key",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/com.github.openshift.api.config.v1alpha1.HugePageResource"
+          },
+          "x-kubernetes-list-map-keys": [
+            "size"
+          ],
+          "x-kubernetes-list-type": "map"
+        },
+        "memory": {
+          "description": "memory defines the memory resource limits and requests. This filed is optional",
+          "$ref": "#/definitions/com.github.openshift.api.config.v1alpha1.ResourceSpec"
+        }
+      }
+    },
+    "com.github.openshift.api.config.v1alpha1.AlertmanagerDeployedConfig": {
+      "description": "alertmanagerConfig provides configuration options for the default Alertmanager instance that runs in the `openshift-monitoring` namespace. Use this configuration to control whether the default Alertmanager is deployed, how it logs, and how its pods are scheduled.\n\nRequired: This field must be specified.",
+      "type": "object",
+      "properties": {
+        "logLevel": {
+          "description": "logLevel defines the verbosity of logs emitted by Alertmanager. This field allows users to control the amount and severity of logs generated, which can be useful for debugging issues or reducing noise in production environments. Allowed values are Error, Warn, Info, Debug, and omitted. When set to Error,  only errors will be logged. When set to Warn, both warnings and errors will be logged. When set to Info, general information, warnings, and errors will all be logged. When set to Debug, detailed debugging information will be logged. When omitted, this means no opinion and the platform is left to choose a default that is subject to change over time. Currently, the default is Info.",
+          "type": "string",
+          "default": ""
+        },
+        "nodeSelector": {
+          "description": "nodeSelector is the node selector applied to network diagnostics components nodeSelector is optional.\n\nWhen omitted, this means the user has no opinion and the platform is left to choose reasonable defaults. These defaults are subject to change over time.",
+          "type": "object",
+          "additionalProperties": {
+            "type": "string",
+            "default": ""
+          }
+        },
+        "resources": {
+          "description": "resources defines the compute resource requests and limits for the Alertmanager container. This includes CPU, memory and HugePages constraints to help control scheduling and resource usage. When not specified, defaults are used by the platform. Requests cannot exceed limits. This field is optional. More info: https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/ This is a simplified API that maps to Kubernetes ResourceRequirements.",
+          "$ref": "#/definitions/com.github.openshift.api.config.v1alpha1.AlertmanagerContainerResources"
+        },
+        "secrets": {
+          "description": "secrets Defines a list of secrets that need to be mounted into the Alertmanager. The secrets must reside within the same namespace as the Alertmanager object. They will be added as volumes named secret-<secret-name> and mounted at /etc/alertmanager/secrets/<secret-name> within the 'alertmanager' container of the Alertmanager Pods. This field is optional. Maximum length for this list is 10",
+          "type": "array",
+          "items": {
+            "type": "string",
+            "default": ""
+          }
+        },
+        "tolerations": {
+          "description": "tolerations is a list of tolerations applied to network diagnostics components tolerations is optional.\n\nWhen omitted, this means the user has no opinion and the platform is left to choose reasonable defaults. These defaults are subject to change over time. Maximum length for this list is 10",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/io.k8s.api.core.v1.Toleration"
+          }
+        },
+        "topologySpreadConstraints": {
+          "description": "topologySpreadConstraints defines rules for how Alertmanager Pods should be distributed across topology domains such as zones, nodes, or other user-defined labels. topologySpreadConstraints is optional. This helps improve high availability and resource efficiency by avoiding placing too many replicas in the same failure domain.\n\nWhen omitted, this means no opinion and the platform is left to choose a default, which is subject to change over time. This field maps directly to the `topologySpreadConstraints` field in the Pod spec. Maximum length for this list is 10",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/io.k8s.api.core.v1.TopologySpreadConstraint"
+          }
+        },
+        "userModeConfig": {
+          "description": "userModeConfig controls whether Alertmanager should process configurations from user-defined (non-platform) namespaces for AlertmanagerConfig lookups. Alertmanager will search for AlertmanagerConfig resources in user-defined namespaces. This field is only effective when the user workload Alertmanager instance is not enabled. If the user workload monitoring Alertmanager is enabled, this field is ignored. userMode is required. Allowed values are Selectable and None Default value is None",
+          "type": "string",
+          "default": ""
+        },
+        "volumeClaimTemplate": {
+          "description": "volumeClaimTemplate Defines persistent storage for Alertmanager. Use this setting to configure the persistent volume claim, including storage class, volume size, and name. If omitted, the Pod uses ephemeral storage and alert data will not persist across restarts. // This field is optional.",
+          "$ref": "#/definitions/io.k8s.api.core.v1.PersistentVolumeClaim"
+        }
+      }
+    },
     "com.github.openshift.api.config.v1alpha1.Backup": {
       "description": "Backup provides configuration for performing backups of the openshift cluster.\n\nCompatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.",
       "type": "object",
@@ -11366,12 +11474,14 @@
     "com.github.openshift.api.config.v1alpha1.ClusterMonitoringSpec": {
       "description": "ClusterMonitoringSpec defines the desired state of Cluster Monitoring Operator",
       "type": "object",
-      "required": [
-        "userDefined"
-      ],
       "properties": {
+        "alertmanagerConfig": {
+          "description": "alertmanagerConfig allows users to configure how the default Alertmanager instance should be deployed in the `openshift-monitoring` namespace. alertmanagerConfig is optional.",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.config.v1alpha1.AlertmanagerConfig"
+        },
         "userDefined": {
-          "description": "userDefined set the deployment mode for user-defined monitoring in addition to the default platform monitoring.",
+          "description": "userDefined set the deployment mode for user-defined monitoring in addition to the default platform monitoring. userDefined is optional.",
           "default": {},
           "$ref": "#/definitions/com.github.openshift.api.config.v1alpha1.UserDefinedMonitoring"
         }
@@ -11452,6 +11562,27 @@
         "storage": {
           "description": "storage is an optional field that allows user to define persistent storage for gathering jobs to store the Insights data archive. If omitted, the gathering job will use ephemeral storage.",
           "$ref": "#/definitions/com.github.openshift.api.config.v1alpha1.Storage"
+        }
+      }
+    },
+    "com.github.openshift.api.config.v1alpha1.HugePageResource": {
+      "description": "HugePageResource describes hugepages resources by page size (e.g. 2Mi, 1Gi).",
+      "type": "object",
+      "required": [
+        "size"
+      ],
+      "properties": {
+        "limit": {
+          "description": "limit amount for this hugepage size. This filed is optional",
+          "$ref": "#/definitions/io.k8s.apimachinery.pkg.api.resource.Quantity"
+        },
+        "request": {
+          "description": "request amount for this hugepage size. This filed is optional",
+          "$ref": "#/definitions/io.k8s.apimachinery.pkg.api.resource.Quantity"
+        },
+        "size": {
+          "description": "size of the hugepage (e.g. \"2Mi\", \"1Gi\"). This field is required.",
+          "$ref": "#/definitions/io.k8s.apimachinery.pkg.api.resource.Quantity"
         }
       }
     },
@@ -11858,6 +11989,20 @@
           "description": "rekorKeyData contains inline base64-encoded data for the PEM format from the Rekor public key. rekorKeyData must be at most 8192 characters.",
           "type": "string",
           "format": "byte"
+        }
+      }
+    },
+    "com.github.openshift.api.config.v1alpha1.ResourceSpec": {
+      "description": "ResourceSpec defines the requested and limited value of a resource.",
+      "type": "object",
+      "properties": {
+        "limit": {
+          "description": "limit is the maximum amount of the resource allowed (e.g. \"2Mi\", \"1Gi\"). This field is optional.",
+          "$ref": "#/definitions/io.k8s.apimachinery.pkg.api.resource.Quantity"
+        },
+        "request": {
+          "description": "request is the minimum amount of the resource required (e.g. \"2Mi\", \"1Gi\"). This field is optional.",
+          "$ref": "#/definitions/io.k8s.apimachinery.pkg.api.resource.Quantity"
         }
       }
     },

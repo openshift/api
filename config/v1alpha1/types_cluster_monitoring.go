@@ -168,7 +168,6 @@ type AlertmanagerDeployedConfig struct {
 	//
 	// When omitted, this means the user has no opinion and the platform is left
 	// to choose reasonable defaults. These defaults are subject to change over time.
-	// The current default is `kubernetes.io/os: linux` so that Pods can be scheduled onto any available node.
 	// +optional
 	NodeSelector map[string]string `json:"nodeSelector,omitempty"`
 	// resources defines the compute resource requests and limits for the Alertmanager container.

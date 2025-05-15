@@ -196,7 +196,7 @@ func (ClusterMonitoringStatus) SwaggerDoc() map[string]string {
 
 var map_HugePageResource = map[string]string{
 	"":        "HugePageResource describes hugepages resources by page size (e.g. 2Mi, 1Gi).",
-	"size":    "size of the hugepage (e.g. \"2Mi\", \"1Gi\"). This filed is optional",
+	"size":    "size of the hugepage (e.g. \"2Mi\", \"1Gi\"). This field is required.",
 	"request": "request amount for this hugepage size. This filed is optional",
 	"limit":   "limit amount for this hugepage size. This filed is optional",
 }

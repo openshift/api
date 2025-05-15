@@ -11568,6 +11568,9 @@
     "com.github.openshift.api.config.v1alpha1.HugePageResource": {
       "description": "HugePageResource describes hugepages resources by page size (e.g. 2Mi, 1Gi).",
       "type": "object",
+      "required": [
+        "size"
+      ],
       "properties": {
         "limit": {
           "description": "limit amount for this hugepage size. This filed is optional",
@@ -11578,7 +11581,7 @@
           "$ref": "#/definitions/io.k8s.apimachinery.pkg.api.resource.Quantity"
         },
         "size": {
-          "description": "size of the hugepage (e.g. \"2Mi\", \"1Gi\"). This filed is optional",
+          "description": "size of the hugepage (e.g. \"2Mi\", \"1Gi\"). This field is required.",
           "$ref": "#/definitions/io.k8s.apimachinery.pkg.api.resource.Quantity"
         }
       }

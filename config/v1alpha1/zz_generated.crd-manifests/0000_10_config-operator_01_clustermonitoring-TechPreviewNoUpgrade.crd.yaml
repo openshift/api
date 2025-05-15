@@ -155,9 +155,11 @@ spec:
                                   - type: string
                                   description: |-
                                     size of the hugepage (e.g. "2Mi", "1Gi").
-                                    This filed is optional
+                                    This field is required.
                                   pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
                                   x-kubernetes-int-or-string: true
+                              required:
+                              - size
                               type: object
                             maxItems: 10
                             type: array

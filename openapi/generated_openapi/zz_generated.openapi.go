@@ -21267,7 +21267,7 @@ func schema_openshift_api_config_v1alpha1_HugePageResource(ref common.ReferenceC
 				Properties: map[string]spec.Schema{
 					"size": {
 						SchemaProps: spec.SchemaProps{
-							Description: "size of the hugepage (e.g. \"2Mi\", \"1Gi\"). This filed is optional",
+							Description: "size of the hugepage (e.g. \"2Mi\", \"1Gi\"). This field is required.",
 							Ref:         ref("k8s.io/apimachinery/pkg/api/resource.Quantity"),
 						},
 					},
@@ -21284,6 +21284,7 @@ func schema_openshift_api_config_v1alpha1_HugePageResource(ref common.ReferenceC
 						},
 					},
 				},
+				Required: []string{"size"},
 			},
 		},
 		Dependencies: []string{

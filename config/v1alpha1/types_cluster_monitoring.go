@@ -313,9 +313,9 @@ type AlertmanagerContainerResources struct {
 // HugePageResource describes hugepages resources by page size (e.g. 2Mi, 1Gi).
 type HugePageResource struct {
 	// size of the hugepage (e.g. "2Mi", "1Gi").
-	// This filed is optional
-	// +optional
-	Size resource.Quantity `json:"size,omitempty"`
+	// This field is required.
+	// +required
+	Size resource.Quantity `json:"size"`
 
 	// request amount for this hugepage size.
 	// This filed is optional

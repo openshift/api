@@ -134,6 +134,9 @@
                         "name": "NewOLMPreflightPermissionChecks"
                     },
                     {
+                        "name": "NewOLMWebhookProviderOpenshiftServiceCA"
+                    },
+                    {
                         "name": "NodeSwap"
                     },
                     {

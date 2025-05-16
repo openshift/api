@@ -40,6 +40,9 @@
                         "name": "NewOLMPreflightPermissionChecks"
                     },
                     {
+                        "name": "NewOLMWebhookProviderOpenshiftServiceCA"
+                    },
+                    {
                         "name": "ShortCertRotation"
                     }
                 ],

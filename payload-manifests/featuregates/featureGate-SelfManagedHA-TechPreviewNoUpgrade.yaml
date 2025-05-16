@@ -222,6 +222,9 @@
                         "name": "NewOLMPreflightPermissionChecks"
                     },
                     {
+                        "name": "NewOLMWebhookProviderOpenshiftServiceCA"
+                    },
+                    {
                         "name": "NodeDisruptionPolicy"
                     },
                     {

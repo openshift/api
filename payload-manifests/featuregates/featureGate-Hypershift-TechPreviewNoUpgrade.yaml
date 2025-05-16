@@ -56,9 +56,6 @@
                     },
                     {
                         "name": "ShortCertRotation"
-                    },
-                    {
-                        "name": "SigstoreImageVerificationPKI"
                     }
                 ],
                 "enabled": [
@@ -271,6 +268,9 @@
                     },
                     {
                         "name": "SigstoreImageVerification"
+                    },
+                    {
+                        "name": "SigstoreImageVerificationPKI"
                     },
                     {
                         "name": "TranslateStreamCloseWebsocketRequests"

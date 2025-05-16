@@ -219,14 +219,14 @@ spec:
                             type: string
                         type: object
                         x-kubernetes-validations:
-                        - message: requiredClaim must be set when type is 'RequiredClaim',
-                            and forbidden otherwise
-                          rule: 'has(self.type) && self.type == ''RequiredClaim''
-                            ? has(self.requiredClaim) : !has(self.requiredClaim)'
                         - message: expressionRule must be set when type is 'Expression',
                             and forbidden otherwise
                           rule: 'has(self.type) && self.type == ''Expression'' ? has(self.expressionRule)
                             : !has(self.expressionRule)'
+                        - message: requiredClaim must be set when type is 'RequiredClaim',
+                            and forbidden otherwise
+                          rule: 'has(self.type) && self.type == ''RequiredClaim''
+                            ? has(self.requiredClaim) : !has(self.requiredClaim)'
                       type: array
                       x-kubernetes-list-type: atomic
                     issuer:
@@ -275,12 +275,11 @@ spec:
                             rule: 'self.size() > 0 ? (isURL(self) && url(self).getScheme()
                               == ''https'') : true'
                           - message: discoveryURL must not contain query parameters
-                            rule: 'self.size() > 0 ? self.find(''?'') == null : true'
+                            rule: self.matches('^[^?]*$')
+                          - message: discoveryURL must not contain fragments
+                            rule: self.matches('^[^#]*$')
                           - message: discoveryURL must not contain user info
-                            rule: 'self.size() > 0 ? self.find(''://'') != null &&
-                              self.find(''@'') == null : true'
-                          - message: discoveryURL must not contain fragment
-                            rule: 'self.size() > 0 ? self.find(''#'') == null : true'
+                            rule: self.matches('^[^@]*$')
                         issuerCertificateAuthority:
                           description: |-
                             CertificateAuthority is a reference to a config map in the

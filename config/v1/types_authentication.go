@@ -251,7 +251,6 @@ type OIDCProvider struct {
 	// +optional
 
 	//+listType=atomic
-	// +openshift:enable:FeatureGate=ExternalOIDCWithNewAuthConfigFields
 	UserValidationRules []TokenUserValidationRule `json:"userValidationRules,omitempty"`
 }
 
@@ -314,13 +313,13 @@ type TokenIssuer struct {
 	//   - Be different from the value of `url` (ignoring trailing slashes)
 	//
 	// +optional
+	// +openshift:enable:FeatureGate=ExternalOIDCWithNewAuthConfigFields
 	// +kubebuilder:validation:XValidation:rule="self.size() > 0 ? isURL(self) : true",message="discoveryURL must be a valid URL"
 	// +kubebuilder:validation:XValidation:rule="self.size() > 0 ? (isURL(self) && url(self).getScheme() == 'https') : true",message="discoveryURL must be a valid https URL"
-	// +kubebuilder:validation:XValidation:rule="self.size() > 0 ? self.find('?') == null : true",message="discoveryURL must not contain query parameters"
-	// +kubebuilder:validation:XValidation:rule="self.size() > 0 ? self.find('://') != null && self.find('@') == null : true",message="discoveryURL must not contain user info"
-	// +kubebuilder:validation:XValidation:rule="self.size() > 0 ? self.find('#') == null : true",message="discoveryURL must not contain fragment"
+	// +kubebuilder:validation:XValidation:rule="self.matches('^[^?]*$')",message="discoveryURL must not contain query parameters"
+	// +kubebuilder:validation:XValidation:rule="self.matches('^[^#]*$')",message="discoveryURL must not contain fragments"
+	// +kubebuilder:validation:XValidation:rule="self.matches('^[^@]*$')",message="discoveryURL must not contain user info"
 	// +kubebuilder:validation:MaxLength=2048
-	// +openshift:enable:FeatureGate=ExternalOIDCWithNewAuthConfigFields
 	DiscoveryURL string `json:"discoveryURL,omitempty"`
 
 	// audienceMatchPolicy specifies how token audiences are matched.
@@ -782,7 +781,7 @@ const (
 // If type is Expression, expressionRule must be set.
 //
 // +kubebuilder:validation:XValidation:rule="has(self.type) && self.type == 'RequiredClaim' ? has(self.requiredClaim) : !has(self.requiredClaim)",message="requiredClaim must be set when type is 'RequiredClaim', and forbidden otherwise"
-// +kubebuilder:validation:XValidation:rule="has(self.type) && self.type == 'Expression' ? has(self.expressionRule) : !has(self.expressionRule)",message="expressionRule must be set when type is 'Expression', and forbidden otherwise"
+// +openshift:validation:FeatureGateAwareXValidation:featureGate=ExternalOIDCWithNewAuthConfigFields,rule="has(self.type) && self.type == 'Expression' ? has(self.expressionRule) : !has(self.expressionRule)",message="expressionRule must be set when type is 'Expression', and forbidden otherwise"
 
 type TokenClaimValidationRule struct {
 	// type is an optional field that configures the type of the validation rule.
@@ -831,6 +830,7 @@ type TokenRequiredClaim struct {
 	RequiredValue string `json:"requiredValue"`
 }
 
+// +openshift:enable:FeatureGate=ExternalOIDCWithNewAuthConfigFields
 type TokenExpressionRule struct {
 	// Expression is a CEL expression evaluated against token claims.
 	// The expression must be a non-empty string and no longer than 4096 characters.
@@ -856,6 +856,7 @@ type TokenExpressionRule struct {
 // If the expression evaluates to false, the token is rejected.
 // See https://kubernetes.io/docs/reference/using-api/cel/ for CEL syntax.
 // At least one rule must evaluate to true for the token to be considered valid.
+// +openshift:enable:FeatureGate=ExternalOIDCWithNewAuthConfigFields
 type TokenUserValidationRule struct {
 	// Expression is a CEL expression that must evaluate
 	// to true for the token to be accepted. The expression is evaluated against the token's

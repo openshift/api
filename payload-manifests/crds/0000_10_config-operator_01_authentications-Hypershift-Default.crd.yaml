@@ -198,10 +198,6 @@ spec:
                             and forbidden otherwise
                           rule: 'has(self.type) && self.type == ''RequiredClaim''
                             ? has(self.requiredClaim) : !has(self.requiredClaim)'
-                        - message: expressionRule must be set when type is 'Expression',
-                            and forbidden otherwise
-                          rule: 'has(self.type) && self.type == ''Expression'' ? has(self.expressionRule)
-                            : !has(self.expressionRule)'
                       type: array
                       x-kubernetes-list-type: atomic
                     issuer:
@@ -303,6 +299,34 @@ spec:
                       - componentNamespace
                       - componentName
                       x-kubernetes-list-type: map
+                    userValidationRules:
+                      items:
+                        description: |-
+                          TokenUserValidationRule provides a CEL-based rule used to validate a token subject.
+                          Each rule contains a CEL expression that is evaluated against the token’s claims.
+                          If the expression evaluates to false, the token is rejected.
+                          See https://kubernetes.io/docs/reference/using-api/cel/ for CEL syntax.
+                          At least one rule must evaluate to true for the token to be considered valid.
+                        properties:
+                          expression:
+                            description: |-
+                              Expression is a CEL expression that must evaluate
+                              to true for the token to be accepted. The expression is evaluated against the token's
+                              user information (e.g., username, groups). This field must be non-empty and may not
+                              exceed 4096 characters.
+                            maxLength: 4096
+                            minLength: 1
+                            type: string
+                          message:
+                            description: |-
+                              Message is an optional, human-readable message returned by the API server when
+                              this validation rule fails. It can help clarify why a token was rejected.
+                            type: string
+                        required:
+                        - expression
+                        type: object
+                      type: array
+                      x-kubernetes-list-type: atomic
                   required:
                   - issuer
                   - name

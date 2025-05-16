@@ -69,6 +69,9 @@
                         "name": "CPMSMachineNamePrefix"
                     },
                     {
+                        "name": "CSIVolumeHealth"
+                    },
+                    {
                         "name": "ChunkSizeMiB"
                     },
                     {
@@ -130,6 +133,9 @@
                     },
                     {
                         "name": "HighlyAvailableArbiter"
+                    },
+                    {
+                        "name": "HonorPVReclaimPolicy"
                     },
                     {
                         "name": "ImageStreamImportMode"
@@ -256,6 +262,9 @@
                     },
                     {
                         "name": "SELinuxMount"
+                    },
+                    {
+                        "name": "SELinuxMountReadWriteOncePod"
                     },
                     {
                         "name": "ServiceAccountTokenNodeBinding"

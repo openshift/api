@@ -814,4 +814,28 @@ var (
 					enhancementPR("https://github.com/openshift/enhancements/pull/1781").
 					enableIn(configv1.DevPreviewNoUpgrade, configv1.TechPreviewNoUpgrade).
 					mustRegister()
+
+	FeatureGateSELinuxMountReadWriteOncePod = newFeatureGate("SELinuxMountReadWriteOncePod").
+						reportProblemsToJiraComponent("Storage / Kubernetes External Components").
+						contactPerson("jsafrane").
+						productScope(kubernetes).
+						enhancementPR("https://github.com/kubernetes/enhancements/issues/1710").
+						enableIn(configv1.Default, configv1.DevPreviewNoUpgrade, configv1.TechPreviewNoUpgrade).
+						mustRegister()
+
+	FeatureGateHonorPVReclaimPolicy = newFeatureGate("HonorPVReclaimPolicy").
+					reportProblemsToJiraComponent("Storage / Kubernetes External Components").
+					contactPerson("jsafrane").
+					productScope(kubernetes).
+					enhancementPR("https://github.com/kubernetes/enhancements/issues/2644").
+					enableIn(configv1.Default, configv1.DevPreviewNoUpgrade, configv1.TechPreviewNoUpgrade).
+					mustRegister()
+
+	FeatureGateCSIVolumeHealth = newFeatureGate("CSIVolumeHealth").
+					reportProblemsToJiraComponent("Storage / Kubernetes External Components").
+					contactPerson("jsafrane").
+					productScope(kubernetes).
+					enhancementPR("https://github.com/kubernetes/enhancements/issues/1432").
+					enableIn(configv1.DevPreviewNoUpgrade).
+					mustRegister()
 )

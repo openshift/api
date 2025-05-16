@@ -29,6 +29,9 @@
                         "name": "BootcNodeManagement"
                     },
                     {
+                        "name": "CSIVolumeHealth"
+                    },
+                    {
                         "name": "ClusterAPIInstall"
                     },
                     {
@@ -238,6 +241,9 @@
                         "name": "HardwareSpeed"
                     },
                     {
+                        "name": "HonorPVReclaimPolicy"
+                    },
+                    {
                         "name": "IngressControllerLBSubnetsAWS"
                     },
                     {
@@ -287,6 +293,9 @@
                     },
                     {
                         "name": "RouteExternalCertificate"
+                    },
+                    {
+                        "name": "SELinuxMountReadWriteOncePod"
                     },
                     {
                         "name": "ServiceAccountTokenNodeBinding"

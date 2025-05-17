@@ -16,6 +16,9 @@
             {
                 "disabled": [
                     {
+                        "name": "CSIVolumeHealth"
+                    },
+                    {
                         "name": "ClusterAPIInstall"
                     },
                     {
@@ -156,6 +159,9 @@
                         "name": "HighlyAvailableArbiter"
                     },
                     {
+                        "name": "HonorPVReclaimPolicy"
+                    },
+                    {
                         "name": "ImageStreamImportMode"
                     },
                     {
@@ -262,6 +268,9 @@
                     },
                     {
                         "name": "RouteExternalCertificate"
+                    },
+                    {
+                        "name": "SELinuxMountReadWriteOncePod"
                     },
                     {
                         "name": "ServiceAccountTokenNodeBinding"

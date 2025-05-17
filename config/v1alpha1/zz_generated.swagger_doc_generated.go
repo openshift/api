@@ -118,6 +118,15 @@ func (ClusterImagePolicyStatus) SwaggerDoc() map[string]string {
 	return map_ClusterImagePolicyStatus
 }
 
+var map_Audit = map[string]string{
+	"":        "Audit defines the configuration for Metrics Server audit logging.",
+	"profile": "profile specifies the audit log level to use. Valid values are: - \"metadata\" - log metadata about requests (default) - \"request\" - log metadata and request payloads - \"requestresponse\" - log metadata, requests, and responses - \"none\" - don't log requests The default audit log level is \"metadata\"\n\nSee: https://kubernetes.io/docs/tasks/debug-application-cluster/audit/#audit-policy for more details about audit logging.",
+}
+
+func (Audit) SwaggerDoc() map[string]string {
+	return map_Audit
+}
+
 var map_ClusterMonitoring = map[string]string{
 	"":         "ClusterMonitoring is the Custom Resource object which holds the current status of Cluster Monitoring Operator. CMO is a central component of the monitoring stack.\n\nCompatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support. ClusterMonitoring is the Schema for the Cluster Monitoring Operators API",
 	"metadata": "metadata is the standard object metadata.",
@@ -140,8 +149,9 @@ func (ClusterMonitoringList) SwaggerDoc() map[string]string {
 }
 
 var map_ClusterMonitoringSpec = map[string]string{
-	"":            "ClusterMonitoringSpec defines the desired state of Cluster Monitoring Operator",
-	"userDefined": "userDefined set the deployment mode for user-defined monitoring in addition to the default platform monitoring.",
+	"":              "ClusterMonitoringSpec defines the desired state of Cluster Monitoring Operator",
+	"userDefined":   "userDefined set the deployment mode for user-defined monitoring in addition to the default platform monitoring.",
+	"metricsServer": "metricsServer defines the configuration for the Metrics Server component. The Metrics Server provides container resource metrics for use in autoscaling pipelines. When omitted, this means no opinion and the platform is left to choose a default, which is subject to change over time.",
 }
 
 func (ClusterMonitoringSpec) SwaggerDoc() map[string]string {
@@ -154,6 +164,51 @@ var map_ClusterMonitoringStatus = map[string]string{
 
 func (ClusterMonitoringStatus) SwaggerDoc() map[string]string {
 	return map_ClusterMonitoringStatus
+}
+
+var map_HugePageResource = map[string]string{
+	"":        "HugePageResource describes hugepages resources by page size (e.g. 2Mi, 1Gi).",
+	"size":    "size of the hugepage (e.g. \"2Mi\", \"1Gi\"). This field is required.",
+	"request": "request amount for this hugepage size. This filed is optional",
+	"limit":   "limit amount for this hugepage size. This filed is optional",
+}
+
+func (HugePageResource) SwaggerDoc() map[string]string {
+	return map_HugePageResource
+}
+
+var map_MetricServerConfigContainerResources = map[string]string{
+	"":          "MetricServerConfigContainerResources defines simplified resource requirements for a container.",
+	"cpu":       "cpu defines the CPU resource limits and requests. This filed is optional",
+	"memory":    "memory defines the memory resource limits and requests. This filed is optional",
+	"hugepages": "hugepages is a list of hugepage resource specifications by page size. defines an optional list of unique configurations identified by their `size` field. A maximum of 10 items is allowed. The list is treated as a map, using `size` as the key",
+}
+
+func (MetricServerConfigContainerResources) SwaggerDoc() map[string]string {
+	return map_MetricServerConfigContainerResources
+}
+
+var map_MetricsServerConfig = map[string]string{
+	"":                          "The MetricsServerConfig resource defines settings for the Metrics Server component. This configuration allows users to customize how the Metrics Server is deployed and how it operates within the cluster.",
+	"audit":                     "audit defines the audit configuration used by the Metrics Server instance. When omitted, this means no opinion and the platform is left to choose a default, which is subject to change over time. The current default is \"metadata\". The audit field is optional.",
+	"nodeSelector":              "nodeSelector is the node selector applied to metrics server pods. nodeSelector is optional.\n\nWhen omitted, this means the user has no opinion and the platform is left to choose reasonable defaults. These defaults are subject to change over time. The current default is `kubernetes.io/os: linux` so that Pods can be scheduled onto any available node.",
+	"tolerations":               "tolerations is a list of tolerations applied to metrics server components tolerations is optional.\n\nWhen omitted, this means the user has no opinion and the platform is left to choose reasonable defaults. These defaults are subject to change over time. Maximum length for this list is 10",
+	"resources":                 "resources defines the compute resource requests and limits for the Metrics Server container. This includes CPU, memory and HugePages constraints to help control scheduling and resource usage. When not specified, defaults are used by the platform. Requests cannot exceed limits. Resources is optional. More info: https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/ This is a simplified API that maps to Kubernetes ResourceRequirements.",
+	"topologySpreadConstraints": "topologySpreadConstraints defines rules for how Metrics Server Pods should be distributed across topology domains such as zones, nodes, or other user-defined labels. topologySpreadConstraints is optional. This helps improve high availability and resource efficiency by avoiding placing too many replicas in the same failure domain.\n\nWhen omitted, this means no opinion and the platform is left to choose a default, which is subject to change over time. This field maps directly to the `topologySpreadConstraints` field in the Pod spec. Maximum length for this list is 10",
+}
+
+func (MetricsServerConfig) SwaggerDoc() map[string]string {
+	return map_MetricsServerConfig
+}
+
+var map_ResourceSpec = map[string]string{
+	"":        "ResourceSpec defines the requested and limited value of a resource.",
+	"request": "request is the minimum amount of the resource required (e.g. \"2Mi\", \"1Gi\"). This field is optional.",
+	"limit":   "limit is the maximum amount of the resource allowed (e.g. \"2Mi\", \"1Gi\"). This field is optional.",
+}
+
+func (ResourceSpec) SwaggerDoc() map[string]string {
+	return map_ResourceSpec
 }
 
 var map_UserDefinedMonitoring = map[string]string{

@@ -62,6 +62,9 @@
                     },
                     {
                         "name": "SigstoreImageVerificationPKI"
+                    },
+                    {
+                        "name": "VSphereMixedNodeEnv"
                     }
                 ],
                 "enabled": [

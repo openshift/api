@@ -286,7 +286,6 @@ type FailureDomains struct {
 	VSphere []VSphereFailureDomain `json:"vsphere,omitempty"`
 
 	// openstack configures failure domain information for the OpenStack platform.
-	// +optional
 	//
 	// + ---
 	// + Unlike other platforms, OpenStack failure domains can be empty.

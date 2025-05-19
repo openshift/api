@@ -185,6 +185,9 @@
                         "name": "VSphereHostVMGroupZonal"
                     },
                     {
+                        "name": "VSphereMixedNodeEnv"
+                    },
+                    {
                         "name": "VSphereMultiDisk"
                     },
                     {

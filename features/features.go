@@ -822,4 +822,12 @@ var (
 					enhancementPR("https://github.com/openshift/enhancements/pull/1781").
 					enableIn(configv1.DevPreviewNoUpgrade, configv1.TechPreviewNoUpgrade).
 					mustRegister()
+
+	FeatureGateVSphereMixedNodeEnv = newFeatureGate("VSphereMixedNodeEnv").
+					reportProblemsToJiraComponent("splat").
+					contactPerson("vr4manta").
+					productScope(ocpSpecific).
+					enhancementPR("https://github.com/openshift/enhancements/pull/1772").
+					enableIn(configv1.DevPreviewNoUpgrade).
+					mustRegister()
 )

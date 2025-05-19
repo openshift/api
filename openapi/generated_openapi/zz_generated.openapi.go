@@ -21650,7 +21650,7 @@ func schema_openshift_api_config_v1alpha1_PolicyRootOfTrust(ref common.Reference
 				Properties: map[string]spec.Schema{
 					"policyType": {
 						SchemaProps: spec.SchemaProps{
-							Description: "policyType serves as the union's discriminator. Users are required to assign a value to this field, choosing one of the policy types that define the root of trust. \"PublicKey\" indicates that the policy relies on a sigstore publicKey and may optionally use a Rekor verification. \"FulcioCAWithRekor\" indicates that the policy is based on the Fulcio certification and incorporates a Rekor verification. \"PKI\" is a DevPreview feature that indicates that the policy is based on the certificates from Bring Your Own Public Key Infrastructure (BYOPKI). This value is enabled by turning on the SigstoreImageVerificationPKI feature gate.",
+							Description: "policyType serves as the union's discriminator. Users are required to assign a value to this field, choosing one of the policy types that define the root of trust. \"PublicKey\" indicates that the policy relies on a sigstore publicKey and may optionally use a Rekor verification. \"FulcioCAWithRekor\" indicates that the policy is based on the Fulcio certification and incorporates a Rekor verification. \"PKI\" indicates that the policy is based on the certificates from Bring Your Own Public Key Infrastructure (BYOPKI). This value is enabled by turning on the SigstoreImageVerificationPKI feature gate.",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",

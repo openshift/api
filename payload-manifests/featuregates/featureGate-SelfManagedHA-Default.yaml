@@ -256,9 +256,6 @@
                         "name": "MultiArchInstallAWS"
                     },
                     {
-                        "name": "MultiArchInstallGCP"
-                    },
-                    {
                         "name": "NetworkDiagnosticsConfig"
                     },
                     {

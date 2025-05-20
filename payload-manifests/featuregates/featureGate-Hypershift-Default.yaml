@@ -155,9 +155,6 @@
                         "name": "RouteAdvertisements"
                     },
                     {
-                        "name": "SELinuxChangePolicy"
-                    },
-                    {
                         "name": "SELinuxMount"
                     },
                     {

@@ -37,9 +37,6 @@
                         "name": "MultiArchInstallAzure"
                     },
                     {
-                        "name": "SELinuxChangePolicy"
-                    },
-                    {
                         "name": "SELinuxMount"
                     },
                     {

@@ -240,9 +240,6 @@
                         "name": "PinnedImages"
                     },
                     {
-                        "name": "PlatformOperators"
-                    },
-                    {
                         "name": "PrivateHostedZoneAWS"
                     },
                     {

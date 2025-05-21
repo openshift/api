@@ -728,6 +728,14 @@ var (
 					enableIn(configv1.DevPreviewNoUpgrade).
 					mustRegister()
 
+	_ = newFeatureGate("TestOCAdminUpgradeTechPreview").
+		reportProblemsToJiraComponent("oc / update").
+		contactPerson("wking").
+		productScope(ocpSpecific).
+		enhancementPR(legacyFeatureGateWithoutEnhancement).
+		enableIn(configv1.Default, configv1.DevPreviewNoUpgrade, configv1.TechPreviewNoUpgrade).
+		mustRegister()
+
 	FeatureGateGCPCustomAPIEndpoints = newFeatureGate("GCPCustomAPIEndpoints").
 						reportProblemsToJiraComponent("Installer").
 						contactPerson("barbacbd").

@@ -46,9 +46,6 @@
                         "name": "ShortCertRotation"
                     },
                     {
-                        "name": "SigstoreImageVerificationPKI"
-                    },
-                    {
                         "name": "VSphereMixedNodeEnv"
                     }
                 ],
@@ -274,6 +271,9 @@
                     },
                     {
                         "name": "SigstoreImageVerification"
+                    },
+                    {
+                        "name": "SigstoreImageVerificationPKI"
                     },
                     {
                         "name": "TranslateStreamCloseWebsocketRequests"

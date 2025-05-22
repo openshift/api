@@ -807,6 +807,35 @@ spec:
                   and conditions fields may represent a previous version.
                 format: int64
                 type: integer
+              relatedObjects:
+                description: |-
+                  relatedObjects is a list of objects that are "interesting" or related to this operator.
+                  `oc adm inspect` honors this field in any type to navigate and collect related data.
+                  Common uses are:
+                  1. operator namespaces
+                  2. operand namespaces
+                items:
+                  description: ObjectReference contains enough information to let
+                    you inspect or modify the referred object.
+                  properties:
+                    group:
+                      description: group of the referent.
+                      type: string
+                    name:
+                      description: name of the referent.
+                      type: string
+                    namespace:
+                      description: namespace of the referent.
+                      type: string
+                    resource:
+                      description: resource of the referent.
+                      type: string
+                  required:
+                  - group
+                  - name
+                  - resource
+                  type: object
+                type: array
               versionHash:
                 description: |-
                   versionHash is a fingerprint of the content that the cluster will be

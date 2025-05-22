@@ -10919,6 +10919,17 @@ func schema_openshift_api_config_v1_ClusterVersionStatus(ref common.ReferenceCal
 						},
 					},
 					"relatedObjects": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-map-keys": []interface{}{
+									"group",
+									"resource",
+									"namespace",
+									"name",
+								},
+								"x-kubernetes-list-type": "map",
+							},
+						},
 						SchemaProps: spec.SchemaProps{
 							Description: "relatedObjects is a list of objects that are \"interesting\" or related to this operator. `oc adm inspect` honors this field in any type to navigate and collect related data. Common uses are: 1. operator namespaces 2. operand namespaces",
 							Type:        []string{"array"},

@@ -249,9 +249,6 @@
                         "name": "PlatformOperators"
                     },
                     {
-                        "name": "PrivateHostedZoneAWS"
-                    },
-                    {
                         "name": "ProcMountType"
                     },
                     {

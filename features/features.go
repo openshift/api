@@ -603,14 +603,6 @@ var (
 						enableIn(configv1.DevPreviewNoUpgrade, configv1.TechPreviewNoUpgrade).
 						mustRegister()
 
-	FeatureGateMultiArchInstallAWS = newFeatureGate("MultiArchInstallAWS").
-					reportProblemsToJiraComponent("Installer").
-					contactPerson("r4f4").
-					productScope(ocpSpecific).
-					enhancementPR(legacyFeatureGateWithoutEnhancement).
-					enableIn(configv1.Default, configv1.DevPreviewNoUpgrade, configv1.TechPreviewNoUpgrade).
-					mustRegister()
-
 	FeatureGateMultiArchInstallAzure = newFeatureGate("MultiArchInstallAzure").
 						reportProblemsToJiraComponent("Installer").
 						contactPerson("r4f4").

@@ -186,9 +186,6 @@
                         "name": "MixedCPUsAllocation"
                     },
                     {
-                        "name": "MultiArchInstallAWS"
-                    },
-                    {
                         "name": "NetworkDiagnosticsConfig"
                     },
                     {

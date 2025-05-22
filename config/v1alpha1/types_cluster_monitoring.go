@@ -77,6 +77,7 @@ type ClusterMonitoringList struct {
 type ClusterMonitoringSpec struct {
 	// userDefined set the deployment mode for user-defined monitoring in addition to the default platform monitoring.
 	// userDefined is optional.
+	// When omitted, default value is `false`, that is subject to change over time.
 	// +optional
 	UserDefined UserDefinedMonitoring `json:"userDefined"`
 	// alertmanagerConfig allows users to configure how the default Alertmanager instance
@@ -122,14 +123,14 @@ type AlertmanagerConfig struct {
 	// ensures that an Alertmanager instance is created and managed in the `openshift-monitoring` namespace.
 	// When set to NotDeployed, the operator will not deploy the Alertmanager instance.
 	// Use this field if you want to explicitly opt in or out of running a platform-level Alertmanager.
+	// When set to empty string, the platform will choose a default that is subject to change over time.
 	//
-	// deploymentMode is required.
 	// +unionDiscriminator
-	// +kubebuilder:validation:Enum=Deployed;NotDeployed
-	// +required
+	// +kubebuilder:validation:Enum="";Deployed;NotDeployed
+	// +optional
 	DeploymentMode string `json:"deploymentMode"`
 
-	// deployed contains configuration options for the deployed Alertmanager instance.
+	// deployed must be set when deploymentMode is Deployed, and must be unset otherwise
 	// +optional
 	Deployed *AlertmanagerDeployedConfig `json:"deployed,omitempty"`
 }
@@ -146,9 +147,9 @@ type AlertmanagerDeployedConfig struct {
 	// This field is only effective when the user workload Alertmanager instance is not enabled.
 	// If the user workload monitoring Alertmanager is enabled, this field is ignored.
 	// userMode is required.
-	// Allowed values are Selectable and None
-	// Default value is None
-	// +kubebuilder:validation:Enum="";Selectable;None
+	// Allowed values are Selectable
+	// Default value is empty string
+	// +kubebuilder:validation:Enum="";Selectable
 	// +optional
 	UserModeConfig UserAlertManagerModeConfig `json:"userModeConfig"`
 	// logLevel defines the verbosity of logs emitted by Alertmanager.
@@ -183,6 +184,13 @@ type AlertmanagerDeployedConfig struct {
 	// They will be added as volumes named secret-<secret-name> and mounted at
 	// /etc/alertmanager/secrets/<secret-name> within the 'alertmanager' container of
 	// the Alertmanager Pods.
+	//
+	// These secrets can be used to authenticate Alertmanager with endpoint receivers.
+	// For example, you can use secrets to:
+	// - Provide certificates for TLS authentication with receivers that require private CA certificates
+	// - Store credentials for Basic HTTP authentication with receivers that require password-based auth
+	// - Store any other authentication credentials needed by your alert receivers
+	//
 	// This field is optional.
 	// Maximum length for this list is 10
 	// +optional
@@ -244,16 +252,12 @@ const (
 //
 // Possible values:
 // - "Selectable": User-defined namespaces can be selected for AlertmanagerConfig lookups.
-// - "None": User-defined namespaces cannot be selected for AlertmanagerConfig lookups.
 type UserAlertManagerModeConfig string
 
 const (
 	// UserAlertmanagerEnabled enables user-defined namespaces to be selected for `AlertmanagerConfig` lookups. This setting only
 	// applies if the user workload monitoring instance of Alertmanager is not enabled.
 	UserAlertManagerModeSelectable UserAlertManagerModeConfig = "Selectable"
-	// UserAlertManagerDisabled disables user-defined namespaces to be selected for `AlertmanagerConfig` lookups. This setting only
-	// applies if the user workload monitoring instance of Alertmanager is not enabled.
-	UserAlertManagerModeNone UserAlertManagerModeConfig = "None"
 )
 
 // logLevel defines the verbosity of logs emitted by Alertmanager.
@@ -273,8 +277,21 @@ const (
 	LogLevelDebug LogLevel = "Debug"
 )
 
-// ResourceSpec defines the requested and limited value of a resource.
-type ResourceSpec struct {
+// AlertmanagerContainerResources defines resource requirements for a container.
+// Each resource requirement is specified as a separate entry in the list,
+// making it easier to support future resource types without API changes.
+// +listType=map
+// +listMapKey=name
+// +kubebuilder:validation:MaxItems=10
+type AlertmanagerContainerResources []ContainerResource
+
+// ContainerResource defines a single resource requirement for a container.
+type ContainerResource struct {
+	// name of the resource (e.g. "cpu", "memory", "hugepages-2Mi").
+	// This field is required.
+	// +required
+	Name string `json:"name"`
+
 	// request is the minimum amount of the resource required (e.g. "2Mi", "1Gi").
 	// This field is optional.
 	// +optional
@@ -284,29 +301,6 @@ type ResourceSpec struct {
 	// This field is optional.
 	// +optional
 	Limit resource.Quantity `json:"limit,omitempty"`
-}
-
-// AlertmanagerContainerResources defines simplified resource requirements for a container.
-type AlertmanagerContainerResources struct {
-	// cpu defines the CPU resource limits and requests.
-	// This filed is optional
-	// +optional
-	CPU *ResourceSpec `json:"cpu,omitempty"`
-
-	// memory defines the memory resource limits and requests.
-	// This filed is optional
-	// +optional
-	Memory *ResourceSpec `json:"memory,omitempty"`
-
-	// hugepages is a list of hugepage resource specifications by page size.
-	// defines an optional list of unique configurations identified by their `size` field.
-	// A maximum of 10 items is allowed.
-	// The list is treated as a map, using `size` as the key
-	// +optional
-	// +listType=map
-	// +listMapKey=size
-	// +kubebuilder:validation:MaxItems=10
-	HugePages []HugePageResource `json:"hugepages,omitempty"`
 }
 
 // HugePageResource describes hugepages resources by page size (e.g. 2Mi, 1Gi).

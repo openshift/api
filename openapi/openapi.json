@@ -5516,6 +5516,14 @@
           "format": "int64",
           "default": 0
         },
+        "relatedObjects": {
+          "description": "relatedObjects is a list of objects that are \"interesting\" or related to this operator. `oc adm inspect` honors this field in any type to navigate and collect related data. Common uses are: 1. operator namespaces 2. operand namespaces",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/com.github.openshift.api.config.v1.ObjectReference"
+          }
+        },
         "versionHash": {
           "description": "versionHash is a fingerprint of the content that the cluster will be updated with. It is used by the operator to avoid unnecessary work and is for internal use only.",
           "type": "string",

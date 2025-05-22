@@ -10918,12 +10918,26 @@ func schema_openshift_api_config_v1_ClusterVersionStatus(ref common.ReferenceCal
 							},
 						},
 					},
+					"relatedObjects": {
+						SchemaProps: spec.SchemaProps{
+							Description: "relatedObjects is a list of objects that are \"interesting\" or related to this operator. `oc adm inspect` honors this field in any type to navigate and collect related data. Common uses are: 1. operator namespaces 2. operand namespaces",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("github.com/openshift/api/config/v1.ObjectReference"),
+									},
+								},
+							},
+						},
+					},
 				},
 				Required: []string{"desired", "observedGeneration", "versionHash", "capabilities", "availableUpdates"},
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/config/v1.ClusterOperatorStatusCondition", "github.com/openshift/api/config/v1.ClusterVersionCapabilitiesStatus", "github.com/openshift/api/config/v1.ConditionalUpdate", "github.com/openshift/api/config/v1.Release", "github.com/openshift/api/config/v1.UpdateHistory"},
+			"github.com/openshift/api/config/v1.ClusterOperatorStatusCondition", "github.com/openshift/api/config/v1.ClusterVersionCapabilitiesStatus", "github.com/openshift/api/config/v1.ConditionalUpdate", "github.com/openshift/api/config/v1.ObjectReference", "github.com/openshift/api/config/v1.Release", "github.com/openshift/api/config/v1.UpdateHistory"},
 	}
 }
 

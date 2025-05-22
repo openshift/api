@@ -1345,6 +1345,11 @@ func (in *ClusterVersionStatus) DeepCopyInto(out *ClusterVersionStatus) {
 			(*in)[i].DeepCopyInto(&(*out)[i])
 		}
 	}
+	if in.RelatedObjects != nil {
+		in, out := &in.RelatedObjects, &out.RelatedObjects
+		*out = make([]ObjectReference, len(*in))
+		copy(*out, *in)
+	}
 	return
 }
 

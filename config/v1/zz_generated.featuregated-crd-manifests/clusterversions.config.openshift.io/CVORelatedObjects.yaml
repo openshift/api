@@ -3,9 +3,11 @@ kind: CustomResourceDefinition
 metadata:
   annotations:
     api-approved.openshift.io: https://github.com/openshift/api/pull/495
-    api.openshift.io/merged-by-featuregates: "true"
+    api.openshift.io/filename-cvo-runlevel: "0000_00"
+    api.openshift.io/filename-operator: cluster-version-operator
+    api.openshift.io/filename-ordering: "01"
+    feature-gate.release.openshift.io/CVORelatedObjects: "true"
     include.release.openshift.io/self-managed-high-availability: "true"
-    release.openshift.io/feature-set: CustomNoUpgrade
   name: clusterversions.config.openshift.io
 spec:
   group: config.openshift.io
@@ -243,57 +245,6 @@ spec:
                 - namespace
                 - name
                 x-kubernetes-list-type: map
-              signatureStores:
-                description: |-
-                  signatureStores contains the upstream URIs to verify release signatures and optional
-                  reference to a config map by name containing the PEM-encoded CA bundle.
-
-                  By default, CVO will use existing signature stores if this property is empty.
-                  The CVO will check the release signatures in the local ConfigMaps first. It will search for a valid signature
-                  in these stores in parallel only when local ConfigMaps did not include a valid signature.
-                  Validation will fail if none of the signature stores reply with valid signature before timeout.
-                  Setting signatureStores will replace the default signature stores with custom signature stores.
-                  Default stores can be used with custom signature stores by adding them manually.
-
-                  A maximum of 32 signature stores may be configured.
-                items:
-                  description: SignatureStore represents the URL of custom Signature
-                    Store
-                  properties:
-                    ca:
-                      description: |-
-                        ca is an optional reference to a config map by name containing the PEM-encoded CA bundle.
-                        It is used as a trust anchor to validate the TLS certificate presented by the remote server.
-                        The key "ca.crt" is used to locate the data.
-                        If specified and the config map or expected key is not found, the signature store is not honored.
-                        If the specified ca data is not valid, the signature store is not honored.
-                        If empty, we fall back to the CA configured via Proxy, which is appended to the default system roots.
-                        The namespace for this config map is openshift-config.
-                      properties:
-                        name:
-                          description: name is the metadata.name of the referenced
-                            config map
-                          type: string
-                      required:
-                      - name
-                      type: object
-                    url:
-                      description: |-
-                        url contains the upstream custom signature store URL.
-                        url should be a valid absolute http/https URI of an upstream signature store as per rfc1738.
-                        This must be provided and cannot be empty.
-                      type: string
-                      x-kubernetes-validations:
-                      - message: url must be a valid absolute URL
-                        rule: isURL(self)
-                  required:
-                  - url
-                  type: object
-                maxItems: 32
-                type: array
-                x-kubernetes-list-map-keys:
-                - url
-                x-kubernetes-list-type: map
               upstream:
                 description: |-
                   upstream may be used to specify the preferred update server. By default
@@ -318,17 +269,6 @@ spec:
                   description: Release represents an OpenShift release image and associated
                     metadata.
                   properties:
-                    architecture:
-                      description: |-
-                        architecture is an optional field that indicates the
-                        value of the cluster architecture. In this context cluster
-                        architecture means either a single architecture or a multi
-                        architecture.
-                        Valid values are 'Multi' and empty.
-                      enum:
-                      - Multi
-                      - ""
-                      type: string
                     channels:
                       description: |-
                         channels is the set of Cincinnati channels to which the release
@@ -504,17 +444,6 @@ spec:
                     release:
                       description: release is the target of the update.
                       properties:
-                        architecture:
-                          description: |-
-                            architecture is an optional field that indicates the
-                            value of the cluster architecture. In this context cluster
-                            architecture means either a single architecture or a multi
-                            architecture.
-                            Valid values are 'Multi' and empty.
-                          enum:
-                          - Multi
-                          - ""
-                          type: string
                         channels:
                           description: |-
                             channels is the set of Cincinnati channels to which the release
@@ -690,17 +619,6 @@ spec:
                   If the cluster is not yet fully initialized desired will be set
                   with the information available, which may be an image or a tag.
                 properties:
-                  architecture:
-                    description: |-
-                      architecture is an optional field that indicates the
-                      value of the cluster architecture. In this context cluster
-                      architecture means either a single architecture or a multi
-                      architecture.
-                      Valid values are 'Multi' and empty.
-                    enum:
-                    - Multi
-                    - ""
-                    type: string
                   channels:
                     description: |-
                       channels is the set of Cincinnati channels to which the release

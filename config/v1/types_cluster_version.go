@@ -207,6 +207,12 @@ type ClusterVersionStatus struct {
 	// 2. operand namespaces
 	// +optional
 	// +openshift:enable:FeatureGate=CVORelatedObjects
+	// +kubebuilder:validation:MaxItems=100
+	// +listType=map
+	// +listMapKey=group
+	// +listMapKey=resource
+	// +listMapKey=namespace
+	// +listMapKey=name
 	RelatedObjects []ObjectReference `json:"relatedObjects,omitempty"`
 }
 

@@ -835,7 +835,14 @@ spec:
                   - name
                   - resource
                   type: object
+                maxItems: 100
                 type: array
+                x-kubernetes-list-map-keys:
+                - group
+                - resource
+                - namespace
+                - name
+                x-kubernetes-list-type: map
               versionHash:
                 description: |-
                   versionHash is a fingerprint of the content that the cluster will be

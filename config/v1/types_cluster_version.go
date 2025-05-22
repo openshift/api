@@ -199,6 +199,15 @@ type ClusterVersionStatus struct {
 	// +listType=atomic
 	// +optional
 	ConditionalUpdates []ConditionalUpdate `json:"conditionalUpdates,omitempty"`
+
+	// relatedObjects is a list of objects that are "interesting" or related to this operator.
+	// `oc adm inspect` honors this field in any type to navigate and collect related data.
+	// Common uses are:
+	// 1. operator namespaces
+	// 2. operand namespaces
+	// +optional
+	// +openshift:enable:FeatureGate=CVORelatedObjects
+	RelatedObjects []ObjectReference `json:"relatedObjects,omitempty"`
 }
 
 // UpdateState is a constant representing whether an update was successfully

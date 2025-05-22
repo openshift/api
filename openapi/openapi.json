@@ -11126,16 +11126,13 @@
     "com.github.openshift.api.config.v1alpha1.AlertmanagerConfig": {
       "description": "alertmanagerConfig provides configuration options for the default Alertmanager instance that runs in the `openshift-monitoring` namespace. Use this configuration to control whether the default Alertmanager is deployed, how it logs, and how its pods are scheduled.",
       "type": "object",
-      "required": [
-        "deploymentMode"
-      ],
       "properties": {
         "deployed": {
-          "description": "deployed contains configuration options for the deployed Alertmanager instance.",
+          "description": "deployed must be set when deploymentMode is Deployed, and must be unset otherwise",
           "$ref": "#/definitions/com.github.openshift.api.config.v1alpha1.AlertmanagerDeployedConfig"
         },
         "deploymentMode": {
-          "description": "deploymentMode determines whether the default Alertmanager instance should be deployed as part of the monitoring stack. Allowed values are Deployed and NotDeployed. When set to Deployed, the Cluster Monitoring Operator ensures that an Alertmanager instance is created and managed in the `openshift-monitoring` namespace. When set to NotDeployed, the operator will not deploy the Alertmanager instance. Use this field if you want to explicitly opt in or out of running a platform-level Alertmanager.\n\ndeploymentMode is required.",
+          "description": "deploymentMode determines whether the default Alertmanager instance should be deployed as part of the monitoring stack. Allowed values are Deployed and NotDeployed. When set to Deployed, the Cluster Monitoring Operator ensures that an Alertmanager instance is created and managed in the `openshift-monitoring` namespace. When set to NotDeployed, the operator will not deploy the Alertmanager instance. Use this field if you want to explicitly opt in or out of running a platform-level Alertmanager. When set to empty string, the platform will choose a default that is subject to change over time.",
           "type": "string",
           "default": ""
         }
@@ -11148,32 +11145,6 @@
           }
         }
       ]
-    },
-    "com.github.openshift.api.config.v1alpha1.AlertmanagerContainerResources": {
-      "description": "AlertmanagerContainerResources defines simplified resource requirements for a container.",
-      "type": "object",
-      "properties": {
-        "cpu": {
-          "description": "cpu defines the CPU resource limits and requests. This filed is optional",
-          "$ref": "#/definitions/com.github.openshift.api.config.v1alpha1.ResourceSpec"
-        },
-        "hugepages": {
-          "description": "hugepages is a list of hugepage resource specifications by page size. defines an optional list of unique configurations identified by their `size` field. A maximum of 10 items is allowed. The list is treated as a map, using `size` as the key",
-          "type": "array",
-          "items": {
-            "default": {},
-            "$ref": "#/definitions/com.github.openshift.api.config.v1alpha1.HugePageResource"
-          },
-          "x-kubernetes-list-map-keys": [
-            "size"
-          ],
-          "x-kubernetes-list-type": "map"
-        },
-        "memory": {
-          "description": "memory defines the memory resource limits and requests. This filed is optional",
-          "$ref": "#/definitions/com.github.openshift.api.config.v1alpha1.ResourceSpec"
-        }
-      }
     },
     "com.github.openshift.api.config.v1alpha1.AlertmanagerDeployedConfig": {
       "description": "alertmanagerConfig provides configuration options for the default Alertmanager instance that runs in the `openshift-monitoring` namespace. Use this configuration to control whether the default Alertmanager is deployed, how it logs, and how its pods are scheduled.\n\nRequired: This field must be specified.",
@@ -11194,10 +11165,14 @@
         },
         "resources": {
           "description": "resources defines the compute resource requests and limits for the Alertmanager container. This includes CPU, memory and HugePages constraints to help control scheduling and resource usage. When not specified, defaults are used by the platform. Requests cannot exceed limits. This field is optional. More info: https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/ This is a simplified API that maps to Kubernetes ResourceRequirements.",
-          "$ref": "#/definitions/com.github.openshift.api.config.v1alpha1.AlertmanagerContainerResources"
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/com.github.openshift.api.config.v1alpha1.ContainerResource"
+          }
         },
         "secrets": {
-          "description": "secrets Defines a list of secrets that need to be mounted into the Alertmanager. The secrets must reside within the same namespace as the Alertmanager object. They will be added as volumes named secret-<secret-name> and mounted at /etc/alertmanager/secrets/<secret-name> within the 'alertmanager' container of the Alertmanager Pods. This field is optional. Maximum length for this list is 10",
+          "description": "secrets Defines a list of secrets that need to be mounted into the Alertmanager. The secrets must reside within the same namespace as the Alertmanager object. They will be added as volumes named secret-<secret-name> and mounted at /etc/alertmanager/secrets/<secret-name> within the 'alertmanager' container of the Alertmanager Pods.\n\nThese secrets can be used to authenticate Alertmanager with endpoint receivers. For example, you can use secrets to: - Provide certificates for TLS authentication with receivers that require private CA certificates - Store credentials for Basic HTTP authentication with receivers that require password-based auth - Store any other authentication credentials needed by your alert receivers\n\nThis field is optional. Maximum length for this list is 10",
           "type": "array",
           "items": {
             "type": "string",
@@ -11221,7 +11196,7 @@
           }
         },
         "userModeConfig": {
-          "description": "userModeConfig controls whether Alertmanager should process configurations from user-defined (non-platform) namespaces for AlertmanagerConfig lookups. Alertmanager will search for AlertmanagerConfig resources in user-defined namespaces. This field is only effective when the user workload Alertmanager instance is not enabled. If the user workload monitoring Alertmanager is enabled, this field is ignored. userMode is required. Allowed values are Selectable and None Default value is None",
+          "description": "userModeConfig controls whether Alertmanager should process configurations from user-defined (non-platform) namespaces for AlertmanagerConfig lookups. Alertmanager will search for AlertmanagerConfig resources in user-defined namespaces. This field is only effective when the user workload Alertmanager instance is not enabled. If the user workload monitoring Alertmanager is enabled, this field is ignored. userMode is required. Allowed values are Selectable Default value is empty string",
           "type": "string",
           "default": ""
         },
@@ -11481,7 +11456,7 @@
           "$ref": "#/definitions/com.github.openshift.api.config.v1alpha1.AlertmanagerConfig"
         },
         "userDefined": {
-          "description": "userDefined set the deployment mode for user-defined monitoring in addition to the default platform monitoring. userDefined is optional.",
+          "description": "userDefined set the deployment mode for user-defined monitoring in addition to the default platform monitoring. userDefined is optional. When omitted, default value is `false`, that is subject to change over time.",
           "default": {},
           "$ref": "#/definitions/com.github.openshift.api.config.v1alpha1.UserDefinedMonitoring"
         }
@@ -11490,6 +11465,28 @@
     "com.github.openshift.api.config.v1alpha1.ClusterMonitoringStatus": {
       "description": "MonitoringOperatorStatus defines the observed state of MonitoringOperator",
       "type": "object"
+    },
+    "com.github.openshift.api.config.v1alpha1.ContainerResource": {
+      "description": "ContainerResource defines a single resource requirement for a container.",
+      "type": "object",
+      "required": [
+        "name"
+      ],
+      "properties": {
+        "limit": {
+          "description": "limit is the maximum amount of the resource allowed (e.g. \"2Mi\", \"1Gi\"). This field is optional.",
+          "$ref": "#/definitions/io.k8s.apimachinery.pkg.api.resource.Quantity"
+        },
+        "name": {
+          "description": "name of the resource (e.g. \"cpu\", \"memory\", \"hugepages-2Mi\"). This field is required.",
+          "type": "string",
+          "default": ""
+        },
+        "request": {
+          "description": "request is the minimum amount of the resource required (e.g. \"2Mi\", \"1Gi\"). This field is optional.",
+          "$ref": "#/definitions/io.k8s.apimachinery.pkg.api.resource.Quantity"
+        }
+      }
     },
     "com.github.openshift.api.config.v1alpha1.EtcdBackupSpec": {
       "description": "EtcdBackupSpec provides configuration for automated etcd backups to the cluster-etcd-operator",
@@ -11989,20 +11986,6 @@
           "description": "rekorKeyData contains inline base64-encoded data for the PEM format from the Rekor public key. rekorKeyData must be at most 8192 characters.",
           "type": "string",
           "format": "byte"
-        }
-      }
-    },
-    "com.github.openshift.api.config.v1alpha1.ResourceSpec": {
-      "description": "ResourceSpec defines the requested and limited value of a resource.",
-      "type": "object",
-      "properties": {
-        "limit": {
-          "description": "limit is the maximum amount of the resource allowed (e.g. \"2Mi\", \"1Gi\"). This field is optional.",
-          "$ref": "#/definitions/io.k8s.apimachinery.pkg.api.resource.Quantity"
-        },
-        "request": {
-          "description": "request is the minimum amount of the resource required (e.g. \"2Mi\", \"1Gi\"). This field is optional.",
-          "$ref": "#/definitions/io.k8s.apimachinery.pkg.api.resource.Quantity"
         }
       }
     },

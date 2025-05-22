@@ -55,8 +55,8 @@ spec:
                   alertmanagerConfig is optional.
                 properties:
                   deployed:
-                    description: deployed contains configuration options for the deployed
-                      Alertmanager instance.
+                    description: deployed must be set when deploymentMode is Deployed,
+                      and must be unset otherwise
                     properties:
                       logLevel:
                         description: |-
@@ -95,101 +95,41 @@ spec:
                           This field is optional.
                           More info: https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/
                           This is a simplified API that maps to Kubernetes ResourceRequirements.
-                        properties:
-                          cpu:
-                            description: |-
-                              cpu defines the CPU resource limits and requests.
-                              This filed is optional
-                            properties:
-                              limit:
-                                anyOf:
-                                - type: integer
-                                - type: string
-                                description: |-
-                                  limit is the maximum amount of the resource allowed (e.g. "2Mi", "1Gi").
-                                  This field is optional.
-                                pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
-                                x-kubernetes-int-or-string: true
-                              request:
-                                anyOf:
-                                - type: integer
-                                - type: string
-                                description: |-
-                                  request is the minimum amount of the resource required (e.g. "2Mi", "1Gi").
-                                  This field is optional.
-                                pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
-                                x-kubernetes-int-or-string: true
-                            type: object
-                          hugepages:
-                            description: |-
-                              hugepages is a list of hugepage resource specifications by page size.
-                              defines an optional list of unique configurations identified by their `size` field.
-                              A maximum of 10 items is allowed.
-                              The list is treated as a map, using `size` as the key
-                            items:
-                              description: HugePageResource describes hugepages resources
-                                by page size (e.g. 2Mi, 1Gi).
-                              properties:
-                                limit:
-                                  anyOf:
-                                  - type: integer
-                                  - type: string
-                                  description: |-
-                                    limit amount for this hugepage size.
-                                    This filed is optional
-                                  pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
-                                  x-kubernetes-int-or-string: true
-                                request:
-                                  anyOf:
-                                  - type: integer
-                                  - type: string
-                                  description: |-
-                                    request amount for this hugepage size.
-                                    This filed is optional
-                                  pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
-                                  x-kubernetes-int-or-string: true
-                                size:
-                                  anyOf:
-                                  - type: integer
-                                  - type: string
-                                  description: |-
-                                    size of the hugepage (e.g. "2Mi", "1Gi").
-                                    This field is required.
-                                  pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
-                                  x-kubernetes-int-or-string: true
-                              required:
-                              - size
-                              type: object
-                            maxItems: 10
-                            type: array
-                            x-kubernetes-list-map-keys:
-                            - size
-                            x-kubernetes-list-type: map
-                          memory:
-                            description: |-
-                              memory defines the memory resource limits and requests.
-                              This filed is optional
-                            properties:
-                              limit:
-                                anyOf:
-                                - type: integer
-                                - type: string
-                                description: |-
-                                  limit is the maximum amount of the resource allowed (e.g. "2Mi", "1Gi").
-                                  This field is optional.
-                                pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
-                                x-kubernetes-int-or-string: true
-                              request:
-                                anyOf:
-                                - type: integer
-                                - type: string
-                                description: |-
-                                  request is the minimum amount of the resource required (e.g. "2Mi", "1Gi").
-                                  This field is optional.
-                                pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
-                                x-kubernetes-int-or-string: true
-                            type: object
-                        type: object
+                        items:
+                          description: ContainerResource defines a single resource
+                            requirement for a container.
+                          properties:
+                            limit:
+                              anyOf:
+                              - type: integer
+                              - type: string
+                              description: |-
+                                limit is the maximum amount of the resource allowed (e.g. "2Mi", "1Gi").
+                                This field is optional.
+                              pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
+                              x-kubernetes-int-or-string: true
+                            name:
+                              description: |-
+                                name of the resource (e.g. "cpu", "memory", "hugepages-2Mi").
+                                This field is required.
+                              type: string
+                            request:
+                              anyOf:
+                              - type: integer
+                              - type: string
+                              description: |-
+                                request is the minimum amount of the resource required (e.g. "2Mi", "1Gi").
+                                This field is optional.
+                              pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
+                              x-kubernetes-int-or-string: true
+                          required:
+                          - name
+                          type: object
+                        maxItems: 10
+                        type: array
+                        x-kubernetes-list-map-keys:
+                        - name
+                        x-kubernetes-list-type: map
                       secrets:
                         description: |-
                           secrets Defines a list of secrets that need to be mounted into the Alertmanager.
@@ -197,6 +137,13 @@ spec:
                           They will be added as volumes named secret-<secret-name> and mounted at
                           /etc/alertmanager/secrets/<secret-name> within the 'alertmanager' container of
                           the Alertmanager Pods.
+
+                          These secrets can be used to authenticate Alertmanager with endpoint receivers.
+                          For example, you can use secrets to:
+                          - Provide certificates for TLS authentication with receivers that require private CA certificates
+                          - Store credentials for Basic HTTP authentication with receivers that require password-based auth
+                          - Store any other authentication credentials needed by your alert receivers
+
                           This field is optional.
                           Maximum length for this list is 10
                         items:
@@ -452,12 +399,11 @@ spec:
                           This field is only effective when the user workload Alertmanager instance is not enabled.
                           If the user workload monitoring Alertmanager is enabled, this field is ignored.
                           userMode is required.
-                          Allowed values are Selectable and None
-                          Default value is None
+                          Allowed values are Selectable
+                          Default value is empty string
                         enum:
                         - ""
                         - Selectable
-                        - None
                         type: string
                       volumeClaimTemplate:
                         description: |-
@@ -898,14 +844,12 @@ spec:
                       ensures that an Alertmanager instance is created and managed in the `openshift-monitoring` namespace.
                       When set to NotDeployed, the operator will not deploy the Alertmanager instance.
                       Use this field if you want to explicitly opt in or out of running a platform-level Alertmanager.
-
-                      deploymentMode is required.
+                      When set to empty string, the platform will choose a default that is subject to change over time.
                     enum:
+                    - ""
                     - Deployed
                     - NotDeployed
                     type: string
-                required:
-                - deploymentMode
                 type: object
                 x-kubernetes-validations:
                 - message: deployed must be set when deploymentMode is Deployed, and
@@ -916,6 +860,7 @@ spec:
                 description: |-
                   userDefined set the deployment mode for user-defined monitoring in addition to the default platform monitoring.
                   userDefined is optional.
+                  When omitted, default value is `false`, that is subject to change over time.
                 properties:
                   mode:
                     description: |-

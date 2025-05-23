@@ -2537,7 +2537,6 @@ func schema_openshift_api_apps_v1_DeploymentConfigStatus(ref common.ReferenceCal
 						},
 					},
 				},
-				Required: []string{"latestVersion", "observedGeneration", "replicas", "updatedReplicas", "availableReplicas", "unavailableReplicas"},
 			},
 		},
 		Dependencies: []string{
@@ -5100,7 +5099,6 @@ func schema_openshift_api_authorization_v1_SubjectRulesReviewStatus(ref common.R
 						},
 					},
 				},
-				Required: []string{"rules"},
 			},
 		},
 		Dependencies: []string{
@@ -5670,7 +5668,6 @@ func schema_openshift_api_build_v1_BuildConfigStatus(ref common.ReferenceCallbac
 						},
 					},
 				},
-				Required: []string{"lastVersion"},
 			},
 		},
 		Dependencies: []string{
@@ -6380,7 +6377,6 @@ func schema_openshift_api_build_v1_BuildStatus(ref common.ReferenceCallback) com
 						},
 					},
 				},
-				Required: []string{"phase"},
 			},
 		},
 		Dependencies: []string{
@@ -9388,7 +9384,6 @@ func schema_openshift_api_config_v1_AuthenticationStatus(ref common.ReferenceCal
 						},
 					},
 				},
-				Required: []string{"integratedOAuthMetadata", "oidcClients"},
 			},
 		},
 		Dependencies: []string{
@@ -10925,7 +10920,7 @@ func schema_openshift_api_config_v1_ClusterVersionStatus(ref common.ReferenceCal
 						},
 					},
 				},
-				Required: []string{"desired", "observedGeneration", "versionHash", "capabilities", "availableUpdates"},
+				Required: []string{"desired", "observedGeneration", "versionHash", "availableUpdates"},
 			},
 		},
 		Dependencies: []string{
@@ -11476,7 +11471,6 @@ func schema_openshift_api_config_v1_ConsoleStatus(ref common.ReferenceCallback) 
 						},
 					},
 				},
-				Required: []string{"consoleURL"},
 			},
 		},
 	}
@@ -12480,7 +12474,6 @@ func schema_openshift_api_config_v1_FeatureGateStatus(ref common.ReferenceCallba
 						},
 					},
 				},
-				Required: []string{"featureGates"},
 			},
 		},
 		Dependencies: []string{
@@ -14484,7 +14477,6 @@ func schema_openshift_api_config_v1_InfrastructureStatus(ref common.ReferenceCal
 						},
 					},
 				},
-				Required: []string{"infrastructureName", "etcdDiscoveryDomain", "apiServerURL", "apiServerInternalURI", "controlPlaneTopology", "infrastructureTopology"},
 			},
 		},
 		Dependencies: []string{
@@ -24227,6 +24219,7 @@ func schema_openshift_api_example_v1_CELUnion(ref common.ReferenceCallback) comm
 					"type": {
 						SchemaProps: spec.SchemaProps{
 							Description: "type determines which of the union members should be populated.",
+							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
 						},
@@ -24274,6 +24267,7 @@ func schema_openshift_api_example_v1_EvolvingUnion(ref common.ReferenceCallback)
 					"type": {
 						SchemaProps: spec.SchemaProps{
 							Description: "type is the discriminator. It has different values for Default and for TechPreviewNoUpgrade",
+							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
 						},
@@ -26325,7 +26319,6 @@ func schema_openshift_api_image_v1_ImageStreamStatus(ref common.ReferenceCallbac
 						},
 					},
 				},
-				Required: []string{"dockerImageRepository"},
 			},
 		},
 		Dependencies: []string{
@@ -39457,7 +39450,6 @@ func schema_openshift_api_machine_v1beta1_MachineHealthCheckStatus(ref common.Re
 						},
 					},
 				},
-				Required: []string{"expectedMachines", "currentHealthy"},
 			},
 		},
 		Dependencies: []string{
@@ -39765,7 +39757,6 @@ func schema_openshift_api_machine_v1beta1_MachineSetStatus(ref common.ReferenceC
 						},
 					},
 				},
-				Required: []string{"replicas"},
 			},
 		},
 		Dependencies: []string{
@@ -46724,7 +46715,6 @@ func schema_openshift_api_operator_v1_AuthenticationStatus(ref common.ReferenceC
 						},
 					},
 				},
-				Required: []string{"readyReplicas"},
 			},
 		},
 		Dependencies: []string{
@@ -47096,7 +47086,6 @@ func schema_openshift_api_operator_v1_CSISnapshotControllerStatus(ref common.Ref
 						},
 					},
 				},
-				Required: []string{"readyReplicas"},
 			},
 		},
 		Dependencies: []string{
@@ -47458,7 +47447,6 @@ func schema_openshift_api_operator_v1_CloudCredentialStatus(ref common.Reference
 						},
 					},
 				},
-				Required: []string{"readyReplicas"},
 			},
 		},
 		Dependencies: []string{
@@ -47715,7 +47703,6 @@ func schema_openshift_api_operator_v1_ClusterCSIDriverStatus(ref common.Referenc
 						},
 					},
 				},
-				Required: []string{"readyReplicas"},
 			},
 		},
 		Dependencies: []string{
@@ -48014,7 +48001,6 @@ func schema_openshift_api_operator_v1_ConfigStatus(ref common.ReferenceCallback)
 						},
 					},
 				},
-				Required: []string{"readyReplicas"},
 			},
 		},
 		Dependencies: []string{
@@ -48487,7 +48473,6 @@ func schema_openshift_api_operator_v1_ConsoleStatus(ref common.ReferenceCallback
 						},
 					},
 				},
-				Required: []string{"readyReplicas"},
 			},
 		},
 		Dependencies: []string{
@@ -49526,7 +49511,6 @@ func schema_openshift_api_operator_v1_EtcdStatus(ref common.ReferenceCallback) c
 						},
 					},
 				},
-				Required: []string{"readyReplicas", "controlPlaneHardwareSpeed"},
 			},
 		},
 		Dependencies: []string{
@@ -51180,7 +51164,6 @@ func schema_openshift_api_operator_v1_IngressControllerStatus(ref common.Referen
 						},
 					},
 				},
-				Required: []string{"availableReplicas", "selector", "domain"},
 			},
 		},
 		Dependencies: []string{
@@ -51532,7 +51515,6 @@ func schema_openshift_api_operator_v1_InsightsOperatorStatus(ref common.Referenc
 						},
 					},
 				},
-				Required: []string{"readyReplicas"},
 			},
 		},
 		Dependencies: []string{
@@ -51879,7 +51861,6 @@ func schema_openshift_api_operator_v1_KubeAPIServerStatus(ref common.ReferenceCa
 						},
 					},
 				},
-				Required: []string{"readyReplicas"},
 			},
 		},
 		Dependencies: []string{
@@ -52180,7 +52161,6 @@ func schema_openshift_api_operator_v1_KubeControllerManagerStatus(ref common.Ref
 						},
 					},
 				},
-				Required: []string{"readyReplicas"},
 			},
 		},
 		Dependencies: []string{
@@ -52473,7 +52453,6 @@ func schema_openshift_api_operator_v1_KubeSchedulerStatus(ref common.ReferenceCa
 						},
 					},
 				},
-				Required: []string{"readyReplicas"},
 			},
 		},
 		Dependencies: []string{
@@ -52713,7 +52692,6 @@ func schema_openshift_api_operator_v1_KubeStorageVersionMigratorStatus(ref commo
 						},
 					},
 				},
-				Required: []string{"readyReplicas"},
 			},
 		},
 		Dependencies: []string{
@@ -53472,7 +53450,6 @@ func schema_openshift_api_operator_v1_MyOperatorResourceStatus(ref common.Refere
 						},
 					},
 				},
-				Required: []string{"readyReplicas"},
 			},
 		},
 		Dependencies: []string{
@@ -53906,7 +53883,6 @@ func schema_openshift_api_operator_v1_NetworkStatus(ref common.ReferenceCallback
 						},
 					},
 				},
-				Required: []string{"readyReplicas"},
 			},
 		},
 		Dependencies: []string{
@@ -54810,7 +54786,6 @@ func schema_openshift_api_operator_v1_OLMStatus(ref common.ReferenceCallback) co
 						},
 					},
 				},
-				Required: []string{"readyReplicas"},
 			},
 		},
 		Dependencies: []string{
@@ -55146,7 +55121,6 @@ func schema_openshift_api_operator_v1_OpenShiftAPIServerStatus(ref common.Refere
 						},
 					},
 				},
-				Required: []string{"readyReplicas"},
 			},
 		},
 		Dependencies: []string{
@@ -55386,7 +55360,6 @@ func schema_openshift_api_operator_v1_OpenShiftControllerManagerStatus(ref commo
 						},
 					},
 				},
-				Required: []string{"readyReplicas"},
 			},
 		},
 		Dependencies: []string{
@@ -55647,7 +55620,6 @@ func schema_openshift_api_operator_v1_OperatorStatus(ref common.ReferenceCallbac
 						},
 					},
 				},
-				Required: []string{"readyReplicas"},
 			},
 		},
 		Dependencies: []string{
@@ -56493,7 +56465,6 @@ func schema_openshift_api_operator_v1_ServiceCAStatus(ref common.ReferenceCallba
 						},
 					},
 				},
-				Required: []string{"readyReplicas"},
 			},
 		},
 		Dependencies: []string{
@@ -56733,7 +56704,6 @@ func schema_openshift_api_operator_v1_ServiceCatalogAPIServerStatus(ref common.R
 						},
 					},
 				},
-				Required: []string{"readyReplicas"},
 			},
 		},
 		Dependencies: []string{
@@ -56973,7 +56943,6 @@ func schema_openshift_api_operator_v1_ServiceCatalogControllerManagerStatus(ref 
 						},
 					},
 				},
-				Required: []string{"readyReplicas"},
 			},
 		},
 		Dependencies: []string{
@@ -57384,7 +57353,6 @@ func schema_openshift_api_operator_v1_StaticPodOperatorStatus(ref common.Referen
 						},
 					},
 				},
-				Required: []string{"readyReplicas"},
 			},
 		},
 		Dependencies: []string{
@@ -57657,7 +57625,6 @@ func schema_openshift_api_operator_v1_StorageStatus(ref common.ReferenceCallback
 						},
 					},
 				},
-				Required: []string{"readyReplicas"},
 			},
 		},
 		Dependencies: []string{
@@ -58821,7 +58788,6 @@ func schema_openshift_api_operator_v1alpha1_OLMStatus(ref common.ReferenceCallba
 						},
 					},
 				},
-				Required: []string{"readyReplicas"},
 			},
 		},
 		Dependencies: []string{
@@ -63305,7 +63271,6 @@ func schema_openshift_api_security_v1_PodSecurityPolicyReviewStatus(ref common.R
 						},
 					},
 				},
-				Required: []string{"allowedServiceAccounts"},
 			},
 		},
 		Dependencies: []string{
@@ -64510,7 +64475,6 @@ func schema_openshift_api_servicecertsigner_v1alpha1_ServiceCertSignerOperatorCo
 						},
 					},
 				},
-				Required: []string{"readyReplicas"},
 			},
 		},
 		Dependencies: []string{

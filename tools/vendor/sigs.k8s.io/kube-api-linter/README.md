@@ -10,11 +10,11 @@ Kube API Linter is aimed at being an assistant to API review, by catching the me
 
 ## Installation
 
-Kube API Linter ships as a golangci-lint plugin.
+Kube API Linter ships as a golangci-lint plugin, and a golangci-lint module.
 
-### Golangci-lint Plugin
+### Golangci-lint Module
 
-To install the `golangci-lint` plugin, first you must have `golangci-lint` installed.
+To install the `golangci-lint` module, first you must have `golangci-lint` installed.
 If you do not have `golangci-lint` installed, review the `golangci-lint` [install guide][golangci-lint-install].
 
 [golangci-lint-install]: https://golangci-lint.run/welcome/install/
@@ -22,7 +22,7 @@ If you do not have `golangci-lint` installed, review the `golangci-lint` [instal
 You will need to create a `.custom-gcl.yml` file to describe the custom linters you want to run. The following is an example of a `.custom-gcl.yml` file:
 
 ```yaml
-version:  v1.62.0
+version:  v1.64.8
 name: golangci-kube-api-linter
 destination: ./bin
 plugins:
@@ -75,6 +75,37 @@ Where fixes are available within a rule, these can be applied automatically with
 ```shell
 golangci-kube-api-linter run path/to/api/types --fix
 ```
+
+### Golangci-lint Plugin
+
+The Kube API Linter can also be used as a plugin for `golangci-lint`.
+To do this, you will need to install the `golangci-lint` binary and then install the Kube API Linter plugin.
+
+More information about golangci-lint plugins can be found in the [golangci-lint plugin documentation][golangci-lint-plugin-docs].
+
+[golangci-lint-plugin-docs]: https://golangci-lint.run/plugins/go-plugins/
+
+```shell
+go build -buildmode=plugin -o bin/kube-api-linter.so sigs.k8s.io/kube-api-linter/pkg/plugin
+```
+
+This will create a `kube-api-linter.so` file in the `bin` directory.
+
+The `golangci-lint` configuration is similar to the module configuration, however, you will need to specify the plugin path instead.
+
+```yaml
+linters-settings:
+  custom:
+    kubeapilinter:
+      path: "bin/kube-api-linter.so"
+      description: Kube API LInter lints Kube like APIs based on API conventions and best practices.
+      original-url: sigs.k8s.io/kube-api-linter
+      settings:
+        linters: {}
+        lintersConfig: {}
+```
+
+The rest of the configuration is the same as the module configuration, except the standard `golangci-lint` binary is invoked, rather than a custom binary.
 
 #### VSCode integration
 
@@ -162,6 +193,24 @@ This helps to ensure that generated documentation reflects the most common usage
 The `commentstart` linter can automatically fix comments that do not start with the serialized form of the type.
 
 When the `json` tag is present, and matches the first word of the field comment in all but casing, the linter will suggest that the comment be updated to match the `json` tag.
+
+## DuplicateMarkers
+
+The duplicatemarkers linter checks for exact duplicates of markers for types and fields.
+This means that something like:
+
+// +kubebuilder:validation:MaxLength=10
+// +kubebuilder:validation:MaxLength=10 
+Will be flagged by this linter, while something like:
+
+// +kubebuilder:validation:MaxLength=10
+// +kubebuilder:validation:MaxLength=11
+will not.
+
+### Fixes
+
+The `duplicatemarkers` linter can automatically fix all markers that are exact match to another markers.
+If there are duplicates across fields and their underlying type, the marker on the type will be preferred and the marker on the field will be removed.
 
 ## Integers
 
@@ -278,6 +327,20 @@ It will suggest to remove the pointer from the field, and update the `json` tag 
 
 If you prefer not to suggest fixes for pointers in required fields, you can change the `pointerPolicy` to `Warn`.
 The linter will then only suggest to remove the `omitempty` value from the `json` tag.
+
+## StatusOptional
+
+The `statusoptional` linter checks that all first-level children fields within a status struct are marked as optional.
+
+This is important because status fields should be optional to allow for partial updates and backward compatibility.
+The linter ensures that all direct child fields of any status struct have either the `// +optional` or 
+`// +kubebuilder:validation:Optional` marker.
+
+### Fixes
+
+The `statusoptional` linter can automatically fix fields in status structs that are not marked as optional.
+
+It will suggest adding the `// +optional` marker to any status field that is missing it.
 
 ## StatusSubresource
 

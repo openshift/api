@@ -161,7 +161,6 @@ type GathererConfig struct {
 }
 
 // dataGatherState declares valid gathering state types
-// +kubebuilder:validation:Optional
 // +kubebuilder:validation:Enum=Running;Completed;Failed;Pending
 // +kubebuilder:validation:XValidation:rule="!(oldSelf == 'Running' && self == 'Pending')", message="dataGatherState cannot transition from Running to Pending"
 // +kubebuilder:validation:XValidation:rule="!(oldSelf == 'Completed' && self == 'Pending')", message="dataGatherState cannot transition from Completed to Pending"
@@ -175,7 +174,6 @@ type DataGatherState string
 // +kubebuilder:validation:XValidation:rule="(!has(oldSelf.startTime) || has(self.startTime))",message="cannot remove startTime attribute from status"
 // +kubebuilder:validation:XValidation:rule="(!has(oldSelf.finishTime) || has(self.finishTime))",message="cannot remove finishTime attribute from status"
 // +kubebuilder:validation:XValidation:rule="(!has(oldSelf.dataGatherState) || has(self.dataGatherState))",message="cannot remove dataGatherState attribute from status"
-// +kubebuilder:validation:Optional
 type DataGatherStatus struct {
 	// conditions provide details on the status of the gatherer job.
 	// +listType=map

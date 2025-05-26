@@ -253,9 +253,6 @@
                         "name": "MetricsCollectionProfiles"
                     },
                     {
-                        "name": "MultiArchInstallAWS"
-                    },
-                    {
                         "name": "NetworkDiagnosticsConfig"
                     },
                     {

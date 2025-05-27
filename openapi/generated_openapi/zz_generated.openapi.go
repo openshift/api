@@ -38238,7 +38238,7 @@ func schema_openshift_api_machine_v1beta1_EBSBlockDeviceSpec(ref common.Referenc
 				Properties: map[string]spec.Schema{
 					"deleteOnTermination": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Indicates whether the EBS volume is deleted on machine termination.",
+							Description: "Indicates whether the EBS volume is deleted on machine termination.\n\nDeprecated: setting this field has no effect.",
 							Type:        []string{"boolean"},
 							Format:      "",
 						},

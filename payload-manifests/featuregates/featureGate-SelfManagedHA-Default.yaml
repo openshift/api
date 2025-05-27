@@ -271,9 +271,6 @@
                         "name": "OpenShiftPodSecurityAdmission"
                     },
                     {
-                        "name": "PersistentIPsForVirtualization"
-                    },
-                    {
                         "name": "PrivateHostedZoneAWS"
                     },
                     {

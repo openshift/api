@@ -228,9 +228,6 @@
                         "name": "OpenShiftPodSecurityAdmission"
                     },
                     {
-                        "name": "PersistentIPsForVirtualization"
-                    },
-                    {
                         "name": "PinnedImages"
                     },
                     {

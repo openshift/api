@@ -825,6 +825,7 @@ spec:
                       description: name of the referent.
                       type: string
                     namespace:
+                      default: ""
                       description: namespace of the referent.
                       type: string
                     resource:

@@ -350,3 +350,4 @@ This roughly follows:
    with no FeatureSet and one ClusterProfile. Continue to 4.
 4. for all remaining ClusterProfile,FeatureSet tuples, serialize a file with one FeatureSet and one ClusterProfile.
 
+canary run

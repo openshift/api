@@ -22057,7 +22057,7 @@
       "type": "object",
       "properties": {
         "deleteOnTermination": {
-          "description": "Indicates whether the EBS volume is deleted on machine termination.",
+          "description": "Indicates whether the EBS volume is deleted on machine termination.\n\nDeprecated: setting this field has no effect.",
           "type": "boolean"
         },
         "encrypted": {

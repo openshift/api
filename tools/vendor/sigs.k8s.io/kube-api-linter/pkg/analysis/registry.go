@@ -21,6 +21,7 @@ import (
 	"golang.org/x/tools/go/analysis"
 	"sigs.k8s.io/kube-api-linter/pkg/analysis/commentstart"
 	"sigs.k8s.io/kube-api-linter/pkg/analysis/conditions"
+	"sigs.k8s.io/kube-api-linter/pkg/analysis/duplicatemarkers"
 	"sigs.k8s.io/kube-api-linter/pkg/analysis/integers"
 	"sigs.k8s.io/kube-api-linter/pkg/analysis/jsontags"
 	"sigs.k8s.io/kube-api-linter/pkg/analysis/maxlength"
@@ -30,6 +31,7 @@ import (
 	"sigs.k8s.io/kube-api-linter/pkg/analysis/nophase"
 	"sigs.k8s.io/kube-api-linter/pkg/analysis/optionalorrequired"
 	"sigs.k8s.io/kube-api-linter/pkg/analysis/requiredfields"
+	"sigs.k8s.io/kube-api-linter/pkg/analysis/statusoptional"
 	"sigs.k8s.io/kube-api-linter/pkg/analysis/statussubresource"
 	"sigs.k8s.io/kube-api-linter/pkg/config"
 
@@ -74,6 +76,7 @@ func NewRegistry() Registry {
 		initializers: []AnalyzerInitializer{
 			conditions.Initializer(),
 			commentstart.Initializer(),
+			duplicatemarkers.Initializer(),
 			integers.Initializer(),
 			jsontags.Initializer(),
 			maxlength.Initializer(),
@@ -83,6 +86,7 @@ func NewRegistry() Registry {
 			nophase.Initializer(),
 			optionalorrequired.Initializer(),
 			requiredfields.Initializer(),
+			statusoptional.Initializer(),
 			statussubresource.Initializer(),
 		},
 	}

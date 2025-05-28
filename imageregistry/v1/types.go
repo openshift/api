@@ -129,9 +129,11 @@ type ImageRegistryStatus struct {
 	operatorv1.OperatorStatus `json:",inline"`
 
 	// storageManaged is deprecated, please refer to Storage.managementState
+	// +required
 	StorageManaged bool `json:"storageManaged"`
 	// storage indicates the current applied storage configuration of the
 	// registry.
+	// +required
 	Storage ImageRegistryConfigStorage `json:"storage"`
 }
 

@@ -155,6 +155,9 @@
                         "name": "PlatformOperators"
                     },
                     {
+                        "name": "PreconfiguredUDNAddresses"
+                    },
+                    {
                         "name": "RouteAdvertisements"
                     },
                     {

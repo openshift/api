@@ -814,4 +814,12 @@ var (
 					enhancementPR("https://github.com/openshift/enhancements/pull/1772").
 					enableIn(configv1.DevPreviewNoUpgrade).
 					mustRegister()
+
+	FeatureGatePreconfiguredUDNAddresses = newFeatureGate("PreconfiguredUDNAddresses").
+					reportProblemsToJiraComponent("Networking/ovn-kubernetes").
+					contactPerson("kyrtapz").
+					productScope(ocpSpecific).
+					enhancementPR("https://github.com/openshift/enhancements/pull/1793").
+					enableIn(configv1.DevPreviewNoUpgrade, configv1.TechPreviewNoUpgrade).
+					mustRegister()
 )

@@ -137,6 +137,9 @@
                         "name": "OVNObservability"
                     },
                     {
+                        "name": "OpenShiftPodSecurityAdmission"
+                    },
+                    {
                         "name": "PinnedImages"
                     },
                     {
@@ -284,9 +287,6 @@
                     },
                     {
                         "name": "OnClusterBuild"
-                    },
-                    {
-                        "name": "OpenShiftPodSecurityAdmission"
                     },
                     {
                         "name": "PersistentIPsForVirtualization"

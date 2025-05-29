@@ -37,6 +37,9 @@
                         "name": "MultiArchInstallAzure"
                     },
                     {
+                        "name": "MutatingAdmissionPolicy"
+                    },
+                    {
                         "name": "NewOLM"
                     },
                     {

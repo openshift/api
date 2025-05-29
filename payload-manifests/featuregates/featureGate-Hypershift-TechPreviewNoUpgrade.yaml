@@ -243,6 +243,9 @@
                         "name": "PlatformOperators"
                     },
                     {
+                        "name": "PreconfiguredUDNAddresses"
+                    },
+                    {
                         "name": "PrivateHostedZoneAWS"
                     },
                     {

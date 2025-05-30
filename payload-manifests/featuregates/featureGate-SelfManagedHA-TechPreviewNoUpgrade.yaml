@@ -195,6 +195,9 @@
                         "name": "MixedCPUsAllocation"
                     },
                     {
+                        "name": "MutatingAdmissionPolicy"
+                    },
+                    {
                         "name": "NetworkDiagnosticsConfig"
                     },
                     {

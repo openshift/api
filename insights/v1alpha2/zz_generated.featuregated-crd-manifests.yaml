@@ -15,10 +15,6 @@ datagathers.insights.openshift.io:
   Labels: {}
   PluralName: datagathers
   PrinterColumns:
-  - description: DataGather job state
-    jsonPath: .status.dataGatherState
-    name: State
-    type: string
   - description: DataGather start time
     jsonPath: .status.startTime
     name: StartTime

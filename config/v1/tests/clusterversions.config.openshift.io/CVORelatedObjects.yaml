@@ -1,0 +1,72 @@
+apiVersion: apiextensions.k8s.io/v1 # Hack because controller-gen complains if we don't have this
+name: "ClusterVersion"
+crdName: clusterversions.config.openshift.io
+featureGates:
+- CVORelatedObjects
+tests:
+  onCreate:
+    - name: Should be able to create a minimal ClusterVersion
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: ClusterVersion
+        spec:
+          clusterID: foo
+      expected: |
+        apiVersion: config.openshift.io/v1
+        kind: ClusterVersion
+        spec:
+          clusterID: foo
+  onUpdate:
+    - name: .status.relatedObjects namespace default should be empty
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: ClusterVersion
+        spec:
+          clusterID: foo
+        status:
+          desired:
+            version: foo
+            image: foo
+            architecture: Multi
+          observedGeneration: 1
+          versionHash: foo
+          availableUpdates:
+          - version: foo
+            image: foo
+      updated: |
+        apiVersion: config.openshift.io/v1
+        kind: ClusterVersion
+        spec:
+        status:
+          desired:
+            version: foo
+            image: foo
+            architecture: Multi
+          observedGeneration: 1
+          versionHash: foo
+          availableUpdates:
+          - version: foo
+            image: foo
+          relatedObjects:
+            - group: g1
+              resource: r1
+              name: n1
+      expected: |
+        apiVersion: config.openshift.io/v1
+        kind: ClusterVersion
+        spec:
+        status:
+          desired:
+            version: foo
+            image: foo
+            architecture: Multi
+          observedGeneration: 1
+          versionHash: foo
+          availableUpdates:
+          - version: foo
+            image: foo
+          relatedObjects:
+            - group: g1
+              resource: r1
+              namespace: ns1
+              name: n1

@@ -491,14 +491,6 @@ var (
 				enableIn(configv1.DevPreviewNoUpgrade).
 				mustRegister()
 
-	FeatureGatePlatformOperators = newFeatureGate("PlatformOperators").
-					reportProblemsToJiraComponent("olm").
-					contactPerson("joe").
-					productScope(ocpSpecific).
-					enhancementPR(legacyFeatureGateWithoutEnhancement).
-					enableIn(configv1.DevPreviewNoUpgrade, configv1.TechPreviewNoUpgrade).
-					mustRegister()
-
 	FeatureGateNewOLM = newFeatureGate("NewOLM").
 				reportProblemsToJiraComponent("olm").
 				contactPerson("joe").

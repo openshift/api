@@ -103,8 +103,6 @@ var legacyFeatureGates = sets.New(
 	// never add to this list, if you think you have an exception ask @deads2k
 	"PinnedImages",
 	// never add to this list, if you think you have an exception ask @deads2k
-	"PlatformOperators",
-	// never add to this list, if you think you have an exception ask @deads2k
 	"PrivateHostedZoneAWS",
 	// never add to this list, if you think you have an exception ask @deads2k
 	"RouteAdvertisements",

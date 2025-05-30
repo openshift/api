@@ -13,7 +13,6 @@ import (
 // +openshift:api-approved.openshift.io=https://github.com/openshift/api/pull/2248
 // +openshift:file-pattern=cvoRunLevel=0000_10,operatorName=insights,operatorOrdering=01
 // +openshift:enable:FeatureGate=InsightsOnDemandDataGather
-// +kubebuilder:printcolumn:name=State,type=string,JSONPath=.status.dataGatherState,description=DataGather job state
 // +kubebuilder:printcolumn:name=StartTime,type=date,JSONPath=.status.startTime,description=DataGather start time
 // +kubebuilder:printcolumn:name=FinishTime,type=date,JSONPath=.status.finishTime,description=DataGather finish time
 //

@@ -24,26 +24,49 @@ tests:
         spec:
           clusterID: foo
         status:
+          desired:
+            version: foo
+            image: foo
+            architecture: Multi
+          observedGeneration: 1
+          versionHash: foo
+          availableUpdates:
+          - version: foo
+            image: foo
       updated: |
         apiVersion: config.openshift.io/v1
-        kind: Infrastructure
+        kind: ClusterVersion
         spec:
+          clusterID: foo
         status:
-          controlPlaneTopology: HighlyAvailable
-          infrastructureTopology: HighlyAvailable
-          platform: AWS
+          desired:
+            version: foo
+            image: foo
+            architecture: Multi
+          observedGeneration: 1
+          versionHash: foo
+          availableUpdates:
+          - version: foo
+            image: foo
           relatedObjects:
             - group: g1
               resource: r1
               name: n1
       expected: |
         apiVersion: config.openshift.io/v1
-        kind: Infrastructure
+        kind: ClusterVersion
         spec:
+          clusterID: foo
         status:
-          controlPlaneTopology: HighlyAvailable
-          infrastructureTopology: HighlyAvailable
-          platform: AWS
+          desired:
+            version: foo
+            image: foo
+            architecture: Multi
+          observedGeneration: 1
+          versionHash: foo
+          availableUpdates:
+          - version: foo
+            image: foo
           relatedObjects:
             - group: g1
               resource: r1

@@ -107,9 +107,6 @@
                         "name": "MachineAPIOperatorDisableMachineHealthCheckController"
                     },
                     {
-                        "name": "MachineConfigNodes"
-                    },
-                    {
                         "name": "ManagedBootImagesvSphere"
                     },
                     {
@@ -245,6 +242,9 @@
                     },
                     {
                         "name": "KMSv1"
+                    },
+                    {
+                        "name": "MachineConfigNodes"
                     },
                     {
                         "name": "ManagedBootImages"

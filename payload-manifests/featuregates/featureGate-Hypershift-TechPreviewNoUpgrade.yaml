@@ -246,9 +246,6 @@
                         "name": "PreconfiguredUDNAddresses"
                     },
                     {
-                        "name": "PrivateHostedZoneAWS"
-                    },
-                    {
                         "name": "ProcMountType"
                     },
                     {

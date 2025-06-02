@@ -282,21 +282,3 @@ type ContainerResource struct {
 	// +optional
 	Limit resource.Quantity `json:"limit,omitempty"`
 }
-
-// HugePageResource describes hugepages resources by page size (e.g. 2Mi, 1Gi).
-type HugePageResource struct {
-	// size of the hugepage (e.g. "2Mi", "1Gi").
-	// This field is required.
-	// +required
-	Size resource.Quantity `json:"size"`
-
-	// request amount for this hugepage size.
-	// This filed is optional
-	// +optional
-	Request resource.Quantity `json:"request,omitempty"`
-
-	// limit amount for this hugepage size.
-	// This filed is optional
-	// +optional
-	Limit resource.Quantity `json:"limit,omitempty"`
-}

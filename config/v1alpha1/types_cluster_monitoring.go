@@ -77,12 +77,13 @@ type ClusterMonitoringList struct {
 type ClusterMonitoringSpec struct {
 	// userDefined set the deployment mode for user-defined monitoring in addition to the default platform monitoring.
 	// userDefined is optional.
-	// When omitted, default value is `false`, that is subject to change over time.
+	// When omitted, default value is `Disabled`, that is subject to change over time.
 	// +optional
 	UserDefined UserDefinedMonitoring `json:"userDefined"`
 	// alertmanagerConfig allows users to configure how the default Alertmanager instance
 	// should be deployed in the `openshift-monitoring` namespace.
 	// alertmanagerConfig is optional.
+	// When omitted, default value is `Deployed`, that is subject to change over time.
 	// +optional
 	AlertmanagerConfig AlertmanagerConfig `json:"alertmanagerConfig"`
 }
@@ -93,8 +94,9 @@ type UserDefinedMonitoring struct {
 	// Valid values are Disabled and NamespaceIsolated
 	// Disabled disables monitoring for user-defined projects. This restricts the default monitoring stack, installed in the openshift-monitoring project, to monitor only platform namespaces, which prevents any custom monitoring configurations or resources from being applied to user-defined namespaces.
 	// NamespaceIsolated enables monitoring for user-defined projects with namespace-scoped tenancy. This ensures that metrics, alerts, and monitoring data are isolated at the namespace level.
-	// +kubebuilder:validation:Enum:="Disabled";"NamespaceIsolated"
-	// +required
+	// When set to empty string, the platform will choose a default that is subject to change over time.
+	// +kubebuilder:validation:Enum="";Disabled;NamespaceIsolated
+	// +optional
 	Mode UserDefinedMode `json:"mode"`
 }
 
@@ -118,12 +120,12 @@ const (
 type AlertmanagerConfig struct {
 	// deploymentMode determines whether the default Alertmanager instance should be deployed
 	// as part of the monitoring stack.
-	// Allowed values are Deployed and NotDeployed.
+	// Allowed values are Deployed, NotDeployed, and omitted.
 	// When set to Deployed, the Cluster Monitoring Operator
 	// ensures that an Alertmanager instance is created and managed in the `openshift-monitoring` namespace.
 	// When set to NotDeployed, the operator will not deploy the Alertmanager instance.
 	// Use this field if you want to explicitly opt in or out of running a platform-level Alertmanager.
-	// When set to empty string, the platform will choose a default that is subject to change over time.
+	// When omitted, this means no opinion and the platform is left to choose a default which is subject to change over time.
 	//
 	// +unionDiscriminator
 	// +kubebuilder:validation:Enum="";Deployed;NotDeployed
@@ -141,17 +143,7 @@ type AlertmanagerConfig struct {
 //
 // Required: This field must be specified.
 type AlertmanagerDeployedConfig struct {
-	// userModeConfig controls whether Alertmanager should process configurations from user-defined (non-platform)
-	// namespaces for AlertmanagerConfig lookups.
-	// Alertmanager will search for AlertmanagerConfig resources in user-defined namespaces.
-	// This field is only effective when the user workload Alertmanager instance is not enabled.
-	// If the user workload monitoring Alertmanager is enabled, this field is ignored.
-	// userMode is required.
-	// Allowed values are Selectable
-	// Default value is empty string
-	// +kubebuilder:validation:Enum="";Selectable
-	// +optional
-	UserModeConfig UserAlertManagerModeConfig `json:"userModeConfig"`
+
 	// logLevel defines the verbosity of logs emitted by Alertmanager.
 	// This field allows users to control the amount and severity of logs generated, which can be useful
 	// for debugging issues or reducing noise in production environments.
@@ -246,18 +238,6 @@ const (
 
 	// AlertManagerModeDisabled means the operator will not deploy the Alertmanager instance.
 	AlertManagerDeployModeNotDeployed AlertManagerDeployMode = "NotDeployed"
-)
-
-// UserAlertManagerModeConfig defines mode for user-defines namespaced
-//
-// Possible values:
-// - "Selectable": User-defined namespaces can be selected for AlertmanagerConfig lookups.
-type UserAlertManagerModeConfig string
-
-const (
-	// UserAlertmanagerEnabled enables user-defined namespaces to be selected for `AlertmanagerConfig` lookups. This setting only
-	// applies if the user workload monitoring instance of Alertmanager is not enabled.
-	UserAlertManagerModeSelectable UserAlertManagerModeConfig = "Selectable"
 )
 
 // logLevel defines the verbosity of logs emitted by Alertmanager.

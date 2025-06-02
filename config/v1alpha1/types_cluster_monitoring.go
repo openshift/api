@@ -116,21 +116,20 @@ const (
 // whether the default Alertmanager is deployed, how it logs, and how its pods are scheduled.
 //
 // +union
-// +kubebuilder:validation:XValidation:rule="self.deploymentMode == 'Deployed' ? has(self.deployed) : !has(self.deployed)",message="deployed must be set when deploymentMode is Deployed, and must be unset otherwise"
+// +kubebuilder:validation:XValidation:rule="self.deploymentMode == 'Deployed' ? has(self.deployed) : (self.deploymentMode == ”) ? !has(self.deployed) : false",message="deployed must be set when deploymentMode is Deployed, and must be unset otherwise"
 type AlertmanagerConfig struct {
 	// deploymentMode determines whether the default Alertmanager instance should be deployed
 	// as part of the monitoring stack.
-	// Allowed values are Deployed, NotDeployed, and omitted.
+	// Allowed values are Deployed and omitted.
 	// When set to Deployed, the Cluster Monitoring Operator
 	// ensures that an Alertmanager instance is created and managed in the `openshift-monitoring` namespace.
-	// When set to NotDeployed, the operator will not deploy the Alertmanager instance.
-	// Use this field if you want to explicitly opt in or out of running a platform-level Alertmanager.
+	// Use this field if you want to explicitly opt in to running a platform-level Alertmanager.
 	// When omitted, this means no opinion and the platform is left to choose a default which is subject to change over time.
 	//
 	// +unionDiscriminator
-	// +kubebuilder:validation:Enum="";Deployed;NotDeployed
+	// +kubebuilder:validation:Enum="";Deployed
 	// +optional
-	DeploymentMode string `json:"deploymentMode"`
+	DeploymentMode AlertManagerDeployMode `json:"deploymentMode"`
 
 	// deployed must be set when deploymentMode is Deployed, and must be unset otherwise
 	// +optional
@@ -229,15 +228,12 @@ type SecretName string
 //
 // Possible values:
 // - "Deployed": The Alertmanager instance will be deployed and managed by the operator.
-// - "NotDeployed": The operator will not deploy an Alertmanager instance.
+// - omitted: The platform will choose a default that is subject to change over time.
 type AlertManagerDeployMode string
 
 const (
 	// AlertManagerModeEnabled means the Alertmanager instance will be deployed and managed by the operator.
 	AlertManagerDeployModeDeployed AlertManagerDeployMode = "Deployed"
-
-	// AlertManagerModeDisabled means the operator will not deploy the Alertmanager instance.
-	AlertManagerDeployModeNotDeployed AlertManagerDeployMode = "NotDeployed"
 )
 
 // logLevel defines the verbosity of logs emitted by Alertmanager.

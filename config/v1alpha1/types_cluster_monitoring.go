@@ -80,7 +80,7 @@ type ClusterMonitoringSpec struct {
 	// When omitted, this means no opinion and the platform is left to choose a reasonable default, that is subject to change over time.
 	// The current default value is `Disabled`.
 	// +optional
-	UserDefined UserDefinedMonitoring `json:"userDefined"`
+	UserDefined UserDefinedMonitoring `json:"userDefined,omitempty"`
 	// alertmanagerConfig allows users to configure how the default Alertmanager instance
 	// should be deployed in the `openshift-monitoring` namespace.
 	// alertmanagerConfig is optional.
@@ -91,13 +91,14 @@ type ClusterMonitoringSpec struct {
 }
 
 // UserDefinedMonitoring config for user-defined projects.
+// When omitted, the platform will choose a reasonable default, that is subject to change over time.
+// The current default value is `Disabled`.
 type UserDefinedMonitoring struct {
 	// mode defines the different configurations of UserDefinedMonitoring
 	// Valid values are Disabled and NamespaceIsolated
 	// Disabled disables monitoring for user-defined projects. This restricts the default monitoring stack, installed in the openshift-monitoring project, to monitor only platform namespaces, which prevents any custom monitoring configurations or resources from being applied to user-defined namespaces.
 	// NamespaceIsolated enables monitoring for user-defined projects with namespace-scoped tenancy. This ensures that metrics, alerts, and monitoring data are isolated at the namespace level.
-	// When omitted or empty, this means no opinion and the platform is left to choose a reasonable default, that is subject to change over time.
-	// The current default value is `???`.
+	// The current default value is `Disabled`.
 	// +kubebuilder:validation:Enum="";Disabled;NamespaceIsolated
 	// +optional
 	Mode UserDefinedMode `json:"mode"`
@@ -118,8 +119,7 @@ const (
 // that runs in the `openshift-monitoring` namespace. Use this configuration to control
 // whether the default Alertmanager is deployed, how it logs, and how its pods are scheduled.
 //
-// +union
-// +kubebuilder:validation:XValidation:rule="has(self.deploymentMode) && self.deploymentMode == 'Deployed' ? has(self.deployed) :  !has(self.deployed)",message="deployed is required when deploymentMode is Deployed, and is forbidden otherwise"
+// When omitted, this means no opinion and the platform is left to choose a reasonable default, that is subject to change over time.
 type AlertmanagerConfig struct {
 	// deploymentMode determines whether the default Alertmanager instance should be deployed
 	// as part of the monitoring stack.
@@ -132,10 +132,11 @@ type AlertmanagerConfig struct {
 	//
 	// +unionDiscriminator
 	// +kubebuilder:validation:Enum="";Deployed
-	// +optional
 	DeploymentMode AlertManagerDeployMode `json:"deploymentMode"`
 
-	// deployed must be set when deploymentMode is Deployed, and must be unset otherwise
+	// deployed must be set when deploymentMode is Deployed, and must be unset otherwise.
+	// When set to Deployed, the Cluster Monitoring Operator
+	// ensures that an Alertmanager instance is created and managed in the `openshift-monitoring` namespace.
 	// +optional
 	Deployed *AlertmanagerDeployedConfig `json:"deployed,omitempty"`
 }
@@ -144,9 +145,8 @@ type AlertmanagerConfig struct {
 // that runs in the `openshift-monitoring` namespace. Use this configuration to control
 // whether the default Alertmanager is deployed, how it logs, and how its pods are scheduled.
 //
-// Required: This field must be specified.
+// When omitted, this means no opinion and the platform is left to choose a reasonable default, that is subject to change over time.
 type AlertmanagerDeployedConfig struct {
-
 	// logLevel defines the verbosity of logs emitted by Alertmanager.
 	// This field allows users to control the amount and severity of logs generated, which can be useful
 	// for debugging issues or reducing noise in production environments.
@@ -158,7 +158,7 @@ type AlertmanagerDeployedConfig struct {
 	// When omitted, this means no opinion and the platform is left to choose a default that is subject to change over time.
 	// Currently, the default is Info.
 	// +optional
-	LogLevel LogLevel `json:"logLevel"`
+	LogLevel LogLevel `json:"logLevel,omitempty"`
 	// nodeSelector is the node selector applied to network diagnostics components
 	// nodeSelector is optional.
 	//
@@ -173,7 +173,7 @@ type AlertmanagerDeployedConfig struct {
 	// More info: https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/
 	// This is a simplified API that maps to Kubernetes ResourceRequirements.
 	// +optional
-	Resources *AlertmanagerContainerResources `json:"resources,omitempty"`
+	Resources AlertmanagerContainerResources `json:"resources,omitempty"`
 	// secrets Defines a list of secrets that need to be mounted into the Alertmanager.
 	// The secrets must reside within the same namespace as the Alertmanager object.
 	// They will be added as volumes named secret-<secret-name> and mounted at
@@ -198,6 +198,7 @@ type AlertmanagerDeployedConfig struct {
 	// to choose reasonable defaults. These defaults are subject to change over time.
 	// Maximum length for this list is 10
 	// +kubebuilder:validation:MaxItems=10
+	// +listType=atomic
 	// +optional
 	Tolerations []v1.Toleration `json:"tolerations,omitempty"`
 	// topologySpreadConstraints defines rules for how Alertmanager Pods should be distributed
@@ -210,6 +211,9 @@ type AlertmanagerDeployedConfig struct {
 	// This field maps directly to the `topologySpreadConstraints` field in the Pod spec.
 	// Maximum length for this list is 10
 	// +kubebuilder:validation:MaxItems=10
+	// +listType=map
+	// +listMapKey=topologyKey
+	// +listMapKey=whenUnsatisfiable
 	// +optional
 	TopologySpreadConstraints []v1.TopologySpreadConstraint `json:"topologySpreadConstraints,omitempty"`
 	// volumeClaimTemplate Defines persistent storage for Alertmanager. Use this setting to
@@ -260,6 +264,7 @@ const (
 // AlertmanagerContainerResources defines resource requirements for a container.
 // Each resource requirement is specified as a separate entry in the list,
 // making it easier to support future resource types without API changes.
+// A maximum of 10 resource requirements is allowed.
 // +listType=map
 // +listMapKey=name
 // +kubebuilder:validation:MaxItems=10
@@ -280,5 +285,6 @@ type ContainerResource struct {
 	// limit is the maximum amount of the resource allowed (e.g. "2Mi", "1Gi").
 	// This field is optional.
 	// +optional
+	// +kubebuilder:validation:XValidation:rule="has(self.request) && has(self.limit) && isQuantity(self.request) && isQuantity(self.limit) ? !quantity(self.limit).isLessThan(self.request) : true",message="limit should not be less than request"
 	Limit resource.Quantity `json:"limit,omitempty"`
 }

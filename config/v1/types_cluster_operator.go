@@ -100,6 +100,7 @@ type ObjectReference struct {
 	// +required
 	Resource string `json:"resource"`
 	// namespace of the referent.
+	// +kubebuilder:default=""
 	// +optional
 	Namespace string `json:"namespace,omitempty"`
 	// name of the referent.

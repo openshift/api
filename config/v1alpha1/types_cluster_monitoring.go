@@ -77,13 +77,15 @@ type ClusterMonitoringList struct {
 type ClusterMonitoringSpec struct {
 	// userDefined set the deployment mode for user-defined monitoring in addition to the default platform monitoring.
 	// userDefined is optional.
-	// When omitted, default value is `Disabled`, that is subject to change over time.
+	// When omitted, this means no opinion and the platform is left to choose a reasonable default, that is subject to change over time.
+	// The current default value is `Disabled`.
 	// +optional
 	UserDefined UserDefinedMonitoring `json:"userDefined"`
 	// alertmanagerConfig allows users to configure how the default Alertmanager instance
 	// should be deployed in the `openshift-monitoring` namespace.
 	// alertmanagerConfig is optional.
-	// When omitted, default value is `Deployed`, that is subject to change over time.
+	// When omitted, this means no opinion and the platform is left to choose a reasonable default, that is subject to change over time.
+	// The current default value is `Deployed`.
 	// +optional
 	AlertmanagerConfig AlertmanagerConfig `json:"alertmanagerConfig"`
 }
@@ -94,7 +96,8 @@ type UserDefinedMonitoring struct {
 	// Valid values are Disabled and NamespaceIsolated
 	// Disabled disables monitoring for user-defined projects. This restricts the default monitoring stack, installed in the openshift-monitoring project, to monitor only platform namespaces, which prevents any custom monitoring configurations or resources from being applied to user-defined namespaces.
 	// NamespaceIsolated enables monitoring for user-defined projects with namespace-scoped tenancy. This ensures that metrics, alerts, and monitoring data are isolated at the namespace level.
-	// When set to empty string, the platform will choose a default that is subject to change over time.
+	// When omitted or empty, this means no opinion and the platform is left to choose a reasonable default, that is subject to change over time.
+	// The current default value is `???`.
 	// +kubebuilder:validation:Enum="";Disabled;NamespaceIsolated
 	// +optional
 	Mode UserDefinedMode `json:"mode"`
@@ -116,7 +119,7 @@ const (
 // whether the default Alertmanager is deployed, how it logs, and how its pods are scheduled.
 //
 // +union
-// +kubebuilder:validation:XValidation:rule="self.deploymentMode == 'Deployed' ? has(self.deployed) : (self.deploymentMode == ”) ? !has(self.deployed) : false",message="deployed must be set when deploymentMode is Deployed, and must be unset otherwise"
+// +kubebuilder:validation:XValidation:rule="has(self.deploymentMode) && self.deploymentMode == 'Deployed' ? has(self.deployed) :  !has(self.deployed)",message="deployed is required when deploymentMode is Deployed, and is forbidden otherwise"
 type AlertmanagerConfig struct {
 	// deploymentMode determines whether the default Alertmanager instance should be deployed
 	// as part of the monitoring stack.
@@ -124,7 +127,8 @@ type AlertmanagerConfig struct {
 	// When set to Deployed, the Cluster Monitoring Operator
 	// ensures that an Alertmanager instance is created and managed in the `openshift-monitoring` namespace.
 	// Use this field if you want to explicitly opt in to running a platform-level Alertmanager.
-	// When omitted, this means no opinion and the platform is left to choose a default which is subject to change over time.
+	// When omitted, this means no opinion and the platform is left to choose a reasonable default, that is subject to change over time.
+	// The current default value is `Deployed`.
 	//
 	// +unionDiscriminator
 	// +kubebuilder:validation:Enum="";Deployed
@@ -147,7 +151,7 @@ type AlertmanagerDeployedConfig struct {
 	// This field allows users to control the amount and severity of logs generated, which can be useful
 	// for debugging issues or reducing noise in production environments.
 	// Allowed values are Error, Warn, Info, Debug, and omitted.
-	// When set to Error,  only errors will be logged.
+	// When set to Error, only errors will be logged.
 	// When set to Warn, both warnings and errors will be logged.
 	// When set to Info, general information, warnings, and errors will all be logged.
 	// When set to Debug, detailed debugging information will be logged.

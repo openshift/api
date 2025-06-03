@@ -133,6 +133,8 @@ tests:
               issuerURL: https://meh.tld
               audiences: ['openshift-aud']
             claimMappings:
+              username:
+                claim: username
               uid:
                 claim: sub
       expected: |
@@ -146,6 +148,8 @@ tests:
               issuerURL: https://meh.tld
               audiences: ['openshift-aud']
             claimMappings:
+              username:
+                claim: username
               uid:
                 claim: sub
     - name: Can set OIDC providers with uid claim mapping as a CEL expression
@@ -160,6 +164,8 @@ tests:
               issuerURL: https://meh.tld
               audiences: ['openshift-aud']
             claimMappings:
+              username:
+                claim: username
               uid:
                 expression: claims.sub
       expected: |
@@ -173,6 +179,8 @@ tests:
               issuerURL: https://meh.tld
               audiences: ['openshift-aud']
             claimMappings:
+              username:
+                claim: username
               uid:
                 expression: claims.sub
     - name: Cannot set OIDC providers with uid claim mapping specifying both claim and expression
@@ -187,6 +195,8 @@ tests:
               issuerURL: https://meh.tld
               audiences: ['openshift-aud']
             claimMappings:
+              username:
+                claim: username
               uid:
                 claim: sub
                 expression: claims.sub
@@ -203,6 +213,8 @@ tests:
               issuerURL: https://meh.tld
               audiences: ['openshift-aud']
             claimMappings:
+              username:
+                claim: username
               uid:
                 claim: ""
       expectedError: "Invalid value: \"\": spec.oidcProviders[0].claimMappings.uid.claim in body should be at least 1 chars long"
@@ -218,6 +230,8 @@ tests:
               issuerURL: https://meh.tld
               audiences: ['openshift-aud']
             claimMappings:
+              username:
+                claim: username
               uid:
                 expression: ""
       expectedError: "Invalid value: \"\": spec.oidcProviders[0].claimMappings.uid.expression in body should be at least 1 chars long"
@@ -233,6 +247,8 @@ tests:
               issuerURL: https://meh.tld
               audiences: ['openshift-aud']
             claimMappings:
+              username:
+                claim: username
               uid: {}
       expectedError: "precisely one of claim or expression must be set"
     - name: Can set OIDC providers with extra claim mappings
@@ -247,6 +263,8 @@ tests:
               issuerURL: https://meh.tld
               audiences: ['openshift-aud']
             claimMappings:
+              username:
+                claim: username
               extra:
               - key: example.com/foo
                 valueExpression: claims.foo
@@ -261,6 +279,8 @@ tests:
               issuerURL: https://meh.tld
               audiences: ['openshift-aud']
             claimMappings:
+              username:
+                claim: username
               extra:
               - key: example.com/foo
                 valueExpression: claims.foo
@@ -276,6 +296,8 @@ tests:
               issuerURL: https://meh.tld
               audiences: ['openshift-aud']
             claimMappings:
+              username:
+                claim: username
               extra:
               - key: example.com/foo/bar/baz
                 valueExpression: claims.foo
@@ -290,6 +312,8 @@ tests:
               issuerURL: https://meh.tld
               audiences: ['openshift-aud']
             claimMappings:
+              username:
+                claim: username
               extra:
               - key: example.com/foo/bar/baz
                 valueExpression: claims.foo
@@ -305,6 +329,8 @@ tests:
               issuerURL: https://meh.tld
               audiences: ['openshift-aud']
             claimMappings:
+              username:
+                claim: username
               extra:
               - key: kubernetes.io/foo
                 valueExpression: claims.foo
@@ -321,6 +347,8 @@ tests:
               issuerURL: https://meh.tld
               audiences: ['openshift-aud']
             claimMappings:
+              username:
+                claim: username
               extra:
               - key: k8s.io/foo
                 valueExpression: claims.foo
@@ -337,6 +365,8 @@ tests:
               issuerURL: https://meh.tld
               audiences: ['openshift-aud']
             claimMappings:
+              username:
+                claim: username
               extra:
               - key: openshift.io/foo
                 valueExpression: claims.foo
@@ -353,6 +383,8 @@ tests:
               issuerURL: https://meh.tld
               audiences: ['openshift-aud']
             claimMappings:
+              username:
+                claim: username
               extra:
               - key: bar.kubernetes.io/foo
                 valueExpression: claims.foo
@@ -369,6 +401,8 @@ tests:
               issuerURL: https://meh.tld
               audiences: ['openshift-aud']
             claimMappings:
+              username:
+                claim: username
               extra:
               - key: bar.k8s.io/foo
                 valueExpression: claims.foo
@@ -385,6 +419,8 @@ tests:
               issuerURL: https://meh.tld
               audiences: ['openshift-aud']
             claimMappings:
+              username:
+                claim: username
               extra:
               - key: bar.openshift.io/foo
                 valueExpression: claims.foo
@@ -401,6 +437,8 @@ tests:
               issuerURL: https://meh.tld
               audiences: ['openshift-aud']
             claimMappings:
+              username:
+                claim: username
               extra:
               - key: example.com
                 valueExpression: claims.foo
@@ -417,6 +455,8 @@ tests:
               issuerURL: https://meh.tld
               audiences: ['openshift-aud']
             claimMappings:
+              username:
+                claim: username
               extra:
               - key: example.com/
                 valueExpression: claims.foo
@@ -433,6 +473,8 @@ tests:
               issuerURL: https://meh.tld
               audiences: ['openshift-aud']
             claimMappings:
+              username:
+                claim: username
               extra:
               - key: example.com/@^#
                 valueExpression: claims.foo
@@ -449,6 +491,8 @@ tests:
               issuerURL: https://meh.tld
               audiences: ['openshift-aud']
             claimMappings:
+              username:
+                claim: username
               extra:
               - valueExpression: claims.foo
       expectedError: "spec.oidcProviders[0].claimMappings.extra[0].key: Required value"
@@ -464,6 +508,8 @@ tests:
               issuerURL: https://meh.tld
               audiences: ['openshift-aud']
             claimMappings:
+              username:
+                claim: username
               extra:
               - key: ""
                 valueExpression: claims.foo
@@ -480,6 +526,8 @@ tests:
               issuerURL: https://meh.tld
               audiences: ['openshift-aud']
             claimMappings:
+              username:
+                claim: username
               extra:
               - key: example.com/foo
       expectedError: "spec.oidcProviders[0].claimMappings.extra[0].valueExpression: Required value"
@@ -495,6 +543,8 @@ tests:
               issuerURL: https://meh.tld
               audiences: ['openshift-aud']
             claimMappings:
+              username:
+                claim: username
               extra:
               - key: example.com/foo
                 valueExpression: ""
@@ -511,6 +561,8 @@ tests:
               issuerURL: https://meh.tld
               audiences: ['openshift-aud']
             claimMappings:
+              username:
+                claim: username
               extra:
               - key: example.com/foo
                 valueExpression: "claims.foo"
@@ -529,6 +581,8 @@ tests:
               issuerURL: https://meh.tld
               audiences: ['openshift-aud']
             claimMappings:
+              username:
+                claim: username
               extra:
               - key: ex@mpl3.com/foo
                 valueExpression: "claims.foo"
@@ -545,6 +599,9 @@ tests:
             issuer:
               issuerURL: https://meh.tld
               audiences: ['openshift-aud']
+            claimMappings:
+              username:
+                claim: username
             oidcClients:
               - componentNamespace: namespace
                 componentName: preexisting
@@ -570,6 +627,9 @@ tests:
             issuer:
               issuerURL: https://meh.tld
               audiences: ['openshift-aud']
+            claimMappings:
+              username:
+                claim: username
             oidcClients:
             - componentNamespace: namespace
               componentName: preexisting
@@ -600,6 +660,9 @@ tests:
             issuer:
               issuerURL: https://meh.tld
               audiences: ['openshift-aud']
+            claimMappings:
+              username:
+                claim: username
             oidcClients:
               - componentNamespace: namespace
                 componentName: preexisting
@@ -625,6 +688,9 @@ tests:
             issuer:
               issuerURL: https://meh.tld
               audiences: ['openshift-aud']
+            claimMappings:
+              username:
+                claim: username
             oidcClients:
             - componentNamespace: dif-namespace
               componentName: tehName
@@ -649,6 +715,9 @@ tests:
             issuer:
               issuerURL: https://meh.tld
               audiences: ['openshift-aud']
+            claimMappings:
+              username:
+                claim: username
             oidcClients:
               - componentNamespace: namespace
                 componentName: preexisting
@@ -674,6 +743,9 @@ tests:
             issuer:
               issuerURL: https://meh.tld
               audiences: ['openshift-aud']
+            claimMappings:
+              username:
+                claim: username
             oidcClients:
               - componentNamespace: namespace
                 componentName: preexisting
@@ -696,6 +768,9 @@ tests:
             issuer:
               issuerURL: https://meh.tld
               audiences: ['openshift-aud']
+            claimMappings:
+              username:
+                claim: username
             oidcClients:
               - componentNamespace: namespace
                 componentName: preexisting
@@ -719,6 +794,9 @@ tests:
             issuer:
               issuerURL: https://meh.tld
               audiences: ['openshift-aud']
+            claimMappings:
+              username:
+                claim: username
             oidcClients:
               - componentNamespace: namespace
                 componentName: preexisting
@@ -744,6 +822,9 @@ tests:
             issuer:
               issuerURL: https://meh.tld
               audiences: ['openshift-aud']
+            claimMappings:
+              username:
+                claim: username
             oidcClients:
               - componentNamespace: namespace
                 componentName: preexisting
@@ -767,6 +848,9 @@ tests:
             issuer:
               issuerURL: https://meh.tld
               audiences: ['openshift-aud']
+            claimMappings:
+              username:
+                claim: username
             oidcClients:
               - componentNamespace: namespace
                 componentName: preexisting
@@ -791,6 +875,9 @@ tests:
             issuer:
               issuerURL: https://meh.tld
               audiences: ['openshift-aud']
+            claimMappings:
+              username:
+                claim: username
             oidcClients:
               - componentNamespace: namespace
                 componentName: preexisting
@@ -816,6 +903,9 @@ tests:
             issuer:
               issuerURL: https://meh.tld
               audiences: ['openshift-aud']
+            claimMappings:
+              username:
+                claim: username
             oidcClients:
               - componentNamespace: namespace
                 componentName: preexisting
@@ -844,6 +934,9 @@ tests:
             issuer:
               issuerURL: https://meh.tld
               audiences: ['openshift-aud']
+            claimMappings:
+              username:
+                claim: username
             oidcClients:
               - componentNamespace: namespace
                 componentName: preexisting
@@ -873,6 +966,9 @@ tests:
             issuer:
               issuerURL: https://meh.tld
               audiences: ['openshift-aud']
+            claimMappings:
+              username:
+                claim: username
             oidcClients:
               - componentNamespace: namespace
                 componentName: preexisting

@@ -20,6 +20,9 @@
                         "name": "AWSDedicatedHosts"
                     },
                     {
+                        "name": "AWSServiceLBNetworkSecurityGroup"
+                    },
+                    {
                         "name": "AutomatedEtcdBackup"
                     },
                     {

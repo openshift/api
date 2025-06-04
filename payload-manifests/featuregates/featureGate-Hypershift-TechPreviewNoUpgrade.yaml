@@ -72,6 +72,9 @@
                         "name": "AWSEFSDriverVolumeMetrics"
                     },
                     {
+                        "name": "AWSServiceLBNetworkSecurityGroup"
+                    },
+                    {
                         "name": "AdditionalRoutingCapabilities"
                     },
                     {

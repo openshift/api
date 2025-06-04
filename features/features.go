@@ -814,4 +814,12 @@ var (
 					enhancementPR("https://github.com/openshift/enhancements/pull/1793").
 					enableIn(configv1.DevPreviewNoUpgrade, configv1.TechPreviewNoUpgrade).
 					mustRegister()
+
+	FeatureGateAWSServiceLBNetworkSecurityGroup = newFeatureGate("AWSServiceLBNetworkSecurityGroup").
+					reportProblemsToJiraComponent("Cloud Compute / Cloud Controller Manager").
+					contactPerson("mtulio").
+					productScope(ocpSpecific).
+					enhancementPR("https://github.com/openshift/enhancements/pull/1802").
+					enableIn(configv1.DevPreviewNoUpgrade, configv1.TechPreviewNoUpgrade).
+					mustRegister()
 )

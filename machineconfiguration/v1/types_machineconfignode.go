@@ -16,6 +16,8 @@ import (
 // +kubebuilder:printcolumn:name="PoolName",type="string",JSONPath=.spec.pool.name,priority=0
 // +kubebuilder:printcolumn:name="DesiredConfig",type="string",JSONPath=.spec.configVersion.desired,priority=0
 // +kubebuilder:printcolumn:name="CurrentConfig",type="string",JSONPath=.status.configVersion.current,priority=0
+// +kubebuilder:printcolumn:name="DesiredImage",type="string",JSONPath=.spec?.configImage?.desired,priority=0
+// +kubebuilder:printcolumn:name="CurrentImage",type="string",JSONPath=.status?.configImage?.current,priority=0
 // +kubebuilder:printcolumn:name="Updated",type="string",JSONPath=.status.conditions[?(@.type=="Updated")].status,priority=0
 // +kubebuilder:printcolumn:name="UpdatePrepared",type="string",JSONPath=.status.conditions[?(@.type=="UpdatePrepared")].status,priority=1
 // +kubebuilder:printcolumn:name="UpdateExecuted",type="string",JSONPath=.status.conditions[?(@.type=="UpdateExecuted")].status,priority=1
@@ -120,6 +122,9 @@ type MachineConfigNodeStatus struct {
 	// configVersion describes the current and desired machine config version for this node.
 	// +optional
 	ConfigVersion *MachineConfigNodeStatusMachineConfigVersion `json:"configVersion,omitempty"`
+	// configImage describes the current and desired images for this node.
+	// +optional
+	ConfigImage *MachineConfigNodeStatusMachineConfigImage `json:"configImage,omitempty"`
 	// pinnedImageSets describes the current and desired pinned image sets for this node.
 	// +listType=map
 	// +listMapKey=name
@@ -187,6 +192,24 @@ type MachineConfigNodeStatusMachineConfigVersion struct {
 	// with an alphanumeric character, and be at most 253 characters in length.
 	// +kubebuilder:validation:MaxLength:=253
 	// +kubebuilder:validation:XValidation:rule="!format.dns1123Subdomain().validate(self).hasValue()",message="a lowercase RFC 1123 subdomain must consist of lower case alphanumeric characters, '-' or '.', and must start and end with an alphanumeric character."
+	// +required
+	Desired string `json:"desired"`
+}
+
+// MachineConfigNodeStatusMachineConfigImage holds the current and desired images as last updated in the MCN status.
+// When the current and desired images do not match, the machine config pool is processing an OCL-enabled upgrade and the
+// machine config node will monitor the upgrade process.
+// When the current and desired images do match, the machine config node will not update any statuses.
+type MachineConfigNodeStatusMachineConfigImage struct {
+	// current is the image in use on the node.
+	// This value is updated once the machine config daemon has completed the update of the configuration for the node.
+	// This value should match the desired version unless an upgrade is in progress.
+	// +kubebuilder:validation:MaxLength:=253
+	// +optional
+	Current string `json:"current"`
+	// desired is the image the node wants to upgrade to.
+	// This value gets set in the machine config node. TODO: figure out when this value is created and when it should be updated.
+	// +kubebuilder:validation:MaxLength:=253
 	// +required
 	Desired string `json:"desired"`
 }

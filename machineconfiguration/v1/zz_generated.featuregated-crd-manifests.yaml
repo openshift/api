@@ -137,6 +137,12 @@ machineconfignodes.machineconfiguration.openshift.io:
   - jsonPath: .status.configVersion.current
     name: CurrentConfig
     type: string
+  - jsonPath: .spec?.configImage?.desired
+    name: DesiredImage
+    type: string
+  - jsonPath: .status?.configImage?.current
+    name: CurrentImage
+    type: string
   - jsonPath: .status.conditions[?(@.type=="Updated")].status
     name: Updated
     type: string

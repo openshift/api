@@ -29,6 +29,12 @@ spec:
     - jsonPath: .status.configVersion.current
       name: CurrentConfig
       type: string
+    - jsonPath: .spec?.configImage?.desired
+      name: DesiredImage
+      type: string
+    - jsonPath: .status?.configImage?.current
+      name: CurrentImage
+      type: string
     - jsonPath: .status.conditions[?(@.type=="Updated")].status
       name: Updated
       type: string
@@ -241,6 +247,26 @@ spec:
                 x-kubernetes-list-map-keys:
                 - type
                 x-kubernetes-list-type: map
+              configImage:
+                description: configImage describes the current and desired images
+                  for this node.
+                properties:
+                  current:
+                    description: |-
+                      current is the image in use on the node.
+                      This value is updated once the machine config daemon has completed the update of the configuration for the node.
+                      This value should match the desired version unless an upgrade is in progress.
+                    maxLength: 253
+                    type: string
+                  desired:
+                    description: |-
+                      desired is the image the node wants to upgrade to.
+                      This value gets set in the machine config node. TODO: figure out when this value is created and when it should be updated.
+                    maxLength: 253
+                    type: string
+                required:
+                - desired
+                type: object
               configVersion:
                 description: configVersion describes the current and desired machine
                   config version for this node.

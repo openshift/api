@@ -32,6 +32,9 @@
                         "name": "AzureMultiDisk"
                     },
                     {
+                        "name": "BootImageSkewEnforcement"
+                    },
+                    {
                         "name": "BootcNodeManagement"
                     },
                     {
@@ -111,6 +114,9 @@
                     },
                     {
                         "name": "MachineConfigNodes"
+                    },
+                    {
+                        "name": "ManagedBootImagesAzure"
                     },
                     {
                         "name": "ManagedBootImagesvSphere"

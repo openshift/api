@@ -80,7 +80,7 @@ type ClusterMonitoringSpec struct {
 	// When omitted, this means no opinion and the platform is left to choose a reasonable default, that is subject to change over time.
 	// The current default value is `Disabled`.
 	// +optional
-	UserDefined UserDefinedMonitoring `json:"userDefined,omitempty"`
+	UserDefined UserDefinedMonitoring `json:"userDefined"`
 	// alertmanagerConfig allows users to configure how the default Alertmanager instance
 	// should be deployed in the `openshift-monitoring` namespace.
 	// alertmanagerConfig is optional.
@@ -155,8 +155,8 @@ type AlertmanagerDeployedConfig struct {
 	// When set to Warn, both warnings and errors will be logged.
 	// When set to Info, general information, warnings, and errors will all be logged.
 	// When set to Debug, detailed debugging information will be logged.
-	// When omitted, this means no opinion and the platform is left to choose a default that is subject to change over time.
-	// Currently, the default is Info.
+	// When omitted, this means no opinion and the platform is left to choose a reasonable default, that is subject to change over time.
+	// The current default value is `Info`.
 	// +optional
 	LogLevel LogLevel `json:"logLevel,omitempty"`
 	// nodeSelector is the node selector applied to network diagnostics components
@@ -164,6 +164,7 @@ type AlertmanagerDeployedConfig struct {
 	//
 	// When omitted, this means the user has no opinion and the platform is left
 	// to choose reasonable defaults. These defaults are subject to change over time.
+	// The current default value is `kubernetes.io/os: linux`.
 	// +optional
 	NodeSelector map[string]string `json:"nodeSelector,omitempty"`
 	// resources defines the compute resource requests and limits for the Alertmanager container.
@@ -172,6 +173,11 @@ type AlertmanagerDeployedConfig struct {
 	// This field is optional.
 	// More info: https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/
 	// This is a simplified API that maps to Kubernetes ResourceRequirements.
+	// The current default values are:
+	//   resources:
+	//     requests:
+	//       cpu: 4m
+	//       memory: 40Mi
 	// +optional
 	Resources AlertmanagerContainerResources `json:"resources,omitempty"`
 	// secrets Defines a list of secrets that need to be mounted into the Alertmanager.

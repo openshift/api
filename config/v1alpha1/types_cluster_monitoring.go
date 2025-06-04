@@ -271,6 +271,7 @@ const (
 type AlertmanagerContainerResources []ContainerResource
 
 // ContainerResource defines a single resource requirement for a container.
+// +kubebuilder:validation:XValidation:rule="has(self.request) || has(self.limit)",message="at least one of request or limit must be set"
 type ContainerResource struct {
 	// name of the resource (e.g. "cpu", "memory", "hugepages-2Mi").
 	// This field is required.

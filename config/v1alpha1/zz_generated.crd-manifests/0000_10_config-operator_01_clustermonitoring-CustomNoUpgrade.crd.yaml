@@ -47,16 +47,20 @@ spec:
           spec:
             description: spec holds user configuration for the Cluster Monitoring
               Operator
+            minProperties: 1
             properties:
               alertmanagerConfig:
                 description: |-
                   alertmanagerConfig allows users to configure how the default Alertmanager instance
                   should be deployed in the `openshift-monitoring` namespace.
                   alertmanagerConfig is optional.
+                  When omitted, this means no opinion and the platform is left to choose a reasonable default, that is subject to change over time.
+                  The current default value is `Deployed`.
                 properties:
-                  deployed:
-                    description: deployed must be set when deploymentMode is Deployed,
-                      and must be unset otherwise
+                  customConfig:
+                    description: |-
+                      customConfig must be set when deploymentMode is CustomConfig, and must be unset otherwise.
+                      When set to CustomConfig, the Alertmanager will be deployed with custom configuration.
                     properties:
                       logLevel:
                         description: |-
@@ -64,12 +68,12 @@ spec:
                           This field allows users to control the amount and severity of logs generated, which can be useful
                           for debugging issues or reducing noise in production environments.
                           Allowed values are Error, Warn, Info, Debug, and omitted.
-                          When set to Error,  only errors will be logged.
+                          When set to Error, only errors will be logged.
                           When set to Warn, both warnings and errors will be logged.
                           When set to Info, general information, warnings, and errors will all be logged.
                           When set to Debug, detailed debugging information will be logged.
-                          When omitted, this means no opinion and the platform is left to choose a default that is subject to change over time.
-                          Currently, the default is Info.
+                          When omitted, this means no opinion and the platform is left to choose a reasonable default, that is subject to change over time.
+                          The current default value is `Info`.
                         enum:
                         - ""
                         - Error
@@ -86,6 +90,7 @@ spec:
 
                           When omitted, this means the user has no opinion and the platform is left
                           to choose reasonable defaults. These defaults are subject to change over time.
+                          The current default value is `kubernetes.io/os: linux`.
                         type: object
                       resources:
                         description: |-
@@ -95,6 +100,11 @@ spec:
                           This field is optional.
                           More info: https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/
                           This is a simplified API that maps to Kubernetes ResourceRequirements.
+                          The current default values are:
+                            resources:
+                              requests:
+                                cpu: 4m
+                                memory: 40Mi
                         items:
                           description: ContainerResource defines a single resource
                             requirement for a container.
@@ -108,6 +118,11 @@ spec:
                                 This field is optional.
                               pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
                               x-kubernetes-int-or-string: true
+                              x-kubernetes-validations:
+                              - message: limit should not be less than request
+                                rule: 'has(self.request) && has(self.limit) && isQuantity(self.request)
+                                  && isQuantity(self.limit) ? !quantity(self.limit).isLessThan(self.request)
+                                  : true'
                             name:
                               description: |-
                                 name of the resource (e.g. "cpu", "memory", "hugepages-2Mi").
@@ -125,6 +140,9 @@ spec:
                           required:
                           - name
                           type: object
+                          x-kubernetes-validations:
+                          - message: at least one of request or limit must be set
+                            rule: has(self.request) || has(self.limit)
                         maxItems: 10
                         type: array
                         x-kubernetes-list-map-keys:
@@ -205,6 +223,7 @@ spec:
                           type: object
                         maxItems: 10
                         type: array
+                        x-kubernetes-list-type: atomic
                       topologySpreadConstraints:
                         description: |-
                           topologySpreadConstraints defines rules for how Alertmanager Pods should be distributed
@@ -391,20 +410,10 @@ spec:
                           type: object
                         maxItems: 10
                         type: array
-                      userModeConfig:
-                        description: |-
-                          userModeConfig controls whether Alertmanager should process configurations from user-defined (non-platform)
-                          namespaces for AlertmanagerConfig lookups.
-                          Alertmanager will search for AlertmanagerConfig resources in user-defined namespaces.
-                          This field is only effective when the user workload Alertmanager instance is not enabled.
-                          If the user workload monitoring Alertmanager is enabled, this field is ignored.
-                          userMode is required.
-                          Allowed values are Selectable
-                          Default value is empty string
-                        enum:
-                        - ""
-                        - Selectable
-                        type: string
+                        x-kubernetes-list-map-keys:
+                        - topologyKey
+                        - whenUnsatisfiable
+                        x-kubernetes-list-type: map
                       volumeClaimTemplate:
                         description: |-
                           volumeClaimTemplate Defines persistent storage for Alertmanager. Use this setting to
@@ -835,32 +844,38 @@ spec:
                             type: object
                         type: object
                     type: object
+                  defaultConfig:
+                    description: |-
+                      defaultConfig must be set when deploymentMode is DefaultConfig, and must be unset otherwise.
+                      When set to DefaultConfig, the platform will deploy Alertmanager with default settings.
+                    type: object
                   deploymentMode:
                     description: |-
                       deploymentMode determines whether the default Alertmanager instance should be deployed
                       as part of the monitoring stack.
-                      Allowed values are Deployed and NotDeployed.
-                      When set to Deployed, the Cluster Monitoring Operator
-                      ensures that an Alertmanager instance is created and managed in the `openshift-monitoring` namespace.
-                      When set to NotDeployed, the operator will not deploy the Alertmanager instance.
-                      Use this field if you want to explicitly opt in or out of running a platform-level Alertmanager.
-                      When set to empty string, the platform will choose a default that is subject to change over time.
+                      Allowed values are Disabled, DefaultConfig, and CustomConfig.
+                      When set to Disabled, the Alertmanager instance will not be deployed.
+                      When set to DefaultConfig, the platform will deploy Alertmanager with default settings.
+                      When set to CustomConfig, the Alertmanager will be deployed with custom configuration.
                     enum:
-                    - ""
-                    - Deployed
-                    - NotDeployed
+                    - Disabled
+                    - DefaultConfig
+                    - CustomConfig
                     type: string
+                  disabled:
+                    description: |-
+                      disabled must be set when deploymentMode is Disabled, and must be unset otherwise.
+                      When set to Disabled, the Alertmanager instance will not be deployed.
+                    type: object
+                required:
+                - deploymentMode
                 type: object
-                x-kubernetes-validations:
-                - message: deployed must be set when deploymentMode is Deployed, and
-                    must be unset otherwise
-                  rule: 'self.deploymentMode == ''Deployed'' ? has(self.deployed)
-                    : !has(self.deployed)'
               userDefined:
                 description: |-
                   userDefined set the deployment mode for user-defined monitoring in addition to the default platform monitoring.
                   userDefined is optional.
-                  When omitted, default value is `false`, that is subject to change over time.
+                  When omitted, this means no opinion and the platform is left to choose a reasonable default, that is subject to change over time.
+                  The current default value is `Disabled`.
                 properties:
                   mode:
                     description: |-
@@ -868,12 +883,11 @@ spec:
                       Valid values are Disabled and NamespaceIsolated
                       Disabled disables monitoring for user-defined projects. This restricts the default monitoring stack, installed in the openshift-monitoring project, to monitor only platform namespaces, which prevents any custom monitoring configurations or resources from being applied to user-defined namespaces.
                       NamespaceIsolated enables monitoring for user-defined projects with namespace-scoped tenancy. This ensures that metrics, alerts, and monitoring data are isolated at the namespace level.
+                      The current default value is `Disabled`.
                     enum:
                     - Disabled
                     - NamespaceIsolated
                     type: string
-                required:
-                - mode
                 type: object
             type: object
           status:

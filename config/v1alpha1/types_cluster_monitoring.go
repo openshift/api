@@ -74,20 +74,21 @@ type ClusterMonitoringList struct {
 }
 
 // ClusterMonitoringSpec defines the desired state of Cluster Monitoring Operator
+// +kubebuilder:validation:MinProperties=1
 type ClusterMonitoringSpec struct {
 	// userDefined set the deployment mode for user-defined monitoring in addition to the default platform monitoring.
 	// userDefined is optional.
 	// When omitted, this means no opinion and the platform is left to choose a reasonable default, that is subject to change over time.
 	// The current default value is `Disabled`.
 	// +optional
-	UserDefined UserDefinedMonitoring `json:"userDefined"`
+	UserDefined UserDefinedMonitoring `json:"userDefined,omitempty"`
 	// alertmanagerConfig allows users to configure how the default Alertmanager instance
 	// should be deployed in the `openshift-monitoring` namespace.
 	// alertmanagerConfig is optional.
 	// When omitted, this means no opinion and the platform is left to choose a reasonable default, that is subject to change over time.
 	// The current default value is `Deployed`.
 	// +optional
-	AlertmanagerConfig AlertmanagerConfig `json:"alertmanagerConfig"`
+	AlertmanagerConfig *AlertmanagerConfig `json:"alertmanagerConfig,omitempty"`
 }
 
 // UserDefinedMonitoring config for user-defined projects.
@@ -99,8 +100,7 @@ type UserDefinedMonitoring struct {
 	// Disabled disables monitoring for user-defined projects. This restricts the default monitoring stack, installed in the openshift-monitoring project, to monitor only platform namespaces, which prevents any custom monitoring configurations or resources from being applied to user-defined namespaces.
 	// NamespaceIsolated enables monitoring for user-defined projects with namespace-scoped tenancy. This ensures that metrics, alerts, and monitoring data are isolated at the namespace level.
 	// The current default value is `Disabled`.
-	// +kubebuilder:validation:Enum="";Disabled;NamespaceIsolated
-	// +optional
+	// +kubebuilder:validation:Enum=Disabled;NamespaceIsolated
 	Mode UserDefinedMode `json:"mode"`
 }
 
@@ -118,35 +118,48 @@ const (
 // alertmanagerConfig provides configuration options for the default Alertmanager instance
 // that runs in the `openshift-monitoring` namespace. Use this configuration to control
 // whether the default Alertmanager is deployed, how it logs, and how its pods are scheduled.
-//
-// When omitted, this means no opinion and the platform is left to choose a reasonable default, that is subject to change over time.
 type AlertmanagerConfig struct {
 	// deploymentMode determines whether the default Alertmanager instance should be deployed
 	// as part of the monitoring stack.
-	// Allowed values are Deployed and omitted.
-	// When set to Deployed, the Cluster Monitoring Operator
-	// ensures that an Alertmanager instance is created and managed in the `openshift-monitoring` namespace.
-	// Use this field if you want to explicitly opt in to running a platform-level Alertmanager.
-	// When omitted, this means no opinion and the platform is left to choose a reasonable default, that is subject to change over time.
-	// The current default value is `Deployed`.
+	// Allowed values are Disabled, DefaultConfig, and CustomConfig.
+	// When set to Disabled, the Alertmanager instance will not be deployed.
+	// When set to DefaultConfig, the platform will deploy Alertmanager with default settings.
+	// When set to CustomConfig, the Alertmanager will be deployed with custom configuration.
 	//
 	// +unionDiscriminator
-	// +kubebuilder:validation:Enum="";Deployed
+	// +kubebuilder:validation:Required
+	// +kubebuilder:validation:Enum=Disabled;DefaultConfig;CustomConfig
 	DeploymentMode AlertManagerDeployMode `json:"deploymentMode"`
 
-	// deployed must be set when deploymentMode is Deployed, and must be unset otherwise.
-	// When set to Deployed, the Cluster Monitoring Operator
-	// ensures that an Alertmanager instance is created and managed in the `openshift-monitoring` namespace.
+	// disabled must be set when deploymentMode is Disabled, and must be unset otherwise.
+	// When set to Disabled, the Alertmanager instance will not be deployed.
 	// +optional
-	Deployed *AlertmanagerDeployedConfig `json:"deployed,omitempty"`
+	Disabled *AlertmanagerDisabledConfig `json:"disabled,omitempty"`
+
+	// defaultConfig must be set when deploymentMode is DefaultConfig, and must be unset otherwise.
+	// When set to DefaultConfig, the platform will deploy Alertmanager with default settings.
+	// +optional
+	DefaultConfig *AlertmanagerDefaultConfig `json:"defaultConfig,omitempty"`
+
+	// customConfig must be set when deploymentMode is CustomConfig, and must be unset otherwise.
+	// When set to CustomConfig, the Alertmanager will be deployed with custom configuration.
+	// +optional
+	CustomConfig *AlertmanagerCustomConfig `json:"customConfig,omitempty"`
 }
 
-// alertmanagerConfig provides configuration options for the default Alertmanager instance
+// AlertmanagerDisabledConfig represents the configuration when Alertmanager is disabled.
+type AlertmanagerDisabledConfig struct {
+}
+
+// AlertmanagerDefaultConfig represents the configuration when using default Alertmanager settings.
+type AlertmanagerDefaultConfig struct {
+}
+
+// AlertmanagerCustomConfig represents the configuration for a custom Alertmanager deployment.
+// alertmanagerCustomConfig provides configuration options for the default Alertmanager instance
 // that runs in the `openshift-monitoring` namespace. Use this configuration to control
 // whether the default Alertmanager is deployed, how it logs, and how its pods are scheduled.
-//
-// When omitted, this means no opinion and the platform is left to choose a reasonable default, that is subject to change over time.
-type AlertmanagerDeployedConfig struct {
+type AlertmanagerCustomConfig struct {
 	// logLevel defines the verbosity of logs emitted by Alertmanager.
 	// This field allows users to control the amount and severity of logs generated, which can be useful
 	// for debugging issues or reducing noise in production environments.
@@ -232,22 +245,21 @@ type AlertmanagerDeployedConfig struct {
 	VolumeClaimTemplate *v1.PersistentVolumeClaim `json:"volumeClaimTemplate,omitempty"`
 }
 
-// SecretName is a type that represents the name of a Secret in the same namespace.
-// It must be at most 253 characters in length.
-// +kubebuilder:validation:XValidation:rule="!format.dns1123Subdomain().validate(self).hasValue()",message="a lowercase RFC 1123 subdomain must consist of lower case alphanumeric characters, '-' or '.', and must start and end with an alphanumeric character."
-// +kubebuilder:validation:MaxLength=253
-type SecretName string
-
 // AlertManagerDeployMode defines the deployment state of the platform Alertmanager instance.
 //
 // Possible values:
-// - "Deployed": The Alertmanager instance will be deployed and managed by the operator.
-// - omitted: The platform will choose a default that is subject to change over time.
+// - "Disabled": The Alertmanager instance will not be deployed.
+// - "DefaultConfig": The Alertmanager instance will be deployed with default settings.
+// - "CustomConfig": The Alertmanager instance will be deployed with custom configuration.
 type AlertManagerDeployMode string
 
 const (
-	// AlertManagerModeEnabled means the Alertmanager instance will be deployed and managed by the operator.
-	AlertManagerDeployModeDeployed AlertManagerDeployMode = "Deployed"
+	// AlertManagerModeDisabled means the Alertmanager instance will not be deployed.
+	AlertManagerDeployModeDisabled AlertManagerDeployMode = "Disabled"
+	// AlertManagerModeDefaultConfig means the Alertmanager instance will be deployed with default settings.
+	AlertManagerDeployModeDefaultConfig AlertManagerDeployMode = "DefaultConfig"
+	// AlertManagerModeCustomConfig means the Alertmanager instance will be deployed with custom configuration.
+	AlertManagerDeployModeCustomConfig AlertManagerDeployMode = "CustomConfig"
 )
 
 // logLevel defines the verbosity of logs emitted by Alertmanager.
@@ -295,3 +307,9 @@ type ContainerResource struct {
 	// +kubebuilder:validation:XValidation:rule="has(self.request) && has(self.limit) && isQuantity(self.request) && isQuantity(self.limit) ? !quantity(self.limit).isLessThan(self.request) : true",message="limit should not be less than request"
 	Limit resource.Quantity `json:"limit,omitempty"`
 }
+
+// SecretName is a type that represents the name of a Secret in the same namespace.
+// It must be at most 253 characters in length.
+// +kubebuilder:validation:XValidation:rule="!format.dns1123Subdomain().validate(self).hasValue()",message="a lowercase RFC 1123 subdomain must consist of lower case alphanumeric characters, '-' or '.', and must start and end with an alphanumeric character."
+// +kubebuilder:validation:MaxLength=253
+type SecretName string

@@ -133,12 +133,12 @@ var (
 						mustRegister()
 
 	FeatureGateAzureDedicatedHosts = newFeatureGate("AzureDedicatedHosts").
-						reportProblemsToJiraComponent("installer").
-						contactPerson("rvanderp3").
-						productScope(ocpSpecific).
-						enhancementPR("https://github.com/openshift/enhancements/pull/1783").
-						enableIn(configv1.DevPreviewNoUpgrade, configv1.TechPreviewNoUpgrade).
-						mustRegister()
+					reportProblemsToJiraComponent("installer").
+					contactPerson("rvanderp3").
+					productScope(ocpSpecific).
+					enhancementPR("https://github.com/openshift/enhancements/pull/1783").
+					enableIn(configv1.DevPreviewNoUpgrade, configv1.TechPreviewNoUpgrade).
+					mustRegister()
 
 	FeatureGateMaxUnavailableStatefulSet = newFeatureGate("MaxUnavailableStatefulSet").
 						reportProblemsToJiraComponent("apps").
@@ -383,6 +383,22 @@ var (
 						productScope(ocpSpecific).
 						enhancementPR("https://github.com/openshift/enhancements/pull/1496").
 						enableIn(configv1.DevPreviewNoUpgrade, configv1.TechPreviewNoUpgrade).
+						mustRegister()
+
+	FeatureGateManagedBootImagesAzure = newFeatureGate("ManagedBootImagesAzure").
+						reportProblemsToJiraComponent("MachineConfigOperator").
+						contactPerson("djoshy").
+						productScope(ocpSpecific).
+						enhancementPR("https://github.com/openshift/enhancements/pull/1761").
+						enableIn(configv1.DevPreviewNoUpgrade, configv1.TechPreviewNoUpgrade).
+						mustRegister()
+
+	FeatureGateBootImageSkewEnforcement = newFeatureGate("BootImageSkewEnforcement").
+						reportProblemsToJiraComponent("MachineConfigOperator").
+						contactPerson("djoshy").
+						productScope(ocpSpecific).
+						enhancementPR("https://github.com/openshift/enhancements/pull/1761").
+						enableIn(configv1.DevPreviewNoUpgrade).
 						mustRegister()
 
 	FeatureGateOnClusterBuild = newFeatureGate("OnClusterBuild").
@@ -808,18 +824,18 @@ var (
 					mustRegister()
 
 	FeatureGatePreconfiguredUDNAddresses = newFeatureGate("PreconfiguredUDNAddresses").
-					reportProblemsToJiraComponent("Networking/ovn-kubernetes").
-					contactPerson("kyrtapz").
-					productScope(ocpSpecific).
-					enhancementPR("https://github.com/openshift/enhancements/pull/1793").
-					enableIn(configv1.DevPreviewNoUpgrade, configv1.TechPreviewNoUpgrade).
-					mustRegister()
+						reportProblemsToJiraComponent("Networking/ovn-kubernetes").
+						contactPerson("kyrtapz").
+						productScope(ocpSpecific).
+						enhancementPR("https://github.com/openshift/enhancements/pull/1793").
+						enableIn(configv1.DevPreviewNoUpgrade, configv1.TechPreviewNoUpgrade).
+						mustRegister()
 
 	FeatureGateAWSServiceLBNetworkSecurityGroup = newFeatureGate("AWSServiceLBNetworkSecurityGroup").
-					reportProblemsToJiraComponent("Cloud Compute / Cloud Controller Manager").
-					contactPerson("mtulio").
-					productScope(ocpSpecific).
-					enhancementPR("https://github.com/openshift/enhancements/pull/1802").
-					enableIn(configv1.DevPreviewNoUpgrade, configv1.TechPreviewNoUpgrade).
-					mustRegister()
+							reportProblemsToJiraComponent("Cloud Compute / Cloud Controller Manager").
+							contactPerson("mtulio").
+							productScope(ocpSpecific).
+							enhancementPR("https://github.com/openshift/enhancements/pull/1802").
+							enableIn(configv1.DevPreviewNoUpgrade, configv1.TechPreviewNoUpgrade).
+							mustRegister()
 )

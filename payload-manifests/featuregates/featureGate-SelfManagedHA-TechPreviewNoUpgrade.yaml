@@ -16,6 +16,9 @@
             {
                 "disabled": [
                     {
+                        "name": "BootImageSkewEnforcement"
+                    },
+                    {
                         "name": "ClusterAPIInstall"
                     },
                     {
@@ -181,6 +184,9 @@
                     },
                     {
                         "name": "ManagedBootImagesAWS"
+                    },
+                    {
+                        "name": "ManagedBootImagesAzure"
                     },
                     {
                         "name": "ManagedBootImagesvSphere"

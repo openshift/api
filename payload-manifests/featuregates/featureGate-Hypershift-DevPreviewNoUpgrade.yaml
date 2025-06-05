@@ -81,6 +81,9 @@
                         "name": "AzureWorkloadIdentity"
                     },
                     {
+                        "name": "BootImageSkewEnforcement"
+                    },
+                    {
                         "name": "BootcNodeManagement"
                     },
                     {
@@ -190,6 +193,9 @@
                     },
                     {
                         "name": "ManagedBootImagesAWS"
+                    },
+                    {
+                        "name": "ManagedBootImagesAzure"
                     },
                     {
                         "name": "ManagedBootImagesvSphere"

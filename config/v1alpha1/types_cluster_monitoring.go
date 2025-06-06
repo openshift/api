@@ -192,7 +192,10 @@ type AlertmanagerCustomConfig struct {
 	//       cpu: 4m
 	//       memory: 40Mi
 	// +optional
-	Resources AlertmanagerContainerResources `json:"resources,omitempty"`
+	// +listType=map
+	// +listMapKey=name
+	// +kubebuilder:validation:MaxItems=10
+	Resources []ContainerResource `json:"resources,omitempty"`
 	// secrets Defines a list of secrets that need to be mounted into the Alertmanager.
 	// The secrets must reside within the same namespace as the Alertmanager object.
 	// They will be added as volumes named secret-<secret-name> and mounted at
@@ -264,11 +267,10 @@ const (
 
 // logLevel defines the verbosity of logs emitted by Alertmanager.
 // Valid values are Error, Warn, Info and Debug.
-// +kubebuilder:validation:Enum="";Error;Warn;Info;Debug
+// +kubebuilder:validation:Enum=Error;Warn;Info;Debug
 type LogLevel string
 
 const (
-	LogLevelEmpty LogLevel = ""
 	// Error only errors will be logged.
 	LogLevelError LogLevel = "Error"
 	// Warn, both warnings and errors will be logged.
@@ -278,15 +280,6 @@ const (
 	// Debug, detailed debugging information will be logged.
 	LogLevelDebug LogLevel = "Debug"
 )
-
-// AlertmanagerContainerResources defines resource requirements for a container.
-// Each resource requirement is specified as a separate entry in the list,
-// making it easier to support future resource types without API changes.
-// A maximum of 10 resource requirements is allowed.
-// +listType=map
-// +listMapKey=name
-// +kubebuilder:validation:MaxItems=10
-type AlertmanagerContainerResources []ContainerResource
 
 // ContainerResource defines a single resource requirement for a container.
 // +kubebuilder:validation:XValidation:rule="has(self.request) || has(self.limit)",message="at least one of request or limit must be set"

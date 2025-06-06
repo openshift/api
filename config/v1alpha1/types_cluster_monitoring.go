@@ -287,16 +287,19 @@ type ContainerResource struct {
 	// name of the resource (e.g. "cpu", "memory", "hugepages-2Mi").
 	// This field is required.
 	// +required
+	// +kubebuilder:validation:XValidation:rule="!format.qualifiedName().validate(self).hasValue()",message="name must be a valid qualified name"
 	Name string `json:"name"`
 
 	// request is the minimum amount of the resource required (e.g. "2Mi", "1Gi").
 	// This field is optional.
 	// +optional
+	// +kubebuilder:validation:XValidation:rule="!has(self) || (isQuantity(self) && quantity(self).compareTo('0') >= 0)",message="request must be a non-negative quantity"
 	Request resource.Quantity `json:"request,omitempty"`
 
 	// limit is the maximum amount of the resource allowed (e.g. "2Mi", "1Gi").
 	// This field is optional.
 	// +optional
+	// +kubebuilder:validation:XValidation:rule="!has(self) || (isQuantity(self) && quantity(self).compareTo('0') >= 0)",message="limit must be a non-negative quantity"
 	// +kubebuilder:validation:XValidation:rule="has(self.request) && has(self.limit) && isQuantity(self.request) && isQuantity(self.limit) ? !quantity(self.limit).isLessThan(self.request) : true",message="limit should not be less than request"
 	Limit resource.Quantity `json:"limit,omitempty"`
 }

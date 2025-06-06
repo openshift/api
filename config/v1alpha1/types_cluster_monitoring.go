@@ -127,7 +127,7 @@ type AlertmanagerConfig struct {
 	// When set to CustomConfig, the Alertmanager will be deployed with custom configuration.
 	//
 	// +unionDiscriminator
-	// +kubebuilder:validation:Required
+	// +required
 	// +kubebuilder:validation:Enum=Disabled;DefaultConfig;CustomConfig
 	DeploymentMode AlertManagerDeployMode `json:"deploymentMode"`
 

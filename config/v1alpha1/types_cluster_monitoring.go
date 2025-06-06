@@ -287,6 +287,7 @@ type ContainerResource struct {
 	// name of the resource (e.g. "cpu", "memory", "hugepages-2Mi").
 	// This field is required.
 	// +required
+	// +kubebuilder:validation:MaxLength=253
 	// +kubebuilder:validation:XValidation:rule="!format.qualifiedName().validate(self).hasValue()",message="name must be a valid qualified name"
 	Name string `json:"name"`
 

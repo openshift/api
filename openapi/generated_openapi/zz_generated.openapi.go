@@ -20558,6 +20558,14 @@ func schema_openshift_api_config_v1alpha1_AlertmanagerCustomConfig(ref common.Re
 						},
 					},
 					"resources": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-map-keys": []interface{}{
+									"name",
+								},
+								"x-kubernetes-list-type": "map",
+							},
+						},
 						SchemaProps: spec.SchemaProps{
 							Description: "resources defines the compute resource requests and limits for the Alertmanager container. This includes CPU, memory and HugePages constraints to help control scheduling and resource usage. When not specified, defaults are used by the platform. Requests cannot exceed limits. This field is optional. More info: https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/ This is a simplified API that maps to Kubernetes ResourceRequirements. The current default values are:\n  resources:\n    requests:\n      cpu: 4m\n      memory: 40Mi",
 							Type:        []string{"array"},

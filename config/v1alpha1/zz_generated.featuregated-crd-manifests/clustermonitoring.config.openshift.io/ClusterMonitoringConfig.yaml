@@ -75,7 +75,6 @@ spec:
                           When omitted, this means no opinion and the platform is left to choose a reasonable default, that is subject to change over time.
                           The current default value is `Info`.
                         enum:
-                        - ""
                         - Error
                         - Warn
                         - Info
@@ -119,6 +118,9 @@ spec:
                               pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
                               x-kubernetes-int-or-string: true
                               x-kubernetes-validations:
+                              - message: limit must be a non-negative quantity
+                                rule: '!has(self) || (isQuantity(self) && quantity(self).compareTo(''0'')
+                                  >= 0)'
                               - message: limit should not be less than request
                                 rule: 'has(self.request) && has(self.limit) && isQuantity(self.request)
                                   && isQuantity(self.limit) ? !quantity(self.limit).isLessThan(self.request)
@@ -127,7 +129,11 @@ spec:
                               description: |-
                                 name of the resource (e.g. "cpu", "memory", "hugepages-2Mi").
                                 This field is required.
+                              maxLength: 253
                               type: string
+                              x-kubernetes-validations:
+                              - message: name must be a valid qualified name
+                                rule: '!format.qualifiedName().validate(self).hasValue()'
                             request:
                               anyOf:
                               - type: integer
@@ -137,6 +143,10 @@ spec:
                                 This field is optional.
                               pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
                               x-kubernetes-int-or-string: true
+                              x-kubernetes-validations:
+                              - message: request must be a non-negative quantity
+                                rule: '!has(self) || (isQuantity(self) && quantity(self).compareTo(''0'')
+                                  >= 0)'
                           required:
                           - name
                           type: object

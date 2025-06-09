@@ -8906,11 +8906,12 @@
       "type": "object",
       "required": [
         "name",
-        "issuer"
+        "issuer",
+        "claimMappings"
       ],
       "properties": {
         "claimMappings": {
-          "description": "claimMappings is an optional field that configures the rules to be used by the Kubernetes API server for translating claims in a JWT token, issued by the identity provider, to a cluster identity.",
+          "description": "claimMappings is a required field that configures the rules to be used by the Kubernetes API server for translating claims in a JWT token, issued by the identity provider, to a cluster identity.",
           "default": {},
           "$ref": "#/definitions/com.github.openshift.api.config.v1.TokenClaimMappings"
         },
@@ -10488,6 +10489,9 @@
     },
     "com.github.openshift.api.config.v1.TokenClaimMappings": {
       "type": "object",
+      "required": [
+        "username"
+      ],
       "properties": {
         "extra": {
           "description": "extra is an optional field for configuring the mappings used to construct the extra attribute for the cluster identity. When omitted, no extra attributes will be present on the cluster identity. key values for extra mappings must be unique. A maximum of 64 extra attribute mappings may be provided.",
@@ -10511,7 +10515,7 @@
           "$ref": "#/definitions/com.github.openshift.api.config.v1.TokenClaimOrExpressionMapping"
         },
         "username": {
-          "description": "username is an optional field that configures how the username of a cluster identity should be constructed from the claims in a JWT token issued by the identity provider.",
+          "description": "username is a required field that configures how the username of a cluster identity should be constructed from the claims in a JWT token issued by the identity provider.",
           "default": {},
           "$ref": "#/definitions/com.github.openshift.api.config.v1.UsernameClaimMapping"
         }
@@ -10693,7 +10697,7 @@
       ],
       "properties": {
         "claim": {
-          "description": "claim is a required field that configures the JWT token claim whose value is assigned to the cluster identity field associated with this mapping.",
+          "description": "claim is a required field that configures the JWT token claim whose value is assigned to the cluster identity field associated with this mapping.\n\nclaim must not be an empty string (\"\") and must not exceed 256 characters.",
           "type": "string",
           "default": ""
         },
@@ -10711,6 +10715,7 @@
         {
           "discriminator": "prefixPolicy",
           "fields-to-discriminateBy": {
+            "claim": "Claim",
             "prefix": "Prefix"
           }
         }

@@ -16711,7 +16711,7 @@ func schema_openshift_api_config_v1_OIDCProvider(ref common.ReferenceCallback) c
 					},
 					"claimMappings": {
 						SchemaProps: spec.SchemaProps{
-							Description: "claimMappings is an optional field that configures the rules to be used by the Kubernetes API server for translating claims in a JWT token, issued by the identity provider, to a cluster identity.",
+							Description: "claimMappings is a required field that configures the rules to be used by the Kubernetes API server for translating claims in a JWT token, issued by the identity provider, to a cluster identity.",
 							Default:     map[string]interface{}{},
 							Ref:         ref("github.com/openshift/api/config/v1.TokenClaimMappings"),
 						},
@@ -16736,7 +16736,7 @@ func schema_openshift_api_config_v1_OIDCProvider(ref common.ReferenceCallback) c
 						},
 					},
 				},
-				Required: []string{"name", "issuer"},
+				Required: []string{"name", "issuer", "claimMappings"},
 			},
 		},
 		Dependencies: []string{
@@ -19392,7 +19392,7 @@ func schema_openshift_api_config_v1_TokenClaimMappings(ref common.ReferenceCallb
 				Properties: map[string]spec.Schema{
 					"username": {
 						SchemaProps: spec.SchemaProps{
-							Description: "username is an optional field that configures how the username of a cluster identity should be constructed from the claims in a JWT token issued by the identity provider.",
+							Description: "username is a required field that configures how the username of a cluster identity should be constructed from the claims in a JWT token issued by the identity provider.",
 							Default:     map[string]interface{}{},
 							Ref:         ref("github.com/openshift/api/config/v1.UsernameClaimMapping"),
 						},
@@ -19433,6 +19433,7 @@ func schema_openshift_api_config_v1_TokenClaimMappings(ref common.ReferenceCallb
 						},
 					},
 				},
+				Required: []string{"username"},
 			},
 		},
 		Dependencies: []string{
@@ -19731,7 +19732,7 @@ func schema_openshift_api_config_v1_UsernameClaimMapping(ref common.ReferenceCal
 				Properties: map[string]spec.Schema{
 					"claim": {
 						SchemaProps: spec.SchemaProps{
-							Description: "claim is a required field that configures the JWT token claim whose value is assigned to the cluster identity field associated with this mapping.",
+							Description: "claim is a required field that configures the JWT token claim whose value is assigned to the cluster identity field associated with this mapping.\n\nclaim must not be an empty string (\"\") and must not exceed 256 characters.",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -19761,6 +19762,7 @@ func schema_openshift_api_config_v1_UsernameClaimMapping(ref common.ReferenceCal
 						map[string]interface{}{
 							"discriminator": "prefixPolicy",
 							"fields-to-discriminateBy": map[string]interface{}{
+								"claim":  "Claim",
 								"prefix": "Prefix",
 							},
 						},

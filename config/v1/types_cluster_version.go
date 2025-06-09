@@ -199,6 +199,21 @@ type ClusterVersionStatus struct {
 	// +listType=atomic
 	// +optional
 	ConditionalUpdates []ConditionalUpdate `json:"conditionalUpdates,omitempty"`
+
+	// conditionalUpdateRisks contains the list of risks associated with
+	// conditionalUpdates. When performing a conditional update, all its
+	// associated risks will be compared with the set of accepted risks
+	// in the spec.desiredUpdate.accept field. If all risks for a conditional
+	// update are included in the spec.desiredUpdate.accept set, the conditional
+	// update will proceed, otherwise it is blocked.
+	// The list of risks is built by a map indexed by the name of the risk.
+	// +kubebuilder:validation:MaxItems=1000
+	// +patchMergeKey=name
+	// +patchStrategy=merge
+	// +listType=map
+	// +listMapKey=name
+	// +optional
+	ConditionalUpdateRisks []ConditionalUpdateRisk `json:"conditionalUpdateRisks,omitempty" patchStrategy:"merge" patchMergeKey:"name"`
 }
 
 // UpdateState is a constant representing whether an update was successfully
@@ -255,10 +270,11 @@ type UpdateHistory struct {
 	Verified bool `json:"verified"`
 
 	// acceptedRisks records risks which were accepted to initiate the update.
-	// For example, it may menition an Upgradeable=False or missing signature
-	// that was overriden via desiredUpdate.force, or an update that was
+	// For example, it may mention an Upgradeable=False or missing signature
+	// that was overridden via desiredUpdate.force, or an update that was
 	// initiated despite not being in the availableUpdates set of recommended
-	// update targets.
+	// update targets, or in the conditionUpdates set and all associated risks
+	// are specified in desiredUpdate.accept.
 	// +optional
 	AcceptedRisks string `json:"acceptedRisks,omitempty"`
 }
@@ -725,6 +741,16 @@ type Update struct {
 	//
 	// +optional
 	Force bool `json:"force"`
+
+	// accept allows an administrator to specify the set of the names of ConditionalUpdateRisk
+	// those are considered acceptable. A conditional update is accepted by Cluster-Version
+	// operator only if all of its risks are acceptable.
+	//
+	// +kubebuilder:validation:items:MaxLength=256
+	// +kubebuilder:validation:MaxItems=1000
+	// +listType=set
+	// +optional
+	Accept []string `json:"accept"`
 }
 
 // Release represents an OpenShift release image and associated metadata.
@@ -780,11 +806,24 @@ type ConditionalUpdate struct {
 	// +required
 	Release Release `json:"release"`
 
+	// riskNames represents the set of the names of conditionalUpdateRisks
+	// in the status that are exposed to the release in this conditional update.
+	// The cluster-version operator will evaluate these risks and only
+	// accept the update if there is at least one risk and for every risk
+	// it is either not applied to the cluster or considered acceptable
+	// by the cluster administrator.
+	// +kubebuilder:validation:items:MaxLength=256
+	// +kubebuilder:validation:MaxItems=100
+	// +listType=set
+	// +optional
+	RiskNames []string `json:"riskNames"`
+
 	// risks represents the range of issues associated with
 	// updating to the target release. The cluster-version
 	// operator will evaluate all entries, and only recommend the
 	// update if there is at least one entry and all entries
 	// recommend the update.
+	// DEPRECATED: the risks has been deprecated by riskNames.
 	// +kubebuilder:validation:MinItems=1
 	// +patchMergeKey=name
 	// +patchStrategy=merge
@@ -806,6 +845,15 @@ type ConditionalUpdate struct {
 // for not recommending a conditional update.
 // +k8s:deepcopy-gen=true
 type ConditionalUpdateRisk struct {
+	// conditions represents the observations of the conditional update
+	// risk's current status. Known types are:
+	// * Applied, for whether the risk is applied to the current cluster.
+	// +kubebuilder:validation:MaxItems=2
+	// +listType=map
+	// +listMapKey=type
+	// +optional
+	Conditions []metav1.Condition `json:"conditions,omitempty"`
+
 	// url contains information about this risk.
 	// +kubebuilder:validation:Format=uri
 	// +kubebuilder:validation:MinLength=1

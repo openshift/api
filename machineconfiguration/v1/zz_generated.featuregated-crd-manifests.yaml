@@ -137,12 +137,6 @@ machineconfignodes.machineconfiguration.openshift.io:
   - jsonPath: .status.configVersion.current
     name: CurrentConfig
     type: string
-  - jsonPath: .spec?.configImage?.desired
-    name: DesiredImage
-    type: string
-  - jsonPath: .status?.configImage?.current
-    name: CurrentImage
-    type: string
   - jsonPath: .status.conditions[?(@.type=="Updated")].status
     name: Updated
     type: string
@@ -184,6 +178,26 @@ machineconfignodes.machineconfiguration.openshift.io:
     type: string
   - jsonPath: .status.conditions[?(@.type=="Uncordoned")].status
     name: UncordonedNode
+    priority: 1
+    type: string
+  - jsonPath: .status.conditions[?(@.type=="ImageBuilt")].status
+    name: ImageBuilt
+    priority: 1
+    type: string
+  - jsonPath: .status.conditions[?(@.type=="ImagePushedToRegistry")].status
+    name: ImagePushedToRegistry
+    priority: 1
+    type: string
+  - jsonPath: .status.conditions[?(@.type=="ImageRolledOutToNode")].status
+    name: ImageRolledOutToNode
+    priority: 1
+    type: string
+  - jsonPath: .status.conditions[?(@.type=="ImagePulledFromRegistry")].status
+    name: ImagePulledFromRegistry
+    priority: 1
+    type: string
+  - jsonPath: .status.conditions[?(@.type=="ImageAppliedToNode")].status
+    name: ImageAppliedToNode
     priority: 1
     type: string
   Scope: Cluster

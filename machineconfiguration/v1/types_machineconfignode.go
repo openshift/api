@@ -16,8 +16,6 @@ import (
 // +kubebuilder:printcolumn:name="PoolName",type="string",JSONPath=.spec.pool.name,priority=0
 // +kubebuilder:printcolumn:name="DesiredConfig",type="string",JSONPath=.spec.configVersion.desired,priority=0
 // +kubebuilder:printcolumn:name="CurrentConfig",type="string",JSONPath=.status.configVersion.current,priority=0
-// +kubebuilder:printcolumn:name="DesiredImage",type="string",JSONPath=.spec?.configImage?.desired,priority=0
-// +kubebuilder:printcolumn:name="CurrentImage",type="string",JSONPath=.status?.configImage?.current,priority=0
 // +kubebuilder:printcolumn:name="Updated",type="string",JSONPath=.status.conditions[?(@.type=="Updated")].status,priority=0
 // +kubebuilder:printcolumn:name="UpdatePrepared",type="string",JSONPath=.status.conditions[?(@.type=="UpdatePrepared")].status,priority=1
 // +kubebuilder:printcolumn:name="UpdateExecuted",type="string",JSONPath=.status.conditions[?(@.type=="UpdateExecuted")].status,priority=1
@@ -29,6 +27,11 @@ import (
 // +kubebuilder:printcolumn:name="DrainedNode",type="string",JSONPath=.status.conditions[?(@.type=="Drained")].status,priority=1
 // +kubebuilder:printcolumn:name="RebootedNode",type="string",JSONPath=.status.conditions[?(@.type=="RebootedNode")].status,priority=1
 // +kubebuilder:printcolumn:name="UncordonedNode",type="string",JSONPath=.status.conditions[?(@.type=="Uncordoned")].status,priority=1
+// +kubebuilder:printcolumn:name="ImageBuilt",type="string",JSONPath=.status.conditions[?(@.type=="ImageBuilt")].status,priority=1
+// +kubebuilder:printcolumn:name="ImagePushedToRegistry",type="string",JSONPath=.status.conditions[?(@.type=="ImagePushedToRegistry")].status,priority=1
+// +kubebuilder:printcolumn:name="ImageRolledOutToNode",type="string",JSONPath=.status.conditions[?(@.type=="ImageRolledOutToNode")].status,priority=1
+// +kubebuilder:printcolumn:name="ImagePulledFromRegistry",type="string",JSONPath=.status.conditions[?(@.type=="ImagePulledFromRegistry")].status,priority=1
+// +kubebuilder:printcolumn:name="ImageAppliedToNode",type="string",JSONPath=.status.conditions[?(@.type=="ImageAppliedToNode")].status,priority=1
 // +kubebuilder:metadata:labels=openshift.io/operator-managed=
 
 // MachineConfigNode describes the health of the Machines on the system
@@ -259,6 +262,16 @@ const (
 	MachineConfigNodeUpdateUncordoned StateProgress = "Uncordoned"
 	// MachineConfigNodeUpdateRebooted describes the part of the post action phase where the node reboots itself
 	MachineConfigNodeUpdateRebooted StateProgress = "RebootedNode"
+	// MachineConfigNodeUpdateImageBuilt describes the part of an OCL-enabled update where an image is built
+	MachineConfigNodeUpdateImageBuilt StateProgress = "ImageBuilt"
+	// MachineConfigNodeUpdateImagePushedToRegistry describes the part of an OCL-enabled update where an image is pushed to the image registry
+	MachineConfigNodeUpdateImagePushedToRegistry StateProgress = "ImagePushedToRegistry"
+	// MachineConfigNodeUpdateImageRolledOutToNode describes the part of an OCL-enabled update where an image is rolled out to a node
+	MachineConfigNodeUpdateImageRolledOutToNode StateProgress = "ImageRolledOutToNode"
+	// MachineConfigNodeUpdateImagePulledFromRegistry describes the part of the image rolling out to node phase in an OCL-enabled update where an image is pulled from the image registry
+	MachineConfigNodeUpdateImagePulledFromRegistry StateProgress = "ImagePulledFromRegistry"
+	// MachineConfigNodeUpdateImageImageAppliedToNode describes the part of the image rolling out to node phase in an OCL-enabled update where an image is applied to a node
+	MachineConfigNodeUpdateImageAppliedToNode StateProgress = "ImageAppliedToNode"
 	// MachineConfigNodeNodeDegraded describes a machine that has failed to update to the desired machine config and is in a degraded state
 	MachineConfigNodeNodeDegraded StateProgress = "NodeDegraded"
 	// MachineConfigNodePinnedImageSetsProgressing describes a machine currently progressing to the desired pinned image sets

@@ -1638,10 +1638,20 @@ func (IPFIXConfig) SwaggerDoc() map[string]string {
 
 var map_IPsecConfig = map[string]string{
 	"mode": "mode defines the behaviour of the ipsec configuration within the platform. Valid values are `Disabled`, `External` and `Full`. When 'Disabled', ipsec will not be enabled at the node level. When 'External', ipsec is enabled on the node level but requires the user to configure the secure communication parameters. This mode is for external secure communications and the configuration can be done using the k8s-nmstate operator. When 'Full', ipsec is configured on the node level and inter-pod secure communication within the cluster is configured. Note with `Full`, if ipsec is desired for communication with external (to the cluster) entities (such as storage arrays), this is left to the user to configure.",
+	"full": "full defines configuration parameters for the IPsec `Full` mode. This is permitted only when mode is configured with `Full`, and forbidden otherwise.",
 }
 
 func (IPsecConfig) SwaggerDoc() map[string]string {
 	return map_IPsecConfig
+}
+
+var map_IPsecFullModeConfig = map[string]string{
+	"":              "IPsecFullModeConfig defines configuration parameters for the IPsec `Full` mode.",
+	"encapsulation": "encapsulation option to configure libreswan on how inter-pod traffic across nodes are encapsulated to handle NAT traversal. When configured it uses UDP port 4500 for the encapsulation. Valid values are Always, Auto and omitted. Always means enable UDP encapsulation regardless of whether NAT is detected. Auto means enable UDP encapsulation based on the detection of NAT. When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time. The current default is Auto.",
+}
+
+func (IPsecFullModeConfig) SwaggerDoc() map[string]string {
+	return map_IPsecFullModeConfig
 }
 
 var map_IPv4GatewayConfig = map[string]string{

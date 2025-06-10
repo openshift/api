@@ -283,9 +283,6 @@
                         "name": "PersistentIPsForVirtualization"
                     },
                     {
-                        "name": "PrivateHostedZoneAWS"
-                    },
-                    {
                         "name": "ProcMountType"
                     },
                     {

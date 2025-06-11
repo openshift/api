@@ -26480,7 +26480,6 @@
       "description": "Compatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.",
       "type": "object",
       "required": [
-        "kubeClientConfig",
         "servingInfo",
         "leaderElection",
         "controllers",
@@ -26540,10 +26539,6 @@
         "kind": {
           "description": "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
           "type": "string"
-        },
-        "kubeClientConfig": {
-          "default": {},
-          "$ref": "#/definitions/com.github.openshift.api.config.v1.KubeClientConfig"
         },
         "leaderElection": {
           "description": "leaderElection defines the configuration for electing a controller instance to make changes to the cluster. If unspecified, the ControllerTTL value is checked to determine whether the legacy direct etcd election code will be used.",

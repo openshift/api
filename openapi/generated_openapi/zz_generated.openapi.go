@@ -45641,12 +45641,6 @@ func schema_openshift_api_openshiftcontrolplane_v1_OpenShiftControllerManagerCon
 							Format:      "",
 						},
 					},
-					"kubeClientConfig": {
-						SchemaProps: spec.SchemaProps{
-							Default: map[string]interface{}{},
-							Ref:     ref("github.com/openshift/api/config/v1.KubeClientConfig"),
-						},
-					},
 					"servingInfo": {
 						SchemaProps: spec.SchemaProps{
 							Description: "servingInfo describes how to start serving",
@@ -45751,11 +45745,11 @@ func schema_openshift_api_openshiftcontrolplane_v1_OpenShiftControllerManagerCon
 						},
 					},
 				},
-				Required: []string{"kubeClientConfig", "servingInfo", "leaderElection", "controllers", "resourceQuota", "serviceServingCert", "deployer", "build", "serviceAccount", "dockerPullSecret", "network", "ingress", "imageImport", "securityAllocator", "featureGates"},
+				Required: []string{"servingInfo", "leaderElection", "controllers", "resourceQuota", "serviceServingCert", "deployer", "build", "serviceAccount", "dockerPullSecret", "network", "ingress", "imageImport", "securityAllocator", "featureGates"},
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/config/v1.HTTPServingInfo", "github.com/openshift/api/config/v1.KubeClientConfig", "github.com/openshift/api/config/v1.LeaderElection", "github.com/openshift/api/openshiftcontrolplane/v1.BuildControllerConfig", "github.com/openshift/api/openshiftcontrolplane/v1.DeployerControllerConfig", "github.com/openshift/api/openshiftcontrolplane/v1.DockerPullSecretControllerConfig", "github.com/openshift/api/openshiftcontrolplane/v1.ImageImportControllerConfig", "github.com/openshift/api/openshiftcontrolplane/v1.IngressControllerConfig", "github.com/openshift/api/openshiftcontrolplane/v1.NetworkControllerConfig", "github.com/openshift/api/openshiftcontrolplane/v1.ResourceQuotaControllerConfig", "github.com/openshift/api/openshiftcontrolplane/v1.SecurityAllocator", "github.com/openshift/api/openshiftcontrolplane/v1.ServiceAccountControllerConfig", "github.com/openshift/api/openshiftcontrolplane/v1.ServiceServingCert"},
+			"github.com/openshift/api/config/v1.HTTPServingInfo", "github.com/openshift/api/config/v1.LeaderElection", "github.com/openshift/api/openshiftcontrolplane/v1.BuildControllerConfig", "github.com/openshift/api/openshiftcontrolplane/v1.DeployerControllerConfig", "github.com/openshift/api/openshiftcontrolplane/v1.DockerPullSecretControllerConfig", "github.com/openshift/api/openshiftcontrolplane/v1.ImageImportControllerConfig", "github.com/openshift/api/openshiftcontrolplane/v1.IngressControllerConfig", "github.com/openshift/api/openshiftcontrolplane/v1.NetworkControllerConfig", "github.com/openshift/api/openshiftcontrolplane/v1.ResourceQuotaControllerConfig", "github.com/openshift/api/openshiftcontrolplane/v1.SecurityAllocator", "github.com/openshift/api/openshiftcontrolplane/v1.ServiceAccountControllerConfig", "github.com/openshift/api/openshiftcontrolplane/v1.ServiceServingCert"},
 	}
 }
 

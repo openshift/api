@@ -56,6 +56,14 @@ spec:
       name: UpdatedFilesAndOS
       priority: 1
       type: string
+    - jsonPath: .status.conditions[?(@.type=="AppliedFiles")].status
+      name: UpdatedFilesAndOS
+      priority: 1
+      type: string
+    - jsonPath: .status.conditions[?(@.type=="AppliedOSImage")].status
+      name: UpdatedFilesAndOS
+      priority: 1
+      type: string
     - jsonPath: .status.conditions[?(@.type=="Cordoned")].status
       name: CordonedNode
       priority: 1
@@ -72,24 +80,8 @@ spec:
       name: UncordonedNode
       priority: 1
       type: string
-    - jsonPath: .status.conditions[?(@.type=="ImageBuilt")].status
-      name: ImageBuilt
-      priority: 1
-      type: string
-    - jsonPath: .status.conditions[?(@.type=="ImagePushedToRegistry")].status
-      name: ImagePushedToRegistry
-      priority: 1
-      type: string
-    - jsonPath: .status.conditions[?(@.type=="ImageRolledOutToNode")].status
-      name: ImageRolledOutToNode
-      priority: 1
-      type: string
     - jsonPath: .status.conditions[?(@.type=="ImagePulledFromRegistry")].status
       name: ImagePulledFromRegistry
-      priority: 1
-      type: string
-    - jsonPath: .status.conditions[?(@.type=="ImageAppliedToNode")].status
-      name: ImageAppliedToNode
       priority: 1
       type: string
     name: v1

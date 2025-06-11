@@ -29,15 +29,8 @@ import (
 // +kubebuilder:printcolumn:name="DrainedNode",type="string",JSONPath=.status.conditions[?(@.type=="Drained")].status,priority=1
 // +kubebuilder:printcolumn:name="RebootedNode",type="string",JSONPath=.status.conditions[?(@.type=="RebootedNode")].status,priority=1
 // +kubebuilder:printcolumn:name="UncordonedNode",type="string",JSONPath=.status.conditions[?(@.type=="Uncordoned")].status,priority=1
-// +kubebuilder:printcolumn:name="ImageBuilt",type="string",JSONPath=.status.conditions[?(@.type=="ImageBuilt")].status,priority=1
-// +kubebuilder:printcolumn:name="ImagePushedToRegistry",type="string",JSONPath=.status.conditions[?(@.type=="ImagePushedToRegistry")].status,priority=1
-// +kubebuilder:printcolumn:name="ImageRolledOutToNode",type="string",JSONPath=.status.conditions[?(@.type=="ImageRolledOutToNode")].status,priority=1
 // +kubebuilder:printcolumn:name="ImagePulledFromRegistry",type="string",JSONPath=.status.conditions[?(@.type=="ImagePulledFromRegistry")].status,priority=1
-// +kubebuilder:printcolumn:name="ImageAppliedToNode",type="string",JSONPath=.status.conditions[?(@.type=="ImageAppliedToNode")].status,priority=1
 // +kubebuilder:metadata:labels=openshift.io/operator-managed=
-
-// TODO: add FG to all new things once it is defined
-// TODO: in enhancement bring up convo of phasing out `AppliedFilesAndOS` and whether it's possible and/or worth it
 
 // MachineConfigNode describes the health of the Machines on the system
 // Compatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).
@@ -77,6 +70,10 @@ type MachineConfigNodeList struct {
 	// +optional
 	Items []MachineConfigNode `json:"items"`
 }
+
+// TODO: add FG to all new things once it is defined
+// TODO: in enhancement bring up convo of phasing out `AppliedFilesAndOS` and whether it's possible and/or worth adding
+// TODO: in story for this need to add tests too
 
 // MCOObjectReference holds information about an object the MCO either owns
 // or modifies in some way

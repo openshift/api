@@ -11128,6 +11128,16 @@
         }
       }
     },
+    "com.github.openshift.api.config.v1alpha1.Audit": {
+      "description": "Audit defines the configuration for Metrics Server audit logging.",
+      "type": "object",
+      "properties": {
+        "profile": {
+          "description": "profile specifies the audit log level to use. Valid values are: - \"metadata\" - log metadata about requests (default) - \"request\" - log metadata and request payloads - \"requestresponse\" - log metadata, requests, and responses - \"none\" - don't log requests The default audit log level is \"metadata\"\n\nSee: https://kubernetes.io/docs/tasks/debug-application-cluster/audit/#audit-policy for more details about audit logging.",
+          "type": "string"
+        }
+      }
+    },
     "com.github.openshift.api.config.v1alpha1.Backup": {
       "description": "Backup provides configuration for performing backups of the openshift cluster.\n\nCompatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.",
       "type": "object",
@@ -11375,6 +11385,11 @@
         "userDefined"
       ],
       "properties": {
+        "metricsServer": {
+          "description": "metricsServer defines the configuration for the Metrics Server component. The Metrics Server provides container resource metrics for use in autoscaling pipelines. When omitted, this means no opinion and the platform is left to choose a default, which is subject to change over time.",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.config.v1alpha1.MetricsServerConfig"
+        },
         "userDefined": {
           "description": "userDefined set the deployment mode for user-defined monitoring in addition to the default platform monitoring.",
           "default": {},
@@ -11457,6 +11472,27 @@
         "storage": {
           "description": "storage is an optional field that allows user to define persistent storage for gathering jobs to store the Insights data archive. If omitted, the gathering job will use ephemeral storage.",
           "$ref": "#/definitions/com.github.openshift.api.config.v1alpha1.Storage"
+        }
+      }
+    },
+    "com.github.openshift.api.config.v1alpha1.HugePageResource": {
+      "description": "HugePageResource describes hugepages resources by page size (e.g. 2Mi, 1Gi).",
+      "type": "object",
+      "required": [
+        "size"
+      ],
+      "properties": {
+        "limit": {
+          "description": "limit amount for this hugepage size. This filed is optional",
+          "$ref": "#/definitions/io.k8s.apimachinery.pkg.api.resource.Quantity"
+        },
+        "request": {
+          "description": "request amount for this hugepage size. This filed is optional",
+          "$ref": "#/definitions/io.k8s.apimachinery.pkg.api.resource.Quantity"
+        },
+        "size": {
+          "description": "size of the hugepage (e.g. \"2Mi\", \"1Gi\"). This field is required.",
+          "$ref": "#/definitions/io.k8s.apimachinery.pkg.api.resource.Quantity"
         }
       }
     },
@@ -11637,6 +11673,70 @@
     },
     "com.github.openshift.api.config.v1alpha1.InsightsDataGatherStatus": {
       "type": "object"
+    },
+    "com.github.openshift.api.config.v1alpha1.MetricServerConfigContainerResources": {
+      "description": "MetricServerConfigContainerResources defines simplified resource requirements for a container.",
+      "type": "object",
+      "properties": {
+        "cpu": {
+          "description": "cpu defines the CPU resource limits and requests. This filed is optional",
+          "$ref": "#/definitions/com.github.openshift.api.config.v1alpha1.ResourceSpec"
+        },
+        "hugepages": {
+          "description": "hugepages is a list of hugepage resource specifications by page size. defines an optional list of unique configurations identified by their `size` field. A maximum of 10 items is allowed. The list is treated as a map, using `size` as the key",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/com.github.openshift.api.config.v1alpha1.HugePageResource"
+          },
+          "x-kubernetes-list-map-keys": [
+            "size"
+          ],
+          "x-kubernetes-list-type": "map"
+        },
+        "memory": {
+          "description": "memory defines the memory resource limits and requests. This filed is optional",
+          "$ref": "#/definitions/com.github.openshift.api.config.v1alpha1.ResourceSpec"
+        }
+      }
+    },
+    "com.github.openshift.api.config.v1alpha1.MetricsServerConfig": {
+      "description": "The MetricsServerConfig resource defines settings for the Metrics Server component. This configuration allows users to customize how the Metrics Server is deployed and how it operates within the cluster.",
+      "type": "object",
+      "properties": {
+        "audit": {
+          "description": "audit defines the audit configuration used by the Metrics Server instance. When omitted, this means no opinion and the platform is left to choose a default, which is subject to change over time. The current default is \"metadata\". The audit field is optional.",
+          "$ref": "#/definitions/com.github.openshift.api.config.v1alpha1.Audit"
+        },
+        "nodeSelector": {
+          "description": "nodeSelector is the node selector applied to metrics server pods. nodeSelector is optional.\n\nWhen omitted, this means the user has no opinion and the platform is left to choose reasonable defaults. These defaults are subject to change over time. The current default is `kubernetes.io/os: linux` so that Pods can be scheduled onto any available node.",
+          "type": "object",
+          "additionalProperties": {
+            "type": "string",
+            "default": ""
+          }
+        },
+        "resources": {
+          "description": "resources defines the compute resource requests and limits for the Metrics Server container. This includes CPU, memory and HugePages constraints to help control scheduling and resource usage. When not specified, defaults are used by the platform. Requests cannot exceed limits. Resources is optional. More info: https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/ This is a simplified API that maps to Kubernetes ResourceRequirements.",
+          "$ref": "#/definitions/com.github.openshift.api.config.v1alpha1.MetricServerConfigContainerResources"
+        },
+        "tolerations": {
+          "description": "tolerations is a list of tolerations applied to metrics server components tolerations is optional.\n\nWhen omitted, this means the user has no opinion and the platform is left to choose reasonable defaults. These defaults are subject to change over time. Maximum length for this list is 10",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/io.k8s.api.core.v1.Toleration"
+          }
+        },
+        "topologySpreadConstraints": {
+          "description": "topologySpreadConstraints defines rules for how Metrics Server Pods should be distributed across topology domains such as zones, nodes, or other user-defined labels. topologySpreadConstraints is optional. This helps improve high availability and resource efficiency by avoiding placing too many replicas in the same failure domain.\n\nWhen omitted, this means no opinion and the platform is left to choose a default, which is subject to change over time. This field maps directly to the `topologySpreadConstraints` field in the Pod spec. Maximum length for this list is 10",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/io.k8s.api.core.v1.TopologySpreadConstraint"
+          }
+        }
+      }
     },
     "com.github.openshift.api.config.v1alpha1.PKI": {
       "description": "PKI defines the root of trust based on Root CA(s) and corresponding intermediate certificates.",
@@ -11863,6 +11963,20 @@
           "description": "rekorKeyData contains inline base64-encoded data for the PEM format from the Rekor public key. rekorKeyData must be at most 8192 characters.",
           "type": "string",
           "format": "byte"
+        }
+      }
+    },
+    "com.github.openshift.api.config.v1alpha1.ResourceSpec": {
+      "description": "ResourceSpec defines the requested and limited value of a resource.",
+      "type": "object",
+      "properties": {
+        "limit": {
+          "description": "limit is the maximum amount of the resource allowed (e.g. \"2Mi\", \"1Gi\"). This field is optional.",
+          "$ref": "#/definitions/io.k8s.apimachinery.pkg.api.resource.Quantity"
+        },
+        "request": {
+          "description": "request is the minimum amount of the resource required (e.g. \"2Mi\", \"1Gi\"). This field is optional.",
+          "$ref": "#/definitions/io.k8s.apimachinery.pkg.api.resource.Quantity"
         }
       }
     },

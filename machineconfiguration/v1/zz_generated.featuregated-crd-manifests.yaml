@@ -160,16 +160,20 @@ machineconfignodes.machineconfiguration.openshift.io:
     name: Resumed
     priority: 1
     type: string
+  - jsonPath: .status.conditions[?(@.type=="ImagePulledFromRegistry")].status
+    name: ImagePulledFromRegistry
+    priority: 1
+    type: string
   - jsonPath: .status.conditions[?(@.type=="AppliedFilesAndOS")].status
     name: UpdatedFilesAndOS
     priority: 1
     type: string
   - jsonPath: .status.conditions[?(@.type=="AppliedFiles")].status
-    name: UpdatedFilesAndOS
+    name: AppliedFiles
     priority: 1
     type: string
   - jsonPath: .status.conditions[?(@.type=="AppliedOSImage")].status
-    name: UpdatedFilesAndOS
+    name: AppliedOSImage
     priority: 1
     type: string
   - jsonPath: .status.conditions[?(@.type=="Cordoned")].status
@@ -186,10 +190,6 @@ machineconfignodes.machineconfiguration.openshift.io:
     type: string
   - jsonPath: .status.conditions[?(@.type=="Uncordoned")].status
     name: UncordonedNode
-    priority: 1
-    type: string
-  - jsonPath: .status.conditions[?(@.type=="ImagePulledFromRegistry")].status
-    name: ImagePulledFromRegistry
     priority: 1
     type: string
   Scope: Cluster

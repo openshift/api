@@ -122,9 +122,6 @@
                         "name": "OVNObservability"
                     },
                     {
-                        "name": "OnClusterBuild"
-                    },
-                    {
                         "name": "OpenShiftPodSecurityAdmission"
                     },
                     {
@@ -239,6 +236,9 @@
                     },
                     {
                         "name": "NodeDisruptionPolicy"
+                    },
+                    {
+                        "name": "OnClusterBuild"
                     },
                     {
                         "name": "PersistentIPsForVirtualization"

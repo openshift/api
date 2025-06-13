@@ -274,9 +274,6 @@
                         "name": "NewOLM"
                     },
                     {
-                        "name": "NodeDisruptionPolicy"
-                    },
-                    {
                         "name": "OnClusterBuild"
                     },
                     {

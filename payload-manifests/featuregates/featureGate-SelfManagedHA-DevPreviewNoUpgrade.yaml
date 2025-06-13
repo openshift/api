@@ -225,9 +225,6 @@
                         "name": "NewOLMWebhookProviderOpenshiftServiceCA"
                     },
                     {
-                        "name": "NodeDisruptionPolicy"
-                    },
-                    {
                         "name": "NodeSwap"
                     },
                     {

@@ -563,14 +563,6 @@ var (
 					enableIn(configv1.DevPreviewNoUpgrade, configv1.TechPreviewNoUpgrade).
 					mustRegister()
 
-	FeatureGateNodeDisruptionPolicy = newFeatureGate("NodeDisruptionPolicy").
-					reportProblemsToJiraComponent("MachineConfigOperator").
-					contactPerson("jerzhang").
-					productScope(ocpSpecific).
-					enhancementPR(legacyFeatureGateWithoutEnhancement).
-					enableIn(configv1.Default, configv1.DevPreviewNoUpgrade, configv1.TechPreviewNoUpgrade).
-					mustRegister()
-
 	FeatureGateMetricsCollectionProfiles = newFeatureGate("MetricsCollectionProfiles").
 						reportProblemsToJiraComponent("Monitoring").
 						contactPerson("rexagod").

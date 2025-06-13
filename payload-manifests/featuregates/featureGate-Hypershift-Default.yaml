@@ -274,9 +274,6 @@
                         "name": "NetworkSegmentation"
                     },
                     {
-                        "name": "NodeDisruptionPolicy"
-                    },
-                    {
                         "name": "OnClusterBuild"
                     },
                     {

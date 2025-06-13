@@ -231,9 +231,6 @@
                         "name": "NetworkSegmentation"
                     },
                     {
-                        "name": "NodeDisruptionPolicy"
-                    },
-                    {
                         "name": "NodeSwap"
                     },
                     {

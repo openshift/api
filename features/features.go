@@ -60,6 +60,14 @@ var (
 						enableIn(configv1.Default, configv1.DevPreviewNoUpgrade, configv1.TechPreviewNoUpgrade).
 						mustRegister()
 
+	FeatureGateMutatingAdmissionPolicy = newFeatureGate("MutatingAdmissionPolicy").
+						reportProblemsToJiraComponent("kube-apiserver").
+						contactPerson("benluddy").
+						productScope(kubernetes).
+						enhancementPR("https://github.com/kubernetes/enhancements/issues/3962").
+						enableIn().
+						mustRegister()
+
 	FeatureGateGatewayAPI = newFeatureGate("GatewayAPI").
 				reportProblemsToJiraComponent("Routing").
 				contactPerson("miciah").

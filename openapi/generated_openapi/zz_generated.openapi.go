@@ -2531,7 +2531,6 @@ func schema_openshift_api_apps_v1_DeploymentConfigStatus(ref common.ReferenceCal
 						},
 					},
 				},
-				Required: []string{"latestVersion", "observedGeneration", "replicas", "updatedReplicas", "availableReplicas", "unavailableReplicas"},
 			},
 		},
 		Dependencies: []string{
@@ -5094,7 +5093,6 @@ func schema_openshift_api_authorization_v1_SubjectRulesReviewStatus(ref common.R
 						},
 					},
 				},
-				Required: []string{"rules"},
 			},
 		},
 		Dependencies: []string{
@@ -5664,7 +5662,6 @@ func schema_openshift_api_build_v1_BuildConfigStatus(ref common.ReferenceCallbac
 						},
 					},
 				},
-				Required: []string{"lastVersion"},
 			},
 		},
 		Dependencies: []string{
@@ -6374,7 +6371,6 @@ func schema_openshift_api_build_v1_BuildStatus(ref common.ReferenceCallback) com
 						},
 					},
 				},
-				Required: []string{"phase"},
 			},
 		},
 		Dependencies: []string{
@@ -8598,6 +8594,7 @@ func schema_openshift_api_config_v1_AWSIngressSpec(ref common.ReferenceCallback)
 					"type": {
 						SchemaProps: spec.SchemaProps{
 							Description: "type allows user to set a load balancer type. When this field is set the default ingresscontroller will get created using the specified LBType. If this field is not set then the default ingress controller of LBType Classic will be created. Valid values are:\n\n* \"Classic\": A Classic Load Balancer that makes routing decisions at either\n  the transport layer (TCP/SSL) or the application layer (HTTP/HTTPS). See\n  the following for additional details:\n\n    https://docs.aws.amazon.com/AmazonECS/latest/developerguide/load-balancer-types.html#clb\n\n* \"NLB\": A Network Load Balancer that makes routing decisions at the\n  transport layer (TCP/SSL). See the following for additional details:\n\n    https://docs.aws.amazon.com/AmazonECS/latest/developerguide/load-balancer-types.html#nlb",
+							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
 						},
@@ -9149,6 +9146,7 @@ func schema_openshift_api_config_v1_AuditCustomRule(ref common.ReferenceCallback
 					"profile": {
 						SchemaProps: spec.SchemaProps{
 							Description: "profile specifies the name of the desired audit policy configuration to be deployed to all OpenShift-provided API servers in the cluster.\n\nThe following profiles are provided: - Default: the existing default policy. - WriteRequestBodies: like 'Default', but logs request and response HTTP payloads for write requests (create, update, patch). - AllRequestBodies: like 'WriteRequestBodies', but also logs request and response HTTP payloads for read requests (get, list). - None: no requests are logged at all, not even oauthaccesstokens and oauthauthorizetokens.\n\nIf unset, the 'Default' profile is used as the default.",
+							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
 						},
@@ -9382,7 +9380,6 @@ func schema_openshift_api_config_v1_AuthenticationStatus(ref common.ReferenceCal
 						},
 					},
 				},
-				Required: []string{"integratedOAuthMetadata", "oidcClients"},
 			},
 		},
 		Dependencies: []string{
@@ -10919,7 +10916,7 @@ func schema_openshift_api_config_v1_ClusterVersionStatus(ref common.ReferenceCal
 						},
 					},
 				},
-				Required: []string{"desired", "observedGeneration", "versionHash", "capabilities", "availableUpdates"},
+				Required: []string{"desired", "observedGeneration", "versionHash", "availableUpdates"},
 			},
 		},
 		Dependencies: []string{
@@ -11470,7 +11467,6 @@ func schema_openshift_api_config_v1_ConsoleStatus(ref common.ReferenceCallback) 
 						},
 					},
 				},
-				Required: []string{"consoleURL"},
 			},
 		},
 	}
@@ -12474,7 +12470,6 @@ func schema_openshift_api_config_v1_FeatureGateStatus(ref common.ReferenceCallba
 						},
 					},
 				},
-				Required: []string{"featureGates"},
 			},
 		},
 		Dependencies: []string{
@@ -14464,7 +14459,6 @@ func schema_openshift_api_config_v1_InfrastructureStatus(ref common.ReferenceCal
 					"infrastructureTopology": {
 						SchemaProps: spec.SchemaProps{
 							Description: "infrastructureTopology expresses the expectations for infrastructure services that do not run on control plane nodes, usually indicated by a node selector for a `role` value other than `master`. The default is 'HighlyAvailable', which represents the behavior operators have in a \"normal\" cluster. The 'SingleReplica' mode will be used in single-node deployments and the operators should not configure the operand for highly-available operation NOTE: External topology mode is not applicable for this field.",
-							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
 						},
@@ -14478,7 +14472,6 @@ func schema_openshift_api_config_v1_InfrastructureStatus(ref common.ReferenceCal
 						},
 					},
 				},
-				Required: []string{"infrastructureName", "etcdDiscoveryDomain", "apiServerURL", "apiServerInternalURI", "controlPlaneTopology", "infrastructureTopology"},
 			},
 		},
 		Dependencies: []string{
@@ -21731,6 +21724,7 @@ func schema_openshift_api_config_v1alpha1_RetentionNumberConfig(ref common.Refer
 					"maxNumberOfBackups": {
 						SchemaProps: spec.SchemaProps{
 							Description: "maxNumberOfBackups defines the maximum number of backups to retain. If the existing number of backups saved is equal to MaxNumberOfBackups then the oldest backup will be removed before a new backup is initiated.",
+							Default:     0,
 							Type:        []string{"integer"},
 							Format:      "int32",
 						},
@@ -21802,6 +21796,7 @@ func schema_openshift_api_config_v1alpha1_RetentionSizeConfig(ref common.Referen
 					"maxSizeOfBackupsGb": {
 						SchemaProps: spec.SchemaProps{
 							Description: "maxSizeOfBackupsGb defines the total size in GB of backups to retain. If the current total size backups exceeds MaxSizeOfBackupsGb then the oldest backup will be removed before a new backup is initiated.",
+							Default:     0,
 							Type:        []string{"integer"},
 							Format:      "int32",
 						},
@@ -23203,7 +23198,6 @@ func schema_openshift_api_console_v1_ConsolePluginService(ref common.ReferenceCa
 					"basePath": {
 						SchemaProps: spec.SchemaProps{
 							Description: "basePath is the path to the plugin's assets. The primary asset it the manifest file called `plugin-manifest.json`, which is a JSON document that contains metadata about the plugin and the extensions.",
-							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
 						},
@@ -24223,6 +24217,7 @@ func schema_openshift_api_example_v1_CELUnion(ref common.ReferenceCallback) comm
 					"type": {
 						SchemaProps: spec.SchemaProps{
 							Description: "type determines which of the union members should be populated.",
+							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
 						},
@@ -24270,6 +24265,7 @@ func schema_openshift_api_example_v1_EvolvingUnion(ref common.ReferenceCallback)
 					"type": {
 						SchemaProps: spec.SchemaProps{
 							Description: "type is the discriminator. It has different values for Default and for TechPreviewNoUpgrade",
+							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
 						},
@@ -26321,7 +26317,6 @@ func schema_openshift_api_image_v1_ImageStreamStatus(ref common.ReferenceCallbac
 						},
 					},
 				},
-				Required: []string{"dockerImageRepository"},
 			},
 		},
 		Dependencies: []string{
@@ -34601,6 +34596,7 @@ func schema_openshift_api_machine_v1_ControlPlaneMachineSetTemplate(ref common.R
 					"machineType": {
 						SchemaProps: spec.SchemaProps{
 							Description: "machineType determines the type of Machines that should be managed by the ControlPlaneMachineSet. Currently, the only valid value is machines_v1beta1_machine_openshift_io.",
+							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
 						},
@@ -35461,6 +35457,7 @@ func schema_openshift_api_machine_v1_NutanixVMDiskDeviceProperties(ref common.Re
 					"adapterType": {
 						SchemaProps: spec.SchemaProps{
 							Description: "adapterType is the adapter type of the disk address. If the deviceType is \"Disk\", the valid adapterType can be \"SCSI\", \"IDE\", \"PCI\", \"SATA\" or \"SPAPR\". If the deviceType is \"CDRom\", the valid adapterType can be \"IDE\" or \"SATA\".",
+							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
 						},
@@ -38127,6 +38124,7 @@ func schema_openshift_api_machine_v1beta1_DataDisk(ref common.ReferenceCallback)
 					"lun": {
 						SchemaProps: spec.SchemaProps{
 							Description: "lun Specifies the logical unit number of the data disk. This value is used to identify data disks within the VM and therefore must be unique for each data disk attached to a VM. This value is also needed for referencing the data disks devices within userdata to perform disk initialization through Ignition (e.g. partition/format/mount). The value must be between 0 and 63.",
+							Default:     0,
 							Type:        []string{"integer"},
 							Format:      "int32",
 						},
@@ -39453,7 +39451,6 @@ func schema_openshift_api_machine_v1beta1_MachineHealthCheckStatus(ref common.Re
 						},
 					},
 				},
-				Required: []string{"expectedMachines", "currentHealthy"},
 			},
 		},
 		Dependencies: []string{
@@ -39761,7 +39758,6 @@ func schema_openshift_api_machine_v1beta1_MachineSetStatus(ref common.ReferenceC
 						},
 					},
 				},
-				Required: []string{"replicas"},
 			},
 		},
 		Dependencies: []string{
@@ -40419,6 +40415,7 @@ func schema_openshift_api_machine_v1beta1_SecuritySettings(ref common.ReferenceC
 					"securityType": {
 						SchemaProps: spec.SchemaProps{
 							Description: "securityType specifies the SecurityType of the virtual machine. It has to be set to any specified value to enable UEFISettings. The default behavior is: UEFISettings will not be enabled unless this property is set.",
+							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
 						},
@@ -41950,7 +41947,6 @@ func schema_openshift_api_machineconfiguration_v1alpha1_MachineOSContainerfile(r
 					"containerfileArch": {
 						SchemaProps: spec.SchemaProps{
 							Description: "containerfileArch describes the architecture this containerfile is to be built for this arch is optional. If the user does not specify an architecture, it is assumed that the content can be applied to all architectures, or in a single arch cluster: the only architecture.",
-							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
 						},
@@ -46714,7 +46710,6 @@ func schema_openshift_api_operator_v1_AuthenticationStatus(ref common.ReferenceC
 						},
 					},
 				},
-				Required: []string{"readyReplicas"},
 			},
 		},
 		Dependencies: []string{
@@ -47086,7 +47081,6 @@ func schema_openshift_api_operator_v1_CSISnapshotControllerStatus(ref common.Ref
 						},
 					},
 				},
-				Required: []string{"readyReplicas"},
 			},
 		},
 		Dependencies: []string{
@@ -47448,7 +47442,6 @@ func schema_openshift_api_operator_v1_CloudCredentialStatus(ref common.Reference
 						},
 					},
 				},
-				Required: []string{"readyReplicas"},
 			},
 		},
 		Dependencies: []string{
@@ -47705,7 +47698,6 @@ func schema_openshift_api_operator_v1_ClusterCSIDriverStatus(ref common.Referenc
 						},
 					},
 				},
-				Required: []string{"readyReplicas"},
 			},
 		},
 		Dependencies: []string{
@@ -48004,7 +47996,6 @@ func schema_openshift_api_operator_v1_ConfigStatus(ref common.ReferenceCallback)
 						},
 					},
 				},
-				Required: []string{"readyReplicas"},
 			},
 		},
 		Dependencies: []string{
@@ -48477,7 +48468,6 @@ func schema_openshift_api_operator_v1_ConsoleStatus(ref common.ReferenceCallback
 						},
 					},
 				},
-				Required: []string{"readyReplicas"},
 			},
 		},
 		Dependencies: []string{
@@ -49516,7 +49506,6 @@ func schema_openshift_api_operator_v1_EtcdStatus(ref common.ReferenceCallback) c
 						},
 					},
 				},
-				Required: []string{"readyReplicas", "controlPlaneHardwareSpeed"},
 			},
 		},
 		Dependencies: []string{
@@ -50464,6 +50453,7 @@ func schema_openshift_api_operator_v1_IngressControllerCaptureHTTPCookie(ref com
 					"matchType": {
 						SchemaProps: spec.SchemaProps{
 							Description: "matchType specifies the type of match to be performed on the cookie name.  Allowed values are \"Exact\" for an exact string match and \"Prefix\" for a string prefix match.  If \"Exact\" is specified, a name must be specified in the name field.  If \"Prefix\" is provided, a prefix must be specified in the namePrefix field.  For example, specifying matchType \"Prefix\" and namePrefix \"foo\" will capture a cookie named \"foo\" or \"foobar\" but not one named \"bar\".  The first matching cookie is captured.",
+							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
 						},
@@ -50522,6 +50512,7 @@ func schema_openshift_api_operator_v1_IngressControllerCaptureHTTPCookieUnion(re
 					"matchType": {
 						SchemaProps: spec.SchemaProps{
 							Description: "matchType specifies the type of match to be performed on the cookie name.  Allowed values are \"Exact\" for an exact string match and \"Prefix\" for a string prefix match.  If \"Exact\" is specified, a name must be specified in the name field.  If \"Prefix\" is provided, a prefix must be specified in the namePrefix field.  For example, specifying matchType \"Prefix\" and namePrefix \"foo\" will capture a cookie named \"foo\" or \"foobar\" but not one named \"bar\".  The first matching cookie is captured.",
+							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
 						},
@@ -51170,7 +51161,6 @@ func schema_openshift_api_operator_v1_IngressControllerStatus(ref common.Referen
 						},
 					},
 				},
-				Required: []string{"availableReplicas", "selector", "domain"},
 			},
 		},
 		Dependencies: []string{
@@ -51522,7 +51512,6 @@ func schema_openshift_api_operator_v1_InsightsOperatorStatus(ref common.Referenc
 						},
 					},
 				},
-				Required: []string{"readyReplicas"},
 			},
 		},
 		Dependencies: []string{
@@ -51869,7 +51858,6 @@ func schema_openshift_api_operator_v1_KubeAPIServerStatus(ref common.ReferenceCa
 						},
 					},
 				},
-				Required: []string{"readyReplicas"},
 			},
 		},
 		Dependencies: []string{
@@ -52170,7 +52158,6 @@ func schema_openshift_api_operator_v1_KubeControllerManagerStatus(ref common.Ref
 						},
 					},
 				},
-				Required: []string{"readyReplicas"},
 			},
 		},
 		Dependencies: []string{
@@ -52463,7 +52450,6 @@ func schema_openshift_api_operator_v1_KubeSchedulerStatus(ref common.ReferenceCa
 						},
 					},
 				},
-				Required: []string{"readyReplicas"},
 			},
 		},
 		Dependencies: []string{
@@ -52703,7 +52689,6 @@ func schema_openshift_api_operator_v1_KubeStorageVersionMigratorStatus(ref commo
 						},
 					},
 				},
-				Required: []string{"readyReplicas"},
 			},
 		},
 		Dependencies: []string{
@@ -53462,7 +53447,6 @@ func schema_openshift_api_operator_v1_MyOperatorResourceStatus(ref common.Refere
 						},
 					},
 				},
-				Required: []string{"readyReplicas"},
 			},
 		},
 		Dependencies: []string{
@@ -53896,7 +53880,6 @@ func schema_openshift_api_operator_v1_NetworkStatus(ref common.ReferenceCallback
 						},
 					},
 				},
-				Required: []string{"readyReplicas"},
 			},
 		},
 		Dependencies: []string{
@@ -54800,7 +54783,6 @@ func schema_openshift_api_operator_v1_OLMStatus(ref common.ReferenceCallback) co
 						},
 					},
 				},
-				Required: []string{"readyReplicas"},
 			},
 		},
 		Dependencies: []string{
@@ -55136,7 +55118,6 @@ func schema_openshift_api_operator_v1_OpenShiftAPIServerStatus(ref common.Refere
 						},
 					},
 				},
-				Required: []string{"readyReplicas"},
 			},
 		},
 		Dependencies: []string{
@@ -55376,7 +55357,6 @@ func schema_openshift_api_operator_v1_OpenShiftControllerManagerStatus(ref commo
 						},
 					},
 				},
-				Required: []string{"readyReplicas"},
 			},
 		},
 		Dependencies: []string{
@@ -55637,7 +55617,6 @@ func schema_openshift_api_operator_v1_OperatorStatus(ref common.ReferenceCallbac
 						},
 					},
 				},
-				Required: []string{"readyReplicas"},
 			},
 		},
 		Dependencies: []string{
@@ -56483,7 +56462,6 @@ func schema_openshift_api_operator_v1_ServiceCAStatus(ref common.ReferenceCallba
 						},
 					},
 				},
-				Required: []string{"readyReplicas"},
 			},
 		},
 		Dependencies: []string{
@@ -56723,7 +56701,6 @@ func schema_openshift_api_operator_v1_ServiceCatalogAPIServerStatus(ref common.R
 						},
 					},
 				},
-				Required: []string{"readyReplicas"},
 			},
 		},
 		Dependencies: []string{
@@ -56963,7 +56940,6 @@ func schema_openshift_api_operator_v1_ServiceCatalogControllerManagerStatus(ref 
 						},
 					},
 				},
-				Required: []string{"readyReplicas"},
 			},
 		},
 		Dependencies: []string{
@@ -57374,7 +57350,6 @@ func schema_openshift_api_operator_v1_StaticPodOperatorStatus(ref common.Referen
 						},
 					},
 				},
-				Required: []string{"readyReplicas"},
 			},
 		},
 		Dependencies: []string{
@@ -57647,7 +57622,6 @@ func schema_openshift_api_operator_v1_StorageStatus(ref common.ReferenceCallback
 						},
 					},
 				},
-				Required: []string{"readyReplicas"},
 			},
 		},
 		Dependencies: []string{
@@ -58811,7 +58785,6 @@ func schema_openshift_api_operator_v1alpha1_OLMStatus(ref common.ReferenceCallba
 						},
 					},
 				},
-				Required: []string{"readyReplicas"},
 			},
 		},
 		Dependencies: []string{
@@ -63085,7 +63058,6 @@ func schema_openshift_api_security_v1_PodSecurityPolicyReviewStatus(ref common.R
 						},
 					},
 				},
-				Required: []string{"allowedServiceAccounts"},
 			},
 		},
 		Dependencies: []string{
@@ -64290,7 +64262,6 @@ func schema_openshift_api_servicecertsigner_v1alpha1_ServiceCertSignerOperatorCo
 						},
 					},
 				},
-				Required: []string{"readyReplicas"},
 			},
 		},
 		Dependencies: []string{

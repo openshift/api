@@ -79,15 +79,19 @@ func (wa *wslAnalyzer) flags() flag.FlagSet {
 	return *flags
 }
 
-func (wa *wslAnalyzer) run(pass *analysis.Pass) (interface{}, error) {
+func (wa *wslAnalyzer) run(pass *analysis.Pass) (any, error) {
 	for _, file := range pass.Files {
 		filename := getFilename(pass.Fset, file)
 		if !strings.HasSuffix(filename, ".go") {
 			continue
 		}
 
-		// if the file is related to cgo the filename of the unadjusted position is a not a '.go' file.
 		fn := pass.Fset.PositionFor(file.Pos(), false).Filename
+
+		// if the file is related to cgo the filename of the unadjusted position is a not a '.go' file.
+		if !strings.HasSuffix(fn, ".go") {
+			continue
+		}
 
 		// The file is skipped if the "unadjusted" file is a Go file, and it's a generated file (ex: "_test.go" file).
 		// The other non-Go files are skipped by the first 'if' with the adjusted position.

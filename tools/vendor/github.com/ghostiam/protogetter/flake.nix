@@ -32,7 +32,7 @@
         defaultShellHook = ''
           export SHELL="${pkgs.bashInteractive}/bin/bash"
 
-          export FLAKE_ROOT=$(nix flake metadata | grep 'Resolved URL' | awk '{print $3}' | awk -F'://' '{print $2}')
+          export FLAKE_ROOT="$(nix flake metadata | grep 'Resolved URL' | awk '{print $3}' | sed 's/^path://' | sed 's/^git+file:\/\///')"
           export HISTFILE="$FLAKE_ROOT/.nix_bash_history"
 
           export GOROOT="${pkgs.go}/share/go"

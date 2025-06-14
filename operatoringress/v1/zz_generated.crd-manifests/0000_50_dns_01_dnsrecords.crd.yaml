@@ -83,11 +83,12 @@ spec:
                 minimum: 0
                 type: integer
               recordType:
-                description: recordType is the DNS record type. For example, "A" or
-                  "CNAME".
+                description: recordType is the DNS record type. For example, "A",
+                  "AAAA", or "CNAME".
                 enum:
                 - CNAME
                 - A
+                - AAAA
                 type: string
               targets:
                 description: targets are record targets.

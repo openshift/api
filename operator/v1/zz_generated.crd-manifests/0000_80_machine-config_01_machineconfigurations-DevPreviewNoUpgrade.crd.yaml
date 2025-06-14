@@ -6,6 +6,7 @@ metadata:
     api.openshift.io/merged-by-featuregates: "true"
     include.release.openshift.io/ibm-cloud-managed: "true"
     include.release.openshift.io/self-managed-high-availability: "true"
+    release.openshift.io/feature-set: DevPreviewNoUpgrade
   name: machineconfigurations.operator.openshift.io
 spec:
   group: operator.openshift.io
@@ -45,6 +46,60 @@ spec:
             description: spec is the specification of the desired behavior of the
               Machine Config Operator
             properties:
+              bootImageSkewEnforcement:
+                description: bootImageSkewEnforcement allows an admin to set the behavior
+                  of the boot image skew enforcement mechanism.
+                properties:
+                  clusterBootImage:
+                    description: |-
+                      clusterBootImage describes the current boot image of the cluster. This will be used to enforce the skew limit.
+                      Only permitted when mode is set to "Automatic" or "Manual".
+                    properties:
+                      ocpVersion:
+                        description: ocpVersion provides a string which represents
+                          the OCP version of the boot image
+                        maxLength: 8
+                        type: string
+                        x-kubernetes-validations:
+                        - message: bootImageOCPVersion must match the OCP semver compatible
+                            format of x.y.z
+                          rule: self.matches('^[0-9]+\\.[0-9]+\\.[0-9]+$')
+                      rhcosVersion:
+                        description: rhcosVersion provides a string which represents
+                          the RHCOS version of the boot image
+                        maxLength: 15
+                        type: string
+                        x-kubernetes-validations:
+                        - message: rhcosVersion must match format [major].[minor].[datestamp(YYYYMMDD)]-[buildnumber]
+                          rule: self.matches('^[0-9]+\\.[0-9]+\\.[0-9]{8}-[0-9]+$')
+                    required:
+                    - ocpVersion
+                    type: object
+                  mode:
+                    description: |-
+                      mode determines the underlying behavior of skew enforcement mechanism.
+                      Valid values are Automatic, Manual and Disabled.
+                      Automatic means that the MCO will store the OCP version associated with the last boot image update in the
+                      clusterBootImage field.
+                      Manual means that the cluster admin is expected to perform manual boot image updates and store OCP version
+                      associated with the last boot image update in the clusterBootImage field.
+                      In Automatic and Manual mode, the MCO will prevent upgrades when the boot image skew exceeds the
+                      skew limit described by the release image.
+                      Disabled means that the MCO will permit upgrades when the boot image exceeds the skew limit
+                      described by the release image. This may affect the cluster's ability to scale.
+                    enum:
+                    - Automatic
+                    - Manual
+                    - Disabled
+                    type: string
+                required:
+                - mode
+                type: object
+                x-kubernetes-validations:
+                - message: clusterBootImage is required when type is Automatic or
+                    Manual, and forbidden otherwise
+                  rule: 'has(self.mode) && (self.mode == ''Automatic'' || self.mode
+                    ==''Manual'') ?  has(self.clusterBootImage) : !has(self.clusterBootImage)'
               failedRevisionLimit:
                 description: |-
                   failedRevisionLimit is the number of failed static pod installer revisions to keep on disk and in the api

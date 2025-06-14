@@ -423,11 +423,22 @@ var map_MachineConfigNodeStatus = map[string]string{
 	"conditions":         "conditions represent the observations of a machine config node's current state. Valid types are: UpdatePrepared, UpdateExecuted, UpdatePostActionComplete, UpdateComplete, Updated, Resumed, Drained, AppliedFilesAndOS, Cordoned, Uncordoned, RebootedNode, NodeDegraded, PinnedImageSetsProgressing, and PinnedImageSetsDegraded.",
 	"observedGeneration": "observedGeneration represents the generation of the MachineConfigNode object observed by the Machine Config Operator's controller. This field is updated when the controller observes a change to the desiredConfig in the configVersion of the machine config node spec.",
 	"configVersion":      "configVersion describes the current and desired machine config version for this node.",
+	"configImage":        "configImage describes the current and desired images for this node.",
 	"pinnedImageSets":    "pinnedImageSets describes the current and desired pinned image sets for this node.",
 }
 
 func (MachineConfigNodeStatus) SwaggerDoc() map[string]string {
 	return map_MachineConfigNodeStatus
+}
+
+var map_MachineConfigNodeStatusMachineConfigImage = map[string]string{
+	"":        "MachineConfigNodeStatusMachineConfigImage holds the current and desired images as last updated in the MCN status. When the current and desired images do not match, the machine config pool is processing an OCL-enabled upgrade and the machine config node will monitor the upgrade process. When the current and desired images do match, the machine config node will not update any statuses.",
+	"current": "current is the image in use on the node. This value is updated once the machine config daemon has completed the update of the configuration for the node. This value should match the desired version unless an upgrade is in progress.",
+	"desired": "desired is the image the node wants to upgrade to. This value gets set in the machine config node. TODO: figure out when this value is created and when it should be updated.",
+}
+
+func (MachineConfigNodeStatusMachineConfigImage) SwaggerDoc() map[string]string {
+	return map_MachineConfigNodeStatusMachineConfigImage
 }
 
 var map_MachineConfigNodeStatusMachineConfigVersion = map[string]string{

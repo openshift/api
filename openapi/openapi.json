@@ -5473,6 +5473,20 @@
           "default": {},
           "$ref": "#/definitions/com.github.openshift.api.config.v1.ClusterVersionCapabilitiesStatus"
         },
+        "conditionalUpdateRisks": {
+          "description": "conditionalUpdateRisks represents issues for ConditionalUpdates. The cluster-version operator will evaluate all risks associated to a conditional update when it is the desired update and only accept it if all its associated risks are in desiredUpdate.accept.",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/com.github.openshift.api.config.v1.ConditionalUpdateRisk"
+          },
+          "x-kubernetes-list-map-keys": [
+            "name"
+          ],
+          "x-kubernetes-list-type": "map",
+          "x-kubernetes-patch-merge-key": "name",
+          "x-kubernetes-patch-strategy": "merge"
+        },
         "conditionalUpdates": {
           "description": "conditionalUpdates contains the list of updates that may be recommended for this cluster if it meets specific required conditions. Consumers interested in the set of updates that are actually recommended for this cluster should use availableUpdates. This list may be empty if no updates are recommended, if the update service is unavailable, or if an empty or invalid channel has been specified.",
           "type": "array",
@@ -5659,8 +5673,7 @@
       "description": "ConditionalUpdate represents an update which is recommended to some clusters on the version the current cluster is reconciling, but which may not be recommended for the current cluster.",
       "type": "object",
       "required": [
-        "release",
-        "risks"
+        "release"
       ],
       "properties": {
         "conditions": {
@@ -5680,8 +5693,17 @@
           "default": {},
           "$ref": "#/definitions/com.github.openshift.api.config.v1.Release"
         },
+        "riskNames": {
+          "description": "riskNames represents names of ClusterVersionStatus.ConditionalUpdateRisks that are exposed to the release in a ConditionalUpdate. The cluster-version operator will evaluate these risks and only accept the update if there is at least one risk and for every risk it is either not applied to the cluster or considered acceptable by the cluster administrator.",
+          "type": "array",
+          "items": {
+            "type": "string",
+            "default": ""
+          },
+          "x-kubernetes-list-type": "set"
+        },
         "risks": {
-          "description": "risks represents the range of issues associated with updating to the target release. The cluster-version operator will evaluate all entries, and only recommend the update if there is at least one entry and all entries recommend the update.",
+          "description": "risks represents the range of issues associated with updating to the target release. The cluster-version operator will evaluate all entries, and only recommend the update if there is at least one entry and all entries recommend the update. DEPRECATED: the risks has been deprecated by RiskNames and will be removed in a future release.",
           "type": "array",
           "items": {
             "default": {},
@@ -5706,6 +5728,18 @@
         "matchingRules"
       ],
       "properties": {
+        "conditions": {
+          "description": "conditions represents the observations of the conditional update risk's current status. Known types are: * Apply, for whether the risk is applied to the current cluster.",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Condition"
+          },
+          "x-kubernetes-list-map-keys": [
+            "type"
+          ],
+          "x-kubernetes-list-type": "map"
+        },
         "matchingRules": {
           "description": "matchingRules is a slice of conditions for deciding which clusters match the risk and which do not. The slice is ordered by decreasing precedence. The cluster-version operator will walk the slice in order, and stop after the first it can successfully evaluate. If no condition can be successfully evaluated, the update will not be recommended.",
           "type": "array",
@@ -10623,6 +10657,15 @@
       "description": "Update represents an administrator update request.",
       "type": "object",
       "properties": {
+        "accept": {
+          "description": "accept allows an administrator to specify the names of ConditionalUpdateRisk those are considered acceptable. A conditional update is accepted by Cluster-Version operator only if all of its risks are acceptable.",
+          "type": "array",
+          "items": {
+            "type": "string",
+            "default": ""
+          },
+          "x-kubernetes-list-type": "set"
+        },
         "architecture": {
           "description": "architecture is an optional field that indicates the desired value of the cluster architecture. In this context cluster architecture means either a single architecture or a multi architecture. architecture can only be set to Multi thereby only allowing updates from single to multi architecture. If architecture is set, image cannot be set and version must be set. Valid values are 'Multi' and empty.",
           "type": "string",
@@ -10657,7 +10700,7 @@
       ],
       "properties": {
         "acceptedRisks": {
-          "description": "acceptedRisks records risks which were accepted to initiate the update. For example, it may menition an Upgradeable=False or missing signature that was overriden via desiredUpdate.force, or an update that was initiated despite not being in the availableUpdates set of recommended update targets.",
+          "description": "acceptedRisks records risks which were accepted to initiate the update. For example, it may mention an Upgradeable=False or missing signature that was overridden via desiredUpdate.force, or an update that was initiated despite not being in the availableUpdates set of recommended update targets, or in the conditionUpdates set and all associated risks are specified in desiredUpdate.accept.",
           "type": "string"
         },
         "completionTime": {

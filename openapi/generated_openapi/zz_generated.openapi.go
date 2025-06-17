@@ -10733,7 +10733,7 @@ func schema_openshift_api_config_v1_ClusterVersionSpec(ref common.ReferenceCallb
 					},
 					"channel": {
 						SchemaProps: spec.SchemaProps{
-							Description: "channel is an identifier for explicitly requesting that a non-default set of updates be applied to this cluster. The default channel will be contain stable updates that are appropriate for production clusters.",
+							Description: "channel is an identifier for explicitly requesting a non-default set of updates to be applied to this cluster. The default channel will contain stable updates that are appropriate for production clusters.",
 							Type:        []string{"string"},
 							Format:      "",
 						},

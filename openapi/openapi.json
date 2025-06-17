@@ -5403,7 +5403,7 @@
           "$ref": "#/definitions/com.github.openshift.api.config.v1.ClusterVersionCapabilitiesSpec"
         },
         "channel": {
-          "description": "channel is an identifier for explicitly requesting that a non-default set of updates be applied to this cluster. The default channel will be contain stable updates that are appropriate for production clusters.",
+          "description": "channel is an identifier for explicitly requesting a non-default set of updates to be applied to this cluster. The default channel will contain stable updates that are appropriate for production clusters.",
           "type": "string"
         },
         "clusterID": {

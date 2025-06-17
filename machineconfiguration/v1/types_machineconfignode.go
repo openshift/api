@@ -22,7 +22,10 @@ import (
 // +kubebuilder:printcolumn:name="UpdatePostActionComplete",type="string",JSONPath=.status.conditions[?(@.type=="UpdatePostActionComplete")].status,priority=1
 // +kubebuilder:printcolumn:name="UpdateComplete",type="string",JSONPath=.status.conditions[?(@.type=="UpdateComplete")].status,priority=1
 // +kubebuilder:printcolumn:name="Resumed",type="string",JSONPath=.status.conditions[?(@.type=="Resumed")].status,priority=1
+// +kubebuilder:printcolumn:name="ImagePulledFromRegistry",type="string",JSONPath=.status.conditions[?(@.type=="ImagePulledFromRegistry")].status,priority=1
 // +kubebuilder:printcolumn:name="UpdatedFilesAndOS",type="string",JSONPath=.status.conditions[?(@.type=="AppliedFilesAndOS")].status,priority=1
+// +kubebuilder:printcolumn:name="AppliedFiles",type="string",JSONPath=.status.conditions[?(@.type=="AppliedFiles")].status,priority=1
+// +kubebuilder:printcolumn:name="AppliedOSImage",type="string",JSONPath=.status.conditions[?(@.type=="AppliedOSImage")].status,priority=1
 // +kubebuilder:printcolumn:name="CordonedNode",type="string",JSONPath=.status.conditions[?(@.type=="Cordoned")].status,priority=1
 // +kubebuilder:printcolumn:name="DrainedNode",type="string",JSONPath=.status.conditions[?(@.type=="Drained")].status,priority=1
 // +kubebuilder:printcolumn:name="RebootedNode",type="string",JSONPath=.status.conditions[?(@.type=="RebootedNode")].status,priority=1
@@ -68,6 +71,10 @@ type MachineConfigNodeList struct {
 	Items []MachineConfigNode `json:"items"`
 }
 
+// TODO: add FG to all new things once it is defined
+// TODO: in enhancement bring up convo of phasing out `AppliedFilesAndOS` and whether it's possible and/or worth adding
+// TODO: in story for this need to add tests too
+
 // MCOObjectReference holds information about an object the MCO either owns
 // or modifies in some way
 type MCOObjectReference struct {
@@ -98,6 +105,13 @@ type MachineConfigNodeSpec struct {
 	// the new machine config against the current machine config.
 	// +required
 	ConfigVersion MachineConfigNodeSpecMachineConfigVersion `json:"configVersion"`
+
+	// // configImage holds the desired image for the node targeted by this machine config node resource.
+	// // The desired image represents the image the node will attempt to update to during an OnClusterLayering update and
+	// // gets set before the machine config operator validates the new image against the current image.
+	// // TODO: Understand if there is still a "before the image is validated" stage where this need to be set.
+	// // +required
+	// ConfigImage MachineConfigNodeSpecMachineConfigImage `json:"configVersion"`
 }
 
 // MachineConfigNodeStatus holds the reported information on a particular machine config node.
@@ -120,6 +134,9 @@ type MachineConfigNodeStatus struct {
 	// configVersion describes the current and desired machine config version for this node.
 	// +optional
 	ConfigVersion *MachineConfigNodeStatusMachineConfigVersion `json:"configVersion,omitempty"`
+	// configImage describes the current and desired images for this node.
+	// +optional
+	ConfigImage *MachineConfigNodeStatusMachineConfigImage `json:"configImage,omitempty"`
 	// pinnedImageSets describes the current and desired pinned image sets for this node.
 	// +listType=map
 	// +listMapKey=name
@@ -191,6 +208,24 @@ type MachineConfigNodeStatusMachineConfigVersion struct {
 	Desired string `json:"desired"`
 }
 
+// MachineConfigNodeStatusMachineConfigImage holds the current and desired images as last updated in the MCN status.
+// When the current and desired images do not match, the machine config pool is processing an OCL-enabled upgrade and the
+// machine config node will monitor the upgrade process.
+// When the current and desired images do match, the machine config node will not update any statuses.
+type MachineConfigNodeStatusMachineConfigImage struct {
+	// current is the image in use on the node.
+	// This value is updated once the machine config daemon has completed the update of the configuration for the node.
+	// This value should match the desired version unless an upgrade is in progress.
+	// +kubebuilder:validation:MaxLength:=253
+	// +optional
+	Current string `json:"current"`
+	// desired is the image the node wants to upgrade to.
+	// This value gets set in the machine config node. TODO: figure out when this value is created and when it should be updated.
+	// +kubebuilder:validation:MaxLength:=253
+	// +required
+	Desired string `json:"desired"`
+}
+
 // MachineConfigNodeSpecMachineConfigVersion holds the desired config version for the current observed machine config node.
 // When Current is not equal to Desired, the MachineConfigOperator is in an upgrade phase and the machine config node will
 // take account of upgrade related events. Otherwise, they will be ignored given that certain operations
@@ -209,6 +244,26 @@ type MachineConfigNodeSpecMachineConfigVersion struct {
 	Desired string `json:"desired"`
 }
 
+// // MachineConfigNodeSpecMachineConfigImage holds the desired image for the current observed machine config node.
+// // When Current is not equal to Desired, the MachineConfigOperator is in an upgrade phase and the machine config node will
+// // take account of upgrade related events. Otherwise, they will be ignored given that certain operations
+// // happen both during the MCO's upgrade mode and the daily operations mode.
+// // TODO: understand if the "otherwise..." is still valid for this OCL case.
+// type MachineConfigNodeSpecMachineConfigImage struct {
+// 	// desired is the name of the image that the the node should be upgraded to.
+// 	// TODO: check if this is the name, see what the value is, understand the validation needed for this field. Check the following comment lines too.
+// 	// This value is set when the machine config pool generates a new version of its rendered configuration.
+// 	// When this value is changed, the machine config daemon starts the node upgrade process.
+// 	// This value gets set in the machine config node spec once the machine config has been targeted for upgrade and before it is validated.
+// 	// Must be a lowercase RFC-1123 subdomain name (https://tools.ietf.org/html/rfc1123) consisting
+// 	// of only lowercase alphanumeric characters, hyphens (-), and periods (.), and must start and end
+// 	// with an alphanumeric character, and be at most 253 characters in length.
+// 	// +kubebuilder:validation:MaxLength:=253
+// 	// +kubebuilder:validation:XValidation:rule="!format.dns1123Subdomain().validate(self).hasValue()",message="a lowercase RFC 1123 subdomain must consist of lower case alphanumeric characters, '-' or '.', and must start and end with an alphanumeric character."
+// 	// +required
+// 	Desired string `json:"desired"`
+// }
+
 // StateProgress is each possible state for each possible MachineConfigNodeType
 // +enum
 type StateProgress string
@@ -226,10 +281,16 @@ const (
 	MachineConfigNodeUpdated StateProgress = "Updated"
 	// MachineConfigNodeUpdateResumed describes a machine that has resumed normal processes
 	MachineConfigNodeResumed StateProgress = "Resumed"
+	// MachineConfigNodeUpdateImagePulledFromRegistry describes the part of the image rolling out to node phase in an OCL-enabled update where an image is pulled from the image registry
+	MachineConfigNodeUpdateImagePulledFromRegistry StateProgress = "ImagePulledFromRegistry"
 	// MachineConfigNodeUpdateDrained describes the part of the in progress phase where the node drains
 	MachineConfigNodeUpdateDrained StateProgress = "Drained"
 	// MachineConfigNodeUpdateFilesAndOS describes the part of the in progress phase where the nodes files and OS config change
 	MachineConfigNodeUpdateFilesAndOS StateProgress = "AppliedFilesAndOS"
+	// MachineConfigNodeUpdateAppliedFiles describes the part of the in progress phase where the node files are updated
+	MachineConfigNodeAppliedFiles StateProgress = "AppliedFiles"
+	// MachineConfigNodeAppliedOSImage describes the part of the in progress phase where the node OS image config is updated
+	MachineConfigNodeAppliedOSImage StateProgress = "AppliedOSImage"
 	// MachineConfigNodeUpdateCordoned describes the part of the in progress phase where the node cordons
 	MachineConfigNodeUpdateCordoned StateProgress = "Cordoned"
 	// MachineConfigNodeUpdateUncordoned describes the part of the completing phase where the node uncordons

@@ -150,6 +150,9 @@
                         "name": "HighlyAvailableArbiter"
                     },
                     {
+                        "name": "ImageModeStatusReporting"
+                    },
+                    {
                         "name": "ImageStreamImportMode"
                     },
                     {

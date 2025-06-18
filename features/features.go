@@ -330,6 +330,14 @@ var (
 					enableIn(configv1.DevPreviewNoUpgrade, configv1.TechPreviewNoUpgrade).
 					mustRegister()
 
+	FeatureGateImageModeStatusReporting = newFeatureGate("ImageModeStatusReporting").
+						reportProblemsToJiraComponent("MachineConfigOperator").
+						contactPerson("ijanssen").
+						productScope(ocpSpecific).
+						enhancementPR("https://github.com/openshift/enhancements/pull/1809").
+						enableIn(configv1.DevPreviewNoUpgrade, configv1.TechPreviewNoUpgrade).
+						mustRegister()
+
 	FeatureGateClusterAPIInstall = newFeatureGate("ClusterAPIInstall").
 					reportProblemsToJiraComponent("Installer").
 					contactPerson("vincepri").

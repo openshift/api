@@ -100,6 +100,7 @@ type UserDefinedMonitoring struct {
 	// Disabled disables monitoring for user-defined projects. This restricts the default monitoring stack, installed in the openshift-monitoring project, to monitor only platform namespaces, which prevents any custom monitoring configurations or resources from being applied to user-defined namespaces.
 	// NamespaceIsolated enables monitoring for user-defined projects with namespace-scoped tenancy. This ensures that metrics, alerts, and monitoring data are isolated at the namespace level.
 	// The current default value is `Disabled`.
+	// +required
 	// +kubebuilder:validation:Enum=Disabled;NamespaceIsolated
 	Mode UserDefinedMode `json:"mode"`
 }
@@ -136,11 +137,6 @@ type AlertmanagerConfig struct {
 	// +optional
 	Disabled *AlertmanagerDisabledConfig `json:"disabled,omitempty"`
 
-	// defaultConfig must be set when deploymentMode is DefaultConfig, and must be unset otherwise.
-	// When set to DefaultConfig, the platform will deploy Alertmanager with default settings.
-	// +optional
-	DefaultConfig *AlertmanagerDefaultConfig `json:"defaultConfig,omitempty"`
-
 	// customConfig must be set when deploymentMode is CustomConfig, and must be unset otherwise.
 	// When set to CustomConfig, the Alertmanager will be deployed with custom configuration.
 	// +optional
@@ -159,6 +155,7 @@ type AlertmanagerDefaultConfig struct {
 // alertmanagerCustomConfig provides configuration options for the default Alertmanager instance
 // that runs in the `openshift-monitoring` namespace. Use this configuration to control
 // whether the default Alertmanager is deployed, how it logs, and how its pods are scheduled.
+// +kubebuilder:validation:MinProperties=1
 type AlertmanagerCustomConfig struct {
 	// logLevel defines the verbosity of logs emitted by Alertmanager.
 	// This field allows users to control the amount and severity of logs generated, which can be useful
@@ -179,6 +176,8 @@ type AlertmanagerCustomConfig struct {
 	// to choose reasonable defaults. These defaults are subject to change over time.
 	// The current default value is `kubernetes.io/os: linux`.
 	// +optional
+	// +kubebuilder:validation:MinProperties=1
+	// +kubebuilder:validation:MaxProperties=10
 	NodeSelector map[string]string `json:"nodeSelector,omitempty"`
 	// resources defines the compute resource requests and limits for the Alertmanager container.
 	// This includes CPU, memory and HugePages constraints to help control scheduling and resource usage.

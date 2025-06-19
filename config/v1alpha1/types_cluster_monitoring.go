@@ -81,7 +81,7 @@ type ClusterMonitoringSpec struct {
 	// When omitted, this means no opinion and the platform is left to choose a reasonable default, that is subject to change over time.
 	// The current default value is `Disabled`.
 	// +optional
-	UserDefined UserDefinedMonitoring `json:"userDefined,omitempty"`
+	UserDefined *UserDefinedMonitoring `json:"userDefined,omitempty"`
 	// alertmanagerConfig allows users to configure how the default Alertmanager instance
 	// should be deployed in the `openshift-monitoring` namespace.
 	// alertmanagerConfig is optional.
@@ -294,13 +294,13 @@ type ContainerResource struct {
 	// request is the minimum amount of the resource required (e.g. "2Mi", "1Gi").
 	// This field is optional.
 	// +optional
-	// +kubebuilder:validation:XValidation:rule="!has(self) || (isQuantity(self) && quantity(self).compareTo('0') >= 0)",message="request must be a non-negative quantity"
+	// +kubebuilder:validation:XValidation:rule="isQuantity(self) && quantity(self).compareTo('0') >= 0",message="request must be a non-negative quantity"
 	Request resource.Quantity `json:"request,omitempty"`
 
 	// limit is the maximum amount of the resource allowed (e.g. "2Mi", "1Gi").
 	// This field is optional.
 	// +optional
-	// +kubebuilder:validation:XValidation:rule="!has(self) || (isQuantity(self) && quantity(self).compareTo('0') >= 0)",message="limit must be a non-negative quantity"
+	// +kubebuilder:validation:XValidation:rule="isQuantity(self) && quantity(self).compareTo('0') >= 0",message="limit must be a non-negative quantity"
 	// +kubebuilder:validation:XValidation:rule="has(self.request) && has(self.limit) && isQuantity(self.request) && isQuantity(self.limit) ? !quantity(self.limit).isLessThan(self.request) : true",message="limit should not be less than request"
 	Limit resource.Quantity `json:"limit,omitempty"`
 }

@@ -174,6 +174,59 @@ func (ClusterVersionOperatorStatus) SwaggerDoc() map[string]string {
 	return map_ClusterVersionOperatorStatus
 }
 
+var map_CRDCompatibilityRequirement = map[string]string{
+	"":         "CRDCompatibilityRequirement expresses a set of requirements on a target CRD. It is used to ensure compatibility between different actors using the same CRD.\n\nCompatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.",
+	"metadata": "metadata is the standard object's metadata. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata",
+	"spec":     "spec is the specification of the desired behavior of the CRD Compatibility Requirement.",
+	"status":   "status is the most recently observed status of the CRD Compatibility Requirement.",
+}
+
+func (CRDCompatibilityRequirement) SwaggerDoc() map[string]string {
+	return map_CRDCompatibilityRequirement
+}
+
+var map_CRDCompatibilityRequirementList = map[string]string{
+	"":         "CRDCompatibilityRequirementList is a collection of CRDCompatibilityRequirements.\n\nCompatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.",
+	"metadata": "metadata is the standard list's metadata. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata",
+	"items":    "items is a list of CRDCompatibilityRequirements.",
+}
+
+func (CRDCompatibilityRequirementList) SwaggerDoc() map[string]string {
+	return map_CRDCompatibilityRequirementList
+}
+
+var map_CRDCompatibilityRequirementSpec = map[string]string{
+	"":                   "CRDCompatibilityRequirementSpec is the specification of the desired behavior of the CRD Compatibility Requirement.",
+	"crdRef":             "crdRef is the name of the target CRD. The target CRD is not required to exist, as we may legitimately place requirements on it before it is created.  The observed CRD is given in status.observedCRD, which will be empty if no CRD is observed. This field is required.",
+	"creatorDescription": "creatorDescription is a string describing the owner of this CRDCompatibilityRequirement. It will be printed in any error or warning emitted by any of the CRDCompatibilityRequirement's webhooks. It should indicate to the recipient who they need to coordinate with in order to safely update the target CRD. The message emitted will be: \"This requirement was added by <creatorDescription>\". This field is required.",
+	"compatibilityCRD":   "compatibilityCRD contains the CRD which is required by the creator of this CRDCompatibilityRequirement. CRD Compatibility Checker will ensure that only a target CRD compatible with compatibilityCRD may be admitted. This field is required.",
+	"crdAdmitAction":     "crdAdmitAction determines whether the CRD admission controller will Enforce or Warn if the CRD presented is not compatible. This field is required.",
+}
+
+func (CRDCompatibilityRequirementSpec) SwaggerDoc() map[string]string {
+	return map_CRDCompatibilityRequirementSpec
+}
+
+var map_CRDCompatibilityRequirementStatus = map[string]string{
+	"":            "CRDCompatibilityRequirementStatus defines the observed status of the CRD Compatibility Requirement.",
+	"conditions":  "conditions is a list of conditions and their status.",
+	"observedCRD": "observedCRD documents the uid and generation of the CRD object when the current status was written. This field will not be emitted if the target CRD does not exist or could not be retrieved.",
+}
+
+func (CRDCompatibilityRequirementStatus) SwaggerDoc() map[string]string {
+	return map_CRDCompatibilityRequirementStatus
+}
+
+var map_ObservedCRD = map[string]string{
+	"":           "ObservedCRD contains information about the observed target CRD.",
+	"uid":        "uid is the uid of the observed CRD.",
+	"generation": "generation is the observed generation of the CRD.",
+}
+
+func (ObservedCRD) SwaggerDoc() map[string]string {
+	return map_ObservedCRD
+}
+
 var map_BackupJobReference = map[string]string{
 	"":          "BackupJobReference holds a reference to the batch/v1 Job created to run the etcd backup",
 	"namespace": "namespace is the namespace of the Job. this is always expected to be \"openshift-etcd\" since the user provided PVC is also required to be in \"openshift-etcd\" Required",

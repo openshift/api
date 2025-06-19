@@ -23,6 +23,7 @@ type VSphereMachineProviderSpec struct {
 	CredentialsSecret *corev1.LocalObjectReference `json:"credentialsSecret,omitempty"`
 	// template is the name, inventory path, or instance UUID of the template
 	// used to clone new machines.
+	// +kubebuilder:validation:MaxLength=80
 	Template string `json:"template"`
 	// workspace describes the workspace to use for the machine.
 	// +optional

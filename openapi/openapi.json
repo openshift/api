@@ -34599,6 +34599,116 @@
         }
       }
     },
+    "com.github.openshift.api.operator.v1alpha1.CRDCompatibilityRequirement": {
+      "description": "CRDCompatibilityRequirement expresses a set of requirements on a target CRD. It is used to ensure compatibility between different actors using the same CRD.\n\nCompatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.",
+      "type": "object",
+      "required": [
+        "spec"
+      ],
+      "properties": {
+        "apiVersion": {
+          "description": "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+          "type": "string"
+        },
+        "kind": {
+          "description": "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+          "type": "string"
+        },
+        "metadata": {
+          "description": "metadata is the standard object's metadata. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata",
+          "default": {},
+          "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.ObjectMeta"
+        },
+        "spec": {
+          "description": "spec is the specification of the desired behavior of the CRD Compatibility Requirement.",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.operator.v1alpha1.CRDCompatibilityRequirementSpec"
+        },
+        "status": {
+          "description": "status is the most recently observed status of the CRD Compatibility Requirement.",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.operator.v1alpha1.CRDCompatibilityRequirementStatus"
+        }
+      }
+    },
+    "com.github.openshift.api.operator.v1alpha1.CRDCompatibilityRequirementList": {
+      "description": "CRDCompatibilityRequirementList is a collection of CRDCompatibilityRequirements.\n\nCompatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.",
+      "type": "object",
+      "properties": {
+        "apiVersion": {
+          "description": "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+          "type": "string"
+        },
+        "items": {
+          "description": "items is a list of CRDCompatibilityRequirements.",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/com.github.openshift.api.operator.v1alpha1.CRDCompatibilityRequirement"
+          }
+        },
+        "kind": {
+          "description": "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+          "type": "string"
+        },
+        "metadata": {
+          "description": "metadata is the standard list's metadata. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata",
+          "default": {},
+          "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.ListMeta"
+        }
+      }
+    },
+    "com.github.openshift.api.operator.v1alpha1.CRDCompatibilityRequirementSpec": {
+      "description": "CRDCompatibilityRequirementSpec is the specification of the desired behavior of the CRD Compatibility Requirement.",
+      "type": "object",
+      "required": [
+        "crdRef",
+        "creatorDescription",
+        "compatibilityCRD",
+        "crdAdmitAction"
+      ],
+      "properties": {
+        "compatibilityCRD": {
+          "description": "compatibilityCRD contains the CRD which is required by the creator of this CRDCompatibilityRequirement. CRD Compatibility Checker will ensure that only a target CRD compatible with compatibilityCRD may be admitted. This field is required.",
+          "type": "string"
+        },
+        "crdAdmitAction": {
+          "description": "crdAdmitAction determines whether the CRD admission controller will Enforce or Warn if the CRD presented is not compatible. This field is required.",
+          "type": "string"
+        },
+        "crdRef": {
+          "description": "crdRef is the name of the target CRD. The target CRD is not required to exist, as we may legitimately place requirements on it before it is created.  The observed CRD is given in status.observedCRD, which will be empty if no CRD is observed. This field is required.",
+          "type": "string"
+        },
+        "creatorDescription": {
+          "description": "creatorDescription is a string describing the owner of this CRDCompatibilityRequirement. It will be printed in any error or warning emitted by any of the CRDCompatibilityRequirement's webhooks. It should indicate to the recipient who they need to coordinate with in order to safely update the target CRD. The message emitted will be: \"This requirement was added by <creatorDescription>\". This field is required.",
+          "type": "string"
+        }
+      }
+    },
+    "com.github.openshift.api.operator.v1alpha1.CRDCompatibilityRequirementStatus": {
+      "description": "CRDCompatibilityRequirementStatus defines the observed status of the CRD Compatibility Requirement.",
+      "type": "object",
+      "properties": {
+        "conditions": {
+          "description": "conditions is a list of conditions and their status.",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Condition"
+          },
+          "x-kubernetes-list-map-keys": [
+            "type"
+          ],
+          "x-kubernetes-list-type": "map"
+        },
+        "observedCRD": {
+          "description": "observedCRD documents the uid and generation of the CRD object when the current status was written. This field will not be emitted if the target CRD does not exist or could not be retrieved.",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.operator.v1alpha1.ObservedCRD"
+        }
+      }
+    },
     "com.github.openshift.api.operator.v1alpha1.ClusterVersionOperator": {
       "description": "ClusterVersionOperator holds cluster-wide information about the Cluster Version Operator.\n\nCompatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.",
       "type": "object",
@@ -35144,6 +35254,25 @@
         },
         "version": {
           "description": "version is the level this availability applies to",
+          "type": "string"
+        }
+      }
+    },
+    "com.github.openshift.api.operator.v1alpha1.ObservedCRD": {
+      "description": "ObservedCRD contains information about the observed target CRD.",
+      "type": "object",
+      "required": [
+        "uid",
+        "generation"
+      ],
+      "properties": {
+        "generation": {
+          "description": "generation is the observed generation of the CRD.",
+          "type": "integer",
+          "format": "int64"
+        },
+        "uid": {
+          "description": "uid is the uid of the observed CRD.",
           "type": "string"
         }
       }

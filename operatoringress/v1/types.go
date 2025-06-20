@@ -51,7 +51,7 @@ type DNSRecordSpec struct {
 	// +kubebuilder:validation:MinItems=1
 	// +required
 	Targets []string `json:"targets"`
-	// recordType is the DNS record type. For example, "A" or "CNAME".
+	// recordType is the DNS record type. For example, "A", "AAAA", or "CNAME".
 	// +required
 	RecordType DNSRecordType `json:"recordType"`
 	// recordTTL is the record TTL in seconds. If zero, the default is 30.
@@ -128,7 +128,7 @@ type DNSZoneCondition struct {
 }
 
 // DNSRecordType is a DNS resource record type.
-// +kubebuilder:validation:Enum=CNAME;A
+// +kubebuilder:validation:Enum=CNAME;A;AAAA
 type DNSRecordType string
 
 const (
@@ -137,6 +137,9 @@ const (
 
 	// ARecordType is an RFC 1035 A record.
 	ARecordType DNSRecordType = "A"
+
+	// AAAARecordType is an RFC 3596 AAAA record that is used to map a domain name to an IPv6 address.
+	AAAARecordType DNSRecordType = "AAAA"
 )
 
 // DNSManagementPolicy is a policy for configuring how the dns controller

@@ -122,7 +122,6 @@ var map_AlertmanagerConfig = map[string]string{
 	"":               "alertmanagerConfig provides configuration options for the default Alertmanager instance that runs in the `openshift-monitoring` namespace. Use this configuration to control whether the default Alertmanager is deployed, how it logs, and how its pods are scheduled.",
 	"deploymentMode": "deploymentMode determines whether the default Alertmanager instance should be deployed as part of the monitoring stack. Allowed values are Disabled, DefaultConfig, and CustomConfig. When set to Disabled, the Alertmanager instance will not be deployed. When set to DefaultConfig, the platform will deploy Alertmanager with default settings. When set to CustomConfig, the Alertmanager will be deployed with custom configuration.",
 	"disabled":       "disabled must be set when deploymentMode is Disabled, and must be unset otherwise. When set to Disabled, the Alertmanager instance will not be deployed.",
-	"defaultConfig":  "defaultConfig must be set when deploymentMode is DefaultConfig, and must be unset otherwise. When set to DefaultConfig, the platform will deploy Alertmanager with default settings.",
 	"customConfig":   "customConfig must be set when deploymentMode is CustomConfig, and must be unset otherwise. When set to CustomConfig, the Alertmanager will be deployed with custom configuration.",
 }
 

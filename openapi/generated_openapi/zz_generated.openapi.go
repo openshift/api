@@ -20506,12 +20506,6 @@ func schema_openshift_api_config_v1alpha1_AlertmanagerConfig(ref common.Referenc
 							Ref:         ref("github.com/openshift/api/config/v1alpha1.AlertmanagerDisabledConfig"),
 						},
 					},
-					"defaultConfig": {
-						SchemaProps: spec.SchemaProps{
-							Description: "defaultConfig must be set when deploymentMode is DefaultConfig, and must be unset otherwise. When set to DefaultConfig, the platform will deploy Alertmanager with default settings.",
-							Ref:         ref("github.com/openshift/api/config/v1alpha1.AlertmanagerDefaultConfig"),
-						},
-					},
 					"customConfig": {
 						SchemaProps: spec.SchemaProps{
 							Description: "customConfig must be set when deploymentMode is CustomConfig, and must be unset otherwise. When set to CustomConfig, the Alertmanager will be deployed with custom configuration.",
@@ -20523,7 +20517,7 @@ func schema_openshift_api_config_v1alpha1_AlertmanagerConfig(ref common.Referenc
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/config/v1alpha1.AlertmanagerCustomConfig", "github.com/openshift/api/config/v1alpha1.AlertmanagerDefaultConfig", "github.com/openshift/api/config/v1alpha1.AlertmanagerDisabledConfig"},
+			"github.com/openshift/api/config/v1alpha1.AlertmanagerCustomConfig", "github.com/openshift/api/config/v1alpha1.AlertmanagerDisabledConfig"},
 	}
 }
 
@@ -21096,7 +21090,6 @@ func schema_openshift_api_config_v1alpha1_ClusterMonitoringSpec(ref common.Refer
 					"userDefined": {
 						SchemaProps: spec.SchemaProps{
 							Description: "userDefined set the deployment mode for user-defined monitoring in addition to the default platform monitoring. userDefined is optional. When omitted, this means no opinion and the platform is left to choose a reasonable default, that is subject to change over time. The current default value is `Disabled`.",
-							Default:     map[string]interface{}{},
 							Ref:         ref("github.com/openshift/api/config/v1alpha1.UserDefinedMonitoring"),
 						},
 					},

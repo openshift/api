@@ -11134,10 +11134,6 @@
           "description": "customConfig must be set when deploymentMode is CustomConfig, and must be unset otherwise. When set to CustomConfig, the Alertmanager will be deployed with custom configuration.",
           "$ref": "#/definitions/com.github.openshift.api.config.v1alpha1.AlertmanagerCustomConfig"
         },
-        "defaultConfig": {
-          "description": "defaultConfig must be set when deploymentMode is DefaultConfig, and must be unset otherwise. When set to DefaultConfig, the platform will deploy Alertmanager with default settings.",
-          "$ref": "#/definitions/com.github.openshift.api.config.v1alpha1.AlertmanagerDefaultConfig"
-        },
         "deploymentMode": {
           "description": "deploymentMode determines whether the default Alertmanager instance should be deployed as part of the monitoring stack. Allowed values are Disabled, DefaultConfig, and CustomConfig. When set to Disabled, the Alertmanager instance will not be deployed. When set to DefaultConfig, the platform will deploy Alertmanager with default settings. When set to CustomConfig, the Alertmanager will be deployed with custom configuration.",
           "type": "string",
@@ -11471,7 +11467,6 @@
         },
         "userDefined": {
           "description": "userDefined set the deployment mode for user-defined monitoring in addition to the default platform monitoring. userDefined is optional. When omitted, this means no opinion and the platform is left to choose a reasonable default, that is subject to change over time. The current default value is `Disabled`.",
-          "default": {},
           "$ref": "#/definitions/com.github.openshift.api.config.v1alpha1.UserDefinedMonitoring"
         }
       }

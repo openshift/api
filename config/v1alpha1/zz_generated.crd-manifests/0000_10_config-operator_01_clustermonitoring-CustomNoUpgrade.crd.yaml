@@ -61,6 +61,7 @@ spec:
                     description: |-
                       customConfig must be set when deploymentMode is CustomConfig, and must be unset otherwise.
                       When set to CustomConfig, the Alertmanager will be deployed with custom configuration.
+                    minProperties: 1
                     properties:
                       logLevel:
                         description: |-
@@ -90,6 +91,8 @@ spec:
                           When omitted, this means the user has no opinion and the platform is left
                           to choose reasonable defaults. These defaults are subject to change over time.
                           The current default value is `kubernetes.io/os: linux`.
+                        maxProperties: 10
+                        minProperties: 1
                         type: object
                       resources:
                         description: |-
@@ -119,8 +122,8 @@ spec:
                               x-kubernetes-int-or-string: true
                               x-kubernetes-validations:
                               - message: limit must be a non-negative quantity
-                                rule: '!has(self) || (isQuantity(self) && quantity(self).compareTo(''0'')
-                                  >= 0)'
+                                rule: isQuantity(self) && quantity(self).compareTo('0')
+                                  >= 0
                               - message: limit should not be less than request
                                 rule: 'has(self.request) && has(self.limit) && isQuantity(self.request)
                                   && isQuantity(self.limit) ? !quantity(self.limit).isLessThan(self.request)
@@ -145,8 +148,8 @@ spec:
                               x-kubernetes-int-or-string: true
                               x-kubernetes-validations:
                               - message: request must be a non-negative quantity
-                                rule: '!has(self) || (isQuantity(self) && quantity(self).compareTo(''0'')
-                                  >= 0)'
+                                rule: isQuantity(self) && quantity(self).compareTo('0')
+                                  >= 0
                           required:
                           - name
                           type: object
@@ -854,11 +857,6 @@ spec:
                             type: object
                         type: object
                     type: object
-                  defaultConfig:
-                    description: |-
-                      defaultConfig must be set when deploymentMode is DefaultConfig, and must be unset otherwise.
-                      When set to DefaultConfig, the platform will deploy Alertmanager with default settings.
-                    type: object
                   deploymentMode:
                     description: |-
                       deploymentMode determines whether the default Alertmanager instance should be deployed
@@ -898,6 +896,8 @@ spec:
                     - Disabled
                     - NamespaceIsolated
                     type: string
+                required:
+                - mode
                 type: object
             type: object
           status:

@@ -144,9 +144,6 @@
                         "name": "GCPCustomAPIEndpoints"
                     },
                     {
-                        "name": "GCPLabelsTags"
-                    },
-                    {
                         "name": "GatewayAPI"
                     },
                     {

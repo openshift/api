@@ -235,9 +235,6 @@
                         "name": "ExternalOIDC"
                     },
                     {
-                        "name": "GCPLabelsTags"
-                    },
-                    {
                         "name": "GatewayAPI"
                     },
                     {

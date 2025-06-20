@@ -137,9 +137,6 @@
                         "name": "OpenShiftPodSecurityAdmission"
                     },
                     {
-                        "name": "PinnedImages"
-                    },
-                    {
                         "name": "PlatformOperators"
                     },
                     {
@@ -287,6 +284,9 @@
                     },
                     {
                         "name": "PersistentIPsForVirtualization"
+                    },
+                    {
+                        "name": "PinnedImages"
                     },
                     {
                         "name": "PrivateHostedZoneAWS"

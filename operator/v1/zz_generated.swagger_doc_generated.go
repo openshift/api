@@ -1379,6 +1379,16 @@ func (KubeStorageVersionMigratorList) SwaggerDoc() map[string]string {
 	return map_KubeStorageVersionMigratorList
 }
 
+var map_ClusterBootImage = map[string]string{
+	"":             "ClusterBootImage describes the boot image of a cluster. It stores the RHCOS version of the boot image and the OCP release version which shipped with that RHCOS boot image.",
+	"ocpVersion":   "ocpVersion provides a string which represents the OCP version of the boot image",
+	"rhcosVersion": "rhcosVersion provides a string which represents the RHCOS version of the boot image",
+}
+
+func (ClusterBootImage) SwaggerDoc() map[string]string {
+	return map_ClusterBootImage
+}
+
 var map_MachineConfiguration = map[string]string{
 	"":         "MachineConfiguration provides information to configure an operator to manage Machine Configuration.\n\nCompatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).",
 	"metadata": "metadata is the standard object's metadata. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata",
@@ -1401,8 +1411,9 @@ func (MachineConfigurationList) SwaggerDoc() map[string]string {
 }
 
 var map_MachineConfigurationSpec = map[string]string{
-	"managedBootImages":    "managedBootImages allows configuration for the management of boot images for machine resources within the cluster. This configuration allows users to select resources that should be updated to the latest boot images during cluster upgrades, ensuring that new machines always boot with the current cluster version's boot image. When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time. The default for each machine manager mode is All for GCP and AWS platforms, and None for all other platforms.",
-	"nodeDisruptionPolicy": "nodeDisruptionPolicy allows an admin to set granular node disruption actions for MachineConfig-based updates, such as drains, service reloads, etc. Specifying this will allow for less downtime when doing small configuration updates to the cluster. This configuration has no effect on cluster upgrades which will still incur node disruption where required.",
+	"managedBootImages":        "managedBootImages allows configuration for the management of boot images for machine resources within the cluster. This configuration allows users to select resources that should be updated to the latest boot images during cluster upgrades, ensuring that new machines always boot with the current cluster version's boot image. When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time. The default for each machine manager mode is All for GCP and AWS platforms, and None for all other platforms.",
+	"nodeDisruptionPolicy":     "nodeDisruptionPolicy allows an admin to set granular node disruption actions for MachineConfig-based updates, such as drains, service reloads, etc. Specifying this will allow for less downtime when doing small configuration updates to the cluster. This configuration has no effect on cluster upgrades which will still incur node disruption where required.",
+	"bootImageSkewEnforcement": "bootImageSkewEnforcement allows an admin to set the behavior of the boot image skew enforcement mechanism.",
 }
 
 func (MachineConfigurationSpec) SwaggerDoc() map[string]string {
@@ -1581,6 +1592,15 @@ var map_RestartService = map[string]string{
 
 func (RestartService) SwaggerDoc() map[string]string {
 	return map_RestartService
+}
+
+var map_SkewEnforcementSelector = map[string]string{
+	"mode":             "mode determines the underlying behavior of skew enforcement mechanism. Valid values are Automatic, Manual and Disabled. Automatic means that the MCO will store the OCP version associated with the last boot image update in the clusterBootImage field. Manual means that the cluster admin is expected to perform manual boot image updates and store OCP version associated with the last boot image update in the clusterBootImage field. In Automatic and Manual mode, the MCO will prevent upgrades when the boot image skew exceeds the skew limit described by the release image. Disabled means that the MCO will permit upgrades when the boot image exceeds the skew limit described by the release image. This may affect the cluster's ability to scale.",
+	"clusterBootImage": "clusterBootImage describes the current boot image of the cluster. This will be used to enforce the skew limit. Only permitted when mode is set to \"Automatic\" or \"Manual\".",
+}
+
+func (SkewEnforcementSelector) SwaggerDoc() map[string]string {
+	return map_SkewEnforcementSelector
 }
 
 var map_AdditionalNetworkDefinition = map[string]string{

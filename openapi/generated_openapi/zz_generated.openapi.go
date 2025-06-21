@@ -11117,12 +11117,36 @@ func schema_openshift_api_config_v1_ClusterVersionStatus(ref common.ReferenceCal
 							},
 						},
 					},
+					"conditionalUpdateRisks": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-map-keys": []interface{}{
+									"name",
+								},
+								"x-kubernetes-list-type":       "map",
+								"x-kubernetes-patch-merge-key": "name",
+								"x-kubernetes-patch-strategy":  "merge",
+							},
+						},
+						SchemaProps: spec.SchemaProps{
+							Description: "conditionalUpdateRisks contains the list of risks associated with conditionalUpdates. When performing a conditional update, all its associated risks will be compared with the set of accepted risks in the spec.desiredUpdate.accept field. If all risks for a conditional update are included in the spec.desiredUpdate.accept set, the conditional update will proceed, otherwise it is blocked. The list of risks is built by a map indexed by the name of the risk.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("github.com/openshift/api/config/v1.ConditionalUpdateRisk"),
+									},
+								},
+							},
+						},
+					},
 				},
 				Required: []string{"desired", "observedGeneration", "versionHash", "capabilities", "availableUpdates"},
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/config/v1.ClusterOperatorStatusCondition", "github.com/openshift/api/config/v1.ClusterVersionCapabilitiesStatus", "github.com/openshift/api/config/v1.ConditionalUpdate", "github.com/openshift/api/config/v1.Release", "github.com/openshift/api/config/v1.UpdateHistory"},
+			"github.com/openshift/api/config/v1.ClusterOperatorStatusCondition", "github.com/openshift/api/config/v1.ClusterVersionCapabilitiesStatus", "github.com/openshift/api/config/v1.ConditionalUpdate", "github.com/openshift/api/config/v1.ConditionalUpdateRisk", "github.com/openshift/api/config/v1.Release", "github.com/openshift/api/config/v1.UpdateHistory"},
 	}
 }
 
@@ -11347,6 +11371,26 @@ func schema_openshift_api_config_v1_ConditionalUpdate(ref common.ReferenceCallba
 							Ref:         ref("github.com/openshift/api/config/v1.Release"),
 						},
 					},
+					"riskNames": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-type": "set",
+							},
+						},
+						SchemaProps: spec.SchemaProps{
+							Description: "riskNames represents the set of the names of conditionalUpdateRisks in the status that are exposed to the release in this conditional update. The cluster-version operator will evaluate these risks and only accept the update if there is at least one risk and for every risk it is either not applied to the cluster or considered acceptable by the cluster administrator.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: "",
+										Type:    []string{"string"},
+										Format:  "",
+									},
+								},
+							},
+						},
+					},
 					"risks": {
 						VendorExtensible: spec.VendorExtensible{
 							Extensions: spec.Extensions{
@@ -11359,7 +11403,7 @@ func schema_openshift_api_config_v1_ConditionalUpdate(ref common.ReferenceCallba
 							},
 						},
 						SchemaProps: spec.SchemaProps{
-							Description: "risks represents the range of issues associated with updating to the target release. The cluster-version operator will evaluate all entries, and only recommend the update if there is at least one entry and all entries recommend the update.",
+							Description: "risks represents the range of issues associated with updating to the target release. The cluster-version operator will evaluate all entries, and only recommend the update if there is at least one entry and all entries recommend the update. DEPRECATED: the risks has been deprecated by riskNames.",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -11409,6 +11453,28 @@ func schema_openshift_api_config_v1_ConditionalUpdateRisk(ref common.ReferenceCa
 				Description: "ConditionalUpdateRisk represents a reason and cluster-state for not recommending a conditional update.",
 				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
+					"conditions": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-map-keys": []interface{}{
+									"type",
+								},
+								"x-kubernetes-list-type": "map",
+							},
+						},
+						SchemaProps: spec.SchemaProps{
+							Description: "conditions represents the observations of the conditional update risk's current status. Known types are: * Applied, for whether the risk is applied to the current cluster.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("k8s.io/apimachinery/pkg/apis/meta/v1.Condition"),
+									},
+								},
+							},
+						},
+					},
 					"url": {
 						SchemaProps: spec.SchemaProps{
 							Description: "url contains information about this risk.",
@@ -11457,7 +11523,7 @@ func schema_openshift_api_config_v1_ConditionalUpdateRisk(ref common.ReferenceCa
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/config/v1.ClusterCondition"},
+			"github.com/openshift/api/config/v1.ClusterCondition", "k8s.io/apimachinery/pkg/apis/meta/v1.Condition"},
 	}
 }
 
@@ -20374,6 +20440,26 @@ func schema_openshift_api_config_v1_Update(ref common.ReferenceCallback) common.
 							Format:      "",
 						},
 					},
+					"accept": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-type": "set",
+							},
+						},
+						SchemaProps: spec.SchemaProps{
+							Description: "accept allows an administrator to specify the set of the names of ConditionalUpdateRisk those are considered acceptable. A conditional update is accepted by Cluster-Version operator only if all of its risks are acceptable.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: "",
+										Type:    []string{"string"},
+										Format:  "",
+									},
+								},
+							},
+						},
+					},
 				},
 			},
 		},
@@ -20433,7 +20519,7 @@ func schema_openshift_api_config_v1_UpdateHistory(ref common.ReferenceCallback) 
 					},
 					"acceptedRisks": {
 						SchemaProps: spec.SchemaProps{
-							Description: "acceptedRisks records risks which were accepted to initiate the update. For example, it may menition an Upgradeable=False or missing signature that was overriden via desiredUpdate.force, or an update that was initiated despite not being in the availableUpdates set of recommended update targets.",
+							Description: "acceptedRisks records risks which were accepted to initiate the update. For example, it may mention an Upgradeable=False or missing signature that was overridden via desiredUpdate.force, or an update that was initiated despite not being in the availableUpdates set of recommended update targets, or in the conditionUpdates set and all associated risks are specified in desiredUpdate.accept.",
 							Type:        []string{"string"},
 							Format:      "",
 						},

@@ -117,6 +117,7 @@ const (
 )
 
 // alertmanagerConfig provides configuration options for the default Alertmanager instance
+// +kubebuilder:validation:XValidation:rule="self.deploymentMode == 'CustomConfig' ? has(self.customConfig) && !has(self.disabled) : true",message="when deploymentMode is CustomConfig, customConfig must be set and disabled must be unset"
 // that runs in the `openshift-monitoring` namespace. Use this configuration to control
 // whether the default Alertmanager is deployed, how it logs, and how its pods are scheduled.
 type AlertmanagerConfig struct {
@@ -282,6 +283,7 @@ const (
 
 // ContainerResource defines a single resource requirement for a container.
 // +kubebuilder:validation:XValidation:rule="has(self.request) || has(self.limit)",message="at least one of request or limit must be set"
+// +kubebuilder:validation:XValidation:rule="has(self.request) && has(self.limit) ? !quantity(self.limit).isLessThan(self.request) : true",message="limit should not be less than request"
 type ContainerResource struct {
 	// name of the resource (e.g. "cpu", "memory", "hugepages-2Mi").
 	// This field is required.

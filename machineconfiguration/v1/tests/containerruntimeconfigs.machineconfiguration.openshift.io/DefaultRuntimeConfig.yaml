@@ -37,3 +37,44 @@ tests:
         spec: 
           containerRuntimeConfig:
             defaultRuntime: runc
+    - name: Should be able to set other parameters
+      initial: |
+        apiVersion: machineconfiguration.openshift.io/v1
+        kind: ContainerRuntimeConfig
+        spec:
+          containerRuntimeConfig:
+            defaultRuntime: runc
+            logLevel: info
+      expected: |
+        apiVersion: machineconfiguration.openshift.io/v1
+        kind: ContainerRuntimeConfig
+        spec:
+          containerRuntimeConfig:
+            defaultRuntime: runc
+            logLevel: info
+  onUpdate:
+    - name: Should be able to update other parameters with invalid defaultRuntime
+      initialCRDPatches:
+        - op: remove
+          path: /spec/versions/0/schema/openAPIV3Schema/properties/spec/properties/containerRuntimeConfig/properties/defaultRuntime/enum
+      initial: |
+        apiVersion: machineconfiguration.openshift.io/v1
+        kind: ContainerRuntimeConfig
+        spec:
+          containerRuntimeConfig:
+            defaultRuntime: docker
+            logLevel: fatal
+      updated: |
+        apiVersion: machineconfiguration.openshift.io/v1
+        kind: ContainerRuntimeConfig
+        spec:
+          containerRuntimeConfig:
+            defaultRuntime: docker
+            logLevel: info
+      expected: |
+        apiVersion: machineconfiguration.openshift.io/v1
+        kind: ContainerRuntimeConfig
+        spec:
+          containerRuntimeConfig:
+            defaultRuntime: docker
+            logLevel: info

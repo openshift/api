@@ -403,10 +403,20 @@ var map_MachineConfigNodeSpec = map[string]string{
 	"node":          "node contains a reference to the node for this machine config node.",
 	"pool":          "pool contains a reference to the machine config pool that this machine config node's referenced node belongs to.",
 	"configVersion": "configVersion holds the desired config version for the node targeted by this machine config node resource. The desired version represents the machine config the node will attempt to update to and gets set before the machine config operator validates the new machine config against the current machine config.",
+	"configImage":   "configImage is an optional field for configuring the image the node referenced in node should use. When omitted, Image Mode is not be enabled and the node will follow the standard update process of creating a rendered MachineConfig and updating to its specifications. When specified, Image Mode is enabled and will attempt to update the node to use the desired image.",
 }
 
 func (MachineConfigNodeSpec) SwaggerDoc() map[string]string {
 	return map_MachineConfigNodeSpec
+}
+
+var map_MachineConfigNodeSpecConfigImage = map[string]string{
+	"":             "MachineConfigNodeSpecConfigImage holds the desired image for the node. This structure is populated from the `machineconfiguration.openshift.io/desiredImage` annotation on the target node, which is set by the Machine Config Pool controller to signal the desired image pullspec for the node to update to.",
+	"desiredImage": "desiredImage is a required field that configures the image that the node should be updated to use. It must be a fully qualified OCI image pull spec of the format host[:port][/namespace]/name@sha256:, where the digest must be exactly 64 characters in length and consist only of lowercase hexadecimal characters, a-f and 0-9. desiredImage must not be an empty string and must not exceed 447 characters in length.",
+}
+
+func (MachineConfigNodeSpecConfigImage) SwaggerDoc() map[string]string {
+	return map_MachineConfigNodeSpecConfigImage
 }
 
 var map_MachineConfigNodeSpecMachineConfigVersion = map[string]string{
@@ -420,14 +430,25 @@ func (MachineConfigNodeSpecMachineConfigVersion) SwaggerDoc() map[string]string 
 
 var map_MachineConfigNodeStatus = map[string]string{
 	"":                   "MachineConfigNodeStatus holds the reported information on a particular machine config node.",
-	"conditions":         "conditions represent the observations of a machine config node's current state. Valid types are: UpdatePrepared, UpdateExecuted, UpdatePostActionComplete, UpdateComplete, Updated, Resumed, Drained, AppliedFilesAndOS, Cordoned, Uncordoned, RebootedNode, NodeDegraded, PinnedImageSetsProgressing, and PinnedImageSetsDegraded.",
+	"conditions":         "conditions represent the observations of a machine config node's current state. Valid types are: UpdatePrepared, UpdateExecuted, UpdatePostActionComplete, UpdateComplete, Updated, Resumed, Drained, AppliedFilesAndOS, Cordoned, Uncordoned, RebootedNode, NodeDegraded, PinnedImageSetsProgressing, and PinnedImageSetsDegraded. The following types are only available when the ImageModeStatusReporting feature gate is enabled: ImagePulledFromRegistry, AppliedOSImage, AppliedFiles",
 	"observedGeneration": "observedGeneration represents the generation of the MachineConfigNode object observed by the Machine Config Operator's controller. This field is updated when the controller observes a change to the desiredConfig in the configVersion of the machine config node spec.",
 	"configVersion":      "configVersion describes the current and desired machine config version for this node.",
+	"configImage":        "configImage is an optional field that reflects the current state of the image used by the node. When omitted, this means that the Image Mode feature is not being used and the node will be up to date with the specific current rendered config version for the nodes MachinePool. When specified, the Image Mode feature is enabled and the contents of this field show the observed state of the node image.",
 	"pinnedImageSets":    "pinnedImageSets describes the current and desired pinned image sets for this node.",
 }
 
 func (MachineConfigNodeStatus) SwaggerDoc() map[string]string {
 	return map_MachineConfigNodeStatus
+}
+
+var map_MachineConfigNodeStatusConfigImage = map[string]string{
+	"":             "MachineConfigNodeStatusConfigImage holds the observed state of the image on the node, including both the image targeted for an update and the image currently applied. This allows for monitoring the progress of the layering rollout. If Image Mode is enabled, desiredImage must be defined.",
+	"currentImage": "currentImage is an optional field that represents the current image that is applied to the node. When omitted, this means that no image updates have been applied to the node and it will be up to date with the specific current rendered config version. When specified, this means that the node is currently using this image. currentImage must be a fully qualified OCI image pull spec of the format host[:port][/namespace]/name@sha256:, where the digest must be exactly 64 characters in length and consist only of lowercase hexadecimal characters, a-f and 0-9. currentImage must not be an empty string and must not exceed 447 characters in length.",
+	"desiredImage": "desiredImage is an optional field that represents the currently observed state of image that the node should be updated to use. When not specified, this means that Image Mode has been disabled and the node will up to date with the specific current rendered config version. When specified, this means that Image Mode has been enabled and the node is actively progressing to update the node to this image. If currentImage and desiredImage match, the node has been successfully updated to use the desired image. desiredImage must be a fully qualified OCI image pull spec of the format host[:port][/namespace]/name@sha256:, where the digest must be exactly 64 characters in length and consist only of lowercase hexadecimal characters, a-f and 0-9. desiredImage must not be an empty string and must not exceed 447 characters in length.",
+}
+
+func (MachineConfigNodeStatusConfigImage) SwaggerDoc() map[string]string {
+	return map_MachineConfigNodeStatusConfigImage
 }
 
 var map_MachineConfigNodeStatusMachineConfigVersion = map[string]string{

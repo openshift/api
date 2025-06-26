@@ -100,14 +100,20 @@ type MachineConfigNodeSpec struct {
 	// the new machine config against the current machine config.
 	// +required
 	ConfigVersion MachineConfigNodeSpecMachineConfigVersion `json:"configVersion"`
+
+	// configImage holds the desired image for the node targeted by this machine config node resource.
+	// The desired version represents the image the node will attempt to update to and gets set before the machine config operator validates
+	// the new image against the current image.
+	// +required
+	ConfigImage MachineConfigNodeSpecConfigImage `json:"configImage"`
 }
 
 // MachineConfigNodeStatus holds the reported information on a particular machine config node.
 type MachineConfigNodeStatus struct {
 	// conditions represent the observations of a machine config node's current state. Valid types are:
 	// UpdatePrepared, UpdateExecuted, UpdatePostActionComplete, UpdateComplete, Updated, Resumed,
-	// Drained, AppliedFilesAndOS, Cordoned, Uncordoned, RebootedNode, NodeDegraded, PinnedImageSetsProgressing,
-	// and PinnedImageSetsDegraded.
+	// Drained, AppliedFilesAndOS, AppliedOSImage, AppliedFiles, Cordoned, Uncordoned, RebootedNode, NodeDegraded, PinnedImageSetsProgressing,
+	// ImagePulledFromRegistry, and PinnedImageSetsDegraded.
 	// +listType=map
 	// +listMapKey=type
 	// +kubebuilder:validation:MaxItems=20
@@ -122,6 +128,9 @@ type MachineConfigNodeStatus struct {
 	// configVersion describes the current and desired machine config version for this node.
 	// +optional
 	ConfigVersion *MachineConfigNodeStatusMachineConfigVersion `json:"configVersion,omitempty"`
+	// configImage describes the current and desired image for this node.
+	// +optional
+	ConfigImage *MachineConfigNodeStatusConfigImage `json:"configImage,omitempty"`
 	// pinnedImageSets describes the current and desired pinned image sets for this node.
 	// +listType=map
 	// +listMapKey=name
@@ -272,13 +281,15 @@ const (
 	MachineConfigNodeResumed StateProgress = "Resumed"
 	// MachineConfigNodeUpdateDrained describes the part of the in progress phase where the node drains
 	MachineConfigNodeUpdateDrained StateProgress = "Drained"
-	// MachineConfigNodeUpdateFilesAndOS describes the part of the in progress phase where the nodes files changes
+	// MachineConfigNodeUpdateFiles describes the part of the in progress phase where the nodes files changes
 	MachineConfigNodeUpdateFiles StateProgress = "AppliedFiles"
-	// MachineConfigNodeUpdateFilesAndOS describes the part of the in progress phase where the OS config changes
+	// MachineConfigNodeUpdateOS describes the part of the in progress phase where the OS config changes
 	MachineConfigNodeUpdateOS StateProgress = "AppliedOSImage"
 	// Deprecated: AppliedFilesAndOS is being replaced by AppliedFiles and AppliedOSImage.
 	// This constant is maintained for backward compatibility.
 	MachineConfigNodeAppliedFilesAndOS StateProgress = "AppliedFilesAndOS"
+	// MachineConfigNodeImagePulledFromRegistry describes the part of the in progress phase where the update image is pulled from the registry
+	MachineConfigNodeImagePulledFromRegistry StateProgress = "ImagePulledFromRegistry"
 	// MachineConfigNodeUpdateCordoned describes the part of the in progress phase where the node cordons
 	MachineConfigNodeUpdateCordoned StateProgress = "Cordoned"
 	// MachineConfigNodeUpdateUncordoned describes the part of the completing phase where the node uncordons
@@ -291,6 +302,4 @@ const (
 	MachineConfigNodePinnedImageSetsProgressing StateProgress = "PinnedImageSetsProgressing"
 	// MachineConfigNodePinnedImageSetsDegraded describes a machine that has failed to progress to the desired pinned image sets
 	MachineConfigNodePinnedImageSetsDegraded StateProgress = "PinnedImageSetsDegraded"
-	// MachineConfigNodePinnedImageSetsDegraded describes a machine that has failed to progress to the desired pinned image sets
-	MachineConfigNodeImagePulledFromRegistry StateProgress = "ImagePulledFromRegistry"
 )

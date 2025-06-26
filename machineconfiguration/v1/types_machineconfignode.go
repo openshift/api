@@ -28,6 +28,7 @@ import (
 // +kubebuilder:printcolumn:name="DrainedNode",type="string",JSONPath=.status.conditions[?(@.type=="Drained")].status,priority=1
 // +kubebuilder:printcolumn:name="RebootedNode",type="string",JSONPath=.status.conditions[?(@.type=="RebootedNode")].status,priority=1
 // +kubebuilder:printcolumn:name="UncordonedNode",type="string",JSONPath=.status.conditions[?(@.type=="Uncordoned")].status,priority=1
+// +kubebuilder:printcolumn:name="ImagePulledFromRegistry",type="string",JSONPath=.status.conditions[?(@.type=="ImagePulledFromRegistry")].status,priority=1
 // +kubebuilder:metadata:labels=openshift.io/operator-managed=
 
 // MachineConfigNode describes the health of the Machines on the system
@@ -221,6 +222,7 @@ type MachineConfigNodeSpecConfigImage struct {
 	// It is a required field because the presence of a desired image is the
 	// initial signal for a node update and a prerequisite for the update process.
 	// +kubebuilder:validation:MaxLength:=32768
+	// +openshift:enable:FeatureGate=ImageModeStatusReporting
 	// +required
 	DesiredImage string `json:"desiredImage"`
 }
@@ -238,6 +240,7 @@ type MachineConfigNodeStatusConfigImage struct {
 	// be the previous one while the desired image is being set. This field is
 	// updated as the node applies the new OS image.
 	// +kubebuilder:validation:MaxLength:=32768
+	// +openshift:enable:FeatureGate=ImageModeStatusReporting
 	// +optional
 	CurrentImage string `json:"currentImage,omitempty"`
 	// desiredImage is a mirror of the desired image from the Spec. This value is
@@ -245,6 +248,7 @@ type MachineConfigNodeStatusConfigImage struct {
 	// annotation. By including it in the Status, clients can easily compare the
 	// 'current' and 'desired' states to determine if an update is complete.
 	// +kubebuilder:validation:MaxLength:=32768
+	// +openshift:enable:FeatureGate=ImageModeStatusReporting
 	// +required
 	DesiredImage string `json:"desiredImage"`
 }

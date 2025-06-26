@@ -22,7 +22,8 @@ import (
 // +kubebuilder:printcolumn:name="UpdatePostActionComplete",type="string",JSONPath=.status.conditions[?(@.type=="UpdatePostActionComplete")].status,priority=1
 // +kubebuilder:printcolumn:name="UpdateComplete",type="string",JSONPath=.status.conditions[?(@.type=="UpdateComplete")].status,priority=1
 // +kubebuilder:printcolumn:name="Resumed",type="string",JSONPath=.status.conditions[?(@.type=="Resumed")].status,priority=1
-// +kubebuilder:printcolumn:name="UpdatedFilesAndOS",type="string",JSONPath=.status.conditions[?(@.type=="AppliedFilesAndOS")].status,priority=1
+// +kubebuilder:printcolumn:name="UpdatedOSImage",type="string",JSONPath=.status.conditions[?(@.type=="AppliedOSImage")].status,priority=1
+// +kubebuilder:printcolumn:name="UpdatedFiles",type="string",JSONPath=.status.conditions[?(@.type=="AppliedFiles")].status,priority=1
 // +kubebuilder:printcolumn:name="CordonedNode",type="string",JSONPath=.status.conditions[?(@.type=="Cordoned")].status,priority=1
 // +kubebuilder:printcolumn:name="DrainedNode",type="string",JSONPath=.status.conditions[?(@.type=="Drained")].status,priority=1
 // +kubebuilder:printcolumn:name="RebootedNode",type="string",JSONPath=.status.conditions[?(@.type=="RebootedNode")].status,priority=1
@@ -209,6 +210,45 @@ type MachineConfigNodeSpecMachineConfigVersion struct {
 	Desired string `json:"desired"`
 }
 
+// MachineConfigNodeSpecConfigImage holds the desired image for the node.
+// This structure is populated from the `machineconfiguration.openshift.io/desiredImage`
+// annotation on the target node, which is set by the Machine Config Pool controller
+// to signal the desired image pullspec for the node to update to.
+type MachineConfigNodeSpecConfigImage struct {
+	// desiredImage is the fully-qualified pullspec of the image that the Machine
+	// Config Operator (MCO) intends to apply to the node. This value is sourced
+	// from the `machineconfiguration.openshift.io/desiredImage` annotation.
+	// It is a required field because the presence of a desired image is the
+	// initial signal for a node update and a prerequisite for the update process.
+	// +kubebuilder:validation:MaxLength:=32768
+	// +required
+	DesiredImage string `json:"desiredImage"`
+}
+
+// MachineConfigNodeStatusConfigImage holds the observed state of the image
+// on the node, including both the image targeted for an update and the image
+// currently applied. This allows for monitoring the progress of the layering
+// rollout.
+type MachineConfigNodeStatusConfigImage struct {
+	// currentImage is the fully-qualified pullspec of the image that is
+	// currently applied to the node. This value is sourced from the
+	// `machineconfiguration.openshift.io/currentImage` annotation.
+	// It is an optional field because at the beginning of an update, the node
+	// may not have an image pulled or applied, and the current image would still
+	// be the previous one while the desired image is being set. This field is
+	// updated as the node applies the new OS image.
+	// +kubebuilder:validation:MaxLength:=32768
+	// +optional
+	CurrentImage string `json:"currentImage,omitempty"`
+	// desiredImage is a mirror of the desired image from the Spec. This value is
+	// set to the same fully-qualified pullspec from the `machineconfiguration.openshift.io/desiredImage`
+	// annotation. By including it in the Status, clients can easily compare the
+	// 'current' and 'desired' states to determine if an update is complete.
+	// +kubebuilder:validation:MaxLength:=32768
+	// +required
+	DesiredImage string `json:"desiredImage"`
+}
+
 // StateProgress is each possible state for each possible MachineConfigNodeType
 // +enum
 type StateProgress string
@@ -228,8 +268,13 @@ const (
 	MachineConfigNodeResumed StateProgress = "Resumed"
 	// MachineConfigNodeUpdateDrained describes the part of the in progress phase where the node drains
 	MachineConfigNodeUpdateDrained StateProgress = "Drained"
-	// MachineConfigNodeUpdateFilesAndOS describes the part of the in progress phase where the nodes files and OS config change
-	MachineConfigNodeUpdateFilesAndOS StateProgress = "AppliedFilesAndOS"
+	// MachineConfigNodeUpdateFilesAndOS describes the part of the in progress phase where the nodes files changes
+	MachineConfigNodeUpdateFiles StateProgress = "AppliedFiles"
+	// MachineConfigNodeUpdateFilesAndOS describes the part of the in progress phase where the OS config changes
+	MachineConfigNodeUpdateOS StateProgress = "AppliedOSImage"
+	// Deprecated: AppliedFilesAndOS is being replaced by AppliedFiles and AppliedOSImage.
+	// This constant is maintained for backward compatibility.
+	MachineConfigNodeAppliedFilesAndOS StateProgress = "AppliedFilesAndOS"
 	// MachineConfigNodeUpdateCordoned describes the part of the in progress phase where the node cordons
 	MachineConfigNodeUpdateCordoned StateProgress = "Cordoned"
 	// MachineConfigNodeUpdateUncordoned describes the part of the completing phase where the node uncordons
@@ -242,4 +287,6 @@ const (
 	MachineConfigNodePinnedImageSetsProgressing StateProgress = "PinnedImageSetsProgressing"
 	// MachineConfigNodePinnedImageSetsDegraded describes a machine that has failed to progress to the desired pinned image sets
 	MachineConfigNodePinnedImageSetsDegraded StateProgress = "PinnedImageSetsDegraded"
+	// MachineConfigNodePinnedImageSetsDegraded describes a machine that has failed to progress to the desired pinned image sets
+	MachineConfigNodeImagePulledFromRegistry StateProgress = "ImagePulledFromRegistry"
 )

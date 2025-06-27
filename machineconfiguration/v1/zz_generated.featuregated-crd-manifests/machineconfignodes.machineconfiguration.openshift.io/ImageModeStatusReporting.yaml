@@ -110,13 +110,14 @@ spec:
               configImage:
                 description: |-
                   configImage holds the desired image for the node targeted by this machine config node resource.
-                  The desired version represents the image the node will attempt to update to and gets set before the machine config operator validates
+                  The desired image represents the image the node will attempt to update to and gets set before the machine config operator validates
                   the new image against the current image.
                 properties:
                   desiredImage:
                     description: |-
                       desiredImage is the fully-qualified pullspec of the image that the Machine
                       Config Operator (MCO) intends to apply to the node.
+                    maxLength: 253
                     type: string
                 required:
                 - desiredImage
@@ -277,11 +278,13 @@ spec:
                       may not have an image pulled or applied, and the current image would still
                       be the previous one while the desired image is being set. This field is
                       updated as the node applies the new OS image.
+                    maxLength: 253
                     type: string
                   desiredImage:
                     description: |-
                       desiredImage is a mirror of the desired image from the Spec. When the
                       current and desired image are not equal, the node is in an updating phase.
+                    maxLength: 253
                     type: string
                 required:
                 - desiredImage

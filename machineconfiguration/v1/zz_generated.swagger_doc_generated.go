@@ -403,7 +403,7 @@ var map_MachineConfigNodeSpec = map[string]string{
 	"node":          "node contains a reference to the node for this machine config node.",
 	"pool":          "pool contains a reference to the machine config pool that this machine config node's referenced node belongs to.",
 	"configVersion": "configVersion holds the desired config version for the node targeted by this machine config node resource. The desired version represents the machine config the node will attempt to update to and gets set before the machine config operator validates the new machine config against the current machine config.",
-	"configImage":   "configImage holds the desired image for the node targeted by this machine config node resource. The desired version represents the image the node will attempt to update to and gets set before the machine config operator validates the new image against the current image.",
+	"configImage":   "configImage holds the desired image for the node targeted by this machine config node resource. The desired image represents the image the node will attempt to update to and gets set before the machine config operator validates the new image against the current image.",
 }
 
 func (MachineConfigNodeSpec) SwaggerDoc() map[string]string {

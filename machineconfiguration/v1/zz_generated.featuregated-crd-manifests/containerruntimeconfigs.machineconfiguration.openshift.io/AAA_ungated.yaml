@@ -54,6 +54,7 @@ spec:
                   runtime.
                 properties:
                   defaultRuntime:
+                    default: ""
                     description: |-
                       defaultRuntime is the name of the OCI runtime to be used as the default for containers.
                       Allowed values are `runc`, `crun`, and omitted (`""`).

@@ -851,8 +851,9 @@ type ContainerRuntimeConfiguration struct {
 	// When omitted, this means no opinion and the platform is left to choose a reasonable default,
 	// which is subject to change over time. Currently, the default is `crun`.
 	// +kubebuilder:validation:Enum=crun;runc;""
+	// +kubebuilder:default:=""
 	// +optional
-	DefaultRuntime ContainerRuntimeDefaultRuntime `json:"defaultRuntime,omitempty"`
+	DefaultRuntime ContainerRuntimeDefaultRuntime `json:"defaultRuntime"`
 }
 
 type ContainerRuntimeDefaultRuntime string

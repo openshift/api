@@ -6,6 +6,7 @@ metadata:
     api.openshift.io/merged-by-featuregates: "true"
     include.release.openshift.io/ibm-cloud-managed: "true"
     include.release.openshift.io/self-managed-high-availability: "true"
+    release.openshift.io/feature-set: DevPreviewNoUpgrade
   labels:
     openshift.io/operator-managed: ""
   name: machineconfignodes.machineconfiguration.openshift.io
@@ -51,8 +52,12 @@ spec:
       name: Resumed
       priority: 1
       type: string
-    - jsonPath: .status.conditions[?(@.type=="AppliedFilesAndOS")].status
-      name: UpdatedFilesAndOS
+    - jsonPath: .status.conditions[?(@.type=="AppliedOSImage")].status
+      name: UpdatedOSImage
+      priority: 1
+      type: string
+    - jsonPath: .status.conditions[?(@.type=="AppliedFiles")].status
+      name: UpdatedFiles
       priority: 1
       type: string
     - jsonPath: .status.conditions[?(@.type=="Cordoned")].status
@@ -69,6 +74,10 @@ spec:
       type: string
     - jsonPath: .status.conditions[?(@.type=="Uncordoned")].status
       name: UncordonedNode
+      priority: 1
+      type: string
+    - jsonPath: .status.conditions[?(@.type=="ImagePulledFromRegistry")].status
+      name: ImagePulledFromRegistry
       priority: 1
       type: string
     name: v1
@@ -98,6 +107,20 @@ spec:
           spec:
             description: spec describes the configuration of the machine config node.
             properties:
+              configImage:
+                description: |-
+                  configImage holds the desired image for the node targeted by this machine config node resource.
+                  The desired version represents the image the node will attempt to update to and gets set before the machine config operator validates
+                  the new image against the current image.
+                properties:
+                  desiredImage:
+                    description: |-
+                      desiredImage is the fully-qualified pullspec of the image that the Machine
+                      Config Operator (MCO) intends to apply to the node.
+                    type: string
+                required:
+                - desiredImage
+                type: object
               configVersion:
                 description: |-
                   configVersion holds the desired config version for the node targeted by this machine config node resource.
@@ -179,8 +202,10 @@ spec:
                 description: |-
                   conditions represent the observations of a machine config node's current state. Valid types are:
                   UpdatePrepared, UpdateExecuted, UpdatePostActionComplete, UpdateComplete, Updated, Resumed,
-                  Drained, AppliedFilesAndOS, Cordoned, Uncordoned, RebootedNode, NodeDegraded, PinnedImageSetsProgressing,
-                  and PinnedImageSetsDegraded.
+                  Drained, AppliedFilesAndOS, AppliedOSImage, AppliedFiles, Cordoned, Uncordoned, RebootedNode, NodeDegraded, PinnedImageSetsProgressing,
+                  ImagePulledFromRegistry, and PinnedImageSetsDegraded.
+                  The following types are only available when the ImageModeStatusReporting feature gate is enabled: ImagePulledFromRegistry,
+                  AppliedOSImage, AppliedFiles
                 items:
                   description: Condition contains details for one aspect of the current
                     state of this API Resource.
@@ -240,6 +265,27 @@ spec:
                 x-kubernetes-list-map-keys:
                 - type
                 x-kubernetes-list-type: map
+              configImage:
+                description: configImage describes the current and desired image for
+                  this node.
+                properties:
+                  currentImage:
+                    description: |-
+                      currentImage is the fully-qualified pullspec of the image that is
+                      currently applied to the node.
+                      It is an optional field because at the beginning of an update, the node
+                      may not have an image pulled or applied, and the current image would still
+                      be the previous one while the desired image is being set. This field is
+                      updated as the node applies the new OS image.
+                    type: string
+                  desiredImage:
+                    description: |-
+                      desiredImage is a mirror of the desired image from the Spec. When the
+                      current and desired image are not equal, the node is in an updating phase.
+                    type: string
+                required:
+                - desiredImage
+                type: object
               configVersion:
                 description: configVersion describes the current and desired machine
                   config version for this node.

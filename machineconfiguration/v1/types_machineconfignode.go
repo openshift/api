@@ -104,7 +104,8 @@ type MachineConfigNodeSpec struct {
 	// configImage holds the desired image for the node targeted by this machine config node resource.
 	// The desired version represents the image the node will attempt to update to and gets set before the machine config operator validates
 	// the new image against the current image.
-	// +required
+	// +openshift:enable:FeatureGate=ImageModeStatusReporting
+	// +optional
 	ConfigImage MachineConfigNodeSpecConfigImage `json:"configImage"`
 }
 
@@ -114,6 +115,8 @@ type MachineConfigNodeStatus struct {
 	// UpdatePrepared, UpdateExecuted, UpdatePostActionComplete, UpdateComplete, Updated, Resumed,
 	// Drained, AppliedFilesAndOS, AppliedOSImage, AppliedFiles, Cordoned, Uncordoned, RebootedNode, NodeDegraded, PinnedImageSetsProgressing,
 	// ImagePulledFromRegistry, and PinnedImageSetsDegraded.
+	// The following types are only available when the ImageModeStatusReporting feature gate is enabled: ImagePulledFromRegistry,
+	// AppliedOSImage, AppliedFiles
 	// +listType=map
 	// +listMapKey=type
 	// +kubebuilder:validation:MaxItems=20
@@ -129,6 +132,7 @@ type MachineConfigNodeStatus struct {
 	// +optional
 	ConfigVersion *MachineConfigNodeStatusMachineConfigVersion `json:"configVersion,omitempty"`
 	// configImage describes the current and desired image for this node.
+	// +openshift:enable:FeatureGate=ImageModeStatusReporting
 	// +optional
 	ConfigImage *MachineConfigNodeStatusConfigImage `json:"configImage,omitempty"`
 	// pinnedImageSets describes the current and desired pinned image sets for this node.
@@ -226,12 +230,7 @@ type MachineConfigNodeSpecMachineConfigVersion struct {
 // to signal the desired image pullspec for the node to update to.
 type MachineConfigNodeSpecConfigImage struct {
 	// desiredImage is the fully-qualified pullspec of the image that the Machine
-	// Config Operator (MCO) intends to apply to the node. This value is sourced
-	// from the `machineconfiguration.openshift.io/desiredImage` annotation.
-	// It is a required field because the presence of a desired image is the
-	// initial signal for a node update and a prerequisite for the update process.
-	// +kubebuilder:validation:MaxLength:=32768
-	// +openshift:enable:FeatureGate=ImageModeStatusReporting
+	// Config Operator (MCO) intends to apply to the node.
 	// +required
 	DesiredImage string `json:"desiredImage"`
 }
@@ -242,22 +241,15 @@ type MachineConfigNodeSpecConfigImage struct {
 // rollout.
 type MachineConfigNodeStatusConfigImage struct {
 	// currentImage is the fully-qualified pullspec of the image that is
-	// currently applied to the node. This value is sourced from the
-	// `machineconfiguration.openshift.io/currentImage` annotation.
+	// currently applied to the node.
 	// It is an optional field because at the beginning of an update, the node
 	// may not have an image pulled or applied, and the current image would still
 	// be the previous one while the desired image is being set. This field is
 	// updated as the node applies the new OS image.
-	// +kubebuilder:validation:MaxLength:=32768
-	// +openshift:enable:FeatureGate=ImageModeStatusReporting
 	// +optional
 	CurrentImage string `json:"currentImage,omitempty"`
-	// desiredImage is a mirror of the desired image from the Spec. This value is
-	// set to the same fully-qualified pullspec from the `machineconfiguration.openshift.io/desiredImage`
-	// annotation. By including it in the Status, clients can easily compare the
-	// 'current' and 'desired' states to determine if an update is complete.
-	// +kubebuilder:validation:MaxLength:=32768
-	// +openshift:enable:FeatureGate=ImageModeStatusReporting
+	// desiredImage is a mirror of the desired image from the Spec. When the
+	// current and desired image are not equal, the node is in an updating phase.
 	// +required
 	DesiredImage string `json:"desiredImage"`
 }

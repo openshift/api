@@ -102,7 +102,7 @@ type MachineConfigNodeSpec struct {
 	ConfigVersion MachineConfigNodeSpecMachineConfigVersion `json:"configVersion"`
 
 	// configImage holds the desired image for the node targeted by this machine config node resource.
-	// The desired version represents the image the node will attempt to update to and gets set before the machine config operator validates
+	// The desired image represents the image the node will attempt to update to and gets set before the machine config operator validates
 	// the new image against the current image.
 	// +openshift:enable:FeatureGate=ImageModeStatusReporting
 	// +optional

@@ -17,6 +17,8 @@ limitations under the License.
 package v1alpha1
 
 import (
+	v1 "k8s.io/api/core/v1"
+	"k8s.io/apimachinery/pkg/api/resource"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
@@ -77,6 +79,13 @@ type ClusterMonitoringSpec struct {
 	// userDefined set the deployment mode for user-defined monitoring in addition to the default platform monitoring.
 	// +required
 	UserDefined UserDefinedMonitoring `json:"userDefined"`
+
+	// metricsServer defines the configuration for the Metrics Server component.
+	// The Metrics Server provides container resource metrics for use in autoscaling pipelines.
+	// When omitted, this means no opinion and the platform is left to choose a default,
+	// which is subject to change over time.
+	// +optional
+	MetricsServerConfig MetricsServerConfig `json:"metricsServer,omitempty"`
 }
 
 // UserDefinedMonitoring config for user-defined projects.
@@ -101,3 +110,146 @@ const (
 	// UserDefinedNamespaceIsolated enables monitoring for user-defined projects with namespace-scoped tenancy. This ensures that metrics, alerts, and monitoring data are isolated at the namespace level.
 	UserDefinedNamespaceIsolated UserDefinedMode = "NamespaceIsolated"
 )
+
+// The MetricsServerConfig resource defines settings for the Metrics Server component.
+// This configuration allows users to customize how the Metrics Server is deployed
+// and how it operates within the cluster.
+type MetricsServerConfig struct {
+	// audit defines the audit configuration used by the Metrics Server instance.
+	// When omitted, this means no opinion and the platform is left to choose a default,
+	// which is subject to change over time. The current default is "metadata".
+	// The audit field is optional.
+	// +optional
+	Audit *Audit `json:"audit,omitempty"`
+
+	// nodeSelector is the node selector applied to metrics server pods.
+	// nodeSelector is optional.
+	//
+	// When omitted, this means the user has no opinion and the platform is left
+	// to choose reasonable defaults. These defaults are subject to change over time.
+	// The current default is `kubernetes.io/os: linux` so that Pods can be scheduled onto any available node.
+	// +optional
+	NodeSelector map[string]string `json:"nodeSelector,omitempty"`
+
+	// tolerations is a list of tolerations applied to metrics server components
+	// tolerations is optional.
+	//
+	// When omitted, this means the user has no opinion and the platform is left
+	// to choose reasonable defaults. These defaults are subject to change over time.
+	// Maximum length for this list is 10
+	// +kubebuilder:validation:MaxItems=10
+	// +optional
+	Tolerations []v1.Toleration `json:"tolerations,omitempty"`
+
+	// resources defines the compute resource requests and limits for the Metrics Server container.
+	// This includes CPU, memory and HugePages constraints to help control scheduling and resource usage.
+	// When not specified, defaults are used by the platform. Requests cannot exceed limits.
+	// Resources is optional.
+	// More info: https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/
+	// This is a simplified API that maps to Kubernetes ResourceRequirements.
+	// +optional
+	Resources *MetricServerConfigContainerResources `json:"resources,omitempty"`
+
+	// topologySpreadConstraints defines rules for how Metrics Server Pods should be distributed
+	// across topology domains such as zones, nodes, or other user-defined labels.
+	// topologySpreadConstraints is optional.
+	// This helps improve high availability and resource efficiency by avoiding placing
+	// too many replicas in the same failure domain.
+	//
+	// When omitted, this means no opinion and the platform is left to choose a default, which is subject to change over time.
+	// This field maps directly to the `topologySpreadConstraints` field in the Pod spec.
+	// Maximum length for this list is 10
+	// +kubebuilder:validation:MaxItems=10
+	// +optional
+	TopologySpreadConstraints []v1.TopologySpreadConstraint `json:"topologySpreadConstraints,omitempty"`
+}
+
+// Audit defines the configuration for Metrics Server audit logging.
+type Audit struct {
+	// profile specifies the audit log level to use.
+	// Valid values are:
+	// - "metadata" - log metadata about requests (default)
+	// - "request" - log metadata and request payloads
+	// - "requestresponse" - log metadata, requests, and responses
+	// - "none" - don't log requests
+	// The default audit log level is "metadata"
+	//
+	// See: https://kubernetes.io/docs/tasks/debug-application-cluster/audit/#audit-policy
+	// for more details about audit logging.
+	//
+	// +kubebuilder:validation:Enum=metadata;request;requestresponse;none
+	// +optional
+	Profile AuditProfileType `json:"profile,omitempty"`
+}
+
+// AuditProfileType defines the audit policy profile type.
+// +kubebuilder:validation:Enum=none;metadata;request;requestresponse
+type AuditProfileType string
+
+const (
+	// None - don't log events that match this rule.
+	AuditProfileTypeNone AuditProfileType = "none"
+
+	// Metadata - log events with metadata (requesting user, timestamp, resource, verb, etc.) but not request or response body.
+	AuditProfileTypeMetadata AuditProfileType = "metadata"
+
+	// Request - log events with request metadata and body but not response body. This does not apply for non-resource requests.
+	AuditProfileTypeRequest AuditProfileType = "request"
+
+	// RequestResponse - log events with request metadata, request body and response body. This does not apply for non-resource requests.
+	AuditProfileTypeRequestResponse AuditProfileType = "requestresponse"
+)
+
+// ResourceSpec defines the requested and limited value of a resource.
+type ResourceSpec struct {
+	// request is the minimum amount of the resource required (e.g. "2Mi", "1Gi").
+	// This field is optional.
+	// +optional
+	Request resource.Quantity `json:"request,omitempty"`
+
+	// limit is the maximum amount of the resource allowed (e.g. "2Mi", "1Gi").
+	// This field is optional.
+	// +optional
+	Limit resource.Quantity `json:"limit,omitempty"`
+}
+
+// MetricServerConfigContainerResources defines simplified resource requirements for a container.
+type MetricServerConfigContainerResources struct {
+	// cpu defines the CPU resource limits and requests.
+	// This filed is optional
+	// +optional
+	CPU *ResourceSpec `json:"cpu,omitempty"`
+
+	// memory defines the memory resource limits and requests.
+	// This filed is optional
+	// +optional
+	Memory *ResourceSpec `json:"memory,omitempty"`
+
+	// hugepages is a list of hugepage resource specifications by page size.
+	// defines an optional list of unique configurations identified by their `size` field.
+	// A maximum of 10 items is allowed.
+	// The list is treated as a map, using `size` as the key
+	// +optional
+	// +listType=map
+	// +listMapKey=size
+	// +kubebuilder:validation:MaxItems=10
+	HugePages []HugePageResource `json:"hugepages,omitempty"`
+}
+
+// HugePageResource describes hugepages resources by page size (e.g. 2Mi, 1Gi).
+type HugePageResource struct {
+	// size of the hugepage (e.g. "2Mi", "1Gi").
+	// This field is required.
+	// +required
+	Size resource.Quantity `json:"size"`
+
+	// request amount for this hugepage size.
+	// This filed is optional
+	// +optional
+	Request resource.Quantity `json:"request,omitempty"`
+
+	// limit amount for this hugepage size.
+	// This filed is optional
+	// +optional
+	Limit resource.Quantity `json:"limit,omitempty"`
+}

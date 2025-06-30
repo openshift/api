@@ -160,7 +160,7 @@ tests:
             desired: rendered-worker-abc
           configImage:
             desiredImage: registry.example.com/a/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/j
-      expectedError: "desiredImage string too long, must be lesser than 254"
+      expectedError: "spec.configImage.desiredImage: String has maxLength of 253."
     - name: ConfigImage is required
       initial: |
         apiVersion: machineconfiguration.openshift.io/v1
@@ -216,7 +216,7 @@ tests:
           configImage:
             desiredImage: registry.example.com/a/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/j
             currentImage: image-registry.openshift-image-registry.svc:5000/openshift-machine-config-operator/os-images:latest
-      expectedError: "desiredImage string too long, must be lesser than 254"
+      expectedError: "status.configImage.desiredImage: String has maxLength of 253."
     - name: status.configImage.currentImage should enforce MaxLength.
       initial: |
         apiVersion: machineconfiguration.openshift.io/v1
@@ -236,5 +236,5 @@ tests:
           configImage:
             desiredImage: image-registry.openshift-image-registry.svc:5000/openshift-machine-config-operator/os-images:latest
             currentImage: registry.example.com/a/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/j
-      expectedError: "currentImage string too long, must be lesser than 254"
+      expectedError: "status.configImage.currentImage: String has maxLength of 253."
       

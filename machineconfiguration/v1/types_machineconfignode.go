@@ -231,7 +231,7 @@ type MachineConfigNodeSpecMachineConfigVersion struct {
 type MachineConfigNodeSpecConfigImage struct {
 	// desiredImage is the fully-qualified pullspec of the image that the Machine
 	// Config Operator (MCO) intends to apply to the node.
-	// +kubebuilder:validation:MaxLength:=253
+	// +kubebuilder:validation:MaxLength:=253, message="desiredImage string too long, must be lesser than 254"
 	// +required
 	DesiredImage string `json:"desiredImage"`
 }
@@ -247,12 +247,12 @@ type MachineConfigNodeStatusConfigImage struct {
 	// may not have an image pulled or applied, and the current image would still
 	// be the previous one while the desired image is being set. This field is
 	// updated as the node applies the new OS image.
-	// +kubebuilder:validation:MaxLength:=253
+	// +kubebuilder:validation:MaxLength:=253, message="currentImage string too long, must be lesser than 254"
 	// +optional
 	CurrentImage string `json:"currentImage,omitempty"`
 	// desiredImage is a mirror of the desired image from the Spec. When the
 	// current and desired image are not equal, the node is in an updating phase.
-	// +kubebuilder:validation:MaxLength:=253
+	// +kubebuilder:validation:MaxLength:=253, message="desiredImage string too long, must be lesser than 254"
 	// +required
 	DesiredImage string `json:"desiredImage"`
 }

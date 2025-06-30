@@ -283,7 +283,7 @@ const (
 
 // ContainerResource defines a single resource requirement for a container.
 // +kubebuilder:validation:XValidation:rule="has(self.request) || has(self.limit)",message="at least one of request or limit must be set"
-// +kubebuilder:validation:XValidation:rule="has(self.request) && has(self.limit) ? !quantity(self.limit).isLessThan(self.request) : true",message="limit should not be less than request"
+
 type ContainerResource struct {
 	// name of the resource (e.g. "cpu", "memory", "hugepages-2Mi").
 	// This field is required.
@@ -295,14 +295,15 @@ type ContainerResource struct {
 	// request is the minimum amount of the resource required (e.g. "2Mi", "1Gi").
 	// This field is optional.
 	// +optional
-	// +kubebuilder:validation:XValidation:rule="isQuantity(self) && quantity(self).compareTo('0') >= 0",message="request must be a non-negative quantity"
+	// +kubebuilder:validation:XValidation:rule="isQuantity(self) && quantity(self) >= quantity('0')",message="request must be a non-negative quantity"
+	// +kubebuilder:validation:XValidation:rule="(has(self.request) && has(self.limit) && isQuantity(self.request) && isQuantity(self.limit)) ? !quantity(self.limit).isLessThan(self.request) : true",message="limit should not be less than request"
 	Request resource.Quantity `json:"request,omitempty"`
 
 	// limit is the maximum amount of the resource allowed (e.g. "2Mi", "1Gi").
 	// This field is optional.
 	// +optional
-	// +kubebuilder:validation:XValidation:rule="isQuantity(self) && quantity(self).compareTo('0') >= 0",message="limit must be a non-negative quantity"
-	// +kubebuilder:validation:XValidation:rule="has(self.request) && has(self.limit) && isQuantity(self.request) && isQuantity(self.limit) ? !quantity(self.limit).isLessThan(self.request) : true",message="limit should not be less than request"
+	// +kubebuilder:validation:XValidation:rule="isQuantity(self) && quantity(self) >= quantity('0')",message="limit must be a non-negative quantity"
+	// +kubebuilder:validation:XValidation:rule="(has(self.request) && has(self.limit) && isQuantity(self.request) && isQuantity(self.limit)) ? !quantity(self.limit).isLessThan(self.request) : true",message="limit should not be less than request"
 	Limit resource.Quantity `json:"limit,omitempty"`
 }
 

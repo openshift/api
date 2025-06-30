@@ -11476,7 +11476,6 @@
       "type": "object"
     },
     "com.github.openshift.api.config.v1alpha1.ContainerResource": {
-      "description": "ContainerResource defines a single resource requirement for a container.",
       "type": "object",
       "required": [
         "name"

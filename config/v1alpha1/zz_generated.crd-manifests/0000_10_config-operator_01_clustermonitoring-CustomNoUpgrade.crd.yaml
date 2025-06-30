@@ -108,8 +108,6 @@ spec:
                                 cpu: 4m
                                 memory: 40Mi
                         items:
-                          description: ContainerResource defines a single resource
-                            requirement for a container.
                           properties:
                             limit:
                               anyOf:
@@ -122,11 +120,10 @@ spec:
                               x-kubernetes-int-or-string: true
                               x-kubernetes-validations:
                               - message: limit must be a non-negative quantity
-                                rule: isQuantity(self) && quantity(self).compareTo('0')
-                                  >= 0
+                                rule: isQuantity(self) && quantity(self) >= quantity('0')
                               - message: limit should not be less than request
-                                rule: 'has(self.request) && has(self.limit) && isQuantity(self.request)
-                                  && isQuantity(self.limit) ? !quantity(self.limit).isLessThan(self.request)
+                                rule: '(has(self.request) && has(self.limit) && isQuantity(self.request)
+                                  && isQuantity(self.limit)) ? !quantity(self.limit).isLessThan(self.request)
                                   : true'
                             name:
                               description: |-
@@ -148,17 +145,17 @@ spec:
                               x-kubernetes-int-or-string: true
                               x-kubernetes-validations:
                               - message: request must be a non-negative quantity
-                                rule: isQuantity(self) && quantity(self).compareTo('0')
-                                  >= 0
+                                rule: isQuantity(self) && quantity(self) >= quantity('0')
+                              - message: limit should not be less than request
+                                rule: '(has(self.request) && has(self.limit) && isQuantity(self.request)
+                                  && isQuantity(self.limit)) ? !quantity(self.limit).isLessThan(self.request)
+                                  : true'
                           required:
                           - name
                           type: object
                           x-kubernetes-validations:
                           - message: at least one of request or limit must be set
                             rule: has(self.request) || has(self.limit)
-                          - message: limit should not be less than request
-                            rule: 'has(self.request) && has(self.limit) ? !quantity(self.limit).isLessThan(self.request)
-                              : true'
                         maxItems: 10
                         type: array
                         x-kubernetes-list-map-keys:

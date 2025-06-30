@@ -807,6 +807,14 @@ var (
 					enableIn(configv1.DevPreviewNoUpgrade, configv1.TechPreviewNoUpgrade).
 					mustRegister()
 
+	FeatureGateStoragePerformantSecurityPolicy = newFeatureGate("StoragePerformantSecurityPolicy").
+							reportProblemsToJiraComponent("Storage / Kubernetes External Components").
+							contactPerson("hekumar").
+							productScope(ocpSpecific).
+							enhancementPR("https://github.com/openshift/enhancements/pull/1804").
+							enableIn(configv1.DevPreviewNoUpgrade, configv1.TechPreviewNoUpgrade).
+							mustRegister()
+
 	FeatureGateAWSDedicatedHosts = newFeatureGate("AWSDedicatedHosts").
 					reportProblemsToJiraComponent("Installer").
 					contactPerson("faermanj").

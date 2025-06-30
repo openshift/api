@@ -20574,6 +20574,11 @@ func schema_openshift_api_config_v1alpha1_AlertmanagerCustomConfig(ref common.Re
 						},
 					},
 					"secrets": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-type": "atomic",
+							},
+						},
 						SchemaProps: spec.SchemaProps{
 							Description: "secrets Defines a list of secrets that need to be mounted into the Alertmanager. The secrets must reside within the same namespace as the Alertmanager object. They will be added as volumes named secret-<secret-name> and mounted at /etc/alertmanager/secrets/<secret-name> within the 'alertmanager' container of the Alertmanager Pods.\n\nThese secrets can be used to authenticate Alertmanager with endpoint receivers. For example, you can use secrets to: - Provide certificates for TLS authentication with receivers that require private CA certificates - Store credentials for Basic HTTP authentication with receivers that require password-based auth - Store any other authentication credentials needed by your alert receivers\n\nThis field is optional. Maximum length for this list is 10",
 							Type:        []string{"array"},
@@ -21122,7 +21127,8 @@ func schema_openshift_api_config_v1alpha1_ContainerResource(ref common.Reference
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
-				Type: []string{"object"},
+				Description: "ContainerResource defines a single resource requirement for a container.",
+				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
 					"name": {
 						SchemaProps: spec.SchemaProps{

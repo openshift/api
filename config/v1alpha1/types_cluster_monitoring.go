@@ -212,6 +212,7 @@ type AlertmanagerCustomConfig struct {
 	// Maximum length for this list is 10
 	// +optional
 	// +kubebuilder:validation:MaxItems=10
+	// +listType=atomic
 	Secrets []SecretName `json:"secrets,omitempty"`
 	// tolerations is a list of tolerations applied to network diagnostics components
 	// tolerations is optional.
@@ -283,7 +284,6 @@ const (
 
 // ContainerResource defines a single resource requirement for a container.
 // +kubebuilder:validation:XValidation:rule="has(self.request) || has(self.limit)",message="at least one of request or limit must be set"
-
 type ContainerResource struct {
 	// name of the resource (e.g. "cpu", "memory", "hugepages-2Mi").
 	// This field is required.
@@ -295,15 +295,15 @@ type ContainerResource struct {
 	// request is the minimum amount of the resource required (e.g. "2Mi", "1Gi").
 	// This field is optional.
 	// +optional
-	// +kubebuilder:validation:XValidation:rule="isQuantity(self) && quantity(self) >= quantity('0')",message="request must be a non-negative quantity"
-	// +kubebuilder:validation:XValidation:rule="(has(self.request) && has(self.limit) && isQuantity(self.request) && isQuantity(self.limit)) ? !quantity(self.limit).isLessThan(self.request) : true",message="limit should not be less than request"
+	// +kubebuilder:validation:XValidation:rule="isQuantity(self) && quantity(self).compareTo(quantity('0')) >= 0",message="request must be a non-negative quantity"
+	// +kubebuilder:validation:XValidation:rule="(has(self.request) && has(self.limit) && isQuantity(self.request) && isQuantity(self.limit)) ? quantity(self.limit).compareTo(quantity(self.request)) >= 0 : true",message="limit should not be less than request"
 	Request resource.Quantity `json:"request,omitempty"`
 
 	// limit is the maximum amount of the resource allowed (e.g. "2Mi", "1Gi").
 	// This field is optional.
 	// +optional
-	// +kubebuilder:validation:XValidation:rule="isQuantity(self) && quantity(self) >= quantity('0')",message="limit must be a non-negative quantity"
-	// +kubebuilder:validation:XValidation:rule="(has(self.request) && has(self.limit) && isQuantity(self.request) && isQuantity(self.limit)) ? !quantity(self.limit).isLessThan(self.request) : true",message="limit should not be less than request"
+	// +kubebuilder:validation:XValidation:rule="isQuantity(self) && quantity(self).compareTo(quantity('0')) >= 0",message="request must be a non-negative quantity"
+	// +kubebuilder:validation:XValidation:rule="(has(self.request) && has(self.limit) && isQuantity(self.request) && isQuantity(self.limit)) ? quantity(self.limit).compareTo(quantity(self.request)) >= 0 : true",message="limit should not be less than request"
 	Limit resource.Quantity `json:"limit,omitempty"`
 }
 

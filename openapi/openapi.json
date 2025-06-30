@@ -11179,7 +11179,8 @@
           "items": {
             "type": "string",
             "default": ""
-          }
+          },
+          "x-kubernetes-list-type": "atomic"
         },
         "tolerations": {
           "description": "tolerations is a list of tolerations applied to network diagnostics components tolerations is optional.\n\nWhen omitted, this means the user has no opinion and the platform is left to choose reasonable defaults. These defaults are subject to change over time. Maximum length for this list is 10",
@@ -11476,6 +11477,7 @@
       "type": "object"
     },
     "com.github.openshift.api.config.v1alpha1.ContainerResource": {
+      "description": "ContainerResource defines a single resource requirement for a container.",
       "type": "object",
       "required": [
         "name"

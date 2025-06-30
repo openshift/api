@@ -47,10 +47,10 @@ tests:
             name: worker
           configVersion:
             desired: rendered-worker-abc
-          configImage: 
+          configImage:
             desiredImage: image-registry.openshift-image-registry.svc:5000/openshift-machine-config-operator/os-images@sha256:c47856f56e1fdb7c9d10a1658e4ea85fbea44d71fb0e82898d152b47e0f894c6
         status:
-          configImage: 
+          configImage:
             desiredImage: image-registry.openshift-image-registry.svc:5000/openshift-machine-config-operator/os-images:latest
             currentImage: image-registry.openshift-image-registry.svc:5000/openshift-machine-config-operator/os-images@sha256:c47856f56e1fdb7c9d10a1658e4ea85fbea44d71fb0e82898d152b47e0f894c6
       expected: |
@@ -65,12 +65,8 @@ tests:
             name: worker
           configVersion:
             desired: rendered-worker-abc
-          configImage: 
-            desiredImage: image-registry.openshift-image-registry.svc:5000/openshift-machine-config-operator/os-images:latest
-        status:
           configImage:
-            desiredImage: image-registry.openshift-image-registry.svc:5000/openshift-machine-config-operator/os-images:latest
-            currentImage: image-registry.openshift-image-registry.svc:5000/openshift-machine-config-operator/os-images:latest
+            desiredImage: image-registry.openshift-image-registry.svc:5000/openshift-machine-config-operator/os-images@sha256:c47856f56e1fdb7c9d10a1658e4ea85fbea44d71fb0e82898d152b47e0f894c6
     - name: Should be able to create MachineConfigNode with status.configImage when ImageModeStatusReporting is enabled when the current and desired images are the same
       initial: |
         apiVersion: machineconfiguration.openshift.io/v1

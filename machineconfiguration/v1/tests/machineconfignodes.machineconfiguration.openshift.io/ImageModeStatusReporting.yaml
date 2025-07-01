@@ -148,7 +148,7 @@ tests:
             desired: rendered-worker-abc
           configImage:
             desiredImage: registry.example.com/a/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/j
-      expectedError: "spec.configImage.desiredImage: Too long: \"registry.example.com/a/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/j\" (max 253 characters)"
+      expectedError: "MachineConfigNode.machineconfiguration.openshift.io \"test-imagemodestatusreporting\" is invalid: [spec.configImage.desiredImage: Too long: may not be more than 253 bytes, <nil>: Invalid value: \"null\": some validation rules were not checked because the object was invalid; correct the existing errors to complete validation]"
     - name: ConfigImage is required
       initial: |
         apiVersion: machineconfiguration.openshift.io/v1
@@ -164,7 +164,7 @@ tests:
             desired: rendered-worker-abc
           configImage: 
             desiredImage:
-      expectedError: "spec.configImage.desiredImage: Required value: must be in JSON format"
+      expectedError: "spec.configImage.desiredImage: Required value, <nil>: Invalid value: \"null\""
     - name: status.configImage.desiredImage is required
       initial: |
         apiVersion: machineconfiguration.openshift.io/v1
@@ -184,7 +184,7 @@ tests:
           configImage:
             desiredImage:
             currentImage:
-      expectedError: "spec.configImage.desiredImage: Required value: must be in JSON format"
+      expectedError: "status.configImage.desiredImage: Required value, <nil>: Invalid value: \"null\""
     - name: status.configImage.desiredImage should enforce MaxLength.
       initial: |
         apiVersion: machineconfiguration.openshift.io/v1
@@ -204,7 +204,7 @@ tests:
           configImage:
             desiredImage: registry.example.com/a/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/j
             currentImage: image-registry.openshift-image-registry.svc:5000/openshift-machine-config-operator/os-images:latest
-      expectedError: "status.configImage.desiredImage: Too long: \"registry.example.com/a/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/j\" (max 253 characters)"
+      expectedError: "MachineConfigNode.machineconfiguration.openshift.io \"test-imagemodestatusreporting\" is invalid: [status.configImage.desiredImage: Too long: may not be more than 253 bytes, <nil>: Invalid value: \"null\": some validation rules were not checked because the object was invalid; correct the existing errors to complete validation]"
     - name: status.configImage.currentImage should enforce MaxLength.
       initial: |
         apiVersion: machineconfiguration.openshift.io/v1
@@ -224,5 +224,4 @@ tests:
           configImage:
             desiredImage: image-registry.openshift-image-registry.svc:5000/openshift-machine-config-operator/os-images:latest
             currentImage: registry.example.com/a/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/j
-      expectedError: "status.configImage.currentImage: Too long: \"registry.example.com/a/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/j\" (max 253 characters)"
-      
+      expectedError: "MachineConfigNode.machineconfiguration.openshift.io \"test-imagemodestatusreporting\" is invalid: [status.configImage.currentImage: Too long: may not be more than 253 bytes, <nil>: Invalid value: \"null\": some validation rules were not checked because the object was invalid; correct the existing errors to complete validation]"

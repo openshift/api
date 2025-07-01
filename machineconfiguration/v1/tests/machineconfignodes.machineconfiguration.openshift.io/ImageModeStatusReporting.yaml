@@ -118,7 +118,7 @@ tests:
         status:
           configImage: 
             desiredImage: image-registry.openshift-image-registry.svc:5000/openshift-machine-config-operator/os-images@sha256:c47856f56e1fdb7c9d10a1658e4ea85fbea44d71fb0e82898d152b47e0f894c6
-            currentImage: 
+            currentImage:
       expected: |
         apiVersion: machineconfiguration.openshift.io/v1
         kind: MachineConfigNode
@@ -133,10 +133,6 @@ tests:
             desired: rendered-worker-abc
           configImage: 
             desiredImage: image-registry.openshift-image-registry.svc:5000/openshift-machine-config-operator/os-images:latest
-        status:
-          configImage:
-            desiredImage: image-registry.openshift-image-registry.svc:5000/openshift-machine-config-operator/os-images@sha256:c47856f56e1fdb7c9d10a1658e4ea85fbea44d71fb0e82898d152b47e0f894c6
-            currentImage: 
     - name: spec.configImage.desiredImage should enforce MaxLength.
       initial: |
         apiVersion: machineconfiguration.openshift.io/v1
@@ -152,7 +148,7 @@ tests:
             desired: rendered-worker-abc
           configImage:
             desiredImage: registry.example.com/a/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/j
-      expectedError: "spec.configImage.desiredImage: String has maxLength of 253."
+      expectedError: "spec.configImage.desiredImage: Too long: \"registry.example.com/a/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/j\" (max 253 characters)"
     - name: ConfigImage is required
       initial: |
         apiVersion: machineconfiguration.openshift.io/v1
@@ -167,8 +163,8 @@ tests:
           configVersion:
             desired: rendered-worker-abc
           configImage: 
-            desiredImage: 
-      expectedError: "spec.configImage: Required value, <nil>: Invalid value: \"null\""
+            desiredImage:
+      expectedError: "spec.configImage.desiredImage: Required value: must be in JSON format"
     - name: status.configImage.desiredImage is required
       initial: |
         apiVersion: machineconfiguration.openshift.io/v1
@@ -188,7 +184,7 @@ tests:
           configImage:
             desiredImage:
             currentImage:
-      expectedError: "status.desiredImage: Required value, <nil>: Invalid value: \"null\""
+      expectedError: "spec.configImage.desiredImage: Required value: must be in JSON format"
     - name: status.configImage.desiredImage should enforce MaxLength.
       initial: |
         apiVersion: machineconfiguration.openshift.io/v1
@@ -208,7 +204,7 @@ tests:
           configImage:
             desiredImage: registry.example.com/a/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/j
             currentImage: image-registry.openshift-image-registry.svc:5000/openshift-machine-config-operator/os-images:latest
-      expectedError: "status.configImage.desiredImage: String has maxLength of 253."
+      expectedError: "status.configImage.desiredImage: Too long: \"registry.example.com/a/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/j\" (max 253 characters)"
     - name: status.configImage.currentImage should enforce MaxLength.
       initial: |
         apiVersion: machineconfiguration.openshift.io/v1
@@ -228,5 +224,5 @@ tests:
           configImage:
             desiredImage: image-registry.openshift-image-registry.svc:5000/openshift-machine-config-operator/os-images:latest
             currentImage: registry.example.com/a/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/j
-      expectedError: "status.configImage.currentImage: String has maxLength of 253."
+      expectedError: "status.configImage.currentImage: Too long: \"registry.example.com/a/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/j\" (max 253 characters)"
       

@@ -113,8 +113,8 @@ type MachineConfigNodeSpec struct {
 type MachineConfigNodeStatus struct {
 	// conditions represent the observations of a machine config node's current state. Valid types are:
 	// UpdatePrepared, UpdateExecuted, UpdatePostActionComplete, UpdateComplete, Updated, Resumed,
-	// Drained, AppliedFilesAndOS, AppliedOSImage, AppliedFiles, Cordoned, Uncordoned, RebootedNode, NodeDegraded, PinnedImageSetsProgressing,
-	// ImagePulledFromRegistry, and PinnedImageSetsDegraded.
+	// Drained, AppliedFilesAndOS, Cordoned, Uncordoned, RebootedNode, NodeDegraded, PinnedImageSetsProgressing,
+	// , and PinnedImageSetsDegraded.
 	// The following types are only available when the ImageModeStatusReporting feature gate is enabled: ImagePulledFromRegistry,
 	// AppliedOSImage, AppliedFiles
 	// +listType=map
@@ -231,6 +231,7 @@ type MachineConfigNodeSpecMachineConfigVersion struct {
 type MachineConfigNodeSpecConfigImage struct {
 	// desiredImage is the fully-qualified pullspec of the image that the Machine
 	// Config Operator (MCO) intends to apply to the node.
+	// Required field that can be at most 253 characters in length.
 	// +kubebuilder:validation:MaxLength:=253
 	// +required
 	DesiredImage string `json:"desiredImage"`
@@ -243,15 +244,17 @@ type MachineConfigNodeSpecConfigImage struct {
 type MachineConfigNodeStatusConfigImage struct {
 	// currentImage is the fully-qualified pullspec of the image that is
 	// currently applied to the node.
-	// It is an optional field because at the beginning of an update, the node
-	// may not have an image pulled or applied, and the current image would still
-	// be the previous one while the desired image is being set. This field is
-	// updated as the node applies the new OS image.
+	// This field is optional because when image-mode is first enabled on a
+	// node, there is no currentImage because the node has not yet applied
+	// the updated image. Only after the updated image is applied will the
+	// currentImage be populated.
+	// This field can be at most 253 characters in length.
 	// +kubebuilder:validation:MaxLength:=253
 	// +optional
 	CurrentImage string `json:"currentImage,omitempty"`
 	// desiredImage is a mirror of the desired image from the Spec. When the
 	// current and desired image are not equal, the node is in an updating phase.
+	// Required field that can be at most 253 characters in length.
 	// +kubebuilder:validation:MaxLength:=253
 	// +required
 	DesiredImage string `json:"desiredImage"`
@@ -280,8 +283,7 @@ const (
 	MachineConfigNodeUpdateFiles StateProgress = "AppliedFiles"
 	// MachineConfigNodeUpdateOS describes the part of the in progress phase where the OS config changes
 	MachineConfigNodeUpdateOS StateProgress = "AppliedOSImage"
-	// Deprecated: AppliedFilesAndOS is being replaced by AppliedFiles and AppliedOSImage.
-	// This constant is maintained for backward compatibility.
+	// MachineConfigNodeUpdateOS describes the part of the in progress phase where the nodes files and OS config change
 	MachineConfigNodeAppliedFilesAndOS StateProgress = "AppliedFilesAndOS"
 	// MachineConfigNodeImagePulledFromRegistry describes the part of the in progress phase where the update image is pulled from the registry
 	MachineConfigNodeImagePulledFromRegistry StateProgress = "ImagePulledFromRegistry"

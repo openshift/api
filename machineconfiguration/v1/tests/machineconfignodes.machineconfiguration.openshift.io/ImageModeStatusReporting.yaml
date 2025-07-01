@@ -195,11 +195,11 @@ tests:
             desired: rendered-worker-abc
           configImage: 
             desiredImage: image-registry.openshift-image-registry.svc:5000/openshift-machine-config-operator/os-images:latest
-          status:
+        status:
           configImage:
             desiredImage:
             currentImage:
-      expectedError: "status.configImage.desiredImage: Required value, <nil>: Invalid value: \"null\""
+      expectedError: "MachineConfigNode.machineconfiguration.openshift.io \"test-imagemodestatusreporting\" is invalid: [spec.configImage.desiredImage: Required value, <nil>: Invalid value: \"null\": some validation rules were not checked because the object was invalid; correct the existing errors to complete validation]"
     - name: status.configImage.desiredImage should enforce MaxLength.
       initial: |
         apiVersion: machineconfiguration.openshift.io/v1

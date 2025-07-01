@@ -199,7 +199,7 @@ tests:
           configImage:
             desiredImage:
             currentImage:
-      expectedError: "MachineConfigNode.machineconfiguration.openshift.io \"test-imagemodestatusreporting\" is invalid: [spec.configImage.desiredImage: Required value, <nil>: Invalid value: \"null\": some validation rules were not checked because the object was invalid; correct the existing errors to complete validation]"
+      expectedError: "MachineConfigNode.machineconfiguration.openshift.io \"test-imagemodestatusreporting\" is invalid: [status.configImage.desiredImage: Required value, <nil>: Invalid value: \"null\": some validation rules were not checked because the object was invalid; correct the existing errors to complete validation]"
     - name: status.configImage.desiredImage should enforce MaxLength.
       initial: |
         apiVersion: machineconfiguration.openshift.io/v1

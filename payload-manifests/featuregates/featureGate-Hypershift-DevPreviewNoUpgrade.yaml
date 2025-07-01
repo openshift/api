@@ -28,9 +28,6 @@
                         "name": "MultiArchInstallAzure"
                     },
                     {
-                        "name": "MutatingAdmissionPolicy"
-                    },
-                    {
                         "name": "NewOLM"
                     },
                     {
@@ -217,6 +214,9 @@
                     },
                     {
                         "name": "MixedCPUsAllocation"
+                    },
+                    {
+                        "name": "MutatingAdmissionPolicy"
                     },
                     {
                         "name": "NetworkDiagnosticsConfig"

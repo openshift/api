@@ -28,9 +28,6 @@
                         "name": "MultiArchInstallAzure"
                     },
                     {
-                        "name": "MutatingAdmissionPolicy"
-                    },
-                    {
                         "name": "ShortCertRotation"
                     }
                 ],
@@ -202,6 +199,9 @@
                     },
                     {
                         "name": "MixedCPUsAllocation"
+                    },
+                    {
+                        "name": "MutatingAdmissionPolicy"
                     },
                     {
                         "name": "NetworkDiagnosticsConfig"

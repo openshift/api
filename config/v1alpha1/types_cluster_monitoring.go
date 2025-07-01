@@ -78,7 +78,7 @@ type ClusterMonitoringList struct {
 type ClusterMonitoringSpec struct {
 	// userDefined set the deployment mode for user-defined monitoring in addition to the default platform monitoring.
 	// userDefined is optional.
-	// When omitted, this means no opinion and the platform is left to choose a reasonable default, that is subject to change over time.
+	// When omitted, the platform will choose a reasonable default, that is subject to change over time.
 	// The current default value is `Disabled`.
 	// +optional
 	UserDefined *UserDefinedMonitoring `json:"userDefined,omitempty"`
@@ -92,8 +92,6 @@ type ClusterMonitoringSpec struct {
 }
 
 // UserDefinedMonitoring config for user-defined projects.
-// When omitted, the platform will choose a reasonable default, that is subject to change over time.
-// The current default value is `Disabled`.
 type UserDefinedMonitoring struct {
 	// mode defines the different configurations of UserDefinedMonitoring
 	// Valid values are Disabled and NamespaceIsolated
@@ -284,6 +282,9 @@ const (
 
 // ContainerResource defines a single resource requirement for a container.
 // +kubebuilder:validation:XValidation:rule="has(self.request) || has(self.limit)",message="at least one of request or limit must be set"
+// +kubebuilder:validation:XValidation:rule="!has(self.request) || quantity(self.request).compareTo(quantity('0')) >= 0",message="request must be a non-negative quantity"
+// +kubebuilder:validation:XValidation:rule="!has(self.limit) || quantity(self.limit).compareTo(quantity('0')) >= 0",message="limit must be a non-negative quantity"
+// +kubebuilder:validation:XValidation:rule="!(has(self.request) && has(self.limit)) || quantity(self.limit).compareTo(quantity(self.request)) >= 0",message="limit should not be less than request"
 type ContainerResource struct {
 	// name of the resource (e.g. "cpu", "memory", "hugepages-2Mi").
 	// This field is required.
@@ -295,15 +296,11 @@ type ContainerResource struct {
 	// request is the minimum amount of the resource required (e.g. "2Mi", "1Gi").
 	// This field is optional.
 	// +optional
-	// +kubebuilder:validation:XValidation:rule="isQuantity(self) && quantity(self).compareTo(quantity('0')) >= 0",message="request must be a non-negative quantity"
-	// +kubebuilder:validation:XValidation:rule="(has(self.request) && has(self.limit) && isQuantity(self.request) && isQuantity(self.limit)) ? quantity(self.limit).compareTo(quantity(self.request)) >= 0 : true",message="limit should not be less than request"
 	Request resource.Quantity `json:"request,omitempty"`
 
 	// limit is the maximum amount of the resource allowed (e.g. "2Mi", "1Gi").
 	// This field is optional.
 	// +optional
-	// +kubebuilder:validation:XValidation:rule="isQuantity(self) && quantity(self).compareTo(quantity('0')) >= 0",message="request must be a non-negative quantity"
-	// +kubebuilder:validation:XValidation:rule="(has(self.request) && has(self.limit) && isQuantity(self.request) && isQuantity(self.limit)) ? quantity(self.limit).compareTo(quantity(self.request)) >= 0 : true",message="limit should not be less than request"
 	Limit resource.Quantity `json:"limit,omitempty"`
 }
 

@@ -183,7 +183,7 @@ func (ClusterMonitoringList) SwaggerDoc() map[string]string {
 
 var map_ClusterMonitoringSpec = map[string]string{
 	"":                   "ClusterMonitoringSpec defines the desired state of Cluster Monitoring Operator",
-	"userDefined":        "userDefined set the deployment mode for user-defined monitoring in addition to the default platform monitoring. userDefined is optional. When omitted, this means no opinion and the platform is left to choose a reasonable default, that is subject to change over time. The current default value is `Disabled`.",
+	"userDefined":        "userDefined set the deployment mode for user-defined monitoring in addition to the default platform monitoring. userDefined is optional. When omitted, the platform will choose a reasonable default, that is subject to change over time. The current default value is `Disabled`.",
 	"alertmanagerConfig": "alertmanagerConfig allows users to configure how the default Alertmanager instance should be deployed in the `openshift-monitoring` namespace. alertmanagerConfig is optional. When omitted, this means no opinion and the platform is left to choose a reasonable default, that is subject to change over time. The current default value is `Deployed`.",
 }
 
@@ -211,7 +211,7 @@ func (ContainerResource) SwaggerDoc() map[string]string {
 }
 
 var map_UserDefinedMonitoring = map[string]string{
-	"":     "UserDefinedMonitoring config for user-defined projects. When omitted, the platform will choose a reasonable default, that is subject to change over time. The current default value is `Disabled`.",
+	"":     "UserDefinedMonitoring config for user-defined projects.",
 	"mode": "mode defines the different configurations of UserDefinedMonitoring Valid values are Disabled and NamespaceIsolated Disabled disables monitoring for user-defined projects. This restricts the default monitoring stack, installed in the openshift-monitoring project, to monitor only platform namespaces, which prevents any custom monitoring configurations or resources from being applied to user-defined namespaces. NamespaceIsolated enables monitoring for user-defined projects with namespace-scoped tenancy. This ensures that metrics, alerts, and monitoring data are isolated at the namespace level. The current default value is `Disabled`.",
 }
 

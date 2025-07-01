@@ -120,14 +120,6 @@ spec:
                                 This field is optional.
                               pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
                               x-kubernetes-int-or-string: true
-                              x-kubernetes-validations:
-                              - message: request must be a non-negative quantity
-                                rule: isQuantity(self) && quantity(self).compareTo(quantity('0'))
-                                  >= 0
-                              - message: limit should not be less than request
-                                rule: '(has(self.request) && has(self.limit) && isQuantity(self.request)
-                                  && isQuantity(self.limit)) ? quantity(self.limit).compareTo(quantity(self.request))
-                                  >= 0 : true'
                             name:
                               description: |-
                                 name of the resource (e.g. "cpu", "memory", "hugepages-2Mi").
@@ -146,20 +138,21 @@ spec:
                                 This field is optional.
                               pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
                               x-kubernetes-int-or-string: true
-                              x-kubernetes-validations:
-                              - message: request must be a non-negative quantity
-                                rule: isQuantity(self) && quantity(self).compareTo(quantity('0'))
-                                  >= 0
-                              - message: limit should not be less than request
-                                rule: '(has(self.request) && has(self.limit) && isQuantity(self.request)
-                                  && isQuantity(self.limit)) ? quantity(self.limit).compareTo(quantity(self.request))
-                                  >= 0 : true'
                           required:
                           - name
                           type: object
                           x-kubernetes-validations:
                           - message: at least one of request or limit must be set
                             rule: has(self.request) || has(self.limit)
+                          - message: request must be a non-negative quantity
+                            rule: '!has(self.request) || quantity(self.request).compareTo(quantity(''0''))
+                              >= 0'
+                          - message: limit must be a non-negative quantity
+                            rule: '!has(self.limit) || quantity(self.limit).compareTo(quantity(''0''))
+                              >= 0'
+                          - message: limit should not be less than request
+                            rule: '!(has(self.request) && has(self.limit)) || quantity(self.limit).compareTo(quantity(self.request))
+                              >= 0'
                         maxItems: 10
                         type: array
                         x-kubernetes-list-map-keys:

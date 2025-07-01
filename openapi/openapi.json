@@ -11467,7 +11467,7 @@
           "$ref": "#/definitions/com.github.openshift.api.config.v1alpha1.AlertmanagerConfig"
         },
         "userDefined": {
-          "description": "userDefined set the deployment mode for user-defined monitoring in addition to the default platform monitoring. userDefined is optional. When omitted, this means no opinion and the platform is left to choose a reasonable default, that is subject to change over time. The current default value is `Disabled`.",
+          "description": "userDefined set the deployment mode for user-defined monitoring in addition to the default platform monitoring. userDefined is optional. When omitted, the platform will choose a reasonable default, that is subject to change over time. The current default value is `Disabled`.",
           "$ref": "#/definitions/com.github.openshift.api.config.v1alpha1.UserDefinedMonitoring"
         }
       }
@@ -12060,7 +12060,7 @@
       }
     },
     "com.github.openshift.api.config.v1alpha1.UserDefinedMonitoring": {
-      "description": "UserDefinedMonitoring config for user-defined projects. When omitted, the platform will choose a reasonable default, that is subject to change over time. The current default value is `Disabled`.",
+      "description": "UserDefinedMonitoring config for user-defined projects.",
       "type": "object",
       "required": [
         "mode"

@@ -21094,7 +21094,7 @@ func schema_openshift_api_config_v1alpha1_ClusterMonitoringSpec(ref common.Refer
 				Properties: map[string]spec.Schema{
 					"userDefined": {
 						SchemaProps: spec.SchemaProps{
-							Description: "userDefined set the deployment mode for user-defined monitoring in addition to the default platform monitoring. userDefined is optional. When omitted, this means no opinion and the platform is left to choose a reasonable default, that is subject to change over time. The current default value is `Disabled`.",
+							Description: "userDefined set the deployment mode for user-defined monitoring in addition to the default platform monitoring. userDefined is optional. When omitted, the platform will choose a reasonable default, that is subject to change over time. The current default value is `Disabled`.",
 							Ref:         ref("github.com/openshift/api/config/v1alpha1.UserDefinedMonitoring"),
 						},
 					},
@@ -22082,7 +22082,7 @@ func schema_openshift_api_config_v1alpha1_UserDefinedMonitoring(ref common.Refer
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
-				Description: "UserDefinedMonitoring config for user-defined projects. When omitted, the platform will choose a reasonable default, that is subject to change over time. The current default value is `Disabled`.",
+				Description: "UserDefinedMonitoring config for user-defined projects.",
 				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
 					"mode": {

@@ -197,8 +197,7 @@ tests:
             desiredImage: image-registry.openshift-image-registry.svc:5000/openshift-machine-config-operator/os-images:latest
         status:
           configImage:
-            desiredImage:
-            currentImage:
+            currentImage: image-registry.openshift-image-registry.svc:5000/openshift-machine-config-operator/os-images:latest
       expectedError: "MachineConfigNode.machineconfiguration.openshift.io \"test-imagemodestatusreporting\" is invalid: [status.configImage.desiredImage: Required value, <nil>: Invalid value: \"null\": some validation rules were not checked because the object was invalid; correct the existing errors to complete validation]"
     - name: status.configImage.desiredImage should enforce MaxLength.
       initial: |

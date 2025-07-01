@@ -165,6 +165,7 @@ tests:
           configImage: 
             desiredImage:
       expectedError: "spec.configImage.desiredImage: Required value, <nil>: Invalid value: \"null\""
+  onUpdate:
     - name: status.configImage.desiredImage is required
       initial: |
         apiVersion: machineconfiguration.openshift.io/v1
@@ -184,6 +185,24 @@ tests:
           configImage:
             desiredImage:
             currentImage:
+      updated: |
+        apiVersion: machineconfiguration.openshift.io/v1
+        kind: MachineConfigNode
+        metadata:
+          name: test-imagemodestatusreporting
+        spec:
+          node:
+            name: test-imagemodestatusreporting
+          pool:
+            name: worker
+          configVersion:
+            desired: rendered-worker-abc
+          configImage: 
+            desiredImage: image-registry.openshift-image-registry.svc:5000/openshift-machine-config-operator/os-images:latest
+        status:
+          configImage:
+            desiredImage:
+            currentImage: ""
       expectedError: "status.configImage.desiredImage: Required value, <nil>: Invalid value: \"null\""
     - name: status.configImage.desiredImage should enforce MaxLength.
       initial: |
@@ -203,6 +222,24 @@ tests:
         status:
           configImage:
             desiredImage: registry.example.com/a/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/j
+            currentImage: image-registry.openshift-image-registry.svc:5000/openshift-machine-config-operator/os-images:latest
+      updated: |
+        apiVersion: machineconfiguration.openshift.io/v1
+        kind: MachineConfigNode
+        metadata:
+          name: test-imagemodestatusreporting
+        spec:
+          node:
+            name: test-imagemodestatusreporting
+          pool:
+            name: worker
+          configVersion:
+            desired: rendered-worker-abc
+          configImage:
+            desiredImage: image-registry.openshift-image-registry.svc:5000/openshift-machine-config-operator/os-images:latest
+        status:
+          configImage:
+            desiredImage: ""
             currentImage: image-registry.openshift-image-registry.svc:5000/openshift-machine-config-operator/os-images:latest
       expectedError: "MachineConfigNode.machineconfiguration.openshift.io \"test-imagemodestatusreporting\" is invalid: [status.configImage.desiredImage: Too long: may not be more than 253 bytes, <nil>: Invalid value: \"null\": some validation rules were not checked because the object was invalid; correct the existing errors to complete validation]"
     - name: status.configImage.currentImage should enforce MaxLength.
@@ -224,4 +261,22 @@ tests:
           configImage:
             desiredImage: image-registry.openshift-image-registry.svc:5000/openshift-machine-config-operator/os-images:latest
             currentImage: registry.example.com/a/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/j
+      updated: |
+        apiVersion: machineconfiguration.openshift.io/v1
+        kind: MachineConfigNode
+        metadata:
+          name: test-imagemodestatusreporting
+        spec:
+          node:
+            name: test-imagemodestatusreporting
+          pool:
+            name: worker
+          configVersion:
+            desired: rendered-worker-abc
+          configImage:
+            desiredImage: image-registry.openshift-image-registry.svc:5000/openshift-machine-config-operator/os-images:latest
+        status:
+          configImage:
+            desiredImage: image-registry.openshift-image-registry.svc:5000/openshift-machine-config-operator/os-images:latest
+            currentImage: ""
       expectedError: "MachineConfigNode.machineconfiguration.openshift.io \"test-imagemodestatusreporting\" is invalid: [status.configImage.currentImage: Too long: may not be more than 253 bytes, <nil>: Invalid value: \"null\": some validation rules were not checked because the object was invalid; correct the existing errors to complete validation]"

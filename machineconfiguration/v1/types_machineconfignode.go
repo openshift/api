@@ -254,9 +254,9 @@ type MachineConfigNodeStatusConfigImage struct {
 	CurrentImage string `json:"currentImage,omitempty"`
 	// desiredImage is a mirror of the desired image from the Spec. When the
 	// current and desired image are not equal, the node is in an updating phase.
-	// Required field that can be at most 253 characters in length.
+	// Optional field that can be at most 253 characters in length.
 	// +kubebuilder:validation:MaxLength:=253
-	// +required
+	// +optional
 	DesiredImage string `json:"desiredImage"`
 }
 

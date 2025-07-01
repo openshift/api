@@ -100,10 +100,6 @@ tests:
             desired: rendered-worker-abc
           configImage: 
             desiredImage: image-registry.openshift-image-registry.svc:5000/openshift-machine-config-operator/os-images:latest
-        status:
-          configImage:
-            desiredImage: image-registry.openshift-image-registry.svc:5000/openshift-machine-config-operator/os-images:latest
-            currentImage: image-registry.openshift-image-registry.svc:5000/openshift-machine-config-operator/os-images:latest
     - name: Should be able to create MachineConfigNode with status.configImage when ImageModeStatusReporting is enabled without the current image provided
       initial: |
         apiVersion: machineconfiguration.openshift.io/v1

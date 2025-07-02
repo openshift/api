@@ -5577,6 +5577,18 @@
           "default": {},
           "$ref": "#/definitions/com.github.openshift.api.config.v1.ClusterVersionCapabilitiesStatus"
         },
+        "conditionalUpdateRisks": {
+          "description": "conditionalUpdateRisks contains the list of risks associated with conditionalUpdates. When performing a conditional update, all its associated risks will be compared with the set of accepted risks in the spec.desiredUpdate.accept field. If all risks for a conditional update are included in the spec.desiredUpdate.accept set, the conditional update will proceed, otherwise it is blocked. The risk names in the list must be unique. conditionalUpdateRisks must not contain more than 500 entries.",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/com.github.openshift.api.config.v1.ConditionalUpdateRisk"
+          },
+          "x-kubernetes-list-map-keys": [
+            "name"
+          ],
+          "x-kubernetes-list-type": "map"
+        },
         "conditionalUpdates": {
           "description": "conditionalUpdates contains the list of updates that may be recommended for this cluster if it meets specific required conditions. Consumers interested in the set of updates that are actually recommended for this cluster should use availableUpdates. This list may be empty if no updates are recommended, if the update service is unavailable, or if an empty or invalid channel has been specified.",
           "type": "array",
@@ -5784,6 +5796,15 @@
           "default": {},
           "$ref": "#/definitions/com.github.openshift.api.config.v1.Release"
         },
+        "riskNames": {
+          "description": "riskNames represents the set of the names of conditionalUpdateRisks in the status that are exposed to the release in this conditional update. A condition update is accepted only if each of its risk is either not applied to the cluster or considered acceptable by the cluster administrator. Entries must be unique and must not exceed 256 characters. riskNames must not contain more than 500 entries.",
+          "type": "array",
+          "items": {
+            "type": "string",
+            "default": ""
+          },
+          "x-kubernetes-list-type": "set"
+        },
         "risks": {
           "description": "risks represents the range of issues associated with updating to the target release. The cluster-version operator will evaluate all entries, and only recommend the update if there is at least one entry and all entries recommend the update.",
           "type": "array",
@@ -5810,6 +5831,18 @@
         "matchingRules"
       ],
       "properties": {
+        "conditions": {
+          "description": "conditions represents the observations of the conditional update risk's current status. Known types are: * Applies, for whether the risk applies to the current cluster. The condition's types in the list must be unique. conditions must not contain more than one entry.",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Condition"
+          },
+          "x-kubernetes-list-map-keys": [
+            "type"
+          ],
+          "x-kubernetes-list-type": "map"
+        },
         "matchingRules": {
           "description": "matchingRules is a slice of conditions for deciding which clusters match the risk and which do not. The slice is ordered by decreasing precedence. The cluster-version operator will walk the slice in order, and stop after the first it can successfully evaluate. If no condition can be successfully evaluated, the update will not be recommended.",
           "type": "array",
@@ -11052,6 +11085,15 @@
       "description": "Update represents an administrator update request.",
       "type": "object",
       "properties": {
+        "accept": {
+          "description": "accept is an optional set of names of conditional update risks that are considered acceptable. A conditional update is performed only if all of its risks are acceptable. Entries must be unique and must not exceed 256 characters. accept must not contain more than 1000 entries.",
+          "type": "array",
+          "items": {
+            "type": "string",
+            "default": ""
+          },
+          "x-kubernetes-list-type": "set"
+        },
         "architecture": {
           "description": "architecture is an optional field that indicates the desired value of the cluster architecture. In this context cluster architecture means either a single architecture or a multi architecture. architecture can only be set to Multi thereby only allowing updates from single to multi architecture. If architecture is set, image cannot be set and version must be set. Valid values are 'Multi' and empty.",
           "type": "string",
@@ -11086,7 +11128,7 @@
       ],
       "properties": {
         "acceptedRisks": {
-          "description": "acceptedRisks records risks which were accepted to initiate the update. For example, it may menition an Upgradeable=False or missing signature that was overriden via desiredUpdate.force, or an update that was initiated despite not being in the availableUpdates set of recommended update targets.",
+          "description": "acceptedRisks records risks which were accepted to initiate the update. For example, it may mention an Upgradeable=False or missing signature that was overridden via desiredUpdate.force, or an update that was initiated despite not being in the availableUpdates set of recommended update targets.",
           "type": "string"
         },
         "completionTime": {

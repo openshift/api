@@ -108,9 +108,8 @@ spec:
                                request: 4m
                                limit: 5m
                         items:
-                          description: |-
-                            ContainerResource defines a single resource requirement for a container.
-                            / +kubebuilder:validation:XValidation:rule="!has(self.request) || quantity(self.request).isGreaterThan(quantity('0'))",message="request must be a non-negative quantity"
+                          description: ContainerResource defines a single resource
+                            requirement for a container.
                           properties:
                             limit:
                               anyOf:
@@ -122,14 +121,20 @@ spec:
                                 When request is specified, limit cannot be less than request.
                               pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
                               x-kubernetes-int-or-string: true
+                              x-kubernetes-validations:
+                              - message: limit must be a non-negative quantity
+                                rule: '!has(self.limit) || quantity(self.limit).isGreaterThan(quantity(''0''))'
                             name:
                               description: |-
                                 name of the resource (e.g. "cpu", "memory", "hugepages-2Mi").
                                 This field is required.
+                                name must consist only of alphanumeric characters, `-`, `_` and `.` and must start and end with an alphanumeric character.
                               maxLength: 253
                               type: string
                               x-kubernetes-validations:
-                              - message: name must be a valid qualified name
+                              - message: name must consist only of alphanumeric characters,
+                                  `-`, `_` and `.` and must start and end with an
+                                  alphanumeric character
                                 rule: '!format.qualifiedName().validate(self).hasValue()'
                             request:
                               anyOf:
@@ -141,16 +146,18 @@ spec:
                                 When limit is specified, request cannot be greater than limit.
                               pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
                               x-kubernetes-int-or-string: true
+                              x-kubernetes-validations:
+                              - message: request must be a non-negative quantity
+                                rule: isQuantity(self) && quantity(self).isGreaterThan(quantity('0'))
                           required:
                           - name
                           type: object
                           x-kubernetes-validations:
                           - message: at least one of request or limit must be set
                             rule: has(self.request) || has(self.limit)
-                          - message: limit must be a non-negative quantity
-                            rule: '!has(self.limit) || quantity(self.limit).isGreaterThan(quantity(''0''))'
                           - message: limit should not be less than request
-                            rule: '!(has(self.request) && has(self.limit)) || quantity(self.limit).compareTo(quantity(self.request))
+                            rule: '!(has(self.request) && has(self.limit)) || isQuantity(self.request)
+                              && isQuantity(self.limit) && quantity(self.limit).compareTo(quantity(self.request))
                               >= 0'
                         maxItems: 10
                         type: array
@@ -177,7 +184,7 @@ spec:
                           description: |-
                             SecretName is a type that represents the name of a Secret in the same namespace.
                             It must be at most 253 characters in length.
-                          maxLength: 253
+                          maxLength: 63
                           type: string
                           x-kubernetes-validations:
                           - message: a lowercase RFC 1123 subdomain must consist of

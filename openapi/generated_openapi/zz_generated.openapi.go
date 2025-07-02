@@ -21097,12 +21097,12 @@ func schema_openshift_api_config_v1alpha1_ContainerResource(ref common.Reference
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
-				Description: "ContainerResource defines a single resource requirement for a container. / +kubebuilder:validation:XValidation:rule=\"!has(self.request) || quantity(self.request).isGreaterThan(quantity('0'))\",message=\"request must be a non-negative quantity\"",
+				Description: "ContainerResource defines a single resource requirement for a container.",
 				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
 					"name": {
 						SchemaProps: spec.SchemaProps{
-							Description: "name of the resource (e.g. \"cpu\", \"memory\", \"hugepages-2Mi\"). This field is required.",
+							Description: "name of the resource (e.g. \"cpu\", \"memory\", \"hugepages-2Mi\"). This field is required. name must consist only of alphanumeric characters, `-`, `_` and `.` and must start and end with an alphanumeric character.",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",

@@ -11465,7 +11465,7 @@
       "type": "object"
     },
     "com.github.openshift.api.config.v1alpha1.ContainerResource": {
-      "description": "ContainerResource defines a single resource requirement for a container. / +kubebuilder:validation:XValidation:rule=\"!has(self.request) || quantity(self.request).isGreaterThan(quantity('0'))\",message=\"request must be a non-negative quantity\"",
+      "description": "ContainerResource defines a single resource requirement for a container.",
       "type": "object",
       "required": [
         "name"
@@ -11476,7 +11476,7 @@
           "$ref": "#/definitions/io.k8s.apimachinery.pkg.api.resource.Quantity"
         },
         "name": {
-          "description": "name of the resource (e.g. \"cpu\", \"memory\", \"hugepages-2Mi\"). This field is required.",
+          "description": "name of the resource (e.g. \"cpu\", \"memory\", \"hugepages-2Mi\"). This field is required. name must consist only of alphanumeric characters, `-`, `_` and `.` and must start and end with an alphanumeric character.",
           "type": "string",
           "default": ""
         },

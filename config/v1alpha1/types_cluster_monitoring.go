@@ -269,32 +269,33 @@ const (
 
 // ContainerResource defines a single resource requirement for a container.
 // +kubebuilder:validation:XValidation:rule="has(self.request) || has(self.limit)",message="at least one of request or limit must be set"
-// / +kubebuilder:validation:XValidation:rule="!has(self.request) || quantity(self.request).isGreaterThan(quantity('0'))",message="request must be a non-negative quantity"
-// +kubebuilder:validation:XValidation:rule="!has(self.limit) || quantity(self.limit).isGreaterThan(quantity('0'))",message="limit must be a non-negative quantity"
-// +kubebuilder:validation:XValidation:rule="!(has(self.request) && has(self.limit)) || quantity(self.limit).compareTo(quantity(self.request)) >= 0",message="limit should not be less than request"
+// +kubebuilder:validation:XValidation:rule="!(has(self.request) && has(self.limit)) || isQuantity(self.request) && isQuantity(self.limit) && quantity(self.limit).compareTo(quantity(self.request)) >= 0",message="limit should not be less than request"
 type ContainerResource struct {
 	// name of the resource (e.g. "cpu", "memory", "hugepages-2Mi").
 	// This field is required.
+	// name must consist only of alphanumeric characters, `-`, `_` and `.` and must start and end with an alphanumeric character.
 	// +required
 	// +kubebuilder:validation:MaxLength=253
-	// +kubebuilder:validation:XValidation:rule="!format.qualifiedName().validate(self).hasValue()",message="name must be a valid qualified name"
+	// +kubebuilder:validation:XValidation:rule="!format.qualifiedName().validate(self).hasValue()",message="name must consist only of alphanumeric characters, `-`, `_` and `.` and must start and end with an alphanumeric character"
 	Name string `json:"name"`
 
 	// request is the minimum amount of the resource required (e.g. "2Mi", "1Gi").
 	// This field is optional.
 	// When limit is specified, request cannot be greater than limit.
 	// +optional
+	// +kubebuilder:validation:XValidation:rule="isQuantity(self) && quantity(self).isGreaterThan(quantity('0'))",message="request must be a non-negative quantity"
 	Request resource.Quantity `json:"request,omitempty"`
 
 	// limit is the maximum amount of the resource allowed (e.g. "2Mi", "1Gi").
 	// This field is optional.
 	// When request is specified, limit cannot be less than request.
 	// +optional
+	// +kubebuilder:validation:XValidation:rule="!has(self.limit) || quantity(self.limit).isGreaterThan(quantity('0'))",message="limit must be a non-negative quantity"
 	Limit resource.Quantity `json:"limit,omitempty"`
 }
 
 // SecretName is a type that represents the name of a Secret in the same namespace.
 // It must be at most 253 characters in length.
 // +kubebuilder:validation:XValidation:rule="!format.dns1123Subdomain().validate(self).hasValue()",message="a lowercase RFC 1123 subdomain must consist of lower case alphanumeric characters, '-' or '.', and must start and end with an alphanumeric character."
-// +kubebuilder:validation:MaxLength=253
+// +kubebuilder:validation:MaxLength=63
 type SecretName string

@@ -78,7 +78,7 @@ type ClusterMonitoringList struct {
 type ClusterMonitoringSpec struct {
 	// userDefined set the deployment mode for user-defined monitoring in addition to the default platform monitoring.
 	// userDefined is optional.
-	// When omitted, the platform will choose a reasonable default, that is subject to change over time.
+	// When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time.
 	// The current default value is `Disabled`.
 	// +optional
 	UserDefined *UserDefinedMonitoring `json:"userDefined,omitempty"`
@@ -86,7 +86,7 @@ type ClusterMonitoringSpec struct {
 	// should be deployed in the `openshift-monitoring` namespace.
 	// alertmanagerConfig is optional.
 	// When omitted, this means no opinion and the platform is left to choose a reasonable default, that is subject to change over time.
-	// The current default value is `Deployed`.
+	// The current default value is `DefaultConfig`.
 	// +optional
 	AlertmanagerConfig *AlertmanagerConfig `json:"alertmanagerConfig,omitempty"`
 }
@@ -115,9 +115,9 @@ const (
 )
 
 // alertmanagerConfig provides configuration options for the default Alertmanager instance
-// +kubebuilder:validation:XValidation:rule="self.deploymentMode == 'CustomConfig' ? has(self.customConfig) && !has(self.disabled) : true",message="when deploymentMode is CustomConfig, customConfig must be set and disabled must be unset"
 // that runs in the `openshift-monitoring` namespace. Use this configuration to control
 // whether the default Alertmanager is deployed, how it logs, and how its pods are scheduled.
+// +kubebuilder:validation:XValidation:rule="self.deploymentMode == 'CustomConfig' ? has(self.customConfig) && !has(self.customConfig) : true",message="customConfig is required when deploymentMode is CustomConfig, and forbidden otherwise"
 type AlertmanagerConfig struct {
 	// deploymentMode determines whether the default Alertmanager instance should be deployed
 	// as part of the monitoring stack.
@@ -128,26 +128,12 @@ type AlertmanagerConfig struct {
 	//
 	// +unionDiscriminator
 	// +required
-	// +kubebuilder:validation:Enum=Disabled;DefaultConfig;CustomConfig
 	DeploymentMode AlertManagerDeployMode `json:"deploymentMode"`
-
-	// disabled must be set when deploymentMode is Disabled, and must be unset otherwise.
-	// When set to Disabled, the Alertmanager instance will not be deployed.
-	// +optional
-	Disabled *AlertmanagerDisabledConfig `json:"disabled,omitempty"`
 
 	// customConfig must be set when deploymentMode is CustomConfig, and must be unset otherwise.
 	// When set to CustomConfig, the Alertmanager will be deployed with custom configuration.
 	// +optional
 	CustomConfig *AlertmanagerCustomConfig `json:"customConfig,omitempty"`
-}
-
-// AlertmanagerDisabledConfig represents the configuration when Alertmanager is disabled.
-type AlertmanagerDisabledConfig struct {
-}
-
-// AlertmanagerDefaultConfig represents the configuration when using default Alertmanager settings.
-type AlertmanagerDefaultConfig struct {
 }
 
 // AlertmanagerCustomConfig represents the configuration for a custom Alertmanager deployment.
@@ -168,7 +154,7 @@ type AlertmanagerCustomConfig struct {
 	// The current default value is `Info`.
 	// +optional
 	LogLevel LogLevel `json:"logLevel,omitempty"`
-	// nodeSelector is the node selector applied to network diagnostics components
+	// nodeSelector defines the nodes on which the Pods are scheduled
 	// nodeSelector is optional.
 	//
 	// When omitted, this means the user has no opinion and the platform is left
@@ -186,9 +172,9 @@ type AlertmanagerCustomConfig struct {
 	// This is a simplified API that maps to Kubernetes ResourceRequirements.
 	// The current default values are:
 	//   resources:
-	//     requests:
-	//       cpu: 4m
-	//       memory: 40Mi
+	//    - name: cpu
+	//      request: 4m
+	//      limit: 5m
 	// +optional
 	// +listType=map
 	// +listMapKey=name
@@ -210,9 +196,9 @@ type AlertmanagerCustomConfig struct {
 	// Maximum length for this list is 10
 	// +optional
 	// +kubebuilder:validation:MaxItems=10
-	// +listType=atomic
+	// +listType=set
 	Secrets []SecretName `json:"secrets,omitempty"`
-	// tolerations is a list of tolerations applied to network diagnostics components
+	// tolerations defines tolerations for the pods.
 	// tolerations is optional.
 	//
 	// When omitted, this means the user has no opinion and the platform is left
@@ -242,7 +228,7 @@ type AlertmanagerCustomConfig struct {
 	// size, and name.
 	// If omitted, the Pod uses ephemeral storage and alert data will not persist
 	// across restarts.
-	// // This field is optional.
+	// This field is optional.
 	// +optional
 	VolumeClaimTemplate *v1.PersistentVolumeClaim `json:"volumeClaimTemplate,omitempty"`
 }
@@ -253,6 +239,7 @@ type AlertmanagerCustomConfig struct {
 // - "Disabled": The Alertmanager instance will not be deployed.
 // - "DefaultConfig": The Alertmanager instance will be deployed with default settings.
 // - "CustomConfig": The Alertmanager instance will be deployed with custom configuration.
+// +kubebuilder:validation:Enum=Disabled;DefaultConfig;CustomConfig
 type AlertManagerDeployMode string
 
 const (
@@ -282,8 +269,8 @@ const (
 
 // ContainerResource defines a single resource requirement for a container.
 // +kubebuilder:validation:XValidation:rule="has(self.request) || has(self.limit)",message="at least one of request or limit must be set"
-// +kubebuilder:validation:XValidation:rule="!has(self.request) || quantity(self.request).compareTo(quantity('0')) >= 0",message="request must be a non-negative quantity"
-// +kubebuilder:validation:XValidation:rule="!has(self.limit) || quantity(self.limit).compareTo(quantity('0')) >= 0",message="limit must be a non-negative quantity"
+// / +kubebuilder:validation:XValidation:rule="!has(self.request) || quantity(self.request).isGreaterThan(quantity('0'))",message="request must be a non-negative quantity"
+// +kubebuilder:validation:XValidation:rule="!has(self.limit) || quantity(self.limit).isGreaterThan(quantity('0'))",message="limit must be a non-negative quantity"
 // +kubebuilder:validation:XValidation:rule="!(has(self.request) && has(self.limit)) || quantity(self.limit).compareTo(quantity(self.request)) >= 0",message="limit should not be less than request"
 type ContainerResource struct {
 	// name of the resource (e.g. "cpu", "memory", "hugepages-2Mi").
@@ -295,11 +282,13 @@ type ContainerResource struct {
 
 	// request is the minimum amount of the resource required (e.g. "2Mi", "1Gi").
 	// This field is optional.
+	// When limit is specified, request cannot be greater than limit.
 	// +optional
 	Request resource.Quantity `json:"request,omitempty"`
 
 	// limit is the maximum amount of the resource allowed (e.g. "2Mi", "1Gi").
 	// This field is optional.
+	// When request is specified, limit cannot be less than request.
 	// +optional
 	Limit resource.Quantity `json:"limit,omitempty"`
 }

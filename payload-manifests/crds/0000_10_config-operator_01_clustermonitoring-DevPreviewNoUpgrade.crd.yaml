@@ -55,7 +55,7 @@ spec:
                   should be deployed in the `openshift-monitoring` namespace.
                   alertmanagerConfig is optional.
                   When omitted, this means no opinion and the platform is left to choose a reasonable default, that is subject to change over time.
-                  The current default value is `Deployed`.
+                  The current default value is `DefaultConfig`.
                 properties:
                   customConfig:
                     description: |-
@@ -85,7 +85,7 @@ spec:
                         additionalProperties:
                           type: string
                         description: |-
-                          nodeSelector is the node selector applied to network diagnostics components
+                          nodeSelector defines the nodes on which the Pods are scheduled
                           nodeSelector is optional.
 
                           When omitted, this means the user has no opinion and the platform is left
@@ -104,12 +104,13 @@ spec:
                           This is a simplified API that maps to Kubernetes ResourceRequirements.
                           The current default values are:
                             resources:
-                              requests:
-                                cpu: 4m
-                                memory: 40Mi
+                             - name: cpu
+                               request: 4m
+                               limit: 5m
                         items:
-                          description: ContainerResource defines a single resource
-                            requirement for a container.
+                          description: |-
+                            ContainerResource defines a single resource requirement for a container.
+                            / +kubebuilder:validation:XValidation:rule="!has(self.request) || quantity(self.request).isGreaterThan(quantity('0'))",message="request must be a non-negative quantity"
                           properties:
                             limit:
                               anyOf:
@@ -118,6 +119,7 @@ spec:
                               description: |-
                                 limit is the maximum amount of the resource allowed (e.g. "2Mi", "1Gi").
                                 This field is optional.
+                                When request is specified, limit cannot be less than request.
                               pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
                               x-kubernetes-int-or-string: true
                             name:
@@ -136,6 +138,7 @@ spec:
                               description: |-
                                 request is the minimum amount of the resource required (e.g. "2Mi", "1Gi").
                                 This field is optional.
+                                When limit is specified, request cannot be greater than limit.
                               pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
                               x-kubernetes-int-or-string: true
                           required:
@@ -144,12 +147,8 @@ spec:
                           x-kubernetes-validations:
                           - message: at least one of request or limit must be set
                             rule: has(self.request) || has(self.limit)
-                          - message: request must be a non-negative quantity
-                            rule: '!has(self.request) || quantity(self.request).compareTo(quantity(''0''))
-                              >= 0'
                           - message: limit must be a non-negative quantity
-                            rule: '!has(self.limit) || quantity(self.limit).compareTo(quantity(''0''))
-                              >= 0'
+                            rule: '!has(self.limit) || quantity(self.limit).isGreaterThan(quantity(''0''))'
                           - message: limit should not be less than request
                             rule: '!(has(self.request) && has(self.limit)) || quantity(self.limit).compareTo(quantity(self.request))
                               >= 0'
@@ -187,10 +186,10 @@ spec:
                             rule: '!format.dns1123Subdomain().validate(self).hasValue()'
                         maxItems: 10
                         type: array
-                        x-kubernetes-list-type: atomic
+                        x-kubernetes-list-type: set
                       tolerations:
                         description: |-
-                          tolerations is a list of tolerations applied to network diagnostics components
+                          tolerations defines tolerations for the pods.
                           tolerations is optional.
 
                           When omitted, this means the user has no opinion and the platform is left
@@ -432,7 +431,7 @@ spec:
                           size, and name.
                           If omitted, the Pod uses ephemeral storage and alert data will not persist
                           across restarts.
-                          // This field is optional.
+                          This field is optional.
                         properties:
                           apiVersion:
                             description: |-
@@ -868,24 +867,19 @@ spec:
                     - DefaultConfig
                     - CustomConfig
                     type: string
-                  disabled:
-                    description: |-
-                      disabled must be set when deploymentMode is Disabled, and must be unset otherwise.
-                      When set to Disabled, the Alertmanager instance will not be deployed.
-                    type: object
                 required:
                 - deploymentMode
                 type: object
                 x-kubernetes-validations:
-                - message: when deploymentMode is CustomConfig, customConfig must
-                    be set and disabled must be unset
+                - message: customConfig is required when deploymentMode is CustomConfig,
+                    and forbidden otherwise
                   rule: 'self.deploymentMode == ''CustomConfig'' ? has(self.customConfig)
-                    && !has(self.disabled) : true'
+                    && !has(self.customConfig) : true'
               userDefined:
                 description: |-
                   userDefined set the deployment mode for user-defined monitoring in addition to the default platform monitoring.
                   userDefined is optional.
-                  When omitted, this means no opinion and the platform is left to choose a reasonable default, that is subject to change over time.
+                  When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time.
                   The current default value is `Disabled`.
                 properties:
                   mode:

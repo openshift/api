@@ -11138,10 +11138,6 @@
           "description": "deploymentMode determines whether the default Alertmanager instance should be deployed as part of the monitoring stack. Allowed values are Disabled, DefaultConfig, and CustomConfig. When set to Disabled, the Alertmanager instance will not be deployed. When set to DefaultConfig, the platform will deploy Alertmanager with default settings. When set to CustomConfig, the Alertmanager will be deployed with custom configuration.",
           "type": "string",
           "default": ""
-        },
-        "disabled": {
-          "description": "disabled must be set when deploymentMode is Disabled, and must be unset otherwise. When set to Disabled, the Alertmanager instance will not be deployed.",
-          "$ref": "#/definitions/com.github.openshift.api.config.v1alpha1.AlertmanagerDisabledConfig"
         }
       }
     },
@@ -11154,7 +11150,7 @@
           "type": "string"
         },
         "nodeSelector": {
-          "description": "nodeSelector is the node selector applied to network diagnostics components nodeSelector is optional.\n\nWhen omitted, this means the user has no opinion and the platform is left to choose reasonable defaults. These defaults are subject to change over time. The current default value is `kubernetes.io/os: linux`.",
+          "description": "nodeSelector defines the nodes on which the Pods are scheduled nodeSelector is optional.\n\nWhen omitted, this means the user has no opinion and the platform is left to choose reasonable defaults. These defaults are subject to change over time. The current default value is `kubernetes.io/os: linux`.",
           "type": "object",
           "additionalProperties": {
             "type": "string",
@@ -11162,7 +11158,7 @@
           }
         },
         "resources": {
-          "description": "resources defines the compute resource requests and limits for the Alertmanager container. This includes CPU, memory and HugePages constraints to help control scheduling and resource usage. When not specified, defaults are used by the platform. Requests cannot exceed limits. This field is optional. More info: https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/ This is a simplified API that maps to Kubernetes ResourceRequirements. The current default values are:\n  resources:\n    requests:\n      cpu: 4m\n      memory: 40Mi",
+          "description": "resources defines the compute resource requests and limits for the Alertmanager container. This includes CPU, memory and HugePages constraints to help control scheduling and resource usage. When not specified, defaults are used by the platform. Requests cannot exceed limits. This field is optional. More info: https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/ This is a simplified API that maps to Kubernetes ResourceRequirements. The current default values are:\n  resources:\n   - name: cpu\n     request: 4m\n     limit: 5m",
           "type": "array",
           "items": {
             "default": {},
@@ -11180,10 +11176,10 @@
             "type": "string",
             "default": ""
           },
-          "x-kubernetes-list-type": "atomic"
+          "x-kubernetes-list-type": "set"
         },
         "tolerations": {
-          "description": "tolerations is a list of tolerations applied to network diagnostics components tolerations is optional.\n\nWhen omitted, this means the user has no opinion and the platform is left to choose reasonable defaults. These defaults are subject to change over time. Maximum length for this list is 10",
+          "description": "tolerations defines tolerations for the pods. tolerations is optional.\n\nWhen omitted, this means the user has no opinion and the platform is left to choose reasonable defaults. These defaults are subject to change over time. Maximum length for this list is 10",
           "type": "array",
           "items": {
             "default": {},
@@ -11205,18 +11201,10 @@
           "x-kubernetes-list-type": "map"
         },
         "volumeClaimTemplate": {
-          "description": "volumeClaimTemplate Defines persistent storage for Alertmanager. Use this setting to configure the persistent volume claim, including storage class, volume size, and name. If omitted, the Pod uses ephemeral storage and alert data will not persist across restarts. // This field is optional.",
+          "description": "volumeClaimTemplate Defines persistent storage for Alertmanager. Use this setting to configure the persistent volume claim, including storage class, volume size, and name. If omitted, the Pod uses ephemeral storage and alert data will not persist across restarts. This field is optional.",
           "$ref": "#/definitions/io.k8s.api.core.v1.PersistentVolumeClaim"
         }
       }
-    },
-    "com.github.openshift.api.config.v1alpha1.AlertmanagerDefaultConfig": {
-      "description": "AlertmanagerDefaultConfig represents the configuration when using default Alertmanager settings.",
-      "type": "object"
-    },
-    "com.github.openshift.api.config.v1alpha1.AlertmanagerDisabledConfig": {
-      "description": "AlertmanagerDisabledConfig represents the configuration when Alertmanager is disabled.",
-      "type": "object"
     },
     "com.github.openshift.api.config.v1alpha1.Backup": {
       "description": "Backup provides configuration for performing backups of the openshift cluster.\n\nCompatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.",
@@ -11463,11 +11451,11 @@
       "type": "object",
       "properties": {
         "alertmanagerConfig": {
-          "description": "alertmanagerConfig allows users to configure how the default Alertmanager instance should be deployed in the `openshift-monitoring` namespace. alertmanagerConfig is optional. When omitted, this means no opinion and the platform is left to choose a reasonable default, that is subject to change over time. The current default value is `Deployed`.",
+          "description": "alertmanagerConfig allows users to configure how the default Alertmanager instance should be deployed in the `openshift-monitoring` namespace. alertmanagerConfig is optional. When omitted, this means no opinion and the platform is left to choose a reasonable default, that is subject to change over time. The current default value is `DefaultConfig`.",
           "$ref": "#/definitions/com.github.openshift.api.config.v1alpha1.AlertmanagerConfig"
         },
         "userDefined": {
-          "description": "userDefined set the deployment mode for user-defined monitoring in addition to the default platform monitoring. userDefined is optional. When omitted, the platform will choose a reasonable default, that is subject to change over time. The current default value is `Disabled`.",
+          "description": "userDefined set the deployment mode for user-defined monitoring in addition to the default platform monitoring. userDefined is optional. When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time. The current default value is `Disabled`.",
           "$ref": "#/definitions/com.github.openshift.api.config.v1alpha1.UserDefinedMonitoring"
         }
       }
@@ -11477,14 +11465,14 @@
       "type": "object"
     },
     "com.github.openshift.api.config.v1alpha1.ContainerResource": {
-      "description": "ContainerResource defines a single resource requirement for a container.",
+      "description": "ContainerResource defines a single resource requirement for a container. / +kubebuilder:validation:XValidation:rule=\"!has(self.request) || quantity(self.request).isGreaterThan(quantity('0'))\",message=\"request must be a non-negative quantity\"",
       "type": "object",
       "required": [
         "name"
       ],
       "properties": {
         "limit": {
-          "description": "limit is the maximum amount of the resource allowed (e.g. \"2Mi\", \"1Gi\"). This field is optional.",
+          "description": "limit is the maximum amount of the resource allowed (e.g. \"2Mi\", \"1Gi\"). This field is optional. When request is specified, limit cannot be less than request.",
           "$ref": "#/definitions/io.k8s.apimachinery.pkg.api.resource.Quantity"
         },
         "name": {
@@ -11493,7 +11481,7 @@
           "default": ""
         },
         "request": {
-          "description": "request is the minimum amount of the resource required (e.g. \"2Mi\", \"1Gi\"). This field is optional.",
+          "description": "request is the minimum amount of the resource required (e.g. \"2Mi\", \"1Gi\"). This field is optional. When limit is specified, request cannot be greater than limit.",
           "$ref": "#/definitions/io.k8s.apimachinery.pkg.api.resource.Quantity"
         }
       }

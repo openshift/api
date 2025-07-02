@@ -406,8 +406,6 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"github.com/openshift/api/config/v1.WebhookTokenAuthenticator":                                       schema_openshift_api_config_v1_WebhookTokenAuthenticator(ref),
 		"github.com/openshift/api/config/v1alpha1.AlertmanagerConfig":                                        schema_openshift_api_config_v1alpha1_AlertmanagerConfig(ref),
 		"github.com/openshift/api/config/v1alpha1.AlertmanagerCustomConfig":                                  schema_openshift_api_config_v1alpha1_AlertmanagerCustomConfig(ref),
-		"github.com/openshift/api/config/v1alpha1.AlertmanagerDefaultConfig":                                 schema_openshift_api_config_v1alpha1_AlertmanagerDefaultConfig(ref),
-		"github.com/openshift/api/config/v1alpha1.AlertmanagerDisabledConfig":                                schema_openshift_api_config_v1alpha1_AlertmanagerDisabledConfig(ref),
 		"github.com/openshift/api/config/v1alpha1.Backup":                                                    schema_openshift_api_config_v1alpha1_Backup(ref),
 		"github.com/openshift/api/config/v1alpha1.BackupList":                                                schema_openshift_api_config_v1alpha1_BackupList(ref),
 		"github.com/openshift/api/config/v1alpha1.BackupSpec":                                                schema_openshift_api_config_v1alpha1_BackupSpec(ref),
@@ -20500,12 +20498,6 @@ func schema_openshift_api_config_v1alpha1_AlertmanagerConfig(ref common.Referenc
 							Format:      "",
 						},
 					},
-					"disabled": {
-						SchemaProps: spec.SchemaProps{
-							Description: "disabled must be set when deploymentMode is Disabled, and must be unset otherwise. When set to Disabled, the Alertmanager instance will not be deployed.",
-							Ref:         ref("github.com/openshift/api/config/v1alpha1.AlertmanagerDisabledConfig"),
-						},
-					},
 					"customConfig": {
 						SchemaProps: spec.SchemaProps{
 							Description: "customConfig must be set when deploymentMode is CustomConfig, and must be unset otherwise. When set to CustomConfig, the Alertmanager will be deployed with custom configuration.",
@@ -20517,7 +20509,7 @@ func schema_openshift_api_config_v1alpha1_AlertmanagerConfig(ref common.Referenc
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/config/v1alpha1.AlertmanagerCustomConfig", "github.com/openshift/api/config/v1alpha1.AlertmanagerDisabledConfig"},
+			"github.com/openshift/api/config/v1alpha1.AlertmanagerCustomConfig"},
 	}
 }
 
@@ -20537,7 +20529,7 @@ func schema_openshift_api_config_v1alpha1_AlertmanagerCustomConfig(ref common.Re
 					},
 					"nodeSelector": {
 						SchemaProps: spec.SchemaProps{
-							Description: "nodeSelector is the node selector applied to network diagnostics components nodeSelector is optional.\n\nWhen omitted, this means the user has no opinion and the platform is left to choose reasonable defaults. These defaults are subject to change over time. The current default value is `kubernetes.io/os: linux`.",
+							Description: "nodeSelector defines the nodes on which the Pods are scheduled nodeSelector is optional.\n\nWhen omitted, this means the user has no opinion and the platform is left to choose reasonable defaults. These defaults are subject to change over time. The current default value is `kubernetes.io/os: linux`.",
 							Type:        []string{"object"},
 							AdditionalProperties: &spec.SchemaOrBool{
 								Allows: true,
@@ -20561,7 +20553,7 @@ func schema_openshift_api_config_v1alpha1_AlertmanagerCustomConfig(ref common.Re
 							},
 						},
 						SchemaProps: spec.SchemaProps{
-							Description: "resources defines the compute resource requests and limits for the Alertmanager container. This includes CPU, memory and HugePages constraints to help control scheduling and resource usage. When not specified, defaults are used by the platform. Requests cannot exceed limits. This field is optional. More info: https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/ This is a simplified API that maps to Kubernetes ResourceRequirements. The current default values are:\n  resources:\n    requests:\n      cpu: 4m\n      memory: 40Mi",
+							Description: "resources defines the compute resource requests and limits for the Alertmanager container. This includes CPU, memory and HugePages constraints to help control scheduling and resource usage. When not specified, defaults are used by the platform. Requests cannot exceed limits. This field is optional. More info: https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/ This is a simplified API that maps to Kubernetes ResourceRequirements. The current default values are:\n  resources:\n   - name: cpu\n     request: 4m\n     limit: 5m",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -20576,7 +20568,7 @@ func schema_openshift_api_config_v1alpha1_AlertmanagerCustomConfig(ref common.Re
 					"secrets": {
 						VendorExtensible: spec.VendorExtensible{
 							Extensions: spec.Extensions{
-								"x-kubernetes-list-type": "atomic",
+								"x-kubernetes-list-type": "set",
 							},
 						},
 						SchemaProps: spec.SchemaProps{
@@ -20600,7 +20592,7 @@ func schema_openshift_api_config_v1alpha1_AlertmanagerCustomConfig(ref common.Re
 							},
 						},
 						SchemaProps: spec.SchemaProps{
-							Description: "tolerations is a list of tolerations applied to network diagnostics components tolerations is optional.\n\nWhen omitted, this means the user has no opinion and the platform is left to choose reasonable defaults. These defaults are subject to change over time. Maximum length for this list is 10",
+							Description: "tolerations defines tolerations for the pods. tolerations is optional.\n\nWhen omitted, this means the user has no opinion and the platform is left to choose reasonable defaults. These defaults are subject to change over time. Maximum length for this list is 10",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -20637,7 +20629,7 @@ func schema_openshift_api_config_v1alpha1_AlertmanagerCustomConfig(ref common.Re
 					},
 					"volumeClaimTemplate": {
 						SchemaProps: spec.SchemaProps{
-							Description: "volumeClaimTemplate Defines persistent storage for Alertmanager. Use this setting to configure the persistent volume claim, including storage class, volume size, and name. If omitted, the Pod uses ephemeral storage and alert data will not persist across restarts. // This field is optional.",
+							Description: "volumeClaimTemplate Defines persistent storage for Alertmanager. Use this setting to configure the persistent volume claim, including storage class, volume size, and name. If omitted, the Pod uses ephemeral storage and alert data will not persist across restarts. This field is optional.",
 							Ref:         ref("k8s.io/api/core/v1.PersistentVolumeClaim"),
 						},
 					},
@@ -20646,28 +20638,6 @@ func schema_openshift_api_config_v1alpha1_AlertmanagerCustomConfig(ref common.Re
 		},
 		Dependencies: []string{
 			"github.com/openshift/api/config/v1alpha1.ContainerResource", "k8s.io/api/core/v1.PersistentVolumeClaim", "k8s.io/api/core/v1.Toleration", "k8s.io/api/core/v1.TopologySpreadConstraint"},
-	}
-}
-
-func schema_openshift_api_config_v1alpha1_AlertmanagerDefaultConfig(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Description: "AlertmanagerDefaultConfig represents the configuration when using default Alertmanager settings.",
-				Type:        []string{"object"},
-			},
-		},
-	}
-}
-
-func schema_openshift_api_config_v1alpha1_AlertmanagerDisabledConfig(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Description: "AlertmanagerDisabledConfig represents the configuration when Alertmanager is disabled.",
-				Type:        []string{"object"},
-			},
-		},
 	}
 }
 
@@ -21094,13 +21064,13 @@ func schema_openshift_api_config_v1alpha1_ClusterMonitoringSpec(ref common.Refer
 				Properties: map[string]spec.Schema{
 					"userDefined": {
 						SchemaProps: spec.SchemaProps{
-							Description: "userDefined set the deployment mode for user-defined monitoring in addition to the default platform monitoring. userDefined is optional. When omitted, the platform will choose a reasonable default, that is subject to change over time. The current default value is `Disabled`.",
+							Description: "userDefined set the deployment mode for user-defined monitoring in addition to the default platform monitoring. userDefined is optional. When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time. The current default value is `Disabled`.",
 							Ref:         ref("github.com/openshift/api/config/v1alpha1.UserDefinedMonitoring"),
 						},
 					},
 					"alertmanagerConfig": {
 						SchemaProps: spec.SchemaProps{
-							Description: "alertmanagerConfig allows users to configure how the default Alertmanager instance should be deployed in the `openshift-monitoring` namespace. alertmanagerConfig is optional. When omitted, this means no opinion and the platform is left to choose a reasonable default, that is subject to change over time. The current default value is `Deployed`.",
+							Description: "alertmanagerConfig allows users to configure how the default Alertmanager instance should be deployed in the `openshift-monitoring` namespace. alertmanagerConfig is optional. When omitted, this means no opinion and the platform is left to choose a reasonable default, that is subject to change over time. The current default value is `DefaultConfig`.",
 							Ref:         ref("github.com/openshift/api/config/v1alpha1.AlertmanagerConfig"),
 						},
 					},
@@ -21127,7 +21097,7 @@ func schema_openshift_api_config_v1alpha1_ContainerResource(ref common.Reference
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
-				Description: "ContainerResource defines a single resource requirement for a container.",
+				Description: "ContainerResource defines a single resource requirement for a container. / +kubebuilder:validation:XValidation:rule=\"!has(self.request) || quantity(self.request).isGreaterThan(quantity('0'))\",message=\"request must be a non-negative quantity\"",
 				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
 					"name": {
@@ -21140,13 +21110,13 @@ func schema_openshift_api_config_v1alpha1_ContainerResource(ref common.Reference
 					},
 					"request": {
 						SchemaProps: spec.SchemaProps{
-							Description: "request is the minimum amount of the resource required (e.g. \"2Mi\", \"1Gi\"). This field is optional.",
+							Description: "request is the minimum amount of the resource required (e.g. \"2Mi\", \"1Gi\"). This field is optional. When limit is specified, request cannot be greater than limit.",
 							Ref:         ref("k8s.io/apimachinery/pkg/api/resource.Quantity"),
 						},
 					},
 					"limit": {
 						SchemaProps: spec.SchemaProps{
-							Description: "limit is the maximum amount of the resource allowed (e.g. \"2Mi\", \"1Gi\"). This field is optional.",
+							Description: "limit is the maximum amount of the resource allowed (e.g. \"2Mi\", \"1Gi\"). This field is optional. When request is specified, limit cannot be less than request.",
 							Ref:         ref("k8s.io/apimachinery/pkg/api/resource.Quantity"),
 						},
 					},

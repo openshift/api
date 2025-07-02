@@ -40,9 +40,6 @@
                         "name": "MultiArchInstallAzure"
                     },
                     {
-                        "name": "MutatingAdmissionPolicy"
-                    },
-                    {
                         "name": "SELinuxMount"
                     },
                     {
@@ -208,6 +205,9 @@
                     },
                     {
                         "name": "MixedCPUsAllocation"
+                    },
+                    {
+                        "name": "MutatingAdmissionPolicy"
                     },
                     {
                         "name": "NetworkDiagnosticsConfig"

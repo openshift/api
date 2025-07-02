@@ -188,8 +188,8 @@ spec:
                 description: |-
                   conditions represent the observations of a machine config node's current state. Valid types are:
                   UpdatePrepared, UpdateExecuted, UpdatePostActionComplete, UpdateComplete, Updated, Resumed,
-                  Drained, AppliedFilesAndOS, AppliedOSImage, AppliedFiles, Cordoned, Uncordoned, RebootedNode, NodeDegraded, PinnedImageSetsProgressing,
-                  ImagePulledFromRegistry, and PinnedImageSetsDegraded.
+                  Drained, AppliedFilesAndOS, Cordoned, Uncordoned, RebootedNode, NodeDegraded, PinnedImageSetsProgressing,
+                  , and PinnedImageSetsDegraded.
                   The following types are only available when the ImageModeStatusReporting feature gate is enabled: ImagePulledFromRegistry,
                   AppliedOSImage, AppliedFiles
                 items:

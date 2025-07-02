@@ -3,7 +3,7 @@ name: "ContainerRuntimeConfig"
 crdName: containerruntimeconfigs.machineconfiguration.openshift.io
 tests:
   onCreate:
-    - name: Should be able to create a minimal ContainerRuntimeConfig and default runtime set
+    - name: Should be able to create a minimal ContainerRuntimeConfig
       initial: |
         apiVersion: machineconfiguration.openshift.io/v1
         kind: ContainerRuntimeConfig
@@ -14,4 +14,4 @@ tests:
         kind: ContainerRuntimeConfig
         spec: 
           containerRuntimeConfig:
-            defaultRuntime: ""
+            defaultRuntime: crun

@@ -203,6 +203,7 @@ type AlertmanagerCustomConfig struct {
 	//
 	// When omitted, this means the user has no opinion and the platform is left
 	// to choose reasonable defaults. These defaults are subject to change over time.
+	// Defaults are empty/unset.
 	// Maximum length for this list is 10
 	// +kubebuilder:validation:MaxItems=10
 	// +listType=atomic
@@ -216,7 +217,9 @@ type AlertmanagerCustomConfig struct {
 	//
 	// When omitted, this means no opinion and the platform is left to choose a default, which is subject to change over time.
 	// This field maps directly to the `topologySpreadConstraints` field in the Pod spec.
-	// Maximum length for this list is 10
+	// Default is empty list.
+	// Maximum length for this list is 10.
+	// Entries must have unique topologyKey and whenUnsatisfiable pairs.
 	// +kubebuilder:validation:MaxItems=10
 	// +listType=map
 	// +listMapKey=topologyKey
@@ -289,8 +292,9 @@ type ContainerResource struct {
 	// limit is the maximum amount of the resource allowed (e.g. "2Mi", "1Gi").
 	// This field is optional.
 	// When request is specified, limit cannot be less than request.
+	// The value must be greater than 0 when specified.
 	// +optional
-	// +kubebuilder:validation:XValidation:rule="!has(self.limit) || quantity(self.limit).isGreaterThan(quantity('0'))",message="limit must be a non-negative quantity"
+	// +kubebuilder:validation:XValidation:rule="isQuantity(self) && quantity(self).isGreaterThan(quantity('0'))",message="limit must be a non-negative quantity"
 	Limit resource.Quantity `json:"limit,omitempty"`
 }
 

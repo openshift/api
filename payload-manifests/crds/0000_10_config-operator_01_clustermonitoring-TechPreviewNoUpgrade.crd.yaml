@@ -119,11 +119,12 @@ spec:
                                 limit is the maximum amount of the resource allowed (e.g. "2Mi", "1Gi").
                                 This field is optional.
                                 When request is specified, limit cannot be less than request.
+                                The value must be greater than 0 when specified.
                               pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
                               x-kubernetes-int-or-string: true
                               x-kubernetes-validations:
                               - message: limit must be a non-negative quantity
-                                rule: '!has(self.limit) || quantity(self.limit).isGreaterThan(quantity(''0''))'
+                                rule: isQuantity(self) && quantity(self).isGreaterThan(quantity('0'))
                             name:
                               description: |-
                                 name of the resource (e.g. "cpu", "memory", "hugepages-2Mi").
@@ -201,6 +202,7 @@ spec:
 
                           When omitted, this means the user has no opinion and the platform is left
                           to choose reasonable defaults. These defaults are subject to change over time.
+                          Defaults are empty/unset.
                           Maximum length for this list is 10
                         items:
                           description: |-
@@ -251,7 +253,9 @@ spec:
 
                           When omitted, this means no opinion and the platform is left to choose a default, which is subject to change over time.
                           This field maps directly to the `topologySpreadConstraints` field in the Pod spec.
-                          Maximum length for this list is 10
+                          Default is empty list.
+                          Maximum length for this list is 10.
+                          Entries must have unique topologyKey and whenUnsatisfiable pairs.
                         items:
                           description: TopologySpreadConstraint specifies how to spread
                             matching pods among the given topology.

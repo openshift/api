@@ -20592,7 +20592,7 @@ func schema_openshift_api_config_v1alpha1_AlertmanagerCustomConfig(ref common.Re
 							},
 						},
 						SchemaProps: spec.SchemaProps{
-							Description: "tolerations defines tolerations for the pods. tolerations is optional.\n\nWhen omitted, this means the user has no opinion and the platform is left to choose reasonable defaults. These defaults are subject to change over time. Maximum length for this list is 10",
+							Description: "tolerations defines tolerations for the pods. tolerations is optional.\n\nWhen omitted, this means the user has no opinion and the platform is left to choose reasonable defaults. These defaults are subject to change over time. Defaults are empty/unset. Maximum length for this list is 10",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -20615,7 +20615,7 @@ func schema_openshift_api_config_v1alpha1_AlertmanagerCustomConfig(ref common.Re
 							},
 						},
 						SchemaProps: spec.SchemaProps{
-							Description: "topologySpreadConstraints defines rules for how Alertmanager Pods should be distributed across topology domains such as zones, nodes, or other user-defined labels. topologySpreadConstraints is optional. This helps improve high availability and resource efficiency by avoiding placing too many replicas in the same failure domain.\n\nWhen omitted, this means no opinion and the platform is left to choose a default, which is subject to change over time. This field maps directly to the `topologySpreadConstraints` field in the Pod spec. Maximum length for this list is 10",
+							Description: "topologySpreadConstraints defines rules for how Alertmanager Pods should be distributed across topology domains such as zones, nodes, or other user-defined labels. topologySpreadConstraints is optional. This helps improve high availability and resource efficiency by avoiding placing too many replicas in the same failure domain.\n\nWhen omitted, this means no opinion and the platform is left to choose a default, which is subject to change over time. This field maps directly to the `topologySpreadConstraints` field in the Pod spec. Default is empty list. Maximum length for this list is 10. Entries must have unique topologyKey and whenUnsatisfiable pairs.",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -21116,7 +21116,7 @@ func schema_openshift_api_config_v1alpha1_ContainerResource(ref common.Reference
 					},
 					"limit": {
 						SchemaProps: spec.SchemaProps{
-							Description: "limit is the maximum amount of the resource allowed (e.g. \"2Mi\", \"1Gi\"). This field is optional. When request is specified, limit cannot be less than request.",
+							Description: "limit is the maximum amount of the resource allowed (e.g. \"2Mi\", \"1Gi\"). This field is optional. When request is specified, limit cannot be less than request. The value must be greater than 0 when specified.",
 							Ref:         ref("k8s.io/apimachinery/pkg/api/resource.Quantity"),
 						},
 					},

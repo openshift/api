@@ -20553,7 +20553,7 @@ func schema_openshift_api_config_v1alpha1_AlertmanagerCustomConfig(ref common.Re
 							},
 						},
 						SchemaProps: spec.SchemaProps{
-							Description: "resources defines the compute resource requests and limits for the Alertmanager container. This includes CPU, memory and HugePages constraints to help control scheduling and resource usage. When not specified, defaults are used by the platform. Requests cannot exceed limits. This field is optional. More info: https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/ This is a simplified API that maps to Kubernetes ResourceRequirements. The current default values are:\n  resources:\n   - name: cpu\n     request: 4m\n     limit: 5m",
+							Description: "resources defines the compute resource requests and limits for the Alertmanager container. This includes CPU, memory and HugePages constraints to help control scheduling and resource usage. When not specified, defaults are used by the platform. Requests cannot exceed limits. This field is optional. More info: https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/ This is a simplified API that maps to Kubernetes ResourceRequirements. The current default values are:\n  resources:\n   - name: cpu\n     request: 4m\n     limit: null\n   - name: memory\n     request: 40Mi\n     limit: null",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -20572,7 +20572,7 @@ func schema_openshift_api_config_v1alpha1_AlertmanagerCustomConfig(ref common.Re
 							},
 						},
 						SchemaProps: spec.SchemaProps{
-							Description: "secrets Defines a list of secrets that need to be mounted into the Alertmanager. The secrets must reside within the same namespace as the Alertmanager object. They will be added as volumes named secret-<secret-name> and mounted at /etc/alertmanager/secrets/<secret-name> within the 'alertmanager' container of the Alertmanager Pods.\n\nThese secrets can be used to authenticate Alertmanager with endpoint receivers. For example, you can use secrets to: - Provide certificates for TLS authentication with receivers that require private CA certificates - Store credentials for Basic HTTP authentication with receivers that require password-based auth - Store any other authentication credentials needed by your alert receivers\n\nThis field is optional. Maximum length for this list is 10",
+							Description: "secrets defines a list of secrets that need to be mounted into the Alertmanager. The secrets must reside within the same namespace as the Alertmanager object. They will be added as volumes named secret-<secret-name> and mounted at /etc/alertmanager/secrets/<secret-name> within the 'alertmanager' container of the Alertmanager Pods.\n\nThese secrets can be used to authenticate Alertmanager with endpoint receivers. For example, you can use secrets to: - Provide certificates for TLS authentication with receivers that require private CA certificates - Store credentials for Basic HTTP authentication with receivers that require password-based auth - Store any other authentication credentials needed by your alert receivers\n\nThis field is optional. Maximum length for this list is 10. Entries in this list must be unique.",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{

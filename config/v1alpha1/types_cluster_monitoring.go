@@ -174,13 +174,16 @@ type AlertmanagerCustomConfig struct {
 	//   resources:
 	//    - name: cpu
 	//      request: 4m
-	//      limit: 5m
+	//      limit: null
+	//    - name: memory
+	//      request: 40Mi
+	//      limit: null
 	// +optional
 	// +listType=map
 	// +listMapKey=name
 	// +kubebuilder:validation:MaxItems=10
 	Resources []ContainerResource `json:"resources,omitempty"`
-	// secrets Defines a list of secrets that need to be mounted into the Alertmanager.
+	// secrets defines a list of secrets that need to be mounted into the Alertmanager.
 	// The secrets must reside within the same namespace as the Alertmanager object.
 	// They will be added as volumes named secret-<secret-name> and mounted at
 	// /etc/alertmanager/secrets/<secret-name> within the 'alertmanager' container of
@@ -193,7 +196,8 @@ type AlertmanagerCustomConfig struct {
 	// - Store any other authentication credentials needed by your alert receivers
 	//
 	// This field is optional.
-	// Maximum length for this list is 10
+	// Maximum length for this list is 10.
+	// Entries in this list must be unique.
 	// +optional
 	// +kubebuilder:validation:MaxItems=10
 	// +listType=set

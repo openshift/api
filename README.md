@@ -300,7 +300,7 @@ For more information on the API markers to add to your Go types, see the [Kubebu
 
 1. Run the `empty-partial-schema` tool.  This creates empty CRD manifests in `zz_generated.featuregated-crd-manifests` for each FeatureGate.
 2. Run the `schemapatch` tool.  This fills in the schema for each per-FeatureGate CRD manifest.
-3. Run the `manifest-merge` tool.  This combines all the per-FeatureGate CRD manifests and `manual-overrides`
+3. Run the `manifest-merge` tool.  This combines all the per-FeatureGate CRD manifests and `manual-overrides`.
 
 #### empty-partial-schema
 This tool is gengo based and scans all types for a `// +kubebuilder:object:root=true` marker.

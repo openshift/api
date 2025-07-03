@@ -120,8 +120,6 @@ spec:
                       Required field that can be at most 253 characters in length.
                     maxLength: 253
                     type: string
-                required:
-                - desiredImage
                 type: object
               configVersion:
                 description: |-

@@ -134,7 +134,7 @@ type MachineConfigNodeStatus struct {
 	// configImage describes the current and desired image for this node.
 	// +openshift:enable:FeatureGate=ImageModeStatusReporting
 	// +optional
-	ConfigImage *MachineConfigNodeStatusConfigImage `json:"configImage,omitempty"`
+	ConfigImage MachineConfigNodeStatusConfigImage `json:"configImage,omitempty"`
 	// pinnedImageSets describes the current and desired pinned image sets for this node.
 	// +listType=map
 	// +listMapKey=name
@@ -233,7 +233,7 @@ type MachineConfigNodeSpecConfigImage struct {
 	// Config Operator (MCO) intends to apply to the node.
 	// Required field that can be at most 253 characters in length.
 	// +kubebuilder:validation:MaxLength:=253
-	// +required
+	// +optional
 	DesiredImage string `json:"desiredImage"`
 }
 
@@ -284,7 +284,7 @@ const (
 	// MachineConfigNodeUpdateOS describes the part of the in progress phase where the OS config changes
 	MachineConfigNodeUpdateOS StateProgress = "AppliedOSImage"
 	// MachineConfigNodeUpdateOS describes the part of the in progress phase where the nodes files and OS config change
-	MachineConfigNodeAppliedFilesAndOS StateProgress = "AppliedFilesAndOS"
+	MachineConfigNodeUpdateFilesAndOS StateProgress = "AppliedFilesAndOS"
 	// MachineConfigNodeImagePulledFromRegistry describes the part of the in progress phase where the update image is pulled from the registry
 	MachineConfigNodeImagePulledFromRegistry StateProgress = "ImagePulledFromRegistry"
 	// MachineConfigNodeUpdateCordoned describes the part of the in progress phase where the node cordons

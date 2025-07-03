@@ -149,19 +149,3 @@ tests:
           configImage:
             desiredImage: registry.example.com/a/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/j
       expectedError: "MachineConfigNode.machineconfiguration.openshift.io \"test-imagemodestatusreporting\" is invalid: [spec.configImage.desiredImage: Too long: may not be more than 253 bytes, <nil>: Invalid value: \"null\": some validation rules were not checked because the object was invalid; correct the existing errors to complete validation]"
-    - name: ConfigImage is required
-      initial: |
-        apiVersion: machineconfiguration.openshift.io/v1
-        kind: MachineConfigNode
-        metadata:
-          name: test-imagemodestatusreporting
-        spec:
-          node:
-            name: test-imagemodestatusreporting
-          pool:
-            name: worker
-          configVersion:
-            desired: rendered-worker-abc
-          configImage: 
-            desiredImage:
-      expectedError: "spec.configImage.desiredImage: Required value, <nil>: Invalid value: \"null\""

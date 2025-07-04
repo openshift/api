@@ -123,6 +123,9 @@
                         "name": "ExternalOIDCWithUIDAndExtraClaimMappings"
                     },
                     {
+                        "name": "ExternalSnapshotMetadata"
+                    },
+                    {
                         "name": "GCPClusterHostedDNS"
                     },
                     {

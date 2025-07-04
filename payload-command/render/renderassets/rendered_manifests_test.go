@@ -97,7 +97,6 @@ status:
     - name: DNSNameResolver
     - name: DynamicResourceAllocation
     - name: EventedPLEG
-    - name: GCPLabelsTags
     - name: GatewayAPI
     - name: InsightsConfigAPI
     - name: MachineAPIOperatorDisableMachineHealthCheckController

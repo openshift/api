@@ -55,7 +55,65 @@ type MachineConfigurationSpec struct {
 	// has no effect on cluster upgrades which will still incur node disruption where required.
 	// +optional
 	NodeDisruptionPolicy NodeDisruptionPolicyConfig `json:"nodeDisruptionPolicy"`
+	// bootImageSkewEnforcement allows an admin to set the behavior of the boot image skew enforcement mechanism.
+	// +openshift:enable:FeatureGate=BootImageSkewEnforcement
+	// +optional
+	BootImageSkewEnforcement SkewEnforcementSelector `json:"bootImageSkewEnforcement"`
 }
+
+// +kubebuilder:validation:XValidation:rule="has(self.mode) && (self.mode == 'Automatic' || self.mode =='Manual') ?  has(self.clusterBootImage) : !has(self.clusterBootImage)",message="clusterBootImage is required when type is Automatic or Manual, and forbidden otherwise"
+// +union
+type SkewEnforcementSelector struct {
+	// mode determines the underlying behavior of skew enforcement mechanism.
+	// Valid values are Automatic, Manual and Disabled.
+	// Automatic means that the MCO will store the OCP version associated with the last boot image update in the
+	// clusterBootImage field.
+	// Manual means that the cluster admin is expected to perform manual boot image updates and store OCP version
+	// associated with the last boot image update in the clusterBootImage field.
+	// In Automatic and Manual mode, the MCO will prevent upgrades when the boot image skew exceeds the
+	// skew limit described by the release image.
+	// Disabled means that the MCO will permit upgrades when the boot image exceeds the skew limit
+	// described by the release image. This may affect the cluster's ability to scale.
+	// +unionDiscriminator
+	// +required
+	Mode SkewEnforcementSelectorMode `json:"mode"`
+
+	// clusterBootImage describes the current boot image of the cluster. This will be used to enforce the skew limit.
+	// Only permitted when mode is set to "Automatic" or "Manual".
+	// +optional
+	ClusterBootImage ClusterBootImage `json:"clusterBootImage,omitempty"`
+}
+
+// ClusterBootImage describes the boot image of a cluster. It stores the RHCOS version of the boot image and
+// the OCP release version which shipped with that RHCOS boot image.
+type ClusterBootImage struct {
+	// ocpVersion provides a string which represents the OCP version of the boot image
+	// +kubebuilder:validation:XValidation:rule="self.matches('^[0-9]+\\\\.[0-9]+\\\\.[0-9]+$')",message="bootImageOCPVersion must match the OCP semver compatible format of x.y.z"
+	// +kubebuilder:validation:MaxLength:=8
+	// +required
+	OCPVersion string `json:"ocpVersion"`
+
+	// rhcosVersion provides a string which represents the RHCOS version of the boot image
+	// +kubebuilder:validation:XValidation:rule="self.matches('^[0-9]+\\\\.[0-9]+\\\\.[0-9]{8}-[0-9]+$')",message="rhcosVersion must match format [major].[minor].[datestamp(YYYYMMDD)]-[buildnumber]"
+	// +kubebuilder:validation:MaxLength:=15
+	// +optional
+	RHCOSVersion string `json:"rhcosVersion,omitempty"`
+}
+
+// SkewEnforcementSelectorMode is a string enum used to indicate the cluster's boot image skew enforcement mode.
+// +kubebuilder:validation:Enum:="Automatic";"Manual";"Disabled"
+type SkewEnforcementSelectorMode string
+
+const (
+	// Automatic represents a configuration mode that allows automatic skew enforcement.
+	Automatic SkewEnforcementSelectorMode = "Automatic"
+
+	// Manual represents a configuration mode that allows manual skew enforcement.
+	Manual SkewEnforcementSelectorMode = "Manual"
+
+	// Disabled represents a configuration mode that disables boot image skew enforcement.
+	Disabled SkewEnforcementSelectorMode = "Disabled"
+)
 
 type MachineConfigurationStatus struct {
 	// observedGeneration is the last generation change you've dealt with

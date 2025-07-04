@@ -204,6 +204,9 @@
                         "name": "MixedCPUsAllocation"
                     },
                     {
+                        "name": "MultiDiskSetup"
+                    },
+                    {
                         "name": "NetworkDiagnosticsConfig"
                     },
                     {

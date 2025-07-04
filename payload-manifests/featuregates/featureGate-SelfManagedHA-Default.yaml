@@ -137,6 +137,9 @@
                         "name": "MultiArchInstallAzure"
                     },
                     {
+                        "name": "MultiDiskSetup"
+                    },
+                    {
                         "name": "MutatingAdmissionPolicy"
                     },
                     {

@@ -807,6 +807,14 @@ var (
 							enableIn(configv1.DevPreviewNoUpgrade, configv1.TechPreviewNoUpgrade).
 							mustRegister()
 
+	FeatureGateMultiDiskSetup = newFeatureGate("MultiDiskSetup").
+					reportProblemsToJiraComponent("splat").
+					contactPerson("jcpowermac").
+					productScope(ocpSpecific).
+					enhancementPR("https://github.com/openshift/enhancements/pull/1805").
+					enableIn(configv1.DevPreviewNoUpgrade, configv1.TechPreviewNoUpgrade).
+					mustRegister()
+
 	FeatureGateAWSDedicatedHosts = newFeatureGate("AWSDedicatedHosts").
 					reportProblemsToJiraComponent("Installer").
 					contactPerson("faermanj").

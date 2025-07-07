@@ -28,9 +28,6 @@
                         "name": "MultiArchInstallAzure"
                     },
                     {
-                        "name": "MutatingAdmissionPolicy"
-                    },
-                    {
                         "name": "ShortCertRotation"
                     }
                 ],
@@ -205,6 +202,9 @@
                     },
                     {
                         "name": "MultiDiskSetup"
+                    },
+                    {
+                        "name": "MutatingAdmissionPolicy"
                     },
                     {
                         "name": "NetworkDiagnosticsConfig"

@@ -40,9 +40,6 @@
                         "name": "MultiArchInstallAzure"
                     },
                     {
-                        "name": "MutatingAdmissionPolicy"
-                    },
-                    {
                         "name": "SELinuxMount"
                     },
                     {
@@ -211,6 +208,9 @@
                     },
                     {
                         "name": "MultiDiskSetup"
+                    },
+                    {
+                        "name": "MutatingAdmissionPolicy"
                     },
                     {
                         "name": "NetworkDiagnosticsConfig"

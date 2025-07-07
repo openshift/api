@@ -28,9 +28,6 @@
                         "name": "MultiArchInstallAzure"
                     },
                     {
-                        "name": "MutatingAdmissionPolicy"
-                    },
-                    {
                         "name": "NewOLM"
                     },
                     {
@@ -220,6 +217,9 @@
                     },
                     {
                         "name": "MultiDiskSetup"
+                    },
+                    {
+                        "name": "MutatingAdmissionPolicy"
                     },
                     {
                         "name": "NetworkDiagnosticsConfig"

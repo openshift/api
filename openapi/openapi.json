@@ -526,14 +526,6 @@
     "com.github.openshift.api.apps.v1.DeploymentConfigStatus": {
       "description": "DeploymentConfigStatus represents the current deployment state.",
       "type": "object",
-      "required": [
-        "latestVersion",
-        "observedGeneration",
-        "replicas",
-        "updatedReplicas",
-        "availableReplicas",
-        "unavailableReplicas"
-      ],
       "properties": {
         "availableReplicas": {
           "description": "availableReplicas is the total number of available pods targeted by this deployment config.",
@@ -2147,9 +2139,6 @@
     "com.github.openshift.api.authorization.v1.SubjectRulesReviewStatus": {
       "description": "SubjectRulesReviewStatus is contains the result of a rules check",
       "type": "object",
-      "required": [
-        "rules"
-      ],
       "properties": {
         "evaluationError": {
           "description": "evaluationError can appear in combination with Rules.  It means some error happened during evaluation that may have prevented additional rules from being populated.",
@@ -2482,9 +2471,6 @@
     "com.github.openshift.api.build.v1.BuildConfigStatus": {
       "description": "BuildConfigStatus contains current state of the build config object.",
       "type": "object",
-      "required": [
-        "lastVersion"
-      ],
       "properties": {
         "imageChangeTriggers": {
           "description": "imageChangeTriggers captures the runtime state of any ImageChangeTrigger specified in the BuildConfigSpec, including the value reconciled by the OpenShift APIServer for the lastTriggeredImageID. There is a single entry in this array for each image change trigger in spec. Each trigger status references the ImageStreamTag that acts as the source of the trigger.",
@@ -2844,9 +2830,6 @@
     "com.github.openshift.api.build.v1.BuildStatus": {
       "description": "BuildStatus contains the status of a build",
       "type": "object",
-      "required": [
-        "phase"
-      ],
       "properties": {
         "cancelled": {
           "description": "cancelled describes if a cancel event was triggered for the build.",
@@ -4182,7 +4165,8 @@
       "properties": {
         "type": {
           "description": "type allows user to set a load balancer type. When this field is set the default ingresscontroller will get created using the specified LBType. If this field is not set then the default ingress controller of LBType Classic will be created. Valid values are:\n\n* \"Classic\": A Classic Load Balancer that makes routing decisions at either\n  the transport layer (TCP/SSL) or the application layer (HTTP/HTTPS). See\n  the following for additional details:\n\n    https://docs.aws.amazon.com/AmazonECS/latest/developerguide/load-balancer-types.html#clb\n\n* \"NLB\": A Network Load Balancer that makes routing decisions at the\n  transport layer (TCP/SSL). See the following for additional details:\n\n    https://docs.aws.amazon.com/AmazonECS/latest/developerguide/load-balancer-types.html#nlb",
-          "type": "string"
+          "type": "string",
+          "default": ""
         }
       },
       "x-kubernetes-unions": [
@@ -4513,7 +4497,8 @@
         },
         "profile": {
           "description": "profile specifies the name of the desired audit policy configuration to be deployed to all OpenShift-provided API servers in the cluster.\n\nThe following profiles are provided: - Default: the existing default policy. - WriteRequestBodies: like 'Default', but logs request and response HTTP payloads for write requests (create, update, patch). - AllRequestBodies: like 'WriteRequestBodies', but also logs request and response HTTP payloads for read requests (get, list). - None: no requests are logged at all, not even oauthaccesstokens and oauthauthorizetokens.\n\nIf unset, the 'Default' profile is used as the default.",
-          "type": "string"
+          "type": "string",
+          "default": ""
         }
       }
     },
@@ -4626,10 +4611,6 @@
     },
     "com.github.openshift.api.config.v1.AuthenticationStatus": {
       "type": "object",
-      "required": [
-        "integratedOAuthMetadata",
-        "oidcClients"
-      ],
       "properties": {
         "integratedOAuthMetadata": {
           "description": "integratedOAuthMetadata contains the discovery endpoint data for OAuth 2.0 Authorization Server Metadata for the in-cluster integrated OAuth server. This discovery document can be viewed from its served location: oc get --raw '/.well-known/oauth-authorization-server' For further details, see the IETF Draft: https://tools.ietf.org/html/draft-ietf-oauth-discovery-04#section-2 This contains the observed value based on cluster state. An explicitly set value in spec.oauthMetadata has precedence over this field. This field has no meaning if authentication spec.type is not set to IntegratedOAuth. The key \"oauthMetadata\" is used to locate the data. If the config map or expected key is not found, no metadata is served. If the specified metadata is not valid, no metadata is served. The namespace for this config map is openshift-config-managed.",
@@ -5559,7 +5540,6 @@
         "desired",
         "observedGeneration",
         "versionHash",
-        "capabilities",
         "availableUpdates"
       ],
       "properties": {
@@ -5952,9 +5932,6 @@
     "com.github.openshift.api.config.v1.ConsoleStatus": {
       "description": "ConsoleStatus defines the observed status of the Console.",
       "type": "object",
-      "required": [
-        "consoleURL"
-      ],
       "properties": {
         "consoleURL": {
           "description": "The URL for the console. This will be derived from the host for the route that is created for the console.",
@@ -6501,9 +6478,6 @@
     },
     "com.github.openshift.api.config.v1.FeatureGateStatus": {
       "type": "object",
-      "required": [
-        "featureGates"
-      ],
       "properties": {
         "conditions": {
           "description": "conditions represent the observations of the current state. Known .status.conditions.type are: \"DeterminationDegraded\"",
@@ -7817,14 +7791,6 @@
     "com.github.openshift.api.config.v1.InfrastructureStatus": {
       "description": "InfrastructureStatus describes the infrastructure the cluster is leveraging.",
       "type": "object",
-      "required": [
-        "infrastructureName",
-        "etcdDiscoveryDomain",
-        "apiServerURL",
-        "apiServerInternalURI",
-        "controlPlaneTopology",
-        "infrastructureTopology"
-      ],
       "properties": {
         "apiServerInternalURI": {
           "description": "apiServerInternalURL is a valid URI with scheme 'https', address and optionally a port (defaulting to 443).  apiServerInternalURL can be used by components like kubelets, to contact the Kubernetes API server using the infrastructure provider rather than Kubernetes networking.",
@@ -7858,8 +7824,7 @@
         },
         "infrastructureTopology": {
           "description": "infrastructureTopology expresses the expectations for infrastructure services that do not run on control plane nodes, usually indicated by a node selector for a `role` value other than `master`. The default is 'HighlyAvailable', which represents the behavior operators have in a \"normal\" cluster. The 'SingleReplica' mode will be used in single-node deployments and the operators should not configure the operand for highly-available operation NOTE: External topology mode is not applicable for this field.",
-          "type": "string",
-          "default": ""
+          "type": "string"
         },
         "platform": {
           "description": "platform is the underlying infrastructure provider for the cluster.\n\nDeprecated: Use platformStatus.type instead.",
@@ -12305,7 +12270,8 @@
         "maxNumberOfBackups": {
           "description": "maxNumberOfBackups defines the maximum number of backups to retain. If the existing number of backups saved is equal to MaxNumberOfBackups then the oldest backup will be removed before a new backup is initiated.",
           "type": "integer",
-          "format": "int32"
+          "format": "int32",
+          "default": 0
         }
       }
     },
@@ -12354,7 +12320,8 @@
         "maxSizeOfBackupsGb": {
           "description": "maxSizeOfBackupsGb defines the total size in GB of backups to retain. If the current total size backups exceeds MaxSizeOfBackupsGb then the oldest backup will be removed before a new backup is initiated.",
           "type": "integer",
-          "format": "int32"
+          "format": "int32",
+          "default": 0
         }
       }
     },
@@ -13204,8 +13171,7 @@
       "properties": {
         "basePath": {
           "description": "basePath is the path to the plugin's assets. The primary asset it the manifest file called `plugin-manifest.json`, which is a JSON document that contains metadata about the plugin and the extensions.",
-          "type": "string",
-          "default": ""
+          "type": "string"
         },
         "name": {
           "description": "name of Service that is serving the plugin assets.",
@@ -13855,7 +13821,8 @@
         },
         "type": {
           "description": "type determines which of the union members should be populated.",
-          "type": "string"
+          "type": "string",
+          "default": ""
         }
       },
       "x-kubernetes-unions": [
@@ -13876,7 +13843,8 @@
       "properties": {
         "type": {
           "description": "type is the discriminator. It has different values for Default and for TechPreviewNoUpgrade",
-          "type": "string"
+          "type": "string",
+          "default": ""
         }
       }
     },
@@ -15068,9 +15036,6 @@
     "com.github.openshift.api.image.v1.ImageStreamStatus": {
       "description": "ImageStreamStatus contains information about the state of this image stream.",
       "type": "object",
-      "required": [
-        "dockerImageRepository"
-      ],
       "properties": {
         "dockerImageRepository": {
           "description": "dockerImageRepository represents the effective location this stream may be accessed at. May be empty until the server determines where the repository is located",
@@ -20352,7 +20317,8 @@
       "properties": {
         "machineType": {
           "description": "machineType determines the type of Machines that should be managed by the ControlPlaneMachineSet. Currently, the only valid value is machines_v1beta1_machine_openshift_io.",
-          "type": "string"
+          "type": "string",
+          "default": ""
         },
         "machines_v1beta1_machine_openshift_io": {
           "description": "OpenShiftMachineV1Beta1Machine defines the template for creating Machines from the v1beta1.machine.openshift.io API group.",
@@ -20869,7 +20835,8 @@
       "properties": {
         "adapterType": {
           "description": "adapterType is the adapter type of the disk address. If the deviceType is \"Disk\", the valid adapterType can be \"SCSI\", \"IDE\", \"PCI\", \"SATA\" or \"SPAPR\". If the deviceType is \"CDRom\", the valid adapterType can be \"IDE\" or \"SATA\".",
-          "type": "string"
+          "type": "string",
+          "default": ""
         },
         "deviceIndex": {
           "description": "deviceIndex is the index of the disk address. The valid values are non-negative integers, with the default value 0. For a Machine VM, the deviceIndex for the disks with the same deviceType.adapterType combination should start from 0 and increase consecutively afterwards. Note that for each Machine VM, the Disk.SCSI.0 and CDRom.IDE.0 are reserved to be used by the VM's system. So for dataDisks of Disk.SCSI and CDRom.IDE, the deviceIndex should start from 1.",
@@ -22434,7 +22401,8 @@
         "lun": {
           "description": "lun Specifies the logical unit number of the data disk. This value is used to identify data disks within the VM and therefore must be unique for each data disk attached to a VM. This value is also needed for referencing the data disks devices within userdata to perform disk initialization through Ignition (e.g. partition/format/mount). The value must be between 0 and 63.",
           "type": "integer",
-          "format": "int32"
+          "format": "int32",
+          "default": 0
         },
         "managedDisk": {
           "description": "managedDisk specifies the Managed Disk parameters for the data disk. Empty value means no opinion and the platform chooses a default, which is subject to change over time. Currently the default is a ManagedDisk with with storageAccountType: \"Premium_LRS\" and diskEncryptionSet.id: \"Default\".",
@@ -23191,10 +23159,6 @@
     "com.github.openshift.api.machine.v1beta1.MachineHealthCheckStatus": {
       "description": "MachineHealthCheckStatus defines the observed state of MachineHealthCheck",
       "type": "object",
-      "required": [
-        "expectedMachines",
-        "currentHealthy"
-      ],
       "properties": {
         "conditions": {
           "description": "conditions defines the current state of the MachineHealthCheck",
@@ -23352,9 +23316,6 @@
     "com.github.openshift.api.machine.v1beta1.MachineSetStatus": {
       "description": "MachineSetStatus defines the observed state of MachineSet",
       "type": "object",
-      "required": [
-        "replicas"
-      ],
       "properties": {
         "authoritativeAPI": {
           "description": "authoritativeAPI is the API that is authoritative for this resource. Valid values are MachineAPI, ClusterAPI and Migrating. This value is updated by the migration controller to reflect the authoritative API. Machine API and Cluster API controllers use this value to determine whether or not to reconcile the resource. When set to Migrating, the migration controller is currently performing the handover of authority from one API to the other.",
@@ -23784,7 +23745,8 @@
         },
         "securityType": {
           "description": "securityType specifies the SecurityType of the virtual machine. It has to be set to any specified value to enable UEFISettings. The default behavior is: UEFISettings will not be enabled unless this property is set.",
-          "type": "string"
+          "type": "string",
+          "default": ""
         },
         "trustedLaunch": {
           "description": "trustedLaunch specifies the security configuration of the virtual machine. For more information regarding TrustedLaunch for VMs, please refer to: https://learn.microsoft.com/azure/virtual-machines/trusted-launch",
@@ -24712,8 +24674,7 @@
       "properties": {
         "containerfileArch": {
           "description": "containerfileArch describes the architecture this containerfile is to be built for this arch is optional. If the user does not specify an architecture, it is assumed that the content can be applied to all architectures, or in a single arch cluster: the only architecture.",
-          "type": "string",
-          "default": ""
+          "type": "string"
         },
         "content": {
           "description": "content is the custom content to be built",
@@ -27510,9 +27471,6 @@
     },
     "com.github.openshift.api.operator.v1.AuthenticationStatus": {
       "type": "object",
-      "required": [
-        "readyReplicas"
-      ],
       "properties": {
         "conditions": {
           "description": "conditions is a list of conditions and their status",
@@ -27744,9 +27702,6 @@
     "com.github.openshift.api.operator.v1.CSISnapshotControllerStatus": {
       "description": "CSISnapshotControllerStatus defines the observed status of the CSISnapshotController operator.",
       "type": "object",
-      "required": [
-        "readyReplicas"
-      ],
       "properties": {
         "conditions": {
           "description": "conditions is a list of conditions and their status",
@@ -27963,9 +27918,6 @@
     "com.github.openshift.api.operator.v1.CloudCredentialStatus": {
       "description": "CloudCredentialStatus defines the observed status of the cloud-credential-operator.",
       "type": "object",
-      "required": [
-        "readyReplicas"
-      ],
       "properties": {
         "conditions": {
           "description": "conditions is a list of conditions and their status",
@@ -28119,9 +28071,6 @@
     "com.github.openshift.api.operator.v1.ClusterCSIDriverStatus": {
       "description": "ClusterCSIDriverStatus is the observed status of CSI driver operator",
       "type": "object",
-      "required": [
-        "readyReplicas"
-      ],
       "properties": {
         "conditions": {
           "description": "conditions is a list of conditions and their status",
@@ -28304,9 +28253,6 @@
     },
     "com.github.openshift.api.operator.v1.ConfigStatus": {
       "type": "object",
-      "required": [
-        "readyReplicas"
-      ],
       "properties": {
         "conditions": {
           "description": "conditions is a list of conditions and their status",
@@ -28587,9 +28533,6 @@
     "com.github.openshift.api.operator.v1.ConsoleStatus": {
       "description": "ConsoleStatus defines the observed status of the Console.",
       "type": "object",
-      "required": [
-        "readyReplicas"
-      ],
       "properties": {
         "conditions": {
           "description": "conditions is a list of conditions and their status",
@@ -29179,10 +29122,6 @@
     },
     "com.github.openshift.api.operator.v1.EtcdStatus": {
       "type": "object",
-      "required": [
-        "readyReplicas",
-        "controlPlaneHardwareSpeed"
-      ],
       "properties": {
         "conditions": {
           "description": "conditions is a list of conditions and their status",
@@ -29798,7 +29737,8 @@
       "properties": {
         "matchType": {
           "description": "matchType specifies the type of match to be performed on the cookie name.  Allowed values are \"Exact\" for an exact string match and \"Prefix\" for a string prefix match.  If \"Exact\" is specified, a name must be specified in the name field.  If \"Prefix\" is provided, a prefix must be specified in the namePrefix field.  For example, specifying matchType \"Prefix\" and namePrefix \"foo\" will capture a cookie named \"foo\" or \"foobar\" but not one named \"bar\".  The first matching cookie is captured.",
-          "type": "string"
+          "type": "string",
+          "default": ""
         },
         "maxLength": {
           "description": "maxLength specifies a maximum length of the string that will be logged, which includes the cookie name, cookie value, and one-character delimiter.  If the log entry exceeds this length, the value will be truncated in the log message.  Note that the ingress controller may impose a separate bound on the total length of HTTP headers in a request.",
@@ -29836,7 +29776,8 @@
       "properties": {
         "matchType": {
           "description": "matchType specifies the type of match to be performed on the cookie name.  Allowed values are \"Exact\" for an exact string match and \"Prefix\" for a string prefix match.  If \"Exact\" is specified, a name must be specified in the name field.  If \"Prefix\" is provided, a prefix must be specified in the namePrefix field.  For example, specifying matchType \"Prefix\" and namePrefix \"foo\" will capture a cookie named \"foo\" or \"foobar\" but not one named \"bar\".  The first matching cookie is captured.",
-          "type": "string"
+          "type": "string",
+          "default": ""
         },
         "name": {
           "description": "name specifies a cookie name.  Its value must be a valid HTTP cookie name as defined in RFC 6265 section 4.1.",
@@ -30163,11 +30104,6 @@
     "com.github.openshift.api.operator.v1.IngressControllerStatus": {
       "description": "IngressControllerStatus defines the observed status of the IngressController.",
       "type": "object",
-      "required": [
-        "availableReplicas",
-        "selector",
-        "domain"
-      ],
       "properties": {
         "availableReplicas": {
           "description": "availableReplicas is number of observed available replicas according to the ingress controller deployment.",
@@ -30376,9 +30312,6 @@
     },
     "com.github.openshift.api.operator.v1.InsightsOperatorStatus": {
       "type": "object",
-      "required": [
-        "readyReplicas"
-      ],
       "properties": {
         "conditions": {
           "description": "conditions is a list of conditions and their status",
@@ -30569,9 +30502,6 @@
     },
     "com.github.openshift.api.operator.v1.KubeAPIServerStatus": {
       "type": "object",
-      "required": [
-        "readyReplicas"
-      ],
       "properties": {
         "conditions": {
           "description": "conditions is a list of conditions and their status",
@@ -30763,9 +30693,6 @@
     },
     "com.github.openshift.api.operator.v1.KubeControllerManagerStatus": {
       "type": "object",
-      "required": [
-        "readyReplicas"
-      ],
       "properties": {
         "conditions": {
           "description": "conditions is a list of conditions and their status",
@@ -30943,9 +30870,6 @@
     },
     "com.github.openshift.api.operator.v1.KubeSchedulerStatus": {
       "type": "object",
-      "required": [
-        "readyReplicas"
-      ],
       "properties": {
         "conditions": {
           "description": "conditions is a list of conditions and their status",
@@ -31105,9 +31029,6 @@
     },
     "com.github.openshift.api.operator.v1.KubeStorageVersionMigratorStatus": {
       "type": "object",
-      "required": [
-        "readyReplicas"
-      ],
       "properties": {
         "conditions": {
           "description": "conditions is a list of conditions and their status",
@@ -31569,9 +31490,6 @@
     },
     "com.github.openshift.api.operator.v1.MyOperatorResourceStatus": {
       "type": "object",
-      "required": [
-        "readyReplicas"
-      ],
       "properties": {
         "conditions": {
           "description": "conditions is a list of conditions and their status",
@@ -31818,9 +31736,6 @@
     "com.github.openshift.api.operator.v1.NetworkStatus": {
       "description": "NetworkStatus is detailed operator status, which is distilled up to the Network clusteroperator object.",
       "type": "object",
-      "required": [
-        "readyReplicas"
-      ],
       "properties": {
         "conditions": {
           "description": "conditions is a list of conditions and their status",
@@ -32333,9 +32248,6 @@
     },
     "com.github.openshift.api.operator.v1.OLMStatus": {
       "type": "object",
-      "required": [
-        "readyReplicas"
-      ],
       "properties": {
         "conditions": {
           "description": "conditions is a list of conditions and their status",
@@ -32541,9 +32453,6 @@
     },
     "com.github.openshift.api.operator.v1.OpenShiftAPIServerStatus": {
       "type": "object",
-      "required": [
-        "readyReplicas"
-      ],
       "properties": {
         "conditions": {
           "description": "conditions is a list of conditions and their status",
@@ -32687,9 +32596,6 @@
     },
     "com.github.openshift.api.operator.v1.OpenShiftControllerManagerStatus": {
       "type": "object",
-      "required": [
-        "readyReplicas"
-      ],
       "properties": {
         "conditions": {
           "description": "conditions is a list of conditions and their status",
@@ -32845,9 +32751,6 @@
     },
     "com.github.openshift.api.operator.v1.OperatorStatus": {
       "type": "object",
-      "required": [
-        "readyReplicas"
-      ],
       "properties": {
         "conditions": {
           "description": "conditions is a list of conditions and their status",
@@ -33342,9 +33245,6 @@
     },
     "com.github.openshift.api.operator.v1.ServiceCAStatus": {
       "type": "object",
-      "required": [
-        "readyReplicas"
-      ],
       "properties": {
         "conditions": {
           "description": "conditions is a list of conditions and their status",
@@ -33487,9 +33387,6 @@
     },
     "com.github.openshift.api.operator.v1.ServiceCatalogAPIServerStatus": {
       "type": "object",
-      "required": [
-        "readyReplicas"
-      ],
       "properties": {
         "conditions": {
           "description": "conditions is a list of conditions and their status",
@@ -33633,9 +33530,6 @@
     },
     "com.github.openshift.api.operator.v1.ServiceCatalogControllerManagerStatus": {
       "type": "object",
-      "required": [
-        "readyReplicas"
-      ],
       "properties": {
         "conditions": {
           "description": "conditions is a list of conditions and their status",
@@ -33847,9 +33741,6 @@
     "com.github.openshift.api.operator.v1.StaticPodOperatorStatus": {
       "description": "StaticPodOperatorStatus is status for controllers that manage static pods.  There are different needs because individual node status must be tracked.",
       "type": "object",
-      "required": [
-        "readyReplicas"
-      ],
       "properties": {
         "conditions": {
           "description": "conditions is a list of conditions and their status",
@@ -34029,9 +33920,6 @@
     "com.github.openshift.api.operator.v1.StorageStatus": {
       "description": "StorageStatus defines the observed status of the cluster storage operator.",
       "type": "object",
-      "required": [
-        "readyReplicas"
-      ],
       "properties": {
         "conditions": {
           "description": "conditions is a list of conditions and their status",
@@ -34741,9 +34629,6 @@
     },
     "com.github.openshift.api.operator.v1alpha1.OLMStatus": {
       "type": "object",
-      "required": [
-        "readyReplicas"
-      ],
       "properties": {
         "conditions": {
           "description": "conditions is a list of conditions and their status",
@@ -37369,9 +37254,6 @@
     "com.github.openshift.api.security.v1.PodSecurityPolicyReviewStatus": {
       "description": "PodSecurityPolicyReviewStatus represents the status of PodSecurityPolicyReview.",
       "type": "object",
-      "required": [
-        "allowedServiceAccounts"
-      ],
       "properties": {
         "allowedServiceAccounts": {
           "description": "allowedServiceAccounts returns the list of service accounts in *this* namespace that have the power to create the PodTemplateSpec.",
@@ -38036,9 +37918,6 @@
     },
     "com.github.openshift.api.servicecertsigner.v1alpha1.ServiceCertSignerOperatorConfigStatus": {
       "type": "object",
-      "required": [
-        "readyReplicas"
-      ],
       "properties": {
         "conditions": {
           "description": "conditions is a list of conditions and their status",

@@ -54,9 +54,6 @@
                         "name": "AWSDedicatedHosts"
                     },
                     {
-                        "name": "AWSEFSDriverVolumeMetrics"
-                    },
-                    {
                         "name": "AWSServiceLBNetworkSecurityGroup"
                     },
                     {

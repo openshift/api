@@ -211,9 +211,6 @@
                 ],
                 "enabled": [
                     {
-                        "name": "AWSEFSDriverVolumeMetrics"
-                    },
-                    {
                         "name": "AdditionalRoutingCapabilities"
                     },
                     {

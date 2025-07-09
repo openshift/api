@@ -871,4 +871,28 @@ var (
 					enhancementPR("https://github.com/openshift/enhancements/pull/1806").
 					enableIn(configv1.DevPreviewNoUpgrade, configv1.TechPreviewNoUpgrade).
 					mustRegister()
+
+	FeatureCBORServingAndStorage = newFeatureGate("CBORServingAndStorage").
+					reportProblemsToJiraComponent("kube-apiserver").
+					contactPerson("benluddy").
+					productScope(kubernetes).
+					enhancementPR("https://github.com/kubernetes/enhancements/issues/4222").
+					enableIn(configv1.DevPreviewNoUpgrade, configv1.TechPreviewNoUpgrade).
+					mustRegister()
+
+	FeatureCBORClientsAllowCBOR = newFeatureGate("ClientsAllowCBOR").
+					reportProblemsToJiraComponent("kube-apiserver").
+					contactPerson("benluddy").
+					productScope(kubernetes).
+					enhancementPR("https://github.com/kubernetes/enhancements/issues/4222").
+					enableIn(configv1.DevPreviewNoUpgrade, configv1.TechPreviewNoUpgrade).
+					mustRegister()
+
+	FeatureClientsPreferCBOR = newFeatureGate("ClientsPreferCBOR").
+					reportProblemsToJiraComponent("kube-apiserver").
+					contactPerson("benluddy").
+					productScope(kubernetes).
+					enhancementPR("https://github.com/kubernetes/enhancements/issues/4222").
+					enableIn(configv1.DevPreviewNoUpgrade, configv1.TechPreviewNoUpgrade).
+					mustRegister()
 )

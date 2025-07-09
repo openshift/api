@@ -80,9 +80,6 @@
                         "name": "ExternalOIDCWithUIDAndExtraClaimMappings"
                     },
                     {
-                        "name": "GCPClusterHostedDNS"
-                    },
-                    {
                         "name": "GCPCustomAPIEndpoints"
                     },
                     {
@@ -233,6 +230,9 @@
                     },
                     {
                         "name": "ConsolePluginContentSecurityPolicy"
+                    },
+                    {
+                        "name": "GCPClusterHostedDNS"
                     },
                     {
                         "name": "GCPLabelsTags"

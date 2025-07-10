@@ -533,6 +533,7 @@ spec:
                         operator will evaluate all entries, and only recommend the
                         update if there is at least one entry and all entries
                         recommend the update.
+                        Deprecated: the risks has been deprecated by riskNames.
                       items:
                         description: |-
                           ConditionalUpdateRisk represents a reason and cluster-state
@@ -716,10 +717,11 @@ spec:
                     acceptedRisks:
                       description: |-
                         acceptedRisks records risks which were accepted to initiate the update.
-                        For example, it may menition an Upgradeable=False or missing signature
-                        that was overriden via desiredUpdate.force, or an update that was
+                        For example, it may mention an Upgradeable=False or missing signature
+                        that was overridden via desiredUpdate.force, or an update that was
                         initiated despite not being in the availableUpdates set of recommended
-                        update targets.
+                        update targets, or in the conditionUpdates set and all associated risks
+                        are specified in desiredUpdate.accept.
                       type: string
                     completionTime:
                       description: |-

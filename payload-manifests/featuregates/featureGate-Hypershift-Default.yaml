@@ -247,9 +247,6 @@
                         "name": "HardwareSpeed"
                     },
                     {
-                        "name": "IngressControllerLBSubnetsAWS"
-                    },
-                    {
                         "name": "KMSv1"
                     },
                     {

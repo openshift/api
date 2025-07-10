@@ -54,6 +54,9 @@
                         "name": "AutomatedEtcdBackup"
                     },
                     {
+                        "name": "AzureClusterHostedDNS"
+                    },
+                    {
                         "name": "AzureDedicatedHosts"
                     },
                     {

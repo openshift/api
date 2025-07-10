@@ -31373,7 +31373,7 @@
           "default": ""
         },
         "resource": {
-          "description": "resource is the machine management resource's type. The only current valid value is machinesets. machinesets means that the machine manager will only register resources of the kind MachineSet.",
+          "description": "resource is the machine management resource's type. Valid values are machinesets and controlplanemachinesets. machinesets means that the machine manager will only register resources of the kind MachineSet. controlplanemachinesets means that the machine manager will only register resources of the kind ControlPlaneMachineSet.",
           "type": "string",
           "default": ""
         },

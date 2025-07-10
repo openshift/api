@@ -53882,7 +53882,7 @@ func schema_openshift_api_operator_v1_MachineManager(ref common.ReferenceCallbac
 				Properties: map[string]spec.Schema{
 					"resource": {
 						SchemaProps: spec.SchemaProps{
-							Description: "resource is the machine management resource's type. The only current valid value is machinesets. machinesets means that the machine manager will only register resources of the kind MachineSet.",
+							Description: "resource is the machine management resource's type. Valid values are machinesets and controlplanemachinesets. machinesets means that the machine manager will only register resources of the kind MachineSet. controlplanemachinesets means that the machine manager will only register resources of the kind ControlPlaneMachineSet.",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",

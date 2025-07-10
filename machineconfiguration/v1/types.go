@@ -850,7 +850,7 @@ type ContainerRuntimeConfiguration struct {
 	// When set to `crun`, OpenShift will use crun to execute the container
 	// When omitted, this means no opinion and the platform is left to choose a reasonable default,
 	// which is subject to change over time. Currently, the default is `crun`.
-	// +kubebuilder:validation:Enum=crun;runc;""
+	// +kubebuilder:validation:Enum=crun;runc
 	// +optional
 	DefaultRuntime ContainerRuntimeDefaultRuntime `json:"defaultRuntime,omitempty"`
 }

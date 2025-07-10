@@ -235,9 +235,6 @@
                         "name": "ConsolePluginContentSecurityPolicy"
                     },
                     {
-                        "name": "GCPLabelsTags"
-                    },
-                    {
                         "name": "GatewayAPI"
                     },
                     {

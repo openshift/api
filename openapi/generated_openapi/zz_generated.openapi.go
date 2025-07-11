@@ -949,6 +949,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"github.com/openshift/api/operator/v1.CloudCredentialList":                                           schema_openshift_api_operator_v1_CloudCredentialList(ref),
 		"github.com/openshift/api/operator/v1.CloudCredentialSpec":                                           schema_openshift_api_operator_v1_CloudCredentialSpec(ref),
 		"github.com/openshift/api/operator/v1.CloudCredentialStatus":                                         schema_openshift_api_operator_v1_CloudCredentialStatus(ref),
+		"github.com/openshift/api/operator/v1.ClusterBootImage":                                              schema_openshift_api_operator_v1_ClusterBootImage(ref),
 		"github.com/openshift/api/operator/v1.ClusterCSIDriver":                                              schema_openshift_api_operator_v1_ClusterCSIDriver(ref),
 		"github.com/openshift/api/operator/v1.ClusterCSIDriverList":                                          schema_openshift_api_operator_v1_ClusterCSIDriverList(ref),
 		"github.com/openshift/api/operator/v1.ClusterCSIDriverSpec":                                          schema_openshift_api_operator_v1_ClusterCSIDriverSpec(ref),
@@ -1133,6 +1134,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"github.com/openshift/api/operator/v1.ServiceCatalogControllerManagerSpec":                           schema_openshift_api_operator_v1_ServiceCatalogControllerManagerSpec(ref),
 		"github.com/openshift/api/operator/v1.ServiceCatalogControllerManagerStatus":                         schema_openshift_api_operator_v1_ServiceCatalogControllerManagerStatus(ref),
 		"github.com/openshift/api/operator/v1.SimpleMacvlanConfig":                                           schema_openshift_api_operator_v1_SimpleMacvlanConfig(ref),
+		"github.com/openshift/api/operator/v1.SkewEnforcementSelector":                                       schema_openshift_api_operator_v1_SkewEnforcementSelector(ref),
 		"github.com/openshift/api/operator/v1.StaticIPAMAddresses":                                           schema_openshift_api_operator_v1_StaticIPAMAddresses(ref),
 		"github.com/openshift/api/operator/v1.StaticIPAMConfig":                                              schema_openshift_api_operator_v1_StaticIPAMConfig(ref),
 		"github.com/openshift/api/operator/v1.StaticIPAMDNS":                                                 schema_openshift_api_operator_v1_StaticIPAMDNS(ref),
@@ -48173,6 +48175,35 @@ func schema_openshift_api_operator_v1_CloudCredentialStatus(ref common.Reference
 	}
 }
 
+func schema_openshift_api_operator_v1_ClusterBootImage(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "ClusterBootImage describes the boot image of a cluster. It stores the RHCOS version of the boot image and the OCP release version which shipped with that RHCOS boot image.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"ocpVersion": {
+						SchemaProps: spec.SchemaProps{
+							Description: "ocpVersion provides a string which represents the OCP version of the boot image",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"rhcosVersion": {
+						SchemaProps: spec.SchemaProps{
+							Description: "rhcosVersion provides a string which represents the RHCOS version of the boot image",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+				},
+				Required: []string{"ocpVersion"},
+			},
+		},
+	}
+}
+
 func schema_openshift_api_operator_v1_ClusterCSIDriver(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -53807,12 +53838,19 @@ func schema_openshift_api_operator_v1_MachineConfigurationSpec(ref common.Refere
 							Ref:         ref("github.com/openshift/api/operator/v1.NodeDisruptionPolicyConfig"),
 						},
 					},
+					"bootImageSkewEnforcement": {
+						SchemaProps: spec.SchemaProps{
+							Description: "bootImageSkewEnforcement allows an admin to set the behavior of the boot image skew enforcement mechanism.",
+							Default:     map[string]interface{}{},
+							Ref:         ref("github.com/openshift/api/operator/v1.SkewEnforcementSelector"),
+						},
+					},
 				},
 				Required: []string{"managementState", "forceRedeploymentReason"},
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/operator/v1.ManagedBootImages", "github.com/openshift/api/operator/v1.NodeDisruptionPolicyConfig", "k8s.io/apimachinery/pkg/runtime.RawExtension"},
+			"github.com/openshift/api/operator/v1.ManagedBootImages", "github.com/openshift/api/operator/v1.NodeDisruptionPolicyConfig", "github.com/openshift/api/operator/v1.SkewEnforcementSelector", "k8s.io/apimachinery/pkg/runtime.RawExtension"},
 	}
 }
 
@@ -57710,6 +57748,48 @@ func schema_openshift_api_operator_v1_SimpleMacvlanConfig(ref common.ReferenceCa
 		},
 		Dependencies: []string{
 			"github.com/openshift/api/operator/v1.IPAMConfig"},
+	}
+}
+
+func schema_openshift_api_operator_v1_SkewEnforcementSelector(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"mode": {
+						SchemaProps: spec.SchemaProps{
+							Description: "mode determines the underlying behavior of skew enforcement mechanism. Valid values are Automatic, Manual and Disabled. Automatic means that the MCO will store the OCP version associated with the last boot image update in the clusterBootImage field. Manual means that the cluster admin is expected to perform manual boot image updates and store OCP version associated with the last boot image update in the clusterBootImage field. In Automatic and Manual mode, the MCO will prevent upgrades when the boot image skew exceeds the skew limit described by the release image. Disabled means that the MCO will permit upgrades when the boot image exceeds the skew limit described by the release image. This may affect the cluster's ability to scale.",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"clusterBootImage": {
+						SchemaProps: spec.SchemaProps{
+							Description: "clusterBootImage describes the current boot image of the cluster. This will be used to enforce the skew limit. Only permitted when mode is set to \"Automatic\" or \"Manual\".",
+							Default:     map[string]interface{}{},
+							Ref:         ref("github.com/openshift/api/operator/v1.ClusterBootImage"),
+						},
+					},
+				},
+				Required: []string{"mode"},
+			},
+			VendorExtensible: spec.VendorExtensible{
+				Extensions: spec.Extensions{
+					"x-kubernetes-unions": []interface{}{
+						map[string]interface{}{
+							"discriminator": "mode",
+							"fields-to-discriminateBy": map[string]interface{}{
+								"clusterBootImage": "ClusterBootImage",
+							},
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"github.com/openshift/api/operator/v1.ClusterBootImage"},
 	}
 }
 

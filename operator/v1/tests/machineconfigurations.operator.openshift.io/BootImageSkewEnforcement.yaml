@@ -1,0 +1,102 @@
+apiVersion: apiextensions.k8s.io/v1 # Hack because controller-gen complains if we don't have this
+name: "MachineConfiguration"
+crdName: machineconfigurations.operator.openshift.io
+featureGates:
+- BootImageSkewEnforcement
+tests:
+  onCreate:
+    - name: Should be able to create a minimal MachineConfiguration
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: MachineConfiguration
+        spec: {} # No spec is required for a MachineConfiguration
+      expected: |
+        apiVersion: operator.openshift.io/v1
+        kind: MachineConfiguration
+        spec:
+          logLevel: Normal
+          operatorLogLevel: Normal
+    - name: Should be able to create an manual BootImageSkewEnforcement configuration knob
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: MachineConfiguration
+        spec:
+          bootImageSkewEnforcement:
+            mode: Manual
+            clusterBootImage:
+              ocpVersion: "4.18.2"
+              rhcosVersion: "9.6.20250523-1"
+      expected: |
+        apiVersion: operator.openshift.io/v1
+        kind: MachineConfiguration
+        spec:
+          logLevel: Normal
+          operatorLogLevel: Normal
+          bootImageSkewEnforcement:
+            mode: Manual
+            clusterBootImage:
+              ocpVersion: "4.18.2"
+              rhcosVersion: "9.6.20250523-1"
+    - name: Should be able to create an automatic BootImageSkewEnforcement configuration knob
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: MachineConfiguration
+        spec:
+          bootImageSkewEnforcement:
+            mode: Automatic
+            clusterBootImage:
+              ocpVersion: "4.18.2"
+              rhcosVersion: "9.6.20250523-1"
+      expected: |
+        apiVersion: operator.openshift.io/v1
+        kind: MachineConfiguration
+        spec:
+          logLevel: Normal
+          operatorLogLevel: Normal
+          bootImageSkewEnforcement:
+            mode: Automatic
+            clusterBootImage:
+              ocpVersion: "4.18.2"
+              rhcosVersion: "9.6.20250523-1"
+    - name: Should be able to create a disabled BootImageSkewEnforcement configuration knob
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: MachineConfiguration
+        spec:
+          bootImageSkewEnforcement:
+            mode: Disabled
+      expected: |
+        apiVersion: operator.openshift.io/v1
+        kind: MachineConfiguration
+        spec:
+          logLevel: Normal
+          operatorLogLevel: Normal
+          bootImageSkewEnforcement:
+            mode: Disabled
+    - name: Should not be able to add ClusterBootImage field if bootImageSkewEnforcement.mode is set to Disabled
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: MachineConfiguration
+        spec:
+          bootImageSkewEnforcement:
+            mode: Disabled
+            clusterBootImage:
+              ocpVersion: "4.18.2"
+              rhcosVersion: "9.6.20250523-1"
+      expectedError: "clusterBootImage is required when type is Automatic or Manual, and forbidden otherwise"
+    - name: ClusterBootImage field should be set if bootImageSkewEnforcement.mode is set to Automatic
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: MachineConfiguration
+        spec:
+          bootImageSkewEnforcement:
+            mode: Automatic
+      expectedError: "clusterBootImage is required when type is Automatic or Manual, and forbidden otherwise"
+    - name: ClusterBootImage field should be set if bootImageSkewEnforcement.mode is set to Manual
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: MachineConfiguration
+        spec:
+          bootImageSkewEnforcement:
+            mode: Manual
+      expectedError: "clusterBootImage is required when type is Automatic or Manual, and forbidden otherwise"                                                   

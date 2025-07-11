@@ -77,7 +77,7 @@ tests:
             defaultRuntime: runc
             logLevel: info
   onUpdate:
-    - name: Should not be able to update from default to invalid value
+    - name: Case 1 - Change another field - Should be able to update other parameters with invalid defaultRuntime
       initialCRDPatches:
         - op: remove
           path: /spec/versions/0/schema/openAPIV3Schema/properties/spec/properties/containerRuntimeConfig/properties/defaultRuntime/enum
@@ -86,7 +86,7 @@ tests:
         kind: ContainerRuntimeConfig
         spec:
           containerRuntimeConfig:
-            defaultRuntime: crun
+            defaultRuntime: docker
             logLevel: fatal
       updated: |
         apiVersion: machineconfiguration.openshift.io/v1
@@ -95,72 +95,52 @@ tests:
           containerRuntimeConfig:
             defaultRuntime: docker
             logLevel: info
-      expectedError: "Unsupported value: \"docker\": supported values: \"crun\", \"runc\""
-    - name: Should be able to update from not set to default when other params are set
-      initial: |
-        apiVersion: machineconfiguration.openshift.io/v1
-        kind: ContainerRuntimeConfig
-        spec:
-          containerRuntimeConfig: {}
-      updated: |
-        apiVersion: machineconfiguration.openshift.io/v1
-        kind: ContainerRuntimeConfig
-        spec:
-          containerRuntimeConfig:
-            logLevel: info
       expected: |
         apiVersion: machineconfiguration.openshift.io/v1
         kind: ContainerRuntimeConfig
         spec:
           containerRuntimeConfig:
+            defaultRuntime: docker
             logLevel: info
-    - name: Should be able to update from runc to crun with other parameters
+    - name: Case 2 - Remove the field - Should be able to update from invalid to removed
       initialCRDPatches:
         - op: remove
           path: /spec/versions/0/schema/openAPIV3Schema/properties/spec/properties/containerRuntimeConfig/properties/defaultRuntime/enum
       initial: |
+        apiVersion: machineconfiguration.openshift.io/v1
+        kind: ContainerRuntimeConfig
+        spec:
+          containerRuntimeConfig:
+            defaultRuntime: docker
+      updated: |
+        apiVersion: machineconfiguration.openshift.io/v1
+        kind: ContainerRuntimeConfig
+        spec:
+          containerRuntimeConfig: {}
+      expected: |
+        apiVersion: machineconfiguration.openshift.io/v1
+        kind: ContainerRuntimeConfig
+        spec:
+          containerRuntimeConfig: {}
+    - name: Case 3 - Update the field - Should be able to update from invalid to correct value
+      initialCRDPatches:
+        - op: remove
+          path: /spec/versions/0/schema/openAPIV3Schema/properties/spec/properties/containerRuntimeConfig/properties/defaultRuntime/enum
+      initial: |
+        apiVersion: machineconfiguration.openshift.io/v1
+        kind: ContainerRuntimeConfig
+        spec:
+          containerRuntimeConfig:
+            defaultRuntime: docker
+      updated: |
         apiVersion: machineconfiguration.openshift.io/v1
         kind: ContainerRuntimeConfig
         spec:
           containerRuntimeConfig:
             defaultRuntime: runc
-            logLevel: fatal
-      updated: |
-        apiVersion: machineconfiguration.openshift.io/v1
-        kind: ContainerRuntimeConfig
-        spec:
-          containerRuntimeConfig:
-            defaultRuntime: crun
-            logLevel: info
       expected: |
         apiVersion: machineconfiguration.openshift.io/v1
         kind: ContainerRuntimeConfig
         spec:
           containerRuntimeConfig:
-            defaultRuntime: crun
-            logLevel: info
-    - name: Should be able to update other parameters with invalid defaultRuntime
-      initialCRDPatches:
-        - op: remove
-          path: /spec/versions/0/schema/openAPIV3Schema/properties/spec/properties/containerRuntimeConfig/properties/defaultRuntime/enum
-      initial: |
-        apiVersion: machineconfiguration.openshift.io/v1
-        kind: ContainerRuntimeConfig
-        spec:
-          containerRuntimeConfig:
-            defaultRuntime: docker
-            logLevel: fatal
-      updated: |
-        apiVersion: machineconfiguration.openshift.io/v1
-        kind: ContainerRuntimeConfig
-        spec:
-          containerRuntimeConfig:
-            defaultRuntime: docker
-            logLevel: info
-      expected: |
-        apiVersion: machineconfiguration.openshift.io/v1
-        kind: ContainerRuntimeConfig
-        spec:
-          containerRuntimeConfig:
-            defaultRuntime: docker
-            logLevel: info
+            defaultRuntime: runc

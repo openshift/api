@@ -109,7 +109,7 @@ tests:
               resources:
                 - name: "cpu"
                   request: "0"
-      expectedError: 'spec.alertmanagerConfig.customConfig.resources[0].request: Invalid value: "": request must be a non-negative quantity'
+      expectedError: 'spec.alertmanagerConfig.customConfig.resources[0].request: Invalid value: "": request must be a positive, non-zero quantity'
     - name: Should reject ContainerResource limit with MaxLength violation
       initial: |
         apiVersion: config.openshift.io/v1alpha1
@@ -151,7 +151,7 @@ tests:
               resources:
                 - name: "cpu"
                   limit: "0"
-      expectedError: 'spec.alertmanagerConfig.customConfig.resources[0].limit: Invalid value: "": limit must be a non-negative quantity'
+      expectedError: 'spec.alertmanagerConfig.customConfig.resources[0].limit: Invalid value: "": limit must be a positive, non-zero quantity'
     - name: Should reject ContainerResource name with MaxLength violation
       initial: |
         apiVersion: config.openshift.io/v1alpha1
@@ -207,4 +207,4 @@ tests:
                 - name: "cpu"
                   request: "500m"
                   limit: "200m"
-      expectedError: 'spec.alertmanagerConfig.customConfig.resources[0]: Invalid value: "object": limit should not be less than request'
+      expectedError: 'spec.alertmanagerConfig.customConfig.resources[0]: Invalid value: "object": limit must be greater than or equal to request'

@@ -130,7 +130,7 @@ spec:
                               pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
                               x-kubernetes-int-or-string: true
                               x-kubernetes-validations:
-                              - message: limit must be a non-negative quantity
+                              - message: limit must be a positive, non-zero quantity
                                 rule: isQuantity(self) && quantity(self).isGreaterThan(quantity('0'))
                             name:
                               description: |-
@@ -898,8 +898,8 @@ spec:
                 x-kubernetes-validations:
                 - message: customConfig is required when deploymentMode is CustomConfig,
                     and forbidden otherwise
-                  rule: 'self.deploymentMode == ''CustomConfig'' ? has(self.customConfig))
-                    : !has(self.customConfig))'
+                  rule: 'self.deploymentMode == ''CustomConfig'' ? has(self.customConfig)
+                    : !has(self.customConfig)'
               userDefined:
                 description: |-
                   userDefined set the deployment mode for user-defined monitoring in addition to the default platform monitoring.

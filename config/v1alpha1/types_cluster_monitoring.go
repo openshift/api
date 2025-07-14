@@ -117,7 +117,7 @@ const (
 // alertmanagerConfig provides configuration options for the default Alertmanager instance
 // that runs in the `openshift-monitoring` namespace. Use this configuration to control
 // whether the default Alertmanager is deployed, how it logs, and how its pods are scheduled.
-// +kubebuilder:validation:XValidation:rule="self.deploymentMode == 'CustomConfig' ? has(self.customConfig)) : !has(self.customConfig))",message="customConfig is required when deploymentMode is CustomConfig, and forbidden otherwise"
+// +kubebuilder:validation:XValidation:rule="self.deploymentMode == 'CustomConfig' ? has(self.customConfig) : !has(self.customConfig)",message="customConfig is required when deploymentMode is CustomConfig, and forbidden otherwise"
 type AlertmanagerConfig struct {
 	// deploymentMode determines whether the default Alertmanager instance should be deployed
 	// as part of the monitoring stack.
@@ -313,7 +313,7 @@ type ContainerResource struct {
 	// +kubebuilder:validation:XIntOrString
 	// +kubebuilder:validation:MaxLength=20
 	// +kubebuilder:validation:MinLength=1
-	// +kubebuilder:validation:XValidation:rule="isQuantity(self) && quantity(self).isGreaterThan(quantity('0'))",message="limit must be a non-negative quantity"
+	// +kubebuilder:validation:XValidation:rule="isQuantity(self) && quantity(self).isGreaterThan(quantity('0'))",message="limit must be a positive, non-zero quantity"
 	Limit resource.Quantity `json:"limit,omitempty"`
 }
 

@@ -22,61 +22,63 @@ tests:
         kind: Infrastructure
         spec:
           platformSpec:
-            aws: {}
-            type: AWS
+            baremetal: {}
+            type: BareMetal
       updated: |
         apiVersion: config.openshift.io/v1
         kind: Infrastructure
         spec:
           platformSpec:
-            type: AWS
-            aws: {}
+            type: BareMetal
+            baremetal: {}
         status:
           controlPlaneTopology: HighlyAvailableArbiter
           infrastructureTopology: HighlyAvailable
-          platform: AWS
+          platform: BareMetal
           platformStatus:
-            aws: {}
-            type: AWS
+            baremetal: {}
+            type: BareMetal
       expected: |
         apiVersion: config.openshift.io/v1
         kind: Infrastructure
         spec:
           platformSpec:
-            type: AWS
-            aws: {}
+            type: BareMetal
+            baremetal: {}
         status:
           controlPlaneTopology: HighlyAvailableArbiter
           cpuPartitioning: None
           infrastructureTopology: HighlyAvailable
-          platform: AWS
+          platform: BareMetal
           platformStatus:
-            aws:
-              cloudLoadBalancerConfig:
-                dnsType: PlatformDefault
-            type: AWS
+            baremetal:
+              loadBalancer:
+                type: OpenShiftManagedDefault
+            type: BareMetal
     - name: should not allow changing infrastructureTopology value to `HighlyAvailableArbiter`
       initial: |
         apiVersion: config.openshift.io/v1
         kind: Infrastructure
         spec:
           platformSpec:
-            aws: {}
-            type: AWS
+            baremetal: {}
+            type: BareMetal
       updated: |
         apiVersion: config.openshift.io/v1
         kind: Infrastructure
         spec:
           platformSpec:
-            type: AWS
-            aws: {}
+            type: BareMetal
+            baremetal: {}
         status:
           controlPlaneTopology: HighlyAvailable
           infrastructureTopology: HighlyAvailableArbiter
-          platform: AWS
+          platform: BareMetal
           platformStatus:
-            aws: {}
-            type: AWS
+            baremetal:
+              loadBalancer:
+                type: OpenShiftManagedDefault
+            type: BareMetal
       expectedStatusError: 'status.infrastructureTopology: Unsupported value: "HighlyAvailableArbiter": supported values: "HighlyAvailable", "SingleReplica"'
     - name: status should allow controlPlaneTopology value for `DualReplica`
       initial: |
@@ -84,59 +86,63 @@ tests:
         kind: Infrastructure
         spec:
           platformSpec:
-            aws: {}
-            type: AWS
+            baremetal: {}
+            type: BareMetal
       updated: |
         apiVersion: config.openshift.io/v1
         kind: Infrastructure
         spec:
           platformSpec:
-            type: AWS
-            aws: {}
+            type: BareMetal
+            baremetal: {}
         status:
           controlPlaneTopology: DualReplica
           infrastructureTopology: HighlyAvailable
-          platform: AWS
+          platform: BareMetal
           platformStatus:
-            aws: {}
-            type: AWS
+            baremetal:
+              loadBalancer:
+                type: OpenShiftManagedDefault
+            type: BareMetal
       expected: |
         apiVersion: config.openshift.io/v1
         kind: Infrastructure
         spec:
           platformSpec:
-            type: AWS
-            aws: {}
+            type: BareMetal
+            baremetal: {}
         status:
           controlPlaneTopology: DualReplica
           cpuPartitioning: None
           infrastructureTopology: HighlyAvailable
-          platform: AWS
+          platform: BareMetal
           platformStatus:
-            aws:
-              cloudLoadBalancerConfig:
-                dnsType: PlatformDefault
-            type: AWS
+            baremetal:
+              loadBalancer:
+                type: OpenShiftManagedDefault
+            type: BareMetal
     - name: should not allow changing infrastructureTopology value to `DualReplica`
       initial: |
         apiVersion: config.openshift.io/v1
         kind: Infrastructure
         spec:
           platformSpec:
-            aws: {}
-            type: AWS
+            baremetal: {}
+            type: BareMetal
       updated: |
         apiVersion: config.openshift.io/v1
         kind: Infrastructure
         spec:
           platformSpec:
-            type: AWS
-            aws: {}
+            type: BareMetal
+            baremetal: {}
         status:
           controlPlaneTopology: HighlyAvailable
           infrastructureTopology: DualReplica
-          platform: AWS
+          platform: BareMetal
           platformStatus:
-            aws: {}
-            type: AWS
+            baremetal:
+              loadBalancer:
+                type: OpenShiftManagedDefault
+            type: BareMetal
       expectedStatusError: 'status.infrastructureTopology: Unsupported value: "DualReplica": supported values: "HighlyAvailable", "SingleReplica"'

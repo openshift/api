@@ -228,10 +228,12 @@ type MachineConfigNodeSpecMachineConfigVersion struct {
 // to signal the desired image pullspec for the node to update to.
 type MachineConfigNodeSpecConfigImage struct {
 	// desiredImage is the  fully qualified image pull spec of the image that the Machine
-	// Config Operator (MCO) intends to apply to the node. This field is optional.
-	// The length of the field must be between 1 to 447 characters.
+	// Config Operator (MCO) intends to apply to the node. This field is optional. When
+	// OCL
+	// The length of the field must be lesser than 447 characters.
+	// The image name should follow the format host[:port][/namespace]/name:<tag> or svc_name.namespace.svc[:port]/repository/name:<tag>.
 	// +kubebuilder:validation:MaxLength=447
-	// +kubebuilder:validation:XValidation:rule="self.matches('^([a-zA-Z0-9-]+\\\\.)+[a-zA-Z0-9-]+(:[0-9]{2,5})?(/[a-zA-Z0-9-_]{1,61})*/[a-zA-Z0-9-_.]+:[a-zA-Z0-9._-]+$') || self.matches('^[^.]+\\\\.[^.]+\\\\.svc:\\\\d+\\\\/[^\\\\/]+\\\\/[^\\\\/]+:[^\\\\/]+$')",message="the OCI Image name should follow the host[:port][/namespace]/name format, resembling a valid URL without the scheme. Or it must be a valid .svc followed by a port, repository, image name, and tag."
+	// +kubebuilder:validation:XValidation:rule="self.matches('^([a-zA-Z0-9-]+\\\\.)+[a-zA-Z0-9-]+(:[0-9]{2,5})?(/[a-zA-Z0-9-_]{1,61})*/[a-zA-Z0-9-_.]+:[a-zA-Z0-9._-]+$') || self.matches('^[^.]+\\\\.[^.]+\\\\.svc:\\\\d+\\\\/[^\\\\/]+\\\\/[^\\\\/]+:[^\\\\/]+$') || self.split('@').size() == 2 && self.split('@')[1].matches('^sha256:[a-f0-9]{64}$') || (self.split('@')[0].matches('^([a-zA-Z0-9-]+\\.)+[a-zA-Z0-9-]+(:[0-9]{2,5})?/([a-zA-Z0-9-_]{0,61}/)?[a-zA-Z0-9-_.]*?$')",message="the OCI Image name should follow the host[:port][/namespace]/name format, resembling a valid URL without the scheme. Or it must be a valid .svc followed by a port, repository, image name, and tag."
 	// +optional
 	DesiredImage string `json:"desiredImage"`
 }
@@ -239,7 +241,9 @@ type MachineConfigNodeSpecConfigImage struct {
 // MachineConfigNodeStatusConfigImage holds the observed state of the image
 // on the node, including both the image targeted for an update and the image
 // currently applied. This allows for monitoring the progress of the layering
-// rollout.
+// rollout. If OCL is enabled, then either the currentImage or desiredImage must be defined.
+// +kubebuilder:validation:XValidation:rule="!has(self.currentImage) ? has(self.desiredImage) : true",message="desiredImage must be defined if currentImage is not defined"
+// +kubebuilder:validation:XValidation:rule="!has(self.desiredImage) ? has(self.currentImage) : true",message="currentImage must be defined if desiredImage is not defined"
 type MachineConfigNodeStatusConfigImage struct {
 	// currentImage is the  fully qualified image pull spec of the image that is
 	// currently applied to the node.
@@ -247,16 +251,18 @@ type MachineConfigNodeStatusConfigImage struct {
 	// node, there is no currentImage because the node has not yet applied
 	// the updated image. Only after the updated image is applied will the
 	// currentImage be populated.
-	// The length of the field must be between 1 to 447 characters.
+	// The image name should follow the format host[:port][/namespace]/name:<tag> or svc_name.namespace.svc[:port]/repository/name:<tag>.
+	// The length of the field must be lesser than 447 characters.
 	// +kubebuilder:validation:MaxLength=447
-	// +kubebuilder:validation:XValidation:rule="self.matches('^([a-zA-Z0-9-]+\\\\.)+[a-zA-Z0-9-]+(:[0-9]{2,5})?(/[a-zA-Z0-9-_]{1,61})*/[a-zA-Z0-9-_.]+:[a-zA-Z0-9._-]+$') || self.matches('^[^.]+\\\\.[^.]+\\\\.svc:\\\\d+\\\\/[^\\\\/]+\\\\/[^\\\\/]+:[^\\\\/]+$')",message="the OCI Image name should follow the host[:port][/namespace]/name format, resembling a valid URL without the scheme. Or it must be a valid .svc followed by a port, repository, image name, and tag."
+	// +kubebuilder:validation:XValidation:rule="self.matches('^([a-zA-Z0-9-]+\\\\.)+[a-zA-Z0-9-]+(:[0-9]{2,5})?(/[a-zA-Z0-9-_]{1,61})*/[a-zA-Z0-9-_.]+:[a-zA-Z0-9._-]+$') || self.matches('^[^.]+\\\\.[^.]+\\\\.svc:\\\\d+\\\\/[^\\\\/]+\\\\/[^\\\\/]+:[^\\\\/]+$') || self.split('@').size() == 2 && self.split('@')[1].matches('^sha256:[a-f0-9]{64}$') || (self.split('@')[0].matches('^([a-zA-Z0-9-]+\\.)+[a-zA-Z0-9-]+(:[0-9]{2,5})?/([a-zA-Z0-9-_]{0,61}/)?[a-zA-Z0-9-_.]*?$')",message="the OCI Image name should follow the host[:port][/namespace]/name format, resembling a valid URL without the scheme. Or it must be a valid .svc followed by a port, repository, image name, and tag."
 	// +optional
 	CurrentImage string `json:"currentImage"`
 	// desiredImage is a mirror of the desired image from the Spec. When the
 	// current and desired image are not equal, the node is in an updating phase. This field is optional.
-	// The length of the field must be between 1 to 447 characters.
+	// The image name should follow the format host[:port][/namespace]/name:<tag> or svc_name.namespace.svc[:port]/repository/name:<tag>.
+	// The length of the field must be lesser than 447 characters.
 	// +kubebuilder:validation:MaxLength=447
-	// +kubebuilder:validation:XValidation:rule="self.matches('^([a-zA-Z0-9-]+\\\\.)+[a-zA-Z0-9-]+(:[0-9]{2,5})?(/[a-zA-Z0-9-_]{1,61})*/[a-zA-Z0-9-_.]+:[a-zA-Z0-9._-]+$') || self.matches('^[^.]+\\\\.[^.]+\\\\.svc:\\\\d+\\\\/[^\\\\/]+\\\\/[^\\\\/]+:[^\\\\/]+$')",message="the OCI Image name should follow the host[:port][/namespace]/name format, resembling a valid URL without the scheme. Or it must be a valid .svc followed by a port, repository, image name, and tag."
+	// +kubebuilder:validation:XValidation:rule="self.matches('^([a-zA-Z0-9-]+\\\\.)+[a-zA-Z0-9-]+(:[0-9]{2,5})?(/[a-zA-Z0-9-_]{1,61})*/[a-zA-Z0-9-_.]+:[a-zA-Z0-9._-]+$') || self.matches('^[^.]+\\\\.[^.]+\\\\.svc:\\\\d+\\\\/[^\\\\/]+\\\\/[^\\\\/]+:[^\\\\/]+$') || self.split('@').size() == 2 && self.split('@')[1].matches('^sha256:[a-f0-9]{64}$') || (self.split('@')[0].matches('^([a-zA-Z0-9-]+\\.)+[a-zA-Z0-9-]+(:[0-9]{2,5})?/([a-zA-Z0-9-_]{0,61}/)?[a-zA-Z0-9-_.]*?$')",message="the OCI Image name should follow the host[:port][/namespace]/name format, resembling a valid URL without the scheme. Or it must be a valid .svc followed by a port, repository, image name, and tag."
 	// +optional
 	DesiredImage string `json:"desiredImage"`
 }

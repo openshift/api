@@ -412,7 +412,7 @@ func (MachineConfigNodeSpec) SwaggerDoc() map[string]string {
 
 var map_MachineConfigNodeSpecConfigImage = map[string]string{
 	"":             "MachineConfigNodeSpecConfigImage holds the desired image for the node. This structure is populated from the `machineconfiguration.openshift.io/desiredImage` annotation on the target node, which is set by the Machine Config Pool controller to signal the desired image pullspec for the node to update to.",
-	"desiredImage": "desiredImage is the  fully qualified image pull spec of the image that the Machine Config Operator (MCO) intends to apply to the node. This field is optional. The length of the field must be between 1 to 447 characters.",
+	"desiredImage": "desiredImage is the  fully qualified image pull spec of the image that the Machine Config Operator (MCO) intends to apply to the node. This field is optional. When OCL The length of the field must be lesser than 447 characters. The image name should follow the format host[:port][/namespace]/name:<tag> or svc_name.namespace.svc[:port]/repository/name:<tag>.",
 }
 
 func (MachineConfigNodeSpecConfigImage) SwaggerDoc() map[string]string {
@@ -442,9 +442,9 @@ func (MachineConfigNodeStatus) SwaggerDoc() map[string]string {
 }
 
 var map_MachineConfigNodeStatusConfigImage = map[string]string{
-	"":             "MachineConfigNodeStatusConfigImage holds the observed state of the image on the node, including both the image targeted for an update and the image currently applied. This allows for monitoring the progress of the layering rollout.",
-	"currentImage": "currentImage is the  fully qualified image pull spec of the image that is currently applied to the node. This field is optional because when image-mode is first enabled on a node, there is no currentImage because the node has not yet applied the updated image. Only after the updated image is applied will the currentImage be populated. The length of the field must be between 1 to 447 characters.",
-	"desiredImage": "desiredImage is a mirror of the desired image from the Spec. When the current and desired image are not equal, the node is in an updating phase. This field is optional. The length of the field must be between 1 to 447 characters.",
+	"":             "MachineConfigNodeStatusConfigImage holds the observed state of the image on the node, including both the image targeted for an update and the image currently applied. This allows for monitoring the progress of the layering rollout. If OCL is enabled, then either the currentImage or desiredImage must be defined.",
+	"currentImage": "currentImage is the  fully qualified image pull spec of the image that is currently applied to the node. This field is optional because when image-mode is first enabled on a node, there is no currentImage because the node has not yet applied the updated image. Only after the updated image is applied will the currentImage be populated. The image name should follow the format host[:port][/namespace]/name:<tag> or svc_name.namespace.svc[:port]/repository/name:<tag>. The length of the field must be lesser than 447 characters.",
+	"desiredImage": "desiredImage is a mirror of the desired image from the Spec. When the current and desired image are not equal, the node is in an updating phase. This field is optional. The image name should follow the format host[:port][/namespace]/name:<tag> or svc_name.namespace.svc[:port]/repository/name:<tag>. The length of the field must be lesser than 447 characters.",
 }
 
 func (MachineConfigNodeStatusConfigImage) SwaggerDoc() map[string]string {

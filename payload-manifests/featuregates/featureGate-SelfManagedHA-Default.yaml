@@ -86,9 +86,6 @@
                         "name": "GCPCustomAPIEndpoints"
                     },
                     {
-                        "name": "HighlyAvailableArbiter"
-                    },
-                    {
                         "name": "ImageModeStatusReporting"
                     },
                     {
@@ -242,6 +239,9 @@
                     },
                     {
                         "name": "HardwareSpeed"
+                    },
+                    {
+                        "name": "HighlyAvailableArbiter"
                     },
                     {
                         "name": "IngressControllerLBSubnetsAWS"

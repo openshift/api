@@ -129,7 +129,7 @@ type MachineConfigNodeStatus struct {
 	// configVersion describes the current and desired machine config version for this node.
 	// +optional
 	ConfigVersion *MachineConfigNodeStatusMachineConfigVersion `json:"configVersion,omitempty"`
-	// configImage describes the current and desired image for this node. OCL must be enabled for this to be populated.
+	// configImage describes the current and desired image for this node. OCL must be enabled for this to be populated. It will be omitted/empty otherwise.
 	// +openshift:enable:FeatureGate=ImageModeStatusReporting
 	// +optional
 	ConfigImage *MachineConfigNodeStatusConfigImage `json:"configImage,omitempty"`

@@ -270,7 +270,8 @@ spec:
                 x-kubernetes-list-type: map
               configImage:
                 description: configImage describes the current and desired image for
-                  this node. OCL must be enabled for this to be populated.
+                  this node. OCL must be enabled for this to be populated. It will
+                  be omitted/empty otherwise.
                 minProperties: 1
                 properties:
                   currentImage:

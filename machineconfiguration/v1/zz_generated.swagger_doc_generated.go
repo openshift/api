@@ -433,7 +433,7 @@ var map_MachineConfigNodeStatus = map[string]string{
 	"conditions":         "conditions represent the observations of a machine config node's current state. Valid types are: UpdatePrepared, UpdateExecuted, UpdatePostActionComplete, UpdateComplete, Updated, Resumed, Drained, AppliedFilesAndOS, Cordoned, Uncordoned, RebootedNode, NodeDegraded, PinnedImageSetsProgressing, and PinnedImageSetsDegraded. The following types are only available when the ImageModeStatusReporting feature gate is enabled: ImagePulledFromRegistry, AppliedOSImage, AppliedFiles",
 	"observedGeneration": "observedGeneration represents the generation of the MachineConfigNode object observed by the Machine Config Operator's controller. This field is updated when the controller observes a change to the desiredConfig in the configVersion of the machine config node spec.",
 	"configVersion":      "configVersion describes the current and desired machine config version for this node.",
-	"configImage":        "configImage describes the current and desired image for this node. OCL must be enabled for this to be populated.",
+	"configImage":        "configImage describes the current and desired image for this node. OCL must be enabled for this to be populated. It will be omitted/empty otherwise.",
 	"pinnedImageSets":    "pinnedImageSets describes the current and desired pinned image sets for this node.",
 }
 

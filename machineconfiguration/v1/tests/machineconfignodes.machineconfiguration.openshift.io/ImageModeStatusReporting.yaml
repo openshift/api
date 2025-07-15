@@ -148,4 +148,4 @@ tests:
             desired: rendered-worker-abc
           configImage:
             desiredImage: registry.example.com/a/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very//very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/j
-      expectedError: "the OCI Image name should follow the host[:port][/namespace]/name format, resembling a valid URL without the scheme."
+      expectedError: "the OCI Image reference must end with a valid '@sha256:<digest>' suffix, where '<digest>' is 64 characters long"

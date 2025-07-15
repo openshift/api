@@ -259,7 +259,7 @@ type MachineConfigNodeStatusConfigImage struct {
 	// The format of the push spec is: host[:port][/namespace]/name@sha256:<digest>,
 	// where the digest must be 64 characters long, and consist only of lowercase hexadecimal characters, a-f and 0-9.
 	// The length of the whole spec must be between 1 to 447 characters.
-	// +required
+	// +optional
 	DesiredImage ImageDigestFormat `json:"desiredImage"`
 }
 

@@ -594,6 +594,20 @@ type AzurePlatformStatus struct {
 	// +listType=atomic
 	// +optional
 	ResourceTags []AzureResourceTag `json:"resourceTags,omitempty"`
+
+	// cloudLoadBalancerConfig is a union that contains the IP addresses of API,
+	// API-Int and Ingress Load Balancers created on the cloud platform. These
+	// values would not be populated on on-prem platforms. These Load Balancer
+	// IPs are used to configure the in-cluster DNS instances for API, API-Int
+	// and Ingress services. `dnsType` is expected to be set to `ClusterHosted`
+	// when these Load Balancer IP addresses are populated and used.
+	//
+	// +default={"dnsType": "PlatformDefault"}
+	// +kubebuilder:default={"dnsType": "PlatformDefault"}
+	// +openshift:enable:FeatureGate=AzureClusterHostedDNS
+	// +optional
+	// +nullable
+	CloudLoadBalancerConfig *CloudLoadBalancerConfig `json:"cloudLoadBalancerConfig,omitempty"`
 }
 
 // AzureResourceTag is a tag to apply to Azure resources created for the cluster.

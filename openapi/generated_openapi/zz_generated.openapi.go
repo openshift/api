@@ -21366,7 +21366,7 @@ func schema_openshift_api_config_v1alpha1_Audit(ref common.ReferenceCallback) co
 				Properties: map[string]spec.Schema{
 					"profile": {
 						SchemaProps: spec.SchemaProps{
-							Description: "profile sets the audit log level for the Metrics Server. This currently matches the various audit log levels such as: \"metadata, request, requestresponse, none\". The default audit log level is \"metadata\"\n\nsee: https://kubernetes.io/docs/tasks/debug-application-cluster/audit/#audit-policy for more information about auditing and log levels.",
+							Description: "profile sets the audit log level for the Metrics Server. This currently matches the various audit log levels such as: \"None, Metadata, Request, RequestResponse\". The default audit log level is \"Metadata\"\n\nsee: https://kubernetes.io/docs/tasks/debug-application-cluster/audit/#audit-policy for more information about auditing and log levels.",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",

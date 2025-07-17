@@ -145,7 +145,7 @@ func (AlertmanagerCustomConfig) SwaggerDoc() map[string]string {
 
 var map_Audit = map[string]string{
 	"":        "Audit profile configurations",
-	"profile": "profile sets the audit log level for the Metrics Server. This currently matches the various audit log levels such as: \"metadata, request, requestresponse, none\". The default audit log level is \"metadata\"\n\nsee: https://kubernetes.io/docs/tasks/debug-application-cluster/audit/#audit-policy for more information about auditing and log levels.",
+	"profile": "profile sets the audit log level for the Metrics Server. This currently matches the various audit log levels such as: \"None, Metadata, Request, RequestResponse\". The default audit log level is \"Metadata\"\n\nsee: https://kubernetes.io/docs/tasks/debug-application-cluster/audit/#audit-policy for more information about auditing and log levels.",
 }
 
 func (Audit) SwaggerDoc() map[string]string {

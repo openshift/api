@@ -20,7 +20,6 @@ import (
 	v1 "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/api/resource"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	auditv1 "k8s.io/apiserver/pkg/apis/audit/v1"
 )
 
 // +genclient
@@ -416,14 +415,29 @@ type MetricsServerConfig struct {
 	TopologySpreadConstraints []v1.TopologySpreadConstraint `json:"topologySpreadConstraints,omitempty"`
 }
 
+// AuditLevel defines the audit log level for the Metrics Server.
+// +kubebuilder:validation:Enum=None;Metadata;Request;RequestResponse
+type AuditLevel string
+
+const (
+	// AuditLevelNone disables audit logging
+	AuditLevelNone AuditLevel = "None"
+	// AuditLevelMetadata logs request metadata (requesting user, timestamp, resource, verb, etc.) but not request or response body
+	AuditLevelMetadata AuditLevel = "Metadata"
+	// AuditLevelRequest logs event metadata and request body but not response body
+	AuditLevelRequest AuditLevel = "Request"
+	// AuditLevelRequestResponse logs event metadata, request and response bodies
+	AuditLevelRequestResponse AuditLevel = "RequestResponse"
+)
+
 // Audit profile configurations
 type Audit struct {
 	// profile sets the audit log level for the Metrics Server. This currently matches the various
-	// audit log levels such as: "metadata, request, requestresponse, none".
-	// The default audit log level is "metadata"
+	// audit log levels such as: "None, Metadata, Request, RequestResponse".
+	// The default audit log level is "Metadata"
 	//
 	// see: https://kubernetes.io/docs/tasks/debug-application-cluster/audit/#audit-policy
 	// for more information about auditing and log levels.
 	// +required
-	Profile auditv1.Level `json:"profile"`
+	Profile AuditLevel `json:"profile"`
 }

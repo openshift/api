@@ -367,8 +367,12 @@ type MetricsServerConfig struct {
 	// Valid values are positive integers, values over 10 are usually unnecessary.
 	// When omitted, this means no opinion and the platform is left to choose a reasonable default, that is subject to change over time.
 	// The current default value is `0`.
+	// default means minimal logging
 	// +optional
-	Verbosity uint8 `json:"verbosity,omitempty"`
+	// +kubebuilder:validation:Minimum=0
+	// +kubebuilder:validation:Maximum=255
+	// +kubebuilder:default=0
+	Verbosity *int32 `json:"verbosity,omitempty"`
 	// resources defines the compute resource requests and limits for the Metrics Server container.
 	// This includes CPU, memory and HugePages constraints to help control scheduling and resource usage.
 	// When not specified, defaults are used by the platform. Requests cannot exceed limits.
@@ -414,11 +418,12 @@ type MetricsServerConfig struct {
 
 // Audit profile configurations
 type Audit struct {
-	// The Profile to set for audit logs. This currently matches the various
+	// profile sets the audit log level for the Metrics Server. This currently matches the various
 	// audit log levels such as: "metadata, request, requestresponse, none".
 	// The default audit log level is "metadata"
 	//
 	// see: https://kubernetes.io/docs/tasks/debug-application-cluster/audit/#audit-policy
 	// for more information about auditing and log levels.
+	// +required
 	Profile auditv1.Level `json:"profile"`
 }

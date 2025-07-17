@@ -11614,7 +11614,7 @@
       ],
       "properties": {
         "profile": {
-          "description": "The Profile to set for audit logs. This currently matches the various audit log levels such as: \"metadata, request, requestresponse, none\". The default audit log level is \"metadata\"\n\nsee: https://kubernetes.io/docs/tasks/debug-application-cluster/audit/#audit-policy for more information about auditing and log levels.",
+          "description": "profile sets the audit log level for the Metrics Server. This currently matches the various audit log levels such as: \"metadata, request, requestresponse, none\". The default audit log level is \"metadata\"\n\nsee: https://kubernetes.io/docs/tasks/debug-application-cluster/audit/#audit-policy for more information about auditing and log levels.",
           "type": "string",
           "default": ""
         }
@@ -12207,9 +12207,9 @@
           "x-kubernetes-list-type": "map"
         },
         "verbosity": {
-          "description": "verbosity defines the verbosity of log messages for Metrics Server. Valid values are positive integers, values over 10 are usually unnecessary. When omitted, this means no opinion and the platform is left to choose a reasonable default, that is subject to change over time. The current default value is `0`.",
+          "description": "verbosity defines the verbosity of log messages for Metrics Server. Valid values are positive integers, values over 10 are usually unnecessary. When omitted, this means no opinion and the platform is left to choose a reasonable default, that is subject to change over time. The current default value is `0`. default means minimal logging",
           "type": "integer",
-          "format": "byte"
+          "format": "int32"
         }
       }
     },

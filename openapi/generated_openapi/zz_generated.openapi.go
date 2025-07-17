@@ -21366,7 +21366,7 @@ func schema_openshift_api_config_v1alpha1_Audit(ref common.ReferenceCallback) co
 				Properties: map[string]spec.Schema{
 					"profile": {
 						SchemaProps: spec.SchemaProps{
-							Description: "The Profile to set for audit logs. This currently matches the various audit log levels such as: \"metadata, request, requestresponse, none\". The default audit log level is \"metadata\"\n\nsee: https://kubernetes.io/docs/tasks/debug-application-cluster/audit/#audit-policy for more information about auditing and log levels.",
+							Description: "profile sets the audit log level for the Metrics Server. This currently matches the various audit log levels such as: \"metadata, request, requestresponse, none\". The default audit log level is \"metadata\"\n\nsee: https://kubernetes.io/docs/tasks/debug-application-cluster/audit/#audit-policy for more information about auditing and log levels.",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -22361,9 +22361,9 @@ func schema_openshift_api_config_v1alpha1_MetricsServerConfig(ref common.Referen
 					},
 					"verbosity": {
 						SchemaProps: spec.SchemaProps{
-							Description: "verbosity defines the verbosity of log messages for Metrics Server. Valid values are positive integers, values over 10 are usually unnecessary. When omitted, this means no opinion and the platform is left to choose a reasonable default, that is subject to change over time. The current default value is `0`.",
+							Description: "verbosity defines the verbosity of log messages for Metrics Server. Valid values are positive integers, values over 10 are usually unnecessary. When omitted, this means no opinion and the platform is left to choose a reasonable default, that is subject to change over time. The current default value is `0`. default means minimal logging",
 							Type:        []string{"integer"},
-							Format:      "byte",
+							Format:      "int32",
 						},
 					},
 					"resources": {

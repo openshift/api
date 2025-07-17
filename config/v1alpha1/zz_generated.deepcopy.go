@@ -720,6 +720,11 @@ func (in *MetricsServerConfig) DeepCopyInto(out *MetricsServerConfig) {
 			(*in)[i].DeepCopyInto(&(*out)[i])
 		}
 	}
+	if in.Verbosity != nil {
+		in, out := &in.Verbosity, &out.Verbosity
+		*out = new(int32)
+		**out = **in
+	}
 	if in.Resources != nil {
 		in, out := &in.Resources, &out.Resources
 		*out = make([]ContainerResource, len(*in))

@@ -916,13 +916,15 @@ spec:
                     properties:
                       profile:
                         description: |-
-                          The Profile to set for audit logs. This currently matches the various
+                          profile sets the audit log level for the Metrics Server. This currently matches the various
                           audit log levels such as: "metadata, request, requestresponse, none".
                           The default audit log level is "metadata"
 
                           see: https://kubernetes.io/docs/tasks/debug-application-cluster/audit/#audit-policy
                           for more information about auditing and log levels.
                         type: string
+                    required:
+                    - profile
                     type: object
                   nodeSelector:
                     additionalProperties:
@@ -1260,11 +1262,16 @@ spec:
                     - whenUnsatisfiable
                     x-kubernetes-list-type: map
                   verbosity:
+                    default: 0
                     description: |-
                       verbosity defines the verbosity of log messages for Metrics Server.
                       Valid values are positive integers, values over 10 are usually unnecessary.
                       When omitted, this means no opinion and the platform is left to choose a reasonable default, that is subject to change over time.
                       The current default value is `0`.
+                      default means minimal logging
+                    format: int32
+                    maximum: 255
+                    minimum: 0
                     type: integer
                 type: object
               userDefined:

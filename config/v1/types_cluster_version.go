@@ -275,8 +275,7 @@ type UpdateHistory struct {
 	// For example, it may mention an Upgradeable=False or missing signature
 	// that was overridden via desiredUpdate.force, or an update that was
 	// initiated despite not being in the availableUpdates set of recommended
-	// update targets, or in the conditionUpdates set and all associated risks
-	// are specified in desiredUpdate.accept.
+	// update targets.
 	// +optional
 	AcceptedRisks string `json:"acceptedRisks,omitempty"`
 }
@@ -845,7 +844,6 @@ type ConditionalUpdate struct {
 	// operator will evaluate all entries, and only recommend the
 	// update if there is at least one entry and all entries
 	// recommend the update.
-	// Deprecated: the risks field has been deprecated in favour of riskNames.
 	// +kubebuilder:validation:MinItems=1
 	// +kubebuilder:validation:MaxItems=200
 	// +patchMergeKey=name

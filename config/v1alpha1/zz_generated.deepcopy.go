@@ -722,8 +722,10 @@ func (in *MetricsServerConfig) DeepCopyInto(out *MetricsServerConfig) {
 	}
 	if in.Resources != nil {
 		in, out := &in.Resources, &out.Resources
-		*out = new(v1.ResourceRequirements)
-		(*in).DeepCopyInto(*out)
+		*out = make([]ContainerResource, len(*in))
+		for i := range *in {
+			(*in)[i].DeepCopyInto(&(*out)[i])
+		}
 	}
 	if in.TopologySpreadConstraints != nil {
 		in, out := &in.TopologySpreadConstraints, &out.TopologySpreadConstraints

@@ -939,68 +939,84 @@ spec:
                     type: object
                   resources:
                     description: |-
-                      resources defines resource requests and limits for the Metrics Server container.
+                      resources defines the compute resource requests and limits for the Metrics Server container.
                       This includes CPU, memory and HugePages constraints to help control scheduling and resource usage.
                       When not specified, defaults are used by the platform. Requests cannot exceed limits.
                       This field is optional.
                       More info: https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/
-                    properties:
-                      claims:
-                        description: |-
-                          Claims lists the names of resources, defined in spec.resourceClaims,
-                          that are used by this container.
-
-                          This is an alpha field and requires enabling the
-                          DynamicResourceAllocation feature gate.
-
-                          This field is immutable. It can only be set for containers.
-                        items:
-                          description: ResourceClaim references one entry in PodSpec.ResourceClaims.
-                          properties:
-                            name:
-                              description: |-
-                                Name must match the name of one entry in pod.spec.resourceClaims of
-                                the Pod where this field is used. It makes that resource available
-                                inside a container.
-                              type: string
-                            request:
-                              description: |-
-                                Request is the name chosen for a request in the referenced claim.
-                                If empty, everything from the claim is made available, otherwise
-                                only the result of this request.
-                              type: string
-                          required:
-                          - name
-                          type: object
-                        type: array
-                        x-kubernetes-list-map-keys:
-                        - name
-                        x-kubernetes-list-type: map
-                      limits:
-                        additionalProperties:
+                      This is a simplified API that maps to Kubernetes ResourceRequirements.
+                      The current default values are:
+                        resources:
+                         - name: cpu
+                           request: 4m
+                           limit: null
+                         - name: memory
+                           request: 40Mi
+                           limit: null
+                      Maximum length for this list is 10.
+                      Minimum length for this list is 1.
+                    items:
+                      description: ContainerResource defines a single resource requirement
+                        for a container.
+                      properties:
+                        limit:
                           anyOf:
                           - type: integer
                           - type: string
+                          description: |-
+                            limit is the maximum amount of the resource allowed (e.g. "2Mi", "1Gi").
+                            This field is optional.
+                            When request is specified, limit cannot be less than request.
+                            The value must be greater than 0 when specified.
+                          maxLength: 20
+                          minLength: 1
                           pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
                           x-kubernetes-int-or-string: true
-                        description: |-
-                          Limits describes the maximum amount of compute resources allowed.
-                          More info: https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/
-                        type: object
-                      requests:
-                        additionalProperties:
+                          x-kubernetes-validations:
+                          - message: limit must be a positive, non-zero quantity
+                            rule: isQuantity(self) && quantity(self).isGreaterThan(quantity('0'))
+                        name:
+                          description: |-
+                            name of the resource (e.g. "cpu", "memory", "hugepages-2Mi").
+                            This field is required.
+                            name must consist only of alphanumeric characters, `-`, `_` and `.` and must start and end with an alphanumeric character.
+                          maxLength: 253
+                          type: string
+                          x-kubernetes-validations:
+                          - message: name must consist only of alphanumeric characters,
+                              `-`, `_` and `.` and must start and end with an alphanumeric
+                              character
+                            rule: '!format.qualifiedName().validate(self).hasValue()'
+                        request:
                           anyOf:
                           - type: integer
                           - type: string
+                          description: |-
+                            request is the minimum amount of the resource required (e.g. "2Mi", "1Gi").
+                            This field is optional.
+                            When limit is specified, request cannot be greater than limit.
+                          maxLength: 20
+                          minLength: 1
                           pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
                           x-kubernetes-int-or-string: true
-                        description: |-
-                          Requests describes the minimum amount of compute resources required.
-                          If Requests is omitted for a container, it defaults to Limits if that is explicitly specified,
-                          otherwise to an implementation-defined value. Requests cannot exceed Limits.
-                          More info: https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/
-                        type: object
-                    type: object
+                          x-kubernetes-validations:
+                          - message: request must be a positive, non-zero quantity
+                            rule: isQuantity(self) && quantity(self).isGreaterThan(quantity('0'))
+                      required:
+                      - name
+                      type: object
+                      x-kubernetes-validations:
+                      - message: at least one of request or limit must be set
+                        rule: has(self.request) || has(self.limit)
+                      - message: limit must be greater than or equal to request
+                        rule: '!(has(self.request) && has(self.limit)) || quantity(self.limit).compareTo(quantity(self.request))
+                          >= 0'
+                    maxItems: 10
+                    minItems: 1
+                    type: array
+                    x-kubernetes-list-map-keys:
+                    - name
+                    x-kubernetes-list-type: map
                   tolerations:
                     description: |-
                       tolerations defines tolerations for the pods.

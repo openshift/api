@@ -44,6 +44,11 @@ func main() {
 		panic("output is required")
 	}
 
+	// We only expect Kubernetes versions that begin with the v prefix.
+	if !strings.HasPrefix(*version, "v") {
+		panic("Kubernetes version must begin with the v prefix. Example: v1.33.2")
+	}
+
 	// Decrypt the pull secret to get the bearer token.
 	registryAuthToken, err := getRegistryAuthToken(*pullSecretFile)
 	if err != nil {

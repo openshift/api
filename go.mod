@@ -5,8 +5,8 @@ go 1.24.0
 require (
 	github.com/gogo/protobuf v1.3.2
 	golang.org/x/tools v0.26.0
-	k8s.io/api v0.33.2
-	k8s.io/apimachinery v0.33.2
+	k8s.io/api v0.33.3
+	k8s.io/apimachinery v0.33.3
 	k8s.io/klog/v2 v2.130.1
 	k8s.io/kube-openapi v0.0.0-20250318190949-c8a335a9a2ff
 	sigs.k8s.io/yaml v1.4.0

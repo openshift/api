@@ -38,6 +38,15 @@
                         "name": "BootcNodeManagement"
                     },
                     {
+                        "name": "CBORServingAndStorage"
+                    },
+                    {
+                        "name": "ClientsAllowCBOR"
+                    },
+                    {
+                        "name": "ClientsPreferCBOR"
+                    },
+                    {
                         "name": "ClusterAPIInstall"
                     },
                     {

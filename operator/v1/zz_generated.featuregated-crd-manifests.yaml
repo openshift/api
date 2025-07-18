@@ -306,6 +306,7 @@ machineconfigurations.operator.openshift.io:
   Capability: ""
   Category: ""
   FeatureGates:
+  - BootImageSkewEnforcement
   - ManagedBootImages
   FilenameOperatorName: machine-config
   FilenameOperatorOrdering: "01"

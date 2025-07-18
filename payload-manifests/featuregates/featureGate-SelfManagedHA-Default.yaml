@@ -176,9 +176,6 @@
                         "name": "SignatureStores"
                     },
                     {
-                        "name": "SigstoreImageVerification"
-                    },
-                    {
                         "name": "SigstoreImageVerificationPKI"
                     },
                     {
@@ -299,6 +296,9 @@
                     },
                     {
                         "name": "SetEIPForNLBIngressController"
+                    },
+                    {
+                        "name": "SigstoreImageVerification"
                     },
                     {
                         "name": "UserNamespacesPodSecurityStandards"

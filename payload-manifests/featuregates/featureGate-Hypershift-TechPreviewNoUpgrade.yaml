@@ -64,6 +64,9 @@
                         "name": "SigstoreImageVerification"
                     },
                     {
+                        "name": "SigstoreImageVerificationPKI"
+                    },
+                    {
                         "name": "VSphereMixedNodeEnv"
                     }
                 ],
@@ -274,9 +277,6 @@
                     },
                     {
                         "name": "SignatureStores"
-                    },
-                    {
-                        "name": "SigstoreImageVerificationPKI"
                     },
                     {
                         "name": "StoragePerformantSecurityPolicy"

@@ -47,6 +47,9 @@
                     },
                     {
                         "name": "SigstoreImageVerification"
+                    },
+                    {
+                        "name": "SigstoreImageVerificationPKI"
                     }
                 ],
                 "enabled": [
@@ -271,9 +274,6 @@
                     },
                     {
                         "name": "SignatureStores"
-                    },
-                    {
-                        "name": "SigstoreImageVerificationPKI"
                     },
                     {
                         "name": "StoragePerformantSecurityPolicy"

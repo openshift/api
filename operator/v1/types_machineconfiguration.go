@@ -135,8 +135,9 @@ type ManagedBootImages struct {
 // such as the resource type and the API Group of the resource. It also provides granular control via the selection field.
 type MachineManager struct {
 	// resource is the machine management resource's type.
-	// The only current valid value is machinesets.
+	// Valid values are machinesets and controlplanemachinesets.
 	// machinesets means that the machine manager will only register resources of the kind MachineSet.
+	// controlplanemachinesets means that the machine manager will only register resources of the kind ControlPlaneMachineSet.
 	// +required
 	Resource MachineManagerMachineSetsResourceType `json:"resource"`
 
@@ -194,12 +195,15 @@ const (
 
 // MachineManagerManagedResourceType is a string enum used in the MachineManager type to describe the resource
 // type to be registered.
-// +kubebuilder:validation:Enum:="machinesets"
+// +openshift:validation:FeatureGateAwareEnum:featureGate="",enum=machinesets
+// +openshift:validation:FeatureGateAwareEnum:featureGate=ManagedBootImagesCPMS,enum=machinesets;controlplanemachinesets
 type MachineManagerMachineSetsResourceType string
 
 const (
 	// MachineSets represent the MachineSet resource type, which manage a group of machines and belong to the Openshift machine API group.
 	MachineSets MachineManagerMachineSetsResourceType = "machinesets"
+	// ControlPlaneMachineSets represent the ControlPlaneMachineSets resource type, which manage a group of control-plane machines and belong to the Openshift machine API group.
+	ControlPlaneMachineSets MachineManagerMachineSetsResourceType = "controlplanemachinesets"
 )
 
 // MachineManagerManagedAPIGroupType is a string enum used in in the MachineManager type to describe the APIGroup
@@ -209,7 +213,7 @@ type MachineManagerMachineSetsAPIGroupType string
 
 const (
 	// MachineAPI represent the traditional MAPI Group that a machineset may belong to.
-	// This feature only supports MAPI machinesets at this time.
+	// This feature only supports MAPI machinesets and controlplanemachinesets at this time.
 	MachineAPI MachineManagerMachineSetsAPIGroupType = "machine.openshift.io"
 )
 

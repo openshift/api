@@ -9475,12 +9475,19 @@ func schema_openshift_api_config_v1_AzurePlatformStatus(ref common.ReferenceCall
 							},
 						},
 					},
+					"cloudLoadBalancerConfig": {
+						SchemaProps: spec.SchemaProps{
+							Description: "cloudLoadBalancerConfig is a union that contains the IP addresses of API, API-Int and Ingress Load Balancers created on the cloud platform. These values would not be populated on on-prem platforms. These Load Balancer IPs are used to configure the in-cluster DNS instances for API, API-Int and Ingress services. `dnsType` is expected to be set to `ClusterHosted` when these Load Balancer IP addresses are populated and used.",
+							Default:     map[string]interface{}{"dnsType": "PlatformDefault"},
+							Ref:         ref("github.com/openshift/api/config/v1.CloudLoadBalancerConfig"),
+						},
+					},
 				},
 				Required: []string{"resourceGroupName"},
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/config/v1.AzureResourceTag"},
+			"github.com/openshift/api/config/v1.AzureResourceTag", "github.com/openshift/api/config/v1.CloudLoadBalancerConfig"},
 	}
 }
 

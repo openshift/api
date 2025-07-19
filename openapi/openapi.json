@@ -4647,6 +4647,13 @@
           "description": "armEndpoint specifies a URL to use for resource management in non-soverign clouds such as Azure Stack.",
           "type": "string"
         },
+        "cloudLoadBalancerConfig": {
+          "description": "cloudLoadBalancerConfig is a union that contains the IP addresses of API, API-Int and Ingress Load Balancers created on the cloud platform. These values would not be populated on on-prem platforms. These Load Balancer IPs are used to configure the in-cluster DNS instances for API, API-Int and Ingress services. `dnsType` is expected to be set to `ClusterHosted` when these Load Balancer IP addresses are populated and used.",
+          "default": {
+            "dnsType": "PlatformDefault"
+          },
+          "$ref": "#/definitions/com.github.openshift.api.config.v1.CloudLoadBalancerConfig"
+        },
         "cloudName": {
           "description": "cloudName is the name of the Azure cloud environment which can be used to configure the Azure SDK with the appropriate Azure API endpoints. If empty, the value is equal to `AzurePublicCloud`.",
           "type": "string"

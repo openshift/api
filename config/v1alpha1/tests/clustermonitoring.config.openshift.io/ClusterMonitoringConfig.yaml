@@ -246,6 +246,7 @@ tests:
           userDefined:
             mode: "Disabled"
           metricsServerConfig:
+            verbosity: 0
             resources:
               - name: "cpu"
                 request: "100m"
@@ -276,6 +277,7 @@ tests:
           userDefined:
             mode: "Disabled"
           metricsServerConfig:
+            verbosity: 0
             resources:
               - name: "cpu"
                 request: "200m"
@@ -301,6 +303,7 @@ tests:
           userDefined:
             mode: "Disabled"
           metricsServerConfig:
+            verbosity: 0
             resources:
               - name: "cpu"
                 limit: "1"

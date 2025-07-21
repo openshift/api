@@ -34,6 +34,9 @@
                         "name": "Example2"
                     },
                     {
+                        "name": "ExternalSnapshotMetadata"
+                    },
+                    {
                         "name": "MachineAPIOperatorDisableMachineHealthCheckController"
                     },
                     {

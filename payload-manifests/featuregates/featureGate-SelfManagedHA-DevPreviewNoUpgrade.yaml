@@ -72,10 +72,19 @@
                         "name": "BuildCSIVolumes"
                     },
                     {
+                        "name": "CBORServingAndStorage"
+                    },
+                    {
                         "name": "CPMSMachineNamePrefix"
                     },
                     {
                         "name": "ChunkSizeMiB"
+                    },
+                    {
+                        "name": "ClientsAllowCBOR"
+                    },
+                    {
+                        "name": "ClientsPreferCBOR"
                     },
                     {
                         "name": "ClusterAPIInstallIBMCloud"

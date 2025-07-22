@@ -606,7 +606,7 @@ spec:
                                             when type is Name, and forbidden otherwise
                                           rule: 'has(self.type) && self.type == ''Name''
                                             ?  has(self.name) : !has(self.name)'
-                                      maxItems: 1
+                                      maxItems: 32
                                       minItems: 1
                                       type: array
                                       x-kubernetes-list-type: atomic

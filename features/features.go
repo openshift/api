@@ -385,6 +385,14 @@ var (
 						enableIn(configv1.DevPreviewNoUpgrade, configv1.TechPreviewNoUpgrade).
 						mustRegister()
 
+	FeatureGateManagedBootImagesCPMS = newFeatureGate("ManagedBootImagesCPMS").
+						reportProblemsToJiraComponent("MachineConfigOperator").
+						contactPerson("djoshy").
+						productScope(ocpSpecific).
+						enhancementPR("https://github.com/openshift/enhancements/pull/1761").
+						enableIn(configv1.DevPreviewNoUpgrade, configv1.TechPreviewNoUpgrade).
+						mustRegister()
+
 	FeatureGateBootImageSkewEnforcement = newFeatureGate("BootImageSkewEnforcement").
 						reportProblemsToJiraComponent("MachineConfigOperator").
 						contactPerson("djoshy").

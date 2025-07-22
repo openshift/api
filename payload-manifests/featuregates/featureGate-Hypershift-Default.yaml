@@ -274,6 +274,9 @@
                         "name": "NetworkSegmentation"
                     },
                     {
+                        "name": "NutanixMultiSubnets"
+                    },
+                    {
                         "name": "OnClusterBuild"
                     },
                     {

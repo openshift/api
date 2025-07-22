@@ -25,9 +25,6 @@
                         "name": "ClusterVersionOperatorConfiguration"
                     },
                     {
-                        "name": "DualReplica"
-                    },
-                    {
                         "name": "EventedPLEG"
                     },
                     {
@@ -106,6 +103,9 @@
                     },
                     {
                         "name": "DNSNameResolver"
+                    },
+                    {
+                        "name": "DualReplica"
                     },
                     {
                         "name": "DyanmicServiceEndpointIBMCloud"

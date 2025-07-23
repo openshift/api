@@ -206,9 +206,6 @@
                         "name": "TranslateStreamCloseWebsocketRequests"
                     },
                     {
-                        "name": "UpgradeStatus"
-                    },
-                    {
                         "name": "VSphereConfigurableMaxAllowedBlockVolumesPerNode"
                     },
                     {
@@ -308,6 +305,9 @@
                     },
                     {
                         "name": "SigstoreImageVerification"
+                    },
+                    {
+                        "name": "UpgradeStatus"
                     },
                     {
                         "name": "UserNamespacesPodSecurityStandards"

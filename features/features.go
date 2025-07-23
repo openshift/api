@@ -835,4 +835,12 @@ var (
 				enhancementPR("https://github.com/openshift/enhancements/pull/1792").
 				enableIn(configv1.DevPreviewNoUpgrade, configv1.TechPreviewNoUpgrade).
 				mustRegister()
+
+	FeatureGateNoRegistryClusterOperations = newFeatureGate("NoRegistryClusterOperations").
+						reportProblemsToJiraComponent("Installer / Agent based installation").
+						contactPerson("andfasano").
+						productScope(ocpSpecific).
+						enhancementPR("https://github.com/openshift/enhancements/pull/1821").
+						enableIn(configv1.DevPreviewNoUpgrade).
+						mustRegister()
 )

@@ -827,4 +827,12 @@ var (
 							enhancementPR("https://github.com/openshift/enhancements/pull/1802").
 							enableIn(configv1.DevPreviewNoUpgrade, configv1.TechPreviewNoUpgrade).
 							mustRegister()
+
+	FeatureGateImageVolume = newFeatureGate("ImageVolume").
+				reportProblemsToJiraComponent("Node").
+				contactPerson("haircommander").
+				productScope(kubernetes).
+				enhancementPR("https://github.com/openshift/enhancements/pull/1792").
+				enableIn(configv1.DevPreviewNoUpgrade, configv1.TechPreviewNoUpgrade).
+				mustRegister()
 )

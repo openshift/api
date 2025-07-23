@@ -13,11 +13,7 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-
-// Package kubeapilinter is a golangci-lint plugin for the Kube API Linter (KAL).
-// It is built as a module to be used with golangci-lint.
-// See https://golangci-lint.run/plugins/module-plugins/ for more information.
-package kubeapilinter
+package base
 
 import (
 	"fmt"
@@ -25,7 +21,7 @@ import (
 	"github.com/golangci/plugin-module-register/register"
 	"golang.org/x/tools/go/analysis"
 	"k8s.io/apimachinery/pkg/util/validation/field"
-	kalanalysis "sigs.k8s.io/kube-api-linter/pkg/analysis"
+	"sigs.k8s.io/kube-api-linter/pkg/analysis/registry"
 	"sigs.k8s.io/kube-api-linter/pkg/config"
 	"sigs.k8s.io/kube-api-linter/pkg/validation"
 )
@@ -58,9 +54,7 @@ func (f *GolangCIPlugin) BuildAnalyzers() ([]*analysis.Analyzer, error) {
 		return nil, fmt.Errorf("error in KAL configuration: %w", err)
 	}
 
-	registry := kalanalysis.NewRegistry()
-
-	analyzers, err := registry.InitializeLinters(f.config.Linters, f.config.LintersConfig)
+	analyzers, err := registry.DefaultRegistry().InitializeLinters(f.config.Linters, f.config.LintersConfig)
 	if err != nil {
 		return nil, fmt.Errorf("error initializing analyzers: %w", err)
 	}

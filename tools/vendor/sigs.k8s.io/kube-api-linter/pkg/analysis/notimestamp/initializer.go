@@ -13,7 +13,8 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-package maxlength
+
+package notimestamp
 
 import (
 	"sigs.k8s.io/kube-api-linter/pkg/analysis/initializer"
@@ -30,6 +31,6 @@ func Initializer() initializer.AnalyzerInitializer {
 	return initializer.NewInitializer(
 		name,
 		Analyzer,
-		false, // For now, CRD only, and so not on by default.
+		true,
 	)
 }

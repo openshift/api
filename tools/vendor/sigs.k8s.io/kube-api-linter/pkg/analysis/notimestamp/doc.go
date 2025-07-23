@@ -13,23 +13,12 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-package maxlength
 
-import (
-	"sigs.k8s.io/kube-api-linter/pkg/analysis/initializer"
-	"sigs.k8s.io/kube-api-linter/pkg/analysis/registry"
-)
+/*
+notimestamp provides a linter to ensure that structs do not contain a TimeStamp field.
 
-func init() {
-	registry.DefaultRegistry().RegisterLinter(Initializer())
-}
+The linter will flag any struct field containing the substring 'timestamp'. This means both
+TimeStamp and FooTimeStamp will be flagged.
+*/
 
-// Initializer returns the AnalyzerInitializer for this
-// Analyzer so that it can be added to the registry.
-func Initializer() initializer.AnalyzerInitializer {
-	return initializer.NewInitializer(
-		name,
-		Analyzer,
-		false, // For now, CRD only, and so not on by default.
-	)
-}
+package notimestamp

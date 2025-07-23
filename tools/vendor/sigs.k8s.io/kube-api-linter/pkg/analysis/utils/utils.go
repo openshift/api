@@ -31,6 +31,27 @@ func IsBasicType(pass *analysis.Pass, ident *ast.Ident) bool {
 	return ok
 }
 
+// IsStructType checks if the given expression is a struct type.
+func IsStructType(pass *analysis.Pass, expr ast.Expr) bool {
+	underlying := getUnderlyingType(expr)
+
+	if _, ok := underlying.(*ast.StructType); ok {
+		return true
+	}
+
+	// Where there's an ident, recurse to find the underlying type.
+	if ident, ok := underlying.(*ast.Ident); ok {
+		typeSpec, ok := LookupTypeSpec(pass, ident)
+		if !ok {
+			return false
+		}
+
+		return IsStructType(pass, typeSpec.Type)
+	}
+
+	return false
+}
+
 // LookupTypeSpec is used to search for the type spec of a given identifier.
 // It will first check to see if the ident has an Obj, and if so, it will return the type spec
 // from the Obj. If the Obj is nil, it will search through the files in the package to find the
@@ -122,11 +143,23 @@ func isInPassPackage(pass *analysis.Pass, namedType *types.Named) bool {
 // TypeAwareMarkerCollectionForField collects the markers for a given field into a single markers.MarkerSet.
 // If the field has a type that is not a basic type (i.e a custom type) then it will also gather any markers from
 // the type and include them in the markers.MarkerSet that is returned.
+// It will look through *ast.StarExpr to the underlying type.
 // Markers on the type will always come before markers on the field in the list of markers for an identifier.
 func TypeAwareMarkerCollectionForField(pass *analysis.Pass, markersAccess markers.Markers, field *ast.Field) markers.MarkerSet {
 	markers := markersAccess.FieldMarkers(field)
 
-	ident, ok := field.Type.(*ast.Ident)
+	var underlyingType ast.Expr
+
+	switch t := field.Type.(type) {
+	case *ast.Ident:
+		underlyingType = t
+	case *ast.StarExpr:
+		underlyingType = t.X
+	default:
+		return markers
+	}
+
+	ident, ok := underlyingType.(*ast.Ident)
 	if !ok {
 		return markers
 	}
@@ -144,4 +177,144 @@ func TypeAwareMarkerCollectionForField(pass *analysis.Pass, markersAccess marker
 	typeMarkers.Insert(markers.UnsortedList()...)
 
 	return typeMarkers
+}
+
+// IsArrayTypeOrAlias checks if the field type is an array type or an alias to an array type.
+func IsArrayTypeOrAlias(pass *analysis.Pass, field *ast.Field) bool {
+	if _, ok := field.Type.(*ast.ArrayType); ok {
+		return true
+	}
+
+	if ident, ok := field.Type.(*ast.Ident); ok {
+		typeOf := pass.TypesInfo.TypeOf(ident)
+		if typeOf == nil {
+			return false
+		}
+
+		return isArrayType(typeOf)
+	}
+
+	return false
+}
+
+// IsObjectList checks if the field represents a list of objects (not primitives).
+func IsObjectList(pass *analysis.Pass, field *ast.Field) bool {
+	if arrayType, ok := field.Type.(*ast.ArrayType); ok {
+		return inspectType(pass, arrayType.Elt)
+	}
+
+	if ident, ok := field.Type.(*ast.Ident); ok {
+		typeOf := pass.TypesInfo.TypeOf(ident)
+		if typeOf == nil {
+			return false
+		}
+
+		return isObjectListFromType(typeOf)
+	}
+
+	return false
+}
+
+// IsByteArray checks if the field type is a byte array or an alias to a byte array.
+func IsByteArray(pass *analysis.Pass, field *ast.Field) bool {
+	if arrayType, ok := field.Type.(*ast.ArrayType); ok {
+		if ident, ok := arrayType.Elt.(*ast.Ident); ok && types.Identical(pass.TypesInfo.TypeOf(ident), types.Typ[types.Byte]) {
+			return true
+		}
+	}
+
+	if ident, ok := field.Type.(*ast.Ident); ok {
+		typeOf := pass.TypesInfo.TypeOf(ident)
+		if typeOf == nil {
+			return false
+		}
+
+		switch typeOf := typeOf.(type) {
+		case *types.Alias:
+			if sliceType, ok := typeOf.Underlying().(*types.Slice); ok {
+				return types.Identical(sliceType.Elem(), types.Typ[types.Byte])
+			}
+		case *types.Named:
+			if sliceType, ok := typeOf.Underlying().(*types.Slice); ok {
+				return types.Identical(sliceType.Elem(), types.Typ[types.Byte])
+			}
+		}
+	}
+
+	return false
+}
+
+func isArrayType(t types.Type) bool {
+	if aliasType, ok := t.(*types.Alias); ok {
+		return isArrayType(aliasType.Underlying())
+	}
+
+	if namedType, ok := t.(*types.Named); ok {
+		return isArrayType(namedType.Underlying())
+	}
+
+	if _, ok := t.(*types.Slice); ok {
+		return true
+	}
+
+	return false
+}
+
+func isObjectListFromType(t types.Type) bool {
+	if aliasType, ok := t.(*types.Alias); ok {
+		return isObjectListFromType(aliasType.Underlying())
+	}
+
+	if namedType, ok := t.(*types.Named); ok {
+		return isObjectListFromType(namedType.Underlying())
+	}
+
+	if sliceType, ok := t.(*types.Slice); ok {
+		return !isTypeBasic(sliceType.Elem())
+	}
+
+	return false
+}
+
+func inspectType(pass *analysis.Pass, expr ast.Expr) bool {
+	switch elementType := expr.(type) {
+	case *ast.Ident:
+		return !isBasicOrAliasToBasic(pass, elementType)
+	case *ast.StarExpr:
+		return inspectType(pass, elementType.X)
+	case *ast.ArrayType:
+		return inspectType(pass, elementType.Elt)
+	case *ast.SelectorExpr:
+		return true
+	}
+
+	return false
+}
+
+func isBasicOrAliasToBasic(pass *analysis.Pass, ident *ast.Ident) bool {
+	typeOf := pass.TypesInfo.TypeOf(ident)
+	if typeOf == nil {
+		return false
+	}
+
+	return isTypeBasic(typeOf)
+}
+
+func isTypeBasic(t types.Type) bool {
+	// Direct basic type
+	if _, ok := t.(*types.Basic); ok {
+		return true
+	}
+
+	// Handle type aliases (type T = U)
+	if aliasType, ok := t.(*types.Alias); ok {
+		return isTypeBasic(aliasType.Underlying())
+	}
+
+	// Handle defined types (type T U)
+	if namedType, ok := t.(*types.Named); ok {
+		return isTypeBasic(namedType.Underlying())
+	}
+
+	return false
 }

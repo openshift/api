@@ -55,6 +55,9 @@
                         "name": "NewOLMWebhookProviderOpenshiftServiceCA"
                     },
                     {
+                        "name": "NoRegistryClusterOperations"
+                    },
+                    {
                         "name": "SELinuxMount"
                     },
                     {

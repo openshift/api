@@ -40,6 +40,9 @@
                         "name": "MultiArchInstallAzure"
                     },
                     {
+                        "name": "NoRegistryClusterOperations"
+                    },
+                    {
                         "name": "SELinuxMount"
                     },
                     {

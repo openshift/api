@@ -228,6 +228,9 @@
                         "name": "NewOLMWebhookProviderOpenshiftServiceCA"
                     },
                     {
+                        "name": "NoRegistryClusterOperations"
+                    },
+                    {
                         "name": "NodeSwap"
                     },
                     {

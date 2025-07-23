@@ -43,6 +43,9 @@
                         "name": "NewOLMWebhookProviderOpenshiftServiceCA"
                     },
                     {
+                        "name": "NoRegistryClusterOperations"
+                    },
+                    {
                         "name": "ShortCertRotation"
                     }
                 ],
@@ -229,9 +232,6 @@
                     },
                     {
                         "name": "NetworkSegmentation"
-                    },
-                    {
-                        "name": "NoRegistryClusterOperations"
                     },
                     {
                         "name": "NodeSwap"

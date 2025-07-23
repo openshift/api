@@ -250,9 +250,6 @@
                         "name": "GatewayAPIController"
                     },
                     {
-                        "name": "HardwareSpeed"
-                    },
-                    {
                         "name": "IngressControllerLBSubnetsAWS"
                     },
                     {

@@ -267,14 +267,6 @@ var (
 					enableIn(configv1.DevPreviewNoUpgrade, configv1.TechPreviewNoUpgrade).
 					mustRegister()
 
-	FeatureGateHardwareSpeed = newFeatureGate("HardwareSpeed").
-					reportProblemsToJiraComponent("etcd").
-					contactPerson("hasbro17").
-					productScope(ocpSpecific).
-					enhancementPR(legacyFeatureGateWithoutEnhancement).
-					enableIn(configv1.Default, configv1.DevPreviewNoUpgrade, configv1.TechPreviewNoUpgrade).
-					mustRegister()
-
 	FeatureGateBackendQuotaGiB = newFeatureGate("EtcdBackendQuota").
 					reportProblemsToJiraComponent("etcd").
 					contactPerson("hasbro17").

@@ -153,9 +153,6 @@
                         "name": "GatewayAPIController"
                     },
                     {
-                        "name": "HardwareSpeed"
-                    },
-                    {
                         "name": "HighlyAvailableArbiter"
                     },
                     {

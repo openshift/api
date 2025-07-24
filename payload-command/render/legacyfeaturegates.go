@@ -5,7 +5,7 @@ import "k8s.io/apimachinery/pkg/util/sets"
 // never add to this list, if you think you have an exception ask @deadsk
 var legacyFeatureGates = sets.New(
 	// never add to this list, if you think you have an exception ask @deads2k
-	"AWSClusterHostedDNS",
+	"AWSClusterHostedDNSInstall",
 	// never add to this list, if you think you have an exception ask @deads2k
 	"AWSEFSDriverVolumeMetrics",
 	// never add to this list, if you think you have an exception ask @deads2k

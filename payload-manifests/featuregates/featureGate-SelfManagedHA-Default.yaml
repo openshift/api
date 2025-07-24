@@ -14,7 +14,7 @@
             {
                 "disabled": [
                     {
-                        "name": "AWSClusterHostedDNS"
+                        "name": "AWSClusterHostedDNSInstall"
                     },
                     {
                         "name": "AWSDedicatedHosts"

@@ -3,7 +3,7 @@ package features
 import "k8s.io/apimachinery/pkg/util/sets"
 
 var legacyFeatureGates = sets.New(
-	"AWSClusterHostedDNS",
+	"AWSClusterHostedDNSInstall",
 	// never add to this list, if you think you have an exception ask @deads2k
 	"AWSEFSDriverVolumeMetrics",
 	// never add to this list, if you think you have an exception ask @deads2k

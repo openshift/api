@@ -47,6 +47,9 @@
                     },
                     {
                         "name": "ShortCertRotation"
+                    },
+                    {
+                        "name": "SigstoreImageVerification"
                     }
                 ],
                 "enabled": [
@@ -271,9 +274,6 @@
                     },
                     {
                         "name": "SignatureStores"
-                    },
-                    {
-                        "name": "SigstoreImageVerification"
                     },
                     {
                         "name": "SigstoreImageVerificationPKI"

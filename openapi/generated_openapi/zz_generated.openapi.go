@@ -424,6 +424,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"github.com/openshift/api/config/v1.WebhookTokenAuthenticator":                                       schema_openshift_api_config_v1_WebhookTokenAuthenticator(ref),
 		"github.com/openshift/api/config/v1alpha1.AlertmanagerConfig":                                        schema_openshift_api_config_v1alpha1_AlertmanagerConfig(ref),
 		"github.com/openshift/api/config/v1alpha1.AlertmanagerCustomConfig":                                  schema_openshift_api_config_v1alpha1_AlertmanagerCustomConfig(ref),
+		"github.com/openshift/api/config/v1alpha1.Audit":                                                     schema_openshift_api_config_v1alpha1_Audit(ref),
 		"github.com/openshift/api/config/v1alpha1.Backup":                                                    schema_openshift_api_config_v1alpha1_Backup(ref),
 		"github.com/openshift/api/config/v1alpha1.BackupList":                                                schema_openshift_api_config_v1alpha1_BackupList(ref),
 		"github.com/openshift/api/config/v1alpha1.BackupSpec":                                                schema_openshift_api_config_v1alpha1_BackupSpec(ref),
@@ -448,6 +449,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"github.com/openshift/api/config/v1alpha1.InsightsDataGatherList":                                    schema_openshift_api_config_v1alpha1_InsightsDataGatherList(ref),
 		"github.com/openshift/api/config/v1alpha1.InsightsDataGatherSpec":                                    schema_openshift_api_config_v1alpha1_InsightsDataGatherSpec(ref),
 		"github.com/openshift/api/config/v1alpha1.InsightsDataGatherStatus":                                  schema_openshift_api_config_v1alpha1_InsightsDataGatherStatus(ref),
+		"github.com/openshift/api/config/v1alpha1.MetricsServerConfig":                                       schema_openshift_api_config_v1alpha1_MetricsServerConfig(ref),
 		"github.com/openshift/api/config/v1alpha1.PKI":                                                       schema_openshift_api_config_v1alpha1_PKI(ref),
 		"github.com/openshift/api/config/v1alpha1.PKICertificateSubject":                                     schema_openshift_api_config_v1alpha1_PKICertificateSubject(ref),
 		"github.com/openshift/api/config/v1alpha1.PersistentVolumeClaimReference":                            schema_openshift_api_config_v1alpha1_PersistentVolumeClaimReference(ref),
@@ -21355,6 +21357,28 @@ func schema_openshift_api_config_v1alpha1_AlertmanagerCustomConfig(ref common.Re
 	}
 }
 
+func schema_openshift_api_config_v1alpha1_Audit(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "Audit profile configurations",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"profile": {
+						SchemaProps: spec.SchemaProps{
+							Description: "profile sets the audit log level for the Metrics Server. This currently matches the various audit log levels such as: \"None, Metadata, Request, RequestResponse\". The default audit log level is \"Metadata\"\n\nsee: https://kubernetes.io/docs/tasks/debug-application-cluster/audit/#audit-policy for more information about auditing and log levels.",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+				},
+				Required: []string{"profile"},
+			},
+		},
+	}
+}
+
 func schema_openshift_api_config_v1alpha1_Backup(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -21788,11 +21812,17 @@ func schema_openshift_api_config_v1alpha1_ClusterMonitoringSpec(ref common.Refer
 							Ref:         ref("github.com/openshift/api/config/v1alpha1.AlertmanagerConfig"),
 						},
 					},
+					"metricsServerConfig": {
+						SchemaProps: spec.SchemaProps{
+							Description: "metricsServerConfig metricsServerConfig defines the configuration for the Kubernetes Metrics Server. metricsServerConfig is optional. When omitted, this means no opinion and the platform is left to choose a reasonable default, that is subject to change over time.",
+							Ref:         ref("github.com/openshift/api/config/v1alpha1.MetricsServerConfig"),
+						},
+					},
 				},
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/config/v1alpha1.AlertmanagerConfig", "github.com/openshift/api/config/v1alpha1.UserDefinedMonitoring"},
+			"github.com/openshift/api/config/v1alpha1.AlertmanagerConfig", "github.com/openshift/api/config/v1alpha1.MetricsServerConfig", "github.com/openshift/api/config/v1alpha1.UserDefinedMonitoring"},
 	}
 }
 
@@ -22278,6 +22308,114 @@ func schema_openshift_api_config_v1alpha1_InsightsDataGatherStatus(ref common.Re
 				Type: []string{"object"},
 			},
 		},
+	}
+}
+
+func schema_openshift_api_config_v1alpha1_MetricsServerConfig(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "MetricsServerConfig provides configuration options for the Metrics Server instance that runs in the `openshift-monitoring` namespace. Use this configuration to control how the Metrics Server instance is deployed, how it logs, and how its pods are scheduled.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"audit": {
+						SchemaProps: spec.SchemaProps{
+							Description: "audit defines the audit configuration used by the Metrics Server instance. audit is optional. When omitted, this means no opinion and the platform is left to choose a reasonable default, that is subject to change over time. The current default value is `metadata`.",
+							Ref:         ref("github.com/openshift/api/config/v1alpha1.Audit"),
+						},
+					},
+					"nodeSelector": {
+						SchemaProps: spec.SchemaProps{
+							Description: "nodeSelector defines the nodes on which the Pods are scheduled nodeSelector is optional.\n\nWhen omitted, this means the user has no opinion and the platform is left to choose reasonable defaults. These defaults are subject to change over time. The current default value is `kubernetes.io/os: linux`.",
+							Type:        []string{"object"},
+							AdditionalProperties: &spec.SchemaOrBool{
+								Allows: true,
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: "",
+										Type:    []string{"string"},
+										Format:  "",
+									},
+								},
+							},
+						},
+					},
+					"tolerations": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-type": "atomic",
+							},
+						},
+						SchemaProps: spec.SchemaProps{
+							Description: "tolerations defines tolerations for the pods. tolerations is optional.\n\nWhen omitted, this means the user has no opinion and the platform is left to choose reasonable defaults. These defaults are subject to change over time. Defaults are empty/unset. Maximum length for this list is 10 Minimum length for this list is 1",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("k8s.io/api/core/v1.Toleration"),
+									},
+								},
+							},
+						},
+					},
+					"verbosity": {
+						SchemaProps: spec.SchemaProps{
+							Description: "verbosity defines the verbosity of log messages for Metrics Server. Valid values are positive integers, values over 10 are usually unnecessary. When omitted, this means no opinion and the platform is left to choose a reasonable default, that is subject to change over time. The current default value is `0`. default means minimal logging",
+							Type:        []string{"integer"},
+							Format:      "int32",
+						},
+					},
+					"resources": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-map-keys": []interface{}{
+									"name",
+								},
+								"x-kubernetes-list-type": "map",
+							},
+						},
+						SchemaProps: spec.SchemaProps{
+							Description: "resources defines the compute resource requests and limits for the Metrics Server container. This includes CPU, memory and HugePages constraints to help control scheduling and resource usage. When not specified, defaults are used by the platform. Requests cannot exceed limits. This field is optional. More info: https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/ This is a simplified API that maps to Kubernetes ResourceRequirements. The current default values are:\n  resources:\n   - name: cpu\n     request: 4m\n     limit: null\n   - name: memory\n     request: 40Mi\n     limit: null\nMaximum length for this list is 10. Minimum length for this list is 1.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("github.com/openshift/api/config/v1alpha1.ContainerResource"),
+									},
+								},
+							},
+						},
+					},
+					"topologySpreadConstraints": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-map-keys": []interface{}{
+									"topologyKey",
+									"whenUnsatisfiable",
+								},
+								"x-kubernetes-list-type": "map",
+							},
+						},
+						SchemaProps: spec.SchemaProps{
+							Description: "topologySpreadConstraints defines rules for how Metrics Server Pods should be distributed across topology domains such as zones, nodes, or other user-defined labels. topologySpreadConstraints is optional. This helps improve high availability and resource efficiency by avoiding placing too many replicas in the same failure domain.\n\nWhen omitted, this means no opinion and the platform is left to choose a default, which is subject to change over time. This field maps directly to the `topologySpreadConstraints` field in the Pod spec. Default is empty list. Maximum length for this list is 10. Minimum length for this list is 1 Entries must have unique topologyKey and whenUnsatisfiable pairs.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("k8s.io/api/core/v1.TopologySpreadConstraint"),
+									},
+								},
+							},
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"github.com/openshift/api/config/v1alpha1.Audit", "github.com/openshift/api/config/v1alpha1.ContainerResource", "k8s.io/api/core/v1.Toleration", "k8s.io/api/core/v1.TopologySpreadConstraint"},
 	}
 }
 

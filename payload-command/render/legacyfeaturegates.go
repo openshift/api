@@ -39,7 +39,7 @@ var legacyFeatureGates = sets.New(
 	// never add to this list, if you think you have an exception ask @deads2k
 	"Example2",
 	// never add to this list, if you think you have an exception ask @deads2k
-	"GCPClusterHostedDNS",
+	"GCPClusterHostedDNSInstall",
 	// never add to this list, if you think you have an exception ask @deads2k
 	"GatewayAPI",
 	// never add to this list, if you think you have an exception ask @deads2k

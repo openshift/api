@@ -31,7 +31,7 @@ controllerconfigs.machineconfiguration.openshift.io:
   - AWSClusterHostedDNSInstall
   - DualReplica
   - DyanmicServiceEndpointIBMCloud
-  - GCPClusterHostedDNS
+  - GCPClusterHostedDNSInstall
   - GCPCustomAPIEndpoints
   - HighlyAvailableArbiter
   - HighlyAvailableArbiter+DualReplica

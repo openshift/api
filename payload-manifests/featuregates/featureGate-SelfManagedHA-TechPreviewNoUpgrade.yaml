@@ -135,7 +135,7 @@
                         "name": "GCPClusterHostedDNSInstall"
                     },
                     {
-                        "name": "GCPCustomAPIEndpoints"
+                        "name": "GCPCustomAPIEndpointsInstall"
                     },
                     {
                         "name": "GatewayAPI"

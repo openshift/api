@@ -760,7 +760,7 @@ type GCPPlatformStatus struct {
 	// +kubebuilder:validation:MaxItems=8
 	// +kubebuilder:validation:XValidation:rule="self.all(x, self.exists_one(y, x.name == y.name))",message="only 1 endpoint override is permitted per GCP service name"
 	// +optional
-	// +openshift:enable:FeatureGate=GCPCustomAPIEndpoints
+	// +openshift:enable:FeatureGate=GCPCustomAPIEndpointsInstall
 	ServiceEndpoints []GCPServiceEndpoint `json:"serviceEndpoints,omitempty"`
 }
 

@@ -703,7 +703,7 @@ var (
 					enableIn(configv1.DevPreviewNoUpgrade).
 					mustRegister()
 
-	FeatureGateGCPCustomAPIEndpoints = newFeatureGate("GCPCustomAPIEndpoints").
+	FeatureGateGCPCustomAPIEndpointsInstall = newFeatureGate("GCPCustomAPIEndpointsInstall").
 						reportProblemsToJiraComponent("Installer").
 						contactPerson("barbacbd").
 						productScope(ocpSpecific).

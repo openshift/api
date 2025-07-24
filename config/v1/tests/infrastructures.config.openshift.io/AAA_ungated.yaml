@@ -2,7 +2,7 @@ apiVersion: apiextensions.k8s.io/v1 # Hack because controller-gen complains if w
 name: "Infrastructure"
 crdName: infrastructures.config.openshift.io
 featureGates:
-- -AWSClusterHostedDNS
+- -AWSClusterHostedDNSInstall
 tests:
   onCreate:
     - name: Should be able to create a minimal Infrastructure

@@ -13,11 +13,10 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-package jsontags
+package ssatags
 
 import (
 	"fmt"
-	"regexp"
 
 	"golang.org/x/tools/go/analysis"
 	"k8s.io/apimachinery/pkg/util/validation/field"
@@ -31,6 +30,8 @@ func init() {
 
 // Initializer returns the AnalyzerInitializer for this
 // Analyzer so that it can be added to the registry.
+// Initializer returns the AnalyzerInitializer for this
+// Analyzer so that it can be added to the registry.
 func Initializer() initializer.AnalyzerInitializer {
 	return initializer.NewConfigurableInitializer(
 		name,
@@ -40,22 +41,23 @@ func Initializer() initializer.AnalyzerInitializer {
 	)
 }
 
-func initAnalyzer(jtc *JSONTagsConfig) (*analysis.Analyzer, error) {
-	return newAnalyzer(jtc)
+// Init returns the intialized Analyzer.
+func initAnalyzer(stc *SSATagsConfig) (*analysis.Analyzer, error) {
+	return newAnalyzer(stc), nil
 }
 
-// validateConfig is used to validate the configuration in the config.JSONTagsConfig struct.
-func validateConfig(jtc *JSONTagsConfig, fldPath *field.Path) field.ErrorList {
-	if jtc == nil {
+// validateConfig implements validation of the ssa tags linter config.
+func validateConfig(stc *SSATagsConfig, fldPath *field.Path) field.ErrorList {
+	if stc == nil {
 		return field.ErrorList{}
 	}
 
 	fieldErrors := field.ErrorList{}
 
-	if jtc.JSONTagRegex != "" {
-		if _, err := regexp.Compile(jtc.JSONTagRegex); err != nil {
-			fieldErrors = append(fieldErrors, field.Invalid(fldPath.Child("jsonTagRegex"), jtc.JSONTagRegex, fmt.Sprintf("invalid regex: %v", err)))
-		}
+	switch stc.ListTypeSetUsage {
+	case "", SSATagsListTypeSetUsageWarn, SSATagsListTypeSetUsageIgnore:
+	default:
+		fieldErrors = append(fieldErrors, field.Invalid(fldPath.Child("listTypeSetUsage"), stc.ListTypeSetUsage, fmt.Sprintf("invalid value, must be one of %q, %q or omitted", SSATagsListTypeSetUsageWarn, SSATagsListTypeSetUsageIgnore)))
 	}
 
 	return fieldErrors

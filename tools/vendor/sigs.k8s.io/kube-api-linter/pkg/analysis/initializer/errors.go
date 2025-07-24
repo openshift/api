@@ -13,23 +13,19 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-package maxlength
+package initializer
 
 import (
-	"sigs.k8s.io/kube-api-linter/pkg/analysis/initializer"
-	"sigs.k8s.io/kube-api-linter/pkg/analysis/registry"
+	"errors"
+	"fmt"
 )
 
-func init() {
-	registry.DefaultRegistry().RegisterLinter(Initializer())
-}
+var (
+	errIncorrectType = errors.New("incorrect type for passed configuration")
+)
 
-// Initializer returns the AnalyzerInitializer for this
-// Analyzer so that it can be added to the registry.
-func Initializer() initializer.AnalyzerInitializer {
-	return initializer.NewInitializer(
-		name,
-		Analyzer,
-		false, // For now, CRD only, and so not on by default.
-	)
+// NewIncorrectTypeError returns a new error indicating that the provided configuration
+// is of the incorrect type.
+func NewIncorrectTypeError(cfg any) error {
+	return fmt.Errorf("%w: %T", errIncorrectType, cfg)
 }

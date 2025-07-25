@@ -197,9 +197,6 @@
                         "name": "TranslateStreamCloseWebsocketRequests"
                     },
                     {
-                        "name": "UpgradeStatus"
-                    },
-                    {
                         "name": "VSphereConfigurableMaxAllowedBlockVolumesPerNode"
                     },
                     {
@@ -302,6 +299,9 @@
                     },
                     {
                         "name": "SetEIPForNLBIngressController"
+                    },
+                    {
+                        "name": "UpgradeStatus"
                     },
                     {
                         "name": "UserNamespacesPodSecurityStandards"

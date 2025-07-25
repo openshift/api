@@ -200,6 +200,18 @@ type ClusterVersionStatus struct {
 	// +listType=atomic
 	// +optional
 	ConditionalUpdates []ConditionalUpdate `json:"conditionalUpdates,omitempty"`
+
+	// conditionalUpdateRisks contains the list of risks associated with conditionalUpdates.
+	// When performing a conditional update, all its associated risks will be compared with the set of accepted risks in the spec.desiredUpdate.accept field.
+	// If all risks for a conditional update are included in the spec.desiredUpdate.accept set, the conditional update will proceed, otherwise it is blocked.
+	// The risk names in the list must be unique.
+	// conditionalUpdateRisks must not contain more than 500 entries.
+	// +openshift:enable:FeatureGate=ClusterUpdateAcceptedRisks
+	// +kubebuilder:validation:MaxItems=500
+	// +listType=map
+	// +listMapKey=name
+	// +optional
+	ConditionalUpdateRisks []ConditionalUpdateRisk `json:"conditionalUpdateRisks,omitempty"`
 }
 
 // UpdateState is a constant representing whether an update was successfully
@@ -256,8 +268,8 @@ type UpdateHistory struct {
 	Verified bool `json:"verified"`
 
 	// acceptedRisks records risks which were accepted to initiate the update.
-	// For example, it may menition an Upgradeable=False or missing signature
-	// that was overriden via desiredUpdate.force, or an update that was
+	// For example, it may mention an Upgradeable=False or missing signature
+	// that was overridden via desiredUpdate.force, or an update that was
 	// initiated despite not being in the availableUpdates set of recommended
 	// update targets.
 	// +optional
@@ -726,6 +738,17 @@ type Update struct {
 	//
 	// +optional
 	Force bool `json:"force"`
+
+	// accept is an optional set of names of conditional update risks that are considered acceptable.
+	// A conditional update is performed only if all of its risks are acceptable.
+	// Entries must be unique and must not exceed 256 characters.
+	// accept must not contain more than 1000 entries.
+	// +openshift:enable:FeatureGate=ClusterUpdateAcceptedRisks
+	// +kubebuilder:validation:items:MaxLength=256
+	// +kubebuilder:validation:MaxItems=1000
+	// +listType=set
+	// +optional
+	Accept []string `json:"accept"`
 }
 
 // Release represents an OpenShift release image and associated metadata.
@@ -781,6 +804,18 @@ type ConditionalUpdate struct {
 	// +required
 	Release Release `json:"release"`
 
+	// riskNames represents the set of the names of conditionalUpdateRisks in the status that are exposed to the release in this conditional update.
+	// A condition update is accepted only if each of its risk is either not applied to the cluster or considered acceptable by the cluster administrator.
+	// Entries must be unique and must not exceed 256 characters.
+	// riskNames must not contain more than 500 entries.
+	// +openshift:enable:FeatureGate=ClusterUpdateAcceptedRisks
+	// +kubebuilder:validation:MinItems=1
+	// +kubebuilder:validation:items:MaxLength=256
+	// +kubebuilder:validation:MaxItems=500
+	// +listType=set
+	// +optional
+	RiskNames []string `json:"riskNames,omitempty"`
+
 	// risks represents the range of issues associated with
 	// updating to the target release. The cluster-version
 	// operator will evaluate all entries, and only recommend the
@@ -807,6 +842,20 @@ type ConditionalUpdate struct {
 // for not recommending a conditional update.
 // +k8s:deepcopy-gen=true
 type ConditionalUpdateRisk struct {
+	// conditions represents the observations of the conditional update
+	// risk's current status. Known types are:
+	// * Applies, for whether the risk applies to the current cluster.
+	// The condition's types in the list must be unique.
+	// conditions must not contain more than one entry.
+	// +openshift:enable:FeatureGate=ClusterUpdateAcceptedRisks
+	// +kubebuilder:validation:items:XValidation:rule="has(self.type) && self.type == 'Applies'",message="type must be 'Applies'"
+	// +kubebuilder:validation:MaxItems=1
+	// +kubebuilder:validation:MinItems=1
+	// +listType=map
+	// +listMapKey=type
+	// +optional
+	Conditions []metav1.Condition `json:"conditions,omitempty"`
+
 	// url contains information about this risk.
 	// +kubebuilder:validation:Format=uri
 	// +kubebuilder:validation:MinLength=1

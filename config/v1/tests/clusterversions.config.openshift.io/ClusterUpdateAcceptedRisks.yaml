@@ -1,0 +1,974 @@
+apiVersion: apiextensions.k8s.io/v1 # Hack because controller-gen complains if we don't have this
+name: "ClusterVersion"
+crdName: clusterversions.config.openshift.io
+featureGates:
+  - ClusterUpdateAcceptedRisks
+tests:
+  onCreate:
+    - name: Should be able to create a minimal ClusterVersion
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: ClusterVersion
+        spec:
+          clusterID: foo
+      expected: |
+        apiVersion: config.openshift.io/v1
+        kind: ClusterVersion
+        spec:
+          clusterID: foo
+    - name: Should allow image to be set
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: ClusterVersion
+        spec:
+          clusterID: foo
+          desiredUpdate:
+            image: bar
+      expected: |
+        apiVersion: config.openshift.io/v1
+        kind: ClusterVersion
+        spec:
+          clusterID: foo
+          desiredUpdate:
+            image: bar
+    - name: Should allow version to be set
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: ClusterVersion
+        spec:
+          clusterID: foo
+          desiredUpdate:
+            version: 4.11.1
+      expected: |
+        apiVersion: config.openshift.io/v1
+        kind: ClusterVersion
+        spec:
+          clusterID: foo
+          desiredUpdate:
+            version: 4.11.1
+    - name: Should allow architecture to be empty
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: ClusterVersion
+        spec:
+          clusterID: foo
+          desiredUpdate:
+            architecture: ""
+            version: 4.11.1
+      expected: |
+        apiVersion: config.openshift.io/v1
+        kind: ClusterVersion
+        spec:
+          clusterID: foo
+          desiredUpdate:
+            architecture: ""
+            version: 4.11.1
+    - name: Should allow architecture and version to be set
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: ClusterVersion
+        spec:
+          clusterID: foo
+          desiredUpdate:
+            architecture: Multi
+            version: 4.11.1
+      expected: |
+        apiVersion: config.openshift.io/v1
+        kind: ClusterVersion
+        spec:
+          clusterID: foo
+          desiredUpdate:
+            architecture: Multi
+            version: 4.11.1
+    - name: Version must be set if architecture is set
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: ClusterVersion
+        spec:
+          clusterID: foo
+          desiredUpdate:
+            architecture: Multi
+      expectedError: "Version must be set if Architecture is set"
+    - name: Should not allow image and architecture to be set
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: ClusterVersion
+        spec:
+          clusterID: foo
+          desiredUpdate:
+            architecture: Multi
+            version: 4.11.1
+            image: bar
+      expectedError: "cannot set both Architecture and Image"
+    - name: Should be able to create a ClusterVersion with base capability None, and additional capabilities baremetal and MachineAPI
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: ClusterVersion
+        spec:
+          clusterID: foo
+          capabilities:
+            baselineCapabilitySet: None
+            additionalEnabledCapabilities:
+            - baremetal
+            - MachineAPI
+      expected: |
+        apiVersion: config.openshift.io/v1
+        kind: ClusterVersion
+        spec:
+          clusterID: foo
+          capabilities:
+            baselineCapabilitySet: None
+            additionalEnabledCapabilities:
+            - baremetal
+            - MachineAPI
+    - name: Should be able to create a ClusterVersion with base capability None, and additional capabilities baremetal without MachineAPI
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: ClusterVersion
+        spec:
+          clusterID: foo
+          capabilities:
+            baselineCapabilitySet: None
+            additionalEnabledCapabilities:
+            - baremetal
+      expected: |
+        apiVersion: config.openshift.io/v1
+        kind: ClusterVersion
+        spec:
+          clusterID: foo
+          capabilities:
+            baselineCapabilitySet: None
+            additionalEnabledCapabilities:
+            - baremetal
+    - name: Should be able to create a ClusterVersion with base capability None, and additional capability OperatorLifecycleManagerV1
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: ClusterVersion
+        spec:
+          clusterID: foo
+          capabilities:
+            baselineCapabilitySet: None
+            additionalEnabledCapabilities:
+            - OperatorLifecycleManagerV1
+      expected: |
+        apiVersion: config.openshift.io/v1
+        kind: ClusterVersion
+        spec:
+          clusterID: foo
+          capabilities:
+            baselineCapabilitySet: None
+            additionalEnabledCapabilities:
+            - OperatorLifecycleManagerV1
+    - name: Should be able to create a ClusterVersion with base capability None, and additional capabilities OperatorLifecycleManager and OperatorLifecycleManagerV1
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: ClusterVersion
+        spec:
+          clusterID: foo
+          capabilities:
+            baselineCapabilitySet: None
+            additionalEnabledCapabilities:
+            - OperatorLifecycleManager
+            - OperatorLifecycleManagerV1
+      expected: |
+        apiVersion: config.openshift.io/v1
+        kind: ClusterVersion
+        spec:
+          clusterID: foo
+          capabilities:
+            baselineCapabilitySet: None
+            additionalEnabledCapabilities:
+            - OperatorLifecycleManager
+            - OperatorLifecycleManagerV1
+    - name: Should be able to create a ClusterVersion with base capability None, and additional capabilities marketplace and OperatorLifecycleManager
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: ClusterVersion
+        spec:
+          clusterID: foo
+          capabilities:
+            baselineCapabilitySet: None
+            additionalEnabledCapabilities:
+            - marketplace
+            - OperatorLifecycleManager
+      expected: |
+        apiVersion: config.openshift.io/v1
+        kind: ClusterVersion
+        spec:
+          clusterID: foo
+          capabilities:
+            baselineCapabilitySet: None
+            additionalEnabledCapabilities:
+            - marketplace
+            - OperatorLifecycleManager
+    - name: Should not be able to create a ClusterVersion with base capability None, and additional capabilities marketplace without OperatorLifecycleManager
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: ClusterVersion
+        spec:
+          clusterID: foo
+          capabilities:
+            baselineCapabilitySet: None
+            additionalEnabledCapabilities:
+            - marketplace
+      expectedError: the `marketplace` capability requires the `OperatorLifecycleManager` capability, which is neither explicitly or implicitly enabled in this cluster, please enable the `OperatorLifecycleManager` capability
+    - name: Should be able to set accepted risks
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: ClusterVersion
+        spec:
+          clusterID: foo
+          desiredUpdate:
+            architecture: Multi
+            version: 4.11.1
+            accept:
+              - RiskA
+              - RiskB
+      expected: |
+        apiVersion: config.openshift.io/v1
+        kind: ClusterVersion
+        spec:
+          clusterID: foo
+          desiredUpdate:
+            architecture: Multi
+            version: 4.11.1
+            accept:
+              - RiskA
+              - RiskB
+    - name: A risk name greater than 256 characters is not allowed
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: ClusterVersion
+        spec:
+          clusterID: foo
+          desiredUpdate:
+            architecture: Multi
+            version: 4.11.1
+            accept:
+              - RiskA
+              - a261aabbbaaabbbaaabbbaaabbbaaabbbaaabbbaaabbbaaabbbaaabbbaaabbbaaabbbaaabbbaaabbbaaabbbaaabbbaaabbbaaabbbaaabbbaaabbbaaabbbaaabbbaaabbbaaabbbaaabbbaaabbbaaabbbaaabbbaaabbbaaabbbaaabbbaaabbbaaabbbaaabbbaaabbbaaabbbaaabbbaaabbbaaabbbaaabbbaaabbbaaabbbaaabbbaaabbb
+      expectedError: "Too long: may not be more than 256 bytes"
+    - name: Risk names from the accept field must be unique
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: ClusterVersion
+        spec:
+          clusterID: foo
+          desiredUpdate:
+            architecture: Multi
+            version: 4.11.1
+            accept:
+              - RiskA
+              - RiskA
+      expectedError: 'Duplicate value: "RiskA"'
+  onUpdate:
+    - name: Should not allow image to be set if architecture set
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: ClusterVersion
+        spec:
+          clusterID: foo
+          desiredUpdate:
+            architecture: Multi
+            version: 4.11.1
+      updated: |
+        apiVersion: config.openshift.io/v1
+        kind: ClusterVersion
+        spec:
+          clusterID: foo
+          desiredUpdate:
+            architecture: Multi
+            version: 4.11.1
+            image: bar
+      expectedError: "cannot set both Architecture and Image"
+    - name: Should not allow architecture to be set if image set
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: ClusterVersion
+        spec:
+          clusterID: foo
+          desiredUpdate:
+            image: bar
+      updated: |
+        apiVersion: config.openshift.io/v1
+        kind: ClusterVersion
+        spec:
+          clusterID: foo
+          desiredUpdate:
+            architecture: Multi
+            version: 4.11.1
+            image: bar
+      expectedError: "cannot set both Architecture and Image"
+    - name: Should be able to add the baremetal capability with a ClusterVersion with base capability None, and implicitly enabled MachineAPI
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: ClusterVersion
+        spec:
+          clusterID: foo
+          capabilities:
+            baselineCapabilitySet: None
+        status:
+          desired:
+            version: foo
+            image: foo
+          observedGeneration: 1
+          versionHash: foo
+          availableUpdates:
+          - version: foo
+            image: foo
+          capabilities:
+            enabledCapabilities:
+            - MachineAPI
+      updated: |
+        apiVersion: config.openshift.io/v1
+        kind: ClusterVersion
+        spec:
+          clusterID: foo
+          capabilities:
+            baselineCapabilitySet: None
+            additionalEnabledCapabilities:
+            - baremetal
+        status:
+          desired:
+            version: foo
+            image: foo
+          observedGeneration: 1
+          versionHash: foo
+          availableUpdates:
+          - version: foo
+            image: foo
+          capabilities:
+            enabledCapabilities:
+            - MachineAPI
+      expected: |
+        apiVersion: config.openshift.io/v1
+        kind: ClusterVersion
+        spec:
+          clusterID: foo
+          capabilities:
+            baselineCapabilitySet: None
+            additionalEnabledCapabilities:
+            - baremetal
+        status:
+          desired:
+            version: foo
+            image: foo
+          observedGeneration: 1
+          versionHash: foo
+          availableUpdates:
+          - version: foo
+            image: foo
+          capabilities:
+            enabledCapabilities:
+            - MachineAPI
+    - name: Should be able to add the baremetal capability with a ClusterVersion with base capability None, with the Machine API capability
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: ClusterVersion
+        spec:
+          clusterID: foo
+          capabilities:
+            baselineCapabilitySet: None
+      updated: |
+        apiVersion: config.openshift.io/v1
+        kind: ClusterVersion
+        spec:
+          clusterID: foo
+          capabilities:
+            baselineCapabilitySet: None
+            additionalEnabledCapabilities:
+            - baremetal
+            - MachineAPI
+      expected: |
+        apiVersion: config.openshift.io/v1
+        kind: ClusterVersion
+        spec:
+          clusterID: foo
+          capabilities:
+            baselineCapabilitySet: None
+            additionalEnabledCapabilities:
+            - baremetal
+            - MachineAPI
+    - name: Should be able to add the baremetal capability without MachineAPI with a ClusterVersion with base capability None
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: ClusterVersion
+        spec:
+          clusterID: foo
+          capabilities:
+            baselineCapabilitySet: None
+      updated: |
+        apiVersion: config.openshift.io/v1
+        kind: ClusterVersion
+        spec:
+          clusterID: foo
+          capabilities:
+            baselineCapabilitySet: None
+            additionalEnabledCapabilities:
+            - baremetal
+      expected: |
+        apiVersion: config.openshift.io/v1
+        kind: ClusterVersion
+        spec:
+          clusterID: foo
+          capabilities:
+            baselineCapabilitySet: None
+            additionalEnabledCapabilities:
+            - baremetal
+    - name: Should be able to add the marketplace capability with a ClusterVersion with base capability None, and implicitly enabled OperatorLifecycleManager
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: ClusterVersion
+        spec:
+          clusterID: foo
+          capabilities:
+            baselineCapabilitySet: None
+        status:
+          desired:
+            version: foo
+            image: foo
+          observedGeneration: 1
+          versionHash: foo
+          availableUpdates:
+          - version: foo
+            image: foo
+          capabilities:
+            enabledCapabilities:
+            - OperatorLifecycleManager
+      updated: |
+        apiVersion: config.openshift.io/v1
+        kind: ClusterVersion
+        spec:
+          clusterID: foo
+          capabilities:
+            baselineCapabilitySet: None
+            additionalEnabledCapabilities:
+            - marketplace
+        status:
+          desired:
+            version: foo
+            image: foo
+          observedGeneration: 1
+          versionHash: foo
+          availableUpdates:
+          - version: foo
+            image: foo
+          capabilities:
+            enabledCapabilities:
+            - OperatorLifecycleManager
+      expected: |
+        apiVersion: config.openshift.io/v1
+        kind: ClusterVersion
+        spec:
+          clusterID: foo
+          capabilities:
+            baselineCapabilitySet: None
+            additionalEnabledCapabilities:
+            - marketplace
+        status:
+          desired:
+            version: foo
+            image: foo
+          observedGeneration: 1
+          versionHash: foo
+          availableUpdates:
+          - version: foo
+            image: foo
+          capabilities:
+            enabledCapabilities:
+            - OperatorLifecycleManager
+    - name: Should be able to add the marketplace capability with a ClusterVersion with base capability None, with the OperatorLifecycleManager capability
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: ClusterVersion
+        spec:
+          clusterID: foo
+          capabilities:
+            baselineCapabilitySet: None
+      updated: |
+        apiVersion: config.openshift.io/v1
+        kind: ClusterVersion
+        spec:
+          clusterID: foo
+          capabilities:
+            baselineCapabilitySet: None
+            additionalEnabledCapabilities:
+            - marketplace
+            - OperatorLifecycleManager
+      expected: |
+        apiVersion: config.openshift.io/v1
+        kind: ClusterVersion
+        spec:
+          clusterID: foo
+          capabilities:
+            baselineCapabilitySet: None
+            additionalEnabledCapabilities:
+            - marketplace
+            - OperatorLifecycleManager
+    - name: Should not be able to add the marketplace capability with a ClusterVersion with base capability None, and without OperatorLifecycleManager
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: ClusterVersion
+        spec:
+          clusterID: foo
+          capabilities:
+            baselineCapabilitySet: None
+      updated: |
+        apiVersion: config.openshift.io/v1
+        kind: ClusterVersion
+        spec:
+          clusterID: foo
+          capabilities:
+            baselineCapabilitySet: None
+            additionalEnabledCapabilities:
+            - marketplace
+      expectedError: the `marketplace` capability requires the `OperatorLifecycleManager` capability, which is neither explicitly or implicitly enabled in this cluster, please enable the `OperatorLifecycleManager` capability
+    - name: The riskNames field might be unspecified
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: ClusterVersion
+        spec:
+          clusterID: foo
+          desiredUpdate:
+            architecture: Multi
+            version: 4.11.1
+      updated: |
+        apiVersion: config.openshift.io/v1
+        kind: ClusterVersion
+        spec:
+          clusterID: foo
+          desiredUpdate:
+            architecture: Multi
+            version: 4.11.2
+        status:
+          desired:
+            version: foo
+            image: foo
+          observedGeneration: 1
+          versionHash: foo
+          availableUpdates:
+            - version: foo
+              image: foo
+          conditionalUpdates:
+            - release:
+                version: 4.18.16
+                image: bar
+              risks:
+                - name: DualStackNeedsController
+                  message: Upgrade can get stuck on clusters that use multiple networks together with dual stack.
+                  url: https://issues.redhat.com/browse/SDN-3996
+                  matchingRules:
+                    - type: Always
+                  conditions:
+                    - status: "True"
+                      type: Applies
+                      reason: MatchingRule
+                      message: The matchingRules[0] matches
+                      lastTransitionTime: 2021-09-13T17:03:05Z
+      expected: |
+        apiVersion: config.openshift.io/v1
+        kind: ClusterVersion
+        spec:
+          clusterID: foo
+          desiredUpdate:
+            architecture: Multi
+            version: 4.11.2
+        status:
+          desired:
+            version: foo
+            image: foo
+          observedGeneration: 1
+          versionHash: foo
+          availableUpdates:
+            - version: foo
+              image: foo
+          conditionalUpdates:
+            - release:
+                version: 4.18.16
+                image: bar
+              risks:
+                - name: DualStackNeedsController
+                  message: Upgrade can get stuck on clusters that use multiple networks together with dual stack.
+                  url: https://issues.redhat.com/browse/SDN-3996
+                  matchingRules:
+                    - type: Always
+                  conditions:
+                    - status: "True"
+                      type: Applies
+                      reason: MatchingRule
+                      message: The matchingRules[0] matches
+                      lastTransitionTime: 2021-09-13T17:03:05Z
+    - name: Should be able to update fields related to accepted risks
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: ClusterVersion
+        spec:
+          clusterID: foo
+          desiredUpdate:
+            architecture: Multi
+            version: 4.11.1
+            accept:
+              - RiskA
+              - RiskB
+      updated: |
+        apiVersion: config.openshift.io/v1
+        kind: ClusterVersion
+        spec:
+          clusterID: foo
+          desiredUpdate:
+            architecture: Multi
+            version: 4.11.2
+            accept:
+              - RiskA
+              - RiskC
+        status:
+          desired:
+            version: foo
+            image: foo
+          observedGeneration: 1
+          versionHash: foo
+          availableUpdates:
+            - version: foo
+              image: foo
+          conditionalUpdateRisks:
+            - name: DualStackNeedsController
+              message: Upgrade can get stuck on clusters that use multiple networks together with dual stack.
+              url: https://issues.redhat.com/browse/SDN-3996
+              matchingRules:
+                - type: Always
+              conditions:
+                - status: "True"
+                  type: Applies
+                  reason: MatchingRule
+                  message: The matchingRules[0] matches
+                  lastTransitionTime: 2021-09-13T17:03:05Z
+          conditionalUpdates:
+            - release:
+                version: 4.18.16
+                image: bar
+              riskNames:
+                - DualStackNeedsController
+              risks:
+                - name: DualStackNeedsController
+                  message: Upgrade can get stuck on clusters that use multiple networks together with dual stack.
+                  url: https://issues.redhat.com/browse/SDN-3996
+                  matchingRules:
+                    - type: Always
+                  conditions:
+                    - status: "True"
+                      type: Applies
+                      reason: MatchingRule
+                      message: The matchingRules[0] matches
+                      lastTransitionTime: 2021-09-13T17:03:05Z
+      expected: |
+        apiVersion: config.openshift.io/v1
+        kind: ClusterVersion
+        spec:
+          clusterID: foo
+          desiredUpdate:
+            architecture: Multi
+            version: 4.11.2
+            accept:
+              - RiskA
+              - RiskC
+        status:
+          desired:
+            version: foo
+            image: foo
+          observedGeneration: 1
+          versionHash: foo
+          availableUpdates:
+            - version: foo
+              image: foo
+          conditionalUpdateRisks:
+            - name: DualStackNeedsController
+              message: Upgrade can get stuck on clusters that use multiple networks together with dual stack.
+              url: https://issues.redhat.com/browse/SDN-3996
+              matchingRules:
+                - type: Always
+              conditions:
+                - status: "True"
+                  type: Applies
+                  reason: MatchingRule
+                  message: The matchingRules[0] matches
+                  lastTransitionTime: 2021-09-13T17:03:05Z
+          conditionalUpdates:
+            - release:
+                version: 4.18.16
+                image: bar
+              riskNames:
+                - DualStackNeedsController
+              risks:
+                - name: DualStackNeedsController
+                  message: Upgrade can get stuck on clusters that use multiple networks together with dual stack.
+                  url: https://issues.redhat.com/browse/SDN-3996
+                  matchingRules:
+                    - type: Always
+                  conditions:
+                    - status: "True"
+                      type: Applies
+                      reason: MatchingRule
+                      message: The matchingRules[0] matches
+                      lastTransitionTime: 2021-09-13T17:03:05Z
+    - name: More than a single condition on an update risk is not allowed
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: ClusterVersion
+        spec:
+          clusterID: foo
+          desiredUpdate:
+            architecture: Multi
+            version: 4.11.1
+            accept:
+              - RiskA
+              - RiskB
+      updated: |
+        apiVersion: config.openshift.io/v1
+        kind: ClusterVersion
+        spec:
+          clusterID: foo
+          desiredUpdate:
+            architecture: Multi
+            version: 4.11.2
+            accept:
+              - RiskA
+              - RiskC
+        status:
+          desired:
+            version: foo
+            image: foo
+          observedGeneration: 1
+          versionHash: foo
+          availableUpdates:
+            - version: foo
+              image: foo
+          conditionalUpdateRisks:
+            - name: DualStackNeedsController
+              message: Upgrade can get stuck on clusters that use multiple networks together with dual stack.
+              url: https://issues.redhat.com/browse/SDN-3996
+              matchingRules:
+                - type: Always
+              conditions:
+                - status: "True"
+                  type: Applies
+                  reason: MatchingRule
+                  message: The matchingRules[0] matches
+                  lastTransitionTime: 2021-09-13T17:03:05Z
+                - status: "False"
+                  type: Applies
+                  reason: Far
+                  message: Far
+                  lastTransitionTime: 2021-09-13T12:03:05Z
+          conditionalUpdates:
+            - release:
+                version: 4.18.16
+                image: bar
+              riskNames:
+                - DualStackNeedsController
+              risks:
+                - name: DualStackNeedsController
+                  message: Upgrade can get stuck on clusters that use multiple networks together with dual stack.
+                  url: https://issues.redhat.com/browse/SDN-3996
+                  matchingRules:
+                    - type: Always
+                  conditions:
+                    - status: "True"
+                      type: Applies
+                      reason: MatchingRule
+                      message: The matchingRules[0] matches
+                      lastTransitionTime: 2021-09-13T17:03:05Z
+      expectedStatusError: "conditions: Too many: 2: must have at most 1 item"
+    - name: Risk names of a conditional update must be unique
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: ClusterVersion
+        spec:
+          clusterID: foo
+          desiredUpdate:
+            architecture: Multi
+            version: 4.11.1
+            accept:
+              - RiskA
+              - RiskB
+      updated: |
+        apiVersion: config.openshift.io/v1
+        kind: ClusterVersion
+        spec:
+          clusterID: foo
+          desiredUpdate:
+            architecture: Multi
+            version: 4.11.2
+            accept:
+              - RiskA
+              - RiskC
+        status:
+          desired:
+            version: foo
+            image: foo
+          observedGeneration: 1
+          versionHash: foo
+          availableUpdates:
+            - version: foo
+              image: foo
+          conditionalUpdateRisks:
+            - name: DualStackNeedsController
+              message: Upgrade can get stuck on clusters that use multiple networks together with dual stack.
+              url: https://issues.redhat.com/browse/SDN-3996
+              matchingRules:
+                - type: Always
+              conditions:
+                - status: "True"
+                  type: Applies
+                  reason: MatchingRule
+                  message: The matchingRules[0] matches
+                  lastTransitionTime: 2021-09-13T17:03:05Z
+          conditionalUpdates:
+            - release:
+                version: 4.18.16
+                image: bar
+              riskNames:
+                - DualStackNeedsController
+                - DualStackNeedsController
+              risks:
+                - name: DualStackNeedsController
+                  message: Upgrade can get stuck on clusters that use multiple networks together with dual stack.
+                  url: https://issues.redhat.com/browse/SDN-3996
+                  matchingRules:
+                    - type: Always
+                  conditions:
+                    - status: "True"
+                      type: Applies
+                      reason: MatchingRule
+                      message: The matchingRules[0] matches
+                      lastTransitionTime: 2021-09-13T17:03:05Z
+                    - status: "False"
+                      type: Applies
+                      reason: Far
+                      message: Far
+                      lastTransitionTime: 2021-09-13T12:03:05Z
+      expectedStatusError: 'Duplicate value: "DualStackNeedsController"'
+    - name: The type of a risk condition must be Applies
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: ClusterVersion
+        spec:
+          clusterID: foo
+          desiredUpdate:
+            architecture: Multi
+            version: 4.11.1
+            accept:
+              - RiskA
+              - RiskB
+      updated: |
+        apiVersion: config.openshift.io/v1
+        kind: ClusterVersion
+        spec:
+          clusterID: foo
+          desiredUpdate:
+            architecture: Multi
+            version: 4.11.2
+            accept:
+              - RiskA
+              - RiskC
+        status:
+          desired:
+            version: foo
+            image: foo
+          observedGeneration: 1
+          versionHash: foo
+          availableUpdates:
+            - version: foo
+              image: foo
+          conditionalUpdateRisks:
+            - name: DualStackNeedsController
+              message: Upgrade can get stuck on clusters that use multiple networks together with dual stack.
+              url: https://issues.redhat.com/browse/SDN-3996
+              matchingRules:
+                - type: Always
+              conditions:
+                - status: "True"
+                  type: Wrong
+                  reason: MatchingRule
+                  message: The matchingRules[0] matches
+                  lastTransitionTime: 2021-09-13T17:03:05Z
+          conditionalUpdates:
+            - release:
+                version: 4.18.16
+                image: bar
+              riskNames:
+                - DualStackNeedsController
+              risks:
+                - name: DualStackNeedsController
+                  message: Upgrade can get stuck on clusters that use multiple networks together with dual stack.
+                  url: https://issues.redhat.com/browse/SDN-3996
+                  matchingRules:
+                    - type: Always
+                  conditions:
+                    - status: "True"
+                      type: Applies
+                      reason: MatchingRule
+                      message: The matchingRules[0] matches
+                      lastTransitionTime: 2021-09-13T17:03:05Z
+      expectedStatusError: "type must be 'Applies'"
+    - name: The value of riskNames cannot be the empty set
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: ClusterVersion
+        spec:
+          clusterID: foo
+          desiredUpdate:
+            architecture: Multi
+            version: 4.11.1
+            accept:
+              - RiskA
+              - RiskB
+      updated: |
+        apiVersion: config.openshift.io/v1
+        kind: ClusterVersion
+        spec:
+          clusterID: foo
+          desiredUpdate:
+            architecture: Multi
+            version: 4.11.2
+            accept:
+              - RiskA
+              - RiskC
+        status:
+          desired:
+            version: foo
+            image: foo
+          observedGeneration: 1
+          versionHash: foo
+          availableUpdates:
+            - version: foo
+              image: foo
+          conditionalUpdateRisks:
+            - name: DualStackNeedsController
+              message: Upgrade can get stuck on clusters that use multiple networks together with dual stack.
+              url: https://issues.redhat.com/browse/SDN-3996
+              matchingRules:
+                - type: Always
+              conditions:
+                - status: "True"
+                  type: Applies
+                  reason: MatchingRule
+                  message: The matchingRules[0] matches
+                  lastTransitionTime: 2021-09-13T17:03:05Z
+          conditionalUpdates:
+            - release:
+                version: 4.18.16
+                image: bar
+              riskNames: []
+              risks:
+                - name: DualStackNeedsController
+                  message: Upgrade can get stuck on clusters that use multiple networks together with dual stack.
+                  url: https://issues.redhat.com/browse/SDN-3996
+                  matchingRules:
+                    - type: Always
+                  conditions:
+                    - status: "True"
+                      type: Applies
+                      reason: MatchingRule
+                      message: The matchingRules[0] matches
+                      lastTransitionTime: 2021-09-13T17:03:05Z
+      expectedStatusError: "should have at least 1 items"

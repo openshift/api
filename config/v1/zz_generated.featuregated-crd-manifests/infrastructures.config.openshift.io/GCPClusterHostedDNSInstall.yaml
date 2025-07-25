@@ -6,7 +6,7 @@ metadata:
     api.openshift.io/filename-cvo-runlevel: "0000_10"
     api.openshift.io/filename-operator: config-operator
     api.openshift.io/filename-ordering: "01"
-    feature-gate.release.openshift.io/GCPClusterHostedDNS: "true"
+    feature-gate.release.openshift.io/GCPClusterHostedDNSInstall: "true"
     release.openshift.io/bootstrap-required: "true"
   name: infrastructures.config.openshift.io
 spec:

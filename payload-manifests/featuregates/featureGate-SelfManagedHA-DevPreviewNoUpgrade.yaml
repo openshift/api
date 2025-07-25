@@ -162,9 +162,6 @@
                         "name": "InsightsOnDemandDataGather"
                     },
                     {
-                        "name": "InsightsRuntimeExtractor"
-                    },
-                    {
                         "name": "KMSEncryptionProvider"
                     },
                     {

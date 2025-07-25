@@ -89,7 +89,7 @@ spec:
                             used to construct the extra attribute for the cluster identity.
                             When omitted, no extra attributes will be present on the cluster identity.
                             key values for extra mappings must be unique.
-                            A maximum of 64 extra attribute mappings may be provided.
+                            A maximum of 32 extra attribute mappings may be provided.
                           items:
                             description: |-
                               ExtraMapping allows specifying a key and CEL expression
@@ -170,16 +170,16 @@ spec:
                                   For example, the 'sub' claim value can be accessed as 'claims.sub'.
                                   Nested claims can be accessed using dot notation ('claims.foo.bar').
 
-                                  valueExpression must not exceed 4096 characters in length.
+                                  valueExpression must not exceed 1024 characters in length.
                                   valueExpression must not be empty.
-                                maxLength: 4096
+                                maxLength: 1024
                                 minLength: 1
                                 type: string
                             required:
                             - key
                             - valueExpression
                             type: object
-                          maxItems: 64
+                          maxItems: 32
                           type: array
                           x-kubernetes-list-map-keys:
                           - key
@@ -255,8 +255,8 @@ spec:
                                 Precisely one of claim or expression must be set.
                                 expression must not be specified when claim is set.
                                 When specified, expression must be at least 1 character in length
-                                and must not exceed 4096 characters in length.
-                              maxLength: 4096
+                                and must not exceed 1024 characters in length.
+                              maxLength: 1024
                               minLength: 1
                               type: string
                           type: object

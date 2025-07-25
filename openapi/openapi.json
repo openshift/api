@@ -21953,6 +21953,10 @@
           "type": "string",
           "default": ""
         },
+        "cpuOptions": {
+          "description": "cpuOptions is the set of cpu options for the instance.",
+          "$ref": "#/definitions/com.github.openshift.api.machine.v1beta1.CPUOptions"
+        },
         "credentialsSecret": {
           "description": "credentialsSecret is a reference to the secret with AWS credentials. Otherwise, defaults to permissions provided by attached IAM role where the actuator is running.",
           "$ref": "#/definitions/io.k8s.api.core.v1.LocalObjectReference"
@@ -22424,6 +22428,16 @@
         },
         "virtualName": {
           "description": "The virtual device name (ephemeralN). Machine store volumes are numbered starting from 0. An machine type with 2 available machine store volumes can specify mappings for ephemeral0 and ephemeral1.The number of available machine store volumes depends on the machine type. After you connect to the machine, you must mount the volume.\n\nConstraints: For M3 machines, you must specify machine store volumes in the block device mapping for the machine. When you launch an M3 machine, we ignore any machine store volumes specified in the block device mapping for the AMI.",
+          "type": "string"
+        }
+      }
+    },
+    "com.github.openshift.api.machine.v1beta1.CPUOptions": {
+      "description": "CPUOptions defines the cpu options for the instance.",
+      "type": "object",
+      "properties": {
+        "amdSevSnp": {
+          "description": "amdSevSnp specifies AMD SEV-SNP on the instance. When set to enabled, AMD SEV-SNP is enabled on the instance. If it is set to enabled: 1) Use an instance type that supports AMD SEV-SNP. 2) Launch your instance with supported AWS region. 3) Use an AMI with uefi or uefi-preferred boot mode and an operating system that supports AMD SEV-SNP. More details can be checked at https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/sev-snp.html When set to disabled(default), AMD SEV-SNP is disabled on the instance.",
           "type": "string"
         }
       }

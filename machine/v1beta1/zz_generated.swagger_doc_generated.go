@@ -15,6 +15,7 @@ var map_AWSMachineProviderConfig = map[string]string{
 	"":                        "AWSMachineProviderConfig is the Schema for the awsmachineproviderconfigs API Compatibility level 2: Stable within a major release for a minimum of 9 months or 3 minor releases (whichever is longer).",
 	"ami":                     "ami is the reference to the AMI from which to create the machine instance.",
 	"instanceType":            "instanceType is the type of instance to create. Example: m4.xlarge",
+	"cpuOptions":              "cpuOptions is the set of cpu options for the instance.",
 	"tags":                    "tags is the set of tags to add to apply to an instance, in addition to the ones added by default by the actuator. These tags are additive. The actuator will ensure these tags are present, but will not remove any other tags that may exist on the instance.",
 	"iamInstanceProfile":      "iamInstanceProfile is a reference to an IAM role to assign to the instance",
 	"userDataSecret":          "userDataSecret contains a local reference to a secret that contains the UserData to apply to the instance",
@@ -80,6 +81,15 @@ var map_BlockDeviceMappingSpec = map[string]string{
 
 func (BlockDeviceMappingSpec) SwaggerDoc() map[string]string {
 	return map_BlockDeviceMappingSpec
+}
+
+var map_CPUOptions = map[string]string{
+	"":          "CPUOptions defines the cpu options for the instance.",
+	"amdSevSnp": "amdSevSnp specifies AMD SEV-SNP on the instance. When set to enabled, AMD SEV-SNP is enabled on the instance. If it is set to enabled: 1) Use an instance type that supports AMD SEV-SNP. 2) Launch your instance with supported AWS region. 3) Use an AMI with uefi or uefi-preferred boot mode and an operating system that supports AMD SEV-SNP. More details can be checked at https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/sev-snp.html When set to disabled(default), AMD SEV-SNP is disabled on the instance.",
+}
+
+func (CPUOptions) SwaggerDoc() map[string]string {
+	return map_CPUOptions
 }
 
 var map_EBSBlockDeviceSpec = map[string]string{

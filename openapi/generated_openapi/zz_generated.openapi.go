@@ -9475,12 +9475,19 @@ func schema_openshift_api_config_v1_AzurePlatformStatus(ref common.ReferenceCall
 							},
 						},
 					},
+					"cloudLoadBalancerConfig": {
+						SchemaProps: spec.SchemaProps{
+							Description: "cloudLoadBalancerConfig holds configuration related to DNS and cloud load balancers. It allows configuration of in-cluster DNS as an alternative to the platform default DNS implementation. When using the ClusterHosted DNS type, Load Balancer IP addresses must be provided for the API and internal API load balancers as well as the ingress load balancer.",
+							Default:     map[string]interface{}{"dnsType": "PlatformDefault"},
+							Ref:         ref("github.com/openshift/api/config/v1.CloudLoadBalancerConfig"),
+						},
+					},
 				},
 				Required: []string{"resourceGroupName"},
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/config/v1.AzureResourceTag"},
+			"github.com/openshift/api/config/v1.AzureResourceTag", "github.com/openshift/api/config/v1.CloudLoadBalancerConfig"},
 	}
 }
 

@@ -3,11 +3,11 @@ kind: CustomResourceDefinition
 metadata:
   annotations:
     api-approved.openshift.io: https://github.com/openshift/api/pull/470
-    api.openshift.io/merged-by-featuregates: "true"
-    include.release.openshift.io/ibm-cloud-managed: "true"
-    include.release.openshift.io/self-managed-high-availability: "true"
+    api.openshift.io/filename-cvo-runlevel: "0000_10"
+    api.openshift.io/filename-operator: config-operator
+    api.openshift.io/filename-ordering: "01"
+    feature-gate.release.openshift.io/AzureClusterHostedDNSInstall: "true"
     release.openshift.io/bootstrap-required: "true"
-    release.openshift.io/feature-set: TechPreviewNoUpgrade
   name: infrastructures.config.openshift.io
 spec:
   group: config.openshift.io
@@ -223,68 +223,6 @@ spec:
                   ibmcloud:
                     description: ibmcloud contains settings specific to the IBMCloud
                       infrastructure provider.
-                    properties:
-                      serviceEndpoints:
-                        description: |-
-                          serviceEndpoints is a list of custom endpoints which will override the default
-                          service endpoints of an IBM service. These endpoints are used by components
-                          within the cluster when trying to reach the IBM Cloud Services that have been
-                          overriden. The CCCMO reads in the IBMCloudPlatformSpec and validates each
-                          endpoint is resolvable. Once validated, the cloud config and IBMCloudPlatformStatus
-                          are updated to reflect the same custom endpoints.
-                          A maximum of 13 service endpoints overrides are supported.
-                        items:
-                          description: |-
-                            IBMCloudServiceEndpoint stores the configuration of a custom url to
-                            override existing defaults of IBM Cloud Services.
-                          properties:
-                            name:
-                              description: |-
-                                name is the name of the IBM Cloud service.
-                                Possible values are: CIS, COS, COSConfig, DNSServices, GlobalCatalog, GlobalSearch, GlobalTagging, HyperProtect, IAM, KeyProtect, ResourceController, ResourceManager, or VPC.
-                                For example, the IBM Cloud Private IAM service could be configured with the
-                                service `name` of `IAM` and `url` of `https://private.iam.cloud.ibm.com`
-                                Whereas the IBM Cloud Private VPC service for US South (Dallas) could be configured
-                                with the service `name` of `VPC` and `url` of `https://us.south.private.iaas.cloud.ibm.com`
-                              enum:
-                              - CIS
-                              - COS
-                              - COSConfig
-                              - DNSServices
-                              - GlobalCatalog
-                              - GlobalSearch
-                              - GlobalTagging
-                              - HyperProtect
-                              - IAM
-                              - KeyProtect
-                              - ResourceController
-                              - ResourceManager
-                              - VPC
-                              type: string
-                            url:
-                              description: |-
-                                url is fully qualified URI with scheme https, that overrides the default generated
-                                endpoint for a client.
-                                This must be provided and cannot be empty. The path must follow the pattern
-                                /v[0,9]+ or /api/v[0,9]+
-                              maxLength: 300
-                              type: string
-                              x-kubernetes-validations:
-                              - message: url must use https scheme
-                                rule: url(self).getScheme() == "https"
-                              - message: url path must match /v[0,9]+ or /api/v[0,9]+
-                                rule: matches((url(self).getEscapedPath()), '^/(api/)?v[0-9]+/{0,1}$')
-                              - message: url must be a valid absolute URL
-                                rule: isURL(self)
-                          required:
-                          - name
-                          - url
-                          type: object
-                        maxItems: 13
-                        type: array
-                        x-kubernetes-list-map-keys:
-                        - name
-                        x-kubernetes-list-type: map
                     type: object
                   kubevirt:
                     description: kubevirt contains settings specific to the kubevirt
@@ -386,19 +324,14 @@ spec:
                                     is Name, and forbidden otherwise
                                   rule: 'has(self.type) && self.type == ''Name'' ?  has(self.name)
                                     : !has(self.name)'
-                              maxItems: 32
                               minItems: 1
                               type: array
                               x-kubernetes-list-type: atomic
-                              x-kubernetes-validations:
-                              - message: each subnet must be unique
-                                rule: self.all(x, self.exists_one(y, x == y))
                           required:
                           - cluster
                           - name
                           - subnets
                           type: object
-                        maxItems: 32
                         type: array
                         x-kubernetes-list-map-keys:
                         - name
@@ -726,10 +659,6 @@ spec:
                               - type
                               type: object
                             server:
-                              anyOf:
-                              - format: ipv4
-                              - format: ipv6
-                              - format: hostname
                               description: server is the fully-qualified domain name
                                 or the IP address of the vCenter server.
                               maxLength: 255
@@ -784,7 +713,6 @@ spec:
                                     /<datacenter>/network/<portgroup>.
                                   items:
                                     type: string
-                                  maxItems: 10
                                   minItems: 1
                                   type: array
                                   x-kubernetes-list-type: atomic
@@ -893,17 +821,6 @@ spec:
                           - topology
                           - zone
                           type: object
-                          x-kubernetes-validations:
-                          - message: when zoneAffinity type is HostGroup, regionAffinity
-                              type must be ComputeCluster
-                            rule: 'has(self.zoneAffinity) && self.zoneAffinity.type
-                              == ''HostGroup'' ?  has(self.regionAffinity) && self.regionAffinity.type
-                              == ''ComputeCluster'' : true'
-                          - message: when zoneAffinity type is ComputeCluster, regionAffinity
-                              type must be Datacenter
-                            rule: 'has(self.zoneAffinity) && self.zoneAffinity.type
-                              == ''ComputeCluster'' ?  has(self.regionAffinity) &&
-                              self.regionAffinity.type == ''Datacenter'' : true'
                         type: array
                         x-kubernetes-list-map-keys:
                         - name
@@ -971,7 +888,6 @@ spec:
                                   excludeNetworkSubnetCidr IP addresses in subnet ranges will be excluded when selecting
                                   the IP address from the VirtualMachine's VM for use in the status.addresses fields.
                                 items:
-                                  format: cidr
                                   type: string
                                 type: array
                                 x-kubernetes-list-type: atomic
@@ -989,7 +905,6 @@ spec:
                                   networkSubnetCidr IP address on VirtualMachine's network interfaces included in the fields' CIDRs
                                   that will be used in respective status.addresses fields.
                                 items:
-                                  format: cidr
                                   type: string
                                 type: array
                                 x-kubernetes-list-type: set
@@ -1003,7 +918,6 @@ spec:
                                   excludeNetworkSubnetCidr IP addresses in subnet ranges will be excluded when selecting
                                   the IP address from the VirtualMachine's VM for use in the status.addresses fields.
                                 items:
-                                  format: cidr
                                   type: string
                                 type: array
                                 x-kubernetes-list-type: atomic
@@ -1021,7 +935,6 @@ spec:
                                   networkSubnetCidr IP address on VirtualMachine's network interfaces included in the fields' CIDRs
                                   that will be used in respective status.addresses fields.
                                 items:
-                                  format: cidr
                                   type: string
                                 type: array
                                 x-kubernetes-list-type: set
@@ -1065,10 +978,6 @@ spec:
                               minimum: 1
                               type: integer
                             server:
-                              anyOf:
-                              - format: ipv4
-                              - format: ipv6
-                              - format: hostname
                               description: server is the fully-qualified domain name
                                 or the IP address of the vCenter server.
                               maxLength: 255
@@ -1126,12 +1035,6 @@ spec:
                   and the operators should not configure the operand for highly-available operation
                   The 'External' mode indicates that the control plane is hosted externally to the cluster and that
                   its components are not visible within the cluster.
-                enum:
-                - HighlyAvailable
-                - HighlyAvailableArbiter
-                - SingleReplica
-                - DualReplica
-                - External
                 type: string
               cpuPartitioning:
                 default: None
@@ -1249,110 +1152,6 @@ spec:
                     description: aws contains settings specific to the Amazon Web
                       Services infrastructure provider.
                     properties:
-                      cloudLoadBalancerConfig:
-                        default:
-                          dnsType: PlatformDefault
-                        description: |-
-                          cloudLoadBalancerConfig holds configuration related to DNS and cloud
-                          load balancers. It allows configuration of in-cluster DNS as an alternative
-                          to the platform default DNS implementation.
-                          When using the ClusterHosted DNS type, Load Balancer IP addresses
-                          must be provided for the API and internal API load balancers as well as the
-                          ingress load balancer.
-                        nullable: true
-                        properties:
-                          clusterHosted:
-                            description: |-
-                              clusterHosted holds the IP addresses of API, API-Int and Ingress Load
-                              Balancers on Cloud Platforms. The DNS solution hosted within the cluster
-                              use these IP addresses to provide resolution for API, API-Int and Ingress
-                              services.
-                            properties:
-                              apiIntLoadBalancerIPs:
-                                description: |-
-                                  apiIntLoadBalancerIPs holds Load Balancer IPs for the internal API service.
-                                  These Load Balancer IP addresses can be IPv4 and/or IPv6 addresses.
-                                  Entries in the apiIntLoadBalancerIPs must be unique.
-                                  A maximum of 16 IP addresses are permitted.
-                                format: ip
-                                items:
-                                  description: IP is an IP address (for example, "10.0.0.0"
-                                    or "fd00::").
-                                  maxLength: 39
-                                  minLength: 1
-                                  type: string
-                                  x-kubernetes-validations:
-                                  - message: value must be a valid IP address
-                                    rule: isIP(self)
-                                maxItems: 16
-                                type: array
-                                x-kubernetes-list-type: set
-                              apiLoadBalancerIPs:
-                                description: |-
-                                  apiLoadBalancerIPs holds Load Balancer IPs for the API service.
-                                  These Load Balancer IP addresses can be IPv4 and/or IPv6 addresses.
-                                  Could be empty for private clusters.
-                                  Entries in the apiLoadBalancerIPs must be unique.
-                                  A maximum of 16 IP addresses are permitted.
-                                format: ip
-                                items:
-                                  description: IP is an IP address (for example, "10.0.0.0"
-                                    or "fd00::").
-                                  maxLength: 39
-                                  minLength: 1
-                                  type: string
-                                  x-kubernetes-validations:
-                                  - message: value must be a valid IP address
-                                    rule: isIP(self)
-                                maxItems: 16
-                                type: array
-                                x-kubernetes-list-type: set
-                              ingressLoadBalancerIPs:
-                                description: |-
-                                  ingressLoadBalancerIPs holds IPs for Ingress Load Balancers.
-                                  These Load Balancer IP addresses can be IPv4 and/or IPv6 addresses.
-                                  Entries in the ingressLoadBalancerIPs must be unique.
-                                  A maximum of 16 IP addresses are permitted.
-                                format: ip
-                                items:
-                                  description: IP is an IP address (for example, "10.0.0.0"
-                                    or "fd00::").
-                                  maxLength: 39
-                                  minLength: 1
-                                  type: string
-                                  x-kubernetes-validations:
-                                  - message: value must be a valid IP address
-                                    rule: isIP(self)
-                                maxItems: 16
-                                type: array
-                                x-kubernetes-list-type: set
-                            type: object
-                          dnsType:
-                            default: PlatformDefault
-                            description: |-
-                              dnsType indicates the type of DNS solution in use within the cluster. Its default value of
-                              `PlatformDefault` indicates that the cluster's DNS is the default provided by the cloud platform.
-                              It can be set to `ClusterHosted` to bypass the configuration of the cloud default DNS. In this mode,
-                              the cluster needs to provide a self-hosted DNS solution for the cluster's installation to succeed.
-                              The cluster's use of the cloud's Load Balancers is unaffected by this setting.
-                              The value is immutable after it has been set at install time.
-                              Currently, there is no way for the customer to add additional DNS entries into the cluster hosted DNS.
-                              Enabling this functionality allows the user to start their own DNS solution outside the cluster after
-                              installation is complete. The customer would be responsible for configuring this custom DNS solution,
-                              and it can be run in addition to the in-cluster DNS solution.
-                            enum:
-                            - ClusterHosted
-                            - PlatformDefault
-                            type: string
-                            x-kubernetes-validations:
-                            - message: dnsType is immutable
-                              rule: oldSelf == '' || self == oldSelf
-                        type: object
-                        x-kubernetes-validations:
-                        - message: clusterHosted is permitted only when dnsType is
-                            ClusterHosted
-                          rule: 'has(self.dnsType) && self.dnsType != ''ClusterHosted''
-                            ? !has(self.clusterHosted) : true'
                       region:
                         description: region holds the default AWS region for new AWS
                           resources created by the cluster.
@@ -1778,110 +1577,6 @@ spec:
                     description: gcp contains settings specific to the Google Cloud
                       Platform infrastructure provider.
                     properties:
-                      cloudLoadBalancerConfig:
-                        default:
-                          dnsType: PlatformDefault
-                        description: |-
-                          cloudLoadBalancerConfig holds configuration related to DNS and cloud
-                          load balancers. It allows configuration of in-cluster DNS as an alternative
-                          to the platform default DNS implementation.
-                          When using the ClusterHosted DNS type, Load Balancer IP addresses
-                          must be provided for the API and internal API load balancers as well as the
-                          ingress load balancer.
-                        nullable: true
-                        properties:
-                          clusterHosted:
-                            description: |-
-                              clusterHosted holds the IP addresses of API, API-Int and Ingress Load
-                              Balancers on Cloud Platforms. The DNS solution hosted within the cluster
-                              use these IP addresses to provide resolution for API, API-Int and Ingress
-                              services.
-                            properties:
-                              apiIntLoadBalancerIPs:
-                                description: |-
-                                  apiIntLoadBalancerIPs holds Load Balancer IPs for the internal API service.
-                                  These Load Balancer IP addresses can be IPv4 and/or IPv6 addresses.
-                                  Entries in the apiIntLoadBalancerIPs must be unique.
-                                  A maximum of 16 IP addresses are permitted.
-                                format: ip
-                                items:
-                                  description: IP is an IP address (for example, "10.0.0.0"
-                                    or "fd00::").
-                                  maxLength: 39
-                                  minLength: 1
-                                  type: string
-                                  x-kubernetes-validations:
-                                  - message: value must be a valid IP address
-                                    rule: isIP(self)
-                                maxItems: 16
-                                type: array
-                                x-kubernetes-list-type: set
-                              apiLoadBalancerIPs:
-                                description: |-
-                                  apiLoadBalancerIPs holds Load Balancer IPs for the API service.
-                                  These Load Balancer IP addresses can be IPv4 and/or IPv6 addresses.
-                                  Could be empty for private clusters.
-                                  Entries in the apiLoadBalancerIPs must be unique.
-                                  A maximum of 16 IP addresses are permitted.
-                                format: ip
-                                items:
-                                  description: IP is an IP address (for example, "10.0.0.0"
-                                    or "fd00::").
-                                  maxLength: 39
-                                  minLength: 1
-                                  type: string
-                                  x-kubernetes-validations:
-                                  - message: value must be a valid IP address
-                                    rule: isIP(self)
-                                maxItems: 16
-                                type: array
-                                x-kubernetes-list-type: set
-                              ingressLoadBalancerIPs:
-                                description: |-
-                                  ingressLoadBalancerIPs holds IPs for Ingress Load Balancers.
-                                  These Load Balancer IP addresses can be IPv4 and/or IPv6 addresses.
-                                  Entries in the ingressLoadBalancerIPs must be unique.
-                                  A maximum of 16 IP addresses are permitted.
-                                format: ip
-                                items:
-                                  description: IP is an IP address (for example, "10.0.0.0"
-                                    or "fd00::").
-                                  maxLength: 39
-                                  minLength: 1
-                                  type: string
-                                  x-kubernetes-validations:
-                                  - message: value must be a valid IP address
-                                    rule: isIP(self)
-                                maxItems: 16
-                                type: array
-                                x-kubernetes-list-type: set
-                            type: object
-                          dnsType:
-                            default: PlatformDefault
-                            description: |-
-                              dnsType indicates the type of DNS solution in use within the cluster. Its default value of
-                              `PlatformDefault` indicates that the cluster's DNS is the default provided by the cloud platform.
-                              It can be set to `ClusterHosted` to bypass the configuration of the cloud default DNS. In this mode,
-                              the cluster needs to provide a self-hosted DNS solution for the cluster's installation to succeed.
-                              The cluster's use of the cloud's Load Balancers is unaffected by this setting.
-                              The value is immutable after it has been set at install time.
-                              Currently, there is no way for the customer to add additional DNS entries into the cluster hosted DNS.
-                              Enabling this functionality allows the user to start their own DNS solution outside the cluster after
-                              installation is complete. The customer would be responsible for configuring this custom DNS solution,
-                              and it can be run in addition to the in-cluster DNS solution.
-                            enum:
-                            - ClusterHosted
-                            - PlatformDefault
-                            type: string
-                            x-kubernetes-validations:
-                            - message: dnsType is immutable
-                              rule: oldSelf == '' || self == oldSelf
-                        type: object
-                        x-kubernetes-validations:
-                        - message: clusterHosted is permitted only when dnsType is
-                            ClusterHosted
-                          rule: 'has(self.dnsType) && self.dnsType != ''ClusterHosted''
-                            ? !has(self.clusterHosted) : true'
                       projectID:
                         description: resourceGroupName is the Project ID for new GCP
                           resources created for the cluster.
@@ -1989,71 +1684,6 @@ spec:
                         - message: resourceTags are immutable and may only be configured
                             during installation
                           rule: self.all(x, x in oldSelf) && oldSelf.all(x, x in self)
-                      serviceEndpoints:
-                        description: |-
-                          serviceEndpoints specifies endpoints that override the default endpoints
-                          used when creating clients to interact with GCP services.
-                          When not specified, the default endpoint for the GCP region will be used.
-                          Only 1 endpoint override is permitted for each GCP service.
-                          The maximum number of endpoint overrides allowed is 9.
-                        items:
-                          description: |-
-                            GCPServiceEndpoint store the configuration of a custom url to
-                            override existing defaults of GCP Services.
-                          properties:
-                            name:
-                              description: |-
-                                name is the name of the GCP service whose endpoint is being overridden.
-                                This must be provided and cannot be empty.
-
-                                Allowed values are Compute, Container, CloudResourceManager, DNS, File, IAM, ServiceUsage,
-                                Storage, and TagManager.
-
-                                As an example, when setting the name to Compute all requests made by the caller to the GCP Compute
-                                Service will be directed to the endpoint specified in the url field.
-                              enum:
-                              - Compute
-                              - Container
-                              - CloudResourceManager
-                              - DNS
-                              - File
-                              - IAM
-                              - ServiceUsage
-                              - Storage
-                              type: string
-                            url:
-                              description: |-
-                                url is a fully qualified URI that overrides the default endpoint for a client using the GCP service specified
-                                in the name field.
-                                url is required, must use the scheme https, must not be more than 253 characters in length,
-                                and must be a valid URL according to Go's net/url package (https://pkg.go.dev/net/url#URL)
-
-                                An example of a valid endpoint that overrides the Compute Service: "https://compute-myendpoint1.p.googleapis.com"
-                              maxLength: 253
-                              type: string
-                              x-kubernetes-validations:
-                              - message: must be a valid URL
-                                rule: isURL(self)
-                              - message: scheme must be https
-                                rule: 'isURL(self) ? (url(self).getScheme() == "https")
-                                  : true'
-                              - message: url must consist only of a scheme and domain.
-                                  The url path must be empty.
-                                rule: url(self).getEscapedPath() == "" || url(self).getEscapedPath()
-                                  == "/"
-                          required:
-                          - name
-                          - url
-                          type: object
-                        maxItems: 8
-                        type: array
-                        x-kubernetes-list-map-keys:
-                        - name
-                        x-kubernetes-list-type: map
-                        x-kubernetes-validations:
-                        - message: only 1 endpoint override is permitted per GCP service
-                            name
-                          rule: self.all(x, self.exists_one(y, x.name == y.name))
                     type: object
                     x-kubernetes-validations:
                     - message: resourceLabels may only be configured during installation
@@ -2138,7 +1768,6 @@ spec:
                           - name
                           - url
                           type: object
-                        maxItems: 13
                         type: array
                         x-kubernetes-list-map-keys:
                         - name

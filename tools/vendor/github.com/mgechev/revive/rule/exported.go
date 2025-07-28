@@ -12,7 +12,7 @@ import (
 	"github.com/mgechev/revive/lint"
 )
 
-// disabledChecks store ignored warnings types
+// disabledChecks store ignored warnings types.
 type disabledChecks struct {
 	Const            bool
 	Function         bool
@@ -30,7 +30,7 @@ const (
 	checkNameStuttering       = "stuttering"
 )
 
-// isDisabled returns true if the given check is disabled, false otherwise
+// isDisabled returns true if the given check is disabled, false otherwise.
 func (dc *disabledChecks) isDisabled(checkName string) bool {
 	switch checkName {
 	case "var":
@@ -110,11 +110,11 @@ func (r *ExportedRule) Configure(arguments lint.Arguments) error {
 
 // Apply applies the rule to given file.
 func (r *ExportedRule) Apply(file *lint.File, _ lint.Arguments) []lint.Failure {
-	var failures []lint.Failure
-	if file.IsTest() {
-		return failures
+	if !file.IsImportable() {
+		return nil
 	}
 
+	var failures []lint.Failure
 	walker := lintExported{
 		file: file,
 		onFailure: func(failure lint.Failure) {
@@ -254,7 +254,7 @@ func (w *lintExported) lintTypeDoc(t *ast.TypeSpec, doc *ast.CommentGroup, first
 	)
 }
 
-// checkValueNames returns true if names check, false otherwise
+// checkValueNames returns true if names check, false otherwise.
 func (w *lintExported) checkValueNames(names []*ast.Ident, nodeToBlame ast.Node, kind string) bool {
 	// Check that none are exported except for the first.
 	if len(names) < 2 {
@@ -438,7 +438,7 @@ func (w *lintExported) lintInterfaceMethod(typeName string, m *ast.Field) {
 	}
 }
 
-// mustCheckMethod returns true if the method must be checked by this rule, false otherwise
+// mustCheckMethod returns true if the method must be checked by this rule, false otherwise.
 func (w *lintExported) mustCheckMethod(fn *ast.FuncDecl) bool {
 	recv := typeparams.ReceiverType(fn)
 

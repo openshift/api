@@ -149,9 +149,6 @@
                         "name": "ProcMountType"
                     },
                     {
-                        "name": "RouteAdvertisements"
-                    },
-                    {
                         "name": "SELinuxChangePolicy"
                     },
                     {
@@ -293,6 +290,9 @@
                     },
                     {
                         "name": "PrivateHostedZoneAWS"
+                    },
+                    {
+                        "name": "RouteAdvertisements"
                     },
                     {
                         "name": "RouteExternalCertificate"

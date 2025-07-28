@@ -39051,7 +39051,7 @@
       "type": "object",
       "properties": {
         "fieldSelector": {
-          "description": "fieldSelector describes the limitation on access based on field.  It can only limit access, not broaden it.\n\nThis field  is alpha-level. To use this field, you must enable the `AuthorizeWithSelectors` feature gate (disabled by default).",
+          "description": "fieldSelector describes the limitation on access based on field.  It can only limit access, not broaden it.",
           "$ref": "#/definitions/io.k8s.api.authorization.v1.FieldSelectorAttributes"
         },
         "group": {
@@ -39059,7 +39059,7 @@
           "type": "string"
         },
         "labelSelector": {
-          "description": "labelSelector describes the limitation on access based on labels.  It can only limit access, not broaden it.\n\nThis field  is alpha-level. To use this field, you must enable the `AuthorizeWithSelectors` feature gate (disabled by default).",
+          "description": "labelSelector describes the limitation on access based on labels.  It can only limit access, not broaden it.",
           "$ref": "#/definitions/io.k8s.api.authorization.v1.LabelSelectorAttributes"
         },
         "name": {
@@ -40208,7 +40208,7 @@
           "x-kubernetes-patch-strategy": "merge"
         },
         "envFrom": {
-          "description": "List of sources to populate environment variables in the container. The keys defined within a source must be a C_IDENTIFIER. All invalid keys will be reported as an event when the container is starting. When a key exists in multiple sources, the value associated with the last source will take precedence. Values defined by an Env with a duplicate key will take precedence. Cannot be updated.",
+          "description": "List of sources to populate environment variables in the container. The keys defined within a source may consist of any printable ASCII characters except '='. When a key exists in multiple sources, the value associated with the last source will take precedence. Values defined by an Env with a duplicate key will take precedence. Cannot be updated.",
           "type": "array",
           "items": {
             "default": {},
@@ -40937,7 +40937,7 @@
           "$ref": "#/definitions/io.k8s.api.core.v1.ConfigMapEnvSource"
         },
         "prefix": {
-          "description": "Optional text to prepend to the name of each environment variable. Must be a C_IDENTIFIER.",
+          "description": "Optional text to prepend to the name of each environment variable. May consist of any printable ASCII characters except '='.",
           "type": "string"
         },
         "secretRef": {
@@ -40954,7 +40954,7 @@
       ],
       "properties": {
         "name": {
-          "description": "Name of the environment variable. Must be a C_IDENTIFIER.",
+          "description": "Name of the environment variable. May consist of any printable ASCII characters except '='.",
           "type": "string",
           "default": ""
         },
@@ -41030,7 +41030,7 @@
           "x-kubernetes-patch-strategy": "merge"
         },
         "envFrom": {
-          "description": "List of sources to populate environment variables in the container. The keys defined within a source must be a C_IDENTIFIER. All invalid keys will be reported as an event when the container is starting. When a key exists in multiple sources, the value associated with the last source will take precedence. Values defined by an Env with a duplicate key will take precedence. Cannot be updated.",
+          "description": "List of sources to populate environment variables in the container. The keys defined within a source may consist of any printable ASCII characters except '='. When a key exists in multiple sources, the value associated with the last source will take precedence. Values defined by an Env with a duplicate key will take precedence. Cannot be updated.",
           "type": "array",
           "items": {
             "default": {},
@@ -41211,7 +41211,7 @@
           "x-kubernetes-patch-strategy": "merge"
         },
         "envFrom": {
-          "description": "List of sources to populate environment variables in the container. The keys defined within a source must be a C_IDENTIFIER. All invalid keys will be reported as an event when the container is starting. When a key exists in multiple sources, the value associated with the last source will take precedence. Values defined by an Env with a duplicate key will take precedence. Cannot be updated.",
+          "description": "List of sources to populate environment variables in the container. The keys defined within a source may consist of any printable ASCII characters except '='. When a key exists in multiple sources, the value associated with the last source will take precedence. Values defined by an Env with a duplicate key will take precedence. Cannot be updated.",
           "type": "array",
           "items": {
             "default": {},
@@ -41741,7 +41741,7 @@
       ],
       "properties": {
         "endpoints": {
-          "description": "endpoints is the endpoint name that details Glusterfs topology. More info: https://examples.k8s.io/volumes/glusterfs/README.md#create-a-pod",
+          "description": "endpoints is the endpoint name that details Glusterfs topology.",
           "type": "string",
           "default": ""
         },
@@ -43941,7 +43941,7 @@
       "type": "object",
       "properties": {
         "preferredDuringSchedulingIgnoredDuringExecution": {
-          "description": "The scheduler will prefer to schedule pods to nodes that satisfy the anti-affinity expressions specified by this field, but it may choose a node that violates one or more of the expressions. The node that is most preferred is the one with the greatest sum of weights, i.e. for each node that meets all of the scheduling requirements (resource request, requiredDuringScheduling anti-affinity expressions, etc.), compute a sum by iterating through the elements of this field and adding \"weight\" to the sum if the node has pods which matches the corresponding podAffinityTerm; the node(s) with the highest sum are the most preferred.",
+          "description": "The scheduler will prefer to schedule pods to nodes that satisfy the anti-affinity expressions specified by this field, but it may choose a node that violates one or more of the expressions. The node that is most preferred is the one with the greatest sum of weights, i.e. for each node that meets all of the scheduling requirements (resource request, requiredDuringScheduling anti-affinity expressions, etc.), compute a sum by iterating through the elements of this field and subtracting \"weight\" from the sum if the node has pods which matches the corresponding podAffinityTerm; the node(s) with the highest sum are the most preferred.",
           "type": "array",
           "items": {
             "default": {},
@@ -44528,7 +44528,7 @@
           "type": "boolean"
         },
         "hostNetwork": {
-          "description": "Host networking requested for this pod. Use the host's network namespace. If this option is set, the ports that will be used must be specified. Default to false.",
+          "description": "Host networking requested for this pod. Use the host's network namespace. When using HostNetwork you should specify ports so the scheduler is aware. When `hostNetwork` is true, specified `hostPort` fields in port definitions must match `containerPort`, and unspecified `hostPort` fields in port definitions are defaulted to match `containerPort`. Default to false.",
           "type": "boolean"
         },
         "hostPID": {
@@ -46751,7 +46751,7 @@
           "default": ""
         },
         "timeAdded": {
-          "description": "TimeAdded represents the time at which the taint was added. It is only written for NoExecute taints.",
+          "description": "TimeAdded represents the time at which the taint was added.",
           "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Time"
         },
         "value": {
@@ -47022,7 +47022,7 @@
           "$ref": "#/definitions/io.k8s.api.core.v1.GitRepoVolumeSource"
         },
         "glusterfs": {
-          "description": "glusterfs represents a Glusterfs mount on the host that shares a pod's lifetime. Deprecated: Glusterfs is deprecated and the in-tree glusterfs type is no longer supported. More info: https://examples.k8s.io/volumes/glusterfs/README.md",
+          "description": "glusterfs represents a Glusterfs mount on the host that shares a pod's lifetime. Deprecated: Glusterfs is deprecated and the in-tree glusterfs type is no longer supported.",
           "$ref": "#/definitions/io.k8s.api.core.v1.GlusterfsVolumeSource"
         },
         "hostPath": {
@@ -47034,7 +47034,7 @@
           "$ref": "#/definitions/io.k8s.api.core.v1.ImageVolumeSource"
         },
         "iscsi": {
-          "description": "iscsi represents an ISCSI Disk resource that is attached to a kubelet's host machine and then exposed to the pod. More info: https://examples.k8s.io/volumes/iscsi/README.md",
+          "description": "iscsi represents an ISCSI Disk resource that is attached to a kubelet's host machine and then exposed to the pod. More info: https://kubernetes.io/docs/concepts/storage/volumes/#iscsi",
           "$ref": "#/definitions/io.k8s.api.core.v1.ISCSIVolumeSource"
         },
         "name": {
@@ -47067,7 +47067,7 @@
           "$ref": "#/definitions/io.k8s.api.core.v1.QuobyteVolumeSource"
         },
         "rbd": {
-          "description": "rbd represents a Rados Block Device mount on the host that shares a pod's lifetime. Deprecated: RBD is deprecated and the in-tree rbd type is no longer supported. More info: https://examples.k8s.io/volumes/rbd/README.md",
+          "description": "rbd represents a Rados Block Device mount on the host that shares a pod's lifetime. Deprecated: RBD is deprecated and the in-tree rbd type is no longer supported.",
           "$ref": "#/definitions/io.k8s.api.core.v1.RBDVolumeSource"
         },
         "scaleIO": {
@@ -47302,7 +47302,7 @@
           "$ref": "#/definitions/io.k8s.api.core.v1.GitRepoVolumeSource"
         },
         "glusterfs": {
-          "description": "glusterfs represents a Glusterfs mount on the host that shares a pod's lifetime. Deprecated: Glusterfs is deprecated and the in-tree glusterfs type is no longer supported. More info: https://examples.k8s.io/volumes/glusterfs/README.md",
+          "description": "glusterfs represents a Glusterfs mount on the host that shares a pod's lifetime. Deprecated: Glusterfs is deprecated and the in-tree glusterfs type is no longer supported.",
           "$ref": "#/definitions/io.k8s.api.core.v1.GlusterfsVolumeSource"
         },
         "hostPath": {
@@ -47314,7 +47314,7 @@
           "$ref": "#/definitions/io.k8s.api.core.v1.ImageVolumeSource"
         },
         "iscsi": {
-          "description": "iscsi represents an ISCSI Disk resource that is attached to a kubelet's host machine and then exposed to the pod. More info: https://examples.k8s.io/volumes/iscsi/README.md",
+          "description": "iscsi represents an ISCSI Disk resource that is attached to a kubelet's host machine and then exposed to the pod. More info: https://kubernetes.io/docs/concepts/storage/volumes/#iscsi",
           "$ref": "#/definitions/io.k8s.api.core.v1.ISCSIVolumeSource"
         },
         "nfs": {
@@ -47342,7 +47342,7 @@
           "$ref": "#/definitions/io.k8s.api.core.v1.QuobyteVolumeSource"
         },
         "rbd": {
-          "description": "rbd represents a Rados Block Device mount on the host that shares a pod's lifetime. Deprecated: RBD is deprecated and the in-tree rbd type is no longer supported. More info: https://examples.k8s.io/volumes/rbd/README.md",
+          "description": "rbd represents a Rados Block Device mount on the host that shares a pod's lifetime. Deprecated: RBD is deprecated and the in-tree rbd type is no longer supported.",
           "$ref": "#/definitions/io.k8s.api.core.v1.RBDVolumeSource"
         },
         "scaleIO": {

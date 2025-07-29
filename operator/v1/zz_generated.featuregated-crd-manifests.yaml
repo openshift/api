@@ -306,6 +306,7 @@ machineconfigurations.operator.openshift.io:
   Category: ""
   FeatureGates:
   - ManagedBootImages
+  - ManagedBootImagesCPMS
   FilenameOperatorName: machine-config
   FilenameOperatorOrdering: "01"
   FilenameRunLevel: "0000_80"

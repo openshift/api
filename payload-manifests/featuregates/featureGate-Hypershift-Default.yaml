@@ -86,9 +86,6 @@
                         "name": "GCPClusterHostedDNS"
                     },
                     {
-                        "name": "GCPClusterHostedDNSInstall"
-                    },
-                    {
                         "name": "GCPCustomAPIEndpoints"
                     },
                     {
@@ -254,6 +251,9 @@
                     },
                     {
                         "name": "ExternalOIDC"
+                    },
+                    {
+                        "name": "GCPClusterHostedDNSInstall"
                     },
                     {
                         "name": "GatewayAPI"

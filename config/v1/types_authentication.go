@@ -91,6 +91,7 @@ type AuthenticationSpec struct {
 	// +kubebuilder:validation:MaxItems=1
 	// +openshift:enable:FeatureGate=ExternalOIDC
 	// +openshift:enable:FeatureGate=ExternalOIDCWithUIDAndExtraClaimMappings
+	// +optional
 	OIDCProviders []OIDCProvider `json:"oidcProviders,omitempty"`
 }
 
@@ -253,9 +254,16 @@ type TokenIssuer struct {
 	// The Kubernetes API server determines how authentication tokens should be handled
 	// by matching the 'iss' claim in the JWT to the issuerURL of configured identity providers.
 	//
-	// issuerURL must use the 'https' scheme.
+	// Must be at least 1 character and must not exceed 512 characters in length.
+	// Must be a valid URL that uses the 'https' scheme and does not contain a query, fragment or user.
 	//
-	// +kubebuilder:validation:Pattern=`^https:\/\/[^\s]`
+	// +kubebuilder:validation:XValidation:rule="isURL(self)",message="must be a valid URL"
+	// +kubebuilder:validation:XValidation:rule="isURL(self) && url(self).getScheme() == 'https'",message="must use the 'https' scheme"
+	// +kubebuilder:validation:XValidation:rule="isURL(self) && url(self).getQuery() == {}",message="must not have a query"
+	// +kubebuilder:validation:XValidation:rule="self.find('#(.+)$') == ''",message="must not have a fragment"
+	// +kubebuilder:validation:XValidation:rule="self.find('@') == ''",message="must not have user info"
+	// +kubebuilder:validation:MaxLength=512
+	// +kubebuilder:validation:MinLength=1
 	// +required
 	URL string `json:"issuerURL"`
 

@@ -39,6 +39,9 @@
                         "name": "AWSClusterHostedDNS"
                     },
                     {
+                        "name": "AWSClusterHostedDNSInstall"
+                    },
+                    {
                         "name": "AWSDedicatedHosts"
                     },
                     {
@@ -126,7 +129,13 @@
                         "name": "GCPClusterHostedDNS"
                     },
                     {
+                        "name": "GCPClusterHostedDNSInstall"
+                    },
+                    {
                         "name": "GCPCustomAPIEndpoints"
+                    },
+                    {
+                        "name": "GCPCustomAPIEndpointsInstall"
                     },
                     {
                         "name": "GatewayAPI"

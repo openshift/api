@@ -1,8 +1,8 @@
 apiVersion: apiextensions.k8s.io/v1 # Hack because controller-gen complains if we don't have this
-name: "AWS Cluster Hosted DNS"
+name: "Azure Cluster Hosted DNS"
 crdName: controllerconfigs.machineconfiguration.openshift.io
 featureGates:
-- AWSClusterHostedDNSInstall
+- AzureClusterHostedDNSInstall
 tests:
   onCreate:
     - name: Should be able to create a minimal ControllerConfig
@@ -15,7 +15,7 @@ tests:
           baseOSExtensionsContainerImage: example.com/example/openshift-release-dev@sha256:d98795f7932441b30bb8bcfbbf05912875383fad1f2b3be08a22ec148d68607e
           cloudProviderCAData: null
           cloudProviderConfig: ""
-          clusterDNSIP: fd02::a
+          clusterDNSIP: 10.0.0.2
           dns:
             apiVersion: config.openshift.io/v1
             kind: DNS
@@ -35,19 +35,19 @@ tests:
               apiServerInternalURI: https://api-int.cnfde4.sno.ptp.lab.eng.bos.redhat.com:6443
               apiServerURL: https://api.cnfde4.sno.ptp.lab.eng.bos.redhat.com:6443
               cpuPartitioning: "None"
-              controlPlaneTopology: SingleReplica
+              controlPlaneTopology: HighlyAvailable
               etcdDiscoveryDomain: ""
               infrastructureName: cnfde4-sxhr7
-              infrastructureTopology: SingleReplica
+              infrastructureTopology: HighlyAvailable
               platform: None
               platformStatus:
                 type: None
-          ipFamilies: IPv6
+          ipFamilies: IPv4
           kubeAPIServerServingCAData: Y2VydGlmaWNhdGUK
           network: null
           networkType: OVNKubernetes
           osImageURL: example.com/example/openshift-release-dev@sha256:eacdc37aec78fdbf8caa9601e4012ab31453cf59b086474901900e853e803ea8
-          platform: none
+          platform: None
           proxy: null
           pullSecret:
             name: pull-secret
@@ -63,7 +63,7 @@ tests:
           baseOSExtensionsContainerImage: example.com/example/openshift-release-dev@sha256:d98795f7932441b30bb8bcfbbf05912875383fad1f2b3be08a22ec148d68607e
           cloudProviderCAData: null
           cloudProviderConfig: ""
-          clusterDNSIP: fd02::a
+          clusterDNSIP: 10.0.0.2
           dns:
             apiVersion: config.openshift.io/v1
             kind: DNS
@@ -83,19 +83,19 @@ tests:
               apiServerInternalURI: https://api-int.cnfde4.sno.ptp.lab.eng.bos.redhat.com:6443
               apiServerURL: https://api.cnfde4.sno.ptp.lab.eng.bos.redhat.com:6443
               cpuPartitioning: "None"
-              controlPlaneTopology: SingleReplica
+              controlPlaneTopology: HighlyAvailable
               etcdDiscoveryDomain: ""
               infrastructureName: cnfde4-sxhr7
-              infrastructureTopology: SingleReplica
+              infrastructureTopology: HighlyAvailable
               platform: None
               platformStatus:
                 type: None
-          ipFamilies: IPv6
+          ipFamilies: IPv4
           kubeAPIServerServingCAData: Y2VydGlmaWNhdGUK
           network: null
           networkType: OVNKubernetes
           osImageURL: example.com/example/openshift-release-dev@sha256:eacdc37aec78fdbf8caa9601e4012ab31453cf59b086474901900e853e803ea8
-          platform: none
+          platform: None
           proxy: null
           pullSecret:
             name: pull-secret

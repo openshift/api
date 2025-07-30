@@ -218,9 +218,6 @@
                         "name": "VSphereMixedNodeEnv"
                     },
                     {
-                        "name": "VSphereMultiDisk"
-                    },
-                    {
                         "name": "VolumeAttributesClass"
                     },
                     {
@@ -317,6 +314,9 @@
                     },
                     {
                         "name": "UserNamespacesSupport"
+                    },
+                    {
+                        "name": "VSphereMultiDisk"
                     },
                     {
                         "name": "VSphereMultiNetworks"

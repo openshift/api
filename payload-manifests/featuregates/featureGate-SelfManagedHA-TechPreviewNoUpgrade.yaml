@@ -66,6 +66,9 @@
                         "name": "AWSDedicatedHosts"
                     },
                     {
+                        "name": "AWSDualStackInstall"
+                    },
+                    {
                         "name": "AWSServiceLBNetworkSecurityGroup"
                     },
                     {
@@ -85,6 +88,9 @@
                     },
                     {
                         "name": "AzureDedicatedHosts"
+                    },
+                    {
+                        "name": "AzureDualStackInstall"
                     },
                     {
                         "name": "AzureMultiDisk"
@@ -148,6 +154,9 @@
                     },
                     {
                         "name": "GCPCustomAPIEndpointsInstall"
+                    },
+                    {
+                        "name": "GCPDualStackInstall"
                     },
                     {
                         "name": "GatewayAPI"

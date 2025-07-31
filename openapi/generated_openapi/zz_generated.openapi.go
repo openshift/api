@@ -1018,6 +1018,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"github.com/openshift/api/operator/v1.InsightsOperatorSpec":                                          schema_openshift_api_operator_v1_InsightsOperatorSpec(ref),
 		"github.com/openshift/api/operator/v1.InsightsOperatorStatus":                                        schema_openshift_api_operator_v1_InsightsOperatorStatus(ref),
 		"github.com/openshift/api/operator/v1.InsightsReport":                                                schema_openshift_api_operator_v1_InsightsReport(ref),
+		"github.com/openshift/api/operator/v1.IrreconcilableValidationOverrides":                             schema_openshift_api_operator_v1_IrreconcilableValidationOverrides(ref),
 		"github.com/openshift/api/operator/v1.KubeAPIServer":                                                 schema_openshift_api_operator_v1_KubeAPIServer(ref),
 		"github.com/openshift/api/operator/v1.KubeAPIServerList":                                             schema_openshift_api_operator_v1_KubeAPIServerList(ref),
 		"github.com/openshift/api/operator/v1.KubeAPIServerSpec":                                             schema_openshift_api_operator_v1_KubeAPIServerSpec(ref),
@@ -51709,6 +51710,39 @@ func schema_openshift_api_operator_v1_InsightsReport(ref common.ReferenceCallbac
 	}
 }
 
+func schema_openshift_api_operator_v1_IrreconcilableValidationOverrides(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "IrreconcilableValidationOverrides holds the irreconcilable validations overrides to be applied on each rendered MachineConfig generation.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"storage": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-type": "set",
+							},
+						},
+						SchemaProps: spec.SchemaProps{
+							Description: "storage can be used to allow making irreconcilable changes to the selected sections under the `spec.config.storage` field of MachineConfig CRs It must have at least one item, may not exceed 3 items and must not contain duplicates. Allowed element values are \"Disks\", \"FileSystems\", \"Raid\" and omitted. When contains \"Disks\" changes to the `spec.config.storage.disks` section of MachineConfig CRs are allowed. When contains \"FileSystems\" changes to the `spec.config.storage.filesystems` section of MachineConfig CRs are allowed. When contains \"Raid\" changes to the `spec.config.storage.raid` section of MachineConfig CRs are allowed. When omitted changes to the `spec.config.storage` section are forbidden.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: "",
+										Type:    []string{"string"},
+										Format:  "",
+									},
+								},
+							},
+						},
+					},
+				},
+			},
+		},
+	}
+}
+
 func schema_openshift_api_operator_v1_KubeAPIServer(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -53233,12 +53267,19 @@ func schema_openshift_api_operator_v1_MachineConfigurationSpec(ref common.Refere
 							Ref:         ref("github.com/openshift/api/operator/v1.NodeDisruptionPolicyConfig"),
 						},
 					},
+					"irreconcilableValidationOverrides": {
+						SchemaProps: spec.SchemaProps{
+							Description: "irreconcilableValidationOverrides is an optional field that can used to make changes to a MachineConfig that cannot be applied to existing nodes. When specified, the fields configured with validation overrides will no longer reject changes to those respective fields due to them not being able to be applied to existing nodes. Only newly provisioned nodes will have these configurations applied. Existing nodes will report observed configuration differences in their MachineConfigNode status.",
+							Default:     map[string]interface{}{},
+							Ref:         ref("github.com/openshift/api/operator/v1.IrreconcilableValidationOverrides"),
+						},
+					},
 				},
 				Required: []string{"managementState", "forceRedeploymentReason"},
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/operator/v1.ManagedBootImages", "github.com/openshift/api/operator/v1.NodeDisruptionPolicyConfig", "k8s.io/apimachinery/pkg/runtime.RawExtension"},
+			"github.com/openshift/api/operator/v1.IrreconcilableValidationOverrides", "github.com/openshift/api/operator/v1.ManagedBootImages", "github.com/openshift/api/operator/v1.NodeDisruptionPolicyConfig", "k8s.io/apimachinery/pkg/runtime.RawExtension"},
 	}
 }
 

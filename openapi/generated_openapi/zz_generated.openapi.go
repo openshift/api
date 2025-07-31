@@ -1036,6 +1036,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"github.com/openshift/api/operator/v1.InsightsOperatorSpec":                                          schema_openshift_api_operator_v1_InsightsOperatorSpec(ref),
 		"github.com/openshift/api/operator/v1.InsightsOperatorStatus":                                        schema_openshift_api_operator_v1_InsightsOperatorStatus(ref),
 		"github.com/openshift/api/operator/v1.InsightsReport":                                                schema_openshift_api_operator_v1_InsightsReport(ref),
+		"github.com/openshift/api/operator/v1.IrreconcilableMachineConfigValidationOverrides":                schema_openshift_api_operator_v1_IrreconcilableMachineConfigValidationOverrides(ref),
 		"github.com/openshift/api/operator/v1.KubeAPIServer":                                                 schema_openshift_api_operator_v1_KubeAPIServer(ref),
 		"github.com/openshift/api/operator/v1.KubeAPIServerList":                                             schema_openshift_api_operator_v1_KubeAPIServerList(ref),
 		"github.com/openshift/api/operator/v1.KubeAPIServerSpec":                                             schema_openshift_api_operator_v1_KubeAPIServerSpec(ref),
@@ -52492,6 +52493,40 @@ func schema_openshift_api_operator_v1_InsightsReport(ref common.ReferenceCallbac
 	}
 }
 
+func schema_openshift_api_operator_v1_IrreconcilableMachineConfigValidationOverrides(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "IrreconcilableMachineConfigValidationOverrides holds the irreconcilable validations overrides to be applied on each rendered MachineConfig generation.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"storage": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-type": "set",
+							},
+						},
+						SchemaProps: spec.SchemaProps{
+							Description: "storage can be used to allow making irreconcilable changes to the selected sections under the `spec.config.storage` field of MachineConfig CRs",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: "",
+										Type:    []string{"string"},
+										Format:  "",
+									},
+								},
+							},
+						},
+					},
+				},
+				Required: []string{"storage"},
+			},
+		},
+	}
+}
+
 func schema_openshift_api_operator_v1_KubeAPIServer(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -54016,12 +54051,19 @@ func schema_openshift_api_operator_v1_MachineConfigurationSpec(ref common.Refere
 							Ref:         ref("github.com/openshift/api/operator/v1.NodeDisruptionPolicyConfig"),
 						},
 					},
+					"irreconcilableMCValidationOverrides": {
+						SchemaProps: spec.SchemaProps{
+							Description: "irreconcilableMCValidationOverrides allows administrators to apply MachineConfig changes that would normally be rejected as irreconcilable by disabling specific MCO validations. When overrides are enabled, the MCO will accept MachineConfigs containing changes to the specified sections and include them in the rendered configuration. However, only newly provisioned nodes will apply these changes - existing nodes will report irreconcilable differences in their MachineConfigNode status.",
+							Default:     map[string]interface{}{},
+							Ref:         ref("github.com/openshift/api/operator/v1.IrreconcilableMachineConfigValidationOverrides"),
+						},
+					},
 				},
 				Required: []string{"managementState", "forceRedeploymentReason"},
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/operator/v1.ManagedBootImages", "github.com/openshift/api/operator/v1.NodeDisruptionPolicyConfig", "k8s.io/apimachinery/pkg/runtime.RawExtension"},
+			"github.com/openshift/api/operator/v1.IrreconcilableMachineConfigValidationOverrides", "github.com/openshift/api/operator/v1.ManagedBootImages", "github.com/openshift/api/operator/v1.NodeDisruptionPolicyConfig", "k8s.io/apimachinery/pkg/runtime.RawExtension"},
 	}
 }
 

@@ -8762,6 +8762,14 @@ func schema_openshift_api_config_v1_AWSPlatformStatus(ref common.ReferenceCallba
 							Ref:         ref("github.com/openshift/api/config/v1.CloudLoadBalancerConfig"),
 						},
 					},
+					"ipFamily": {
+						SchemaProps: spec.SchemaProps{
+							Description: "ipFamily indicates the IP Address family supported by cluster nodes.",
+							Default:     "IPFamiliesIPv4",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
 				},
 				Required: []string{"region"},
 			},
@@ -9480,6 +9488,14 @@ func schema_openshift_api_config_v1_AzurePlatformStatus(ref common.ReferenceCall
 							Description: "cloudLoadBalancerConfig holds configuration related to DNS and cloud load balancers. It allows configuration of in-cluster DNS as an alternative to the platform default DNS implementation. When using the ClusterHosted DNS type, Load Balancer IP addresses must be provided for the API and internal API load balancers as well as the ingress load balancer.",
 							Default:     map[string]interface{}{"dnsType": "PlatformDefault"},
 							Ref:         ref("github.com/openshift/api/config/v1.CloudLoadBalancerConfig"),
+						},
+					},
+					"ipFamily": {
+						SchemaProps: spec.SchemaProps{
+							Description: "ipFamily indicates the IP Address family supported by cluster nodes.",
+							Default:     "IPFamiliesIPv4",
+							Type:        []string{"string"},
+							Format:      "",
 						},
 					},
 				},
@@ -12866,6 +12882,14 @@ func schema_openshift_api_config_v1_GCPPlatformStatus(ref common.ReferenceCallba
 									},
 								},
 							},
+						},
+					},
+					"ipFamily": {
+						SchemaProps: spec.SchemaProps{
+							Description: "ipFamily indicates the IP Address family supported by cluster nodes.",
+							Default:     "IPFamiliesIPv4",
+							Type:        []string{"string"},
+							Format:      "",
 						},
 					},
 				},

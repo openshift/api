@@ -536,6 +536,14 @@ type AWSPlatformStatus struct {
 	// +optional
 	// +nullable
 	CloudLoadBalancerConfig *CloudLoadBalancerConfig `json:"cloudLoadBalancerConfig,omitempty"`
+
+	// ipFamily indicates the IP Address family supported by cluster nodes.
+	// +default="IPFamiliesIPv4"
+	// +kubebuilder:default:="IPFamiliesIPv4"
+	// +kubebuilder:validation:Enum="IPFamiliesIPv4";"IPFamiliesDualStack"
+	// +openshift:enable:FeatureGate=AWSDualStackInstall
+	// +optional
+	IpFamily IPFamiliesType `json:"ipFamily,omitempty"`
 }
 
 // AWSResourceTag is a tag to apply to AWS resources created for the cluster.
@@ -607,6 +615,14 @@ type AzurePlatformStatus struct {
 	// +openshift:enable:FeatureGate=AzureClusterHostedDNSInstall
 	// +optional
 	CloudLoadBalancerConfig *CloudLoadBalancerConfig `json:"cloudLoadBalancerConfig,omitempty"`
+
+	// ipFamily indicates the IP Address family supported by cluster nodes.
+	// +default="IPFamiliesIPv4"
+	// +kubebuilder:default:="IPFamiliesIPv4"
+	// +kubebuilder:validation:Enum="IPFamiliesIPv4";"IPFamiliesDualStack"
+	// +openshift:enable:FeatureGate=AzureDualStackInstall
+	// +optional
+	IpFamily IPFamiliesType `json:"ipFamily,omitempty"`
 }
 
 // AzureResourceTag is a tag to apply to Azure resources created for the cluster.
@@ -775,6 +791,14 @@ type GCPPlatformStatus struct {
 	// +optional
 	// +openshift:enable:FeatureGate=GCPCustomAPIEndpointsInstall
 	ServiceEndpoints []GCPServiceEndpoint `json:"serviceEndpoints,omitempty"`
+
+	// ipFamily indicates the IP Address family supported by cluster nodes.
+	// +default="IPFamiliesIPv4"
+	// +kubebuilder:default:="IPFamiliesIPv4"
+	// +kubebuilder:validation:Enum="IPFamiliesIPv4";"IPFamiliesDualStack"
+	// +openshift:enable:FeatureGate=GCPDualStackInstall
+	// +optional
+	IpFamily IPFamiliesType `json:"ipFamily,omitempty"`
 }
 
 // GCPResourceLabel is a label to apply to GCP resources created for the cluster.

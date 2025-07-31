@@ -669,7 +669,7 @@ spec:
                                             when type is Name, and forbidden otherwise
                                           rule: 'has(self.type) && self.type == ''Name''
                                             ?  has(self.name) : !has(self.name)'
-                                      maxItems: 32
+                                      maxItems: 1
                                       minItems: 1
                                       type: array
                                       x-kubernetes-list-type: atomic
@@ -1402,7 +1402,6 @@ spec:
                         - HighlyAvailable
                         - HighlyAvailableArbiter
                         - SingleReplica
-                        - DualReplica
                         - External
                         type: string
                       cpuPartitioning:
@@ -1626,6 +1625,14 @@ spec:
                                     is ClusterHosted
                                   rule: 'has(self.dnsType) && self.dnsType != ''ClusterHosted''
                                     ? !has(self.clusterHosted) : true'
+                              ipFamily:
+                                default: IPFamiliesIPv4
+                                description: ipFamily indicates the IP Address family
+                                  supported by cluster nodes.
+                                enum:
+                                - IPFamiliesIPv4
+                                - IPFamiliesDualStack
+                                type: string
                               region:
                                 description: region holds the default AWS region for
                                   new AWS resources created by the cluster.
@@ -1829,6 +1836,14 @@ spec:
                                 - AzureChinaCloud
                                 - AzureGermanCloud
                                 - AzureStackCloud
+                                type: string
+                              ipFamily:
+                                default: IPFamiliesIPv4
+                                description: ipFamily indicates the IP Address family
+                                  supported by cluster nodes.
+                                enum:
+                                - IPFamiliesIPv4
+                                - IPFamiliesDualStack
                                 type: string
                               networkResourceGroupName:
                                 description: |-
@@ -2159,6 +2174,14 @@ spec:
                                     is ClusterHosted
                                   rule: 'has(self.dnsType) && self.dnsType != ''ClusterHosted''
                                     ? !has(self.clusterHosted) : true'
+                              ipFamily:
+                                default: IPFamiliesIPv4
+                                description: ipFamily indicates the IP Address family
+                                  supported by cluster nodes.
+                                enum:
+                                - IPFamiliesIPv4
+                                - IPFamiliesDualStack
+                                type: string
                               projectID:
                                 description: resourceGroupName is the Project ID for
                                   new GCP resources created for the cluster.

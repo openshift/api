@@ -29,11 +29,14 @@ controllerconfigs.machineconfiguration.openshift.io:
   Category: ""
   FeatureGates:
   - AWSClusterHostedDNSInstall
+  - AWSDualStackInstall
   - AzureClusterHostedDNSInstall
+  - AzureDualStackInstall
   - DualReplica
   - DyanmicServiceEndpointIBMCloud
   - GCPClusterHostedDNSInstall
   - GCPCustomAPIEndpointsInstall
+  - GCPDualStackInstall
   - HighlyAvailableArbiter
   - HighlyAvailableArbiter+DualReplica
   - NutanixMultiSubnets

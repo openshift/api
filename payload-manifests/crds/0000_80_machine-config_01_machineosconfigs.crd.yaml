@@ -345,6 +345,10 @@ spec:
         required:
         - spec
         type: object
+        x-kubernetes-validations:
+        - message: MachineOSConfig name must match the referenced MachineConfigPool
+            name; can only have one MachineOSConfig per MachineConfigPool
+          rule: self.metadata.name == self.spec.machineConfigPool.name
     served: true
     storage: true
     subresources:

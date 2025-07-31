@@ -51,8 +51,8 @@ tests:
             desiredImage: image-registry.openshift-image-registry.svc:5000/openshift-machine-config-operator/os-images@sha256:c47856f56e1fdb7c9d10a1658e4ea85fbea44d71fb0e82898d152b47e0f894c6
         status:
           configImage:
-            desiredImage: image-registry.openshift-image-registry.svc:5000/openshift-machine-config-operator/ocb-image@sha256:7a539f562d8d5d3b6bd7338ac014e34dabc9626cf344d30e412ef98a55cc1bf6
             currentImage: image-registry.openshift-image-registry.svc:5000/openshift-machine-config-operator/os-images@sha256:c47856f56e1fdb7c9d10a1658e4ea85fbea44d71fb0e82898d152b47e0f894c6
+            desiredImage: image-registry.openshift-image-registry.svc:5000/openshift-machine-config-operator/ocb-image@sha256:7a539f562d8d5d3b6bd7338ac014e34dabc9626cf344d30e412ef98a55cc1bf6
       expected: |
         apiVersion: machineconfiguration.openshift.io/v1
         kind: MachineConfigNode
@@ -67,6 +67,10 @@ tests:
             desired: rendered-worker-abc
           configImage:
             desiredImage: image-registry.openshift-image-registry.svc:5000/openshift-machine-config-operator/os-images@sha256:c47856f56e1fdb7c9d10a1658e4ea85fbea44d71fb0e82898d152b47e0f894c6
+        status:
+          configImage:
+            currentImage: image-registry.openshift-image-registry.svc:5000/openshift-machine-config-operator/os-images@sha256:c47856f56e1fdb7c9d10a1658e4ea85fbea44d71fb0e82898d152b47e0f894c6
+            desiredImage: image-registry.openshift-image-registry.svc:5000/openshift-machine-config-operator/ocb-image@sha256:7a539f562d8d5d3b6bd7338ac014e34dabc9626cf344d30e412ef98a55cc1bf6
     - name: Should be able to create MachineConfigNode with status.configImage when ImageModeStatusReporting is enabled when the current and desired images are the same
       initial: |
         apiVersion: machineconfiguration.openshift.io/v1
@@ -84,8 +88,8 @@ tests:
             desiredImage: image-registry.openshift-image-registry.svc:5000/openshift-machine-config-operator/ocb-image@sha256:7a539f562d8d5d3b6bd7338ac014e34dabc9626cf344d30e412ef98a55cc1bf6
         status:
           configImage: 
-            desiredImage: image-registry.openshift-image-registry.svc:5000/openshift-machine-config-operator/ocb-image@sha256:7a539f562d8d5d3b6bd7338ac014e34dabc9626cf344d30e412ef98a55cc1bf6
             currentImage: image-registry.openshift-image-registry.svc:5000/openshift-machine-config-operator/ocb-image@sha256:7a539f562d8d5d3b6bd7338ac014e34dabc9626cf344d30e412ef98a55cc1bf6
+            desiredImage: image-registry.openshift-image-registry.svc:5000/openshift-machine-config-operator/ocb-image@sha256:7a539f562d8d5d3b6bd7338ac014e34dabc9626cf344d30e412ef98a55cc1bf6
       expected: |
         apiVersion: machineconfiguration.openshift.io/v1
         kind: MachineConfigNode
@@ -99,6 +103,10 @@ tests:
           configVersion:
             desired: rendered-worker-abc
           configImage: 
+            desiredImage: image-registry.openshift-image-registry.svc:5000/openshift-machine-config-operator/ocb-image@sha256:7a539f562d8d5d3b6bd7338ac014e34dabc9626cf344d30e412ef98a55cc1bf6
+        status:
+          configImage: 
+            currentImage: image-registry.openshift-image-registry.svc:5000/openshift-machine-config-operator/ocb-image@sha256:7a539f562d8d5d3b6bd7338ac014e34dabc9626cf344d30e412ef98a55cc1bf6
             desiredImage: image-registry.openshift-image-registry.svc:5000/openshift-machine-config-operator/ocb-image@sha256:7a539f562d8d5d3b6bd7338ac014e34dabc9626cf344d30e412ef98a55cc1bf6
     - name: Should be able to create MachineConfigNode with status.configImage when ImageModeStatusReporting is enabled without the current image provided
       initial: |
@@ -117,8 +125,8 @@ tests:
             desiredImage: image-registry.openshift-image-registry.svc:5000/openshift-machine-config-operator/ocb-image@sha256:7a539f562d8d5d3b6bd7338ac014e34dabc9626cf344d30e412ef98a55cc1bf6
         status:
           configImage: 
-            desiredImage: image-registry.openshift-image-registry.svc:5000/openshift-machine-config-operator/os-images@sha256:c47856f56e1fdb7c9d10a1658e4ea85fbea44d71fb0e82898d152b47e0f894c6
             currentImage:
+            desiredImage: image-registry.openshift-image-registry.svc:5000/openshift-machine-config-operator/os-images@sha256:c47856f56e1fdb7c9d10a1658e4ea85fbea44d71fb0e82898d152b47e0f894c6
       expected: |
         apiVersion: machineconfiguration.openshift.io/v1
         kind: MachineConfigNode
@@ -133,6 +141,10 @@ tests:
             desired: rendered-worker-abc
           configImage: 
             desiredImage: image-registry.openshift-image-registry.svc:5000/openshift-machine-config-operator/ocb-image@sha256:7a539f562d8d5d3b6bd7338ac014e34dabc9626cf344d30e412ef98a55cc1bf6
+        status:
+          configImage: 
+            currentImage:
+            desiredImage: image-registry.openshift-image-registry.svc:5000/openshift-machine-config-operator/os-images@sha256:c47856f56e1fdb7c9d10a1658e4ea85fbea44d71fb0e82898d152b47e0f894c6
     - name: spec.configImage.desiredImage should enforce MaxLength.
       initial: |
         apiVersion: machineconfiguration.openshift.io/v1
@@ -148,4 +160,20 @@ tests:
             desired: rendered-worker-abc
           configImage:
             desiredImage: registry.example.com/a/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very//very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/very/j
+      expectedError: "the OCI Image reference must end with a valid '@sha256:<digest>' suffix, where '<digest>' is 64 characters long"
+    - name: spec.configImage.desiredImage should enforce format.
+      initial: |
+        apiVersion: machineconfiguration.openshift.io/v1
+        kind: MachineConfigNode
+        metadata:
+          name: test-imagemodestatusreporting
+        spec:
+          node:
+            name: test-imagemodestatusreporting
+          pool:
+            name: worker
+          configVersion:
+            desired: rendered-worker-abc
+          configImage:
+            desiredImage: image-registry.openshift-image-registry.svc:5000/openshift-machine-config-operator/os-images:latest
       expectedError: "the OCI Image reference must end with a valid '@sha256:<digest>' suffix, where '<digest>' is 64 characters long"

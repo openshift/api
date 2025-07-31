@@ -148,7 +148,7 @@ type ControllerConfigSpec struct {
 
 	// ipFamilies indicates the IP families in use by the cluster network
 	// +required
-	IPFamilies IPFamiliesType `json:"ipFamilies"`
+	IPFamilies configv1.IPFamiliesType `json:"ipFamilies"`
 
 	// networkType holds the type of network the cluster is using
 	// XXX: this is temporary and will be dropped as soon as possible in favor of a better support
@@ -173,16 +173,6 @@ type ImageRegistryBundle struct {
 	// +required
 	Data []byte `json:"data"`
 }
-
-// IPFamiliesType indicates whether the cluster network is IPv4-only, IPv6-only, or dual-stack
-type IPFamiliesType string
-
-const (
-	IPFamiliesIPv4                 IPFamiliesType = "IPv4"
-	IPFamiliesIPv6                 IPFamiliesType = "IPv6"
-	IPFamiliesDualStack            IPFamiliesType = "DualStack"
-	IPFamiliesDualStackIPv6Primary IPFamiliesType = "DualStackIPv6Primary"
-)
 
 // Network contains network related configuration
 type NetworkInfo struct {

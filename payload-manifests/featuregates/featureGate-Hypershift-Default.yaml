@@ -307,6 +307,9 @@
                         "name": "RouteExternalCertificate"
                     },
                     {
+                        "name": "SELinuxChangePolicy"
+                    },
+                    {
                         "name": "ServiceAccountTokenNodeBinding"
                     },
                     {

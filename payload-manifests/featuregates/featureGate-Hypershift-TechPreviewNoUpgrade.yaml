@@ -58,9 +58,6 @@
                         "name": "NoRegistryClusterOperations"
                     },
                     {
-                        "name": "SELinuxMount"
-                    },
-                    {
                         "name": "ShortCertRotation"
                     },
                     {
@@ -280,6 +277,12 @@
                     },
                     {
                         "name": "RouteExternalCertificate"
+                    },
+                    {
+                        "name": "SELinuxChangePolicy"
+                    },
+                    {
+                        "name": "SELinuxMount"
                     },
                     {
                         "name": "ServiceAccountTokenNodeBinding"

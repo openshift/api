@@ -1,0 +1,105 @@
+apiVersion: apiextensions.k8s.io/v1 # Hack because controller-gen complains if we don't have this
+name: "APIServer"
+crdName: apiservers.config.openshift.io
+featureGate: HTTP01ChallengeProxy
+tests:
+  onCreate:
+    - name: Should be able to create with HTTP01ChallengeProxy DefaultDeployment mode
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: APIServer
+        spec:
+          http01ChallengeProxy:
+            mode: DefaultDeployment
+      expected: |
+        apiVersion: config.openshift.io/v1
+        kind: APIServer
+        spec:
+          audit:
+            profile: Default
+          http01ChallengeProxy:
+            mode: DefaultDeployment
+    - name: Should be able to create with HTTP01ChallengeProxy CustomDeployment mode
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: APIServer
+        spec:
+          http01ChallengeProxy:
+            mode: CustomDeployment
+            customDeployment:
+              internalPort: 8888
+      expected: |
+        apiVersion: config.openshift.io/v1
+        kind: APIServer
+        spec:
+          audit:
+            profile: Default
+          http01ChallengeProxy:
+            mode: CustomDeployment
+            customDeployment:
+              internalPort: 8888
+    - name: Should be able to create with HTTP01ChallengeProxy CustomDeployment mode with custom port
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: APIServer
+        spec:
+          http01ChallengeProxy:
+            mode: CustomDeployment
+            customDeployment:
+              internalPort: 9999
+      expected: |
+        apiVersion: config.openshift.io/v1
+        kind: APIServer
+        spec:
+          audit:
+            profile: Default
+          http01ChallengeProxy:
+            mode: CustomDeployment
+            customDeployment:
+              internalPort: 9999
+    - name: Should reject CustomDeployment mode without customDeployment field
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: APIServer
+        spec:
+          http01ChallengeProxy:
+            mode: CustomDeployment
+      expectedError: "customDeployment is required when mode is CustomDeployment and forbidden otherwise"
+    - name: Should reject DefaultDeployment mode with customDeployment field
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: APIServer
+        spec:
+          http01ChallengeProxy:
+            mode: DefaultDeployment
+            customDeployment:
+              internalPort: 8888
+      expectedError: "customDeployment is required when mode is CustomDeployment and forbidden otherwise"
+    - name: Should reject invalid mode
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: APIServer
+        spec:
+          http01ChallengeProxy:
+            mode: InvalidMode
+      expectedError: "spec.http01ChallengeProxy.mode: Unsupported value: \"InvalidMode\": supported values: \"DefaultDeployment\", \"CustomDeployment\""
+    - name: Should reject port below minimum
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: APIServer
+        spec:
+          http01ChallengeProxy:
+            mode: CustomDeployment
+            customDeployment:
+              internalPort: 1023
+      expectedError: "spec.http01ChallengeProxy.customDeployment.internalPort: Invalid value: 1023: spec.http01ChallengeProxy.customDeployment.internalPort in body should be greater than or equal to 1024"
+    - name: Should reject port above maximum
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: APIServer
+        spec:
+          http01ChallengeProxy:
+            mode: CustomDeployment
+            customDeployment:
+              internalPort: 65536
+      expectedError: "spec.http01ChallengeProxy.customDeployment.internalPort: Invalid value: 65536: spec.http01ChallengeProxy.customDeployment.internalPort in body should be less than or equal to 65535"

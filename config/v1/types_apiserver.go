@@ -68,6 +68,12 @@ type APIServerSpec struct {
 	// +optional
 	// +kubebuilder:default={profile: Default}
 	Audit Audit `json:"audit"`
+	// http01ChallengeProxy contains configuration for the HTTP01 challenge proxy
+	// that redirects traffic from the API endpoint on port 80 to ingress routers.
+	// This enables cert-manager to perform HTTP01 ACME challenges for API endpoint certificates.
+	// +openshift:enable:FeatureGate=HTTP01ChallengeProxy
+	// +optional
+	HTTP01ChallengeProxy *HTTP01ChallengeProxySpec `json:"http01ChallengeProxy,omitempty"`
 }
 
 // AuditProfileType defines the audit policy profile type.
@@ -233,6 +239,36 @@ const (
 	// encryption is still performed at the datastore layer.
 	EncryptionTypeKMS EncryptionType = "KMS"
 )
+
+// +union
+// +kubebuilder:validation:XValidation:rule="self.mode == 'CustomDeployment' ? has(self.customDeployment) : !has(self.customDeployment)",message="customDeployment is required when mode is CustomDeployment and forbidden otherwise"
+type HTTP01ChallengeProxySpec struct {
+	// mode controls whether the HTTP01 challenge proxy is active and how it should be deployed.
+	// DefaultDeployment enables the proxy with default configuration.
+	// CustomDeployment enables the proxy with user-specified configuration.
+	// +kubebuilder:validation:Enum=DefaultDeployment;CustomDeployment
+	// +required
+	// +unionDiscriminator
+	Mode string `json:"mode,omitempty"`
+
+	// customDeployment contains configuration options when mode is CustomDeployment.
+	// This field is only valid when mode is CustomDeployment.
+	// +optional
+	// +unionMember
+	CustomDeployment *HTTP01ChallengeProxyCustomDeploymentSpec `json:"customDeployment,omitempty"`
+}
+
+// +kubebuilder:validation:MinProperties=1
+type HTTP01ChallengeProxyCustomDeploymentSpec struct {
+	// internalPort specifies the internal port used by the proxy service.
+	// Valid values are 1024-65535. Defaults to 8888.
+	// This port is used to avoid conflicts with other workloads that may require port 8888 on the host.
+	// +kubebuilder:validation:Minimum=1024
+	// +kubebuilder:validation:Maximum=65535
+	// +kubebuilder:default=8888
+	// +optional
+	InternalPort int32 `json:"internalPort,omitempty"`
+}
 
 type APIServerStatus struct {
 }

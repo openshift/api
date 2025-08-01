@@ -141,6 +141,7 @@ clusterversions.config.openshift.io:
   Capability: ""
   Category: ""
   FeatureGates:
+  - ClusterUpdateAcceptedRisks
   - ImageStreamImportMode
   - SignatureStores
   FilenameOperatorName: cluster-version-operator

@@ -93,6 +93,9 @@
                         "name": "ClusterMonitoringConfig"
                     },
                     {
+                        "name": "ClusterUpdateAcceptedRisks"
+                    },
+                    {
                         "name": "ClusterVersionOperatorConfiguration"
                     },
                     {

@@ -262,9 +262,6 @@
                         "name": "GatewayAPIController"
                     },
                     {
-                        "name": "IngressControllerLBSubnetsAWS"
-                    },
-                    {
                         "name": "KMSv1"
                     },
                     {

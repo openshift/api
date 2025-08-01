@@ -30504,6 +30504,24 @@
         }
       }
     },
+    "com.github.openshift.api.operator.v1.IrreconcilableMachineConfigValidationOverrides": {
+      "description": "IrreconcilableMachineConfigValidationOverrides holds the irreconcilable validations overrides to be applied on each rendered MachineConfig generation.",
+      "type": "object",
+      "required": [
+        "storage"
+      ],
+      "properties": {
+        "storage": {
+          "description": "storage can be used to allow making irreconcilable changes to the selected sections under the `spec.config.storage` field of MachineConfig CRs",
+          "type": "array",
+          "items": {
+            "type": "string",
+            "default": ""
+          },
+          "x-kubernetes-list-type": "set"
+        }
+      }
+    },
     "com.github.openshift.api.operator.v1.KubeAPIServer": {
       "description": "KubeAPIServer provides information to configure an operator to manage kube-apiserver.\n\nCompatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).",
       "type": "object",
@@ -31400,6 +31418,11 @@
           "description": "forceRedeploymentReason can be used to force the redeployment of the operand by providing a unique string. This provides a mechanism to kick a previously failed deployment and provide a reason why you think it will work this time instead of failing again on the same config.",
           "type": "string",
           "default": ""
+        },
+        "irreconcilableMCValidationOverrides": {
+          "description": "irreconcilableMCValidationOverrides allows administrators to apply MachineConfig changes that would normally be rejected as irreconcilable by disabling specific MCO validations. When overrides are enabled, the MCO will accept MachineConfigs containing changes to the specified sections and include them in the rendered configuration. However, only newly provisioned nodes will apply these changes - existing nodes will report irreconcilable differences in their MachineConfigNode status.",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.operator.v1.IrreconcilableMachineConfigValidationOverrides"
         },
         "logLevel": {
           "description": "logLevel is an intent based logging for an overall component.  It does not give fine grained control, but it is a simple way to manage coarse grained logging choices that operators have to interpret for their operands.\n\nValid values are: \"Normal\", \"Debug\", \"Trace\", \"TraceAll\". Defaults to \"Normal\".",

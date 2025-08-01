@@ -368,6 +368,16 @@ func (PoolSynchronizerStatus) SwaggerDoc() map[string]string {
 	return map_PoolSynchronizerStatus
 }
 
+var map_IrreconcilableChangeDiff = map[string]string{
+	"":          "IrreconcilableChangeDiff holds an individual diff of between the initial install-time MachineConfig and the latest applied one caused by the presence of irreconcilable changes.",
+	"fieldPath": "fieldPath points to the path in the latest rendered MachineConfig this diff element refers to.",
+	"diff":      "diff contains a human-readable representation of the difference between the original install-time content of the field and the current applied MachineConfig content for that field.",
+}
+
+func (IrreconcilableChangeDiff) SwaggerDoc() map[string]string {
+	return map_IrreconcilableChangeDiff
+}
+
 var map_MCOObjectReference = map[string]string{
 	"":     "MCOObjectReference holds information about an object the MCO either owns or modifies in some way",
 	"name": "name is the name of the object being referenced. For example, this can represent a machine config pool or node name. Must be a lowercase RFC-1123 subdomain name (https://tools.ietf.org/html/rfc1123) consisting of only lowercase alphanumeric characters, hyphens (-), and periods (.), and must start and end with an alphanumeric character, and be at most 253 characters in length.",
@@ -419,11 +429,12 @@ func (MachineConfigNodeSpecMachineConfigVersion) SwaggerDoc() map[string]string 
 }
 
 var map_MachineConfigNodeStatus = map[string]string{
-	"":                   "MachineConfigNodeStatus holds the reported information on a particular machine config node.",
-	"conditions":         "conditions represent the observations of a machine config node's current state. Valid types are: UpdatePrepared, UpdateExecuted, UpdatePostActionComplete, UpdateComplete, Updated, Resumed, Drained, AppliedFilesAndOS, Cordoned, Uncordoned, RebootedNode, NodeDegraded, PinnedImageSetsProgressing, and PinnedImageSetsDegraded.",
-	"observedGeneration": "observedGeneration represents the generation of the MachineConfigNode object observed by the Machine Config Operator's controller. This field is updated when the controller observes a change to the desiredConfig in the configVersion of the machine config node spec.",
-	"configVersion":      "configVersion describes the current and desired machine config version for this node.",
-	"pinnedImageSets":    "pinnedImageSets describes the current and desired pinned image sets for this node.",
+	"":                      "MachineConfigNodeStatus holds the reported information on a particular machine config node.",
+	"conditions":            "conditions represent the observations of a machine config node's current state. Valid types are: UpdatePrepared, UpdateExecuted, UpdatePostActionComplete, UpdateComplete, Updated, Resumed, Drained, AppliedFilesAndOS, Cordoned, Uncordoned, RebootedNode, NodeDegraded, PinnedImageSetsProgressing, and PinnedImageSetsDegraded.",
+	"observedGeneration":    "observedGeneration represents the generation of the MachineConfigNode object observed by the Machine Config Operator's controller. This field is updated when the controller observes a change to the desiredConfig in the configVersion of the machine config node spec.",
+	"configVersion":         "configVersion describes the current and desired machine config version for this node.",
+	"pinnedImageSets":       "pinnedImageSets describes the current and desired pinned image sets for this node.",
+	"irreconcilableChanges": "irreconcilableChanges described the current differences between the target rendered MachineConfig and the configuration the Machine Config Daemon has applied to the associated node. This field is only populated when irreconcilable changes are permitted and applied to a pool of nodes. Already existing nodes will start reporting this field while new joining nodes will pick the irreconcilable changes at the first Ignition run and won't report differences.",
 }
 
 func (MachineConfigNodeStatus) SwaggerDoc() map[string]string {

@@ -186,6 +186,9 @@
                         "name": "InsightsRuntimeExtractor"
                     },
                     {
+                        "name": "IrreconcilableMachineConfig"
+                    },
+                    {
                         "name": "KMSEncryptionProvider"
                     },
                     {

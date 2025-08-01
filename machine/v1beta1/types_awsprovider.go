@@ -17,6 +17,9 @@ type AWSMachineProviderConfig struct {
 	AMI AWSResourceReference `json:"ami"`
 	// instanceType is the type of instance to create. Example: m4.xlarge
 	InstanceType string `json:"instanceType"`
+	// cpuOptions is the set of cpu options for the instance.
+	// +optional
+	CPUOptions *CPUOptions `json:"cpuOptions,omitempty"`
 	// tags is the set of tags to add to apply to an instance, in addition to the ones
 	// added by default by the actuator. These tags are additive. The actuator will ensure
 	// these tags are present, but will not remove any other tags that may exist on the
@@ -107,6 +110,31 @@ type AWSMachineProviderConfig struct {
 	// If this value is selected, capacityReservationID must be specified to identify the target reservation.
 	// +optional
 	MarketType MarketType `json:"marketType,omitempty"`
+}
+
+// AmdSevSnpSpecification defines the different values for AmdSevSnp
+type AmdSevSnpSpecification string
+
+const (
+	// AmdSevSnpSpecificationEnabled means AMD SEV SNP is enabled for the instance.
+	AmdSevSnpSpecificationEnabled AmdSevSnpSpecification = "enabled"
+
+	// AmdSevSnpSpecificationDisabled means AMD SEV SNP is disabled for the instance.
+	AmdSevSnpSpecificationDisabled AmdSevSnpSpecification = "disabled"
+)
+
+// CPUOptions defines the cpu options for the instance.
+type CPUOptions struct {
+	// amdSevSnp specifies AMD SEV-SNP on the instance.
+	// When set to enabled, AMD SEV-SNP is enabled on the instance. If it is set to enabled:
+	// 1) Use an instance type that supports AMD SEV-SNP.
+	// 2) Launch your instance with supported AWS region.
+	// 3) Use an AMI with uefi or uefi-preferred boot mode and an operating system that supports AMD SEV-SNP.
+	// More details can be checked at https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/sev-snp.html
+	// When set to disabled(default), AMD SEV-SNP is disabled on the instance.
+	// +kubebuilder:validation:Enum=enabled;disabled
+	// +optional
+	AmdSevSnp AmdSevSnpSpecification `json:"amdSevSnp,omitempty"`
 }
 
 // BlockDeviceMappingSpec describes a block device mapping

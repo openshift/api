@@ -763,6 +763,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"github.com/openshift/api/machine/v1beta1.AzureMachineProviderSpec":                                  schema_openshift_api_machine_v1beta1_AzureMachineProviderSpec(ref),
 		"github.com/openshift/api/machine/v1beta1.AzureMachineProviderStatus":                                schema_openshift_api_machine_v1beta1_AzureMachineProviderStatus(ref),
 		"github.com/openshift/api/machine/v1beta1.BlockDeviceMappingSpec":                                    schema_openshift_api_machine_v1beta1_BlockDeviceMappingSpec(ref),
+		"github.com/openshift/api/machine/v1beta1.CPUOptions":                                                schema_openshift_api_machine_v1beta1_CPUOptions(ref),
 		"github.com/openshift/api/machine/v1beta1.Condition":                                                 schema_openshift_api_machine_v1beta1_Condition(ref),
 		"github.com/openshift/api/machine/v1beta1.ConfidentialVM":                                            schema_openshift_api_machine_v1beta1_ConfidentialVM(ref),
 		"github.com/openshift/api/machine/v1beta1.DataDisk":                                                  schema_openshift_api_machine_v1beta1_DataDisk(ref),
@@ -38127,6 +38128,12 @@ func schema_openshift_api_machine_v1beta1_AWSMachineProviderConfig(ref common.Re
 							Format:      "",
 						},
 					},
+					"cpuOptions": {
+						SchemaProps: spec.SchemaProps{
+							Description: "cpuOptions is the set of cpu options for the instance.",
+							Ref:         ref("github.com/openshift/api/machine/v1beta1.CPUOptions"),
+						},
+					},
 					"tags": {
 						SchemaProps: spec.SchemaProps{
 							Description: "tags is the set of tags to add to apply to an instance, in addition to the ones added by default by the actuator. These tags are additive. The actuator will ensure these tags are present, but will not remove any other tags that may exist on the instance.",
@@ -38291,7 +38298,7 @@ func schema_openshift_api_machine_v1beta1_AWSMachineProviderConfig(ref common.Re
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/machine/v1beta1.AWSResourceReference", "github.com/openshift/api/machine/v1beta1.BlockDeviceMappingSpec", "github.com/openshift/api/machine/v1beta1.LoadBalancerReference", "github.com/openshift/api/machine/v1beta1.MetadataServiceOptions", "github.com/openshift/api/machine/v1beta1.Placement", "github.com/openshift/api/machine/v1beta1.SpotMarketOptions", "github.com/openshift/api/machine/v1beta1.TagSpecification", "k8s.io/api/core/v1.LocalObjectReference", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"},
+			"github.com/openshift/api/machine/v1beta1.AWSResourceReference", "github.com/openshift/api/machine/v1beta1.BlockDeviceMappingSpec", "github.com/openshift/api/machine/v1beta1.CPUOptions", "github.com/openshift/api/machine/v1beta1.LoadBalancerReference", "github.com/openshift/api/machine/v1beta1.MetadataServiceOptions", "github.com/openshift/api/machine/v1beta1.Placement", "github.com/openshift/api/machine/v1beta1.SpotMarketOptions", "github.com/openshift/api/machine/v1beta1.TagSpecification", "k8s.io/api/core/v1.LocalObjectReference", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"},
 	}
 }
 
@@ -38939,6 +38946,26 @@ func schema_openshift_api_machine_v1beta1_BlockDeviceMappingSpec(ref common.Refe
 		},
 		Dependencies: []string{
 			"github.com/openshift/api/machine/v1beta1.EBSBlockDeviceSpec"},
+	}
+}
+
+func schema_openshift_api_machine_v1beta1_CPUOptions(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "CPUOptions defines the cpu options for the instance.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"amdSevSnp": {
+						SchemaProps: spec.SchemaProps{
+							Description: "amdSevSnp specifies AMD SEV-SNP on the instance. When set to enabled, AMD SEV-SNP is enabled on the instance. If it is set to enabled: 1) Use an instance type that supports AMD SEV-SNP. 2) Launch your instance with supported AWS region. 3) Use an AMI with uefi or uefi-preferred boot mode and an operating system that supports AMD SEV-SNP. More details can be checked at https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/sev-snp.html When set to disabled(default), AMD SEV-SNP is disabled on the instance.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+				},
+			},
+		},
 	}
 }
 

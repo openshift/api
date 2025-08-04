@@ -28801,6 +28801,24 @@
         }
       }
     },
+    "com.github.openshift.api.operator.v1.DNSNodeService": {
+      "description": "DNSNodeService represents a Kubernetes service by name and namespace for node services.",
+      "type": "object",
+      "required": [
+        "name",
+        "namespace"
+      ],
+      "properties": {
+        "name": {
+          "description": "name is the name of the service. The name should consist of at most 63 characters, and of only lowercase alphanumeric characters and hyphens, and should start with an alphabetic character and end with an alphanumeric character.",
+          "type": "string"
+        },
+        "namespace": {
+          "description": "namespace is the namespace of the service. The namespace should consist of at most 63 characters, and of only lowercase alphanumeric characters and hyphens, and should start and end with an alphanumeric character.",
+          "type": "string"
+        }
+      }
+    },
     "com.github.openshift.api.operator.v1.DNSOverTLSConfig": {
       "description": "DNSOverTLSConfig describes optional DNSTransportConfig fields that should be captured.",
       "type": "object",
@@ -28841,6 +28859,19 @@
           "description": "nodePlacement provides explicit control over the scheduling of DNS pods.\n\nGenerally, it is useful to run a DNS pod on every node so that DNS queries are always handled by a local DNS pod instead of going over the network to a DNS pod on another node.  However, security policies may require restricting the placement of DNS pods to specific nodes. For example, if a security policy prohibits pods on arbitrary nodes from communicating with the API, a node selector can be specified to restrict DNS pods to nodes that are permitted to communicate with the API.  Conversely, if running DNS pods on nodes with a particular taint is desired, a toleration can be specified for that taint.\n\nIf unset, defaults are used. See nodePlacement for more details.",
           "default": {},
           "$ref": "#/definitions/com.github.openshift.api.operator.v1.DNSNodePlacement"
+        },
+        "nodeServices": {
+          "description": "nodeServices specifies a list of service objects for which host level resolvable entries should be added. Services in this list will be added to /etc/hosts on each node in the cluster by the node resolver. When not specified, only the default image registry service is resolvable. Services in this list will be added in addition to the default \"image-registry.openshift-image-registry.svc\" service. The default image registry service cannot be removed. For each service reference, entries will be created using the format \"<name>.<namespace>.svc\" and an alias with the CLUSTER_DOMAIN suffix of cluster.local will also be added.",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/com.github.openshift.api.operator.v1.DNSNodeService"
+          },
+          "x-kubernetes-list-map-keys": [
+            "name",
+            "namespace"
+          ],
+          "x-kubernetes-list-type": "map"
         },
         "operatorLogLevel": {
           "description": "operatorLogLevel controls the logging level of the DNS Operator. Valid values are: \"Normal\", \"Debug\", \"Trace\". Defaults to \"Normal\". setting operatorLogLevel: Trace will produce extremely verbose logs.",

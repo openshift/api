@@ -974,6 +974,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"github.com/openshift/api/operator/v1.DNSCache":                                                      schema_openshift_api_operator_v1_DNSCache(ref),
 		"github.com/openshift/api/operator/v1.DNSList":                                                       schema_openshift_api_operator_v1_DNSList(ref),
 		"github.com/openshift/api/operator/v1.DNSNodePlacement":                                              schema_openshift_api_operator_v1_DNSNodePlacement(ref),
+		"github.com/openshift/api/operator/v1.DNSNodeService":                                                schema_openshift_api_operator_v1_DNSNodeService(ref),
 		"github.com/openshift/api/operator/v1.DNSOverTLSConfig":                                              schema_openshift_api_operator_v1_DNSOverTLSConfig(ref),
 		"github.com/openshift/api/operator/v1.DNSSpec":                                                       schema_openshift_api_operator_v1_DNSSpec(ref),
 		"github.com/openshift/api/operator/v1.DNSStatus":                                                     schema_openshift_api_operator_v1_DNSStatus(ref),
@@ -49600,6 +49601,34 @@ func schema_openshift_api_operator_v1_DNSNodePlacement(ref common.ReferenceCallb
 	}
 }
 
+func schema_openshift_api_operator_v1_DNSNodeService(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "DNSNodeService represents a Kubernetes service by name and namespace for node services.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"name": {
+						SchemaProps: spec.SchemaProps{
+							Description: "name is the name of the service. The name should consist of at most 63 characters, and of only lowercase alphanumeric characters and hyphens, and should start with an alphabetic character and end with an alphanumeric character.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"namespace": {
+						SchemaProps: spec.SchemaProps{
+							Description: "namespace is the namespace of the service. The namespace should consist of at most 63 characters, and of only lowercase alphanumeric characters and hyphens, and should start and end with an alphanumeric character.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+				},
+				Required: []string{"name", "namespace"},
+			},
+		},
+	}
+}
+
 func schema_openshift_api_operator_v1_DNSOverTLSConfig(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -49680,6 +49709,29 @@ func schema_openshift_api_operator_v1_DNSSpec(ref common.ReferenceCallback) comm
 							Format:      "",
 						},
 					},
+					"nodeServices": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-map-keys": []interface{}{
+									"name",
+									"namespace",
+								},
+								"x-kubernetes-list-type": "map",
+							},
+						},
+						SchemaProps: spec.SchemaProps{
+							Description: "nodeServices specifies a list of service objects for which host level resolvable entries should be added. Services in this list will be added to /etc/hosts on each node in the cluster by the node resolver. When not specified, only the default image registry service is resolvable. Services in this list will be added in addition to the default \"image-registry.openshift-image-registry.svc\" service. The default image registry service cannot be removed. For each service reference, entries will be created using the format \"<name>.<namespace>.svc\" and an alias with the CLUSTER_DOMAIN suffix of cluster.local will also be added.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("github.com/openshift/api/operator/v1.DNSNodeService"),
+									},
+								},
+							},
+						},
+					},
 					"logLevel": {
 						SchemaProps: spec.SchemaProps{
 							Description: "logLevel describes the desired logging verbosity for CoreDNS. Any one of the following values may be specified: * Normal logs errors from upstream resolvers. * Debug logs errors, NXDOMAIN responses, and NODATA responses. * Trace logs errors and all responses.\n Setting logLevel: Trace will produce extremely verbose logs.\nValid values are: \"Normal\", \"Debug\", \"Trace\". Defaults to \"Normal\".",
@@ -49698,7 +49750,7 @@ func schema_openshift_api_operator_v1_DNSSpec(ref common.ReferenceCallback) comm
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/operator/v1.DNSCache", "github.com/openshift/api/operator/v1.DNSNodePlacement", "github.com/openshift/api/operator/v1.Server", "github.com/openshift/api/operator/v1.UpstreamResolvers"},
+			"github.com/openshift/api/operator/v1.DNSCache", "github.com/openshift/api/operator/v1.DNSNodePlacement", "github.com/openshift/api/operator/v1.DNSNodeService", "github.com/openshift/api/operator/v1.Server", "github.com/openshift/api/operator/v1.UpstreamResolvers"},
 	}
 }
 

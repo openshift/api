@@ -392,14 +392,6 @@ var (
 						enableIn(configv1.DevPreviewNoUpgrade).
 						mustRegister()
 
-	FeatureGateOnClusterBuild = newFeatureGate("OnClusterBuild").
-					reportProblemsToJiraComponent("MachineConfigOperator").
-					contactPerson("cheesesashimi").
-					productScope(ocpSpecific).
-					enhancementPR(legacyFeatureGateWithoutEnhancement).
-					enableIn(configv1.Default, configv1.DevPreviewNoUpgrade, configv1.TechPreviewNoUpgrade).
-					mustRegister()
-
 	FeatureGateBootcNodeManagement = newFeatureGate("BootcNodeManagement").
 					reportProblemsToJiraComponent("MachineConfigOperator").
 					contactPerson("inesqyx").

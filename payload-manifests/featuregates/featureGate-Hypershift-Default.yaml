@@ -292,9 +292,6 @@
                         "name": "NetworkSegmentation"
                     },
                     {
-                        "name": "OnClusterBuild"
-                    },
-                    {
                         "name": "OpenShiftPodSecurityAdmission"
                     },
                     {

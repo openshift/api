@@ -4782,6 +4782,11 @@
           },
           "x-kubernetes-list-type": "atomic"
         },
+        "internalDNSRecords": {
+          "description": "internalDNSRecords determines whether we deploy with internal records enabled for api, api-int, and ingress.",
+          "type": "string",
+          "default": ""
+        },
         "loadBalancer": {
           "description": "loadBalancer defines how the load balancer used by the cluster is configured.",
           "default": {

@@ -273,6 +273,9 @@
                         "name": "OVNObservability"
                     },
                     {
+                        "name": "OnPremInternalDNSRecords"
+                    },
+                    {
                         "name": "OpenShiftPodSecurityAdmission"
                     },
                     {

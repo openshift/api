@@ -905,4 +905,11 @@ var (
 					enhancementPR("https://github.com/kubernetes/enhancements/issues/4222").
 					enableIn(configv1.DevPreviewNoUpgrade, configv1.TechPreviewNoUpgrade).
 					mustRegister()
+	FeatureGateOnPremInternalDNSRecords    = newFeatureGate("OnPremInternalDNSRecords").
+						reportProblemsToJiraComponent("Networking / On-Prem DNS").
+						contactPerson("bnemec").
+						productScope(ocpSpecific).
+						enhancementPR("https://github.com/openshift/enhancements/pull/1803").
+						enableIn(configv1.DevPreviewNoUpgrade, configv1.TechPreviewNoUpgrade).
+						mustRegister()
 )

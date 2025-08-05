@@ -9685,6 +9685,14 @@ func schema_openshift_api_config_v1_BareMetalPlatformStatus(ref common.Reference
 							Ref:         ref("github.com/openshift/api/config/v1.BareMetalPlatformLoadBalancer"),
 						},
 					},
+					"internalDNSRecords": {
+						SchemaProps: spec.SchemaProps{
+							Description: "internalDNSRecords determines whether we deploy with internal records enabled for api, api-int, and ingress.",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
 					"machineNetworks": {
 						VendorExtensible: spec.VendorExtensible{
 							Extensions: spec.Extensions{

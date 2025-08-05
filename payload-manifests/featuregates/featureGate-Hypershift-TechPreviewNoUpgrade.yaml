@@ -264,6 +264,9 @@
                         "name": "OnClusterBuild"
                     },
                     {
+                        "name": "OnPremInternalDNSRecords"
+                    },
+                    {
                         "name": "OpenShiftPodSecurityAdmission"
                     },
                     {

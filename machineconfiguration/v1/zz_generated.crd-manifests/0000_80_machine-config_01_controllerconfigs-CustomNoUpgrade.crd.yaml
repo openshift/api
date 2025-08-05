@@ -1941,6 +1941,14 @@ spec:
                                   rule: 'self == oldSelf || (size(self) == 2 && isIP(self[0])
                                     && isIP(self[1]) ? ip(self[0]).family() != ip(self[1]).family()
                                     : true)'
+                              internalDNSRecords:
+                                description: |-
+                                  internalDNSRecords determines whether we deploy with internal records enabled for
+                                  api, api-int, and ingress.
+                                enum:
+                                - Enabled
+                                - Disabled
+                                type: string
                               loadBalancer:
                                 default:
                                   type: OpenShiftManagedDefault

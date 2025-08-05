@@ -40,9 +40,6 @@
                         "name": "MultiArchInstallAzure"
                     },
                     {
-                        "name": "NoRegistryClusterOperations"
-                    },
-                    {
                         "name": "SELinuxMount"
                     },
                     {
@@ -253,6 +250,9 @@
                     },
                     {
                         "name": "NewOLMWebhookProviderOpenshiftServiceCA"
+                    },
+                    {
+                        "name": "NoRegistryClusterOperations"
                     },
                     {
                         "name": "NodeSwap"

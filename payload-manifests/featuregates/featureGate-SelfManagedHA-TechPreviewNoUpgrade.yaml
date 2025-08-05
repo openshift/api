@@ -49,9 +49,6 @@
                         "name": "ShortCertRotation"
                     },
                     {
-                        "name": "SigstoreImageVerification"
-                    },
-                    {
                         "name": "VSphereMixedNodeEnv"
                     }
                 ],
@@ -292,6 +289,9 @@
                     },
                     {
                         "name": "SignatureStores"
+                    },
+                    {
+                        "name": "SigstoreImageVerification"
                     },
                     {
                         "name": "SigstoreImageVerificationPKI"

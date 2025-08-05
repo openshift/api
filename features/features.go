@@ -866,4 +866,12 @@ var (
 						enhancementPR("https://github.com/openshift/enhancements/pull/1492").
 						enableIn(configv1.DevPreviewNoUpgrade, configv1.TechPreviewNoUpgrade).
 						mustRegister()
+
+	FeatureGateIrreconcilableMachineConfig = newFeatureGate("IrreconcilableMachineConfig").
+						reportProblemsToJiraComponent("MachineConfigOperator").
+						contactPerson("pabrodri").
+						productScope(ocpSpecific).
+						enhancementPR("https://github.com/openshift/enhancements/pull/1785").
+						enableIn(configv1.DevPreviewNoUpgrade, configv1.TechPreviewNoUpgrade).
+						mustRegister()
 )

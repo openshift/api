@@ -11609,9 +11609,6 @@
     "com.github.openshift.api.config.v1alpha1.Audit": {
       "description": "Audit profile configurations",
       "type": "object",
-      "required": [
-        "profile"
-      ],
       "properties": {
         "profile": {
           "description": "profile sets the audit log level for the Metrics Server. This currently matches the various audit log levels such as: \"None, Metadata, Request, RequestResponse\". The default audit log level is \"Metadata\"\n\nsee: https://kubernetes.io/docs/tasks/debug-application-cluster/audit/#audit-policy for more information about auditing and log levels.",

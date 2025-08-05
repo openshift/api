@@ -928,8 +928,6 @@ spec:
                         - Request
                         - RequestResponse
                         type: string
-                    required:
-                    - profile
                     type: object
                   nodeSelector:
                     additionalProperties:

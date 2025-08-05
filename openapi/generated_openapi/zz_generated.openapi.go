@@ -21373,7 +21373,6 @@ func schema_openshift_api_config_v1alpha1_Audit(ref common.ReferenceCallback) co
 						},
 					},
 				},
-				Required: []string{"profile"},
 			},
 		},
 	}

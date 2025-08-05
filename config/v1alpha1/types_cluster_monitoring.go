@@ -438,6 +438,6 @@ type Audit struct {
 	//
 	// see: https://kubernetes.io/docs/tasks/debug-application-cluster/audit/#audit-policy
 	// for more information about auditing and log levels.
-	// +required
+	// +optional
 	Profile AuditLevel `json:"profile"`
 }

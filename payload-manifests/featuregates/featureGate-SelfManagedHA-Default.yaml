@@ -193,6 +193,9 @@
                         "name": "OVNObservability"
                     },
                     {
+                        "name": "OnPremDNSRecords"
+                    },
+                    {
                         "name": "SELinuxMount"
                     },
                     {

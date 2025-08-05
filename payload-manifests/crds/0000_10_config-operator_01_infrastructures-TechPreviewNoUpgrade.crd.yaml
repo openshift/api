@@ -1670,6 +1670,22 @@ spec:
                           rule: 'self == oldSelf || (size(self) == 2 && isIP(self[0])
                             && isIP(self[1]) ? ip(self[0]).family() != ip(self[1]).family()
                             : true)'
+                      dnsRecordsType:
+                        description: |-
+                          dnsRecordsType determines whether records for api, api-int, and ingress
+                          are provided by the internal DNS service or externally.
+                          Allowed values are `Internal`, `External`, and omitted.
+                          When set to `Internal`, records are provided by the internal infrastructure
+                          When set to `External`, records are not provided by the internal infrastructure
+                          and must be configured by the user. This value may only be set when a
+                          user-managed loadbalancer is configured.
+                          When omitted, this means the user has no opinion and the platform is left
+                          to choose reasonable defaults. These defaults are subject to change over time.
+                          The current default is `Internal`.
+                        enum:
+                        - Internal
+                        - External
+                        type: string
                       ingressIP:
                         description: |-
                           ingressIP is an external IP which routes to the default ingress controller.

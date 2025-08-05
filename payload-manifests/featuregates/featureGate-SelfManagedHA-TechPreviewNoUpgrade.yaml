@@ -102,9 +102,6 @@
                         "name": "CPMSMachineNamePrefix"
                     },
                     {
-                        "name": "ChunkSizeMiB"
-                    },
-                    {
                         "name": "ClusterAPIInstallIBMCloud"
                     },
                     {

@@ -185,3 +185,4 @@ tests:
           configImage: 
             currentImage: image-registry.openshift-image-registry.svc:5000/openshift-machine-config-operator/ocb-image@sha256:c47856f56e1fdb7c9d10a1658e4ea85fbea44d71fb0e82898d152b47e0f894c6
             desiredImage: image-registry.openshift-image-registry.svc:5000/openshift-machine-config-operator/ocb-image@sha256:7a539f562d8d5d3b6bd7338ac014e34dabc9626cf344d30e412ef98a55cc1bf6
+ 

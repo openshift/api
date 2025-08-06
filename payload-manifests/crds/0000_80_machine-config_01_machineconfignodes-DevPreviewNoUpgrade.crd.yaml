@@ -269,7 +269,7 @@ spec:
                 x-kubernetes-list-type: map
               configImage:
                 description: |-
-                  configImage is an optional field for configuring the OS image to be used for this node. This field will only exist if the node belongs to a pool opted into on-cluster image builds, and will override any MachineConfig referenced OSImageURL fields
+                  configImage is an optional field for configuring the OS image to be used for this node. This field will only exist if the node belongs to a pool opted into on-cluster image builds, and will override any MachineConfig referenced OSImageURL fields.
                   When omitted, this means that the Image Mode feature is not being used and the node will be up to date with the specific current rendered config version for the nodes MachinePool.
                   When specified, the Image Mode feature is enabled and the contents of this field show the observed state of the node image.
                   When Image Mode is enabled and a new MachineConfig is applied such that a new OS image build is not created, only the configVersion field will change.

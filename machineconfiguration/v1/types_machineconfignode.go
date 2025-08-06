@@ -99,7 +99,7 @@ type MachineConfigNodeSpec struct {
 	// +required
 	ConfigVersion MachineConfigNodeSpecMachineConfigVersion `json:"configVersion"`
 
-	// configImage is an optional field for configuring the image in the referenced node.
+	// configImage is an optional field for configuring the OS image to be used for this node. This field will only exist if the node belongs to a pool opted into on-cluster image builds, and will override any MachineConfig referenced OSImageURL fields
 	// When omitted, Image Mode is not be enabled and the node will follow the standard update process of creating a rendered MachineConfig and updating to its specifications.
 	// When specified, Image Mode is enabled and will attempt to update the node to use the desired image. Following this, the node will follow the standard update process of creating a rendered MachineConfig and updating to its specifications.
 	// +openshift:enable:FeatureGate=ImageModeStatusReporting
@@ -129,7 +129,7 @@ type MachineConfigNodeStatus struct {
 	// configVersion describes the current and desired machine config version for this node.
 	// +optional
 	ConfigVersion *MachineConfigNodeStatusMachineConfigVersion `json:"configVersion,omitempty"`
-	// configImage is an optional field that reflects the current state of the image used by the node.
+	// configImage is an optional field for configuring the OS image to be used for this node. This field will only exist if the node belongs to a pool opted into on-cluster image builds, and will override any MachineConfig referenced OSImageURL fields.
 	// When omitted, this means that the Image Mode feature is not being used and the node will be up to date with the specific current rendered config version for the nodes MachinePool.
 	// When specified, the Image Mode feature is enabled and the contents of this field show the observed state of the node image.
 	// When Image Mode is enabled and a new MachineConfig is applied such that a new OS image build is not created, only the configVersion field will change.

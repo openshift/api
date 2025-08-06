@@ -101,6 +101,9 @@
                         "name": "GCPCustomAPIEndpointsInstall"
                     },
                     {
+                        "name": "HTTP01ChallengeProxy"
+                    },
+                    {
                         "name": "ImageModeStatusReporting"
                     },
                     {

@@ -253,6 +253,8 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"github.com/openshift/api/config/v1.GitLabIdentityProvider":                                          schema_openshift_api_config_v1_GitLabIdentityProvider(ref),
 		"github.com/openshift/api/config/v1.GoogleIdentityProvider":                                          schema_openshift_api_config_v1_GoogleIdentityProvider(ref),
 		"github.com/openshift/api/config/v1.HTPasswdIdentityProvider":                                        schema_openshift_api_config_v1_HTPasswdIdentityProvider(ref),
+		"github.com/openshift/api/config/v1.HTTP01ChallengeProxyCustomDeploymentSpec":                        schema_openshift_api_config_v1_HTTP01ChallengeProxyCustomDeploymentSpec(ref),
+		"github.com/openshift/api/config/v1.HTTP01ChallengeProxySpec":                                        schema_openshift_api_config_v1_HTTP01ChallengeProxySpec(ref),
 		"github.com/openshift/api/config/v1.HTTPServingInfo":                                                 schema_openshift_api_config_v1_HTTPServingInfo(ref),
 		"github.com/openshift/api/config/v1.HubSource":                                                       schema_openshift_api_config_v1_HubSource(ref),
 		"github.com/openshift/api/config/v1.HubSourceStatus":                                                 schema_openshift_api_config_v1_HubSourceStatus(ref),
@@ -8341,6 +8343,7 @@ func schema_openshift_api_config_v1_APIServerEncryption(ref common.ReferenceCall
 					"kms": {
 						SchemaProps: spec.SchemaProps{
 							Description: "kms defines the configuration for the external KMS instance that manages the encryption keys, when KMS encryption is enabled sensitive resources will be encrypted using keys managed by an externally configured KMS instance.\n\nThe Key Management Service (KMS) instance provides symmetric encryption and is responsible for managing the lifecyle of the encryption keys outside of the control plane. This allows integration with an external provider to manage the data encryption keys securely.",
+							Default:     map[string]interface{}{},
 							Ref:         ref("github.com/openshift/api/config/v1.KMSConfig"),
 						},
 					},
@@ -8550,11 +8553,18 @@ func schema_openshift_api_config_v1_APIServerSpec(ref common.ReferenceCallback) 
 							Ref:         ref("github.com/openshift/api/config/v1.Audit"),
 						},
 					},
+					"http01ChallengeProxy": {
+						SchemaProps: spec.SchemaProps{
+							Description: "http01ChallengeProxy contains configuration for the HTTP01 challenge proxy that redirects traffic from the API endpoint on port 80 to ingress routers. This enables cert-manager to perform HTTP01 ACME challenges for API endpoint certificates.",
+							Default:     map[string]interface{}{},
+							Ref:         ref("github.com/openshift/api/config/v1.HTTP01ChallengeProxySpec"),
+						},
+					},
 				},
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/config/v1.APIServerEncryption", "github.com/openshift/api/config/v1.APIServerServingCerts", "github.com/openshift/api/config/v1.Audit", "github.com/openshift/api/config/v1.ConfigMapNameReference", "github.com/openshift/api/config/v1.TLSSecurityProfile"},
+			"github.com/openshift/api/config/v1.APIServerEncryption", "github.com/openshift/api/config/v1.APIServerServingCerts", "github.com/openshift/api/config/v1.Audit", "github.com/openshift/api/config/v1.ConfigMapNameReference", "github.com/openshift/api/config/v1.HTTP01ChallengeProxySpec", "github.com/openshift/api/config/v1.TLSSecurityProfile"},
 	}
 }
 
@@ -9151,7 +9161,6 @@ func schema_openshift_api_config_v1_AuditCustomRule(ref common.ReferenceCallback
 					"profile": {
 						SchemaProps: spec.SchemaProps{
 							Description: "profile specifies the name of the desired audit policy configuration to be deployed to all OpenShift-provided API servers in the cluster.\n\nThe following profiles are provided: - Default: the existing default policy. - WriteRequestBodies: like 'Default', but logs request and response HTTP payloads for write requests (create, update, patch). - AllRequestBodies: like 'WriteRequestBodies', but also logs request and response HTTP payloads for read requests (get, list). - None: no requests are logged at all, not even oauthaccesstokens and oauthauthorizetokens.\n\nIf unset, the 'Default' profile is used as the default.",
-							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
 						},
@@ -13248,6 +13257,67 @@ func schema_openshift_api_config_v1_HTPasswdIdentityProvider(ref common.Referenc
 		},
 		Dependencies: []string{
 			"github.com/openshift/api/config/v1.SecretNameReference"},
+	}
+}
+
+func schema_openshift_api_config_v1_HTTP01ChallengeProxyCustomDeploymentSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"internalPort": {
+						SchemaProps: spec.SchemaProps{
+							Description: "internalPort specifies the internal port used by the proxy service. Valid values are 1024-65535. When not specified for CustomDeployment mode, users should ensure their chosen port does not conflict with other workloads on the host.",
+							Type:        []string{"integer"},
+							Format:      "int32",
+						},
+					},
+				},
+				Required: []string{"internalPort"},
+			},
+		},
+	}
+}
+
+func schema_openshift_api_config_v1_HTTP01ChallengeProxySpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"mode": {
+						SchemaProps: spec.SchemaProps{
+							Description: "mode controls whether the HTTP01 challenge proxy is active and how it should be deployed. DefaultDeployment enables the proxy with default configuration. CustomDeployment enables the proxy with user-specified configuration.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"customDeployment": {
+						SchemaProps: spec.SchemaProps{
+							Description: "customDeployment contains configuration options when mode is CustomDeployment. This field is only valid when mode is CustomDeployment.",
+							Default:     map[string]interface{}{},
+							Ref:         ref("github.com/openshift/api/config/v1.HTTP01ChallengeProxyCustomDeploymentSpec"),
+						},
+					},
+				},
+				Required: []string{"mode"},
+			},
+			VendorExtensible: spec.VendorExtensible{
+				Extensions: spec.Extensions{
+					"x-kubernetes-unions": []interface{}{
+						map[string]interface{}{
+							"discriminator": "mode",
+							"fields-to-discriminateBy": map[string]interface{}{
+								"customDeployment": "CustomDeployment",
+							},
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"github.com/openshift/api/config/v1.HTTP01ChallengeProxyCustomDeploymentSpec"},
 	}
 }
 

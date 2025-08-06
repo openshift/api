@@ -4021,6 +4021,7 @@
       "properties": {
         "kms": {
           "description": "kms defines the configuration for the external KMS instance that manages the encryption keys, when KMS encryption is enabled sensitive resources will be encrypted using keys managed by an externally configured KMS instance.\n\nThe Key Management Service (KMS) instance provides symmetric encryption and is responsible for managing the lifecyle of the encryption keys outside of the control plane. This allows integration with an external provider to manage the data encryption keys securely.",
+          "default": {},
           "$ref": "#/definitions/com.github.openshift.api.config.v1.KMSConfig"
         },
         "type": {
@@ -4130,6 +4131,11 @@
           "description": "encryption allows the configuration of encryption of resources at the datastore layer.",
           "default": {},
           "$ref": "#/definitions/com.github.openshift.api.config.v1.APIServerEncryption"
+        },
+        "http01ChallengeProxy": {
+          "description": "http01ChallengeProxy contains configuration for the HTTP01 challenge proxy that redirects traffic from the API endpoint on port 80 to ingress routers. This enables cert-manager to perform HTTP01 ACME challenges for API endpoint certificates.",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.config.v1.HTTP01ChallengeProxySpec"
         },
         "servingCerts": {
           "description": "servingCert is the TLS cert info for serving secure traffic. If not specified, operator managed certificates will be used for serving secure traffic.",
@@ -4497,8 +4503,7 @@
         },
         "profile": {
           "description": "profile specifies the name of the desired audit policy configuration to be deployed to all OpenShift-provided API servers in the cluster.\n\nThe following profiles are provided: - Default: the existing default policy. - WriteRequestBodies: like 'Default', but logs request and response HTTP payloads for write requests (create, update, patch). - AllRequestBodies: like 'WriteRequestBodies', but also logs request and response HTTP payloads for read requests (get, list). - None: no requests are logged at all, not even oauthaccesstokens and oauthauthorizetokens.\n\nIf unset, the 'Default' profile is used as the default.",
-          "type": "string",
-          "default": ""
+          "type": "string"
         }
       }
     },
@@ -6886,6 +6891,44 @@
           "$ref": "#/definitions/com.github.openshift.api.config.v1.SecretNameReference"
         }
       }
+    },
+    "com.github.openshift.api.config.v1.HTTP01ChallengeProxyCustomDeploymentSpec": {
+      "type": "object",
+      "required": [
+        "internalPort"
+      ],
+      "properties": {
+        "internalPort": {
+          "description": "internalPort specifies the internal port used by the proxy service. Valid values are 1024-65535. When not specified for CustomDeployment mode, users should ensure their chosen port does not conflict with other workloads on the host.",
+          "type": "integer",
+          "format": "int32"
+        }
+      }
+    },
+    "com.github.openshift.api.config.v1.HTTP01ChallengeProxySpec": {
+      "type": "object",
+      "required": [
+        "mode"
+      ],
+      "properties": {
+        "customDeployment": {
+          "description": "customDeployment contains configuration options when mode is CustomDeployment. This field is only valid when mode is CustomDeployment.",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.config.v1.HTTP01ChallengeProxyCustomDeploymentSpec"
+        },
+        "mode": {
+          "description": "mode controls whether the HTTP01 challenge proxy is active and how it should be deployed. DefaultDeployment enables the proxy with default configuration. CustomDeployment enables the proxy with user-specified configuration.",
+          "type": "string"
+        }
+      },
+      "x-kubernetes-unions": [
+        {
+          "discriminator": "mode",
+          "fields-to-discriminateBy": {
+            "customDeployment": "CustomDeployment"
+          }
+        }
+      ]
     },
     "com.github.openshift.api.config.v1.HTTPServingInfo": {
       "description": "HTTPServingInfo holds configuration for serving HTTP",

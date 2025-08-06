@@ -249,6 +249,47 @@ spec:
                     forbidden otherwise
                   rule: 'has(self.type) && self.type == ''KMS'' ?  has(self.kms) :
                     !has(self.kms)'
+              http01ChallengeProxy:
+                description: |-
+                  http01ChallengeProxy contains configuration for the HTTP01 challenge proxy
+                  that redirects traffic from the API endpoint on port 80 to ingress routers.
+                  This enables cert-manager to perform HTTP01 ACME challenges for API endpoint certificates.
+                properties:
+                  customDeployment:
+                    description: |-
+                      customDeployment contains configuration options when mode is CustomDeployment.
+                      This field is only valid when mode is CustomDeployment.
+                    properties:
+                      internalPort:
+                        description: |-
+                          internalPort specifies the internal port used by the proxy service.
+                          Valid values are 1024-65535.
+                          When not specified for CustomDeployment mode, users should ensure their chosen port
+                          does not conflict with other workloads on the host.
+                        format: int32
+                        maximum: 65535
+                        minimum: 1024
+                        type: integer
+                    required:
+                    - internalPort
+                    type: object
+                  mode:
+                    description: |-
+                      mode controls whether the HTTP01 challenge proxy is active and how it should be deployed.
+                      DefaultDeployment enables the proxy with default configuration.
+                      CustomDeployment enables the proxy with user-specified configuration.
+                    enum:
+                    - DefaultDeployment
+                    - CustomDeployment
+                    type: string
+                required:
+                - mode
+                type: object
+                x-kubernetes-validations:
+                - message: customDeployment is required when mode is CustomDeployment
+                    and forbidden otherwise
+                  rule: 'self.mode == ''CustomDeployment'' ? has(self.customDeployment)
+                    : !has(self.customDeployment)'
               servingCerts:
                 description: |-
                   servingCert is the TLS cert info for serving secure traffic. If not specified, operator managed certificates

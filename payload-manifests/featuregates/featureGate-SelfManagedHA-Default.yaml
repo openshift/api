@@ -101,9 +101,6 @@
                         "name": "GCPCustomAPIEndpointsInstall"
                     },
                     {
-                        "name": "HighlyAvailableArbiter"
-                    },
-                    {
                         "name": "ImageModeStatusReporting"
                     },
                     {
@@ -260,6 +257,9 @@
                     },
                     {
                         "name": "GatewayAPIController"
+                    },
+                    {
+                        "name": "HighlyAvailableArbiter"
                     },
                     {
                         "name": "IngressControllerLBSubnetsAWS"

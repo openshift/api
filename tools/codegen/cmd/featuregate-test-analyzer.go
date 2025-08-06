@@ -368,13 +368,13 @@ var (
 			Topology:     "ha",
 			NetworkStack: "dual",
 		},
+		{
+			Cloud:        "aws",
+			Architecture: "amd64",
+			Topology:     "single-node",
+		},
 
 		// TODO restore these once we run TechPreview jobs that contain them
-		//{
-		//	Cloud:        "aws",
-		//	Architecture: "amd64",
-		//	Topology:     "single-node",
-		//},
 		//{
 		//	Cloud:        "metal-ipi",
 		//	Architecture: "amd64",
@@ -393,6 +393,42 @@ var (
 			Cloud:        "openstack",
 			Architecture: "amd64",
 			Topology:     "ha",
+		},
+		{
+			Cloud:        "metal",
+			Architecture: "amd64",
+			Topology:     "two-node-arbiter",
+			NetworkStack: "ipv4",
+		},
+		{
+			Cloud:        "metal",
+			Architecture: "amd64",
+			Topology:     "two-node-arbiter",
+			NetworkStack: "ipv6",
+		},
+		{
+			Cloud:        "metal",
+			Architecture: "amd64",
+			Topology:     "two-node-arbiter",
+			NetworkStack: "dual",
+		},
+		{
+			Cloud:        "metal",
+			Architecture: "amd64",
+			Topology:     "two-node-fencing",
+			NetworkStack: "ipv4",
+		},
+		{
+			Cloud:        "metal",
+			Architecture: "amd64",
+			Topology:     "two-node-fencing",
+			NetworkStack: "ipv6",
+		},
+		{
+			Cloud:        "metal",
+			Architecture: "amd64",
+			Topology:     "two-node-fencing",
+			NetworkStack: "dual",
 		},
 	}
 
@@ -503,8 +539,9 @@ func filterVariants(featureGate string, variantsList ...[]JobVariant) []JobVaria
 		for _, variant := range variants {
 			normalizedCloud := strings.ReplaceAll(strings.ToLower(variant.Cloud), "-ipi", "") // The feature gate probably won't include the install type, but some cloud variants do
 			normalizedArchitecture := strings.ToLower(variant.Architecture)
+			normalizedTopology := strings.ToLower(variant.Topology)
 
-			if strings.Contains(normalizedFeatureGate, normalizedCloud) || strings.Contains(normalizedFeatureGate, normalizedArchitecture) {
+			if strings.Contains(normalizedFeatureGate, normalizedCloud) || strings.Contains(normalizedFeatureGate, normalizedArchitecture) || matchTwoNodeFeatureGates(normalizedFeatureGate, normalizedTopology) {
 				filteredVariants = append(filteredVariants, variant)
 			}
 		}
@@ -679,4 +716,15 @@ func listTestResultForVariant(featureGate string, jobVariant JobVariant) (*Testi
 	}
 
 	return jobVariantResults, nil
+}
+
+// Check for Arbiter and DualReplica or Fencing featureGates as these have special topologies
+func matchTwoNodeFeatureGates(featureGate string, topology string) bool {
+	if strings.Contains(featureGate, "arbiter") && strings.Contains(topology, "arbiter") {
+		return true
+	}
+	if (strings.Contains(featureGate, "dualreplica") || strings.Contains(featureGate, "fencing")) && strings.Contains(topology, "fencing") {
+		return true
+	}
+	return false
 }

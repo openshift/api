@@ -99,9 +99,9 @@ type MachineConfigNodeSpec struct {
 	// +required
 	ConfigVersion MachineConfigNodeSpecMachineConfigVersion `json:"configVersion"`
 
-	// configImage is an optional field for configuring the image the node referenced in node should use.
+	// configImage is an optional field for configuring the image in the referenced node.
 	// When omitted, Image Mode is not be enabled and the node will follow the standard update process of creating a rendered MachineConfig and updating to its specifications.
-	// When specified, Image Mode is enabled and will attempt to update the node to use the desired image.
+	// When specified, Image Mode is enabled and will attempt to update the node to use the desired image. Following this, the node will follow the standard update process of creating a rendered MachineConfig and updating to its specifications.
 	// +openshift:enable:FeatureGate=ImageModeStatusReporting
 	// +optional
 	ConfigImage MachineConfigNodeSpecConfigImage `json:"configImage,omitempty,omitzero"`
@@ -132,6 +132,9 @@ type MachineConfigNodeStatus struct {
 	// configImage is an optional field that reflects the current state of the image used by the node.
 	// When omitted, this means that the Image Mode feature is not being used and the node will be up to date with the specific current rendered config version for the nodes MachinePool.
 	// When specified, the Image Mode feature is enabled and the contents of this field show the observed state of the node image.
+	// When Image Mode is enabled and a new MachineConfig is applied such that a new OS image build is not created, only the configVersion field will change.
+	// When Image Mode is enabled and a new MachineConfig is applied such that a new OS image build is created, then only the configImage field will change. It is also possible that both the configImage
+	// and configVersion change during the same update.
 	// +openshift:enable:FeatureGate=ImageModeStatusReporting
 	// +optional
 	ConfigImage MachineConfigNodeStatusConfigImage `json:"configImage,omitempty,omitzero"`

@@ -336,7 +336,7 @@ type MetricsServerConfig struct {
 	// audit defines the audit configuration used by the Metrics Server instance.
 	// audit is optional.
 	// When omitted, this means no opinion and the platform is left to choose a reasonable default, that is subject to change over time.
-	// The current default value is `metadata`.
+	//The current default sets audit.profile to Metadata
 	// +optional
 	Audit *Audit `json:"audit,omitempty"`
 	// nodeSelector defines the nodes on which the Pods are scheduled
@@ -363,14 +363,18 @@ type MetricsServerConfig struct {
 	// +optional
 	Tolerations []v1.Toleration `json:"tolerations,omitempty"`
 	// verbosity defines the verbosity of log messages for Metrics Server.
-	// Valid values are positive integers, values over 10 are usually unnecessary.
+	// Valid values are positive integers from 0 to 255, values over 10 are usually unnecessary.
 	// When omitted, this means no opinion and the platform is left to choose a reasonable default, that is subject to change over time.
 	// The current default value is `0`.
-	// default means minimal logging
+	// Verbosity controls the threshold for emitting log messages.
+	//
+	// - Level 0: Only critical messages and errors are logged.
+	// - Level 1: Basic informational messages.
+	// - Level 2: Extended information useful for general debugging.
+	// - Level 6: Detailed information about metric scraping operations.
 	// +optional
 	// +kubebuilder:validation:Minimum=0
 	// +kubebuilder:validation:Maximum=255
-	// +kubebuilder:default=0
 	Verbosity *int32 `json:"verbosity,omitempty"`
 	// resources defines the compute resource requests and limits for the Metrics Server container.
 	// This includes CPU, memory and HugePages constraints to help control scheduling and resource usage.

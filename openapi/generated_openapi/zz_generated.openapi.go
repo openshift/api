@@ -22319,7 +22319,7 @@ func schema_openshift_api_config_v1alpha1_MetricsServerConfig(ref common.Referen
 				Properties: map[string]spec.Schema{
 					"audit": {
 						SchemaProps: spec.SchemaProps{
-							Description: "audit defines the audit configuration used by the Metrics Server instance. audit is optional. When omitted, this means no opinion and the platform is left to choose a reasonable default, that is subject to change over time. The current default value is `metadata`.",
+							Description: "audit defines the audit configuration used by the Metrics Server instance. audit is optional. When omitted, this means no opinion and the platform is left to choose a reasonable default, that is subject to change over time. The current default sets audit.profile to Metadata",
 							Ref:         ref("github.com/openshift/api/config/v1alpha1.Audit"),
 						},
 					},
@@ -22360,7 +22360,7 @@ func schema_openshift_api_config_v1alpha1_MetricsServerConfig(ref common.Referen
 					},
 					"verbosity": {
 						SchemaProps: spec.SchemaProps{
-							Description: "verbosity defines the verbosity of log messages for Metrics Server. Valid values are positive integers, values over 10 are usually unnecessary. When omitted, this means no opinion and the platform is left to choose a reasonable default, that is subject to change over time. The current default value is `0`. default means minimal logging",
+							Description: "verbosity defines the verbosity of log messages for Metrics Server. Valid values are positive integers from 0 to 255, values over 10 are usually unnecessary. When omitted, this means no opinion and the platform is left to choose a reasonable default, that is subject to change over time. The current default value is `0`. Verbosity controls the threshold for emitting log messages.\n\n- Level 0: Only critical messages and errors are logged. - Level 1: Basic informational messages. - Level 2: Extended information useful for general debugging. - Level 6: Detailed information about metric scraping operations.",
 							Type:        []string{"integer"},
 							Format:      "int32",
 						},

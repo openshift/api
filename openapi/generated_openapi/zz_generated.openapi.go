@@ -13267,14 +13267,12 @@ func schema_openshift_api_config_v1_HTTP01ChallengeProxyCustomDeploymentSpec(ref
 				Properties: map[string]spec.Schema{
 					"internalPort": {
 						SchemaProps: spec.SchemaProps{
-							Description: "internalPort specifies the internal port used by the proxy service. Valid values are 1024-65535. This port must be specified to avoid conflicts with other workloads on the host.",
-							Default:     0,
+							Description: "internalPort specifies the internal port used by the proxy service. Valid values are 1024-65535. When not specified for CustomDeployment mode, users should ensure their chosen port does not conflict with other workloads on the host.",
 							Type:        []string{"integer"},
 							Format:      "int32",
 						},
 					},
 				},
-				Required: []string{"internalPort"},
 			},
 		},
 	}

@@ -104,7 +104,7 @@ tests:
             customDeployment:
               internalPort: 8888
       expectedError: "customDeployment is required when mode is CustomDeployment and forbidden otherwise"
-    - name: Should reject CustomDeployment mode with customDeployment but missing internalPort
+    - name: Should be able to create CustomDeployment mode with empty customDeployment (internalPort optional)
       initial: |
         apiVersion: config.openshift.io/v1
         kind: APIServer
@@ -112,7 +112,15 @@ tests:
           http01ChallengeProxy:
             mode: CustomDeployment
             customDeployment: {}
-      expectedError: "spec.http01ChallengeProxy.customDeployment.internalPort: Required value"
+      expected: |
+        apiVersion: config.openshift.io/v1
+        kind: APIServer
+        spec:
+          audit:
+            profile: Default
+          http01ChallengeProxy:
+            mode: CustomDeployment
+            customDeployment: {}
     - name: Should reject CustomDeployment mode with port below minimum 1023
       initial: |
         apiVersion: config.openshift.io/v1

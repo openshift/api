@@ -263,11 +263,12 @@ type HTTP01ChallengeProxySpec struct {
 type HTTP01ChallengeProxyCustomDeploymentSpec struct {
 	// internalPort specifies the internal port used by the proxy service.
 	// Valid values are 1024-65535.
-	// This port must be specified to avoid conflicts with other workloads on the host.
+	// When not specified for CustomDeployment mode, users should ensure their chosen port
+	// does not conflict with other workloads on the host.
 	// +kubebuilder:validation:Minimum=1024
 	// +kubebuilder:validation:Maximum=65535
-	// +required
-	InternalPort int32 `json:"internalPort"`
+	// +optional
+	InternalPort *int32 `json:"internalPort,omitempty"`
 }
 
 type APIServerStatus struct {

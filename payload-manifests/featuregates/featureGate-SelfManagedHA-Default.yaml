@@ -179,9 +179,6 @@
                         "name": "NodeSwap"
                     },
                     {
-                        "name": "NutanixMultiSubnets"
-                    },
-                    {
                         "name": "OVNObservability"
                     },
                     {
@@ -290,6 +287,9 @@
                     },
                     {
                         "name": "NewOLM"
+                    },
+                    {
+                        "name": "NutanixMultiSubnets"
                     },
                     {
                         "name": "OnClusterBuild"

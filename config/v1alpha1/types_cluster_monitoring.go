@@ -89,6 +89,11 @@ type ClusterMonitoringSpec struct {
 	// The current default value is `DefaultConfig`.
 	// +optional
 	AlertmanagerConfig *AlertmanagerConfig `json:"alertmanagerConfig,omitempty"`
+	// metricsServerConfig metricsServerConfig defines the configuration for the Kubernetes Metrics Server.
+	// metricsServerConfig is optional.
+	// When omitted, this means no opinion and the platform is left to choose a reasonable default, that is subject to change over time.
+	// +optional
+	MetricsServerConfig *MetricsServerConfig `json:"metricsServerConfig,omitempty"`
 }
 
 // UserDefinedMonitoring config for user-defined projects.
@@ -322,3 +327,121 @@ type ContainerResource struct {
 // +kubebuilder:validation:XValidation:rule="!format.dns1123Subdomain().validate(self).hasValue()",message="a lowercase RFC 1123 subdomain must consist of lower case alphanumeric characters, '-' or '.', and must start and end with an alphanumeric character."
 // +kubebuilder:validation:MaxLength=63
 type SecretName string
+
+// MetricsServerConfig provides configuration options for the Metrics Server instance
+// that runs in the `openshift-monitoring` namespace. Use this configuration to control
+// how the Metrics Server instance is deployed, how it logs, and how its pods are scheduled.
+// +kubebuilder:validation:MinProperties=1
+type MetricsServerConfig struct {
+	// audit defines the audit configuration used by the Metrics Server instance.
+	// audit is optional.
+	// When omitted, this means no opinion and the platform is left to choose a reasonable default, that is subject to change over time.
+	//The current default sets audit.profile to Metadata
+	// +optional
+	Audit *Audit `json:"audit,omitempty"`
+	// nodeSelector defines the nodes on which the Pods are scheduled
+	// nodeSelector is optional.
+	//
+	// When omitted, this means the user has no opinion and the platform is left
+	// to choose reasonable defaults. These defaults are subject to change over time.
+	// The current default value is `kubernetes.io/os: linux`.
+	// +optional
+	// +kubebuilder:validation:MinProperties=1
+	// +kubebuilder:validation:MaxProperties=10
+	NodeSelector map[string]string `json:"nodeSelector,omitempty"`
+	// tolerations defines tolerations for the pods.
+	// tolerations is optional.
+	//
+	// When omitted, this means the user has no opinion and the platform is left
+	// to choose reasonable defaults. These defaults are subject to change over time.
+	// Defaults are empty/unset.
+	// Maximum length for this list is 10
+	// Minimum length for this list is 1
+	// +kubebuilder:validation:MaxItems=10
+	// +kubebuilder:validation:MinItems=1
+	// +listType=atomic
+	// +optional
+	Tolerations []v1.Toleration `json:"tolerations,omitempty"`
+	// verbosity defines the verbosity of log messages for Metrics Server.
+	// Valid values are positive integers from 0 to 255, values over 10 are usually unnecessary.
+	// When omitted, this means no opinion and the platform is left to choose a reasonable default, that is subject to change over time.
+	// The current default value is `0`.
+	// Verbosity controls the threshold for emitting log messages.
+	//
+	// - Level 0: Only critical messages and errors are logged.
+	// - Level 1: Basic informational messages.
+	// - Level 2: Extended information useful for general debugging.
+	// - Level 6: Detailed information about metric scraping operations.
+	// +optional
+	// +kubebuilder:validation:Minimum=0
+	// +kubebuilder:validation:Maximum=255
+	Verbosity *int32 `json:"verbosity,omitempty"`
+	// resources defines the compute resource requests and limits for the Metrics Server container.
+	// This includes CPU, memory and HugePages constraints to help control scheduling and resource usage.
+	// When not specified, defaults are used by the platform. Requests cannot exceed limits.
+	// This field is optional.
+	// More info: https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/
+	// This is a simplified API that maps to Kubernetes ResourceRequirements.
+	// The current default values are:
+	//   resources:
+	//    - name: cpu
+	//      request: 4m
+	//      limit: null
+	//    - name: memory
+	//      request: 40Mi
+	//      limit: null
+	// Maximum length for this list is 10.
+	// Minimum length for this list is 1.
+	// +optional
+	// +listType=map
+	// +listMapKey=name
+	// +kubebuilder:validation:MaxItems=10
+	// +kubebuilder:validation:MinItems=1
+	Resources []ContainerResource `json:"resources,omitempty"`
+	// topologySpreadConstraints defines rules for how Metrics Server Pods should be distributed
+	// across topology domains such as zones, nodes, or other user-defined labels.
+	// topologySpreadConstraints is optional.
+	// This helps improve high availability and resource efficiency by avoiding placing
+	// too many replicas in the same failure domain.
+	//
+	// When omitted, this means no opinion and the platform is left to choose a default, which is subject to change over time.
+	// This field maps directly to the `topologySpreadConstraints` field in the Pod spec.
+	// Default is empty list.
+	// Maximum length for this list is 10.
+	// Minimum length for this list is 1
+	// Entries must have unique topologyKey and whenUnsatisfiable pairs.
+	// +kubebuilder:validation:MaxItems=10
+	// +kubebuilder:validation:MinItems=1
+	// +listType=map
+	// +listMapKey=topologyKey
+	// +listMapKey=whenUnsatisfiable
+	// +optional
+	TopologySpreadConstraints []v1.TopologySpreadConstraint `json:"topologySpreadConstraints,omitempty"`
+}
+
+// AuditLevel defines the audit log level for the Metrics Server.
+// +kubebuilder:validation:Enum=None;Metadata;Request;RequestResponse
+type AuditLevel string
+
+const (
+	// AuditLevelNone disables audit logging
+	AuditLevelNone AuditLevel = "None"
+	// AuditLevelMetadata logs request metadata (requesting user, timestamp, resource, verb, etc.) but not request or response body
+	AuditLevelMetadata AuditLevel = "Metadata"
+	// AuditLevelRequest logs event metadata and request body but not response body
+	AuditLevelRequest AuditLevel = "Request"
+	// AuditLevelRequestResponse logs event metadata, request and response bodies
+	AuditLevelRequestResponse AuditLevel = "RequestResponse"
+)
+
+// Audit profile configurations
+type Audit struct {
+	// profile sets the audit log level for the Metrics Server. This currently matches the various
+	// audit log levels such as: "None, Metadata, Request, RequestResponse".
+	// The default audit log level is "Metadata"
+	//
+	// see: https://kubernetes.io/docs/tasks/debug-application-cluster/audit/#audit-policy
+	// for more information about auditing and log levels.
+	// +optional
+	Profile AuditLevel `json:"profile"`
+}

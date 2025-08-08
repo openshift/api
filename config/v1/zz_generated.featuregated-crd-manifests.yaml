@@ -6,6 +6,7 @@ apiservers.config.openshift.io:
   Capability: ""
   Category: ""
   FeatureGates:
+  - HTTP01ChallengeProxy
   - KMSEncryptionProvider
   FilenameOperatorName: config-operator
   FilenameOperatorOrdering: "01"

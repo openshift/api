@@ -101,9 +101,6 @@
                         "name": "ImageModeStatusReporting"
                     },
                     {
-                        "name": "ImageStreamImportMode"
-                    },
-                    {
                         "name": "ImageVolume"
                     },
                     {
@@ -263,6 +260,9 @@
                     },
                     {
                         "name": "HighlyAvailableArbiter"
+                    },
+                    {
+                        "name": "ImageStreamImportMode"
                     },
                     {
                         "name": "IngressControllerLBSubnetsAWS"

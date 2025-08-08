@@ -68,6 +68,16 @@ type IngressControllerSpec struct {
 	//
 	// If empty, defaults to ingress.config.openshift.io/cluster .spec.domain.
 	//
+	// The domain value must be a valid DNS name. It must consist of lowercase
+	// alphanumeric characters, '-' or '.', and each label must start and end
+	// with an alphanumeric character and not exceed 63 characters.
+	//
+	// The total length of the domain is limited to account for the router name
+	// prefix (e.g. "router-default.") that gets prepended when constructing
+	// the canonical hostname.
+	//
+	// +kubebuilder:validation:XValidation:rule="!format.dns1123Subdomain().validate(self).hasValue()",message="domain must consist of DNS labels separated by periods, where each label contains only lowercase alphanumeric characters and hyphens, must start and end with an alphanumeric character, and must not exceed 63 characters"
+	// +kubebuilder:validation:MaxLength=239
 	// +optional
 	Domain string `json:"domain,omitempty"`
 

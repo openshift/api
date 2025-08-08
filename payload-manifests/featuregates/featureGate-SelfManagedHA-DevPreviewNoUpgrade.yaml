@@ -198,6 +198,9 @@
                         "name": "ManagedBootImagesAzure"
                     },
                     {
+                        "name": "ManagedBootImagesCPMS"
+                    },
+                    {
                         "name": "ManagedBootImagesvSphere"
                     },
                     {

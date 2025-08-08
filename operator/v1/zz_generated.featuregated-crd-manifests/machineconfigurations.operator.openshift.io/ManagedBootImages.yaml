@@ -103,10 +103,9 @@ spec:
                         resource:
                           description: |-
                             resource is the machine management resource's type.
-                            The only current valid value is machinesets.
+                            Valid values are machinesets and controlplanemachinesets.
                             machinesets means that the machine manager will only register resources of the kind MachineSet.
-                          enum:
-                          - machinesets
+                            controlplanemachinesets means that the machine manager will only register resources of the kind ControlPlaneMachineSet.
                           type: string
                         selection:
                           description: selection allows granular control of the machine
@@ -734,10 +733,9 @@ spec:
                         resource:
                           description: |-
                             resource is the machine management resource's type.
-                            The only current valid value is machinesets.
+                            Valid values are machinesets and controlplanemachinesets.
                             machinesets means that the machine manager will only register resources of the kind MachineSet.
-                          enum:
-                          - machinesets
+                            controlplanemachinesets means that the machine manager will only register resources of the kind ControlPlaneMachineSet.
                           type: string
                         selection:
                           description: selection allows granular control of the machine

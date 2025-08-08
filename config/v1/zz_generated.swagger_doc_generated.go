@@ -1410,6 +1410,7 @@ var map_AWSPlatformStatus = map[string]string{
 	"serviceEndpoints":        "serviceEndpoints list contains custom endpoints which will override default service endpoint of AWS Services. There must be only one ServiceEndpoint for a service.",
 	"resourceTags":            "resourceTags is a list of additional tags to apply to AWS resources created for the cluster. See https://docs.aws.amazon.com/general/latest/gr/aws_tagging.html for information on tagging AWS resources. AWS supports a maximum of 50 tags per resource. OpenShift reserves 25 tags for its use, leaving 25 tags available for the user.",
 	"cloudLoadBalancerConfig": "cloudLoadBalancerConfig holds configuration related to DNS and cloud load balancers. It allows configuration of in-cluster DNS as an alternative to the platform default DNS implementation. When using the ClusterHosted DNS type, Load Balancer IP addresses must be provided for the API and internal API load balancers as well as the ingress load balancer.",
+	"ipFamily":                "ipFamily indicates the IP Address family supported by cluster nodes. This value indicates what IP address types can be expected to be found within the cluster. When set to \"IPv4\", the cluster infrastructure and all cluster resources including pods and nodes are set up with just IPv4 addresses. When set to \"DualStack\", cluster infrastructure and all cluster resources are expected to have both IPv4 and IPv6 addresses.",
 }
 
 func (AWSPlatformStatus) SwaggerDoc() map[string]string {
@@ -1481,6 +1482,7 @@ var map_AzurePlatformStatus = map[string]string{
 	"armEndpoint":              "armEndpoint specifies a URL to use for resource management in non-soverign clouds such as Azure Stack.",
 	"resourceTags":             "resourceTags is a list of additional tags to apply to Azure resources created for the cluster. See https://docs.microsoft.com/en-us/rest/api/resources/tags for information on tagging Azure resources. Due to limitations on Automation, Content Delivery Network, DNS Azure resources, a maximum of 15 tags may be applied. OpenShift reserves 5 tags for internal use, allowing 10 tags for user configuration.",
 	"cloudLoadBalancerConfig":  "cloudLoadBalancerConfig holds configuration related to DNS and cloud load balancers. It allows configuration of in-cluster DNS as an alternative to the platform default DNS implementation. When using the ClusterHosted DNS type, Load Balancer IP addresses must be provided for the API and internal API load balancers as well as the ingress load balancer.",
+	"ipFamily":                 "ipFamily indicates the IP Address family supported by cluster nodes. This value indicates what IP address types can be expected to be found within the cluster. When set to \"IPv4\", the cluster infrastructure and all cluster resources including pods and nodes are set up with just IPv4 addresses. When set to \"DualStack\", cluster infrastructure and all cluster resources are expected to have both IPv4 and IPv6 addresses.",
 }
 
 func (AzurePlatformStatus) SwaggerDoc() map[string]string {
@@ -1614,6 +1616,7 @@ var map_GCPPlatformStatus = map[string]string{
 	"resourceTags":            "resourceTags is a list of additional tags to apply to GCP resources created for the cluster. See https://cloud.google.com/resource-manager/docs/tags/tags-overview for information on tagging GCP resources. GCP supports a maximum of 50 tags per resource.",
 	"cloudLoadBalancerConfig": "cloudLoadBalancerConfig holds configuration related to DNS and cloud load balancers. It allows configuration of in-cluster DNS as an alternative to the platform default DNS implementation. When using the ClusterHosted DNS type, Load Balancer IP addresses must be provided for the API and internal API load balancers as well as the ingress load balancer.",
 	"serviceEndpoints":        "serviceEndpoints specifies endpoints that override the default endpoints used when creating clients to interact with GCP services. When not specified, the default endpoint for the GCP region will be used. Only 1 endpoint override is permitted for each GCP service. The maximum number of endpoint overrides allowed is 9.",
+	"ipFamily":                "ipFamily indicates the IP Address family supported by cluster nodes. This value indicates what IP address types can be expected to be found within the cluster. When set to \"IPv4\", the cluster infrastructure and all cluster resources including pods and nodes are set up with just IPv4 addresses. When set to \"DualStack\", cluster infrastructure and all cluster resources are expected to have both IPv4 and IPv6 addresses.",
 }
 
 func (GCPPlatformStatus) SwaggerDoc() map[string]string {

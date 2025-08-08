@@ -1353,6 +1353,18 @@ spec:
                             ClusterHosted
                           rule: 'has(self.dnsType) && self.dnsType != ''ClusterHosted''
                             ? !has(self.clusterHosted) : true'
+                      ipFamily:
+                        default: IPv4
+                        description: |-
+                          ipFamily indicates the IP Address family supported by cluster nodes.
+                          This value indicates what IP address types can be expected to be found within the cluster.
+                          When set to "IPv4", the cluster infrastructure and all cluster resources including pods
+                          and nodes are set up with just IPv4 addresses. When set to "DualStack", cluster
+                          infrastructure and all cluster resources are expected to have both IPv4 and IPv6 addresses.
+                        enum:
+                        - IPv4
+                        - DualStack
+                        type: string
                       region:
                         description: region holds the default AWS region for new AWS
                           resources created by the cluster.
@@ -1555,6 +1567,18 @@ spec:
                         - AzureChinaCloud
                         - AzureGermanCloud
                         - AzureStackCloud
+                        type: string
+                      ipFamily:
+                        default: IPv4
+                        description: |-
+                          ipFamily indicates the IP Address family supported by cluster nodes.
+                          This value indicates what IP address types can be expected to be found within the cluster.
+                          When set to "IPv4", the cluster infrastructure and all cluster resources including pods
+                          and nodes are set up with just IPv4 addresses. When set to "DualStack", cluster
+                          infrastructure and all cluster resources are expected to have both IPv4 and IPv6 addresses.
+                        enum:
+                        - IPv4
+                        - DualStack
                         type: string
                       networkResourceGroupName:
                         description: |-
@@ -1882,6 +1906,18 @@ spec:
                             ClusterHosted
                           rule: 'has(self.dnsType) && self.dnsType != ''ClusterHosted''
                             ? !has(self.clusterHosted) : true'
+                      ipFamily:
+                        default: IPv4
+                        description: |-
+                          ipFamily indicates the IP Address family supported by cluster nodes.
+                          This value indicates what IP address types can be expected to be found within the cluster.
+                          When set to "IPv4", the cluster infrastructure and all cluster resources including pods
+                          and nodes are set up with just IPv4 addresses. When set to "DualStack", cluster
+                          infrastructure and all cluster resources are expected to have both IPv4 and IPv6 addresses.
+                        enum:
+                        - IPv4
+                        - DualStack
+                        type: string
                       projectID:
                         description: resourceGroupName is the Project ID for new GCP
                           resources created for the cluster.

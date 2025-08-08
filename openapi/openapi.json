@@ -4225,6 +4225,11 @@
           },
           "$ref": "#/definitions/com.github.openshift.api.config.v1.CloudLoadBalancerConfig"
         },
+        "ipFamily": {
+          "description": "ipFamily indicates the IP Address family supported by cluster nodes. This value indicates what IP address types can be expected to be found within the cluster. When set to \"IPv4\", the cluster infrastructure and all cluster resources including pods and nodes are set up with just IPv4 addresses. When set to \"DualStack\", cluster infrastructure and all cluster resources are expected to have both IPv4 and IPv6 addresses.",
+          "type": "string",
+          "default": "IPv4"
+        },
         "region": {
           "description": "region holds the default AWS region for new AWS resources created by the cluster.",
           "type": "string",
@@ -4657,6 +4662,11 @@
         "cloudName": {
           "description": "cloudName is the name of the Azure cloud environment which can be used to configure the Azure SDK with the appropriate Azure API endpoints. If empty, the value is equal to `AzurePublicCloud`.",
           "type": "string"
+        },
+        "ipFamily": {
+          "description": "ipFamily indicates the IP Address family supported by cluster nodes. This value indicates what IP address types can be expected to be found within the cluster. When set to \"IPv4\", the cluster infrastructure and all cluster resources including pods and nodes are set up with just IPv4 addresses. When set to \"DualStack\", cluster infrastructure and all cluster resources are expected to have both IPv4 and IPv6 addresses.",
+          "type": "string",
+          "default": "IPv4"
         },
         "networkResourceGroupName": {
           "description": "networkResourceGroupName is the Resource Group for network resources like the Virtual Network and Subnets used by the cluster. If empty, the value is same as ResourceGroupName.",
@@ -6578,6 +6588,11 @@
             "dnsType": "PlatformDefault"
           },
           "$ref": "#/definitions/com.github.openshift.api.config.v1.CloudLoadBalancerConfig"
+        },
+        "ipFamily": {
+          "description": "ipFamily indicates the IP Address family supported by cluster nodes. This value indicates what IP address types can be expected to be found within the cluster. When set to \"IPv4\", the cluster infrastructure and all cluster resources including pods and nodes are set up with just IPv4 addresses. When set to \"DualStack\", cluster infrastructure and all cluster resources are expected to have both IPv4 and IPv6 addresses.",
+          "type": "string",
+          "default": "IPv4"
         },
         "projectID": {
           "description": "resourceGroupName is the Project ID for new GCP resources created for the cluster.",

@@ -429,3 +429,13 @@ const (
 	// IBMCloudServiceVPC is the name for IBM Cloud VPC.
 	IBMCloudServiceVPC IBMCloudServiceName = "VPC"
 )
+
+// IPFamiliesType indicates whether the different IP address configurations supported like IPv4-only, IPv6-only, or dual-stack
+type IPFamiliesType string
+
+const (
+	IPFamiliesIPv4                 IPFamiliesType = "IPv4"
+	IPFamiliesIPv6                 IPFamiliesType = "IPv6"
+	IPFamiliesDualStack            IPFamiliesType = "DualStack"
+	IPFamiliesDualStackIPv6Primary IPFamiliesType = "DualStackIPv6Primary"
+)

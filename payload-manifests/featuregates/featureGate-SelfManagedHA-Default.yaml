@@ -247,9 +247,6 @@
                         "name": "CPMSMachineNamePrefix"
                     },
                     {
-                        "name": "ChunkSizeMiB"
-                    },
-                    {
                         "name": "ConsolePluginContentSecurityPolicy"
                     },
                     {

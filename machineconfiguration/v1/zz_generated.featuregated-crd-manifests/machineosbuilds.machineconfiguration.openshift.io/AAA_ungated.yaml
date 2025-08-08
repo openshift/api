@@ -6,7 +6,7 @@ metadata:
     api.openshift.io/filename-cvo-runlevel: "0000_80"
     api.openshift.io/filename-operator: machine-config
     api.openshift.io/filename-ordering: "01"
-    feature-gate.release.openshift.io/OnClusterBuild: "true"
+    feature-gate.release.openshift.io/: "true"
   labels:
     openshift.io/operator-managed: ""
   name: machineosbuilds.machineconfiguration.openshift.io

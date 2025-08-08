@@ -255,9 +255,6 @@
                         "name": "OVNObservability"
                     },
                     {
-                        "name": "OnClusterBuild"
-                    },
-                    {
                         "name": "OpenShiftPodSecurityAdmission"
                     },
                     {

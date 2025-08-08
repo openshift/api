@@ -292,9 +292,6 @@
                         "name": "NewOLM"
                     },
                     {
-                        "name": "OnClusterBuild"
-                    },
-                    {
                         "name": "OpenShiftPodSecurityAdmission"
                     },
                     {

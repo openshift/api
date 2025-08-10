@@ -206,9 +206,6 @@
                         "name": "StoragePerformantSecurityPolicy"
                     },
                     {
-                        "name": "TranslateStreamCloseWebsocketRequests"
-                    },
-                    {
                         "name": "UpgradeStatus"
                     },
                     {
@@ -311,6 +308,9 @@
                     },
                     {
                         "name": "SetEIPForNLBIngressController"
+                    },
+                    {
+                        "name": "TranslateStreamCloseWebsocketRequests"
                     },
                     {
                         "name": "UserNamespacesPodSecurityStandards"

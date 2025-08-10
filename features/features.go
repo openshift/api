@@ -438,7 +438,7 @@ var (
 								contactPerson("akashem").
 								productScope(kubernetes).
 								enhancementPR("https://github.com/kubernetes/enhancements/issues/4006").
-								enableIn(configv1.DevPreviewNoUpgrade, configv1.TechPreviewNoUpgrade).
+								enableIn(configv1.Default, configv1.DevPreviewNoUpgrade, configv1.TechPreviewNoUpgrade).
 								mustRegister()
 
 	FeatureGateVolumeAttributesClass = newFeatureGate("VolumeAttributesClass").

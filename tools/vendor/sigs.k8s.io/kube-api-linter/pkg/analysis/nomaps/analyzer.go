@@ -27,7 +27,6 @@ import (
 	"sigs.k8s.io/kube-api-linter/pkg/analysis/helpers/inspector"
 	"sigs.k8s.io/kube-api-linter/pkg/analysis/helpers/markers"
 	"sigs.k8s.io/kube-api-linter/pkg/analysis/utils"
-	"sigs.k8s.io/kube-api-linter/pkg/config"
 )
 
 const (
@@ -35,12 +34,16 @@ const (
 )
 
 type analyzer struct {
-	policy config.NoMapsPolicy
+	policy NoMapsPolicy
 }
 
 // newAnalyzer creates a new analyzer.
-func newAnalyzer(cfg config.NoMapsConfig) *analysis.Analyzer {
-	defaultConfig(&cfg)
+func newAnalyzer(cfg *NoMapsConfig) *analysis.Analyzer {
+	if cfg == nil {
+		cfg = &NoMapsConfig{}
+	}
+
+	defaultConfig(cfg)
 
 	a := &analyzer{
 		policy: cfg.Policy,
@@ -68,8 +71,6 @@ func (a *analyzer) run(pass *analysis.Pass) (any, error) {
 }
 
 func (a *analyzer) checkField(pass *analysis.Pass, field *ast.Field) {
-	stringToStringMapType := types.NewMap(types.Typ[types.String], types.Typ[types.String])
-
 	underlyingType := pass.TypesInfo.TypeOf(field.Type).Underlying()
 
 	if ptr, ok := underlyingType.(*types.Pointer); ok {
@@ -81,20 +82,21 @@ func (a *analyzer) checkField(pass *analysis.Pass, field *ast.Field) {
 		return
 	}
 
-	if a.policy == config.NoMapsEnforce {
+	if a.policy == NoMapsEnforce {
 		report(pass, field.Pos(), utils.FieldName(field))
 		return
 	}
 
-	if a.policy == config.NoMapsAllowStringToStringMaps {
-		if types.Identical(m, stringToStringMapType) {
+	if a.policy == NoMapsAllowStringToStringMaps {
+		if types.AssignableTo(m.Elem().Underlying(), types.Typ[types.String]) &&
+			types.AssignableTo(m.Key().Underlying(), types.Typ[types.String]) {
 			return
 		}
 
 		report(pass, field.Pos(), utils.FieldName(field))
 	}
 
-	if a.policy == config.NoMapsIgnore {
+	if a.policy == NoMapsIgnore {
 		key := m.Key().Underlying()
 		_, ok := key.(*types.Basic)
 
@@ -116,8 +118,8 @@ func report(pass *analysis.Pass, pos token.Pos, fieldName string) {
 	})
 }
 
-func defaultConfig(cfg *config.NoMapsConfig) {
+func defaultConfig(cfg *NoMapsConfig) {
 	if cfg.Policy == "" {
-		cfg.Policy = config.NoMapsAllowStringToStringMaps
+		cfg.Policy = NoMapsAllowStringToStringMaps
 	}
 }

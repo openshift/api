@@ -179,6 +179,81 @@ tests:
                 claim: "username"
               groups:
                 claim: ""
+    - name: Cannot set OIDC Provider with an issuer URL with a fragment
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: Authentication
+        spec:
+          type: OIDC
+          oidcProviders:
+          - name: myoidc
+            issuer:
+              issuerURL: https://meh.tld/#fragment
+              audiences: ['openshift-aud']
+            claimMappings:
+              username:
+                claim: "username"
+      expectedError: "must not have a fragment"
+    - name: Cannot set OIDC Provider with an issuer URL with a query
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: Authentication
+        spec:
+          type: OIDC
+          oidcProviders:
+          - name: myoidc
+            issuer:
+              issuerURL: https://meh.tld?key=value
+              audiences: ['openshift-aud']
+            claimMappings:
+              username:
+                claim: "username"
+      expectedError: "must not have a query"
+    - name: Cannot set OIDC Provider with an issuer URL using non-https scheme
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: Authentication
+        spec:
+          type: OIDC
+          oidcProviders:
+          - name: myoidc
+            issuer:
+              issuerURL: http://meh.tld
+              audiences: ['openshift-aud']
+            claimMappings:
+              username:
+                claim: "username"
+      expectedError: "must use the 'https' scheme"
+    - name: Cannot set OIDC Provider with an issuer URL including user info
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: Authentication
+        spec:
+          type: OIDC
+          oidcProviders:
+          - name: myoidc
+            issuer:
+              issuerURL: "https://username:password@meh.tld"
+              audiences: ['openshift-aud']
+            claimMappings:
+              username:
+                claim: "username"
+      expectedError: "must not have user info"
+    - name: Cannot set OIDC Provider with an issuer URL that is not a URL, even if it uses the https scheme
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: Authentication
+        spec:
+          type: OIDC
+          oidcProviders:
+          - name: myoidc
+            issuer:
+              issuerURL: "https://!&^(!*&07s6da..sdjfya897w6234k.....s76r872)"
+              audiences: ['openshift-aud']
+            claimMappings:
+              username:
+                claim: "username"
+      expectedError: "must be a valid URL"
   onUpdate:
     - name: Updating OIDC provider with a client that's not in the status
       initial: &initConfig |
@@ -460,3 +535,398 @@ tests:
             claimMappings:
               username:
                 claim: "thisisanincrediblylongclaimnamethatwhileacceptableinjwtsisgenerallyadvisedagainstbecauseitisextremelylongandnoteasilyusablebutmaybethereisausecaseouttherethathasdecidedthattheyneedtousethisextremelylongclaimnameforsomereasoneventhoughtheyreallyshouldreconsiderthis"
+    - name: Should allow updating other fields if issuerURL contains fragment
+      initialCRDPatches:
+        - op: remove
+          path: /spec/versions/0/schema/openAPIV3Schema/properties/spec/properties/oidcProviders/items/properties/issuer/properties/issuerURL/x-kubernetes-validations/3
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: Authentication
+        spec:
+          type: OIDC
+          oidcProviders:
+          - name: myoidc
+            issuer:
+              issuerURL: https://meh.tld/#fragment
+              audiences: ['openshift-aud']
+            claimMappings:
+              username:
+                claim: "claim"
+      updated: |
+        apiVersion: config.openshift.io/v1
+        kind: Authentication
+        spec:
+          type: OIDC
+          oidcProviders:
+          - name: myoidc
+            issuer:
+              issuerURL: https://meh.tld/#fragment
+              audiences: ['openshift-aud']
+            claimMappings:
+              username:
+                claim: "newclaim"
+      expected: |
+        apiVersion: config.openshift.io/v1
+        kind: Authentication
+        spec:
+          type: OIDC
+          oidcProviders:
+          - name: myoidc
+            issuer:
+              issuerURL: https://meh.tld/#fragment
+              audiences: ['openshift-aud']
+            claimMappings:
+              username:
+                claim: "newclaim"
+    - name: Should allow updating issuerURL from a previously invalid value to a valid value (fragment)
+      initialCRDPatches:
+        - op: remove
+          path: /spec/versions/0/schema/openAPIV3Schema/properties/spec/properties/oidcProviders/items/properties/issuer/properties/issuerURL/x-kubernetes-validations/3
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: Authentication
+        spec:
+          type: OIDC
+          oidcProviders:
+          - name: myoidc
+            issuer:
+              issuerURL: https://meh.tld/#fragment
+              audiences: ['openshift-aud']
+            claimMappings:
+              username:
+                claim: "claim"
+      updated: |
+        apiVersion: config.openshift.io/v1
+        kind: Authentication
+        spec:
+          type: OIDC
+          oidcProviders:
+          - name: myoidc
+            issuer:
+              issuerURL: https://meh.tld
+              audiences: ['openshift-aud']
+            claimMappings:
+              username:
+                claim: "claim"
+      expected: |
+        apiVersion: config.openshift.io/v1
+        kind: Authentication
+        spec:
+          type: OIDC
+          oidcProviders:
+          - name: myoidc
+            issuer:
+              issuerURL: https://meh.tld
+              audiences: ['openshift-aud']
+            claimMappings:
+              username:
+                claim: "claim"
+    - name: Should not allow updating issuerURL from a previously invalid value to a still invalid value (fragment)
+      initialCRDPatches:
+        - op: remove
+          path: /spec/versions/0/schema/openAPIV3Schema/properties/spec/properties/oidcProviders/items/properties/issuer/properties/issuerURL/x-kubernetes-validations/3
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: Authentication
+        spec:
+          type: OIDC
+          oidcProviders:
+          - name: myoidc
+            issuer:
+              issuerURL: https://meh.tld/#fragment
+              audiences: ['openshift-aud']
+            claimMappings:
+              username:
+                claim: "claim"
+      updated: |
+        apiVersion: config.openshift.io/v1
+        kind: Authentication
+        spec:
+          type: OIDC
+          oidcProviders:
+          - name: myoidc
+            issuer:
+              issuerURL: https://meh.tld/#newFragment
+              audiences: ['openshift-aud']
+            claimMappings:
+              username:
+                claim: "claim"
+      expectedError: "must not have a fragment"
+    - name: Should allow updating other fields if issuerURL is not a valid URL using the https scheme
+      initialCRDPatches:
+        # removes all validations because every CEL check fails when invalid URL
+        - op: remove
+          path: /spec/versions/0/schema/openAPIV3Schema/properties/spec/properties/oidcProviders/items/properties/issuer/properties/issuerURL/x-kubernetes-validations
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: Authentication
+        spec:
+          type: OIDC
+          oidcProviders:
+          - name: myoidc
+            issuer:
+              issuerURL: https://!&^(!*&07s6da..sdjfya897w6234k.....s76r872)
+              audiences: ['openshift-aud']
+            claimMappings:
+              username:
+                claim: "claim"
+      updated: |
+        apiVersion: config.openshift.io/v1
+        kind: Authentication
+        spec:
+          type: OIDC
+          oidcProviders:
+          - name: myoidc
+            issuer:
+              issuerURL: https://!&^(!*&07s6da..sdjfya897w6234k.....s76r872)
+              audiences: ['openshift-aud']
+            claimMappings:
+              username:
+                claim: "newclaim"
+      expected: |
+        apiVersion: config.openshift.io/v1
+        kind: Authentication
+        spec:
+          type: OIDC
+          oidcProviders:
+          - name: myoidc
+            issuer:
+              issuerURL: https://!&^(!*&07s6da..sdjfya897w6234k.....s76r872)
+              audiences: ['openshift-aud']
+            claimMappings:
+              username:
+                claim: "newclaim"
+    - name: Should allow updating other fields if issuerURL has a query
+      initialCRDPatches:
+        - op: remove
+          path: /spec/versions/0/schema/openAPIV3Schema/properties/spec/properties/oidcProviders/items/properties/issuer/properties/issuerURL/x-kubernetes-validations/2
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: Authentication
+        spec:
+          type: OIDC
+          oidcProviders:
+          - name: myoidc
+            issuer:
+              issuerURL: https://meh.tld?key=value
+              audiences: ['openshift-aud']
+            claimMappings:
+              username:
+                claim: "claim"
+      updated: |
+        apiVersion: config.openshift.io/v1
+        kind: Authentication
+        spec:
+          type: OIDC
+          oidcProviders:
+          - name: myoidc
+            issuer:
+              issuerURL: https://meh.tld?key=value
+              audiences: ['openshift-aud']
+            claimMappings:
+              username:
+                claim: "newclaim"
+      expected: |
+        apiVersion: config.openshift.io/v1
+        kind: Authentication
+        spec:
+          type: OIDC
+          oidcProviders:
+          - name: myoidc
+            issuer:
+              issuerURL: https://meh.tld?key=value
+              audiences: ['openshift-aud']
+            claimMappings:
+              username:
+                claim: "newclaim"
+    - name: Should allow updating issuerURL from a previously invalid value to a valid value (query)
+      initialCRDPatches:
+        - op: remove
+          path: /spec/versions/0/schema/openAPIV3Schema/properties/spec/properties/oidcProviders/items/properties/issuer/properties/issuerURL/x-kubernetes-validations/2
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: Authentication
+        spec:
+          type: OIDC
+          oidcProviders:
+          - name: myoidc
+            issuer:
+              issuerURL: https://meh.tld?key=value
+              audiences: ['openshift-aud']
+            claimMappings:
+              username:
+                claim: "claim"
+      updated: |
+        apiVersion: config.openshift.io/v1
+        kind: Authentication
+        spec:
+          type: OIDC
+          oidcProviders:
+          - name: myoidc
+            issuer:
+              issuerURL: https://meh.tld
+              audiences: ['openshift-aud']
+            claimMappings:
+              username:
+                claim: "claim"
+      expected: |
+        apiVersion: config.openshift.io/v1
+        kind: Authentication
+        spec:
+          type: OIDC
+          oidcProviders:
+          - name: myoidc
+            issuer:
+              issuerURL: https://meh.tld
+              audiences: ['openshift-aud']
+            claimMappings:
+              username:
+                claim: "claim"
+    - name: Should not allow updating issuerURL from a previously invalid value to a still invalid value (query)
+      initialCRDPatches:
+        - op: remove
+          path: /spec/versions/0/schema/openAPIV3Schema/properties/spec/properties/oidcProviders/items/properties/issuer/properties/issuerURL/x-kubernetes-validations/2
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: Authentication
+        spec:
+          type: OIDC
+          oidcProviders:
+          - name: myoidc
+            issuer:
+              issuerURL: https://meh.tld?key=value
+              audiences: ['openshift-aud']
+            claimMappings:
+              username:
+                claim: "claim"
+      updated: |
+        apiVersion: config.openshift.io/v1
+        kind: Authentication
+        spec:
+          type: OIDC
+          oidcProviders:
+          - name: myoidc
+            issuer:
+              issuerURL: https://meh.tld?newKey=value
+              audiences: ['openshift-aud']
+            claimMappings:
+              username:
+                claim: "claim"
+      expectedError: "must not have a query"
+    - name: Should allow updating other fields if issuerURL has userinfo
+      initialCRDPatches:
+        - op: remove
+          path: /spec/versions/0/schema/openAPIV3Schema/properties/spec/properties/oidcProviders/items/properties/issuer/properties/issuerURL/x-kubernetes-validations/4
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: Authentication
+        spec:
+          type: OIDC
+          oidcProviders:
+          - name: myoidc
+            issuer:
+              issuerURL: https://username:password@meh.tld
+              audiences: ['openshift-aud']
+            claimMappings:
+              username:
+                claim: "claim"
+      updated: |
+        apiVersion: config.openshift.io/v1
+        kind: Authentication
+        spec:
+          type: OIDC
+          oidcProviders:
+          - name: myoidc
+            issuer:
+              issuerURL: https://username:password@meh.tld
+              audiences: ['openshift-aud']
+            claimMappings:
+              username:
+                claim: "newclaim"
+      expected: |
+        apiVersion: config.openshift.io/v1
+        kind: Authentication
+        spec:
+          type: OIDC
+          oidcProviders:
+          - name: myoidc
+            issuer:
+              issuerURL: https://username:password@meh.tld
+              audiences: ['openshift-aud']
+            claimMappings:
+              username:
+                claim: "newclaim"
+    - name: Should allow updating issuerURL from a previously invalid value to a valid value (userinfo)
+      initialCRDPatches:
+        - op: remove
+          path: /spec/versions/0/schema/openAPIV3Schema/properties/spec/properties/oidcProviders/items/properties/issuer/properties/issuerURL/x-kubernetes-validations/4
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: Authentication
+        spec:
+          type: OIDC
+          oidcProviders:
+          - name: myoidc
+            issuer:
+              issuerURL: https://user:pass@meh.tld
+              audiences: ['openshift-aud']
+            claimMappings:
+              username:
+                claim: "claim"
+      updated: |
+        apiVersion: config.openshift.io/v1
+        kind: Authentication
+        spec:
+          type: OIDC
+          oidcProviders:
+          - name: myoidc
+            issuer:
+              issuerURL: https://meh.tld
+              audiences: ['openshift-aud']
+            claimMappings:
+              username:
+                claim: "claim"
+      expected: |
+        apiVersion: config.openshift.io/v1
+        kind: Authentication
+        spec:
+          type: OIDC
+          oidcProviders:
+          - name: myoidc
+            issuer:
+              issuerURL: https://meh.tld
+              audiences: ['openshift-aud']
+            claimMappings:
+              username:
+                claim: "claim"
+    - name: Should not allow updating issuerURL from a previously invalid value to a still invalid value (userinfo)
+      initialCRDPatches:
+        - op: remove
+          path: /spec/versions/0/schema/openAPIV3Schema/properties/spec/properties/oidcProviders/items/properties/issuer/properties/issuerURL/x-kubernetes-validations/4
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: Authentication
+        spec:
+          type: OIDC
+          oidcProviders:
+          - name: myoidc
+            issuer:
+              issuerURL: https://user:pass@meh.tld
+              audiences: ['openshift-aud']
+            claimMappings:
+              username:
+                claim: "claim"
+      updated: |
+        apiVersion: config.openshift.io/v1
+        kind: Authentication
+        spec:
+          type: OIDC
+          oidcProviders:
+          - name: myoidc
+            issuer:
+              issuerURL: https://username:password@meh.tld
+              audiences: ['openshift-aud']
+            claimMappings:
+              username:
+                claim: "claim"
+      expectedError: "must not have user info"

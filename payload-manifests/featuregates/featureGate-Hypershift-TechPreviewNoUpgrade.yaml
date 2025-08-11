@@ -25,9 +25,6 @@
                         "name": "ClusterVersionOperatorConfiguration"
                     },
                     {
-                        "name": "DualReplica"
-                    },
-                    {
                         "name": "EventedPLEG"
                     },
                     {
@@ -58,7 +55,7 @@
                         "name": "NewOLMWebhookProviderOpenshiftServiceCA"
                     },
                     {
-                        "name": "SELinuxMount"
+                        "name": "NoRegistryClusterOperations"
                     },
                     {
                         "name": "ShortCertRotation"
@@ -70,6 +67,9 @@
                 "enabled": [
                     {
                         "name": "AWSClusterHostedDNS"
+                    },
+                    {
+                        "name": "AWSClusterHostedDNSInstall"
                     },
                     {
                         "name": "AWSDedicatedHosts"
@@ -88,6 +88,9 @@
                     },
                     {
                         "name": "AutomatedEtcdBackup"
+                    },
+                    {
+                        "name": "AzureClusterHostedDNSInstall"
                     },
                     {
                         "name": "AzureDedicatedHosts"
@@ -123,6 +126,9 @@
                         "name": "DNSNameResolver"
                     },
                     {
+                        "name": "DualReplica"
+                    },
+                    {
                         "name": "DyanmicServiceEndpointIBMCloud"
                     },
                     {
@@ -144,16 +150,19 @@
                         "name": "GCPClusterHostedDNS"
                     },
                     {
+                        "name": "GCPClusterHostedDNSInstall"
+                    },
+                    {
                         "name": "GCPCustomAPIEndpoints"
+                    },
+                    {
+                        "name": "GCPCustomAPIEndpointsInstall"
                     },
                     {
                         "name": "GatewayAPI"
                     },
                     {
                         "name": "GatewayAPIController"
-                    },
-                    {
-                        "name": "HardwareSpeed"
                     },
                     {
                         "name": "HighlyAvailableArbiter"
@@ -163,6 +172,9 @@
                     },
                     {
                         "name": "ImageStreamImportMode"
+                    },
+                    {
+                        "name": "ImageVolume"
                     },
                     {
                         "name": "IngressControllerDynamicConfigurationManager"
@@ -181,6 +193,9 @@
                     },
                     {
                         "name": "InsightsRuntimeExtractor"
+                    },
+                    {
+                        "name": "IrreconcilableMachineConfig"
                     },
                     {
                         "name": "KMSEncryptionProvider"
@@ -243,9 +258,6 @@
                         "name": "OVNObservability"
                     },
                     {
-                        "name": "OnClusterBuild"
-                    },
-                    {
                         "name": "OpenShiftPodSecurityAdmission"
                     },
                     {
@@ -262,6 +274,9 @@
                     },
                     {
                         "name": "RouteExternalCertificate"
+                    },
+                    {
+                        "name": "SELinuxMount"
                     },
                     {
                         "name": "ServiceAccountTokenNodeBinding"

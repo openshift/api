@@ -59,6 +59,19 @@ spec:
                 x-kubernetes-validations:
                 - message: etcd backendQuotaGiB may not be decreased
                   rule: self>=oldSelf
+              controlPlaneHardwareSpeed:
+                description: "HardwareSpeed allows user to change the etcd tuning
+                  profile which configures\nthe latency parameters for heartbeat interval
+                  and leader election timeouts\nallowing the cluster to tolerate longer
+                  round-trip-times between etcd members.\nValid values are \"\", \"Standard\"
+                  and \"Slower\".\n\t\"\" means no opinion and the platform is left
+                  to choose a reasonable default\n\twhich is subject to change without
+                  notice."
+                enum:
+                - ""
+                - Standard
+                - Slower
+                type: string
               failedRevisionLimit:
                 description: |-
                   failedRevisionLimit is the number of failed static pod installer revisions to keep on disk and in the api

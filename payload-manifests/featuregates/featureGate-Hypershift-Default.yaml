@@ -17,6 +17,9 @@
                         "name": "AWSClusterHostedDNS"
                     },
                     {
+                        "name": "AWSClusterHostedDNSInstall"
+                    },
+                    {
                         "name": "AWSDedicatedHosts"
                     },
                     {
@@ -24,6 +27,9 @@
                     },
                     {
                         "name": "AutomatedEtcdBackup"
+                    },
+                    {
+                        "name": "AzureClusterHostedDNSInstall"
                     },
                     {
                         "name": "AzureDedicatedHosts"
@@ -83,16 +89,22 @@
                         "name": "GCPClusterHostedDNS"
                     },
                     {
+                        "name": "GCPClusterHostedDNSInstall"
+                    },
+                    {
                         "name": "GCPCustomAPIEndpoints"
                     },
                     {
-                        "name": "HighlyAvailableArbiter"
+                        "name": "GCPCustomAPIEndpointsInstall"
                     },
                     {
                         "name": "ImageModeStatusReporting"
                     },
                     {
                         "name": "ImageStreamImportMode"
+                    },
+                    {
+                        "name": "ImageVolume"
                     },
                     {
                         "name": "IngressControllerDynamicConfigurationManager"
@@ -108,6 +120,9 @@
                     },
                     {
                         "name": "InsightsRuntimeExtractor"
+                    },
+                    {
+                        "name": "IrreconcilableMachineConfig"
                     },
                     {
                         "name": "KMSEncryptionProvider"
@@ -158,6 +173,9 @@
                         "name": "NewOLMWebhookProviderOpenshiftServiceCA"
                     },
                     {
+                        "name": "NoRegistryClusterOperations"
+                    },
+                    {
                         "name": "NodeSwap"
                     },
                     {
@@ -198,9 +216,6 @@
                     },
                     {
                         "name": "VSphereMixedNodeEnv"
-                    },
-                    {
-                        "name": "VSphereMultiDisk"
                     },
                     {
                         "name": "VolumeAttributesClass"
@@ -244,7 +259,7 @@
                         "name": "GatewayAPIController"
                     },
                     {
-                        "name": "HardwareSpeed"
+                        "name": "HighlyAvailableArbiter"
                     },
                     {
                         "name": "IngressControllerLBSubnetsAWS"
@@ -305,6 +320,9 @@
                     },
                     {
                         "name": "UserNamespacesSupport"
+                    },
+                    {
+                        "name": "VSphereMultiDisk"
                     },
                     {
                         "name": "VSphereMultiNetworks"

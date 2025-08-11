@@ -1055,6 +1055,7 @@ spec:
                   its components are not visible within the cluster.
                 enum:
                 - HighlyAvailable
+                - HighlyAvailableArbiter
                 - SingleReplica
                 - External
                 type: string

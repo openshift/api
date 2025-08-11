@@ -4133,6 +4133,7 @@
         },
         "http01ChallengeProxy": {
           "description": "http01ChallengeProxy contains configuration for the HTTP01 challenge proxy that redirects traffic from the API endpoint on port 80 to ingress routers. This enables cert-manager to perform HTTP01 ACME challenges for API endpoint certificates.",
+          "default": {},
           "$ref": "#/definitions/com.github.openshift.api.config.v1.HTTP01ChallengeProxySpec"
         },
         "servingCerts": {
@@ -6903,10 +6904,12 @@
     },
     "com.github.openshift.api.config.v1.HTTP01ChallengeProxySpec": {
       "type": "object",
+      "required": [
+        "mode"
+      ],
       "properties": {
         "customDeployment": {
           "description": "customDeployment contains configuration options when mode is CustomDeployment. This field is only valid when mode is CustomDeployment.",
-          "default": {},
           "$ref": "#/definitions/com.github.openshift.api.config.v1.HTTP01ChallengeProxyCustomDeploymentSpec"
         },
         "mode": {

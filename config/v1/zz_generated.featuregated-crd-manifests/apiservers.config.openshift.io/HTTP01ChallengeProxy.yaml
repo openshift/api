@@ -185,22 +185,19 @@ spec:
                     description: |-
                       customDeployment contains configuration options when mode is CustomDeployment.
                       This field is only valid when mode is CustomDeployment.
-                    minProperties: 1
                     properties:
                       internalPort:
                         description: |-
                           internalPort specifies the internal port used by the proxy service.
                           Valid values are 1024-65535.
-                          This port must be specified to avoid conflicts with other workloads on the host.
+                          When not specified for CustomDeployment mode, users should ensure their chosen port
+                          does not conflict with other workloads on the host.
                         format: int32
                         maximum: 65535
                         minimum: 1024
                         type: integer
-                    required:
-                    - internalPort
                     type: object
                   mode:
-                    default: DefaultDeployment
                     description: |-
                       mode controls whether the HTTP01 challenge proxy is active and how it should be deployed.
                       DefaultDeployment enables the proxy with default configuration.
@@ -209,6 +206,8 @@ spec:
                     - DefaultDeployment
                     - CustomDeployment
                     type: string
+                required:
+                - mode
                 type: object
                 x-kubernetes-validations:
                 - message: customDeployment is required when mode is CustomDeployment

@@ -8555,6 +8555,7 @@ func schema_openshift_api_config_v1_APIServerSpec(ref common.ReferenceCallback) 
 					"http01ChallengeProxy": {
 						SchemaProps: spec.SchemaProps{
 							Description: "http01ChallengeProxy contains configuration for the HTTP01 challenge proxy that redirects traffic from the API endpoint on port 80 to ingress routers. This enables cert-manager to perform HTTP01 ACME challenges for API endpoint certificates.",
+							Default:     map[string]interface{}{},
 							Ref:         ref("github.com/openshift/api/config/v1.HTTP01ChallengeProxySpec"),
 						},
 					},
@@ -13294,11 +13295,11 @@ func schema_openshift_api_config_v1_HTTP01ChallengeProxySpec(ref common.Referenc
 					"customDeployment": {
 						SchemaProps: spec.SchemaProps{
 							Description: "customDeployment contains configuration options when mode is CustomDeployment. This field is only valid when mode is CustomDeployment.",
-							Default:     map[string]interface{}{},
 							Ref:         ref("github.com/openshift/api/config/v1.HTTP01ChallengeProxyCustomDeploymentSpec"),
 						},
 					},
 				},
+				Required: []string{"mode"},
 			},
 			VendorExtensible: spec.VendorExtensible{
 				Extensions: spec.Extensions{

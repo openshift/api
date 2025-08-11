@@ -347,7 +347,7 @@ func (AuditCustomRule) SwaggerDoc() map[string]string {
 }
 
 var map_HTTP01ChallengeProxyCustomDeploymentSpec = map[string]string{
-	"internalPort": "internalPort specifies the internal port used by the proxy service. Valid values are 1024-65535. This port must be specified to avoid conflicts with other workloads on the host.",
+	"internalPort": "internalPort specifies the internal port used by the proxy service. Valid values are 1024-65535. When not specified for CustomDeployment mode, users should ensure their chosen port does not conflict with other workloads on the host.",
 }
 
 func (HTTP01ChallengeProxyCustomDeploymentSpec) SwaggerDoc() map[string]string {

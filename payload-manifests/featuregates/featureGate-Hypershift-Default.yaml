@@ -98,9 +98,6 @@
                         "name": "GCPCustomAPIEndpointsInstall"
                     },
                     {
-                        "name": "HighlyAvailableArbiter"
-                    },
-                    {
                         "name": "ImageModeStatusReporting"
                     },
                     {
@@ -123,6 +120,9 @@
                     },
                     {
                         "name": "InsightsRuntimeExtractor"
+                    },
+                    {
+                        "name": "IrreconcilableMachineConfig"
                     },
                     {
                         "name": "KMSEncryptionProvider"
@@ -262,6 +262,9 @@
                         "name": "GatewayAPIController"
                     },
                     {
+                        "name": "HighlyAvailableArbiter"
+                    },
+                    {
                         "name": "IngressControllerLBSubnetsAWS"
                     },
                     {
@@ -287,9 +290,6 @@
                     },
                     {
                         "name": "NetworkSegmentation"
-                    },
-                    {
-                        "name": "OnClusterBuild"
                     },
                     {
                         "name": "OpenShiftPodSecurityAdmission"

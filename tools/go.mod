@@ -30,7 +30,7 @@ require (
 	k8s.io/kube-openapi v0.0.0-20250318190949-c8a335a9a2ff
 	k8s.io/utils v0.0.0-20250604170112-4c0f3b243397
 	sigs.k8s.io/controller-tools v0.15.0
-	sigs.k8s.io/kube-api-linter v0.0.0-20250729132427-47bfeef6cd38
+	sigs.k8s.io/kube-api-linter v0.0.0-20250808120943-48643eb2563d
 	sigs.k8s.io/yaml v1.4.0
 )
 

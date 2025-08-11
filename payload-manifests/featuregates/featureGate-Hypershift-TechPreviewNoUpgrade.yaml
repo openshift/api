@@ -58,13 +58,7 @@
                         "name": "NoRegistryClusterOperations"
                     },
                     {
-                        "name": "SELinuxMount"
-                    },
-                    {
                         "name": "ShortCertRotation"
-                    },
-                    {
-                        "name": "SigstoreImageVerification"
                     },
                     {
                         "name": "VSphereMixedNodeEnv"
@@ -201,6 +195,9 @@
                         "name": "InsightsRuntimeExtractor"
                     },
                     {
+                        "name": "IrreconcilableMachineConfig"
+                    },
+                    {
                         "name": "KMSEncryptionProvider"
                     },
                     {
@@ -261,9 +258,6 @@
                         "name": "OVNObservability"
                     },
                     {
-                        "name": "OnClusterBuild"
-                    },
-                    {
                         "name": "OpenShiftPodSecurityAdmission"
                     },
                     {
@@ -282,6 +276,9 @@
                         "name": "RouteExternalCertificate"
                     },
                     {
+                        "name": "SELinuxMount"
+                    },
+                    {
                         "name": "ServiceAccountTokenNodeBinding"
                     },
                     {
@@ -289,6 +286,9 @@
                     },
                     {
                         "name": "SignatureStores"
+                    },
+                    {
+                        "name": "SigstoreImageVerification"
                     },
                     {
                         "name": "SigstoreImageVerificationPKI"

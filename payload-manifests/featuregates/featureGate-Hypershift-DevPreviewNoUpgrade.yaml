@@ -47,9 +47,6 @@
                     },
                     {
                         "name": "ShortCertRotation"
-                    },
-                    {
-                        "name": "SigstoreImageVerification"
                     }
                 ],
                 "enabled": [
@@ -195,6 +192,9 @@
                         "name": "InsightsRuntimeExtractor"
                     },
                     {
+                        "name": "IrreconcilableMachineConfig"
+                    },
+                    {
                         "name": "KMSEncryptionProvider"
                     },
                     {
@@ -255,9 +255,6 @@
                         "name": "OVNObservability"
                     },
                     {
-                        "name": "OnClusterBuild"
-                    },
-                    {
                         "name": "OpenShiftPodSecurityAdmission"
                     },
                     {
@@ -286,6 +283,9 @@
                     },
                     {
                         "name": "SignatureStores"
+                    },
+                    {
+                        "name": "SigstoreImageVerification"
                     },
                     {
                         "name": "SigstoreImageVerificationPKI"

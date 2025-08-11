@@ -73,7 +73,7 @@ type APIServerSpec struct {
 	// This enables cert-manager to perform HTTP01 ACME challenges for API endpoint certificates.
 	// +openshift:enable:FeatureGate=HTTP01ChallengeProxy
 	// +optional
-	HTTP01ChallengeProxy *HTTP01ChallengeProxySpec `json:"http01ChallengeProxy,omitempty"`
+	HTTP01ChallengeProxy HTTP01ChallengeProxySpec `json:"http01ChallengeProxy,omitzero"`
 }
 
 // AuditProfileType defines the audit policy profile type.
@@ -240,26 +240,34 @@ const (
 	EncryptionTypeKMS EncryptionType = "KMS"
 )
 
+// HTTP01ChallengeProxyMode defines how the HTTP01 challenge proxy should be deployed.
+// +kubebuilder:validation:Enum=DefaultDeployment;CustomDeployment
+type HTTP01ChallengeProxyMode string
+
+const (
+	// HTTP01ChallengeProxyModeDefaultDeployment enables the proxy with default configuration.
+	HTTP01ChallengeProxyModeDefaultDeployment HTTP01ChallengeProxyMode = "DefaultDeployment"
+	// HTTP01ChallengeProxyModeCustomDeployment enables the proxy with user-specified configuration.
+	HTTP01ChallengeProxyModeCustomDeployment HTTP01ChallengeProxyMode = "CustomDeployment"
+)
+
 // +union
 // +kubebuilder:validation:XValidation:rule="self.mode == 'CustomDeployment' ? has(self.customDeployment) : !has(self.customDeployment)",message="customDeployment is required when mode is CustomDeployment and forbidden otherwise"
 type HTTP01ChallengeProxySpec struct {
 	// mode controls whether the HTTP01 challenge proxy is active and how it should be deployed.
 	// DefaultDeployment enables the proxy with default configuration.
 	// CustomDeployment enables the proxy with user-specified configuration.
-	// +kubebuilder:validation:Enum=DefaultDeployment;CustomDeployment
-	// +kubebuilder:default=DefaultDeployment
-	// +optional
+	// +required
 	// +unionDiscriminator
-	Mode string `json:"mode,omitempty"`
+	Mode HTTP01ChallengeProxyMode `json:"mode,omitempty"`
 
 	// customDeployment contains configuration options when mode is CustomDeployment.
 	// This field is only valid when mode is CustomDeployment.
 	// +optional
 	// +unionMember
-	CustomDeployment HTTP01ChallengeProxyCustomDeploymentSpec `json:"customDeployment,omitzero,omitempty"`
+	CustomDeployment *HTTP01ChallengeProxyCustomDeploymentSpec `json:"customDeployment,omitzero,omitempty"`
 }
 
-// +kubebuilder:validation:MinProperties=1
 type HTTP01ChallengeProxyCustomDeploymentSpec struct {
 	// internalPort specifies the internal port used by the proxy service.
 	// Valid values are 1024-65535.
@@ -268,7 +276,7 @@ type HTTP01ChallengeProxyCustomDeploymentSpec struct {
 	// +kubebuilder:validation:Minimum=1024
 	// +kubebuilder:validation:Maximum=65535
 	// +optional
-	InternalPort *int32 `json:"internalPort,omitempty"`
+	InternalPort int32 `json:"internalPort,omitempty"`
 }
 
 type APIServerStatus struct {

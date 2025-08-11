@@ -651,7 +651,7 @@ func (ClusterImagePolicyStatus) SwaggerDoc() map[string]string {
 }
 
 var map_ClusterOperator = map[string]string{
-	"":         "ClusterOperator is the Custom Resource object which holds the current state of an operator. This object is used by operators to convey their state to the rest of the cluster.\n\nCompatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).",
+	"":         "ClusterOperator holds the status of a core or optional OpenShift component managed by the Cluster Version Operator (CVO). This object is used by operators to convey their state to the rest of the cluster. Compatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).",
 	"metadata": "metadata is the standard object's metadata. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata",
 	"spec":     "spec holds configuration that could apply to any operator.",
 	"status":   "status holds the information about the state of an operator.  It is consistent with status information across the Kubernetes ecosystem.",

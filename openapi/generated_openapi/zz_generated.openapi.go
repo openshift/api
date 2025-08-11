@@ -10466,7 +10466,7 @@ func schema_openshift_api_config_v1_ClusterOperator(ref common.ReferenceCallback
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
-				Description: "ClusterOperator is the Custom Resource object which holds the current state of an operator. This object is used by operators to convey their state to the rest of the cluster.\n\nCompatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).",
+				Description: "ClusterOperator holds the status of a core or optional OpenShift component managed by the Cluster Version Operator (CVO). This object is used by operators to convey their state to the rest of the cluster. Compatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).",
 				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
 					"kind": {

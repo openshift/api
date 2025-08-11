@@ -611,7 +611,6 @@ var ClusterVersionCapabilitySets = map[ClusterVersionCapabilitySet][]ClusterVers
 		ClusterVersionCapabilityNodeTuning,
 		ClusterVersionCapabilityMachineAPI,
 		ClusterVersionCapabilityBuild,
-		ClusterVersionCapabilityDeploymentConfig,
 		ClusterVersionCapabilityImageRegistry,
 		ClusterVersionCapabilityOperatorLifecycleManager,
 		ClusterVersionCapabilityOperatorLifecycleManagerV1,

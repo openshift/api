@@ -6,7 +6,7 @@ metadata:
     api.openshift.io/merged-by-featuregates: "true"
     include.release.openshift.io/ibm-cloud-managed: "true"
     include.release.openshift.io/self-managed-high-availability: "true"
-    release.openshift.io/feature-set: DevPreviewNoUpgrade
+    release.openshift.io/feature-set: OKD
   name: stableconfigtypes.example.openshift.io
 spec:
   group: example.openshift.io
@@ -75,17 +75,13 @@ spec:
                 - message: optionalMember is forbidden when type is not OptionalMember
                   rule: 'has(self.type) && self.type == ''OptionalMember'' ?  true
                     : !has(self.optionalMember)'
-              coolNewField:
-                description: coolNewField is a field that is for tech preview only.  On
-                  normal clusters this shouldn't be present
-                type: string
               evolvingCollection:
                 description: |-
                   evolvingCollection demonstrates how to have a collection where the maximum number of items varies on cluster type.
                   For default clusters, this will be "1" but on TechPreview clusters, this value will be "3".
                 items:
                   type: string
-                maxItems: 3
+                maxItems: 1
                 type: array
                 x-kubernetes-list-type: atomic
               evolvingUnion:
@@ -98,7 +94,6 @@ spec:
                     enum:
                     - ""
                     - StableValue
-                    - TechPreviewOnlyValue
                     type: string
                 required:
                 - type
@@ -216,12 +211,6 @@ spec:
             required:
             - immutableField
             type: object
-            x-kubernetes-validations:
-            - message: coolNewField may not be removed once set
-              rule: 'has(oldSelf.coolNewField) ? has(self.coolNewField) : true'
-            - message: stableField may not be removed once set (this should only show
-                up with both the Example and Example2 feature gates)
-              rule: 'has(oldSelf.stableField) ? has(self.stableField) : true'
           status:
             description: status is the most recently observed status of the StableConfigType.
             properties:

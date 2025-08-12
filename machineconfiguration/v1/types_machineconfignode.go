@@ -271,7 +271,7 @@ type MachineConfigNodeSpecConfigImage struct {
 	// It must be a fully qualified OCI image pull spec of the format host[:port][/namespace]/name@sha256:, where the digest must be exactly 64 characters in length and consist only of lowercase hexadecimal characters, a-f and 0-9.
 	// desiredImage must not be an empty string and must not exceed 447 characters in length.
 	// +required
-	DesiredImage ImageDigestFormat `json:"desiredImage"`
+	DesiredImage ImageDigestFormat `json:"desiredImage,omitempty"`
 }
 
 // MachineConfigNodeStatusConfigImage holds the observed state of the image

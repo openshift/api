@@ -80,6 +80,7 @@ spec:
                 - CustomNoUpgrade
                 - DevPreviewNoUpgrade
                 - TechPreviewNoUpgrade
+                - OKD
                 - ""
                 type: string
                 x-kubernetes-validations:
@@ -92,6 +93,8 @@ spec:
                 - message: DevPreviewNoUpgrade may not be changed
                   rule: 'oldSelf == ''DevPreviewNoUpgrade'' ? self == ''DevPreviewNoUpgrade''
                     : true'
+                - message: OKD may not be changed
+                  rule: 'oldSelf == ''OKD'' ? self == ''OKD'' : true'
             type: object
             x-kubernetes-validations:
             - message: .spec.featureSet cannot be removed

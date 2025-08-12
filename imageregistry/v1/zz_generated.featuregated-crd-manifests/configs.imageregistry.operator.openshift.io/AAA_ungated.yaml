@@ -1468,6 +1468,18 @@ spec:
                           data.
                           Optional, will be generated if not provided.
                         type: string
+                      chunkSizeMiB:
+                        description: |-
+                          chunkSizeMiB defines the size of the multipart upload chunks of the S3 API.
+                          The S3 API requires multipart upload chunks to be at least 5MiB.
+                          When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time.
+                          The current default value is 10 MiB.
+                          The value is an integer number of MiB.
+                          The minimum value is 5 and the maximum value is 5120 (5 GiB).
+                        format: int32
+                        maximum: 5120
+                        minimum: 5
+                        type: integer
                       cloudFront:
                         description: |-
                           cloudFront configures Amazon Cloudfront as the storage middleware in a
@@ -2212,6 +2224,18 @@ spec:
                           data.
                           Optional, will be generated if not provided.
                         type: string
+                      chunkSizeMiB:
+                        description: |-
+                          chunkSizeMiB defines the size of the multipart upload chunks of the S3 API.
+                          The S3 API requires multipart upload chunks to be at least 5MiB.
+                          When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time.
+                          The current default value is 10 MiB.
+                          The value is an integer number of MiB.
+                          The minimum value is 5 and the maximum value is 5120 (5 GiB).
+                        format: int32
+                        maximum: 5120
+                        minimum: 5
+                        type: integer
                       cloudFront:
                         description: |-
                           cloudFront configures Amazon Cloudfront as the storage middleware in a

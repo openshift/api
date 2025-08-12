@@ -3660,8 +3660,16 @@ func (in *InsightsDataGather) DeepCopyInto(out *InsightsDataGather) {
 	*out = *in
 	out.TypeMeta = in.TypeMeta
 	in.ObjectMeta.DeepCopyInto(&out.ObjectMeta)
-	in.Spec.DeepCopyInto(&out.Spec)
-	out.Status = in.Status
+	if in.Spec != nil {
+		in, out := &in.Spec, &out.Spec
+		*out = new(InsightsDataGatherSpec)
+		(*in).DeepCopyInto(*out)
+	}
+	if in.Status != nil {
+		in, out := &in.Status, &out.Status
+		*out = new(InsightsDataGatherStatus)
+		**out = **in
+	}
 	return
 }
 
@@ -5218,6 +5226,11 @@ func (in *PersistentVolumeClaimReference) DeepCopy() *PersistentVolumeClaimRefer
 func (in *PersistentVolumeConfig) DeepCopyInto(out *PersistentVolumeConfig) {
 	*out = *in
 	out.Claim = in.Claim
+	if in.MountPath != nil {
+		in, out := &in.MountPath, &out.MountPath
+		*out = new(string)
+		**out = **in
+	}
 	return
 }
 
@@ -6199,7 +6212,7 @@ func (in *Storage) DeepCopyInto(out *Storage) {
 	if in.PersistentVolume != nil {
 		in, out := &in.PersistentVolume, &out.PersistentVolume
 		*out = new(PersistentVolumeConfig)
-		**out = **in
+		(*in).DeepCopyInto(*out)
 	}
 	return
 }

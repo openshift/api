@@ -37,7 +37,11 @@ func (in *DataGather) DeepCopyInto(out *DataGather) {
 	out.TypeMeta = in.TypeMeta
 	in.ObjectMeta.DeepCopyInto(&out.ObjectMeta)
 	in.Spec.DeepCopyInto(&out.Spec)
-	in.Status.DeepCopyInto(&out.Status)
+	if in.Status != nil {
+		in, out := &in.Status, &out.Status
+		*out = new(DataGatherStatus)
+		(*in).DeepCopyInto(*out)
+	}
 	return
 }
 
@@ -63,7 +67,11 @@ func (in *DataGather) DeepCopyObject() runtime.Object {
 func (in *DataGatherList) DeepCopyInto(out *DataGatherList) {
 	*out = *in
 	out.TypeMeta = in.TypeMeta
-	in.ListMeta.DeepCopyInto(&out.ListMeta)
+	if in.ListMeta != nil {
+		in, out := &in.ListMeta, &out.ListMeta
+		*out = new(metav1.ListMeta)
+		(*in).DeepCopyInto(*out)
+	}
 	if in.Items != nil {
 		in, out := &in.Items, &out.Items
 		*out = make([]DataGather, len(*in))
@@ -153,7 +161,11 @@ func (in *DataGatherStatus) DeepCopyInto(out *DataGatherStatus) {
 		*out = make([]ObjectReference, len(*in))
 		copy(*out, *in)
 	}
-	in.InsightsReport.DeepCopyInto(&out.InsightsReport)
+	if in.InsightsReport != nil {
+		in, out := &in.InsightsReport, &out.InsightsReport
+		*out = new(InsightsReport)
+		(*in).DeepCopyInto(*out)
+	}
 	return
 }
 
@@ -304,6 +316,11 @@ func (in *PersistentVolumeClaimReference) DeepCopy() *PersistentVolumeClaimRefer
 func (in *PersistentVolumeConfig) DeepCopyInto(out *PersistentVolumeConfig) {
 	*out = *in
 	out.Claim = in.Claim
+	if in.MountPath != nil {
+		in, out := &in.MountPath, &out.MountPath
+		*out = new(string)
+		**out = **in
+	}
 	return
 }
 
@@ -323,7 +340,7 @@ func (in *Storage) DeepCopyInto(out *Storage) {
 	if in.PersistentVolume != nil {
 		in, out := &in.PersistentVolume, &out.PersistentVolume
 		*out = new(PersistentVolumeConfig)
-		**out = **in
+		(*in).DeepCopyInto(*out)
 	}
 	return
 }

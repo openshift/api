@@ -722,7 +722,7 @@ func (in *MetricsServerConfig) DeepCopyInto(out *MetricsServerConfig) {
 	}
 	if in.Verbosity != nil {
 		in, out := &in.Verbosity, &out.Verbosity
-		*out = new(int32)
+		*out = new(VerbosityLevel)
 		**out = **in
 	}
 	if in.Resources != nil {

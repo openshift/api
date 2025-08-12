@@ -12204,9 +12204,8 @@
           "x-kubernetes-list-type": "map"
         },
         "verbosity": {
-          "description": "verbosity defines the verbosity of log messages for Metrics Server. Valid values are positive integers from 0 to 255, values over 10 are usually unnecessary. When omitted, this means no opinion and the platform is left to choose a reasonable default, that is subject to change over time. The current default value is `0`. Verbosity controls the threshold for emitting log messages.\n\n- Level 0: Only critical messages and errors are logged. - Level 1: Basic informational messages. - Level 2: Extended information useful for general debugging. - Level 6: Detailed information about metric scraping operations.",
-          "type": "integer",
-          "format": "int32"
+          "description": "verbosity defines the verbosity of log messages for Metrics Server. Valid values are Errors, Info, Tradeall, and Traceall. When omitted, this means no opinion and the platform is left to choose a reasonable default, that is subject to change over time. The current default value is `Errors` Verbosity controls the threshold for emitting log messages.\n\n- Errors: Only critical messages and errors are logged. - Info: Basic informational messages. - Trace: Extended information useful for general debugging. - Traceall: Detailed information about metric scraping operations.",
+          "type": "string"
         }
       }
     },

@@ -363,19 +363,17 @@ type MetricsServerConfig struct {
 	// +optional
 	Tolerations []v1.Toleration `json:"tolerations,omitempty"`
 	// verbosity defines the verbosity of log messages for Metrics Server.
-	// Valid values are positive integers from 0 to 255, values over 10 are usually unnecessary.
+	// Valid values are Errors, Info, Tradeall, and Traceall.
 	// When omitted, this means no opinion and the platform is left to choose a reasonable default, that is subject to change over time.
-	// The current default value is `0`.
+	// The current default value is `Errors`
 	// Verbosity controls the threshold for emitting log messages.
 	//
-	// - Level 0: Only critical messages and errors are logged.
-	// - Level 1: Basic informational messages.
-	// - Level 2: Extended information useful for general debugging.
-	// - Level 6: Detailed information about metric scraping operations.
+	// - Errors: Only critical messages and errors are logged.
+	// - Info: Basic informational messages.
+	// - Trace: Extended information useful for general debugging.
+	// - Traceall: Detailed information about metric scraping operations.
 	// +optional
-	// +kubebuilder:validation:Minimum=0
-	// +kubebuilder:validation:Maximum=255
-	Verbosity *int32 `json:"verbosity,omitempty"`
+	Verbosity *VerbosityLevel `json:"verbosity,omitempty"`
 	// resources defines the compute resource requests and limits for the Metrics Server container.
 	// This includes CPU, memory and HugePages constraints to help control scheduling and resource usage.
 	// When not specified, defaults are used by the platform. Requests cannot exceed limits.
@@ -419,19 +417,34 @@ type MetricsServerConfig struct {
 	TopologySpreadConstraints []v1.TopologySpreadConstraint `json:"topologySpreadConstraints,omitempty"`
 }
 
-// AuditLevel defines the audit log level for the Metrics Server.
+// AuditProfile defines the audit log level for the Metrics Server.
 // +kubebuilder:validation:Enum=None;Metadata;Request;RequestResponse
-type AuditLevel string
+type AuditProfile string
 
 const (
 	// AuditLevelNone disables audit logging
-	AuditLevelNone AuditLevel = "None"
+	AuditLevelNone AuditProfile = "None"
 	// AuditLevelMetadata logs request metadata (requesting user, timestamp, resource, verb, etc.) but not request or response body
-	AuditLevelMetadata AuditLevel = "Metadata"
+	AuditLevelMetadata AuditProfile = "Metadata"
 	// AuditLevelRequest logs event metadata and request body but not response body
-	AuditLevelRequest AuditLevel = "Request"
+	AuditLevelRequest AuditProfile = "Request"
 	// AuditLevelRequestResponse logs event metadata, request and response bodies
-	AuditLevelRequestResponse AuditLevel = "RequestResponse"
+	AuditLevelRequestResponse AuditProfile = "RequestResponse"
+)
+
+// VerbosityLevel defines the verbosity of log messages for Metrics Server.
+// +kubebuilder:validation:Enum=Errors;Info;Tradeall;Traceall
+type VerbosityLevel string
+
+const (
+	// VerbosityErrors means only critical messages and errors are logged.
+	VerbosityErrors VerbosityLevel = "Errors"
+	// VerbosityInfo means basic informational messages are logged.
+	VerbosityInfo VerbosityLevel = "Info"
+	// VerbosityTrace means extended information useful for general debugging is logged.
+	VerbosityTradeall VerbosityLevel = "Trace"
+	// VerbosityTraceall means detailed information about metric scraping operations is logged.
+	VerbosityTraceall VerbosityLevel = "Traceall"
 )
 
 // Audit profile configurations
@@ -443,5 +456,5 @@ type Audit struct {
 	// see: https://kubernetes.io/docs/tasks/debug-application-cluster/audit/#audit-policy
 	// for more information about auditing and log levels.
 	// +optional
-	Profile AuditLevel `json:"profile"`
+	Profile AuditProfile `json:"profile"`
 }

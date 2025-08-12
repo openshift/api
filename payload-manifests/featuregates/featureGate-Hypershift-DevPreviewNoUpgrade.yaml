@@ -186,9 +186,6 @@
                         "name": "InsightsOnDemandDataGather"
                     },
                     {
-                        "name": "InsightsRuntimeExtractor"
-                    },
-                    {
                         "name": "IrreconcilableMachineConfig"
                     },
                     {

@@ -371,14 +371,14 @@ var (
 		{
 			Cloud:        "aws",
 			Architecture: "amd64",
-			Topology:     "single-node",
+			Topology:     "single",
 		},
 
 		// TODO restore these once we run TechPreview jobs that contain them
 		//{
 		//	Cloud:        "metal-ipi",
 		//	Architecture: "amd64",
-		//	Topology:     "single-node",
+		//	Topology:     "single",
 		//},
 	}
 

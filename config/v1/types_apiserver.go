@@ -275,7 +275,7 @@ type HTTP01ChallengeProxyCustomDeploymentSpec struct {
 	// does not conflict with other workloads on the host.
 	// +kubebuilder:validation:Minimum=1024
 	// +kubebuilder:validation:Maximum=65535
-	// +optional
+	// +required
 	InternalPort int32 `json:"internalPort,omitempty"`
 }
 

@@ -6894,6 +6894,9 @@
     },
     "com.github.openshift.api.config.v1.HTTP01ChallengeProxyCustomDeploymentSpec": {
       "type": "object",
+      "required": [
+        "internalPort"
+      ],
       "properties": {
         "internalPort": {
           "description": "internalPort specifies the internal port used by the proxy service. Valid values are 1024-65535. When not specified for CustomDeployment mode, users should ensure their chosen port does not conflict with other workloads on the host.",

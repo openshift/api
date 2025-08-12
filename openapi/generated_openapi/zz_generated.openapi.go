@@ -13274,6 +13274,7 @@ func schema_openshift_api_config_v1_HTTP01ChallengeProxyCustomDeploymentSpec(ref
 						},
 					},
 				},
+				Required: []string{"internalPort"},
 			},
 		},
 	}

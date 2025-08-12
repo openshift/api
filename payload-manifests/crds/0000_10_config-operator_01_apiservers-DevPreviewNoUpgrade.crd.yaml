@@ -270,6 +270,8 @@ spec:
                         maximum: 65535
                         minimum: 1024
                         type: integer
+                    required:
+                    - internalPort
                     type: object
                   mode:
                     description: |-

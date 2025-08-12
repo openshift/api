@@ -5,7 +5,6 @@
         "annotations": {
             "include.release.openshift.io/ibm-cloud-managed": "false-except-for-the-config-operator"
         },
-        "creationTimestamp": null,
         "name": "cluster"
     },
     "spec": {

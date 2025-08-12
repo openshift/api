@@ -6737,6 +6737,7 @@
         },
         "storage": {
           "description": "storage is an optional field that allows user to define persistent storage for gathering jobs to store the Insights data archive. If omitted, the gathering job will use ephemeral storage.",
+          "default": {},
           "$ref": "#/definitions/com.github.openshift.api.config.v1.Storage"
         }
       }
@@ -6751,13 +6752,11 @@
       "properties": {
         "name": {
           "description": "name is the required name of a specific gatherer It may not exceed 256 characters. The format for a gatherer name is: {gatherer}/{function} where the function is optional. Gatherer consists of a lowercase letters only that may include underscores (_). Function consists of a lowercase letters only that may include underscores (_) and is separated from the gatherer by a forward slash (/). The particular gatherers can be found at https://github.com/openshift/insights-operator/blob/master/docs/gathered-data.md. Run the following command to get the names of last active gatherers: \"oc get insightsoperators.operator.openshift.io cluster -o json | jq '.status.gatherStatus.gatherers[].name'\"",
-          "type": "string",
-          "default": ""
+          "type": "string"
         },
         "state": {
           "description": "state is a required field that allows you to configure specific gatherer. Valid values are \"Enabled\" and \"Disabled\". When set to Enabled the gatherer will run. When set to Disabled the gatherer will not run.",
-          "type": "string",
-          "default": ""
+          "type": "string"
         }
       }
     },
@@ -6769,12 +6768,12 @@
       "properties": {
         "custom": {
           "description": "custom provides gathering configuration. It is required when mode is Custom, and forbidden otherwise. Custom configuration allows user to disable only a subset of gatherers. Gatherers that are not explicitly disabled in custom configuration will run.",
+          "default": {},
           "$ref": "#/definitions/com.github.openshift.api.config.v1.Custom"
         },
         "mode": {
           "description": "mode is a required field that specifies the mode for gatherers. Allowed values are All, None, and Custom. When set to All, all gatherers wil run and gather data. When set to None, all gatherers will be disabled and no data will be gathered. When set to Custom, the custom configuration from the custom field will be applied.",
-          "type": "string",
-          "default": ""
+          "type": "string"
         }
       }
     },
@@ -8146,6 +8145,7 @@
       }
     },
     "com.github.openshift.api.config.v1.InsightsDataGatherSpec": {
+      "description": "InsightsDataGatherSpec contains the configuration for the data gathering.",
       "type": "object",
       "properties": {
         "gatherConfig": {
@@ -9784,8 +9784,7 @@
       "properties": {
         "name": {
           "description": "name is a string that follows the DNS1123 subdomain format. It must be at most 253 characters in length, and must consist only of lower case alphanumeric characters, '-' and '.', and must start and end with an alphanumeric character.",
-          "type": "string",
-          "default": ""
+          "type": "string"
         }
       }
     },
@@ -10873,12 +10872,12 @@
       "properties": {
         "persistentVolume": {
           "description": "persistentVolume is an optional field that specifies the PersistentVolume that will be used to store the Insights data archive. The PersistentVolume must be created in the openshift-insights namespace.",
+          "default": {},
           "$ref": "#/definitions/com.github.openshift.api.config.v1.PersistentVolumeConfig"
         },
         "type": {
           "description": "type is a required field that specifies the type of storage that will be used to store the Insights data archive. Valid values are \"PersistentVolume\" and \"Ephemeral\". When set to Ephemeral, the Insights data archive is stored in the ephemeral storage of the gathering job. When set to PersistentVolume, the Insights data archive is stored in the PersistentVolume that is defined by the persistentVolume field.",
-          "type": "string",
-          "default": ""
+          "type": "string"
         }
       }
     },
@@ -15999,7 +15998,6 @@
         },
         "spec": {
           "description": "spec holds user settable values for configuration",
-          "default": {},
           "$ref": "#/definitions/com.github.openshift.api.insights.v1.DataGatherSpec"
         },
         "status": {
@@ -16032,7 +16030,6 @@
         },
         "metadata": {
           "description": "metadata is the standard list's metadata. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata",
-          "default": {},
           "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.ListMeta"
         }
       }
@@ -16052,10 +16049,12 @@
         },
         "gatherers": {
           "description": "gatherers is an optional field that specifies the configuration of the gatherers. If omitted, all gatherers will be run.",
+          "default": {},
           "$ref": "#/definitions/com.github.openshift.api.insights.v1.Gatherers"
         },
         "storage": {
           "description": "storage is an optional field that allows user to define persistent storage for gathering jobs to store the Insights data archive. If omitted, the gathering job will use ephemeral storage.",
+          "default": {},
           "$ref": "#/definitions/com.github.openshift.api.insights.v1.Storage"
         }
       }
@@ -16094,7 +16093,6 @@
         },
         "insightsReport": {
           "description": "insightsReport provides general Insights analysis results. When omitted, this means no data gathering has taken place yet or the corresponding Insights analysis (identified by \"insightsRequestID\") is not available.",
-          "default": {},
           "$ref": "#/definitions/com.github.openshift.api.insights.v1.InsightsReport"
         },
         "insightsRequestID": {
@@ -16130,13 +16128,11 @@
       "properties": {
         "name": {
           "description": "name is the required name of a specific gatherer It may not exceed 256 characters. The format for a gatherer name is: {gatherer}/{function} where the function is optional. Gatherer consists of a lowercase letters only that may include underscores (_). Function consists of a lowercase letters only that may include underscores (_) and is separated from the gatherer by a forward slash (/). The particular gatherers can be found at https://github.com/openshift/insights-operator/blob/master/docs/gathered-data.md. Run the following command to get the names of last active gatherers: \"oc get insightsoperators.operator.openshift.io cluster -o json | jq '.status.gatherStatus.gatherers[].name'\"",
-          "type": "string",
-          "default": ""
+          "type": "string"
         },
         "state": {
           "description": "state is a required field that allows you to configure specific gatherer. Valid values are \"Enabled\" and \"Disabled\". When set to Enabled the gatherer will run. When set to Disabled the gatherer will not run.",
-          "type": "string",
-          "default": ""
+          "type": "string"
         }
       }
     },
@@ -16163,13 +16159,11 @@
         "lastGatherSeconds": {
           "description": "lastGatherSeconds is required field that represents the time spent gathering in seconds",
           "type": "integer",
-          "format": "int32",
-          "default": 0
+          "format": "int32"
         },
         "name": {
           "description": "name is the required name of the gatherer. It must contain at least 5 characters and may not exceed 256 characters.",
-          "type": "string",
-          "default": ""
+          "type": "string"
         }
       }
     },
@@ -16182,12 +16176,12 @@
       "properties": {
         "custom": {
           "description": "custom provides gathering configuration. It is required when mode is Custom, and forbidden otherwise. Custom configuration allows user to disable only a subset of gatherers. Gatherers that are not explicitly disabled in custom configuration will run.",
+          "default": {},
           "$ref": "#/definitions/com.github.openshift.api.insights.v1.Custom"
         },
         "mode": {
           "description": "mode is a required field that specifies the mode for gatherers. Allowed values are All and Custom. When set to All, all gatherers wil run and gather data. When set to Custom, the custom configuration from the custom field will be applied.",
-          "type": "string",
-          "default": ""
+          "type": "string"
         }
       },
       "x-kubernetes-unions": [
@@ -16210,18 +16204,15 @@
       "properties": {
         "advisorURI": {
           "description": "advisorURI is required field that provides the URL link to the Insights Advisor. The link must be a valid HTTPS URL and the maximum length is 2048 characters.",
-          "type": "string",
-          "default": ""
+          "type": "string"
         },
         "description": {
           "description": "description is required field that provides basic description of the healtcheck. It must contain at least 10 characters and may not exceed 2048 characters.",
-          "type": "string",
-          "default": ""
+          "type": "string"
         },
         "totalRisk": {
           "description": "totalRisk is the required field of the healthcheck. It is indicator of the total risk posed by the detected issue; combination of impact and likelihood. Allowed values are Low, Medium, Important and Critical. The value represents the severity of the issue.",
-          "type": "string",
-          "default": ""
+          "type": "string"
         }
       }
     },
@@ -16265,23 +16256,19 @@
       "properties": {
         "group": {
           "description": "group is required field that specifies the API Group of the Resource. Enter empty string for the core group. This value is empty or it should follow the DNS1123 subdomain format. It must be at most 253 characters in length, and must consist only of lower case alphanumeric characters, '-' and '.', and must start with an alphabetic character and end with an alphanumeric character. Example: \"\", \"apps\", \"build.openshift.io\", etc.",
-          "type": "string",
-          "default": ""
+          "type": "string"
         },
         "name": {
           "description": "name is required field that specifies the referent that follows the DNS1123 subdomain format. It must be at most 253 characters in length, and must consist only of lower case alphanumeric characters, '-' and '.', and must start with an alphabetic character and end with an alphanumeric character..",
-          "type": "string",
-          "default": ""
+          "type": "string"
         },
         "namespace": {
           "description": "namespace if required field of the referent that follows the DNS1123 labels format. It must be at most 63 characters in length, and must must consist of only lowercase alphanumeric characters and hyphens, and must start with an alphabetic character and end with an alphanumeric character.",
-          "type": "string",
-          "default": ""
+          "type": "string"
         },
         "resource": {
           "description": "resource is required field of the type that is being referenced and follows the DNS1035 format. It is normally the plural form of the resource kind in lowercase. It must be at most 63 characters in length, and must must consist of only lowercase alphanumeric characters and hyphens, and must start with an alphabetic character and end with an alphanumeric character. Example: \"deployments\", \"deploymentconfigs\", \"pods\", etc.",
-          "type": "string",
-          "default": ""
+          "type": "string"
         }
       }
     },
@@ -16294,8 +16281,7 @@
       "properties": {
         "name": {
           "description": "name is a string that follows the DNS1123 subdomain format. It must be at most 253 characters in length, and must consist only of lower case alphanumeric characters, '-' and '.', and must start and end with an alphanumeric character.",
-          "type": "string",
-          "default": ""
+          "type": "string"
         }
       }
     },
@@ -16326,12 +16312,12 @@
       "properties": {
         "persistentVolume": {
           "description": "persistentVolume is an optional field that specifies the PersistentVolume that will be used to store the Insights data archive. The PersistentVolume must be created in the openshift-insights namespace.",
+          "default": {},
           "$ref": "#/definitions/com.github.openshift.api.insights.v1.PersistentVolumeConfig"
         },
         "type": {
           "description": "type is a required field that specifies the type of storage that will be used to store the Insights data archive. Valid values are \"PersistentVolume\" and \"Ephemeral\". When set to Ephemeral, the Insights data archive is stored in the ephemeral storage of the gathering job. When set to PersistentVolume, the Insights data archive is stored in the PersistentVolume that is defined by the PersistentVolume field.",
-          "type": "string",
-          "default": ""
+          "type": "string"
         }
       },
       "x-kubernetes-unions": [

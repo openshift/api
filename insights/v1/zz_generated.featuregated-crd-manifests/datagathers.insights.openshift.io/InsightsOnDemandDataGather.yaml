@@ -53,6 +53,7 @@ spec:
             type: object
           spec:
             description: spec holds user settable values for configuration
+            minProperties: 0
             properties:
               dataPolicy:
                 description: |-
@@ -69,6 +70,7 @@ spec:
                   - WorkloadNames
                   type: string
                 maxItems: 2
+                minItems: 0
                 type: array
                 x-kubernetes-list-type: atomic
                 x-kubernetes-validations:
@@ -109,6 +111,7 @@ spec:
                                 Run the following command to get the names of last active gatherers:
                                 "oc get insightsoperators.operator.openshift.io cluster -o json | jq '.status.gatherStatus.gatherers[].name'"
                               maxLength: 256
+                              minLength: 1
                               type: string
                               x-kubernetes-validations:
                               - message: gatherer name must be in the format of {gatherer}/{function}
@@ -130,6 +133,7 @@ spec:
                           - state
                           type: object
                         maxItems: 100
+                        minItems: 1
                         type: array
                         x-kubernetes-list-map-keys:
                         - name
@@ -173,6 +177,7 @@ spec:
                               name is a string that follows the DNS1123 subdomain format.
                               It must be at most 253 characters in length, and must consist only of lower case alphanumeric characters, '-' and '.', and must start and end with an alphanumeric character.
                             maxLength: 253
+                            minLength: 1
                             type: string
                             x-kubernetes-validations:
                             - message: a lowercase RFC 1123 subdomain must consist
@@ -189,6 +194,7 @@ spec:
                           The current default mount path is /var/lib/insights-operator
                           The path may not exceed 1024 characters and must not contain a colon.
                         maxLength: 1024
+                        minLength: 1
                         type: string
                         x-kubernetes-validations:
                         - message: mountPath must not contain a colon
@@ -219,6 +225,7 @@ spec:
           status:
             description: status holds observed values from the cluster. They may not
               be overridden.
+            minProperties: 1
             properties:
               conditions:
                 description: |-
@@ -453,6 +460,7 @@ spec:
                             advisorURI is required field that provides the URL link to the Insights Advisor.
                             The link must be a valid HTTPS URL and the maximum length is 2048 characters.
                           maxLength: 2048
+                          minLength: 1
                           type: string
                           x-kubernetes-validations:
                           - message: advisorURI must be a valid HTTPS URL (e.g., https://example.com)
@@ -493,6 +501,7 @@ spec:
                       uri is optional field that provides the URL link from which the report was downloaded.
                       The link must be a valid HTTPS URL and the maximum length is 2048 characters.
                     maxLength: 2048
+                    minLength: 1
                     type: string
                     x-kubernetes-validations:
                     - message: URI must be a valid HTTPS URL (e.g., https://example.com)
@@ -503,6 +512,7 @@ spec:
                   insightsRequestID is an optional Insights request ID to track the status of the Insights analysis (in console.redhat.com processing pipeline) for the corresponding Insights data archive.
                   It may not exceed 256 characters and is immutable once set.
                 maxLength: 256
+                minLength: 1
                 type: string
                 x-kubernetes-validations:
                 - message: insightsRequestID is immutable once set
@@ -523,6 +533,7 @@ spec:
                         It must be at most 253 characters in length, and must consist only of lower case alphanumeric characters, '-' and '.', and must start with an alphabetic character and end with an alphanumeric character.
                         Example: "", "apps", "build.openshift.io", etc.
                       maxLength: 253
+                      minLength: 1
                       type: string
                       x-kubernetes-validations:
                       - message: a lowercase RFC 1123 subdomain must consist of lower
@@ -535,6 +546,7 @@ spec:
                         name is required field that specifies the referent that follows the DNS1123 subdomain format.
                         It must be at most 253 characters in length, and must consist only of lower case alphanumeric characters, '-' and '.', and must start with an alphabetic character and end with an alphanumeric character..
                       maxLength: 253
+                      minLength: 1
                       type: string
                       x-kubernetes-validations:
                       - message: a lowercase RFC 1123 subdomain must consist of lower
@@ -547,6 +559,7 @@ spec:
                         namespace if required field of the referent that follows the DNS1123 labels format.
                         It must be at most 63 characters in length, and must must consist of only lowercase alphanumeric characters and hyphens, and must start with an alphabetic character and end with an alphanumeric character.
                       maxLength: 63
+                      minLength: 1
                       type: string
                       x-kubernetes-validations:
                       - message: the value must consist of only lowercase alphanumeric
@@ -560,6 +573,7 @@ spec:
                         It must be at most 63 characters in length, and must must consist of only lowercase alphanumeric characters and hyphens, and must start with an alphabetic character and end with an alphanumeric character.
                         Example: "deployments", "deploymentconfigs", "pods", etc.
                       maxLength: 63
+                      minLength: 1
                       type: string
                       x-kubernetes-validations:
                       - message: the value must consist of only lowercase alphanumeric

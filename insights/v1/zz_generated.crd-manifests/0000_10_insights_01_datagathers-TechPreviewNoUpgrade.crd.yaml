@@ -53,7 +53,7 @@ spec:
             type: object
           spec:
             description: spec holds user settable values for configuration
-            minProperties: 1
+            minProperties: 0
             properties:
               dataPolicy:
                 description: |-
@@ -194,7 +194,7 @@ spec:
                           The current default mount path is /var/lib/insights-operator
                           The path may not exceed 1024 characters and must not contain a colon.
                         maxLength: 1024
-                        minLength: 0
+                        minLength: 1
                         type: string
                         x-kubernetes-validations:
                         - message: mountPath must not contain a colon
@@ -225,6 +225,7 @@ spec:
           status:
             description: status holds observed values from the cluster. They may not
               be overridden.
+            minProperties: 1
             properties:
               conditions:
                 description: |-

@@ -25,18 +25,21 @@ type InsightsDataGather struct {
 	metav1.ObjectMeta `json:"metadata,omitempty"`
 	// spec holds user settable values for configuration
 	// +required
-	Spec InsightsDataGatherSpec `json:"spec"`
+	Spec InsightsDataGatherSpec `json:"spec,omitempty,omitzero"`
 	// status holds observed values from the cluster. They may not be overridden.
 	// +optional
-	Status InsightsDataGatherStatus `json:"status"`
+	Status InsightsDataGatherStatus `json:"status,omitempty,omitzero"`
 }
 
+// InsightsDataGatherSpec contains the configuration for the data gathering.
+// +kubebuilder:validation:MinProperties=1
 type InsightsDataGatherSpec struct {
 	// gatherConfig is an optional spec attribute that includes all the configuration options related to gathering of the Insights data and its uploading to the ingress.
 	// +optional
-	GatherConfig GatherConfig `json:"gatherConfig"`
+	GatherConfig GatherConfig `json:"gatherConfig,omitempty,omitzero"`
 }
 
+// +kubebuilder:validation:MinProperties=1
 type InsightsDataGatherStatus struct{}
 
 // gatherConfig provides data gathering configuration options.
@@ -47,18 +50,19 @@ type GatherConfig struct {
 	// When set to ObfuscateNetworking the IP addresses and the cluster domain name are obfuscated.
 	// When set to WorkloadNames, the gathered data about cluster resources will not contain the workload names for your deployments. Resources UIDs will be used instead.
 	// When omitted no obfuscation is applied.
+	// +kubebuilder:validation:MinItems=0
 	// +kubebuilder:validation:MaxItems=2
 	// +kubebuilder:validation:XValidation:rule="self.all(x, self.exists_one(y, x == y))",message="dataPolicy items must be unique"
 	// +listType=atomic
 	// +optional
-	DataPolicy []DataPolicyOption `json:"dataPolicy"`
+	DataPolicy []DataPolicyOption `json:"dataPolicy,omitempty"`
 	// gatherers is a required field that specifies the configuration of the gatherers.
 	// +required
-	Gatherers Gatherers `json:"gatherers"`
+	Gatherers Gatherers `json:"gatherers,omitempty,omitzero"`
 	// storage is an optional field that allows user to define persistent storage for gathering jobs to store the Insights data archive.
 	// If omitted, the gathering job will use ephemeral storage.
 	// +optional
-	Storage *Storage `json:"storage,omitempty"`
+	Storage Storage `json:"storage,omitempty,omitzero"`
 }
 
 // +kubebuilder:validation:XValidation:rule="has(self.mode) && self.mode == 'Custom' ?  has(self.custom) : !has(self.custom)",message="custom is required when mode is Custom, and forbidden otherwise"
@@ -68,13 +72,13 @@ type Gatherers struct {
 	// When set to None, all gatherers will be disabled and no data will be gathered.
 	// When set to Custom, the custom configuration from the custom field will be applied.
 	// +required
-	Mode GatheringMode `json:"mode"`
+	Mode GatheringMode `json:"mode,omitempty"`
 	// custom provides gathering configuration.
 	// It is required when mode is Custom, and forbidden otherwise.
 	// Custom configuration allows user to disable only a subset of gatherers.
 	// Gatherers that are not explicitly disabled in custom configuration will run.
 	// +optional
-	Custom *Custom `json:"custom,omitempty"`
+	Custom Custom `json:"custom,omitempty,omitzero"`
 }
 
 // custom provides the custom configuration of gatherers
@@ -85,11 +89,12 @@ type Custom struct {
 	// The particular gatherers IDs can be found at https://github.com/openshift/insights-operator/blob/master/docs/gathered-data.md.
 	// Run the following command to get the names of last active gatherers:
 	// "oc get insightsoperators.operator.openshift.io cluster -o json | jq '.status.gatherStatus.gatherers[].name'"
+	// +kubebuilder:validation:MinItems=1
 	// +kubebuilder:validation:MaxItems=100
 	// +listType=map
 	// +listMapKey=name
 	// +required
-	Configs []GathererConfig `json:"configs"`
+	Configs []GathererConfig `json:"configs,omitempty"`
 }
 
 // gatheringMode defines the valid gathering modes.
@@ -126,11 +131,11 @@ type Storage struct {
 	// When set to Ephemeral, the Insights data archive is stored in the ephemeral storage of the gathering job.
 	// When set to PersistentVolume, the Insights data archive is stored in the PersistentVolume that is defined by the persistentVolume field.
 	// +required
-	Type StorageType `json:"type"`
+	Type StorageType `json:"type,omitempty"`
 	// persistentVolume is an optional field that specifies the PersistentVolume that will be used to store the Insights data archive.
 	// The PersistentVolume must be created in the openshift-insights namespace.
 	// +optional
-	PersistentVolume *PersistentVolumeConfig `json:"persistentVolume,omitempty"`
+	PersistentVolume PersistentVolumeConfig `json:"persistentVolume,omitempty,omitzero"`
 }
 
 // storageType declares valid storage types
@@ -149,11 +154,12 @@ type PersistentVolumeConfig struct {
 	// claim is a required field that specifies the configuration of the PersistentVolumeClaim that will be used to store the Insights data archive.
 	// The PersistentVolumeClaim must be created in the openshift-insights namespace.
 	// +required
-	Claim PersistentVolumeClaimReference `json:"claim"`
+	Claim PersistentVolumeClaimReference `json:"claim,omitempty,omitzero"`
 	// mountPath is an optional field specifying the directory where the PVC will be mounted inside the Insights data gathering Pod.
 	// When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time.
 	// The current default mount path is /var/lib/insights-operator
 	// The path may not exceed 1024 characters and must not contain a colon.
+	// +kubebuilder:validation:MinLength=1
 	// +kubebuilder:validation:MaxLength=1024
 	// +kubebuilder:validation:XValidation:rule="!self.contains(':')",message="mountPath must not contain a colon"
 	// +optional
@@ -165,9 +171,10 @@ type PersistentVolumeClaimReference struct {
 	// name is a string that follows the DNS1123 subdomain format.
 	// It must be at most 253 characters in length, and must consist only of lower case alphanumeric characters, '-' and '.', and must start and end with an alphanumeric character.
 	// +kubebuilder:validation:XValidation:rule="!format.dns1123Subdomain().validate(self).hasValue()",message="a lowercase RFC 1123 subdomain must consist of lower case alphanumeric characters, '-' or '.', and must start and end with an alphanumeric character."
-	// +kubebuilder:validation:MaxLength:=253
+	// +kubebuilder:validation:MinLength=1
+	// +kubebuilder:validation:MaxLength=253
 	// +required
-	Name string `json:"name"`
+	Name string `json:"name,omitempty"`
 }
 
 // gathererConfig allows to configure specific gatherers
@@ -180,15 +187,16 @@ type GathererConfig struct {
 	// The particular gatherers can be found at https://github.com/openshift/insights-operator/blob/master/docs/gathered-data.md.
 	// Run the following command to get the names of last active gatherers:
 	// "oc get insightsoperators.operator.openshift.io cluster -o json | jq '.status.gatherStatus.gatherers[].name'"
+	// +kubebuilder:validation:MinLength=1
 	// +kubebuilder:validation:MaxLength=256
 	// +kubebuilder:validation:XValidation:rule=`self.matches("^[a-z]+[_a-z]*[a-z]([/a-z][_a-z]*)?[a-z]$")`,message=`gatherer name must be in the format of {gatherer}/{function} where the gatherer and function are lowercase letters only that may include underscores (_) and are separated by a forward slash (/) if the function is provided`
 	// +required
-	Name string `json:"name"`
+	Name string `json:"name,omitempty"`
 	// state is a required field that allows you to configure specific gatherer. Valid values are "Enabled" and "Disabled".
 	// When set to Enabled the gatherer will run.
 	// When set to Disabled the gatherer will not run.
 	// +required
-	State GathererState `json:"state"`
+	State GathererState `json:"state,omitempty"`
 }
 
 // state declares valid gatherer state types.
@@ -212,10 +220,11 @@ type InsightsDataGatherList struct {
 	// metadata is the required standard list's metadata.
 	// More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata
 	// +required
-	metav1.ListMeta `json:"metadata"`
+	metav1.ListMeta `json:"metadata,omitempty"`
 	// items is the required list of InsightsDataGather objects
 	// it may not exceed 100 items
+	// +kubebuilder:validation:MinItems=0
 	// +kubebuilder:validation:MaxItems=100
 	// +required
-	Items []InsightsDataGather `json:"items"`
+	Items []InsightsDataGather `json:"items,omitempty"`
 }

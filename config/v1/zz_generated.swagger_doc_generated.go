@@ -2256,6 +2256,7 @@ func (InsightsDataGatherList) SwaggerDoc() map[string]string {
 }
 
 var map_InsightsDataGatherSpec = map[string]string{
+	"":             "InsightsDataGatherSpec contains the configuration for the data gathering.",
 	"gatherConfig": "gatherConfig is an optional spec attribute that includes all the configuration options related to gathering of the Insights data and its uploading to the ingress.",
 }
 

@@ -28,13 +28,14 @@ type DataGather struct {
 	metav1.ObjectMeta `json:"metadata,omitempty"`
 	// spec holds user settable values for configuration
 	// +required
-	Spec DataGatherSpec `json:"spec"`
+	Spec *DataGatherSpec `json:"spec,omitempty,omitzero"`
 	// status holds observed values from the cluster. They may not be overridden.
 	// +optional
-	Status DataGatherStatus `json:"status"`
+	Status DataGatherStatus `json:"status,omitempty,omitzero"`
 }
 
 // DataGatherSpec contains the configuration for the DataGather.
+// +kubebuilder:validation:MinProperties=0
 type DataGatherSpec struct {
 	// dataPolicy is an optional list of DataPolicyOptions that allows user to enable additional obfuscation of the Insights archive data.
 	// It may not exceed 2 items and must not contain duplicates.
@@ -42,19 +43,20 @@ type DataGatherSpec struct {
 	// When set to ObfuscateNetworking the IP addresses and the cluster domain name are obfuscated.
 	// When set to WorkloadNames, the gathered data about cluster resources will not contain the workload names for your deployments. Resources UIDs will be used instead.
 	// When omitted no obfuscation is applied.
+	// +kubebuilder:validation:MinItems=0
 	// +kubebuilder:validation:MaxItems=2
 	// +kubebuilder:validation:XValidation:rule="self.all(x, self.exists_one(y, x == y))",message="dataPolicy items must be unique"
 	// +listType=atomic
 	// +optional
-	DataPolicy []DataPolicyOption `json:"dataPolicy"`
+	DataPolicy []DataPolicyOption `json:"dataPolicy,omitempty"`
 	// gatherers is an optional field that specifies the configuration of the gatherers.
 	// If omitted, all gatherers will be run.
 	// +optional
-	Gatherers *Gatherers `json:"gatherers,omitempty"`
+	Gatherers Gatherers `json:"gatherers,omitempty,omitzero"`
 	// storage is an optional field that allows user to define persistent storage for gathering jobs to store the Insights data archive.
 	// If omitted, the gathering job will use ephemeral storage.
 	// +optional
-	Storage *Storage `json:"storage,omitempty"`
+	Storage Storage `json:"storage,omitempty,omitzero"`
 }
 
 // Gathereres specifies the configuration of the gatherers
@@ -66,13 +68,13 @@ type Gatherers struct {
 	// When set to Custom, the custom configuration from the custom field will be applied.
 	// +unionDiscriminator
 	// +required
-	Mode GatheringMode `json:"mode"`
+	Mode GatheringMode `json:"mode,omitempty"`
 	// custom provides gathering configuration.
 	// It is required when mode is Custom, and forbidden otherwise.
 	// Custom configuration allows user to disable only a subset of gatherers.
 	// Gatherers that are not explicitly disabled in custom configuration will run.
 	// +optional
-	Custom *Custom `json:"custom,omitempty"`
+	Custom Custom `json:"custom,omitempty,omitzero"`
 }
 
 // custom provides the custom configuration of gatherers
@@ -83,11 +85,12 @@ type Custom struct {
 	// The particular gatherers IDs can be found at https://github.com/openshift/insights-operator/blob/master/docs/gathered-data.md.
 	// Run the following command to get the names of last active gatherers:
 	// "oc get insightsoperators.operator.openshift.io cluster -o json | jq '.status.gatherStatus.gatherers[].name'"
+	// +kubebuilder:validation:MinItems=1
 	// +kubebuilder:validation:MaxItems=100
 	// +listType=map
 	// +listMapKey=name
 	// +required
-	Configs []GathererConfig `json:"configs"`
+	Configs []GathererConfig `json:"configs,omitempty"`
 }
 
 // gatheringMode defines the valid gathering modes.
@@ -114,11 +117,11 @@ type Storage struct {
 	// defined by the PersistentVolume field.
 	// +unionDiscriminator
 	// +required
-	Type StorageType `json:"type"`
+	Type StorageType `json:"type,omitempty"`
 	// persistentVolume is an optional field that specifies the PersistentVolume that will be used to store the Insights data archive.
 	// The PersistentVolume must be created in the openshift-insights namespace.
 	// +optional
-	PersistentVolume *PersistentVolumeConfig `json:"persistentVolume,omitempty"`
+	PersistentVolume PersistentVolumeConfig `json:"persistentVolume,omitempty,omitzero"`
 }
 
 // storageType declares valid storage types
@@ -137,11 +140,12 @@ type PersistentVolumeConfig struct {
 	// claim is a required field that specifies the configuration of the PersistentVolumeClaim that will be used to store the Insights data archive.
 	// The PersistentVolumeClaim must be created in the openshift-insights namespace.
 	// +required
-	Claim PersistentVolumeClaimReference `json:"claim"`
+	Claim PersistentVolumeClaimReference `json:"claim,omitempty,omitzero"`
 	// mountPath is an optional field specifying the directory where the PVC will be mounted inside the Insights data gathering Pod.
 	// When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time.
 	// The current default mount path is /var/lib/insights-operator
 	// The path may not exceed 1024 characters and must not contain a colon.
+	// +kubebuilder:validation:MinLength=1
 	// +kubebuilder:validation:MaxLength=1024
 	// +kubebuilder:validation:XValidation:rule="!self.contains(':')",message="mountPath must not contain a colon"
 	// +optional
@@ -153,9 +157,10 @@ type PersistentVolumeClaimReference struct {
 	// name is a string that follows the DNS1123 subdomain format.
 	// It must be at most 253 characters in length, and must consist only of lower case alphanumeric characters, '-' and '.', and must start and end with an alphanumeric character.
 	// +kubebuilder:validation:XValidation:rule="!format.dns1123Subdomain().validate(self).hasValue()",message="a lowercase RFC 1123 subdomain must consist of lower case alphanumeric characters, '-' or '.', and must start and end with an alphanumeric character."
-	// +kubebuilder:validation:MaxLength:=253
+	// +kubebuilder:validation:MinLength=1
+	// +kubebuilder:validation:MaxLength=253
 	// +required
-	Name string `json:"name"`
+	Name string `json:"name,omitempty"`
 }
 
 // dataPolicyOption declares valid data policy types
@@ -179,15 +184,16 @@ type GathererConfig struct {
 	// The particular gatherers can be found at https://github.com/openshift/insights-operator/blob/master/docs/gathered-data.md.
 	// Run the following command to get the names of last active gatherers:
 	// "oc get insightsoperators.operator.openshift.io cluster -o json | jq '.status.gatherStatus.gatherers[].name'"
+	// +kubebuilder:validation:MinLength=1
 	// +kubebuilder:validation:MaxLength=256
 	// +kubebuilder:validation:XValidation:rule=`self.matches("^[a-z]+[_a-z]*[a-z]([/a-z][_a-z]*)?[a-z]$")`,message=`gatherer name must be in the format of {gatherer}/{function} where the gatherer and function are lowercase letters only that may include underscores (_) and are separated by a forward slash (/) if the function is provided`
 	// +required
-	Name string `json:"name"`
+	Name string `json:"name,omitempty"`
 	// state is a required field that allows you to configure specific gatherer. Valid values are "Enabled" and "Disabled".
 	// When set to Enabled the gatherer will run.
 	// When set to Disabled the gatherer will not run.
 	// +required
-	State GathererState `json:"state"`
+	State GathererState `json:"state,omitempty"`
 }
 
 // state declares valid gatherer state types.
@@ -205,6 +211,7 @@ const (
 // +kubebuilder:validation:XValidation:rule="(!has(oldSelf.insightsRequestID) || has(self.insightsRequestID))",message="cannot remove insightsRequestID attribute from status"
 // +kubebuilder:validation:XValidation:rule="(!has(oldSelf.startTime) || has(self.startTime))",message="cannot remove startTime attribute from status"
 // +kubebuilder:validation:XValidation:rule="(!has(oldSelf.finishTime) || has(self.finishTime))",message="cannot remove finishTime attribute from status"
+// +kubebuilder:validation:MinProperties=1
 type DataGatherStatus struct {
 	// conditions is an optional field that provides details on the status of the gatherer job.
 	// It may not exceed 100 items and must not contain duplicates.
@@ -273,6 +280,7 @@ type DataGatherStatus struct {
 	// insightsRequestID is an optional Insights request ID to track the status of the Insights analysis (in console.redhat.com processing pipeline) for the corresponding Insights data archive.
 	// It may not exceed 256 characters and is immutable once set.
 	// +kubebuilder:validation:XValidation:rule="self == oldSelf",message="insightsRequestID is immutable once set"
+	// +kubebuilder:validation:MinLength=1
 	// +kubebuilder:validation:MaxLength=256
 	// +optional
 	InsightsRequestID string `json:"insightsRequestID,omitempty"`
@@ -280,7 +288,7 @@ type DataGatherStatus struct {
 	// When omitted, this means no data gathering has taken place yet or the
 	// corresponding Insights analysis (identified by "insightsRequestID") is not available.
 	// +optional
-	InsightsReport InsightsReport `json:"insightsReport,omitempty"`
+	InsightsReport *InsightsReport `json:"insightsReport,omitempty"`
 }
 
 // gathererStatus represents information about a particular
@@ -308,11 +316,11 @@ type GathererStatus struct {
 	// +kubebuilder:validation:MaxLength=256
 	// +kubebuilder:validation:MinLength=5
 	// +required
-	Name string `json:"name"`
+	Name string `json:"name,omitempty"`
 	// lastGatherSeconds is required field that represents the time spent gathering in seconds
 	// +kubebuilder:validation:Minimum=0
 	// +required
-	LastGatherSeconds int32 `json:"lastGatherSeconds"`
+	LastGatherSeconds *int32 `json:"lastGatherSeconds,omitempty"`
 }
 
 // insightsReport provides Insights health check report based on the most
@@ -335,31 +343,33 @@ type InsightsReport struct {
 	// uri is optional field that provides the URL link from which the report was downloaded.
 	// The link must be a valid HTTPS URL and the maximum length is 2048 characters.
 	// +kubebuilder:validation:XValidation:rule=`isURL(self) && url(self).getScheme() == "https"`,message=`URI must be a valid HTTPS URL (e.g., https://example.com)`
+	// +kubebuilder:validation:MinLength=1
 	// +kubebuilder:validation:MaxLength=2048
 	// +optional
-	URI string `json:"uri,omitempty"`
+	URI string `json:"uri,omitempty,omitzero"`
 }
 
 // healthCheck represents an Insights health check attributes.
 type HealthCheck struct {
 	// description is required field that provides basic description of the healtcheck.
 	// It must contain at least 10 characters and may not exceed 2048 characters.
-	// +kubebuilder:validation:MaxLength=2048
 	// +kubebuilder:validation:MinLength=10
+	// +kubebuilder:validation:MaxLength=2048
 	// +required
-	Description string `json:"description"`
+	Description string `json:"description,omitempty"`
 	// totalRisk is the required field of the healthcheck.
 	// It is indicator of the total risk posed by the detected issue; combination of impact and likelihood.
 	// Allowed values are Low, Medium, Important and Critical.
 	// The value represents the severity of the issue.
 	// +required
-	TotalRisk TotalRisk `json:"totalRisk"`
+	TotalRisk TotalRisk `json:"totalRisk,omitempty"`
 	// advisorURI is required field that provides the URL link to the Insights Advisor.
 	// The link must be a valid HTTPS URL and the maximum length is 2048 characters.
 	// +kubebuilder:validation:XValidation:rule=`isURL(self) && url(self).getScheme() == "https"`,message=`advisorURI must be a valid HTTPS URL (e.g., https://example.com)`
+	// +kubebuilder:validation:MinLength=1
 	// +kubebuilder:validation:MaxLength=2048
 	// +required
-	AdvisorURI string `json:"advisorURI"`
+	AdvisorURI string `json:"advisorURI,omitempty"`
 }
 
 // totalRisk defines the valid totalRisk values.
@@ -381,29 +391,33 @@ type ObjectReference struct {
 	// It must be at most 253 characters in length, and must consist only of lower case alphanumeric characters, '-' and '.', and must start with an alphabetic character and end with an alphanumeric character.
 	// Example: "", "apps", "build.openshift.io", etc.
 	// +kubebuilder:validation:XValidation:rule="self.size() == 0 || !format.dns1123Subdomain().validate(self).hasValue()",message="a lowercase RFC 1123 subdomain must consist of lower case alphanumeric characters, '-' or '.', and must start with an alphabetic character and end with an alphanumeric character."
-	// +kubebuilder:validation:MaxLength:=253
+	// +kubebuilder:validation:MinLength=1
+	// +kubebuilder:validation:MaxLength=253
 	// +required
-	Group string `json:"group"`
+	Group string `json:"group,omitempty"`
 	// resource is required field of the type that is being referenced and follows the DNS1035 format.
 	// It is normally the plural form of the resource kind in lowercase.
 	// It must be at most 63 characters in length, and must must consist of only lowercase alphanumeric characters and hyphens, and must start with an alphabetic character and end with an alphanumeric character.
 	// Example: "deployments", "deploymentconfigs", "pods", etc.
 	// +kubebuilder:validation:XValidation:rule=`!format.dns1035Label().validate(self).hasValue()`,message="the value must consist of only lowercase alphanumeric characters and hyphens, and must start with an alphabetic character and end with an alphanumeric character."
+	// +kubebuilder:validation:MinLength=1
 	// +kubebuilder:validation:MaxLength=63
 	// +required
-	Resource string `json:"resource"`
+	Resource string `json:"resource,omitempty"`
 	// name is required field that specifies the referent that follows the DNS1123 subdomain format.
 	// It must be at most 253 characters in length, and must consist only of lower case alphanumeric characters, '-' and '.', and must start with an alphabetic character and end with an alphanumeric character..
 	// +kubebuilder:validation:XValidation:rule="!format.dns1123Subdomain().validate(self).hasValue()",message="a lowercase RFC 1123 subdomain must consist of lower case alphanumeric characters, '-' or '.', and must start with an alphabetic character and end with an alphanumeric character."
+	// +kubebuilder:validation:MinLength=1
 	// +kubebuilder:validation:MaxLength=253
 	// +required
-	Name string `json:"name"`
+	Name string `json:"name,omitempty"`
 	// namespace if required field of the referent that follows the DNS1123 labels format.
 	// It must be at most 63 characters in length, and must must consist of only lowercase alphanumeric characters and hyphens, and must start with an alphabetic character and end with an alphanumeric character.
 	// +kubebuilder:validation:XValidation:rule=`!format.dns1123Label().validate(self).hasValue()`,message="the value must consist of only lowercase alphanumeric characters and hyphens, and must start with an alphabetic character and end with an alphanumeric character."
+	// +kubebuilder:validation:MinLength=1
 	// +kubebuilder:validation:MaxLength=63
 	// +required
-	Namespace string `json:"namespace"`
+	Namespace string `json:"namespace,omitempty"`
 }
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
@@ -417,7 +431,7 @@ type DataGatherList struct {
 	// metadata is the standard list's metadata.
 	// More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata
 	// +optional
-	metav1.ListMeta `json:"metadata,omitempty"`
+	*metav1.ListMeta `json:"metadata,omitempty"`
 	// items contains a list of DataGather resources.
 	// +listType=atomic
 	// +kubebuilder:validation:MaxItems=100

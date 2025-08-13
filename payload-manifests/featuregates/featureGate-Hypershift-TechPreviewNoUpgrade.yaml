@@ -117,6 +117,9 @@
                         "name": "ClusterMonitoringConfig"
                     },
                     {
+                        "name": "ClusterUpdateAcceptRisks"
+                    },
+                    {
                         "name": "ConsolePluginContentSecurityPolicy"
                     },
                     {

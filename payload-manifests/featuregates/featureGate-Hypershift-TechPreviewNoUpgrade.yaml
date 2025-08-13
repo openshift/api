@@ -108,7 +108,16 @@
                         "name": "BuildCSIVolumes"
                     },
                     {
+                        "name": "CBORServingAndStorage"
+                    },
+                    {
                         "name": "CPMSMachineNamePrefix"
+                    },
+                    {
+                        "name": "ClientsAllowCBOR"
+                    },
+                    {
+                        "name": "ClientsPreferCBOR"
                     },
                     {
                         "name": "ClusterAPIInstallIBMCloud"

@@ -92,9 +92,6 @@
                         "name": "GCPClusterHostedDNS"
                     },
                     {
-                        "name": "GCPClusterHostedDNSInstall"
-                    },
-                    {
                         "name": "GCPCustomAPIEndpoints"
                     },
                     {
@@ -248,6 +245,9 @@
                     },
                     {
                         "name": "ConsolePluginContentSecurityPolicy"
+                    },
+                    {
+                        "name": "GCPClusterHostedDNSInstall"
                     },
                     {
                         "name": "GatewayAPI"

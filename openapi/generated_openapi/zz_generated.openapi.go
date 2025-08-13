@@ -763,6 +763,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"github.com/openshift/api/machine/v1beta1.AzureMachineProviderSpec":                                  schema_openshift_api_machine_v1beta1_AzureMachineProviderSpec(ref),
 		"github.com/openshift/api/machine/v1beta1.AzureMachineProviderStatus":                                schema_openshift_api_machine_v1beta1_AzureMachineProviderStatus(ref),
 		"github.com/openshift/api/machine/v1beta1.BlockDeviceMappingSpec":                                    schema_openshift_api_machine_v1beta1_BlockDeviceMappingSpec(ref),
+		"github.com/openshift/api/machine/v1beta1.CPUOptions":                                                schema_openshift_api_machine_v1beta1_CPUOptions(ref),
 		"github.com/openshift/api/machine/v1beta1.Condition":                                                 schema_openshift_api_machine_v1beta1_Condition(ref),
 		"github.com/openshift/api/machine/v1beta1.ConfidentialVM":                                            schema_openshift_api_machine_v1beta1_ConfidentialVM(ref),
 		"github.com/openshift/api/machine/v1beta1.DataDisk":                                                  schema_openshift_api_machine_v1beta1_DataDisk(ref),
@@ -38110,6 +38111,12 @@ func schema_openshift_api_machine_v1beta1_AWSMachineProviderConfig(ref common.Re
 							Format:      "",
 						},
 					},
+					"cpuOptions": {
+						SchemaProps: spec.SchemaProps{
+							Description: "cpuOptions defines CPU-related settings for the instance, including the confidential computing policy. If unset, no CPU options will be passed to the AWS platform and AWS default CPU options will be applied.",
+							Ref:         ref("github.com/openshift/api/machine/v1beta1.CPUOptions"),
+						},
+					},
 					"tags": {
 						SchemaProps: spec.SchemaProps{
 							Description: "tags is the set of tags to add to apply to an instance, in addition to the ones added by default by the actuator. These tags are additive. The actuator will ensure these tags are present, but will not remove any other tags that may exist on the instance.",
@@ -38274,7 +38281,7 @@ func schema_openshift_api_machine_v1beta1_AWSMachineProviderConfig(ref common.Re
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/machine/v1beta1.AWSResourceReference", "github.com/openshift/api/machine/v1beta1.BlockDeviceMappingSpec", "github.com/openshift/api/machine/v1beta1.LoadBalancerReference", "github.com/openshift/api/machine/v1beta1.MetadataServiceOptions", "github.com/openshift/api/machine/v1beta1.Placement", "github.com/openshift/api/machine/v1beta1.SpotMarketOptions", "github.com/openshift/api/machine/v1beta1.TagSpecification", "k8s.io/api/core/v1.LocalObjectReference", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"},
+			"github.com/openshift/api/machine/v1beta1.AWSResourceReference", "github.com/openshift/api/machine/v1beta1.BlockDeviceMappingSpec", "github.com/openshift/api/machine/v1beta1.CPUOptions", "github.com/openshift/api/machine/v1beta1.LoadBalancerReference", "github.com/openshift/api/machine/v1beta1.MetadataServiceOptions", "github.com/openshift/api/machine/v1beta1.Placement", "github.com/openshift/api/machine/v1beta1.SpotMarketOptions", "github.com/openshift/api/machine/v1beta1.TagSpecification", "k8s.io/api/core/v1.LocalObjectReference", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"},
 	}
 }
 
@@ -38922,6 +38929,26 @@ func schema_openshift_api_machine_v1beta1_BlockDeviceMappingSpec(ref common.Refe
 		},
 		Dependencies: []string{
 			"github.com/openshift/api/machine/v1beta1.EBSBlockDeviceSpec"},
+	}
+}
+
+func schema_openshift_api_machine_v1beta1_CPUOptions(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "CPUOptions defines CPU-related settings for the instance, including the confidential computing policy.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"confidentialCompute": {
+						SchemaProps: spec.SchemaProps{
+							Description: "confidentialCompute specifies whether confidential computing should be enabled for the instance, and, if so, which confidential computing technology to use. Valid values are: Disabled, AMDEncrytedVirtualizationNestedPaging When set to Disabled, confidential computing will be disabled for the instance. When set to AMDEncrytedVirtualizationNestedPaging, AMD SEV-SNP will be used as the confidential computing technology for the instance. In this case, ensure the following conditions are met: 1) The selected instance type supports AMD SEV-SNP. 2) The selected AWS region supports AMD SEV-SNP. 3) The selected AMI supports AMD SEV-SNP. More details can be checked at https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/sev-snp.html When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change without notice. The current default is Disabled.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+				},
+			},
+		},
 	}
 }
 

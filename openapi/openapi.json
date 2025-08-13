@@ -6913,6 +6913,7 @@
       "properties": {
         "customDeployment": {
           "description": "customDeployment contains configuration options when mode is CustomDeployment. This field is only valid when mode is CustomDeployment.",
+          "default": {},
           "$ref": "#/definitions/com.github.openshift.api.config.v1.HTTP01ChallengeProxyCustomDeploymentSpec"
         },
         "mode": {

@@ -265,7 +265,7 @@ type HTTP01ChallengeProxySpec struct {
 	// This field is only valid when mode is CustomDeployment.
 	// +optional
 	// +unionMember
-	CustomDeployment *HTTP01ChallengeProxyCustomDeploymentSpec `json:"customDeployment,omitzero,omitempty"`
+	CustomDeployment HTTP01ChallengeProxyCustomDeploymentSpec `json:"customDeployment,omitzero,omitempty"`
 }
 
 type HTTP01ChallengeProxyCustomDeploymentSpec struct {

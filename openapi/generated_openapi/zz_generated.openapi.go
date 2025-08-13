@@ -13296,6 +13296,7 @@ func schema_openshift_api_config_v1_HTTP01ChallengeProxySpec(ref common.Referenc
 					"customDeployment": {
 						SchemaProps: spec.SchemaProps{
 							Description: "customDeployment contains configuration options when mode is CustomDeployment. This field is only valid when mode is CustomDeployment.",
+							Default:     map[string]interface{}{},
 							Ref:         ref("github.com/openshift/api/config/v1.HTTP01ChallengeProxyCustomDeploymentSpec"),
 						},
 					},

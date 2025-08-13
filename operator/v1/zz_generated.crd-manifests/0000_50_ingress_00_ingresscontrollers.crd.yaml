@@ -164,7 +164,22 @@ spec:
                   updated.
 
                   If empty, defaults to ingress.config.openshift.io/cluster .spec.domain.
+
+                  The domain value must be a valid DNS name. It must consist of lowercase
+                  alphanumeric characters, '-' or '.', and each label must start and end
+                  with an alphanumeric character and not exceed 63 characters.
+
+                  The total length of the domain is limited to account for the router name
+                  prefix (e.g. "router-default.") that gets prepended when constructing
+                  the canonical hostname.
+                maxLength: 239
                 type: string
+                x-kubernetes-validations:
+                - message: domain must consist of DNS labels separated by periods,
+                    where each label contains only lowercase alphanumeric characters
+                    and hyphens, must start and end with an alphanumeric character,
+                    and must not exceed 63 characters
+                  rule: '!format.dns1123Subdomain().validate(self).hasValue()'
               endpointPublishingStrategy:
                 description: |-
                   endpointPublishingStrategy is used to publish the ingress controller

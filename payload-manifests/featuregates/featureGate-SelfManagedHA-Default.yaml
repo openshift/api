@@ -203,9 +203,6 @@
                         "name": "SigstoreImageVerificationPKI"
                     },
                     {
-                        "name": "StoragePerformantSecurityPolicy"
-                    },
-                    {
                         "name": "TranslateStreamCloseWebsocketRequests"
                     },
                     {
@@ -308,6 +305,9 @@
                     },
                     {
                         "name": "SetEIPForNLBIngressController"
+                    },
+                    {
+                        "name": "StoragePerformantSecurityPolicy"
                     },
                     {
                         "name": "UserNamespacesPodSecurityStandards"

@@ -536,6 +536,19 @@ type AWSPlatformStatus struct {
 	// +optional
 	// +nullable
 	CloudLoadBalancerConfig *CloudLoadBalancerConfig `json:"cloudLoadBalancerConfig,omitempty"`
+
+	// ipFamily indicates the IP Address family supported by cluster nodes.
+	// This value indicates what IP address types can be expected to be found within the cluster.
+	// When set to "IPv4", the cluster infrastructure and all cluster resources including pods
+	// and nodes are set up with just IPv4 addresses. When set to "DualStack", cluster
+	// infrastructure and all cluster resources are expected to have both IPv4 and IPv6 addresses.
+	// +default="IPv4"
+	// +kubebuilder:default:="IPv4"
+	// +kubebuilder:validation:Enum="IPv4";"DualStack"
+	// +openshift:enable:FeatureGate=AWSDualStackInstall
+	// +kubebuilder:validation:XValidation:rule="self == oldSelf",message="ipFamily is immutable once set"
+	// +optional
+	IPFamily IPFamilyType `json:"ipFamily,omitempty"`
 }
 
 // AWSResourceTag is a tag to apply to AWS resources created for the cluster.
@@ -607,6 +620,19 @@ type AzurePlatformStatus struct {
 	// +openshift:enable:FeatureGate=AzureClusterHostedDNSInstall
 	// +optional
 	CloudLoadBalancerConfig *CloudLoadBalancerConfig `json:"cloudLoadBalancerConfig,omitempty"`
+
+	// ipFamily indicates the IP Address family supported by cluster nodes.
+	// This value indicates what IP address types can be expected to be found within the cluster.
+	// When set to "IPv4", the cluster infrastructure and all cluster resources including pods
+	// and nodes are set up with just IPv4 addresses. When set to "DualStack", cluster
+	// infrastructure and all cluster resources are expected to have both IPv4 and IPv6 addresses.
+	// +default="IPv4"
+	// +kubebuilder:default:="IPv4"
+	// +kubebuilder:validation:Enum="IPv4";"DualStack"
+	// +openshift:enable:FeatureGate=AzureDualStackInstall
+	// +kubebuilder:validation:XValidation:rule="self == oldSelf",message="ipFamily is immutable once set"
+	// +optional
+	IPFamily IPFamilyType `json:"ipFamily,omitempty"`
 }
 
 // AzureResourceTag is a tag to apply to Azure resources created for the cluster.
@@ -775,6 +801,19 @@ type GCPPlatformStatus struct {
 	// +optional
 	// +openshift:enable:FeatureGate=GCPCustomAPIEndpointsInstall
 	ServiceEndpoints []GCPServiceEndpoint `json:"serviceEndpoints,omitempty"`
+
+	// ipFamily indicates the IP Address family supported by cluster nodes.
+	// This value indicates what IP address types can be expected to be found within the cluster.
+	// When set to "IPv4", the cluster infrastructure and all cluster resources including pods
+	// and nodes are set up with just IPv4 addresses. When set to "DualStack", cluster
+	// infrastructure and all cluster resources are expected to have both IPv4 and IPv6 addresses.
+	// +default="IPv4"
+	// +kubebuilder:default:="IPv4"
+	// +kubebuilder:validation:Enum="IPv4";"DualStack"
+	// +openshift:enable:FeatureGate=GCPDualStackInstall
+	// +kubebuilder:validation:XValidation:rule="self == oldSelf",message="ipFamily is immutable once set"
+	// +optional
+	IPFamily IPFamilyType `json:"ipFamily,omitempty"`
 }
 
 // GCPResourceLabel is a label to apply to GCP resources created for the cluster.

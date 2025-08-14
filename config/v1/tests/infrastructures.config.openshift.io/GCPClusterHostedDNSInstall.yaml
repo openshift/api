@@ -60,6 +60,7 @@ tests:
             gcp:
               cloudLoadBalancerConfig:
                 dnsType: PlatformDefault
+              ipFamily: IPv4
             type: GCP
     - name: should be able to set dnsType to non-default value of `ClusterHosted`
       initial: |
@@ -84,6 +85,7 @@ tests:
             gcp:
               cloudLoadBalancerConfig:
                 dnsType: ClusterHosted
+              ipFamily: IPv4
             type: GCP
       expected: |
         apiVersion: config.openshift.io/v1
@@ -101,6 +103,7 @@ tests:
             gcp:
               cloudLoadBalancerConfig:
                 dnsType: ClusterHosted
+              ipFamily: IPv4
             type: GCP
     - name: Should not allow changing the immutable dnsType field
       initial: |

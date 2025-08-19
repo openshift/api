@@ -197,9 +197,6 @@
                         "name": "SigstoreImageVerificationPKI"
                     },
                     {
-                        "name": "StoragePerformantSecurityPolicy"
-                    },
-                    {
                         "name": "TranslateStreamCloseWebsocketRequests"
                     },
                     {
@@ -302,6 +299,9 @@
                     },
                     {
                         "name": "SigstoreImageVerification"
+                    },
+                    {
+                        "name": "StoragePerformantSecurityPolicy"
                     },
                     {
                         "name": "UpgradeStatus"

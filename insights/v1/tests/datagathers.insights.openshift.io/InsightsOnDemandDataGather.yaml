@@ -262,7 +262,7 @@ tests:
           relatedObjects:
             - name: periodic-job-xyz
               resource: "pods"
-              group: ""
+              group: "group"
               namespace: "openshift-insights"
       updated: |
         apiVersion: insights.openshift.io/v1
@@ -273,7 +273,7 @@ tests:
           relatedObjects:
             - name: periodic-job-xyz
               resource: "pods"
-              group: ""
+              group: "group"
               namespace: "openshift-insights"
       expected: |
         apiVersion: insights.openshift.io/v1
@@ -283,7 +283,7 @@ tests:
           insightsRequestID: testing-xyz
           relatedObjects:
             - name: periodic-job-xyz
-              group: ""
+              group: "group"
               resource: "pods"
               namespace: "openshift-insights"
     - name: insightsRequestID cannot be removed from status
@@ -295,7 +295,7 @@ tests:
           insightsRequestID: testing-xyz
           relatedObjects:
             - name: periodic-job-xyz
-              group: ""
+              group: "group"
               resource: "pods"
               namespace: "openshift-insights"
       updated: |
@@ -305,7 +305,7 @@ tests:
         status: 
           relatedObjects:
             - name: periodic-job-xyz
-              group: ""
+              group: "group"
               resource: "pods"
               namespace: "openshift-insights"
       expectedStatusError: 'status: Invalid value: "object": cannot remove insightsRequestID attribute from status'
@@ -318,7 +318,7 @@ tests:
           insightsRequestID: testing-xyz
           relatedObjects:
             - name: periodic-job-xyz
-              group: ""
+              group: "group"
               resource: "pods"
               namespace: "openshift-insights"
       updated: |
@@ -329,7 +329,7 @@ tests:
           insightsRequestID: testing-xyz-updated
           relatedObjects:
             - name: periodic-job-xyz
-              group: ""
+              group: "group"
               resource: "pods"
               namespace: "openshift-insights"
       expectedStatusError: 'Invalid value: "string": insightsRequestID is immutable once set'
@@ -342,7 +342,7 @@ tests:
           finishTime: 2023-03-13T11:34:06Z
           relatedObjects:
             - name: periodic-job-xyz
-              group: ""
+              group: "group"
               resource: "pods"
               namespace: "openshift-insights"
       updated: |
@@ -352,7 +352,7 @@ tests:
         status: 
           relatedObjects:
             - name: periodic-job-xyz
-              group: ""
+              group: "group"
               resource: "pods"
               namespace: "openshift-insights"
       expectedStatusError: 'status: Invalid value: "object": cannot remove finishTime attribute from status'

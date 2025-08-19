@@ -160,7 +160,7 @@ var (
 						contactPerson("sgrunert").
 						productScope(ocpSpecific).
 						enhancementPR(legacyFeatureGateWithoutEnhancement).
-						enableIn(configv1.DevPreviewNoUpgrade, configv1.TechPreviewNoUpgrade).
+						enableIn(configv1.DevPreviewNoUpgrade, configv1.TechPreviewNoUpgrade, configv1.Default).
 						mustRegister()
 
 	FeatureGateSigstoreImageVerificationPKI = newFeatureGate("SigstoreImageVerificationPKI").

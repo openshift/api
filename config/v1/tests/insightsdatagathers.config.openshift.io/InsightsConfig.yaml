@@ -9,11 +9,23 @@ tests:
       initial: |
         apiVersion: config.openshift.io/v1
         kind: InsightsDataGather
-        spec: {} # No spec is required for a InsightsDataGather
+        spec:
+          gatherConfig:
+              gatherers:
+                mode: All
       expected: |
         apiVersion: config.openshift.io/v1
         kind: InsightsDataGather
+        spec:
+          gatherConfig:
+              gatherers:
+                mode: All
+    - name: InsightsDataGather without the spec should not be created
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: InsightsDataGather
         spec: {}
+      expectedError: "spec: Invalid value: 0: spec in body should have at least 1 properties"
     - name: Should be able to create InsightsDataGather with a storage and PersistentVolume
       initial: |
         apiVersion: config.openshift.io/v1

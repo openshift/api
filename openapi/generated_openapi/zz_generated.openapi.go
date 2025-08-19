@@ -8745,6 +8745,15 @@ func schema_openshift_api_config_v1_AWSPlatformStatus(ref common.ReferenceCallba
 							Ref:         ref("github.com/openshift/api/config/v1.CloudLoadBalancerConfig"),
 						},
 					},
+					"ipFamily": {
+						SchemaProps: spec.SchemaProps{
+							Description: "ipFamily indicates the IP Address family supported by cluster nodes. This value indicates what IP address types can be expected to be found within the cluster. When set to \"IPv4\", the cluster infrastructure and all cluster resources including pods and nodes are set up with just IPv4 addresses. When set to \"DualStack\", cluster infrastructure and all cluster resources are expected to have both IPv4 and IPv6 addresses.\n\nPossible enum values:\n - `\"DualStack\"` IPFamilyIPv4 indicates that the cluster contains both IPv4 and IPv6 addresses\n - `\"IPv4\"` indicates that the cluster contains IPv4 addresses",
+							Default:     "IPv4",
+							Type:        []string{"string"},
+							Format:      "",
+							Enum:        []interface{}{"DualStack", "IPv4"},
+						},
+					},
 				},
 				Required: []string{"region"},
 			},
@@ -9463,6 +9472,15 @@ func schema_openshift_api_config_v1_AzurePlatformStatus(ref common.ReferenceCall
 							Description: "cloudLoadBalancerConfig holds configuration related to DNS and cloud load balancers. It allows configuration of in-cluster DNS as an alternative to the platform default DNS implementation. When using the ClusterHosted DNS type, Load Balancer IP addresses must be provided for the API and internal API load balancers as well as the ingress load balancer.",
 							Default:     map[string]interface{}{"dnsType": "PlatformDefault"},
 							Ref:         ref("github.com/openshift/api/config/v1.CloudLoadBalancerConfig"),
+						},
+					},
+					"ipFamily": {
+						SchemaProps: spec.SchemaProps{
+							Description: "ipFamily indicates the IP Address family supported by cluster nodes. This value indicates what IP address types can be expected to be found within the cluster. When set to \"IPv4\", the cluster infrastructure and all cluster resources including pods and nodes are set up with just IPv4 addresses. When set to \"DualStack\", cluster infrastructure and all cluster resources are expected to have both IPv4 and IPv6 addresses.\n\nPossible enum values:\n - `\"DualStack\"` IPFamilyIPv4 indicates that the cluster contains both IPv4 and IPv6 addresses\n - `\"IPv4\"` indicates that the cluster contains IPv4 addresses",
+							Default:     "IPv4",
+							Type:        []string{"string"},
+							Format:      "",
+							Enum:        []interface{}{"DualStack", "IPv4"},
 						},
 					},
 				},
@@ -12849,6 +12867,15 @@ func schema_openshift_api_config_v1_GCPPlatformStatus(ref common.ReferenceCallba
 									},
 								},
 							},
+						},
+					},
+					"ipFamily": {
+						SchemaProps: spec.SchemaProps{
+							Description: "ipFamily indicates the IP Address family supported by cluster nodes. This value indicates what IP address types can be expected to be found within the cluster. When set to \"IPv4\", the cluster infrastructure and all cluster resources including pods and nodes are set up with just IPv4 addresses. When set to \"DualStack\", cluster infrastructure and all cluster resources are expected to have both IPv4 and IPv6 addresses.\n\nPossible enum values:\n - `\"DualStack\"` IPFamilyIPv4 indicates that the cluster contains both IPv4 and IPv6 addresses\n - `\"IPv4\"` indicates that the cluster contains IPv4 addresses",
+							Default:     "IPv4",
+							Type:        []string{"string"},
+							Format:      "",
+							Enum:        []interface{}{"DualStack", "IPv4"},
 						},
 					},
 				},

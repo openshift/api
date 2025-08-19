@@ -52,6 +52,7 @@ tests:
             gcp:
               cloudLoadBalancerConfig:
                 dnsType: PlatformDefault
+              ipFamily: IPv4
               serviceEndpoints:
                 - {name: "Compute", url: "https://compute-myendpoint1.p.googleapis.com"}
       expected: |
@@ -71,6 +72,7 @@ tests:
             gcp:
               cloudLoadBalancerConfig:
                 dnsType: PlatformDefault
+              ipFamily: IPv4
               serviceEndpoints:
                 - {name: "Compute", url: "https://compute-myendpoint1.p.googleapis.com"}
     - name: Service Endpoint Same Name
@@ -258,6 +260,7 @@ tests:
             gcp:
               cloudLoadBalancerConfig:
                 dnsType: PlatformDefault
+              ipFamily: IPv4
               serviceEndpoints:
                 - {name: "Compute", url: "https://compute-myendpoint1.p.googleapis.com/"}
     - name: Service Endpoint Bad Path

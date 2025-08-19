@@ -429,3 +429,16 @@ const (
 	// IBMCloudServiceVPC is the name for IBM Cloud VPC.
 	IBMCloudServiceVPC IBMCloudServiceName = "VPC"
 )
+
+// IPFamilyType represents the different IP address configurations supported.
+// There are two supported types IPv4 and DualStack.
+// Currently supported on platforms AWS, Azure and GCP.
+// +enum
+type IPFamilyType string
+
+const (
+	// IPFamilyIPv4 indicates that the cluster contains IPv4 addresses
+	IPFamilyIPv4 IPFamilyType = "IPv4"
+	// IPFamilyIPv4 indicates that the cluster contains both IPv4 and IPv6 addresses
+	IPFamilyDualStack IPFamilyType = "DualStack"
+)

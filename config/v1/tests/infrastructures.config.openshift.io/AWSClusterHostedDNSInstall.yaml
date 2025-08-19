@@ -60,6 +60,7 @@ tests:
             aws:
               cloudLoadBalancerConfig:
                 dnsType: PlatformDefault
+              ipFamily: IPv4
             type: AWS
     - name: should be able to set dnsType to non-default value of `ClusterHosted`
       initial: |
@@ -84,6 +85,7 @@ tests:
             aws:
               cloudLoadBalancerConfig:
                 dnsType: ClusterHosted
+              ipFamily: IPv4
             type: AWS
       expected: |
         apiVersion: config.openshift.io/v1
@@ -101,6 +103,7 @@ tests:
             aws:
               cloudLoadBalancerConfig:
                 dnsType: ClusterHosted
+              ipFamily: IPv4
             type: AWS
     - name: Should not allow changing the immutable dnsType field
       initial: |

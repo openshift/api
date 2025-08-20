@@ -22,9 +22,6 @@
                         "name": "ClusterAPIInstall"
                     },
                     {
-                        "name": "ClusterVersionOperatorConfiguration"
-                    },
-                    {
                         "name": "EventedPLEG"
                     },
                     {
@@ -115,6 +112,9 @@
                     },
                     {
                         "name": "ClusterMonitoringConfig"
+                    },
+                    {
+                        "name": "ClusterVersionOperatorConfiguration"
                     },
                     {
                         "name": "ConsolePluginContentSecurityPolicy"

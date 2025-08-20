@@ -1888,7 +1888,7 @@ spec:
                                   used when creating clients to interact with GCP services.
                                   When not specified, the default endpoint for the GCP region will be used.
                                   Only 1 endpoint override is permitted for each GCP service.
-                                  The maximum number of endpoint overrides allowed is 9.
+                                  The maximum number of endpoint overrides allowed is 11.
                                 items:
                                   description: |-
                                     GCPServiceEndpoint store the configuration of a custom url to
@@ -1911,8 +1911,11 @@ spec:
                                       - DNS
                                       - File
                                       - IAM
+                                      - IAMCredentials
+                                      - OAuth
                                       - ServiceUsage
                                       - Storage
+                                      - STS
                                       type: string
                                     url:
                                       description: |-
@@ -1938,7 +1941,7 @@ spec:
                                   - name
                                   - url
                                   type: object
-                                maxItems: 8
+                                maxItems: 11
                                 type: array
                                 x-kubernetes-list-map-keys:
                                 - name

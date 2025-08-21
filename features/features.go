@@ -814,7 +814,7 @@ var (
 						contactPerson("andfasano").
 						productScope(ocpSpecific).
 						enhancementPR("https://github.com/openshift/enhancements/pull/1821").
-						enableForClusterProfile(SelfManaged, configv1.DevPreviewNoUpgrade).
+						enableForClusterProfile(SelfManaged, configv1.DevPreviewNoUpgrade, configv1.TechPreviewNoUpgrade).
 						mustRegister()
 
 	FeatureGateGCPClusterHostedDNSInstall = newFeatureGate("GCPClusterHostedDNSInstall").

@@ -37,9 +37,6 @@
                         "name": "MultiArchInstallAzure"
                     },
                     {
-                        "name": "NoRegistryClusterOperations"
-                    },
-                    {
                         "name": "ShortCertRotation"
                     },
                     {
@@ -241,6 +238,9 @@
                     },
                     {
                         "name": "NewOLMWebhookProviderOpenshiftServiceCA"
+                    },
+                    {
+                        "name": "NoRegistryClusterOperations"
                     },
                     {
                         "name": "NodeSwap"

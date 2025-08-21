@@ -107,9 +107,6 @@
                         "name": "ImageStreamImportMode"
                     },
                     {
-                        "name": "ImageVolume"
-                    },
-                    {
                         "name": "IngressControllerDynamicConfigurationManager"
                     },
                     {
@@ -245,6 +242,9 @@
                     },
                     {
                         "name": "HighlyAvailableArbiter"
+                    },
+                    {
+                        "name": "ImageVolume"
                     },
                     {
                         "name": "IngressControllerLBSubnetsAWS"

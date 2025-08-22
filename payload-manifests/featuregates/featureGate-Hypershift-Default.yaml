@@ -173,9 +173,6 @@
                         "name": "NodeSwap"
                     },
                     {
-                        "name": "NutanixMultiSubnets"
-                    },
-                    {
                         "name": "OVNObservability"
                     },
                     {
@@ -275,6 +272,12 @@
                     },
                     {
                         "name": "NetworkSegmentation"
+                    },
+                    {
+                        "name": "NutanixMultiSubnets"
+                    },
+                    {
+                        "name": "OnClusterBuild"
                     },
                     {
                         "name": "OpenShiftPodSecurityAdmission"

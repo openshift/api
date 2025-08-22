@@ -21960,6 +21960,10 @@
           "type": "string",
           "default": ""
         },
+        "cpuOptions": {
+          "description": "cpuOptions defines CPU-related settings for the instance, including the confidential computing policy. If unset, no CPU options will be passed to the AWS platform and AWS default CPU options will be applied.",
+          "$ref": "#/definitions/com.github.openshift.api.machine.v1beta1.CPUOptions"
+        },
         "credentialsSecret": {
           "description": "credentialsSecret is a reference to the secret with AWS credentials. Otherwise, defaults to permissions provided by attached IAM role where the actuator is running.",
           "$ref": "#/definitions/io.k8s.api.core.v1.LocalObjectReference"
@@ -22431,6 +22435,16 @@
         },
         "virtualName": {
           "description": "The virtual device name (ephemeralN). Machine store volumes are numbered starting from 0. An machine type with 2 available machine store volumes can specify mappings for ephemeral0 and ephemeral1.The number of available machine store volumes depends on the machine type. After you connect to the machine, you must mount the volume.\n\nConstraints: For M3 machines, you must specify machine store volumes in the block device mapping for the machine. When you launch an M3 machine, we ignore any machine store volumes specified in the block device mapping for the AMI.",
+          "type": "string"
+        }
+      }
+    },
+    "com.github.openshift.api.machine.v1beta1.CPUOptions": {
+      "description": "CPUOptions defines CPU-related settings for the instance, including the confidential computing policy.",
+      "type": "object",
+      "properties": {
+        "confidentialCompute": {
+          "description": "confidentialCompute specifies whether confidential computing should be enabled for the instance, and, if so, which confidential computing technology to use. Valid values are: Disabled, AMDEncrytedVirtualizationNestedPaging When set to Disabled, confidential computing will be disabled for the instance. When set to AMDEncrytedVirtualizationNestedPaging, AMD SEV-SNP will be used as the confidential computing technology for the instance. In this case, ensure the following conditions are met: 1) The selected instance type supports AMD SEV-SNP. 2) The selected AWS region supports AMD SEV-SNP. 3) The selected AMI supports AMD SEV-SNP. More details can be checked at https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/sev-snp.html When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change without notice. The current default is Disabled.",
           "type": "string"
         }
       }

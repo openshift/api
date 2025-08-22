@@ -17,6 +17,10 @@ type AWSMachineProviderConfig struct {
 	AMI AWSResourceReference `json:"ami"`
 	// instanceType is the type of instance to create. Example: m4.xlarge
 	InstanceType string `json:"instanceType"`
+	// cpuOptions defines CPU-related settings for the instance, including the confidential computing policy.
+	// If unset, no CPU options will be passed to the AWS platform and AWS default CPU options will be applied.
+	// +optional
+	CPUOptions *CPUOptions `json:"cpuOptions,omitempty"`
 	// tags is the set of tags to add to apply to an instance, in addition to the ones
 	// added by default by the actuator. These tags are additive. The actuator will ensure
 	// these tags are present, but will not remove any other tags that may exist on the
@@ -107,6 +111,34 @@ type AWSMachineProviderConfig struct {
 	// If this value is selected, capacityReservationID must be specified to identify the target reservation.
 	// +optional
 	MarketType MarketType `json:"marketType,omitempty"`
+}
+
+// AWSConfidentialComputePolicy represents the confidential compute configuration for the instance.
+type AWSConfidentialComputePolicy string
+
+const (
+	// AWSConfidentialComputePolicyDisabled disables confidential computing for the instance.
+	AWSConfidentialComputePolicyDisabled AWSConfidentialComputePolicy = "Disabled"
+	// AWSConfidentialComputePolicySEVSNP enables AMD SEV-SNP as the confidential computing technology for the instance.
+	AWSConfidentialComputePolicySEVSNP AWSConfidentialComputePolicy = "AMDEncrytedVirtualizationNestedPaging"
+)
+
+// CPUOptions defines CPU-related settings for the instance, including the confidential computing policy.
+type CPUOptions struct {
+	// confidentialCompute specifies whether confidential computing should be enabled for the instance,
+	// and, if so, which confidential computing technology to use.
+	// Valid values are: Disabled, AMDEncrytedVirtualizationNestedPaging
+	// When set to Disabled, confidential computing will be disabled for the instance.
+	// When set to AMDEncrytedVirtualizationNestedPaging, AMD SEV-SNP will be used as the confidential computing technology for the instance.
+	// In this case, ensure the following conditions are met:
+	// 1) The selected instance type supports AMD SEV-SNP.
+	// 2) The selected AWS region supports AMD SEV-SNP.
+	// 3) The selected AMI supports AMD SEV-SNP.
+	// More details can be checked at https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/sev-snp.html
+	// When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change without notice. The current default is Disabled.
+	// +kubebuilder:validation:Enum=Disabled;AMDEncrytedVirtualizationNestedPaging
+	// +optional
+	ConfidentialCompute AWSConfidentialComputePolicy `json:"confidentialCompute,omitempty"`
 }
 
 // BlockDeviceMappingSpec describes a block device mapping

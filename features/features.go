@@ -271,8 +271,8 @@ var (
 					reportProblemsToJiraComponent("Networking/ovn-kubernetes").
 					contactPerson("jcaamano").
 					productScope(ocpSpecific).
-					enhancementPR(legacyFeatureGateWithoutEnhancement).
-					enableIn(configv1.DevPreviewNoUpgrade, configv1.TechPreviewNoUpgrade).
+					enhancementPR("https://github.com/openshift/enhancements/pull/1636").
+					enableIn(configv1.Default, configv1.DevPreviewNoUpgrade, configv1.TechPreviewNoUpgrade).
 					mustRegister()
 
 	FeatureGateNetworkLiveMigration = newFeatureGate("NetworkLiveMigration").

@@ -247,9 +247,6 @@
                         "name": "ImageVolume"
                     },
                     {
-                        "name": "IngressControllerLBSubnetsAWS"
-                    },
-                    {
                         "name": "KMSv1"
                     },
                     {

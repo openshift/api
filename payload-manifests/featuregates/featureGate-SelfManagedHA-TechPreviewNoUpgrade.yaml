@@ -162,9 +162,6 @@
                         "name": "IngressControllerDynamicConfigurationManager"
                     },
                     {
-                        "name": "IngressControllerLBSubnetsAWS"
-                    },
-                    {
                         "name": "InsightsConfig"
                     },
                     {

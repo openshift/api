@@ -3,7 +3,6 @@ name: "IngressController"
 crdName: ingresscontrollers.operator.openshift.io
 featureGates:
 - SetEIPForNLBIngressController
-- IngressControllerLBSubnetsAWS
 tests:
   onCreate:
     - name: Should be able to create a minimal IngressController

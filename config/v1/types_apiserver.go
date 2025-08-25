@@ -68,6 +68,12 @@ type APIServerSpec struct {
 	// +optional
 	// +kubebuilder:default={profile: Default}
 	Audit Audit `json:"audit"`
+	// http01ChallengeProxy contains configuration for the HTTP01 challenge proxy
+	// that redirects traffic from the API endpoint on port 80 to ingress routers.
+	// This enables cert-manager to perform HTTP01 ACME challenges for API endpoint certificates.
+	// +openshift:enable:FeatureGate=HTTP01ChallengeProxy
+	// +optional
+	HTTP01ChallengeProxy HTTP01ChallengeProxySpec `json:"http01ChallengeProxy,omitzero,omitempty"`
 }
 
 // AuditProfileType defines the audit policy profile type.
@@ -146,7 +152,7 @@ type AuditCustomRule struct {
 	// If unset, the 'Default' profile is used as the default.
 	//
 	// +required
-	Profile AuditProfileType `json:"profile"`
+	Profile AuditProfileType `json:"profile,omitempty"`
 }
 
 type APIServerServingCerts struct {
@@ -208,7 +214,7 @@ type APIServerEncryption struct {
 	// +openshift:enable:FeatureGate=KMSEncryptionProvider
 	// +unionMember
 	// +optional
-	KMS *KMSConfig `json:"kms,omitempty"`
+	KMS KMSConfig `json:"kms,omitzero,omitempty"`
 }
 
 // +openshift:validation:FeatureGateAwareEnum:featureGate="",enum="";identity;aescbc;aesgcm
@@ -233,6 +239,45 @@ const (
 	// encryption is still performed at the datastore layer.
 	EncryptionTypeKMS EncryptionType = "KMS"
 )
+
+// HTTP01ChallengeProxyMode defines how the HTTP01 challenge proxy should be deployed.
+// +kubebuilder:validation:Enum=DefaultDeployment;CustomDeployment
+type HTTP01ChallengeProxyMode string
+
+const (
+	// HTTP01ChallengeProxyModeDefaultDeployment enables the proxy with default configuration.
+	HTTP01ChallengeProxyModeDefaultDeployment HTTP01ChallengeProxyMode = "DefaultDeployment"
+	// HTTP01ChallengeProxyModeCustomDeployment enables the proxy with user-specified configuration.
+	HTTP01ChallengeProxyModeCustomDeployment HTTP01ChallengeProxyMode = "CustomDeployment"
+)
+
+// +union
+// +kubebuilder:validation:XValidation:rule="self.mode == 'CustomDeployment' ? has(self.customDeployment) : !has(self.customDeployment)",message="customDeployment is required when mode is CustomDeployment and forbidden otherwise"
+type HTTP01ChallengeProxySpec struct {
+	// mode controls whether the HTTP01 challenge proxy is active and how it should be deployed.
+	// DefaultDeployment enables the proxy with default configuration.
+	// CustomDeployment enables the proxy with user-specified configuration.
+	// +required
+	// +unionDiscriminator
+	Mode HTTP01ChallengeProxyMode `json:"mode,omitempty"`
+
+	// customDeployment contains configuration options when mode is CustomDeployment.
+	// This field is only valid when mode is CustomDeployment.
+	// +optional
+	// +unionMember
+	CustomDeployment HTTP01ChallengeProxyCustomDeploymentSpec `json:"customDeployment,omitzero"`
+}
+
+type HTTP01ChallengeProxyCustomDeploymentSpec struct {
+	// internalPort specifies the internal port used by the proxy service.
+	// Valid values are 1024-65535.
+	// When not specified for CustomDeployment mode, users should ensure their chosen port
+	// does not conflict with other workloads on the host.
+	// +kubebuilder:validation:Minimum=1024
+	// +kubebuilder:validation:Maximum=65535
+	// +required
+	InternalPort int32 `json:"internalPort,omitempty"`
+}
 
 type APIServerStatus struct {
 }

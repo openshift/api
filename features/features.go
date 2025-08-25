@@ -848,4 +848,12 @@ var (
 						enhancementPR("https://github.com/openshift/enhancements/pull/1785").
 						enableIn(configv1.DevPreviewNoUpgrade, configv1.TechPreviewNoUpgrade).
 						mustRegister()
+
+	FeatureGateHTTP01ChallengeProxy = newFeatureGate("HTTP01ChallengeProxy").
+					reportProblemsToJiraComponent("kube-apiserver").
+					contactPerson("sebrandon1").
+					productScope(ocpSpecific).
+					enhancementPR("https://github.com/openshift/enhancements/pull/1773").
+					enableIn(configv1.DevPreviewNoUpgrade, configv1.TechPreviewNoUpgrade).
+					mustRegister()
 )

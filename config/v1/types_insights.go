@@ -50,7 +50,7 @@ type GatherConfig struct {
 	// When set to ObfuscateNetworking the IP addresses and the cluster domain name are obfuscated.
 	// When set to WorkloadNames, the gathered data about cluster resources will not contain the workload names for your deployments. Resources UIDs will be used instead.
 	// When omitted no obfuscation is applied.
-	// +kubebuilder:validation:MinItems=0
+	// +kubebuilder:validation:MinItems=1
 	// +kubebuilder:validation:MaxItems=2
 	// +kubebuilder:validation:XValidation:rule="self.all(x, self.exists_one(y, x == y))",message="dataPolicy items must be unique"
 	// +listType=atomic

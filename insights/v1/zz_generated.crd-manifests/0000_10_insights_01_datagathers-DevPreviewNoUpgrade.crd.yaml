@@ -70,7 +70,7 @@ spec:
                   - WorkloadNames
                   type: string
                 maxItems: 2
-                minItems: 0
+                minItems: 1
                 type: array
                 x-kubernetes-list-type: atomic
                 x-kubernetes-validations:

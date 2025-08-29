@@ -469,9 +469,12 @@ type Audit struct {
 	Profile AuditProfile `json:"profile,omitempty"`
 }
 
-// KubeStateMetricsConfig provides configuration options for the kube-state-metrics agent
-// that runs in the `openshift-monitoring` namespace. Use this configuration to control
-// how the kube-state-metrics instance is deployed, pod scheduling, and resource allocation.
+// kubeStateMetricsConfig (KSM) is a service that listens to the Kubernetes API server
+// and generates metrics about the state of Kubernetes objects. Metrics reflect
+// the raw, unmodified data of objects such as Deployments, Nodes, and Pods.
+// Specifically, it can configure how the kube-state-metrics instance is deployed, pod scheduling, and resource allocation.
+// When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time.
+// +optional
 // +kubebuilder:validation:MinProperties=1
 type KubeStateMetricsConfig struct {
 	// nodeSelector defines the nodes on which the Pods are scheduled

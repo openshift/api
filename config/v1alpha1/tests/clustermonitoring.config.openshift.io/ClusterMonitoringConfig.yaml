@@ -208,3 +208,146 @@ tests:
                   request: "500m"
                   limit: "200m"
       expectedError: 'spec.alertmanagerConfig.customConfig.resources[0]: Invalid value: "object": limit must be greater than or equal to request'
+    - name: Should be able to create a minimal MetricsServerConfig
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          metricsServerConfig:
+            verbosity: Info
+      expected: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          metricsServerConfig:
+            verbosity: Info
+    - name: Should accept MetricsServerConfig with comprehensive ContainerResource array
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: "Disabled"
+          metricsServerConfig:
+            resources:
+              - name: "cpu"
+                request: "100m"
+                limit: "500m"
+              - name: "memory"
+                request: "128Mi"
+                limit: "512Mi"
+              - name: "ephemeral-storage"
+                request: "1Gi"
+                limit: "2Gi"
+      expected: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: "Disabled"
+          metricsServerConfig:
+            resources:
+              - name: "cpu"
+                request: "100m"
+                limit: "500m"
+              - name: "memory"
+                request: "128Mi"
+                limit: "512Mi"
+              - name: "ephemeral-storage"
+                request: "1Gi"
+                limit: "2Gi"
+    - name: Should accept MetricsServerConfig with only requests
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: "Disabled"
+          metricsServerConfig:
+            resources:
+              - name: "cpu"
+                request: "200m"
+              - name: "memory"
+                request: "256Mi"
+      expected: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: "Disabled"
+          metricsServerConfig:
+            resources:
+              - name: "cpu"
+                request: "200m"
+              - name: "memory"
+                request: "256Mi"
+    - name: Should accept MetricsServerConfig with only limits
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: "Disabled"
+          metricsServerConfig:
+            resources:
+              - name: "cpu"
+                limit: "1"
+              - name: "memory"
+                limit: "1Gi"
+      expected: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: "Disabled"
+          metricsServerConfig:
+            resources:
+              - name: "cpu"
+                limit: "1"
+              - name: "memory"
+                limit: "1Gi"
+    - name: Should reject MetricsServerConfig with limit less than request
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: "Disabled"
+          metricsServerConfig:
+            resources:
+              - name: "cpu"
+                request: "500m"
+                limit: "200m"
+      expectedError: 'spec.metricsServerConfig.resources[0]: Invalid value: "object": limit must be greater than or equal to request'
+    - name: Should reject MetricsServerConfig with more than 10 resource items
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: "Disabled"
+          metricsServerConfig:
+            resources:
+              - name: "cpu"
+                request: "100m"
+              - name: "memory"
+                request: "64Mi"
+              - name: "hugepages-2Mi"
+                request: "32Mi"
+              - name: "hugepages-1Gi"
+                request: "1Gi"
+              - name: "ephemeral-storage"
+                request: "1Gi"
+              - name: "nvidia.com/gpu"
+                request: "1"
+              - name: "example.com/foo"
+                request: "1"
+              - name: "example.com/bar"
+                request: "1"
+              - name: "example.com/baz"
+                request: "1"
+              - name: "example.com/qux"
+                request: "1"
+              - name: "example.com/quux"
+                request: "1"
+      expectedError: 'spec.metricsServerConfig.resources: Too many: 11: must have at most 10 items'

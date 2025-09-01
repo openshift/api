@@ -32,10 +32,9 @@ type InsightsDataGather struct {
 }
 
 // InsightsDataGatherSpec contains the configuration for the data gathering.
-// +kubebuilder:validation:MinProperties=1
 type InsightsDataGatherSpec struct {
 	// gatherConfig is an optional spec attribute that includes all the configuration options related to gathering of the Insights data and its uploading to the ingress.
-	// +optional
+	// +required
 	GatherConfig GatherConfig `json:"gatherConfig,omitempty,omitzero"`
 }
 

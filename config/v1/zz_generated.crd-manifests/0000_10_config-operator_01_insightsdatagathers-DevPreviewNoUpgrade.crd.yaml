@@ -44,7 +44,6 @@ spec:
             type: object
           spec:
             description: spec holds user settable values for configuration
-            minProperties: 1
             properties:
               gatherConfig:
                 description: gatherConfig is an optional spec attribute that includes
@@ -223,6 +222,8 @@ spec:
                 required:
                 - gatherers
                 type: object
+            required:
+            - gatherConfig
             type: object
           status:
             description: status holds observed values from the cluster. They may not

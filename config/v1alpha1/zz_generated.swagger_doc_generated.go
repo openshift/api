@@ -118,6 +118,21 @@ func (ClusterImagePolicyStatus) SwaggerDoc() map[string]string {
 	return map_ClusterImagePolicyStatus
 }
 
+var map_AdditionalAlertmanagerConfig = map[string]string{
+	"":              "AdditionalAlertmanagerConfig represents configuration for additional Alertmanager instances. The `AdditionalAlertmanagerConfig` resource defines settings for how a component communicates with additional Alertmanager instances.",
+	"apiVersion":    "apiVersion defines the API version of Alertmanager. `v1` is no longer supported, `v2` is set as the default value.",
+	"bearerToken":   "bearerToken defines the secret key reference containing the bearer token to use when authenticating to Alertmanager.",
+	"pathPrefix":    "pathPrefix defines the path prefix to add in front of the push endpoint path.",
+	"scheme":        "scheme defines the URL scheme to use when communicating with Alertmanager instances. Possible values are `http` or `https`. The default value is `http`.",
+	"staticConfigs": "staticConfigs is a list of statically configured Alertmanager endpoints in the form of `<hosts>:<port>`.",
+	"timeout":       "timeout defines the timeout value used when sending alerts.",
+	"tlsConfig":     "tlsConfig defines the TLS settings to use for Alertmanager connections.",
+}
+
+func (AdditionalAlertmanagerConfig) SwaggerDoc() map[string]string {
+	return map_AdditionalAlertmanagerConfig
+}
+
 var map_AlertmanagerConfig = map[string]string{
 	"":               "alertmanagerConfig provides configuration options for the default Alertmanager instance that runs in the `openshift-monitoring` namespace. Use this configuration to control whether the default Alertmanager is deployed, how it logs, and how its pods are scheduled.",
 	"deploymentMode": "deploymentMode determines whether the default Alertmanager instance should be deployed as part of the monitoring stack. Allowed values are Disabled, DefaultConfig, and CustomConfig. When set to Disabled, the Alertmanager instance will not be deployed. When set to DefaultConfig, the platform will deploy Alertmanager with default settings. When set to CustomConfig, the Alertmanager will be deployed with custom configuration.",
@@ -177,6 +192,7 @@ var map_ClusterMonitoringSpec = map[string]string{
 	"":                       "ClusterMonitoringSpec defines the desired state of Cluster Monitoring Operator",
 	"userDefined":            "userDefined set the deployment mode for user-defined monitoring in addition to the default platform monitoring. userDefined is optional. When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time. The current default value is `Disabled`.",
 	"alertmanagerConfig":     "alertmanagerConfig allows users to configure how the default Alertmanager instance should be deployed in the `openshift-monitoring` namespace. alertmanagerConfig is optional. When omitted, this means no opinion and the platform is left to choose a reasonable default, that is subject to change over time. The current default value is `DefaultConfig`.",
+	"prometheusK8sConfig":    "prometheusK8sConfig provides configuration options for the Prometheus instance Prometheus deployment, pod scheduling, resource allocation, retention policies, and external integrations. prometheusK8sConfig is optional. When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time.",
 	"metricsServerConfig":    "metricsServerConfig is an optional field that can be used to configure the Kubernetes Metrics Server that runs in the openshift-monitoring namespace. Specifically, it can configure how the Metrics Server instance is deployed, pod scheduling, its audit policy and log verbosity. When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time.",
 	"kubeStateMetricsConfig": "kubeStateMetricsConfig is an optional field that can be used to configure the kube-state-metrics agent that runs in the openshift-monitoring namespace. KubeStateMetrics (KSM) is a service that listens to the Kubernetes API server and generates metrics about the state of Kubernetes objects. Metrics reflect the raw, unmodified data of objects such as Deployments, Nodes, and Pods. Specifically, it can configure how the kube-state-metrics instance is deployed, pod scheduling, and resource allocation. When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time.",
 }
@@ -204,6 +220,15 @@ func (ContainerResource) SwaggerDoc() map[string]string {
 	return map_ContainerResource
 }
 
+var map_ExternalLabels = map[string]string{
+	"":       "ExternalLabels represents labels to be added to time series and alerts.",
+	"labels": "labels is a map of label names to label values.",
+}
+
+func (ExternalLabels) SwaggerDoc() map[string]string {
+	return map_ExternalLabels
+}
+
 var map_KubeStateMetricsConfig = map[string]string{
 	"":                          "kubeStateMetricsConfig (KSM) is a service that listens to the Kubernetes API server and generates metrics about the state of Kubernetes objects. Metrics reflect the raw, unmodified data of objects such as Deployments, Nodes, and Pods. Specifically, it can configure how the kube-state-metrics instance is deployed, pod scheduling, and resource allocation. When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time.",
 	"nodeSelector":              "nodeSelector defines the nodes on which the Pods are scheduled nodeSelector is optional.\n\nWhen omitted, this means the user has no opinion and the platform is left to choose reasonable defaults. These defaults are subject to change over time. The current default value is `kubernetes.io/os: linux`.",
@@ -228,6 +253,67 @@ var map_MetricsServerConfig = map[string]string{
 
 func (MetricsServerConfig) SwaggerDoc() map[string]string {
 	return map_MetricsServerConfig
+}
+
+var map_PrometheusK8sConfig = map[string]string{
+	"":                              "PrometheusK8sConfig provides configuration options for the Prometheus instance Use this configuration to control Prometheus deployment, pod scheduling, resource allocation, retention policies, and external integrations.",
+	"additionalAlertmanagerConfigs": "additionalAlertmanagerConfigs configures additional Alertmanager instances that receive alerts from the Prometheus component. By default, no additional Alertmanager instances are configured.",
+	"enforcedBodySizeLimit":         "enforcedBodySizeLimit enforces a body size limit for Prometheus scraped metrics. If a scraped target's body response is larger than the limit, the scrape will fail. The following values are valid: an empty value to specify no limit, a numeric value in Prometheus size format (such as `64MB`), or the string `automatic`, which indicates that the limit will be automatically calculated based on cluster capacity. The default value is empty, which indicates no limit.",
+	"externalLabels":                "externalLabels defines labels to be added to any time series or alerts when communicating with external systems such as federation, remote storage, and Alertmanager. By default, no labels are added.",
+	"logLevel":                      "logLevel defines the log level setting for Prometheus. The possible values are: `error`, `warn`, `info`, and `debug`. The default value is `info`.",
+	"nodeSelector":                  "nodeSelector defines the nodes on which the Pods are scheduled.",
+	"queryLogFile":                  "queryLogFile specifies the file to which PromQL queries are logged. This setting can be either a filename, in which case the queries are saved to an `emptyDir` volume at `/var/log/prometheus`, or a full path to a location where an `emptyDir` volume will be mounted and the queries saved. Writing to `/dev/stderr`, `/dev/stdout` or `/dev/null` is supported, but writing to any other `/dev/` path is not supported. Relative paths are also not supported. By default, PromQL queries are not logged.",
+	"remoteWrite":                   "remoteWrite defines the remote write configuration, including URL, authentication, and relabeling settings.",
+	"resources":                     "resources defines resource requests and limits for the Prometheus container.",
+	"retention":                     "retention defines the duration for which Prometheus retains data. This definition must be specified using the following regular expression pattern: `[0-9]+(ms|s|m|h|d|w|y)` (ms = milliseconds, s= seconds,m = minutes, h = hours, d = days, w = weeks, y = years). The default value is `15d`.",
+	"retentionSize":                 "retentionSize defines the maximum amount of disk space used by data blocks plus the write-ahead log (WAL). Supported values are `B`, `KB`, `KiB`, `MB`, `MiB`, `GB`, `GiB`, `TB`, `TiB`, `PB`, `PiB`, `EB`, and `EiB`. By default, no limit is defined.",
+	"tolerations":                   "tolerations defines tolerations for the pods.",
+	"topologySpreadConstraints":     "topologySpreadConstraints defines the pod's topology spread constraints.",
+	"collectionProfile":             "collectionProfile defines the metrics collection profile that Prometheus uses to collect metrics from the platform components. Supported values are `full` or `minimal`. In the `full` profile (default), Prometheus collects all metrics that are exposed by the platform components. In the `minimal` profile, Prometheus only collects metrics necessary for the default platform alerts, recording rules, telemetry and console dashboards.",
+	"volumeClaimTemplate":           "volumeClaimTemplate defines persistent storage for Prometheus. Use this setting to configure the persistent volume claim, including storage class, volume size and name.",
+}
+
+func (PrometheusK8sConfig) SwaggerDoc() map[string]string {
+	return map_PrometheusK8sConfig
+}
+
+var map_RelabelConfig = map[string]string{
+	"":             "RelabelConfig represents a relabeling rule.",
+	"sourceLabels": "sourceLabels is a list of source label names.",
+	"separator":    "separator is the separator used to join source label values.",
+	"regex":        "regex is the regular expression to match against the concatenated source label values.",
+	"targetLabel":  "targetLabel is the target label name.",
+	"replacement":  "replacement is the replacement value for the target label.",
+	"action":       "action is the action to perform.",
+}
+
+func (RelabelConfig) SwaggerDoc() map[string]string {
+	return map_RelabelConfig
+}
+
+var map_RemoteWriteSpec = map[string]string{
+	"":                    "RemoteWriteSpec represents configuration for remote write endpoints.",
+	"url":                 "url is the URL of the remote write endpoint.",
+	"name":                "name is the name of the remote write configuration.",
+	"remoteTimeout":       "remoteTimeout is the timeout for requests to the remote write endpoint.",
+	"writeRelabelConfigs": "writeRelabelConfigs is a list of relabeling rules to apply before sending data to the remote endpoint.",
+}
+
+func (RemoteWriteSpec) SwaggerDoc() map[string]string {
+	return map_RemoteWriteSpec
+}
+
+var map_TLSConfig = map[string]string{
+	"":                   "TLSConfig represents TLS configuration for Alertmanager connections.",
+	"ca":                 "ca is the CA certificate to use for TLS connections.",
+	"cert":               "cert is the client certificate to use for TLS connections.",
+	"key":                "key is the client key to use for TLS connections.",
+	"serverName":         "serverName is the server name to use for TLS connections.",
+	"insecureSkipVerify": "insecureSkipVerify determines whether to skip TLS certificate verification.",
+}
+
+func (TLSConfig) SwaggerDoc() map[string]string {
+	return map_TLSConfig
 }
 
 var map_UserDefinedMonitoring = map[string]string{

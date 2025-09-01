@@ -8147,6 +8147,9 @@
     "com.github.openshift.api.config.v1.InsightsDataGatherSpec": {
       "description": "InsightsDataGatherSpec contains the configuration for the data gathering.",
       "type": "object",
+      "required": [
+        "gatherConfig"
+      ],
       "properties": {
         "gatherConfig": {
           "description": "gatherConfig is an optional spec attribute that includes all the configuration options related to gathering of the Insights data and its uploading to the ingress.",
@@ -16211,7 +16214,7 @@
           "type": "string"
         },
         "totalRisk": {
-          "description": "totalRisk is the required field of the healthcheck. It is indicator of the total risk posed by the detected issue; combination of impact and likelihood. Allowed values are Low, Medium, Important and Critical. The value represents the severity of the issue.",
+          "description": "totalRisk is the required field of the healthcheck. It is indicator of the total risk posed by the detected issue; combination of impact and likelihood. Allowed values are Low, Moderate, Important and Critical. The value represents the severity of the issue.",
           "type": "string"
         }
       }

@@ -359,7 +359,7 @@ type HealthCheck struct {
 	Description string `json:"description,omitempty"`
 	// totalRisk is the required field of the healthcheck.
 	// It is indicator of the total risk posed by the detected issue; combination of impact and likelihood.
-	// Allowed values are Low, Medium, Important and Critical.
+	// Allowed values are Low, Moderate, Important and Critical.
 	// The value represents the severity of the issue.
 	// +required
 	TotalRisk TotalRisk `json:"totalRisk,omitempty"`
@@ -391,10 +391,10 @@ type ObjectReference struct {
 	// It must be at most 253 characters in length, and must consist only of lower case alphanumeric characters, '-' and '.', and must start with an alphabetic character and end with an alphanumeric character.
 	// Example: "", "apps", "build.openshift.io", etc.
 	// +kubebuilder:validation:XValidation:rule="self.size() == 0 || !format.dns1123Subdomain().validate(self).hasValue()",message="a lowercase RFC 1123 subdomain must consist of lower case alphanumeric characters, '-' or '.', and must start with an alphabetic character and end with an alphanumeric character."
-	// +kubebuilder:validation:MinLength=1
+	// +kubebuilder:validation:MinLength=0
 	// +kubebuilder:validation:MaxLength=253
 	// +required
-	Group string `json:"group,omitempty"`
+	Group *string `json:"group,omitempty"`
 	// resource is required field of the type that is being referenced and follows the DNS1035 format.
 	// It is normally the plural form of the resource kind in lowercase.
 	// It must be at most 63 characters in length, and must must consist of only lowercase alphanumeric characters and hyphens, and must start with an alphabetic character and end with an alphanumeric character.

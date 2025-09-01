@@ -15445,6 +15445,7 @@ func schema_openshift_api_config_v1_InsightsDataGatherSpec(ref common.ReferenceC
 						},
 					},
 				},
+				Required: []string{"gatherConfig"},
 			},
 		},
 		Dependencies: []string{
@@ -29022,7 +29023,7 @@ func schema_openshift_api_insights_v1_HealthCheck(ref common.ReferenceCallback) 
 					},
 					"totalRisk": {
 						SchemaProps: spec.SchemaProps{
-							Description: "totalRisk is the required field of the healthcheck. It is indicator of the total risk posed by the detected issue; combination of impact and likelihood. Allowed values are Low, Medium, Important and Critical. The value represents the severity of the issue.",
+							Description: "totalRisk is the required field of the healthcheck. It is indicator of the total risk posed by the detected issue; combination of impact and likelihood. Allowed values are Low, Moderate, Important and Critical. The value represents the severity of the issue.",
 							Type:        []string{"string"},
 							Format:      "",
 						},

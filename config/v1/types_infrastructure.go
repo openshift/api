@@ -183,11 +183,11 @@ const (
 	LoadBalancerTypeOpenShiftManagedDefault PlatformLoadBalancerType = "OpenShiftManagedDefault"
 )
 
-type InternalDNSRecordsType string
+type DNSRecordsType string
 
 const (
-	InternalDNSRecordsDisabled InternalDNSRecordsType = "Disabled"
-	InternalDNSRecordsEnabled InternalDNSRecordsType = "Enabled"
+	DNSRecordsExternal DNSRecordsType = "External"
+	DNSRecordsInternal DNSRecordsType = "Internal"
 )
 
 // PlatformType is a specific supported infrastructure provider.
@@ -1044,12 +1044,10 @@ type BareMetalPlatformStatus struct {
 
 	// internalDNSRecords determines whether we deploy with internal records enabled for
 	// api, api-int, and ingress.
-	// +kubebuilder:validation:Optional
-	// +kubebuilder:validation:Enum=Enabled;Disabled
-	// +openshift:validation:featureGate=OnPremInternalDNSRecords
-	// +openshift:enable:FeatureGate=OnPremInternalDNSRecords
+	// +kubebuilder:validation:Enum=Internal,External
+	// +openshift:enable:FeatureGate=OnPremDNSRecords
 	// +optional
-	InternalDNSRecords InternalDNSRecordsType `json:"internalDNSRecords"`
+	DNSRecordsType DNSRecordsType `json:"dnsRecordsType,omitempty"`
 
 	// machineNetworks are IP networks used to connect all the OpenShift cluster nodes.
 	// +listType=atomic

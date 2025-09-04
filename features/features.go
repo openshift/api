@@ -912,4 +912,11 @@ var (
 						enhancementPR("https://github.com/openshift/enhancements/pull/1803").
 						enableIn(configv1.DevPreviewNoUpgrade, configv1.TechPreviewNoUpgrade).
 						mustRegister()
+	FeatureGateOnPremDNSRecords = newFeatureGate("OnPremInternalDNSRecords").
+					reportProblemsToJiraComponent("Networking / On-Prem DNS").
+					contactPerson("bnemec").
+					productScope(ocpSpecific).
+					enhancementPR("https://github.com/openshift/enhancements/pull/1803").
+					enableIn(configv1.DevPreviewNoUpgrade, configv1.TechPreviewNoUpgrade).
+					mustRegister()
 )

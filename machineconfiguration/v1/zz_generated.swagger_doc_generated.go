@@ -512,6 +512,7 @@ var map_MachineOSBuilderReference = map[string]string{
 	"":                 "MachineOSBuilderReference describes which ImageBuilder backend to use for this build",
 	"imageBuilderType": "imageBuilderType describes the type of image builder used to build this image. Valid values are Job only. When set to Job, a pod based builder, using buildah, is launched to build the specified image.",
 	"job":              "job is a reference to the job object that is managing the image build. This is required if the imageBuilderType is Job, and forbidden otherwise.",
+	"buildPipeline":    "PipelineImageBuilder is used when ImageBuilderType is PipelineImageBuilder.",
 }
 
 func (MachineOSBuilderReference) SwaggerDoc() map[string]string {

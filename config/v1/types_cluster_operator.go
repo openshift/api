@@ -164,6 +164,9 @@ const (
 	// state. If the observed cluster state has changed and the component is
 	// reacting to it (scaling up for instance), Progressing should become true
 	// since it is moving from one steady state to another.
+	// A component in a cluster with less than 250 nodes must complete a version
+	// change within a limited period of time: 90 minutes for Machine Config Operator and 20 minutes for others.
+	// Machine Config Operator is given more time as it needs to restart control plane nodes.
 	OperatorProgressing ClusterStatusConditionType = "Progressing"
 
 	// Degraded indicates that the component (operator and all configured operands)

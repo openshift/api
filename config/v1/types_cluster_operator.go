@@ -154,6 +154,7 @@ const (
 	// is functional and available in the cluster. Available=False means at least
 	// part of the component is non-functional, and that the condition requires
 	// immediate administrator intervention.
+	// A component must not report Available=False during the course of a normal upgrade.
 	OperatorAvailable ClusterStatusConditionType = "Available"
 
 	// Progressing indicates that the component (operator and all configured operands)
@@ -175,7 +176,7 @@ const (
 	// Degraded because it may have a lower quality of service. A component may be
 	// Progressing but not Degraded because the transition from one state to
 	// another does not persist over a long enough period to report Degraded. A
-	// component should not report Degraded during the course of a normal upgrade.
+	// component must not report Degraded during the course of a normal upgrade.
 	// A component may report Degraded in response to a persistent infrastructure
 	// failure that requires eventual administrator intervention.  For example, if
 	// a control plane host is unhealthy and must be replaced. A component should

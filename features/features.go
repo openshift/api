@@ -92,9 +92,11 @@ var (
 					enableIn(configv1.Default, configv1.DevPreviewNoUpgrade, configv1.TechPreviewNoUpgrade).
 					mustRegister()
 
+	// OpenShift and Node Team will keep this turned off until evictions and
+	// disk provisioning are fixed even though upstream will take this GA.
 	FeatureGateNodeSwap = newFeatureGate("NodeSwap").
 				reportProblemsToJiraComponent("node").
-				contactPerson("ehashman").
+				contactPerson("haircommander").
 				productScope(kubernetes).
 				enhancementPR("https://github.com/kubernetes/enhancements/issues/2400").
 				enableIn(configv1.DevPreviewNoUpgrade, configv1.TechPreviewNoUpgrade).

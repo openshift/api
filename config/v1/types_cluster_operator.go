@@ -158,11 +158,13 @@ const (
 	OperatorAvailable ClusterStatusConditionType = "Available"
 
 	// Progressing indicates that the component (operator and all configured operands)
-	// is actively rolling out new code, propagating config changes, or otherwise
+	// is actively rolling out new code, propagating config changes (e.g, a version change), or otherwise
 	// moving from one steady state to another. Operators should not report
-	// progressing when they are reconciling (without action) a previously known
-	// state. If the observed cluster state has changed and the component is
-	// reacting to it (scaling up for instance), Progressing should become true
+	// Progressing when they are reconciling (without action) a previously known
+	// state. Operators should not report Progressing only because DaemonSets owned by them
+	// are adjusting to a new node from cluster scaleup or a node rebooting from cluster upgrade.
+	// If the observed cluster state has changed and the component is
+	// reacting to it (updated proxy configuration for instance), Progressing should become true
 	// since it is moving from one steady state to another.
 	// A component in a cluster with less than 250 nodes must complete a version
 	// change within a limited period of time: 90 minutes for Machine Config Operator and 20 minutes for others.

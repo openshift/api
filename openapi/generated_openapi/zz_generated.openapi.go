@@ -38269,6 +38269,20 @@ func schema_openshift_api_machine_v1beta1_AWSMachineProviderConfig(ref common.Re
 							Format:      "",
 						},
 					},
+					"hostID": {
+						SchemaProps: spec.SchemaProps{
+							Description: "hostID specifies the Dedicated Host on which the instance must be started. This field is mutually exclusive with DynamicHostAllocation. When set, the value must be a valid AWS Dedicated Host ID in the form \"h-\" followed by 17 lowercase hexadecimal characters. The maximum length is 19 characters, and the field may be omitted.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"hostAffinity": {
+						SchemaProps: spec.SchemaProps{
+							Description: "hostAffinity specifies the dedicated host affinity setting for the instance. Valid values are \"AnyAvailable\", \"Host\", and omitted. When HostAffinity is set to \"Host\", an instance started onto a specific host always restarts on the same host if stopped. When HostAffinity is set to \"AnyAvailable\", and you stop and restart the instance, it can be restarted on any available host. When HostAffinity is omitted and HostID is defined, the instance is started onto the specified host. When HostAffinity is defined, HostID is required.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
 				},
 				Required: []string{"ami", "instanceType", "deviceIndex", "subnet", "placement"},
 			},

@@ -16,6 +16,7 @@ require (
 	github.com/openshift/crd-schema-checker v0.0.0-20250905140724-c313b6407231
 	github.com/russross/blackfriday v2.0.0+incompatible
 	github.com/sergi/go-diff v1.3.2-0.20230802210424-5b0b94c5c0d3
+	github.com/spf13/afero v1.14.0
 	github.com/spf13/cobra v1.9.1
 	github.com/spf13/pflag v1.0.7
 	github.com/vmware-archive/yaml-patch v0.0.11
@@ -30,6 +31,7 @@ require (
 	k8s.io/kube-openapi v0.0.0-20250710124328-f3f2b991d03b
 	k8s.io/utils v0.0.0-20250604170112-4c0f3b243397
 	sigs.k8s.io/controller-tools v0.18.0
+	sigs.k8s.io/crdify v0.5.0
 	sigs.k8s.io/kube-api-linter v0.0.0-20250808120943-48643eb2563d
 	sigs.k8s.io/yaml v1.6.0
 )
@@ -246,7 +248,6 @@ require (
 	github.com/skeema/knownhosts v1.2.2 // indirect
 	github.com/sonatard/noctx v0.1.0 // indirect
 	github.com/sourcegraph/go-diff v0.7.0 // indirect
-	github.com/spf13/afero v1.14.0 // indirect
 	github.com/spf13/cast v1.5.0 // indirect
 	github.com/spf13/jwalterweatherman v1.1.0 // indirect
 	github.com/spf13/viper v1.12.0 // indirect

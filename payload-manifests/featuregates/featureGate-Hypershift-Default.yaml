@@ -215,9 +215,6 @@
                         "name": "VSphereMixedNodeEnv"
                     },
                     {
-                        "name": "VolumeAttributesClass"
-                    },
-                    {
                         "name": "VolumeGroupSnapshot"
                     }
                 ],
@@ -326,6 +323,9 @@
                     },
                     {
                         "name": "VSphereMultiNetworks"
+                    },
+                    {
+                        "name": "VolumeAttributesClass"
                     }
                 ],
                 "version": ""

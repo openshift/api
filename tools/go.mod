@@ -13,7 +13,7 @@ require (
 	github.com/golangci/golangci-lint/v2 v2.1.6
 	github.com/google/go-cmp v0.7.0
 	github.com/mikefarah/yq/v4 v4.44.5
-	github.com/openshift/crd-schema-checker v0.0.0-20241113192003-573763d3107a
+	github.com/openshift/crd-schema-checker v0.0.0-20250905140724-c313b6407231
 	github.com/russross/blackfriday v2.0.0+incompatible
 	github.com/sergi/go-diff v1.3.2-0.20230802210424-5b0b94c5c0d3
 	github.com/spf13/cobra v1.9.1

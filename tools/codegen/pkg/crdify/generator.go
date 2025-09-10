@@ -63,7 +63,7 @@ func NewGenerator(opts ...generatorOption) generation.Generator {
 		comparisonBase: "master",
 		cfg: &config.Config{
 			UnhandledEnforcement: config.EnforcementPolicyError,
-			Conversion: config.ConversionPolicyNone,
+			Conversion:           config.ConversionPolicyNone,
 			Validations: []config.ValidationConfig{
 				// Allow addition of new enums
 				{
@@ -194,39 +194,33 @@ func (g *generator) genGroupVersion(name string, version generation.APIVersionCo
 			}
 		}
 
-		// TODO: common method
-		for version, versionResults := range runResults.SameVersionValidation {
-			for property, propertyResults := range versionResults {
-				for _, versionedPropertyResult := range propertyResults {
-					for _, err := range versionedPropertyResult.Errors {
-						result.Errors = append(result.Errors, fmt.Errorf("(%s) %s - %s: %w", version, property, versionedPropertyResult.Name, errors.New(err)))
-					}
+		versionedResultFunc := func(version, property string, compResult validations.ComparisonResult) {
+			for _, err := range compResult.Errors {
+				result.Errors = append(result.Errors, fmt.Errorf("(%s) %s - %s: %w", version, property, compResult.Name, errors.New(err)))
+			}
 
-					for _, warn := range versionedPropertyResult.Warnings {
-						result.Warnings = append(result.Warnings, fmt.Sprintf("(%s) %s - %s: %s", version, property, versionedPropertyResult.Name, warn))
-					}
-				}
+			for _, warn := range compResult.Warnings {
+				result.Warnings = append(result.Warnings, fmt.Sprintf("(%s) %s - %s: %s", version, property, compResult.Name, warn))
 			}
 		}
 
-		for version, versionResults := range runResults.ServedVersionValidation {
-			for property, propertyResults := range versionResults {
-				for _, versionedPropertyResult := range propertyResults {
-					for _, err := range versionedPropertyResult.Errors {
-						result.Errors = append(result.Errors, fmt.Errorf("(%s) %s - %s: %w", version, property, versionedPropertyResult.Name, errors.New(err)))
-					}
-
-					for _, warn := range versionedPropertyResult.Warnings {
-						result.Warnings = append(result.Warnings, fmt.Sprintf("(%s) %s - %s: %s", version, property, versionedPropertyResult.Name, warn))
-					}
-				}
-			}
-		}
+		processVersionedPropertyResults(runResults.SameVersionValidation, versionedResultFunc)
+		processVersionedPropertyResults(runResults.ServedVersionValidation, versionedResultFunc)
 
 		results = append(results, result)
 	}
 
 	return results, nil
+}
+
+func processVersionedPropertyResults(vpr map[string]map[string][]validations.ComparisonResult, processFunc func(version, property string, cr validations.ComparisonResult)) {
+	for version, versionResults := range vpr {
+		for property, propertyResults := range versionResults {
+			for _, versionedPropertyResult := range propertyResults {
+				processFunc(version, property, versionedPropertyResult)
+			}
+		}
+	}
 }
 
 const (

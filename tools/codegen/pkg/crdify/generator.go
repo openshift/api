@@ -61,8 +61,28 @@ type generator struct {
 func NewGenerator(opts ...generatorOption) generation.Generator {
 	defaultGenerator := &generator{
 		comparisonBase: "master",
-		// TODO: come up with reasonable default configuration
-		cfg:                &config.Config{},
+		cfg: &config.Config{
+			UnhandledEnforcement: config.EnforcementPolicyError,
+			Conversion: config.ConversionPolicyNone,
+			Validations: []config.ValidationConfig{
+				// Allow addition of new enums
+				{
+					Name:        "enum",
+					Enforcement: config.EnforcementPolicyError,
+					Configuration: map[string]interface{}{
+						"additionPolicy": "Allow",
+					},
+				},
+				// Only issue a warning on description changes
+				// so we get an explicit signal to remind us
+				// that changing the semantic meaning of a
+				// property is a breaking change.
+				{
+					Name:        "description",
+					Enforcement: config.EnforcementPolicyWarn,
+				},
+			},
+		},
 		validationRegistry: runner.DefaultRegistry(),
 	}
 

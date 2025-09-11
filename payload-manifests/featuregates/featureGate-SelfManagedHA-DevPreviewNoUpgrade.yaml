@@ -90,6 +90,9 @@
                         "name": "ClusterAPIInstallIBMCloud"
                     },
                     {
+                        "name": "ClusterAPIMachineManagementVSphere"
+                    },
+                    {
                         "name": "ClusterMonitoringConfig"
                     },
                     {

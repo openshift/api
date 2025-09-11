@@ -573,6 +573,14 @@ var (
 					enableIn(configv1.DevPreviewNoUpgrade, configv1.TechPreviewNoUpgrade).
 					mustRegister()
 
+	FeatureGateClusterAPIMachineManagementVSphere = newFeatureGate("ClusterAPIMachineManagementVSphere").
+							reportProblemsToJiraComponent("SPLAT").
+							contactPerson("jcpowermac").
+							productScope(ocpSpecific).
+							enhancementPR("https://github.com/openshift/enhancements/pull/1465").
+							enableIn(configv1.DevPreviewNoUpgrade).
+							mustRegister()
+
 	FeatureGateClusterMonitoringConfig = newFeatureGate("ClusterMonitoringConfig").
 						reportProblemsToJiraComponent("Monitoring").
 						contactPerson("marioferh").

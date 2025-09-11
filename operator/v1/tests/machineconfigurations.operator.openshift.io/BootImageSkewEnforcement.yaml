@@ -220,6 +220,12 @@ tests:
         kind: MachineConfiguration
         spec: {}
         status:
+          managedBootImagesStatus:
+            machineManagers:
+              - resource: machinesets
+                apiGroup: machine.openshift.io
+                selection:
+                  mode: All        
           bootImageSkewEnforcementStatus:
             mode: Automatic
             automatic:
@@ -232,8 +238,263 @@ tests:
           logLevel: Normal
           operatorLogLevel: Normal
         status:
+          managedBootImagesStatus:
+            machineManagers:
+              - resource: machinesets
+                apiGroup: machine.openshift.io
+                selection:
+                  mode: All        
           bootImageSkewEnforcementStatus:
             mode: Automatic
             automatic:
               ocpVersion: "4.18.2"
-              rhcosVersion: "416.94.202411201433-0"                 
+              rhcosVersion: "416.94.202411201433-0"
+    - name: Should require boot image configuration to be set to All when bootImageSkewEnforcementStatus.mode is Automatic
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: MachineConfiguration
+        spec: {}
+        status:
+          managedBootImagesStatus:
+            machineManagers:
+              - resource: machinesets
+                apiGroup: machine.openshift.io
+                selection:
+                  mode: All
+          bootImageSkewEnforcementStatus:
+            mode: Automatic         
+            automatic:
+              ocpVersion: "4.18.2"
+              rhcosVersion: "416.94.202411201433-0"
+      updated: |
+        apiVersion: operator.openshift.io/v1
+        kind: MachineConfiguration
+        spec: 
+          managedBootImages:
+            machineManagers:
+              - resource: machinesets
+                apiGroup: machine.openshift.io
+                selection:
+                  mode: None
+        status:
+          managedBootImagesStatus:
+            machineManagers:
+              - resource: machinesets
+                apiGroup: machine.openshift.io
+                selection:
+                  mode: All
+          bootImageSkewEnforcementStatus:
+            mode: Automatic
+            automatic:
+              ocpVersion: "4.18.2"
+              rhcosVersion: "416.94.202411201433-0"
+      expectedError: "when skew enforcement is in Automatic mode, managedBootImages must contain a MachineManager opting in all MachineAPI MachineSets"
+    - name: Should not be able to set boot image configuration to an empty list if bootImageSkewEnforcementStatus.mode is set to Automatic
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: MachineConfiguration
+        spec: {}
+        status:
+          managedBootImagesStatus:
+            machineManagers:
+              - resource: machinesets
+                apiGroup: machine.openshift.io
+                selection:
+                  mode: All
+          bootImageSkewEnforcementStatus:
+            mode: Automatic         
+            automatic:
+              ocpVersion: "4.18.2"
+              rhcosVersion: "416.94.202411201433-0"
+      updated: |
+        apiVersion: operator.openshift.io/v1
+        kind: MachineConfiguration
+        spec: 
+          managedBootImages:
+            machineManagers:
+              []
+        status:
+          managedBootImagesStatus:
+            machineManagers:
+              - resource: machinesets
+                apiGroup: machine.openshift.io
+                selection:
+                  mode: All
+          bootImageSkewEnforcementStatus:
+            mode: Automatic
+            automatic:
+              ocpVersion: "4.18.2"
+              rhcosVersion: "416.94.202411201433-0"
+      expectedError: "when skew enforcement is in Automatic mode, managedBootImages must contain a MachineManager opting in all MachineAPI MachineSets"
+    - name: Should require boot image configuration status to be set to All when bootImageSkewEnforcementStatus.mode is Automatic
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: MachineConfiguration
+        spec: {}
+        status:
+          managedBootImagesStatus:
+            machineManagers:
+              - resource: machinesets
+                apiGroup: machine.openshift.io
+                selection:
+                  mode: All
+          bootImageSkewEnforcementStatus:
+            mode: Automatic         
+            automatic:
+              ocpVersion: "4.18.2"
+              rhcosVersion: "416.94.202411201433-0"
+      updated: |
+        apiVersion: operator.openshift.io/v1
+        kind: MachineConfiguration
+        spec: {}
+        status:
+          managedBootImagesStatus:
+            machineManagers:
+              - resource: machinesets
+                apiGroup: machine.openshift.io
+                selection:
+                  mode: None
+          bootImageSkewEnforcementStatus:
+            mode: Automatic
+            automatic:
+              ocpVersion: "4.18.2"
+              rhcosVersion: "416.94.202411201433-0"
+      expectedStatusError: "when skew enforcement is in Automatic mode, managedBootImagesStatus must contain a MachineManager opting in all MachineAPI MachineSets"            
+    - name: Should be able change boot image configuration if bootImageSkewEnforcementStatus.mode is set to Manual
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: MachineConfiguration
+        spec:
+          bootImageSkewEnforcement:
+            mode: Manual
+            manual:
+              ocpVersion: "4.18.2"
+              rhcosVersion: "9.6.20250523-1"
+        status:
+          managedBootImagesStatus:
+            machineManagers:
+              - resource: machinesets
+                apiGroup: machine.openshift.io
+                selection:
+                  mode: All
+          bootImageSkewEnforcementStatus:
+            mode: Manual         
+            manual:
+              ocpVersion: "4.18.2"
+              rhcosVersion: "416.94.202411201433-0"
+      updated: |
+        apiVersion: operator.openshift.io/v1
+        kind: MachineConfiguration
+        spec:
+          managedBootImages:
+            machineManagers:
+              - resource: machinesets
+                apiGroup: machine.openshift.io
+                selection:
+                  mode: None
+          bootImageSkewEnforcement:
+            mode: Manual
+            manual:
+              ocpVersion: "4.18.2"
+              rhcosVersion: "9.6.20250523-1"              
+        status:
+          managedBootImagesStatus:
+            machineManagers:
+              - resource: machinesets
+                apiGroup: machine.openshift.io
+                selection:
+                  mode: All
+          bootImageSkewEnforcementStatus:
+            mode: Manual
+            manual:
+              ocpVersion: "4.18.2"
+              rhcosVersion: "416.94.202411201433-0"
+      expected: |
+        apiVersion: operator.openshift.io/v1
+        kind: MachineConfiguration
+        spec:
+          logLevel: Normal
+          operatorLogLevel: Normal  
+          managedBootImages:
+            machineManagers:
+              - resource: machinesets
+                apiGroup: machine.openshift.io
+                selection:
+                  mode: None
+          bootImageSkewEnforcement:
+            mode: Manual
+            manual:
+              ocpVersion: "4.18.2"
+              rhcosVersion: "9.6.20250523-1"              
+        status:
+          managedBootImagesStatus:
+            machineManagers:
+              - resource: machinesets
+                apiGroup: machine.openshift.io
+                selection:
+                  mode: All
+          bootImageSkewEnforcementStatus:
+            mode: Manual
+            manual:
+              ocpVersion: "4.18.2"
+              rhcosVersion: "416.94.202411201433-0"
+    - name: Should be able change boot image configuration if bootImageSkewEnforcementStatus.mode is set to None
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: MachineConfiguration
+        spec:
+          bootImageSkewEnforcement:
+            mode: None
+        status:
+          managedBootImagesStatus:
+            machineManagers:
+              - resource: machinesets
+                apiGroup: machine.openshift.io
+                selection:
+                  mode: All
+          bootImageSkewEnforcementStatus:
+            mode: None         
+      updated: |
+        apiVersion: operator.openshift.io/v1
+        kind: MachineConfiguration
+        spec:
+          managedBootImages:
+            machineManagers:
+              - resource: machinesets
+                apiGroup: machine.openshift.io
+                selection:
+                  mode: None
+          bootImageSkewEnforcement:
+            mode: None           
+        status:
+          managedBootImagesStatus:
+            machineManagers:
+              - resource: machinesets
+                apiGroup: machine.openshift.io
+                selection:
+                  mode: All
+          bootImageSkewEnforcementStatus:
+            mode: None
+      expected: |
+        apiVersion: operator.openshift.io/v1
+        kind: MachineConfiguration
+        spec:
+          logLevel: Normal
+          operatorLogLevel: Normal  
+          managedBootImages:
+            machineManagers:
+              - resource: machinesets
+                apiGroup: machine.openshift.io
+                selection:
+                  mode: None
+          bootImageSkewEnforcement:
+            mode: None            
+        status:
+          managedBootImagesStatus:
+            machineManagers:
+              - resource: machinesets
+                apiGroup: machine.openshift.io
+                selection:
+                  mode: All
+          bootImageSkewEnforcementStatus:
+            mode: None               

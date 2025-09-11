@@ -410,7 +410,7 @@ ingresses.config.openshift.io:
 
 insightsdatagathers.config.openshift.io:
   Annotations: {}
-  ApprovedPRNumber: https://github.com/openshift/api/pull/2195
+  ApprovedPRNumber: https://github.com/openshift/api/pull/2448
   CRDName: insightsdatagathers.config.openshift.io
   Capability: ""
   Category: ""
@@ -420,7 +420,7 @@ insightsdatagathers.config.openshift.io:
   FilenameOperatorOrdering: "01"
   FilenameRunLevel: "0000_10"
   GroupName: config.openshift.io
-  HasStatus: true
+  HasStatus: false
   KindName: InsightsDataGather
   Labels: {}
   PluralName: insightsdatagathers

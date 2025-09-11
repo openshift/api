@@ -44,7 +44,7 @@ func (DataGatherList) SwaggerDoc() map[string]string {
 var map_DataGatherSpec = map[string]string{
 	"":           "DataGatherSpec contains the configuration for the DataGather.",
 	"dataPolicy": "dataPolicy is an optional list of DataPolicyOptions that allows user to enable additional obfuscation of the Insights archive data. It may not exceed 2 items and must not contain duplicates. Valid values are ObfuscateNetworking and WorkloadNames. When set to ObfuscateNetworking the IP addresses and the cluster domain name are obfuscated. When set to WorkloadNames, the gathered data about cluster resources will not contain the workload names for your deployments. Resources UIDs will be used instead. When omitted no obfuscation is applied.",
-	"gatherers":  "gatherers is an optional field that specifies the configuration of the gatherers. If omitted, all gatherers will be run.",
+	"gatherers":  "gatherers is a required field that specifies the configuration of the gatherers.",
 	"storage":    "storage is an optional field that allows user to define persistent storage for gathering jobs to store the Insights data archive. If omitted, the gathering job will use ephemeral storage.",
 }
 
@@ -69,7 +69,7 @@ func (DataGatherStatus) SwaggerDoc() map[string]string {
 
 var map_GathererConfig = map[string]string{
 	"":      "gathererConfig allows to configure specific gatherers",
-	"name":  "name is the required name of a specific gatherer It may not exceed 256 characters. The format for a gatherer name is: {gatherer}/{function} where the function is optional. Gatherer consists of a lowercase letters only that may include underscores (_). Function consists of a lowercase letters only that may include underscores (_) and is separated from the gatherer by a forward slash (/). The particular gatherers can be found at https://github.com/openshift/insights-operator/blob/master/docs/gathered-data.md. Run the following command to get the names of last active gatherers: \"oc get insightsoperators.operator.openshift.io cluster -o json | jq '.status.gatherStatus.gatherers[].name'\"",
+	"name":  "name is the required name of a specific gatherer. It may not exceed 256 characters. The format for a gatherer name is: {gatherer}/{function} where the function is optional. Gatherer consists of a lowercase letters only that may include underscores (_). Function consists of a lowercase letters only that may include underscores (_) and is separated from the gatherer by a forward slash (/). The particular gatherers can be found at https://github.com/openshift/insights-operator/blob/master/docs/gathered-data.md. Run the following command to get the names of last active gatherers: \"oc get insightsoperators.operator.openshift.io cluster -o json | jq '.status.gatherStatus.gatherers[].name'\"",
 	"state": "state is a required field that allows you to configure specific gatherer. Valid values are \"Enabled\" and \"Disabled\". When set to Enabled the gatherer will run. When set to Disabled the gatherer will not run.",
 }
 
@@ -111,9 +111,9 @@ func (HealthCheck) SwaggerDoc() map[string]string {
 
 var map_InsightsReport = map[string]string{
 	"":               "insightsReport provides Insights health check report based on the most recently sent Insights data.",
-	"downloadedTime": "downloadedTime is an optional time when the last Insights report was downloaded. An empty value means that there has not been any Insights report downloaded yet and it usually appears in disconnected clusters (or clusters when the Insights data gathering is disabled).",
-	"healthChecks":   "healthChecks provides basic information about active Insights health checks in a cluster.",
-	"uri":            "uri is optional field that provides the URL link from which the report was downloaded. The link must be a valid HTTPS URL and the maximum length is 2048 characters.",
+	"downloadedTime": "downloadedTime is a required field that specifies when the Insights report was last downloaded.",
+	"healthChecks":   "healthChecks is an optional field that provides basic information about active Insights recommendations, which serve as proactive notifications for potential issues in the cluster. When omitted, it means that there are no active recommendations in the cluster.",
+	"uri":            "uri is a required field that provides the URL link from which the report was downloaded. The link must be a valid HTTPS URL and the maximum length is 2048 characters.",
 }
 
 func (InsightsReport) SwaggerDoc() map[string]string {
@@ -134,7 +134,7 @@ func (ObjectReference) SwaggerDoc() map[string]string {
 
 var map_PersistentVolumeClaimReference = map[string]string{
 	"":     "persistentVolumeClaimReference is a reference to a PersistentVolumeClaim.",
-	"name": "name is a string that follows the DNS1123 subdomain format. It must be at most 253 characters in length, and must consist only of lower case alphanumeric characters, '-' and '.', and must start and end with an alphanumeric character.",
+	"name": "name is the name of the PersistentVolumeClaim that will be used to store the Insights data archive. It is a string that follows the DNS1123 subdomain format. It must be at most 253 characters in length, and must consist only of lower case alphanumeric characters, '-' and '.', and must start and end with an alphanumeric character.",
 }
 
 func (PersistentVolumeClaimReference) SwaggerDoc() map[string]string {

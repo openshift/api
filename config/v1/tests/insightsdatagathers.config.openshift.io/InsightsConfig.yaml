@@ -272,7 +272,7 @@ tests:
                 configs:
                   - name: gatherer
                     state: InvalidState
-      expectedError: 'spec.gatherConfig.gatherers.custom.configs[0].state: Unsupported value: "InvalidState": supported values: "Enabled", "Disabled", <nil>:'
+      expectedError: 'spec.gatherConfig.gatherers.custom.configs[0].state: Unsupported value: "InvalidState": supported values: "Enabled", "Disabled"'
     - name: dataPolicy must be one of the valid values
       initial: |
         apiVersion: config.openshift.io/v1
@@ -283,7 +283,7 @@ tests:
               mode: All
             dataPolicy:
               - InvalidPolicy
-      expectedError: 'spec.gatherConfig.dataPolicy[0]: Unsupported value: "InvalidPolicy": supported values: "ObfuscateNetworking", "WorkloadNames", <nil>'
+      expectedError: 'spec.gatherConfig.dataPolicy[0]: Unsupported value: "InvalidPolicy": supported values: "ObfuscateNetworking", "WorkloadNames"'
     - name: mode must have a valid value
       initial: |
         apiVersion: config.openshift.io/v1
@@ -292,7 +292,7 @@ tests:
           gatherConfig:
             gatherers:
               mode: InvalidMode
-      expectedError: 'spec.gatherConfig.gatherers.mode: Unsupported value: "InvalidMode": supported values: "All", "None", "Custom", <nil>'
+      expectedError: 'spec.gatherConfig.gatherers.mode: Unsupported value: "InvalidMode": supported values: "All", "None", "Custom"'
     - name: mode set to Custom must have gatherers present
       initial: |
         apiVersion: config.openshift.io/v1

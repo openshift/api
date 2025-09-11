@@ -10,11 +10,12 @@ import (
 // +kubebuilder:object:root=true
 // +kubebuilder:resource:path=datagathers,scope=Cluster
 // +kubebuilder:subresource:status
-// +openshift:api-approved.openshift.io=https://github.com/openshift/api/pull/2248
+// +openshift:api-approved.openshift.io=https://github.com/openshift/api/pull/2448
 // +openshift:file-pattern=cvoRunLevel=0000_10,operatorName=insights,operatorOrdering=01
 // +openshift:enable:FeatureGate=InsightsOnDemandDataGather
 // +kubebuilder:printcolumn:name=StartTime,type=date,JSONPath=.status.startTime,description=DataGather start time
 // +kubebuilder:printcolumn:name=FinishTime,type=date,JSONPath=.status.finishTime,description=DataGather finish time
+// +kubebuilder:printcolumn:name="Age",type="date",JSONPath=".metadata.creationTimestamp",description="DataGather age"
 //
 // DataGather provides data gather configuration options and status for the particular Insights data gathering.
 //
@@ -28,14 +29,13 @@ type DataGather struct {
 	metav1.ObjectMeta `json:"metadata,omitempty"`
 	// spec holds user settable values for configuration
 	// +required
-	Spec *DataGatherSpec `json:"spec,omitempty,omitzero"`
+	Spec DataGatherSpec `json:"spec,omitempty,omitzero"`
 	// status holds observed values from the cluster. They may not be overridden.
 	// +optional
 	Status DataGatherStatus `json:"status,omitempty,omitzero"`
 }
 
 // DataGatherSpec contains the configuration for the DataGather.
-// +kubebuilder:validation:MinProperties=0
 type DataGatherSpec struct {
 	// dataPolicy is an optional list of DataPolicyOptions that allows user to enable additional obfuscation of the Insights archive data.
 	// It may not exceed 2 items and must not contain duplicates.
@@ -43,15 +43,14 @@ type DataGatherSpec struct {
 	// When set to ObfuscateNetworking the IP addresses and the cluster domain name are obfuscated.
 	// When set to WorkloadNames, the gathered data about cluster resources will not contain the workload names for your deployments. Resources UIDs will be used instead.
 	// When omitted no obfuscation is applied.
-	// +kubebuilder:validation:MinItems=1
 	// +kubebuilder:validation:MaxItems=2
+	// +kubebuilder:validation:MinItems=1
 	// +kubebuilder:validation:XValidation:rule="self.all(x, self.exists_one(y, x == y))",message="dataPolicy items must be unique"
 	// +listType=atomic
 	// +optional
 	DataPolicy []DataPolicyOption `json:"dataPolicy,omitempty"`
-	// gatherers is an optional field that specifies the configuration of the gatherers.
-	// If omitted, all gatherers will be run.
-	// +optional
+	// gatherers is a required field that specifies the configuration of the gatherers.
+	// +required
 	Gatherers Gatherers `json:"gatherers,omitempty,omitzero"`
 	// storage is an optional field that allows user to define persistent storage for gathering jobs to store the Insights data archive.
 	// If omitted, the gathering job will use ephemeral storage.
@@ -73,6 +72,7 @@ type Gatherers struct {
 	// It is required when mode is Custom, and forbidden otherwise.
 	// Custom configuration allows user to disable only a subset of gatherers.
 	// Gatherers that are not explicitly disabled in custom configuration will run.
+	// +unionMember
 	// +optional
 	Custom Custom `json:"custom,omitempty,omitzero"`
 }
@@ -85,8 +85,8 @@ type Custom struct {
 	// The particular gatherers IDs can be found at https://github.com/openshift/insights-operator/blob/master/docs/gathered-data.md.
 	// Run the following command to get the names of last active gatherers:
 	// "oc get insightsoperators.operator.openshift.io cluster -o json | jq '.status.gatherStatus.gatherers[].name'"
-	// +kubebuilder:validation:MinItems=1
 	// +kubebuilder:validation:MaxItems=100
+	// +kubebuilder:validation:MinItems=1
 	// +listType=map
 	// +listMapKey=name
 	// +required
@@ -120,6 +120,7 @@ type Storage struct {
 	Type StorageType `json:"type,omitempty"`
 	// persistentVolume is an optional field that specifies the PersistentVolume that will be used to store the Insights data archive.
 	// The PersistentVolume must be created in the openshift-insights namespace.
+	// +unionMember
 	// +optional
 	PersistentVolume PersistentVolumeConfig `json:"persistentVolume,omitempty,omitzero"`
 }
@@ -154,7 +155,8 @@ type PersistentVolumeConfig struct {
 
 // persistentVolumeClaimReference is a reference to a PersistentVolumeClaim.
 type PersistentVolumeClaimReference struct {
-	// name is a string that follows the DNS1123 subdomain format.
+	// name is the name of the PersistentVolumeClaim that will be used to store the Insights data archive.
+	// It is a string that follows the DNS1123 subdomain format.
 	// It must be at most 253 characters in length, and must consist only of lower case alphanumeric characters, '-' and '.', and must start and end with an alphanumeric character.
 	// +kubebuilder:validation:XValidation:rule="!format.dns1123Subdomain().validate(self).hasValue()",message="a lowercase RFC 1123 subdomain must consist of lower case alphanumeric characters, '-' or '.', and must start and end with an alphanumeric character."
 	// +kubebuilder:validation:MinLength=1
@@ -176,7 +178,7 @@ const (
 
 // gathererConfig allows to configure specific gatherers
 type GathererConfig struct {
-	// name is the required name of a specific gatherer
+	// name is the required name of a specific gatherer.
 	// It may not exceed 256 characters.
 	// The format for a gatherer name is: {gatherer}/{function} where the function is optional.
 	// Gatherer consists of a lowercase letters only that may include underscores (_).
@@ -253,28 +255,31 @@ type DataGatherStatus struct {
 	// +listType=map
 	// +listMapKey=type
 	// +kubebuilder:validation:MaxItems=100
+	// +kubebuilder:validation:MinItems=1
 	// +optional
 	Conditions []metav1.Condition `json:"conditions,omitempty"`
 	// gatherers is a list of active gatherers (and their statuses) in the last gathering.
 	// +listType=map
 	// +listMapKey=name
 	// +kubebuilder:validation:MaxItems=100
+	// +kubebuilder:validation:MinItems=1
 	// +optional
 	Gatherers []GathererStatus `json:"gatherers,omitempty"`
 	// startTime is the time when Insights data gathering started.
 	// +kubebuilder:validation:XValidation:rule="self == oldSelf",message="startTime is immutable once set"
 	// +optional
-	StartTime *metav1.Time `json:"startTime,omitempty"`
+	StartTime metav1.Time `json:"startTime,omitempty,omitzero"`
 	// finishTime is the time when Insights data gathering finished.
 	// +kubebuilder:validation:XValidation:rule="self == oldSelf",message="finishTime is immutable once set"
 	// +optional
-	FinishTime *metav1.Time `json:"finishTime,omitempty"`
+	FinishTime metav1.Time `json:"finishTime,omitempty,omitzero"`
 	// relatedObjects is an optional list of resources which are useful when debugging or inspecting the data gathering Pod
 	// It may not exceed 100 items and must not contain duplicates.
 	// +listType=map
 	// +listMapKey=name
 	// +listMapKey=namespace
 	// +kubebuilder:validation:MaxItems=100
+	// +kubebuilder:validation:MinItems=1
 	// +optional
 	RelatedObjects []ObjectReference `json:"relatedObjects,omitempty"`
 	// insightsRequestID is an optional Insights request ID to track the status of the Insights analysis (in console.redhat.com processing pipeline) for the corresponding Insights data archive.
@@ -288,7 +293,7 @@ type DataGatherStatus struct {
 	// When omitted, this means no data gathering has taken place yet or the
 	// corresponding Insights analysis (identified by "insightsRequestID") is not available.
 	// +optional
-	InsightsReport *InsightsReport `json:"insightsReport,omitempty"`
+	InsightsReport InsightsReport `json:"insightsReport,omitzero"`
 }
 
 // gathererStatus represents information about a particular
@@ -307,8 +312,8 @@ type GathererStatus struct {
 	//
 	// +listType=map
 	// +listMapKey=type
-	// +kubebuilder:validation:MinItems=1
 	// +kubebuilder:validation:MaxItems=100
+	// +kubebuilder:validation:MinItems=1
 	// +optional
 	Conditions []metav1.Condition `json:"conditions,omitempty"`
 	// name is the required name of the gatherer.
@@ -326,26 +331,26 @@ type GathererStatus struct {
 // insightsReport provides Insights health check report based on the most
 // recently sent Insights data.
 type InsightsReport struct {
-	// downloadedTime is an optional time when the last Insights report was downloaded.
-	// An empty value means that there has not been any Insights report downloaded yet and
-	// it usually appears in disconnected clusters (or clusters when the Insights data gathering is disabled).
-	// +optional
-	DownloadedTime *metav1.Time `json:"downloadedTime,omitempty"`
-	// healthChecks provides basic information about active Insights health checks
-	// in a cluster.
+	// downloadedTime is a required field that specifies when the Insights report was last downloaded.
+	// +required
+	DownloadedTime metav1.Time `json:"downloadedTime,omitempty"`
+	// healthChecks is an optional field that provides basic information about active Insights
+	// recommendations, which serve as proactive notifications for potential issues in the cluster.
+	// When omitted, it means that there are no active recommendations in the cluster.
 	// +listType=map
 	// +listMapKey=advisorURI
 	// +listMapKey=totalRisk
 	// +listMapKey=description
 	// +kubebuilder:validation:MaxItems=100
+	// +kubebuilder:validation:MinItems=1
 	// +optional
 	HealthChecks []HealthCheck `json:"healthChecks,omitempty"`
-	// uri is optional field that provides the URL link from which the report was downloaded.
+	// uri is a required field that provides the URL link from which the report was downloaded.
 	// The link must be a valid HTTPS URL and the maximum length is 2048 characters.
 	// +kubebuilder:validation:XValidation:rule=`isURL(self) && url(self).getScheme() == "https"`,message=`URI must be a valid HTTPS URL (e.g., https://example.com)`
 	// +kubebuilder:validation:MinLength=1
 	// +kubebuilder:validation:MaxLength=2048
-	// +optional
+	// +required
 	URI string `json:"uri,omitempty,omitzero"`
 }
 
@@ -431,10 +436,11 @@ type DataGatherList struct {
 	// metadata is the standard list's metadata.
 	// More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata
 	// +optional
-	*metav1.ListMeta `json:"metadata,omitempty"`
+	metav1.ListMeta `json:"metadata,omitempty"`
 	// items contains a list of DataGather resources.
 	// +listType=atomic
 	// +kubebuilder:validation:MaxItems=100
+	// +kubebuilder:validation:MinItems=1
 	// +optional
 	Items []DataGather `json:"items,omitempty"`
 }

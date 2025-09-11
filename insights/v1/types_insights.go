@@ -10,7 +10,7 @@ import (
 // +kubebuilder:object:root=true
 // +kubebuilder:resource:path=datagathers,scope=Cluster
 // +kubebuilder:subresource:status
-// +openshift:api-approved.openshift.io=https://github.com/openshift/api/pull/2248
+// +openshift:api-approved.openshift.io=https://github.com/openshift/api/pull/2448
 // +openshift:file-pattern=cvoRunLevel=0000_10,operatorName=insights,operatorOrdering=01
 // +openshift:enable:FeatureGate=InsightsOnDemandDataGather
 // +kubebuilder:printcolumn:name=StartTime,type=date,JSONPath=.status.startTime,description=DataGather start time
@@ -73,6 +73,7 @@ type Gatherers struct {
 	// It is required when mode is Custom, and forbidden otherwise.
 	// Custom configuration allows user to disable only a subset of gatherers.
 	// Gatherers that are not explicitly disabled in custom configuration will run.
+	// +unionMember
 	// +optional
 	Custom Custom `json:"custom,omitempty,omitzero"`
 }
@@ -120,6 +121,7 @@ type Storage struct {
 	Type StorageType `json:"type,omitempty"`
 	// persistentVolume is an optional field that specifies the PersistentVolume that will be used to store the Insights data archive.
 	// The PersistentVolume must be created in the openshift-insights namespace.
+	// +unionMember
 	// +optional
 	PersistentVolume PersistentVolumeConfig `json:"persistentVolume,omitempty,omitzero"`
 }
@@ -154,7 +156,8 @@ type PersistentVolumeConfig struct {
 
 // persistentVolumeClaimReference is a reference to a PersistentVolumeClaim.
 type PersistentVolumeClaimReference struct {
-	// name is a string that follows the DNS1123 subdomain format.
+	// name is the name of the PersistentVolumeClaim that will be used to store the Insights data archive.
+	// It is a string that follows the DNS1123 subdomain format.
 	// It must be at most 253 characters in length, and must consist only of lower case alphanumeric characters, '-' and '.', and must start and end with an alphanumeric character.
 	// +kubebuilder:validation:XValidation:rule="!format.dns1123Subdomain().validate(self).hasValue()",message="a lowercase RFC 1123 subdomain must consist of lower case alphanumeric characters, '-' or '.', and must start and end with an alphanumeric character."
 	// +kubebuilder:validation:MinLength=1
@@ -176,7 +179,7 @@ const (
 
 // gathererConfig allows to configure specific gatherers
 type GathererConfig struct {
-	// name is the required name of a specific gatherer
+	// name is the required name of a specific gatherer.
 	// It may not exceed 256 characters.
 	// The format for a gatherer name is: {gatherer}/{function} where the function is optional.
 	// Gatherer consists of a lowercase letters only that may include underscores (_).

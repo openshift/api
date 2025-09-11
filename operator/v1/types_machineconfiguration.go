@@ -17,6 +17,9 @@ import (
 //
 // Compatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).
 // +openshift:compatibility-gen:level=1
+// +openshift:validation:FeatureGateAwareXValidation:featureGate=BootImageSkewEnforcement,rule="self.?status.bootImageSkewEnforcementStatus.mode.orValue(\"\") == 'Automatic' ? self.?spec.managedBootImages.hasValue() || self.?status.managedBootImagesStatus.hasValue() : true",message="when skew enforcement is in Automatic mode, a boot image configuration is required"
+// +openshift:validation:FeatureGateAwareXValidation:featureGate=BootImageSkewEnforcement,rule="self.?status.bootImageSkewEnforcementStatus.mode.orValue(\"\") == 'Automatic' ? !(self.?spec.managedBootImages.machineManagers.hasValue()) || self.spec.managedBootImages.machineManagers.exists(m, m.selection.mode == 'All' && m.resource == 'machinesets' && m.apiGroup == 'machine.openshift.io') : true",message="when skew enforcement is in Automatic mode, managedBootImages must contain a MachineManager opting in all MachineAPI MachineSets"
+// +openshift:validation:FeatureGateAwareXValidation:featureGate=BootImageSkewEnforcement,rule="self.?status.bootImageSkewEnforcementStatus.mode.orValue(\"\") == 'Automatic' ? !(self.?status.managedBootImagesStatus.machineManagers.hasValue()) || self.status.managedBootImagesStatus.machineManagers.exists(m, m.selection.mode == 'All' && m.resource == 'machinesets' && m.apiGroup == 'machine.openshift.io'): true",message="when skew enforcement is in Automatic mode, managedBootImagesStatus must contain a MachineManager opting in all MachineAPI MachineSets"
 type MachineConfiguration struct {
 	metav1.TypeMeta `json:",inline"`
 

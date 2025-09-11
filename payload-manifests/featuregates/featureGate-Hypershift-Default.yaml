@@ -140,9 +140,6 @@
                         "name": "ManagedBootImagesAzure"
                     },
                     {
-                        "name": "ManagedBootImagesvSphere"
-                    },
-                    {
                         "name": "MaxUnavailableStatefulSet"
                     },
                     {
@@ -275,6 +272,9 @@
                     },
                     {
                         "name": "ManagedBootImagesAWS"
+                    },
+                    {
+                        "name": "ManagedBootImagesvSphere"
                     },
                     {
                         "name": "MetricsCollectionProfiles"

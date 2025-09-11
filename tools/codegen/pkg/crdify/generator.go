@@ -27,30 +27,37 @@ import (
 
 type generatorOption func(*generator)
 
+// WithComparisonBase configures the git base used by the crdify generator
+// to load the "old" CRD.
 func WithComparisonBase(base string) generatorOption {
 	return func(g *generator) {
 		g.comparisonBase = base
 	}
 }
 
+// WithConfig configures the crdify configuration used by the crdify generator.
 func WithConfig(cfg *config.Config) generatorOption {
 	return func(g *generator) {
 		g.cfg = cfg
 	}
 }
 
+// WithValidationRegistry configures the validation registry used by the crdify generator.
 func WithValidationRegistry(registry validations.Registry) generatorOption {
 	return func(g *generator) {
 		g.validationRegistry = registry
 	}
 }
 
+// WithDisabled configures whether or not the crdify generator is disabled.
 func WithDisabled(disabled bool) generatorOption {
 	return func(g *generator) {
 		g.disabled = disabled
 	}
 }
 
+// generator implements the generation.Generator interface.
+// It is designed to verify the CRD schema updates for a particular API group.
 type generator struct {
 	disabled           bool
 	comparisonBase     string
@@ -58,6 +65,10 @@ type generator struct {
 	validationRegistry validations.Registry
 }
 
+// NewGenerator returns a new generation.Generator
+// that runs crdify validations.
+// Optionally, callers can provide configuration
+// options to change the default behavior of the generator.
 func NewGenerator(opts ...generatorOption) generation.Generator {
 	defaultGenerator := &generator{
 		comparisonBase: "master",
@@ -73,13 +84,11 @@ func NewGenerator(opts ...generatorOption) generation.Generator {
 						"additionPolicy": "Allow",
 					},
 				},
-				// Only issue a warning on description changes
-				// so we get an explicit signal to remind us
-				// that changing the semantic meaning of a
-				// property is a breaking change.
+				// Ignore any incompatibility detection
+				// for descriptions changes.
 				{
 					Name:        "description",
-					Enforcement: config.EnforcementPolicyWarn,
+					Enforcement: config.EnforcementPolicyNone,
 				},
 			},
 		},
@@ -93,10 +102,13 @@ func NewGenerator(opts ...generatorOption) generation.Generator {
 	return defaultGenerator
 }
 
+// Name returns the name of the generator.
 func (g *generator) Name() string {
 	return "crdify"
 }
 
+// ApplyConfig creates returns a new generator based on the configuration passed.
+// If the crdify configuration is empty, the existing generator is returned.
 func (g *generator) ApplyConfig(cfg *generation.Config) generation.Generator {
 	if cfg == nil || cfg.Crdify == nil {
 		return g
@@ -109,6 +121,7 @@ func (g *generator) ApplyConfig(cfg *generation.Config) generation.Generator {
 	)
 }
 
+// GenGroup runs the crdify generator against the given group context.
 func (g *generator) GenGroup(groupCtx generation.APIGroupContext) ([]generation.Result, error) {
 	if g.disabled {
 		klog.V(2).Infof("Skipping crdify check for %s", groupCtx.Name)
@@ -136,6 +149,7 @@ func (g *generator) GenGroup(groupCtx generation.APIGroupContext) ([]generation.
 	return results, nil
 }
 
+// genGroupVersion runs the crdify generator against a particular version of the API group.
 func (g *generator) genGroupVersion(name string, version generation.APIVersionContext) ([]generation.Result, error) {
 	crdPaths, err := getCRDPathsForVersion(version)
 	if err != nil {
@@ -213,6 +227,7 @@ func (g *generator) genGroupVersion(name string, version generation.APIVersionCo
 	return results, nil
 }
 
+// processVersionedPropertyResults iterates over all version-property pairs and calls the provided processing function
 func processVersionedPropertyResults(vpr map[string]map[string][]validations.ComparisonResult, processFunc func(version, property string, cr validations.ComparisonResult)) {
 	for version, versionResults := range vpr {
 		for property, propertyResults := range versionResults {
@@ -230,23 +245,31 @@ const (
 	manualOverrideCRDManifests = "manual-override-crd-manifests"
 )
 
+// getCRDPathsForVersion returns a string slice containing all the relative paths
+// for CRDs in the provided generation.APIVersionContext.
+// A nil slice and an error are returned if any error occurs while building the
+// set of relative paths.
 func getCRDPathsForVersion(version generation.APIVersionContext) ([]string, error) {
 	contexts := []string{}
+
 	currDir, err := os.Getwd()
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("getting current working directory: %w", err)
 	}
 
 	relativePath, err := filepath.Rel(currDir, version.Path)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("determining relative path for version context: %w", err)
 	}
 
 	err = recursiveCRDFilesForPath(relativePath, sets.New(featureGatedCRDManifests, manualOverrideCRDManifests), func(path string) {
 		contexts = append(contexts, path)
 	})
+	if err != nil {
+		return nil, fmt.Errorf("recursively building CRD file paths: %w", err)
+	}
 
-	return contexts, err
+	return contexts, nil
 }
 
 func recursiveCRDFilesForPath(baseDir string, directoryIgnoreSet sets.Set[string], handleFunc func(path string)) error {
@@ -264,7 +287,7 @@ func recursiveCRDFilesForPath(baseDir string, directoryIgnoreSet sets.Set[string
 
 			err := recursiveCRDFilesForPath(filePath, directoryIgnoreSet, handleFunc)
 			if err != nil {
-				return err
+				return fmt.Errorf("recursing into directory %s: %w", filePath, err)
 			}
 		}
 

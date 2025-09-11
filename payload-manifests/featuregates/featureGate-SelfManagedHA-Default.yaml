@@ -128,12 +128,6 @@
                         "name": "IngressControllerDynamicConfigurationManager"
                     },
                     {
-                        "name": "InsightsConfig"
-                    },
-                    {
-                        "name": "InsightsOnDemandDataGather"
-                    },
-                    {
                         "name": "IrreconcilableMachineConfig"
                     },
                     {
@@ -266,6 +260,12 @@
                     },
                     {
                         "name": "IngressControllerLBSubnetsAWS"
+                    },
+                    {
+                        "name": "InsightsConfig"
+                    },
+                    {
+                        "name": "InsightsOnDemandDataGather"
                     },
                     {
                         "name": "KMSv1"

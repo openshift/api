@@ -150,12 +150,6 @@
                         "name": "IngressControllerDynamicConfigurationManager"
                     },
                     {
-                        "name": "InsightsConfig"
-                    },
-                    {
-                        "name": "InsightsOnDemandDataGather"
-                    },
-                    {
                         "name": "IrreconcilableMachineConfig"
                     },
                     {
@@ -279,6 +273,12 @@
                     },
                     {
                         "name": "ImageVolume"
+                    },
+                    {
+                        "name": "InsightsConfig"
+                    },
+                    {
+                        "name": "InsightsOnDemandDataGather"
                     },
                     {
                         "name": "KMSv1"

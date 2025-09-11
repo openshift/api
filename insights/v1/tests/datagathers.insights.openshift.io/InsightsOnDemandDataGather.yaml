@@ -9,11 +9,29 @@ tests:
       initial: |
         apiVersion: insights.openshift.io/v1
         kind: DataGather
-        spec: {} # No spec is required for a DataGather
+        spec:
+          gatherers:
+            mode: All
       expected: |
         apiVersion: insights.openshift.io/v1
         kind: DataGather
+        spec:
+          gatherers:
+            mode: All
+    - name: Should not be created with empty spec
+      initial: |
+        apiVersion: insights.openshift.io/v1
+        kind: DataGather
         spec: {}
+      expectedError: "spec.gatherers: Required value, <nil>: Invalid value"
+    - name: Should not be created with invalid gathering mode
+      initial: |
+        apiVersion: insights.openshift.io/v1
+        kind: DataGather
+        spec:
+          gatherers:
+            mode: None
+      expectedError: 'spec.gatherers.mode: Unsupported value: "None": supported values: "All", "Custom"'
     - name: Should be able to create a DataGather with a storage persistentVolume, dataPolicy and gatherers
       initial: |
         apiVersion: insights.openshift.io/v1
@@ -106,7 +124,7 @@ tests:
               configs:
                 - name: gatherer
                   state: InvalidState
-      expectedError: 'spec.gatherers.custom.configs[0].state: Unsupported value: "InvalidState": supported values: "Enabled", "Disabled", <nil>'
+      expectedError: 'spec.gatherers.custom.configs[0].state: Unsupported value: "InvalidState": supported values: "Enabled", "Disabled"'
     - name: Name must be in a described format
       initial: |
         apiVersion: insights.openshift.io/v1
@@ -124,6 +142,8 @@ tests:
         apiVersion: insights.openshift.io/v1
         kind: DataGather
         spec:
+          gatherers:
+            mode: All
           storage:
             type: PersistentVolume
       expectedError: 'spec.storage: Invalid value: "object": persistentVolume is required when type is PersistentVolume, and forbidden otherwise'
@@ -132,6 +152,8 @@ tests:
         apiVersion: insights.openshift.io/v1
         kind: DataGather
         spec:
+          gatherers:
+            mode: All
           storage:
             type: Ephemeral
             persistentVolume:
@@ -143,6 +165,8 @@ tests:
         apiVersion: insights.openshift.io/v1
         kind: DataGather
         spec:
+          gatherers:
+              mode: All
           storage:
             type: PersistentVolume
             persistentVolume:
@@ -155,6 +179,8 @@ tests:
         apiVersion: insights.openshift.io/v1
         kind: DataGather
         spec:
+          gatherers:
+              mode: All
           storage:
             persistentVolume:
               mountPath: /data
@@ -166,6 +192,8 @@ tests:
         apiVersion: insights.openshift.io/v1
         kind: DataGather
         spec:
+          gatherers:
+            mode: All
           storage:
             type: PersistentVolume
             persistentVolume:
@@ -177,6 +205,8 @@ tests:
         apiVersion: insights.openshift.io/v1
         kind: DataGather
         spec:
+          gatherers:
+            mode: All
           storage:
             type: PersistentVolume
             persistentVolume:
@@ -188,14 +218,18 @@ tests:
         apiVersion: insights.openshift.io/v1
         kind: DataGather
         spec:
+          gatherers:
+            mode: All
           dataPolicy:
             - InvalidValue
-      expectedError: 'spec.dataPolicy[0]: Unsupported value: "InvalidValue": supported values: "ObfuscateNetworking", "WorkloadNames", <nil>'
+      expectedError: 'spec.dataPolicy[0]: Unsupported value: "InvalidValue": supported values: "ObfuscateNetworking", "WorkloadNames"'
     - name: dataPolicy must not contain duplicates
       initial: |
         apiVersion: insights.openshift.io/v1
         kind: DataGather
         spec:
+          gatherers:
+            mode: All
           dataPolicy:
             - WorkloadNames
             - WorkloadNames
@@ -205,20 +239,26 @@ tests:
       initial: |
         apiVersion: insights.openshift.io/v1
         kind: DataGather
-        spec: {} # No spec is required for a DataGather
+        spec:
+          gatherers:
+              mode: All
         status: 
           insightsRequestID: xyz
       updated: |
         apiVersion: insights.openshift.io/v1
         kind: DataGather
-        spec: {} # No spec is required for a DataGather
+        spec:
+          gatherers:
+              mode: All
         status: 
           insightsRequestID: xyz
           startTime: 2023-03-13T11:34:06Z
       expected: |
         apiVersion: insights.openshift.io/v1
         kind: DataGather
-        spec: {} # No spec is required for a DataGather
+        spec:
+          gatherers:
+              mode: All
         status: 
           insightsRequestID: xyz
           startTime: 2023-03-13T11:34:06Z
@@ -226,14 +266,18 @@ tests:
       initial: |
         apiVersion: insights.openshift.io/v1
         kind: DataGather
-        spec: {} # No spec is required for a DataGather
+        spec:
+          gatherers:
+              mode: All
         status: 
           insightsRequestID: xyz
           startTime: 2023-03-13T11:34:06Z
       updated: |
         apiVersion: insights.openshift.io/v1
         kind: DataGather
-        spec: {} # No spec is required for a DataGather
+        spec:
+          gatherers:
+              mode: All
         status: 
           insightsRequestID: xyz
       expectedStatusError: 'status: Invalid value: "object": cannot remove startTime attribute from status'
@@ -241,14 +285,18 @@ tests:
       initial: |
         apiVersion: insights.openshift.io/v1
         kind: DataGather
-        spec: {} # No spec is required for a DataGather
+        spec:
+          gatherers:
+              mode: All
         status: 
           insightsRequestID: xyz
           startTime: 2023-03-13T11:34:06Z
       updated: |
         apiVersion: insights.openshift.io/v1
         kind: DataGather
-        spec: {} # No spec is required for a DataGather
+        spec:
+          gatherers:
+              mode: All
         status: 
           insightsRequestID: xyz
           startTime: 2023-03-13T12:34:06Z
@@ -257,7 +305,9 @@ tests:
       initial: |
         apiVersion: insights.openshift.io/v1
         kind: DataGather
-        spec: {} # No spec is required for a DataGather
+        spec:
+          gatherers:
+              mode: All
         status: 
           relatedObjects:
             - name: periodic-job-xyz
@@ -267,7 +317,9 @@ tests:
       updated: |
         apiVersion: insights.openshift.io/v1
         kind: DataGather
-        spec: {} # No spec is required for a DataGather
+        spec:
+          gatherers:
+              mode: All
         status: 
           insightsRequestID: testing-xyz
           relatedObjects:
@@ -278,7 +330,9 @@ tests:
       expected: |
         apiVersion: insights.openshift.io/v1
         kind: DataGather
-        spec: {} # No spec is required for a DataGather
+        spec:
+          gatherers:
+              mode: All
         status: 
           insightsRequestID: testing-xyz
           relatedObjects:
@@ -290,7 +344,9 @@ tests:
       initial: |
         apiVersion: insights.openshift.io/v1
         kind: DataGather
-        spec: {} # No spec is required for a DataGather
+        spec:
+          gatherers:
+              mode: All
         status: 
           insightsRequestID: testing-xyz
           relatedObjects:
@@ -301,7 +357,9 @@ tests:
       updated: |
         apiVersion: insights.openshift.io/v1
         kind: DataGather
-        spec: {} # No spec is required for a DataGather
+        spec:
+          gatherers:
+              mode: All
         status: 
           relatedObjects:
             - name: periodic-job-xyz
@@ -313,7 +371,9 @@ tests:
       initial: |
         apiVersion: insights.openshift.io/v1
         kind: DataGather
-        spec: {} # No spec is required for a DataGather
+        spec:
+          gatherers:
+              mode: All
         status: 
           insightsRequestID: testing-xyz
           relatedObjects:
@@ -324,7 +384,9 @@ tests:
       updated: |
         apiVersion: insights.openshift.io/v1
         kind: DataGather
-        spec: {} # No spec is required for a DataGather
+        spec:
+          gatherers:
+              mode: All
         status: 
           insightsRequestID: testing-xyz-updated
           relatedObjects:
@@ -337,7 +399,9 @@ tests:
       initial: |
         apiVersion: insights.openshift.io/v1
         kind: DataGather
-        spec: {} # No spec is required for a DataGather
+        spec:
+          gatherers:
+              mode: All
         status: 
           finishTime: 2023-03-13T11:34:06Z
           relatedObjects:
@@ -348,7 +412,9 @@ tests:
       updated: |
         apiVersion: insights.openshift.io/v1
         kind: DataGather
-        spec: {} # No spec is required for a DataGather
+        spec:
+          gatherers:
+              mode: All
         status: 
           relatedObjects:
             - name: periodic-job-xyz
@@ -360,11 +426,15 @@ tests:
       initial: |
         apiVersion: insights.openshift.io/v1
         kind: DataGather
-        spec: {} # No spec is required for a DataGather
+        spec:
+          gatherers:
+              mode: All
       updated: |
         apiVersion: insights.openshift.io/v1
         kind: DataGather
-        spec: {} # No spec is required for a DataGather
+        spec:
+          gatherers:
+              mode: All
         status:
           gatherers:
           - name: testGatherer
@@ -380,11 +450,15 @@ tests:
       initial: |
         apiVersion: insights.openshift.io/v1
         kind: DataGather
-        spec: {} # No spec is required for a DataGather
+        spec:
+          gatherers:
+              mode: All
       updated: |
         apiVersion: insights.openshift.io/v1
         kind: DataGather
-        spec: {} # No spec is required for a DataGather
+        spec:
+          gatherers:
+              mode: All
         status:
           gatherers:
           - name: testGatherer
@@ -400,11 +474,15 @@ tests:
       initial: |
         apiVersion: insights.openshift.io/v1
         kind: DataGather
-        spec: {} # No spec is required for a DataGather
+        spec:
+          gatherers:
+              mode: All
       updated: |
         apiVersion: insights.openshift.io/v1
         kind: DataGather
-        spec: {} # No spec is required for a DataGather
+        spec:
+          gatherers:
+              mode: All
         status:
           gatherers:
           - name: testGatherer
@@ -420,45 +498,64 @@ tests:
       initial: |
         apiVersion: insights.openshift.io/v1
         kind: DataGather
-        spec: {} # No spec is required for a DataGather
+        spec:
+          gatherers:
+              mode: All
       updated: |
         apiVersion: insights.openshift.io/v1
         kind: DataGather
-        spec: {} # No spec is required for a DataGather
+        spec:
+          gatherers:
+              mode: All
         status:
           insightsReport:
             uri: http://example.com
+            downloadedTime: 2025-09-15T12:56:41Z
       expectedStatusError: 'status.insightsReport.uri: Invalid value: "string": URI must be a valid HTTPS URL (e.g., https://example.com)'
     - name: should be updated with a valid HTTPS URL
       initial: |
         apiVersion: insights.openshift.io/v1
         kind: DataGather
-        spec: {} # No spec is required for a DataGather
+        spec:
+          gatherers:
+              mode: All
       updated: |
         apiVersion: insights.openshift.io/v1
         kind: DataGather
-        spec: {} # No spec is required for a DataGather
+        spec:
+          gatherers:
+              mode: All
         status:
           insightsReport:
+            downloadedTime: 2025-09-15T12:56:41Z
             uri: https://example.com
       expected: |
         apiVersion: insights.openshift.io/v1
         kind: DataGather
-        spec: {} # No spec is required for a DataGather
+        spec:
+          gatherers:
+              mode: All
         status:
           insightsReport:
+            downloadedTime: 2025-09-15T12:56:41Z
             uri: https://example.com
     - name: should be updated with a valid totalRisk
       initial: |
         apiVersion: insights.openshift.io/v1
         kind: DataGather
-        spec: {} # No spec is required for a DataGather
+        spec:
+          gatherers:
+              mode: All
       updated: |
         apiVersion: insights.openshift.io/v1
         kind: DataGather
-        spec: {} # No spec is required for a DataGather
+        spec:
+          gatherers:
+              mode: All
         status:
           insightsReport:
+            downloadedTime: 2025-09-15T12:56:41Z
+            uri: https://example.com
             healthChecks:
               - description: Low risk update test
                 totalRisk: Low
@@ -466,9 +563,13 @@ tests:
       expected: |
         apiVersion: insights.openshift.io/v1
         kind: DataGather
-        spec: {} # No spec is required for a DataGather
+        spec:
+          gatherers:
+              mode: All
         status:
           insightsReport:
+            downloadedTime: 2025-09-15T12:56:41Z
+            uri: https://example.com
             healthChecks:
               - description: Low risk update test
                 totalRisk: Low
@@ -477,13 +578,19 @@ tests:
       initial: |
         apiVersion: insights.openshift.io/v1
         kind: DataGather
-        spec: {} # No spec is required for a DataGather
+        spec:
+          gatherers:
+              mode: All
       updated: |
         apiVersion: insights.openshift.io/v1
         kind: DataGather
-        spec: {} # No spec is required for a DataGather
+        spec:
+          gatherers:
+              mode: All
         status:
           insightsReport:
+            downloadedTime: 2025-09-15T12:56:41Z
+            uri: https://example.com
             healthChecks:
               - description:  NoRisk update test
                 totalRisk: NoRisk
@@ -493,13 +600,19 @@ tests:
       initial: |
         apiVersion: insights.openshift.io/v1
         kind: DataGather
-        spec: {} # No spec is required for a DataGather
+        spec:
+          gatherers:
+              mode: All
       updated: |
         apiVersion: insights.openshift.io/v1
         kind: DataGather
-        spec: {} # No spec is required for a DataGather
+        spec:
+          gatherers:
+              mode: All
         status:
           insightsReport:
+            downloadedTime: 2025-09-15T12:56:41Z
+            uri: https://example.com
             healthChecks:
               - description:  NoRisk update test
                 totalRisk: Low
@@ -510,9 +623,13 @@ tests:
       expected: |
         apiVersion: insights.openshift.io/v1
         kind: DataGather
-        spec: {} # No spec is required for a DataGather
+        spec:
+          gatherers:
+              mode: All
         status:
           insightsReport:
+            downloadedTime: 2025-09-15T12:56:41Z
+            uri: https://example.com
             healthChecks:
               - description:  NoRisk update test
                 totalRisk: Low
@@ -524,13 +641,19 @@ tests:
       initial: |
         apiVersion: insights.openshift.io/v1
         kind: DataGather
-        spec: {} # No spec is required for a DataGather
+        spec:
+          gatherers:
+              mode: All
       updated: |
         apiVersion: insights.openshift.io/v1
         kind: DataGather
-        spec: {} # No spec is required for a DataGather
+        spec:
+          gatherers:
+              mode: All
         status:
           insightsReport:
+            downloadedTime: 2025-09-15T12:56:41Z
+            uri: https://example.com
             healthChecks:
               - description:  Low risk update test
                 totalRisk: Low
@@ -539,3 +662,41 @@ tests:
                 totalRisk: Low
                 advisorURI: https://example.com
       expectedStatusError: "invalid: status.insightsReport.healthChecks[1]: Duplicate value"
+    - name: missing insightsReport.uri
+      initial: |
+        apiVersion: insights.openshift.io/v1
+        kind: DataGather
+        spec:
+          gatherers:
+              mode: All
+      updated: |
+        apiVersion: insights.openshift.io/v1
+        kind: DataGather
+        spec:
+          gatherers:
+              mode: All
+        status:
+          insightsReport:
+            downloadedTime: 2025-09-15T12:56:41Z
+      expectedStatusError: "status.insightsReport.uri: Required value"
+    - name: missing insightsReport.downloadedTime
+      initial: |
+        apiVersion: insights.openshift.io/v1
+        kind: DataGather
+        spec:
+          gatherers:
+              mode: All
+      updated: |
+        apiVersion: insights.openshift.io/v1
+        kind: DataGather
+        spec:
+          gatherers:
+              mode: All
+        status:
+          insightsReport:
+            uri: https://example.com
+            healthChecks:
+              - description:  Low risk update test
+                totalRisk: Low
+                advisorURI: https://example.com
+      expectedStatusError: "status.insightsReport.downloadedTime: Required value"

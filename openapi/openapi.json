@@ -6751,7 +6751,7 @@
       ],
       "properties": {
         "name": {
-          "description": "name is the required name of a specific gatherer It may not exceed 256 characters. The format for a gatherer name is: {gatherer}/{function} where the function is optional. Gatherer consists of a lowercase letters only that may include underscores (_). Function consists of a lowercase letters only that may include underscores (_) and is separated from the gatherer by a forward slash (/). The particular gatherers can be found at https://github.com/openshift/insights-operator/blob/master/docs/gathered-data.md. Run the following command to get the names of last active gatherers: \"oc get insightsoperators.operator.openshift.io cluster -o json | jq '.status.gatherStatus.gatherers[].name'\"",
+          "description": "name is the required name of a specific gatherer. It may not exceed 256 characters. The format for a gatherer name is: {gatherer}/{function} where the function is optional. Gatherer consists of a lowercase letters only that may include underscores (_). Function consists of a lowercase letters only that may include underscores (_) and is separated from the gatherer by a forward slash (/). The particular gatherers can be found at https://github.com/openshift/insights-operator/blob/master/docs/gathered-data.md. Run the following command to get the names of last active gatherers: \"oc get insightsoperators.operator.openshift.io cluster -o json | jq '.status.gatherStatus.gatherers[].name'\"",
           "type": "string"
         },
         "state": {
@@ -6775,7 +6775,15 @@
           "description": "mode is a required field that specifies the mode for gatherers. Allowed values are All, None, and Custom. When set to All, all gatherers wil run and gather data. When set to None, all gatherers will be disabled and no data will be gathered. When set to Custom, the custom configuration from the custom field will be applied.",
           "type": "string"
         }
-      }
+      },
+      "x-kubernetes-unions": [
+        {
+          "discriminator": "mode",
+          "fields-to-discriminateBy": {
+            "custom": "Custom"
+          }
+        }
+      ]
     },
     "com.github.openshift.api.config.v1.GenericAPIServerConfig": {
       "description": "GenericAPIServerConfig is an inline-able struct for aggregated apiservers that need to store data in etcd",
@@ -8105,11 +8113,6 @@
           "description": "spec holds user settable values for configuration",
           "default": {},
           "$ref": "#/definitions/com.github.openshift.api.config.v1.InsightsDataGatherSpec"
-        },
-        "status": {
-          "description": "status holds observed values from the cluster. They may not be overridden.",
-          "default": {},
-          "$ref": "#/definitions/com.github.openshift.api.config.v1.InsightsDataGatherStatus"
         }
       }
     },
@@ -8152,14 +8155,11 @@
       ],
       "properties": {
         "gatherConfig": {
-          "description": "gatherConfig is an optional spec attribute that includes all the configuration options related to gathering of the Insights data and its uploading to the ingress.",
+          "description": "gatherConfig is a required spec attribute that includes all the configuration options related to gathering of the Insights data and its uploading to the ingress.",
           "default": {},
           "$ref": "#/definitions/com.github.openshift.api.config.v1.GatherConfig"
         }
       }
-    },
-    "com.github.openshift.api.config.v1.InsightsDataGatherStatus": {
-      "type": "object"
     },
     "com.github.openshift.api.config.v1.IntermediateTLSProfile": {
       "description": "IntermediateTLSProfile is a TLS security profile based on: https://wiki.mozilla.org/Security/Server_Side_TLS#Intermediate_compatibility_.28default.29",
@@ -9786,7 +9786,7 @@
       ],
       "properties": {
         "name": {
-          "description": "name is a string that follows the DNS1123 subdomain format. It must be at most 253 characters in length, and must consist only of lower case alphanumeric characters, '-' and '.', and must start and end with an alphanumeric character.",
+          "description": "name is the name of the PersistentVolumeClaim that will be used to store the Insights data archive. It is a string that follows the DNS1123 subdomain format. It must be at most 253 characters in length, and must consist only of lower case alphanumeric characters, '-' and '.', and must start and end with an alphanumeric character.",
           "type": "string"
         }
       }
@@ -10882,7 +10882,15 @@
           "description": "type is a required field that specifies the type of storage that will be used to store the Insights data archive. Valid values are \"PersistentVolume\" and \"Ephemeral\". When set to Ephemeral, the Insights data archive is stored in the ephemeral storage of the gathering job. When set to PersistentVolume, the Insights data archive is stored in the PersistentVolume that is defined by the persistentVolume field.",
           "type": "string"
         }
-      }
+      },
+      "x-kubernetes-unions": [
+        {
+          "discriminator": "type",
+          "fields-to-discriminateBy": {
+            "persistentVolume": "PersistentVolume"
+          }
+        }
+      ]
     },
     "com.github.openshift.api.config.v1.StringSource": {
       "description": "StringSource allows specifying a string inline, or externally via env var or file. When it contains only a string value, it marshals to a simple JSON string.",
@@ -16001,6 +16009,7 @@
         },
         "spec": {
           "description": "spec holds user settable values for configuration",
+          "default": {},
           "$ref": "#/definitions/com.github.openshift.api.insights.v1.DataGatherSpec"
         },
         "status": {
@@ -16033,6 +16042,7 @@
         },
         "metadata": {
           "description": "metadata is the standard list's metadata. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata",
+          "default": {},
           "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.ListMeta"
         }
       }
@@ -16040,6 +16050,9 @@
     "com.github.openshift.api.insights.v1.DataGatherSpec": {
       "description": "DataGatherSpec contains the configuration for the DataGather.",
       "type": "object",
+      "required": [
+        "gatherers"
+      ],
       "properties": {
         "dataPolicy": {
           "description": "dataPolicy is an optional list of DataPolicyOptions that allows user to enable additional obfuscation of the Insights archive data. It may not exceed 2 items and must not contain duplicates. Valid values are ObfuscateNetworking and WorkloadNames. When set to ObfuscateNetworking the IP addresses and the cluster domain name are obfuscated. When set to WorkloadNames, the gathered data about cluster resources will not contain the workload names for your deployments. Resources UIDs will be used instead. When omitted no obfuscation is applied.",
@@ -16051,7 +16064,7 @@
           "x-kubernetes-list-type": "atomic"
         },
         "gatherers": {
-          "description": "gatherers is an optional field that specifies the configuration of the gatherers. If omitted, all gatherers will be run.",
+          "description": "gatherers is a required field that specifies the configuration of the gatherers.",
           "default": {},
           "$ref": "#/definitions/com.github.openshift.api.insights.v1.Gatherers"
         },
@@ -16096,6 +16109,7 @@
         },
         "insightsReport": {
           "description": "insightsReport provides general Insights analysis results. When omitted, this means no data gathering has taken place yet or the corresponding Insights analysis (identified by \"insightsRequestID\") is not available.",
+          "default": {},
           "$ref": "#/definitions/com.github.openshift.api.insights.v1.InsightsReport"
         },
         "insightsRequestID": {
@@ -16130,7 +16144,7 @@
       ],
       "properties": {
         "name": {
-          "description": "name is the required name of a specific gatherer It may not exceed 256 characters. The format for a gatherer name is: {gatherer}/{function} where the function is optional. Gatherer consists of a lowercase letters only that may include underscores (_). Function consists of a lowercase letters only that may include underscores (_) and is separated from the gatherer by a forward slash (/). The particular gatherers can be found at https://github.com/openshift/insights-operator/blob/master/docs/gathered-data.md. Run the following command to get the names of last active gatherers: \"oc get insightsoperators.operator.openshift.io cluster -o json | jq '.status.gatherStatus.gatherers[].name'\"",
+          "description": "name is the required name of a specific gatherer. It may not exceed 256 characters. The format for a gatherer name is: {gatherer}/{function} where the function is optional. Gatherer consists of a lowercase letters only that may include underscores (_). Function consists of a lowercase letters only that may include underscores (_) and is separated from the gatherer by a forward slash (/). The particular gatherers can be found at https://github.com/openshift/insights-operator/blob/master/docs/gathered-data.md. Run the following command to get the names of last active gatherers: \"oc get insightsoperators.operator.openshift.io cluster -o json | jq '.status.gatherStatus.gatherers[].name'\"",
           "type": "string"
         },
         "state": {
@@ -16222,13 +16236,17 @@
     "com.github.openshift.api.insights.v1.InsightsReport": {
       "description": "insightsReport provides Insights health check report based on the most recently sent Insights data.",
       "type": "object",
+      "required": [
+        "downloadedTime",
+        "uri"
+      ],
       "properties": {
         "downloadedTime": {
-          "description": "downloadedTime is an optional time when the last Insights report was downloaded. An empty value means that there has not been any Insights report downloaded yet and it usually appears in disconnected clusters (or clusters when the Insights data gathering is disabled).",
+          "description": "downloadedTime is a required field that specifies when the Insights report was last downloaded.",
           "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Time"
         },
         "healthChecks": {
-          "description": "healthChecks provides basic information about active Insights health checks in a cluster.",
+          "description": "healthChecks is an optional field that provides basic information about active Insights recommendations, which serve as proactive notifications for potential issues in the cluster. When omitted, it means that there are no active recommendations in the cluster.",
           "type": "array",
           "items": {
             "default": {},
@@ -16242,7 +16260,7 @@
           "x-kubernetes-list-type": "map"
         },
         "uri": {
-          "description": "uri is optional field that provides the URL link from which the report was downloaded. The link must be a valid HTTPS URL and the maximum length is 2048 characters.",
+          "description": "uri is a required field that provides the URL link from which the report was downloaded. The link must be a valid HTTPS URL and the maximum length is 2048 characters.",
           "type": "string"
         }
       }
@@ -16283,7 +16301,7 @@
       ],
       "properties": {
         "name": {
-          "description": "name is a string that follows the DNS1123 subdomain format. It must be at most 253 characters in length, and must consist only of lower case alphanumeric characters, '-' and '.', and must start and end with an alphanumeric character.",
+          "description": "name is the name of the PersistentVolumeClaim that will be used to store the Insights data archive. It is a string that follows the DNS1123 subdomain format. It must be at most 253 characters in length, and must consist only of lower case alphanumeric characters, '-' and '.', and must start and end with an alphanumeric character.",
           "type": "string"
         }
       }

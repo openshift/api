@@ -2217,7 +2217,7 @@ func (GatherConfig) SwaggerDoc() map[string]string {
 
 var map_GathererConfig = map[string]string{
 	"":      "gathererConfig allows to configure specific gatherers",
-	"name":  "name is the required name of a specific gatherer It may not exceed 256 characters. The format for a gatherer name is: {gatherer}/{function} where the function is optional. Gatherer consists of a lowercase letters only that may include underscores (_). Function consists of a lowercase letters only that may include underscores (_) and is separated from the gatherer by a forward slash (/). The particular gatherers can be found at https://github.com/openshift/insights-operator/blob/master/docs/gathered-data.md. Run the following command to get the names of last active gatherers: \"oc get insightsoperators.operator.openshift.io cluster -o json | jq '.status.gatherStatus.gatherers[].name'\"",
+	"name":  "name is the required name of a specific gatherer. It may not exceed 256 characters. The format for a gatherer name is: {gatherer}/{function} where the function is optional. Gatherer consists of a lowercase letters only that may include underscores (_). Function consists of a lowercase letters only that may include underscores (_) and is separated from the gatherer by a forward slash (/). The particular gatherers can be found at https://github.com/openshift/insights-operator/blob/master/docs/gathered-data.md. Run the following command to get the names of last active gatherers: \"oc get insightsoperators.operator.openshift.io cluster -o json | jq '.status.gatherStatus.gatherers[].name'\"",
 	"state": "state is a required field that allows you to configure specific gatherer. Valid values are \"Enabled\" and \"Disabled\". When set to Enabled the gatherer will run. When set to Disabled the gatherer will not run.",
 }
 
@@ -2238,7 +2238,6 @@ var map_InsightsDataGather = map[string]string{
 	"":         "\n\nInsightsDataGather provides data gather configuration options for the the Insights Operator.\n\n\nCompatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).",
 	"metadata": "metadata is the standard object's metadata. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata",
 	"spec":     "spec holds user settable values for configuration",
-	"status":   "status holds observed values from the cluster. They may not be overridden.",
 }
 
 func (InsightsDataGather) SwaggerDoc() map[string]string {
@@ -2257,7 +2256,7 @@ func (InsightsDataGatherList) SwaggerDoc() map[string]string {
 
 var map_InsightsDataGatherSpec = map[string]string{
 	"":             "InsightsDataGatherSpec contains the configuration for the data gathering.",
-	"gatherConfig": "gatherConfig is an optional spec attribute that includes all the configuration options related to gathering of the Insights data and its uploading to the ingress.",
+	"gatherConfig": "gatherConfig is a required spec attribute that includes all the configuration options related to gathering of the Insights data and its uploading to the ingress.",
 }
 
 func (InsightsDataGatherSpec) SwaggerDoc() map[string]string {
@@ -2266,7 +2265,7 @@ func (InsightsDataGatherSpec) SwaggerDoc() map[string]string {
 
 var map_PersistentVolumeClaimReference = map[string]string{
 	"":     "persistentVolumeClaimReference is a reference to a PersistentVolumeClaim.",
-	"name": "name is a string that follows the DNS1123 subdomain format. It must be at most 253 characters in length, and must consist only of lower case alphanumeric characters, '-' and '.', and must start and end with an alphanumeric character.",
+	"name": "name is the name of the PersistentVolumeClaim that will be used to store the Insights data archive. It is a string that follows the DNS1123 subdomain format. It must be at most 253 characters in length, and must consist only of lower case alphanumeric characters, '-' and '.', and must start and end with an alphanumeric character.",
 }
 
 func (PersistentVolumeClaimReference) SwaggerDoc() map[string]string {

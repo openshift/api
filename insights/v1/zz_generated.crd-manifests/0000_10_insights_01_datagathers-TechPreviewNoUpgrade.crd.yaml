@@ -2,7 +2,7 @@ apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
 metadata:
   annotations:
-    api-approved.openshift.io: https://github.com/openshift/api/pull/2248
+    api-approved.openshift.io: https://github.com/openshift/api/pull/2448
     api.openshift.io/merged-by-featuregates: "true"
     include.release.openshift.io/ibm-cloud-managed: "true"
     include.release.openshift.io/self-managed-high-availability: "true"
@@ -25,6 +25,10 @@ spec:
     - description: DataGather finish time
       jsonPath: .status.finishTime
       name: FinishTime
+      type: date
+    - description: DataGather age
+      jsonPath: .metadata.creationTimestamp
+      name: Age
       type: date
     name: v1
     schema:
@@ -53,7 +57,6 @@ spec:
             type: object
           spec:
             description: spec holds user settable values for configuration
-            minProperties: 0
             properties:
               dataPolicy:
                 description: |-
@@ -77,9 +80,8 @@ spec:
                 - message: dataPolicy items must be unique
                   rule: self.all(x, self.exists_one(y, x == y))
               gatherers:
-                description: |-
-                  gatherers is an optional field that specifies the configuration of the gatherers.
-                  If omitted, all gatherers will be run.
+                description: gatherers is a required field that specifies the configuration
+                  of the gatherers.
                 properties:
                   custom:
                     description: |-
@@ -102,7 +104,7 @@ spec:
                           properties:
                             name:
                               description: |-
-                                name is the required name of a specific gatherer
+                                name is the required name of a specific gatherer.
                                 It may not exceed 256 characters.
                                 The format for a gatherer name is: {gatherer}/{function} where the function is optional.
                                 Gatherer consists of a lowercase letters only that may include underscores (_).
@@ -174,7 +176,8 @@ spec:
                         properties:
                           name:
                             description: |-
-                              name is a string that follows the DNS1123 subdomain format.
+                              name is the name of the PersistentVolumeClaim that will be used to store the Insights data archive.
+                              It is a string that follows the DNS1123 subdomain format.
                               It must be at most 253 characters in length, and must consist only of lower case alphanumeric characters, '-' and '.', and must start and end with an alphanumeric character.
                             maxLength: 253
                             minLength: 1
@@ -221,6 +224,8 @@ spec:
                     and forbidden otherwise
                   rule: 'has(self.type) && self.type == ''PersistentVolume'' ?  has(self.persistentVolume)
                     : !has(self.persistentVolume)'
+            required:
+            - gatherers
             type: object
           status:
             description: status holds observed values from the cluster. They may not
@@ -320,6 +325,7 @@ spec:
                   - type
                   type: object
                 maxItems: 100
+                minItems: 1
                 type: array
                 x-kubernetes-list-map-keys:
                 - type
@@ -430,6 +436,7 @@ spec:
                   - name
                   type: object
                 maxItems: 100
+                minItems: 1
                 type: array
                 x-kubernetes-list-map-keys:
                 - name
@@ -441,16 +448,15 @@ spec:
                   corresponding Insights analysis (identified by "insightsRequestID") is not available.
                 properties:
                   downloadedTime:
-                    description: |-
-                      downloadedTime is an optional time when the last Insights report was downloaded.
-                      An empty value means that there has not been any Insights report downloaded yet and
-                      it usually appears in disconnected clusters (or clusters when the Insights data gathering is disabled).
+                    description: downloadedTime is a required field that specifies
+                      when the Insights report was last downloaded.
                     format: date-time
                     type: string
                   healthChecks:
                     description: |-
-                      healthChecks provides basic information about active Insights health checks
-                      in a cluster.
+                      healthChecks is an optional field that provides basic information about active Insights
+                      recommendations, which serve as proactive notifications for potential issues in the cluster.
+                      When omitted, it means that there are no active recommendations in the cluster.
                     items:
                       description: healthCheck represents an Insights health check
                         attributes.
@@ -490,6 +496,7 @@ spec:
                       - totalRisk
                       type: object
                     maxItems: 100
+                    minItems: 1
                     type: array
                     x-kubernetes-list-map-keys:
                     - advisorURI
@@ -498,7 +505,7 @@ spec:
                     x-kubernetes-list-type: map
                   uri:
                     description: |-
-                      uri is optional field that provides the URL link from which the report was downloaded.
+                      uri is a required field that provides the URL link from which the report was downloaded.
                       The link must be a valid HTTPS URL and the maximum length is 2048 characters.
                     maxLength: 2048
                     minLength: 1
@@ -506,6 +513,9 @@ spec:
                     x-kubernetes-validations:
                     - message: URI must be a valid HTTPS URL (e.g., https://example.com)
                       rule: isURL(self) && url(self).getScheme() == "https"
+                required:
+                - downloadedTime
+                - uri
                 type: object
               insightsRequestID:
                 description: |-
@@ -587,6 +597,7 @@ spec:
                   - resource
                   type: object
                 maxItems: 100
+                minItems: 1
                 type: array
                 x-kubernetes-list-map-keys:
                 - name

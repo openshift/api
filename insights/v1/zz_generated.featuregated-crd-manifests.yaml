@@ -1,6 +1,6 @@
 datagathers.insights.openshift.io:
   Annotations: {}
-  ApprovedPRNumber: https://github.com/openshift/api/pull/2248
+  ApprovedPRNumber: https://github.com/openshift/api/pull/2448
   CRDName: datagathers.insights.openshift.io
   Capability: ""
   Category: ""
@@ -22,6 +22,10 @@ datagathers.insights.openshift.io:
   - description: DataGather finish time
     jsonPath: .status.finishTime
     name: FinishTime
+    type: date
+  - description: DataGather age
+    jsonPath: .metadata.creationTimestamp
+    name: Age
     type: date
   Scope: Cluster
   ShortNames: null

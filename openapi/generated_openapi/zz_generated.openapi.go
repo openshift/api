@@ -299,7 +299,6 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"github.com/openshift/api/config/v1.InsightsDataGather":                                              schema_openshift_api_config_v1_InsightsDataGather(ref),
 		"github.com/openshift/api/config/v1.InsightsDataGatherList":                                          schema_openshift_api_config_v1_InsightsDataGatherList(ref),
 		"github.com/openshift/api/config/v1.InsightsDataGatherSpec":                                          schema_openshift_api_config_v1_InsightsDataGatherSpec(ref),
-		"github.com/openshift/api/config/v1.InsightsDataGatherStatus":                                        schema_openshift_api_config_v1_InsightsDataGatherStatus(ref),
 		"github.com/openshift/api/config/v1.IntermediateTLSProfile":                                          schema_openshift_api_config_v1_IntermediateTLSProfile(ref),
 		"github.com/openshift/api/config/v1.KMSConfig":                                                       schema_openshift_api_config_v1_KMSConfig(ref),
 		"github.com/openshift/api/config/v1.KeystoneIdentityProvider":                                        schema_openshift_api_config_v1_KeystoneIdentityProvider(ref),
@@ -13086,7 +13085,7 @@ func schema_openshift_api_config_v1_GathererConfig(ref common.ReferenceCallback)
 				Properties: map[string]spec.Schema{
 					"name": {
 						SchemaProps: spec.SchemaProps{
-							Description: "name is the required name of a specific gatherer It may not exceed 256 characters. The format for a gatherer name is: {gatherer}/{function} where the function is optional. Gatherer consists of a lowercase letters only that may include underscores (_). Function consists of a lowercase letters only that may include underscores (_) and is separated from the gatherer by a forward slash (/). The particular gatherers can be found at https://github.com/openshift/insights-operator/blob/master/docs/gathered-data.md. Run the following command to get the names of last active gatherers: \"oc get insightsoperators.operator.openshift.io cluster -o json | jq '.status.gatherStatus.gatherers[].name'\"",
+							Description: "name is the required name of a specific gatherer. It may not exceed 256 characters. The format for a gatherer name is: {gatherer}/{function} where the function is optional. Gatherer consists of a lowercase letters only that may include underscores (_). Function consists of a lowercase letters only that may include underscores (_) and is separated from the gatherer by a forward slash (/). The particular gatherers can be found at https://github.com/openshift/insights-operator/blob/master/docs/gathered-data.md. Run the following command to get the names of last active gatherers: \"oc get insightsoperators.operator.openshift.io cluster -o json | jq '.status.gatherStatus.gatherers[].name'\"",
 							Type:        []string{"string"},
 							Format:      "",
 						},
@@ -13127,6 +13126,18 @@ func schema_openshift_api_config_v1_Gatherers(ref common.ReferenceCallback) comm
 					},
 				},
 				Required: []string{"mode"},
+			},
+			VendorExtensible: spec.VendorExtensible{
+				Extensions: spec.Extensions{
+					"x-kubernetes-unions": []interface{}{
+						map[string]interface{}{
+							"discriminator": "mode",
+							"fields-to-discriminateBy": map[string]interface{}{
+								"custom": "Custom",
+							},
+						},
+					},
+				},
 			},
 		},
 		Dependencies: []string{
@@ -15363,19 +15374,12 @@ func schema_openshift_api_config_v1_InsightsDataGather(ref common.ReferenceCallb
 							Ref:         ref("github.com/openshift/api/config/v1.InsightsDataGatherSpec"),
 						},
 					},
-					"status": {
-						SchemaProps: spec.SchemaProps{
-							Description: "status holds observed values from the cluster. They may not be overridden.",
-							Default:     map[string]interface{}{},
-							Ref:         ref("github.com/openshift/api/config/v1.InsightsDataGatherStatus"),
-						},
-					},
 				},
 				Required: []string{"spec"},
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/config/v1.InsightsDataGatherSpec", "github.com/openshift/api/config/v1.InsightsDataGatherStatus", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"},
+			"github.com/openshift/api/config/v1.InsightsDataGatherSpec", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"},
 	}
 }
 
@@ -15439,7 +15443,7 @@ func schema_openshift_api_config_v1_InsightsDataGatherSpec(ref common.ReferenceC
 				Properties: map[string]spec.Schema{
 					"gatherConfig": {
 						SchemaProps: spec.SchemaProps{
-							Description: "gatherConfig is an optional spec attribute that includes all the configuration options related to gathering of the Insights data and its uploading to the ingress.",
+							Description: "gatherConfig is a required spec attribute that includes all the configuration options related to gathering of the Insights data and its uploading to the ingress.",
 							Default:     map[string]interface{}{},
 							Ref:         ref("github.com/openshift/api/config/v1.GatherConfig"),
 						},
@@ -15450,16 +15454,6 @@ func schema_openshift_api_config_v1_InsightsDataGatherSpec(ref common.ReferenceC
 		},
 		Dependencies: []string{
 			"github.com/openshift/api/config/v1.GatherConfig"},
-	}
-}
-
-func schema_openshift_api_config_v1_InsightsDataGatherStatus(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Type: []string{"object"},
-			},
-		},
 	}
 }
 
@@ -18299,7 +18293,7 @@ func schema_openshift_api_config_v1_PersistentVolumeClaimReference(ref common.Re
 				Properties: map[string]spec.Schema{
 					"name": {
 						SchemaProps: spec.SchemaProps{
-							Description: "name is a string that follows the DNS1123 subdomain format. It must be at most 253 characters in length, and must consist only of lower case alphanumeric characters, '-' and '.', and must start and end with an alphanumeric character.",
+							Description: "name is the name of the PersistentVolumeClaim that will be used to store the Insights data archive. It is a string that follows the DNS1123 subdomain format. It must be at most 253 characters in length, and must consist only of lower case alphanumeric characters, '-' and '.', and must start and end with an alphanumeric character.",
 							Type:        []string{"string"},
 							Format:      "",
 						},
@@ -20129,6 +20123,18 @@ func schema_openshift_api_config_v1_Storage(ref common.ReferenceCallback) common
 					},
 				},
 				Required: []string{"type"},
+			},
+			VendorExtensible: spec.VendorExtensible{
+				Extensions: spec.Extensions{
+					"x-kubernetes-unions": []interface{}{
+						map[string]interface{}{
+							"discriminator": "type",
+							"fields-to-discriminateBy": map[string]interface{}{
+								"persistentVolume": "PersistentVolume",
+							},
+						},
+					},
+				},
 			},
 		},
 		Dependencies: []string{
@@ -28656,6 +28662,7 @@ func schema_openshift_api_insights_v1_DataGather(ref common.ReferenceCallback) c
 					"spec": {
 						SchemaProps: spec.SchemaProps{
 							Description: "spec holds user settable values for configuration",
+							Default:     map[string]interface{}{},
 							Ref:         ref("github.com/openshift/api/insights/v1.DataGatherSpec"),
 						},
 					},
@@ -28699,6 +28706,7 @@ func schema_openshift_api_insights_v1_DataGatherList(ref common.ReferenceCallbac
 					"metadata": {
 						SchemaProps: spec.SchemaProps{
 							Description: "metadata is the standard list's metadata. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata",
+							Default:     map[string]interface{}{},
 							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"),
 						},
 					},
@@ -28758,7 +28766,7 @@ func schema_openshift_api_insights_v1_DataGatherSpec(ref common.ReferenceCallbac
 					},
 					"gatherers": {
 						SchemaProps: spec.SchemaProps{
-							Description: "gatherers is an optional field that specifies the configuration of the gatherers. If omitted, all gatherers will be run.",
+							Description: "gatherers is a required field that specifies the configuration of the gatherers.",
 							Default:     map[string]interface{}{},
 							Ref:         ref("github.com/openshift/api/insights/v1.Gatherers"),
 						},
@@ -28771,6 +28779,7 @@ func schema_openshift_api_insights_v1_DataGatherSpec(ref common.ReferenceCallbac
 						},
 					},
 				},
+				Required: []string{"gatherers"},
 			},
 		},
 		Dependencies: []string{
@@ -28874,6 +28883,7 @@ func schema_openshift_api_insights_v1_DataGatherStatus(ref common.ReferenceCallb
 					"insightsReport": {
 						SchemaProps: spec.SchemaProps{
 							Description: "insightsReport provides general Insights analysis results. When omitted, this means no data gathering has taken place yet or the corresponding Insights analysis (identified by \"insightsRequestID\") is not available.",
+							Default:     map[string]interface{}{},
 							Ref:         ref("github.com/openshift/api/insights/v1.InsightsReport"),
 						},
 					},
@@ -28894,7 +28904,7 @@ func schema_openshift_api_insights_v1_GathererConfig(ref common.ReferenceCallbac
 				Properties: map[string]spec.Schema{
 					"name": {
 						SchemaProps: spec.SchemaProps{
-							Description: "name is the required name of a specific gatherer It may not exceed 256 characters. The format for a gatherer name is: {gatherer}/{function} where the function is optional. Gatherer consists of a lowercase letters only that may include underscores (_). Function consists of a lowercase letters only that may include underscores (_) and is separated from the gatherer by a forward slash (/). The particular gatherers can be found at https://github.com/openshift/insights-operator/blob/master/docs/gathered-data.md. Run the following command to get the names of last active gatherers: \"oc get insightsoperators.operator.openshift.io cluster -o json | jq '.status.gatherStatus.gatherers[].name'\"",
+							Description: "name is the required name of a specific gatherer. It may not exceed 256 characters. The format for a gatherer name is: {gatherer}/{function} where the function is optional. Gatherer consists of a lowercase letters only that may include underscores (_). Function consists of a lowercase letters only that may include underscores (_) and is separated from the gatherer by a forward slash (/). The particular gatherers can be found at https://github.com/openshift/insights-operator/blob/master/docs/gathered-data.md. Run the following command to get the names of last active gatherers: \"oc get insightsoperators.operator.openshift.io cluster -o json | jq '.status.gatherStatus.gatherers[].name'\"",
 							Type:        []string{"string"},
 							Format:      "",
 						},
@@ -29051,7 +29061,7 @@ func schema_openshift_api_insights_v1_InsightsReport(ref common.ReferenceCallbac
 				Properties: map[string]spec.Schema{
 					"downloadedTime": {
 						SchemaProps: spec.SchemaProps{
-							Description: "downloadedTime is an optional time when the last Insights report was downloaded. An empty value means that there has not been any Insights report downloaded yet and it usually appears in disconnected clusters (or clusters when the Insights data gathering is disabled).",
+							Description: "downloadedTime is a required field that specifies when the Insights report was last downloaded.",
 							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.Time"),
 						},
 					},
@@ -29067,7 +29077,7 @@ func schema_openshift_api_insights_v1_InsightsReport(ref common.ReferenceCallbac
 							},
 						},
 						SchemaProps: spec.SchemaProps{
-							Description: "healthChecks provides basic information about active Insights health checks in a cluster.",
+							Description: "healthChecks is an optional field that provides basic information about active Insights recommendations, which serve as proactive notifications for potential issues in the cluster. When omitted, it means that there are no active recommendations in the cluster.",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -29081,12 +29091,13 @@ func schema_openshift_api_insights_v1_InsightsReport(ref common.ReferenceCallbac
 					},
 					"uri": {
 						SchemaProps: spec.SchemaProps{
-							Description: "uri is optional field that provides the URL link from which the report was downloaded. The link must be a valid HTTPS URL and the maximum length is 2048 characters.",
+							Description: "uri is a required field that provides the URL link from which the report was downloaded. The link must be a valid HTTPS URL and the maximum length is 2048 characters.",
 							Type:        []string{"string"},
 							Format:      "",
 						},
 					},
 				},
+				Required: []string{"downloadedTime", "uri"},
 			},
 		},
 		Dependencies: []string{
@@ -29145,7 +29156,7 @@ func schema_openshift_api_insights_v1_PersistentVolumeClaimReference(ref common.
 				Properties: map[string]spec.Schema{
 					"name": {
 						SchemaProps: spec.SchemaProps{
-							Description: "name is a string that follows the DNS1123 subdomain format. It must be at most 253 characters in length, and must consist only of lower case alphanumeric characters, '-' and '.', and must start and end with an alphanumeric character.",
+							Description: "name is the name of the PersistentVolumeClaim that will be used to store the Insights data archive. It is a string that follows the DNS1123 subdomain format. It must be at most 253 characters in length, and must consist only of lower case alphanumeric characters, '-' and '.', and must start and end with an alphanumeric character.",
 							Type:        []string{"string"},
 							Format:      "",
 						},

@@ -4131,6 +4131,11 @@
           "default": {},
           "$ref": "#/definitions/com.github.openshift.api.config.v1.APIServerEncryption"
         },
+        "http01ChallengeProxy": {
+          "description": "http01ChallengeProxy contains configuration for the HTTP01 challenge proxy that redirects traffic from the API endpoint on port 80 to ingress routers. This enables cert-manager to perform HTTP01 ACME challenges for API endpoint certificates.",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.config.v1.HTTP01ChallengeProxySpec"
+        },
         "servingCerts": {
           "description": "servingCert is the TLS cert info for serving secure traffic. If not specified, operator managed certificates will be used for serving secure traffic.",
           "default": {},
@@ -6886,6 +6891,44 @@
           "$ref": "#/definitions/com.github.openshift.api.config.v1.SecretNameReference"
         }
       }
+    },
+    "com.github.openshift.api.config.v1.HTTP01ChallengeProxyCustomDeploymentSpec": {
+      "type": "object",
+      "required": [
+        "internalPort"
+      ],
+      "properties": {
+        "internalPort": {
+          "description": "internalPort specifies the internal port used by the proxy service. Valid values are 1024-65535. When not specified for CustomDeployment mode, users should ensure their chosen port does not conflict with other workloads on the host.",
+          "type": "integer",
+          "format": "int32"
+        }
+      }
+    },
+    "com.github.openshift.api.config.v1.HTTP01ChallengeProxySpec": {
+      "type": "object",
+      "required": [
+        "mode"
+      ],
+      "properties": {
+        "customDeployment": {
+          "description": "customDeployment contains configuration options when mode is CustomDeployment. This field is only valid when mode is CustomDeployment.",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.config.v1.HTTP01ChallengeProxyCustomDeploymentSpec"
+        },
+        "mode": {
+          "description": "mode controls whether the HTTP01 challenge proxy is active and how it should be deployed. DefaultDeployment enables the proxy with default configuration. CustomDeployment enables the proxy with user-specified configuration.",
+          "type": "string"
+        }
+      },
+      "x-kubernetes-unions": [
+        {
+          "discriminator": "mode",
+          "fields-to-discriminateBy": {
+            "customDeployment": "CustomDeployment"
+          }
+        }
+      ]
     },
     "com.github.openshift.api.config.v1.HTTPServingInfo": {
       "description": "HTTPServingInfo holds configuration for serving HTTP",

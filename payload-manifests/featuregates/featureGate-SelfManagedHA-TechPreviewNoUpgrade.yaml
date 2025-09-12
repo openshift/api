@@ -156,6 +156,9 @@
                         "name": "GatewayAPIController"
                     },
                     {
+                        "name": "HTTP01ChallengeProxy"
+                    },
+                    {
                         "name": "HighlyAvailableArbiter"
                     },
                     {

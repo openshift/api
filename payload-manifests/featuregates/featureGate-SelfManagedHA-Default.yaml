@@ -110,6 +110,9 @@
                         "name": "GCPDualStackInstall"
                     },
                     {
+                        "name": "HTTP01ChallengeProxy"
+                    },
+                    {
                         "name": "ImageModeStatusReporting"
                     },
                     {

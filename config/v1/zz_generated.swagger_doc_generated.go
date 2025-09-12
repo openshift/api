@@ -320,6 +320,7 @@ var map_APIServerSpec = map[string]string{
 	"encryption":                   "encryption allows the configuration of encryption of resources at the datastore layer.",
 	"tlsSecurityProfile":           "tlsSecurityProfile specifies settings for TLS connections for externally exposed servers.\n\nWhen omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time. The current default is the Intermediate profile.",
 	"audit":                        "audit specifies the settings for audit configuration to be applied to all OpenShift-provided API servers in the cluster.",
+	"http01ChallengeProxy":         "http01ChallengeProxy contains configuration for the HTTP01 challenge proxy that redirects traffic from the API endpoint on port 80 to ingress routers. This enables cert-manager to perform HTTP01 ACME challenges for API endpoint certificates.",
 }
 
 func (APIServerSpec) SwaggerDoc() map[string]string {
@@ -343,6 +344,23 @@ var map_AuditCustomRule = map[string]string{
 
 func (AuditCustomRule) SwaggerDoc() map[string]string {
 	return map_AuditCustomRule
+}
+
+var map_HTTP01ChallengeProxyCustomDeploymentSpec = map[string]string{
+	"internalPort": "internalPort specifies the internal port used by the proxy service. Valid values are 1024-65535. When not specified for CustomDeployment mode, users should ensure their chosen port does not conflict with other workloads on the host.",
+}
+
+func (HTTP01ChallengeProxyCustomDeploymentSpec) SwaggerDoc() map[string]string {
+	return map_HTTP01ChallengeProxyCustomDeploymentSpec
+}
+
+var map_HTTP01ChallengeProxySpec = map[string]string{
+	"mode":             "mode controls whether the HTTP01 challenge proxy is active and how it should be deployed. DefaultDeployment enables the proxy with default configuration. CustomDeployment enables the proxy with user-specified configuration.",
+	"customDeployment": "customDeployment contains configuration options when mode is CustomDeployment. This field is only valid when mode is CustomDeployment.",
+}
+
+func (HTTP01ChallengeProxySpec) SwaggerDoc() map[string]string {
+	return map_HTTP01ChallengeProxySpec
 }
 
 var map_Authentication = map[string]string{

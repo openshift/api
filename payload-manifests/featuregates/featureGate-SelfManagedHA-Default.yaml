@@ -179,6 +179,9 @@
                         "name": "OVNObservability"
                     },
                     {
+                        "name": "OpenShiftPodSecurityAdmission"
+                    },
+                    {
                         "name": "PreconfiguredUDNAddresses"
                     },
                     {
@@ -275,9 +278,6 @@
                     },
                     {
                         "name": "NewOLM"
-                    },
-                    {
-                        "name": "OpenShiftPodSecurityAdmission"
                     },
                     {
                         "name": "PinnedImages"

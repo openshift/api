@@ -42,6 +42,9 @@
                         "name": "AWSDedicatedHosts"
                     },
                     {
+                        "name": "AWSDualStackInstall"
+                    },
+                    {
                         "name": "AWSServiceLBNetworkSecurityGroup"
                     },
                     {
@@ -63,6 +66,9 @@
                         "name": "AzureDedicatedHosts"
                     },
                     {
+                        "name": "AzureDualStackInstall"
+                    },
+                    {
                         "name": "AzureMultiDisk"
                     },
                     {
@@ -78,10 +84,22 @@
                         "name": "BuildCSIVolumes"
                     },
                     {
+                        "name": "CBORServingAndStorage"
+                    },
+                    {
                         "name": "CPMSMachineNamePrefix"
                     },
                     {
+                        "name": "ClientsAllowCBOR"
+                    },
+                    {
+                        "name": "ClientsPreferCBOR"
+                    },
+                    {
                         "name": "ClusterAPIInstallIBMCloud"
+                    },
+                    {
+                        "name": "ClusterAPIMachineManagementVSphere"
                     },
                     {
                         "name": "ClusterMonitoringConfig"
@@ -135,6 +153,9 @@
                         "name": "GCPCustomAPIEndpointsInstall"
                     },
                     {
+                        "name": "GCPDualStackInstall"
+                    },
+                    {
                         "name": "GatewayAPI"
                     },
                     {
@@ -166,9 +187,6 @@
                     },
                     {
                         "name": "InsightsOnDemandDataGather"
-                    },
-                    {
-                        "name": "InsightsRuntimeExtractor"
                     },
                     {
                         "name": "IrreconcilableMachineConfig"

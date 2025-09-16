@@ -23,6 +23,9 @@
                         "name": "AWSDedicatedHosts"
                     },
                     {
+                        "name": "AWSDualStackInstall"
+                    },
+                    {
                         "name": "AWSServiceLBNetworkSecurityGroup"
                     },
                     {
@@ -35,6 +38,9 @@
                         "name": "AzureDedicatedHosts"
                     },
                     {
+                        "name": "AzureDualStackInstall"
+                    },
+                    {
                         "name": "AzureMultiDisk"
                     },
                     {
@@ -44,10 +50,22 @@
                         "name": "BootcNodeManagement"
                     },
                     {
+                        "name": "CBORServingAndStorage"
+                    },
+                    {
+                        "name": "ClientsAllowCBOR"
+                    },
+                    {
+                        "name": "ClientsPreferCBOR"
+                    },
+                    {
                         "name": "ClusterAPIInstall"
                     },
                     {
                         "name": "ClusterAPIInstallIBMCloud"
+                    },
+                    {
+                        "name": "ClusterAPIMachineManagementVSphere"
                     },
                     {
                         "name": "ClusterMonitoringConfig"
@@ -92,22 +110,19 @@
                         "name": "GCPClusterHostedDNS"
                     },
                     {
-                        "name": "GCPClusterHostedDNSInstall"
-                    },
-                    {
                         "name": "GCPCustomAPIEndpoints"
                     },
                     {
                         "name": "GCPCustomAPIEndpointsInstall"
                     },
                     {
+                        "name": "GCPDualStackInstall"
+                    },
+                    {
                         "name": "ImageModeStatusReporting"
                     },
                     {
                         "name": "ImageStreamImportMode"
-                    },
-                    {
-                        "name": "ImageVolume"
                     },
                     {
                         "name": "IngressControllerDynamicConfigurationManager"
@@ -120,9 +135,6 @@
                     },
                     {
                         "name": "InsightsOnDemandDataGather"
-                    },
-                    {
-                        "name": "InsightsRuntimeExtractor"
                     },
                     {
                         "name": "IrreconcilableMachineConfig"
@@ -197,19 +209,10 @@
                         "name": "SignatureStores"
                     },
                     {
-                        "name": "SigstoreImageVerification"
-                    },
-                    {
                         "name": "SigstoreImageVerificationPKI"
                     },
                     {
-                        "name": "StoragePerformantSecurityPolicy"
-                    },
-                    {
                         "name": "TranslateStreamCloseWebsocketRequests"
-                    },
-                    {
-                        "name": "UpgradeStatus"
                     },
                     {
                         "name": "VSphereConfigurableMaxAllowedBlockVolumesPerNode"
@@ -250,6 +253,9 @@
                         "name": "ConsolePluginContentSecurityPolicy"
                     },
                     {
+                        "name": "GCPClusterHostedDNSInstall"
+                    },
+                    {
                         "name": "GatewayAPI"
                     },
                     {
@@ -257,6 +263,9 @@
                     },
                     {
                         "name": "HighlyAvailableArbiter"
+                    },
+                    {
+                        "name": "ImageVolume"
                     },
                     {
                         "name": "IngressControllerLBSubnetsAWS"
@@ -308,6 +317,15 @@
                     },
                     {
                         "name": "SetEIPForNLBIngressController"
+                    },
+                    {
+                        "name": "SigstoreImageVerification"
+                    },
+                    {
+                        "name": "StoragePerformantSecurityPolicy"
+                    },
+                    {
+                        "name": "UpgradeStatus"
                     },
                     {
                         "name": "UserNamespacesPodSecurityStandards"

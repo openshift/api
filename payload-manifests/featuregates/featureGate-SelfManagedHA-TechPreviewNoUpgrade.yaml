@@ -22,7 +22,7 @@
                         "name": "ClusterAPIInstall"
                     },
                     {
-                        "name": "ClusterVersionOperatorConfiguration"
+                        "name": "ClusterAPIMachineManagementVSphere"
                     },
                     {
                         "name": "EventedPLEG"
@@ -40,9 +40,6 @@
                         "name": "MultiArchInstallAzure"
                     },
                     {
-                        "name": "NoRegistryClusterOperations"
-                    },
-                    {
                         "name": "ShortCertRotation"
                     },
                     {
@@ -58,6 +55,9 @@
                     },
                     {
                         "name": "AWSDedicatedHosts"
+                    },
+                    {
+                        "name": "AWSDualStackInstall"
                     },
                     {
                         "name": "AWSServiceLBNetworkSecurityGroup"
@@ -81,6 +81,9 @@
                         "name": "AzureDedicatedHosts"
                     },
                     {
+                        "name": "AzureDualStackInstall"
+                    },
+                    {
                         "name": "AzureMultiDisk"
                     },
                     {
@@ -93,13 +96,25 @@
                         "name": "BuildCSIVolumes"
                     },
                     {
+                        "name": "CBORServingAndStorage"
+                    },
+                    {
                         "name": "CPMSMachineNamePrefix"
+                    },
+                    {
+                        "name": "ClientsAllowCBOR"
+                    },
+                    {
+                        "name": "ClientsPreferCBOR"
                     },
                     {
                         "name": "ClusterAPIInstallIBMCloud"
                     },
                     {
                         "name": "ClusterMonitoringConfig"
+                    },
+                    {
+                        "name": "ClusterVersionOperatorConfiguration"
                     },
                     {
                         "name": "ConsolePluginContentSecurityPolicy"
@@ -141,6 +156,9 @@
                         "name": "GCPCustomAPIEndpointsInstall"
                     },
                     {
+                        "name": "GCPDualStackInstall"
+                    },
+                    {
                         "name": "GatewayAPI"
                     },
                     {
@@ -172,9 +190,6 @@
                     },
                     {
                         "name": "InsightsOnDemandDataGather"
-                    },
-                    {
-                        "name": "InsightsRuntimeExtractor"
                     },
                     {
                         "name": "IrreconcilableMachineConfig"
@@ -244,6 +259,9 @@
                     },
                     {
                         "name": "NewOLMWebhookProviderOpenshiftServiceCA"
+                    },
+                    {
+                        "name": "NoRegistryClusterOperations"
                     },
                     {
                         "name": "NodeSwap"

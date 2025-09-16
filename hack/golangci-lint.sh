@@ -2,7 +2,7 @@
 
 source "$(dirname "${BASH_SOURCE}")/lib/init.sh"
 
-# Build codegen-crds when it's not present and not overriden for a specific file.
+# Build codegen-crds when it's not present and not overridden for a specific file.
 if [ -z "${GOLANGCI_LINT:-}" ];then
   ${TOOLS_MAKE} golangci-lint kube-api-linter
   GOLANGCI_LINT="${TOOLS_OUTPUT}/golangci-lint"

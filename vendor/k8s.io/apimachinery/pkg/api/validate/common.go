@@ -1,10 +1,5 @@
-// This file contains changes that are only compatible with go 1.10 and onwards.
-
-//go:build go1.10
-// +build go1.10
-
 /*
-Copyright 2021 The Kubernetes Authors.
+Copyright 2024 The Kubernetes Authors.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -19,13 +14,15 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-package yaml
+package validate
 
-import "encoding/json"
+import (
+	"context"
 
-// DisallowUnknownFields configures the JSON decoder to error out if unknown
-// fields come along, instead of dropping them by default.
-func DisallowUnknownFields(d *json.Decoder) *json.Decoder {
-	d.DisallowUnknownFields()
-	return d
-}
+	"k8s.io/apimachinery/pkg/api/operation"
+	"k8s.io/apimachinery/pkg/util/validation/field"
+)
+
+// ValidateFunc is a function that validates a value, possibly considering the
+// old value (if any).
+type ValidateFunc[T any] func(ctx context.Context, op operation.Operation, fldPath *field.Path, newValue, oldValue T) field.ErrorList

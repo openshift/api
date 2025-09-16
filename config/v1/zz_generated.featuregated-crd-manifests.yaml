@@ -370,7 +370,7 @@ infrastructures.config.openshift.io:
   - HighlyAvailableArbiter
   - HighlyAvailableArbiter+DualReplica
   - NutanixMultiSubnets
-  - OnPremInternalDNSRecords
+  - OnPremDNSRecords
   - VSphereHostVMGroupZonal
   - VSphereMultiNetworks
   FilenameOperatorName: config-operator

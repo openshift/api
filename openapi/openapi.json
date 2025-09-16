@@ -6951,26 +6951,6 @@
         }
       }
     },
-    "com.github.openshift.api.config.v1.GCPServiceEndpoint": {
-      "description": "GCPServiceEndpoint store the configuration of a custom url to override existing defaults of GCP Services.",
-      "type": "object",
-      "required": [
-        "name",
-        "url"
-      ],
-      "properties": {
-        "name": {
-          "description": "name is the name of the GCP service whose endpoint is being overridden. This must be provided and cannot be empty.\n\nAllowed values are Compute, Container, CloudResourceManager, DNS, File, IAM, ServiceUsage, Storage, and TagManager.\n\nAs an example, when setting the name to Compute all requests made by the caller to the GCP Compute Service will be directed to the endpoint specified in the url field.",
-          "type": "string",
-          "default": ""
-        },
-        "url": {
-          "description": "url is a fully qualified URI that overrides the default endpoint for a client using the GCP service specified in the name field. url is required, must use the scheme https, must not be more than 253 characters in length, and must be a valid URL according to Go's net/url package (https://pkg.go.dev/net/url#URL)\n\nAn example of a valid endpoint that overrides the Compute Service: \"https://compute-myendpoint1.p.googleapis.com\"",
-          "type": "string",
-          "default": ""
-        }
-      }
-    },
     "com.github.openshift.api.config.v1.GatherConfig": {
       "description": "GatherConfig provides data gathering configuration options.",
       "type": "object",
@@ -12066,6 +12046,52 @@
         }
       }
     },
+    "com.github.openshift.api.config.v1alpha1.AdditionalAlertmanagerConfig": {
+      "description": "AdditionalAlertmanagerConfig represents configuration for additional Alertmanager instances. The `AdditionalAlertmanagerConfig` resource defines settings for how a component communicates with additional Alertmanager instances.",
+      "type": "object",
+      "required": [
+        "name",
+        "staticConfigs"
+      ],
+      "properties": {
+        "authorization": {
+          "description": "authorization configures the authentication method for Alertmanager connections. Supports bearer token authentication. When omitted, no authentication is used.",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.config.v1alpha1.AuthorizationConfig"
+        },
+        "name": {
+          "description": "name is a unique identifier for this Alertmanager configuration entry. This field is used as the map key for server-side apply, allowing multiple controllers (e.g., ACM, cluster admins) to independently manage their own entries. The name must be a valid DNS subdomain (RFC 1123): lowercase alphanumeric characters, hyphens, or periods, and must start and end with an alphanumeric character. Maximum length is 253 characters.",
+          "type": "string"
+        },
+        "pathPrefix": {
+          "description": "pathPrefix defines an optional URL path prefix to prepend to the Alertmanager API endpoints. For example, if your Alertmanager is behind a reverse proxy at \"/alertmanager/\", set this to \"/alertmanager\" so requests go to \"/alertmanager/api/v1/alerts\" instead of \"/api/v1/alerts\". This is commonly needed when Alertmanager is deployed behind ingress controllers or load balancers. Must start with \"/\" and not end with \"/\" (unless it is the root path \"/\"). Must not contain query strings (\"?\") or fragments (\"#\").",
+          "type": "string"
+        },
+        "scheme": {
+          "description": "scheme defines the URL scheme to use when communicating with Alertmanager instances. Possible values are `HTTP` or `HTTPS`. When omitted, defaults to `HTTP`.",
+          "type": "string"
+        },
+        "staticConfigs": {
+          "description": "staticConfigs is a list of statically configured Alertmanager endpoints in the form of `<host>:<port>`. Each entry must be a valid hostname, IPv4 address, or IPv6 address (in brackets) followed by a colon and a valid port number (1-65535). Examples: \"alertmanager.example.com:9093\", \"192.168.1.100:9093\", \"[::1]:9093\" At least one endpoint must be specified (minimum 1, maximum 10 endpoints). Each entry must be unique.",
+          "type": "array",
+          "items": {
+            "type": "string",
+            "default": ""
+          },
+          "x-kubernetes-list-type": "set"
+        },
+        "timeoutSeconds": {
+          "description": "timeoutSeconds defines the timeout in seconds for requests to Alertmanager. When omitted, the default is 10 seconds. Minimum value is 1 second. Maximum value is 600 seconds (10 minutes).",
+          "type": "integer",
+          "format": "int32"
+        },
+        "tlsConfig": {
+          "description": "tlsConfig defines the TLS settings to use for Alertmanager connections. When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time.",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.config.v1alpha1.TLSConfig"
+        }
+      }
+    },
     "com.github.openshift.api.config.v1alpha1.AlertmanagerConfig": {
       "description": "alertmanagerConfig provides configuration options for the default Alertmanager instance that runs in the `openshift-monitoring` namespace. Use this configuration to control whether the default Alertmanager is deployed, how it logs, and how its pods are scheduled.",
       "type": "object",
@@ -12144,7 +12170,7 @@
           "x-kubernetes-list-type": "map"
         },
         "volumeClaimTemplate": {
-          "description": "volumeClaimTemplate Defines persistent storage for Alertmanager. Use this setting to configure the persistent volume claim, including storage class, volume size, and name. If omitted, the Pod uses ephemeral storage and alert data will not persist across restarts. This field is optional.",
+          "description": "volumeClaimTemplate defines persistent storage for Alertmanager. Use this setting to configure the persistent volume claim, including storage class and volume size. If omitted, the Pod uses ephemeral storage and alert data will not persist across restarts.",
           "$ref": "#/definitions/io.k8s.api.core.v1.PersistentVolumeClaim"
         }
       }
@@ -12161,6 +12187,32 @@
           "type": "string"
         }
       }
+    },
+    "com.github.openshift.api.config.v1alpha1.AuthorizationConfig": {
+      "description": "AuthorizationConfig defines the authentication method for Alertmanager connections.",
+      "type": "object",
+      "required": [
+        "type"
+      ],
+      "properties": {
+        "bearerToken": {
+          "description": "bearerToken defines the secret reference containing the bearer token. Required when type is \"BearerToken\", forbidden otherwise. The secret must exist in the openshift-monitoring namespace.",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.config.v1alpha1.SecretKeySelector"
+        },
+        "type": {
+          "description": "type specifies the authentication type to use. Valid values are \"None\" (no authentication) and \"BearerToken\" (bearer token authentication). When set to None, no authentication credentials are sent. When set to BearerToken, the bearerToken field must be specified.",
+          "type": "string"
+        }
+      },
+      "x-kubernetes-unions": [
+        {
+          "discriminator": "type",
+          "fields-to-discriminateBy": {
+            "bearerToken": "BearerToken"
+          }
+        }
+      ]
     },
     "com.github.openshift.api.config.v1alpha1.Backup": {
       "description": "Backup provides configuration for performing backups of the openshift cluster.\n\nCompatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.",
@@ -12415,6 +12467,11 @@
           "description": "metricsServerConfig is an optional field that can be used to configure the Kubernetes Metrics Server that runs in the openshift-monitoring namespace. Specifically, it can configure how the Metrics Server instance is deployed, pod scheduling, its audit policy and log verbosity. When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time.",
           "default": {},
           "$ref": "#/definitions/com.github.openshift.api.config.v1alpha1.MetricsServerConfig"
+        },
+        "prometheusConfig": {
+          "description": "prometheusConfig provides configuration options for the default platform Prometheus instance that runs in the `openshift-monitoring` namespace. This configuration applies only to the platform Prometheus instance; user-workload Prometheus instances are configured separately.\n\nThis field allows you to customize how the platform Prometheus is deployed and operated, including:\n  - Pod scheduling (node selectors, tolerations, topology spread constraints)\n  - Resource allocation (CPU, memory requests/limits)\n  - Retention policies (how long metrics are stored)\n  - External integrations (remote write, additional alertmanagers)\n\nThis field is optional. When omitted, the platform chooses reasonable defaults, which may change over time.",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.config.v1alpha1.PrometheusConfig"
         },
         "userDefined": {
           "description": "userDefined set the deployment mode for user-defined monitoring in addition to the default platform monitoring. userDefined is optional. When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time. The current default value is `Disabled`.",
@@ -12763,6 +12820,24 @@
     "com.github.openshift.api.config.v1alpha1.InsightsDataGatherStatus": {
       "type": "object"
     },
+    "com.github.openshift.api.config.v1alpha1.Label": {
+      "description": "Label represents a key/value pair for external labels.",
+      "type": "object",
+      "required": [
+        "key",
+        "value"
+      ],
+      "properties": {
+        "key": {
+          "description": "key is the name of the label. Prometheus supports UTF-8 label names, so any valid UTF-8 string is allowed. Must be between 1 and 128 characters in length.",
+          "type": "string"
+        },
+        "value": {
+          "description": "value is the value of the label. Must be between 1 and 128 characters in length.",
+          "type": "string"
+        }
+      }
+    },
     "com.github.openshift.api.config.v1alpha1.MetricsServerConfig": {
       "description": "MetricsServerConfig provides configuration options for the Metrics Server instance that runs in the `openshift-monitoring` namespace. Use this configuration to control how the Metrics Server instance is deployed, how it logs, and how its pods are scheduled.",
       "type": "object",
@@ -12985,6 +13060,209 @@
         }
       ]
     },
+    "com.github.openshift.api.config.v1alpha1.PrometheusConfig": {
+      "description": "PrometheusConfig provides configuration options for the Prometheus instance. Use this configuration to control Prometheus deployment, pod scheduling, resource allocation, retention policies, and external integrations.",
+      "type": "object",
+      "properties": {
+        "additionalAlertmanagerConfigs": {
+          "description": "additionalAlertmanagerConfigs configures additional Alertmanager instances that receive alerts from the Prometheus component. This is useful for organizations that need to:\n  - Send alerts to external monitoring systems (like PagerDuty, Slack, or custom webhooks)\n  - Route different types of alerts to different teams or systems\n  - Integrate with existing enterprise alerting infrastructure\n  - Maintain separate alert routing for compliance or organizational requirements\nBy default, no additional Alertmanager instances are configured. When omitted, no additional Alertmanager instances are configured (default behavior). When provided, at least one configuration must be specified (minimum 1, maximum 10 items). Each entry must have a unique name field, which serves as the map key for server-side apply.",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/com.github.openshift.api.config.v1alpha1.AdditionalAlertmanagerConfig"
+          },
+          "x-kubernetes-list-map-keys": [
+            "name"
+          ],
+          "x-kubernetes-list-type": "map"
+        },
+        "collectionProfile": {
+          "description": "collectionProfile defines the metrics collection profile that Prometheus uses to collect metrics from the platform components. Supported values are `Full` or `Minimal`. In the `Full` profile (default), Prometheus collects all metrics that are exposed by the platform components. In the `Minimal` profile, Prometheus only collects metrics necessary for the default platform alerts, recording rules, telemetry and console dashboards. When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time. The default value is `Full`.",
+          "type": "string"
+        },
+        "enforcedBodySizeLimitBytes": {
+          "description": "enforcedBodySizeLimitBytes enforces a body size limit (in bytes) for Prometheus scraped metrics. If a scraped target's body response is larger than the limit, the scrape will fail. This helps protect Prometheus from targets that return excessively large responses. The value is specified in bytes (e.g., 4194304 for 4MB, 1073741824 for 1GB). When omitted, the Cluster Monitoring Operator automatically calculates an appropriate limit based on cluster capacity. Set an explicit value to override the automatic calculation. Minimum value is 10240 (10kB). Maximum value is 1073741824 (1GB).",
+          "type": "integer",
+          "format": "int64"
+        },
+        "externalLabels": {
+          "description": "externalLabels defines labels to be attached to time series and alerts when communicating with external systems such as federation, remote storage, and Alertmanager. These labels are not stored with metrics on disk; they are only added when data leaves Prometheus (e.g., during federation queries, remote write, or alert notifications). At least 1 label must be specified when set, with a maximum of 50 labels allowed. Each label key must be unique within this list. When omitted, no external labels are applied.",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/com.github.openshift.api.config.v1alpha1.Label"
+          },
+          "x-kubernetes-list-map-keys": [
+            "key"
+          ],
+          "x-kubernetes-list-type": "map"
+        },
+        "logLevel": {
+          "description": "logLevel defines the verbosity of logs emitted by Prometheus. This field allows users to control the amount and severity of logs generated, which can be useful for debugging issues or reducing noise in production environments. Allowed values are Error, Warn, Info, and Debug. When set to Error, only errors will be logged. When set to Warn, both warnings and errors will be logged. When set to Info, general information, warnings, and errors will all be logged. When set to Debug, detailed debugging information will be logged. When omitted, this means no opinion and the platform is left to choose a reasonable default, that is subject to change over time. The current default value is `Info`.",
+          "type": "string"
+        },
+        "nodeSelector": {
+          "description": "nodeSelector defines the nodes on which the Pods are scheduled. nodeSelector is optional.\n\nWhen omitted, this means the user has no opinion and the platform is left to choose reasonable defaults. These defaults are subject to change over time. The current default value is `kubernetes.io/os: linux`. Maximum of 10 node selector key-value pairs can be specified.",
+          "type": "object",
+          "additionalProperties": {
+            "type": "string",
+            "default": ""
+          }
+        },
+        "queryLogFile": {
+          "description": "queryLogFile specifies the file to which PromQL queries are logged. This setting can be either a filename, in which case the queries are saved to an `emptyDir` volume at `/var/log/prometheus`, or a full path to a location where an `emptyDir` volume will be mounted and the queries saved. Writing to `/dev/stderr`, `/dev/stdout` or `/dev/null` is supported, but writing to any other `/dev/` path is not supported. Relative paths are also not supported. By default, PromQL queries are not logged. Must be an absolute path starting with `/` or a simple filename without path separators. Must not contain consecutive slashes, end with a slash, or include '..' path traversal. Must contain only alphanumeric characters, '.', '_', '-', or '/'. Must be between 1 and 255 characters in length.",
+          "type": "string"
+        },
+        "remoteWrite": {
+          "description": "remoteWrite defines the remote write configuration, including URL, authentication, and relabeling settings. Remote write allows Prometheus to send metrics it collects to external long-term storage systems. When omitted, no remote write endpoints are configured. When provided, at least one configuration must be specified (minimum 1, maximum 10 items). Each entry must have a unique URL.",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/com.github.openshift.api.config.v1alpha1.RemoteWriteSpec"
+          },
+          "x-kubernetes-list-map-keys": [
+            "url"
+          ],
+          "x-kubernetes-list-type": "map"
+        },
+        "resources": {
+          "description": "resources defines the compute resource requests and limits for the Prometheus container. This includes CPU, memory and HugePages constraints to help control scheduling and resource usage. When not specified, defaults are used by the platform. Requests cannot exceed limits. Each entry must have a unique resource name. Minimum of 1 and maximum of 10 resource entries can be specified. The current default values are:\n  resources:\n   - name: cpu\n     request: 4m\n   - name: memory\n     request: 40Mi",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/com.github.openshift.api.config.v1alpha1.ContainerResource"
+          },
+          "x-kubernetes-list-map-keys": [
+            "name"
+          ],
+          "x-kubernetes-list-type": "map"
+        },
+        "retention": {
+          "description": "retention configures how long Prometheus retains metrics data and how much storage it can use. When omitted, the platform chooses reasonable defaults (currently 15 days retention, no size limit).",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.config.v1alpha1.Retention"
+        },
+        "tolerations": {
+          "description": "tolerations defines tolerations for the pods. tolerations is optional.\n\nWhen omitted, this means the user has no opinion and the platform is left to choose reasonable defaults. These defaults are subject to change over time. Defaults are empty/unset. Maximum length for this list is 10 Minimum length for this list is 1",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/io.k8s.api.core.v1.Toleration"
+          },
+          "x-kubernetes-list-type": "atomic"
+        },
+        "topologySpreadConstraints": {
+          "description": "topologySpreadConstraints defines rules for how Prometheus Pods should be distributed across topology domains such as zones, nodes, or other user-defined labels. topologySpreadConstraints is optional. This helps improve high availability and resource efficiency by avoiding placing too many replicas in the same failure domain.\n\nWhen omitted, this means no opinion and the platform is left to choose a default, which is subject to change over time. This field maps directly to the `topologySpreadConstraints` field in the Pod spec. Default is empty list. Maximum length for this list is 10. Minimum length for this list is 1 Entries must have unique topologyKey and whenUnsatisfiable pairs.",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/io.k8s.api.core.v1.TopologySpreadConstraint"
+          },
+          "x-kubernetes-list-map-keys": [
+            "topologyKey",
+            "whenUnsatisfiable"
+          ],
+          "x-kubernetes-list-type": "map"
+        },
+        "volumeClaimTemplate": {
+          "description": "volumeClaimTemplate defines persistent storage for Prometheus. Use this setting to configure the persistent volume claim, including storage class and volume size. If omitted, the Pod uses ephemeral storage and Prometheus data will not persist across restarts.",
+          "$ref": "#/definitions/io.k8s.api.core.v1.PersistentVolumeClaim"
+        }
+      }
+    },
+    "com.github.openshift.api.config.v1alpha1.RelabelConfig": {
+      "description": "RelabelConfig represents a relabeling rule.",
+      "type": "object",
+      "required": [
+        "name",
+        "action"
+      ],
+      "properties": {
+        "action": {
+          "description": "action is the action to perform on the matched labels. Valid actions are:\n  - Replace: Replaces the value of targetLabel with replacement, using regex capture groups.\n  - Keep: Keeps only metrics where regex matches the source labels.\n  - Drop: Drops metrics where regex matches the source labels.\n  - HashMod: Sets targetLabel to the hash modulus of the source labels.\n  - LabelMap: Copies labels matching regex to new label names derived from replacement.\n  - LabelDrop: Drops labels matching regex.\n  - LabelKeep: Keeps only labels matching regex.",
+          "type": "string"
+        },
+        "name": {
+          "description": "name is a unique identifier for this relabel configuration. Must contain only alphanumeric characters, hyphens, and underscores. Must be between 1 and 63 characters in length.",
+          "type": "string"
+        },
+        "regex": {
+          "description": "regex is the regular expression to match against the concatenated source label values. Must be a valid RE2 regular expression (https://github.com/google/re2/wiki/Syntax). When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time. The default value is \"(.*)\" to match everything. Must be between 1 and 1000 characters in length when specified.",
+          "type": "string"
+        },
+        "replacement": {
+          "description": "replacement value against which a Replace action is performed if the regular expression matches. Regex capture groups are available (e.g., $1, $2). When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time. The default value is \"$1\" (the first capture group). Setting to an empty string (\"\") explicitly clears the target label value. Must be at most 255 characters in length.",
+          "type": "string"
+        },
+        "separator": {
+          "description": "separator is the character sequence used to join source label values. Common examples: \";\", \",\", \"::\", \"|||\". When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time. The default value is \";\". Must be between 1 and 5 characters in length when specified.",
+          "type": "string"
+        },
+        "sourceLabels": {
+          "description": "sourceLabels specifies which label names to extract from each series for this relabeling rule. Each entry must be a valid label name (non-empty). The values of these labels are joined together using the configured separator, and the resulting string is then matched against the regular expression for the replace, keep, or drop actions. If a referenced label does not exist on a series, Prometheus substitutes an empty string. When omitted, the rule operates without extracting source labels (useful for actions like labelmap). Minimum of 1 and maximum of 10 source labels can be specified, each between 1 and 128 characters. Each entry must be unique.",
+          "type": "array",
+          "items": {
+            "type": "string",
+            "default": ""
+          },
+          "x-kubernetes-list-type": "set"
+        },
+        "targetLabel": {
+          "description": "targetLabel is the target label name where the result is written. Required for `Replace`, `HashMod`, `Lowercase`, `Uppercase`,`KeepEqual` and `DropEqual` actions. Must be between 1 and 128 characters in length when specified.",
+          "type": "string"
+        }
+      }
+    },
+    "com.github.openshift.api.config.v1alpha1.RemoteWriteSpec": {
+      "description": "RemoteWriteSpec represents configuration for remote write endpoints.",
+      "type": "object",
+      "required": [
+        "url"
+      ],
+      "properties": {
+        "name": {
+          "description": "name is an optional identifier for this remote write configuration. When omitted, Prometheus generates a unique name automatically. Must contain only alphanumeric characters, hyphens, and underscores. Must be between 1 and 63 characters in length when specified.",
+          "type": "string"
+        },
+        "remoteTimeoutSeconds": {
+          "description": "remoteTimeoutSeconds is the timeout in seconds for requests to the remote write endpoint. When omitted, the default is 30 seconds. Minimum value is 1 second. Maximum value is 600 seconds (10 minutes).",
+          "type": "integer",
+          "format": "int32"
+        },
+        "url": {
+          "description": "url is the URL of the remote write endpoint. Must be a valid URL with http or https scheme. Must be between 1 and 2048 characters in length.",
+          "type": "string"
+        },
+        "writeRelabelConfigs": {
+          "description": "writeRelabelConfigs is a list of relabeling rules to apply before sending data to the remote endpoint. When omitted, no relabeling is performed and all metrics are sent as-is. Minimum of 1 and maximum of 10 relabeling rules can be specified. Each rule must have a unique name.",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/com.github.openshift.api.config.v1alpha1.RelabelConfig"
+          },
+          "x-kubernetes-list-map-keys": [
+            "name"
+          ],
+          "x-kubernetes-list-type": "map"
+        }
+      }
+    },
+    "com.github.openshift.api.config.v1alpha1.Retention": {
+      "description": "Retention configures how long Prometheus retains metrics data and how much storage it can use.",
+      "type": "object",
+      "properties": {
+        "durationInDays": {
+          "description": "durationInDays specifies how many days Prometheus will retain metrics data. Prometheus automatically deletes data older than this duration. When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time. The default value is 15. Minimum value is 1 day. Maximum value is 365 days (1 year).",
+          "type": "integer",
+          "format": "int32"
+        },
+        "sizeInGiB": {
+          "description": "sizeInGiB specifies the maximum storage size in gibibytes (GiB) that Prometheus can use for data blocks and the write-ahead log (WAL). When the limit is reached, Prometheus will delete oldest data first. When omitted, no size limit is enforced and Prometheus uses available PersistentVolume capacity. Minimum value is 1 GiB. Maximum value is 16384 GiB (16 TiB).",
+          "type": "integer",
+          "format": "int32"
+        }
+      }
+    },
     "com.github.openshift.api.config.v1alpha1.RetentionNumberConfig": {
       "description": "RetentionNumberConfig specifies the configuration of the retention policy on the number of backups",
       "type": "object",
@@ -13050,6 +13328,25 @@
         }
       }
     },
+    "com.github.openshift.api.config.v1alpha1.SecretKeySelector": {
+      "description": "SecretKeySelector selects a key of a Secret in the `openshift-monitoring` namespace.",
+      "type": "object",
+      "required": [
+        "name",
+        "key"
+      ],
+      "properties": {
+        "key": {
+          "description": "key is the key of the secret to select from. Must consist of alphanumeric characters, '-', '_', or '.'. Must be between 1 and 253 characters in length.",
+          "type": "string"
+        },
+        "name": {
+          "description": "name is the name of the secret in the `openshift-monitoring` namespace to select from. Must be a valid Kubernetes secret name (lowercase alphanumeric, '-' or '.', start/end with alphanumeric). Must be between 1 and 253 characters in length.",
+          "type": "string"
+        }
+      },
+      "x-kubernetes-map-type": "atomic"
+    },
     "com.github.openshift.api.config.v1alpha1.Storage": {
       "description": "storage provides persistent storage configuration options for gathering jobs. If the type is set to PersistentVolume, then the PersistentVolume must be defined. If the type is set to Ephemeral, then the PersistentVolume must not be defined.",
       "type": "object",
@@ -13065,6 +13362,35 @@
           "description": "type is a required field that specifies the type of storage that will be used to store the Insights data archive. Valid values are \"PersistentVolume\" and \"Ephemeral\". When set to Ephemeral, the Insights data archive is stored in the ephemeral storage of the gathering job. When set to PersistentVolume, the Insights data archive is stored in the PersistentVolume that is defined by the persistentVolume field.",
           "type": "string",
           "default": ""
+        }
+      }
+    },
+    "com.github.openshift.api.config.v1alpha1.TLSConfig": {
+      "description": "TLSConfig represents TLS configuration for Alertmanager connections. At least one TLS configuration option must be specified. For mutual TLS (mTLS), both cert and key must be specified together, or both omitted.",
+      "type": "object",
+      "properties": {
+        "ca": {
+          "description": "ca is an optional CA certificate to use for TLS connections. When omitted, the system's default CA bundle is used.",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.config.v1alpha1.SecretKeySelector"
+        },
+        "cert": {
+          "description": "cert is an optional client certificate to use for mutual TLS connections. When omitted, no client certificate is presented.",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.config.v1alpha1.SecretKeySelector"
+        },
+        "certificateVerification": {
+          "description": "certificateVerification determines the policy for TLS certificate verification. Allowed values are \"Verify\" (performs certificate verification, secure) and \"SkipVerify\" (skips verification, insecure). When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time. The default value is \"Verify\".",
+          "type": "string"
+        },
+        "key": {
+          "description": "key is an optional client key to use for mutual TLS connections. When omitted, no client key is used.",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.config.v1alpha1.SecretKeySelector"
+        },
+        "serverName": {
+          "description": "serverName is an optional server name to use for TLS connections. When specified, must be a valid DNS subdomain as per RFC 1123. When omitted, the server name is derived from the URL. Must be between 1 and 253 characters in length.",
+          "type": "string"
         }
       }
     },

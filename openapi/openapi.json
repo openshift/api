@@ -11874,6 +11874,11 @@
           "default": {},
           "$ref": "#/definitions/com.github.openshift.api.config.v1alpha1.AlertmanagerConfig"
         },
+        "kubeStateMetricsConfig": {
+          "description": "kubeStateMetricsConfig is an optional field that can be used to configure the kube-state-metrics agent that runs in the openshift-monitoring namespace. KubeStateMetrics (KSM) is a service that listens to the Kubernetes API server and generates metrics about the state of Kubernetes objects. Metrics reflect the raw, unmodified data of objects such as Deployments, Nodes, and Pods. Specifically, it can configure how the kube-state-metrics instance is deployed, pod scheduling, and resource allocation. When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time.",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.config.v1alpha1.KubeStateMetricsConfig"
+        },
         "metricsServerConfig": {
           "description": "metricsServerConfig is an optional field that can be used to configure the Kubernetes Metrics Server that runs in the openshift-monitoring namespace. Specifically, it can configure how the Metrics Server instance is deployed, pod scheduling, its audit policy and log verbosity. When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time.",
           "default": {},
@@ -12162,6 +12167,54 @@
     },
     "com.github.openshift.api.config.v1alpha1.InsightsDataGatherStatus": {
       "type": "object"
+    },
+    "com.github.openshift.api.config.v1alpha1.KubeStateMetricsConfig": {
+      "description": "kubeStateMetricsConfig (KSM) is a service that listens to the Kubernetes API server and generates metrics about the state of Kubernetes objects. Metrics reflect the raw, unmodified data of objects such as Deployments, Nodes, and Pods. Specifically, it can configure how the kube-state-metrics instance is deployed, pod scheduling, and resource allocation. When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time.",
+      "type": "object",
+      "properties": {
+        "nodeSelector": {
+          "description": "nodeSelector defines the nodes on which the Pods are scheduled nodeSelector is optional.\n\nWhen omitted, this means the user has no opinion and the platform is left to choose reasonable defaults. These defaults are subject to change over time. The current default value is `kubernetes.io/os: linux`.",
+          "type": "object",
+          "additionalProperties": {
+            "type": "string",
+            "default": ""
+          }
+        },
+        "resources": {
+          "description": "resources defines the compute resource requests and limits for the KubeStateMetrics container. This includes CPU, memory and HugePages constraints to help control scheduling and resource usage. When not specified, defaults are used by the platform. Requests cannot exceed limits. This field is optional. More info: https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/ This is a simplified API that maps to Kubernetes ResourceRequirements. The current default values are:\n  resources:\n   - name: cpu\n     request: 4m\n     limit: null\n   - name: memory\n     request: 40Mi\n     limit: null\nMaximum length for this list is 10. Minimum length for this list is 1.",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/com.github.openshift.api.config.v1alpha1.ContainerResource"
+          },
+          "x-kubernetes-list-map-keys": [
+            "name"
+          ],
+          "x-kubernetes-list-type": "map"
+        },
+        "tolerations": {
+          "description": "tolerations defines tolerations for the pods. tolerations is optional.\n\nWhen omitted, this means the user has no opinion and the platform is left to choose reasonable defaults. These defaults are subject to change over time. Defaults are empty/unset. Maximum length for this list is 10 Minimum length for this list is 1",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/io.k8s.api.core.v1.Toleration"
+          },
+          "x-kubernetes-list-type": "atomic"
+        },
+        "topologySpreadConstraints": {
+          "description": "topologySpreadConstraints defines rules for how KubeStateMetrics Pods should be distributed across topology domains such as zones, nodes, or other user-defined labels. topologySpreadConstraints is optional. This helps improve high availability and resource efficiency by avoiding placing too many replicas in the same failure domain.\n\nWhen omitted, this means no opinion and the platform is left to choose a default, which is subject to change over time. This field maps directly to the `topologySpreadConstraints` field in the Pod spec. Default is empty list. Maximum length for this list is 10. Minimum length for this list is 1 Entries must have unique topologyKey and whenUnsatisfiable pairs.",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/io.k8s.api.core.v1.TopologySpreadConstraint"
+          },
+          "x-kubernetes-list-map-keys": [
+            "topologyKey",
+            "whenUnsatisfiable"
+          ],
+          "x-kubernetes-list-type": "map"
+        }
+      }
     },
     "com.github.openshift.api.config.v1alpha1.MetricsServerConfig": {
       "description": "MetricsServerConfig provides configuration options for the Metrics Server instance that runs in the `openshift-monitoring` namespace. Use this configuration to control how the Metrics Server instance is deployed, how it logs, and how its pods are scheduled.",

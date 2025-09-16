@@ -94,6 +94,14 @@ type ClusterMonitoringSpec struct {
 	// When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time.
 	// +optional
 	MetricsServerConfig MetricsServerConfig `json:"metricsServerConfig,omitempty,omitzero"`
+	// kubeStateMetricsConfig is an optional field that can be used to configure the kube-state-metrics agent that runs in the openshift-monitoring namespace.
+	// KubeStateMetrics (KSM) is a service that listens to the Kubernetes API server
+	// and generates metrics about the state of Kubernetes objects. Metrics reflect
+	// the raw, unmodified data of objects such as Deployments, Nodes, and Pods.
+	// Specifically, it can configure how the kube-state-metrics instance is deployed, pod scheduling, and resource allocation.
+	// When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time.
+	// +optional
+	KubeStateMetricsConfig KubeStateMetricsConfig `json:"kubeStateMetricsConfig,omitempty,omitzero"`
 }
 
 // UserDefinedMonitoring config for user-defined projects.
@@ -459,4 +467,77 @@ type Audit struct {
 	// for more information about auditing and log levels.
 	// +required
 	Profile AuditProfile `json:"profile,omitempty"`
+}
+
+// kubeStateMetricsConfig (KSM) is a service that listens to the Kubernetes API server
+// and generates metrics about the state of Kubernetes objects. Metrics reflect
+// the raw, unmodified data of objects such as Deployments, Nodes, and Pods.
+// Specifically, it can configure how the kube-state-metrics instance is deployed, pod scheduling, and resource allocation.
+// When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time.
+// +kubebuilder:validation:MinProperties=1
+type KubeStateMetricsConfig struct {
+	// nodeSelector defines the nodes on which the Pods are scheduled
+	// nodeSelector is optional.
+	//
+	// When omitted, this means the user has no opinion and the platform is left
+	// to choose reasonable defaults. These defaults are subject to change over time.
+	// The current default value is `kubernetes.io/os: linux`.
+	// +optional
+	// +kubebuilder:validation:MinProperties=1
+	// +kubebuilder:validation:MaxProperties=10
+	NodeSelector map[string]string `json:"nodeSelector,omitempty"`
+	// resources defines the compute resource requests and limits for the KubeStateMetrics container.
+	// This includes CPU, memory and HugePages constraints to help control scheduling and resource usage.
+	// When not specified, defaults are used by the platform. Requests cannot exceed limits.
+	// This field is optional.
+	// More info: https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/
+	// This is a simplified API that maps to Kubernetes ResourceRequirements.
+	// The current default values are:
+	//   resources:
+	//    - name: cpu
+	//      request: 4m
+	//      limit: null
+	//    - name: memory
+	//      request: 40Mi
+	//      limit: null
+	// Maximum length for this list is 10.
+	// Minimum length for this list is 1.
+	// +optional
+	// +listType=map
+	// +listMapKey=name
+	// +kubebuilder:validation:MaxItems=10
+	// +kubebuilder:validation:MinItems=1
+	Resources []ContainerResource `json:"resources,omitempty"`
+	// tolerations defines tolerations for the pods.
+	// tolerations is optional.
+	//
+	// When omitted, this means the user has no opinion and the platform is left
+	// to choose reasonable defaults. These defaults are subject to change over time.
+	// Defaults are empty/unset.
+	// Maximum length for this list is 10
+	// Minimum length for this list is 1
+	// +kubebuilder:validation:MaxItems=10
+	// +kubebuilder:validation:MinItems=1
+	// +listType=atomic
+	// +optional
+	Tolerations []v1.Toleration `json:"tolerations,omitempty"`
+	// topologySpreadConstraints defines rules for how KubeStateMetrics Pods should be distributed
+	// across topology domains such as zones, nodes, or other user-defined labels.
+	// topologySpreadConstraints is optional.
+	// This helps improve high availability and resource efficiency by avoiding placing
+	// too many replicas in the same failure domain.
+	//
+	// When omitted, this means no opinion and the platform is left to choose a default, which is subject to change over time.
+	// This field maps directly to the `topologySpreadConstraints` field in the Pod spec.
+	// Default is empty list.
+	// Maximum length for this list is 10.
+	// Minimum length for this list is 1
+	// Entries must have unique topologyKey and whenUnsatisfiable pairs.
+	// +kubebuilder:validation:MaxItems=10
+	// +kubebuilder:validation:MinItems=1
+	// +listType=map
+	// +listMapKey=topologyKey
+	// +listMapKey=whenUnsatisfiable
+	// +optional
+	TopologySpreadConstraints []v1.TopologySpreadConstraint `json:"topologySpreadConstraints,omitempty"`
 }

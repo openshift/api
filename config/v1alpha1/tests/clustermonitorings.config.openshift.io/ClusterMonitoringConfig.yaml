@@ -351,3 +351,426 @@ tests:
               - name: "example.com/quux"
                 request: "1"
       expectedError: 'spec.metricsServerConfig.resources: Too many: 11: must have at most 10 items'
+    - name: Should be able to create a minimal PrometheusK8sConfig
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: "Disabled"
+          prometheusConfig:
+            logLevel: "Info"
+      expected: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: "Disabled"
+          prometheusConfig:
+            logLevel: "Info"
+    - name: Should accept PrometheusK8sConfig with valid nodeSelector
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: "Disabled"
+          prometheusConfig:
+            nodeSelector:
+              kubernetes.io/os: linux
+              node-role.kubernetes.io/worker: ""
+      expected: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: "Disabled"
+          prometheusConfig:
+            nodeSelector:
+              kubernetes.io/os: linux
+              node-role.kubernetes.io/worker: ""
+    - name: Should accept PrometheusK8sConfig with valid resources
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: "Disabled"
+          prometheusConfig:
+            resources:
+              - name: cpu
+                request: 100m
+                limit: 500m
+              - name: memory
+                request: 128Mi
+                limit: 512Mi
+      expected: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: "Disabled"
+          prometheusConfig:
+            resources:
+              - name: cpu
+                request: 100m
+                limit: 500m
+              - name: memory
+                request: 128Mi
+                limit: 512Mi
+    - name: Should accept PrometheusK8sConfig with valid tolerations
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: "Disabled"
+          prometheusConfig:
+            tolerations:
+              - key: node-role.kubernetes.io/master
+                operator: Exists
+                effect: NoSchedule
+              - key: node-role.kubernetes.io/control-plane
+                operator: Exists
+                effect: NoSchedule
+      expected: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: "Disabled"
+          prometheusConfig:
+            tolerations:
+              - key: node-role.kubernetes.io/master
+                operator: Exists
+                effect: NoSchedule
+              - key: node-role.kubernetes.io/control-plane
+                operator: Exists
+                effect: NoSchedule
+    - name: Should accept PrometheusK8sConfig with valid topologySpreadConstraints
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: "Disabled"
+          prometheusConfig:
+            topologySpreadConstraints:
+              - maxSkew: 1
+                topologyKey: topology.kubernetes.io/zone
+                whenUnsatisfiable: DoNotSchedule
+                labelSelector:
+                  matchLabels:
+                    app: prometheus
+              - maxSkew: 2
+                topologyKey: kubernetes.io/hostname
+                whenUnsatisfiable: ScheduleAnyway
+                labelSelector:
+                  matchLabels:
+                    app: prometheus
+      expected: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: "Disabled"
+          prometheusConfig:
+            topologySpreadConstraints:
+              - maxSkew: 1
+                topologyKey: topology.kubernetes.io/zone
+                whenUnsatisfiable: DoNotSchedule
+                labelSelector:
+                  matchLabels:
+                    app: prometheus
+              - maxSkew: 2
+                topologyKey: kubernetes.io/hostname
+                whenUnsatisfiable: ScheduleAnyway
+                labelSelector:
+                  matchLabels:
+                    app: prometheus
+    - name: Should accept PrometheusK8sConfig with valid additionalAlertmanagerConfigs
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: "Disabled"
+          prometheusConfig:
+            additionalAlertmanagerConfigs:
+              - name: "external-am"
+                scheme: "HTTPS"
+                staticConfigs:
+                  - "alertmanager.example.com:9093"
+                pathPrefix: "/alertmanager"
+      expected: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: "Disabled"
+          prometheusConfig:
+            additionalAlertmanagerConfigs:
+              - name: "external-am"
+                scheme: "HTTPS"
+                staticConfigs:
+                  - "alertmanager.example.com:9093"
+                pathPrefix: "/alertmanager"
+    - name: Should accept PrometheusK8sConfig with valid remoteWrite
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: "Disabled"
+          prometheusConfig:
+            remoteWrite:
+              - url: "https://remote-write.example.com/api/v1/write"
+                name: "remote-storage"
+                remoteTimeoutSeconds: 30
+      expected: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: "Disabled"
+          prometheusConfig:
+            remoteWrite:
+              - url: "https://remote-write.example.com/api/v1/write"
+                name: "remote-storage"
+                remoteTimeoutSeconds: 30
+    - name: Should accept PrometheusK8sConfig with valid externalLabels
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: "Disabled"
+          prometheusConfig:
+            externalLabels:
+              - key: "cluster"
+                value: "production"
+              - key: "environment"
+                value: "prod"
+      expected: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: "Disabled"
+          prometheusConfig:
+            externalLabels:
+              - key: "cluster"
+                value: "production"
+              - key: "environment"
+                value: "prod"
+    - name: Should reject PrometheusK8sConfig with empty object
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: "Disabled"
+          prometheusConfig: {}
+      expectedError: 'spec.prometheusConfig: Invalid value: 0: spec.prometheusConfig in body should have at least 1 properties'
+    - name: Should reject PrometheusK8sConfig with too many additionalAlertmanagerConfigs
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: "Disabled"
+          prometheusConfig:
+            additionalAlertmanagerConfigs:
+              - name: "am1"
+                scheme: "HTTPS"
+                staticConfigs: ["alertmanager1.example.com:9093"]
+              - name: "am2"
+                scheme: "HTTPS"
+                staticConfigs: ["alertmanager2.example.com:9093"]
+              - name: "am3"
+                scheme: "HTTPS"
+                staticConfigs: ["alertmanager3.example.com:9093"]
+              - name: "am4"
+                scheme: "HTTPS"
+                staticConfigs: ["alertmanager4.example.com:9093"]
+              - name: "am5"
+                scheme: "HTTPS"
+                staticConfigs: ["alertmanager5.example.com:9093"]
+              - name: "am6"
+                scheme: "HTTPS"
+                staticConfigs: ["alertmanager6.example.com:9093"]
+              - name: "am7"
+                scheme: "HTTPS"
+                staticConfigs: ["alertmanager7.example.com:9093"]
+              - name: "am8"
+                scheme: "HTTPS"
+                staticConfigs: ["alertmanager8.example.com:9093"]
+              - name: "am9"
+                scheme: "HTTPS"
+                staticConfigs: ["alertmanager9.example.com:9093"]
+              - name: "am10"
+                scheme: "HTTPS"
+                staticConfigs: ["alertmanager10.example.com:9093"]
+              - name: "am11"
+                scheme: "HTTPS"
+                staticConfigs: ["alertmanager11.example.com:9093"]
+      expectedError: 'spec.prometheusConfig.additionalAlertmanagerConfigs: Too many: 11: must have at most 10 items'
+    - name: Should reject PrometheusK8sConfig with too many remoteWrite configs
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: "Disabled"
+          prometheusConfig:
+            remoteWrite:
+              - url: "https://remote1.example.com/api/v1/write"
+              - url: "https://remote2.example.com/api/v1/write"
+              - url: "https://remote3.example.com/api/v1/write"
+              - url: "https://remote4.example.com/api/v1/write"
+              - url: "https://remote5.example.com/api/v1/write"
+              - url: "https://remote6.example.com/api/v1/write"
+              - url: "https://remote7.example.com/api/v1/write"
+              - url: "https://remote8.example.com/api/v1/write"
+              - url: "https://remote9.example.com/api/v1/write"
+              - url: "https://remote10.example.com/api/v1/write"
+              - url: "https://remote11.example.com/api/v1/write"
+      expectedError: 'spec.prometheusConfig.remoteWrite: Too many: 11: must have at most 10 items'
+    - name: Should reject PrometheusK8sConfig with too many resources
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: "Disabled"
+          prometheusConfig:
+            resources:
+              - name: "cpu"
+                request: "100m"
+              - name: "memory"
+                request: "64Mi"
+              - name: "hugepages-2Mi"
+                request: "32Mi"
+              - name: "hugepages-1Gi"
+                request: "1Gi"
+              - name: "ephemeral-storage"
+                request: "1Gi"
+              - name: "nvidia.com/gpu"
+                request: "1"
+              - name: "example.com/foo"
+                request: "1"
+              - name: "example.com/bar"
+                request: "1"
+              - name: "example.com/baz"
+                request: "1"
+              - name: "example.com/qux"
+                request: "1"
+              - name: "example.com/quux"
+                request: "1"
+      expectedError: 'spec.prometheusConfig.resources: Too many: 11: must have at most 10 items'
+    - name: Should reject PrometheusK8sConfig with too many tolerations
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: "Disabled"
+          prometheusConfig:
+            tolerations:
+              - key: key1
+                operator: Exists
+                effect: NoSchedule
+              - key: key2
+                operator: Exists
+                effect: NoSchedule
+              - key: key3
+                operator: Exists
+                effect: NoSchedule
+              - key: key4
+                operator: Exists
+                effect: NoSchedule
+              - key: key5
+                operator: Exists
+                effect: NoSchedule
+              - key: key6
+                operator: Exists
+                effect: NoSchedule
+              - key: key7
+                operator: Exists
+                effect: NoSchedule
+              - key: key8
+                operator: Exists
+                effect: NoSchedule
+              - key: key9
+                operator: Exists
+                effect: NoSchedule
+              - key: key10
+                operator: Exists
+                effect: NoSchedule
+              - key: key11
+                operator: Exists
+                effect: NoSchedule
+      expectedError: 'spec.prometheusConfig.tolerations: Too many: 11: must have at most 10 items'
+    - name: Should reject PrometheusK8sConfig with empty tolerations array
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: "Disabled"
+          prometheusConfig:
+            tolerations: []
+      expectedError: 'spec.prometheusConfig.tolerations: Invalid value: 0: spec.prometheusConfig.tolerations in body should have at least 1 items'
+    - name: Should reject PrometheusK8sConfig with empty topologySpreadConstraints array
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: "Disabled"
+          prometheusConfig:
+            topologySpreadConstraints: []
+      expectedError: 'spec.prometheusConfig.topologySpreadConstraints: Invalid value: 0: spec.prometheusConfig.topologySpreadConstraints in body should have at least 1 items'
+    - name: Should reject PrometheusK8sConfig with too many topologySpreadConstraints
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: "Disabled"
+          prometheusConfig:
+            topologySpreadConstraints:
+              - maxSkew: 1
+                topologyKey: "zone1"
+                whenUnsatisfiable: DoNotSchedule
+              - maxSkew: 1
+                topologyKey: "zone2"
+                whenUnsatisfiable: DoNotSchedule
+              - maxSkew: 1
+                topologyKey: "zone3"
+                whenUnsatisfiable: DoNotSchedule
+              - maxSkew: 1
+                topologyKey: "zone4"
+                whenUnsatisfiable: DoNotSchedule
+              - maxSkew: 1
+                topologyKey: "zone5"
+                whenUnsatisfiable: DoNotSchedule
+              - maxSkew: 1
+                topologyKey: "zone6"
+                whenUnsatisfiable: DoNotSchedule
+              - maxSkew: 1
+                topologyKey: "zone7"
+                whenUnsatisfiable: DoNotSchedule
+              - maxSkew: 1
+                topologyKey: "zone8"
+                whenUnsatisfiable: DoNotSchedule
+              - maxSkew: 1
+                topologyKey: "zone9"
+                whenUnsatisfiable: DoNotSchedule
+              - maxSkew: 1
+                topologyKey: "zone10"
+                whenUnsatisfiable: DoNotSchedule
+              - maxSkew: 1
+                topologyKey: "zone11"
+                whenUnsatisfiable: DoNotSchedule
+      expectedError: 'spec.prometheusConfig.topologySpreadConstraints: Too many: 11: must have at most 10 items'

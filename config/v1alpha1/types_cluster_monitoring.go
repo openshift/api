@@ -483,6 +483,8 @@ type KubeStateMetricsConfig struct {
 	// to choose reasonable defaults. These defaults are subject to change over time.
 	// The current default value is `kubernetes.io/os: linux`.
 	// +optional
+	// Minimum number of properties: 1.
+	// Maximum number of properties: 10.
 	// +kubebuilder:validation:MinProperties=1
 	// +kubebuilder:validation:MaxProperties=10
 	NodeSelector map[string]string `json:"nodeSelector,omitempty"`
@@ -500,8 +502,7 @@ type KubeStateMetricsConfig struct {
 	//    - name: memory
 	//      request: 40Mi
 	//      limit: null
-	// Maximum length for this list is 10.
-	// Minimum length for this list is 1.
+	// When specified, resources must contain at least 1 entry and must not contain more than 10 entries.
 	// +optional
 	// +listType=map
 	// +listMapKey=name
@@ -514,8 +515,7 @@ type KubeStateMetricsConfig struct {
 	// When omitted, this means the user has no opinion and the platform is left
 	// to choose reasonable defaults. These defaults are subject to change over time.
 	// Defaults are empty/unset.
-	// Maximum length for this list is 10
-	// Minimum length for this list is 1
+	// When specified, resources must contain at least 1 entry and must not contain more than 10 entries.
 	// +kubebuilder:validation:MaxItems=10
 	// +kubebuilder:validation:MinItems=1
 	// +listType=atomic
@@ -530,8 +530,7 @@ type KubeStateMetricsConfig struct {
 	// When omitted, this means no opinion and the platform is left to choose a default, which is subject to change over time.
 	// This field maps directly to the `topologySpreadConstraints` field in the Pod spec.
 	// Default is empty list.
-	// Maximum length for this list is 10.
-	// Minimum length for this list is 1
+	// When specified, resources must contain at least 1 entry and must not contain more than 10 entries.
 	// Entries must have unique topologyKey and whenUnsatisfiable pairs.
 	// +kubebuilder:validation:MaxItems=10
 	// +kubebuilder:validation:MinItems=1

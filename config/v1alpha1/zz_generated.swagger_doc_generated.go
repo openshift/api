@@ -120,13 +120,13 @@ func (ClusterImagePolicyStatus) SwaggerDoc() map[string]string {
 
 var map_AdditionalAlertmanagerConfig = map[string]string{
 	"":              "AdditionalAlertmanagerConfig represents configuration for additional Alertmanager instances. The `AdditionalAlertmanagerConfig` resource defines settings for how a component communicates with additional Alertmanager instances.",
-	"apiVersion":    "apiVersion defines the API version of Alertmanager. `v1` is no longer supported, `v2` is set as the default value.",
-	"bearerToken":   "bearerToken defines the secret key reference containing the bearer token to use when authenticating to Alertmanager.",
+	"apiVersion":    "apiVersion defines the API version of Alertmanager. Allowed values: \"v2\". \"v1\" is no longer supported, \"v2\" is set as the default value.",
+	"bearerToken":   "bearerToken defines the secret reference containing the bearer token to use when authenticating to Alertmanager. This is a custom type to allow for admission time validations.",
 	"pathPrefix":    "pathPrefix defines the path prefix to add in front of the push endpoint path.",
 	"scheme":        "scheme defines the URL scheme to use when communicating with Alertmanager instances. Possible values are `http` or `https`. The default value is `http`.",
-	"staticConfigs": "staticConfigs is a list of statically configured Alertmanager endpoints in the form of `<hosts>:<port>`.",
-	"timeout":       "timeout defines the timeout value used when sending alerts.",
-	"tlsConfig":     "tlsConfig defines the TLS settings to use for Alertmanager connections.",
+	"staticConfigs": "staticConfigs is a list of statically configured Alertmanager endpoints in the form of `<host>:<port>`. Each entry must be a valid hostname or IP address followed by a colon and a valid port number (1-65535).",
+	"timeout":       "timeout defines the timeout value used when sending alerts. The value must be a valid Go time.Duration string (e.g. 30s, 5m, 1h).",
+	"tlsConfig":     "tlsConfig defines the TLS settings to use for Alertmanager connections. When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time.",
 }
 
 func (AdditionalAlertmanagerConfig) SwaggerDoc() map[string]string {
@@ -221,11 +221,21 @@ func (ContainerResource) SwaggerDoc() map[string]string {
 
 var map_ExternalLabels = map[string]string{
 	"":       "ExternalLabels represents labels to be added to time series and alerts.",
-	"labels": "labels is a map of label names to label values.",
+	"labels": "labels is a list of label key/value pairs.",
 }
 
 func (ExternalLabels) SwaggerDoc() map[string]string {
 	return map_ExternalLabels
+}
+
+var map_Label = map[string]string{
+	"":      "Label represents a key/value pair for external labels.",
+	"key":   "key is the name of the label.",
+	"value": "value is the value of the label.",
+}
+
+func (Label) SwaggerDoc() map[string]string {
+	return map_Label
 }
 
 var map_MetricsServerConfig = map[string]string{
@@ -240,28 +250,6 @@ var map_MetricsServerConfig = map[string]string{
 
 func (MetricsServerConfig) SwaggerDoc() map[string]string {
 	return map_MetricsServerConfig
-}
-
-var map_PrometheusK8sConfig = map[string]string{
-	"":                              "PrometheusK8sConfig provides configuration options for the Prometheus instance Use this configuration to control Prometheus deployment, pod scheduling, resource allocation, retention policies, and external integrations.",
-	"additionalAlertmanagerConfigs": "additionalAlertmanagerConfigs configures additional Alertmanager instances that receive alerts from the Prometheus component. By default, no additional Alertmanager instances are configured.",
-	"enforcedBodySizeLimit":         "enforcedBodySizeLimit enforces a body size limit for Prometheus scraped metrics. If a scraped target's body response is larger than the limit, the scrape will fail. The following values are valid: an empty value to specify no limit, a numeric value in Prometheus size format (such as `64MB`), or the string `automatic`, which indicates that the limit will be automatically calculated based on cluster capacity. The default value is empty, which indicates no limit.",
-	"externalLabels":                "externalLabels defines labels to be added to any time series or alerts when communicating with external systems such as federation, remote storage, and Alertmanager. By default, no labels are added.",
-	"logLevel":                      "logLevel defines the verbosity of logs emitted by Prometheus. This field allows users to control the amount and severity of logs generated, which can be useful for debugging issues or reducing noise in production environments. Allowed values are Error, Warn, Info, and Debug. When set to Error, only errors will be logged. When set to Warn, both warnings and errors will be logged. When set to Info, general information, warnings, and errors will all be logged. When set to Debug, detailed debugging information will be logged. When omitted, this means no opinion and the platform is left to choose a reasonable default, that is subject to change over time. The current default value is `Info`.",
-	"nodeSelector":                  "nodeSelector defines the nodes on which the Pods are scheduled nodeSelector is optional.\n\nWhen omitted, this means the user has no opinion and the platform is left to choose reasonable defaults. These defaults are subject to change over time. The current default value is `kubernetes.io/os: linux`.",
-	"queryLogFile":                  "queryLogFile specifies the file to which PromQL queries are logged. This setting can be either a filename, in which case the queries are saved to an `emptyDir` volume at `/var/log/prometheus`, or a full path to a location where an `emptyDir` volume will be mounted and the queries saved. Writing to `/dev/stderr`, `/dev/stdout` or `/dev/null` is supported, but writing to any other `/dev/` path is not supported. Relative paths are also not supported. By default, PromQL queries are not logged.",
-	"remoteWrite":                   "remoteWrite defines the remote write configuration, including URL, authentication, and relabeling settings.",
-	"resources":                     "resources defines the compute resource requests and limits for the Prometheus container. This includes CPU, memory and HugePages constraints to help control scheduling and resource usage. When not specified, defaults are used by the platform. Requests cannot exceed limits. This field is optional. More info: https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/ This is a simplified API that maps to Kubernetes ResourceRequirements. The current default values are:\n  resources:\n   - name: cpu\n     request: 4m\n     limit: null\n   - name: memory\n     request: 40Mi\n     limit: null\nMaximum length for this list is 10. Minimum length for this list is 1.",
-	"retention":                     "retention defines the duration for which Prometheus retains data. This definition must be specified using the following regular expression pattern: `[0-9]+(ms|s|m|h|d|w|y)` (ms = milliseconds, s= seconds,m = minutes, h = hours, d = days, w = weeks, y = years). The default value is `15d`.",
-	"retentionSize":                 "retentionSize defines the maximum amount of disk space used by data blocks plus the write-ahead log (WAL). Supported values are `B`, `KB`, `KiB`, `MB`, `MiB`, `GB`, `GiB`, `TB`, `TiB`, `PB`, `PiB`, `EB`, and `EiB`. By default, no limit is defined.",
-	"tolerations":                   "tolerations defines tolerations for the pods. tolerations is optional.\n\nWhen omitted, this means the user has no opinion and the platform is left to choose reasonable defaults. These defaults are subject to change over time. Defaults are empty/unset. Maximum length for this list is 10 Minimum length for this list is 1",
-	"topologySpreadConstraints":     "topologySpreadConstraints defines rules for how Prometheus Pods should be distributed across topology domains such as zones, nodes, or other user-defined labels. topologySpreadConstraints is optional. This helps improve high availability and resource efficiency by avoiding placing too many replicas in the same failure domain.\n\nWhen omitted, this means no opinion and the platform is left to choose a default, which is subject to change over time. This field maps directly to the `topologySpreadConstraints` field in the Pod spec. Default is empty list. Maximum length for this list is 10. Minimum length for this list is 1 Entries must have unique topologyKey and whenUnsatisfiable pairs.",
-	"collectionProfile":             "collectionProfile defines the metrics collection profile that Prometheus uses to collect metrics from the platform components. Supported values are `full` or `minimal`. In the `full` profile (default), Prometheus collects all metrics that are exposed by the platform components. In the `minimal` profile, Prometheus only collects metrics necessary for the default platform alerts, recording rules, telemetry and console dashboards.",
-	"volumeClaimTemplate":           "volumeClaimTemplate Defines persistent storage for Prometheus. Use this setting to configure the persistent volume claim, including storage class, volume size, and name. If omitted, the Pod uses ephemeral storage and Prometheus data will not persist across restarts. This field is optional.",
-}
-
-func (PrometheusK8sConfig) SwaggerDoc() map[string]string {
-	return map_PrometheusK8sConfig
 }
 
 var map_RelabelConfig = map[string]string{
@@ -288,6 +276,17 @@ var map_RemoteWriteSpec = map[string]string{
 
 func (RemoteWriteSpec) SwaggerDoc() map[string]string {
 	return map_RemoteWriteSpec
+}
+
+var map_SecretKeyReference = map[string]string{
+	"":         "SecretKeyReference represents a reference to a secret key.",
+	"name":     "The name of the secret in the pod's namespace to select from.",
+	"key":      "The key of the secret to select from. Must be a valid secret key.",
+	"optional": "Specify whether the Secret or its key must be defined",
+}
+
+func (SecretKeyReference) SwaggerDoc() map[string]string {
+	return map_SecretKeyReference
 }
 
 var map_TLSConfig = map[string]string{

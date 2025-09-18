@@ -285,7 +285,7 @@ type TokenIssuer struct {
 	//
 	// +listType=set
 	// +kubebuilder:validation:MinItems=1
-	// +kubebuilder:validation:MaxItems=10
+	// +kubebuilder:validation:MaxItems=263
 	// +required
 	Audiences []TokenAudience `json:"audiences"`
 

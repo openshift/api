@@ -250,7 +250,8 @@ type OIDCProvider struct {
 	// See the TokenUserValidationRule type for more information on rule structure.
 	// +optional
 
-	//+listType=atomic
+	// +listType=atomic
+	// +kubebuilder:validation:MaxItems=20
 	UserValidationRules []TokenUserValidationRule `json:"userValidationRules,omitempty"`
 }
 
@@ -285,7 +286,7 @@ type TokenIssuer struct {
 	//
 	// +listType=set
 	// +kubebuilder:validation:MinItems=1
-	// +kubebuilder:validation:MaxItems=263
+	// +kubebuilder:validation:MaxItems=20
 	// +required
 	Audiences []TokenAudience `json:"audiences"`
 
@@ -807,7 +808,7 @@ type TokenClaimValidationRule struct {
 	// Must be set if type == "Expression".
 	//
 	// +optional
-	ExpressionRule *TokenExpressionRule `json:"expressionRule,omitempty"`
+	ExpressionRule *TokenExpressionRule `json:"expressionRule,omitzero,omitempty"`
 }
 
 type TokenRequiredClaim struct {

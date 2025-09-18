@@ -6299,6 +6299,16 @@ func (in *TokenIssuer) DeepCopyInto(out *TokenIssuer) {
 		copy(*out, *in)
 	}
 	out.CertificateAuthority = in.CertificateAuthority
+	if in.DiscoveryURL != nil {
+		in, out := &in.DiscoveryURL, &out.DiscoveryURL
+		*out = new(string)
+		**out = **in
+	}
+	if in.AudienceMatchPolicy != nil {
+		in, out := &in.AudienceMatchPolicy, &out.AudienceMatchPolicy
+		*out = new(AudienceMatchPolicy)
+		**out = **in
+	}
 	return
 }
 

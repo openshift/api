@@ -801,13 +801,13 @@ type TokenClaimValidationRule struct {
 	// requiredClaim allows configuring a required claim name and its expected value.
 	// RequiredClaim is used when type is RequiredClaim.
 	// +optional
-	RequiredClaim TokenRequiredClaim `json:"requiredClaim,omitzero"`
+	RequiredClaim *TokenRequiredClaim `json:"requiredClaim,omitempty"`
 
 	// expressionRule contains the configuration for the "Expression" type.
 	// Must be set if type == "Expression".
 	//
 	// +optional
-	ExpressionRule TokenExpressionRule `json:"expressionRule,omitzero,omitempty"`
+	ExpressionRule *TokenExpressionRule `json:"expressionRule,omitempty"`
 }
 
 type TokenRequiredClaim struct {
@@ -840,7 +840,7 @@ type TokenExpressionRule struct {
 	// +required
 	Expression string `json:"expression,omitempty"`
 
-	// Message allows configuring the human-readable message that is returned
+	// message allows configuring the human-readable message that is returned
 	// from the Kubernetes API server when a token fails validation based on
 	// the CEL expression defined in 'expression'. This field is optional.
 	//
@@ -866,11 +866,11 @@ type TokenUserValidationRule struct {
 	// +kubebuilder:validation:MinLength=1
 	// +kubebuilder:validation:MaxLength=4096
 	Expression string `json:"expression,omitempty"`
-	// Message is an optional, human-readable message returned by the API server when
+	// message is an optional, human-readable message returned by the API server when
 	// this validation rule fails. It can help clarify why a token was rejected.
 	//
 	// +optional
 	// +kubebuilder:validation:MinLength=1
 	// +kubebuilder:validation:MaxLength=256
-	Message *string `json:"message,omitempty"`
+	Message string `json:"message,omitempty"`
 }

@@ -320,7 +320,7 @@ type TokenIssuer struct {
 	// +kubebuilder:validation:XValidation:rule="self.matches('^[^#]*$')",message="discoveryURL must not contain fragments"
 	// +kubebuilder:validation:XValidation:rule="self.matches('^[^@]*$')",message="discoveryURL must not contain user info"
 	// +kubebuilder:validation:MaxLength=2048
-	DiscoveryURL string `json:"discoveryURL,omitempty"`
+	DiscoveryURL *string `json:"discoveryURL,omitempty"`
 
 	// audienceMatchPolicy specifies how token audiences are matched.
 	// If omitted, the system applies a default policy.
@@ -329,7 +329,7 @@ type TokenIssuer struct {
 	//
 	// +optional
 	// +openshift:enable:FeatureGate=ExternalOIDCWithNewAuthConfigFields
-	AudienceMatchPolicy AudienceMatchPolicy `json:"audienceMatchPolicy,omitempty"`
+	AudienceMatchPolicy *AudienceMatchPolicy `json:"audienceMatchPolicy,omitempty"`
 }
 
 // AudienceMatchPolicyType is a set of valid values for Issuer.AudienceMatchPolicy.
@@ -801,14 +801,13 @@ type TokenClaimValidationRule struct {
 	// requiredClaim allows configuring a required claim name and its expected value.
 	// RequiredClaim is used when type is RequiredClaim.
 	// +optional
-	RequiredClaim *TokenRequiredClaim `json:"requiredClaim"`
+	RequiredClaim TokenRequiredClaim `json:"requiredClaim,omitzero"`
 
 	// expressionRule contains the configuration for the "Expression" type.
 	// Must be set if type == "Expression".
 	//
 	// +optional
-	// +openshift:enable:FeatureGate=ExternalOIDCWithNewAuthConfigFields
-	ExpressionRule *TokenExpressionRule `json:"expressionRule,omitempty"`
+	ExpressionRule TokenExpressionRule `json:"expressionRule,omitzero,omitempty"`
 }
 
 type TokenRequiredClaim struct {
@@ -832,14 +831,14 @@ type TokenRequiredClaim struct {
 
 // +openshift:enable:FeatureGate=ExternalOIDCWithNewAuthConfigFields
 type TokenExpressionRule struct {
-	// Expression is a CEL expression evaluated against token claims.
+	// expression is a CEL expression evaluated against token claims.
 	// The expression must be a non-empty string and no longer than 4096 characters.
 	// This field is required.
 	//
 	// +kubebuilder:validation:MinLength=1
 	// +kubebuilder:validation:MaxLength=4096
 	// +required
-	Expression string `json:"expression"`
+	Expression string `json:"expression,omitempty"`
 
 	// Message allows configuring the human-readable message that is returned
 	// from the Kubernetes API server when a token fails validation based on
@@ -858,7 +857,7 @@ type TokenExpressionRule struct {
 // At least one rule must evaluate to true for the token to be considered valid.
 // +openshift:enable:FeatureGate=ExternalOIDCWithNewAuthConfigFields
 type TokenUserValidationRule struct {
-	// Expression is a CEL expression that must evaluate
+	// expression is a CEL expression that must evaluate
 	// to true for the token to be accepted. The expression is evaluated against the token's
 	// user information (e.g., username, groups). This field must be non-empty and may not
 	// exceed 4096 characters.
@@ -871,5 +870,7 @@ type TokenUserValidationRule struct {
 	// this validation rule fails. It can help clarify why a token was rejected.
 	//
 	// +optional
-	Message string `json:"message,omitempty"`
+	// +kubebuilder:validation:MinLength=1
+	// +kubebuilder:validation:MaxLength=256
+	Message *string `json:"message,omitempty"`
 }

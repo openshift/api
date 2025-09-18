@@ -244,14 +244,14 @@ type OIDCProvider struct {
 	// +optional
 	ClaimValidationRules []TokenClaimValidationRule `json:"claimValidationRules,omitempty"`
 
-	// UserValidationRules defines the set of rules used to validate claims in a user’s token.
+	// userValidationRules defines the set of rules used to validate claims in a user’s token.
 	// These rules determine whether a token subject is considered valid based on its claims.
 	// Each rule is evaluated independently.
 	// See the TokenUserValidationRule type for more information on rule structure.
-	// +optional
 
 	// +listType=atomic
-	// +kubebuilder:validation:MaxItems=20
+	// +kubebuilder:validation:MaxItems=64
+	// +optional
 	UserValidationRules []TokenUserValidationRule `json:"userValidationRules,omitempty"`
 }
 
@@ -808,7 +808,7 @@ type TokenClaimValidationRule struct {
 	// Must be set if type == "Expression".
 	//
 	// +optional
-	ExpressionRule *TokenExpressionRule `json:"expressionRule,omitzero,omitempty"`
+	ExpressionRule *TokenExpressionRule `json:"expressionRule,omitempty"`
 }
 
 type TokenRequiredClaim struct {

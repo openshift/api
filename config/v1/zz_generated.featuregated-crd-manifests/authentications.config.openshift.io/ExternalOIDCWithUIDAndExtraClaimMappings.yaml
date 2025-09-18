@@ -615,7 +615,7 @@ spec:
                         required:
                         - expression
                         type: object
-                      maxItems: 20
+                      maxItems: 64
                       type: array
                       x-kubernetes-list-type: atomic
                   required:

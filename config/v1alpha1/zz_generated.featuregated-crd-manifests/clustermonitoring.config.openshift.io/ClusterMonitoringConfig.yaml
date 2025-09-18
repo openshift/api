@@ -1309,26 +1309,23 @@ spec:
                         apiVersion:
                           description: |-
                             apiVersion defines the API version of Alertmanager.
-                            `v1` is no longer supported, `v2` is set as the default value.
-                          maxLength: 10
+                            Allowed values: "v2". "v1" is no longer supported, "v2" is set as the default value.
+                          enum:
+                          - v2
                           type: string
                         bearerToken:
                           description: |-
-                            bearerToken defines the secret key reference containing the bearer token
+                            bearerToken defines the secret reference containing the bearer token
                             to use when authenticating to Alertmanager.
+                            This is a custom type to allow for admission time validations.
                           properties:
                             key:
-                              description: The key of the secret to select from.  Must
+                              description: The key of the secret to select from. Must
                                 be a valid secret key.
                               type: string
                             name:
-                              default: ""
-                              description: |-
-                                Name of the referent.
-                                This field is effectively required, but due to backwards compatibility is
-                                allowed to be empty. Instances of this type with an empty value here are
-                                almost certainly wrong.
-                                More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names
+                              description: The name of the secret in the pod's namespace
+                                to select from.
                               type: string
                             optional:
                               description: Specify whether the Secret or its key must
@@ -1336,38 +1333,45 @@ spec:
                               type: boolean
                           required:
                           - key
+                          - name
                           type: object
-                          x-kubernetes-map-type: atomic
                         pathPrefix:
                           description: pathPrefix defines the path prefix to add in
                             front of the push endpoint path.
                           maxLength: 255
+                          minLength: 1
                           type: string
                         scheme:
                           description: |-
                             scheme defines the URL scheme to use when communicating with Alertmanager
                             instances.
                             Possible values are `http` or `https`. The default value is `http`.
-                          maxLength: 10
+                          enum:
+                          - http
+                          - https
                           type: string
                         staticConfigs:
                           description: |-
                             staticConfigs is a list of statically configured Alertmanager endpoints in the form
-                            of `<hosts>:<port>`.
+                            of `<host>:<port>`. Each entry must be a valid hostname or IP address followed by a colon and a valid port number (1-65535).
                           items:
                             maxLength: 255
+                            pattern: ^([a-zA-Z0-9.-]+|\[[a-fA-F0-9:]+\]):([1-9][0-9]{0,4})$
                             type: string
                           maxItems: 10
                           type: array
                           x-kubernetes-list-type: set
                         timeout:
-                          description: timeout defines the timeout value used when
-                            sending alerts.
-                          maxLength: 20
+                          description: |-
+                            timeout defines the timeout value used when sending alerts.
+                            The value must be a valid Go time.Duration string (e.g. 30s, 5m, 1h).
+                          minLength: 2
+                          pattern: ^([0-9]+(\.[0-9]+)?(ns|us|µs|ms|s|m|h))+$
                           type: string
                         tlsConfig:
-                          description: tlsConfig defines the TLS settings to use for
-                            Alertmanager connections.
+                          description: |-
+                            tlsConfig defines the TLS settings to use for Alertmanager connections.
+                            When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time.
                           properties:
                             ca:
                               description: ca is the CA certificate to use for TLS
@@ -1458,10 +1462,12 @@ spec:
                           type: object
                       required:
                       - apiVersion
+                      - scheme
+                      - staticConfigs
                       type: object
                     maxItems: 10
                     type: array
-                    x-kubernetes-list-type: atomic
+                    x-kubernetes-list-type: map
                   collectionProfile:
                     description: |-
                       collectionProfile defines the metrics collection profile that Prometheus uses to collect
@@ -1470,6 +1476,8 @@ spec:
                       metrics that are exposed by the platform components. In the `minimal`
                       profile, Prometheus only collects metrics necessary for the default
                       platform alerts, recording rules, telemetry and console dashboards.
+                      When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time.
+                      The default value is `full`.
                     enum:
                     - full
                     - minimal
@@ -1483,8 +1491,11 @@ spec:
                       a numeric value in Prometheus size format (such as `64MB`), or
                       the string `automatic`, which indicates that the limit will be
                       automatically calculated based on cluster capacity.
-                      The default value is empty, which indicates no limit.
+                      To specify no limit, omit this field.
+                      Minimum length for this list is 1
+                      Maximum length for this list is 50.
                     maxLength: 50
+                    minLength: 1
                     type: string
                   externalLabels:
                     description: |-
@@ -1493,16 +1504,37 @@ spec:
                       and Alertmanager. By default, no labels are added.
                     properties:
                       labels:
-                        additionalProperties:
-                          type: string
-                        description: labels is a map of label names to label values.
-                        type: object
+                        description: labels is a list of label key/value pairs.
+                        items:
+                          description: Label represents a key/value pair for external
+                            labels.
+                          properties:
+                            key:
+                              description: key is the name of the label.
+                              maxLength: 63
+                              minLength: 1
+                              type: string
+                            value:
+                              description: value is the value of the label.
+                              maxLength: 63
+                              minLength: 1
+                              type: string
+                          required:
+                          - key
+                          - value
+                          type: object
+                        maxItems: 50
+                        minItems: 1
+                        type: array
+                        x-kubernetes-list-map-keys:
+                        - key
+                        x-kubernetes-list-type: map
                     required:
                     - labels
                     type: object
                   logLevel:
                     description: |-
-                      logLevel defines the verbosity of logs emitted by Prometheus.
+                      logLevel defines the verbosity of logs emitted by Alertmanager.
                       This field allows users to control the amount and severity of logs generated, which can be useful
                       for debugging issues or reducing noise in production environments.
                       Allowed values are Error, Warn, Info, and Debug.
@@ -1512,7 +1544,11 @@ spec:
                       When set to Debug, detailed debugging information will be logged.
                       When omitted, this means no opinion and the platform is left to choose a reasonable default, that is subject to change over time.
                       The current default value is `Info`.
-                    maxLength: 10
+                    enum:
+                    - Error
+                    - Warn
+                    - Info
+                    - Debug
                     type: string
                   nodeSelector:
                     additionalProperties:
@@ -1539,11 +1575,13 @@ spec:
                       also not supported.
                       By default, PromQL queries are not logged.
                     maxLength: 255
+                    minLength: 1
                     type: string
                   remoteWrite:
                     description: |-
                       remoteWrite defines the remote write configuration, including URL, authentication,
                       and relabeling settings.
+                      remoteWrite supports a maximum of 10 items in the list.
                     items:
                       description: RemoteWriteSpec represents configuration for remote
                         write endpoints.
@@ -1608,7 +1646,7 @@ spec:
                       type: object
                     maxItems: 10
                     type: array
-                    x-kubernetes-list-type: atomic
+                    x-kubernetes-list-type: map
                   resources:
                     description: |-
                       resources defines the compute resource requests and limits for the Prometheus container.
@@ -1696,16 +1734,18 @@ spec:
                       This definition must be specified using the following regular
                       expression pattern: `[0-9]+(ms|s|m|h|d|w|y)` (ms = milliseconds,
                       s= seconds,m = minutes, h = hours, d = days, w = weeks, y = years).
+                      When omitted, this means the user has no opinion and the platform is left
+                      to choose reasonable defaults, which are subject to change over time.
                       The default value is `15d`.
                     maxLength: 20
+                    minLength: 1
                     type: string
                   retentionSize:
                     description: |-
-                      retentionSize defines the maximum amount of disk space used by data blocks plus the
-                      write-ahead log (WAL).
-                      Supported values are `B`, `KB`, `KiB`, `MB`, `MiB`, `GB`, `GiB`, `TB`,
-                      `TiB`, `PB`, `PiB`, `EB`, and `EiB`.
-                      By default, no limit is defined.
+                      retentionSize specifies the maximum volume of persistent storage that Prometheus uses for data blocks and the write-ahead log (WAL).
+                      Acceptable values use standard Kubernetes resource quantity formats, such as `Mi`, `Gi`, `Ti`, etc.
+                      When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time.
+                      The default is no storage size limit is enforced and Prometheus will use the available storage capacity of the PersistentVolume.
                     maxLength: 20
                     type: string
                   tolerations:

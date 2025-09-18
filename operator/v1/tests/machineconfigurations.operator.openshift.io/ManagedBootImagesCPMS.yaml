@@ -2,7 +2,7 @@ apiVersion: apiextensions.k8s.io/v1 # Hack because controller-gen complains if w
 name: "MachineConfiguration"
 crdName: machineconfigurations.operator.openshift.io
 featureGates:
-- ManagedBootImages
+- ManagedBootImagesCPMS
 tests:
   onCreate:
     - name: Should be able to create a minimal MachineConfiguration
@@ -107,4 +107,4 @@ tests:
                 apiGroup: machine.openshift.io
                 selection:
                   mode: All
-      expectedError: "spec.managedBootImages.machineManagers[1]: Duplicate value: map[string]interface {}{\"apiGroup\":\"machine.openshift.io\", \"resource\":\"controlplalohaanemachinesets\"}"
+      expectedError: "spec.managedBootImages.machineManagers[1]: Duplicate value: map[string]interface {}{\"apiGroup\":\"machine.openshift.io\", \"resource\":\"controlplanemachinesets\"}"

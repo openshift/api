@@ -351,3 +351,255 @@ tests:
               - name: "example.com/quux"
                 request: "1"
       expectedError: 'spec.metricsServerConfig.resources: Too many: 11: must have at most 10 items'
+    - name: Should be able to create a minimal PrometheusOperatorConfig
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: "Disabled"
+          prometheusOperatorConfig:
+            logLevel: "info"
+      expected: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: "Disabled"
+          prometheusOperatorConfig:
+            logLevel: "info"
+    - name: Should accept PrometheusOperatorConfig with valid nodeSelector
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: "Disabled"
+          prometheusOperatorConfig:
+            nodeSelector:
+              kubernetes.io/os: linux
+              node-role.kubernetes.io/worker: ""
+      expected: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: "Disabled"
+          prometheusOperatorConfig:
+            nodeSelector:
+              kubernetes.io/os: linux
+              node-role.kubernetes.io/worker: ""
+    - name: Should accept PrometheusOperatorConfig with valid resources
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: "Disabled"
+          prometheusOperatorConfig:
+            resources:
+              requests:
+                cpu: 100m
+                memory: 128Mi
+              limits:
+                cpu: 500m
+                memory: 512Mi
+      expected: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: "Disabled"
+          prometheusOperatorConfig:
+            resources:
+              requests:
+                cpu: 100m
+                memory: 128Mi
+              limits:
+                cpu: 500m
+                memory: 512Mi
+    - name: Should accept PrometheusOperatorConfig with valid tolerations
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: "Disabled"
+          prometheusOperatorConfig:
+            tolerations:
+              - key: node-role.kubernetes.io/master
+                operator: Exists
+                effect: NoSchedule
+              - key: node-role.kubernetes.io/control-plane
+                operator: Exists
+                effect: NoSchedule
+      expected: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: "Disabled"
+          prometheusOperatorConfig:
+            tolerations:
+              - key: node-role.kubernetes.io/master
+                operator: Exists
+                effect: NoSchedule
+              - key: node-role.kubernetes.io/control-plane
+                operator: Exists
+                effect: NoSchedule
+    - name: Should accept PrometheusOperatorConfig with valid topologySpreadConstraints
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: "Disabled"
+          prometheusOperatorConfig:
+            topologySpreadConstraints:
+              - maxSkew: 1
+                topologyKey: topology.kubernetes.io/zone
+                whenUnsatisfiable: DoNotSchedule
+                labelSelector:
+                  matchLabels:
+                    app: prometheus-operator
+              - maxSkew: 2
+                topologyKey: kubernetes.io/hostname
+                whenUnsatisfiable: ScheduleAnyway
+                labelSelector:
+                  matchLabels:
+                    app: prometheus-operator
+      expected: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: "Disabled"
+          prometheusOperatorConfig:
+            topologySpreadConstraints:
+              - maxSkew: 1
+                topologyKey: topology.kubernetes.io/zone
+                whenUnsatisfiable: DoNotSchedule
+                labelSelector:
+                  matchLabels:
+                    app: prometheus-operator
+              - maxSkew: 2
+                topologyKey: kubernetes.io/hostname
+                whenUnsatisfiable: ScheduleAnyway
+                labelSelector:
+                  matchLabels:
+                    app: prometheus-operator
+    - name: Should reject PrometheusOperatorConfig with empty object
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: "Disabled"
+          prometheusOperatorConfig: {}
+      expectedError: 'spec.prometheusOperatorConfig: Invalid value: 0: spec.prometheusOperatorConfig in body should have at least 1 properties'
+    - name: Should reject PrometheusOperatorConfig with too many tolerations
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: "Disabled"
+          prometheusOperatorConfig:
+            tolerations:
+              - key: key1
+                operator: Exists
+                effect: NoSchedule
+              - key: key2
+                operator: Exists
+                effect: NoSchedule
+              - key: key3
+                operator: Exists
+                effect: NoSchedule
+              - key: key4
+                operator: Exists
+                effect: NoSchedule
+              - key: key5
+                operator: Exists
+                effect: NoSchedule
+              - key: key6
+                operator: Exists
+                effect: NoSchedule
+              - key: key7
+                operator: Exists
+                effect: NoSchedule
+              - key: key8
+                operator: Exists
+                effect: NoSchedule
+              - key: key9
+                operator: Exists
+                effect: NoSchedule
+              - key: key10
+                operator: Exists
+                effect: NoSchedule
+              - key: key11
+                operator: Exists
+                effect: NoSchedule
+      expectedError: 'spec.prometheusOperatorConfig.tolerations: Too many: 11: must have at most 10 items'
+    - name: Should reject PrometheusOperatorConfig with empty tolerations array
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: "Disabled"
+          prometheusOperatorConfig:
+            tolerations: []
+      expectedError: 'spec.prometheusOperatorConfig.tolerations: Invalid value: 0: spec.prometheusOperatorConfig.tolerations in body should have at least 1 items'
+    - name: Should reject PrometheusOperatorConfig with empty topologySpreadConstraints array
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: "Disabled"
+          prometheusOperatorConfig:
+            topologySpreadConstraints: []
+      expectedError: 'spec.prometheusOperatorConfig.topologySpreadConstraints: Invalid value: 0: spec.prometheusOperatorConfig.topologySpreadConstraints in body should have at least 1 items'
+    - name: Should reject PrometheusOperatorConfig with too many topologySpreadConstraints
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: "Disabled"
+          prometheusOperatorConfig:
+            topologySpreadConstraints:
+              - maxSkew: 1
+                topologyKey: "zone1"
+                whenUnsatisfiable: DoNotSchedule
+              - maxSkew: 1
+                topologyKey: "zone2"
+                whenUnsatisfiable: DoNotSchedule
+              - maxSkew: 1
+                topologyKey: "zone3"
+                whenUnsatisfiable: DoNotSchedule
+              - maxSkew: 1
+                topologyKey: "zone4"
+                whenUnsatisfiable: DoNotSchedule
+              - maxSkew: 1
+                topologyKey: "zone5"
+                whenUnsatisfiable: DoNotSchedule
+              - maxSkew: 1
+                topologyKey: "zone6"
+                whenUnsatisfiable: DoNotSchedule
+              - maxSkew: 1
+                topologyKey: "zone7"
+                whenUnsatisfiable: DoNotSchedule
+              - maxSkew: 1
+                topologyKey: "zone8"
+                whenUnsatisfiable: DoNotSchedule
+              - maxSkew: 1
+                topologyKey: "zone9"
+                whenUnsatisfiable: DoNotSchedule
+              - maxSkew: 1
+                topologyKey: "zone10"
+                whenUnsatisfiable: DoNotSchedule
+              - maxSkew: 1
+                topologyKey: "zone11"
+                whenUnsatisfiable: DoNotSchedule
+      expectedError: 'spec.prometheusOperatorConfig.topologySpreadConstraints: Too many: 11: must have at most 10 items'

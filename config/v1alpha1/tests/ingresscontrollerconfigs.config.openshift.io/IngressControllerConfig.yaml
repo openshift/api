@@ -1,0 +1,246 @@
+apiVersion: apiextensions.k8s.io/v1 # Hack because controller-gen complains if we don't have this
+name: "IngressControllerConfig"
+crdName: ingresscontrollerconfigs.config.openshift.io
+featureGate: IngressControllerConfig
+tests:
+  onCreate:
+    - name: Should be able to create a minimal IngressControllerConfig
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: IngressControllerConfig
+        metadata:
+          name: cluster
+        spec:
+          defaultControllerConfig:
+            logLevel: Info
+      expected: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: IngressControllerConfig
+        metadata:
+          name: cluster
+        spec:
+          defaultControllerConfig:
+            logLevel: Info
+    - name: Should be able to create a comprehensive IngressControllerConfig
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: IngressControllerConfig
+        metadata:
+          name: cluster
+        spec:
+          defaultControllerConfig:
+            logLevel: Info
+            nodeSelector:
+              kubernetes.io/os: linux
+              node-role.kubernetes.io/worker: ""
+            resources:
+            - name: cpu
+              request: 100m
+            - name: memory
+              request: 256Mi
+              limit: 512Mi
+            replicas: 2
+            tolerations:
+            - effect: NoSchedule
+              key: node-role.kubernetes.io/worker
+              operator: Exists
+          performanceTuning:
+            connectionLimits:
+              maxConnections: 20000
+              maxConnectionsPerBackend: 100
+              maxRequestsPerConnection: 10
+            timeouts:
+              clientTimeout:
+                duration: "30s"
+              serverTimeout:
+                duration: "30s"
+              connectTimeout:
+                duration: "5s"
+            bufferSizes:
+              requestHeaderBufferSize: "8Ki"
+              responseBufferSize: "32Ki"
+      expected: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: IngressControllerConfig
+        metadata:
+          name: cluster
+        spec:
+          defaultControllerConfig:
+            logLevel: Info
+            nodeSelector:
+              kubernetes.io/os: linux
+              node-role.kubernetes.io/worker: ""
+            resources:
+            - name: cpu
+              request: 100m
+            - name: memory
+              request: 256Mi
+              limit: 512Mi
+            replicas: 2
+            tolerations:
+            - effect: NoSchedule
+              key: node-role.kubernetes.io/worker
+              operator: Exists
+          performanceTuning:
+            connectionLimits:
+              maxConnections: 20000
+              maxConnectionsPerBackend: 100
+              maxRequestsPerConnection: 10
+            timeouts:
+              clientTimeout:
+                duration: "30s"
+              serverTimeout:
+                duration: "30s"
+              connectTimeout:
+                duration: "5s"
+            bufferSizes:
+              requestHeaderBufferSize: "8Ki"
+              responseBufferSize: "32Ki"
+    - name: Should reject IngressControllerConfig with replicas below minimum
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: IngressControllerConfig
+        metadata:
+          name: cluster
+        spec:
+          defaultControllerConfig:
+            replicas: 0
+      expectedError: 'spec.defaultControllerConfig.replicas: Invalid value: 0: spec.defaultControllerConfig.replicas in body should be greater than or equal to 1'
+    - name: Should reject IngressControllerConfig with replicas above maximum
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: IngressControllerConfig
+        metadata:
+          name: cluster
+        spec:
+          defaultControllerConfig:
+            replicas: 21
+      expectedError: 'spec.defaultControllerConfig.replicas: Invalid value: 21: spec.defaultControllerConfig.replicas in body should be less than or equal to 20'
+    - name: Should reject ContainerResource with duplicate names
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: IngressControllerConfig
+        metadata:
+          name: cluster
+        spec:
+          defaultControllerConfig:
+            resources:
+              - name: "cpu"
+                request: "100m"
+              - name: "cpu"
+                request: "200m"
+      expectedError: 'spec.defaultControllerConfig.resources[1]: Duplicate value: map[string]interface {}{"name":"cpu"}'
+    - name: Should reject more than 50 tolerations
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: IngressControllerConfig
+        metadata:
+          name: cluster
+        spec:
+          defaultControllerConfig:
+            tolerations:
+            - key: key-0
+              effect: NoSchedule
+            - key: key-1
+              effect: NoSchedule
+            - key: key-2
+              effect: NoSchedule
+            - key: key-3
+              effect: NoSchedule
+            - key: key-4
+              effect: NoSchedule
+            - key: key-5
+              effect: NoSchedule
+            - key: key-6
+              effect: NoSchedule
+            - key: key-7
+              effect: NoSchedule
+            - key: key-8
+              effect: NoSchedule
+            - key: key-9
+              effect: NoSchedule
+            - key: key-10
+              effect: NoSchedule
+            - key: key-11
+              effect: NoSchedule
+            - key: key-12
+              effect: NoSchedule
+            - key: key-13
+              effect: NoSchedule
+            - key: key-14
+              effect: NoSchedule
+            - key: key-15
+              effect: NoSchedule
+            - key: key-16
+              effect: NoSchedule
+            - key: key-17
+              effect: NoSchedule
+            - key: key-18
+              effect: NoSchedule
+            - key: key-19
+              effect: NoSchedule
+            - key: key-20
+              effect: NoSchedule
+            - key: key-21
+              effect: NoSchedule
+            - key: key-22
+              effect: NoSchedule
+            - key: key-23
+              effect: NoSchedule
+            - key: key-24
+              effect: NoSchedule
+            - key: key-25
+              effect: NoSchedule
+            - key: key-26
+              effect: NoSchedule
+            - key: key-27
+              effect: NoSchedule
+            - key: key-28
+              effect: NoSchedule
+            - key: key-29
+              effect: NoSchedule
+            - key: key-30
+              effect: NoSchedule
+            - key: key-31
+              effect: NoSchedule
+            - key: key-32
+              effect: NoSchedule
+            - key: key-33
+              effect: NoSchedule
+            - key: key-34
+              effect: NoSchedule
+            - key: key-35
+              effect: NoSchedule
+            - key: key-36
+              effect: NoSchedule
+            - key: key-37
+              effect: NoSchedule
+            - key: key-38
+              effect: NoSchedule
+            - key: key-39
+              effect: NoSchedule
+            - key: key-40
+              effect: NoSchedule
+            - key: key-41
+              effect: NoSchedule
+            - key: key-42
+              effect: NoSchedule
+            - key: key-43
+              effect: NoSchedule
+            - key: key-44
+              effect: NoSchedule
+            - key: key-45
+              effect: NoSchedule
+            - key: key-46
+              effect: NoSchedule
+            - key: key-47
+              effect: NoSchedule
+            - key: key-48
+              effect: NoSchedule
+            - key: key-49
+              effect: NoSchedule
+            - key: key-50
+              effect: NoSchedule
+            - key: key-51
+              effect: NoSchedule
+      expectedError: 'spec.defaultControllerConfig.tolerations: Too many: 51: must have at most 50 items'

@@ -589,6 +589,14 @@ var (
 						enableIn(configv1.DevPreviewNoUpgrade, configv1.TechPreviewNoUpgrade).
 						mustRegister()
 
+	FeatureGateIngressControllerConfig = newFeatureGate("IngressControllerConfig").
+						reportProblemsToJiraComponent("Routing").
+						contactPerson("tbd").
+						productScope(ocpSpecific).
+						enhancementPR(legacyFeatureGateWithoutEnhancement).
+						enableIn(configv1.DevPreviewNoUpgrade, configv1.TechPreviewNoUpgrade).
+						mustRegister()
+
 	FeatureGateMultiArchInstallAzure = newFeatureGate("MultiArchInstallAzure").
 						reportProblemsToJiraComponent("Installer").
 						contactPerson("r4f4").

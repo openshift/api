@@ -1,0 +1,23 @@
+apiVersion: apiextensions.k8s.io/v1 # Hack because controller-gen complains if we don't have this
+name: "IngressControllerConfig"
+crdName: ingresscontrollerconfigs.config.openshift.io
+tests:
+  onCreate:
+    - name: Should be able to create a minimal IngressControllerConfig
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: IngressControllerConfig
+        metadata:
+          name: cluster
+        spec:
+          defaultControllerConfig:
+            logLevel: Info
+      expected: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: IngressControllerConfig
+        metadata:
+          name: cluster
+        spec:
+          defaultControllerConfig:
+            logLevel: Info
+

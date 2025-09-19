@@ -40,6 +40,8 @@ func addKnownTypes(scheme *runtime.Scheme) error {
 		&ImagePolicyList{},
 		&ClusterImagePolicy{},
 		&ClusterImagePolicyList{},
+		&IngressControllerConfig{},
+		&IngressControllerConfigList{},
 	)
 	metav1.AddToGroupVersion(scheme, GroupVersion)
 	return nil

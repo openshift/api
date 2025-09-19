@@ -100,6 +100,9 @@
                         "name": "Example2"
                     },
                     {
+                        "name": "ExternalOIDCWithUpstreamParity"
+                    },
+                    {
                         "name": "ExternalSnapshotMetadata"
                     },
                     {

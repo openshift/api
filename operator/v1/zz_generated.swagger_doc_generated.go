@@ -1382,7 +1382,7 @@ func (KubeStorageVersionMigratorList) SwaggerDoc() map[string]string {
 var map_BootImageSkewEnforcementConfig = map[string]string{
 	"":       "BootImageSkewEnforcementConfig is used to configure how boot image version skew is enforced on the cluster.",
 	"mode":   "mode determines the underlying behavior of skew enforcement mechanism. Valid values are Manual and None. Manual means that the cluster admin is expected to perform manual boot image updates and store the OCP & RHCOS version associated with the last boot image update in the manual field. In Manual mode, the MCO will prevent upgrades when the boot image skew exceeds the skew limit described by the release image. None means that the MCO will no longer monitor the boot image skew. This may affect the cluster's ability to scale. This field is required.",
-	"manual": "manual describes the current boot image of the cluster. This should be set to the oldest boot image used amongst all machine resources in the cluster. This includes the RHCOS version of the boot image and the OCP release version which shipped with that RHCOS boot image. If ocpVersion and rhcosVersion are defined, both values will be used for checking skew compliance. If only ocpVersion is defined, only that value will be used for checking skew compliance. If only rhcosVersion is defined, only that value will be used for checking skew compliance. Required when mode is set to \"Manual\" and forbidden otherwise.",
+	"manual": "manual describes the current boot image of the cluster. This should be set to the oldest boot image used amongst all machine resources in the cluster. This must include either the RHCOS version of the boot image or the OCP release version which shipped with that RHCOS boot image. Required when mode is set to \"Manual\" and forbidden otherwise.",
 }
 
 func (BootImageSkewEnforcementConfig) SwaggerDoc() map[string]string {
@@ -1400,14 +1400,25 @@ func (BootImageSkewEnforcementStatus) SwaggerDoc() map[string]string {
 	return map_BootImageSkewEnforcementStatus
 }
 
-var map_ClusterBootImage = map[string]string{
-	"":             "ClusterBootImage describes the boot image of a cluster. It stores the RHCOS version of the boot image and the OCP release version which shipped with that RHCOS boot image. At least one of these values are required. If ocpVersion and rhcosVersion are defined, both values will be used for checking skew compliance. If only ocpVersion is defined, only that value will be used for checking skew compliance. If only rhcosVersion is defined, only that value will be used for checking skew compliance.",
+var map_ClusterBootImageAutomatic = map[string]string{
+	"":             "ClusterBootImageAutomatic is used to describe the cluster boot image in Automatic mode. It stores the RHCOS version of the boot image and the OCP release version which shipped with that RHCOS boot image. At least one of these values are required. If ocpVersion and rhcosVersion are defined, both values will be used for checking skew compliance. If only ocpVersion is defined, only that value will be used for checking skew compliance. If only rhcosVersion is defined, only that value will be used for checking skew compliance.",
 	"ocpVersion":   "ocpVersion provides a string which represents the OCP version of the boot image. This field must match the OCP semver compatible format of x.y.z. This field must be between 5 and 10 characters long.",
 	"rhcosVersion": "rhcosVersion provides a string which represents the RHCOS version of the boot image This field must match rhcosVersion formatting of [major].[minor].[datestamp(YYYYMMDD)]-[buildnumber] or the legacy format of [major].[minor].[timestamp(YYYYMMDDHHmm)]-[buildnumber]. This field must be between 14 and 21 characters long.",
 }
 
-func (ClusterBootImage) SwaggerDoc() map[string]string {
-	return map_ClusterBootImage
+func (ClusterBootImageAutomatic) SwaggerDoc() map[string]string {
+	return map_ClusterBootImageAutomatic
+}
+
+var map_ClusterBootImageManual = map[string]string{
+	"":             "ClusterBootImageManual is used to describe the cluster boot image in Manual mode.",
+	"mode":         "mode is used to configure which boot image field is defined in Manual mode. Valid values are OCPVersion and RHCOSVersion. OCPVersion means that the cluster admin is expected to set the OCP version associated with the last boot image update in the OCPVersion field. RHCOSVersion means that the cluster admin is expected to set the RHCOS version associated with the last boot image update in the RHCOSVersion field. This field is required.",
+	"ocpVersion":   "ocpVersion provides a string which represents the OCP version of the boot image. This field must match the OCP semver compatible format of x.y.z. This field must be between 5 and 10 characters long. Required when mode is set to \"OCPVersion\" and forbidden otherwise.",
+	"rhcosVersion": "rhcosVersion provides a string which represents the RHCOS version of the boot image This field must match rhcosVersion formatting of [major].[minor].[datestamp(YYYYMMDD)]-[buildnumber] or the legacy format of [major].[minor].[timestamp(YYYYMMDDHHmm)]-[buildnumber]. This field must be between 14 and 21 characters long. Required when mode is set to \"RHCOSVersion\" and forbidden otherwise.",
+}
+
+func (ClusterBootImageManual) SwaggerDoc() map[string]string {
+	return map_ClusterBootImageManual
 }
 
 var map_IrreconcilableValidationOverrides = map[string]string{

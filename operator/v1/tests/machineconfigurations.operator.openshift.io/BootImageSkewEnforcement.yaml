@@ -16,27 +16,6 @@ tests:
         spec:
           logLevel: Normal
           operatorLogLevel: Normal
-    - name: Should be able to create a manual BootImageSkewEnforcement configuration knob
-      initial: |
-        apiVersion: operator.openshift.io/v1
-        kind: MachineConfiguration
-        spec:
-          bootImageSkewEnforcement:
-            mode: Manual
-            manual:
-              ocpVersion: "4.18.2"
-              rhcosVersion: "9.6.20250523-1"
-      expected: |
-        apiVersion: operator.openshift.io/v1
-        kind: MachineConfiguration
-        spec:
-          logLevel: Normal
-          operatorLogLevel: Normal
-          bootImageSkewEnforcement:
-            mode: Manual
-            manual:
-              ocpVersion: "4.18.2"
-              rhcosVersion: "9.6.20250523-1"
     - name: Should not be able to create an automatic BootImageSkewEnforcement configuration knob
       initial: |
         apiVersion: operator.openshift.io/v1
@@ -45,27 +24,6 @@ tests:
           bootImageSkewEnforcement:
             mode: Automatic
       expectedError: "Unsupported value: \"Automatic\": supported values: \"Manual\", \"None\""
-    - name: Should be able to create a manual BootImageSkewEnforcement configuration knob with a legacy cluster boot image
-      initial: |
-        apiVersion: operator.openshift.io/v1
-        kind: MachineConfiguration
-        spec:
-          bootImageSkewEnforcement:
-            mode: Manual
-            manual:
-              ocpVersion: "4.18.2"
-              rhcosVersion: "416.94.202411201433-0"
-      expected: |
-        apiVersion: operator.openshift.io/v1
-        kind: MachineConfiguration
-        spec:
-          logLevel: Normal
-          operatorLogLevel: Normal
-          bootImageSkewEnforcement:
-            mode: Manual
-            manual:
-              ocpVersion: "4.18.2"
-              rhcosVersion: "416.94.202411201433-0"
     - name: Should be able to create a manual BootImageSkewEnforcement configuration knob with only ocpVersion defined
       initial: |
         apiVersion: operator.openshift.io/v1
@@ -74,6 +32,7 @@ tests:
           bootImageSkewEnforcement:
             mode: Manual
             manual:
+              mode: OCPVersion
               ocpVersion: "4.18.2"
       expected: |
         apiVersion: operator.openshift.io/v1
@@ -84,6 +43,7 @@ tests:
           bootImageSkewEnforcement:
             mode: Manual
             manual:
+              mode: OCPVersion
               ocpVersion: "4.18.2"
     - name: Should be able to create a manual BootImageSkewEnforcement configuration knob with only rhcosVersion defined
       initial: |
@@ -93,6 +53,7 @@ tests:
           bootImageSkewEnforcement:
             mode: Manual
             manual:
+              mode: RHCOSVersion
               rhcosVersion: "416.94.202411201433-0"
       expected: |
         apiVersion: operator.openshift.io/v1
@@ -103,7 +64,54 @@ tests:
           bootImageSkewEnforcement:
             mode: Manual
             manual:
+              mode: RHCOSVersion
               rhcosVersion: "416.94.202411201433-0"
+    - name: Should not be able to create a manual BootImageSkewEnforcement configuration knob with rhcosVersion defined in OCPVersion mode
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: MachineConfiguration
+        spec:
+          bootImageSkewEnforcement:
+            mode: Manual
+            manual:
+              mode: OCPVersion
+              ocpVersion: "4.18.2"
+              rhcosVersion: "416.94.202411201433-0"
+      expectedError: "rhcosVersion is required when mode is RHCOSVersion, and forbidden otherwise"                  
+    - name: Should not be able to create a manual BootImageSkewEnforcement configuration knob with ocpVersion defined in RHCOSVersion mode
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: MachineConfiguration
+        spec:
+          bootImageSkewEnforcement:
+            mode: Manual
+            manual:
+              mode: RHCOSVersion
+              ocpVersion: "4.18.2"
+              rhcosVersion: "416.94.202411201433-0"
+      expectedError: "ocpVersion is required when mode is OCPVersion, and forbidden otherwise" 
+    - name: Should not be able to create a manual BootImageSkewEnforcement configuration knob with an invalid ocpVersion
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: MachineConfiguration
+        spec:
+          bootImageSkewEnforcement:
+            mode: Manual
+            manual:
+              mode: OCPVersion
+              ocpVersion: "4.18"
+      expectedError: "ocpVersion must match the OCP semver compatible format of x.y.z"
+    - name: Should not be able to create a manual BootImageSkewEnforcement configuration knob with an invalid rhcosVersion
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: MachineConfiguration
+        spec:
+          bootImageSkewEnforcement:
+            mode: Manual
+            manual:
+              mode: RHCOSVersion
+              rhcosVersion: "416.94.2024112021-0"
+      expectedError: "rhcosVersion must match format [major].[minor].[datestamp(YYYYMMDD)]-[buildnumber] or must match legacy format [major].[minor].[timestamp(YYYYMMDDHHmm)]-[buildnumber]"                              
     - name: Should be able to create a None BootImageSkewEnforcement configuration knob
       initial: |
         apiVersion: operator.openshift.io/v1
@@ -127,8 +135,8 @@ tests:
           bootImageSkewEnforcement:
             mode: None
             manual:
-              ocpVersion: "4.18.2"
-              rhcosVersion: "9.6.20250523-1"
+              mode: RHCOSVersion
+              rhcosVersion: "416.94.202411201433-0"
       expectedError: "manual is required when mode is Manual, and forbidden otherwise"
     - name: manual field should be set if bootImageSkewEnforcement.mode is set to Manual
       initial: |
@@ -155,8 +163,8 @@ tests:
           bootImageSkewEnforcementStatus:
             mode: None
             manual:
-              ocpVersion: "4.18.2"
-              rhcosVersion: "9.6.20250523-1"             
+              mode: RHCOSVersion
+              rhcosVersion: "416.94.202411201433-0"           
       expectedStatusError: "manual is required when mode is Manual, and forbidden otherwise"
     - name: Should not able to add automatic field in status if bootImageSkewEnforcementStatus.mode is set to None
       initial: |
@@ -193,8 +201,8 @@ tests:
           bootImageSkewEnforcementStatus:
             mode: Manual
             manual:
-              ocpVersion: "4.18.2"
-              rhcosVersion: "9.6.20250523-1"  
+              mode: RHCOSVersion
+              rhcosVersion: "416.94.202411201433-0"
       expected: |
         apiVersion: operator.openshift.io/v1
         kind: MachineConfiguration
@@ -205,8 +213,48 @@ tests:
           bootImageSkewEnforcementStatus:
             mode: Manual
             manual:
+              mode: RHCOSVersion
+              rhcosVersion: "416.94.202411201433-0"
+    - name: Should not be able to add a rhcosVersion field when bootImageSkewEnforcementStatus.mode.manual.mode is set to OCPVersion
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: MachineConfiguration
+        spec: {}
+        status:
+          bootImageSkewEnforcementStatus:
+            mode: None        
+      updated: |
+        apiVersion: operator.openshift.io/v1
+        kind: MachineConfiguration
+        spec: {}
+        status:
+          bootImageSkewEnforcementStatus:
+            mode: Manual
+            manual:
+              mode: OCPVersion
               ocpVersion: "4.18.2"
-              rhcosVersion: "9.6.20250523-1"   
+              rhcosVersion: "416.94.202411201433-0"
+      expectedStatusError: "rhcosVersion is required when mode is RHCOSVersion, and forbidden otherwise"  
+    - name: Should not be able to add a ocpVersion field when bootImageSkewEnforcementStatus.mode.manual.mode is set to RHCOSVersion
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: MachineConfiguration
+        spec: {}
+        status:
+          bootImageSkewEnforcementStatus:
+            mode: None        
+      updated: |
+        apiVersion: operator.openshift.io/v1
+        kind: MachineConfiguration
+        spec: {}
+        status:
+          bootImageSkewEnforcementStatus:
+            mode: Manual
+            manual:
+              mode: RHCOSVersion
+              ocpVersion: "4.18.2"
+              rhcosVersion: "416.94.202411201433-0"
+      expectedStatusError: "ocpVersion is required when mode is OCPVersion, and forbidden otherwise"             
     - name: Should be able to add automatic field in status if bootImageSkewEnforcementStatus.mode is set to automatic
       initial: |
         apiVersion: operator.openshift.io/v1
@@ -368,8 +416,8 @@ tests:
           bootImageSkewEnforcement:
             mode: Manual
             manual:
-              ocpVersion: "4.18.2"
-              rhcosVersion: "9.6.20250523-1"
+              mode: RHCOSVersion
+              rhcosVersion: "416.94.202411201433-0"
         status:
           managedBootImagesStatus:
             machineManagers:
@@ -380,8 +428,8 @@ tests:
           bootImageSkewEnforcementStatus:
             mode: Manual         
             manual:
+              mode: OCPVersion
               ocpVersion: "4.18.2"
-              rhcosVersion: "416.94.202411201433-0"
       updated: |
         apiVersion: operator.openshift.io/v1
         kind: MachineConfiguration
@@ -395,8 +443,8 @@ tests:
           bootImageSkewEnforcement:
             mode: Manual
             manual:
-              ocpVersion: "4.18.2"
-              rhcosVersion: "9.6.20250523-1"              
+              mode: RHCOSVersion
+              rhcosVersion: "416.94.202411201433-0"         
         status:
           managedBootImagesStatus:
             machineManagers:
@@ -407,8 +455,8 @@ tests:
           bootImageSkewEnforcementStatus:
             mode: Manual
             manual:
+              mode: OCPVersion
               ocpVersion: "4.18.2"
-              rhcosVersion: "416.94.202411201433-0"
       expected: |
         apiVersion: operator.openshift.io/v1
         kind: MachineConfiguration
@@ -424,8 +472,8 @@ tests:
           bootImageSkewEnforcement:
             mode: Manual
             manual:
-              ocpVersion: "4.18.2"
-              rhcosVersion: "9.6.20250523-1"              
+              mode: RHCOSVersion
+              rhcosVersion: "416.94.202411201433-0"   
         status:
           managedBootImagesStatus:
             machineManagers:
@@ -436,8 +484,8 @@ tests:
           bootImageSkewEnforcementStatus:
             mode: Manual
             manual:
-              ocpVersion: "4.18.2"
-              rhcosVersion: "416.94.202411201433-0"
+              mode: OCPVersion
+              ocpVersion: "4.18.2"    
     - name: Should be able change boot image configuration if bootImageSkewEnforcementStatus.mode is set to None
       initial: |
         apiVersion: operator.openshift.io/v1
@@ -497,4 +545,62 @@ tests:
                 selection:
                   mode: All
           bootImageSkewEnforcementStatus:
-            mode: None               
+            mode: None
+    - name: Should not be able to update an automatic bootImageSkewEnforcementStatus.mode with an invalid ocpVersion
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: MachineConfiguration
+        spec: {}
+        status:
+          managedBootImagesStatus:
+            machineManagers:
+              - resource: machinesets
+                apiGroup: machine.openshift.io
+                selection:
+                  mode: All
+      updated: |
+        apiVersion: operator.openshift.io/v1
+        kind: MachineConfiguration
+        spec: {} 
+        status:
+          managedBootImagesStatus:
+            machineManagers:
+              - resource: machinesets
+                apiGroup: machine.openshift.io
+                selection:
+                  mode: All
+          bootImageSkewEnforcementStatus:
+            mode: Automatic
+            automatic:
+              ocpVersion: "4.18"
+              rhcosVersion: "416.94.202411201433-0"
+      expectedStatusError: "ocpVersion must match the OCP semver compatible format of x.y.z"                           
+    - name: Should not be able to update an automatic bootImageSkewEnforcementStatus.mode with an invalid rhcosVersion
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: MachineConfiguration
+        spec: {}
+        status:
+          managedBootImagesStatus:
+            machineManagers:
+              - resource: machinesets
+                apiGroup: machine.openshift.io
+                selection:
+                  mode: All
+      updated: |
+        apiVersion: operator.openshift.io/v1
+        kind: MachineConfiguration
+        spec: {} 
+        status:
+          managedBootImagesStatus:
+            machineManagers:
+              - resource: machinesets
+                apiGroup: machine.openshift.io
+                selection:
+                  mode: All
+          bootImageSkewEnforcementStatus:
+            mode: Automatic
+            automatic:
+              ocpVersion: "4.18"
+              rhcosVersion: "416.94.2024112021-0"
+      expectedStatusError: "rhcosVersion must match format [major].[minor].[datestamp(YYYYMMDD)]-[buildnumber] or must match legacy format [major].[minor].[timestamp(YYYYMMDDHHmm)]-[buildnumber]"        

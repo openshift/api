@@ -936,7 +936,8 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"github.com/openshift/api/operator/v1.CloudCredentialList":                                           schema_openshift_api_operator_v1_CloudCredentialList(ref),
 		"github.com/openshift/api/operator/v1.CloudCredentialSpec":                                           schema_openshift_api_operator_v1_CloudCredentialSpec(ref),
 		"github.com/openshift/api/operator/v1.CloudCredentialStatus":                                         schema_openshift_api_operator_v1_CloudCredentialStatus(ref),
-		"github.com/openshift/api/operator/v1.ClusterBootImage":                                              schema_openshift_api_operator_v1_ClusterBootImage(ref),
+		"github.com/openshift/api/operator/v1.ClusterBootImageAutomatic":                                     schema_openshift_api_operator_v1_ClusterBootImageAutomatic(ref),
+		"github.com/openshift/api/operator/v1.ClusterBootImageManual":                                        schema_openshift_api_operator_v1_ClusterBootImageManual(ref),
 		"github.com/openshift/api/operator/v1.ClusterCSIDriver":                                              schema_openshift_api_operator_v1_ClusterCSIDriver(ref),
 		"github.com/openshift/api/operator/v1.ClusterCSIDriverList":                                          schema_openshift_api_operator_v1_ClusterCSIDriverList(ref),
 		"github.com/openshift/api/operator/v1.ClusterCSIDriverSpec":                                          schema_openshift_api_operator_v1_ClusterCSIDriverSpec(ref),
@@ -46946,9 +46947,9 @@ func schema_openshift_api_operator_v1_BootImageSkewEnforcementConfig(ref common.
 					},
 					"manual": {
 						SchemaProps: spec.SchemaProps{
-							Description: "manual describes the current boot image of the cluster. This should be set to the oldest boot image used amongst all machine resources in the cluster. This includes the RHCOS version of the boot image and the OCP release version which shipped with that RHCOS boot image. If ocpVersion and rhcosVersion are defined, both values will be used for checking skew compliance. If only ocpVersion is defined, only that value will be used for checking skew compliance. If only rhcosVersion is defined, only that value will be used for checking skew compliance. Required when mode is set to \"Manual\" and forbidden otherwise.",
+							Description: "manual describes the current boot image of the cluster. This should be set to the oldest boot image used amongst all machine resources in the cluster. This must include either the RHCOS version of the boot image or the OCP release version which shipped with that RHCOS boot image. Required when mode is set to \"Manual\" and forbidden otherwise.",
 							Default:     map[string]interface{}{},
-							Ref:         ref("github.com/openshift/api/operator/v1.ClusterBootImage"),
+							Ref:         ref("github.com/openshift/api/operator/v1.ClusterBootImageManual"),
 						},
 					},
 				},
@@ -46968,7 +46969,7 @@ func schema_openshift_api_operator_v1_BootImageSkewEnforcementConfig(ref common.
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/operator/v1.ClusterBootImage"},
+			"github.com/openshift/api/operator/v1.ClusterBootImageManual"},
 	}
 }
 
@@ -46990,14 +46991,14 @@ func schema_openshift_api_operator_v1_BootImageSkewEnforcementStatus(ref common.
 						SchemaProps: spec.SchemaProps{
 							Description: "automatic describes the current boot image of the cluster. This will be populated by the MCO when performing boot image updates. This value will be compared against the cluster's skew limit to determine skew compliance. Required when mode is set to \"Automatic\" and forbidden otherwise.",
 							Default:     map[string]interface{}{},
-							Ref:         ref("github.com/openshift/api/operator/v1.ClusterBootImage"),
+							Ref:         ref("github.com/openshift/api/operator/v1.ClusterBootImageAutomatic"),
 						},
 					},
 					"manual": {
 						SchemaProps: spec.SchemaProps{
 							Description: "manual describes the current boot image of the cluster. This will be populated by the MCO using the values provided in the spec.bootImageSkewEnforcement.manual field. This value will be compared against the cluster's skew limit to determine skew compliance. Required when mode is set to \"Manual\" and forbidden otherwise.",
 							Default:     map[string]interface{}{},
-							Ref:         ref("github.com/openshift/api/operator/v1.ClusterBootImage"),
+							Ref:         ref("github.com/openshift/api/operator/v1.ClusterBootImageManual"),
 						},
 					},
 				},
@@ -47018,7 +47019,7 @@ func schema_openshift_api_operator_v1_BootImageSkewEnforcementStatus(ref common.
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/operator/v1.ClusterBootImage"},
+			"github.com/openshift/api/operator/v1.ClusterBootImageAutomatic", "github.com/openshift/api/operator/v1.ClusterBootImageManual"},
 	}
 }
 
@@ -47695,11 +47696,11 @@ func schema_openshift_api_operator_v1_CloudCredentialStatus(ref common.Reference
 	}
 }
 
-func schema_openshift_api_operator_v1_ClusterBootImage(ref common.ReferenceCallback) common.OpenAPIDefinition {
+func schema_openshift_api_operator_v1_ClusterBootImageAutomatic(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
-				Description: "ClusterBootImage describes the boot image of a cluster. It stores the RHCOS version of the boot image and the OCP release version which shipped with that RHCOS boot image. At least one of these values are required. If ocpVersion and rhcosVersion are defined, both values will be used for checking skew compliance. If only ocpVersion is defined, only that value will be used for checking skew compliance. If only rhcosVersion is defined, only that value will be used for checking skew compliance.",
+				Description: "ClusterBootImageAutomatic is used to describe the cluster boot image in Automatic mode. It stores the RHCOS version of the boot image and the OCP release version which shipped with that RHCOS boot image. At least one of these values are required. If ocpVersion and rhcosVersion are defined, both values will be used for checking skew compliance. If only ocpVersion is defined, only that value will be used for checking skew compliance. If only rhcosVersion is defined, only that value will be used for checking skew compliance.",
 				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
 					"ocpVersion": {
@@ -47714,6 +47715,54 @@ func schema_openshift_api_operator_v1_ClusterBootImage(ref common.ReferenceCallb
 							Description: "rhcosVersion provides a string which represents the RHCOS version of the boot image This field must match rhcosVersion formatting of [major].[minor].[datestamp(YYYYMMDD)]-[buildnumber] or the legacy format of [major].[minor].[timestamp(YYYYMMDDHHmm)]-[buildnumber]. This field must be between 14 and 21 characters long.",
 							Type:        []string{"string"},
 							Format:      "",
+						},
+					},
+				},
+			},
+		},
+	}
+}
+
+func schema_openshift_api_operator_v1_ClusterBootImageManual(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "ClusterBootImageManual is used to describe the cluster boot image in Manual mode.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"mode": {
+						SchemaProps: spec.SchemaProps{
+							Description: "mode is used to configure which boot image field is defined in Manual mode. Valid values are OCPVersion and RHCOSVersion. OCPVersion means that the cluster admin is expected to set the OCP version associated with the last boot image update in the OCPVersion field. RHCOSVersion means that the cluster admin is expected to set the RHCOS version associated with the last boot image update in the RHCOSVersion field. This field is required.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"ocpVersion": {
+						SchemaProps: spec.SchemaProps{
+							Description: "ocpVersion provides a string which represents the OCP version of the boot image. This field must match the OCP semver compatible format of x.y.z. This field must be between 5 and 10 characters long. Required when mode is set to \"OCPVersion\" and forbidden otherwise.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"rhcosVersion": {
+						SchemaProps: spec.SchemaProps{
+							Description: "rhcosVersion provides a string which represents the RHCOS version of the boot image This field must match rhcosVersion formatting of [major].[minor].[datestamp(YYYYMMDD)]-[buildnumber] or the legacy format of [major].[minor].[timestamp(YYYYMMDDHHmm)]-[buildnumber]. This field must be between 14 and 21 characters long. Required when mode is set to \"RHCOSVersion\" and forbidden otherwise.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+				},
+				Required: []string{"mode"},
+			},
+			VendorExtensible: spec.VendorExtensible{
+				Extensions: spec.Extensions{
+					"x-kubernetes-unions": []interface{}{
+						map[string]interface{}{
+							"discriminator": "mode",
+							"fields-to-discriminateBy": map[string]interface{}{
+								"ocpVersion":   "OCPVersion",
+								"rhcosVersion": "RHCOSVersion",
+							},
 						},
 					},
 				},

@@ -60,23 +60,34 @@ spec:
                     description: |-
                       manual describes the current boot image of the cluster.
                       This should be set to the oldest boot image used amongst all machine resources in the cluster.
-                      This includes the RHCOS version of the boot image and the OCP release version which shipped with that RHCOS boot image.
-                      If ocpVersion and rhcosVersion are defined, both values will be used for checking skew compliance.
-                      If only ocpVersion is defined, only that value will be used for checking skew compliance.
-                      If only rhcosVersion is defined, only that value will be used for checking skew compliance.
+                      This must include either the RHCOS version of the boot image or the OCP release version which shipped with that
+                      RHCOS boot image.
                       Required when mode is set to "Manual" and forbidden otherwise.
-                    minProperties: 1
                     properties:
+                      mode:
+                        description: |-
+                          mode is used to configure which boot image field is defined in Manual mode.
+                          Valid values are OCPVersion and RHCOSVersion.
+                          OCPVersion means that the cluster admin is expected to set the OCP version associated with the last boot image update
+                          in the OCPVersion field.
+                          RHCOSVersion means that the cluster admin is expected to set the RHCOS version associated with the last boot image update
+                          in the RHCOSVersion field.
+                          This field is required.
+                        enum:
+                        - OCPVersion
+                        - RHCOSVersion
+                        type: string
                       ocpVersion:
                         description: |-
                           ocpVersion provides a string which represents the OCP version of the boot image.
                           This field must match the OCP semver compatible format of x.y.z. This field must be between
                           5 and 10 characters long.
+                          Required when mode is set to "OCPVersion" and forbidden otherwise.
                         maxLength: 10
                         minLength: 5
                         type: string
                         x-kubernetes-validations:
-                        - message: bootImageOCPVersion must match the OCP semver compatible
+                        - message: ocpVersion must match the OCP semver compatible
                             format of x.y.z
                           rule: self.matches('^[0-9]+\\.[0-9]+\\.[0-9]+$')
                       rhcosVersion:
@@ -85,6 +96,7 @@ spec:
                           This field must match rhcosVersion formatting of [major].[minor].[datestamp(YYYYMMDD)]-[buildnumber] or the legacy
                           format of [major].[minor].[timestamp(YYYYMMDDHHmm)]-[buildnumber]. This field must be between
                           14 and 21 characters long.
+                          Required when mode is set to "RHCOSVersion" and forbidden otherwise.
                         maxLength: 21
                         minLength: 14
                         type: string
@@ -92,10 +104,18 @@ spec:
                         - message: rhcosVersion must match format [major].[minor].[datestamp(YYYYMMDD)]-[buildnumber]
                             or must match legacy format [major].[minor].[timestamp(YYYYMMDDHHmm)]-[buildnumber]
                           rule: self.matches('^[0-9]+\\.[0-9]+\\.([0-9]{8}|[0-9]{12})-[0-9]+$')
+                    required:
+                    - mode
                     type: object
                     x-kubernetes-validations:
-                    - message: at least one of ocpVersion or rhcosVersion is required
-                      rule: has(self.ocpVersion) || has(self.rhcosVersion)
+                    - message: ocpVersion is required when mode is OCPVersion, and
+                        forbidden otherwise
+                      rule: 'has(self.mode) && (self.mode ==''OCPVersion'') ?  has(self.ocpVersion)
+                        : !has(self.ocpVersion)'
+                    - message: rhcosVersion is required when mode is RHCOSVersion,
+                        and forbidden otherwise
+                      rule: 'has(self.mode) && (self.mode ==''RHCOSVersion'') ?  has(self.rhcosVersion)
+                        : !has(self.rhcosVersion)'
                   mode:
                     description: |-
                       mode determines the underlying behavior of skew enforcement mechanism.
@@ -618,7 +638,7 @@ spec:
                         minLength: 5
                         type: string
                         x-kubernetes-validations:
-                        - message: bootImageOCPVersion must match the OCP semver compatible
+                        - message: ocpVersion must match the OCP semver compatible
                             format of x.y.z
                           rule: self.matches('^[0-9]+\\.[0-9]+\\.[0-9]+$')
                       rhcosVersion:
@@ -644,18 +664,31 @@ spec:
                       This will be populated by the MCO using the values provided in the spec.bootImageSkewEnforcement.manual field.
                       This value will be compared against the cluster's skew limit to determine skew compliance.
                       Required when mode is set to "Manual" and forbidden otherwise.
-                    minProperties: 1
                     properties:
+                      mode:
+                        description: |-
+                          mode is used to configure which boot image field is defined in Manual mode.
+                          Valid values are OCPVersion and RHCOSVersion.
+                          OCPVersion means that the cluster admin is expected to set the OCP version associated with the last boot image update
+                          in the OCPVersion field.
+                          RHCOSVersion means that the cluster admin is expected to set the RHCOS version associated with the last boot image update
+                          in the RHCOSVersion field.
+                          This field is required.
+                        enum:
+                        - OCPVersion
+                        - RHCOSVersion
+                        type: string
                       ocpVersion:
                         description: |-
                           ocpVersion provides a string which represents the OCP version of the boot image.
                           This field must match the OCP semver compatible format of x.y.z. This field must be between
                           5 and 10 characters long.
+                          Required when mode is set to "OCPVersion" and forbidden otherwise.
                         maxLength: 10
                         minLength: 5
                         type: string
                         x-kubernetes-validations:
-                        - message: bootImageOCPVersion must match the OCP semver compatible
+                        - message: ocpVersion must match the OCP semver compatible
                             format of x.y.z
                           rule: self.matches('^[0-9]+\\.[0-9]+\\.[0-9]+$')
                       rhcosVersion:
@@ -664,6 +697,7 @@ spec:
                           This field must match rhcosVersion formatting of [major].[minor].[datestamp(YYYYMMDD)]-[buildnumber] or the legacy
                           format of [major].[minor].[timestamp(YYYYMMDDHHmm)]-[buildnumber]. This field must be between
                           14 and 21 characters long.
+                          Required when mode is set to "RHCOSVersion" and forbidden otherwise.
                         maxLength: 21
                         minLength: 14
                         type: string
@@ -671,10 +705,18 @@ spec:
                         - message: rhcosVersion must match format [major].[minor].[datestamp(YYYYMMDD)]-[buildnumber]
                             or must match legacy format [major].[minor].[timestamp(YYYYMMDDHHmm)]-[buildnumber]
                           rule: self.matches('^[0-9]+\\.[0-9]+\\.([0-9]{8}|[0-9]{12})-[0-9]+$')
+                    required:
+                    - mode
                     type: object
                     x-kubernetes-validations:
-                    - message: at least one of ocpVersion or rhcosVersion is required
-                      rule: has(self.ocpVersion) || has(self.rhcosVersion)
+                    - message: ocpVersion is required when mode is OCPVersion, and
+                        forbidden otherwise
+                      rule: 'has(self.mode) && (self.mode ==''OCPVersion'') ?  has(self.ocpVersion)
+                        : !has(self.ocpVersion)'
+                    - message: rhcosVersion is required when mode is RHCOSVersion,
+                        and forbidden otherwise
+                      rule: 'has(self.mode) && (self.mode ==''RHCOSVersion'') ?  has(self.rhcosVersion)
+                        : !has(self.rhcosVersion)'
                   mode:
                     description: |-
                       mode determines the underlying behavior of skew enforcement mechanism.

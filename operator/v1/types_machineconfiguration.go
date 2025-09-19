@@ -98,14 +98,62 @@ type BootImageSkewEnforcementConfig struct {
 
 	// manual describes the current boot image of the cluster.
 	// This should be set to the oldest boot image used amongst all machine resources in the cluster.
-	// This includes the RHCOS version of the boot image and the OCP release version which shipped with that RHCOS boot image.
-	// If ocpVersion and rhcosVersion are defined, both values will be used for checking skew compliance.
-	// If only ocpVersion is defined, only that value will be used for checking skew compliance.
-	// If only rhcosVersion is defined, only that value will be used for checking skew compliance.
+	// This must include either the RHCOS version of the boot image or the OCP release version which shipped with that
+	// RHCOS boot image.
 	// Required when mode is set to "Manual" and forbidden otherwise.
 	// +optional
-	Manual ClusterBootImage `json:"manual,omitempty,omitzero"`
+	Manual ClusterBootImageManual `json:"manual,omitempty,omitzero"`
 }
+
+// ClusterBootImageManual is used to describe the cluster boot image in Manual mode.
+// +kubebuilder:validation:XValidation:rule="has(self.mode) && (self.mode =='OCPVersion') ?  has(self.ocpVersion) : !has(self.ocpVersion)",message="ocpVersion is required when mode is OCPVersion, and forbidden otherwise"
+// +kubebuilder:validation:XValidation:rule="has(self.mode) && (self.mode =='RHCOSVersion') ?  has(self.rhcosVersion) : !has(self.rhcosVersion)",message="rhcosVersion is required when mode is RHCOSVersion, and forbidden otherwise"
+// +union
+type ClusterBootImageManual struct {
+	// mode is used to configure which boot image field is defined in Manual mode.
+	// Valid values are OCPVersion and RHCOSVersion.
+	// OCPVersion means that the cluster admin is expected to set the OCP version associated with the last boot image update
+	// in the OCPVersion field.
+	// RHCOSVersion means that the cluster admin is expected to set the RHCOS version associated with the last boot image update
+	// in the RHCOSVersion field.
+	// This field is required.
+	// +unionDiscriminator
+	// +required
+	Mode ClusterBootImageManualMode `json:"mode,omitempty"`
+
+	// ocpVersion provides a string which represents the OCP version of the boot image.
+	// This field must match the OCP semver compatible format of x.y.z. This field must be between
+	// 5 and 10 characters long.
+	// Required when mode is set to "OCPVersion" and forbidden otherwise.
+	// +kubebuilder:validation:XValidation:rule="self.matches('^[0-9]+\\\\.[0-9]+\\\\.[0-9]+$')",message="ocpVersion must match the OCP semver compatible format of x.y.z"
+	// +kubebuilder:validation:MaxLength:=10
+	// +kubebuilder:validation:MinLength:=5
+	// +optional
+	OCPVersion string `json:"ocpVersion,omitempty"`
+
+	// rhcosVersion provides a string which represents the RHCOS version of the boot image
+	// This field must match rhcosVersion formatting of [major].[minor].[datestamp(YYYYMMDD)]-[buildnumber] or the legacy
+	// format of [major].[minor].[timestamp(YYYYMMDDHHmm)]-[buildnumber]. This field must be between
+	// 14 and 21 characters long.
+	// Required when mode is set to "RHCOSVersion" and forbidden otherwise.
+	// +kubebuilder:validation:XValidation:rule="self.matches('^[0-9]+\\\\.[0-9]+\\\\.([0-9]{8}|[0-9]{12})-[0-9]+$')",message="rhcosVersion must match format [major].[minor].[datestamp(YYYYMMDD)]-[buildnumber] or must match legacy format [major].[minor].[timestamp(YYYYMMDDHHmm)]-[buildnumber]"
+	// +kubebuilder:validation:MaxLength:=21
+	// +kubebuilder:validation:MinLength:=14
+	// +optional
+	RHCOSVersion string `json:"rhcosVersion,omitempty"`
+}
+
+// ClusterBootImageManualMode is a string enum used to define the cluster's boot image in manual mode.
+// +kubebuilder:validation:Enum:="OCPVersion";"RHCOSVersion"
+type ClusterBootImageManualMode string
+
+const (
+	// OCPVersion represents a configuration mode used to define the OCPVersion.
+	ClusterBootImageSpecModeOCPVersion ClusterBootImageManualMode = "OCPVersion"
+
+	// RHCOSVersion represents a configuration mode used to define the RHCOSVersion.
+	ClusterBootImageSpecModeRHCOSVersion ClusterBootImageManualMode = "RHCOSVersion"
+)
 
 // BootImageSkewEnforcementStatus is the type for the status object. It represents the cluster defaults when
 // the boot image skew enforcement configuration is undefined and reflects the actual configuration when it is defined.
@@ -133,28 +181,28 @@ type BootImageSkewEnforcementStatus struct {
 	// the cluster's skew limit to determine skew compliance.
 	// Required when mode is set to "Automatic" and forbidden otherwise.
 	// +optional
-	Automatic ClusterBootImage `json:"automatic,omitempty,omitzero"`
+	Automatic ClusterBootImageAutomatic `json:"automatic,omitempty,omitzero"`
 
 	// manual describes the current boot image of the cluster.
 	// This will be populated by the MCO using the values provided in the spec.bootImageSkewEnforcement.manual field.
 	// This value will be compared against the cluster's skew limit to determine skew compliance.
 	// Required when mode is set to "Manual" and forbidden otherwise.
 	// +optional
-	Manual ClusterBootImage `json:"manual,omitempty,omitzero"`
+	Manual ClusterBootImageManual `json:"manual,omitempty,omitzero"`
 }
 
-// ClusterBootImage describes the boot image of a cluster. It stores the RHCOS version of the boot image and
-// the OCP release version which shipped with that RHCOS boot image. At least one of these values are required.
+// ClusterBootImageAutomatic is used to describe the cluster boot image in Automatic mode. It stores the RHCOS version of the
+// boot image and the OCP release version which shipped with that RHCOS boot image. At least one of these values are required.
 // If ocpVersion and rhcosVersion are defined, both values will be used for checking skew compliance.
 // If only ocpVersion is defined, only that value will be used for checking skew compliance.
 // If only rhcosVersion is defined, only that value will be used for checking skew compliance.
 // +kubebuilder:validation:XValidation:rule="has(self.ocpVersion) || has(self.rhcosVersion)",message="at least one of ocpVersion or rhcosVersion is required"
 // +kubebuilder:validation:MinProperties=1
-type ClusterBootImage struct {
+type ClusterBootImageAutomatic struct {
 	// ocpVersion provides a string which represents the OCP version of the boot image.
 	// This field must match the OCP semver compatible format of x.y.z. This field must be between
 	// 5 and 10 characters long.
-	// +kubebuilder:validation:XValidation:rule="self.matches('^[0-9]+\\\\.[0-9]+\\\\.[0-9]+$')",message="bootImageOCPVersion must match the OCP semver compatible format of x.y.z"
+	// +kubebuilder:validation:XValidation:rule="self.matches('^[0-9]+\\\\.[0-9]+\\\\.[0-9]+$')",message="ocpVersion must match the OCP semver compatible format of x.y.z"
 	// +kubebuilder:validation:MaxLength:=10
 	// +kubebuilder:validation:MinLength:=5
 	// +optional

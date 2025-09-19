@@ -27206,9 +27206,9 @@
       ],
       "properties": {
         "manual": {
-          "description": "manual describes the current boot image of the cluster. This should be set to the oldest boot image used amongst all machine resources in the cluster. This includes the RHCOS version of the boot image and the OCP release version which shipped with that RHCOS boot image. If ocpVersion and rhcosVersion are defined, both values will be used for checking skew compliance. If only ocpVersion is defined, only that value will be used for checking skew compliance. If only rhcosVersion is defined, only that value will be used for checking skew compliance. Required when mode is set to \"Manual\" and forbidden otherwise.",
+          "description": "manual describes the current boot image of the cluster. This should be set to the oldest boot image used amongst all machine resources in the cluster. This must include either the RHCOS version of the boot image or the OCP release version which shipped with that RHCOS boot image. Required when mode is set to \"Manual\" and forbidden otherwise.",
           "default": {},
-          "$ref": "#/definitions/com.github.openshift.api.operator.v1.ClusterBootImage"
+          "$ref": "#/definitions/com.github.openshift.api.operator.v1.ClusterBootImageManual"
         },
         "mode": {
           "description": "mode determines the underlying behavior of skew enforcement mechanism. Valid values are Manual and None. Manual means that the cluster admin is expected to perform manual boot image updates and store the OCP & RHCOS version associated with the last boot image update in the manual field. In Manual mode, the MCO will prevent upgrades when the boot image skew exceeds the skew limit described by the release image. None means that the MCO will no longer monitor the boot image skew. This may affect the cluster's ability to scale. This field is required.",
@@ -27234,12 +27234,12 @@
         "automatic": {
           "description": "automatic describes the current boot image of the cluster. This will be populated by the MCO when performing boot image updates. This value will be compared against the cluster's skew limit to determine skew compliance. Required when mode is set to \"Automatic\" and forbidden otherwise.",
           "default": {},
-          "$ref": "#/definitions/com.github.openshift.api.operator.v1.ClusterBootImage"
+          "$ref": "#/definitions/com.github.openshift.api.operator.v1.ClusterBootImageAutomatic"
         },
         "manual": {
           "description": "manual describes the current boot image of the cluster. This will be populated by the MCO using the values provided in the spec.bootImageSkewEnforcement.manual field. This value will be compared against the cluster's skew limit to determine skew compliance. Required when mode is set to \"Manual\" and forbidden otherwise.",
           "default": {},
-          "$ref": "#/definitions/com.github.openshift.api.operator.v1.ClusterBootImage"
+          "$ref": "#/definitions/com.github.openshift.api.operator.v1.ClusterBootImageManual"
         },
         "mode": {
           "description": "mode determines the underlying behavior of skew enforcement mechanism. Valid values are Automatic, Manual and None. Automatic means that the MCO will perform boot image updates and store the OCP & RHCOS version associated with the last boot image update in the automatic field. Manual means that the cluster admin is expected to perform manual boot image updates and store the OCP & RHCOS version associated with the last boot image update in the manual field. In Automatic and Manual mode, the MCO will prevent upgrades when the boot image skew exceeds the skew limit described by the release image. None means that the MCO will no longer monitor the boot image skew. This may affect the cluster's ability to scale. This field is required.",
@@ -27662,8 +27662,8 @@
         }
       }
     },
-    "com.github.openshift.api.operator.v1.ClusterBootImage": {
-      "description": "ClusterBootImage describes the boot image of a cluster. It stores the RHCOS version of the boot image and the OCP release version which shipped with that RHCOS boot image. At least one of these values are required. If ocpVersion and rhcosVersion are defined, both values will be used for checking skew compliance. If only ocpVersion is defined, only that value will be used for checking skew compliance. If only rhcosVersion is defined, only that value will be used for checking skew compliance.",
+    "com.github.openshift.api.operator.v1.ClusterBootImageAutomatic": {
+      "description": "ClusterBootImageAutomatic is used to describe the cluster boot image in Automatic mode. It stores the RHCOS version of the boot image and the OCP release version which shipped with that RHCOS boot image. At least one of these values are required. If ocpVersion and rhcosVersion are defined, both values will be used for checking skew compliance. If only ocpVersion is defined, only that value will be used for checking skew compliance. If only rhcosVersion is defined, only that value will be used for checking skew compliance.",
       "type": "object",
       "properties": {
         "ocpVersion": {
@@ -27675,6 +27675,36 @@
           "type": "string"
         }
       }
+    },
+    "com.github.openshift.api.operator.v1.ClusterBootImageManual": {
+      "description": "ClusterBootImageManual is used to describe the cluster boot image in Manual mode.",
+      "type": "object",
+      "required": [
+        "mode"
+      ],
+      "properties": {
+        "mode": {
+          "description": "mode is used to configure which boot image field is defined in Manual mode. Valid values are OCPVersion and RHCOSVersion. OCPVersion means that the cluster admin is expected to set the OCP version associated with the last boot image update in the OCPVersion field. RHCOSVersion means that the cluster admin is expected to set the RHCOS version associated with the last boot image update in the RHCOSVersion field. This field is required.",
+          "type": "string"
+        },
+        "ocpVersion": {
+          "description": "ocpVersion provides a string which represents the OCP version of the boot image. This field must match the OCP semver compatible format of x.y.z. This field must be between 5 and 10 characters long. Required when mode is set to \"OCPVersion\" and forbidden otherwise.",
+          "type": "string"
+        },
+        "rhcosVersion": {
+          "description": "rhcosVersion provides a string which represents the RHCOS version of the boot image This field must match rhcosVersion formatting of [major].[minor].[datestamp(YYYYMMDD)]-[buildnumber] or the legacy format of [major].[minor].[timestamp(YYYYMMDDHHmm)]-[buildnumber]. This field must be between 14 and 21 characters long. Required when mode is set to \"RHCOSVersion\" and forbidden otherwise.",
+          "type": "string"
+        }
+      },
+      "x-kubernetes-unions": [
+        {
+          "discriminator": "mode",
+          "fields-to-discriminateBy": {
+            "ocpVersion": "OCPVersion",
+            "rhcosVersion": "RHCOSVersion"
+          }
+        }
+      ]
     },
     "com.github.openshift.api.operator.v1.ClusterCSIDriver": {
       "description": "ClusterCSIDriver object allows management and configuration of a CSI driver operator installed by default in OpenShift. Name of the object must be name of the CSI driver it operates. See CSIDriverName type for list of allowed values.\n\nCompatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).",

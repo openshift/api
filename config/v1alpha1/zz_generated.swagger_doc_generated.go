@@ -118,6 +118,21 @@ func (ClusterImagePolicyStatus) SwaggerDoc() map[string]string {
 	return map_ClusterImagePolicyStatus
 }
 
+var map_AdditionalAlertmanagerConfig = map[string]string{
+	"":              "AdditionalAlertmanagerConfig represents configuration for additional Alertmanager instances. The `AdditionalAlertmanagerConfig` resource defines settings for how a component communicates with additional Alertmanager instances.",
+	"apiVersion":    "apiVersion defines the API version of Alertmanager. Allowed values: \"v2\". \"v1\" is no longer supported, \"v2\" is set as the default value.",
+	"bearerToken":   "bearerToken defines the secret reference containing the bearer token to use when authenticating to Alertmanager. This is a custom type to allow for admission time validations.",
+	"pathPrefix":    "pathPrefix defines the path prefix to add in front of the push endpoint path.",
+	"scheme":        "scheme defines the URL scheme to use when communicating with Alertmanager instances. Possible values are `http` or `https`. The default value is `http`.",
+	"staticConfigs": "staticConfigs is a list of statically configured Alertmanager endpoints in the form of `<host>:<port>`. Each entry must be a valid hostname or IP address followed by a colon and a valid port number (1-65535).",
+	"timeout":       "timeout defines the timeout value used when sending alerts. The value must be a valid Go time.Duration string (e.g. 30s, 5m, 1h).",
+	"tlsConfig":     "tlsConfig defines the TLS settings to use for Alertmanager connections. When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time.",
+}
+
+func (AdditionalAlertmanagerConfig) SwaggerDoc() map[string]string {
+	return map_AdditionalAlertmanagerConfig
+}
+
 var map_AlertmanagerConfig = map[string]string{
 	"":               "alertmanagerConfig provides configuration options for the default Alertmanager instance that runs in the `openshift-monitoring` namespace. Use this configuration to control whether the default Alertmanager is deployed, how it logs, and how its pods are scheduled.",
 	"deploymentMode": "deploymentMode determines whether the default Alertmanager instance should be deployed as part of the monitoring stack. Allowed values are Disabled, DefaultConfig, and CustomConfig. When set to Disabled, the Alertmanager instance will not be deployed. When set to DefaultConfig, the platform will deploy Alertmanager with default settings. When set to CustomConfig, the Alertmanager will be deployed with custom configuration.",
@@ -177,6 +192,7 @@ var map_ClusterMonitoringSpec = map[string]string{
 	"":                    "ClusterMonitoringSpec defines the desired state of Cluster Monitoring Operator",
 	"userDefined":         "userDefined set the deployment mode for user-defined monitoring in addition to the default platform monitoring. userDefined is optional. When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time. The current default value is `Disabled`.",
 	"alertmanagerConfig":  "alertmanagerConfig allows users to configure how the default Alertmanager instance should be deployed in the `openshift-monitoring` namespace. alertmanagerConfig is optional. When omitted, this means no opinion and the platform is left to choose a reasonable default, that is subject to change over time. The current default value is `DefaultConfig`.",
+	"prometheusK8sConfig": "prometheusK8sConfig provides configuration options for the Prometheus instance Prometheus deployment, pod scheduling, resource allocation, retention policies, and external integrations. prometheusK8sConfig is optional. When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time.",
 	"metricsServerConfig": "metricsServerConfig is an optional field that can be used to configure the Kubernetes Metrics Server that runs in the openshift-monitoring namespace. Specifically, it can configure how the Metrics Server instance is deployed, pod scheduling, its audit policy and log verbosity. When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time.",
 }
 
@@ -203,6 +219,25 @@ func (ContainerResource) SwaggerDoc() map[string]string {
 	return map_ContainerResource
 }
 
+var map_ExternalLabels = map[string]string{
+	"":       "ExternalLabels represents labels to be added to time series and alerts.",
+	"labels": "labels is a list of label key/value pairs.",
+}
+
+func (ExternalLabels) SwaggerDoc() map[string]string {
+	return map_ExternalLabels
+}
+
+var map_Label = map[string]string{
+	"":      "Label represents a key/value pair for external labels.",
+	"key":   "key is the name of the label.",
+	"value": "value is the value of the label.",
+}
+
+func (Label) SwaggerDoc() map[string]string {
+	return map_Label
+}
+
 var map_MetricsServerConfig = map[string]string{
 	"":                          "MetricsServerConfig provides configuration options for the Metrics Server instance that runs in the `openshift-monitoring` namespace. Use this configuration to control how the Metrics Server instance is deployed, how it logs, and how its pods are scheduled.",
 	"audit":                     "audit defines the audit configuration used by the Metrics Server instance. audit is optional. When omitted, this means no opinion and the platform is left to choose a reasonable default, that is subject to change over time. The current default sets audit.profile to Metadata",
@@ -215,6 +250,56 @@ var map_MetricsServerConfig = map[string]string{
 
 func (MetricsServerConfig) SwaggerDoc() map[string]string {
 	return map_MetricsServerConfig
+}
+
+var map_RelabelConfig = map[string]string{
+	"":             "RelabelConfig represents a relabeling rule.",
+	"sourceLabels": "sourceLabels is a list of source label names.",
+	"separator":    "separator is the separator used to join source label values.",
+	"regex":        "regex is the regular expression to match against the concatenated source label values.",
+	"targetLabel":  "targetLabel is the target label name.",
+	"replacement":  "replacement is the replacement value for the target label.",
+	"action":       "action is the action to perform.",
+}
+
+func (RelabelConfig) SwaggerDoc() map[string]string {
+	return map_RelabelConfig
+}
+
+var map_RemoteWriteSpec = map[string]string{
+	"":                    "RemoteWriteSpec represents configuration for remote write endpoints.",
+	"url":                 "url is the URL of the remote write endpoint.",
+	"name":                "name is the name of the remote write configuration.",
+	"remoteTimeout":       "remoteTimeout is the timeout for requests to the remote write endpoint.",
+	"writeRelabelConfigs": "writeRelabelConfigs is a list of relabeling rules to apply before sending data to the remote endpoint.",
+}
+
+func (RemoteWriteSpec) SwaggerDoc() map[string]string {
+	return map_RemoteWriteSpec
+}
+
+var map_SecretKeyReference = map[string]string{
+	"":         "SecretKeyReference represents a reference to a secret key.",
+	"name":     "The name of the secret in the pod's namespace to select from.",
+	"key":      "The key of the secret to select from. Must be a valid secret key.",
+	"optional": "Specify whether the Secret or its key must be defined",
+}
+
+func (SecretKeyReference) SwaggerDoc() map[string]string {
+	return map_SecretKeyReference
+}
+
+var map_TLSConfig = map[string]string{
+	"":                   "TLSConfig represents TLS configuration for Alertmanager connections.",
+	"ca":                 "ca is the CA certificate to use for TLS connections.",
+	"cert":               "cert is the client certificate to use for TLS connections.",
+	"key":                "key is the client key to use for TLS connections.",
+	"serverName":         "serverName is the server name to use for TLS connections.",
+	"insecureSkipVerify": "insecureSkipVerify determines whether to skip TLS certificate verification.",
+}
+
+func (TLSConfig) SwaggerDoc() map[string]string {
+	return map_TLSConfig
 }
 
 var map_UserDefinedMonitoring = map[string]string{

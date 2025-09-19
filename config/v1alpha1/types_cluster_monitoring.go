@@ -89,6 +89,12 @@ type ClusterMonitoringSpec struct {
 	// The current default value is `DefaultConfig`.
 	// +optional
 	AlertmanagerConfig AlertmanagerConfig `json:"alertmanagerConfig,omitempty,omitzero"`
+	// prometheusK8sConfig provides configuration options for the Prometheus instance
+	// Prometheus deployment, pod scheduling, resource allocation, retention policies, and external integrations.
+	// prometheusK8sConfig is optional.
+	// When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time.
+	// +optional
+	PrometheusK8sConfig prometheusK8sConfig `json:"prometheusK8sConfig,omitempty,omitzero"`
 	// metricsServerConfig is an optional field that can be used to configure the Kubernetes Metrics Server that runs in the openshift-monitoring namespace.
 	// Specifically, it can configure how the Metrics Server instance is deployed, pod scheduling, its audit policy and log verbosity.
 	// When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time.
@@ -415,6 +421,350 @@ type MetricsServerConfig struct {
 	// +optional
 	TopologySpreadConstraints []v1.TopologySpreadConstraint `json:"topologySpreadConstraints,omitempty"`
 }
+
+// prometheusK8sConfig provides configuration options for the Prometheus instance
+// Use this configuration to control
+// Prometheus deployment, pod scheduling, resource allocation, retention policies, and external integrations.
+// +kubebuilder:validation:MinProperties=1
+type prometheusK8sConfig struct {
+	// additionalAlertmanagerConfigs configures additional Alertmanager instances that receive alerts from
+	// the Prometheus component. By default, no additional Alertmanager instances are configured.
+	// +optional
+	// +kubebuilder:validation:MaxItems=10
+	// +listType=map
+	AdditionalAlertmanagerConfigs []AdditionalAlertmanagerConfig `json:"additionalAlertmanagerConfigs,omitempty"`
+	// enforcedBodySizeLimit enforces a body size limit for Prometheus scraped metrics. If a scraped
+	// target's body response is larger than the limit, the scrape will fail.
+	// The following values are valid:
+	// an empty value to specify no limit,
+	// a numeric value in Prometheus size format (such as `64MB`), or
+	// the string `automatic`, which indicates that the limit will be
+	// automatically calculated based on cluster capacity.
+	// To specify no limit, omit this field.
+	// Minimum length for this list is 1
+	// Maximum length for this list is 50.
+	// +kubebuilder:validation:MinLength=1
+	// +kubebuilder:validation:MaxLength=50
+	// +optional
+	EnforcedBodySizeLimit *string `json:"enforcedBodySizeLimit,omitempty"`
+	// externalLabels defines labels to be added to any time series or alerts when
+	// communicating with external systems such as federation, remote storage,
+	// and Alertmanager. By default, no labels are added.
+	// +optional
+	ExternalLabels ExternalLabels `json:"externalLabels,omitempty,omitzero"`
+	// logLevel defines the verbosity of logs emitted by Alertmanager.
+	// This field allows users to control the amount and severity of logs generated, which can be useful
+	// for debugging issues or reducing noise in production environments.
+	// Allowed values are Error, Warn, Info, and Debug.
+	// When set to Error, only errors will be logged.
+	// When set to Warn, both warnings and errors will be logged.
+	// When set to Info, general information, warnings, and errors will all be logged.
+	// When set to Debug, detailed debugging information will be logged.
+	// When omitted, this means no opinion and the platform is left to choose a reasonable default, that is subject to change over time.
+	// The current default value is `Info`.
+	// +optional
+	LogLevel LogLevel `json:"logLevel,omitempty"`
+	// nodeSelector defines the nodes on which the Pods are scheduled
+	// nodeSelector is optional.
+	//
+	// When omitted, this means the user has no opinion and the platform is left
+	// to choose reasonable defaults. These defaults are subject to change over time.
+	// The current default value is `kubernetes.io/os: linux`.
+	// +optional
+	// +kubebuilder:validation:MinProperties=1
+	// +kubebuilder:validation:MaxProperties=10
+	NodeSelector map[string]string `json:"nodeSelector,omitempty"`
+	// queryLogFile specifies the file to which PromQL queries are logged.
+	// This setting can be either a filename, in which
+	// case the queries are saved to an `emptyDir` volume
+	// at `/var/log/prometheus`, or a full path to a location where
+	// an `emptyDir` volume will be mounted and the queries saved.
+	// Writing to `/dev/stderr`, `/dev/stdout` or `/dev/null` is supported, but
+	// writing to any other `/dev/` path is not supported. Relative paths are
+	// also not supported.
+	// By default, PromQL queries are not logged.
+	// +optional
+	// +kubebuilder:validation:MinLength=1
+	// +kubebuilder:validation:MaxLength=255
+	QueryLogFile *string `json:"queryLogFile,omitempty"`
+	// remoteWrite defines the remote write configuration, including URL, authentication,
+	// and relabeling settings.
+	// +optional
+	// remoteWrite supports a maximum of 10 items in the list.
+	// +kubebuilder:validation:MaxItems=10
+	// +listType=map
+	RemoteWrite []RemoteWriteSpec `json:"remoteWrite,omitempty"`
+	// resources defines the compute resource requests and limits for the Prometheus container.
+	// This includes CPU, memory and HugePages constraints to help control scheduling and resource usage.
+	// When not specified, defaults are used by the platform. Requests cannot exceed limits.
+	// This field is optional.
+	// More info: https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/
+	// This is a simplified API that maps to Kubernetes ResourceRequirements.
+	// The current default values are:
+	//   resources:
+	//    - name: cpu
+	//      request: 4m
+	//      limit: null
+	//    - name: memory
+	//      request: 40Mi
+	//      limit: null
+	// Maximum length for this list is 10.
+	// Minimum length for this list is 1.
+	// +optional
+	// +listType=map
+	// +listMapKey=name
+	// +kubebuilder:validation:MaxItems=10
+	// +kubebuilder:validation:MinItems=1
+	Resources []ContainerResource `json:"resources,omitempty"`
+	// retention defines the duration for which Prometheus retains data.
+	// This definition must be specified using the following regular
+	// expression pattern: `[0-9]+(ms|s|m|h|d|w|y)` (ms = milliseconds,
+	// s= seconds,m = minutes, h = hours, d = days, w = weeks, y = years).
+	// When omitted, this means the user has no opinion and the platform is left
+	// to choose reasonable defaults, which are subject to change over time.
+	// The default value is `15d`.
+	// +optional
+	// +kubebuilder:validation:MinLength=1
+	// +kubebuilder:validation:MaxLength=20
+	Retention *string `json:"retention,omitempty"`
+	// retentionSize specifies the maximum volume of persistent storage that Prometheus uses for data blocks and the write-ahead log (WAL).
+	// Acceptable values use standard Kubernetes resource quantity formats, such as `Mi`, `Gi`, `Ti`, etc.
+	// When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time.
+	// The default is no storage size limit is enforced and Prometheus will use the available storage capacity of the PersistentVolume.
+	// +optional
+	// +kubebuilder:validation:MaxLength=20
+	RetentionSize *string `json:"retentionSize,omitempty"`
+	// tolerations defines tolerations for the pods.
+	// tolerations is optional.
+	//
+	// When omitted, this means the user has no opinion and the platform is left
+	// to choose reasonable defaults. These defaults are subject to change over time.
+	// Defaults are empty/unset.
+	// Maximum length for this list is 10
+	// Minimum length for this list is 1
+	// +kubebuilder:validation:MaxItems=10
+	// +kubebuilder:validation:MinItems=1
+	// +listType=atomic
+	// +optional
+	Tolerations []v1.Toleration `json:"tolerations,omitempty"`
+	// topologySpreadConstraints defines rules for how Prometheus Pods should be distributed
+	// across topology domains such as zones, nodes, or other user-defined labels.
+	// topologySpreadConstraints is optional.
+	// This helps improve high availability and resource efficiency by avoiding placing
+	// too many replicas in the same failure domain.
+	//
+	// When omitted, this means no opinion and the platform is left to choose a default, which is subject to change over time.
+	// This field maps directly to the `topologySpreadConstraints` field in the Pod spec.
+	// Default is empty list.
+	// Maximum length for this list is 10.
+	// Minimum length for this list is 1
+	// Entries must have unique topologyKey and whenUnsatisfiable pairs.
+	// +kubebuilder:validation:MaxItems=10
+	// +kubebuilder:validation:MinItems=1
+	// +listType=map
+	// +listMapKey=topologyKey
+	// +listMapKey=whenUnsatisfiable
+	// +optional
+	TopologySpreadConstraints []v1.TopologySpreadConstraint `json:"topologySpreadConstraints,omitempty"`
+	// collectionProfile defines the metrics collection profile that Prometheus uses to collect
+	// metrics from the platform components. Supported values are `full` or
+	// `minimal`. In the `full` profile (default), Prometheus collects all
+	// metrics that are exposed by the platform components. In the `minimal`
+	// profile, Prometheus only collects metrics necessary for the default
+	// platform alerts, recording rules, telemetry and console dashboards.
+	// When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time.
+	// The default value is `full`.
+	// +optional
+	CollectionProfile CollectionProfile `json:"collectionProfile,omitempty"`
+	// volumeClaimTemplate Defines persistent storage for Prometheus. Use this setting to
+	// configure the persistent volume claim, including storage class, volume
+	// size, and name.
+	// If omitted, the Pod uses ephemeral storage and Prometheus data will not persist
+	// across restarts.
+	// This field is optional.
+	// +optional
+	VolumeClaimTemplate *v1.PersistentVolumeClaim `json:"volumeClaimTemplate,omitempty"`
+}
+
+type AlertmanagerAPIVersion string
+
+const (
+	AlertmanagerAPIVersionV2 AlertmanagerAPIVersion = "v2"
+)
+
+// SecretKeyReference represents a reference to a secret key.
+type SecretKeyReference struct {
+	// The name of the secret in the pod's namespace to select from.
+	// +required
+	Name string `json:"name"`
+	// The key of the secret to select from. Must be a valid secret key.
+	// +required
+	Key string `json:"key"`
+	// Specify whether the Secret or its key must be defined
+	// +optional
+	Optional *bool `json:"optional,omitempty"`
+}
+
+type AlertmanagerScheme string
+
+const (
+	AlertmanagerSchemeHTTP  AlertmanagerScheme = "http"
+	AlertmanagerSchemeHTTPS AlertmanagerScheme = "https"
+)
+
+// AdditionalAlertmanagerConfig represents configuration for additional Alertmanager instances.
+// The `AdditionalAlertmanagerConfig` resource defines settings for how a
+// component communicates with additional Alertmanager instances.
+type AdditionalAlertmanagerConfig struct {
+	// apiVersion defines the API version of Alertmanager.
+	// Allowed values: "v2". "v1" is no longer supported, "v2" is set as the default value.
+	// +kubebuilder:validation:Enum=v2
+	// +required
+	APIVersion AlertmanagerAPIVersion `json:"apiVersion,omitempty"`
+	// bearerToken defines the secret reference containing the bearer token
+	// to use when authenticating to Alertmanager.
+	// This is a custom type to allow for admission time validations.
+	// +optional
+	BearerToken *SecretKeyReference `json:"bearerToken,omitempty"`
+	// pathPrefix defines the path prefix to add in front of the push endpoint path.
+	// +kubebuilder:validation:MaxLength=255
+	// +kubebuilder:validation:MinLength=1
+	// +optional
+	PathPrefix *string `json:"pathPrefix,omitempty"`
+	// scheme defines the URL scheme to use when communicating with Alertmanager
+	// instances.
+	// Possible values are `http` or `https`. The default value is `http`.
+	// +kubebuilder:validation:Enum=http;https
+	// +required
+	Scheme AlertmanagerScheme `json:"scheme,omitempty"`
+	// staticConfigs is a list of statically configured Alertmanager endpoints in the form
+	// of `<host>:<port>`. Each entry must be a valid hostname or IP address followed by a colon and a valid port number (1-65535).
+	// +kubebuilder:validation:MaxItems=10
+	// +kubebuilder:validation:items:MaxLength=255
+	// +kubebuilder:validation:items:Pattern=`^([a-zA-Z0-9.-]+|\[[a-fA-F0-9:]+\]):([1-9][0-9]{0,4})$`
+	// +listType=set
+	// +required
+	StaticConfigs []string `json:"staticConfigs,omitempty"`
+	// timeout defines the timeout value used when sending alerts.
+	// The value must be a valid Go time.Duration string (e.g. 30s, 5m, 1h).
+	// +kubebuilder:validation:Pattern=`^([0-9]+(\.[0-9]+)?(ns|us|µs|ms|s|m|h))+$`
+	// +kubebuilder:validation:MinLength=2
+	// +optional
+	Timeout *string `json:"timeout,omitempty"`
+	// tlsConfig defines the TLS settings to use for Alertmanager connections.
+	// When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time.
+	// +optional
+	TLSConfig *TLSConfig `json:"tlsConfig,omitempty"`
+}
+
+// Label represents a key/value pair for external labels.
+type Label struct {
+	// key is the name of the label.
+	// +required
+	// +kubebuilder:validation:MaxLength=63
+	// +kubebuilder:validation:MinLength=1
+	Key string `json:"key"`
+	// value is the value of the label.
+	// +required
+	// +kubebuilder:validation:MaxLength=63
+	// +kubebuilder:validation:MinLength=1
+	Value string `json:"value"`
+}
+
+// ExternalLabels represents labels to be added to time series and alerts.
+type ExternalLabels struct {
+	// labels is a list of label key/value pairs.
+	// +required
+	// +kubebuilder:validation:MinItems=1
+	// +kubebuilder:validation:MaxItems=50
+	// +listType=map
+	// +listMapKey=key
+	Labels []Label `json:"labels,omitempty"`
+}
+
+// RemoteWriteSpec represents configuration for remote write endpoints.
+type RemoteWriteSpec struct {
+	// url is the URL of the remote write endpoint.
+	// +required
+	// +kubebuilder:validation:MaxLength=2048
+	URL *string `json:"url,omitempty"`
+	// name is the name of the remote write configuration.
+	// +optional
+	// +kubebuilder:validation:MaxLength=63
+	Name *string `json:"name,omitempty"`
+	// remoteTimeout is the timeout for requests to the remote write endpoint.
+	// +optional
+	// +kubebuilder:validation:MaxLength=20
+	RemoteTimeout *string `json:"remoteTimeout,omitempty"`
+	// writeRelabelConfigs is a list of relabeling rules to apply before sending data to the remote endpoint.
+	// +optional
+	// +kubebuilder:validation:MaxItems=10
+	// +listType=atomic
+	WriteRelabelConfigs []RelabelConfig `json:"writeRelabelConfigs,omitempty"`
+}
+
+// RelabelConfig represents a relabeling rule.
+type RelabelConfig struct {
+	// sourceLabels is a list of source label names.
+	// +optional
+	// +kubebuilder:validation:MaxItems=10
+	// +kubebuilder:validation:items:MaxLength=63
+	// +listType=set
+	SourceLabels []string `json:"sourceLabels,omitempty"`
+	// separator is the separator used to join source label values.
+	// +optional
+	// +kubebuilder:validation:MaxLength=10
+	Separator *string `json:"separator,omitempty"`
+	// regex is the regular expression to match against the concatenated source label values.
+	// +optional
+	// +kubebuilder:validation:MaxLength=1000
+	Regex *string `json:"regex,omitempty"`
+	// targetLabel is the target label name.
+	// +optional
+	// +kubebuilder:validation:MaxLength=63
+	TargetLabel *string `json:"targetLabel,omitempty"`
+	// replacement is the replacement value for the target label.
+	// +optional
+	// +kubebuilder:validation:MaxLength=255
+	Replacement *string `json:"replacement,omitempty"`
+	// action is the action to perform.
+	// +optional
+	// +kubebuilder:validation:MaxLength=20
+	Action *string `json:"action,omitempty"`
+}
+
+// TLSConfig represents TLS configuration for Alertmanager connections.
+type TLSConfig struct {
+	// ca is the CA certificate to use for TLS connections.
+	// +optional
+	CA *v1.SecretKeySelector `json:"ca,omitempty"`
+	// cert is the client certificate to use for TLS connections.
+	// +optional
+	Cert *v1.SecretKeySelector `json:"cert,omitempty"`
+	// key is the client key to use for TLS connections.
+	// +optional
+	Key *v1.SecretKeySelector `json:"key,omitempty"`
+	// serverName is the server name to use for TLS connections.
+	// +optional
+	// +kubebuilder:validation:MaxLength=253
+	ServerName *string `json:"serverName,omitempty"`
+	// insecureSkipVerify determines whether to skip TLS certificate verification.
+	// +optional
+	// +kubebuilder:validation:Enum=true;false
+	InsecureSkipVerify string `json:"insecureSkipVerify,omitempty"`
+}
+
+// CollectionProfile defines the metrics collection profile for Prometheus.
+// +kubebuilder:validation:Enum=full;minimal
+type CollectionProfile string
+
+const (
+	// CollectionProfileFull means Prometheus collects all metrics that are exposed by the platform components.
+	CollectionProfileFull CollectionProfile = "full"
+	// CollectionProfileMinimal means Prometheus only collects metrics necessary for the default
+	// platform alerts, recording rules, telemetry and console dashboards.
+	CollectionProfileMinimal CollectionProfile = "minimal"
+)
 
 // AuditProfile defines the audit log level for the Metrics Server.
 // +kubebuilder:validation:Enum=None;Metadata;Request;RequestResponse

@@ -441,6 +441,14 @@ var (
 								enableIn(configv1.DevPreviewNoUpgrade, configv1.TechPreviewNoUpgrade, configv1.Default, configv1.OKD).
 								mustRegister()
 
+	FeatureGateExternalOIDCWithUpstreamParity = newFeatureGate("ExternalOIDCWithUpstreamParity").
+							reportProblemsToJiraComponent("authentication").
+							contactPerson("saldawam").
+							productScope(ocpSpecific).
+							enhancementPR("https://github.com/openshift/enhancements/pull/1763").
+							enableIn(configv1.DevPreviewNoUpgrade, configv1.TechPreviewNoUpgrade).
+							mustRegister()
+
 	FeatureGateExample = newFeatureGate("Example").
 				reportProblemsToJiraComponent("cluster-config").
 				contactPerson("deads").

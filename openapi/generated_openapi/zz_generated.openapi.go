@@ -404,8 +404,10 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"github.com/openshift/api/config/v1.TokenClaimOrExpressionMapping":                                   schema_openshift_api_config_v1_TokenClaimOrExpressionMapping(ref),
 		"github.com/openshift/api/config/v1.TokenClaimValidationRule":                                        schema_openshift_api_config_v1_TokenClaimValidationRule(ref),
 		"github.com/openshift/api/config/v1.TokenConfig":                                                     schema_openshift_api_config_v1_TokenConfig(ref),
+		"github.com/openshift/api/config/v1.TokenExpressionRule":                                             schema_openshift_api_config_v1_TokenExpressionRule(ref),
 		"github.com/openshift/api/config/v1.TokenIssuer":                                                     schema_openshift_api_config_v1_TokenIssuer(ref),
 		"github.com/openshift/api/config/v1.TokenRequiredClaim":                                              schema_openshift_api_config_v1_TokenRequiredClaim(ref),
+		"github.com/openshift/api/config/v1.TokenUserValidationRule":                                         schema_openshift_api_config_v1_TokenUserValidationRule(ref),
 		"github.com/openshift/api/config/v1.Update":                                                          schema_openshift_api_config_v1_Update(ref),
 		"github.com/openshift/api/config/v1.UpdateHistory":                                                   schema_openshift_api_config_v1_UpdateHistory(ref),
 		"github.com/openshift/api/config/v1.UsernameClaimMapping":                                            schema_openshift_api_config_v1_UsernameClaimMapping(ref),
@@ -17141,12 +17143,30 @@ func schema_openshift_api_config_v1_OIDCProvider(ref common.ReferenceCallback) c
 							},
 						},
 					},
+					"userValidationRules": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-type": "atomic",
+							},
+						},
+						SchemaProps: spec.SchemaProps{
+							Type: []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("github.com/openshift/api/config/v1.TokenUserValidationRule"),
+									},
+								},
+							},
+						},
+					},
 				},
 				Required: []string{"name", "issuer", "claimMappings"},
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/config/v1.OIDCClientConfig", "github.com/openshift/api/config/v1.TokenClaimMappings", "github.com/openshift/api/config/v1.TokenClaimValidationRule", "github.com/openshift/api/config/v1.TokenIssuer"},
+			"github.com/openshift/api/config/v1.OIDCClientConfig", "github.com/openshift/api/config/v1.TokenClaimMappings", "github.com/openshift/api/config/v1.TokenClaimValidationRule", "github.com/openshift/api/config/v1.TokenIssuer", "github.com/openshift/api/config/v1.TokenUserValidationRule"},
 	}
 }
 
@@ -20192,13 +20212,18 @@ func schema_openshift_api_config_v1_TokenClaimValidationRule(ref common.Referenc
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
-							Enum:        []interface{}{},
 						},
 					},
 					"requiredClaim": {
 						SchemaProps: spec.SchemaProps{
-							Description: "requiredClaim is an optional field that configures the required claim and value that the Kubernetes API server will use to validate if an incoming JWT is valid for this identity provider.",
+							Description: "requiredClaim allows configuring a required claim name and its expected value. RequiredClaim is used when type is RequiredClaim.",
 							Ref:         ref("github.com/openshift/api/config/v1.TokenRequiredClaim"),
+						},
+					},
+					"expressionRule": {
+						SchemaProps: spec.SchemaProps{
+							Description: "expressionRule contains the configuration for the \"Expression\" type. Must be set if type == \"Expression\".",
+							Ref:         ref("github.com/openshift/api/config/v1.TokenExpressionRule"),
 						},
 					},
 				},
@@ -20206,7 +20231,7 @@ func schema_openshift_api_config_v1_TokenClaimValidationRule(ref common.Referenc
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/config/v1.TokenRequiredClaim"},
+			"github.com/openshift/api/config/v1.TokenExpressionRule", "github.com/openshift/api/config/v1.TokenRequiredClaim"},
 	}
 }
 
@@ -20242,6 +20267,33 @@ func schema_openshift_api_config_v1_TokenConfig(ref common.ReferenceCallback) co
 		},
 		Dependencies: []string{
 			"k8s.io/apimachinery/pkg/apis/meta/v1.Duration"},
+	}
+}
+
+func schema_openshift_api_config_v1_TokenExpressionRule(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"expression": {
+						SchemaProps: spec.SchemaProps{
+							Description: "expression is a CEL expression evaluated against token claims. The expression must be a non-empty string and no longer than 4096 characters. This field is required.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"message": {
+						SchemaProps: spec.SchemaProps{
+							Description: "message allows configuring the human-readable message that is returned from the Kubernetes API server when a token fails validation based on the CEL expression defined in 'expression'. This field is optional.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+				},
+				Required: []string{"expression"},
+			},
+		},
 	}
 }
 
@@ -20286,6 +20338,20 @@ func schema_openshift_api_config_v1_TokenIssuer(ref common.ReferenceCallback) co
 							Ref:         ref("github.com/openshift/api/config/v1.ConfigMapNameReference"),
 						},
 					},
+					"discoveryURL": {
+						SchemaProps: spec.SchemaProps{
+							Description: "discoveryURL is an optional field that, if specified, overrides the default discovery endpoint used to retrieve OIDC configuration metadata. By default, the discovery URL is derived from `url` as \"{url}/.well-known/openid-configuration\".\n\nThe discoveryURL must:\n  - Be a valid absolute URL.\n  - Use the HTTPS scheme.\n  - Not contain query parameters, user info, or fragments.\n  - Be different from the value of `url` (ignoring trailing slashes)",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"audienceMatchPolicy": {
+						SchemaProps: spec.SchemaProps{
+							Description: "audienceMatchPolicy specifies how token audiences are matched. If omitted, the system applies a default policy. Valid values are: - \"MatchAny\": The token is accepted if any of its audiences match any of the configured audiences.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
 				},
 				Required: []string{"issuerURL", "audiences"},
 			},
@@ -20303,7 +20369,7 @@ func schema_openshift_api_config_v1_TokenRequiredClaim(ref common.ReferenceCallb
 				Properties: map[string]spec.Schema{
 					"claim": {
 						SchemaProps: spec.SchemaProps{
-							Description: "claim is a required field that configures the name of the required claim. When taken from the JWT claims, claim must be a string value.\n\nclaim must not be an empty string (\"\").",
+							Description: "claim is a name of a required claim. Only claims with string values are supported.",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -20319,6 +20385,34 @@ func schema_openshift_api_config_v1_TokenRequiredClaim(ref common.ReferenceCallb
 					},
 				},
 				Required: []string{"claim", "requiredValue"},
+			},
+		},
+	}
+}
+
+func schema_openshift_api_config_v1_TokenUserValidationRule(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "TokenUserValidationRule provides a CEL-based rule used to validate a token subject. Each rule contains a CEL expression that is evaluated against the token’s claims. If the expression evaluates to false, the token is rejected. See https://kubernetes.io/docs/reference/using-api/cel/ for CEL syntax. At least one rule must evaluate to true for the token to be considered valid.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"expression": {
+						SchemaProps: spec.SchemaProps{
+							Description: "expression is a CEL expression that must evaluate to true for the token to be accepted. The expression is evaluated against the token's user information (e.g., username, groups). This field must be non-empty and may not exceed 4096 characters.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"message": {
+						SchemaProps: spec.SchemaProps{
+							Description: "message is an optional, human-readable message returned by the API server when this validation rule fails. It can help clarify why a token was rejected.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+				},
+				Required: []string{"expression"},
 			},
 		},
 	}

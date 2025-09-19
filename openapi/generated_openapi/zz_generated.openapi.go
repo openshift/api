@@ -450,6 +450,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"github.com/openshift/api/config/v1alpha1.InsightsDataGatherSpec":                                    schema_openshift_api_config_v1alpha1_InsightsDataGatherSpec(ref),
 		"github.com/openshift/api/config/v1alpha1.InsightsDataGatherStatus":                                  schema_openshift_api_config_v1alpha1_InsightsDataGatherStatus(ref),
 		"github.com/openshift/api/config/v1alpha1.MetricsServerConfig":                                       schema_openshift_api_config_v1alpha1_MetricsServerConfig(ref),
+		"github.com/openshift/api/config/v1alpha1.OpenShiftStateMetricsConfig":                               schema_openshift_api_config_v1alpha1_OpenShiftStateMetricsConfig(ref),
 		"github.com/openshift/api/config/v1alpha1.PKI":                                                       schema_openshift_api_config_v1alpha1_PKI(ref),
 		"github.com/openshift/api/config/v1alpha1.PKICertificateSubject":                                     schema_openshift_api_config_v1alpha1_PKICertificateSubject(ref),
 		"github.com/openshift/api/config/v1alpha1.PersistentVolumeClaimReference":                            schema_openshift_api_config_v1alpha1_PersistentVolumeClaimReference(ref),
@@ -21809,11 +21810,18 @@ func schema_openshift_api_config_v1alpha1_ClusterMonitoringSpec(ref common.Refer
 							Ref:         ref("github.com/openshift/api/config/v1alpha1.MetricsServerConfig"),
 						},
 					},
+					"openShiftStateMetricsConfig": {
+						SchemaProps: spec.SchemaProps{
+							Description: "openShiftStateMetricsConfig is an optional field that can be used to configure the openshift-state-metrics OpenShift State Metrics (OSM) is a service that listens to the OpenShift API server and generates metrics about the state of OpenShift objects. Metrics reflect the raw, unmodified data of objects such as Projects, Routes, and Builds. Specifically, it can configure how the openshift-state-metrics instance is deployed, pod scheduling, and resource allocation. When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time.",
+							Default:     map[string]interface{}{},
+							Ref:         ref("github.com/openshift/api/config/v1alpha1.OpenShiftStateMetricsConfig"),
+						},
+					},
 				},
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/config/v1alpha1.AlertmanagerConfig", "github.com/openshift/api/config/v1alpha1.MetricsServerConfig", "github.com/openshift/api/config/v1alpha1.UserDefinedMonitoring"},
+			"github.com/openshift/api/config/v1alpha1.AlertmanagerConfig", "github.com/openshift/api/config/v1alpha1.MetricsServerConfig", "github.com/openshift/api/config/v1alpha1.OpenShiftStateMetricsConfig", "github.com/openshift/api/config/v1alpha1.UserDefinedMonitoring"},
 	}
 }
 
@@ -22407,6 +22415,85 @@ func schema_openshift_api_config_v1alpha1_MetricsServerConfig(ref common.Referen
 		},
 		Dependencies: []string{
 			"github.com/openshift/api/config/v1alpha1.Audit", "github.com/openshift/api/config/v1alpha1.ContainerResource", "k8s.io/api/core/v1.Toleration", "k8s.io/api/core/v1.TopologySpreadConstraint"},
+	}
+}
+
+func schema_openshift_api_config_v1alpha1_OpenShiftStateMetricsConfig(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "OpenShiftStateMetricsConfig provides configuration options for the OpenShift State Metrics instance Use this configuration to control how the OpenShift State Metrics instance is deployed, and how its pods are scheduled.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"nodeSelector": {
+						SchemaProps: spec.SchemaProps{
+							Description: "nodeSelector defines the nodes on which the Pods are scheduled. nodeSelector is optional.\n\nWhen omitted, this means the user has no opinion and the platform is left to choose reasonable defaults. These defaults are subject to change over time. The current default value is `kubernetes.io/os: linux`.",
+							Type:        []string{"object"},
+							AdditionalProperties: &spec.SchemaOrBool{
+								Allows: true,
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: "",
+										Type:    []string{"string"},
+										Format:  "",
+									},
+								},
+							},
+						},
+					},
+					"resources": {
+						SchemaProps: spec.SchemaProps{
+							Description: "resources defines the compute resource requests and limits for the Metrics Server container. This includes CPU, memory and HugePages constraints to help control scheduling and resource usage. When not specified, defaults are used by the platform. Requests cannot exceed limits. This field is optional. More info: https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/ This is a simplified API that maps to Kubernetes ResourceRequirements. The current default values are:\n  resources:\n   - name: cpu\n     request: 4m\n     limit: null\n   - name: memory\n     request: 40Mi\n     limit: null",
+							Ref:         ref("k8s.io/api/core/v1.ResourceRequirements"),
+						},
+					},
+					"tolerations": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-type": "atomic",
+							},
+						},
+						SchemaProps: spec.SchemaProps{
+							Description: "tolerations defines the tolerations for the pods. This field is optional.\n\nWhen omitted, this means the user has no opinion and the platform is left to choose reasonable defaults. These defaults are subject to change over time. The default is an empty list. Maximum length for this list is 10. Minimum length for this list is 1.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("k8s.io/api/core/v1.Toleration"),
+									},
+								},
+							},
+						},
+					},
+					"topologySpreadConstraints": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-map-keys": []interface{}{
+									"topologyKey",
+									"whenUnsatisfiable",
+								},
+								"x-kubernetes-list-type": "map",
+							},
+						},
+						SchemaProps: spec.SchemaProps{
+							Description: "topologySpreadConstraints defines rules for how OpenShift State Metrics Pods should be distributed across topology domains such as zones, nodes, or other user-defined labels. topologySpreadConstraints is optional. This helps improve high availability and resource efficiency by avoiding placing too many replicas in the same failure domain.\n\nWhen omitted, this means no opinion and the platform is left to choose a default, which is subject to change over time. This field maps directly to the `topologySpreadConstraints` field in the Pod spec. Default is empty list. Maximum length for this list is 10. Minimum length for this list is 1 Entries must have unique topologyKey and whenUnsatisfiable pairs.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("k8s.io/api/core/v1.TopologySpreadConstraint"),
+									},
+								},
+							},
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/api/core/v1.ResourceRequirements", "k8s.io/api/core/v1.Toleration", "k8s.io/api/core/v1.TopologySpreadConstraint"},
 	}
 }
 

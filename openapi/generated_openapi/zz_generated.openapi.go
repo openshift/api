@@ -438,6 +438,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"github.com/openshift/api/config/v1alpha1.ClusterMonitoringSpec":                                     schema_openshift_api_config_v1alpha1_ClusterMonitoringSpec(ref),
 		"github.com/openshift/api/config/v1alpha1.ClusterMonitoringStatus":                                   schema_openshift_api_config_v1alpha1_ClusterMonitoringStatus(ref),
 		"github.com/openshift/api/config/v1alpha1.ContainerResource":                                         schema_openshift_api_config_v1alpha1_ContainerResource(ref),
+		"github.com/openshift/api/config/v1alpha1.DefaultIngressControllerConfig":                            schema_openshift_api_config_v1alpha1_DefaultIngressControllerConfig(ref),
 		"github.com/openshift/api/config/v1alpha1.EtcdBackupSpec":                                            schema_openshift_api_config_v1alpha1_EtcdBackupSpec(ref),
 		"github.com/openshift/api/config/v1alpha1.FulcioCAWithRekor":                                         schema_openshift_api_config_v1alpha1_FulcioCAWithRekor(ref),
 		"github.com/openshift/api/config/v1alpha1.GatherConfig":                                              schema_openshift_api_config_v1alpha1_GatherConfig(ref),
@@ -445,6 +446,15 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"github.com/openshift/api/config/v1alpha1.ImagePolicyList":                                           schema_openshift_api_config_v1alpha1_ImagePolicyList(ref),
 		"github.com/openshift/api/config/v1alpha1.ImagePolicySpec":                                           schema_openshift_api_config_v1alpha1_ImagePolicySpec(ref),
 		"github.com/openshift/api/config/v1alpha1.ImagePolicyStatus":                                         schema_openshift_api_config_v1alpha1_ImagePolicyStatus(ref),
+		"github.com/openshift/api/config/v1alpha1.IngressControllerBufferSizes":                              schema_openshift_api_config_v1alpha1_IngressControllerBufferSizes(ref),
+		"github.com/openshift/api/config/v1alpha1.IngressControllerConfig":                                   schema_openshift_api_config_v1alpha1_IngressControllerConfig(ref),
+		"github.com/openshift/api/config/v1alpha1.IngressControllerConfigList":                               schema_openshift_api_config_v1alpha1_IngressControllerConfigList(ref),
+		"github.com/openshift/api/config/v1alpha1.IngressControllerConfigSpec":                               schema_openshift_api_config_v1alpha1_IngressControllerConfigSpec(ref),
+		"github.com/openshift/api/config/v1alpha1.IngressControllerConfigStatus":                             schema_openshift_api_config_v1alpha1_IngressControllerConfigStatus(ref),
+		"github.com/openshift/api/config/v1alpha1.IngressControllerConnectionLimits":                         schema_openshift_api_config_v1alpha1_IngressControllerConnectionLimits(ref),
+		"github.com/openshift/api/config/v1alpha1.IngressControllerContainerResource":                        schema_openshift_api_config_v1alpha1_IngressControllerContainerResource(ref),
+		"github.com/openshift/api/config/v1alpha1.IngressControllerPerformanceTuning":                        schema_openshift_api_config_v1alpha1_IngressControllerPerformanceTuning(ref),
+		"github.com/openshift/api/config/v1alpha1.IngressControllerTimeouts":                                 schema_openshift_api_config_v1alpha1_IngressControllerTimeouts(ref),
 		"github.com/openshift/api/config/v1alpha1.InsightsDataGather":                                        schema_openshift_api_config_v1alpha1_InsightsDataGather(ref),
 		"github.com/openshift/api/config/v1alpha1.InsightsDataGatherList":                                    schema_openshift_api_config_v1alpha1_InsightsDataGatherList(ref),
 		"github.com/openshift/api/config/v1alpha1.InsightsDataGatherSpec":                                    schema_openshift_api_config_v1alpha1_InsightsDataGatherSpec(ref),
@@ -21863,6 +21873,98 @@ func schema_openshift_api_config_v1alpha1_ContainerResource(ref common.Reference
 	}
 }
 
+func schema_openshift_api_config_v1alpha1_DefaultIngressControllerConfig(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "DefaultIngressControllerConfig represents the configuration for the default ingress controller deployment. defaultIngressControllerConfig provides configuration options for the default ingress controller instance that runs in the `openshift-ingress` namespace. Use this configuration to control how the default ingress controller is deployed, how it logs, and how its pods are scheduled.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"logLevel": {
+						SchemaProps: spec.SchemaProps{
+							Description: "logLevel defines the verbosity of logs emitted by the ingress controller. This field allows users to control the amount and severity of logs generated, which can be useful for debugging issues or reducing noise in production environments. Allowed values are Error, Warn, Info, and Debug. When set to Error, only errors will be logged. When set to Warn, both warnings and errors will be logged. When set to Info, general information, warnings, and errors will all be logged. When set to Debug, detailed debugging information will be logged. When omitted, this means no opinion and the platform is left to choose a reasonable default, that is subject to change over time. The current default value is `Info`.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"nodeSelector": {
+						SchemaProps: spec.SchemaProps{
+							Description: "nodeSelector defines the nodes on which the ingress controller Pods are scheduled nodeSelector is optional.\n\nWhen omitted, this means the user has no opinion and the platform is left to choose reasonable defaults. These defaults are subject to change over time. The current default value is `kubernetes.io/os: linux`.",
+							Type:        []string{"object"},
+							AdditionalProperties: &spec.SchemaOrBool{
+								Allows: true,
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: "",
+										Type:    []string{"string"},
+										Format:  "",
+									},
+								},
+							},
+						},
+					},
+					"resources": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-map-keys": []interface{}{
+									"name",
+								},
+								"x-kubernetes-list-type": "map",
+							},
+						},
+						SchemaProps: spec.SchemaProps{
+							Description: "resources defines the compute resource requests and limits for the ingress controller container. This includes CPU, memory and HugePages constraints to help control scheduling and resource usage. When not specified, defaults are used by the platform. Requests cannot exceed limits. This field is optional. More info: https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/ This is a simplified API that maps to Kubernetes ResourceRequirements. The current default values are:\n  resources:\n   - name: cpu\n     request: 100m\n     limit: null\n   - name: memory\n     request: 256Mi\n     limit: null\nMaximum length for this list is 10. Minimum length for this list is 1.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("github.com/openshift/api/config/v1alpha1.IngressControllerContainerResource"),
+									},
+								},
+							},
+						},
+					},
+					"replicas": {
+						SchemaProps: spec.SchemaProps{
+							Description: "replicas defines the desired number of ingress controller replicas. This field allows users to control the availability and load distribution of the ingress controller. When not specified, defaults are used by the platform based on the cluster topology. The current default behavior is: - SingleReplica topology: 1 replica - HighlyAvailable topology: 2 replicas",
+							Type:        []string{"integer"},
+							Format:      "int32",
+						},
+					},
+					"tolerations": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-type": "atomic",
+							},
+						},
+						SchemaProps: spec.SchemaProps{
+							Description: "tolerations defines the tolerations for ingress controller pods. This allows the ingress controller to be scheduled on nodes with matching taints. When not specified, no tolerations are applied.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("k8s.io/api/core/v1.Toleration"),
+									},
+								},
+							},
+						},
+					},
+					"affinity": {
+						SchemaProps: spec.SchemaProps{
+							Description: "affinity defines the affinity rules for ingress controller pods. This allows users to control pod placement for high availability or performance optimization. When not specified, no affinity rules are applied.",
+							Ref:         ref("k8s.io/api/core/v1.Affinity"),
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"github.com/openshift/api/config/v1alpha1.IngressControllerContainerResource", "k8s.io/api/core/v1.Affinity", "k8s.io/api/core/v1.Toleration"},
+	}
+}
+
 func schema_openshift_api_config_v1alpha1_EtcdBackupSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -22166,6 +22268,334 @@ func schema_openshift_api_config_v1alpha1_ImagePolicyStatus(ref common.Reference
 		},
 		Dependencies: []string{
 			"k8s.io/apimachinery/pkg/apis/meta/v1.Condition"},
+	}
+}
+
+func schema_openshift_api_config_v1alpha1_IngressControllerBufferSizes(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "IngressControllerBufferSizes defines buffer size settings for ingress controllers.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"requestHeaderBufferSize": {
+						SchemaProps: spec.SchemaProps{
+							Description: "requestHeaderBufferSize defines the size of the buffer for request headers. This affects the maximum size of request headers that can be processed. When not specified, the platform default is used.",
+							Ref:         ref("k8s.io/apimachinery/pkg/api/resource.Quantity"),
+						},
+					},
+					"responseBufferSize": {
+						SchemaProps: spec.SchemaProps{
+							Description: "responseBufferSize defines the size of the buffer for responses. This affects buffering behavior for responses from backend servers. When not specified, the platform default is used.",
+							Ref:         ref("k8s.io/apimachinery/pkg/api/resource.Quantity"),
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/apimachinery/pkg/api/resource.Quantity"},
+	}
+}
+
+func schema_openshift_api_config_v1alpha1_IngressControllerConfig(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "IngressControllerConfig is the Custom Resource object which holds the current configuration of Ingress Controllers. This provides a cluster-level configuration API for managing ingress controller operational settings.\n\nCompatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"kind": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"apiVersion": {
+						SchemaProps: spec.SchemaProps{
+							Description: "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"metadata": {
+						SchemaProps: spec.SchemaProps{
+							Description: "metadata is the standard object metadata.",
+							Default:     map[string]interface{}{},
+							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"),
+						},
+					},
+					"spec": {
+						SchemaProps: spec.SchemaProps{
+							Description: "spec holds user configuration for the Ingress Controllers",
+							Default:     map[string]interface{}{},
+							Ref:         ref("github.com/openshift/api/config/v1alpha1.IngressControllerConfigSpec"),
+						},
+					},
+					"status": {
+						SchemaProps: spec.SchemaProps{
+							Description: "status holds observed values from the cluster. They may not be overridden.",
+							Ref:         ref("github.com/openshift/api/config/v1alpha1.IngressControllerConfigStatus"),
+						},
+					},
+				},
+				Required: []string{"spec"},
+			},
+		},
+		Dependencies: []string{
+			"github.com/openshift/api/config/v1alpha1.IngressControllerConfigSpec", "github.com/openshift/api/config/v1alpha1.IngressControllerConfigStatus", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"},
+	}
+}
+
+func schema_openshift_api_config_v1alpha1_IngressControllerConfigList(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "Compatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"kind": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"apiVersion": {
+						SchemaProps: spec.SchemaProps{
+							Description: "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"metadata": {
+						SchemaProps: spec.SchemaProps{
+							Description: "metadata is the standard list metadata.",
+							Default:     map[string]interface{}{},
+							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"),
+						},
+					},
+					"items": {
+						SchemaProps: spec.SchemaProps{
+							Description: "items is a list of IngressControllerConfig",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("github.com/openshift/api/config/v1alpha1.IngressControllerConfig"),
+									},
+								},
+							},
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"github.com/openshift/api/config/v1alpha1.IngressControllerConfig", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"},
+	}
+}
+
+func schema_openshift_api_config_v1alpha1_IngressControllerConfigSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "IngressControllerConfigSpec defines the desired state of Ingress Controller operational configuration",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"defaultControllerConfig": {
+						SchemaProps: spec.SchemaProps{
+							Description: "defaultControllerConfig allows users to configure how the default ingress controller instance should be deployed and managed. defaultControllerConfig is optional. When omitted, this means no opinion and the platform is left to choose a reasonable default, that is subject to change over time.",
+							Default:     map[string]interface{}{},
+							Ref:         ref("github.com/openshift/api/config/v1alpha1.DefaultIngressControllerConfig"),
+						},
+					},
+					"performanceTuning": {
+						SchemaProps: spec.SchemaProps{
+							Description: "performanceTuning provides configuration options for performance optimization of ingress controllers. performanceTuning is optional. When omitted, this means no opinion and the platform is left to choose a reasonable default, that is subject to change over time.",
+							Default:     map[string]interface{}{},
+							Ref:         ref("github.com/openshift/api/config/v1alpha1.IngressControllerPerformanceTuning"),
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"github.com/openshift/api/config/v1alpha1.DefaultIngressControllerConfig", "github.com/openshift/api/config/v1alpha1.IngressControllerPerformanceTuning"},
+	}
+}
+
+func schema_openshift_api_config_v1alpha1_IngressControllerConfigStatus(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "IngressControllerConfigStatus defines the observed state of IngressControllerConfig",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"conditions": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-map-keys": []interface{}{
+									"type",
+								},
+								"x-kubernetes-list-type": "map",
+							},
+						},
+						SchemaProps: spec.SchemaProps{
+							Description: "conditions represent the latest available observations of the IngressControllerConfig's current state.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("k8s.io/apimachinery/pkg/apis/meta/v1.Condition"),
+									},
+								},
+							},
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/apimachinery/pkg/apis/meta/v1.Condition"},
+	}
+}
+
+func schema_openshift_api_config_v1alpha1_IngressControllerConnectionLimits(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "IngressControllerConnectionLimits defines connection-related limits for ingress controllers.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"maxConnections": {
+						SchemaProps: spec.SchemaProps{
+							Description: "maxConnections defines the maximum number of concurrent connections. This helps prevent resource exhaustion under high load. When not specified, the platform default is used.",
+							Type:        []string{"integer"},
+							Format:      "int32",
+						},
+					},
+					"maxConnectionsPerBackend": {
+						SchemaProps: spec.SchemaProps{
+							Description: "maxConnectionsPerBackend defines the maximum number of connections per backend server. This helps distribute load evenly across backend servers. When not specified, the platform default is used.",
+							Type:        []string{"integer"},
+							Format:      "int32",
+						},
+					},
+					"maxRequestsPerConnection": {
+						SchemaProps: spec.SchemaProps{
+							Description: "maxRequestsPerConnection defines the maximum number of requests per connection. This controls connection reuse behavior. When not specified, the platform default is used.",
+							Type:        []string{"integer"},
+							Format:      "int32",
+						},
+					},
+				},
+			},
+		},
+	}
+}
+
+func schema_openshift_api_config_v1alpha1_IngressControllerContainerResource(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "IngressControllerContainerResource defines a single resource requirement for an ingress controller container.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"name": {
+						SchemaProps: spec.SchemaProps{
+							Description: "name of the resource (e.g. \"cpu\", \"memory\", \"hugepages-2Mi\"). This field is required. name must consist only of alphanumeric characters, `-`, `_` and `.` and must start and end with an alphanumeric character.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"request": {
+						SchemaProps: spec.SchemaProps{
+							Description: "request is the minimum amount of the resource required (e.g. \"2Mi\", \"1Gi\"). This field is optional. When limit is specified, request cannot be greater than limit.",
+							Ref:         ref("k8s.io/apimachinery/pkg/api/resource.Quantity"),
+						},
+					},
+					"limit": {
+						SchemaProps: spec.SchemaProps{
+							Description: "limit is the maximum amount of the resource allowed (e.g. \"2Mi\", \"1Gi\"). This field is optional. When request is specified, limit cannot be less than request. The value must be greater than 0 when specified.",
+							Ref:         ref("k8s.io/apimachinery/pkg/api/resource.Quantity"),
+						},
+					},
+				},
+				Required: []string{"name"},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/apimachinery/pkg/api/resource.Quantity"},
+	}
+}
+
+func schema_openshift_api_config_v1alpha1_IngressControllerPerformanceTuning(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "IngressControllerPerformanceTuning provides configuration options for performance optimization of ingress controllers. Use this configuration to control connection limits, timeouts, and other performance-related settings.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"connectionLimits": {
+						SchemaProps: spec.SchemaProps{
+							Description: "connectionLimits defines limits on connections handled by the ingress controller. connectionLimits is optional. When omitted, this means no opinion and the platform is left to choose reasonable defaults.",
+							Ref:         ref("github.com/openshift/api/config/v1alpha1.IngressControllerConnectionLimits"),
+						},
+					},
+					"timeouts": {
+						SchemaProps: spec.SchemaProps{
+							Description: "timeouts defines timeout settings for the ingress controller. timeouts is optional. When omitted, this means no opinion and the platform is left to choose reasonable defaults.",
+							Ref:         ref("github.com/openshift/api/config/v1alpha1.IngressControllerTimeouts"),
+						},
+					},
+					"bufferSizes": {
+						SchemaProps: spec.SchemaProps{
+							Description: "bufferSizes defines buffer size settings for the ingress controller. bufferSizes is optional. When omitted, this means no opinion and the platform is left to choose reasonable defaults.",
+							Ref:         ref("github.com/openshift/api/config/v1alpha1.IngressControllerBufferSizes"),
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"github.com/openshift/api/config/v1alpha1.IngressControllerBufferSizes", "github.com/openshift/api/config/v1alpha1.IngressControllerConnectionLimits", "github.com/openshift/api/config/v1alpha1.IngressControllerTimeouts"},
+	}
+}
+
+func schema_openshift_api_config_v1alpha1_IngressControllerTimeouts(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "IngressControllerTimeouts defines timeout settings for ingress controllers.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"clientTimeout": {
+						SchemaProps: spec.SchemaProps{
+							Description: "clientTimeout defines the timeout for client connections. This is the maximum time to wait for a client to send a request. When not specified, the platform default is used.",
+							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.Duration"),
+						},
+					},
+					"serverTimeout": {
+						SchemaProps: spec.SchemaProps{
+							Description: "serverTimeout defines the timeout for backend server connections. This is the maximum time to wait for a response from a backend server. When not specified, the platform default is used.",
+							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.Duration"),
+						},
+					},
+					"connectTimeout": {
+						SchemaProps: spec.SchemaProps{
+							Description: "connectTimeout defines the timeout for establishing connections to backend servers. This is the maximum time to wait when establishing a connection to a backend. When not specified, the platform default is used.",
+							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.Duration"),
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/apimachinery/pkg/apis/meta/v1.Duration"},
 	}
 }
 

@@ -128,9 +128,6 @@
                         "name": "InsightsConfig"
                     },
                     {
-                        "name": "InsightsConfigAPI"
-                    },
-                    {
                         "name": "InsightsOnDemandDataGather"
                     },
                     {

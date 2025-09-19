@@ -22925,6 +22925,10 @@
           "description": "projectID is the project in which the GCP machine provider will create the VM.",
           "type": "string"
         },
+        "provisioningModel": {
+          "description": "provisioningModel is an optional field that determines the provisioning model for the GCP machine instance. Valid values are \"Spot\" and omitted. When set to Spot, the instance runs as a Google Cloud Spot instance which provides significant cost savings but may be preempted by Google Cloud Platform when resources are needed elsewhere. When omitted, the machine will be provisioned as a standard on-demand instance. This field cannot be used together with the preemptible field.",
+          "type": "string"
+        },
         "region": {
           "description": "region is the region in which the GCP machine provider will create the VM.",
           "type": "string",

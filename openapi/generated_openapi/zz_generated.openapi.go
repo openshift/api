@@ -9685,6 +9685,13 @@ func schema_openshift_api_config_v1_BareMetalPlatformStatus(ref common.Reference
 							Ref:         ref("github.com/openshift/api/config/v1.BareMetalPlatformLoadBalancer"),
 						},
 					},
+					"dnsRecordsType": {
+						SchemaProps: spec.SchemaProps{
+							Description: "DNSRecordsType determines whether records for api, api-int, and ingress are provided by the internal DNS service or externally. `Internal` configures DNS records in the internal service. `External` means no records will be provided and must be configured external to the cluster. `External` is only allowed when a user-managed loadbalancer is configured. When unset, the internal records will be provided. api, api-int, and ingress.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
 					"machineNetworks": {
 						VendorExtensible: spec.VendorExtensible{
 							Extensions: spec.Extensions{

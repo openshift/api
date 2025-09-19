@@ -1916,6 +1916,19 @@ spec:
                                   rule: 'self == oldSelf || (size(self) == 2 && isIP(self[0])
                                     && isIP(self[1]) ? ip(self[0]).family() != ip(self[1]).family()
                                     : true)'
+                              dnsRecordsType:
+                                description: |-
+                                  DNSRecordsType determines whether records for api, api-int, and ingress
+                                  are provided by the internal DNS service or externally. `Internal` configures
+                                  DNS records in the internal service. `External` means no records will be
+                                  provided and must be configured external to the cluster. `External` is only
+                                  allowed when a user-managed loadbalancer is configured. When unset, the
+                                  internal records will be provided.
+                                  api, api-int, and ingress.
+                                enum:
+                                - Internal
+                                - External
+                                type: string
                               ingressIP:
                                 description: |-
                                   ingressIP is an external IP which routes to the default ingress controller.

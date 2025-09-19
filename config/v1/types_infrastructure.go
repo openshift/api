@@ -183,6 +183,13 @@ const (
 	LoadBalancerTypeOpenShiftManagedDefault PlatformLoadBalancerType = "OpenShiftManagedDefault"
 )
 
+type DNSRecordsType string
+
+const (
+	DNSRecordsExternal DNSRecordsType = "External"
+	DNSRecordsInternal DNSRecordsType = "Internal"
+)
+
 // PlatformType is a specific supported infrastructure provider.
 // +kubebuilder:validation:Enum="";AWS;Azure;BareMetal;GCP;Libvirt;OpenStack;None;VSphere;oVirt;IBMCloud;KubeVirt;EquinixMetal;PowerVS;AlibabaCloud;Nutanix;External
 type PlatformType string
@@ -1034,6 +1041,18 @@ type BareMetalPlatformStatus struct {
 	// +kubebuilder:default={"type": "OpenShiftManagedDefault"}
 	// +optional
 	LoadBalancer *BareMetalPlatformLoadBalancer `json:"loadBalancer,omitempty"`
+
+	// DNSRecordsType determines whether records for api, api-int, and ingress
+	// are provided by the internal DNS service or externally. `Internal` configures
+	// DNS records in the internal service. `External` means no records will be
+	// provided and must be configured external to the cluster. `External` is only
+	// allowed when a user-managed loadbalancer is configured. When unset, the
+	// internal records will be provided.
+	// api, api-int, and ingress.
+	// +kubebuilder:validation:Enum=Internal;External
+	// +openshift:enable:FeatureGate=OnPremDNSRecords
+	// +optional
+	DNSRecordsType DNSRecordsType `json:"dnsRecordsType,omitempty"`
 
 	// machineNetworks are IP networks used to connect all the OpenShift cluster nodes.
 	// +listType=atomic

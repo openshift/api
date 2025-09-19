@@ -177,7 +177,7 @@ type ManagedBootImages struct {
 
 // MachineManager describes a target machine resource that is registered for boot image updates. It stores identifying information
 // such as the resource type and the API Group of the resource. It also provides granular control via the selection field.
-// +kubebuilder:validation:XValidation:rule="self.resource != 'controlplanemachinesets' || self.selection.mode == 'All' || self.selection.mode == 'None'", message="Only All or None selection mode is permitted for ControlPlaneMachineSets"
+// +openshift:validation:FeatureGateAwareXValidation:featureGate=ManagedBootImagesCPMS,rule="self.resource != 'controlplanemachinesets' || self.selection.mode == 'All' || self.selection.mode == 'None'", message="Only All or None selection mode is permitted for ControlPlaneMachineSets"
 type MachineManager struct {
 	// resource is the machine management resource's type.
 	// Valid values are machinesets and controlplanemachinesets.

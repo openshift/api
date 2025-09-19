@@ -195,11 +195,6 @@ spec:
                       - resource
                       - selection
                       type: object
-                      x-kubernetes-validations:
-                      - message: Only All or None selection mode is permitted for
-                          ControlPlaneMachineSets
-                        rule: self.resource != 'controlplanemachinesets' || self.selection.mode
-                          == 'All' || self.selection.mode == 'None'
                     maxItems: 5
                     type: array
                     x-kubernetes-list-map-keys:
@@ -831,11 +826,6 @@ spec:
                       - resource
                       - selection
                       type: object
-                      x-kubernetes-validations:
-                      - message: Only All or None selection mode is permitted for
-                          ControlPlaneMachineSets
-                        rule: self.resource != 'controlplanemachinesets' || self.selection.mode
-                          == 'All' || self.selection.mode == 'None'
                     maxItems: 5
                     type: array
                     x-kubernetes-list-map-keys:

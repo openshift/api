@@ -1899,8 +1899,8 @@ spec:
                                         name is the name of the GCP service whose endpoint is being overridden.
                                         This must be provided and cannot be empty.
 
-                                        Allowed values are Compute, Container, CloudResourceManager, DNS, File, IAM, ServiceUsage,
-                                        Storage, and TagManager.
+                                        Allowed values are Compute, Container, CloudResourceManager, DNS, File, IAM, IAMCredentials,
+                                        ServiceUsage, and Storage.
 
                                         As an example, when setting the name to Compute all requests made by the caller to the GCP Compute
                                         Service will be directed to the endpoint specified in the url field.
@@ -1912,10 +1912,8 @@ spec:
                                       - File
                                       - IAM
                                       - IAMCredentials
-                                      - OAuth
                                       - ServiceUsage
                                       - Storage
-                                      - STS
                                       type: string
                                     url:
                                       description: |-
@@ -1941,7 +1939,7 @@ spec:
                                   - name
                                   - url
                                   type: object
-                                maxItems: 11
+                                maxItems: 9
                                 type: array
                                 x-kubernetes-list-map-keys:
                                 - name

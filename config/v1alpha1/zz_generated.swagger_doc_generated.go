@@ -192,7 +192,7 @@ var map_ClusterMonitoringSpec = map[string]string{
 	"":                    "ClusterMonitoringSpec defines the desired state of Cluster Monitoring Operator",
 	"userDefined":         "userDefined set the deployment mode for user-defined monitoring in addition to the default platform monitoring. userDefined is optional. When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time. The current default value is `Disabled`.",
 	"alertmanagerConfig":  "alertmanagerConfig allows users to configure how the default Alertmanager instance should be deployed in the `openshift-monitoring` namespace. alertmanagerConfig is optional. When omitted, this means no opinion and the platform is left to choose a reasonable default, that is subject to change over time. The current default value is `DefaultConfig`.",
-	"prometheusK8sConfig": "prometheusK8sConfig provides configuration options for the Prometheus instance Prometheus deployment, pod scheduling, resource allocation, retention policies, and external integrations. prometheusK8sConfig is optional. When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time.",
+	"prometheusK8sConfig": "prometheusK8sConfig provides configuration options for the Prometheus instance, which is the pod running Prometheus in the cluster. By default, at least one Prometheus pod is deployed in the `openshift-monitoring` namespace to collect and store metrics for the platform.\n\nThis field allows you to customize how Prometheus is deployed and operated, including:\n  - Deployment settings (such as replica count and update strategy)\n  - Pod scheduling (node selectors, tolerations, affinity)\n  - Resource allocation (CPU, memory, and storage requests/limits)\n  - Retention policies (how long metrics are stored)\n  - External integrations (remote write/read, alerting, and scraping configuration)\n\nConfiguring Prometheus is important because it enables you to tailor monitoring to your cluster's needs, such as:\n  - Ensuring high availability and reliability of monitoring data\n  - Managing resource usage to fit your infrastructure\n  - Controlling how long metrics are retained for compliance or troubleshooting\n  - Integrating with external systems for alerting or long-term storage\n  - Adjusting scraping and relabeling to match your workloads and security requirements\n\nFor more information on Prometheus configuration, see:\n  https://prometheus.io/docs/prometheus/latest/configuration/configuration/\n  https://prometheus.io/docs/prometheus/latest/storage/\n\nThis field is optional. When omitted, the platform chooses reasonable defaults, which may change over time.",
 	"metricsServerConfig": "metricsServerConfig is an optional field that can be used to configure the Kubernetes Metrics Server that runs in the openshift-monitoring namespace. Specifically, it can configure how the Metrics Server instance is deployed, pod scheduling, its audit policy and log verbosity. When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time.",
 }
 
@@ -238,6 +238,15 @@ func (Label) SwaggerDoc() map[string]string {
 	return map_Label
 }
 
+var map_LocalObjectReference = map[string]string{
+	"":     "LocalObjectReference contains enough information to let you locate the referenced object inside the same namespace.",
+	"name": "Name of the referent. This field is effectively required, but due to backwards compatibility is allowed to be empty. Instances of this type with an empty value here are almost certainly wrong. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names",
+}
+
+func (LocalObjectReference) SwaggerDoc() map[string]string {
+	return map_LocalObjectReference
+}
+
 var map_MetricsServerConfig = map[string]string{
 	"":                          "MetricsServerConfig provides configuration options for the Metrics Server instance that runs in the `openshift-monitoring` namespace. Use this configuration to control how the Metrics Server instance is deployed, how it logs, and how its pods are scheduled.",
 	"audit":                     "audit defines the audit configuration used by the Metrics Server instance. audit is optional. When omitted, this means no opinion and the platform is left to choose a reasonable default, that is subject to change over time. The current default sets audit.profile to Metadata",
@@ -254,11 +263,11 @@ func (MetricsServerConfig) SwaggerDoc() map[string]string {
 
 var map_RelabelConfig = map[string]string{
 	"":             "RelabelConfig represents a relabeling rule.",
-	"sourceLabels": "sourceLabels is a list of source label names.",
+	"sourceLabels": "sourceLabels specifies which labels to extract from each series for this relabeling rule. If a label does not exist, an empty string (\"\") is used in its place. The values of these labels are joined together using the configured separator, and the resulting string is then matched against the regular expression for the replace, keep, or drop actions.",
 	"separator":    "separator is the separator used to join source label values.",
 	"regex":        "regex is the regular expression to match against the concatenated source label values.",
 	"targetLabel":  "targetLabel is the target label name.",
-	"replacement":  "replacement is the replacement value for the target label.",
+	"replacement":  "replacement is the value against which a regex replace is performed if the regular expression matches. Regex capture groups are available.",
 	"action":       "action is the action to perform.",
 }
 
@@ -270,7 +279,7 @@ var map_RemoteWriteSpec = map[string]string{
 	"":                    "RemoteWriteSpec represents configuration for remote write endpoints.",
 	"url":                 "url is the URL of the remote write endpoint.",
 	"name":                "name is the name of the remote write configuration.",
-	"remoteTimeout":       "remoteTimeout is the timeout for requests to the remote write endpoint.",
+	"remoteTimeout":       "remoteTimeout is the timeout for requests to the remote write endpoint. When omitted, the default is 30s.",
 	"writeRelabelConfigs": "writeRelabelConfigs is a list of relabeling rules to apply before sending data to the remote endpoint.",
 }
 
@@ -289,13 +298,23 @@ func (SecretKeyReference) SwaggerDoc() map[string]string {
 	return map_SecretKeyReference
 }
 
+var map_SecretKeySelector = map[string]string{
+	"":         "SecretKeySelector selects a key of a Secret.",
+	"key":      "The key of the secret to select from.  Must be a valid secret key.",
+	"optional": "Specify whether the Secret or its key must be defined",
+}
+
+func (SecretKeySelector) SwaggerDoc() map[string]string {
+	return map_SecretKeySelector
+}
+
 var map_TLSConfig = map[string]string{
 	"":                   "TLSConfig represents TLS configuration for Alertmanager connections.",
 	"ca":                 "ca is the CA certificate to use for TLS connections.",
 	"cert":               "cert is the client certificate to use for TLS connections.",
 	"key":                "key is the client key to use for TLS connections.",
-	"serverName":         "serverName is the server name to use for TLS connections.",
-	"insecureSkipVerify": "insecureSkipVerify determines whether to skip TLS certificate verification.",
+	"serverName":         "serverName is the server name to use for TLS connections. If specified, must be a valid DNS subdomain as per RFC 1123.",
+	"insecureSkipVerify": "verificationPolicy determines the policy for TLS certificate verification. Allowed values are \"Verify\" (default, secure) and \"InsecureSkipVerify\" (skip certificate verification, insecure). By default, certificate verification is performed (\"Verify\").",
 }
 
 func (TLSConfig) SwaggerDoc() map[string]string {

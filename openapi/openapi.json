@@ -11924,7 +11924,7 @@
           "$ref": "#/definitions/com.github.openshift.api.config.v1alpha1.MetricsServerConfig"
         },
         "prometheusK8sConfig": {
-          "description": "prometheusK8sConfig provides configuration options for the Prometheus instance Prometheus deployment, pod scheduling, resource allocation, retention policies, and external integrations. prometheusK8sConfig is optional. When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time.",
+          "description": "prometheusK8sConfig provides configuration options for the Prometheus instance, which is the pod running Prometheus in the cluster. By default, at least one Prometheus pod is deployed in the `openshift-monitoring` namespace to collect and store metrics for the platform.\n\nThis field allows you to customize how Prometheus is deployed and operated, including:\n  - Deployment settings (such as replica count and update strategy)\n  - Pod scheduling (node selectors, tolerations, affinity)\n  - Resource allocation (CPU, memory, and storage requests/limits)\n  - Retention policies (how long metrics are stored)\n  - External integrations (remote write/read, alerting, and scraping configuration)\n\nConfiguring Prometheus is important because it enables you to tailor monitoring to your cluster's needs, such as:\n  - Ensuring high availability and reliability of monitoring data\n  - Managing resource usage to fit your infrastructure\n  - Controlling how long metrics are retained for compliance or troubleshooting\n  - Integrating with external systems for alerting or long-term storage\n  - Adjusting scraping and relabeling to match your workloads and security requirements\n\nFor more information on Prometheus configuration, see:\n  https://prometheus.io/docs/prometheus/latest/configuration/configuration/\n  https://prometheus.io/docs/prometheus/latest/storage/\n\nThis field is optional. When omitted, the platform chooses reasonable defaults, which may change over time.",
           "default": {},
           "$ref": "#/definitions/com.github.openshift.api.config.v1alpha1.prometheusK8sConfig"
         },
@@ -12253,6 +12253,18 @@
         }
       }
     },
+    "com.github.openshift.api.config.v1alpha1.LocalObjectReference": {
+      "description": "LocalObjectReference contains enough information to let you locate the referenced object inside the same namespace.",
+      "type": "object",
+      "properties": {
+        "name": {
+          "description": "Name of the referent. This field is effectively required, but due to backwards compatibility is allowed to be empty. Instances of this type with an empty value here are almost certainly wrong. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names",
+          "type": "string",
+          "default": ""
+        }
+      },
+      "x-kubernetes-map-type": "atomic"
+    },
     "com.github.openshift.api.config.v1alpha1.MetricsServerConfig": {
       "description": "MetricsServerConfig provides configuration options for the Metrics Server instance that runs in the `openshift-monitoring` namespace. Use this configuration to control how the Metrics Server instance is deployed, how it logs, and how its pods are scheduled.",
       "type": "object",
@@ -12551,7 +12563,7 @@
           "type": "string"
         },
         "replacement": {
-          "description": "replacement is the replacement value for the target label.",
+          "description": "replacement is the value against which a regex replace is performed if the regular expression matches. Regex capture groups are available.",
           "type": "string"
         },
         "separator": {
@@ -12559,7 +12571,7 @@
           "type": "string"
         },
         "sourceLabels": {
-          "description": "sourceLabels is a list of source label names.",
+          "description": "sourceLabels specifies which labels to extract from each series for this relabeling rule. If a label does not exist, an empty string (\"\") is used in its place. The values of these labels are joined together using the configured separator, and the resulting string is then matched against the regular expression for the replace, keep, or drop actions.",
           "type": "array",
           "items": {
             "type": "string",
@@ -12585,7 +12597,7 @@
           "type": "string"
         },
         "remoteTimeout": {
-          "description": "remoteTimeout is the timeout for requests to the remote write endpoint.",
+          "description": "remoteTimeout is the timeout for requests to the remote write endpoint. When omitted, the default is 30s.",
           "type": "string"
         },
         "url": {
@@ -12692,6 +12704,30 @@
         }
       }
     },
+    "com.github.openshift.api.config.v1alpha1.SecretKeySelector": {
+      "description": "SecretKeySelector selects a key of a Secret.",
+      "type": "object",
+      "required": [
+        "key"
+      ],
+      "properties": {
+        "key": {
+          "description": "The key of the secret to select from.  Must be a valid secret key.",
+          "type": "string",
+          "default": ""
+        },
+        "name": {
+          "description": "Name of the referent. This field is effectively required, but due to backwards compatibility is allowed to be empty. Instances of this type with an empty value here are almost certainly wrong. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names",
+          "type": "string",
+          "default": ""
+        },
+        "optional": {
+          "description": "Specify whether the Secret or its key must be defined",
+          "type": "boolean"
+        }
+      },
+      "x-kubernetes-map-type": "atomic"
+    },
     "com.github.openshift.api.config.v1alpha1.Storage": {
       "description": "storage provides persistent storage configuration options for gathering jobs. If the type is set to PersistentVolume, then the PersistentVolume must be defined. If the type is set to Ephemeral, then the PersistentVolume must not be defined.",
       "type": "object",
@@ -12716,22 +12752,22 @@
       "properties": {
         "ca": {
           "description": "ca is the CA certificate to use for TLS connections.",
-          "$ref": "#/definitions/io.k8s.api.core.v1.SecretKeySelector"
+          "$ref": "#/definitions/com.github.openshift.api.config.v1alpha1.SecretKeySelector"
         },
         "cert": {
           "description": "cert is the client certificate to use for TLS connections.",
-          "$ref": "#/definitions/io.k8s.api.core.v1.SecretKeySelector"
+          "$ref": "#/definitions/com.github.openshift.api.config.v1alpha1.SecretKeySelector"
         },
         "insecureSkipVerify": {
-          "description": "insecureSkipVerify determines whether to skip TLS certificate verification.",
+          "description": "verificationPolicy determines the policy for TLS certificate verification. Allowed values are \"Verify\" (default, secure) and \"InsecureSkipVerify\" (skip certificate verification, insecure). By default, certificate verification is performed (\"Verify\").",
           "type": "string"
         },
         "key": {
           "description": "key is the client key to use for TLS connections.",
-          "$ref": "#/definitions/io.k8s.api.core.v1.SecretKeySelector"
+          "$ref": "#/definitions/com.github.openshift.api.config.v1alpha1.SecretKeySelector"
         },
         "serverName": {
-          "description": "serverName is the server name to use for TLS connections.",
+          "description": "serverName is the server name to use for TLS connections. If specified, must be a valid DNS subdomain as per RFC 1123.",
           "type": "string"
         }
       }
@@ -12772,7 +12808,7 @@
           "type": "string"
         },
         "enforcedBodySizeLimit": {
-          "description": "enforcedBodySizeLimit enforces a body size limit for Prometheus scraped metrics. If a scraped target's body response is larger than the limit, the scrape will fail. The following values are valid: an empty value to specify no limit, a numeric value in Prometheus size format (such as `64MB`), or the string `automatic`, which indicates that the limit will be automatically calculated based on cluster capacity. To specify no limit, omit this field. Minimum length for this list is 1 Maximum length for this list is 50.",
+          "description": "enforcedBodySizeLimit enforces a body size limit for Prometheus scraped metrics. If a scraped target's body response is larger than the limit, the scrape will fail. The following values are valid: an empty value to specify no limit, a numeric value in Prometheus size format (such as \"4MB\", \"1000\", \"1GB\", \"512KB\", \"100B\") or the string `automatic`, which indicates that the limit will be automatically calculated based on cluster capacity. To specify no limit, omit this field. The value must match the following pattern: ^(automatic|[0-9]+(B|KB|MB|GB|TB)?)$ Minimum length for this list is 1 Maximum length for this list is 50.",
           "type": "string"
         },
         "externalLabels": {
@@ -12793,11 +12829,11 @@
           }
         },
         "queryLogFile": {
-          "description": "queryLogFile specifies the file to which PromQL queries are logged. This setting can be either a filename, in which case the queries are saved to an `emptyDir` volume at `/var/log/prometheus`, or a full path to a location where an `emptyDir` volume will be mounted and the queries saved. Writing to `/dev/stderr`, `/dev/stdout` or `/dev/null` is supported, but writing to any other `/dev/` path is not supported. Relative paths are also not supported. By default, PromQL queries are not logged.",
+          "description": "queryLogFile specifies the file to which PromQL queries are logged. This setting can be either a filename, in which case the queries are saved to an `emptyDir` volume at `/var/log/prometheus`, or a full path to a location where an `emptyDir` volume will be mounted and the queries saved. Writing to `/dev/stderr`, `/dev/stdout` or `/dev/null` is supported, but writing to any other `/dev/` path is not supported. Relative paths are also not supported. By default, PromQL queries are not logged. The value must be a valid filename.",
           "type": "string"
         },
         "remoteWrite": {
-          "description": "remoteWrite defines the remote write configuration, including URL, authentication, and relabeling settings. remoteWrite supports a maximum of 10 items in the list.",
+          "description": "remoteWrite defines the remote write configuration, including URL, authentication, and relabeling settings. The remote-write protocol is intended to allow Prometheus instances to actively send the metrics they collect/receive to other instances. For more information, see: https://prometheus.io/docs/prometheus/latest/configuration/configuration/#remote_write remoteWrite supports a maximum of 10 items in the list.",
           "type": "array",
           "items": {
             "default": {},

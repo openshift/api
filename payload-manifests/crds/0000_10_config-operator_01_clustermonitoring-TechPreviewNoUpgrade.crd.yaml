@@ -1290,10 +1290,28 @@ spec:
                 type: object
               prometheusK8sConfig:
                 description: |-
-                  prometheusK8sConfig provides configuration options for the Prometheus instance
-                  Prometheus deployment, pod scheduling, resource allocation, retention policies, and external integrations.
-                  prometheusK8sConfig is optional.
-                  When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time.
+                  prometheusK8sConfig provides configuration options for the Prometheus instance, which is the pod running Prometheus in the cluster.
+                  By default, at least one Prometheus pod is deployed in the `openshift-monitoring` namespace to collect and store metrics for the platform.
+
+                  This field allows you to customize how Prometheus is deployed and operated, including:
+                    - Deployment settings (such as replica count and update strategy)
+                    - Pod scheduling (node selectors, tolerations, affinity)
+                    - Resource allocation (CPU, memory, and storage requests/limits)
+                    - Retention policies (how long metrics are stored)
+                    - External integrations (remote write/read, alerting, and scraping configuration)
+
+                  Configuring Prometheus is important because it enables you to tailor monitoring to your cluster's needs, such as:
+                    - Ensuring high availability and reliability of monitoring data
+                    - Managing resource usage to fit your infrastructure
+                    - Controlling how long metrics are retained for compliance or troubleshooting
+                    - Integrating with external systems for alerting or long-term storage
+                    - Adjusting scraping and relabeling to match your workloads and security requirements
+
+                  For more information on Prometheus configuration, see:
+                    https://prometheus.io/docs/prometheus/latest/configuration/configuration/
+                    https://prometheus.io/docs/prometheus/latest/storage/
+
+                  This field is optional. When omitted, the platform chooses reasonable defaults, which may change over time.
                 minProperties: 1
                 properties:
                   additionalAlertmanagerConfigs:
@@ -1394,8 +1412,6 @@ spec:
                                   description: Specify whether the Secret or its key
                                     must be defined
                                   type: boolean
-                              required:
-                              - key
                               type: object
                               x-kubernetes-map-type: atomic
                             cert:
@@ -1419,16 +1435,17 @@ spec:
                                   description: Specify whether the Secret or its key
                                     must be defined
                                   type: boolean
-                              required:
-                              - key
                               type: object
                               x-kubernetes-map-type: atomic
                             insecureSkipVerify:
-                              description: insecureSkipVerify determines whether to
-                                skip TLS certificate verification.
+                              default: Verify
+                              description: |-
+                                verificationPolicy determines the policy for TLS certificate verification.
+                                Allowed values are "Verify" (default, secure) and "InsecureSkipVerify" (skip certificate verification, insecure).
+                                By default, certificate verification is performed ("Verify").
                               enum:
-                              - true
-                              - false
+                              - Verify
+                              - InsecureSkipVerify
                               type: string
                             key:
                               description: key is the client key to use for TLS connections.
@@ -1450,14 +1467,15 @@ spec:
                                   description: Specify whether the Secret or its key
                                     must be defined
                                   type: boolean
-                              required:
-                              - key
                               type: object
                               x-kubernetes-map-type: atomic
                             serverName:
-                              description: serverName is the server name to use for
-                                TLS connections.
+                              description: |-
+                                serverName is the server name to use for TLS connections.
+                                If specified, must be a valid DNS subdomain as per RFC 1123.
                               maxLength: 253
+                              minLength: 1
+                              pattern: ^([a-zA-Z0-9][-a-zA-Z0-9]*\.)*[a-zA-Z0-9][-a-zA-Z0-9]*$
                               type: string
                           type: object
                       required:
@@ -1479,8 +1497,8 @@ spec:
                       When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time.
                       The default value is `full`.
                     enum:
-                    - full
-                    - minimal
+                    - Full
+                    - Minimal
                     type: string
                   enforcedBodySizeLimit:
                     description: |-
@@ -1488,14 +1506,16 @@ spec:
                       target's body response is larger than the limit, the scrape will fail.
                       The following values are valid:
                       an empty value to specify no limit,
-                      a numeric value in Prometheus size format (such as `64MB`), or
-                      the string `automatic`, which indicates that the limit will be
+                      a numeric value in Prometheus size format (such as "4MB", "1000", "1GB", "512KB", "100B")
+                      or the string `automatic`, which indicates that the limit will be
                       automatically calculated based on cluster capacity.
                       To specify no limit, omit this field.
+                      The value must match the following pattern: ^(automatic|[0-9]+(B|KB|MB|GB|TB)?)$
                       Minimum length for this list is 1
                       Maximum length for this list is 50.
                     maxLength: 50
                     minLength: 1
+                    pattern: ^(automatic|[0-9]+(B|KB|MB|GB|TB)?)$
                     type: string
                   externalLabels:
                     description: |-
@@ -1574,13 +1594,16 @@ spec:
                       writing to any other `/dev/` path is not supported. Relative paths are
                       also not supported.
                       By default, PromQL queries are not logged.
+                      The value must be a valid filename.
                     maxLength: 255
                     minLength: 1
+                    pattern: ^[a-zA-Z0-9_\-\./]+$
                     type: string
                   remoteWrite:
                     description: |-
-                      remoteWrite defines the remote write configuration, including URL, authentication,
-                      and relabeling settings.
+                      remoteWrite defines the remote write configuration, including URL, authentication, and relabeling settings.
+                      The remote-write protocol is intended to allow Prometheus instances to actively send the metrics they collect/receive to other instances.
+                      For more information, see: https://prometheus.io/docs/prometheus/latest/configuration/configuration/#remote_write
                       remoteWrite supports a maximum of 10 items in the list.
                     items:
                       description: RemoteWriteSpec represents configuration for remote
@@ -1589,15 +1612,21 @@ spec:
                         name:
                           description: name is the name of the remote write configuration.
                           maxLength: 63
+                          pattern: ^[a-zA-Z0-9]([-a-zA-Z0-9_.]*[a-zA-Z0-9])?$
                           type: string
                         remoteTimeout:
-                          description: remoteTimeout is the timeout for requests to
-                            the remote write endpoint.
+                          description: |-
+                            remoteTimeout is the timeout for requests to the remote write endpoint.
+                            When omitted, the default is 30s.
                           maxLength: 20
+                          minLength: 2
+                          pattern: ^([0-9]+(\.[0-9]+)?(ns|us|µs|ms|s|m|h))+$
                           type: string
                         url:
                           description: url is the URL of the remote write endpoint.
                           maxLength: 2048
+                          minLength: 1
+                          pattern: ^https?://[^\s]+$
                           type: string
                         writeRelabelConfigs:
                           description: writeRelabelConfigs is a list of relabeling
@@ -1615,8 +1644,9 @@ spec:
                                 maxLength: 1000
                                 type: string
                               replacement:
-                                description: replacement is the replacement value
-                                  for the target label.
+                                description: |-
+                                  replacement is the value against which a regex replace is performed if the
+                                  regular expression matches. Regex capture groups are available.
                                 maxLength: 255
                                 type: string
                               separator:
@@ -1625,8 +1655,12 @@ spec:
                                 maxLength: 10
                                 type: string
                               sourceLabels:
-                                description: sourceLabels is a list of source label
-                                  names.
+                                description: |-
+                                  sourceLabels specifies which labels to extract from each series for this relabeling rule.
+                                  If a label does not exist, an empty string ("") is used in its place.
+                                  The values of these labels are joined together using the configured separator,
+                                  and the resulting string is then matched against the regular expression for
+                                  the replace, keep, or drop actions.
                                 items:
                                   maxLength: 63
                                   type: string
@@ -1739,6 +1773,7 @@ spec:
                       The default value is `15d`.
                     maxLength: 20
                     minLength: 1
+                    pattern: ^[0-9]+(ms|s|m|h|d|w|y)$
                     type: string
                   retentionSize:
                     description: |-
@@ -1747,6 +1782,7 @@ spec:
                       When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time.
                       The default is no storage size limit is enforced and Prometheus will use the available storage capacity of the PersistentVolume.
                     maxLength: 20
+                    pattern: ^[0-9]+(Ei|Pi|Ti|Gi|Mi|Ki|E|P|T|G|M|K)?$
                     type: string
                   tolerations:
                     description: |-

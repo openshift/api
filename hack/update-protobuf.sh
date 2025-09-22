@@ -16,7 +16,7 @@ if [[ "${GOPATH}/src/github.com/openshift/api" != "${SCRIPT_ROOT}" ]]; then
   exit 1
 fi
 
-if [[ "$(protoc --version)" != "libprotoc 23."* ]]; then
+if [[ "$(protoc --version)" != "libprotoc 3."* ]]; then
   echo "Generating protobuf requires protoc 23.x. Please download and
 install the platform appropriate Protobuf package for your OS:
 

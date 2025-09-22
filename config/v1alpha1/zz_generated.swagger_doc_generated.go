@@ -240,7 +240,7 @@ func (Label) SwaggerDoc() map[string]string {
 
 var map_LocalObjectReference = map[string]string{
 	"":     "LocalObjectReference contains enough information to let you locate the referenced object inside the same namespace.",
-	"name": "Name of the referent. This field is effectively required, but due to backwards compatibility is allowed to be empty. Instances of this type with an empty value here are almost certainly wrong. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names",
+	"name": "name of the referent. This field is effectively required, but due to backwards compatibility is allowed to be empty. Instances of this type with an empty value here are almost certainly wrong. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names",
 }
 
 func (LocalObjectReference) SwaggerDoc() map[string]string {
@@ -259,6 +259,28 @@ var map_MetricsServerConfig = map[string]string{
 
 func (MetricsServerConfig) SwaggerDoc() map[string]string {
 	return map_MetricsServerConfig
+}
+
+var map_PrometheusK8sConfig = map[string]string{
+	"":                              "PrometheusK8sConfig provides configuration options for the Prometheus instance Use this configuration to control Prometheus deployment, pod scheduling, resource allocation, retention policies, and external integrations.",
+	"additionalAlertmanagerConfigs": "additionalAlertmanagerConfigs configures additional Alertmanager instances that receive alerts from the Prometheus component. By default, no additional Alertmanager instances are configured.",
+	"enforcedBodySizeLimit":         "enforcedBodySizeLimit enforces a body size limit for Prometheus scraped metrics. If a scraped target's body response is larger than the limit, the scrape will fail. The following values are valid: an empty value to specify no limit, a numeric value in Prometheus size format (such as \"4MB\", \"1000\", \"1GB\", \"512KB\", \"100B\") or the string `automatic`, which indicates that the limit will be automatically calculated based on cluster capacity. To specify no limit, omit this field. The value must match the following pattern: ^(automatic|[0-9]+(B|KB|MB|GB|TB)?)$ Minimum length for this list is 1 Maximum length for this list is 50.",
+	"externalLabels":                "externalLabels defines labels to be added to any time series or alerts when communicating with external systems such as federation, remote storage, and Alertmanager. By default, no labels are added.",
+	"logLevel":                      "logLevel defines the verbosity of logs emitted by Alertmanager. This field allows users to control the amount and severity of logs generated, which can be useful for debugging issues or reducing noise in production environments. Allowed values are Error, Warn, Info, and Debug. When set to Error, only errors will be logged. When set to Warn, both warnings and errors will be logged. When set to Info, general information, warnings, and errors will all be logged. When set to Debug, detailed debugging information will be logged. When omitted, this means no opinion and the platform is left to choose a reasonable default, that is subject to change over time. The current default value is `Info`.",
+	"nodeSelector":                  "nodeSelector defines the nodes on which the Pods are scheduled nodeSelector is optional.\n\nWhen omitted, this means the user has no opinion and the platform is left to choose reasonable defaults. These defaults are subject to change over time. The current default value is `kubernetes.io/os: linux`.",
+	"queryLogFile":                  "queryLogFile specifies the file to which PromQL queries are logged. This setting can be either a filename, in which case the queries are saved to an `emptyDir` volume at `/var/log/prometheus`, or a full path to a location where an `emptyDir` volume will be mounted and the queries saved. Writing to `/dev/stderr`, `/dev/stdout` or `/dev/null` is supported, but writing to any other `/dev/` path is not supported. Relative paths are also not supported. By default, PromQL queries are not logged. The value must be a valid filename.",
+	"remoteWrite":                   "remoteWrite defines the remote write configuration, including URL, authentication, and relabeling settings. The remote-write protocol is intended to allow Prometheus instances to actively send the metrics they collect/receive to other instances. For more information, see: https://prometheus.io/docs/prometheus/latest/configuration/configuration/#remote_write remoteWrite supports a maximum of 10 items in the list.",
+	"resources":                     "resources defines the compute resource requests and limits for the Prometheus container. This includes CPU, memory and HugePages constraints to help control scheduling and resource usage. When not specified, defaults are used by the platform. Requests cannot exceed limits. This field is optional. More info: https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/ This is a simplified API that maps to Kubernetes ResourceRequirements. The current default values are:\n  resources:\n   - name: cpu\n     request: 4m\n     limit: null\n   - name: memory\n     request: 40Mi\n     limit: null\nMaximum length for this list is 10. Minimum length for this list is 1.",
+	"retention":                     "retention defines the duration for which Prometheus retains data. This definition must be specified using the following regular expression pattern: `[0-9]+(ms|s|m|h|d|w|y)` (ms = milliseconds, s= seconds,m = minutes, h = hours, d = days, w = weeks, y = years). When omitted, this means the user has no opinion and the platform is left to choose reasonable defaults, which are subject to change over time. The default value is `15d`.",
+	"retentionSize":                 "retentionSize specifies the maximum volume of persistent storage that Prometheus uses for data blocks and the write-ahead log (WAL). Acceptable values use standard Kubernetes resource quantity formats, such as `Mi`, `Gi`, `Ti`, etc. When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time. The default is no storage size limit is enforced and Prometheus will use the available storage capacity of the PersistentVolume.",
+	"tolerations":                   "tolerations defines tolerations for the pods. tolerations is optional.\n\nWhen omitted, this means the user has no opinion and the platform is left to choose reasonable defaults. These defaults are subject to change over time. Defaults are empty/unset. Maximum length for this list is 10 Minimum length for this list is 1",
+	"topologySpreadConstraints":     "topologySpreadConstraints defines rules for how Prometheus Pods should be distributed across topology domains such as zones, nodes, or other user-defined labels. topologySpreadConstraints is optional. This helps improve high availability and resource efficiency by avoiding placing too many replicas in the same failure domain.\n\nWhen omitted, this means no opinion and the platform is left to choose a default, which is subject to change over time. This field maps directly to the `topologySpreadConstraints` field in the Pod spec. Default is empty list. Maximum length for this list is 10. Minimum length for this list is 1 Entries must have unique topologyKey and whenUnsatisfiable pairs.",
+	"collectionProfile":             "collectionProfile defines the metrics collection profile that Prometheus uses to collect metrics from the platform components. Supported values are `full` or `minimal`. In the `full` profile (default), Prometheus collects all metrics that are exposed by the platform components. In the `minimal` profile, Prometheus only collects metrics necessary for the default platform alerts, recording rules, telemetry and console dashboards. When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time. The default value is `full`.",
+	"volumeClaimTemplate":           "volumeClaimTemplate Defines persistent storage for Prometheus. Use this setting to configure the persistent volume claim, including storage class, volume size, and name. If omitted, the Pod uses ephemeral storage and Prometheus data will not persist across restarts. This field is optional.",
+}
+
+func (PrometheusK8sConfig) SwaggerDoc() map[string]string {
+	return map_PrometheusK8sConfig
 }
 
 var map_RelabelConfig = map[string]string{
@@ -289,9 +311,9 @@ func (RemoteWriteSpec) SwaggerDoc() map[string]string {
 
 var map_SecretKeyReference = map[string]string{
 	"":         "SecretKeyReference represents a reference to a secret key.",
-	"name":     "The name of the secret in the pod's namespace to select from.",
-	"key":      "The key of the secret to select from. Must be a valid secret key.",
-	"optional": "Specify whether the Secret or its key must be defined",
+	"name":     "name of the secret in the pod's namespace to select from.",
+	"key":      "key of the secret to select from. Must be a valid secret key.",
+	"optional": "optional specifies whether the Secret or its key must be defined",
 }
 
 func (SecretKeyReference) SwaggerDoc() map[string]string {
@@ -300,8 +322,8 @@ func (SecretKeyReference) SwaggerDoc() map[string]string {
 
 var map_SecretKeySelector = map[string]string{
 	"":         "SecretKeySelector selects a key of a Secret.",
-	"key":      "The key of the secret to select from.  Must be a valid secret key.",
-	"optional": "Specify whether the Secret or its key must be defined",
+	"key":      "key of the secret to select from.  Must be a valid secret key.",
+	"optional": "optional specifies whether the Secret or its key must be defined",
 }
 
 func (SecretKeySelector) SwaggerDoc() map[string]string {
@@ -314,7 +336,7 @@ var map_TLSConfig = map[string]string{
 	"cert":               "cert is the client certificate to use for TLS connections.",
 	"key":                "key is the client key to use for TLS connections.",
 	"serverName":         "serverName is the server name to use for TLS connections. If specified, must be a valid DNS subdomain as per RFC 1123.",
-	"insecureSkipVerify": "verificationPolicy determines the policy for TLS certificate verification. Allowed values are \"Verify\" (default, secure) and \"InsecureSkipVerify\" (skip certificate verification, insecure). By default, certificate verification is performed (\"Verify\").",
+	"insecureSkipVerify": "insecureSkipVerify determines the policy for TLS certificate verification. Allowed values are \"Verify\" (default, secure) and \"InsecureSkipVerify\" (skip certificate verification, insecure). By default, certificate verification is performed (\"Verify\").",
 }
 
 func (TLSConfig) SwaggerDoc() map[string]string {

@@ -451,6 +451,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"github.com/openshift/api/config/v1alpha1.InsightsDataGatherSpec":                                    schema_openshift_api_config_v1alpha1_InsightsDataGatherSpec(ref),
 		"github.com/openshift/api/config/v1alpha1.InsightsDataGatherStatus":                                  schema_openshift_api_config_v1alpha1_InsightsDataGatherStatus(ref),
 		"github.com/openshift/api/config/v1alpha1.Label":                                                     schema_openshift_api_config_v1alpha1_Label(ref),
+		"github.com/openshift/api/config/v1alpha1.LocalObjectReference":                                      schema_openshift_api_config_v1alpha1_LocalObjectReference(ref),
 		"github.com/openshift/api/config/v1alpha1.MetricsServerConfig":                                       schema_openshift_api_config_v1alpha1_MetricsServerConfig(ref),
 		"github.com/openshift/api/config/v1alpha1.PKI":                                                       schema_openshift_api_config_v1alpha1_PKI(ref),
 		"github.com/openshift/api/config/v1alpha1.PKICertificateSubject":                                     schema_openshift_api_config_v1alpha1_PKICertificateSubject(ref),
@@ -469,6 +470,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"github.com/openshift/api/config/v1alpha1.RetentionPolicy":                                           schema_openshift_api_config_v1alpha1_RetentionPolicy(ref),
 		"github.com/openshift/api/config/v1alpha1.RetentionSizeConfig":                                       schema_openshift_api_config_v1alpha1_RetentionSizeConfig(ref),
 		"github.com/openshift/api/config/v1alpha1.SecretKeyReference":                                        schema_openshift_api_config_v1alpha1_SecretKeyReference(ref),
+		"github.com/openshift/api/config/v1alpha1.SecretKeySelector":                                         schema_openshift_api_config_v1alpha1_SecretKeySelector(ref),
 		"github.com/openshift/api/config/v1alpha1.Storage":                                                   schema_openshift_api_config_v1alpha1_Storage(ref),
 		"github.com/openshift/api/config/v1alpha1.TLSConfig":                                                 schema_openshift_api_config_v1alpha1_TLSConfig(ref),
 		"github.com/openshift/api/config/v1alpha1.UserDefinedMonitoring":                                     schema_openshift_api_config_v1alpha1_UserDefinedMonitoring(ref),
@@ -21916,7 +21918,7 @@ func schema_openshift_api_config_v1alpha1_ClusterMonitoringSpec(ref common.Refer
 					},
 					"prometheusK8sConfig": {
 						SchemaProps: spec.SchemaProps{
-							Description: "prometheusK8sConfig provides configuration options for the Prometheus instance Prometheus deployment, pod scheduling, resource allocation, retention policies, and external integrations. prometheusK8sConfig is optional. When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time.",
+							Description: "prometheusK8sConfig provides configuration options for the Prometheus instance, which is the pod running Prometheus in the cluster. By default, at least one Prometheus pod is deployed in the `openshift-monitoring` namespace to collect and store metrics for the platform.\n\nThis field allows you to customize how Prometheus is deployed and operated, including:\n  - Deployment settings (such as replica count and update strategy)\n  - Pod scheduling (node selectors, tolerations, affinity)\n  - Resource allocation (CPU, memory, and storage requests/limits)\n  - Retention policies (how long metrics are stored)\n  - External integrations (remote write/read, alerting, and scraping configuration)\n\nConfiguring Prometheus is important because it enables you to tailor monitoring to your cluster's needs, such as:\n  - Ensuring high availability and reliability of monitoring data\n  - Managing resource usage to fit your infrastructure\n  - Controlling how long metrics are retained for compliance or troubleshooting\n  - Integrating with external systems for alerting or long-term storage\n  - Adjusting scraping and relabeling to match your workloads and security requirements\n\nFor more information on Prometheus configuration, see:\n  https://prometheus.io/docs/prometheus/latest/configuration/configuration/\n  https://prometheus.io/docs/prometheus/latest/storage/\n\nThis field is optional. When omitted, the platform chooses reasonable defaults, which may change over time.",
 							Default:     map[string]interface{}{},
 							Ref:         ref("github.com/openshift/api/config/v1alpha1.prometheusK8sConfig"),
 						},
@@ -22488,6 +22490,32 @@ func schema_openshift_api_config_v1alpha1_Label(ref common.ReferenceCallback) co
 	}
 }
 
+func schema_openshift_api_config_v1alpha1_LocalObjectReference(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "LocalObjectReference contains enough information to let you locate the referenced object inside the same namespace.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"name": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Name of the referent. This field is effectively required, but due to backwards compatibility is allowed to be empty. Instances of this type with an empty value here are almost certainly wrong. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+				},
+			},
+			VendorExtensible: spec.VendorExtensible{
+				Extensions: spec.Extensions{
+					"x-kubernetes-map-type": "atomic",
+				},
+			},
+		},
+	}
+}
+
 func schema_openshift_api_config_v1alpha1_MetricsServerConfig(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -22970,7 +22998,7 @@ func schema_openshift_api_config_v1alpha1_RelabelConfig(ref common.ReferenceCall
 							},
 						},
 						SchemaProps: spec.SchemaProps{
-							Description: "sourceLabels is a list of source label names.",
+							Description: "sourceLabels specifies which labels to extract from each series for this relabeling rule. If a label does not exist, an empty string (\"\") is used in its place. The values of these labels are joined together using the configured separator, and the resulting string is then matched against the regular expression for the replace, keep, or drop actions.",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -23006,7 +23034,7 @@ func schema_openshift_api_config_v1alpha1_RelabelConfig(ref common.ReferenceCall
 					},
 					"replacement": {
 						SchemaProps: spec.SchemaProps{
-							Description: "replacement is the replacement value for the target label.",
+							Description: "replacement is the value against which a regex replace is performed if the regular expression matches. Regex capture groups are available.",
 							Type:        []string{"string"},
 							Format:      "",
 						},
@@ -23047,7 +23075,7 @@ func schema_openshift_api_config_v1alpha1_RemoteWriteSpec(ref common.ReferenceCa
 					},
 					"remoteTimeout": {
 						SchemaProps: spec.SchemaProps{
-							Description: "remoteTimeout is the timeout for requests to the remote write endpoint.",
+							Description: "remoteTimeout is the timeout for requests to the remote write endpoint. When omitted, the default is 30s.",
 							Type:        []string{"string"},
 							Format:      "",
 						},
@@ -23211,6 +23239,48 @@ func schema_openshift_api_config_v1alpha1_SecretKeyReference(ref common.Referenc
 	}
 }
 
+func schema_openshift_api_config_v1alpha1_SecretKeySelector(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "SecretKeySelector selects a key of a Secret.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"name": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Name of the referent. This field is effectively required, but due to backwards compatibility is allowed to be empty. Instances of this type with an empty value here are almost certainly wrong. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"key": {
+						SchemaProps: spec.SchemaProps{
+							Description: "The key of the secret to select from.  Must be a valid secret key.",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"optional": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Specify whether the Secret or its key must be defined",
+							Type:        []string{"boolean"},
+							Format:      "",
+						},
+					},
+				},
+				Required: []string{"key"},
+			},
+			VendorExtensible: spec.VendorExtensible{
+				Extensions: spec.Extensions{
+					"x-kubernetes-map-type": "atomic",
+				},
+			},
+		},
+	}
+}
+
 func schema_openshift_api_config_v1alpha1_Storage(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -23251,31 +23321,31 @@ func schema_openshift_api_config_v1alpha1_TLSConfig(ref common.ReferenceCallback
 					"ca": {
 						SchemaProps: spec.SchemaProps{
 							Description: "ca is the CA certificate to use for TLS connections.",
-							Ref:         ref("k8s.io/api/core/v1.SecretKeySelector"),
+							Ref:         ref("github.com/openshift/api/config/v1alpha1.SecretKeySelector"),
 						},
 					},
 					"cert": {
 						SchemaProps: spec.SchemaProps{
 							Description: "cert is the client certificate to use for TLS connections.",
-							Ref:         ref("k8s.io/api/core/v1.SecretKeySelector"),
+							Ref:         ref("github.com/openshift/api/config/v1alpha1.SecretKeySelector"),
 						},
 					},
 					"key": {
 						SchemaProps: spec.SchemaProps{
 							Description: "key is the client key to use for TLS connections.",
-							Ref:         ref("k8s.io/api/core/v1.SecretKeySelector"),
+							Ref:         ref("github.com/openshift/api/config/v1alpha1.SecretKeySelector"),
 						},
 					},
 					"serverName": {
 						SchemaProps: spec.SchemaProps{
-							Description: "serverName is the server name to use for TLS connections.",
+							Description: "serverName is the server name to use for TLS connections. If specified, must be a valid DNS subdomain as per RFC 1123.",
 							Type:        []string{"string"},
 							Format:      "",
 						},
 					},
 					"insecureSkipVerify": {
 						SchemaProps: spec.SchemaProps{
-							Description: "insecureSkipVerify determines whether to skip TLS certificate verification.",
+							Description: "verificationPolicy determines the policy for TLS certificate verification. Allowed values are \"Verify\" (default, secure) and \"InsecureSkipVerify\" (skip certificate verification, insecure). By default, certificate verification is performed (\"Verify\").",
 							Type:        []string{"string"},
 							Format:      "",
 						},
@@ -23284,7 +23354,7 @@ func schema_openshift_api_config_v1alpha1_TLSConfig(ref common.ReferenceCallback
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.SecretKeySelector"},
+			"github.com/openshift/api/config/v1alpha1.SecretKeySelector"},
 	}
 }
 
@@ -23339,7 +23409,7 @@ func schema_openshift_api_config_v1alpha1_prometheusK8sConfig(ref common.Referen
 					},
 					"enforcedBodySizeLimit": {
 						SchemaProps: spec.SchemaProps{
-							Description: "enforcedBodySizeLimit enforces a body size limit for Prometheus scraped metrics. If a scraped target's body response is larger than the limit, the scrape will fail. The following values are valid: an empty value to specify no limit, a numeric value in Prometheus size format (such as `64MB`), or the string `automatic`, which indicates that the limit will be automatically calculated based on cluster capacity. To specify no limit, omit this field. Minimum length for this list is 1 Maximum length for this list is 50.",
+							Description: "enforcedBodySizeLimit enforces a body size limit for Prometheus scraped metrics. If a scraped target's body response is larger than the limit, the scrape will fail. The following values are valid: an empty value to specify no limit, a numeric value in Prometheus size format (such as \"4MB\", \"1000\", \"1GB\", \"512KB\", \"100B\") or the string `automatic`, which indicates that the limit will be automatically calculated based on cluster capacity. To specify no limit, omit this field. The value must match the following pattern: ^(automatic|[0-9]+(B|KB|MB|GB|TB)?)$ Minimum length for this list is 1 Maximum length for this list is 50.",
 							Type:        []string{"string"},
 							Format:      "",
 						},
@@ -23376,7 +23446,7 @@ func schema_openshift_api_config_v1alpha1_prometheusK8sConfig(ref common.Referen
 					},
 					"queryLogFile": {
 						SchemaProps: spec.SchemaProps{
-							Description: "queryLogFile specifies the file to which PromQL queries are logged. This setting can be either a filename, in which case the queries are saved to an `emptyDir` volume at `/var/log/prometheus`, or a full path to a location where an `emptyDir` volume will be mounted and the queries saved. Writing to `/dev/stderr`, `/dev/stdout` or `/dev/null` is supported, but writing to any other `/dev/` path is not supported. Relative paths are also not supported. By default, PromQL queries are not logged.",
+							Description: "queryLogFile specifies the file to which PromQL queries are logged. This setting can be either a filename, in which case the queries are saved to an `emptyDir` volume at `/var/log/prometheus`, or a full path to a location where an `emptyDir` volume will be mounted and the queries saved. Writing to `/dev/stderr`, `/dev/stdout` or `/dev/null` is supported, but writing to any other `/dev/` path is not supported. Relative paths are also not supported. By default, PromQL queries are not logged. The value must be a valid filename.",
 							Type:        []string{"string"},
 							Format:      "",
 						},
@@ -23388,7 +23458,7 @@ func schema_openshift_api_config_v1alpha1_prometheusK8sConfig(ref common.Referen
 							},
 						},
 						SchemaProps: spec.SchemaProps{
-							Description: "remoteWrite defines the remote write configuration, including URL, authentication, and relabeling settings. remoteWrite supports a maximum of 10 items in the list.",
+							Description: "remoteWrite defines the remote write configuration, including URL, authentication, and relabeling settings. The remote-write protocol is intended to allow Prometheus instances to actively send the metrics they collect/receive to other instances. For more information, see: https://prometheus.io/docs/prometheus/latest/configuration/configuration/#remote_write remoteWrite supports a maximum of 10 items in the list.",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{

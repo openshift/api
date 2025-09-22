@@ -1338,17 +1338,22 @@ spec:
                             This is a custom type to allow for admission time validations.
                           properties:
                             key:
-                              description: The key of the secret to select from. Must
+                              description: key of the secret to select from. Must
                                 be a valid secret key.
+                              maxLength: 253
                               type: string
                             name:
-                              description: The name of the secret in the pod's namespace
+                              description: name of the secret in the pod's namespace
                                 to select from.
+                              maxLength: 253
                               type: string
                             optional:
-                              description: Specify whether the Secret or its key must
-                                be defined
-                              type: boolean
+                              description: optional specifies whether the Secret or
+                                its key must be defined
+                              enum:
+                              - true
+                              - false
+                              type: string
                           required:
                           - key
                           - name
@@ -1383,6 +1388,7 @@ spec:
                           description: |-
                             timeout defines the timeout value used when sending alerts.
                             The value must be a valid Go time.Duration string (e.g. 30s, 5m, 1h).
+                          maxLength: 20
                           minLength: 2
                           pattern: ^([0-9]+(\.[0-9]+)?(ns|us|µs|ms|s|m|h))+$
                           type: string
@@ -1396,22 +1402,30 @@ spec:
                                 connections.
                               properties:
                                 key:
-                                  description: The key of the secret to select from.  Must
+                                  description: key of the secret to select from.  Must
                                     be a valid secret key.
+                                  maxLength: 253
+                                  minLength: 1
                                   type: string
                                 name:
                                   default: ""
                                   description: |-
-                                    Name of the referent.
+                                    name of the referent.
                                     This field is effectively required, but due to backwards compatibility is
                                     allowed to be empty. Instances of this type with an empty value here are
                                     almost certainly wrong.
                                     More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names
+                                  maxLength: 253
                                   type: string
                                 optional:
-                                  description: Specify whether the Secret or its key
-                                    must be defined
-                                  type: boolean
+                                  description: optional specifies whether the Secret
+                                    or its key must be defined
+                                  enum:
+                                  - true
+                                  - false
+                                  type: string
+                              required:
+                              - key
                               type: object
                               x-kubernetes-map-type: atomic
                             cert:
@@ -1419,28 +1433,36 @@ spec:
                                 TLS connections.
                               properties:
                                 key:
-                                  description: The key of the secret to select from.  Must
+                                  description: key of the secret to select from.  Must
                                     be a valid secret key.
+                                  maxLength: 253
+                                  minLength: 1
                                   type: string
                                 name:
                                   default: ""
                                   description: |-
-                                    Name of the referent.
+                                    name of the referent.
                                     This field is effectively required, but due to backwards compatibility is
                                     allowed to be empty. Instances of this type with an empty value here are
                                     almost certainly wrong.
                                     More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names
+                                  maxLength: 253
                                   type: string
                                 optional:
-                                  description: Specify whether the Secret or its key
-                                    must be defined
-                                  type: boolean
+                                  description: optional specifies whether the Secret
+                                    or its key must be defined
+                                  enum:
+                                  - true
+                                  - false
+                                  type: string
+                              required:
+                              - key
                               type: object
                               x-kubernetes-map-type: atomic
                             insecureSkipVerify:
                               default: Verify
                               description: |-
-                                verificationPolicy determines the policy for TLS certificate verification.
+                                insecureSkipVerify determines the policy for TLS certificate verification.
                                 Allowed values are "Verify" (default, secure) and "InsecureSkipVerify" (skip certificate verification, insecure).
                                 By default, certificate verification is performed ("Verify").
                               enum:
@@ -1451,22 +1473,30 @@ spec:
                               description: key is the client key to use for TLS connections.
                               properties:
                                 key:
-                                  description: The key of the secret to select from.  Must
+                                  description: key of the secret to select from.  Must
                                     be a valid secret key.
+                                  maxLength: 253
+                                  minLength: 1
                                   type: string
                                 name:
                                   default: ""
                                   description: |-
-                                    Name of the referent.
+                                    name of the referent.
                                     This field is effectively required, but due to backwards compatibility is
                                     allowed to be empty. Instances of this type with an empty value here are
                                     almost certainly wrong.
                                     More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names
+                                  maxLength: 253
                                   type: string
                                 optional:
-                                  description: Specify whether the Secret or its key
-                                    must be defined
-                                  type: boolean
+                                  description: optional specifies whether the Secret
+                                    or its key must be defined
+                                  enum:
+                                  - true
+                                  - false
+                                  type: string
+                              required:
+                              - key
                               type: object
                               x-kubernetes-map-type: atomic
                             serverName:
@@ -1485,6 +1515,8 @@ spec:
                       type: object
                     maxItems: 10
                     type: array
+                    x-kubernetes-list-map-keys:
+                    - apiVersion
                     x-kubernetes-list-type: map
                   collectionProfile:
                     description: |-
@@ -1680,6 +1712,8 @@ spec:
                       type: object
                     maxItems: 10
                     type: array
+                    x-kubernetes-list-map-keys:
+                    - url
                     x-kubernetes-list-type: map
                   resources:
                     description: |-

@@ -112,7 +112,7 @@ type ClusterMonitoringSpec struct {
 	//
 	// This field is optional. When omitted, the platform chooses reasonable defaults, which may change over time.
 	// +optional
-	PrometheusK8sConfig prometheusK8sConfig `json:"prometheusK8sConfig,omitempty,omitzero"`
+	PrometheusK8sConfig PrometheusK8sConfig `json:"prometheusK8sConfig,omitempty,omitzero"`
 	// metricsServerConfig is an optional field that can be used to configure the Kubernetes Metrics Server that runs in the openshift-monitoring namespace.
 	// Specifically, it can configure how the Metrics Server instance is deployed, pod scheduling, its audit policy and log verbosity.
 	// When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time.
@@ -440,16 +440,17 @@ type MetricsServerConfig struct {
 	TopologySpreadConstraints []v1.TopologySpreadConstraint `json:"topologySpreadConstraints,omitempty"`
 }
 
-// prometheusK8sConfig provides configuration options for the Prometheus instance
+// PrometheusK8sConfig provides configuration options for the Prometheus instance
 // Use this configuration to control
 // Prometheus deployment, pod scheduling, resource allocation, retention policies, and external integrations.
 // +kubebuilder:validation:MinProperties=1
-type prometheusK8sConfig struct {
+type PrometheusK8sConfig struct {
 	// additionalAlertmanagerConfigs configures additional Alertmanager instances that receive alerts from
 	// the Prometheus component. By default, no additional Alertmanager instances are configured.
 	// +optional
 	// +kubebuilder:validation:MaxItems=10
 	// +listType=map
+	// +listMapKey=apiVersion
 	AdditionalAlertmanagerConfigs []AdditionalAlertmanagerConfig `json:"additionalAlertmanagerConfigs,omitempty"`
 	// enforcedBodySizeLimit enforces a body size limit for Prometheus scraped metrics. If a scraped
 	// target's body response is larger than the limit, the scrape will fail.
@@ -466,7 +467,7 @@ type prometheusK8sConfig struct {
 	// +kubebuilder:validation:MaxLength=50
 	// +kubebuilder:validation:Pattern=`^(automatic|[0-9]+(B|KB|MB|GB|TB)?)$`
 	// +optional
-	EnforcedBodySizeLimit *string `json:"enforcedBodySizeLimit,omitempty"`
+	EnforcedBodySizeLimit string `json:"enforcedBodySizeLimit,omitempty"`
 	// externalLabels defines labels to be added to any time series or alerts when
 	// communicating with external systems such as federation, remote storage,
 	// and Alertmanager. By default, no labels are added.
@@ -508,13 +509,14 @@ type prometheusK8sConfig struct {
 	// +kubebuilder:validation:MinLength=1
 	// +kubebuilder:validation:MaxLength=255
 	// +kubebuilder:validation:Pattern=`^[a-zA-Z0-9_\-\./]+$`
-	QueryLogFile *string `json:"queryLogFile,omitempty"`
+	QueryLogFile string `json:"queryLogFile,omitempty"`
 	// remoteWrite defines the remote write configuration, including URL, authentication, and relabeling settings.
 	// The remote-write protocol is intended to allow Prometheus instances to actively send the metrics they collect/receive to other instances.
 	// For more information, see: https://prometheus.io/docs/prometheus/latest/configuration/configuration/#remote_write
 	// remoteWrite supports a maximum of 10 items in the list.
 	// +kubebuilder:validation:MaxItems=10
 	// +listType=map
+	// +listMapKey=url
 	// +optional
 	RemoteWrite []RemoteWriteSpec `json:"remoteWrite,omitempty"`
 	// resources defines the compute resource requests and limits for the Prometheus container.
@@ -550,7 +552,7 @@ type prometheusK8sConfig struct {
 	// +kubebuilder:validation:MaxLength=20
 	// +kubebuilder:validation:Pattern=`^[0-9]+(ms|s|m|h|d|w|y)$`
 	// +optional
-	Retention *string `json:"retention,omitempty"`
+	Retention string `json:"retention,omitempty"`
 	// retentionSize specifies the maximum volume of persistent storage that Prometheus uses for data blocks and the write-ahead log (WAL).
 	// Acceptable values use standard Kubernetes resource quantity formats, such as `Mi`, `Gi`, `Ti`, etc.
 	// When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time.
@@ -619,15 +621,18 @@ const (
 
 // SecretKeyReference represents a reference to a secret key.
 type SecretKeyReference struct {
-	// The name of the secret in the pod's namespace to select from.
+	// name of the secret in the pod's namespace to select from.
 	// +required
-	Name string `json:"name"`
-	// The key of the secret to select from. Must be a valid secret key.
+	// +kubebuilder:validation:MaxLength=253
+	Name *string `json:"name,omitempty"`
+	// key of the secret to select from. Must be a valid secret key.
 	// +required
-	Key string `json:"key"`
-	// Specify whether the Secret or its key must be defined
+	// +kubebuilder:validation:MaxLength=253
+	Key *string `json:"key,omitempty"`
+	// optional specifies whether the Secret or its key must be defined
 	// +optional
-	Optional *bool `json:"optional,omitempty"`
+	// +kubebuilder:validation:Enum=true;false
+	Optional string `json:"optional,omitempty"`
 }
 
 type AlertmanagerScheme string
@@ -650,12 +655,12 @@ type AdditionalAlertmanagerConfig struct {
 	// to use when authenticating to Alertmanager.
 	// This is a custom type to allow for admission time validations.
 	// +optional
-	BearerToken *SecretKeyReference `json:"bearerToken,omitempty"`
+	BearerToken SecretKeyReference `json:"bearerToken,omitempty,omitzero"`
 	// pathPrefix defines the path prefix to add in front of the push endpoint path.
 	// +kubebuilder:validation:MaxLength=255
 	// +kubebuilder:validation:MinLength=1
 	// +optional
-	PathPrefix *string `json:"pathPrefix,omitempty"`
+	PathPrefix string `json:"pathPrefix,omitempty"`
 	// scheme defines the URL scheme to use when communicating with Alertmanager
 	// instances.
 	// Possible values are `http` or `https`. The default value is `http`.
@@ -674,8 +679,9 @@ type AdditionalAlertmanagerConfig struct {
 	// The value must be a valid Go time.Duration string (e.g. 30s, 5m, 1h).
 	// +kubebuilder:validation:Pattern=`^([0-9]+(\.[0-9]+)?(ns|us|µs|ms|s|m|h))+$`
 	// +kubebuilder:validation:MinLength=2
+	// +kubebuilder:validation:MaxLength=20
 	// +optional
-	Timeout *string `json:"timeout,omitempty"`
+	Timeout string `json:"timeout,omitempty"`
 	// tlsConfig defines the TLS settings to use for Alertmanager connections.
 	// When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time.
 	// +optional
@@ -688,12 +694,12 @@ type Label struct {
 	// +required
 	// +kubebuilder:validation:MaxLength=63
 	// +kubebuilder:validation:MinLength=1
-	Key string `json:"key"`
+	Key string `json:"key,omitempty"`
 	// value is the value of the label.
 	// +required
 	// +kubebuilder:validation:MaxLength=63
 	// +kubebuilder:validation:MinLength=1
-	Value string `json:"value"`
+	Value string `json:"value,omitempty"`
 }
 
 // ExternalLabels represents labels to be added to time series and alerts.
@@ -714,7 +720,7 @@ type RemoteWriteSpec struct {
 	// +kubebuilder:validation:MaxLength=2048
 	// +kubebuilder:validation:MinLength=1
 	// +kubebuilder:validation:Pattern=`^https?://[^\s]+$`
-	URL *string `json:"url,omitempty"`
+	URL string `json:"url,omitempty"`
 	// name is the name of the remote write configuration.
 	// +optional
 	// +kubebuilder:validation:MaxLength=63
@@ -726,7 +732,7 @@ type RemoteWriteSpec struct {
 	// +kubebuilder:validation:MaxLength=20
 	// +kubebuilder:validation:Pattern=`^([0-9]+(\.[0-9]+)?(ns|us|µs|ms|s|m|h))+$`
 	// +kubebuilder:validation:MinLength=2
-	RemoteTimeout *string `json:"remoteTimeout,omitempty"`
+	RemoteTimeout string `json:"remoteTimeout,omitempty"`
 	// writeRelabelConfigs is a list of relabeling rules to apply before sending data to the remote endpoint.
 	// +optional
 	// +kubebuilder:validation:MaxItems=10
@@ -773,21 +779,21 @@ type RelabelConfig struct {
 type TLSConfig struct {
 	// ca is the CA certificate to use for TLS connections.
 	// +optional
-	CA *SecretKeySelector `json:"ca,omitempty"`
+	CA SecretKeySelector `json:"ca,omitempty,omitzero"`
 	// cert is the client certificate to use for TLS connections.
 	// +optional
-	Cert *SecretKeySelector `json:"cert,omitempty"`
+	Cert SecretKeySelector `json:"cert,omitempty,omitzero"`
 	// key is the client key to use for TLS connections.
 	// +optional
-	Key *SecretKeySelector `json:"key,omitempty"`
+	Key SecretKeySelector `json:"key,omitempty,omitzero"`
 	// serverName is the server name to use for TLS connections.
 	// If specified, must be a valid DNS subdomain as per RFC 1123.
 	// +optional
 	// +kubebuilder:validation:MinLength=1
 	// +kubebuilder:validation:MaxLength=253
 	// +kubebuilder:validation:Pattern=`^([a-zA-Z0-9][-a-zA-Z0-9]*\.)*[a-zA-Z0-9][-a-zA-Z0-9]*$`
-	ServerName *string `json:"serverName,omitempty"`
-	// verificationPolicy determines the policy for TLS certificate verification.
+	ServerName string `json:"serverName,omitempty"`
+	// insecureSkipVerify determines the policy for TLS certificate verification.
 	// Allowed values are "Verify" (default, secure) and "InsecureSkipVerify" (skip certificate verification, insecure).
 	// By default, certificate verification is performed ("Verify").
 	// +optional
@@ -811,7 +817,7 @@ type TLSConfig struct {
 // For example, ServiceReferences for admission registration: https://github.com/kubernetes/api/blob/release-1.17/admissionregistration/v1/types.go#L533 .
 // +structType=atomic
 type LocalObjectReference struct {
-	// Name of the referent.
+	// name of the referent.
 	// This field is effectively required, but due to backwards compatibility is
 	// allowed to be empty. Instances of this type with an empty value here are
 	// almost certainly wrong.
@@ -819,8 +825,9 @@ type LocalObjectReference struct {
 	// +optional
 	// +default=""
 	// +kubebuilder:default=""
+	// +kubebuilder:validation:MaxLength=253
 	// TODO: Drop `kubebuilder:default` when controller-gen doesn't need it https://github.com/kubernetes-sigs/kubebuilder/issues/3896.
-	Name string `json:"name,omitempty" protobuf:"bytes,1,opt,name=name"`
+	Name *string `json:"name,omitempty" protobuf:"bytes,1,opt,name=name"`
 }
 
 // SecretKeySelector selects a key of a Secret.
@@ -828,11 +835,15 @@ type LocalObjectReference struct {
 type SecretKeySelector struct {
 	// The name of the secret in the pod's namespace to select from.
 	LocalObjectReference `json:",inline" protobuf:"bytes,1,opt,name=localObjectReference"`
-	// The key of the secret to select from.  Must be a valid secret key.
-	Key string `json:"key" protobuf:"bytes,2,opt,name=key"`
-	// Specify whether the Secret or its key must be defined
+	// key of the secret to select from.  Must be a valid secret key.
+	// +required
+	// +kubebuilder:validation:MinLength=1
+	// +kubebuilder:validation:MaxLength=253
+	Key string `json:"key,omitempty" protobuf:"bytes,2,opt,name=key"`
+	// optional specifies whether the Secret or its key must be defined
 	// +optional
-	Optional *bool `json:"optional,omitempty" protobuf:"varint,3,opt,name=optional"`
+	// +kubebuilder:validation:Enum=true;false
+	Optional string `json:"optional,omitempty" protobuf:"varint,3,opt,name=optional"`
 }
 
 // CollectionProfile defines the metrics collection profile for Prometheus.

@@ -210,7 +210,9 @@ func (g *generator) genGroupVersion(name string, version generation.APIVersionCo
 
 		for _, crdResults := range runResults.CRDValidation {
 			for _, err := range crdResults.Errors {
-				result.Errors = append(result.Errors, fmt.Errorf("%s: %w", crdResults.Name, errors.New(err)))
+				resErr := fmt.Errorf("%s: %w", crdResults.Name, errors.New(err))
+				result.Errors = append(result.Errors, resErr)
+				errs = append(errs, resErr)
 			}
 
 			for _, warn := range crdResults.Warnings {
@@ -220,7 +222,9 @@ func (g *generator) genGroupVersion(name string, version generation.APIVersionCo
 
 		versionedResultFunc := func(version, property string, compResult validations.ComparisonResult) {
 			for _, err := range compResult.Errors {
-				result.Errors = append(result.Errors, fmt.Errorf("(%s) %s - %s: %w", version, property, compResult.Name, errors.New(err)))
+				resErr := fmt.Errorf("(%s) %s - %s: %w", version, property, compResult.Name, errors.New(err))
+				result.Errors = append(result.Errors, resErr)
+				errs = append(errs, resErr)
 			}
 
 			for _, warn := range compResult.Warnings {
@@ -232,6 +236,10 @@ func (g *generator) genGroupVersion(name string, version generation.APIVersionCo
 		processVersionedPropertyResults(runResults.ServedVersionValidation, versionedResultFunc)
 
 		results = append(results, result)
+	}
+
+	if len(errs) > 0 {
+		return results, kerrors.NewAggregate(errs)
 	}
 
 	return results, nil

@@ -186,8 +186,8 @@ const (
 type DNSRecordsType string
 
 const (
-	DNSRecordsExternal DNSRecordsType = "External"
-	DNSRecordsInternal DNSRecordsType = "Internal"
+	DNSRecordsTypeExternal DNSRecordsType = "External"
+	DNSRecordsTypeInternal DNSRecordsType = "Internal"
 )
 
 // PlatformType is a specific supported infrastructure provider.
@@ -1042,13 +1042,14 @@ type BareMetalPlatformStatus struct {
 	// +optional
 	LoadBalancer *BareMetalPlatformLoadBalancer `json:"loadBalancer,omitempty"`
 
-	// DNSRecordsType determines whether records for api, api-int, and ingress
-	// are provided by the internal DNS service or externally. `Internal` configures
-	// DNS records in the internal service. `External` means no records will be
-	// provided and must be configured external to the cluster. `External` is only
-	// allowed when a user-managed loadbalancer is configured. When unset, the
-	// internal records will be provided.
-	// api, api-int, and ingress.
+	// dnsRecordsType determines whether records for api, api-int, and ingress
+	// are provided by the internal DNS service or externally.
+	// Allowed values are `Internal`, `External`, and omitted.
+	// When set to `Internal`, records are provided by the internal infrastructure
+	// When set to `External`, records are not provided by the internal infrastructure
+	// and must be configured by the user. This value may only be set when a
+	// user-managed loadbalancer is configured.
+	// When omitted, the behavior will be the same as `Internal`.
 	// +kubebuilder:validation:Enum=Internal;External
 	// +openshift:enable:FeatureGate=OnPremDNSRecords
 	// +optional

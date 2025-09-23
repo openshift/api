@@ -359,7 +359,7 @@ tests:
           userDefined:
             mode: "Disabled"
           prometheusOperatorConfig:
-            logLevel: "info"
+            logLevel: "Info"
       expected: |
         apiVersion: config.openshift.io/v1alpha1
         kind: ClusterMonitoring
@@ -367,7 +367,7 @@ tests:
           userDefined:
             mode: "Disabled"
           prometheusOperatorConfig:
-            logLevel: "info"
+            logLevel: "Info"
     - name: Should accept PrometheusOperatorConfig with valid nodeSelector
       initial: |
         apiVersion: config.openshift.io/v1alpha1
@@ -398,12 +398,12 @@ tests:
             mode: "Disabled"
           prometheusOperatorConfig:
             resources:
-              requests:
-                cpu: 100m
-                memory: 128Mi
-              limits:
-                cpu: 500m
-                memory: 512Mi
+              - name: "cpu"
+                request: "100m"
+                limit: "500m"
+              - name: "memory"
+                request: "128Mi"
+                limit: "512Mi"
       expected: |
         apiVersion: config.openshift.io/v1alpha1
         kind: ClusterMonitoring
@@ -412,12 +412,12 @@ tests:
             mode: "Disabled"
           prometheusOperatorConfig:
             resources:
-              requests:
-                cpu: 100m
-                memory: 128Mi
-              limits:
-                cpu: 500m
-                memory: 512Mi
+              - name: "cpu"
+                request: "100m"
+                limit: "500m"
+              - name: "memory"
+                request: "128Mi"
+                limit: "512Mi"
     - name: Should accept PrometheusOperatorConfig with valid tolerations
       initial: |
         apiVersion: config.openshift.io/v1alpha1

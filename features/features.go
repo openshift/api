@@ -102,6 +102,14 @@ var (
 				enableIn(configv1.DevPreviewNoUpgrade, configv1.TechPreviewNoUpgrade).
 				mustRegister()
 
+	FeatureGateInsightsConfigAPI = newFeatureGate("InsightsConfigAPI").
+					reportProblemsToJiraComponent("insights").
+					contactPerson("tremes").
+					productScope(ocpSpecific).
+					enhancementPR(legacyFeatureGateWithoutEnhancement).
+					enableIn(configv1.DevPreviewNoUpgrade, configv1.TechPreviewNoUpgrade).
+					mustRegister()
+
 	FeatureGateDynamicResourceAllocation = newFeatureGate("DynamicResourceAllocation").
 						reportProblemsToJiraComponent("scheduling").
 						contactPerson("jchaloup").

@@ -359,7 +359,7 @@ tests:
           userDefined:
             mode: "Disabled"
           prometheusK8sConfig:
-            logLevel: "info"
+            logLevel: "Info"
       expected: |
         apiVersion: config.openshift.io/v1alpha1
         kind: ClusterMonitoring
@@ -367,7 +367,7 @@ tests:
           userDefined:
             mode: "Disabled"
           prometheusK8sConfig:
-            logLevel: "info"
+            logLevel: "Info"
     - name: Should accept PrometheusK8sConfig with valid nodeSelector
       initial: |
         apiVersion: config.openshift.io/v1alpha1
@@ -548,8 +548,10 @@ tests:
           prometheusK8sConfig:
             externalLabels:
               labels:
-                cluster: "production"
-                environment: "prod"
+                - key: "cluster"
+                  value: "production"
+                - key: "environment"
+                  value: "prod"
       expected: |
         apiVersion: config.openshift.io/v1alpha1
         kind: ClusterMonitoring
@@ -559,8 +561,10 @@ tests:
           prometheusK8sConfig:
             externalLabels:
               labels:
-                cluster: "production"
-                environment: "prod"
+                - key: "cluster"
+                  value: "production"
+                - key: "environment"
+                  value: "prod"
     - name: Should reject PrometheusK8sConfig with empty object
       initial: |
         apiVersion: config.openshift.io/v1alpha1

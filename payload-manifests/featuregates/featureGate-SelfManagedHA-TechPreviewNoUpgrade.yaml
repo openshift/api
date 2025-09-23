@@ -63,6 +63,9 @@
                         "name": "AWSServiceLBNetworkSecurityGroup"
                     },
                     {
+                        "name": "NodeSwap"
+                    },
+                    {
                         "name": "AdditionalRoutingCapabilities"
                     },
                     {
@@ -259,9 +262,6 @@
                     },
                     {
                         "name": "NoRegistryClusterOperations"
-                    },
-                    {
-                        "name": "NodeSwap"
                     },
                     {
                         "name": "NutanixMultiSubnets"

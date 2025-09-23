@@ -535,8 +535,8 @@ func (TokenRequiredClaim) SwaggerDoc() map[string]string {
 }
 
 var map_TokenUserValidationRule = map[string]string{
-	"":           "TokenUserValidationRule provides a CEL-based rule used to validate a token subject. Each rule contains a CEL expression that is evaluated against the token’s claims. If the expression evaluates to false, the token is rejected. See https://kubernetes.io/docs/reference/using-api/cel/ for CEL syntax. At least one rule must evaluate to true for the token to be considered valid.",
-	"expression": "expression is a CEL expression that must evaluate to true for the token to be accepted. The expression is evaluated against the token's user information (e.g., username, groups). This field must be non-empty and may not exceed 4096 characters.",
+	"":           "TokenUserValidationRule provides a CEL-based rule used to validate a token subject. Each rule contains a CEL expression that is evaluated against the token’s claims.",
+	"expression": "expression is a CEL expression that must evaluate to true for the token to be accepted. The expression is evaluated against the token's user information (e.g., username, groups).\n\nIf the expression evaluates to false, the token is rejected. See https://kubernetes.io/docs/reference/using-api/cel/ for CEL syntax. At least one rule must evaluate to true for the token to be considered valid.\n\nThis field must be non-empty and may not exceed 4096 characters.",
 	"message":    "message is an optional, human-readable message returned by the API server when this validation rule fails. It can help clarify why a token was rejected.",
 }
 

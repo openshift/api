@@ -20394,12 +20394,12 @@ func schema_openshift_api_config_v1_TokenUserValidationRule(ref common.Reference
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
-				Description: "TokenUserValidationRule provides a CEL-based rule used to validate a token subject. Each rule contains a CEL expression that is evaluated against the token’s claims. If the expression evaluates to false, the token is rejected. See https://kubernetes.io/docs/reference/using-api/cel/ for CEL syntax. At least one rule must evaluate to true for the token to be considered valid.",
+				Description: "TokenUserValidationRule provides a CEL-based rule used to validate a token subject. Each rule contains a CEL expression that is evaluated against the token’s claims.",
 				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
 					"expression": {
 						SchemaProps: spec.SchemaProps{
-							Description: "expression is a CEL expression that must evaluate to true for the token to be accepted. The expression is evaluated against the token's user information (e.g., username, groups). This field must be non-empty and may not exceed 4096 characters.",
+							Description: "expression is a CEL expression that must evaluate to true for the token to be accepted. The expression is evaluated against the token's user information (e.g., username, groups).\n\nIf the expression evaluates to false, the token is rejected. See https://kubernetes.io/docs/reference/using-api/cel/ for CEL syntax. At least one rule must evaluate to true for the token to be considered valid.\n\nThis field must be non-empty and may not exceed 4096 characters.",
 							Type:        []string{"string"},
 							Format:      "",
 						},

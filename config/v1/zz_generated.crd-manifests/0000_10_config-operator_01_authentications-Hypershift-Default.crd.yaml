@@ -201,25 +201,6 @@ spec:
                             description: |-
                               expressionRule contains the configuration for the "Expression" type.
                               Must be set if type == "Expression".
-                            properties:
-                              expression:
-                                description: |-
-                                  expression is a CEL expression evaluated against token claims.
-                                  The expression must be a non-empty string and no longer than 4096 characters.
-                                  This field is required.
-                                maxLength: 4096
-                                minLength: 1
-                                type: string
-                              message:
-                                description: |-
-                                  message allows configuring the human-readable message that is returned
-                                  from the Kubernetes API server when a token fails validation based on
-                                  the CEL expression defined in 'expression'. This field is optional.
-                                maxLength: 256
-                                minLength: 1
-                                type: string
-                            required:
-                            - expression
                             type: object
                           requiredClaim:
                             description: |-
@@ -435,37 +416,6 @@ spec:
                       - componentNamespace
                       - componentName
                       x-kubernetes-list-type: map
-                    userValidationRules:
-                      items:
-                        description: |-
-                          TokenUserValidationRule provides a CEL-based rule used to validate a token subject.
-                          Each rule contains a CEL expression that is evaluated against the token’s claims.
-                          If the expression evaluates to false, the token is rejected.
-                          See https://kubernetes.io/docs/reference/using-api/cel/ for CEL syntax.
-                          At least one rule must evaluate to true for the token to be considered valid.
-                        properties:
-                          expression:
-                            description: |-
-                              expression is a CEL expression that must evaluate
-                              to true for the token to be accepted. The expression is evaluated against the token's
-                              user information (e.g., username, groups). This field must be non-empty and may not
-                              exceed 4096 characters.
-                            maxLength: 4096
-                            minLength: 1
-                            type: string
-                          message:
-                            description: |-
-                              message is an optional, human-readable message returned by the API server when
-                              this validation rule fails. It can help clarify why a token was rejected.
-                            maxLength: 256
-                            minLength: 1
-                            type: string
-                        required:
-                        - expression
-                        type: object
-                      maxItems: 64
-                      type: array
-                      x-kubernetes-list-type: atomic
                   required:
                   - claimMappings
                   - issuer

@@ -253,13 +253,14 @@ type OIDCProvider struct {
 	// +listType=atomic
 	// +kubebuilder:validation:MaxItems=64
 	// +optional
+	// +openshift:enable:FeatureGate=ExternalOIDCWithNewAuthConfigFields
 	UserValidationRules []TokenUserValidationRule `json:"userValidationRules,omitempty"`
 }
 
 // +kubebuilder:validation:MinLength=1
 type TokenAudience string
 
-// +openshift:validation:FeatureGateAwareXValidation:featureGate=ExternalOIDCWithNewAuthConfigFields,rule="self.discoveryURL.size() > 0 ? (self.issuerURL.size() == 0 || self.discoveryURL.find('^.+[^/]') != self.issuerURL.find('^.+[^/]')) : true",message="discoveryURL must be different from issuerURL"
+// +openshift:validation:FeatureGateAwareXValidation:featureGate=ExternalOIDCWithNewAuthConfigFields,rule="self.?discoveryURL.orValue(\"\").size() > 0 ? (self.issuerURL.size() == 0 || self.discoveryURL.find('^.+[^/]') != self.issuerURL.find('^.+[^/]')) : true",message="discoveryURL must be different from issuerURL"
 type TokenIssuer struct {
 	// issuerURL is a required field that configures the URL used to issue tokens
 	// by the identity provider.
@@ -830,7 +831,6 @@ type TokenRequiredClaim struct {
 	RequiredValue string `json:"requiredValue"`
 }
 
-// +openshift:enable:FeatureGate=ExternalOIDCWithNewAuthConfigFields
 type TokenExpressionRule struct {
 	// expression is a CEL expression evaluated against token claims.
 	// The expression must be a non-empty string and no longer than 4096 characters.
@@ -839,6 +839,7 @@ type TokenExpressionRule struct {
 	// +kubebuilder:validation:MinLength=1
 	// +kubebuilder:validation:MaxLength=4096
 	// +required
+	// +openshift:enable:FeatureGate=ExternalOIDCWithNewAuthConfigFields
 	Expression string `json:"expression,omitempty"`
 
 	// message allows configuring the human-readable message that is returned
@@ -848,24 +849,27 @@ type TokenExpressionRule struct {
 	// +optional
 	// +kubebuilder:validation:MinLength=1
 	// +kubebuilder:validation:MaxLength=256
+	// +openshift:enable:FeatureGate=ExternalOIDCWithNewAuthConfigFields
 	Message string `json:"message,omitempty"`
 }
 
 // TokenUserValidationRule provides a CEL-based rule used to validate a token subject.
 // Each rule contains a CEL expression that is evaluated against the token’s claims.
-// If the expression evaluates to false, the token is rejected.
-// See https://kubernetes.io/docs/reference/using-api/cel/ for CEL syntax.
-// At least one rule must evaluate to true for the token to be considered valid.
-// +openshift:enable:FeatureGate=ExternalOIDCWithNewAuthConfigFields
 type TokenUserValidationRule struct {
 	// expression is a CEL expression that must evaluate
 	// to true for the token to be accepted. The expression is evaluated against the token's
-	// user information (e.g., username, groups). This field must be non-empty and may not
-	// exceed 4096 characters.
+	// user information (e.g., username, groups).
+	//
+	// If the expression evaluates to false, the token is rejected.
+	// See https://kubernetes.io/docs/reference/using-api/cel/ for CEL syntax.
+	// At least one rule must evaluate to true for the token to be considered valid.
+	//
+	// This field must be non-empty and may not exceed 4096 characters.
 	//
 	// +required
 	// +kubebuilder:validation:MinLength=1
 	// +kubebuilder:validation:MaxLength=4096
+	// +openshift:enable:FeatureGate=ExternalOIDCWithNewAuthConfigFields
 	Expression string `json:"expression,omitempty"`
 	// message is an optional, human-readable message returned by the API server when
 	// this validation rule fails. It can help clarify why a token was rejected.
@@ -873,5 +877,6 @@ type TokenUserValidationRule struct {
 	// +optional
 	// +kubebuilder:validation:MinLength=1
 	// +kubebuilder:validation:MaxLength=256
+	// +openshift:enable:FeatureGate=ExternalOIDCWithNewAuthConfigFields
 	Message string `json:"message,omitempty"`
 }

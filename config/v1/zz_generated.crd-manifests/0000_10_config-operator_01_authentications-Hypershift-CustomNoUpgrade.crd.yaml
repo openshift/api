@@ -524,7 +524,7 @@ spec:
                       type: object
                       x-kubernetes-validations:
                       - message: discoveryURL must be different from issuerURL
-                        rule: 'self.discoveryURL.size() > 0 ? (self.issuerURL.size()
+                        rule: 'self.?discoveryURL.orValue("").size() > 0 ? (self.issuerURL.size()
                           == 0 || self.discoveryURL.find(''^.+[^/]'') != self.issuerURL.find(''^.+[^/]''))
                           : true'
                     name:
@@ -631,16 +631,18 @@ spec:
                         description: |-
                           TokenUserValidationRule provides a CEL-based rule used to validate a token subject.
                           Each rule contains a CEL expression that is evaluated against the token’s claims.
-                          If the expression evaluates to false, the token is rejected.
-                          See https://kubernetes.io/docs/reference/using-api/cel/ for CEL syntax.
-                          At least one rule must evaluate to true for the token to be considered valid.
                         properties:
                           expression:
                             description: |-
                               expression is a CEL expression that must evaluate
                               to true for the token to be accepted. The expression is evaluated against the token's
-                              user information (e.g., username, groups). This field must be non-empty and may not
-                              exceed 4096 characters.
+                              user information (e.g., username, groups).
+
+                              If the expression evaluates to false, the token is rejected.
+                              See https://kubernetes.io/docs/reference/using-api/cel/ for CEL syntax.
+                              At least one rule must evaluate to true for the token to be considered valid.
+
+                              This field must be non-empty and may not exceed 4096 characters.
                             maxLength: 4096
                             minLength: 1
                             type: string

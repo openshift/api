@@ -606,15 +606,20 @@ spec:
                                             when type is Name, and forbidden otherwise
                                           rule: 'has(self.type) && self.type == ''Name''
                                             ?  has(self.name) : !has(self.name)'
-                                      maxItems: 1
+                                      maxItems: 32
                                       minItems: 1
                                       type: array
                                       x-kubernetes-list-type: atomic
+                                      x-kubernetes-validations:
+                                      - message: each subnet must be unique
+                                        rule: self.all(x, self.exists_one(y, x ==
+                                          y))
                                   required:
                                   - cluster
                                   - name
                                   - subnets
                                   type: object
+                                maxItems: 32
                                 type: array
                                 x-kubernetes-list-map-keys:
                                 - name

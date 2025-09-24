@@ -332,9 +332,6 @@
                     },
                     {
                         "name": "VSphereMultiNetworks"
-                    },
-                    {
-                        "name": "NodeSwap"
                     }
                 ],
                 "version": ""

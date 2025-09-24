@@ -1410,6 +1410,7 @@ var map_AWSPlatformStatus = map[string]string{
 	"serviceEndpoints":        "serviceEndpoints list contains custom endpoints which will override default service endpoint of AWS Services. There must be only one ServiceEndpoint for a service.",
 	"resourceTags":            "resourceTags is a list of additional tags to apply to AWS resources created for the cluster. See https://docs.aws.amazon.com/general/latest/gr/aws_tagging.html for information on tagging AWS resources. AWS supports a maximum of 50 tags per resource. OpenShift reserves 25 tags for its use, leaving 25 tags available for the user.",
 	"cloudLoadBalancerConfig": "cloudLoadBalancerConfig holds configuration related to DNS and cloud load balancers. It allows configuration of in-cluster DNS as an alternative to the platform default DNS implementation. When using the ClusterHosted DNS type, Load Balancer IP addresses must be provided for the API and internal API load balancers as well as the ingress load balancer.",
+	"ipFamily":                "ipFamily specifies the IP protocol family that should be used for AWS network resources. This controls whether AWS resources are created with IPv4-only, or dual-stack networking with IPv4 or IPv6 as the primary protocol family.",
 }
 
 func (AWSPlatformStatus) SwaggerDoc() map[string]string {
@@ -1481,6 +1482,7 @@ var map_AzurePlatformStatus = map[string]string{
 	"armEndpoint":              "armEndpoint specifies a URL to use for resource management in non-soverign clouds such as Azure Stack.",
 	"resourceTags":             "resourceTags is a list of additional tags to apply to Azure resources created for the cluster. See https://docs.microsoft.com/en-us/rest/api/resources/tags for information on tagging Azure resources. Due to limitations on Automation, Content Delivery Network, DNS Azure resources, a maximum of 15 tags may be applied. OpenShift reserves 5 tags for internal use, allowing 10 tags for user configuration.",
 	"cloudLoadBalancerConfig":  "cloudLoadBalancerConfig holds configuration related to DNS and cloud load balancers. It allows configuration of in-cluster DNS as an alternative to the platform default DNS implementation. When using the ClusterHosted DNS type, Load Balancer IP addresses must be provided for the API and internal API load balancers as well as the ingress load balancer.",
+	"ipFamily":                 "ipFamily specifies the IP protocol family that should be used for Azure network resources. This controls whether Azure resources are created with IPv4-only, or dual-stack networking with IPv4 or IPv6 as the primary protocol family.",
 }
 
 func (AzurePlatformStatus) SwaggerDoc() map[string]string {

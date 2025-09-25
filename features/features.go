@@ -885,4 +885,12 @@ var (
 			enhancementPR("https://github.com/openshift/enhancements/pull/1857").
 			enableIn(configv1.DevPreviewNoUpgrade, configv1.TechPreviewNoUpgrade).
 			mustRegister()
+
+	FeatureGateMutableCSINodeAllocatableCount = newFeatureGate("MutableCSINodeAllocatableCount").
+							reportProblemsToJiraComponent("Storage / Kubernetes External Components").
+							contactPerson("jsafrane").
+							productScope(kubernetes).
+							enhancementPR("https://github.com/kubernetes/enhancements/issues/4876").
+							enableIn(configv1.DevPreviewNoUpgrade, configv1.TechPreviewNoUpgrade).
+							mustRegister()
 )

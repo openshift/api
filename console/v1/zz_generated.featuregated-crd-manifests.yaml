@@ -22,7 +22,7 @@ consoleclidownloads.console.openshift.io:
     type: string
   - jsonPath: .metadata.creationTimestamp
     name: Age
-    type: string
+    type: date
   Scope: Cluster
   ShortNames: null
   TopLevelFeatureGates: []

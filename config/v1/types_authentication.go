@@ -249,7 +249,6 @@ type OIDCProvider struct {
 	// These rules determine whether a token subject is considered valid based on its claims.
 	// Each rule is evaluated independently.
 	// See the TokenUserValidationRule type for more information on rule structure.
-
 	// +listType=atomic
 	// +kubebuilder:validation:MaxItems=64
 	// +optional
@@ -785,19 +784,28 @@ const (
 // +kubebuilder:validation:XValidation:rule="has(self.type) && self.type == 'RequiredClaim' ? has(self.requiredClaim) : !has(self.requiredClaim)",message="requiredClaim must be set when type is 'RequiredClaim', and forbidden otherwise"
 // +openshift:validation:FeatureGateAwareXValidation:featureGate=ExternalOIDCWithNewAuthConfigFields,rule="has(self.type) && self.type == 'Expression' ? has(self.expressionRule) : !has(self.expressionRule)",message="expressionRule must be set when type is 'Expression', and forbidden otherwise"
 
+// TokenClaimValidationRule represents a validation rule based on token claims.
+// If type is RequiredClaim, requiredClaim must be set.
+// If type is Expression, expressionRule must be set.
+//
+// +kubebuilder:validation:XValidation:rule="has(self.type) && self.type == 'RequiredClaim' ? has(self.requiredClaim) : !has(self.requiredClaim)",message="requiredClaim must be set when type is 'RequiredClaim', and forbidden otherwise"
+// +openshift:validation:FeatureGateAwareXValidation:featureGate=ExternalOIDCWithNewAuthConfigFields,rule="has(self.type) && self.type == 'Expression' ? has(self.expressionRule) : !has(self.expressionRule)",message="expressionRule must be set when type is 'Expression', and forbidden otherwise"
 type TokenClaimValidationRule struct {
 	// type is an optional field that configures the type of the validation rule.
 	//
-	// Allowed values are 'RequiredClaim' and omitted (not provided or an empty string).
+	// Allowed values are "RequiredClaim" and "Expression".
 	//
-	// When set to 'RequiredClaim', the Kubernetes API server
-	// will be configured to validate that the incoming JWT
-	// contains the required claim and that its value matches
-	// the required value.
+	// When set to 'RequiredClaim', the Kubernetes API server will be configured
+	// to validate that the incoming JWT contains the required claim and that its
+	// value matches the required value.
 	//
-	// Defaults to 'RequiredClaim'.
+	// When set to 'Expression', the Kubernetes API server will be configured
+	// to validate the incoming JWT against the configured CEL expression.
+	//
+	// Defaults to "RequiredClaim".
 	//
 	// +kubebuilder:default="RequiredClaim"
+	// +kubebuilder:validation:Enum=RequiredClaim;Expression
 	Type TokenValidationRuleType `json:"type"`
 
 	// requiredClaim allows configuring a required claim name and its expected value.

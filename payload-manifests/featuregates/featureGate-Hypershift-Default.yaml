@@ -98,9 +98,6 @@
                         "name": "Example2"
                     },
                     {
-                        "name": "ExternalOIDCWithUIDAndExtraClaimMappings"
-                    },
-                    {
                         "name": "ExternalSnapshotMetadata"
                     },
                     {
@@ -251,6 +248,9 @@
                     },
                     {
                         "name": "ExternalOIDC"
+                    },
+                    {
+                        "name": "ExternalOIDCWithUIDAndExtraClaimMappings"
                     },
                     {
                         "name": "GCPClusterHostedDNSInstall"

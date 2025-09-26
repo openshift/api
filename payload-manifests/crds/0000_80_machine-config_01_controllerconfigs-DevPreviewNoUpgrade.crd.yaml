@@ -2299,10 +2299,8 @@ spec:
                                       - File
                                       - IAM
                                       - IAMCredentials
-                                      - OAuth
                                       - ServiceUsage
                                       - Storage
-                                      - STS
                                       type: string
                                     url:
                                       description: |-
@@ -2328,7 +2326,7 @@ spec:
                                   - name
                                   - url
                                   type: object
-                                maxItems: 11
+                                maxItems: 9
                                 type: array
                                 x-kubernetes-list-map-keys:
                                 - name

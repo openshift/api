@@ -9152,6 +9152,15 @@
             "componentName"
           ],
           "x-kubernetes-list-type": "map"
+        },
+        "userValidationRules": {
+          "description": "userValidationRules defines the set of rules used to validate claims in a user’s token. These rules determine whether a token subject is considered valid based on its claims. Each rule is evaluated independently. See the TokenUserValidationRule type for more information on rule structure.",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/com.github.openshift.api.config.v1.TokenUserValidationRule"
+          },
+          "x-kubernetes-list-type": "atomic"
         }
       }
     },
@@ -10937,17 +10946,22 @@
       }
     },
     "com.github.openshift.api.config.v1.TokenClaimValidationRule": {
+      "description": "TokenClaimValidationRule represents a validation rule based on token claims. If type is RequiredClaim, requiredClaim must be set. If type is Expression, expressionRule must be set.",
       "type": "object",
       "required": [
         "type"
       ],
       "properties": {
+        "expressionRule": {
+          "description": "expressionRule contains the configuration for the \"Expression\" type. Must be set if type == \"Expression\".",
+          "$ref": "#/definitions/com.github.openshift.api.config.v1.TokenExpressionRule"
+        },
         "requiredClaim": {
-          "description": "requiredClaim is an optional field that configures the required claim and value that the Kubernetes API server will use to validate if an incoming JWT is valid for this identity provider.",
+          "description": "requiredClaim allows configuring a required claim name and its expected value. RequiredClaim is used when type is RequiredClaim.",
           "$ref": "#/definitions/com.github.openshift.api.config.v1.TokenRequiredClaim"
         },
         "type": {
-          "description": "type is an optional field that configures the type of the validation rule.\n\nAllowed values are 'RequiredClaim' and omitted (not provided or an empty string).\n\nWhen set to 'RequiredClaim', the Kubernetes API server will be configured to validate that the incoming JWT contains the required claim and that its value matches the required value.\n\nDefaults to 'RequiredClaim'.",
+          "description": "type is an optional field that configures the type of the validation rule.\n\nAllowed values are \"RequiredClaim\" and \"Expression\".\n\nWhen set to 'RequiredClaim', the Kubernetes API server will be configured to validate that the incoming JWT contains the required claim and that its value matches the required value.\n\nWhen set to 'Expression', the Kubernetes API server will be configured to validate the incoming JWT against the configured CEL expression.\n\nDefaults to \"RequiredClaim\".",
           "type": "string",
           "default": ""
         }
@@ -10973,6 +10987,22 @@
         }
       }
     },
+    "com.github.openshift.api.config.v1.TokenExpressionRule": {
+      "type": "object",
+      "required": [
+        "expression"
+      ],
+      "properties": {
+        "expression": {
+          "description": "expression is a CEL expression evaluated against token claims. The expression must be a non-empty string and no longer than 4096 characters. This field is required.",
+          "type": "string"
+        },
+        "message": {
+          "description": "message allows configuring the human-readable message that is returned from the Kubernetes API server when a token fails validation based on the CEL expression defined in 'expression'. This field is optional.",
+          "type": "string"
+        }
+      }
+    },
     "com.github.openshift.api.config.v1.TokenIssuer": {
       "type": "object",
       "required": [
@@ -10980,6 +11010,10 @@
         "audiences"
       ],
       "properties": {
+        "audienceMatchPolicy": {
+          "description": "audienceMatchPolicy specifies how token audiences are matched. If omitted, the system applies a default policy. Valid values are: - \"MatchAny\": The token is accepted if any of its audiences match any of the configured audiences.",
+          "type": "string"
+        },
         "audiences": {
           "description": "audiences is a required field that configures the acceptable audiences the JWT token, issued by the identity provider, must be issued to. At least one of the entries must match the 'aud' claim in the JWT token.\n\naudiences must contain at least one entry and must not exceed ten entries.",
           "type": "array",
@@ -10988,6 +11022,10 @@
             "default": ""
           },
           "x-kubernetes-list-type": "set"
+        },
+        "discoveryURL": {
+          "description": "discoveryURL is an optional field that, if specified, overrides the default discovery endpoint used to retrieve OIDC configuration metadata. By default, the discovery URL is derived from `url` as \"{url}/.well-known/openid-configuration\".\n\nThe discoveryURL must:\n  - Be a valid absolute URL.\n  - Use the HTTPS scheme.\n  - Not contain query parameters, user info, or fragments.\n  - Be different from the value of `url` (ignoring trailing slashes)",
+          "type": "string"
         },
         "issuerCertificateAuthority": {
           "description": "issuerCertificateAuthority is an optional field that configures the certificate authority, used by the Kubernetes API server, to validate the connection to the identity provider when fetching discovery information.\n\nWhen not specified, the system trust is used.\n\nWhen specified, it must reference a ConfigMap in the openshift-config namespace containing the PEM-encoded CA certificates under the 'ca-bundle.crt' key in the data field of the ConfigMap.",
@@ -11009,7 +11047,7 @@
       ],
       "properties": {
         "claim": {
-          "description": "claim is a required field that configures the name of the required claim. When taken from the JWT claims, claim must be a string value.\n\nclaim must not be an empty string (\"\").",
+          "description": "claim is a name of a required claim. Only claims with string values are supported.",
           "type": "string",
           "default": ""
         },
@@ -11017,6 +11055,23 @@
           "description": "requiredValue is a required field that configures the value that 'claim' must have when taken from the incoming JWT claims. If the value in the JWT claims does not match, the token will be rejected for authentication.\n\nrequiredValue must not be an empty string (\"\").",
           "type": "string",
           "default": ""
+        }
+      }
+    },
+    "com.github.openshift.api.config.v1.TokenUserValidationRule": {
+      "description": "TokenUserValidationRule provides a CEL-based rule used to validate a token subject. Each rule contains a CEL expression that is evaluated against the token’s claims.",
+      "type": "object",
+      "required": [
+        "expression"
+      ],
+      "properties": {
+        "expression": {
+          "description": "expression is a CEL expression that must evaluate to true for the token to be accepted. The expression is evaluated against the token's user information (e.g., username, groups).\n\nIf the expression evaluates to false, the token is rejected. See https://kubernetes.io/docs/reference/using-api/cel/ for CEL syntax. At least one rule must evaluate to true for the token to be considered valid.\n\nThis field must be non-empty and may not exceed 4096 characters.",
+          "type": "string"
+        },
+        "message": {
+          "description": "message is an optional, human-readable message returned by the API server when this validation rule fails. It can help clarify why a token was rejected.",
+          "type": "string"
         }
       }
     },

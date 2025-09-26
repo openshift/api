@@ -258,9 +258,6 @@
                         "name": "NetworkSegmentation"
                     },
                     {
-                        "name": "NodeSwap"
-                    },
-                    {
                         "name": "NutanixMultiSubnets"
                     },
                     {

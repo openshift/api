@@ -258,9 +258,6 @@
                         "name": "NoRegistryClusterOperations"
                     },
                     {
-                        "name": "NodeSwap"
-                    },
-                    {
                         "name": "NutanixMultiSubnets"
                     },
                     {

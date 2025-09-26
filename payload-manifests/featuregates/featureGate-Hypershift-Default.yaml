@@ -194,9 +194,6 @@
                         "name": "OVNObservability"
                     },
                     {
-                        "name": "PreconfiguredUDNAddresses"
-                    },
-                    {
                         "name": "SELinuxMount"
                     },
                     {
@@ -299,6 +296,9 @@
                     },
                     {
                         "name": "PinnedImages"
+                    },
+                    {
+                        "name": "PreconfiguredUDNAddresses"
                     },
                     {
                         "name": "ProcMountType"

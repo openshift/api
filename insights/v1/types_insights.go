@@ -4,6 +4,8 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
+// DataGather provides data gather configuration options and status for the particular Insights data gathering.
+//
 // +genclient
 // +genclient:nonNamespaced
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
@@ -16,8 +18,6 @@ import (
 // +kubebuilder:printcolumn:name=StartTime,type=date,JSONPath=.status.startTime,description=DataGather start time
 // +kubebuilder:printcolumn:name=FinishTime,type=date,JSONPath=.status.finishTime,description=DataGather finish time
 // +kubebuilder:printcolumn:name="Age",type="date",JSONPath=".metadata.creationTimestamp",description="DataGather age"
-//
-// DataGather provides data gather configuration options and status for the particular Insights data gathering.
 //
 // Compatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).
 // +openshift:compatibility-gen:level=1
@@ -58,12 +58,12 @@ type DataGatherSpec struct {
 	Storage Storage `json:"storage,omitempty,omitzero"`
 }
 
-// Gathereres specifies the configuration of the gatherers
+// Gatherers specifies the configuration of the gatherers
 // +kubebuilder:validation:XValidation:rule="has(self.mode) && self.mode == 'Custom' ?  has(self.custom) : !has(self.custom)",message="custom is required when mode is Custom, and forbidden otherwise"
 // +union
 type Gatherers struct {
 	// mode is a required field that specifies the mode for gatherers. Allowed values are All and Custom.
-	// When set to All, all gatherers wil run and gather data.
+	// When set to All, all gatherers will run and gather data.
 	// When set to Custom, the custom configuration from the custom field will be applied.
 	// +unionDiscriminator
 	// +required
@@ -77,7 +77,7 @@ type Gatherers struct {
 	Custom Custom `json:"custom,omitempty,omitzero"`
 }
 
-// custom provides the custom configuration of gatherers
+// Custom provides the custom configuration of gatherers
 type Custom struct {
 	// configs is a required list of gatherers configurations that can be used to enable or disable specific gatherers.
 	// It may not exceed 100 items and each gatherer can be present only once.
@@ -93,7 +93,7 @@ type Custom struct {
 	Configs []GathererConfig `json:"configs,omitempty"`
 }
 
-// gatheringMode defines the valid gathering modes.
+// GatheringMode defines the valid gathering modes.
 // +kubebuilder:validation:Enum=All;Custom
 type GatheringMode string
 
@@ -104,7 +104,7 @@ const (
 	GatheringModeCustom GatheringMode = "Custom"
 )
 
-// storage provides persistent storage configuration options for gathering jobs.
+// Storage provides persistent storage configuration options for gathering jobs.
 // If the type is set to PersistentVolume, then the PersistentVolume must be defined.
 // If the type is set to Ephemeral, then the PersistentVolume must not be defined.
 // +kubebuilder:validation:XValidation:rule="has(self.type) && self.type == 'PersistentVolume' ?  has(self.persistentVolume) : !has(self.persistentVolume)",message="persistentVolume is required when type is PersistentVolume, and forbidden otherwise"
@@ -125,7 +125,7 @@ type Storage struct {
 	PersistentVolume PersistentVolumeConfig `json:"persistentVolume,omitempty,omitzero"`
 }
 
-// storageType declares valid storage types
+// StorageType declares valid storage types
 // +kubebuilder:validation:Enum=PersistentVolume;Ephemeral
 type StorageType string
 
@@ -136,7 +136,7 @@ const (
 	StorageTypeEphemeral StorageType = "Ephemeral"
 )
 
-// persistentVolumeConfig provides configuration options for PersistentVolume storage.
+// PersistentVolumeConfig provides configuration options for PersistentVolume storage.
 type PersistentVolumeConfig struct {
 	// claim is a required field that specifies the configuration of the PersistentVolumeClaim that will be used to store the Insights data archive.
 	// The PersistentVolumeClaim must be created in the openshift-insights namespace.
@@ -153,7 +153,7 @@ type PersistentVolumeConfig struct {
 	MountPath string `json:"mountPath,omitempty"`
 }
 
-// persistentVolumeClaimReference is a reference to a PersistentVolumeClaim.
+// PersistentVolumeClaimReference is a reference to a PersistentVolumeClaim.
 type PersistentVolumeClaimReference struct {
 	// name is the name of the PersistentVolumeClaim that will be used to store the Insights data archive.
 	// It is a string that follows the DNS1123 subdomain format.
@@ -165,7 +165,7 @@ type PersistentVolumeClaimReference struct {
 	Name string `json:"name,omitempty"`
 }
 
-// dataPolicyOption declares valid data policy types
+// DataPolicyOption declares valid data policy types
 // +kubebuilder:validation:Enum=ObfuscateNetworking;WorkloadNames
 type DataPolicyOption string
 
@@ -176,7 +176,7 @@ const (
 	DataPolicyOptionObfuscateWorkloadNames DataPolicyOption = "WorkloadNames"
 )
 
-// gathererConfig allows to configure specific gatherers
+// GathererConfig allows to configure specific gatherers
 type GathererConfig struct {
 	// name is the required name of a specific gatherer.
 	// It may not exceed 256 characters.
@@ -198,7 +198,7 @@ type GathererConfig struct {
 	State GathererState `json:"state,omitempty"`
 }
 
-// state declares valid gatherer state types.
+// GathererState declares valid gatherer state types.
 // +kubebuilder:validation:Enum=Enabled;Disabled
 type GathererState string
 
@@ -249,7 +249,7 @@ type DataGatherStatus struct {
 	// The Progressing condition is used to represent the phase of gathering
 	// When it has a status of False and the reason is DataGatherPending, the gathering has not started yet.
 	// When it has a status of True and reason is Gathering, the gathering is running.
-	// When it has a status of False and reason is GatheringSucceeded, the gathering succesfully finished.
+	// When it has a status of False and reason is GatheringSucceeded, the gathering successfully finished.
 	// When it has a status of False and reason is GatheringFailed, the gathering failed.
 	//
 	// +listType=map
@@ -296,7 +296,7 @@ type DataGatherStatus struct {
 	InsightsReport InsightsReport `json:"insightsReport,omitzero"`
 }
 
-// gathererStatus represents information about a particular
+// GathererStatus represents information about a particular
 // data gatherer.
 type GathererStatus struct {
 	// conditions provide details on the status of each gatherer.
@@ -328,7 +328,7 @@ type GathererStatus struct {
 	LastGatherSeconds *int32 `json:"lastGatherSeconds,omitempty"`
 }
 
-// insightsReport provides Insights health check report based on the most
+// InsightsReport provides Insights health check report based on the most
 // recently sent Insights data.
 type InsightsReport struct {
 	// downloadedTime is a required field that specifies when the Insights report was last downloaded.
@@ -354,9 +354,9 @@ type InsightsReport struct {
 	URI string `json:"uri,omitempty,omitzero"`
 }
 
-// healthCheck represents an Insights health check attributes.
+// HealthCheck represents an Insights health check attributes.
 type HealthCheck struct {
-	// description is required field that provides basic description of the healtcheck.
+	// description is required field that provides basic description of the healthcheck.
 	// It must contain at least 10 characters and may not exceed 2048 characters.
 	// +kubebuilder:validation:MinLength=10
 	// +kubebuilder:validation:MaxLength=2048
@@ -377,7 +377,7 @@ type HealthCheck struct {
 	AdvisorURI string `json:"advisorURI,omitempty"`
 }
 
-// totalRisk defines the valid totalRisk values.
+// TotalRisk defines the valid totalRisk values.
 // +kubebuilder:validation:Enum=Low;Moderate;Important;Critical
 type TotalRisk string
 

@@ -11699,7 +11699,7 @@ func schema_openshift_api_config_v1_Custom(ref common.ReferenceCallback) common.
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
-				Description: "custom provides the custom configuration of gatherers",
+				Description: "Custom provides the custom configuration of gatherers",
 				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
 					"configs": {
@@ -13030,7 +13030,7 @@ func schema_openshift_api_config_v1_GatherConfig(ref common.ReferenceCallback) c
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
-				Description: "gatherConfig provides data gathering configuration options.",
+				Description: "GatherConfig provides data gathering configuration options.",
 				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
 					"dataPolicy": {
@@ -13080,7 +13080,7 @@ func schema_openshift_api_config_v1_GathererConfig(ref common.ReferenceCallback)
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
-				Description: "gathererConfig allows to configure specific gatherers",
+				Description: "GathererConfig allows to configure specific gatherers",
 				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
 					"name": {
@@ -13108,11 +13108,12 @@ func schema_openshift_api_config_v1_Gatherers(ref common.ReferenceCallback) comm
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
-				Type: []string{"object"},
+				Description: "Gatherers specifies the configuration of the gatherers",
+				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
 					"mode": {
 						SchemaProps: spec.SchemaProps{
-							Description: "mode is a required field that specifies the mode for gatherers. Allowed values are All, None, and Custom. When set to All, all gatherers wil run and gather data. When set to None, all gatherers will be disabled and no data will be gathered. When set to Custom, the custom configuration from the custom field will be applied.",
+							Description: "mode is a required field that specifies the mode for gatherers. Allowed values are All, None, and Custom. When set to All, all gatherers will run and gather data. When set to None, all gatherers will be disabled and no data will be gathered. When set to Custom, the custom configuration from the custom field will be applied.",
 							Type:        []string{"string"},
 							Format:      "",
 						},
@@ -15343,7 +15344,7 @@ func schema_openshift_api_config_v1_InsightsDataGather(ref common.ReferenceCallb
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
-				Description: "InsightsDataGather provides data gather configuration options for the the Insights Operator.\n\n\nCompatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).",
+				Description: "InsightsDataGather provides data gather configuration options for the Insights Operator.\n\n\n\nCompatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).",
 				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
 					"kind": {
@@ -18288,7 +18289,7 @@ func schema_openshift_api_config_v1_PersistentVolumeClaimReference(ref common.Re
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
-				Description: "persistentVolumeClaimReference is a reference to a PersistentVolumeClaim.",
+				Description: "PersistentVolumeClaimReference is a reference to a PersistentVolumeClaim.",
 				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
 					"name": {
@@ -18309,7 +18310,7 @@ func schema_openshift_api_config_v1_PersistentVolumeConfig(ref common.ReferenceC
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
-				Description: "persistentVolumeConfig provides configuration options for PersistentVolume storage.",
+				Description: "PersistentVolumeConfig provides configuration options for PersistentVolume storage.",
 				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
 					"claim": {
@@ -20104,7 +20105,7 @@ func schema_openshift_api_config_v1_Storage(ref common.ReferenceCallback) common
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
-				Description: "storage provides persistent storage configuration options for gathering jobs. If the type is set to PersistentVolume, then the PersistentVolume must be defined. If the type is set to Ephemeral, then the PersistentVolume must not be defined.",
+				Description: "Storage provides persistent storage configuration options for gathering jobs. If the type is set to PersistentVolume, then the PersistentVolume must be defined. If the type is set to Ephemeral, then the PersistentVolume must not be defined.",
 				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
 					"type": {
@@ -28597,7 +28598,7 @@ func schema_openshift_api_insights_v1_Custom(ref common.ReferenceCallback) commo
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
-				Description: "custom provides the custom configuration of gatherers",
+				Description: "Custom provides the custom configuration of gatherers",
 				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
 					"configs": {
@@ -28635,7 +28636,7 @@ func schema_openshift_api_insights_v1_DataGather(ref common.ReferenceCallback) c
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
-				Description: "DataGather provides data gather configuration options and status for the particular Insights data gathering.\n\nCompatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).",
+				Description: "DataGather provides data gather configuration options and status for the particular Insights data gathering.\n\n\nCompatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).",
 				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
 					"kind": {
@@ -28804,7 +28805,7 @@ func schema_openshift_api_insights_v1_DataGatherStatus(ref common.ReferenceCallb
 							},
 						},
 						SchemaProps: spec.SchemaProps{
-							Description: "conditions is an optional field that provides details on the status of the gatherer job. It may not exceed 100 items and must not contain duplicates.\n\nThe current condition types are DataUploaded, DataRecorded, DataProcessed, RemoteConfigurationNotAvailable, RemoteConfigurationInvalid\n\nThe DataUploaded condition is used to represent whether or not the archive was successfully uploaded for further processing. When it has a status of True and a reason of Succeeded, the archive was successfully uploaded. When it has a status of Unknown and a reason of NoUploadYet, the upload has not occurred, or there was no data to upload. When it has a status of False and a reason Failed, the upload failed. The accompanying message will include the specific error encountered.\n\nThe DataRecorded condition is used to represent whether or not the archive was successfully recorded. When it has a status of True and a reason of Succeeded, the archive was recorded successfully. When it has a status of Unknown and a reason of NoDataGatheringYet, the data gathering process has not started yet. When it has a status of False and a reason of RecordingFailed, the recording failed and a message will include the specific error encountered.\n\nThe DataProcessed condition is used to represent whether or not the archive was processed by the processing service. When it has a status of True and a reason of Processed, the data was processed successfully. When it has a status of Unknown and a reason of NothingToProcessYet, there is no data to process at the moment. When it has a status of False and a reason of Failure, processing failed and a message will include the specific error encountered.\n\nThe RemoteConfigurationAvailable condition is used to represent whether the remote configuration is available. When it has a status of Unknown and a reason of Unknown or RemoteConfigNotRequestedYet, the state of the remote configuration is unknown—typically at startup. When it has a status of True and a reason of Succeeded, the configuration is available. When it has a status of False and a reason of NoToken, the configuration was disabled by removing the cloud.openshift.com field from the pull secret. When it has a status of False and a reason of DisabledByConfiguration, the configuration was disabled in insightsdatagather.config.openshift.io.\n\nThe RemoteConfigurationValid condition is used to represent whether the remote configuration is valid. When it has a status of Unknown and a reason of Unknown or NoValidationYet, the validity of the remote configuration is unknown—typically at startup. When it has a status of True and a reason of Succeeded, the configuration is valid. When it has a status of False and a reason of Invalid, the configuration is invalid.\n\nThe Progressing condition is used to represent the phase of gathering When it has a status of False and the reason is DataGatherPending, the gathering has not started yet. When it has a status of True and reason is Gathering, the gathering is running. When it has a status of False and reason is GatheringSucceeded, the gathering succesfully finished. When it has a status of False and reason is GatheringFailed, the gathering failed.",
+							Description: "conditions is an optional field that provides details on the status of the gatherer job. It may not exceed 100 items and must not contain duplicates.\n\nThe current condition types are DataUploaded, DataRecorded, DataProcessed, RemoteConfigurationNotAvailable, RemoteConfigurationInvalid\n\nThe DataUploaded condition is used to represent whether or not the archive was successfully uploaded for further processing. When it has a status of True and a reason of Succeeded, the archive was successfully uploaded. When it has a status of Unknown and a reason of NoUploadYet, the upload has not occurred, or there was no data to upload. When it has a status of False and a reason Failed, the upload failed. The accompanying message will include the specific error encountered.\n\nThe DataRecorded condition is used to represent whether or not the archive was successfully recorded. When it has a status of True and a reason of Succeeded, the archive was recorded successfully. When it has a status of Unknown and a reason of NoDataGatheringYet, the data gathering process has not started yet. When it has a status of False and a reason of RecordingFailed, the recording failed and a message will include the specific error encountered.\n\nThe DataProcessed condition is used to represent whether or not the archive was processed by the processing service. When it has a status of True and a reason of Processed, the data was processed successfully. When it has a status of Unknown and a reason of NothingToProcessYet, there is no data to process at the moment. When it has a status of False and a reason of Failure, processing failed and a message will include the specific error encountered.\n\nThe RemoteConfigurationAvailable condition is used to represent whether the remote configuration is available. When it has a status of Unknown and a reason of Unknown or RemoteConfigNotRequestedYet, the state of the remote configuration is unknown—typically at startup. When it has a status of True and a reason of Succeeded, the configuration is available. When it has a status of False and a reason of NoToken, the configuration was disabled by removing the cloud.openshift.com field from the pull secret. When it has a status of False and a reason of DisabledByConfiguration, the configuration was disabled in insightsdatagather.config.openshift.io.\n\nThe RemoteConfigurationValid condition is used to represent whether the remote configuration is valid. When it has a status of Unknown and a reason of Unknown or NoValidationYet, the validity of the remote configuration is unknown—typically at startup. When it has a status of True and a reason of Succeeded, the configuration is valid. When it has a status of False and a reason of Invalid, the configuration is invalid.\n\nThe Progressing condition is used to represent the phase of gathering When it has a status of False and the reason is DataGatherPending, the gathering has not started yet. When it has a status of True and reason is Gathering, the gathering is running. When it has a status of False and reason is GatheringSucceeded, the gathering successfully finished. When it has a status of False and reason is GatheringFailed, the gathering failed.",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -28899,7 +28900,7 @@ func schema_openshift_api_insights_v1_GathererConfig(ref common.ReferenceCallbac
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
-				Description: "gathererConfig allows to configure specific gatherers",
+				Description: "GathererConfig allows to configure specific gatherers",
 				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
 					"name": {
@@ -28927,7 +28928,7 @@ func schema_openshift_api_insights_v1_GathererStatus(ref common.ReferenceCallbac
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
-				Description: "gathererStatus represents information about a particular data gatherer.",
+				Description: "GathererStatus represents information about a particular data gatherer.",
 				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
 					"conditions": {
@@ -28979,12 +28980,12 @@ func schema_openshift_api_insights_v1_Gatherers(ref common.ReferenceCallback) co
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
-				Description: "Gathereres specifies the configuration of the gatherers",
+				Description: "Gatherers specifies the configuration of the gatherers",
 				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
 					"mode": {
 						SchemaProps: spec.SchemaProps{
-							Description: "mode is a required field that specifies the mode for gatherers. Allowed values are All and Custom. When set to All, all gatherers wil run and gather data. When set to Custom, the custom configuration from the custom field will be applied.",
+							Description: "mode is a required field that specifies the mode for gatherers. Allowed values are All and Custom. When set to All, all gatherers will run and gather data. When set to Custom, the custom configuration from the custom field will be applied.",
 							Type:        []string{"string"},
 							Format:      "",
 						},
@@ -29021,12 +29022,12 @@ func schema_openshift_api_insights_v1_HealthCheck(ref common.ReferenceCallback) 
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
-				Description: "healthCheck represents an Insights health check attributes.",
+				Description: "HealthCheck represents an Insights health check attributes.",
 				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
 					"description": {
 						SchemaProps: spec.SchemaProps{
-							Description: "description is required field that provides basic description of the healtcheck. It must contain at least 10 characters and may not exceed 2048 characters.",
+							Description: "description is required field that provides basic description of the healthcheck. It must contain at least 10 characters and may not exceed 2048 characters.",
 							Type:        []string{"string"},
 							Format:      "",
 						},
@@ -29056,7 +29057,7 @@ func schema_openshift_api_insights_v1_InsightsReport(ref common.ReferenceCallbac
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
-				Description: "insightsReport provides Insights health check report based on the most recently sent Insights data.",
+				Description: "InsightsReport provides Insights health check report based on the most recently sent Insights data.",
 				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
 					"downloadedTime": {
@@ -29151,7 +29152,7 @@ func schema_openshift_api_insights_v1_PersistentVolumeClaimReference(ref common.
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
-				Description: "persistentVolumeClaimReference is a reference to a PersistentVolumeClaim.",
+				Description: "PersistentVolumeClaimReference is a reference to a PersistentVolumeClaim.",
 				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
 					"name": {
@@ -29172,7 +29173,7 @@ func schema_openshift_api_insights_v1_PersistentVolumeConfig(ref common.Referenc
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
-				Description: "persistentVolumeConfig provides configuration options for PersistentVolume storage.",
+				Description: "PersistentVolumeConfig provides configuration options for PersistentVolume storage.",
 				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
 					"claim": {
@@ -29202,7 +29203,7 @@ func schema_openshift_api_insights_v1_Storage(ref common.ReferenceCallback) comm
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
-				Description: "storage provides persistent storage configuration options for gathering jobs. If the type is set to PersistentVolume, then the PersistentVolume must be defined. If the type is set to Ephemeral, then the PersistentVolume must not be defined.",
+				Description: "Storage provides persistent storage configuration options for gathering jobs. If the type is set to PersistentVolume, then the PersistentVolume must be defined. If the type is set to Ephemeral, then the PersistentVolume must not be defined.",
 				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
 					"type": {

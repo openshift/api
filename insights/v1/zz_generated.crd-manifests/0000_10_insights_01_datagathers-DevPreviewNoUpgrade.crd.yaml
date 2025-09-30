@@ -67,7 +67,7 @@ spec:
                   When set to WorkloadNames, the gathered data about cluster resources will not contain the workload names for your deployments. Resources UIDs will be used instead.
                   When omitted no obfuscation is applied.
                 items:
-                  description: dataPolicyOption declares valid data policy types
+                  description: DataPolicyOption declares valid data policy types
                   enum:
                   - ObfuscateNetworking
                   - WorkloadNames
@@ -99,7 +99,7 @@ spec:
                           Run the following command to get the names of last active gatherers:
                           "oc get insightsoperators.operator.openshift.io cluster -o json | jq '.status.gatherStatus.gatherers[].name'"
                         items:
-                          description: gathererConfig allows to configure specific
+                          description: GathererConfig allows to configure specific
                             gatherers
                           properties:
                             name:
@@ -146,7 +146,7 @@ spec:
                   mode:
                     description: |-
                       mode is a required field that specifies the mode for gatherers. Allowed values are All and Custom.
-                      When set to All, all gatherers wil run and gather data.
+                      When set to All, all gatherers will run and gather data.
                       When set to Custom, the custom configuration from the custom field will be applied.
                     enum:
                     - All
@@ -268,7 +268,7 @@ spec:
                   The Progressing condition is used to represent the phase of gathering
                   When it has a status of False and the reason is DataGatherPending, the gathering has not started yet.
                   When it has a status of True and reason is Gathering, the gathering is running.
-                  When it has a status of False and reason is GatheringSucceeded, the gathering succesfully finished.
+                  When it has a status of False and reason is GatheringSucceeded, the gathering successfully finished.
                   When it has a status of False and reason is GatheringFailed, the gathering failed.
                 items:
                   description: Condition contains details for one aspect of the current
@@ -342,7 +342,7 @@ spec:
                   in the last gathering.
                 items:
                   description: |-
-                    gathererStatus represents information about a particular
+                    GathererStatus represents information about a particular
                     data gatherer.
                   properties:
                     conditions:
@@ -458,7 +458,7 @@ spec:
                       recommendations, which serve as proactive notifications for potential issues in the cluster.
                       When omitted, it means that there are no active recommendations in the cluster.
                     items:
-                      description: healthCheck represents an Insights health check
+                      description: HealthCheck represents an Insights health check
                         attributes.
                       properties:
                         advisorURI:
@@ -473,7 +473,7 @@ spec:
                             rule: isURL(self) && url(self).getScheme() == "https"
                         description:
                           description: |-
-                            description is required field that provides basic description of the healtcheck.
+                            description is required field that provides basic description of the healthcheck.
                             It must contain at least 10 characters and may not exceed 2048 characters.
                           maxLength: 2048
                           minLength: 10

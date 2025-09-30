@@ -2,11 +2,11 @@ package v1
 
 import metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 
+// InsightsDataGather provides data gather configuration options for the Insights Operator.
+//
 // +genclient
 // +genclient:nonNamespaced
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
-//
-// InsightsDataGather provides data gather configuration options for the the Insights Operator.
 //
 // +kubebuilder:object:root=true
 // +kubebuilder:resource:path=insightsdatagathers,scope=Cluster
@@ -34,7 +34,7 @@ type InsightsDataGatherSpec struct {
 	GatherConfig GatherConfig `json:"gatherConfig,omitempty,omitzero"`
 }
 
-// gatherConfig provides data gathering configuration options.
+// GatherConfig provides data gathering configuration options.
 type GatherConfig struct {
 	// dataPolicy is an optional list of DataPolicyOptions that allows user to enable additional obfuscation of the Insights archive data.
 	// It may not exceed 2 items and must not contain duplicates.
@@ -57,11 +57,12 @@ type GatherConfig struct {
 	Storage Storage `json:"storage,omitempty,omitzero"`
 }
 
+// Gatherers specifies the configuration of the gatherers
 // +kubebuilder:validation:XValidation:rule="has(self.mode) && self.mode == 'Custom' ?  has(self.custom) : !has(self.custom)",message="custom is required when mode is Custom, and forbidden otherwise"
 // +union
 type Gatherers struct {
 	// mode is a required field that specifies the mode for gatherers. Allowed values are All, None, and Custom.
-	// When set to All, all gatherers wil run and gather data.
+	// When set to All, all gatherers will run and gather data.
 	// When set to None, all gatherers will be disabled and no data will be gathered.
 	// When set to Custom, the custom configuration from the custom field will be applied.
 	// +unionDiscriminator
@@ -76,7 +77,7 @@ type Gatherers struct {
 	Custom Custom `json:"custom,omitempty,omitzero"`
 }
 
-// custom provides the custom configuration of gatherers
+// Custom provides the custom configuration of gatherers
 type Custom struct {
 	// configs is a required list of gatherers configurations that can be used to enable or disable specific gatherers.
 	// It may not exceed 100 items and each gatherer can be present only once.
@@ -92,7 +93,7 @@ type Custom struct {
 	Configs []GathererConfig `json:"configs,omitempty"`
 }
 
-// gatheringMode defines the valid gathering modes.
+// GatheringMode defines the valid gathering modes.
 // +kubebuilder:validation:Enum=All;None;Custom
 type GatheringMode string
 
@@ -105,7 +106,7 @@ const (
 	GatheringModeCustom GatheringMode = "Custom"
 )
 
-// dataPolicyOption declares valid data policy options
+// DataPolicyOption declares valid data policy options
 // +kubebuilder:validation:Enum=ObfuscateNetworking;WorkloadNames
 type DataPolicyOption string
 
@@ -116,7 +117,7 @@ const (
 	DataPolicyOptionObfuscateWorkloadNames DataPolicyOption = "WorkloadNames"
 )
 
-// storage provides persistent storage configuration options for gathering jobs.
+// Storage provides persistent storage configuration options for gathering jobs.
 // If the type is set to PersistentVolume, then the PersistentVolume must be defined.
 // If the type is set to Ephemeral, then the PersistentVolume must not be defined.
 // +kubebuilder:validation:XValidation:rule="has(self.type) && self.type == 'PersistentVolume' ?  has(self.persistentVolume) : !has(self.persistentVolume)",message="persistentVolume is required when type is PersistentVolume, and forbidden otherwise"
@@ -136,7 +137,7 @@ type Storage struct {
 	PersistentVolume PersistentVolumeConfig `json:"persistentVolume,omitempty,omitzero"`
 }
 
-// storageType declares valid storage types
+// StorageType declares valid storage types
 // +kubebuilder:validation:Enum=PersistentVolume;Ephemeral
 type StorageType string
 
@@ -147,7 +148,7 @@ const (
 	StorageTypeEphemeral StorageType = "Ephemeral"
 )
 
-// persistentVolumeConfig provides configuration options for PersistentVolume storage.
+// PersistentVolumeConfig provides configuration options for PersistentVolume storage.
 type PersistentVolumeConfig struct {
 	// claim is a required field that specifies the configuration of the PersistentVolumeClaim that will be used to store the Insights data archive.
 	// The PersistentVolumeClaim must be created in the openshift-insights namespace.
@@ -164,7 +165,7 @@ type PersistentVolumeConfig struct {
 	MountPath string `json:"mountPath,omitempty"`
 }
 
-// persistentVolumeClaimReference is a reference to a PersistentVolumeClaim.
+// PersistentVolumeClaimReference is a reference to a PersistentVolumeClaim.
 type PersistentVolumeClaimReference struct {
 	// name is the name of the PersistentVolumeClaim that will be used to store the Insights data archive.
 	// It is a string that follows the DNS1123 subdomain format.
@@ -176,7 +177,7 @@ type PersistentVolumeClaimReference struct {
 	Name string `json:"name,omitempty"`
 }
 
-// gathererConfig allows to configure specific gatherers
+// GathererConfig allows to configure specific gatherers
 type GathererConfig struct {
 	// name is the required name of a specific gatherer.
 	// It may not exceed 256 characters.
@@ -198,7 +199,7 @@ type GathererConfig struct {
 	State GathererState `json:"state,omitempty"`
 }
 
-// state declares valid gatherer state types.
+// GathererState declares valid gatherer state types.
 // +kubebuilder:validation:Enum=Enabled;Disabled
 type GathererState string
 

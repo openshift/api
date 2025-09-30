@@ -21,7 +21,7 @@ spec:
     schema:
       openAPIV3Schema:
         description: |-
-          InsightsDataGather provides data gather configuration options for the the Insights Operator.
+          InsightsDataGather provides data gather configuration options for the Insights Operator.
 
           Compatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).
         properties:
@@ -59,7 +59,7 @@ spec:
                       When set to WorkloadNames, the gathered data about cluster resources will not contain the workload names for your deployments. Resources UIDs will be used instead.
                       When omitted no obfuscation is applied.
                     items:
-                      description: dataPolicyOption declares valid data policy options
+                      description: DataPolicyOption declares valid data policy options
                       enum:
                       - ObfuscateNetworking
                       - WorkloadNames
@@ -91,7 +91,7 @@ spec:
                               Run the following command to get the names of last active gatherers:
                               "oc get insightsoperators.operator.openshift.io cluster -o json | jq '.status.gatherStatus.gatherers[].name'"
                             items:
-                              description: gathererConfig allows to configure specific
+                              description: GathererConfig allows to configure specific
                                 gatherers
                               properties:
                                 name:
@@ -139,7 +139,7 @@ spec:
                       mode:
                         description: |-
                           mode is a required field that specifies the mode for gatherers. Allowed values are All, None, and Custom.
-                          When set to All, all gatherers wil run and gather data.
+                          When set to All, all gatherers will run and gather data.
                           When set to None, all gatherers will be disabled and no data will be gathered.
                           When set to Custom, the custom configuration from the custom field will be applied.
                         enum:

@@ -53673,7 +53673,7 @@ func schema_openshift_api_operator_v1_MachineManager(ref common.ReferenceCallbac
 				Properties: map[string]spec.Schema{
 					"resource": {
 						SchemaProps: spec.SchemaProps{
-							Description: "resource is the machine management resource's type. The only current valid value is machinesets. machinesets means that the machine manager will only register resources of the kind MachineSet.",
+							Description: "resource is the machine management resource's type. Valid values are machinesets and controlplanemachinesets. machinesets means that the machine manager will only register resources of the kind MachineSet. controlplanemachinesets means that the machine manager will only register resources of the kind ControlPlaneMachineSet.",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -53711,7 +53711,7 @@ func schema_openshift_api_operator_v1_MachineManagerSelector(ref common.Referenc
 				Properties: map[string]spec.Schema{
 					"mode": {
 						SchemaProps: spec.SchemaProps{
-							Description: "mode determines how machine managers will be selected for updates. Valid values are All and Partial. All means that every resource matched by the machine manager will be updated. Partial requires specified selector(s) and allows customisation of which resources matched by the machine manager will be updated. None means that every resource matched by the machine manager will not be updated.",
+							Description: "mode determines how machine managers will be selected for updates. Valid values are All, Partial and None. All means that every resource matched by the machine manager will be updated. Partial requires specified selector(s) and allows customisation of which resources matched by the machine manager will be updated. Partial is not permitted for the controlplanemachinesets resource type as they are a singleton within the cluster. None means that every resource matched by the machine manager will not be updated.",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",

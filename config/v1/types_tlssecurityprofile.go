@@ -213,6 +213,14 @@ type TLSProfileSpec struct {
 	//
 	// +listType=atomic
 	Ciphers []string `json:"ciphers"`
+	// curves is used to specify the elliptic curves that are used during
+	// the TLS handshake.  Operators may remove entries their operands do
+	// not support.  For example, to use X25519 and P-256 (yaml):
+	//
+	//   curves:
+	//     - X25519
+	//     - P-256
+	Curves []string `json:"curves.omitempty"`
 	// minTLSVersion is used to specify the minimal version of the TLS protocol
 	// that is negotiated during the TLS handshake. For example, to use TLS
 	// versions 1.1, 1.2 and 1.3 (yaml):

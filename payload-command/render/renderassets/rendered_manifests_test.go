@@ -104,7 +104,6 @@ status:
     - name: MachineConfigNodes
     - name: MaxUnavailableStatefulSet
     - name: MetricsServer
-    - name: NodeSwap
     - name: RouteExternalCertificate
     - name: SigstoreImageVerification
     - name: ValidatingAdmissionPolicy

@@ -98,10 +98,10 @@
                         "name": "Example2"
                     },
                     {
-                        "name": "ExternalOIDCWithNewAuthConfigFields"
+                        "name": "ExternalOIDCWithUIDAndExtraClaimMappings"
                     },
                     {
-                        "name": "ExternalOIDCWithUIDAndExtraClaimMappings"
+                        "name": "ExternalOIDCWithUpstreamParity"
                     },
                     {
                         "name": "ExternalSnapshotMetadata"

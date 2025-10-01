@@ -141,10 +141,10 @@
                         "name": "ExternalOIDC"
                     },
                     {
-                        "name": "ExternalOIDCWithNewAuthConfigFields"
+                        "name": "ExternalOIDCWithUIDAndExtraClaimMappings"
                     },
                     {
-                        "name": "ExternalOIDCWithUIDAndExtraClaimMappings"
+                        "name": "ExternalOIDCWithUpstreamParity"
                     },
                     {
                         "name": "GCPClusterHostedDNS"

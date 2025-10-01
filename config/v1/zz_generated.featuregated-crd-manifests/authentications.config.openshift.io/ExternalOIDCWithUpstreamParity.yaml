@@ -6,7 +6,7 @@ metadata:
     api.openshift.io/filename-cvo-runlevel: "0000_10"
     api.openshift.io/filename-operator: config-operator
     api.openshift.io/filename-ordering: "01"
-    feature-gate.release.openshift.io/ExternalOIDCWithNewAuthConfigFields: "true"
+    feature-gate.release.openshift.io/ExternalOIDCWithUpstreamParity: "true"
     release.openshift.io/bootstrap-required: "true"
   name: authentications.config.openshift.io
 spec:
@@ -279,14 +279,6 @@ spec:
                             and forbidden otherwise
                           rule: 'has(self.type) && self.type == ''Expression'' ? has(self.expressionRule)
                             : !has(self.expressionRule)'
-                        - message: expressionRule must be set when type is 'Expression',
-                            and forbidden otherwise
-                          rule: 'has(self.type) && self.type == ''Expression'' ? has(self.expressionRule)
-                            : !has(self.expressionRule)'
-                        - message: requiredClaim must be set when type is 'RequiredClaim',
-                            and forbidden otherwise
-                          rule: 'has(self.type) && self.type == ''RequiredClaim''
-                            ? has(self.requiredClaim) : !has(self.requiredClaim)'
                         - message: requiredClaim must be set when type is 'RequiredClaim',
                             and forbidden otherwise
                           rule: 'has(self.type) && self.type == ''RequiredClaim''

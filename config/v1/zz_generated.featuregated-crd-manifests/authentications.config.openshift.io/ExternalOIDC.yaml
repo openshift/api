@@ -260,10 +260,6 @@ spec:
                             and forbidden otherwise
                           rule: 'has(self.type) && self.type == ''RequiredClaim''
                             ? has(self.requiredClaim) : !has(self.requiredClaim)'
-                        - message: requiredClaim must be set when type is 'RequiredClaim',
-                            and forbidden otherwise
-                          rule: 'has(self.type) && self.type == ''RequiredClaim''
-                            ? has(self.requiredClaim) : !has(self.requiredClaim)'
                       type: array
                       x-kubernetes-list-type: atomic
                     issuer:

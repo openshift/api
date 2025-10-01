@@ -477,7 +477,7 @@ var (
 								enableForClusterProfile(Hypershift, configv1.DevPreviewNoUpgrade, configv1.TechPreviewNoUpgrade).
 								mustRegister()
 
-	FeatureGateExternalOIDCWithNewAuthConfigFields = newFeatureGate("ExternalOIDCWithNewAuthConfigFields").
+	FeatureGateExternalOIDCWithUpstreamParity = newFeatureGate("ExternalOIDCWithUpstreamParity").
 							reportProblemsToJiraComponent("authentication").
 							contactPerson("saldawam").
 							productScope(ocpSpecific).

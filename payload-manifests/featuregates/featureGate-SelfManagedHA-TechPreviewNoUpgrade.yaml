@@ -144,6 +144,9 @@
                         "name": "ExternalOIDCWithUIDAndExtraClaimMappings"
                     },
                     {
+                        "name": "ExternalOIDCWithUpstreamParity"
+                    },
+                    {
                         "name": "GCPClusterHostedDNS"
                     },
                     {

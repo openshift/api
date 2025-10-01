@@ -449,6 +449,7 @@ var map_OIDCProvider = map[string]string{
 	"oidcClients":          "oidcClients is an optional field that configures how on-cluster, platform clients should request tokens from the identity provider. oidcClients must not exceed 20 entries and entries must have unique namespace/name pairs.",
 	"claimMappings":        "claimMappings is a required field that configures the rules to be used by the Kubernetes API server for translating claims in a JWT token, issued by the identity provider, to a cluster identity.",
 	"claimValidationRules": "claimValidationRules is an optional field that configures the rules to be used by the Kubernetes API server for validating the claims in a JWT token issued by the identity provider.\n\nValidation rules are joined via an AND operation.",
+	"userValidationRules":  "userValidationRules defines the set of rules used to validate claims in a user’s token. These rules determine whether a token subject is considered valid based on its claims. Each rule is evaluated independently. See the TokenUserValidationRule type for more information on rule structure.",
 }
 
 func (OIDCProvider) SwaggerDoc() map[string]string {
@@ -495,18 +496,31 @@ func (TokenClaimOrExpressionMapping) SwaggerDoc() map[string]string {
 }
 
 var map_TokenClaimValidationRule = map[string]string{
-	"type":          "type is an optional field that configures the type of the validation rule.\n\nAllowed values are 'RequiredClaim' and omitted (not provided or an empty string).\n\nWhen set to 'RequiredClaim', the Kubernetes API server will be configured to validate that the incoming JWT contains the required claim and that its value matches the required value.\n\nDefaults to 'RequiredClaim'.",
-	"requiredClaim": "requiredClaim is an optional field that configures the required claim and value that the Kubernetes API server will use to validate if an incoming JWT is valid for this identity provider.",
+	"":               "TokenClaimValidationRule represents a validation rule based on token claims. If type is RequiredClaim, requiredClaim must be set. If type is Expression, expressionRule must be set.",
+	"type":           "type is an optional field that configures the type of the validation rule.\n\nAllowed values are \"RequiredClaim\" and \"Expression\".\n\nWhen set to 'RequiredClaim', the Kubernetes API server will be configured to validate that the incoming JWT contains the required claim and that its value matches the required value.\n\nWhen set to 'Expression', the Kubernetes API server will be configured to validate the incoming JWT against the configured CEL expression.\n\nDefaults to \"RequiredClaim\".",
+	"requiredClaim":  "requiredClaim allows configuring a required claim name and its expected value. RequiredClaim is used when type is RequiredClaim.",
+	"expressionRule": "expressionRule contains the configuration for the \"Expression\" type. Must be set if type == \"Expression\".",
 }
 
 func (TokenClaimValidationRule) SwaggerDoc() map[string]string {
 	return map_TokenClaimValidationRule
 }
 
+var map_TokenExpressionRule = map[string]string{
+	"expression": "expression is a CEL expression evaluated against token claims. The expression must be a non-empty string and no longer than 4096 characters. This field is required.",
+	"message":    "message allows configuring the human-readable message that is returned from the Kubernetes API server when a token fails validation based on the CEL expression defined in 'expression'. This field is optional.",
+}
+
+func (TokenExpressionRule) SwaggerDoc() map[string]string {
+	return map_TokenExpressionRule
+}
+
 var map_TokenIssuer = map[string]string{
 	"issuerURL":                  "issuerURL is a required field that configures the URL used to issue tokens by the identity provider. The Kubernetes API server determines how authentication tokens should be handled by matching the 'iss' claim in the JWT to the issuerURL of configured identity providers.\n\nMust be at least 1 character and must not exceed 512 characters in length. Must be a valid URL that uses the 'https' scheme and does not contain a query, fragment or user.",
 	"audiences":                  "audiences is a required field that configures the acceptable audiences the JWT token, issued by the identity provider, must be issued to. At least one of the entries must match the 'aud' claim in the JWT token.\n\naudiences must contain at least one entry and must not exceed ten entries.",
 	"issuerCertificateAuthority": "issuerCertificateAuthority is an optional field that configures the certificate authority, used by the Kubernetes API server, to validate the connection to the identity provider when fetching discovery information.\n\nWhen not specified, the system trust is used.\n\nWhen specified, it must reference a ConfigMap in the openshift-config namespace containing the PEM-encoded CA certificates under the 'ca-bundle.crt' key in the data field of the ConfigMap.",
+	"discoveryURL":               "discoveryURL is an optional field that, if specified, overrides the default discovery endpoint used to retrieve OIDC configuration metadata. By default, the discovery URL is derived from `url` as \"{url}/.well-known/openid-configuration\".\n\nThe discoveryURL must:\n  - Be a valid absolute URL.\n  - Use the HTTPS scheme.\n  - Not contain query parameters, user info, or fragments.\n  - Be different from the value of `url` (ignoring trailing slashes)",
+	"audienceMatchPolicy":        "audienceMatchPolicy specifies how token audiences are matched. If omitted, the system applies a default policy. Valid values are: - \"MatchAny\": The token is accepted if any of its audiences match any of the configured audiences.",
 }
 
 func (TokenIssuer) SwaggerDoc() map[string]string {
@@ -514,12 +528,22 @@ func (TokenIssuer) SwaggerDoc() map[string]string {
 }
 
 var map_TokenRequiredClaim = map[string]string{
-	"claim":         "claim is a required field that configures the name of the required claim. When taken from the JWT claims, claim must be a string value.\n\nclaim must not be an empty string (\"\").",
+	"claim":         "claim is a name of a required claim. Only claims with string values are supported.",
 	"requiredValue": "requiredValue is a required field that configures the value that 'claim' must have when taken from the incoming JWT claims. If the value in the JWT claims does not match, the token will be rejected for authentication.\n\nrequiredValue must not be an empty string (\"\").",
 }
 
 func (TokenRequiredClaim) SwaggerDoc() map[string]string {
 	return map_TokenRequiredClaim
+}
+
+var map_TokenUserValidationRule = map[string]string{
+	"":           "TokenUserValidationRule provides a CEL-based rule used to validate a token subject. Each rule contains a CEL expression that is evaluated against the token’s claims.",
+	"expression": "expression is a CEL expression that must evaluate to true for the token to be accepted. The expression is evaluated against the token's user information (e.g., username, groups).\n\nIf the expression evaluates to false, the token is rejected. See https://kubernetes.io/docs/reference/using-api/cel/ for CEL syntax. At least one rule must evaluate to true for the token to be considered valid.\n\nThis field must be non-empty and may not exceed 4096 characters.",
+	"message":    "message is an optional, human-readable message returned by the API server when this validation rule fails. It can help clarify why a token was rejected.",
+}
+
+func (TokenUserValidationRule) SwaggerDoc() map[string]string {
+	return map_TokenUserValidationRule
 }
 
 var map_UsernameClaimMapping = map[string]string{

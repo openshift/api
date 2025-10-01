@@ -550,7 +550,7 @@ var (
 					contactPerson("jspeed").
 					productScope(ocpSpecific).
 					enhancementPR(legacyFeatureGateWithoutEnhancement).
-					enableIn(configv1.DevPreviewNoUpgrade, configv1.TechPreviewNoUpgrade).
+					enableIn(configv1.DevPreviewNoUpgrade, configv1.TechPreviewNoUpgrade, configv1.OKD).
 					mustRegister()
 
 	FeatureGateClusterAPIMachineManagementVSphere = newFeatureGate("ClusterAPIMachineManagementVSphere").
@@ -784,7 +784,7 @@ var (
 							mustRegister()
 
 	FeatureGateImageVolume = newFeatureGate("ImageVolume").
-				reportProblemsToJiraComponent("Node").
+			reportProblemsToJiraComponent("Node").
 				contactPerson("haircommander").
 				productScope(kubernetes).
 				enhancementPR("https://github.com/openshift/enhancements/pull/1792").

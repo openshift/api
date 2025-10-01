@@ -307,9 +307,6 @@
                         "name": "ServiceAccountTokenNodeBinding"
                     },
                     {
-                        "name": "SetEIPForNLBIngressController"
-                    },
-                    {
                         "name": "SigstoreImageVerification"
                     },
                     {

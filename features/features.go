@@ -579,14 +579,6 @@ var (
 						enhancementPR(legacyFeatureGateWithoutEnhancement).
 						mustRegister()
 
-	FeatureGateIngressControllerLBSubnetsAWS = newFeatureGate("IngressControllerLBSubnetsAWS").
-							reportProblemsToJiraComponent("Routing").
-							contactPerson("miciah").
-							productScope(ocpSpecific).
-							enhancementPR(legacyFeatureGateWithoutEnhancement).
-							enableIn(configv1.Default, configv1.DevPreviewNoUpgrade, configv1.TechPreviewNoUpgrade).
-							mustRegister()
-
 	FeatureGateImageStreamImportMode = newFeatureGate("ImageStreamImportMode").
 						reportProblemsToJiraComponent("Multi-Arch").
 						contactPerson("psundara").

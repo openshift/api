@@ -97,6 +97,7 @@ spec:
                       - Ingress
                       - CloudControllerManager
                       - OperatorLifecycleManagerV1
+                      - OptionalMonitoring
                       type: string
                     type: array
                     x-kubernetes-list-type: atomic
@@ -342,6 +343,7 @@ spec:
                       - Ingress
                       - CloudControllerManager
                       - OperatorLifecycleManagerV1
+                      - OptionalMonitoring
                       type: string
                     type: array
                     x-kubernetes-list-type: atomic
@@ -369,6 +371,7 @@ spec:
                       - Ingress
                       - CloudControllerManager
                       - OperatorLifecycleManagerV1
+                      - OptionalMonitoring
                       type: string
                     type: array
                     x-kubernetes-list-type: atomic

@@ -225,6 +225,9 @@
                         "name": "MultiDiskSetup"
                     },
                     {
+                        "name": "MutableCSINodeAllocatableCount"
+                    },
+                    {
                         "name": "MutatingAdmissionPolicy"
                     },
                     {

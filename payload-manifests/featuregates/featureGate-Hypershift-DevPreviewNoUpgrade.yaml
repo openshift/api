@@ -276,6 +276,12 @@
                         "name": "SigstoreImageVerificationPKI"
                     },
                     {
+                        "name": "StreamingCollectionEncodingToJSON"
+                    },
+                    {
+                        "name": "StreamingCollectionEncodingToProtobuf"
+                    },
+                    {
                         "name": "TranslateStreamCloseWebsocketRequests"
                     },
                     {

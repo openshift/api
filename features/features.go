@@ -808,6 +808,22 @@ var (
 		enableIn(configv1.DevPreviewNoUpgrade).
 		mustRegister()
 
+	FeatureStreamingCollectionEncodingToJSON = newFeatureGate("StreamingCollectionEncodingToJSON").
+		reportProblemsToJiraComponent("kube-apiserver").
+		contactPerson("rofeldma").
+		productScope(kubernetes).
+		enhancementPR("https://github.com/kubernetes/enhancements/issues/5116").
+		enableIn(configv1.DevPreviewNoUpgrade, configv1.TechPreviewNoUpgrade).
+		mustRegister()
+
+	FeatureStreamingCollectionEncodingToProtobuf = newFeatureGate("StreamingCollectionEncodingToProtobuf").
+		reportProblemsToJiraComponent("kube-apiserver").
+		contactPerson("rofeldma").
+		productScope(kubernetes).
+		enhancementPR("https://github.com/kubernetes/enhancements/issues/5116").
+		enableIn(configv1.DevPreviewNoUpgrade, configv1.TechPreviewNoUpgrade).
+		mustRegister()
+
 	FeatureGateGatewayAPIController = newFeatureGate("GatewayAPIController").
 					reportProblemsToJiraComponent("Routing").
 					contactPerson("miciah").

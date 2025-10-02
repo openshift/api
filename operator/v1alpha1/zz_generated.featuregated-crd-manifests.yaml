@@ -62,7 +62,8 @@ imagecontentsourcepolicies.operator.openshift.io:
   PluralName: imagecontentsourcepolicies
   PrinterColumns: []
   Scope: Cluster
-  ShortNames: null
+  ShortNames:
+  - icsp
   TopLevelFeatureGates: []
   Version: v1alpha1
 

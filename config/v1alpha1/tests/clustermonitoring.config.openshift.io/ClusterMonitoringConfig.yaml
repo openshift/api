@@ -351,3 +351,396 @@ tests:
               - name: "example.com/quux"
                 request: "1"
       expectedError: 'spec.metricsServerConfig.resources: Too many: 11: must have at most 10 items'
+    - name: Should be able to create a minimal KubeStateMetricsConfig
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: "Disabled"
+          kubeStateMetricsConfig:
+            nodeSelector:
+              kubernetes.io/os: linux
+      expected: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: "Disabled"
+          kubeStateMetricsConfig:
+            nodeSelector:
+              kubernetes.io/os: linux
+    - name: Should accept KubeStateMetricsConfig with comprehensive ContainerResource array
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: "Disabled"
+          kubeStateMetricsConfig:
+            resources:
+              - name: "cpu"
+                request: "100m"
+                limit: "500m"
+              - name: "memory"
+                request: "128Mi"
+                limit: "512Mi"
+              - name: "ephemeral-storage"
+                request: "1Gi"
+                limit: "2Gi"
+      expected: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: "Disabled"
+          kubeStateMetricsConfig:
+            resources:
+              - name: "cpu"
+                request: "100m"
+                limit: "500m"
+              - name: "memory"
+                request: "128Mi"
+                limit: "512Mi"
+              - name: "ephemeral-storage"
+                request: "1Gi"
+                limit: "2Gi"
+    - name: Should accept KubeStateMetricsConfig with only requests
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: "Disabled"
+          kubeStateMetricsConfig:
+            resources:
+              - name: "cpu"
+                request: "200m"
+              - name: "memory"
+                request: "256Mi"
+      expected: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: "Disabled"
+          kubeStateMetricsConfig:
+            resources:
+              - name: "cpu"
+                request: "200m"
+              - name: "memory"
+                request: "256Mi"
+    - name: Should accept KubeStateMetricsConfig with only limits
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: "Disabled"
+          kubeStateMetricsConfig:
+            resources:
+              - name: "cpu"
+                limit: "1"
+              - name: "memory"
+                limit: "1Gi"
+      expected: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: "Disabled"
+          kubeStateMetricsConfig:
+            resources:
+              - name: "cpu"
+                limit: "1"
+              - name: "memory"
+                limit: "1Gi"
+    - name: Should accept KubeStateMetricsConfig with tolerations
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: "Disabled"
+          kubeStateMetricsConfig:
+            tolerations:
+              - key: "node-role.kubernetes.io/master"
+                operator: "Exists"
+                effect: "NoSchedule"
+      expected: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: "Disabled"
+          kubeStateMetricsConfig:
+            tolerations:
+              - key: "node-role.kubernetes.io/master"
+                operator: "Exists"
+                effect: "NoSchedule"
+    - name: Should accept KubeStateMetricsConfig with topology spread constraints
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: "Disabled"
+          kubeStateMetricsConfig:
+            topologySpreadConstraints:
+              - maxSkew: 1
+                topologyKey: "topology.kubernetes.io/zone"
+                whenUnsatisfiable: "DoNotSchedule"
+                labelSelector:
+                  matchLabels:
+                    app: kube-state-metrics
+      expected: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: "Disabled"
+          kubeStateMetricsConfig:
+            topologySpreadConstraints:
+              - maxSkew: 1
+                topologyKey: "topology.kubernetes.io/zone"
+                whenUnsatisfiable: "DoNotSchedule"
+                labelSelector:
+                  matchLabels:
+                    app: kube-state-metrics
+    - name: Should reject KubeStateMetricsConfig with limit less than request
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: "Disabled"
+          kubeStateMetricsConfig:
+            resources:
+              - name: "cpu"
+                request: "500m"
+                limit: "200m"
+      expectedError: 'spec.kubeStateMetricsConfig.resources[0]: Invalid value: "object": limit must be greater than or equal to request'
+    - name: Should reject KubeStateMetricsConfig with more than 10 resource items
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: "Disabled"
+          kubeStateMetricsConfig:
+            resources:
+              - name: "cpu"
+                request: "100m"
+              - name: "memory"
+                request: "64Mi"
+              - name: "hugepages-2Mi"
+                request: "32Mi"
+              - name: "hugepages-1Gi"
+                request: "1Gi"
+              - name: "ephemeral-storage"
+                request: "1Gi"
+              - name: "nvidia.com/gpu"
+                request: "1"
+              - name: "example.com/foo"
+                request: "1"
+              - name: "example.com/bar"
+                request: "1"
+              - name: "example.com/baz"
+                request: "1"
+              - name: "example.com/qux"
+                request: "1"
+              - name: "example.com/quux"
+                request: "1"
+      expectedError: 'spec.kubeStateMetricsConfig.resources: Too many: 11: must have at most 10 items'
+    - name: Should reject KubeStateMetricsConfig with empty object
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: "Disabled"
+          kubeStateMetricsConfig: {}
+      expectedError: 'spec.kubeStateMetricsConfig: Invalid value: 0: spec.kubeStateMetricsConfig in body should have at least 1 properties'
+    - name: Should accept KubeStateMetricsConfig with valid nodeSelector
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: "Disabled"
+          kubeStateMetricsConfig:
+            nodeSelector:
+              kubernetes.io/os: linux
+              node-role.kubernetes.io/worker: ""
+      expected: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: "Disabled"
+          kubeStateMetricsConfig:
+            nodeSelector:
+              kubernetes.io/os: linux
+              node-role.kubernetes.io/worker: ""
+    - name: Should accept KubeStateMetricsConfig with valid resources
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: "Disabled"
+          kubeStateMetricsConfig:
+            resources:
+              - name: cpu
+                request: 100m
+                limit: 500m
+              - name: memory
+                request: 128Mi
+                limit: 512Mi
+      expected: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: "Disabled"
+          kubeStateMetricsConfig:
+            resources:
+              - name: cpu
+                request: 100m
+                limit: 500m
+              - name: memory
+                request: 128Mi
+                limit: 512Mi
+    - name: Should reject KubeStateMetricsConfig with empty resources array
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: "Disabled"
+          kubeStateMetricsConfig:
+            resources: []
+      expectedError: 'spec.kubeStateMetricsConfig.resources: Invalid value: 0: spec.kubeStateMetricsConfig.resources in body should have at least 1 items'
+    - name: Should accept KubeStateMetricsConfig with valid tolerations
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: "Disabled"
+          kubeStateMetricsConfig:
+            tolerations:
+              - key: node-role.kubernetes.io/master
+                operator: Exists
+                effect: NoSchedule
+              - key: node-role.kubernetes.io/control-plane
+                operator: Exists
+                effect: NoSchedule
+      expected: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: "Disabled"
+          kubeStateMetricsConfig:
+            tolerations:
+              - key: node-role.kubernetes.io/master
+                operator: Exists
+                effect: NoSchedule
+              - key: node-role.kubernetes.io/control-plane
+                operator: Exists
+                effect: NoSchedule
+    - name: Should reject KubeStateMetricsConfig with empty tolerations array
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: "Disabled"
+          kubeStateMetricsConfig:
+            tolerations: []
+      expectedError: 'spec.kubeStateMetricsConfig.tolerations: Invalid value: 0: spec.kubeStateMetricsConfig.tolerations in body should have at least 1 items'
+    - name: Should reject KubeStateMetricsConfig with too many tolerations
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: "Disabled"
+          kubeStateMetricsConfig:
+            tolerations:
+              - key: key1
+                operator: Exists
+                effect: NoSchedule
+              - key: key2
+                operator: Exists
+                effect: NoSchedule
+              - key: key3
+                operator: Exists
+                effect: NoSchedule
+              - key: key4
+                operator: Exists
+                effect: NoSchedule
+              - key: key5
+                operator: Exists
+                effect: NoSchedule
+              - key: key6
+                operator: Exists
+                effect: NoSchedule
+              - key: key7
+                operator: Exists
+                effect: NoSchedule
+              - key: key8
+                operator: Exists
+                effect: NoSchedule
+              - key: key9
+                operator: Exists
+                effect: NoSchedule
+              - key: key10
+                operator: Exists
+                effect: NoSchedule
+              - key: key11
+                operator: Exists
+                effect: NoSchedule
+      expectedError: 'spec.kubeStateMetricsConfig.tolerations: Too many: 11: must have at most 10 items'
+    - name: Should accept KubeStateMetricsConfig with valid topologySpreadConstraints
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: "Disabled"
+          kubeStateMetricsConfig:
+            topologySpreadConstraints:
+              - maxSkew: 1
+                topologyKey: topology.kubernetes.io/zone
+                whenUnsatisfiable: DoNotSchedule
+                labelSelector:
+                  matchLabels:
+                    app: kube-state-metrics
+              - maxSkew: 2
+                topologyKey: kubernetes.io/hostname
+                whenUnsatisfiable: ScheduleAnyway
+                labelSelector:
+                  matchLabels:
+                    app: kube-state-metrics
+      expected: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: "Disabled"
+          kubeStateMetricsConfig:
+            topologySpreadConstraints:
+              - maxSkew: 1
+                topologyKey: topology.kubernetes.io/zone
+                whenUnsatisfiable: DoNotSchedule
+                labelSelector:
+                  matchLabels:
+                    app: kube-state-metrics
+              - maxSkew: 2
+                topologyKey: kubernetes.io/hostname
+                whenUnsatisfiable: ScheduleAnyway
+                labelSelector:
+                  matchLabels:
+                    app: kube-state-metrics

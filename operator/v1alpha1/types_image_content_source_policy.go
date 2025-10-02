@@ -11,7 +11,7 @@ import metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 //
 // Compatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.
 // +kubebuilder:object:root=true
-// +kubebuilder:resource:path=imagecontentsourcepolicies,scope=Cluster
+// +kubebuilder:resource:path=imagecontentsourcepolicies,scope=Cluster,shortName=icsp
 // +kubebuilder:subresource:status
 // +openshift:api-approved.openshift.io=https://github.com/openshift/api/pull/470
 // +openshift:file-pattern=cvoRunLevel=0000_10,operatorName=config-operator,operatorOrdering=01

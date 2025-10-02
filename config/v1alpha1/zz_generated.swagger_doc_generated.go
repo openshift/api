@@ -174,10 +174,11 @@ func (ClusterMonitoringList) SwaggerDoc() map[string]string {
 }
 
 var map_ClusterMonitoringSpec = map[string]string{
-	"":                    "ClusterMonitoringSpec defines the desired state of Cluster Monitoring Operator",
-	"userDefined":         "userDefined set the deployment mode for user-defined monitoring in addition to the default platform monitoring. userDefined is optional. When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time. The current default value is `Disabled`.",
-	"alertmanagerConfig":  "alertmanagerConfig allows users to configure how the default Alertmanager instance should be deployed in the `openshift-monitoring` namespace. alertmanagerConfig is optional. When omitted, this means no opinion and the platform is left to choose a reasonable default, that is subject to change over time. The current default value is `DefaultConfig`.",
-	"metricsServerConfig": "metricsServerConfig is an optional field that can be used to configure the Kubernetes Metrics Server that runs in the openshift-monitoring namespace. Specifically, it can configure how the Metrics Server instance is deployed, pod scheduling, its audit policy and log verbosity. When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time.",
+	"":                            "ClusterMonitoringSpec defines the desired state of Cluster Monitoring Operator",
+	"userDefined":                 "userDefined set the deployment mode for user-defined monitoring in addition to the default platform monitoring. userDefined is optional. When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time. The current default value is `Disabled`.",
+	"alertmanagerConfig":          "alertmanagerConfig allows users to configure how the default Alertmanager instance should be deployed in the `openshift-monitoring` namespace. alertmanagerConfig is optional. When omitted, this means no opinion and the platform is left to choose a reasonable default, that is subject to change over time. The current default value is `DefaultConfig`.",
+	"metricsServerConfig":         "metricsServerConfig is an optional field that can be used to configure the Kubernetes Metrics Server that runs in the openshift-monitoring namespace. Specifically, it can configure how the Metrics Server instance is deployed, pod scheduling, its audit policy and log verbosity. When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time.",
+	"openShiftStateMetricsConfig": "openShiftStateMetricsConfig is an optional field that can be used to configure the openshift-state-metrics OpenShift State Metrics (OSM) is a service that listens to the OpenShift API server and generates metrics about the state of OpenShift objects. Metrics reflect the raw, unmodified data of objects such as Projects, Routes, and Builds. Specifically, it can configure how the openshift-state-metrics instance is deployed, pod scheduling, and resource allocation. When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time.",
 }
 
 func (ClusterMonitoringSpec) SwaggerDoc() map[string]string {
@@ -215,6 +216,18 @@ var map_MetricsServerConfig = map[string]string{
 
 func (MetricsServerConfig) SwaggerDoc() map[string]string {
 	return map_MetricsServerConfig
+}
+
+var map_OpenShiftStateMetricsConfig = map[string]string{
+	"":                          "OpenShiftStateMetricsConfig provides configuration options for the OpenShift State Metrics instance Use this configuration to control how the OpenShift State Metrics instance is deployed, and how its pods are scheduled.",
+	"nodeSelector":              "nodeSelector defines the nodes on which the Pods are scheduled. nodeSelector is optional.\n\nWhen omitted, this means the user has no opinion and the platform is left to choose reasonable defaults. These defaults are subject to change over time. The current default value is `kubernetes.io/os: linux`.",
+	"resources":                 "resources defines the compute resource requests and limits for the Metrics Server container. This includes CPU, memory and HugePages constraints to help control scheduling and resource usage. When not specified, defaults are used by the platform. Requests cannot exceed limits. This field is optional. More info: https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/ This is a simplified API that maps to Kubernetes ResourceRequirements. The current default values are:\n  resources:\n   - name: cpu\n     request: 4m\n     limit: null\n   - name: memory\n     request: 40Mi\n     limit: null",
+	"tolerations":               "tolerations defines the tolerations for the pods. This field is optional.\n\nWhen omitted, this means the user has no opinion and the platform is left to choose reasonable defaults. These defaults are subject to change over time. The default is an empty list. Maximum length for this list is 10. Minimum length for this list is 1.",
+	"topologySpreadConstraints": "topologySpreadConstraints defines rules for how OpenShift State Metrics Pods should be distributed across topology domains such as zones, nodes, or other user-defined labels. topologySpreadConstraints is optional. This helps improve high availability and resource efficiency by avoiding placing too many replicas in the same failure domain.\n\nWhen omitted, this means no opinion and the platform is left to choose a default, which is subject to change over time. This field maps directly to the `topologySpreadConstraints` field in the Pod spec. Default is empty list. Maximum length for this list is 10. Minimum length for this list is 1 Entries must have unique topologyKey and whenUnsatisfiable pairs.",
+}
+
+func (OpenShiftStateMetricsConfig) SwaggerDoc() map[string]string {
+	return map_OpenShiftStateMetricsConfig
 }
 
 var map_UserDefinedMonitoring = map[string]string{

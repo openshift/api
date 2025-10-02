@@ -220,7 +220,7 @@ type TLSProfileSpec struct {
 	//   curves:
 	//     - X25519
 	//     - P-256
-	Curves []string `json:"curves.omitempty"`
+	Curves []string `json:"curves,omitempty"`
 	// minTLSVersion is used to specify the minimal version of the TLS protocol
 	// that is negotiated during the TLS handshake. For example, to use TLS
 	// versions 1.1, 1.2 and 1.3 (yaml):

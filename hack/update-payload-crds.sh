@@ -2,9 +2,11 @@
 
 source "$(dirname "${BASH_SOURCE}")/lib/init.sh"
 
+shopt -s extglob
+
 crd_globs="\
     authorization/v1/zz_generated.crd-manifests/*_config-operator_*.crd*yaml\
-    config/v1/zz_generated.crd-manifests/*_config-operator_*.crd*yaml\
+    config/v1/zz_generated.crd-manifests/*_config-operator_!(01_insightsdatagathers*).crd*yaml\
     machine/v1/zz_generated.crd-manifests/*.crd*yaml\
     operator/v1/zz_generated.crd-manifests//*_config-operator_*.crd*yaml\
     operator/v1alpha1/zz_generated.crd-manifests//*_config-operator_*.crd*yaml\
@@ -26,6 +28,8 @@ crd_globs="\
     config/v1alpha1/zz_generated.crd-manifests/0000_10_config-operator_01_clustermonitoring*.crd.yaml
     operator/v1/zz_generated.crd-manifests/*_storage_01_storages*.crd.yaml
     operator/v1/zz_generated.crd-manifests/*_csi-driver_01_clustercsidrivers*.crd.yaml
+    insights/v1alpha2/zz_generated.crd-manifests/0000_10_insights_01_datagathers*.crd.yaml
+    config/v1alpha2/zz_generated.crd-manifests/0000_10_config-operator_01_insightsdatagathers*.crd.yaml
     "
 
 # To allow the crd_globs to be sourced in the verify script,

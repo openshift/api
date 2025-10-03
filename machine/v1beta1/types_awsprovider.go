@@ -107,6 +107,28 @@ type AWSMachineProviderConfig struct {
 	// If this value is selected, capacityReservationID must be specified to identify the target reservation.
 	// +optional
 	MarketType MarketType `json:"marketType,omitempty"`
+
+	// hostID specifies the Dedicated Host on which the instance must be started.
+	// This field is mutually exclusive with DynamicHostAllocation.
+	// When set, the value must be a valid AWS Dedicated Host ID in the form
+	// "h-" followed by 17 lowercase hexadecimal characters.
+	// The maximum length is 19 characters, and the field may be omitted.
+	// +kubebuilder:validation:XValidation:rule="self == null || self.matches('^h-[0-9a-f]{17}$')",message="hostID must start with 'h-' and end in 17 alphanumeric characters"
+	// +kubebuilder:validation:MaxLength=19
+	// +openshift:enable:FeatureGate=AWSDedicatedHosts
+	// +optional
+	HostID *string `json:"hostID,omitempty"`
+
+	// hostAffinity specifies the dedicated host affinity setting for the instance.
+	// Valid values are "AnyAvailable", "Host", and omitted.
+	// When HostAffinity is set to "Host", an instance started onto a specific host always restarts on the same host if stopped.
+	// When HostAffinity is set to "AnyAvailable", and you stop and restart the instance, it can be restarted on any available host.
+	// When HostAffinity is omitted and HostID is defined, the instance is started onto the specified host.
+	// When HostAffinity is defined, HostID is required.
+	// +kubebuilder:validation:MaxLength=64
+	// +openshift:enable:FeatureGate=AWSDedicatedHosts
+	// +optional
+	HostAffinity *HostAffinity `json:"hostAffinity,omitempty"`
 }
 
 // BlockDeviceMappingSpec describes a block device mapping
@@ -354,4 +376,17 @@ const (
 	// MarketTypeCapacityBlock is a MarketType enum value
 	// When set to CapacityBlock the instance utilizes pre-purchased compute capacity (capacity blocks) with AWS Capacity Reservations.
 	MarketTypeCapacityBlock MarketType = "CapacityBlock"
+)
+
+// HostAffinity describes the host affinity of an EC2 Instance
+type HostAffinity string
+
+const (
+	// HostAffinityAnyAvailable is a HostAffinity enum value
+	// When set to AnyAvailable the instance is put on a host using the AWS default logic.
+	HostAffinityAnyAvailable HostAffinity = "AnyAvailable"
+
+	// HostAffinityHost is a HostAffinity enum value
+	// When set to host the instance runs on the specified host.
+	HostAffinityHost HostAffinity = "Host"
 )

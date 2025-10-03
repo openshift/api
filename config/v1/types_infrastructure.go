@@ -650,7 +650,7 @@ const (
 )
 
 // GCPServiceEndpointName is the name of the GCP Service Endpoint.
-// +kubebuilder:validation:Enum=Compute;Container;CloudResourceManager;DNS;File;IAM;IAMCredentials;OAuth;ServiceUsage;Storage;STS
+// +kubebuilder:validation:Enum=Compute;Container;CloudResourceManager;DNS;File;IAM;IAMCredentials;ServiceUsage;Storage
 type GCPServiceEndpointName string
 
 const (
@@ -675,17 +675,11 @@ const (
 	// GCPServiceEndpointNameIAMCredentials is the name used for the GCP IAM Credentials Service endpoint.
 	GCPServiceEndpointNameIAMCredentials GCPServiceEndpointName = "IAMCredentials"
 
-	// GCPServiceEndpointNameOAuth is the name used for the GCP OAuth2 Service endpoint.
-	GCPServiceEndpointNameOAuth GCPServiceEndpointName = "OAuth"
-
 	// GCPServiceEndpointNameServiceUsage is the name used for the GCP Service Usage Service endpoint.
 	GCPServiceEndpointNameServiceUsage GCPServiceEndpointName = "ServiceUsage"
 
 	// GCPServiceEndpointNameStorage is the name used for the GCP Storage Service endpoint.
 	GCPServiceEndpointNameStorage GCPServiceEndpointName = "Storage"
-
-	// GCPServiceEndpointNameSTS is the name used for the GCP STS Service endpoint.
-	GCPServiceEndpointNameSTS GCPServiceEndpointName = "STS"
 )
 
 // GCPServiceEndpoint store the configuration of a custom url to
@@ -694,8 +688,8 @@ type GCPServiceEndpoint struct {
 	// name is the name of the GCP service whose endpoint is being overridden.
 	// This must be provided and cannot be empty.
 	//
-	// Allowed values are Compute, Container, CloudResourceManager, DNS, File, IAM, ServiceUsage,
-	// Storage, and TagManager.
+	// Allowed values are Compute, Container, CloudResourceManager, DNS, File, IAM, IAMCredentials,
+	// ServiceUsage, and Storage.
 	//
 	// As an example, when setting the name to Compute all requests made by the caller to the GCP Compute
 	// Service will be directed to the endpoint specified in the url field.
@@ -779,7 +773,7 @@ type GCPPlatformStatus struct {
 	// The maximum number of endpoint overrides allowed is 11.
 	// +listType=map
 	// +listMapKey=name
-	// +kubebuilder:validation:MaxItems=11
+	// +kubebuilder:validation:MaxItems=9
 	// +kubebuilder:validation:XValidation:rule="self.all(x, self.exists_one(y, x.name == y.name))",message="only 1 endpoint override is permitted per GCP service name"
 	// +optional
 	// +openshift:enable:FeatureGate=GCPCustomAPIEndpointsInstall

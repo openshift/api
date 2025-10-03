@@ -188,6 +188,9 @@
                         "name": "OVNObservability"
                     },
                     {
+                        "name": "OnPremDNSRecords"
+                    },
+                    {
                         "name": "PreconfiguredUDNAddresses"
                     },
                     {

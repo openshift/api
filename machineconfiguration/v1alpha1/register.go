@@ -28,6 +28,7 @@ func addKnownTypes(scheme *runtime.Scheme) error {
 		&MachineConfigNodeList{},
 		&PinnedImageSet{},
 		&PinnedImageSetList{},
+		&InternalReleaseImage{},
 	)
 	metav1.AddToGroupVersion(scheme, GroupVersion)
 	return nil

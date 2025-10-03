@@ -68,14 +68,6 @@ var (
 				enableIn(configv1.Default, configv1.DevPreviewNoUpgrade, configv1.TechPreviewNoUpgrade).
 				mustRegister()
 
-	FeatureGateSetEIPForNLBIngressController = newFeatureGate("SetEIPForNLBIngressController").
-							reportProblemsToJiraComponent("Networking / router").
-							contactPerson("miheer").
-							productScope(ocpSpecific).
-							enhancementPR(legacyFeatureGateWithoutEnhancement).
-							enableIn(configv1.Default, configv1.DevPreviewNoUpgrade, configv1.TechPreviewNoUpgrade).
-							mustRegister()
-
 	FeatureGateOpenShiftPodSecurityAdmission = newFeatureGate("OpenShiftPodSecurityAdmission").
 							reportProblemsToJiraComponent("auth").
 							contactPerson("ibihim").

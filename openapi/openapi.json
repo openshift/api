@@ -4225,6 +4225,11 @@
           },
           "$ref": "#/definitions/com.github.openshift.api.config.v1.CloudLoadBalancerConfig"
         },
+        "ipFamily": {
+          "description": "ipFamily specifies the IP protocol family that should be used for AWS network resources. This controls whether AWS resources are created with IPv4-only, or dual-stack networking with IPv4 or IPv6 as the primary protocol family.",
+          "type": "string",
+          "default": "IPv4"
+        },
         "region": {
           "description": "region holds the default AWS region for new AWS resources created by the cluster.",
           "type": "string",
@@ -4657,6 +4662,11 @@
         "cloudName": {
           "description": "cloudName is the name of the Azure cloud environment which can be used to configure the Azure SDK with the appropriate Azure API endpoints. If empty, the value is equal to `AzurePublicCloud`.",
           "type": "string"
+        },
+        "ipFamily": {
+          "description": "ipFamily specifies the IP protocol family that should be used for Azure network resources. This controls whether Azure resources are created with IPv4-only, or dual-stack networking with IPv4 or IPv6 as the primary protocol family.",
+          "type": "string",
+          "default": "IPv4"
         },
         "networkResourceGroupName": {
           "description": "networkResourceGroupName is the Resource Group for network resources like the Virtual Network and Subnets used by the cluster. If empty, the value is same as ResourceGroupName.",

@@ -1237,6 +1237,12 @@ spec:
                         type: array
                         x-kubernetes-list-type: atomic
                     type: object
+                    x-kubernetes-validations:
+                    - message: ipFamily may only be configured during installation
+                      rule: '!has(oldSelf.IPFamily) && !has(self.IPFamily) || has(oldSelf.IPFamily)
+                        && has(self.IPFamily)'
+                    - message: ipFamily cannot be removed if it exists
+                      rule: '!has(oldSelf.IPFamily) || has(oldSelf.IPFamily)'
                   azure:
                     description: azure contains settings specific to the Azure infrastructure
                       provider.
@@ -1310,6 +1316,11 @@ spec:
                     - message: resourceTags may only be configured during installation
                       rule: '!has(oldSelf.resourceTags) && !has(self.resourceTags)
                         || has(oldSelf.resourceTags) && has(self.resourceTags)'
+                    - message: ipFamily may only be configured during installation
+                      rule: '!has(oldSelf.IPFamily) && !has(self.IPFamily) || has(oldSelf.IPFamily)
+                        && has(self.IPFamily)'
+                    - message: ipFamily cannot be removed if it exists
+                      rule: '!has(oldSelf.IPFamily) || has(oldSelf.IPFamily)'
                   baremetal:
                     description: baremetal contains settings specific to the BareMetal
                       platform.

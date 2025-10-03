@@ -1130,7 +1130,6 @@ spec:
                 - HighlyAvailable
                 - HighlyAvailableArbiter
                 - SingleReplica
-                - DualReplica
                 - External
                 type: string
               cpuPartitioning:
@@ -1353,6 +1352,21 @@ spec:
                             ClusterHosted
                           rule: 'has(self.dnsType) && self.dnsType != ''ClusterHosted''
                             ? !has(self.clusterHosted) : true'
+                      ipFamily:
+                        default: IPv4
+                        description: |-
+                          ipFamily specifies the IP protocol family that should be used for AWS
+                          network resources. This controls whether AWS resources are created with
+                          IPv4-only, or dual-stack networking with IPv4 or IPv6 as the primary
+                          protocol family.
+                        enum:
+                        - IPv4
+                        - DualStackIPv6Primary
+                        - DualStackIPv4Primary
+                        type: string
+                        x-kubernetes-validations:
+                        - message: ipFamily is immutable once set
+                          rule: oldSelf == '' || self == oldSelf
                       region:
                         description: region holds the default AWS region for new AWS
                           resources created by the cluster.
@@ -1432,6 +1446,12 @@ spec:
                         type: array
                         x-kubernetes-list-type: atomic
                     type: object
+                    x-kubernetes-validations:
+                    - message: ipFamily may only be configured during installation
+                      rule: '!has(oldSelf.IPFamily) && !has(self.IPFamily) || has(oldSelf.IPFamily)
+                        && has(self.IPFamily)'
+                    - message: ipFamily cannot be removed if it exists
+                      rule: '!has(oldSelf.IPFamily) || has(oldSelf.IPFamily)'
                   azure:
                     description: azure contains settings specific to the Azure infrastructure
                       provider.
@@ -1556,6 +1576,21 @@ spec:
                         - AzureGermanCloud
                         - AzureStackCloud
                         type: string
+                      ipFamily:
+                        default: IPv4
+                        description: |-
+                          ipFamily specifies the IP protocol family that should be used for Azure
+                          network resources. This controls whether Azure resources are created with
+                          IPv4-only, or dual-stack networking with IPv4 or IPv6 as the primary
+                          protocol family.
+                        enum:
+                        - IPv4
+                        - DualStackIPv6Primary
+                        - DualStackIPv4Primary
+                        type: string
+                        x-kubernetes-validations:
+                        - message: ipFamily is immutable once set
+                          rule: oldSelf == '' || self == oldSelf
                       networkResourceGroupName:
                         description: |-
                           networkResourceGroupName is the Resource Group for network resources like the Virtual Network and Subnets used by the cluster.
@@ -1608,6 +1643,11 @@ spec:
                     - message: resourceTags may only be configured during installation
                       rule: '!has(oldSelf.resourceTags) && !has(self.resourceTags)
                         || has(oldSelf.resourceTags) && has(self.resourceTags)'
+                    - message: ipFamily may only be configured during installation
+                      rule: '!has(oldSelf.IPFamily) && !has(self.IPFamily) || has(oldSelf.IPFamily)
+                        && has(self.IPFamily)'
+                    - message: ipFamily cannot be removed if it exists
+                      rule: '!has(oldSelf.IPFamily) || has(oldSelf.IPFamily)'
                   baremetal:
                     description: baremetal contains settings specific to the BareMetal
                       platform.

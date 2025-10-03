@@ -117,7 +117,7 @@ All kubebuilder validation markers must be documented in the field's comment. Fo
 
 **Good:**
 ```go
-// internalDNSRecords is an optional field that determines whether we deploy 
+// internalDNSRecords is an optional field that determines whether we deploy
 // with internal records enabled for api, api-int, and ingress.
 // Valid values are "Enabled" and "Disabled".
 // When set to Enabled, in cluster DNS resolution will be enabled for the api, api-int, and ingress endpoints.
@@ -135,6 +135,43 @@ InternalDNSRecords InternalDNSRecordsType `json:"internalDNSRecords"`
 // +kubebuilder:validation:Enum=Enabled;Disabled  // ❌ Valid values not documented
 InternalDNSRecords InternalDNSRecordsType `json:"internalDNSRecords"`
 ```
+
+#### Systematic Validation Marker Documentation Checklist
+
+**MANDATORY**: For each field with validation markers, verify the comment documents ALL of the following that apply:
+
+**Field Optionality:**
+- [ ] `+optional` - explain behavior when field is omitted
+- [ ] `+required` - explain that the field is required
+
+**String/Array Length Constraints:**
+- [ ] `+kubebuilder:validation:MinLength` and `+kubebuilder:validation:MaxLength` - document character length constraints
+- [ ] `+kubebuilder:validation:MinItems` and `+kubebuilder:validation:MaxItems` - document item count ranges
+
+**Value Constraints:**
+- [ ] `+kubebuilder:validation:Enum` - list all valid enum values and their meanings
+- [ ] `+kubebuilder:validation:Pattern` - explain the pattern requirement in human-readable terms
+- [ ] `+kubebuilder:validation:Minimum` and `+kubebuilder:validation:Maximum` - document numeric ranges
+
+**Advanced Validation:**
+- [ ] `+kubebuilder:validation:XValidation` - explain cross-field validation rules in detail
+- [ ] Any custom validation logic - document the validation behavior
+
+#### API Review Process
+
+**CRITICAL PROCESS**: Follow this exact order to ensure comprehensive validation:
+
+1. **Linting Check**: Run `make lint` and fix all kubeapilinter errors first
+2. **Extract Validation Markers**: Use systematic search to find all markers
+3. **Systematic Documentation Review**: For each marker found, verify corresponding documentation exists
+4. **Optional Fields Review**: Ensure every `+optional` field explains omitted behavior
+5. **Cross-field Validation**: Verify any documented field relationships have corresponding `XValidation` rules
+
+**FAILURE CONDITIONS**: The review MUST fail if any of these are found:
+- Any validation marker without corresponding documentation
+- Any `+optional` field without omitted behavior explanation
+- Any documented field constraint without enforcement via validation rules
+- Any `make lint` failures
 
 The comment must explicitly state:
 - When a field is optional (for `+kubebuilder:validation:Optional` or `+optional`)

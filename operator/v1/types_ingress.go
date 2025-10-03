@@ -35,11 +35,13 @@ import (
 //
 // Compatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).
 // +openshift:compatibility-gen:level=1
+// +kubebuilder:validation:XValidation:rule="!has(self.spec.domain) || size('router-' + self.metadata.name + '.' + self.spec.domain) <= 253",message="The combined 'router-' + IngressController.Name + '.' + .spec.domain cannot exceed 253 characters"
 type IngressController struct {
 	metav1.TypeMeta `json:",inline"`
 
 	// metadata is the standard object's metadata.
 	// More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata
+	// // +kubebuilder:validation:XValidation:rule="!has(self.name) || size(self.name) <= 63",message="metadata.name must not exceed 63 characters"
 	metav1.ObjectMeta `json:"metadata,omitempty"`
 
 	// spec is the specification of the desired behavior of the IngressController.
@@ -68,6 +70,20 @@ type IngressControllerSpec struct {
 	//
 	// If empty, defaults to ingress.config.openshift.io/cluster .spec.domain.
 	//
+	// The domain value must be a valid DNS name. It must consist of lowercase
+	// alphanumeric characters, '-' or '.', and each label must start and end
+	// with an alphanumeric character and not exceed 63 characters. Maximum
+	// length of a valid DNS domain is 253 characters.
+	//
+	// The implementation may add a prefix such as "router-default-" to the domain
+	// when constructing the router canonical hostname. To ensure the resulting
+	// hostname does not exceed the DNS maximum length of 253 characters,
+	// the domain length additionally validated at the IngressController object
+	// level.
+	//
+	// +kubebuilder:validation:MaxLength=253
+	// +kubebuilder:validation:XValidation:rule="!format.dns1123Subdomain().validate(self).hasValue()",message="domain must consist of lower case alphanumeric characters, '-' or '.', and must start and end with an alphanumeric character"
+	// +kubebuilder:validation:XValidation:rule="self.split('.').all(label, !format.dns1123Label().validate(label).hasValue())",message="each DNS label must not exceed 63 characters"
 	// +optional
 	Domain string `json:"domain,omitempty"`
 

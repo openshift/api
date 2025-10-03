@@ -50877,7 +50877,7 @@ func schema_openshift_api_operator_v1_IngressController(ref common.ReferenceCall
 					},
 					"metadata": {
 						SchemaProps: spec.SchemaProps{
-							Description: "metadata is the standard object's metadata. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata",
+							Description: "metadata is the standard object's metadata. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata // +kubebuilder:validation:XValidation:rule=\"!has(self.name) || size(self.name) <= 63\",message=\"metadata.name must not exceed 63 characters\"",
 							Default:     map[string]interface{}{},
 							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"),
 						},
@@ -51414,7 +51414,7 @@ func schema_openshift_api_operator_v1_IngressControllerSpec(ref common.Reference
 				Properties: map[string]spec.Schema{
 					"domain": {
 						SchemaProps: spec.SchemaProps{
-							Description: "domain is a DNS name serviced by the ingress controller and is used to configure multiple features:\n\n* For the LoadBalancerService endpoint publishing strategy, domain is\n  used to configure DNS records. See endpointPublishingStrategy.\n\n* When using a generated default certificate, the certificate will be valid\n  for domain and its subdomains. See defaultCertificate.\n\n* The value is published to individual Route statuses so that end-users\n  know where to target external DNS records.\n\ndomain must be unique among all IngressControllers, and cannot be updated.\n\nIf empty, defaults to ingress.config.openshift.io/cluster .spec.domain.",
+							Description: "domain is a DNS name serviced by the ingress controller and is used to configure multiple features:\n\n* For the LoadBalancerService endpoint publishing strategy, domain is\n  used to configure DNS records. See endpointPublishingStrategy.\n\n* When using a generated default certificate, the certificate will be valid\n  for domain and its subdomains. See defaultCertificate.\n\n* The value is published to individual Route statuses so that end-users\n  know where to target external DNS records.\n\ndomain must be unique among all IngressControllers, and cannot be updated.\n\nIf empty, defaults to ingress.config.openshift.io/cluster .spec.domain.\n\nThe domain value must be a valid DNS name. It must consist of lowercase alphanumeric characters, '-' or '.', and each label must start and end with an alphanumeric character and not exceed 63 characters. Maximum length of a valid DNS domain is 253 characters.\n\nThe implementation may add a prefix such as \"router-default-\" to the domain when constructing the router canonical hostname. To ensure the resulting hostname does not exceed the DNS maximum length of 253 characters, the domain length additionally validated at the IngressController object level.",
 							Type:        []string{"string"},
 							Format:      "",
 						},

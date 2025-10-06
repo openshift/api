@@ -2793,6 +2793,7 @@ func (in *KubeAPIServerList) DeepCopyObject() runtime.Object {
 func (in *KubeAPIServerSpec) DeepCopyInto(out *KubeAPIServerSpec) {
 	*out = *in
 	in.StaticPodOperatorSpec.DeepCopyInto(&out.StaticPodOperatorSpec)
+	out.GoawayChance = in.GoawayChance.DeepCopy()
 	return
 }
 

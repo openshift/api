@@ -52217,12 +52217,19 @@ func schema_openshift_api_operator_v1_KubeAPIServerSpec(ref common.ReferenceCall
 							Format:      "int32",
 						},
 					},
+					"goawayChance": {
+						SchemaProps: spec.SchemaProps{
+							Description: "goawayChance sets the goaway-chance on the kube-apiserver configuration. It is the probability to send a GOAWAY to HTTP/2 clients. When a client received GOAWAY, the in-flight requests will not be affected and new requests will use a new TCP connection to triggering re-balancing to another server. Default to 0, means never send GOAWAY. Max is 0.02 to prevent breaking the apiserver. When not specified, the default value is 0.001. This setting has no effect on a single node topology,",
+							Default:     "0.001",
+							Ref:         ref("k8s.io/apimachinery/pkg/api/resource.Quantity"),
+						},
+					},
 				},
 				Required: []string{"managementState", "forceRedeploymentReason"},
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/apimachinery/pkg/runtime.RawExtension"},
+			"k8s.io/apimachinery/pkg/api/resource.Quantity", "k8s.io/apimachinery/pkg/runtime.RawExtension"},
 	}
 }
 

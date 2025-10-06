@@ -1,6 +1,7 @@
 package v1
 
 import (
+	"k8s.io/apimachinery/pkg/api/resource"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
@@ -35,6 +36,19 @@ type KubeAPIServer struct {
 
 type KubeAPIServerSpec struct {
 	StaticPodOperatorSpec `json:",inline"`
+
+	// goawayChance sets the goaway-chance on the kube-apiserver configuration.
+	// It is the probability to send a GOAWAY to HTTP/2 clients. When a client received
+	// GOAWAY, the in-flight requests will not be affected and new requests will use
+	// a new TCP connection to triggering re-balancing to another server.
+	// Default to 0, means never send GOAWAY. Max is 0.02 to prevent breaking the apiserver.
+	// When not specified, the default value is 0.001. This setting has no effect on a single node topology,
+	// +kubebuilder:default:="0.001"
+	// +kubebuilder:validation:XValidation:rule="isQuantity(self) && quantity(self).compareTo(quantity('0')) >= 0",message="must be positive or zero"
+	// +kubebuilder:validation:XValidation:rule="isQuantity(self) && quantity(self).compareTo(quantity('0.02')) <= 0",message="must be less than or equal to 0.02"
+	// +default="0.001"
+	// +optional
+	GoawayChance resource.Quantity `json:"goawayChance,omitempty"`
 }
 
 type KubeAPIServerStatus struct {

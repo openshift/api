@@ -1314,6 +1314,14 @@ func (KubeAPIServerList) SwaggerDoc() map[string]string {
 	return map_KubeAPIServerList
 }
 
+var map_KubeAPIServerSpec = map[string]string{
+	"goawayChance": "goawayChance sets the goaway-chance on the kube-apiserver configuration. It is the probability to send a GOAWAY to HTTP/2 clients. When a client received GOAWAY, the in-flight requests will not be affected and new requests will use a new TCP connection to triggering re-balancing to another server. Default to 0, means never send GOAWAY. Max is 0.02 to prevent breaking the apiserver. When not specified, the default value is 0.001. This setting has no effect on a single node topology,",
+}
+
+func (KubeAPIServerSpec) SwaggerDoc() map[string]string {
+	return map_KubeAPIServerSpec
+}
+
 var map_KubeAPIServerStatus = map[string]string{
 	"serviceAccountIssuers": "serviceAccountIssuers tracks history of used service account issuers. The item without expiration time represents the currently used service account issuer. The other items represents service account issuers that were used previously and are still being trusted. The default expiration for the items is set by the platform and it defaults to 24h. see: https://kubernetes.io/docs/tasks/configure-pod-container/configure-service-account/#service-account-token-volume-projection",
 }

@@ -30300,6 +30300,11 @@
           "type": "string",
           "default": ""
         },
+        "goawayChance": {
+          "description": "goawayChance sets the goaway-chance on the kube-apiserver configuration. It is the probability to send a GOAWAY to HTTP/2 clients. When a client received GOAWAY, the in-flight requests will not be affected and new requests will use a new TCP connection to triggering re-balancing to another server. Default to 0, means never send GOAWAY. Max is 0.02 to prevent breaking the apiserver. When not specified, the default value is 0.001. This setting has no effect on a single node topology,",
+          "default": "0.001",
+          "$ref": "#/definitions/io.k8s.apimachinery.pkg.api.resource.Quantity"
+        },
         "logLevel": {
           "description": "logLevel is an intent based logging for an overall component.  It does not give fine grained control, but it is a simple way to manage coarse grained logging choices that operators have to interpret for their operands.\n\nValid values are: \"Normal\", \"Debug\", \"Trace\", \"TraceAll\". Defaults to \"Normal\".",
           "type": "string"

@@ -57,7 +57,7 @@ type CRDCompatibilityRequirementSpec struct {
 
 // CompatibilitySchema defines the schema used by crdSchemaValidation and objectSchemaValidation.
 type CompatibilitySchema struct {
-	// crdYAML contains the complete YAML document of the CRD from transport config map.
+	// crdYAML contains the complete YAML document of the CRD for schema and object validation purposes.
 	// This field is required.
 	// +kubebuilder:validation:MinLength=1
 	// +kubebuilder:validation:MaxLength=1572864

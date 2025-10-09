@@ -32,6 +32,8 @@ type ClUprobeProgramInfo struct {
 	// optional function name and/or offset. Optionally, the eBPF program can be
 	// installed in a set of containers or limited to a specified PID.
 	// +optional
+	// +kubebuilder:validation:MaxItems=1023
+	// +listType=atomic
 	Links []ClUprobeAttachInfo `json:"links,omitempty"`
 }
 
@@ -56,6 +58,7 @@ type ClUprobeAttachInfo struct {
 	// target is a required field and is the user-space library name or the
 	// absolute path to a binary or library.
 	// +required
+	// +kubebuilder:validation:MaxLength=1023
 	Target string `json:"target"`
 
 	// pid is an optional field and if provided, limits the execution of the UProbe
@@ -77,6 +80,8 @@ type ClUprobeProgramInfoState struct {
 	// successful or not on this node, a linkId, which is the kernel ID for the
 	// link if successfully attached, and other attachment specific data.
 	// +optional
+	// +kubebuilder:validation:MaxItems=1023
+	// +listType=atomic
 	Links []ClUprobeAttachInfoState `json:"links,omitempty"`
 }
 
@@ -86,6 +91,7 @@ type ClUprobeAttachInfoState struct {
 	// function is the provisioned name of the user-space function the UProbe
 	// program should be attached.
 	// +optional
+	// +kubebuilder:validation:MaxLength=1023
 	Function string `json:"function,omitempty"`
 
 	// offset is the provisioned offset, whose value is added to the address of the
@@ -97,6 +103,7 @@ type ClUprobeAttachInfoState struct {
 	// target is the provisioned user-space library name or the absolute path to a
 	// binary or library.
 	// +required
+	// +kubebuilder:validation:MaxLength=1023
 	Target string `json:"target"`
 
 	// pid is the provisioned pid. If set, pid limits the execution of the UProbe
@@ -105,9 +112,9 @@ type ClUprobeAttachInfoState struct {
 	// +optional
 	Pid *int32 `json:"pid,omitempty"`
 
-	// If containers is provisioned in the ClusterBpfApplication instance,
-	// containerPid is the derived PID of the container the UProbe or URetProbe this
-	// attachment point is attached.
+	// containerPid is the derived PID of the container to which this UProbe or
+	// URetProbe attachment point is attached. This field is populated when
+	// containers are provisioned in the ClusterBpfApplication instance.
 	// +optional
 	ContainerPid *int32 `json:"containerPid,omitempty"`
 }

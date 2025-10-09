@@ -31,7 +31,7 @@ type BpfApplicationProgram struct {
 	// name is a required field and is the name of the function that is the entry
 	// point for the eBPF program. name must not be an empty string, must not
 	// exceed 64 characters in length, must start with alpha characters and must
-	// only contain alphanumeric characters.
+	// only contain alphanumeric characters and underscores.
 	// +required
 	// +kubebuilder:validation:Pattern="^[a-zA-Z][a-zA-Z0-9_]+."
 	// +kubebuilder:validation:MinLength=1
@@ -164,6 +164,8 @@ type BpfApplicationSpec struct {
 	// effecting. For this reason, modifying the list is currently not allowed.
 	// +required
 	// +kubebuilder:validation:MinItems:=1
+	// +kubebuilder:validation:MaxItems=1023
+	// +listType=atomic
 	Programs []BpfApplicationProgram `json:"programs,omitempty"`
 }
 
@@ -185,11 +187,17 @@ type BpfApplicationSpec struct {
 // +kubebuilder:printcolumn:name="Status",type=string,JSONPath=`.status.conditions[0].reason`
 // +kubebuilder:printcolumn:name="Age",type="date",JSONPath=".metadata.creationTimestamp"
 type BpfApplication struct {
-	metav1.TypeMeta   `json:",inline"`
+	metav1.TypeMeta `json:",inline"`
+	// metadata is the object's metadata.
+	// +optional
 	metav1.ObjectMeta `json:"metadata,omitempty"`
 
-	Spec   BpfApplicationSpec `json:"spec,omitempty"`
-	Status BpfAppStatus       `json:"status,omitempty"`
+	// spec defines the desired state of the BpfApplication.
+	// +required
+	Spec BpfApplicationSpec `json:"spec,omitempty"`
+	// status reflects the observed state of the BpfApplication.
+	// +optional
+	Status BpfAppStatus `json:"status,omitempty"`
 }
 
 // +kubebuilder:object:root=true

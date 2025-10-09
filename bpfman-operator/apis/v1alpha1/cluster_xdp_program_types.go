@@ -35,6 +35,8 @@ type ClXdpProgramInfo struct {
 	// bpfman to use the primary interface of a Kubernetes node. Optionally, the
 	// XDP program can also be installed into a set of network namespaces.
 	// +optional
+	// +kubebuilder:validation:MaxItems=1023
+	// +listType=atomic
 	Links []ClXdpAttachInfo `json:"links,omitempty"`
 }
 
@@ -76,6 +78,8 @@ type ClXdpAttachInfo struct {
 	// next XDP program in the chain will NOT be called.
 	// +optional
 	// +kubebuilder:default:={Pass,DispatcherReturn}
+	// +kubebuilder:validation:MaxItems=1023
+	// +listType=atomic
 	ProceedOn []XdpProceedOnValue `json:"proceedOn,omitempty"`
 }
 
@@ -85,6 +89,8 @@ type ClXdpProgramInfoState struct {
 	// or not on this node, a linkId, which is the kernel ID for the link if
 	// successfully attached, and other attachment specific data.
 	// +optional
+	// +kubebuilder:validation:MaxItems=1023
+	// +listType=atomic
 	Links []ClXdpAttachInfoState `json:"links,omitempty"`
 }
 
@@ -92,13 +98,16 @@ type ClXdpAttachInfoState struct {
 	AttachInfoStateCommon `json:",inline"`
 
 	// interfaceName is the name of the interface the XDP program should be
-	// attached.
+	// attached. interfaceName must not exceed 63 characters in length.
 	// +required
+	// +kubebuilder:validation:MaxLength=63
 	InterfaceName string `json:"interfaceName"`
 
 	// netnsPath is the optional path to the network namespace inside of which the
-	// XDP program should be attached.
+	// XDP program should be attached. If not provided, the default network
+	// namespace is used. netnsPath must not exceed 1023 characters in length.
 	// +optional
+	// +kubebuilder:validation:MaxLength=1023
 	NetnsPath string `json:"netnsPath,omitempty"`
 
 	// priority is the provisioned priority of the XDP program in relation to other
@@ -113,5 +122,7 @@ type ClXdpAttachInfoState struct {
 	// user to call other TC programs in a chain, or not call the next program in a
 	// chain based on the exit code of a TC program .Multiple values are supported.
 	// +required
+	// +kubebuilder:validation:MaxItems=1023
+	// +listType=atomic
 	ProceedOn []XdpProceedOnValue `json:"proceedOn"`
 }

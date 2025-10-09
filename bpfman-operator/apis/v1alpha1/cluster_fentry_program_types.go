@@ -30,6 +30,7 @@ type ClFentryProgramInfo struct {
 	// the program, add an entry to links with mode set to Attach. To detach it,
 	// remove the entry from links.
 	// +optional
+	// +listType=atomic
 	// +kubebuilder:validation:MaxItems=1
 	Links []ClFentryAttachInfo `json:"links,omitempty"`
 }
@@ -43,7 +44,7 @@ type ClFentryLoadInfo struct {
 	// +kubebuilder:validation:Pattern="^[a-zA-Z][a-zA-Z0-9_]+."
 	// +kubebuilder:validation:MinLength=1
 	// +kubebuilder:validation:MaxLength=64
-	Function string `json:"function"`
+	Function string `json:"function,omitempty"`
 }
 
 type AttachTypeAttach string
@@ -68,6 +69,7 @@ type ClFentryProgramInfoState struct {
 	// successful or not on this node, a linkId, which is the kernel ID for the
 	// link if successfully attached, and other attachment specific data.
 	// +optional
+	// +listType=atomic
 	// +kubebuilder:validation:MaxItems=1
 	Links []ClFentryAttachInfoState `json:"links,omitempty"`
 }

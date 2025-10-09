@@ -33,6 +33,8 @@ type TcxProgramInfo struct {
 	// bpfman to use the primary interface of a Kubernetes node. Optionally, the
 	// TCX program can also be installed into a set of network namespaces.
 	// +optional
+	// +kubebuilder:validation:MaxItems=1023
+	// +listType=atomic
 	Links []TcxAttachInfo `json:"links,omitempty"`
 }
 
@@ -81,6 +83,8 @@ type TcxProgramInfoState struct {
 	// or not on this node, a linkId, which is the kernel ID for the link if
 	// successfully attached, and other attachment specific data.
 	// +optional
+	// +kubebuilder:validation:MaxItems=1023
+	// +listType=atomic
 	Links []TcxAttachInfoState `json:"links,omitempty"`
 }
 
@@ -88,13 +92,16 @@ type TcxAttachInfoState struct {
 	AttachInfoStateCommon `json:",inline"`
 
 	// interfaceName is the name of the interface the TCX program should be
-	// attached.
+	// attached. interfaceName must not exceed 63 characters in length.
 	// +required
+	// +kubebuilder:validation:MaxLength=63
 	InterfaceName string `json:"interfaceName"`
 
 	// netnsPath is the path to the network namespace inside of which the TCX
-	// program should be attached.
+	// program should be attached. netnsPath must not exceed 1023 characters in
+	// length.
 	// +required
+	// +kubebuilder:validation:MaxLength=1023
 	NetnsPath string `json:"netnsPath"`
 
 	// direction is the provisioned direction of traffic, Ingress or Egress, the

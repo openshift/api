@@ -31,10 +31,16 @@ import (
 // +kubebuilder:printcolumn:name="Progressing",type="string",JSONPath=".status.conditions[?(@.type=='Progressing')].status"
 // +kubebuilder:printcolumn:name="Available",type="string",JSONPath=".status.conditions[?(@.type=='Available')].status"
 type Config struct {
-	metav1.TypeMeta   `json:",inline"`
+	metav1.TypeMeta `json:",inline"`
+	// metadata is the object's metadata.
+	// +optional
 	metav1.ObjectMeta `json:"metadata,omitempty"`
 
-	Spec   ConfigSpec   `json:"spec,omitempty"`
+	// spec defines the desired state of the bpfman-operator.
+	// +required
+	Spec ConfigSpec `json:"spec,omitempty"`
+	// status reflects the observed state of the bpfman-operator.
+	// +optional
 	Status ConfigStatus `json:"status,omitempty"`
 }
 
@@ -46,19 +52,23 @@ type ConfigSpec struct {
 	// configuration specifies the content of bpfman.toml configuration file used by the bpfman DaemonSet.
 	// +required
 	// +kubebuilder:validation:MinLength=1
+	// +kubebuilder:validation:MaxLength=65536
 	Configuration string `json:"configuration"`
 	// image specifies the container image for the bpfman DaemonSet.
 	// +required
 	// +kubebuilder:validation:MinLength=1
+	// +kubebuilder:validation:MaxLength=1023
 	Image string `json:"image"`
 	// logLevel specifies the log level for the bpfman DaemonSet via the RUST_LOG environment variable.
 	// The RUST_LOG environment variable controls logging with the syntax: RUST_LOG=[target][=][level][,...].
 	// For further information, see https://docs.rs/env_logger/latest/env_logger/.
 	// +optional
+	// +kubebuilder:validation:MaxLength=256
 	LogLevel string `json:"logLevel,omitempty"`
 	// namespace specifies the namespace where bpfman-operator resources will be deployed.
 	// If not specified, resources will be deployed in the default bpfman namespace.
 	// +optional
+	// +kubebuilder:validation:MaxLength=253
 	Namespace string `json:"namespace,omitempty"`
 }
 
@@ -72,6 +82,7 @@ type AgentSpec struct {
 	HealthProbePort int32 `json:"healthProbePort,omitempty"`
 	// image specifies the container image for the bpfman agent DaemonSet.
 	// +required
+	// +kubebuilder:validation:MaxLength=1023
 	Image string `json:"image"`
 	// logLevel specifies the verbosity of logs produced by the bpfman agent.
 	// Valid values are: "", "info", "debug", "trace".
@@ -83,10 +94,12 @@ type AgentSpec struct {
 // status reflects the status of the bpfman-operator configuration.
 type ConfigStatus struct {
 	// conditions represents the current state conditions of the bpfman-operator and its components.
+	// +optional
 	// +patchMergeKey=type
 	// +patchStrategy=merge
 	// +listType=map
 	// +listMapKey=type
+	// +kubebuilder:validation:MaxItems=1023
 	Conditions []metav1.Condition `json:"conditions,omitempty" patchStrategy:"merge" patchMergeKey:"type" protobuf:"bytes,1,rep,name=conditions"`
 
 	// components represents the operational status of each individual bpfman-operator component such as the deployed

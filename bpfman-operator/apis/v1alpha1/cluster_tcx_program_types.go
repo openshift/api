@@ -33,6 +33,8 @@ type ClTcxProgramInfo struct {
 	// bpfman to use the primary interface of a Kubernetes node. Optionally, the
 	// TCX program can also be installed into a set of network namespaces.
 	// +optional
+	// +kubebuilder:validation:MaxItems=1023
+	// +listType=atomic
 	Links []ClTcxAttachInfo `json:"links,omitempty"`
 }
 
@@ -80,8 +82,11 @@ type ClTcxProgramInfoState struct {
 	// links is a list of attachment points for the TCX program. Each entry in the
 	// list includes a linkStatus, which indicates if the attachment was successful
 	// or not on this node, a linkId, which is the kernel ID for the link if
-	// successfully attached, and other attachment specific data.
+	// successfully attached, and other attachment specific data. The list is
+	// limited to a maximum of 1023 entries.
 	// +optional
+	// +kubebuilder:validation:MaxItems=1023
+	// +listType=atomic
 	Links []ClTcxAttachInfoState `json:"links,omitempty"`
 }
 
@@ -89,13 +94,16 @@ type ClTcxAttachInfoState struct {
 	AttachInfoStateCommon `json:",inline"`
 
 	// interfaceName is the name of the interface the TCX program should be
-	// attached.
+	// attached. interfaceName must not exceed 63 characters in length.
 	// +required
+	// +kubebuilder:validation:MaxLength=63
 	InterfaceName string `json:"interfaceName"`
 
 	// netnsPath is the optional path to the network namespace inside of which the
-	// TCX program should be attached.
+	// TCX program should be attached. If not provided, the default network
+	// namespace is used. netnsPath must not exceed 1023 characters in length.
 	// +optional
+	// +kubebuilder:validation:MaxLength=1023
 	NetnsPath string `json:"netnsPath,omitempty"`
 
 	// direction is the provisioned direction of traffic, Ingress or Egress, the TC

@@ -32,6 +32,8 @@ type TcProgramInfo struct {
 	// bpfman to use the primary interface of a Kubernetes node. Optionally, the
 	// TC program can also be installed into a set of network namespaces.
 	// +optional
+	// +kubebuilder:validation:MaxItems=1023
+	// +listType=atomic
 	Links []TcAttachInfo `json:"links,omitempty"`
 }
 
@@ -86,6 +88,8 @@ type TcAttachInfo struct {
 	// next TC program in the chain will NOT be called.
 	// +optional
 	// +kubebuilder:default:={Pipe,DispatcherReturn}
+	// +kubebuilder:validation:MaxItems=1023
+	// +listType=atomic
 	ProceedOn []TcProceedOnValue `json:"proceedOn,omitempty"`
 }
 
@@ -95,6 +99,8 @@ type TcProgramInfoState struct {
 	// or not on this node, a linkId, which is the kernel ID for the link if
 	// successfully attached, and other attachment specific data.
 	// +optional
+	// +kubebuilder:validation:MaxItems=1023
+	// +listType=atomic
 	Links []TcAttachInfoState `json:"links,omitempty"`
 }
 
@@ -102,13 +108,16 @@ type TcAttachInfoState struct {
 	AttachInfoStateCommon `json:",inline"`
 
 	// interfaceName is the name of the interface the TC program should be
-	// attached.
+	// attached. interfaceName must not exceed 63 characters in length.
 	// +required
+	// +kubebuilder:validation:MaxLength=63
 	InterfaceName string `json:"interfaceName"`
 
 	// netnsPath is the path to the network namespace inside of which the TC
-	// program should be attached.
+	// program should be attached. netnsPath must not exceed 1023 characters in
+	// length.
 	// +required
+	// +kubebuilder:validation:MaxLength=1023
 	NetnsPath string `json:"netnsPath"`
 
 	// direction is the provisioned direction of traffic, Ingress or Egress, the TC
@@ -129,5 +138,7 @@ type TcAttachInfoState struct {
 	// user to call other TC programs in a chain, or not call the next program in a
 	// chain based on the exit code of a TC program .Multiple values are supported.
 	// +required
+	// +kubebuilder:validation:MaxItems=1023
+	// +listType=atomic
 	ProceedOn []TcProceedOnValue `json:"proceedOn"`
 }

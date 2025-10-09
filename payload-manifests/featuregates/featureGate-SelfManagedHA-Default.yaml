@@ -240,6 +240,7 @@
                     {
                         "name": "DualReplica"
                     },
+                    {
                         "name": "ExternalOIDC"
                     },
                     {

@@ -305,6 +305,7 @@ machineconfigurations.operator.openshift.io:
   - BootImageSkewEnforcement
   - IrreconcilableMachineConfig
   - ManagedBootImages
+  - ManagedBootImages+ManagedBootImagesCPMS
   FilenameOperatorName: machine-config
   FilenameOperatorOrdering: "01"
   FilenameRunLevel: "0000_80"

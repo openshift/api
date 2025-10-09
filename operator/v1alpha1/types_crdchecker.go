@@ -58,7 +58,7 @@ type CRDCompatibilityRequirementSpec struct {
 // CompatibilitySchema defines the schema used by crdSchemaValidation and objectSchemaValidation.
 type CompatibilitySchema struct {
 	// crdYAML contains the complete YAML document of the CRD for schema and object validation purposes.
-	// This field is required.
+	// This field is required and must be between 1 and 1,572,864 characters in length.
 	// +kubebuilder:validation:MinLength=1
 	// +kubebuilder:validation:MaxLength=1572864
 	// +required
@@ -75,6 +75,9 @@ type CompatibilitySchema struct {
 
 	// additionalVersions is a set of versions to require in addition to those discovered by requireVersions.
 	// Overlap with requireVersions is explicitly permitted.
+	// When present, each version string must be between 1 and 255 characters in length.
+	// The list may contain at most 255 items.
+	// When not specified, no additional versions are required.
 	// +kubebuilder:validation:items:MinLength=1
 	// +kubebuilder:validation:items:MaxLength=255
 	// +kubebuilder:validation:MaxItems=255
@@ -84,7 +87,10 @@ type CompatibilitySchema struct {
 
 	// excludeFields is a set of fields in the yaml which will not be validated by either
 	// crdSchemaValidation or objectSchemaValidation.
-	// FIXME(chrischdi): explain the format which is
+	// Each field path string must be between 1 and 8,192 characters in length.
+	// The list may contain at most 1,024 field paths.
+	// When not specified, all fields in the YAML will be validated.
+	// FIXME(chrischdi): explain the format for it.	// FIXME(chrischdi): explain the format for it.
 	// +kubebuilder:validation:items:MinLength=1
 	// +kubebuilder:validation:items:MaxLength=8192
 	// +kubebuilder:validation:MaxItems=1024
@@ -115,14 +121,19 @@ type ObjectSchemaValidation struct {
 	Action CRDAdmitAction `json:"action,omitempty"`
 
 	// namespaceSelector defines the namespaceSelector field of the resulting ValidatingWebhookConfiguration.
+	// When not specified, objects from all namespaces matching the objectSelector will be subject to validation.
 	// +optional
 	NamespaceSelector *metav1.LabelSelector `json:"namespaceSelector,omitempty"`
 
 	// objectSelector defines the objectSelector field of the resulting ValidatingWebhookConfiguration.
+	// When not specified, all objects matching the namespaceSelector will be subject to validation.
 	// +optional
 	ObjectSelector *metav1.LabelSelector `json:"objectSelector,omitempty"`
 
 	// matchConditions defines the matchConditions field of the resulting ValidatingWebhookConfiguration.
+	// When present, must contain between 1 and 64 match conditions.
+	// When not specified, the webhook will match all requests according to its other selectors.
+	// FIXME(chrischdi): should we embed this type? Or maintain our own copy of MatchCondition?
 	// +listType=map
 	// +listMapKey=name
 	// +kubebuilder:validation:MinItems=1
@@ -226,8 +237,10 @@ type CRDCompatibilityRequirementStatus struct {
 	// exist, as we may legitimately place requirements on it before it is
 	// created.  The observed CRD is given in status.observedCRD, which will be
 	// empty if no CRD is observed.
+	// When present, must be between 1 and 253 characters and conform to RFC 1123 subdomain format:
+	// lowercase alphanumeric characters, '-' or '.', starting and ending with alphanumeric characters.
+	// When not specified, the requirement applies to any CRD name discovered from the compatibility schema.
 	// This field is optional.
-	// crdRef must be at most 253 characters in length and must consist only of lower-case alphanumeric characters, periods (.) and hyphens (-). Each period separated label must start and end with an alphanumeric character and be at most 63 characters in length.
 	// +kubebuilder:validation:MinLength=1
 	// +kubebuilder:validation:MaxLength=253
 	// +kubebuilder:validation:XValidation:rule="!format.dns1123Subdomain().validate(self).hasValue()",message="a lowercase RFC 1123 subdomain must consist of lower case alphanumeric characters, '-' or '.', and must start and end with an alphanumeric character."
@@ -239,6 +252,8 @@ type CRDCompatibilityRequirementStatus struct {
 // +kubebuilder:validation:MinProperties=1
 type ObservedCRD struct {
 	// uid is the uid of the observed CRD.
+	// Must be a valid UUID consisting of lowercase hexadecimal digits in 5 hyphenated blocks (8-4-4-4-12 format).
+	// Length must be between 1 and 36 characters.
 	// +kubebuilder:validation:MinLength=1
 	// +kubebuilder:validation:MaxLength=36
 	// +kubebuilder:validation:Format=uuid
@@ -247,6 +262,7 @@ type ObservedCRD struct {
 	UID string `json:"uid,omitempty"`
 
 	// generation is the observed generation of the CRD.
+	// Must be a positive integer (minimum value of 1).
 	// +kubebuilder:validation:Minimum=1
 	// +required
 	Generation int64 `json:"generation,omitempty"`

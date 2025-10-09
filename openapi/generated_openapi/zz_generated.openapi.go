@@ -765,6 +765,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"github.com/openshift/api/machine/v1beta1.AzureMachineProviderSpec":                                  schema_openshift_api_machine_v1beta1_AzureMachineProviderSpec(ref),
 		"github.com/openshift/api/machine/v1beta1.AzureMachineProviderStatus":                                schema_openshift_api_machine_v1beta1_AzureMachineProviderStatus(ref),
 		"github.com/openshift/api/machine/v1beta1.BlockDeviceMappingSpec":                                    schema_openshift_api_machine_v1beta1_BlockDeviceMappingSpec(ref),
+		"github.com/openshift/api/machine/v1beta1.CPUOptions":                                                schema_openshift_api_machine_v1beta1_CPUOptions(ref),
 		"github.com/openshift/api/machine/v1beta1.Condition":                                                 schema_openshift_api_machine_v1beta1_Condition(ref),
 		"github.com/openshift/api/machine/v1beta1.ConfidentialVM":                                            schema_openshift_api_machine_v1beta1_ConfidentialVM(ref),
 		"github.com/openshift/api/machine/v1beta1.DataDisk":                                                  schema_openshift_api_machine_v1beta1_DataDisk(ref),
@@ -924,6 +925,8 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"github.com/openshift/api/operator/v1.AuthenticationStatus":                                          schema_openshift_api_operator_v1_AuthenticationStatus(ref),
 		"github.com/openshift/api/operator/v1.AzureCSIDriverConfigSpec":                                      schema_openshift_api_operator_v1_AzureCSIDriverConfigSpec(ref),
 		"github.com/openshift/api/operator/v1.AzureDiskEncryptionSet":                                        schema_openshift_api_operator_v1_AzureDiskEncryptionSet(ref),
+		"github.com/openshift/api/operator/v1.BootImageSkewEnforcementConfig":                                schema_openshift_api_operator_v1_BootImageSkewEnforcementConfig(ref),
+		"github.com/openshift/api/operator/v1.BootImageSkewEnforcementStatus":                                schema_openshift_api_operator_v1_BootImageSkewEnforcementStatus(ref),
 		"github.com/openshift/api/operator/v1.CSIDriverConfigSpec":                                           schema_openshift_api_operator_v1_CSIDriverConfigSpec(ref),
 		"github.com/openshift/api/operator/v1.CSISnapshotController":                                         schema_openshift_api_operator_v1_CSISnapshotController(ref),
 		"github.com/openshift/api/operator/v1.CSISnapshotControllerList":                                     schema_openshift_api_operator_v1_CSISnapshotControllerList(ref),
@@ -936,6 +939,8 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"github.com/openshift/api/operator/v1.CloudCredentialList":                                           schema_openshift_api_operator_v1_CloudCredentialList(ref),
 		"github.com/openshift/api/operator/v1.CloudCredentialSpec":                                           schema_openshift_api_operator_v1_CloudCredentialSpec(ref),
 		"github.com/openshift/api/operator/v1.CloudCredentialStatus":                                         schema_openshift_api_operator_v1_CloudCredentialStatus(ref),
+		"github.com/openshift/api/operator/v1.ClusterBootImageAutomatic":                                     schema_openshift_api_operator_v1_ClusterBootImageAutomatic(ref),
+		"github.com/openshift/api/operator/v1.ClusterBootImageManual":                                        schema_openshift_api_operator_v1_ClusterBootImageManual(ref),
 		"github.com/openshift/api/operator/v1.ClusterCSIDriver":                                              schema_openshift_api_operator_v1_ClusterCSIDriver(ref),
 		"github.com/openshift/api/operator/v1.ClusterCSIDriverList":                                          schema_openshift_api_operator_v1_ClusterCSIDriverList(ref),
 		"github.com/openshift/api/operator/v1.ClusterCSIDriverSpec":                                          schema_openshift_api_operator_v1_ClusterCSIDriverSpec(ref),
@@ -38249,6 +38254,12 @@ func schema_openshift_api_machine_v1beta1_AWSMachineProviderConfig(ref common.Re
 							Format:      "",
 						},
 					},
+					"cpuOptions": {
+						SchemaProps: spec.SchemaProps{
+							Description: "cpuOptions defines CPU-related settings for the instance, including the confidential computing policy. When omitted, this means no opinion and the AWS platform is left to choose a reasonable default. More info: https://docs.aws.amazon.com/AWSEC2/latest/APIReference/API_CpuOptionsRequest.html, https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/cpu-options-supported-instances-values.html",
+							Ref:         ref("github.com/openshift/api/machine/v1beta1.CPUOptions"),
+						},
+					},
 					"tags": {
 						SchemaProps: spec.SchemaProps{
 							Description: "tags is the set of tags to add to apply to an instance, in addition to the ones added by default by the actuator. These tags are additive. The actuator will ensure these tags are present, but will not remove any other tags that may exist on the instance.",
@@ -38413,7 +38424,7 @@ func schema_openshift_api_machine_v1beta1_AWSMachineProviderConfig(ref common.Re
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/machine/v1beta1.AWSResourceReference", "github.com/openshift/api/machine/v1beta1.BlockDeviceMappingSpec", "github.com/openshift/api/machine/v1beta1.LoadBalancerReference", "github.com/openshift/api/machine/v1beta1.MetadataServiceOptions", "github.com/openshift/api/machine/v1beta1.Placement", "github.com/openshift/api/machine/v1beta1.SpotMarketOptions", "github.com/openshift/api/machine/v1beta1.TagSpecification", "k8s.io/api/core/v1.LocalObjectReference", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"},
+			"github.com/openshift/api/machine/v1beta1.AWSResourceReference", "github.com/openshift/api/machine/v1beta1.BlockDeviceMappingSpec", "github.com/openshift/api/machine/v1beta1.CPUOptions", "github.com/openshift/api/machine/v1beta1.LoadBalancerReference", "github.com/openshift/api/machine/v1beta1.MetadataServiceOptions", "github.com/openshift/api/machine/v1beta1.Placement", "github.com/openshift/api/machine/v1beta1.SpotMarketOptions", "github.com/openshift/api/machine/v1beta1.TagSpecification", "k8s.io/api/core/v1.LocalObjectReference", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"},
 	}
 }
 
@@ -39061,6 +39072,26 @@ func schema_openshift_api_machine_v1beta1_BlockDeviceMappingSpec(ref common.Refe
 		},
 		Dependencies: []string{
 			"github.com/openshift/api/machine/v1beta1.EBSBlockDeviceSpec"},
+	}
+}
+
+func schema_openshift_api_machine_v1beta1_CPUOptions(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "CPUOptions defines CPU-related settings for the instance, including the confidential computing policy. If provided, it must not be empty — at least one field must be set.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"confidentialCompute": {
+						SchemaProps: spec.SchemaProps{
+							Description: "confidentialCompute specifies whether confidential computing should be enabled for the instance, and, if so, which confidential computing technology to use. Valid values are: Disabled, AMDEncryptedVirtualizationNestedPaging and omitted. When set to Disabled, confidential computing will be disabled for the instance. When set to AMDEncryptedVirtualizationNestedPaging, AMD SEV-SNP will be used as the confidential computing technology for the instance. In this case, ensure the following conditions are met: 1) The selected instance type supports AMD SEV-SNP. 2) The selected AWS region supports AMD SEV-SNP. 3) The selected AMI supports AMD SEV-SNP. More details can be checked at https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/sev-snp.html When omitted, this means no opinion and the AWS platform is left to choose a reasonable default, which is subject to change without notice. The current default is Disabled.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+				},
+			},
+		},
 	}
 }
 
@@ -47066,6 +47097,98 @@ func schema_openshift_api_operator_v1_AzureDiskEncryptionSet(ref common.Referenc
 	}
 }
 
+func schema_openshift_api_operator_v1_BootImageSkewEnforcementConfig(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "BootImageSkewEnforcementConfig is used to configure how boot image version skew is enforced on the cluster.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"mode": {
+						SchemaProps: spec.SchemaProps{
+							Description: "mode determines the underlying behavior of skew enforcement mechanism. Valid values are Manual and None. Manual means that the cluster admin is expected to perform manual boot image updates and store the OCP & RHCOS version associated with the last boot image update in the manual field. In Manual mode, the MCO will prevent upgrades when the boot image skew exceeds the skew limit described by the release image. None means that the MCO will no longer monitor the boot image skew. This may affect the cluster's ability to scale. This field is required.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"manual": {
+						SchemaProps: spec.SchemaProps{
+							Description: "manual describes the current boot image of the cluster. This should be set to the oldest boot image used amongst all machine resources in the cluster. This must include either the RHCOS version of the boot image or the OCP release version which shipped with that RHCOS boot image. Required when mode is set to \"Manual\" and forbidden otherwise.",
+							Default:     map[string]interface{}{},
+							Ref:         ref("github.com/openshift/api/operator/v1.ClusterBootImageManual"),
+						},
+					},
+				},
+				Required: []string{"mode"},
+			},
+			VendorExtensible: spec.VendorExtensible{
+				Extensions: spec.Extensions{
+					"x-kubernetes-unions": []interface{}{
+						map[string]interface{}{
+							"discriminator": "mode",
+							"fields-to-discriminateBy": map[string]interface{}{
+								"manual": "Manual",
+							},
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"github.com/openshift/api/operator/v1.ClusterBootImageManual"},
+	}
+}
+
+func schema_openshift_api_operator_v1_BootImageSkewEnforcementStatus(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "BootImageSkewEnforcementStatus is the type for the status object. It represents the cluster defaults when the boot image skew enforcement configuration is undefined and reflects the actual configuration when it is defined.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"mode": {
+						SchemaProps: spec.SchemaProps{
+							Description: "mode determines the underlying behavior of skew enforcement mechanism. Valid values are Automatic, Manual and None. Automatic means that the MCO will perform boot image updates and store the OCP & RHCOS version associated with the last boot image update in the automatic field. Manual means that the cluster admin is expected to perform manual boot image updates and store the OCP & RHCOS version associated with the last boot image update in the manual field. In Automatic and Manual mode, the MCO will prevent upgrades when the boot image skew exceeds the skew limit described by the release image. None means that the MCO will no longer monitor the boot image skew. This may affect the cluster's ability to scale. This field is required.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"automatic": {
+						SchemaProps: spec.SchemaProps{
+							Description: "automatic describes the current boot image of the cluster. This will be populated by the MCO when performing boot image updates. This value will be compared against the cluster's skew limit to determine skew compliance. Required when mode is set to \"Automatic\" and forbidden otherwise.",
+							Default:     map[string]interface{}{},
+							Ref:         ref("github.com/openshift/api/operator/v1.ClusterBootImageAutomatic"),
+						},
+					},
+					"manual": {
+						SchemaProps: spec.SchemaProps{
+							Description: "manual describes the current boot image of the cluster. This will be populated by the MCO using the values provided in the spec.bootImageSkewEnforcement.manual field. This value will be compared against the cluster's skew limit to determine skew compliance. Required when mode is set to \"Manual\" and forbidden otherwise.",
+							Default:     map[string]interface{}{},
+							Ref:         ref("github.com/openshift/api/operator/v1.ClusterBootImageManual"),
+						},
+					},
+				},
+				Required: []string{"mode"},
+			},
+			VendorExtensible: spec.VendorExtensible{
+				Extensions: spec.Extensions{
+					"x-kubernetes-unions": []interface{}{
+						map[string]interface{}{
+							"discriminator": "mode",
+							"fields-to-discriminateBy": map[string]interface{}{
+								"automatic": "Automatic",
+								"manual":    "Manual",
+							},
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"github.com/openshift/api/operator/v1.ClusterBootImageAutomatic", "github.com/openshift/api/operator/v1.ClusterBootImageManual"},
+	}
+}
+
 func schema_openshift_api_operator_v1_CSIDriverConfigSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -47736,6 +47859,81 @@ func schema_openshift_api_operator_v1_CloudCredentialStatus(ref common.Reference
 		},
 		Dependencies: []string{
 			"github.com/openshift/api/operator/v1.GenerationStatus", "github.com/openshift/api/operator/v1.OperatorCondition"},
+	}
+}
+
+func schema_openshift_api_operator_v1_ClusterBootImageAutomatic(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "ClusterBootImageAutomatic is used to describe the cluster boot image in Automatic mode. It stores the RHCOS version of the boot image and the OCP release version which shipped with that RHCOS boot image. At least one of these values are required. If ocpVersion and rhcosVersion are defined, both values will be used for checking skew compliance. If only ocpVersion is defined, only that value will be used for checking skew compliance. If only rhcosVersion is defined, only that value will be used for checking skew compliance.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"ocpVersion": {
+						SchemaProps: spec.SchemaProps{
+							Description: "ocpVersion provides a string which represents the OCP version of the boot image. This field must match the OCP semver compatible format of x.y.z. This field must be between 5 and 10 characters long.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"rhcosVersion": {
+						SchemaProps: spec.SchemaProps{
+							Description: "rhcosVersion provides a string which represents the RHCOS version of the boot image This field must match rhcosVersion formatting of [major].[minor].[datestamp(YYYYMMDD)]-[buildnumber] or the legacy format of [major].[minor].[timestamp(YYYYMMDDHHmm)]-[buildnumber]. This field must be between 14 and 21 characters long.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+				},
+			},
+		},
+	}
+}
+
+func schema_openshift_api_operator_v1_ClusterBootImageManual(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "ClusterBootImageManual is used to describe the cluster boot image in Manual mode.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"mode": {
+						SchemaProps: spec.SchemaProps{
+							Description: "mode is used to configure which boot image field is defined in Manual mode. Valid values are OCPVersion and RHCOSVersion. OCPVersion means that the cluster admin is expected to set the OCP version associated with the last boot image update in the OCPVersion field. RHCOSVersion means that the cluster admin is expected to set the RHCOS version associated with the last boot image update in the RHCOSVersion field. This field is required.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"ocpVersion": {
+						SchemaProps: spec.SchemaProps{
+							Description: "ocpVersion provides a string which represents the OCP version of the boot image. This field must match the OCP semver compatible format of x.y.z. This field must be between 5 and 10 characters long. Required when mode is set to \"OCPVersion\" and forbidden otherwise.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"rhcosVersion": {
+						SchemaProps: spec.SchemaProps{
+							Description: "rhcosVersion provides a string which represents the RHCOS version of the boot image This field must match rhcosVersion formatting of [major].[minor].[datestamp(YYYYMMDD)]-[buildnumber] or the legacy format of [major].[minor].[timestamp(YYYYMMDDHHmm)]-[buildnumber]. This field must be between 14 and 21 characters long. Required when mode is set to \"RHCOSVersion\" and forbidden otherwise.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+				},
+				Required: []string{"mode"},
+			},
+			VendorExtensible: spec.VendorExtensible{
+				Extensions: spec.Extensions{
+					"x-kubernetes-unions": []interface{}{
+						map[string]interface{}{
+							"discriminator": "mode",
+							"fields-to-discriminateBy": map[string]interface{}{
+								"ocpVersion":   "OCPVersion",
+								"rhcosVersion": "RHCOSVersion",
+							},
+						},
+					},
+				},
+			},
+		},
 	}
 }
 
@@ -53413,12 +53611,19 @@ func schema_openshift_api_operator_v1_MachineConfigurationSpec(ref common.Refere
 							Ref:         ref("github.com/openshift/api/operator/v1.IrreconcilableValidationOverrides"),
 						},
 					},
+					"bootImageSkewEnforcement": {
+						SchemaProps: spec.SchemaProps{
+							Description: "bootImageSkewEnforcement allows an admin to configure how boot image version skew is enforced on the cluster. When omitted, this will default to Automatic for clusters that support automatic boot image updates. For clusters that do not support automatic boot image updates, cluster upgrades will be disabled until a skew enforcement mode has been specified. When version skew is being enforced, cluster upgrades will be disabled until the version skew is deemed acceptable for the current release payload.",
+							Default:     map[string]interface{}{},
+							Ref:         ref("github.com/openshift/api/operator/v1.BootImageSkewEnforcementConfig"),
+						},
+					},
 				},
 				Required: []string{"managementState", "forceRedeploymentReason"},
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/operator/v1.IrreconcilableValidationOverrides", "github.com/openshift/api/operator/v1.ManagedBootImages", "github.com/openshift/api/operator/v1.NodeDisruptionPolicyConfig", "k8s.io/apimachinery/pkg/runtime.RawExtension"},
+			"github.com/openshift/api/operator/v1.BootImageSkewEnforcementConfig", "github.com/openshift/api/operator/v1.IrreconcilableValidationOverrides", "github.com/openshift/api/operator/v1.ManagedBootImages", "github.com/openshift/api/operator/v1.NodeDisruptionPolicyConfig", "k8s.io/apimachinery/pkg/runtime.RawExtension"},
 	}
 }
 
@@ -53471,11 +53676,18 @@ func schema_openshift_api_operator_v1_MachineConfigurationStatus(ref common.Refe
 							Ref:         ref("github.com/openshift/api/operator/v1.ManagedBootImages"),
 						},
 					},
+					"bootImageSkewEnforcementStatus": {
+						SchemaProps: spec.SchemaProps{
+							Description: "bootImageSkewEnforcementStatus reflects what the latest cluster-validated boot image skew enforcement configuration is and will be used by Machine Config Controller while performing boot image skew enforcement. When omitted, the MCO has no knowledge of how to enforce boot image skew. When the MCO does not know how boot image skew should be enforced, cluster upgrades will be blocked until it can either automatically determine skew enforcement or there is an explicit skew enforcement configuration provided in the spec.bootImageSkewEnforcement field.",
+							Default:     map[string]interface{}{},
+							Ref:         ref("github.com/openshift/api/operator/v1.BootImageSkewEnforcementStatus"),
+						},
+					},
 				},
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/operator/v1.ManagedBootImages", "github.com/openshift/api/operator/v1.NodeDisruptionPolicyStatus", "k8s.io/apimachinery/pkg/apis/meta/v1.Condition"},
+			"github.com/openshift/api/operator/v1.BootImageSkewEnforcementStatus", "github.com/openshift/api/operator/v1.ManagedBootImages", "github.com/openshift/api/operator/v1.NodeDisruptionPolicyStatus", "k8s.io/apimachinery/pkg/apis/meta/v1.Condition"},
 	}
 }
 
@@ -53488,7 +53700,7 @@ func schema_openshift_api_operator_v1_MachineManager(ref common.ReferenceCallbac
 				Properties: map[string]spec.Schema{
 					"resource": {
 						SchemaProps: spec.SchemaProps{
-							Description: "resource is the machine management resource's type. The only current valid value is machinesets. machinesets means that the machine manager will only register resources of the kind MachineSet.",
+							Description: "resource is the machine management resource's type. Valid values are machinesets and controlplanemachinesets. machinesets means that the machine manager will only register resources of the kind MachineSet. controlplanemachinesets means that the machine manager will only register resources of the kind ControlPlaneMachineSet.",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -53526,7 +53738,7 @@ func schema_openshift_api_operator_v1_MachineManagerSelector(ref common.Referenc
 				Properties: map[string]spec.Schema{
 					"mode": {
 						SchemaProps: spec.SchemaProps{
-							Description: "mode determines how machine managers will be selected for updates. Valid values are All and Partial. All means that every resource matched by the machine manager will be updated. Partial requires specified selector(s) and allows customisation of which resources matched by the machine manager will be updated. None means that every resource matched by the machine manager will not be updated.",
+							Description: "mode determines how machine managers will be selected for updates. Valid values are All, Partial and None. All means that every resource matched by the machine manager will be updated. Partial requires specified selector(s) and allows customisation of which resources matched by the machine manager will be updated. Partial is not permitted for the controlplanemachinesets resource type as they are a singleton within the cluster. None means that every resource matched by the machine manager will not be updated.",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",

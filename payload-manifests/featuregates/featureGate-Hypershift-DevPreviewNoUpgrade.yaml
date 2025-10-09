@@ -195,13 +195,7 @@
                         "name": "IngressControllerDynamicConfigurationManager"
                     },
                     {
-                        "name": "IngressControllerLBSubnetsAWS"
-                    },
-                    {
                         "name": "InsightsConfig"
-                    },
-                    {
-                        "name": "InsightsConfigAPI"
                     },
                     {
                         "name": "InsightsOnDemandDataGather"
@@ -229,6 +223,9 @@
                     },
                     {
                         "name": "ManagedBootImagesAzure"
+                    },
+                    {
+                        "name": "ManagedBootImagesCPMS"
                     },
                     {
                         "name": "ManagedBootImagesvSphere"
@@ -261,9 +258,6 @@
                         "name": "NetworkSegmentation"
                     },
                     {
-                        "name": "NodeSwap"
-                    },
-                    {
                         "name": "NutanixMultiSubnets"
                     },
                     {
@@ -292,9 +286,6 @@
                     },
                     {
                         "name": "ServiceAccountTokenNodeBinding"
-                    },
-                    {
-                        "name": "SetEIPForNLBIngressController"
                     },
                     {
                         "name": "SignatureStores"

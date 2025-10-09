@@ -95,12 +95,6 @@
                         "name": "Example2"
                     },
                     {
-                        "name": "ExternalOIDC"
-                    },
-                    {
-                        "name": "ExternalOIDCWithUIDAndExtraClaimMappings"
-                    },
-                    {
                         "name": "ExternalSnapshotMetadata"
                     },
                     {
@@ -128,9 +122,6 @@
                         "name": "InsightsConfig"
                     },
                     {
-                        "name": "InsightsConfigAPI"
-                    },
-                    {
                         "name": "InsightsOnDemandDataGather"
                     },
                     {
@@ -147,6 +138,9 @@
                     },
                     {
                         "name": "ManagedBootImagesAzure"
+                    },
+                    {
+                        "name": "ManagedBootImagesCPMS"
                     },
                     {
                         "name": "ManagedBootImagesvSphere"
@@ -185,9 +179,6 @@
                         "name": "NoRegistryClusterOperations"
                     },
                     {
-                        "name": "NodeSwap"
-                    },
-                    {
                         "name": "NutanixMultiSubnets"
                     },
                     {
@@ -221,9 +212,6 @@
                         "name": "VSphereMixedNodeEnv"
                     },
                     {
-                        "name": "VolumeAttributesClass"
-                    },
-                    {
                         "name": "VolumeGroupSnapshot"
                     }
                 ],
@@ -252,6 +240,11 @@
                     {
                         "name": "DualReplica"
                     },
+                        "name": "ExternalOIDC"
+                    },
+                    {
+                        "name": "ExternalOIDCWithUIDAndExtraClaimMappings"
+                    },
                     {
                         "name": "GCPClusterHostedDNSInstall"
                     },
@@ -266,9 +259,6 @@
                     },
                     {
                         "name": "ImageVolume"
-                    },
-                    {
-                        "name": "IngressControllerLBSubnetsAWS"
                     },
                     {
                         "name": "KMSv1"
@@ -316,9 +306,6 @@
                         "name": "ServiceAccountTokenNodeBinding"
                     },
                     {
-                        "name": "SetEIPForNLBIngressController"
-                    },
-                    {
                         "name": "SigstoreImageVerification"
                     },
                     {
@@ -338,6 +325,9 @@
                     },
                     {
                         "name": "VSphereMultiNetworks"
+                    },
+                    {
+                        "name": "VolumeAttributesClass"
                     }
                 ],
                 "version": ""

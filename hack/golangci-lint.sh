@@ -15,4 +15,11 @@ if [[ ${HOME} == "/" ]]; then
   HOME="/tmp"
 fi
 
+# We have two separate configs so that we can have different config for types that are go-validated vs openapi validated.
+# Init sets errexit so we must unset that for the rest of this script to correctly propagate the exit code.
+set +e
+
 "${GOLANGCI_LINT}" $@
+status=$?
+
+"${GOLANGCI_LINT}" $@ --config=.golangci.go-validated.yaml && exit ${status}

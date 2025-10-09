@@ -84,7 +84,6 @@ var (
 					enableIn(configv1.Default, configv1.DevPreviewNoUpgrade, configv1.TechPreviewNoUpgrade).
 					mustRegister()
 
-
 	FeatureGateDynamicResourceAllocation = newFeatureGate("DynamicResourceAllocation").
 						reportProblemsToJiraComponent("scheduling").
 						contactPerson("jchaloup").
@@ -878,4 +877,12 @@ var (
 					enhancementPR("https://github.com/kubernetes/enhancements/issues/4222").
 					enableIn(configv1.DevPreviewNoUpgrade, configv1.TechPreviewNoUpgrade).
 					mustRegister()
+
+	FeatureEventTTL = newFeatureGate("EventTTL").
+			reportProblemsToJiraComponent("kube-apiserver").
+			contactPerson("tjungblu").
+			productScope(ocpSpecific).
+			enhancementPR("https://github.com/openshift/enhancements/pull/1857").
+			enableIn(configv1.DevPreviewNoUpgrade, configv1.TechPreviewNoUpgrade).
+			mustRegister()
 )

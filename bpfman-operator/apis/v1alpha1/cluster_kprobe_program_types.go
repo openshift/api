@@ -31,19 +31,22 @@ type ClKprobeProgramInfo struct {
 	// default, the eBPF program is triggered at the entry of the attachment point,
 	// but the attachment point can be adjusted using an optional offset.
 	// +optional
+	// +kubebuilder:validation:MaxItems=1
+	// +listType=atomic
 	Links []ClKprobeAttachInfo `json:"links,omitempty"`
 }
 
 type ClKprobeAttachInfo struct {
 	// function is a required field and specifies the name of the Linux kernel
 	// function to attach the KProbe program. function must not be an empty string,
-	// must not exceed 64 characters in length, must start with alpha characters
-	// and must only contain alphanumeric characters.
+	// must be between 1 and 64 characters in length, must start with alpha
+	// characters and must only contain alphanumeric characters and underscores.
+	// The pattern ^[a-zA-Z][a-zA-Z0-9_]+. is enforced.
 	// +required
 	// +kubebuilder:validation:Pattern="^[a-zA-Z][a-zA-Z0-9_]+."
 	// +kubebuilder:validation:MinLength=1
 	// +kubebuilder:validation:MaxLength=64
-	Function string `json:"function"`
+	Function string `json:"function,omitempty"`
 
 	// offset is an optional field and the value is added to the address of the
 	// attachment point function. If not provided, offset defaults to 0.
@@ -58,16 +61,23 @@ type ClKprobeProgramInfoState struct {
 	// successful or not on this node, a linkId, which is the kernel ID for the
 	// link if successfully attached, and other attachment specific data.
 	// +optional
+	// +kubebuilder:validation:MaxItems=1023
+	// +listType=atomic
 	Links []ClKprobeAttachInfoState `json:"links,omitempty"`
 }
 
 type ClKprobeAttachInfoState struct {
 	AttachInfoStateCommon `json:",inline"`
 
-	// function is the provisioned name of the Linux kernel function the KProbe
-	// program should be attached.
+	// function is a required field and specifies the name of the Linux kernel
+	// function to attach the Kprobe. function must not be an empty
+	// string, must not exceed 64 characters in length, must start with alpha
+	// characters and must only contain alphanumeric characters.
 	// +required
-	Function string `json:"function"`
+	// +kubebuilder:validation:Pattern="^[a-zA-Z][a-zA-Z0-9_]+."
+	// +kubebuilder:validation:MinLength=1
+	// +kubebuilder:validation:MaxLength=64
+	Function string `json:"function,omitempty"`
 
 	// offset is the provisioned offset, whose value is added to the address of the
 	// attachment point function.

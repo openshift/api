@@ -24,6 +24,7 @@ type InterfaceDiscovery struct {
 	// interfaceAutoDiscovery is an optional field. When enabled, the agent
 	// monitors the creation and deletion of interfaces and automatically
 	// attached eBPF programs to the newly discovered interfaces.
+	// Valid values are "Enabled", "Disabled" (default).
 	// CAUTION: This has the potential to attach a given eBPF program to a large
 	// number of interfaces. Use with caution.
 	// +optional
@@ -34,9 +35,14 @@ type InterfaceDiscovery struct {
 	// names that are excluded from interface discovery. The interface names in
 	// the list are case-sensitive. By default, the list contains the loopback
 	// interface, "lo". This field is only taken into consideration if
-	// interfaceAutoDiscovery is set to true.
+	// interfaceAutoDiscovery is set to true. The list is limited to a maximum of
+	// 1023 entries, and each interface name must not exceed 63 characters in
+	// length.
 	// +optional
 	// +kubebuilder:default:={"lo"}
+	// +kubebuilder:validation:MaxItems=1023
+	// +kubebuilder:validation:items:MaxLength=63
+	// +listType=atomic
 	ExcludeInterfaces []string `json:"excludeInterfaces,omitempty"`
 
 	// allowedInterfaces is an optional field that contains a list of interface
@@ -47,12 +53,17 @@ type InterfaceDiscovery struct {
 	// `/veth*/`, then the entry is considered as a regular expression for
 	// matching. Otherwise, the interface names in the list are case-sensitive.
 	// This field is only taken into consideration if interfaceAutoDiscovery is set
-	// to true.
+	// to true. The list is limited to a maximum of 1023 entries, and each
+	// interface name must not exceed 63 characters in length.
 	// +optional
+	// +kubebuilder:validation:MaxItems=1023
+	// +kubebuilder:validation:items:MaxLength=63
+	// +listType=atomic
 	AllowedInterfaces []string `json:"allowedInterfaces,omitempty"`
 }
 
 // InterfaceSelector describes the set of interfaces to attach a program to.
+// Exactly one of interfacesDiscoveryConfig, interfaces, or primaryNodeInterface must be specified.
 // +kubebuilder:validation:MaxProperties=1
 // +kubebuilder:validation:MinProperties=1
 type InterfaceSelector struct {
@@ -66,7 +77,12 @@ type InterfaceSelector struct {
 
 	// interfaces is an optional field and is a list of network interface names to
 	// attach the eBPF program. The interface names in the list are case-sensitive.
+	// The list is limited to a maximum of 1023 entries, and each interface name
+	// must not exceed 63 characters in length.
 	// +optional
+	// +kubebuilder:validation:MaxItems=1023
+	// +kubebuilder:validation:items:MaxLength=63
+	// +listType=atomic
 	Interfaces []string `json:"interfaces,omitempty"`
 
 	// primaryNodeInterface is and optional field and indicates to attach the eBPF
@@ -80,18 +96,25 @@ type InterfaceSelector struct {
 type ClContainerSelector struct {
 	// namespace is an optional field and indicates the target Kubernetes
 	// namespace. If not provided, all Kubernetes namespaces are included.
+	// namespace must not exceed 253 characters in length.
 	// +optional
+	// +kubebuilder:validation:MinLength=1
+	// +kubebuilder:validation:MaxLength=253
 	Namespace string `json:"namespace,omitempty"`
 
 	// pods is a required field and indicates the target pods. To select all pods
 	// use the standard metav1.LabelSelector semantics and make it empty.
 	// +required
-	Pods metav1.LabelSelector `json:"pods"`
+	Pods metav1.LabelSelector `json:"pods,omitempty"`
 
 	// containerNames is an optional field and is a list of container names in a
 	// pod to attach the eBPF program. If no names are specified, all containers
-	// in the pod are selected.
+	// in the pod are selected. The list is limited to a maximum of 1023 entries,
+	// and each container name must not exceed 253 characters in length.
 	// +optional
+	// +kubebuilder:validation:MaxItems=1023
+	// +kubebuilder:validation:items:MaxLength=253
+	// +listType=atomic
 	ContainerNames []string `json:"containerNames,omitempty"`
 }
 
@@ -102,12 +125,16 @@ type ContainerSelector struct {
 	// pods is a required field and indicates the target pods. To select all pods
 	// use the standard metav1.LabelSelector semantics and make it empty.
 	// +required
-	Pods metav1.LabelSelector `json:"pods"`
+	Pods metav1.LabelSelector `json:"pods,omitempty"`
 
 	// containerNames is an optional field and is a list of container names in a
 	// pod to attach the eBPF program. If no names are  specified, all containers
-	// in the pod are selected.
+	// in the pod are selected. The list is limited to a maximum of 1023 entries,
+	// and each container name must not exceed 253 characters in length.
 	// +optional
+	// +kubebuilder:validation:MaxItems=1023
+	// +kubebuilder:validation:items:MaxLength=253
+	// +listType=atomic
 	ContainerNames []string `json:"containerNames,omitempty"`
 }
 
@@ -115,14 +142,17 @@ type ContainerSelector struct {
 // program types in the cluster-scoped ClusterBpfApplication object.
 type ClNetworkNamespaceSelector struct {
 	// namespace is an optional field and indicates the target network namespace.
-	// If not provided, the default network namespace is used.
+	// If not provided, the default network namespace is used. namespace must not
+	// exceed 253 characters in length.
 	// +optional
+	// +kubebuilder:validation:MinLength=1
+	// +kubebuilder:validation:MaxLength=253
 	Namespace string `json:"namespace,omitempty"`
 
 	// pods is a required field and indicates the target pods. To select all pods
 	// use the standard metav1.LabelSelector semantics and make it empty.
 	// +required
-	Pods metav1.LabelSelector `json:"pods"`
+	Pods metav1.LabelSelector `json:"pods,omitempty"`
 }
 
 // NetworkNamespaceSelector identifies a network namespace for network-related
@@ -131,7 +161,7 @@ type NetworkNamespaceSelector struct {
 	// pods is a required field and indicates the target pods. To select all pods
 	// use the standard metav1.LabelSelector semantics and make it empty.
 	// +required
-	Pods metav1.LabelSelector `json:"pods"`
+	Pods metav1.LabelSelector `json:"pods,omitempty"`
 }
 
 // BpfAppCommon defines the common attributes for all BpfApp programs
@@ -140,7 +170,7 @@ type BpfAppCommon struct {
 	// Kubernetes nodes to deploy the eBPF programs. To select all nodes use
 	// standard metav1.LabelSelector semantics and make it empty.
 	// +required
-	NodeSelector metav1.LabelSelector `json:"nodeSelector"`
+	NodeSelector metav1.LabelSelector `json:"nodeSelector,omitempty"`
 
 	// globalData is an optional field that allows the user to set global variables
 	// when the program is loaded. This allows the same compiled bytecode to be
@@ -152,11 +182,11 @@ type BpfAppCommon struct {
 	// +optional
 	GlobalData map[string][]byte `json:"globalData,omitempty"`
 
-	// bytecode is a required field and configures where the eBPF program's
+	// byteCode is a required field and configures where the eBPF program's
 	// bytecode should be loaded from. The image must contain one or more
 	// eBPF programs.
 	// +required
-	ByteCode ByteCodeSelector `json:"byteCode"`
+	ByteCode ByteCodeSelector `json:"byteCode,omitzero"`
 
 	// mapOwnerSelector is an optional field used to share maps across
 	// applications. eBPF programs loaded with the same ClusterBpfApplication or
@@ -177,38 +207,47 @@ type BpfAppStatus struct {
 	// +patchStrategy=merge
 	// +listType=map
 	// +listMapKey=type
+	// +kubebuilder:validation:MaxItems=1023
+	// +optional
 	Conditions []metav1.Condition `json:"conditions,omitempty" patchStrategy:"merge" patchMergeKey:"type" protobuf:"bytes,1,rep,name=conditions"`
 }
 
 // AttachInfoStateCommon reflects the status for one attach point for a given bpf
-// application program
+// application program.
 type AttachInfoStateCommon struct {
 	// shouldAttach reflects whether the attachment should exist.
 	// +required
 	ShouldAttach bool `json:"shouldAttach"`
 	// uuid is an Unique identifier for the attach point assigned by bpfman agent.
+	// uuid must not exceed 64 characters in length.
 	// +required
-	UUID string `json:"uuid"`
+	// +kubebuilder:validation:MinLength=1
+	// +kubebuilder:validation:MaxLength=64
+	UUID string `json:"uuid,omitempty"`
 	// linkId is an identifier for the link assigned by bpfman. This field is
 	// empty until the program is successfully attached and bpfman returns the
 	// id.
 	// +optional
 	LinkId *uint32 `json:"linkId,omitempty"`
 	// linkStatus reflects whether the attachment has been reconciled
-	// successfully, and if not, why.
+	// successfully, and if not, why. Valid values are documented in the
+	// LinkStatus type definition.
 	// +required
-	LinkStatus LinkStatus `json:"linkStatus"`
+	LinkStatus LinkStatus `json:"linkStatus,omitempty"`
 }
 
 type BpfProgramStateCommon struct {
 	// name is the name of the function that is the entry point for the eBPF
-	// program
+	// program. name must not exceed 64 characters in length.
 	// +required
-	Name string `json:"name"`
+	// +kubebuilder:validation:MinLength=1
+	// +kubebuilder:validation:MaxLength=64
+	Name string `json:"name,omitempty"`
 	// programLinkStatus reflects whether all links requested for the program
-	// are in the correct state.
+	// are in the correct state. Valid values are documented in the
+	// ProgramLinkStatus type definition.
 	// +required
-	ProgramLinkStatus ProgramLinkStatus `json:"programLinkStatus"`
+	ProgramLinkStatus ProgramLinkStatus `json:"programLinkStatus,omitempty"`
 	// programId is the id of the program in the kernel.  Not set until the
 	// program is loaded.
 	// +optional
@@ -229,6 +268,7 @@ const (
 )
 
 // ByteCodeSelector defines the various ways to reference BPF bytecode objects.
+// Exactly one of image or path must be specified.
 // +kubebuilder:validation:MaxProperties=1
 // +kubebuilder:validation:MinProperties=1
 type ByteCodeSelector struct {
@@ -238,9 +278,11 @@ type ByteCodeSelector struct {
 	Image *ByteCodeImage `json:"image,omitempty"`
 
 	// path is an optional field and used to specify a bytecode object file via
-	// filepath on a Kubernetes node.
+	// filepath on a Kubernetes node. The path must be a valid absolute path with no null bytes,
+	// matching the pattern ^(/[^/\0]+)+/?$. path must not exceed 1023 characters in length.
 	// +optional
 	// +kubebuilder:validation:Pattern=`^(/[^/\0]+)+/?$`
+	// +kubebuilder:validation:MaxLength=1023
 	Path *string `json:"path,omitempty"`
 }
 
@@ -250,12 +292,12 @@ type ByteCodeImage struct {
 	// a remote bytecode image. url must not be an empty string, must not exceed
 	// 525 characters in length and must be a valid URL.
 	// +required
-	// +kubebuilder:validation:Required
+	// +kubebuilder:validation:MinLength:=1
 	// +kubebuilder:validation:MaxLength:=525
 	// +kubebuilder:validation:Pattern=`[a-zA-Z0-9_][a-zA-Z0-9._-]{0,127}`
-	Url string `json:"url"`
+	Url string `json:"url,omitempty"`
 
-	// pullPolicy is an optional field that describes a policy for if/when to pull
+	// imagePullPolicy is an optional field that describes a policy for if/when to pull
 	// a bytecode image. Defaults to IfNotPresent. Allowed values are:
 	//   Always, IfNotPresent and Never
 	//
@@ -280,14 +322,20 @@ type ByteCodeImage struct {
 // ImagePullSecretSelector defines the name and namespace of an image pull secret.
 type ImagePullSecretSelector struct {
 	// name is a required field and is the name of the secret which contains the
-	// credentials to access the image repository.
+	// credentials to access the image repository. name must not exceed 253
+	// characters in length.
 	// +required
-	Name string `json:"name"`
+	// +kubebuilder:validation:MinLength=1
+	// +kubebuilder:validation:MaxLength=253
+	Name string `json:"name,omitempty"`
 
 	// namespace is a required field and is the namespace of the secret which
-	// contains the credentials to access the image repository.
+	// contains the credentials to access the image repository. namespace must not
+	// exceed 253 characters in length.
 	// +required
-	Namespace string `json:"namespace"`
+	// +kubebuilder:validation:MinLength=1
+	// +kubebuilder:validation:MaxLength=253
+	Namespace string `json:"namespace,omitempty"`
 }
 
 // -----------------------------------------------------------------------------
@@ -460,6 +508,8 @@ func (b BpfApplicationStateConditionType) Condition() metav1.Condition {
 	return cond
 }
 
+// +kubebuilder:validation:MinLength=1
+// +kubebuilder:validation:MaxLength=1023
 type AppLoadStatus string
 
 const (
@@ -479,6 +529,8 @@ const (
 	ProgListChangedError AppLoadStatus = "ProgramListChangedError"
 )
 
+// +kubebuilder:validation:MinLength=1
+// +kubebuilder:validation:MaxLength=1023
 type ProgramLinkStatus string
 
 const (
@@ -492,6 +544,8 @@ const (
 	UpdateAttachInfoError ProgramLinkStatus = "UpdateAttachInfoError"
 )
 
+// +kubebuilder:validation:MinLength=1
+// +kubebuilder:validation:MaxLength=1023
 type LinkStatus string
 
 const (

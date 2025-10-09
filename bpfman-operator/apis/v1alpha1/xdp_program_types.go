@@ -31,6 +31,8 @@ type XdpProgramInfo struct {
 	// interface, or by setting the primaryNodeInterface flag, which instructs
 	// bpfman to use the primary interface of a Kubernetes node.
 	// +optional
+	// +kubebuilder:validation:MaxItems=1023
+	// +listType=atomic
 	Links []XdpAttachInfo `json:"links,omitempty"`
 }
 
@@ -40,12 +42,12 @@ type XdpAttachInfo struct {
 	// by providing a list of interface names, enabling auto discovery, or setting
 	// the primaryNodeInterface flag, but only one option is allowed.
 	// +required
-	InterfaceSelector InterfaceSelector `json:"interfaceSelector"`
+	InterfaceSelector InterfaceSelector `json:"interfaceSelector,omitzero"`
 
 	// networkNamespaces is a required field that identifies the set of network
 	// namespaces in which to attach the eBPF program.
 	// +required
-	NetworkNamespaces NetworkNamespaceSelector `json:"networkNamespaces"`
+	NetworkNamespaces NetworkNamespaceSelector `json:"networkNamespaces,omitzero"`
 
 	// priority is an optional field and determines the execution order of the XDP
 	// program relative to other XDP programs attached to the same attachment
@@ -71,6 +73,8 @@ type XdpAttachInfo struct {
 	// next XDP program in the chain will NOT be called.
 	// +optional
 	// +kubebuilder:default:={Pass,DispatcherReturn}
+	// +kubebuilder:validation:MaxItems=1023
+	// +listType=atomic
 	ProceedOn []XdpProceedOnValue `json:"proceedOn,omitempty"`
 }
 
@@ -80,6 +84,8 @@ type XdpProgramInfoState struct {
 	// or not on this node, a linkId, which is the kernel ID for the link if
 	// successfully attached, and other attachment specific data.
 	// +optional
+	// +kubebuilder:validation:MaxItems=1023
+	// +listType=atomic
 	Links []XdpAttachInfoState `json:"links,omitempty"`
 }
 
@@ -87,14 +93,19 @@ type XdpAttachInfoState struct {
 	AttachInfoStateCommon `json:",inline"`
 
 	// interfaceName is the name of the interface the XDP program should be
-	// attached.
+	// attached. interfaceName must not exceed 63 characters in length.
 	// +required
-	InterfaceName string `json:"interfaceName"`
+	// +kubebuilder:validation:MinLength=1
+	// +kubebuilder:validation:MaxLength=63
+	InterfaceName string `json:"interfaceName,omitempty"`
 
 	// netnsPath is the path to the network namespace inside of which the XDP
-	// program should be attached.
+	// program should be attached. netnsPath must not exceed 1023 characters in
+	// length.
 	// +required
-	NetnsPath string `json:"netnsPath"`
+	// +kubebuilder:validation:MinLength=1
+	// +kubebuilder:validation:MaxLength=1023
+	NetnsPath string `json:"netnsPath,omitempty"`
 
 	// priority is the provisioned priority of the XDP program in relation to other
 	// programs of the same type with the same attach point. It is a value from 0
@@ -108,5 +119,7 @@ type XdpAttachInfoState struct {
 	// user to call other TC programs in a chain, or not call the next program in a
 	// chain based on the exit code of a TC program .Multiple values are supported.
 	// +required
-	ProceedOn []XdpProceedOnValue `json:"proceedOn"`
+	// +kubebuilder:validation:MaxItems=1023
+	// +listType=atomic
+	ProceedOn []XdpProceedOnValue `json:"proceedOn,omitempty"`
 }

@@ -32,6 +32,8 @@ type UprobeProgramInfo struct {
 	// optional function name and/or offset. Optionally, the eBPF program can be
 	// installed in a set of containers or limited to a specified PID.
 	// +optional
+	// +kubebuilder:validation:MaxItems=1023
+	// +listType=atomic
 	Links []UprobeAttachInfo `json:"links,omitempty"`
 }
 
@@ -54,9 +56,12 @@ type UprobeAttachInfo struct {
 	Offset uint64 `json:"offset"`
 
 	// target is a required field and is the user-space library name or the
-	// absolute path to a binary or library.
+	// absolute path to a binary or library. target must not exceed 1023 characters
+	// in length.
 	// +required
-	Target string `json:"target"`
+	// +kubebuilder:validation:MinLength=1
+	// +kubebuilder:validation:MaxLength=1023
+	Target string `json:"target,omitempty"`
 
 	// pid is an optional field and if provided, limits the execution of the UProbe
 	// or URetProbe to the provided process identification number (PID). If pid is
@@ -68,7 +73,8 @@ type UprobeAttachInfo struct {
 	// which to attach the UProbe or URetProbe program. If containers is not
 	// specified, the eBPF program will be attached in the bpfman container.
 	// uprobe.
-	Containers ContainerSelector `json:"containers"`
+	// +optional
+	Containers ContainerSelector `json:"containers,omitempty"`
 }
 
 type UprobeProgramInfoState struct {
@@ -77,6 +83,8 @@ type UprobeProgramInfoState struct {
 	// successful or not on this node, a linkId, which is the kernel ID for the
 	// link if successfully attached, and other attachment specific data.
 	// +optional
+	// +kubebuilder:validation:MaxItems=1023
+	// +listType=atomic
 	Links []UprobeAttachInfoState `json:"links,omitempty"`
 }
 
@@ -84,8 +92,10 @@ type UprobeAttachInfoState struct {
 	AttachInfoStateCommon `json:",inline"`
 
 	// function is the provisioned name of the user-space function the UProbe
-	// program should be attached.
+	// program should be attached. function must not exceed 64 characters in length.
 	// +optional
+	// +kubebuilder:validation:MinLength=1
+	// +kubebuilder:validation:MaxLength=64
 	Function string `json:"function,omitempty"`
 
 	// offset is the provisioned offset, whose value is added to the address of the
@@ -95,9 +105,11 @@ type UprobeAttachInfoState struct {
 	Offset uint64 `json:"offset"`
 
 	// target is the provisioned user-space library name or the absolute path to a
-	// binary or library.
+	// binary or library. target must not exceed 1023 characters in length.
 	// +required
-	Target string `json:"target"`
+	// +kubebuilder:validation:MinLength=1
+	// +kubebuilder:validation:MaxLength=1023
+	Target string `json:"target,omitempty"`
 
 	// pid is the provisioned pid. If set, pid limits the execution of the UProbe
 	// or URetProbe to the provided process identification number (PID). If pid is
@@ -105,9 +117,11 @@ type UprobeAttachInfoState struct {
 	// +optional
 	Pid *int32 `json:"pid,omitempty"`
 
-	// If containers is provisioned in the BpfApplication instance, containerPid is
-	// the derived PID of the container the UProbe or URetProbe this attachment
-	// point is attached.
+	// containerPid is the derived PID of the container the UProbe or URetProbe
+	// this attachment point is attached to, if containers is provisioned in the
+	// BpfApplication instance.
 	// +optional
+	// +kubebuilder:validation:Minimum=1
+	// +kubebuilder:validation:Maximum=2147483647
 	ContainerPid int32 `json:"containerPid,omitempty"`
 }

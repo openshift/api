@@ -30,6 +30,7 @@ type ClFexitProgramInfo struct {
 	// the program, add an entry to links with mode set to Attach. To detach it,
 	// remove the entry from links.
 	// +optional
+	// +listType=atomic
 	// +kubebuilder:validation:MaxItems=1
 	Links []ClFexitAttachInfo `json:"links,omitempty"`
 }
@@ -37,13 +38,14 @@ type ClFexitProgramInfo struct {
 type ClFexitLoadInfo struct {
 	// function is a required field and specifies the name of the Linux kernel
 	// function to attach the FExit program. function must not be an empty string,
-	// must not exceed 64 characters in length, must start with alpha characters
-	// and must only contain alphanumeric characters.
+	// must be between 1 and 64 characters in length, must start with alpha
+	// characters and must only contain alphanumeric characters and underscores.
+	// The pattern ^[a-zA-Z][a-zA-Z0-9_]+. is enforced.
 	// +required
 	// +kubebuilder:validation:Pattern="^[a-zA-Z][a-zA-Z0-9_]+."
 	// +kubebuilder:validation:MinLength=1
 	// +kubebuilder:validation:MaxLength=64
-	Function string `json:"function"`
+	Function string `json:"function,omitempty"`
 }
 
 type ClFexitAttachInfo struct {
@@ -51,7 +53,7 @@ type ClFexitAttachInfo struct {
 	// attempt to be attached. To detach the FExit program, remove the link entry.
 	// +required
 	// +kubebuilder:validation:Enum=Attach;
-	Mode AttachTypeAttach `json:"mode"`
+	Mode AttachTypeAttach `json:"mode,omitempty"`
 }
 
 type ClFexitProgramInfoState struct {
@@ -62,6 +64,7 @@ type ClFexitProgramInfoState struct {
 	// successful or not, a linkId, which is the kernel ID for the link if
 	// successfully attached, and other attachment specific data.
 	// +optional
+	// +listType=atomic
 	// +kubebuilder:validation:MaxItems=1
 	Links []ClFexitAttachInfoState `json:"links,omitempty"`
 }

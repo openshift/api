@@ -27,8 +27,10 @@ type ClTracepointProgramInfo struct {
 	// the Tracepoint program to be attached or detached.
 	//
 	// The attachment point for a Tracepoint program is a one of a predefined set
-	// of Linux kernel functions.
+	// of Linux kernel functions. The list is limited to a maximum of 1023 entries.
 	// +optional
+	// +kubebuilder:validation:MaxItems=1023
+	// +listType=atomic
 	Links []ClTracepointAttachInfo `json:"links,omitempty"`
 }
 
@@ -41,24 +43,28 @@ type ClTracepointAttachInfo struct {
 	// +kubebuilder:validation:Pattern="^[a-zA-Z][a-zA-Z0-9_]+."
 	// +kubebuilder:validation:MinLength=1
 	// +kubebuilder:validation:MaxLength=64
-	Name string `json:"name"`
+	Name string `json:"name,omitempty"`
 }
 
 type ClTracepointProgramInfoState struct {
 	// links is a list of attachment points for the Tracepoint program. Each entry
 	// in the list includes a linkStatus, which indicates if the attachment was
 	// successful or not on this node, a linkId, which is the kernel ID for the
-	// link if successfully attached, and other attachment specific data.
+	// link if successfully attached, and other attachment specific data. The list
+	// is limited to a maximum of 1023 entries.
 	// +optional
+	// +kubebuilder:validation:MaxItems=1023
+	// +listType=atomic
 	Links []ClTracepointAttachInfoState `json:"links,omitempty"`
 }
 
 type ClTracepointAttachInfoState struct {
 	AttachInfoStateCommon `json:",inline"`
 
-	// The name of a kernel tracepoint to attach the bpf program to.
-	// name is the provisioned name of the Linux kernel tracepoint function the
-	// Tracepoint program should be attached.
+	// name is the provisioned name of the Linux kernel tracepoint function to which
+	// the BPF program should be attached. name must not exceed 64 characters in length.
 	// +required
-	Name string `json:"name"`
+	// +kubebuilder:validation:MinLength=1
+	// +kubebuilder:validation:MaxLength=64
+	Name string `json:"name,omitempty"`
 }

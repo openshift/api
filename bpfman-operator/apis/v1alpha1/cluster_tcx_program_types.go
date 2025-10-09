@@ -33,6 +33,8 @@ type ClTcxProgramInfo struct {
 	// bpfman to use the primary interface of a Kubernetes node. Optionally, the
 	// TCX program can also be installed into a set of network namespaces.
 	// +optional
+	// +kubebuilder:validation:MaxItems=1023
+	// +listType=atomic
 	Links []ClTcxAttachInfo `json:"links,omitempty"`
 }
 
@@ -42,7 +44,7 @@ type ClTcxAttachInfo struct {
 	// by providing a list of interface names, enabling auto discovery, or setting
 	// the primaryNodeInterface flag, but only one option is allowed.
 	// +required
-	InterfaceSelector InterfaceSelector `json:"interfaceSelector"`
+	InterfaceSelector InterfaceSelector `json:"interfaceSelector,omitzero"`
 
 	// networkNamespaces is an optional field that identifies the set of network
 	// namespaces in which to attach the eBPF program. If networkNamespaces is not
@@ -61,7 +63,7 @@ type ClTcxAttachInfo struct {
 	// transmitted by the interface.
 	// +required
 	// +kubebuilder:validation:Enum=Ingress;Egress
-	Direction TCDirectionType `json:"direction"`
+	Direction TCDirectionType `json:"direction,omitempty"`
 
 	// priority is an optional field and determines the execution order of the TCX
 	// program relative to other TCX programs attached to the same attachment
@@ -80,8 +82,11 @@ type ClTcxProgramInfoState struct {
 	// links is a list of attachment points for the TCX program. Each entry in the
 	// list includes a linkStatus, which indicates if the attachment was successful
 	// or not on this node, a linkId, which is the kernel ID for the link if
-	// successfully attached, and other attachment specific data.
+	// successfully attached, and other attachment specific data. The list is
+	// limited to a maximum of 1023 entries.
 	// +optional
+	// +kubebuilder:validation:MaxItems=1023
+	// +listType=atomic
 	Links []ClTcxAttachInfoState `json:"links,omitempty"`
 }
 
@@ -89,20 +94,25 @@ type ClTcxAttachInfoState struct {
 	AttachInfoStateCommon `json:",inline"`
 
 	// interfaceName is the name of the interface the TCX program should be
-	// attached.
+	// attached. interfaceName must not exceed 63 characters in length.
 	// +required
-	InterfaceName string `json:"interfaceName"`
+	// +kubebuilder:validation:MinLength=1
+	// +kubebuilder:validation:MaxLength=63
+	InterfaceName string `json:"interfaceName,omitempty"`
 
 	// netnsPath is the optional path to the network namespace inside of which the
-	// TCX program should be attached.
+	// TCX program should be attached. If not provided, the default network
+	// namespace is used. netnsPath must not exceed 1023 characters in length.
 	// +optional
+	// +kubebuilder:validation:MinLength=1
+	// +kubebuilder:validation:MaxLength=1023
 	NetnsPath string `json:"netnsPath,omitempty"`
 
 	// direction is the provisioned direction of traffic, Ingress or Egress, the TC
 	// program should be attached for a given network device.
 	// +required
 	// +kubebuilder:validation:Enum=Ingress;Egress
-	Direction TCDirectionType `json:"direction"`
+	Direction TCDirectionType `json:"direction,omitempty"`
 
 	// priority is the provisioned priority of the TCX program in relation to other
 	// programs of the same type with the same attach point. It is a value from 0

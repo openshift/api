@@ -35,6 +35,8 @@ type ClTcProgramInfo struct {
 	// bpfman to use the primary interface of a Kubernetes node. Optionally, the
 	// TC program can also be installed into a set of network namespaces.
 	// +optional
+	// +kubebuilder:validation:MaxItems=1023
+	// +listType=atomic
 	Links []ClTcAttachInfo `json:"links,omitempty"`
 }
 
@@ -44,7 +46,7 @@ type ClTcAttachInfo struct {
 	// by providing a list of interface names, enabling auto discovery, or setting
 	// the primaryNodeInterface flag, but only one option is allowed.
 	// +required
-	InterfaceSelector InterfaceSelector `json:"interfaceSelector"`
+	InterfaceSelector InterfaceSelector `json:"interfaceSelector,omitzero"`
 
 	// networkNamespaces is an optional field that identifies the set of network
 	// namespaces in which to attach the eBPF program. If networkNamespaces is not
@@ -63,7 +65,7 @@ type ClTcAttachInfo struct {
 	// transmitted by the interface.
 	// +required
 	// +kubebuilder:validation:Enum=Ingress;Egress
-	Direction TCDirectionType `json:"direction"`
+	Direction TCDirectionType `json:"direction,omitempty"`
 
 	// priority is an optional field and determines the execution order of the TC
 	// program relative to other TC programs attached to the same attachment point.
@@ -90,6 +92,8 @@ type ClTcAttachInfo struct {
 	// next TC program in the chain will NOT be called.
 	// +optional
 	// +kubebuilder:default:={Pipe,DispatcherReturn}
+	// +kubebuilder:validation:MaxItems=1023
+	// +listType=atomic
 	ProceedOn []TcProceedOnValue `json:"proceedOn,omitempty"`
 }
 
@@ -99,6 +103,8 @@ type ClTcProgramInfoState struct {
 	// or not on this node, a linkId, which is the kernel ID for the link if
 	// successfully attached, and other attachment specific data.
 	// +optional
+	// +kubebuilder:validation:MaxItems=1023
+	// +listType=atomic
 	Links []ClTcAttachInfoState `json:"links,omitempty"`
 }
 
@@ -108,18 +114,22 @@ type ClTcAttachInfoState struct {
 	// interfaceName is the name of the interface the TC program should be
 	// attached.
 	// +required
-	InterfaceName string `json:"interfaceName"`
+	// +kubebuilder:validation:MinLength=1
+	// +kubebuilder:validation:MaxLength=63
+	InterfaceName string `json:"interfaceName,omitempty"`
 
 	// netnsPath is the optional path to the network namespace inside of which the
 	// TC program should be attached.
 	// +optional
+	// +kubebuilder:validation:MinLength=1
+	// +kubebuilder:validation:MaxLength=1023
 	NetnsPath string `json:"netnsPath,omitempty"`
 
 	// direction is the provisioned direction of traffic, Ingress or Egress, the TC
 	// program should be attached for a given network device.
 	// +required
 	// +kubebuilder:validation:Enum=Ingress;Egress
-	Direction TCDirectionType `json:"direction"`
+	Direction TCDirectionType `json:"direction,omitempty"`
 
 	// priority is the provisioned priority of the TC program in relation to other
 	// programs of the same type with the same attach point. It is a value from 0
@@ -133,5 +143,7 @@ type ClTcAttachInfoState struct {
 	// user to call other TC programs in a chain, or not call the next program in a
 	// chain based on the exit code of a TC program .Multiple values are supported.
 	// +required
-	ProceedOn []TcProceedOnValue `json:"proceedOn"`
+	// +kubebuilder:validation:MaxItems=1023
+	// +listType=atomic
+	ProceedOn []TcProceedOnValue `json:"proceedOn,omitempty"`
 }

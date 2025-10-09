@@ -29,6 +29,8 @@ type ClKretprobeProgramInfo struct {
 	//
 	// The attachment point for a KRetProbe program is a Linux kernel function.
 	// +optional
+	// +kubebuilder:validation:MaxItems=1023
+	// +listType=atomic
 	Links []ClKretprobeAttachInfo `json:"links,omitempty"`
 }
 
@@ -41,7 +43,7 @@ type ClKretprobeAttachInfo struct {
 	// +kubebuilder:validation:Pattern="^[a-zA-Z][a-zA-Z0-9_]+."
 	// +kubebuilder:validation:MinLength=1
 	// +kubebuilder:validation:MaxLength=64
-	Function string `json:"function"`
+	Function string `json:"function,omitempty"`
 }
 
 type ClKretprobeProgramInfoState struct {
@@ -50,13 +52,21 @@ type ClKretprobeProgramInfoState struct {
 	// successful or not on this node, a linkId, which is the kernel ID for the
 	// link if successfully attached, and other attachment specific data.
 	// +optional
+	// +kubebuilder:validation:MaxItems=1023
+	// +listType=atomic
 	Links []ClKretprobeAttachInfoState `json:"links,omitempty"`
 }
 
 type ClKretprobeAttachInfoState struct {
 	AttachInfoStateCommon `json:",inline"`
 
-	// function is the provisioned name of the Linux kernel function the KRetProbe
-	// program should be attached.
-	Function string `json:"function"`
+	// function is a required field and specifies the name of the Linux kernel
+	// function to attach the KRetProbe program. function must not be an empty
+	// string, must not exceed 64 characters in length, must start with alpha
+	// characters and must only contain alphanumeric characters.
+	// +required
+	// +kubebuilder:validation:Pattern="^[a-zA-Z][a-zA-Z0-9_]+."
+	// +kubebuilder:validation:MinLength=1
+	// +kubebuilder:validation:MaxLength=64
+	Function string `json:"function,omitempty"`
 }

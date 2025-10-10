@@ -89,6 +89,9 @@
                         "name": "EtcdBackendQuota"
                     },
                     {
+                        "name": "EventTTL"
+                    },
+                    {
                         "name": "EventedPLEG"
                     },
                     {

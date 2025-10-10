@@ -135,6 +135,9 @@
                         "name": "EtcdBackendQuota"
                     },
                     {
+                        "name": "EventTTL"
+                    },
+                    {
                         "name": "Example"
                     },
                     {

@@ -61,6 +61,7 @@ type KubeAPIServerStatus struct {
 	// The default expiration for the items is set by the platform and it defaults to 24h.
 	// see: https://kubernetes.io/docs/tasks/configure-pod-container/configure-service-account/#service-account-token-volume-projection
 	// +optional
+	// +listType=atomic
 	ServiceAccountIssuers []ServiceAccountIssuerStatus `json:"serviceAccountIssuers,omitempty"`
 }
 

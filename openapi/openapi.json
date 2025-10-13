@@ -31021,7 +31021,8 @@
           "items": {
             "default": {},
             "$ref": "#/definitions/com.github.openshift.api.operator.v1.ServiceAccountIssuerStatus"
-          }
+          },
+          "x-kubernetes-list-type": "atomic"
         },
         "version": {
           "description": "version is the level this availability applies to",

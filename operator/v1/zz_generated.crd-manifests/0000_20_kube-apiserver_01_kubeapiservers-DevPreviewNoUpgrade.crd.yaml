@@ -335,6 +335,7 @@ spec:
                       type: string
                   type: object
                 type: array
+                x-kubernetes-list-type: atomic
               version:
                 description: version is the level this availability applies to
                 type: string

@@ -53284,6 +53284,13 @@ func schema_openshift_api_operator_v1_KubeAPIServerSpec(ref common.ReferenceCall
 							Format:      "int32",
 						},
 					},
+					"eventTTLMinutes": {
+						SchemaProps: spec.SchemaProps{
+							Description: "eventTTLMinutes specifies the amount of time that the events are stored before being deleted. The TTL is allowed between 5 minutes minimum up to a maximum of 180 minutes (3 hours).\n\nLowering this value will reduce the storage required in etcd. Note that this setting will only apply to new events being created and will not update existing events.\n\nWhen omitted this means no opinion, and the platform is left to choose a reasonable default, which is subject to change over time. The current default value is 3h (180 minutes).",
+							Type:        []string{"integer"},
+							Format:      "int32",
+						},
+					},
 				},
 				Required: []string{"managementState", "forceRedeploymentReason"},
 			},
@@ -53405,6 +53412,11 @@ func schema_openshift_api_operator_v1_KubeAPIServerStatus(ref common.ReferenceCa
 						},
 					},
 					"serviceAccountIssuers": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-type": "atomic",
+							},
+						},
 						SchemaProps: spec.SchemaProps{
 							Description: "serviceAccountIssuers tracks history of used service account issuers. The item without expiration time represents the currently used service account issuer. The other items represents service account issuers that were used previously and are still being trusted. The default expiration for the items is set by the platform and it defaults to 24h. see: https://kubernetes.io/docs/tasks/configure-pod-container/configure-service-account/#service-account-token-volume-projection",
 							Type:        []string{"array"},

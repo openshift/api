@@ -34586,11 +34586,11 @@
       ],
       "properties": {
         "path": {
-          "description": "Path is the path to the field in the schema. Paths are dot-separated field names (e.g., \"fieldA.fieldB.fieldC\") representing nested object fields. Each field name must be a valid Kubernetes CRD field name: start with a letter, contain only letters, digits, and underscores, and be between 1 and 63 characters in length.",
+          "description": "path is the path to the field in the schema. Paths are dot-separated field names (e.g., \"fieldA.fieldB.fieldC\") representing nested object fields. Each field name must be a valid Kubernetes CRD field name: start with a letter, contain only letters, digits, and underscores, and be between 1 and 63 characters in length.",
           "type": "string"
         },
         "version": {
-          "description": "Version is the version of the API that the field is excluded from. When not specified, the field is excluded from all versions. When present, must be a valid Kubernetes API version string, with a maximum length of 255 characters.",
+          "description": "version is the version of the API that the field is excluded from. When not specified, the field is excluded from all versions. When present, must be a valid Kubernetes API version string, with a maximum length of 255 characters.",
           "type": "string"
         }
       }
@@ -34603,7 +34603,7 @@
       ],
       "properties": {
         "additional": {
-          "description": "Additional specifies a set api versions to require in addition to the default set. It is explicitly permitted to specify a version in the additional set which was also selected by the default set. The sets will be merged and deduplicated.\n\nWhen present, each version string must be between 1 and 255 characters in length. The list may contain at most 255 items.",
+          "description": "additional specifies a set api versions to require in addition to the default set. It is explicitly permitted to specify a version in the additional set which was also selected by the default set. The sets will be merged and deduplicated.\n\nWhen present, each version string must be between 1 and 255 characters in length. The list may contain at most 255 items.",
           "type": "array",
           "items": {
             "type": "string",
@@ -34612,7 +34612,7 @@
           "x-kubernetes-list-type": "set"
         },
         "defaultSet": {
-          "description": "DefaultSet specifies a method for automatically selecting a set of versions to require. Valid options are:\n  StorageOnly - only the storage version is selected.\n  All - all versions are selected.\nThis field is required.",
+          "description": "defaultSet specifies a method for automatically selecting a set of versions to require. Valid options are:\n  StorageOnly - only the storage version is selected.\n  All - all versions are selected.\nThis field is required.",
           "type": "string"
         }
       }
@@ -34723,9 +34723,6 @@
     "com.github.openshift.api.operator.v1alpha1.CRDCompatibilityRequirementStatus": {
       "description": "CRDCompatibilityRequirementStatus defines the observed status of the CRD Compatibility Requirement.",
       "type": "object",
-      "required": [
-        "conditions"
-      ],
       "properties": {
         "conditions": {
           "description": "conditions is a list of conditions and their status. Known condition types are Progressing, Admitted, Compatible.",
@@ -34759,11 +34756,11 @@
       ],
       "properties": {
         "data": {
-          "description": "Data contains the complete definition of the CRD. This field is required.",
+          "description": "data contains the complete definition of the CRD. This field is required.",
           "type": "string"
         },
         "type": {
-          "description": "Type indicates the type of the CRD data. The only supported type is YAML. This field is required.",
+          "description": "type indicates the type of the CRD data. The only supported type is YAML. This field is required.",
           "type": "string"
         }
       }
@@ -34865,14 +34862,14 @@
           "default": {},
           "$ref": "#/definitions/com.github.openshift.api.operator.v1alpha1.CRDData"
         },
-        "excludeFields": {
+        "excludedFields": {
           "description": "excludedFields is a set of fields in the schema which will not be validated by crdSchemaValidation or objectSchemaValidation. The list may contain at most 64 fields. When not specified, all fields in the schema will be validated.",
           "type": "array",
           "items": {
             "default": {},
             "$ref": "#/definitions/com.github.openshift.api.operator.v1alpha1.APIExcludedField"
           },
-          "x-kubernetes-list-type": "set"
+          "x-kubernetes-list-type": "atomic"
         },
         "requiredVersions": {
           "description": "requiredVersions specifies a subset of the CRD's API versions which will be asserted for compatibility. This field is required.",

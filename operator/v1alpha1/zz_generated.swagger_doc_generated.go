@@ -175,8 +175,8 @@ func (ClusterVersionOperatorStatus) SwaggerDoc() map[string]string {
 }
 
 var map_APIExcludedField = map[string]string{
-	"path":    "Path is the path to the field in the schema. Paths are dot-separated field names (e.g., \"fieldA.fieldB.fieldC\") representing nested object fields. Each field name must be a valid Kubernetes CRD field name: start with a letter, contain only letters, digits, and underscores, and be between 1 and 63 characters in length.",
-	"version": "Version is the version of the API that the field is excluded from. When not specified, the field is excluded from all versions. When present, must be a valid Kubernetes API version string, with a maximum length of 255 characters.",
+	"path":    "path is the path to the field in the schema. Paths are dot-separated field names (e.g., \"fieldA.fieldB.fieldC\") representing nested object fields. Each field name must be a valid Kubernetes CRD field name: start with a letter, contain only letters, digits, and underscores, and be between 1 and 63 characters in length.",
+	"version": "version is the version of the API that the field is excluded from. When not specified, the field is excluded from all versions. When present, must be a valid Kubernetes API version string, with a maximum length of 255 characters.",
 }
 
 func (APIExcludedField) SwaggerDoc() map[string]string {
@@ -185,8 +185,8 @@ func (APIExcludedField) SwaggerDoc() map[string]string {
 
 var map_APIVersions = map[string]string{
 	"":           "APIVersions specifies a set of API versions of a CRD.",
-	"defaultSet": "DefaultSet specifies a method for automatically selecting a set of versions to require. Valid options are:\n  StorageOnly - only the storage version is selected.\n  All - all versions are selected.\nThis field is required.",
-	"additional": "Additional specifies a set api versions to require in addition to the default set. It is explicitly permitted to specify a version in the additional set which was also selected by the default set. The sets will be merged and deduplicated.\n\nWhen present, each version string must be between 1 and 255 characters in length. The list may contain at most 255 items.",
+	"defaultSet": "defaultSet specifies a method for automatically selecting a set of versions to require. Valid options are:\n  StorageOnly - only the storage version is selected.\n  All - all versions are selected.\nThis field is required.",
+	"additional": "additional specifies a set api versions to require in addition to the default set. It is explicitly permitted to specify a version in the additional set which was also selected by the default set. The sets will be merged and deduplicated.\n\nWhen present, each version string must be between 1 and 255 characters in length. The list may contain at most 255 items.",
 }
 
 func (APIVersions) SwaggerDoc() map[string]string {
@@ -238,8 +238,8 @@ func (CRDCompatibilityRequirementStatus) SwaggerDoc() map[string]string {
 
 var map_CRDData = map[string]string{
 	"":     "CRDData contains the complete definition of a CRD",
-	"type": "Type indicates the type of the CRD data. The only supported type is YAML. This field is required.",
-	"data": "Data contains the complete definition of the CRD. This field is required.",
+	"type": "type indicates the type of the CRD data. The only supported type is YAML. This field is required.",
+	"data": "data contains the complete definition of the CRD. This field is required.",
 }
 
 func (CRDData) SwaggerDoc() map[string]string {
@@ -250,7 +250,7 @@ var map_CompatibilitySchema = map[string]string{
 	"":                         "CompatibilitySchema defines the schema used by crdSchemaValidation and objectSchemaValidation.",
 	"customResourceDefinition": "customResourceDefinition contains the complete definition of the CRD for schema and object validation purposes. This field is required.",
 	"requiredVersions":         "requiredVersions specifies a subset of the CRD's API versions which will be asserted for compatibility. This field is required.",
-	"excludeFields":            "excludedFields is a set of fields in the schema which will not be validated by crdSchemaValidation or objectSchemaValidation. The list may contain at most 64 fields. When not specified, all fields in the schema will be validated.",
+	"excludedFields":           "excludedFields is a set of fields in the schema which will not be validated by crdSchemaValidation or objectSchemaValidation. The list may contain at most 64 fields. When not specified, all fields in the schema will be validated.",
 }
 
 func (CompatibilitySchema) SwaggerDoc() map[string]string {

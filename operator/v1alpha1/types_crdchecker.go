@@ -49,6 +49,7 @@ type CRDCompatibilityRequirementSpec struct {
 	// installed CRD are compatible with this compatibility requirement. If not
 	// specified, admission of the target CRD will not be validated.
 	// This field is optional.
+	// +optional
 	CustomResourceDefinitionSchemaValidation CustomResourceDefinitionSchemaValidation `json:"customResourceDefinitionSchemaValidation,omitempty,omitzero"`
 
 	// objectSchemaValidation ensures that matching resources conform to
@@ -69,13 +70,13 @@ const (
 
 // CRDData contains the complete definition of a CRD
 type CRDData struct {
-	// Type indicates the type of the CRD data. The only supported type is YAML.
+	// type indicates the type of the CRD data. The only supported type is YAML.
 	// This field is required.
 	// +kubebuilder:validation:Enum=YAML
 	// +required
 	Type CRDDataType `json:"type,omitempty"`
 
-	// Data contains the complete definition of the CRD.
+	// data contains the complete definition of the CRD.
 	// This field is required.
 	// +kubebuilder:validation:MinLength=1
 	// +kubebuilder:validation:MaxLength=1572864
@@ -99,7 +100,7 @@ type APIVersionString string
 
 // APIVersions specifies a set of API versions of a CRD.
 type APIVersions struct {
-	// DefaultSet specifies a method for automatically selecting a set of versions to require.
+	// defaultSet specifies a method for automatically selecting a set of versions to require.
 	// Valid options are:
 	//   StorageOnly - only the storage version is selected.
 	//   All - all versions are selected.
@@ -107,7 +108,7 @@ type APIVersions struct {
 	// +required
 	DefaultSet APIVersionSetType `json:"defaultSet,omitempty"`
 
-	// Additional specifies a set api versions to require in addition to the
+	// additional specifies a set api versions to require in addition to the
 	// default set. It is explicitly permitted to specify a version in the
 	// additional set which was also selected by the default set. The sets will
 	// be merged and deduplicated.
@@ -122,7 +123,7 @@ type APIVersions struct {
 }
 
 type APIExcludedField struct {
-	// Path is the path to the field in the schema.
+	// path is the path to the field in the schema.
 	// Paths are dot-separated field names (e.g., "fieldA.fieldB.fieldC") representing nested object fields.
 	// Each field name must be a valid Kubernetes CRD field name: start with a letter, contain only
 	// letters, digits, and underscores, and be between 1 and 63 characters in length.
@@ -133,7 +134,7 @@ type APIExcludedField struct {
 	// +required
 	Path string `json:"path,omitempty"`
 
-	// Version is the version of the API that the field is excluded from.
+	// version is the version of the API that the field is excluded from.
 	// When not specified, the field is excluded from all versions.
 	// When present, must be a valid Kubernetes API version string, with a
 	// maximum length of 255 characters.
@@ -146,21 +147,21 @@ type CompatibilitySchema struct {
 	// customResourceDefinition contains the complete definition of the CRD for schema and object validation purposes.
 	// This field is required.
 	// +required
-	CustomResourceDefinition CRDData `json:"customResourceDefinition,omitempty"`
+	CustomResourceDefinition CRDData `json:"customResourceDefinition,omitzero"`
 
 	// requiredVersions specifies a subset of the CRD's API versions which will be asserted for compatibility.
 	// This field is required.
 	// +required
-	RequiredVersions APIVersions `json:"requiredVersions,omitempty"`
+	RequiredVersions APIVersions `json:"requiredVersions,omitzero"`
 
 	// excludedFields is a set of fields in the schema which will not be validated by
 	// crdSchemaValidation or objectSchemaValidation.
 	// The list may contain at most 64 fields.
 	// When not specified, all fields in the schema will be validated.
 	// +kubebuilder:validation:MaxItems=64
-	// +listType=set
+	// +listType=atomic
 	// +optional
-	ExcludedFields []APIExcludedField `json:"excludeFields,omitempty"`
+	ExcludedFields []APIExcludedField `json:"excludedFields,omitempty"`
 }
 
 // CustomResourceDefinitionSchemaValidation ensures that updates to the installed CRD are compatible with this compatibility requirement.
@@ -276,7 +277,7 @@ const (
 type CRDCompatibilityRequirementStatus struct {
 	// conditions is a list of conditions and their status.
 	// Known condition types are Progressing, Admitted, Compatible.
-	// +required
+	// +optional
 	// +listType=map
 	// +listMapKey=type
 	// +kubebuilder:validation:MinItems=1

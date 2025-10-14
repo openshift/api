@@ -61,14 +61,14 @@ spec:
                     properties:
                       data:
                         description: |-
-                          Data contains the complete definition of the CRD.
+                          data contains the complete definition of the CRD.
                           This field is required.
                         maxLength: 1572864
                         minLength: 1
                         type: string
                       type:
                         description: |-
-                          Type indicates the type of the CRD data. The only supported type is YAML.
+                          type indicates the type of the CRD data. The only supported type is YAML.
                           This field is required.
                         enum:
                         - YAML
@@ -77,7 +77,7 @@ spec:
                     - data
                     - type
                     type: object
-                  excludeFields:
+                  excludedFields:
                     description: |-
                       excludedFields is a set of fields in the schema which will not be validated by
                       crdSchemaValidation or objectSchemaValidation.
@@ -87,7 +87,7 @@ spec:
                       properties:
                         path:
                           description: |-
-                            Path is the path to the field in the schema.
+                            path is the path to the field in the schema.
                             Paths are dot-separated field names (e.g., "fieldA.fieldB.fieldC") representing nested object fields.
                             Each field name must be a valid Kubernetes CRD field name: start with a letter, contain only
                             letters, digits, and underscores, and be between 1 and 63 characters in length.
@@ -105,7 +105,7 @@ spec:
                               <= 63)
                         version:
                           description: |-
-                            Version is the version of the API that the field is excluded from.
+                            version is the version of the API that the field is excluded from.
                             When not specified, the field is excluded from all versions.
                             When present, must be a valid Kubernetes API version string, with a
                             maximum length of 255 characters.
@@ -117,7 +117,7 @@ spec:
                       type: object
                     maxItems: 64
                     type: array
-                    x-kubernetes-list-type: set
+                    x-kubernetes-list-type: atomic
                   requiredVersions:
                     description: |-
                       requiredVersions specifies a subset of the CRD's API versions which will be asserted for compatibility.
@@ -125,7 +125,7 @@ spec:
                     properties:
                       additional:
                         description: |-
-                          Additional specifies a set api versions to require in addition to the
+                          additional specifies a set api versions to require in addition to the
                           default set. It is explicitly permitted to specify a version in the
                           additional set which was also selected by the default set. The sets will
                           be merged and deduplicated.
@@ -144,7 +144,7 @@ spec:
                         x-kubernetes-list-type: set
                       defaultSet:
                         description: |-
-                          DefaultSet specifies a method for automatically selecting a set of versions to require.
+                          defaultSet specifies a method for automatically selecting a set of versions to require.
                           Valid options are:
                             StorageOnly - only the storage version is selected.
                             All - all versions are selected.
@@ -472,8 +472,6 @@ spec:
                 - generation
                 - uid
                 type: object
-            required:
-            - conditions
             type: object
         required:
         - spec

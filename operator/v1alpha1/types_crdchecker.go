@@ -19,7 +19,7 @@ import (
 // +kubebuilder:object:root=true
 // +kubebuilder:subresource:status
 // +kubebuilder:resource:path=crdcompatibilityrequirements,scope=Cluster
-// +openshift:api-approved.openshift.io=https://github.com/openshift/api/pull/XXXX
+// +openshift:api-approved.openshift.io=https://github.com/openshift/api/pull/2479
 type CRDCompatibilityRequirement struct {
 	metav1.TypeMeta `json:",inline"`
 
@@ -39,96 +39,163 @@ type CRDCompatibilityRequirement struct {
 
 // CRDCompatibilityRequirementSpec is the specification of the desired behavior of the CRD Compatibility Requirement.
 type CRDCompatibilityRequirementSpec struct {
-	// compatibilitySchema defines the schema used by crdSchemaValidation and objectSchemaValidation.
+	// compatibilitySchema defines the schema used by
+	// customResourceDefinitionSchemaValidation and objectSchemaValidation.
 	// This field is required.
 	// +required
 	CompatibilitySchema CompatibilitySchema `json:"compatibilitySchema,omitempty,omitzero"`
 
-	// crdSchemaValidation ensures that updates to the installed CRD are compatible with this compatibility requirement.
+	// customResourceDefinitionSchemaValidation ensures that updates to the
+	// installed CRD are compatible with this compatibility requirement. If not
+	// specified, admission of the target CRD will not be validated.
 	// This field is optional.
-	// +optional
-	CRDSchemaValidation CRDSchemaValidation `json:"crdSchemaValidation,omitempty,omitzero"`
+	CustomResourceDefinitionSchemaValidation CustomResourceDefinitionSchemaValidation `json:"customResourceDefinitionSchemaValidation,omitempty,omitzero"`
 
-	// objectSchemaValidation ensures that matching objects conform to compatibilitySchema.
+	// objectSchemaValidation ensures that matching resources conform to
+	// compatibilitySchema. If not specified, admission of matching resources
+	// will not be validated.
 	// This field is optional.
 	// +optional
 	ObjectSchemaValidation ObjectSchemaValidation `json:"objectSchemaValidation,omitempty,omitzero"`
 }
 
-// CompatibilitySchema defines the schema used by crdSchemaValidation and objectSchemaValidation.
-type CompatibilitySchema struct {
-	// crdYAML contains the complete YAML document of the CRD for schema and object validation purposes.
-	// This field is required and must be between 1 and 1,572,864 characters in length.
+// CRDDataType indicates the type of the CRD data.
+type CRDDataType string
+
+const (
+	// CRDDataTypeYAML indicates that the CRD data is in YAML format.
+	CRDDataTypeYAML CRDDataType = "YAML"
+)
+
+// CRDData contains the complete definition of a CRD
+type CRDData struct {
+	// Type indicates the type of the CRD data. The only supported type is YAML.
+	// This field is required.
+	// +kubebuilder:validation:Enum=YAML
+	// +required
+	Type CRDDataType `json:"type,omitempty"`
+
+	// Data contains the complete definition of the CRD.
+	// This field is required.
 	// +kubebuilder:validation:MinLength=1
 	// +kubebuilder:validation:MaxLength=1572864
 	// +required
-	CRDYAML string `json:"crdYAML,omitempty"`
+	Data string `json:"data,omitempty"`
+}
 
-	// requireVersions specifies which versions we will automatically extract from the yaml and require.
+// APIVersionSetType specifies a method for selecting the set of API versions to require.
+// +kubebuilder:validation:Enum=StorageOnly;All
+type APIVersionSetType string
+
+const (
+	APIVersionSetTypeStorageOnly APIVersionSetType = "StorageOnly"
+	APIVersionSetTypeAll         APIVersionSetType = "All"
+)
+
+// APIVersionString is a string representing a kubernetes API version.
+// +kubebuilder:validation:MinLength=1
+// +kubebuilder:validation:MaxLength=255
+type APIVersionString string
+
+// APIVersions specifies a set of API versions of a CRD.
+type APIVersions struct {
+	// DefaultSet specifies a method for automatically selecting a set of versions to require.
 	// Valid options are:
-	//   StorageOnly - only storage version(s) required for compatibility. Users can create/update
-	//     objects using any served version. additionalVersions are applied on top of this.
-	//   All - all versions defined in the CRD are required for compatibility.
+	//   StorageOnly - only the storage version is selected.
+	//   All - all versions are selected.
 	// This field is required.
 	// +required
-	RequireVersions RequireVersions `json:"requireVersions,omitempty"`
+	DefaultSet APIVersionSetType `json:"defaultSet,omitempty"`
 
-	// additionalVersions is a set of versions to require in addition to those discovered by requireVersions.
-	// Overlap with requireVersions is explicitly permitted.
+	// Additional specifies a set api versions to require in addition to the
+	// default set. It is explicitly permitted to specify a version in the
+	// additional set which was also selected by the default set. The sets will
+	// be merged and deduplicated.
+	//
 	// When present, each version string must be between 1 and 255 characters in length.
 	// The list may contain at most 255 items.
-	// When not specified, no additional versions are required.
-	// +kubebuilder:validation:items:MinLength=1
-	// +kubebuilder:validation:items:MaxLength=255
+	// +kubebuilder:validation:MinItems=1
 	// +kubebuilder:validation:MaxItems=255
 	// +listType=set
 	// +optional
-	AdditionalVersions []string `json:"additionalVersions,omitempty"`
-
-	// excludeFields is a set of fields in the yaml which will not be validated by either
-	// crdSchemaValidation or objectSchemaValidation.
-	// Each field path string must be between 1 and 8,192 characters in length.
-	// The list may contain at most 1,024 field paths.
-	// When not specified, all fields in the YAML will be validated.
-	// FIXME(chrischdi): explain the format for it.	// FIXME(chrischdi): explain the format for it.
-	// +kubebuilder:validation:items:MinLength=1
-	// +kubebuilder:validation:items:MaxLength=8192
-	// +kubebuilder:validation:MaxItems=1024
-	// +listType=set
-	// +optional
-	ExcludeFields []string `json:"excludeFields,omitempty"`
+	Additional []APIVersionString `json:"additional,omitempty"`
 }
 
-// CRDSchemaValidation ensures that updates to the installed CRD are compatible with this compatibility requirement.
-type CRDSchemaValidation struct {
-	// action determines whether violations are not admitted (Enforce) or admitted with an API warning (Warn).
+type APIExcludedField struct {
+	// Path is the path to the field in the schema.
+	// Paths are dot-separated field names (e.g., "fieldA.fieldB.fieldC") representing nested object fields.
+	// Each field name must be a valid Kubernetes CRD field name: start with a letter, contain only
+	// letters, digits, and underscores, and be between 1 and 63 characters in length.
+	// +kubebuilder:validation:MinLength=1
+	// +kubebuilder:validation:MaxLength=8192
+	// +kubebuilder:validation:XValidation:rule="self.split('.').all(f, f.matches('^[a-zA-Z][a-zA-Z0-9_]*$'))",message="path must be dot-separated field names, each starting with a letter and containing only letters, digits, and underscores"
+	// +kubebuilder:validation:XValidation:rule="self.split('.').all(f, f.size() >= 1 && f.size() <= 63)",message="each field name in the path must be between 1 and 63 characters"
+	// +required
+	Path string `json:"path,omitempty"`
+
+	// Version is the version of the API that the field is excluded from.
+	// When not specified, the field is excluded from all versions.
+	// When present, must be a valid Kubernetes API version string, with a
+	// maximum length of 255 characters.
+	// +optional
+	Version APIVersionString `json:"version,omitempty"`
+}
+
+// CompatibilitySchema defines the schema used by crdSchemaValidation and objectSchemaValidation.
+type CompatibilitySchema struct {
+	// customResourceDefinition contains the complete definition of the CRD for schema and object validation purposes.
+	// This field is required.
+	// +required
+	CustomResourceDefinition CRDData `json:"customResourceDefinition,omitempty"`
+
+	// requiredVersions specifies a subset of the CRD's API versions which will be asserted for compatibility.
+	// This field is required.
+	// +required
+	RequiredVersions APIVersions `json:"requiredVersions,omitempty"`
+
+	// excludedFields is a set of fields in the schema which will not be validated by
+	// crdSchemaValidation or objectSchemaValidation.
+	// The list may contain at most 64 fields.
+	// When not specified, all fields in the schema will be validated.
+	// +kubebuilder:validation:MaxItems=64
+	// +listType=set
+	// +optional
+	ExcludedFields []APIExcludedField `json:"excludeFields,omitempty"`
+}
+
+// CustomResourceDefinitionSchemaValidation ensures that updates to the installed CRD are compatible with this compatibility requirement.
+type CustomResourceDefinitionSchemaValidation struct {
+	// action determines whether violations are rejected (Deny) or admitted with an API warning (Warn).
 	// Valid options are:
-	//   Enforce - incompatible CRDs will be rejected and not admitted to the cluster.
+	//   Deny - incompatible CRDs will be rejected and not admitted to the cluster.
 	//   Warn - incompatible CRDs will be allowed but a warning will be generated in the API response.
 	// This field is required.
 	// +required
 	Action CRDAdmitAction `json:"action,omitempty"`
 }
 
-// ObjectSchemaValidation ensures that matching objects conform to compatibilitySchema.
+// ObjectSchemaValidation ensures that matching objects conform to the compatibilitySchema.
 type ObjectSchemaValidation struct {
-	// action determines whether violations are not admitted (Enforce) or admitted with an API warning (Warn).
+	// action determines whether violations are rejected (Deny) or admitted with an API warning (Warn).
 	// Valid options are:
-	//   Enforce - incompatible Objects will be rejected and not admitted to the cluster.
+	//   Deny - incompatible Objects will be rejected and not admitted to the cluster.
 	//   Warn - incompatible Objects will be allowed but a warning will be generated in the API response.
 	// This field is required.
 	// +required
 	Action CRDAdmitAction `json:"action,omitempty"`
 
-	// namespaceSelector defines the namespaceSelector field of the resulting ValidatingWebhookConfiguration.
-	// When not specified, objects from all namespaces matching the objectSelector will be subject to validation.
+	// namespaceSelector defines a label selector for namespaces. If defined,
+	// only objects in a namespace with matching labels will be subject to
+	// validation. When not specified, objects for validation will not be
+	// filtered by namespace.
 	// +optional
-	NamespaceSelector *metav1.LabelSelector `json:"namespaceSelector,omitempty"`
+	NamespaceSelector metav1.LabelSelector `json:"namespaceSelector,omitempty"`
 
-	// objectSelector defines the objectSelector field of the resulting ValidatingWebhookConfiguration.
-	// When not specified, all objects matching the namespaceSelector will be subject to validation.
+	// objectSelector defines a label selector for objects. If defined, only
+	// objects with matching labels will be subject to validation. When not
+	// specified, objects for validation will not be filtered by label.
 	// +optional
-	ObjectSelector *metav1.LabelSelector `json:"objectSelector,omitempty"`
+	ObjectSelector metav1.LabelSelector `json:"objectSelector,omitempty"`
 
 	// matchConditions defines the matchConditions field of the resulting ValidatingWebhookConfiguration.
 	// When present, must contain between 1 and 64 match conditions.
@@ -143,27 +210,15 @@ type ObjectSchemaValidation struct {
 }
 
 // CRDAdmitAction determines the action taken when a CRD is not compatible.
-// +kubebuilder:validation:Enum=Enforce;Warn
+// +kubebuilder:validation:Enum=Deny;Warn
 type CRDAdmitAction string
 
 const (
-	// CRDAdmitActionEnforce means that incompatible CRDs will be rejected.
-	CRDAdmitActionEnforce CRDAdmitAction = "Enforce"
+	// CRDAdmitActionDeny means that incompatible CRDs will be rejected.
+	CRDAdmitActionDeny CRDAdmitAction = "Deny"
 
 	// CRDAdmitActionWarn means that incompatible CRDs will be allowed but a warning will be generated.
 	CRDAdmitActionWarn CRDAdmitAction = "Warn"
-)
-
-// RequireVersions specifies which versions we will automatically extract from the yaml and require.
-// +kubebuilder:validation:Enum=StorageOnly;All
-type RequireVersions string
-
-const (
-	// RequireVersionsStorageOnly means only storage versions will be required.
-	RequireVersionsStorageOnly RequireVersions = "StorageOnly"
-
-	// RequireVersionsAll means all versions will be required.
-	RequireVersionsAll RequireVersions = "All"
 )
 
 // CRDCompatibilityRequirement's Progressing condition and corresponding reasons.
@@ -221,15 +276,15 @@ const (
 type CRDCompatibilityRequirementStatus struct {
 	// conditions is a list of conditions and their status.
 	// Known condition types are Progressing, Admitted, Compatible.
-	// +optional
+	// +required
 	// +listType=map
 	// +listMapKey=type
-	// +kubebuilder:validation:MaxItems=16
 	// +kubebuilder:validation:MinItems=1
+	// +kubebuilder:validation:MaxItems=32
 	Conditions []metav1.Condition `json:"conditions,omitempty"`
 
 	// observedCRD documents the uid and generation of the CRD object when the current status was written.
-	// This field will not be emitted if the target CRD does not exist or could not be retrieved.
+	// This field will be omitted if the target CRD does not exist or could not be retrieved.
 	// +optional
 	ObservedCRD ObservedCRD `json:"observedCRD,omitzero"`
 
@@ -240,10 +295,11 @@ type CRDCompatibilityRequirementStatus struct {
 	// When present, must be between 1 and 253 characters and conform to RFC 1123 subdomain format:
 	// lowercase alphanumeric characters, '-' or '.', starting and ending with alphanumeric characters.
 	// When not specified, the requirement applies to any CRD name discovered from the compatibility schema.
-	// This field is optional.
+	// This field is optional. Once set, the value cannot be changed and must always remain set.
 	// +kubebuilder:validation:MinLength=1
 	// +kubebuilder:validation:MaxLength=253
 	// +kubebuilder:validation:XValidation:rule="!format.dns1123Subdomain().validate(self).hasValue()",message="a lowercase RFC 1123 subdomain must consist of lower case alphanumeric characters, '-' or '.', and must start and end with an alphanumeric character."
+	// +kubebuilder:validation:XValidation:rule="!has(self) || self == oldSelf",message="crdName cannot be changed once set"
 	// +optional
 	CRDName string `json:"crdName,omitempty"`
 }

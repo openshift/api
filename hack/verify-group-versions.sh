@@ -24,7 +24,7 @@ validate_group_versions() {
   fi
 }
 
-for groupVersion in ${API_GROUP_VERSIONS}; do
+for groupVersion in ${API_GROUP_VERSION_PATHS}; do
   echo "Validating groups version for ${groupVersion}"
   validate_group_versions ${SCRIPT_ROOT}/${groupVersion}
 done

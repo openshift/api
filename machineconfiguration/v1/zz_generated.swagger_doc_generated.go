@@ -368,6 +368,26 @@ func (PoolSynchronizerStatus) SwaggerDoc() map[string]string {
 	return map_PoolSynchronizerStatus
 }
 
+var map_InternalReleaseImageRef = map[string]string{
+	"name":  "name indicates the desired release bundle identifier.",
+	"image": "image is an OCP release imaged referenced by digest. The format of the image pull spec is: host[:port][/namespace]/name@sha256:<digest>, where the digest must be 64 characters long, and consist only of lowercase hexadecimal characters, a-f and 0-9. The length of the whole spec must be between 1 to 447 characters.",
+}
+
+func (InternalReleaseImageRef) SwaggerDoc() map[string]string {
+	return map_InternalReleaseImageRef
+}
+
+var map_InternalReleaseImageStatus = map[string]string{
+	"":                  "InternalReleaseImageStatus describes the current state of a InternalReleaseImage.",
+	"conditions":        "conditions represent the observations of an internal release image current state.",
+	"availableReleases": "availableReleases is a list of release bundle identifiers currently detected from the attached ISO.",
+	"releases":          "releases is a list of the currently managed release bundles.",
+}
+
+func (InternalReleaseImageStatus) SwaggerDoc() map[string]string {
+	return map_InternalReleaseImageStatus
+}
+
 var map_IrreconcilableChangeDiff = map[string]string{
 	"":          "IrreconcilableChangeDiff holds an individual diff between the initial install-time MachineConfig and the latest applied one caused by the presence of irreconcilable changes.",
 	"fieldPath": "fieldPath is a required reference to the path in the latest rendered MachineConfig that differs from this nodes configuration. Must not be empty and must not exceed 70 characters in length. Must begin with the prefix 'spec.' and only contain alphanumeric characters, square brackets ('[]'), or dots ('.').",

@@ -1,0 +1,43 @@
+apiVersion: apiextensions.k8s.io/v1 # Hack because controller-gen complains if we don't have this
+name: "[TechPreview] InternalReleaseImage"
+crdName: internalreleaseimages.machineconfiguration.openshift.io
+featureGate: NoRegistryClusterOperations
+tests:
+  onCreate:
+  - name: Should be able to create a minimal InternalReleaseImage
+    initial: |
+      apiVersion: machineconfiguration.openshift.io/v1alpha1
+      kind: InternalReleaseImage
+      spec:
+        releases:
+          - name: ocp-release-bundle-4.18.0-x86_64          
+    expected: |
+      apiVersion: machineconfiguration.openshift.io/v1alpha1
+      kind: InternalReleaseImage
+      spec: 
+        releases:
+          - name: ocp-release-bundle-4.18.0-x86_64
+  - name: Invalid undefined releases
+    initial: |
+      apiVersion: machineconfiguration.openshift.io/v1alpha1
+      kind: InternalReleaseImage
+      spec:
+    expectedError: "spec: Required value"    
+  - name: Invalid empty release name
+    initial: |
+      apiVersion: machineconfiguration.openshift.io/v1alpha1
+      kind: InternalReleaseImage
+      spec:
+        releases:
+          - name: ""
+    expectedError: "Invalid value: \"\": spec.releases[0].name in body should be at least 1 chars long"
+  - name: Should reject duplicate releases
+    initial: |
+      apiVersion: machineconfiguration.openshift.io/v1alpha1
+      kind: InternalReleaseImage
+      spec:
+        releases:
+          - name: ocp-release-bundle-4.18.0-x86_64
+          - name: ocp-release-bundle-4.18.0-x86_64
+    expectedError: "Duplicate value: map[string]interface {}{\"name\":\"ocp-release-bundle-4.18.0-x86_64\"}"
+

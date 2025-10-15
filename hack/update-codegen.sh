@@ -14,4 +14,11 @@ fi
 # deepcopy, schemapatch or swaggerdocs.
 # EXTRA_ARGS are additional arguments to pass to the generator, usually this would be
 # --verify so that the generator verifies the output rather than writing it.
-"${CODEGEN}" ${GENERATOR:-} --base-dir "${SCRIPT_ROOT}" -v 1 ${EXTRA_ARGS:-}
+
+# Build API group versions argument if API_GROUP_VERSIONS is set
+API_GROUP_VERSIONS_ARG=""
+if [ -n "${API_GROUP_VERSIONS:-}" ]; then
+  API_GROUP_VERSIONS_ARG="--api-group-versions ${API_GROUP_VERSIONS}"
+fi
+
+"${CODEGEN}" ${GENERATOR:-} --base-dir "${SCRIPT_ROOT}" -v 1 ${API_GROUP_VERSIONS_ARG} ${EXTRA_ARGS:-}

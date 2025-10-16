@@ -99,7 +99,7 @@ spec:
                               starting with a letter and containing only letters,
                               digits, and underscores not exceeding 63 characters.
                               There may be at most 32 fields in the path.
-                            rule: self.split('.', 32).all(f, f.matches('^[a-zA-Z][a-zA-Z0-9_]{0,63}*$'))
+                            rule: self.split('.', 32).all(f, f.matches('^[a-zA-Z][a-zA-Z0-9_]{0,63}$'))
                         version:
                           description: |-
                             version is the version of the API that the field is excluded from.

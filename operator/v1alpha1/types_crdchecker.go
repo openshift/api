@@ -130,7 +130,7 @@ type APIExcludedField struct {
 	// A path may contain at most 32 fields.
 	// +kubebuilder:validation:MinLength=1
 	// +kubebuilder:validation:MaxLength=1024
-	// +kubebuilder:validation:XValidation:rule="self.split('.', 32).all(f, f.matches('^[a-zA-Z][a-zA-Z0-9_]{0,63}*$'))",message="path must be dot-separated field names, each starting with a letter and containing only letters, digits, and underscores not exceeding 63 characters. There may be at most 32 fields in the path."
+	// +kubebuilder:validation:XValidation:rule="self.split('.', 32).all(f, f.matches('^[a-zA-Z][a-zA-Z0-9_]{0,63}$'))",message="path must be dot-separated field names, each starting with a letter and containing only letters, digits, and underscores not exceeding 63 characters. There may be at most 32 fields in the path."
 	// +required
 	Path string `json:"path,omitempty"`
 

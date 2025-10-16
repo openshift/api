@@ -350,7 +350,7 @@ var (
 						contactPerson("djoshy").
 						productScope(ocpSpecific).
 						enhancementPR("https://github.com/openshift/enhancements/pull/1761").
-						enableIn(configv1.DevPreviewNoUpgrade, configv1.TechPreviewNoUpgrade).
+						enableIn(configv1.Default, configv1.DevPreviewNoUpgrade, configv1.TechPreviewNoUpgrade).
 						mustRegister()
 
 	FeatureGateManagedBootImagesCPMS = newFeatureGate("ManagedBootImagesCPMS").

@@ -142,9 +142,6 @@
                         "name": "MachineAPIOperatorDisableMachineHealthCheckController"
                     },
                     {
-                        "name": "ManagedBootImagesAzure"
-                    },
-                    {
                         "name": "ManagedBootImagesCPMS"
                     },
                     {
@@ -277,6 +274,9 @@
                     },
                     {
                         "name": "ManagedBootImagesAWS"
+                    },
+                    {
+                        "name": "ManagedBootImagesAzure"
                     },
                     {
                         "name": "MetricsCollectionProfiles"

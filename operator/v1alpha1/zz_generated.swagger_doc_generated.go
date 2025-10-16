@@ -174,6 +174,120 @@ func (ClusterVersionOperatorStatus) SwaggerDoc() map[string]string {
 	return map_ClusterVersionOperatorStatus
 }
 
+var map_APIExcludedField = map[string]string{
+	"path":    "path is the path to the field in the schema. Paths are dot-separated field names (e.g., \"fieldA.fieldB.fieldC\") representing nested object fields. Each field name must be a valid Kubernetes CRD field name: start with a letter, contain only letters, digits, and underscores, and be between 1 and 63 characters in length. A path may contain at most 32 fields.",
+	"version": "version is the version of the API that the field is excluded from. When not specified, the field is excluded from all versions. When present, must be a valid Kubernetes API version string, with a maximum length of 255 characters.",
+}
+
+func (APIExcludedField) SwaggerDoc() map[string]string {
+	return map_APIExcludedField
+}
+
+var map_APIVersions = map[string]string{
+	"":           "APIVersions specifies a set of API versions of a CRD.",
+	"defaultSet": "defaultSet specifies a method for automatically selecting a set of versions to require. Valid options are:\n  StorageOnly - only the storage version is selected.\n  All - all versions are selected.\nThis field is required.",
+	"additional": "additional specifies a set api versions to require in addition to the default set. It is explicitly permitted to specify a version in the additional set which was also selected by the default set. The sets will be merged and deduplicated.\n\nWhen present, each version string must be between 1 and 255 characters in length. The list may contain at most 255 items.",
+}
+
+func (APIVersions) SwaggerDoc() map[string]string {
+	return map_APIVersions
+}
+
+var map_CRDCompatibilityRequirement = map[string]string{
+	"":         "CRDCompatibilityRequirement expresses a set of requirements on a target CRD. It is used to ensure compatibility between different actors using the same CRD.\n\nCompatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.",
+	"metadata": "metadata is the standard object's metadata. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata",
+	"spec":     "spec is the specification of the desired behavior of the CRD Compatibility Requirement.",
+	"status":   "status is the most recently observed status of the CRD Compatibility Requirement.",
+}
+
+func (CRDCompatibilityRequirement) SwaggerDoc() map[string]string {
+	return map_CRDCompatibilityRequirement
+}
+
+var map_CRDCompatibilityRequirementList = map[string]string{
+	"":         "CRDCompatibilityRequirementList is a collection of CRDCompatibilityRequirements.\n\nCompatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.",
+	"metadata": "metadata is the standard list's metadata. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata",
+	"items":    "items is a list of CRDCompatibilityRequirements.",
+}
+
+func (CRDCompatibilityRequirementList) SwaggerDoc() map[string]string {
+	return map_CRDCompatibilityRequirementList
+}
+
+var map_CRDCompatibilityRequirementSpec = map[string]string{
+	"":                    "CRDCompatibilityRequirementSpec is the specification of the desired behavior of the CRD Compatibility Requirement.",
+	"compatibilitySchema": "compatibilitySchema defines the schema used by customResourceDefinitionSchemaValidation and objectSchemaValidation. This field is required.",
+	"customResourceDefinitionSchemaValidation": "customResourceDefinitionSchemaValidation ensures that updates to the installed CRD are compatible with this compatibility requirement. If not specified, admission of the target CRD will not be validated. This field is optional.",
+	"objectSchemaValidation":                   "objectSchemaValidation ensures that matching resources conform to compatibilitySchema. If not specified, admission of matching resources will not be validated. This field is optional.",
+}
+
+func (CRDCompatibilityRequirementSpec) SwaggerDoc() map[string]string {
+	return map_CRDCompatibilityRequirementSpec
+}
+
+var map_CRDCompatibilityRequirementStatus = map[string]string{
+	"":            "CRDCompatibilityRequirementStatus defines the observed status of the CRD Compatibility Requirement.",
+	"conditions":  "conditions is a list of conditions and their status. Known condition types are Progressing, Admitted, Compatible.",
+	"observedCRD": "observedCRD documents the uid and generation of the CRD object when the current status was written. This field will be omitted if the target CRD does not exist or could not be retrieved.",
+	"crdName":     "crdName is the name of the target CRD. The target CRD is not required to exist, as we may legitimately place requirements on it before it is created.  The observed CRD is given in status.observedCRD, which will be empty if no CRD is observed. When present, must be between 1 and 253 characters and conform to RFC 1123 subdomain format: lowercase alphanumeric characters, '-' or '.', starting and ending with alphanumeric characters. When not specified, the requirement applies to any CRD name discovered from the compatibility schema. This field is optional. Once set, the value cannot be changed and must always remain set.",
+}
+
+func (CRDCompatibilityRequirementStatus) SwaggerDoc() map[string]string {
+	return map_CRDCompatibilityRequirementStatus
+}
+
+var map_CRDData = map[string]string{
+	"":     "CRDData contains the complete definition of a CRD.",
+	"type": "type indicates the type of the CRD data. The only supported type is YAML. This field is required.",
+	"data": "data contains the complete definition of the CRD. This field is required.",
+}
+
+func (CRDData) SwaggerDoc() map[string]string {
+	return map_CRDData
+}
+
+var map_CompatibilitySchema = map[string]string{
+	"":                         "CompatibilitySchema defines the schema used by crdSchemaValidation and objectSchemaValidation.",
+	"customResourceDefinition": "customResourceDefinition contains the complete definition of the CRD for schema and object validation purposes. This field is required.",
+	"requiredVersions":         "requiredVersions specifies a subset of the CRD's API versions which will be asserted for compatibility. This field is required.",
+	"excludedFields":           "excludedFields is a set of fields in the schema which will not be validated by crdSchemaValidation or objectSchemaValidation. The list may contain at most 64 fields. When not specified, all fields in the schema will be validated.",
+}
+
+func (CompatibilitySchema) SwaggerDoc() map[string]string {
+	return map_CompatibilitySchema
+}
+
+var map_CustomResourceDefinitionSchemaValidation = map[string]string{
+	"":       "CustomResourceDefinitionSchemaValidation ensures that updates to the installed CRD are compatible with this compatibility requirement.",
+	"action": "action determines whether violations are rejected (Deny) or admitted with an API warning (Warn). Valid options are:\n  Deny - incompatible CRDs will be rejected and not admitted to the cluster.\n  Warn - incompatible CRDs will be allowed but a warning will be generated in the API response.\nThis field is required.",
+}
+
+func (CustomResourceDefinitionSchemaValidation) SwaggerDoc() map[string]string {
+	return map_CustomResourceDefinitionSchemaValidation
+}
+
+var map_ObjectSchemaValidation = map[string]string{
+	"":                  "ObjectSchemaValidation ensures that matching objects conform to the compatibilitySchema.",
+	"action":            "action determines whether violations are rejected (Deny) or admitted with an API warning (Warn). Valid options are:\n  Deny - incompatible Objects will be rejected and not admitted to the cluster.\n  Warn - incompatible Objects will be allowed but a warning will be generated in the API response.\nThis field is required.",
+	"namespaceSelector": "namespaceSelector defines a label selector for namespaces. If defined, only objects in a namespace with matching labels will be subject to validation. When not specified, objects for validation will not be filtered by namespace.",
+	"objectSelector":    "objectSelector defines a label selector for objects. If defined, only objects with matching labels will be subject to validation. When not specified, objects for validation will not be filtered by label.",
+	"matchConditions":   "matchConditions defines the matchConditions field of the resulting ValidatingWebhookConfiguration. When present, must contain between 1 and 64 match conditions. When not specified, the webhook will match all requests according to its other selectors. FIXME(chrischdi): should we embed this type? Or maintain our own copy of MatchCondition?",
+}
+
+func (ObjectSchemaValidation) SwaggerDoc() map[string]string {
+	return map_ObjectSchemaValidation
+}
+
+var map_ObservedCRD = map[string]string{
+	"":           "ObservedCRD contains information about the observed target CRD.",
+	"uid":        "uid is the uid of the observed CRD. Must be a valid UUID consisting of lowercase hexadecimal digits in 5 hyphenated blocks (8-4-4-4-12 format). Length must be between 1 and 36 characters.",
+	"generation": "generation is the observed generation of the CRD. Must be a positive integer (minimum value of 1).",
+}
+
+func (ObservedCRD) SwaggerDoc() map[string]string {
+	return map_ObservedCRD
+}
+
 var map_BackupJobReference = map[string]string{
 	"":          "BackupJobReference holds a reference to the batch/v1 Job created to run the etcd backup",
 	"namespace": "namespace is the namespace of the Job. this is always expected to be \"openshift-etcd\" since the user provided PVC is also required to be in \"openshift-etcd\" Required",

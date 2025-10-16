@@ -175,9 +175,6 @@
                         "name": "NewOLMPreflightPermissionChecks"
                     },
                     {
-                        "name": "NewOLMWebhookProviderOpenshiftServiceCA"
-                    },
-                    {
                         "name": "NoRegistryClusterOperations"
                     },
                     {
@@ -289,6 +286,9 @@
                     },
                     {
                         "name": "NewOLM"
+                    },
+                    {
+                        "name": "NewOLMWebhookProviderOpenshiftServiceCA"
                     },
                     {
                         "name": "OpenShiftPodSecurityAdmission"

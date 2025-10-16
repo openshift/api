@@ -224,18 +224,23 @@ const (
 
 // CRDCompatibilityRequirement's Progressing condition and corresponding reasons.
 const (
-	// CRDCompatibilityRequirementProgressing is false if the spec has been completely reconciled.
+	// CRDCompatibilityRequirementProgressing is false if the spec has been
+	// completely reconciled against the condition's observed generation.
 	// True indicates that reconciliation is still in progress and the current status does not represent
 	// a stable state. Progressing false with an error reason indicates that the object cannot be reconciled.
 	CRDCompatibilityRequirementProgressing string = "Progressing"
 
-	// CRDCompatibilityRequirementConfigurationErrorReason surfaces when reconciliation cannot progress due to an invalid spec.
+	// CRDCompatibilityRequirementConfigurationErrorReason indicates that
+	// reconciliation cannot progress due to an invalid spec. The controller
+	// will not reconcile this object again until the spec is updated.
 	CRDCompatibilityRequirementConfigurationErrorReason string = "ConfigurationError"
 
-	// CRDCompatibilityRequirementTransientErrorReason surfaces when reconciliation failed due to an error that can be retried.
+	// CRDCompatibilityRequirementTransientErrorReason indicates that
+	// reconciliation failed due to an error that can be retried.
 	CRDCompatibilityRequirementTransientErrorReason string = "TransientError"
 
-	// CRDCompatibilityRequirementUpToDateReason surfaces when reconciliation completed successfully.
+	// CRDCompatibilityRequirementUpToDateReason surfaces when reconciliation
+	// completed successfully for the condition's observed generation.
 	CRDCompatibilityRequirementUpToDateReason string = "UpToDate"
 )
 
@@ -314,7 +319,6 @@ type ObservedCRD struct {
 	// +kubebuilder:validation:MinLength=1
 	// +kubebuilder:validation:MaxLength=36
 	// +kubebuilder:validation:Format=uuid
-	// +kubebuilder:validation:XValidation:rule="!format.uuid().validate(self).hasValue()",message="uid must be a valid UUID. It must consist only of lower-case hexadecimal digits, in 5 hyphenated blocks, where the blocks are of length 8-4-4-4-12 respectively."
 	// +required
 	UID string `json:"uid,omitempty"`
 

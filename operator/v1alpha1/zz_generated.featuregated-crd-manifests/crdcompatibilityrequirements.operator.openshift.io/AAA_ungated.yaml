@@ -461,11 +461,6 @@ spec:
                     maxLength: 36
                     minLength: 1
                     type: string
-                    x-kubernetes-validations:
-                    - message: uid must be a valid UUID. It must consist only of lower-case
-                        hexadecimal digits, in 5 hyphenated blocks, where the blocks
-                        are of length 8-4-4-4-12 respectively.
-                      rule: '!format.uuid().validate(self).hasValue()'
                 required:
                 - generation
                 - uid

@@ -175,7 +175,7 @@ func (ClusterVersionOperatorStatus) SwaggerDoc() map[string]string {
 }
 
 var map_APIExcludedField = map[string]string{
-	"path":    "path is the path to the field in the schema. Paths are dot-separated field names (e.g., \"fieldA.fieldB.fieldC\") representing nested object fields. Each field name must be a valid Kubernetes CRD field name: start with a letter, contain only letters, digits, and underscores, and be between 1 and 63 characters in length.",
+	"path":    "path is the path to the field in the schema. Paths are dot-separated field names (e.g., \"fieldA.fieldB.fieldC\") representing nested object fields. Each field name must be a valid Kubernetes CRD field name: start with a letter, contain only letters, digits, and underscores, and be between 1 and 63 characters in length. A path may contain at most 32 fields.",
 	"version": "version is the version of the API that the field is excluded from. When not specified, the field is excluded from all versions. When present, must be a valid Kubernetes API version string, with a maximum length of 255 characters.",
 }
 
@@ -237,7 +237,7 @@ func (CRDCompatibilityRequirementStatus) SwaggerDoc() map[string]string {
 }
 
 var map_CRDData = map[string]string{
-	"":     "CRDData contains the complete definition of a CRD",
+	"":     "CRDData contains the complete definition of a CRD.",
 	"type": "type indicates the type of the CRD data. The only supported type is YAML. This field is required.",
 	"data": "data contains the complete definition of the CRD. This field is required.",
 }

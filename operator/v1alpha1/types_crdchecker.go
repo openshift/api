@@ -68,7 +68,7 @@ const (
 	CRDDataTypeYAML CRDDataType = "YAML"
 )
 
-// CRDData contains the complete definition of a CRD
+// CRDData contains the complete definition of a CRD.
 type CRDData struct {
 	// type indicates the type of the CRD data. The only supported type is YAML.
 	// This field is required.
@@ -127,10 +127,10 @@ type APIExcludedField struct {
 	// Paths are dot-separated field names (e.g., "fieldA.fieldB.fieldC") representing nested object fields.
 	// Each field name must be a valid Kubernetes CRD field name: start with a letter, contain only
 	// letters, digits, and underscores, and be between 1 and 63 characters in length.
+	// A path may contain at most 32 fields.
 	// +kubebuilder:validation:MinLength=1
-	// +kubebuilder:validation:MaxLength=8192
-	// +kubebuilder:validation:XValidation:rule="self.split('.').all(f, f.matches('^[a-zA-Z][a-zA-Z0-9_]*$'))",message="path must be dot-separated field names, each starting with a letter and containing only letters, digits, and underscores"
-	// +kubebuilder:validation:XValidation:rule="self.split('.').all(f, f.size() >= 1 && f.size() <= 63)",message="each field name in the path must be between 1 and 63 characters"
+	// +kubebuilder:validation:MaxLength=1024
+	// +kubebuilder:validation:XValidation:rule="self.split('.', 32).all(f, f.matches('^[a-zA-Z][a-zA-Z0-9_]{0,63}*$'))",message="path must be dot-separated field names, each starting with a letter and containing only letters, digits, and underscores not exceeding 63 characters. There may be at most 32 fields in the path."
 	// +required
 	Path string `json:"path,omitempty"`
 
@@ -300,7 +300,7 @@ type CRDCompatibilityRequirementStatus struct {
 	// +kubebuilder:validation:MinLength=1
 	// +kubebuilder:validation:MaxLength=253
 	// +kubebuilder:validation:XValidation:rule="!format.dns1123Subdomain().validate(self).hasValue()",message="a lowercase RFC 1123 subdomain must consist of lower case alphanumeric characters, '-' or '.', and must start and end with an alphanumeric character."
-	// +kubebuilder:validation:XValidation:rule="!has(self) || self == oldSelf",message="crdName cannot be changed once set"
+	// +kubebuilder:validation:XValidation:rule="oldSelf == '' || self == oldSelf",message="crdName cannot be changed once set"
 	// +optional
 	CRDName string `json:"crdName,omitempty"`
 }

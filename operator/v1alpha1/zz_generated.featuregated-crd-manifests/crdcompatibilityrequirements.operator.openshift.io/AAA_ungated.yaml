@@ -91,18 +91,16 @@ spec:
                             Paths are dot-separated field names (e.g., "fieldA.fieldB.fieldC") representing nested object fields.
                             Each field name must be a valid Kubernetes CRD field name: start with a letter, contain only
                             letters, digits, and underscores, and be between 1 and 63 characters in length.
-                          maxLength: 8192
+                            A path may contain at most 32 fields.
+                          maxLength: 1024
                           minLength: 1
                           type: string
                           x-kubernetes-validations:
                           - message: path must be dot-separated field names, each
                               starting with a letter and containing only letters,
-                              digits, and underscores
-                            rule: self.split('.').all(f, f.matches('^[a-zA-Z][a-zA-Z0-9_]*$'))
-                          - message: each field name in the path must be between 1
-                              and 63 characters
-                            rule: self.split('.').all(f, f.size() >= 1 && f.size()
-                              <= 63)
+                              digits, and underscores not exceeding 63 characters.
+                              There may be at most 32 fields in the path.
+                            rule: self.split('.', 32).all(f, f.matches('^[a-zA-Z][a-zA-Z0-9_]{0,63}*$'))
                         version:
                           description: |-
                             version is the version of the API that the field is excluded from.
@@ -440,7 +438,7 @@ spec:
                     an alphanumeric character.
                   rule: '!format.dns1123Subdomain().validate(self).hasValue()'
                 - message: crdName cannot be changed once set
-                  rule: '!has(self) || self == oldSelf'
+                  rule: oldSelf == '' || self == oldSelf
               observedCRD:
                 description: |-
                   observedCRD documents the uid and generation of the CRD object when the current status was written.

@@ -145,9 +145,6 @@
                         "name": "ManagedBootImagesCPMS"
                     },
                     {
-                        "name": "ManagedBootImagesvSphere"
-                    },
-                    {
                         "name": "MaxUnavailableStatefulSet"
                     },
                     {
@@ -274,6 +271,9 @@
                     },
                     {
                         "name": "ManagedBootImagesAzure"
+                    },
+                    {
+                        "name": "ManagedBootImagesvSphere"
                     },
                     {
                         "name": "MetricsCollectionProfiles"

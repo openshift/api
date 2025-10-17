@@ -158,6 +158,78 @@ type MachineConfigNodeStatus struct {
 	// +kubebuilder:validation:MaxItems=32
 	// +optional
 	IrreconcilableChanges []IrreconcilableChangeDiff `json:"irreconcilableChanges,omitempty"`
+	// internalReleaseImage describes the status of the release payloads stored in the node.
+	// +optional
+	InternalReleaseImage *MachineConfigNodeStatusInternalReleaseImage `json:"internalReleaseImage,omitempty"`
+}
+
+// MachineConfigNodeStatusInternalReleaseImage holds information about the current, desidered and discovered release bundles for the observed machine
+// config node.
+// +openshift:enable:FeatureGate=NoRegistryClusterOperations
+type MachineConfigNodeStatusInternalReleaseImage struct {
+	// conditions represent the observations of an internal release image current state.
+	// +listType=map
+	// +listMapKey=type
+	// +kubebuilder:validation:MinItems=1
+	// +kubebuilder:validation:MaxItems=256
+	// +optional
+	Conditions []metav1.Condition `json:"conditions,omitempty"`
+
+	// availableReleases is a list of release bundle identifiers currently detected
+	// from the ISO attached to one of the control plane nodes. Any reported identifier can
+	// be used to amend the `spec.Releases` field to add a new release bundle to the cluster.
+	// An empty value indicates that no ISOs are currently being detected on any control plane
+	// node.
+	// Must not exceed 5 entries.
+	// +listType=map
+	// +listMapKey=name
+	// +kubebuilder:validation:MaxItems=5
+	// +optional
+	AvailableReleases []MachineConfigNodeStatusInternalReleaseImageRef `json:"availableReleases,omitempty"`
+
+	// installedReleases is a list of the release bundles currently owned and managed by the
+	// cluster, indicating that their images can be safely pulled by any cluster entity
+	// requiring them.
+	// This field can contain between 1 and 5 entries.
+	// +listType=map
+	// +listMapKey=name
+	// +kubebuilder:validation:MinItems=1
+	// +kubebuilder:validation:MaxItems=5
+	// +optional
+	InstalledReleases []MachineConfigNodeStatusInternalReleaseImageDetailedRef `json:"installedReleases,omitempty"`
+}
+
+// MachineConfigNodeStatusInternalReleaseImageRef is used to provide a simple reference for a release
+// bundle. Currently it contains only the name field.
+// +openshift:enable:FeatureGate=NoRegistryClusterOperations
+type MachineConfigNodeStatusInternalReleaseImageRef struct {
+	// name indicates the desired release bundle identifier. This field is required and must be between 1 and 64 characters long.
+	// +required
+	// +kubebuilder:validation:MinLength=1
+	// +kubebuilder:validation:MaxLength=64
+	Name string `json:"name,omitempty"`
+}
+
+// MachineConfigNodeStatusInternalReleaseImageDetailedRef is used to provide a more detailed reference for
+// a release bundle.
+// +openshift:enable:FeatureGate=NoRegistryClusterOperations
+type MachineConfigNodeStatusInternalReleaseImageDetailedRef struct {
+	// name indicates the desired release bundle identifier. This field is required and must be between 1 and 64 characters long.
+	// +kubebuilder:validation:MinLength=1
+	// +kubebuilder:validation:MaxLength=64
+	// +required
+	Name string `json:"name,omitempty"`
+
+	// image is an OCP release image referenced by digest.
+	// The format of the image pull spec is: host[:port][/namespace]/name@sha256:<digest>,
+	// where the digest must be 64 characters long, and consist only of lowercase hexadecimal characters, a-f and 0-9.
+	// The length of the whole spec must be between 1 to 447 characters.
+	// +kubebuilder:validation:MinLength=1
+	// +kubebuilder:validation:MaxLength=447
+	// +kubebuilder:validation:XValidation:rule=`(self.split('@').size() == 2 && self.split('@')[1].matches('^sha256:[a-f0-9]{64}$'))`,message="the OCI Image reference must end with a valid '@sha256:<digest>' suffix, where '<digest>' is 64 characters long"
+	// +kubebuilder:validation:XValidation:rule=`(self.split('@')[0].matches('^([a-zA-Z0-9-]+\\.)+[a-zA-Z0-9-]+(:[0-9]{2,5})?/([a-zA-Z0-9-_]{0,61}/)?[a-zA-Z0-9-_.]*?$'))`,message="the OCI Image name should follow the host[:port][/namespace]/name format, resembling a valid URL without the scheme"
+	// +required
+	Image string `json:"image,omitempty"`
 }
 
 // IrreconcilableChangeDiff holds an individual diff between the initial install-time MachineConfig

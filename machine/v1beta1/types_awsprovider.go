@@ -205,6 +205,17 @@ type EBSBlockDeviceSpec struct {
 	// it is not used in requests to create gp2, st1, sc1, or standard volumes.
 	// +optional
 	Iops *int64 `json:"iops,omitempty"`
+	// throughput to provision in MiB/s supported for the volume type. Not applicable to all types.
+	//
+	// This parameter is valid only for gp3 volumes.
+	// Valid Range: Minimum value of 125. Maximum value of 1000.
+	//
+	// When omitted, this means no opinion, and the platform is left to
+	// choose a reasonable default, which is subject to change over time.
+	// The current default is 125.
+	//
+	// +optional
+	ThroughputMib *int32 `json:"throughput,omitempty"`
 	// The size of the volume, in GiB.
 	//
 	// Constraints: 1-16384 for General Purpose SSD (gp2), 4-16384 for Provisioned

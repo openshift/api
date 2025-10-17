@@ -446,6 +446,7 @@ var map_MachineConfigNodeStatus = map[string]string{
 	"configImage":           "configImage is an optional field for configuring the OS image to be used for this node. This field will only exist if the node belongs to a pool opted into on-cluster image builds, and will override any MachineConfig referenced OSImageURL fields. When omitted, this means that the Image Mode feature is not being used and the node will be up to date with the specific current rendered config version for the nodes MachinePool. When specified, the Image Mode feature is enabled and the contents of this field show the observed state of the node image. When Image Mode is enabled and a new MachineConfig is applied such that a new OS image build is not created, only the configVersion field will change. When Image Mode is enabled and a new MachineConfig is applied such that a new OS image build is created, then only the configImage field will change. It is also possible that both the configImage and configVersion change during the same update.",
 	"pinnedImageSets":       "pinnedImageSets describes the current and desired pinned image sets for this node.",
 	"irreconcilableChanges": "irreconcilableChanges is an optional field that contains the observed differences between this nodes configuration and the target rendered MachineConfig. This field will be set when there are changes to the target rendered MachineConfig that can only be applied to new nodes joining the cluster. Entries must be unique, keyed on the fieldPath field. Must not exceed 32 entries.",
+	"internalReleaseImage":  "internalReleaseImage describes the status of the release payloads stored in the node.",
 }
 
 func (MachineConfigNodeStatus) SwaggerDoc() map[string]string {
@@ -460,6 +461,36 @@ var map_MachineConfigNodeStatusConfigImage = map[string]string{
 
 func (MachineConfigNodeStatusConfigImage) SwaggerDoc() map[string]string {
 	return map_MachineConfigNodeStatusConfigImage
+}
+
+var map_MachineConfigNodeStatusInternalReleaseImage = map[string]string{
+	"":                  "MachineConfigNodeStatusInternalReleaseImage holds information about the current, desidered and discovered release bundles for the observed machine config node.",
+	"conditions":        "conditions represent the observations of an internal release image current state.",
+	"availableReleases": "availableReleases is a list of release bundle identifiers currently detected from the ISO attached to one of the control plane nodes. Any reported identifier can be used to amend the `spec.Releases` field to add a new release bundle to the cluster. An empty value indicates that no ISOs are currently being detected on any control plane node. Must not exceed 5 entries.",
+	"installedReleases": "installedReleases is a list of the release bundles currently owned and managed by the cluster, indicating that their images can be safely pulled by any cluster entity requiring them. This field can contain between 1 and 5 entries.",
+}
+
+func (MachineConfigNodeStatusInternalReleaseImage) SwaggerDoc() map[string]string {
+	return map_MachineConfigNodeStatusInternalReleaseImage
+}
+
+var map_MachineConfigNodeStatusInternalReleaseImageDetailedRef = map[string]string{
+	"":      "MachineConfigNodeStatusInternalReleaseImageDetailedRef is used to provide a more detailed reference for a release bundle.",
+	"name":  "name indicates the desired release bundle identifier. This field is required and must be between 1 and 64 characters long.",
+	"image": "image is an OCP release image referenced by digest. The format of the image pull spec is: host[:port][/namespace]/name@sha256:<digest>, where the digest must be 64 characters long, and consist only of lowercase hexadecimal characters, a-f and 0-9. The length of the whole spec must be between 1 to 447 characters.",
+}
+
+func (MachineConfigNodeStatusInternalReleaseImageDetailedRef) SwaggerDoc() map[string]string {
+	return map_MachineConfigNodeStatusInternalReleaseImageDetailedRef
+}
+
+var map_MachineConfigNodeStatusInternalReleaseImageRef = map[string]string{
+	"":     "MachineConfigNodeStatusInternalReleaseImageRef is used to provide a simple reference for a release bundle. Currently it contains only the name field.",
+	"name": "name indicates the desired release bundle identifier. This field is required and must be between 1 and 64 characters long.",
+}
+
+func (MachineConfigNodeStatusInternalReleaseImageRef) SwaggerDoc() map[string]string {
+	return map_MachineConfigNodeStatusInternalReleaseImageRef
 }
 
 var map_MachineConfigNodeStatusMachineConfigVersion = map[string]string{

@@ -23,9 +23,7 @@ func newCrdifyCommand() *cobra.Command {
 				return fmt.Errorf("could not build generation context: %w", err)
 			}
 
-			gen := crdify.NewGenerator(crdify.WithComparisonBase(crdifyComparisonBase))
-
-			return executeGenerators(genCtx, gen)
+			return executeGenerators(genCtx, newCrdifyGenerator())
 		},
 	}
 
@@ -35,4 +33,8 @@ func newCrdifyCommand() *cobra.Command {
 func init() {
 	rootCmd.AddCommand(newCrdifyCommand())
 	rootCmd.PersistentFlags().StringVar(&crdifyComparisonBase, "crdify:comparison-base", crdifyComparisonBase, "base branch/commit to compare against")
+}
+
+func newCrdifyGenerator() generation.Generator {
+	return crdify.NewGenerator(crdify.WithComparisonBase(crdifyComparisonBase))
 }

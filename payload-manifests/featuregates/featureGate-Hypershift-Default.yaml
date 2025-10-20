@@ -137,6 +137,12 @@
                         "name": "SigstoreImageVerification"
                     },
                     {
+                        "name": "StreamingCollectionEncodingToJSON"
+                    },
+                    {
+                        "name": "StreamingCollectionEncodingToProtobuf"
+                    },
+                    {
                         "name": "TranslateStreamCloseWebsocketRequests"
                     },
                     {

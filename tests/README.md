@@ -269,3 +269,32 @@ Once the patch is applied, three tests should be added for each ratcheting valid
 
 [validation-ratcheting]: https://kubernetes.io/docs/tasks/extend-kubernetes/custom-resources/custom-resource-definitions/#validation-ratcheting
 [rfc6902]: https://datatracker.ietf.org/doc/html/rfc6902
+
+## Running integration tests locally
+
+To run the full integration suite locally you need envtest control-plane binaries (etcd, kube-apiserver, kube-controller-manager).
+We provide a small helper script to download a minimal set of binaries into `tests/testbin`.
+
+1. Download required test binaries (example):
+
+```bash
+./tests/hack/install-envtest-assets.sh 1.27.1 ./tests/testbin
+```
+
+2. Export the path where the binaries were placed:
+
+```bash
+export TEST_ASSET_KUBEBUILDER_BIN=$(realpath ./tests/testbin)
+```
+
+3. Run the tests from the `tests` module:
+
+```bash
+cd tests
+go test ./... -v
+```
+
+Notes:
+- The script pins `etcd` to v3.5.9 and attempts to download kube-apiserver/kube-controller-manager for the provided Kubernetes version. You may need to adjust versions for compatibility with controller-runtime in `tests/go.mod`.
+- If you already have `kubebuilder` installed, placing its `bin/` folder at `/usr/local/kubebuilder/bin` or setting `TEST_ASSET_KUBEBUILDER_BIN` to that folder is sufficient.
+- Running the full suite will start a real API server and etcd locally and can be resource-intensive. Use the fast unit tests for quick feedback.

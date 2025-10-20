@@ -34,6 +34,15 @@ func LoadTestSuiteSpecs(paths ...string) ([]SuiteSpec, error) {
 			}
 
 			dirPath := filepath.Base(filepath.Dir(filepath.Dir(path)))
+			// ignore sample testdata files which live under tests/testdata - these
+			// are used by unit tests and do not have associated generated CRD
+			// manifests. Skipping prevents LoadTestSuiteSpecs from attempting to
+			// locate zz_generated.crd-manifests at the repository root.
+			parentDir := filepath.Base(filepath.Dir(path))
+			if parentDir == "testdata" {
+				return nil
+			}
+
 			if !info.IsDir() && strings.HasSuffix(path, ".yaml") && dirPath == "tests" {
 				suiteFiles[path] = struct{}{}
 			}
@@ -188,9 +197,15 @@ func generateOnCreateTable(onCreateTests []OnCreateTestSpec) {
 
 	// Convert the test specs into table entries
 	for _, testEntry := range onCreateTests {
+		// If expected is omitted, default it to the initial value to reduce verbosity in tests.
+		expected := testEntry.Expected
+		if strings.TrimSpace(expected) == "" {
+			expected = testEntry.Initial
+		}
+
 		tableEntries = append(tableEntries, Entry(testEntry.Name, onCreateTableInput{
 			initial:       []byte(testEntry.Initial),
-			expected:      []byte(testEntry.Expected),
+			expected:      []byte(expected),
 			expectedError: testEntry.ExpectedError,
 		}))
 	}
@@ -198,6 +213,24 @@ func generateOnCreateTable(onCreateTests []OnCreateTestSpec) {
 	if len(tableEntries) > 1 {
 		DescribeTable("On Create", tableEntries...)
 	}
+}
+
+// defaultOnCreateExpected returns the expected YAML bytes for an onCreate test,
+// defaulting to initial when expected is empty or whitespace.
+func defaultOnCreateExpected(initial, expected string) []byte {
+	if strings.TrimSpace(expected) == "" {
+		return []byte(initial)
+	}
+	return []byte(expected)
+}
+
+// defaultOnUpdateExpected returns the expected YAML bytes for an onUpdate test,
+// defaulting to updated when expected is empty or whitespace.
+func defaultOnUpdateExpected(updated, expected string) []byte {
+	if strings.TrimSpace(expected) == "" {
+		return []byte(updated)
+	}
+	return []byte(expected)
 }
 
 // generateOnUpdateTable generates a table of tests from the defined OnUpdate tests
@@ -342,11 +375,17 @@ func generateOnUpdateTable(onUpdateTests []OnUpdateTestSpec, crdFileName string)
 
 	// Convert the test specs into table entries
 	for _, testEntry := range onUpdateTests {
+		// If expected is omitted, default it to the updated value to reduce verbosity in tests.
+		expected := testEntry.Expected
+		if strings.TrimSpace(expected) == "" {
+			expected = testEntry.Updated
+		}
+
 		tableEntries = append(tableEntries, Entry(testEntry.Name, onUpdateTableInput{
 			crdPatches:          testEntry.InitialCRDPatches,
 			initial:             []byte(testEntry.Initial),
 			updated:             []byte(testEntry.Updated),
-			expected:            []byte(testEntry.Expected),
+			expected:            []byte(expected),
 			expectedError:       testEntry.ExpectedError,
 			expectedStatusError: testEntry.ExpectedStatusError,
 		}))

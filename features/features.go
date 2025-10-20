@@ -348,6 +348,20 @@ var (
 					enableIn(configv1.DevPreviewNoUpgrade, configv1.TechPreviewNoUpgrade).
 					mustRegister()
 
+	FeatureStreamingCollectionEncodingToJSON = newFeatureGate("StreamingCollectionEncodingToJSON").
+						reportProblemsToJiraComponent("kube-apiserver").
+						contactPerson("rofeldma").
+						productScope(kubernetes).
+						enableIn(configv1.DevPreviewNoUpgrade, configv1.TechPreviewNoUpgrade).
+						mustRegister()
+
+	FeatureStreamingCollectionEncodingToProtobuf = newFeatureGate("StreamingCollectionEncodingToProtobuf").
+						reportProblemsToJiraComponent("kube-apiserver").
+						contactPerson("rofeldma").
+						productScope(kubernetes).
+						enableIn(configv1.DevPreviewNoUpgrade, configv1.TechPreviewNoUpgrade).
+						mustRegister()
+
 	FeatureGateSignatureStores = newFeatureGate("SignatureStores").
 					reportProblemsToJiraComponent("Cluster Version Operator").
 					contactPerson("lmohanty").

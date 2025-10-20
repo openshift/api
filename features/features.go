@@ -509,8 +509,8 @@ var (
 								reportProblemsToJiraComponent("olm").
 								contactPerson("pegoncal").
 								productScope(ocpSpecific).
-								enhancementPR("https://github.com/openshift/enhancements/pull/1799").
-								enableForClusterProfile(SelfManaged, configv1.DevPreviewNoUpgrade, configv1.TechPreviewNoUpgrade).
+								enhancementPR("https://github.com/openshift/enhancements/pull/1844").
+								enableForClusterProfile(SelfManaged, configv1.Default, configv1.DevPreviewNoUpgrade, configv1.TechPreviewNoUpgrade).
 								mustRegister()
 
 	FeatureGateInsightsOnDemandDataGather = newFeatureGate("InsightsOnDemandDataGather").

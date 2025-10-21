@@ -1986,3 +1986,47 @@ tests:
             type: AWS
             aws: {}
       expectedStatusError: "status.platformStatus.aws: Invalid value: \"object\": resourceTags may only be configured during installation"
+    - name: Ratcheting validation for AWS prefix ResourceTags should not break updates
+      initialCRDPatches:
+      - op: remove
+        path: /spec/versions/0/schema/openAPIV3Schema/properties/status/properties/platformStatus/properties/aws/properties/resourceTags/items/properties/key/x-kubernetes-validations
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        spec: {}
+        status:
+          platform: AWS
+          platformStatus:
+            type: AWS
+            aws:
+              resourceTags:
+                - {key: "aws:invalidKey", value: "value"}
+      updated: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        spec: {}
+        status:
+          platform: AWS
+          platformStatus:
+            type: AWS
+            aws:
+              resourceTags:
+                - {key: "aws:invalidKey", value: "value"}
+              serviceEndpoints:
+                - {name: "newendpoint", url: "https://www.awsendpoint.com"}
+      expected: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        spec: {}
+        status:
+          platform: AWS
+          controlPlaneTopology: HighlyAvailable
+          cpuPartitioning: None
+          infrastructureTopology: HighlyAvailable
+          platformStatus:
+            type: AWS
+            aws:
+              resourceTags:
+                - {key: "aws:invalidKey", value: "value"}
+              serviceEndpoints:
+                - {name: "newendpoint", url: "https://www.awsendpoint.com"}

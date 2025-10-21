@@ -1,0 +1,272 @@
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    api-approved.openshift.io: https://github.com/openshift/api/pull/2544
+    api.openshift.io/merged-by-featuregates: "true"
+    include.release.openshift.io/ibm-cloud-managed: "true"
+    include.release.openshift.io/self-managed-high-availability: "true"
+  name: pacemakers.etcd.openshift.io
+spec:
+  group: etcd.openshift.io
+  names:
+    kind: Pacemaker
+    listKind: PacemakerList
+    plural: pacemakers
+    singular: pacemaker
+  scope: Cluster
+  versions:
+  - name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        description: |-
+          # Pacemaker represents the current state of the Pacemaker cluster as reported by the pcs status command
+
+          This resource provides a view into the health and status of a Pacemaker-managed cluster in dual-replica (two-node)
+          deployments. The status is periodically collected by a privileged controller and made available for monitoring
+          and health checking purposes.
+
+          Compatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.
+        properties:
+          apiVersion:
+            description: |-
+              APIVersion defines the versioned schema of this representation of an object.
+              Servers should convert recognized schemas to the latest internal value, and
+              may reject unrecognized values.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
+            type: string
+          kind:
+            description: |-
+              Kind is a string value representing the REST resource this object represents.
+              Servers may infer this from the endpoint the client submits requests to.
+              Cannot be updated.
+              In CamelCase.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: |-
+              spec is an empty spec to satisfy Kubernetes API conventions.
+              Pacemaker is a status-only resource and does not use spec for configuration.
+            type: object
+          status:
+            description: status contains the actual pacemaker cluster status information
+              collected from the cluster.
+            properties:
+              collectionError:
+                description: collectionError contains any error encountered while
+                  collecting status
+                maxLength: 2048
+                minLength: 1
+                type: string
+              fencingHistory:
+                description: fencingHistory provides recent fencing events
+                items:
+                  description: FencingEvent represents a single fencing event from
+                    fence history
+                  properties:
+                    action:
+                      description: action is the fencing action performed (e.g., "reboot",
+                        "off", "on")
+                      maxLength: 16
+                      minLength: 1
+                      type: string
+                    completed:
+                      description: completed is the timestamp when the fencing event
+                        was completed
+                      format: date-time
+                      type: string
+                    status:
+                      description: status is the status of the fencing operation (e.g.,
+                        "success", "failed")
+                      maxLength: 16
+                      minLength: 1
+                      type: string
+                    target:
+                      description: target is the node that was fenced
+                      maxLength: 256
+                      minLength: 1
+                      type: string
+                  type: object
+                maxItems: 16
+                minItems: 1
+                type: array
+                x-kubernetes-list-type: atomic
+              lastUpdated:
+                description: lastUpdated is the timestamp when this status was last
+                  updated
+                format: date-time
+                type: string
+              nodeHistory:
+                description: nodeHistory provides recent operation history for troubleshooting
+                items:
+                  description: NodeHistoryEntry represents a single operation history
+                    entry from node_history
+                  properties:
+                    lastRCChange:
+                      description: lastRCChange is the timestamp when the RC last
+                        changed
+                      format: date-time
+                      type: string
+                    node:
+                      description: node is the node where the operation occurred
+                      maxLength: 256
+                      minLength: 1
+                      type: string
+                    operation:
+                      description: operation is the operation that was performed (e.g.,
+                        "monitor", "start", "stop")
+                      maxLength: 16
+                      minLength: 1
+                      type: string
+                    rc:
+                      description: rc is the return code from the operation
+                      format: int32
+                      type: integer
+                    rcText:
+                      description: rcText is the human-readable return code text (e.g.,
+                        "ok", "error", "not running")
+                      maxLength: 16
+                      minLength: 1
+                      type: string
+                    resource:
+                      description: resource is the resource that was operated on
+                      maxLength: 256
+                      minLength: 1
+                      type: string
+                  type: object
+                maxItems: 16
+                minItems: 1
+                type: array
+                x-kubernetes-list-type: atomic
+              nodes:
+                description: nodes provides detailed information about each node in
+                  the cluster
+                items:
+                  description: NodeStatus represents the status of a single node in
+                    the Pacemaker cluster
+                  properties:
+                    ip:
+                      description: ip is the IP address of the node
+                      maxLength: 62
+                      minLength: 2
+                      type: string
+                    mode:
+                      description: mode indicates if the node is in active or standby
+                        mode
+                      enum:
+                      - Active
+                      - Standby
+                      type: string
+                    name:
+                      description: name is the name of the node
+                      maxLength: 256
+                      minLength: 1
+                      type: string
+                    onlineStatus:
+                      description: onlineStatus indicates if the node is online or
+                        offline
+                      enum:
+                      - Online
+                      - Offline
+                      type: string
+                  type: object
+                maxItems: 2
+                minItems: 2
+                type: array
+                x-kubernetes-list-type: atomic
+              rawXML:
+                description: |-
+                  rawXML contains the raw XML output from pcs status xml command.
+                  Kept for debugging purposes only; healthcheck should not need to parse this.
+                maxLength: 262144
+                minLength: 1
+                type: string
+              resources:
+                description: resources provides detailed information about each resource
+                  in the cluster
+                items:
+                  description: ResourceStatus represents the status of a single resource
+                    in the Pacemaker cluster
+                  properties:
+                    activeStatus:
+                      description: activeStatus indicates if the resource is active
+                        or inactive
+                      enum:
+                      - Active
+                      - Inactive
+                      type: string
+                    name:
+                      description: name is the name of the resource
+                      maxLength: 256
+                      minLength: 1
+                      type: string
+                    node:
+                      description: node is the node where the resource is running
+                      maxLength: 256
+                      minLength: 1
+                      type: string
+                    resourceAgent:
+                      description: resourceAgent is the resource agent type (e.g.,
+                        "ocf:heartbeat:IPaddr2", "systemd:kubelet")
+                      maxLength: 256
+                      minLength: 1
+                      type: string
+                    role:
+                      description: role is the current role of the resource (e.g.,
+                        "Started", "Stopped")
+                      maxLength: 16
+                      minLength: 1
+                      type: string
+                  type: object
+                maxItems: 16
+                minItems: 1
+                type: array
+                x-kubernetes-list-type: atomic
+              summary:
+                description: summary provides high-level counts and flags for the
+                  cluster state
+                properties:
+                  nodesOnline:
+                    description: nodesOnline is the count of online nodes
+                    format: int32
+                    maximum: 2
+                    minimum: 0
+                    type: integer
+                  nodesTotal:
+                    description: nodesTotal is the total count of configured nodes
+                    format: int32
+                    maximum: 2
+                    minimum: 0
+                    type: integer
+                  pacemakerdState:
+                    description: pacemakerdState indicates if pacemaker is running
+                    maxLength: 16
+                    minLength: 1
+                    type: string
+                  quorumStatus:
+                    description: quorumStatus indicates if the cluster has quorum
+                    enum:
+                    - Quorate
+                    - NoQuorum
+                    type: string
+                  resourcesStarted:
+                    description: resourcesStarted is the count of started resources
+                    format: int32
+                    maximum: 16
+                    minimum: 0
+                    type: integer
+                  resourcesTotal:
+                    description: resourcesTotal is the total count of configured resources
+                    format: int32
+                    maximum: 16
+                    minimum: 0
+                    type: integer
+                type: object
+            type: object
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}

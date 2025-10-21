@@ -1247,8 +1247,7 @@ spec:
                     type: object
                     x-kubernetes-validations:
                     - message: resourceTags may only be configured during installation
-                      rule: '!has(oldSelf.resourceTags) && !has(self.resourceTags)
-                        || has(oldSelf.resourceTags) && has(self.resourceTags)'
+                      rule: has(oldSelf.resourceTags) == has(self.resourceTags)
                   azure:
                     description: azure contains settings specific to the Azure infrastructure
                       provider.

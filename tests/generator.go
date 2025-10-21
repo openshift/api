@@ -34,14 +34,10 @@ func LoadTestSuiteSpecs(paths ...string) ([]SuiteSpec, error) {
 			}
 
 			dirPath := filepath.Base(filepath.Dir(filepath.Dir(path)))
-			// Ignore sample testdata files which live under tests/testdata. These
-			// YAMLs are intentionally small fixtures used by unit tests inside
-			// the `tests` package (for example `testdata/minimal.testsuite.yaml`).
-			// They do not have associated generated CRD manifests under the
-			// repository root (zz_generated.crd-manifests), and attempting to
-			// resolve those manifests for these fixtures causes loader errors.
-			// We therefore skip walking into `testdata` so unit tests can load
-			// their local fixtures without requiring generated artifacts.
+			// ignore sample testdata files which live under tests/testdata - these
+			// are used by unit tests and do not have associated generated CRD
+			// manifests. Skipping prevents LoadTestSuiteSpecs from attempting to
+			// locate zz_generated.crd-manifests at the repository root.
 			parentDir := filepath.Base(filepath.Dir(path))
 			if parentDir == "testdata" {
 				return nil

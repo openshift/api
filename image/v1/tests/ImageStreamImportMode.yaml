@@ -9,28 +9,14 @@ tests:
         apiVersion: config.openshift.io/v1
         kind: Image
         spec: {}
-      expected: |
-        apiVersion: config.openshift.io/v1
-        kind: Image
-        spec: {}
     - name: Should be able to configure imageStreamImportMode to Legacy
       initial: |
         apiVersion: config.openshift.io/v1
         kind: Image
         spec:
           imageStreamImportMode: Legacy
-      expected: |
-        apiVersion: config.openshift.io/v1
-        kind: Image
-        spec:
-          imageStreamImportMode: Legacy
     - name: Should be able to configure imageStreamImportMode to PreserveOriginal
       initial: |
-        apiVersion: config.openshift.io/v1
-        kind: Image
-        spec:
-          imageStreamImportMode: PreserveOriginal
-      expected: |
         apiVersion: config.openshift.io/v1
         kind: Image
         spec:
@@ -44,11 +30,6 @@ tests:
       expectedError: 'spec.imageStreamImportMode: Unsupported value: "InvalidValue": supported values: "", "Legacy", "PreserveOriginal"'
     - name: Should be able to configure imageStreamImportMode to empty string
       initial: |
-        apiVersion: config.openshift.io/v1
-        kind: Image
-        spec:
-          imageStreamImportMode: ""
-      expected: |
         apiVersion: config.openshift.io/v1
         kind: Image
         spec:

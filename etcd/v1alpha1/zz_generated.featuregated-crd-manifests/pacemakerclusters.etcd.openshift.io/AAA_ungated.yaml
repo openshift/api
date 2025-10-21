@@ -1,0 +1,426 @@
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    api-approved.openshift.io: https://github.com/openshift/api/pull/2544
+    api.openshift.io/filename-cvo-runlevel: "0000_25"
+    api.openshift.io/filename-operator: etcd
+    api.openshift.io/filename-ordering: "01"
+    feature-gate.release.openshift.io/: "true"
+  name: pacemakerclusters.etcd.openshift.io
+spec:
+  group: etcd.openshift.io
+  names:
+    kind: PacemakerCluster
+    listKind: PacemakerClusterList
+    plural: pacemakerclusters
+    singular: pacemakercluster
+  scope: Cluster
+  versions:
+  - name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        description: 'Compatibility level 4: No compatibility is provided, the API
+          can change at any point for any reason. These capabilities should not be
+          used by applications needing long term support.'
+        properties:
+          apiVersion:
+            description: |-
+              APIVersion defines the versioned schema of this representation of an object.
+              Servers should convert recognized schemas to the latest internal value, and
+              may reject unrecognized values.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
+            type: string
+          kind:
+            description: |-
+              Kind is a string value representing the REST resource this object represents.
+              Servers may infer this from the endpoint the client submits requests to.
+              Cannot be updated.
+              In CamelCase.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: |-
+              spec is an empty spec to satisfy Kubernetes API conventions.
+              PacemakerCluster is a status-only resource and does not use spec for configuration.
+            type: object
+          status:
+            description: |-
+              status contains the actual pacemaker cluster status information collected from the cluster.
+              This follows the Design Principle: Act on Deterministic Information.
+              When fields are not present, they are treated as unknown and no actions are taken by the cluster-etcd-operator.
+            properties:
+              collectionError:
+                description: |-
+                  collectionError contains any error encountered while collecting status
+                  When present, it must be between 1 and 2048 characters long (max 2KB). This limit ensures that the error message can be displayed in a human-readable format.
+                  When not present, no collection errors are available and the status collection is assumed to be successful.
+                maxLength: 2048
+                minLength: 1
+                type: string
+              fencingHistory:
+                description: |-
+                  fencingHistory provides recent fencing events
+                  When present, it must be a list of 1 or more PacemakerFencingEvent objects.
+                  When not present, the fencing history is not available. This is the expected status for a healthy cluster.
+                  Fencing history being capped at 16 is a reasonable limit to prevent abuse of the API, since the fencing history reported by the cluster
+                  is presented as a recorded event.
+                  The healthchecker runs every 30 seconds and creates events for fencing events that occured within the last 24 hours (unless they have already been reported).
+                items:
+                  description: PacemakerFencingEvent represents a single fencing event
+                    from fence history
+                  properties:
+                    action:
+                      description: |-
+                        action is the fencing action performed
+                        FencingActionType can be one of the following values:
+                        - reboot - the node was rebooted
+                        - off - the node was turned off
+                        - on - the node was turned on
+                        When present, it must be a valid FencingActionType.
+                        When not present, the fencing action is unknown. This likely indicates that there is an error parsing the raw XML output.
+                      enum:
+                      - reboot
+                      - false
+                      - true
+                      type: string
+                    completed:
+                      allOf:
+                      - format: date-time
+                      - format: RFC3339
+                      description: |-
+                        completed is the timestamp when the fencing event was completed
+                        It must be a valid timestamp in RFC3339 format and cannot be empty.
+                      type: string
+                    status:
+                      description: |-
+                        status is the status of the fencing operation
+                        FencingStatusType can be one of the following values:
+                        - success - the fencing event was successful
+                        - failed - the fencing event failed
+                        - pending - the fencing event is pending
+                        When present, it must be a valid FencingStatusType.
+                        When not present, the fencing status is unknown. This likely indicates that there is an error parsing the raw XML output.
+                      enum:
+                      - success
+                      - failed
+                      - pending
+                      type: string
+                    target:
+                      description: |-
+                        target is the node that was fenced
+                        It must be a valid string between 1 and 256 characters long and cannot be empty.
+                      maxLength: 256
+                      minLength: 1
+                      type: string
+                  required:
+                  - completed
+                  - target
+                  type: object
+                maxItems: 16
+                minItems: 1
+                type: array
+                x-kubernetes-list-type: atomic
+              lastUpdated:
+                allOf:
+                - format: date-time
+                - format: RFC3339
+                description: |-
+                  lastUpdated is the timestamp when this status was last updated
+                  When present, it must be a valid timestamp in RFC3339 format and cannot be set to an earlier timestamp than the current value
+                  This is the most critical field in the status object because we can use it to warn if the status collection has gone stale.
+                  It is optional upon initial creation, but required once it has been set.
+                type: string
+              nodeHistory:
+                description: |-
+                  nodeHistory provides recent operation history for troubleshooting
+                  When present, it must be a list of 1 or more PacemakerNodeHistoryEntry objects.
+                  When not present, the node history is not available. This is the expected status for a healthy cluster.
+                  Node history being capped at 16 is a reasonable limit to prevent abuse of the API, since the action history reported by the cluster
+                  is presented as a recorded event.
+                  The healthchecker runs every 30 seconds and creates events for failed operations that occured within the last 5 minutes (unless they have already been reported).
+                items:
+                  description: PacemakerNodeHistoryEntry represents a single operation
+                    history entry from node_history
+                  properties:
+                    lastRCChange:
+                      allOf:
+                      - format: date-time
+                      - format: RFC3339
+                      description: |-
+                        lastRCChange is the timestamp when the RC last changed
+                        It must be a valid timestamp in RFC3339 format and cannot be empty.
+                      type: string
+                    node:
+                      description: |-
+                        node is the node where the operation occurred
+                        It must be a valid string between 1 and 256 characters long and cannot be empty.
+                      maxLength: 256
+                      minLength: 1
+                      type: string
+                    operation:
+                      description: |-
+                        operation is the operation that was performed (e.g., "monitor", "start", "stop")
+                        Unlike other fields, this is not an enum because while "monitor", "start" and "stop"
+                        are the most common, resource agents can define their own operations.
+                        It must be a valid string between 1 and 32 characters long and cannot be empty.
+                      maxLength: 32
+                      minLength: 1
+                      type: string
+                    rc:
+                      description: |-
+                        rc is the return code from the operation
+                        When present, it must be a valid integer between 0 and 2147483647 (max 32-bit int) inclusive.
+                        When not present, the return code is unknown. This likely indicates that there is an error parsing the raw XML output.
+                      format: int32
+                      maximum: 2147483647
+                      minimum: 0
+                      type: integer
+                    rcText:
+                      description: |-
+                        rcText is the human-readable return code text (e.g., "ok", "error", "not running")
+                        When present, it must be a valid string between 1 and 32 characters long. This is a human-readable string and is not validated against any specific format.
+                        When not present, the return code text is unknown. This likely indicates that there is an error parsing the raw XML output.
+                      maxLength: 32
+                      minLength: 1
+                      type: string
+                    resource:
+                      description: |-
+                        resource is the resource that was operated on
+                        It must be a valid string between 1 and 256 characters long and cannot be empty.
+                      maxLength: 256
+                      minLength: 1
+                      type: string
+                  required:
+                  - lastRCChange
+                  - node
+                  - operation
+                  - resource
+                  type: object
+                maxItems: 16
+                minItems: 1
+                type: array
+                x-kubernetes-list-type: atomic
+              nodes:
+                description: |-
+                  nodes provides detailed information about each node in the cluster
+                  When present, it must be a list of 1 or 2 PacemakerNodeStatus objects. Two is expected in a healthy cluster.
+                  When not present, the nodes are not available. This likely indicates that there is an error parsing the raw XML output.
+                  If only one node is present, this indicates that the cluster is in the process of replacing a failed node.
+                items:
+                  description: NodeStatus represents the status of a single node in
+                    the Pacemaker cluster
+                  properties:
+                    ipAddress:
+                      description: |-
+                        ipAddress is the canonical IPv4 or IPv6 address of the node
+                        When present, it must be a valid canonical global unicast IPv4 or IPv6 address (including private/RFC1918 addresses).
+                        This excludes special addresses like unspecified, loopback, link-local, and multicast.
+                        When not present, the IP address is unknown. This likely indicates that there is an error parsing the raw XML output.
+                      maxLength: 39
+                      minLength: 2
+                      type: string
+                      x-kubernetes-validations:
+                      - message: ipAddress must be a valid canonical global unicast
+                          IPv4 or IPv6 address
+                        rule: isIP(self) && ip.isCanonical(self) && ip(self).isGlobalUnicast()
+                    mode:
+                      description: |-
+                        mode indicates if the node is in active or standby mode
+                        NodeModeType can be one of the following values:
+                        - Active - the node is in active mode
+                        - Standby - the node is in standby mode
+                        When present, it must be a valid NodeModeType.
+                        When not present, the node mode is unknown. This likely indicates that there is an error parsing the raw XML output.
+                      enum:
+                      - Active
+                      - Standby
+                      type: string
+                    name:
+                      description: |-
+                        name is the name of the node
+                        It must be a valid string between 1 and 256 characters long and cannot be empty.
+                      maxLength: 256
+                      minLength: 1
+                      type: string
+                    onlineStatus:
+                      description: |-
+                        onlineStatus indicates if the node is online or offline
+                        NodeOnlineStatusType can be one of the following values:
+                        - Online - the node is online
+                        - Offline - the node is offline
+                        When present, it must be a valid NodeOnlineStatusType.
+                        When not present, the online status is unknown. This likely indicates that there is an error parsing the raw XML output.
+                      enum:
+                      - Online
+                      - Offline
+                      type: string
+                  required:
+                  - name
+                  type: object
+                maxItems: 2
+                minItems: 1
+                type: array
+                x-kubernetes-list-type: atomic
+              rawXML:
+                description: |-
+                  rawXML contains the raw XML output from pcs status xml command.
+                  Kept for debugging purposes only; healthcheck should not need to parse this.
+                  When present, it must be between 1 and 262144 characters long (max 256KB). This limit protects the API from XML bombs and excessive memory consumption.
+                  When not present, the raw XML output is not available.
+                maxLength: 262144
+                minLength: 1
+                type: string
+              resources:
+                description: |-
+                  resources provides detailed information about each resource in the cluster
+                  When present, it must be a list of 1 or more PacemakerResourceStatus objects.
+                  When not present, the resources are not available. This likely indicates that there is an error parsing the raw XML output.
+                  The number of resources is expected to be between 1 and 16, but is most likely to be exactly 6.
+                  The critical resources that expect to run on both nodes are: kubelet, etcd, and a fencing resource (i.e. redfish) for each node.
+                  This could drift over time as Two Node Fencing matures, so this is left flexible.
+                items:
+                  description: PacemakerResourceStatus represents the status of a
+                    single resource in the Pacemaker cluster
+                  properties:
+                    activeStatus:
+                      description: |-
+                        activeStatus indicates if the resource is active or inactive
+                        ResourceActiveStatusType can be one of the following values:
+                        - Active - the resource is active
+                        - Inactive - the resource is inactive
+                        When present, it must be a valid ResourceActiveStatusType.
+                        When not present, the active status is unknown. This likely indicates that there is an error parsing the raw XML output.
+                      enum:
+                      - Active
+                      - Inactive
+                      type: string
+                    name:
+                      description: |-
+                        name is the name of the resource
+                        It must be a valid string between 1 and 256 characters long and cannot be empty.
+                      maxLength: 256
+                      minLength: 1
+                      type: string
+                    node:
+                      description: |-
+                        node is the node where the resource is running
+                        When present, it must be a valid string between 1 and 256 characters long.
+                        When not present, the resource is not assigned to a node. This typically indicates a stopped or unscheduled resource. It could also imply an error parsing the raw XML output.
+                      maxLength: 256
+                      minLength: 1
+                      type: string
+                    resourceAgent:
+                      description: |-
+                        resourceAgent is the resource agent type (e.g., "ocf:heartbeat:IPaddr2", "systemd:kubelet")
+                        When present, it must be a valid string between 1 and 256 characters long.
+                        When not present, the resource agent type is unknown. This likely indicates that there is an error parsing the raw XML output.
+                      maxLength: 256
+                      minLength: 1
+                      type: string
+                    role:
+                      description: |-
+                        role is the current role of the resource
+                        ResourceRoleType can be one of the following values:
+                        - Started - the resource is started
+                        - Stopped - the resource is stopped
+                        We don't use promoted and unpromoted, so resources in those roles would omit the role field.
+                        When present, it must be a valid ResourceRoleType.
+                        When not present, the resource role is unknown (or an unsupported type like promoted or unpromoted). This likely indicates that there is an error parsing the raw XML output.
+                      enum:
+                      - Started
+                      - Stopped
+                      type: string
+                  required:
+                  - name
+                  type: object
+                maxItems: 16
+                minItems: 1
+                type: array
+                x-kubernetes-list-type: atomic
+              summary:
+                description: |-
+                  summary provides high-level counts and flags for the cluster state
+                  TNF clusters don't use advanced pacemaker features like maintenance mode or pacemaker remote nodes, so these are omitted from the summary.
+                  When present, it must be a valid PacemakerSummary object.
+                  When not present, the summary is not available. This likely indicates that there is an error parsing the raw XML output.
+                properties:
+                  nodesOnline:
+                    description: |-
+                      nodesOnline is the count of online nodes
+                      When present, it must be a valid integer between 0 and 2 inclusive.
+                      When not present, the nodes online count is unknown. This likely indicates that there is an error parsing the raw XML output.
+                    format: int32
+                    maximum: 2
+                    minimum: 0
+                    type: integer
+                  nodesTotal:
+                    description: |-
+                      nodesTotal is the total count of configured nodes
+                      When present, it must be a valid integer between 0 and 2 inclusive.
+                      When not present, the nodes total count is unknown. This likely indicates that there is an error parsing the raw XML output.
+                    format: int32
+                    maximum: 2
+                    minimum: 0
+                    type: integer
+                  pacemakerDaemonState:
+                    description: |-
+                      pacemakerDaemonState indicates the state of the pacemaker daemon
+                      PacemakerDaemonStateType can be one of the following values:
+                      - Running - the pacemaker daemon is in the 'running' state
+                      - KnownNotRunning - the pacemaker daemon is not in the 'running' state. This is left as a blanket state
+                        to cover states like init, wait_for_ping, starting_daemons, shutting_down, shutdown_complete, etc.
+                      When present, it must be a valid PacemakerDaemonStateType.
+                      When not present, the pacemaker daemon state is unknown. This likely indicates that there is an error parsing the raw XML output.
+                    enum:
+                    - Running
+                    - KnownNotRunning
+                    type: string
+                  quorumStatus:
+                    description: |-
+                      quorumStatus indicates if the cluster has quorum
+                      QuorumStatusType can be one of the following values:
+                      - Quorate - the cluster has quorum
+                      - NoQuorum - the cluster does not have quorum
+                      When present, it must be a valid QuorumStatusType.
+                      When not present, the quorum status is unknown. This likely indicates that there is an error parsing the raw XML output.
+                    enum:
+                    - Quorate
+                    - NoQuorum
+                    type: string
+                  resourcesStarted:
+                    description: |-
+                      resourcesStarted is the count of started resources
+                      When present, it must be a valid integer between 0 and 16 inclusive. For a healthy Two Node Fencing (TNF) cluster, this is expected to be 6.
+                      The expected resources are kubelet, etcd, and a fencing resource (i.e. redfish) for each node.
+                      The number could be less than 6 if the cluster is starting up or not healthy.
+                      The total number of resources managed by the cluster could drift over time as Two Node Fencing matures, so this is left flexible.
+                      When not present, the resources started count is unknown. This likely indicates that there is an error parsing the raw XML output.
+                    format: int32
+                    maximum: 16
+                    minimum: 0
+                    type: integer
+                  resourcesTotal:
+                    description: |-
+                      resourcesTotal is the total count of configured resources
+                      When present, it must be a valid integer between 0 and 16 inclusive. For a healthy Two Node Fencing (TNF) cluster, this is expected to be 6.
+                      The expected resources are kubelet, etcd, and a fencing resource (i.e. redfish) for each node.
+                      The total number of resources managed by the cluster could drift over time as Two Node Fencing matures, so this is left flexible.
+                      When not present, the resources total count is unknown. This likely indicates that there is an error parsing the raw XML output.
+                    format: int32
+                    maximum: 16
+                    minimum: 0
+                    type: integer
+                type: object
+            type: object
+            x-kubernetes-validations:
+            - message: lastUpdated must be a newer timestamp than the current value
+              rule: '!has(oldSelf.lastUpdated) || (has(self.lastUpdated) && self.lastUpdated
+                >= oldSelf.lastUpdated)'
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}

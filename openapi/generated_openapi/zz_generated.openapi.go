@@ -531,6 +531,15 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"github.com/openshift/api/console/v1.ConsoleYAMLSampleSpec":                                          schema_openshift_api_console_v1_ConsoleYAMLSampleSpec(ref),
 		"github.com/openshift/api/console/v1.Link":                                                           schema_openshift_api_console_v1_Link(ref),
 		"github.com/openshift/api/console/v1.NamespaceDashboardSpec":                                         schema_openshift_api_console_v1_NamespaceDashboardSpec(ref),
+		"github.com/openshift/api/etcd/v1alpha1.PacemakerCluster":                                            schema_openshift_api_etcd_v1alpha1_PacemakerCluster(ref),
+		"github.com/openshift/api/etcd/v1alpha1.PacemakerClusterList":                                        schema_openshift_api_etcd_v1alpha1_PacemakerClusterList(ref),
+		"github.com/openshift/api/etcd/v1alpha1.PacemakerClusterSpec":                                        schema_openshift_api_etcd_v1alpha1_PacemakerClusterSpec(ref),
+		"github.com/openshift/api/etcd/v1alpha1.PacemakerClusterStatus":                                      schema_openshift_api_etcd_v1alpha1_PacemakerClusterStatus(ref),
+		"github.com/openshift/api/etcd/v1alpha1.PacemakerFencingEvent":                                       schema_openshift_api_etcd_v1alpha1_PacemakerFencingEvent(ref),
+		"github.com/openshift/api/etcd/v1alpha1.PacemakerNodeHistoryEntry":                                   schema_openshift_api_etcd_v1alpha1_PacemakerNodeHistoryEntry(ref),
+		"github.com/openshift/api/etcd/v1alpha1.PacemakerNodeStatus":                                         schema_openshift_api_etcd_v1alpha1_PacemakerNodeStatus(ref),
+		"github.com/openshift/api/etcd/v1alpha1.PacemakerResourceStatus":                                     schema_openshift_api_etcd_v1alpha1_PacemakerResourceStatus(ref),
+		"github.com/openshift/api/etcd/v1alpha1.PacemakerSummary":                                            schema_openshift_api_etcd_v1alpha1_PacemakerSummary(ref),
 		"github.com/openshift/api/example/v1.CELUnion":                                                       schema_openshift_api_example_v1_CELUnion(ref),
 		"github.com/openshift/api/example/v1.EvolvingUnion":                                                  schema_openshift_api_example_v1_EvolvingUnion(ref),
 		"github.com/openshift/api/example/v1.StableConfigType":                                               schema_openshift_api_example_v1_StableConfigType(ref),
@@ -25679,6 +25688,479 @@ func schema_openshift_api_console_v1_NamespaceDashboardSpec(ref common.Reference
 		},
 		Dependencies: []string{
 			"k8s.io/apimachinery/pkg/apis/meta/v1.LabelSelector"},
+	}
+}
+
+func schema_openshift_api_etcd_v1alpha1_PacemakerCluster(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "Compatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"kind": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"apiVersion": {
+						SchemaProps: spec.SchemaProps{
+							Description: "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"metadata": {
+						SchemaProps: spec.SchemaProps{
+							Description: "metadata is the standard object's metadata. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata",
+							Default:     map[string]interface{}{},
+							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"),
+						},
+					},
+					"spec": {
+						SchemaProps: spec.SchemaProps{
+							Description: "spec is an empty spec to satisfy Kubernetes API conventions. PacemakerCluster is a status-only resource and does not use spec for configuration.",
+							Ref:         ref("github.com/openshift/api/etcd/v1alpha1.PacemakerClusterSpec"),
+						},
+					},
+					"status": {
+						SchemaProps: spec.SchemaProps{
+							Description: "status contains the actual pacemaker cluster status information collected from the cluster. This follows the Design Principle: Act on Deterministic Information. When fields are not present, they are treated as unknown and no actions are taken by the cluster-etcd-operator.",
+							Ref:         ref("github.com/openshift/api/etcd/v1alpha1.PacemakerClusterStatus"),
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"github.com/openshift/api/etcd/v1alpha1.PacemakerClusterSpec", "github.com/openshift/api/etcd/v1alpha1.PacemakerClusterStatus", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"},
+	}
+}
+
+func schema_openshift_api_etcd_v1alpha1_PacemakerClusterList(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "PacemakerClusterList contains a list of PacemakerCluster objects.\n\nCompatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"kind": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"apiVersion": {
+						SchemaProps: spec.SchemaProps{
+							Description: "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"metadata": {
+						SchemaProps: spec.SchemaProps{
+							Description: "metadata is the standard list's metadata. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata",
+							Default:     map[string]interface{}{},
+							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"),
+						},
+					},
+					"items": {
+						SchemaProps: spec.SchemaProps{
+							Description: "items is a list of PacemakerCluster objects.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("github.com/openshift/api/etcd/v1alpha1.PacemakerCluster"),
+									},
+								},
+							},
+						},
+					},
+				},
+				Required: []string{"items"},
+			},
+		},
+		Dependencies: []string{
+			"github.com/openshift/api/etcd/v1alpha1.PacemakerCluster", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"},
+	}
+}
+
+func schema_openshift_api_etcd_v1alpha1_PacemakerClusterSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "PacemakerClusterSpec is an empty spec as PacemakerCluster is a status-only resource",
+				Type:        []string{"object"},
+			},
+		},
+	}
+}
+
+func schema_openshift_api_etcd_v1alpha1_PacemakerClusterStatus(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "PacemakerClusterStatus contains the actual pacemaker cluster status information As part of validating the status object, we need to ensure that the lastUpdated timestamp is always newer than the current value. We allow the lastUpdated timestamp to be empty on initial creation, but it is required once it has been set.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"lastUpdated": {
+						SchemaProps: spec.SchemaProps{
+							Description: "lastUpdated is the timestamp when this status was last updated When present, it must be a valid timestamp in RFC3339 format and cannot be set to an earlier timestamp than the current value This is the most critical field in the status object because we can use it to warn if the status collection has gone stale. It is optional upon initial creation, but required once it has been set.",
+							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.Time"),
+						},
+					},
+					"rawXML": {
+						SchemaProps: spec.SchemaProps{
+							Description: "rawXML contains the raw XML output from pcs status xml command. Kept for debugging purposes only; healthcheck should not need to parse this. When present, it must be between 1 and 262144 characters long (max 256KB). This limit protects the API from XML bombs and excessive memory consumption. When not present, the raw XML output is not available.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"collectionError": {
+						SchemaProps: spec.SchemaProps{
+							Description: "collectionError contains any error encountered while collecting status When present, it must be between 1 and 2048 characters long (max 2KB). This limit ensures that the error message can be displayed in a human-readable format. When not present, no collection errors are available and the status collection is assumed to be successful.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"summary": {
+						SchemaProps: spec.SchemaProps{
+							Description: "summary provides high-level counts and flags for the cluster state TNF clusters don't use advanced pacemaker features like maintenance mode or pacemaker remote nodes, so these are omitted from the summary. When present, it must be a valid PacemakerSummary object. When not present, the summary is not available. This likely indicates that there is an error parsing the raw XML output.",
+							Ref:         ref("github.com/openshift/api/etcd/v1alpha1.PacemakerSummary"),
+						},
+					},
+					"nodes": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-type": "atomic",
+							},
+						},
+						SchemaProps: spec.SchemaProps{
+							Description: "nodes provides detailed information about each node in the cluster When present, it must be a list of 1 or 2 PacemakerNodeStatus objects. Two is expected in a healthy cluster. When not present, the nodes are not available. This likely indicates that there is an error parsing the raw XML output. If only one node is present, this indicates that the cluster is in the process of replacing a failed node.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("github.com/openshift/api/etcd/v1alpha1.PacemakerNodeStatus"),
+									},
+								},
+							},
+						},
+					},
+					"resources": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-type": "atomic",
+							},
+						},
+						SchemaProps: spec.SchemaProps{
+							Description: "resources provides detailed information about each resource in the cluster When present, it must be a list of 1 or more PacemakerResourceStatus objects. When not present, the resources are not available. This likely indicates that there is an error parsing the raw XML output. The number of resources is expected to be between 1 and 16, but is most likely to be exactly 6. The critical resources that expect to run on both nodes are: kubelet, etcd, and a fencing resource (i.e. redfish) for each node. This could drift over time as Two Node Fencing matures, so this is left flexible.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("github.com/openshift/api/etcd/v1alpha1.PacemakerResourceStatus"),
+									},
+								},
+							},
+						},
+					},
+					"nodeHistory": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-type": "atomic",
+							},
+						},
+						SchemaProps: spec.SchemaProps{
+							Description: "nodeHistory provides recent operation history for troubleshooting When present, it must be a list of 1 or more PacemakerNodeHistoryEntry objects. When not present, the node history is not available. This is the expected status for a healthy cluster. Node history being capped at 16 is a reasonable limit to prevent abuse of the API, since the action history reported by the cluster is presented as a recorded event. The healthchecker runs every 30 seconds and creates events for failed operations that occured within the last 5 minutes (unless they have already been reported).",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("github.com/openshift/api/etcd/v1alpha1.PacemakerNodeHistoryEntry"),
+									},
+								},
+							},
+						},
+					},
+					"fencingHistory": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-type": "atomic",
+							},
+						},
+						SchemaProps: spec.SchemaProps{
+							Description: "fencingHistory provides recent fencing events When present, it must be a list of 1 or more PacemakerFencingEvent objects. When not present, the fencing history is not available. This is the expected status for a healthy cluster. Fencing history being capped at 16 is a reasonable limit to prevent abuse of the API, since the fencing history reported by the cluster is presented as a recorded event. The healthchecker runs every 30 seconds and creates events for fencing events that occured within the last 24 hours (unless they have already been reported).",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("github.com/openshift/api/etcd/v1alpha1.PacemakerFencingEvent"),
+									},
+								},
+							},
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"github.com/openshift/api/etcd/v1alpha1.PacemakerFencingEvent", "github.com/openshift/api/etcd/v1alpha1.PacemakerNodeHistoryEntry", "github.com/openshift/api/etcd/v1alpha1.PacemakerNodeStatus", "github.com/openshift/api/etcd/v1alpha1.PacemakerResourceStatus", "github.com/openshift/api/etcd/v1alpha1.PacemakerSummary", "k8s.io/apimachinery/pkg/apis/meta/v1.Time"},
+	}
+}
+
+func schema_openshift_api_etcd_v1alpha1_PacemakerFencingEvent(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "PacemakerFencingEvent represents a single fencing event from fence history",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"target": {
+						SchemaProps: spec.SchemaProps{
+							Description: "target is the node that was fenced It must be a valid string between 1 and 256 characters long and cannot be empty.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"action": {
+						SchemaProps: spec.SchemaProps{
+							Description: "action is the fencing action performed FencingActionType can be one of the following values: - reboot - the node was rebooted - off - the node was turned off - on - the node was turned on When present, it must be a valid FencingActionType. When not present, the fencing action is unknown. This likely indicates that there is an error parsing the raw XML output.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"status": {
+						SchemaProps: spec.SchemaProps{
+							Description: "status is the status of the fencing operation FencingStatusType can be one of the following values: - success - the fencing event was successful - failed - the fencing event failed - pending - the fencing event is pending When present, it must be a valid FencingStatusType. When not present, the fencing status is unknown. This likely indicates that there is an error parsing the raw XML output.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"completed": {
+						SchemaProps: spec.SchemaProps{
+							Description: "completed is the timestamp when the fencing event was completed It must be a valid timestamp in RFC3339 format and cannot be empty.",
+							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.Time"),
+						},
+					},
+				},
+				Required: []string{"target", "completed"},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/apimachinery/pkg/apis/meta/v1.Time"},
+	}
+}
+
+func schema_openshift_api_etcd_v1alpha1_PacemakerNodeHistoryEntry(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "PacemakerNodeHistoryEntry represents a single operation history entry from node_history",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"node": {
+						SchemaProps: spec.SchemaProps{
+							Description: "node is the node where the operation occurred It must be a valid string between 1 and 256 characters long and cannot be empty.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"resource": {
+						SchemaProps: spec.SchemaProps{
+							Description: "resource is the resource that was operated on It must be a valid string between 1 and 256 characters long and cannot be empty.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"operation": {
+						SchemaProps: spec.SchemaProps{
+							Description: "operation is the operation that was performed (e.g., \"monitor\", \"start\", \"stop\") Unlike other fields, this is not an enum because while \"monitor\", \"start\" and \"stop\" are the most common, resource agents can define their own operations. It must be a valid string between 1 and 32 characters long and cannot be empty.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"rc": {
+						SchemaProps: spec.SchemaProps{
+							Description: "rc is the return code from the operation When present, it must be a valid integer between 0 and 2147483647 (max 32-bit int) inclusive. When not present, the return code is unknown. This likely indicates that there is an error parsing the raw XML output.",
+							Type:        []string{"integer"},
+							Format:      "int32",
+						},
+					},
+					"rcText": {
+						SchemaProps: spec.SchemaProps{
+							Description: "rcText is the human-readable return code text (e.g., \"ok\", \"error\", \"not running\") When present, it must be a valid string between 1 and 32 characters long. This is a human-readable string and is not validated against any specific format. When not present, the return code text is unknown. This likely indicates that there is an error parsing the raw XML output.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"lastRCChange": {
+						SchemaProps: spec.SchemaProps{
+							Description: "lastRCChange is the timestamp when the RC last changed It must be a valid timestamp in RFC3339 format and cannot be empty.",
+							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.Time"),
+						},
+					},
+				},
+				Required: []string{"node", "resource", "operation", "lastRCChange"},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/apimachinery/pkg/apis/meta/v1.Time"},
+	}
+}
+
+func schema_openshift_api_etcd_v1alpha1_PacemakerNodeStatus(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "NodeStatus represents the status of a single node in the Pacemaker cluster",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"name": {
+						SchemaProps: spec.SchemaProps{
+							Description: "name is the name of the node It must be a valid string between 1 and 256 characters long and cannot be empty.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"ipAddress": {
+						SchemaProps: spec.SchemaProps{
+							Description: "ipAddress is the canonical IPv4 or IPv6 address of the node When present, it must be a valid canonical global unicast IPv4 or IPv6 address (including private/RFC1918 addresses). This excludes special addresses like unspecified, loopback, link-local, and multicast. When not present, the IP address is unknown. This likely indicates that there is an error parsing the raw XML output.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"onlineStatus": {
+						SchemaProps: spec.SchemaProps{
+							Description: "onlineStatus indicates if the node is online or offline NodeOnlineStatusType can be one of the following values: - Online - the node is online - Offline - the node is offline When present, it must be a valid NodeOnlineStatusType. When not present, the online status is unknown. This likely indicates that there is an error parsing the raw XML output.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"mode": {
+						SchemaProps: spec.SchemaProps{
+							Description: "mode indicates if the node is in active or standby mode NodeModeType can be one of the following values: - Active - the node is in active mode - Standby - the node is in standby mode When present, it must be a valid NodeModeType. When not present, the node mode is unknown. This likely indicates that there is an error parsing the raw XML output.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+				},
+				Required: []string{"name"},
+			},
+		},
+	}
+}
+
+func schema_openshift_api_etcd_v1alpha1_PacemakerResourceStatus(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "PacemakerResourceStatus represents the status of a single resource in the Pacemaker cluster",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"name": {
+						SchemaProps: spec.SchemaProps{
+							Description: "name is the name of the resource It must be a valid string between 1 and 256 characters long and cannot be empty.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"resourceAgent": {
+						SchemaProps: spec.SchemaProps{
+							Description: "resourceAgent is the resource agent type (e.g., \"ocf:heartbeat:IPaddr2\", \"systemd:kubelet\") When present, it must be a valid string between 1 and 256 characters long. When not present, the resource agent type is unknown. This likely indicates that there is an error parsing the raw XML output.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"role": {
+						SchemaProps: spec.SchemaProps{
+							Description: "role is the current role of the resource ResourceRoleType can be one of the following values: - Started - the resource is started - Stopped - the resource is stopped We don't use promoted and unpromoted, so resources in those roles would omit the role field. When present, it must be a valid ResourceRoleType. When not present, the resource role is unknown (or an unsupported type like promoted or unpromoted). This likely indicates that there is an error parsing the raw XML output.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"activeStatus": {
+						SchemaProps: spec.SchemaProps{
+							Description: "activeStatus indicates if the resource is active or inactive ResourceActiveStatusType can be one of the following values: - Active - the resource is active - Inactive - the resource is inactive When present, it must be a valid ResourceActiveStatusType. When not present, the active status is unknown. This likely indicates that there is an error parsing the raw XML output.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"node": {
+						SchemaProps: spec.SchemaProps{
+							Description: "node is the node where the resource is running When present, it must be a valid string between 1 and 256 characters long. When not present, the resource is not assigned to a node. This typically indicates a stopped or unscheduled resource. It could also imply an error parsing the raw XML output.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+				},
+				Required: []string{"name"},
+			},
+		},
+	}
+}
+
+func schema_openshift_api_etcd_v1alpha1_PacemakerSummary(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "PacemakerSummary provides a high-level summary of cluster state",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"pacemakerDaemonState": {
+						SchemaProps: spec.SchemaProps{
+							Description: "pacemakerDaemonState indicates the state of the pacemaker daemon PacemakerDaemonStateType can be one of the following values: - Running - the pacemaker daemon is in the 'running' state - KnownNotRunning - the pacemaker daemon is not in the 'running' state. This is left as a blanket state\n  to cover states like init, wait_for_ping, starting_daemons, shutting_down, shutdown_complete, etc.\nWhen present, it must be a valid PacemakerDaemonStateType. When not present, the pacemaker daemon state is unknown. This likely indicates that there is an error parsing the raw XML output.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"quorumStatus": {
+						SchemaProps: spec.SchemaProps{
+							Description: "quorumStatus indicates if the cluster has quorum QuorumStatusType can be one of the following values: - Quorate - the cluster has quorum - NoQuorum - the cluster does not have quorum When present, it must be a valid QuorumStatusType. When not present, the quorum status is unknown. This likely indicates that there is an error parsing the raw XML output.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"nodesOnline": {
+						SchemaProps: spec.SchemaProps{
+							Description: "nodesOnline is the count of online nodes When present, it must be a valid integer between 0 and 2 inclusive. When not present, the nodes online count is unknown. This likely indicates that there is an error parsing the raw XML output.",
+							Type:        []string{"integer"},
+							Format:      "int32",
+						},
+					},
+					"nodesTotal": {
+						SchemaProps: spec.SchemaProps{
+							Description: "nodesTotal is the total count of configured nodes When present, it must be a valid integer between 0 and 2 inclusive. When not present, the nodes total count is unknown. This likely indicates that there is an error parsing the raw XML output.",
+							Type:        []string{"integer"},
+							Format:      "int32",
+						},
+					},
+					"resourcesStarted": {
+						SchemaProps: spec.SchemaProps{
+							Description: "resourcesStarted is the count of started resources When present, it must be a valid integer between 0 and 16 inclusive. For a healthy Two Node Fencing (TNF) cluster, this is expected to be 6. The expected resources are kubelet, etcd, and a fencing resource (i.e. redfish) for each node. The number could be less than 6 if the cluster is starting up or not healthy. The total number of resources managed by the cluster could drift over time as Two Node Fencing matures, so this is left flexible. When not present, the resources started count is unknown. This likely indicates that there is an error parsing the raw XML output.",
+							Type:        []string{"integer"},
+							Format:      "int32",
+						},
+					},
+					"resourcesTotal": {
+						SchemaProps: spec.SchemaProps{
+							Description: "resourcesTotal is the total count of configured resources When present, it must be a valid integer between 0 and 16 inclusive. For a healthy Two Node Fencing (TNF) cluster, this is expected to be 6. The expected resources are kubelet, etcd, and a fencing resource (i.e. redfish) for each node. The total number of resources managed by the cluster could drift over time as Two Node Fencing matures, so this is left flexible. When not present, the resources total count is unknown. This likely indicates that there is an error parsing the raw XML output.",
+							Type:        []string{"integer"},
+							Format:      "int32",
+						},
+					},
+				},
+			},
+		},
 	}
 }
 

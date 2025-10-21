@@ -529,7 +529,7 @@ type AWSPlatformSpec struct {
 }
 
 // AWSPlatformStatus holds the current status of the Amazon Web Services infrastructure provider.
-// +kubebuilder:validation:XValidation:rule="!has(oldSelf.resourceTags) && !has(self.resourceTags) || has(oldSelf.resourceTags) && has(self.resourceTags)",message="resourceTags may only be configured during installation"
+// +kubebuilder:validation:XValidation:rule="has(oldSelf.resourceTags) == has(self.resourceTags)",message="resourceTags may only be configured during installation"
 type AWSPlatformStatus struct {
 	// region holds the default AWS region for new AWS resources created by the cluster.
 	Region string `json:"region"`

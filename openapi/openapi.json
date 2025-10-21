@@ -9881,7 +9881,7 @@
           "$ref": "#/definitions/com.github.openshift.api.config.v1.PKI"
         },
         "policyType": {
-          "description": "policyType is a required field specifies the type of the policy for verification. This field must correspond to how the policy was generated. Allowed values are \"PublicKey\", \"FulcioCAWithRekor\", and \"PKI\". When set to \"PublicKey\", the policy relies on a sigstore publicKey and may optionally use a Rekor verification. When set to \"FulcioCAWithRekor\", the policy is based on the Fulcio certification and incorporates a Rekor verification. When set to \"PKI\", the policy is based on the certificates from Bring Your Own Public Key Infrastructure (BYOPKI). This value is enabled by turning on the SigstoreImageVerificationPKI feature gate.",
+          "description": "policyType is a required field specifies the type of the policy for verification. This field must correspond to how the policy was generated. Allowed values are \"PublicKey\", \"FulcioCAWithRekor\", and \"PKI\". When set to \"PublicKey\", the policy relies on a sigstore publicKey and may optionally use a Rekor verification. When set to \"FulcioCAWithRekor\", the policy is based on the Fulcio certification and incorporates a Rekor verification. When set to \"PKI\", the policy is based on the certificates from Bring Your Own Public Key Infrastructure (BYOPKI).",
           "type": "string",
           "default": ""
         },
@@ -14007,6 +14007,169 @@
             "type": "string",
             "default": ""
           }
+        }
+      }
+    },
+    "com.github.openshift.api.etcd.v1alpha1.PacemakerCluster": {
+      "description": "PacemakerCluster represents the current state of the pacemaker cluster as reported by the pcs status command. PacemakerCluster is a cluster-scoped singleton resource. The name of this instance is \"cluster\". This resource provides a view into the health and status of a pacemaker-managed cluster in Two Node OpenShift with Fencing deployments.\n\nCompatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.",
+      "type": "object",
+      "required": [
+        "metadata"
+      ],
+      "properties": {
+        "apiVersion": {
+          "description": "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+          "type": "string"
+        },
+        "kind": {
+          "description": "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+          "type": "string"
+        },
+        "metadata": {
+          "description": "metadata is the standard object's metadata. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata",
+          "default": {},
+          "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.ObjectMeta"
+        },
+        "status": {
+          "description": "status contains the actual pacemaker cluster status information collected from the cluster. The goal of this status is to be able to quickly identify if pacemaker is in a healthy state. In Two Node OpenShift with Fencing, a healthy pacemaker cluster has 2 nodes, both of which have healthy kubelet, etcd, and fencing resources.",
+          "$ref": "#/definitions/com.github.openshift.api.etcd.v1alpha1.PacemakerClusterStatus"
+        }
+      }
+    },
+    "com.github.openshift.api.etcd.v1alpha1.PacemakerClusterList": {
+      "description": "PacemakerClusterList contains a list of PacemakerCluster objects. PacemakerCluster is a cluster-scoped singleton resource; only one instance named \"cluster\" may exist. This list type exists only to satisfy Kubernetes API conventions.\n\nCompatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.",
+      "type": "object",
+      "required": [
+        "items"
+      ],
+      "properties": {
+        "apiVersion": {
+          "description": "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+          "type": "string"
+        },
+        "items": {
+          "description": "items is a list of PacemakerCluster objects.",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/com.github.openshift.api.etcd.v1alpha1.PacemakerCluster"
+          }
+        },
+        "kind": {
+          "description": "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+          "type": "string"
+        },
+        "metadata": {
+          "description": "metadata is the standard list's metadata. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata",
+          "default": {},
+          "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.ListMeta"
+        }
+      }
+    },
+    "com.github.openshift.api.etcd.v1alpha1.PacemakerClusterNodeStatus": {
+      "description": "PacemakerClusterNodeStatus represents the status of a single node in the pacemaker cluster including the node's conditions and the health of critical resources running on that node.",
+      "type": "object",
+      "required": [
+        "name",
+        "ipAddresses",
+        "resources"
+      ],
+      "properties": {
+        "conditions": {
+          "description": "conditions represent the observations of the node's current state. Known condition types are: \"Healthy\", \"Online\", \"InService\", \"Active\", \"Ready\", \"Clean\", \"Member\". The \"Healthy\" condition is an aggregate that tracks the overall health of the node. The \"Online\" condition tracks whether the node is online. The \"InService\" condition tracks whether the node is in service (not in maintenance mode). The \"Active\" condition tracks whether the node is active (not in standby mode). The \"Ready\" condition tracks whether the node is ready (not in a pending state). The \"Clean\" condition tracks whether the node is in a clean (status known) state. The \"Member\" condition tracks whether the node is a member of the cluster. Each of these conditions is required, so the array must contain at least 7 items. Conditions is marked optional per Kubernetes API conventions because controllers populate conditions after observing state. The MinItems validation ensures conditions are present once the controller has reported status. See: https://github.com/kubernetes-sigs/kube-api-linter/blob/main/pkg/analysis/conditions/doc.go",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Condition"
+          },
+          "x-kubernetes-list-map-keys": [
+            "type"
+          ],
+          "x-kubernetes-list-type": "map"
+        },
+        "ipAddresses": {
+          "description": "ipAddresses is a list of IPv4 or IPv6 addresses for the node in canonical form. Pacemaker allows multiple IP addresses for Corosync communication between nodes. The first address in this list is used for IP-based peer URLs for etcd membership. Each address must be in canonical form (e.g., \"192.168.1.1\" not \"192.168.001.001\", or \"2001:db8::1\" not \"2001:0db8::1\"). Each address must be a valid global unicast IPv4 or IPv6 address (including private/RFC1918 addresses). This excludes special addresses like unspecified, loopback, link-local, and multicast.",
+          "type": "array",
+          "items": {
+            "type": "string",
+            "default": ""
+          },
+          "x-kubernetes-list-type": "set"
+        },
+        "name": {
+          "description": "name is the name of the node. This is expected to match the Kubernetes node's name, which must be a lowercase RFC 1123 subdomain consisting of lowercase alphanumeric characters, '-' or '.', starting and ending with an alphanumeric character, and be at most 253 characters in length.",
+          "type": "string"
+        },
+        "resources": {
+          "description": "resources contains the status of pacemaker resources on this node. Each resource entry includes the resource name and its health conditions. For Two Node OpenShift with Fencing, we manage three resources: Kubelet, Etcd, and FencingAgent. All three resources are required to be present, so the array must contain at least 3 items. Valid resource names are \"Kubelet\", \"Etcd\", and \"FencingAgent\".",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/com.github.openshift.api.etcd.v1alpha1.PacemakerClusterResourceStatus"
+          },
+          "x-kubernetes-list-map-keys": [
+            "name"
+          ],
+          "x-kubernetes-list-type": "map"
+        }
+      }
+    },
+    "com.github.openshift.api.etcd.v1alpha1.PacemakerClusterResourceStatus": {
+      "description": "PacemakerClusterResourceStatus represents the status of a pacemaker resource on a node. A pacemaker resource is a unit of work managed by pacemaker. In pacemaker terminology, resources are services or applications that pacemaker monitors, starts, stops, and moves between nodes to maintain high availability. For Two Node OpenShift with Fencing, we manage three resources:\n  - Kubelet (the Kubernetes node agent and a prerequisite for etcd),\n  - Etcd (the distributed key-value store)\n  - FencingAgent (used to isolate failed nodes during a quorum loss event)",
+      "type": "object",
+      "required": [
+        "name"
+      ],
+      "properties": {
+        "conditions": {
+          "description": "conditions represent the observations of the resource's current state. Known condition types are: \"Healthy\", \"InService\", \"Managed\", \"Enabled\", \"Operational\", \"Active\", \"Started\", \"Schedulable\". The \"Healthy\" condition is an aggregate that tracks the overall health of the resource. The \"InService\" condition tracks whether the resource is in service (not in maintenance mode). The \"Managed\" condition tracks whether the resource is managed by pacemaker. The \"Enabled\" condition tracks whether the resource is enabled. The \"Operational\" condition tracks whether the resource is operational (not failed). The \"Active\" condition tracks whether the resource is active (available to be used). The \"Started\" condition tracks whether the resource is started. The \"Schedulable\" condition tracks whether the resource is schedulable (not blocked). Each of these conditions is required, so the array must contain at least 8 items. Conditions is idiomatically the first field in status structs per Kubernetes API conventions. Conditions is marked optional per Kubernetes API conventions because controllers populate conditions after observing state. The MinItems validation ensures conditions are present once the controller has reported status. See: https://github.com/kubernetes-sigs/kube-api-linter/blob/main/pkg/analysis/conditions/doc.go",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Condition"
+          },
+          "x-kubernetes-list-map-keys": [
+            "type"
+          ],
+          "x-kubernetes-list-type": "map"
+        },
+        "name": {
+          "description": "name is the name of the pacemaker resource. Valid values are \"Kubelet\", \"Etcd\", and \"FencingAgent\". The Kubelet resource is a prerequisite for etcd in Two Node OpenShift with Fencing deployments. The Etcd resource may temporarily transition to stopped during pacemaker quorum-recovery operations. The FencingAgent resource is used to fence the other node during a quorum loss event.",
+          "type": "string"
+        }
+      }
+    },
+    "com.github.openshift.api.etcd.v1alpha1.PacemakerClusterStatus": {
+      "description": "PacemakerClusterStatus contains the actual pacemaker cluster status information. As part of validating the status object, we need to ensure that the lastUpdated timestamp cannot be removed once set and cannot be set to an earlier timestamp than the current value.",
+      "type": "object",
+      "properties": {
+        "conditions": {
+          "description": "conditions represent the observations of the pacemaker cluster's current state. Known condition types are: \"Healthy\", \"InService\", \"NodeCountAsExpected\". The \"Healthy\" condition is an aggregate that tracks the overall health of the cluster. The \"InService\" condition tracks whether the cluster is in service (not in maintenance mode). The \"NodeCountAsExpected\" condition tracks whether the expected number of nodes are present. Each of these conditions is required, so the array must contain at least 3 items. Conditions is marked optional per Kubernetes API conventions because controllers populate conditions after observing state. The MinItems validation ensures conditions are present once the controller has reported status. See: https://github.com/kubernetes-sigs/kube-api-linter/blob/main/pkg/analysis/conditions/doc.go",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Condition"
+          },
+          "x-kubernetes-list-map-keys": [
+            "type"
+          ],
+          "x-kubernetes-list-type": "map"
+        },
+        "lastUpdated": {
+          "description": "lastUpdated is the timestamp when this status was last updated. This is useful for identifying stale status reports. It must be a valid timestamp in RFC3339 format. Once set, this field cannot be removed and cannot be set to an earlier timestamp than the current value. This field is marked optional because all status fields must be optional to allow for partial updates and backward compatibility. However, once set it must always be present. See: https://github.com/kubernetes-sigs/kube-api-linter/blob/main/pkg/analysis/statusoptional/doc.go",
+          "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Time"
+        },
+        "nodes": {
+          "description": "nodes provides detailed information about each node in the cluster including per-node resource health. Each node entry includes the node's name, IP address, conditions, and resource status. The list can contain up to 32 nodes (the upper limit imposed by pacemaker). For Two Node OpenShift with Fencing, exactly 2 nodes are expected in a healthy cluster. An empty list indicates no nodes are currently reporting status.",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/com.github.openshift.api.etcd.v1alpha1.PacemakerClusterNodeStatus"
+          },
+          "x-kubernetes-list-map-keys": [
+            "name"
+          ],
+          "x-kubernetes-list-type": "map"
         }
       }
     },

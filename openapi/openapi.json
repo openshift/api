@@ -6,6 +6,278 @@
   },
   "paths": null,
   "definitions": {
+    "com.github.openshift.api.apiextensions.v1alpha1.APIExcludedField": {
+      "description": "APIExcludedField describes a field in the schema which will not be validated by crdSchemaValidation or objectSchemaValidation.",
+      "type": "object",
+      "required": [
+        "path"
+      ],
+      "properties": {
+        "path": {
+          "description": "path is the path to the field in the schema. Paths are dot-separated field names (e.g., \"fieldA.fieldB.fieldC\") representing nested object fields. Each field name must be a valid Kubernetes CRD field name: start with a letter, contain only letters, digits, and underscores, and be between 1 and 63 characters in length. A path may contain at most 16 fields.",
+          "type": "string"
+        },
+        "version": {
+          "description": "version is the API version the field is excluded from. When not specified, the field is excluded from all versions.\n\nWhen present, must be at most 63 characters in length, and must must consist of only lowercase alphanumeric characters and hyphens, and must start with an alphabetic character and end with an alphanumeric character.",
+          "type": "string"
+        }
+      }
+    },
+    "com.github.openshift.api.apiextensions.v1alpha1.APIVersions": {
+      "description": "APIVersions specifies a set of API versions of a CRD.",
+      "type": "object",
+      "required": [
+        "defaultSelection"
+      ],
+      "properties": {
+        "additionalVersions": {
+          "description": "additionalVersions specifies a set api versions to require in addition to the default selection. It is explicitly permitted to specify a version in additionalVersions which was also selected by the default selection. The selections will be merged and deduplicated.\n\nEach item must be at most 63 characters in length, and must must consist of only lowercase alphanumeric characters and hyphens, and must start with an alphabetic character and end with an alphanumeric character.",
+          "type": "array",
+          "items": {
+            "type": "string",
+            "default": ""
+          },
+          "x-kubernetes-list-type": "set"
+        },
+        "defaultSelection": {
+          "description": "defaultSelection specifies a method for automatically selecting a set of versions to require.\n\nValid options are StorageOnly and AllServed. When set to StorageOnly, only the storage version is selected for compatibility assessment. When set to AllServed, all served versions are selected for compatibility assessment.\n\nThis field is required.",
+          "type": "string"
+        }
+      }
+    },
+    "com.github.openshift.api.apiextensions.v1alpha1.CRDData": {
+      "description": "CRDData contains the complete definition of a CRD.",
+      "type": "object",
+      "required": [
+        "type",
+        "data"
+      ],
+      "properties": {
+        "data": {
+          "description": "data contains the complete definition of the CRD. This field must be in the format specified by the type field. It may not be longer than 1572864 characters. This field is required.",
+          "type": "string"
+        },
+        "type": {
+          "description": "type indicates the type of the CRD data. The only supported type is \"YAML\". This field is required.",
+          "type": "string"
+        }
+      }
+    },
+    "com.github.openshift.api.apiextensions.v1alpha1.CompatibilityRequirement": {
+      "description": "CompatibilityRequirement expresses a set of requirements on a target CRD. It is used to ensure compatibility between different actors using the same CRD.\n\nCompatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.",
+      "type": "object",
+      "required": [
+        "metadata",
+        "spec"
+      ],
+      "properties": {
+        "apiVersion": {
+          "description": "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+          "type": "string"
+        },
+        "kind": {
+          "description": "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+          "type": "string"
+        },
+        "metadata": {
+          "description": "metadata is the standard object's metadata. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata",
+          "default": {},
+          "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.ObjectMeta"
+        },
+        "spec": {
+          "description": "spec is the specification of the desired behavior of the Compatibility Requirement.",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.apiextensions.v1alpha1.CompatibilityRequirementSpec"
+        },
+        "status": {
+          "description": "status is the most recently observed status of the Compatibility Requirement.",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.apiextensions.v1alpha1.CompatibilityRequirementStatus"
+        }
+      }
+    },
+    "com.github.openshift.api.apiextensions.v1alpha1.CompatibilityRequirementList": {
+      "description": "CompatibilityRequirementList is a collection of CompatibilityRequirements.\n\nCompatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.",
+      "type": "object",
+      "properties": {
+        "apiVersion": {
+          "description": "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+          "type": "string"
+        },
+        "items": {
+          "description": "items is a list of CompatibilityRequirements.",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/com.github.openshift.api.apiextensions.v1alpha1.CompatibilityRequirement"
+          }
+        },
+        "kind": {
+          "description": "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+          "type": "string"
+        },
+        "metadata": {
+          "description": "metadata is the standard list's metadata. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata",
+          "default": {},
+          "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.ListMeta"
+        }
+      }
+    },
+    "com.github.openshift.api.apiextensions.v1alpha1.CompatibilityRequirementSpec": {
+      "description": "CompatibilityRequirementSpec is the specification of the desired behavior of the Compatibility Requirement.",
+      "type": "object",
+      "required": [
+        "compatibilitySchema"
+      ],
+      "properties": {
+        "compatibilitySchema": {
+          "description": "compatibilitySchema defines the schema used by customResourceDefinitionSchemaValidation and objectSchemaValidation. This field is required.",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.apiextensions.v1alpha1.CompatibilitySchema"
+        },
+        "customResourceDefinitionSchemaValidation": {
+          "description": "customResourceDefinitionSchemaValidation ensures that updates to the installed CRD are compatible with this compatibility requirement. If not specified, admission of the target CRD will not be validated. This field is optional.",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.apiextensions.v1alpha1.CustomResourceDefinitionSchemaValidation"
+        },
+        "objectSchemaValidation": {
+          "description": "objectSchemaValidation ensures that matching resources conform to compatibilitySchema. If not specified, admission of matching resources will not be validated. This field is optional.",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.apiextensions.v1alpha1.ObjectSchemaValidation"
+        }
+      }
+    },
+    "com.github.openshift.api.apiextensions.v1alpha1.CompatibilityRequirementStatus": {
+      "description": "CompatibilityRequirementStatus defines the observed status of the Compatibility Requirement.",
+      "type": "object",
+      "properties": {
+        "conditions": {
+          "description": "conditions is a list of conditions and their status. Known condition types are Progressing, Admitted, and Compatible.",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Condition"
+          },
+          "x-kubernetes-list-map-keys": [
+            "type"
+          ],
+          "x-kubernetes-list-type": "map"
+        },
+        "crdName": {
+          "description": "crdName is the name of the target CRD. The target CRD is not required to exist, as we may legitimately place requirements on it before it is created.  The observed CRD is given in status.observedCRD, which will be empty if no CRD is observed. When present, must be between 1 and 253 characters and conform to RFC 1123 subdomain format: lowercase alphanumeric characters, '-' or '.', starting and ending with alphanumeric characters. When not specified, the requirement applies to any CRD name discovered from the compatibility schema. This field is optional. Once set, the value cannot be changed and must always remain set.",
+          "type": "string"
+        },
+        "observedCRD": {
+          "description": "observedCRD documents the uid and generation of the CRD object when the current status was written. This field will be omitted if the target CRD does not exist or could not be retrieved.",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.apiextensions.v1alpha1.ObservedCRD"
+        }
+      }
+    },
+    "com.github.openshift.api.apiextensions.v1alpha1.CompatibilitySchema": {
+      "description": "CompatibilitySchema defines the schema used by crdSchemaValidation and objectSchemaValidation.",
+      "type": "object",
+      "required": [
+        "customResourceDefinition",
+        "requiredVersions"
+      ],
+      "properties": {
+        "customResourceDefinition": {
+          "description": "customResourceDefinition contains the complete definition of the CRD for schema and object validation purposes. This field is required.",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.apiextensions.v1alpha1.CRDData"
+        },
+        "excludedFields": {
+          "description": "excludedFields is a set of fields in the schema which will not be validated by crdSchemaValidation or objectSchemaValidation. The list may contain at most 64 fields. When not specified, all fields in the schema will be validated.",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/com.github.openshift.api.apiextensions.v1alpha1.APIExcludedField"
+          },
+          "x-kubernetes-list-type": "atomic"
+        },
+        "requiredVersions": {
+          "description": "requiredVersions specifies a subset of the CRD's API versions which will be asserted for compatibility. This field is required.",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.apiextensions.v1alpha1.APIVersions"
+        }
+      }
+    },
+    "com.github.openshift.api.apiextensions.v1alpha1.CustomResourceDefinitionSchemaValidation": {
+      "description": "CustomResourceDefinitionSchemaValidation ensures that updates to the installed CRD are compatible with this compatibility requirement.",
+      "type": "object",
+      "required": [
+        "action"
+      ],
+      "properties": {
+        "action": {
+          "description": "action determines whether violations are rejected (Deny) or admitted with an API warning (Warn). Valid options are Deny and Warn. When set to Deny, incompatible CRDs will be rejected and not admitted to the cluster. When set to Warn, incompatible CRDs will be allowed but a warning will be generated in the API response. This field is required.\n\nPossible enum values:\n - `\"Deny\"` means that incompatible CRDs will be rejected.\n - `\"Warn\"` means that incompatible CRDs will be allowed but a warning will be generated.",
+          "type": "string",
+          "enum": [
+            "Deny",
+            "Warn"
+          ]
+        }
+      }
+    },
+    "com.github.openshift.api.apiextensions.v1alpha1.ObjectSchemaValidation": {
+      "description": "ObjectSchemaValidation ensures that matching objects conform to the compatibilitySchema.",
+      "type": "object",
+      "required": [
+        "action"
+      ],
+      "properties": {
+        "action": {
+          "description": "action determines whether violations are rejected (Deny) or admitted with an API warning (Warn). Valid options are Deny and Warn. When set to Deny, incompatible Objects will be rejected and not admitted to the cluster. When set to Warn, incompatible Objects will be allowed but a warning will be generated in the API response. This field is required.\n\nPossible enum values:\n - `\"Deny\"` means that incompatible CRDs will be rejected.\n - `\"Warn\"` means that incompatible CRDs will be allowed but a warning will be generated.",
+          "type": "string",
+          "enum": [
+            "Deny",
+            "Warn"
+          ]
+        },
+        "matchConditions": {
+          "description": "matchConditions defines the matchConditions field of the resulting ValidatingWebhookConfiguration. When present, must contain between 1 and 64 match conditions. When not specified, the webhook will match all requests according to its other selectors.",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/io.k8s.api.admissionregistration.v1.MatchCondition"
+          },
+          "x-kubernetes-list-map-keys": [
+            "name"
+          ],
+          "x-kubernetes-list-type": "map"
+        },
+        "namespaceSelector": {
+          "description": "namespaceSelector defines a label selector for namespaces. If defined, only objects in a namespace with matching labels will be subject to validation. When not specified, objects for validation will not be filtered by namespace.",
+          "default": {},
+          "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.LabelSelector"
+        },
+        "objectSelector": {
+          "description": "objectSelector defines a label selector for objects. If defined, only objects with matching labels will be subject to validation. When not specified, objects for validation will not be filtered by label.",
+          "default": {},
+          "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.LabelSelector"
+        }
+      }
+    },
+    "com.github.openshift.api.apiextensions.v1alpha1.ObservedCRD": {
+      "description": "ObservedCRD contains information about the observed target CRD.",
+      "type": "object",
+      "required": [
+        "uid",
+        "generation"
+      ],
+      "properties": {
+        "generation": {
+          "description": "generation is the observed generation of the CRD. Must be a positive integer (minimum value of 1).",
+          "type": "integer",
+          "format": "int64"
+        },
+        "uid": {
+          "description": "uid is the uid of the observed CRD. Must be a valid UUID consisting of lowercase hexadecimal digits in 5 hyphenated blocks (8-4-4-4-12 format). Length must be between 1 and 36 characters.",
+          "type": "string"
+        }
+      }
+    },
     "com.github.openshift.api.apiserver.v1.APIRequestCount": {
       "description": "APIRequestCount tracks requests made to an API. The instance name must be of the form `resource.version.group`, matching the resource.\n\nCompatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).",
       "type": "object",

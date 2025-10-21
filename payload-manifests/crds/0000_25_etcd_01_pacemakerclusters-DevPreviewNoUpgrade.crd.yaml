@@ -1,0 +1,582 @@
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    api-approved.openshift.io: https://github.com/openshift/api/pull/2544
+    api.openshift.io/merged-by-featuregates: "true"
+    include.release.openshift.io/ibm-cloud-managed: "true"
+    include.release.openshift.io/self-managed-high-availability: "true"
+    release.openshift.io/feature-set: DevPreviewNoUpgrade
+  name: pacemakerclusters.etcd.openshift.io
+spec:
+  group: etcd.openshift.io
+  names:
+    kind: PacemakerCluster
+    listKind: PacemakerClusterList
+    plural: pacemakerclusters
+    singular: pacemakercluster
+  scope: Cluster
+  versions:
+  - name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        description: |-
+          PacemakerCluster represents the current state of the pacemaker cluster as reported by the pcs status command.
+          PacemakerCluster is a cluster-scoped singleton resource. The name of this instance is "cluster". This
+          resource provides a view into the health and status of a pacemaker-managed cluster in TNF deployments.
+
+          Compatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.
+        properties:
+          apiVersion:
+            description: |-
+              APIVersion defines the versioned schema of this representation of an object.
+              Servers should convert recognized schemas to the latest internal value, and
+              may reject unrecognized values.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
+            type: string
+          kind:
+            description: |-
+              Kind is a string value representing the REST resource this object represents.
+              Servers may infer this from the endpoint the client submits requests to.
+              Cannot be updated.
+              In CamelCase.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+            type: string
+          metadata:
+            type: object
+          status:
+            description: |-
+              status contains the actual pacemaker cluster status information collected from the cluster.
+              The goal of this status is to be able to quickly identify if pacemaker is in a healthy state.
+              In TNF, a healthy pacemaker cluster has 2 nodes, both of which have healthy kubelet, etcd, and fencing resources.
+            properties:
+              conditions:
+                description: |-
+                  conditions represent the observations of the pacemaker cluster's current state.
+                  Known condition types are: "PacemakerClusterHealthy", "PacemakerClusterNotInMaintenanceMode",
+                  "PacemakerClusterExpectedNodeCount".
+                  The "PacemakerClusterHealthy" condition is an aggregate that tracks the overall health of the cluster.
+                  The "PacemakerClusterNotInMaintenanceMode" condition tracks whether the cluster is not in maintenance mode.
+                  The "PacemakerClusterExpectedNodeCount" condition tracks whether the expected number of nodes are present.
+                  Each of these conditions is required.
+                items:
+                  description: Condition contains details for one aspect of the current
+                    state of this API Resource.
+                  properties:
+                    lastTransitionTime:
+                      description: |-
+                        lastTransitionTime is the last time the condition transitioned from one status to another.
+                        This should be when the underlying condition changed.  If that is not known, then using the time when the API field changed is acceptable.
+                      format: date-time
+                      type: string
+                    message:
+                      description: |-
+                        message is a human readable message indicating details about the transition.
+                        This may be an empty string.
+                      maxLength: 32768
+                      type: string
+                    observedGeneration:
+                      description: |-
+                        observedGeneration represents the .metadata.generation that the condition was set based upon.
+                        For instance, if .metadata.generation is currently 12, but the .status.conditions[x].observedGeneration is 9, the condition is out of date
+                        with respect to the current state of the instance.
+                      format: int64
+                      minimum: 0
+                      type: integer
+                    reason:
+                      description: |-
+                        reason contains a programmatic identifier indicating the reason for the condition's last transition.
+                        Producers of specific condition types may define expected values and meanings for this field,
+                        and whether the values are considered a guaranteed API.
+                        The value should be a CamelCase string.
+                        This field may not be empty.
+                      maxLength: 1024
+                      minLength: 1
+                      pattern: ^[A-Za-z]([A-Za-z0-9_,:]*[A-Za-z0-9_])?$
+                      type: string
+                    status:
+                      description: status of the condition, one of True, False, Unknown.
+                      enum:
+                      - "True"
+                      - "False"
+                      - Unknown
+                      type: string
+                    type:
+                      description: type of condition in CamelCase or in foo.example.com/CamelCase.
+                      maxLength: 316
+                      pattern: ^([a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*/)?(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])$
+                      type: string
+                  required:
+                  - lastTransitionTime
+                  - message
+                  - reason
+                  - status
+                  - type
+                  type: object
+                maxItems: 8
+                type: array
+                x-kubernetes-list-map-keys:
+                - type
+                x-kubernetes-list-type: map
+                x-kubernetes-validations:
+                - message: conditions must contain a condition of type PacemakerClusterHealthy
+                  rule: self.exists(c, c.type == 'PacemakerClusterHealthy')
+                - message: conditions must contain a condition of type PacemakerClusterNotInMaintenanceMode
+                  rule: self.exists(c, c.type == 'PacemakerClusterNotInMaintenanceMode')
+                - message: conditions must contain a condition of type PacemakerClusterExpectedNodeCount
+                  rule: self.exists(c, c.type == 'PacemakerClusterExpectedNodeCount')
+              lastUpdated:
+                description: |-
+                  lastUpdated is the timestamp when this status was last updated. This is useful for identifying
+                  stale status reports.
+                  When present, it must be a valid timestamp in RFC3339 format and cannot be set to an earlier timestamp than the
+                  current value. It is optional upon initial creation, but required once it has been set.
+                format: date-time
+                type: string
+              nodes:
+                description: |-
+                  nodes provides detailed information about each node in the cluster including per-node resource health.
+                  Each node entry includes the node's name, IP address, conditions, and resource status.
+                  The list can contain between 1 and 32 nodes. The upper limit is imposed by pacemaker.
+                  For TNF, exactly 2 nodes are expected in a healthy cluster.
+                items:
+                  description: |-
+                    PacemakerClusterNodeStatus represents the status of a single node in the pacemaker cluster including
+                    the node's conditions and the health of critical resources running on that node.
+                  properties:
+                    conditions:
+                      description: |-
+                        conditions represent the observations of the node's current state.
+                        Known condition types are: "PacemakerClusterNodeHealthy", "PacemakerClusterNodeOnline",
+                        "PacemakerClusterNodeNotInMaintenance", "PacemakerClusterNodeActive", "PacemakerClusterNodeReady",
+                        "PacemakerClusterNodeClean", "PacemakerClusterNodeMember".
+                        The "PacemakerClusterNodeHealthy" condition is an aggregate that tracks the overall health of the node.
+                        The "PacemakerClusterNodeOnline" condition tracks whether the node is online.
+                        The "PacemakerClusterNodeNotInMaintenance" condition tracks whether the node is not in maintenance mode.
+                        The "PacemakerClusterNodeActive" condition tracks whether the node is active (not in standby mode).
+                        The "PacemakerClusterNodeReady" condition tracks whether the node is ready (not in a pending state).
+                        The "PacemakerClusterNodeClean" condition tracks whether the node is in a clean (status known) state.
+                        The "PacemakerClusterNodeMember" condition tracks whether the node is a member of the cluster.
+                        Each of these conditions is required.
+                      items:
+                        description: Condition contains details for one aspect of
+                          the current state of this API Resource.
+                        properties:
+                          lastTransitionTime:
+                            description: |-
+                              lastTransitionTime is the last time the condition transitioned from one status to another.
+                              This should be when the underlying condition changed.  If that is not known, then using the time when the API field changed is acceptable.
+                            format: date-time
+                            type: string
+                          message:
+                            description: |-
+                              message is a human readable message indicating details about the transition.
+                              This may be an empty string.
+                            maxLength: 32768
+                            type: string
+                          observedGeneration:
+                            description: |-
+                              observedGeneration represents the .metadata.generation that the condition was set based upon.
+                              For instance, if .metadata.generation is currently 12, but the .status.conditions[x].observedGeneration is 9, the condition is out of date
+                              with respect to the current state of the instance.
+                            format: int64
+                            minimum: 0
+                            type: integer
+                          reason:
+                            description: |-
+                              reason contains a programmatic identifier indicating the reason for the condition's last transition.
+                              Producers of specific condition types may define expected values and meanings for this field,
+                              and whether the values are considered a guaranteed API.
+                              The value should be a CamelCase string.
+                              This field may not be empty.
+                            maxLength: 1024
+                            minLength: 1
+                            pattern: ^[A-Za-z]([A-Za-z0-9_,:]*[A-Za-z0-9_])?$
+                            type: string
+                          status:
+                            description: status of the condition, one of True, False,
+                              Unknown.
+                            enum:
+                            - "True"
+                            - "False"
+                            - Unknown
+                            type: string
+                          type:
+                            description: type of condition in CamelCase or in foo.example.com/CamelCase.
+                            maxLength: 316
+                            pattern: ^([a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*/)?(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])$
+                            type: string
+                        required:
+                        - lastTransitionTime
+                        - message
+                        - reason
+                        - status
+                        - type
+                        type: object
+                      maxItems: 16
+                      type: array
+                      x-kubernetes-list-map-keys:
+                      - type
+                      x-kubernetes-list-type: map
+                      x-kubernetes-validations:
+                      - message: conditions must contain a condition of type PacemakerClusterNodeHealthy
+                        rule: self.exists(c, c.type == 'PacemakerClusterNodeHealthy')
+                      - message: conditions must contain a condition of type PacemakerClusterNodeOnline
+                        rule: self.exists(c, c.type == 'PacemakerClusterNodeOnline')
+                      - message: conditions must contain a condition of type PacemakerClusterNodeNotInMaintenance
+                        rule: self.exists(c, c.type == 'PacemakerClusterNodeNotInMaintenance')
+                      - message: conditions must contain a condition of type PacemakerClusterNodeActive
+                        rule: self.exists(c, c.type == 'PacemakerClusterNodeActive')
+                      - message: conditions must contain a condition of type PacemakerClusterNodeReady
+                        rule: self.exists(c, c.type == 'PacemakerClusterNodeReady')
+                      - message: conditions must contain a condition of type PacemakerClusterNodeClean
+                        rule: self.exists(c, c.type == 'PacemakerClusterNodeClean')
+                      - message: conditions must contain a condition of type PacemakerClusterNodeMember
+                        rule: self.exists(c, c.type == 'PacemakerClusterNodeMember')
+                    etcd:
+                      description: |-
+                        etcd contains the status of the etcd pacemaker resource on this node.
+                        The etcd resource may temporarily transition to stopped during pacemaker quorum-recovery operations.
+                      properties:
+                        conditions:
+                          description: |-
+                            conditions represent the observations of the resource's current state.
+                            Known condition types are: "PacemakerClusterResourceHealthy", "PacemakerClusterResourceNotInMaintenance",
+                            "PacemakerClusterResourceManaged", "PacemakerClusterResourceEnabled", "PacemakerClusterResourceOperational",
+                            "PacemakerClusterResourceActive", "PacemakerClusterResourceStarted", "PacemakerClusterResourceUnblocked".
+                            The "PacemakerClusterResourceHealthy" condition is an aggregate that tracks the overall health of the resource.
+                            The "PacemakerClusterResourceNotInMaintenance" condition tracks whether the resource is not in maintenance mode.
+                            The "PacemakerClusterResourceManaged" condition tracks whether the resource is managed by pacemaker.
+                            The "PacemakerClusterResourceEnabled" condition tracks whether the resource is enabled.
+                            The "PacemakerClusterResourceOperational" condition tracks whether the resource is operational (not failed).
+                            The "PacemakerClusterResourceActive" condition tracks whether the resource is active (available to be used).
+                            The "PacemakerClusterResourceStarted" condition tracks whether the resource is started.
+                            The "PacemakerClusterResourceUnblocked" condition tracks whether the resource is unblocked.
+                            Each of these conditions is required.
+                          items:
+                            description: Condition contains details for one aspect
+                              of the current state of this API Resource.
+                            properties:
+                              lastTransitionTime:
+                                description: |-
+                                  lastTransitionTime is the last time the condition transitioned from one status to another.
+                                  This should be when the underlying condition changed.  If that is not known, then using the time when the API field changed is acceptable.
+                                format: date-time
+                                type: string
+                              message:
+                                description: |-
+                                  message is a human readable message indicating details about the transition.
+                                  This may be an empty string.
+                                maxLength: 32768
+                                type: string
+                              observedGeneration:
+                                description: |-
+                                  observedGeneration represents the .metadata.generation that the condition was set based upon.
+                                  For instance, if .metadata.generation is currently 12, but the .status.conditions[x].observedGeneration is 9, the condition is out of date
+                                  with respect to the current state of the instance.
+                                format: int64
+                                minimum: 0
+                                type: integer
+                              reason:
+                                description: |-
+                                  reason contains a programmatic identifier indicating the reason for the condition's last transition.
+                                  Producers of specific condition types may define expected values and meanings for this field,
+                                  and whether the values are considered a guaranteed API.
+                                  The value should be a CamelCase string.
+                                  This field may not be empty.
+                                maxLength: 1024
+                                minLength: 1
+                                pattern: ^[A-Za-z]([A-Za-z0-9_,:]*[A-Za-z0-9_])?$
+                                type: string
+                              status:
+                                description: status of the condition, one of True,
+                                  False, Unknown.
+                                enum:
+                                - "True"
+                                - "False"
+                                - Unknown
+                                type: string
+                              type:
+                                description: type of condition in CamelCase or in
+                                  foo.example.com/CamelCase.
+                                maxLength: 316
+                                pattern: ^([a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*/)?(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])$
+                                type: string
+                            required:
+                            - lastTransitionTime
+                            - message
+                            - reason
+                            - status
+                            - type
+                            type: object
+                          maxItems: 16
+                          type: array
+                          x-kubernetes-list-map-keys:
+                          - type
+                          x-kubernetes-list-type: map
+                          x-kubernetes-validations:
+                          - message: conditions must contain a condition of type PacemakerClusterResourceHealthy
+                            rule: self.exists(c, c.type == 'PacemakerClusterResourceHealthy')
+                          - message: conditions must contain a condition of type PacemakerClusterResourceNotInMaintenance
+                            rule: self.exists(c, c.type == 'PacemakerClusterResourceNotInMaintenance')
+                          - message: conditions must contain a condition of type PacemakerClusterResourceManaged
+                            rule: self.exists(c, c.type == 'PacemakerClusterResourceManaged')
+                          - message: conditions must contain a condition of type PacemakerClusterResourceEnabled
+                            rule: self.exists(c, c.type == 'PacemakerClusterResourceEnabled')
+                          - message: conditions must contain a condition of type PacemakerClusterResourceOperational
+                            rule: self.exists(c, c.type == 'PacemakerClusterResourceOperational')
+                          - message: conditions must contain a condition of type PacemakerClusterResourceActive
+                            rule: self.exists(c, c.type == 'PacemakerClusterResourceActive')
+                          - message: conditions must contain a condition of type PacemakerClusterResourceStarted
+                            rule: self.exists(c, c.type == 'PacemakerClusterResourceStarted')
+                          - message: conditions must contain a condition of type PacemakerClusterResourceUnblocked
+                            rule: self.exists(c, c.type == 'PacemakerClusterResourceUnblocked')
+                      type: object
+                    fencingAgent:
+                      description: |-
+                        fencingAgent contains the status of the fencing agent pacemaker resource on this node.
+                        The fencing agent is used to fence the other node during a quorum loss event.
+                      properties:
+                        conditions:
+                          description: |-
+                            conditions represent the observations of the resource's current state.
+                            Known condition types are: "PacemakerClusterResourceHealthy", "PacemakerClusterResourceNotInMaintenance",
+                            "PacemakerClusterResourceManaged", "PacemakerClusterResourceEnabled", "PacemakerClusterResourceOperational",
+                            "PacemakerClusterResourceActive", "PacemakerClusterResourceStarted", "PacemakerClusterResourceUnblocked".
+                            The "PacemakerClusterResourceHealthy" condition is an aggregate that tracks the overall health of the resource.
+                            The "PacemakerClusterResourceNotInMaintenance" condition tracks whether the resource is not in maintenance mode.
+                            The "PacemakerClusterResourceManaged" condition tracks whether the resource is managed by pacemaker.
+                            The "PacemakerClusterResourceEnabled" condition tracks whether the resource is enabled.
+                            The "PacemakerClusterResourceOperational" condition tracks whether the resource is operational (not failed).
+                            The "PacemakerClusterResourceActive" condition tracks whether the resource is active (available to be used).
+                            The "PacemakerClusterResourceStarted" condition tracks whether the resource is started.
+                            The "PacemakerClusterResourceUnblocked" condition tracks whether the resource is unblocked.
+                            Each of these conditions is required.
+                          items:
+                            description: Condition contains details for one aspect
+                              of the current state of this API Resource.
+                            properties:
+                              lastTransitionTime:
+                                description: |-
+                                  lastTransitionTime is the last time the condition transitioned from one status to another.
+                                  This should be when the underlying condition changed.  If that is not known, then using the time when the API field changed is acceptable.
+                                format: date-time
+                                type: string
+                              message:
+                                description: |-
+                                  message is a human readable message indicating details about the transition.
+                                  This may be an empty string.
+                                maxLength: 32768
+                                type: string
+                              observedGeneration:
+                                description: |-
+                                  observedGeneration represents the .metadata.generation that the condition was set based upon.
+                                  For instance, if .metadata.generation is currently 12, but the .status.conditions[x].observedGeneration is 9, the condition is out of date
+                                  with respect to the current state of the instance.
+                                format: int64
+                                minimum: 0
+                                type: integer
+                              reason:
+                                description: |-
+                                  reason contains a programmatic identifier indicating the reason for the condition's last transition.
+                                  Producers of specific condition types may define expected values and meanings for this field,
+                                  and whether the values are considered a guaranteed API.
+                                  The value should be a CamelCase string.
+                                  This field may not be empty.
+                                maxLength: 1024
+                                minLength: 1
+                                pattern: ^[A-Za-z]([A-Za-z0-9_,:]*[A-Za-z0-9_])?$
+                                type: string
+                              status:
+                                description: status of the condition, one of True,
+                                  False, Unknown.
+                                enum:
+                                - "True"
+                                - "False"
+                                - Unknown
+                                type: string
+                              type:
+                                description: type of condition in CamelCase or in
+                                  foo.example.com/CamelCase.
+                                maxLength: 316
+                                pattern: ^([a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*/)?(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])$
+                                type: string
+                            required:
+                            - lastTransitionTime
+                            - message
+                            - reason
+                            - status
+                            - type
+                            type: object
+                          maxItems: 16
+                          type: array
+                          x-kubernetes-list-map-keys:
+                          - type
+                          x-kubernetes-list-type: map
+                          x-kubernetes-validations:
+                          - message: conditions must contain a condition of type PacemakerClusterResourceHealthy
+                            rule: self.exists(c, c.type == 'PacemakerClusterResourceHealthy')
+                          - message: conditions must contain a condition of type PacemakerClusterResourceNotInMaintenance
+                            rule: self.exists(c, c.type == 'PacemakerClusterResourceNotInMaintenance')
+                          - message: conditions must contain a condition of type PacemakerClusterResourceManaged
+                            rule: self.exists(c, c.type == 'PacemakerClusterResourceManaged')
+                          - message: conditions must contain a condition of type PacemakerClusterResourceEnabled
+                            rule: self.exists(c, c.type == 'PacemakerClusterResourceEnabled')
+                          - message: conditions must contain a condition of type PacemakerClusterResourceOperational
+                            rule: self.exists(c, c.type == 'PacemakerClusterResourceOperational')
+                          - message: conditions must contain a condition of type PacemakerClusterResourceActive
+                            rule: self.exists(c, c.type == 'PacemakerClusterResourceActive')
+                          - message: conditions must contain a condition of type PacemakerClusterResourceStarted
+                            rule: self.exists(c, c.type == 'PacemakerClusterResourceStarted')
+                          - message: conditions must contain a condition of type PacemakerClusterResourceUnblocked
+                            rule: self.exists(c, c.type == 'PacemakerClusterResourceUnblocked')
+                      type: object
+                    ipAddress:
+                      description: |-
+                        ipAddress is the canonical IPv4 or IPv6 address of the node. It must be a valid canonical global unicast IPv4
+                        or IPv6 address (including private/RFC1918 addresses). This excludes special addresses like unspecified,
+                        loopback, link-local, and multicast.
+                      maxLength: 39
+                      minLength: 1
+                      type: string
+                      x-kubernetes-validations:
+                      - message: ipAddress must be a valid canonical global unicast
+                          IPv4 or IPv6 address
+                        rule: isIP(self) && ip.isCanonical(self) && ip(self).isGlobalUnicast()
+                    kubelet:
+                      description: |-
+                        kubelet contains the status of the kubelet pacemaker resource on this node.
+                        The kubelet resource is a prerequisite for etcd in TNF deployments. It is expected to be running on all nodes.
+                      properties:
+                        conditions:
+                          description: |-
+                            conditions represent the observations of the resource's current state.
+                            Known condition types are: "PacemakerClusterResourceHealthy", "PacemakerClusterResourceNotInMaintenance",
+                            "PacemakerClusterResourceManaged", "PacemakerClusterResourceEnabled", "PacemakerClusterResourceOperational",
+                            "PacemakerClusterResourceActive", "PacemakerClusterResourceStarted", "PacemakerClusterResourceUnblocked".
+                            The "PacemakerClusterResourceHealthy" condition is an aggregate that tracks the overall health of the resource.
+                            The "PacemakerClusterResourceNotInMaintenance" condition tracks whether the resource is not in maintenance mode.
+                            The "PacemakerClusterResourceManaged" condition tracks whether the resource is managed by pacemaker.
+                            The "PacemakerClusterResourceEnabled" condition tracks whether the resource is enabled.
+                            The "PacemakerClusterResourceOperational" condition tracks whether the resource is operational (not failed).
+                            The "PacemakerClusterResourceActive" condition tracks whether the resource is active (available to be used).
+                            The "PacemakerClusterResourceStarted" condition tracks whether the resource is started.
+                            The "PacemakerClusterResourceUnblocked" condition tracks whether the resource is unblocked.
+                            Each of these conditions is required.
+                          items:
+                            description: Condition contains details for one aspect
+                              of the current state of this API Resource.
+                            properties:
+                              lastTransitionTime:
+                                description: |-
+                                  lastTransitionTime is the last time the condition transitioned from one status to another.
+                                  This should be when the underlying condition changed.  If that is not known, then using the time when the API field changed is acceptable.
+                                format: date-time
+                                type: string
+                              message:
+                                description: |-
+                                  message is a human readable message indicating details about the transition.
+                                  This may be an empty string.
+                                maxLength: 32768
+                                type: string
+                              observedGeneration:
+                                description: |-
+                                  observedGeneration represents the .metadata.generation that the condition was set based upon.
+                                  For instance, if .metadata.generation is currently 12, but the .status.conditions[x].observedGeneration is 9, the condition is out of date
+                                  with respect to the current state of the instance.
+                                format: int64
+                                minimum: 0
+                                type: integer
+                              reason:
+                                description: |-
+                                  reason contains a programmatic identifier indicating the reason for the condition's last transition.
+                                  Producers of specific condition types may define expected values and meanings for this field,
+                                  and whether the values are considered a guaranteed API.
+                                  The value should be a CamelCase string.
+                                  This field may not be empty.
+                                maxLength: 1024
+                                minLength: 1
+                                pattern: ^[A-Za-z]([A-Za-z0-9_,:]*[A-Za-z0-9_])?$
+                                type: string
+                              status:
+                                description: status of the condition, one of True,
+                                  False, Unknown.
+                                enum:
+                                - "True"
+                                - "False"
+                                - Unknown
+                                type: string
+                              type:
+                                description: type of condition in CamelCase or in
+                                  foo.example.com/CamelCase.
+                                maxLength: 316
+                                pattern: ^([a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*/)?(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])$
+                                type: string
+                            required:
+                            - lastTransitionTime
+                            - message
+                            - reason
+                            - status
+                            - type
+                            type: object
+                          maxItems: 16
+                          type: array
+                          x-kubernetes-list-map-keys:
+                          - type
+                          x-kubernetes-list-type: map
+                          x-kubernetes-validations:
+                          - message: conditions must contain a condition of type PacemakerClusterResourceHealthy
+                            rule: self.exists(c, c.type == 'PacemakerClusterResourceHealthy')
+                          - message: conditions must contain a condition of type PacemakerClusterResourceNotInMaintenance
+                            rule: self.exists(c, c.type == 'PacemakerClusterResourceNotInMaintenance')
+                          - message: conditions must contain a condition of type PacemakerClusterResourceManaged
+                            rule: self.exists(c, c.type == 'PacemakerClusterResourceManaged')
+                          - message: conditions must contain a condition of type PacemakerClusterResourceEnabled
+                            rule: self.exists(c, c.type == 'PacemakerClusterResourceEnabled')
+                          - message: conditions must contain a condition of type PacemakerClusterResourceOperational
+                            rule: self.exists(c, c.type == 'PacemakerClusterResourceOperational')
+                          - message: conditions must contain a condition of type PacemakerClusterResourceActive
+                            rule: self.exists(c, c.type == 'PacemakerClusterResourceActive')
+                          - message: conditions must contain a condition of type PacemakerClusterResourceStarted
+                            rule: self.exists(c, c.type == 'PacemakerClusterResourceStarted')
+                          - message: conditions must contain a condition of type PacemakerClusterResourceUnblocked
+                            rule: self.exists(c, c.type == 'PacemakerClusterResourceUnblocked')
+                      type: object
+                    name:
+                      description: |-
+                        name is the name of the node. This is expected to match the Kubernetes node's name, which must be a lowercase
+                        RFC 1123 subdomain consisting of lowercase alphanumeric characters, '-' or '.', starting and ending with
+                        an alphanumeric character, and be at most 253 characters in length.
+                      maxLength: 253
+                      minLength: 1
+                      type: string
+                      x-kubernetes-validations:
+                      - message: name must be a lowercase RFC 1123 subdomain consisting
+                          of lowercase alphanumeric characters, '-' or '.', and must
+                          start and end with an alphanumeric character
+                        rule: '!format.dns1123Subdomain().validate(self).hasValue()'
+                  required:
+                  - ipAddress
+                  - name
+                  type: object
+                maxItems: 32
+                minItems: 1
+                type: array
+                x-kubernetes-list-map-keys:
+                - name
+                x-kubernetes-list-type: map
+            type: object
+            x-kubernetes-validations:
+            - message: lastUpdated must be a newer timestamp than the current value
+              rule: '!has(oldSelf.lastUpdated) || (has(self.lastUpdated) && self.lastUpdated
+                > oldSelf.lastUpdated)'
+        required:
+        - metadata
+        type: object
+        x-kubernetes-validations:
+        - message: PacemakerCluster must be named 'cluster'
+          rule: self.metadata.name == 'cluster'
+    served: true
+    storage: true
+    subresources:
+      status: {}

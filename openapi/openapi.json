@@ -6630,18 +6630,6 @@
             "key"
           ],
           "x-kubernetes-list-type": "map"
-        },
-        "serviceEndpoints": {
-          "description": "serviceEndpoints specifies endpoints that override the default endpoints used when creating clients to interact with GCP services. When not specified, the default endpoint for the GCP region will be used. Only 1 endpoint override is permitted for each GCP service. The maximum number of endpoint overrides allowed is 11.",
-          "type": "array",
-          "items": {
-            "default": {},
-            "$ref": "#/definitions/com.github.openshift.api.config.v1.GCPServiceEndpoint"
-          },
-          "x-kubernetes-list-map-keys": [
-            "name"
-          ],
-          "x-kubernetes-list-type": "map"
         }
       }
     },
@@ -6686,26 +6674,6 @@
         },
         "value": {
           "description": "value is the value part of the tag. A tag value can have a maximum of 63 characters and cannot be empty. Tag value must begin and end with an alphanumeric character, and must contain only uppercase, lowercase alphanumeric characters, and the following special characters `_-.@%=+:,*#&(){}[]` and spaces.",
-          "type": "string",
-          "default": ""
-        }
-      }
-    },
-    "com.github.openshift.api.config.v1.GCPServiceEndpoint": {
-      "description": "GCPServiceEndpoint store the configuration of a custom url to override existing defaults of GCP Services.",
-      "type": "object",
-      "required": [
-        "name",
-        "url"
-      ],
-      "properties": {
-        "name": {
-          "description": "name is the name of the GCP service whose endpoint is being overridden. This must be provided and cannot be empty.\n\nAllowed values are Compute, Container, CloudResourceManager, DNS, File, IAM, ServiceUsage, Storage, and TagManager.\n\nAs an example, when setting the name to Compute all requests made by the caller to the GCP Compute Service will be directed to the endpoint specified in the url field.",
-          "type": "string",
-          "default": ""
-        },
-        "url": {
-          "description": "url is a fully qualified URI that overrides the default endpoint for a client using the GCP service specified in the name field. url is required, must use the scheme https, must not be more than 253 characters in length, and must be a valid URL according to Go's net/url package (https://pkg.go.dev/net/url#URL)\n\nAn example of a valid endpoint that overrides the Compute Service: \"https://compute-myendpoint1.p.googleapis.com\"",
           "type": "string",
           "default": ""
         }
@@ -10615,7 +10583,7 @@
           "type": "string"
         },
         "profileCustomizations": {
-          "description": "profileCustomizations contains configuration for modifying the default behavior of existing scheduler profiles.",
+          "description": "profileCustomizations contains configuration for modifying the default behavior of existing scheduler profiles. Deprecated: no longer needed, since DRA is GA starting with 4.21, and is enabled by' default in the cluster, this field will be removed in 4.24.",
           "default": {},
           "$ref": "#/definitions/com.github.openshift.api.config.v1.ProfileCustomizations"
         }
@@ -14039,6 +14007,156 @@
             "type": "string",
             "default": ""
           }
+        }
+      }
+    },
+    "com.github.openshift.api.etcd.v1alpha1.PacemakerCluster": {
+      "description": "PacemakerCluster represents the current state of the pacemaker cluster as reported by the pcs status command. PacemakerCluster is a cluster-scoped singleton resource. The name of this instance is \"cluster\". This resource provides a view into the health and status of a pacemaker-managed cluster in TNF deployments.\n\nCompatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.",
+      "type": "object",
+      "required": [
+        "metadata"
+      ],
+      "properties": {
+        "apiVersion": {
+          "description": "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+          "type": "string"
+        },
+        "kind": {
+          "description": "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+          "type": "string"
+        },
+        "metadata": {
+          "description": "metadata is the standard object's metadata. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata",
+          "default": {},
+          "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.ObjectMeta"
+        },
+        "status": {
+          "description": "status contains the actual pacemaker cluster status information collected from the cluster. The goal of this status is to be able to quickly identify if pacemaker is in a healthy state. In TNF, a healthy pacemaker cluster has 2 nodes, both of which have healthy kubelet, etcd, and fencing resources.",
+          "$ref": "#/definitions/com.github.openshift.api.etcd.v1alpha1.PacemakerClusterStatus"
+        }
+      }
+    },
+    "com.github.openshift.api.etcd.v1alpha1.PacemakerClusterList": {
+      "description": "PacemakerClusterList contains a list of PacemakerCluster objects. PacemakerCluster is a cluster-scoped singleton resource; only one instance named \"cluster\" may exist. This list type exists only to satisfy Kubernetes API conventions.\n\nCompatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.",
+      "type": "object",
+      "required": [
+        "items"
+      ],
+      "properties": {
+        "apiVersion": {
+          "description": "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+          "type": "string"
+        },
+        "items": {
+          "description": "items is a list of PacemakerCluster objects.",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/com.github.openshift.api.etcd.v1alpha1.PacemakerCluster"
+          }
+        },
+        "kind": {
+          "description": "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+          "type": "string"
+        },
+        "metadata": {
+          "description": "metadata is the standard list's metadata. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata",
+          "default": {},
+          "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.ListMeta"
+        }
+      }
+    },
+    "com.github.openshift.api.etcd.v1alpha1.PacemakerClusterNodeStatus": {
+      "description": "PacemakerClusterNodeStatus represents the status of a single node in the pacemaker cluster including the node's conditions and the health of critical resources running on that node.",
+      "type": "object",
+      "required": [
+        "name",
+        "ipAddress"
+      ],
+      "properties": {
+        "conditions": {
+          "description": "conditions represent the observations of the node's current state. Known condition types are: \"PacemakerClusterNodeHealthy\", \"PacemakerClusterNodeOnline\", \"PacemakerClusterNodeNotInMaintenance\", \"PacemakerClusterNodeActive\", \"PacemakerClusterNodeReady\", \"PacemakerClusterNodeClean\", \"PacemakerClusterNodeMember\". The \"PacemakerClusterNodeHealthy\" condition is an aggregate that tracks the overall health of the node. The \"PacemakerClusterNodeOnline\" condition tracks whether the node is online. The \"PacemakerClusterNodeNotInMaintenance\" condition tracks whether the node is not in maintenance mode. The \"PacemakerClusterNodeActive\" condition tracks whether the node is active (not in standby mode). The \"PacemakerClusterNodeReady\" condition tracks whether the node is ready (not in a pending state). The \"PacemakerClusterNodeClean\" condition tracks whether the node is in a clean (status known) state. The \"PacemakerClusterNodeMember\" condition tracks whether the node is a member of the cluster. Each of these conditions is required.",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Condition"
+          },
+          "x-kubernetes-list-map-keys": [
+            "type"
+          ],
+          "x-kubernetes-list-type": "map"
+        },
+        "etcd": {
+          "description": "etcd contains the status of the etcd pacemaker resource on this node. The etcd resource may temporarily transition to stopped during pacemaker quorum-recovery operations.",
+          "$ref": "#/definitions/com.github.openshift.api.etcd.v1alpha1.PacemakerClusterResourceStatus"
+        },
+        "fencingAgent": {
+          "description": "fencingAgent contains the status of the fencing agent pacemaker resource on this node. The fencing agent is used to fence the other node during a quorum loss event.",
+          "$ref": "#/definitions/com.github.openshift.api.etcd.v1alpha1.PacemakerClusterResourceStatus"
+        },
+        "ipAddress": {
+          "description": "ipAddress is the canonical IPv4 or IPv6 address of the node. It must be a valid canonical global unicast IPv4 or IPv6 address (including private/RFC1918 addresses). This excludes special addresses like unspecified, loopback, link-local, and multicast.",
+          "type": "string"
+        },
+        "kubelet": {
+          "description": "kubelet contains the status of the kubelet pacemaker resource on this node. The kubelet resource is a prerequisite for etcd in TNF deployments. It is expected to be running on all nodes.",
+          "$ref": "#/definitions/com.github.openshift.api.etcd.v1alpha1.PacemakerClusterResourceStatus"
+        },
+        "name": {
+          "description": "name is the name of the node. This is expected to match the Kubernetes node's name, which must be a lowercase RFC 1123 subdomain consisting of lowercase alphanumeric characters, '-' or '.', starting and ending with an alphanumeric character, and be at most 253 characters in length.",
+          "type": "string"
+        }
+      }
+    },
+    "com.github.openshift.api.etcd.v1alpha1.PacemakerClusterResourceStatus": {
+      "description": "PacemakerClusterResourceStatus represents the status of a pacemaker resource on a node. A pacemaker resource is a unit of work managed by pacemaker. In pacemaker terminology, resources are services or applications that pacemaker monitors, starts, stops, and moves between nodes to maintain high availability. For TNF, we manage three resources:\n - kubelet (the Kubernetes node agent and a prerequisite for etcd),\n - etcd (the distributed key-value store)\n - fencing agent (used to isolate failed nodes during a quorum loss event)",
+      "type": "object",
+      "properties": {
+        "conditions": {
+          "description": "conditions represent the observations of the resource's current state. Known condition types are: \"PacemakerClusterResourceHealthy\", \"PacemakerClusterResourceNotInMaintenance\", \"PacemakerClusterResourceManaged\", \"PacemakerClusterResourceEnabled\", \"PacemakerClusterResourceOperational\", \"PacemakerClusterResourceActive\", \"PacemakerClusterResourceStarted\", \"PacemakerClusterResourceUnblocked\". The \"PacemakerClusterResourceHealthy\" condition is an aggregate that tracks the overall health of the resource. The \"PacemakerClusterResourceNotInMaintenance\" condition tracks whether the resource is not in maintenance mode. The \"PacemakerClusterResourceManaged\" condition tracks whether the resource is managed by pacemaker. The \"PacemakerClusterResourceEnabled\" condition tracks whether the resource is enabled. The \"PacemakerClusterResourceOperational\" condition tracks whether the resource is operational (not failed). The \"PacemakerClusterResourceActive\" condition tracks whether the resource is active (available to be used). The \"PacemakerClusterResourceStarted\" condition tracks whether the resource is started. The \"PacemakerClusterResourceUnblocked\" condition tracks whether the resource is unblocked. Each of these conditions is required.",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Condition"
+          },
+          "x-kubernetes-list-map-keys": [
+            "type"
+          ],
+          "x-kubernetes-list-type": "map"
+        }
+      }
+    },
+    "com.github.openshift.api.etcd.v1alpha1.PacemakerClusterStatus": {
+      "description": "PacemakerClusterStatus contains the actual pacemaker cluster status information. As part of validating the status object, we need to ensure that the lastUpdated timestamp is always newer than the current value. We allow the lastUpdated timestamp to be empty on initial creation, but it is required once it has been set.",
+      "type": "object",
+      "properties": {
+        "conditions": {
+          "description": "conditions represent the observations of the pacemaker cluster's current state. Known condition types are: \"PacemakerClusterHealthy\", \"PacemakerClusterNotInMaintenanceMode\", \"PacemakerClusterExpectedNodeCount\". The \"PacemakerClusterHealthy\" condition is an aggregate that tracks the overall health of the cluster. The \"PacemakerClusterNotInMaintenanceMode\" condition tracks whether the cluster is not in maintenance mode. The \"PacemakerClusterExpectedNodeCount\" condition tracks whether the expected number of nodes are present. Each of these conditions is required.",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Condition"
+          },
+          "x-kubernetes-list-map-keys": [
+            "type"
+          ],
+          "x-kubernetes-list-type": "map"
+        },
+        "lastUpdated": {
+          "description": "lastUpdated is the timestamp when this status was last updated. This is useful for identifying stale status reports. When present, it must be a valid timestamp in RFC3339 format and cannot be set to an earlier timestamp than the current value. It is optional upon initial creation, but required once it has been set.",
+          "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Time"
+        },
+        "nodes": {
+          "description": "nodes provides detailed information about each node in the cluster including per-node resource health. Each node entry includes the node's name, IP address, conditions, and resource status. The list can contain between 1 and 32 nodes. The upper limit is imposed by pacemaker. For TNF, exactly 2 nodes are expected in a healthy cluster.",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/com.github.openshift.api.etcd.v1alpha1.PacemakerClusterNodeStatus"
+          },
+          "x-kubernetes-list-map-keys": [
+            "name"
+          ],
+          "x-kubernetes-list-type": "map"
         }
       }
     },
@@ -24787,7 +24905,7 @@
       }
     },
     "com.github.openshift.api.machineconfiguration.v1alpha1.OSImageStream": {
-      "description": "OSImageStream describes a set of streams and associated URLs available for the MachineConfigPools to be used as base OS images.\n\nCompatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.",
+      "description": "OSImageStream describes a set of streams and associated images available for the MachineConfigPools to be used as base OS images.\n\nThe resource is a singleton named \"cluster\".\n\nCompatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.",
       "type": "object",
       "required": [
         "spec"
@@ -24812,6 +24930,7 @@
         },
         "status": {
           "description": "status describes the last observed state of this OSImageStream. Populated by the MachineConfigOperator after reading release metadata. When not present, the controller has not yet reconciled this resource.",
+          "default": {},
           "$ref": "#/definitions/com.github.openshift.api.machineconfiguration.v1alpha1.OSImageStreamStatus"
         }
       }
@@ -24846,20 +24965,46 @@
         }
       }
     },
+    "com.github.openshift.api.machineconfiguration.v1alpha1.OSImageStreamSet": {
+      "type": "object",
+      "required": [
+        "name",
+        "osImage",
+        "osExtensionsImage"
+      ],
+      "properties": {
+        "name": {
+          "description": "name is the required identifier of the stream.\n\nname is determined by the operator based on the OCI label of the discovered OS or Extension Image.\n\nMust be a valid RFC 1123 subdomain between 1 and 253 characters in length, consisting of lowercase alphanumeric characters, hyphens ('-'), and periods ('.').",
+          "type": "string"
+        },
+        "osExtensionsImage": {
+          "description": "osExtensionsImage is a required OS Extensions Image referenced by digest.\n\nosExtensionsImage bundles the extra repositories used to enable extensions, augmenting the base operating system without modifying the underlying immutable osImage.\n\nThe format of the image pull spec is: host[:port][/namespace]/name@sha256:<digest>, where the digest must be 64 characters long, and consist only of lowercase hexadecimal characters, a-f and 0-9. The length of the whole spec must be between 1 to 447 characters.",
+          "type": "string"
+        },
+        "osImage": {
+          "description": "osImage is a required OS Image referenced by digest.\n\nosImage contains the immutable, fundamental operating system components, including the kernel and base utilities, that define the core environment for the node's host operating system.\n\nThe format of the image pull spec is: host[:port][/namespace]/name@sha256:<digest>, where the digest must be 64 characters long, and consist only of lowercase hexadecimal characters, a-f and 0-9. The length of the whole spec must be between 1 to 447 characters.",
+          "type": "string"
+        }
+      }
+    },
     "com.github.openshift.api.machineconfiguration.v1alpha1.OSImageStreamSpec": {
       "description": "OSImageStreamSpec defines the desired state of a OSImageStream.",
       "type": "object"
     },
     "com.github.openshift.api.machineconfiguration.v1alpha1.OSImageStreamStatus": {
-      "description": "OSImageStreamStatus describes the current state of a OSImageStream.",
+      "description": "OSImageStreamStatus describes the current state of a OSImageStream",
       "type": "object",
+      "required": [
+        "availableStreams",
+        "defaultStream"
+      ],
       "properties": {
         "availableStreams": {
-          "description": "availableStreams is a list of the available OS Image Streams available and their associated URLs for both OS and Extensions images.\n\nA maximum of 100 streams may be specified.",
+          "description": "availableStreams is a list of the available OS Image Streams that can be used as the base image for MachineConfigPools. availableStreams is required, must have at least one item, must not exceed 100 items, and must have unique entries keyed on the name field.",
           "type": "array",
           "items": {
             "default": {},
-            "$ref": "#/definitions/com.github.openshift.api.machineconfiguration.v1alpha1.OSImageStreamURLSet"
+            "$ref": "#/definitions/com.github.openshift.api.machineconfiguration.v1alpha1.OSImageStreamSet"
           },
           "x-kubernetes-list-map-keys": [
             "name"
@@ -24867,29 +25012,7 @@
           "x-kubernetes-list-type": "map"
         },
         "defaultStream": {
-          "description": "defaultStream is the name of the stream that should be used as the default when no specific stream is requested by a MachineConfigPool. Must reference the name of one of the streams in availableStreams. Must be set when availableStreams is not empty. When not set and availableStreams is empty, controllers should use the default one stated in the release image.",
-          "type": "string"
-        }
-      }
-    },
-    "com.github.openshift.api.machineconfiguration.v1alpha1.OSImageStreamURLSet": {
-      "type": "object",
-      "required": [
-        "name",
-        "osImageURL",
-        "osExtensionsImageURL"
-      ],
-      "properties": {
-        "name": {
-          "description": "name is the identifier of the stream.\n\nMust not be empty and must not exceed 70 characters in length. Must only contain alphanumeric characters, hyphens ('-'), or dots ('.').",
-          "type": "string"
-        },
-        "osExtensionsImageURL": {
-          "description": "osExtensionsImageURL is an OS Extensions Image referenced by digest.\n\nThe format of the URL ref is: host[:port][/namespace]/name@sha256:<digest>",
-          "type": "string"
-        },
-        "osImageURL": {
-          "description": "osImageURL is an OS Image referenced by digest.\n\nThe format of the URL ref is: host[:port][/namespace]/name@sha256:<digest>",
+          "description": "defaultStream is the name of the stream that should be used as the default when no specific stream is requested by a MachineConfigPool.\n\nIt must be a valid RFC 1123 subdomain between 1 and 253 characters in length, consisting of lowercase alphanumeric characters, hyphens ('-'), and periods ('.'), and must reference the name of one of the streams in availableStreams.",
           "type": "string"
         }
       }
@@ -24901,9 +25024,8 @@
       ],
       "properties": {
         "name": {
-          "description": "name is an OCI Image referenced by digest.\n\nThe format of the image ref is: host[:port][/namespace]/name@sha256:<digest>",
-          "type": "string",
-          "default": ""
+          "description": "name is an OCI Image referenced by digest. The format of the image pull spec is: host[:port][/namespace]/name@sha256:<digest>, where the digest must be 64 characters long, and consist only of lowercase hexadecimal characters, a-f and 0-9. The length of the whole spec must be between 1 to 447 characters.",
+          "type": "string"
         }
       }
     },

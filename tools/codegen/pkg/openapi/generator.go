@@ -30,6 +30,7 @@ var (
 		"k8s.io/api/core/v1",
 		"k8s.io/api/rbac/v1",
 		"k8s.io/api/authorization/v1",
+		"k8s.io/api/admissionregistration/v1",
 	}
 )
 

@@ -931,4 +931,12 @@ var (
 					enhancementPR("https://github.com/openshift/enhancements/pull/1803").
 					enableIn(configv1.DevPreviewNoUpgrade, configv1.TechPreviewNoUpgrade).
 					mustRegister()
+
+	FeatureGateConfigurablePKI = newFeatureGate("ConfigurablePKI").
+					reportProblemsToJiraComponent("kube-apiserver").
+					contactPerson("sanchezl").
+					productScope(ocpSpecific).
+					enhancementPR("https://github.com/openshift/enhancements/pull/1882").
+					enableIn(configv1.DevPreviewNoUpgrade, configv1.TechPreviewNoUpgrade).
+					mustRegister()
 )

@@ -38,8 +38,12 @@ func LoadTestSuiteSpecs(paths ...string) ([]SuiteSpec, error) {
 			// are used by unit tests and do not have associated generated CRD
 			// manifests. Skipping prevents LoadTestSuiteSpecs from attempting to
 			// locate zz_generated.crd-manifests at the repository root.
+			// Tighten the check so we only skip when the path is actually
+			// under a `tests/testdata` directory (grandparent == "tests" and
+			// parent == "testdata") to avoid accidental matches elsewhere.
 			parentDir := filepath.Base(filepath.Dir(path))
-			if parentDir == "testdata" {
+			grandParentDir := filepath.Base(filepath.Dir(filepath.Dir(path)))
+			if grandParentDir == "tests" && parentDir == "testdata" {
 				return nil
 			}
 

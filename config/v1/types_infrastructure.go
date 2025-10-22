@@ -1092,6 +1092,7 @@ type BareMetalPlatformStatus struct {
 	// to choose reasonable defaults. These defaults are subject to change over time.
 	// The current default is `Internal`.
 	// +kubebuilder:validation:Enum=Internal;External
+	// +kubebuilder:validation:XValidation:rule="!has(self.dnsRecordsType) || self.dnsRecordsType == 'Internal' || (has(self.loadBalancer) && self.loadBalancer.type == 'UserManaged')",message="dnsRecordsType may only be set to External when loadBalancer.type is UserManaged"
 	// +openshift:enable:FeatureGate=OnPremDNSRecords
 	// +optional
 	DNSRecordsType DNSRecordsType `json:"dnsRecordsType,omitempty"`
@@ -1239,6 +1240,7 @@ type OpenStackPlatformStatus struct {
 	// to choose reasonable defaults. These defaults are subject to change over time.
 	// The current default is `Internal`.
 	// +kubebuilder:validation:Enum=Internal;External
+	// +kubebuilder:validation:XValidation:rule="!has(self.dnsRecordsType) || self.dnsRecordsType == 'Internal' || (has(self.loadBalancer) && self.loadBalancer.type == 'UserManaged')",message="dnsRecordsType may only be set to External when loadBalancer.type is UserManaged"
 	// +openshift:enable:FeatureGate=OnPremDNSRecords
 	// +optional
 	DNSRecordsType DNSRecordsType `json:"dnsRecordsType,omitempty"`
@@ -1335,6 +1337,7 @@ type OvirtPlatformStatus struct {
 	// to choose reasonable defaults. These defaults are subject to change over time.
 	// The current default is `Internal`.
 	// +kubebuilder:validation:Enum=Internal;External
+	// +kubebuilder:validation:XValidation:rule="!has(self.dnsRecordsType) || self.dnsRecordsType == 'Internal' || (has(self.loadBalancer) && self.loadBalancer.type == 'UserManaged')",message="dnsRecordsType may only be set to External when loadBalancer.type is UserManaged"
 	// +openshift:enable:FeatureGate=OnPremDNSRecords
 	// +optional
 	DNSRecordsType DNSRecordsType `json:"dnsRecordsType,omitempty"`
@@ -1798,6 +1801,7 @@ type VSpherePlatformStatus struct {
 	// to choose reasonable defaults. These defaults are subject to change over time.
 	// The current default is `Internal`.
 	// +kubebuilder:validation:Enum=Internal;External
+	// +kubebuilder:validation:XValidation:rule="!has(self.dnsRecordsType) || self.dnsRecordsType == 'Internal' || (has(self.loadBalancer) && self.loadBalancer.type == 'UserManaged')",message="dnsRecordsType may only be set to External when loadBalancer.type is UserManaged"
 	// +openshift:enable:FeatureGate=OnPremDNSRecords
 	// +optional
 	DNSRecordsType DNSRecordsType `json:"dnsRecordsType,omitempty"`
@@ -2230,6 +2234,7 @@ type NutanixPlatformStatus struct {
 	// to choose reasonable defaults. These defaults are subject to change over time.
 	// The current default is `Internal`.
 	// +kubebuilder:validation:Enum=Internal;External
+	// +kubebuilder:validation:XValidation:rule="!has(self.dnsRecordsType) || self.dnsRecordsType == 'Internal' || (has(self.loadBalancer) && self.loadBalancer.type == 'UserManaged')",message="dnsRecordsType may only be set to External when loadBalancer.type is UserManaged"
 	// +openshift:enable:FeatureGate=OnPremDNSRecords
 	// +optional
 	DNSRecordsType DNSRecordsType `json:"dnsRecordsType,omitempty"`

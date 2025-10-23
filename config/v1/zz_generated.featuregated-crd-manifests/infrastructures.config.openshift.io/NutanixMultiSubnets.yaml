@@ -1419,6 +1419,11 @@ spec:
                           to the nodes in the cluster.
                         type: string
                     type: object
+                    x-kubernetes-validations:
+                    - message: dnsRecordsType may only be set to External when loadBalancer.type
+                        is UserManaged
+                      rule: '!has(self.dnsRecordsType) || self.dnsRecordsType == ''Internal''
+                        || (has(self.loadBalancer) && self.loadBalancer.type == ''UserManaged'')'
                   equinixMetal:
                     description: equinixMetal contains settings specific to the Equinix
                       Metal infrastructure provider.
@@ -1776,6 +1781,11 @@ spec:
                               rule: oldSelf == '' || self == oldSelf
                         type: object
                     type: object
+                    x-kubernetes-validations:
+                    - message: dnsRecordsType may only be set to External when loadBalancer.type
+                        is UserManaged
+                      rule: '!has(self.dnsRecordsType) || self.dnsRecordsType == ''Internal''
+                        || (has(self.loadBalancer) && self.loadBalancer.type == ''UserManaged'')'
                   openstack:
                     description: openstack contains settings specific to the OpenStack
                       infrastructure provider.
@@ -1891,6 +1901,11 @@ spec:
                           to the nodes in the cluster.
                         type: string
                     type: object
+                    x-kubernetes-validations:
+                    - message: dnsRecordsType may only be set to External when loadBalancer.type
+                        is UserManaged
+                      rule: '!has(self.dnsRecordsType) || self.dnsRecordsType == ''Internal''
+                        || (has(self.loadBalancer) && self.loadBalancer.type == ''UserManaged'')'
                   ovirt:
                     description: ovirt contains settings specific to the oVirt infrastructure
                       provider.
@@ -1979,6 +1994,11 @@ spec:
                           set or honored.  It will be removed in a future release.'
                         type: string
                     type: object
+                    x-kubernetes-validations:
+                    - message: dnsRecordsType may only be set to External when loadBalancer.type
+                        is UserManaged
+                      rule: '!has(self.dnsRecordsType) || self.dnsRecordsType == ''Internal''
+                        || (has(self.loadBalancer) && self.loadBalancer.type == ''UserManaged'')'
                   powervs:
                     description: powervs contains settings specific to the Power Systems
                       Virtual Servers infrastructure provider.
@@ -2209,6 +2229,11 @@ spec:
                           to the nodes in the cluster.
                         type: string
                     type: object
+                    x-kubernetes-validations:
+                    - message: dnsRecordsType may only be set to External when loadBalancer.type
+                        is UserManaged
+                      rule: '!has(self.dnsRecordsType) || self.dnsRecordsType == ''Internal''
+                        || (has(self.loadBalancer) && self.loadBalancer.type == ''UserManaged'')'
                 type: object
             type: object
         required:

@@ -182,9 +182,6 @@
                         "name": "OpenShiftPodSecurityAdmission"
                     },
                     {
-                        "name": "PreconfiguredUDNAddresses"
-                    },
-                    {
                         "name": "SELinuxMount"
                     },
                     {
@@ -281,6 +278,9 @@
                     },
                     {
                         "name": "PinnedImages"
+                    },
+                    {
+                        "name": "PreconfiguredUDNAddresses"
                     },
                     {
                         "name": "ProcMountType"

@@ -17,10 +17,8 @@ test-unit:
 #
 # BEGIN: Update codegen-crds. Defaults to generating updates for all API packages.
 #        To run a subset of packages:
-#        - Filter by group with make update-codegen-crds-<group>
-#          E.g. make update-codegen-crds-machine
-#        - Set API_GROUP_VERSIONS to a space separated list of <group>/<version>.
-#          E.g. API_GROUP_VERSIONS="apps/v1 build/v1" make update-codegen-crds.
+#        - Set API_GROUP_VERSIONS to a space separated list of fully qualified <group>/<version>.
+#          E.g. API_GROUP_VERSIONS="apps.openshift.io/v1 build.openshift.io/v1" make update-codegen-crds.
 #        FeatureSet generation is controlled at the group level by the
 #        .codegen.yaml file.
 #
@@ -104,8 +102,8 @@ verify-%:
 ################################################################################################
 #
 # BEGIN: Update scripts. Defaults to generating updates for all API packages.
-#        Set API_GROUP_VERSIONS to a space separated list of <group>/<version> to limit
-#        the scope of the updates. Eg API_GROUP_VERSIONS="apps/v1 build/v1" make update-scripts.
+#        Set API_GROUP_VERSIONS to a space separated list of fully qualified <group>/<version> to limit
+#        the scope of the updates. Eg API_GROUP_VERSIONS="apps.openshift.io/v1 build.openshift.io/v1" make update-scripts.
 #        Note: Protobuf generation is handled separately, see hack/lib/init.sh.
 #
 ################################################################################################

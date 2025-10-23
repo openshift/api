@@ -341,14 +341,30 @@ tests:
         kind: Infrastructure
         spec:
           platformSpec:
-            nutanix: {}
+            nutanix:
+              prismCentral:
+                address: test.nutanix.com
+                port: 9440
+              prismElements:
+              - endpoint:
+                  address: test-pe.nutanix.com
+                  port: 9440
+                name: test-pe
             type: Nutanix
       updated: |
         apiVersion: config.openshift.io/v1
         kind: Infrastructure
         spec:
           platformSpec:
-            nutanix: {}
+            nutanix:
+              prismCentral:
+                address: test.nutanix.com
+                port: 9440
+              prismElements:
+              - endpoint:
+                  address: test-pe.nutanix.com
+                  port: 9440
+                name: test-pe
             type: Nutanix
         status:
           platform: Nutanix
@@ -363,7 +379,15 @@ tests:
         kind: Infrastructure
         spec:
           platformSpec:
-            nutanix: {}
+            nutanix:
+              prismCentral:
+                address: test.nutanix.com
+                port: 9440
+              prismElements:
+              - endpoint:
+                  address: test-pe.nutanix.com
+                  port: 9440
+                name: test-pe
             type: Nutanix
         status:
           platform: Nutanix
@@ -382,14 +406,30 @@ tests:
         kind: Infrastructure
         spec:
           platformSpec:
-            nutanix: {}
+            nutanix:
+              prismCentral:
+                address: test.nutanix.com
+                port: 9440
+              prismElements:
+              - endpoint:
+                  address: test-pe.nutanix.com
+                  port: 9440
+                name: test-pe
             type: Nutanix
       updated: |
         apiVersion: config.openshift.io/v1
         kind: Infrastructure
         spec:
           platformSpec:
-            nutanix: {}
+            nutanix:
+              prismCentral:
+                address: test.nutanix.com
+                port: 9440
+              prismElements:
+              - endpoint:
+                  address: test-pe.nutanix.com
+                  port: 9440
+                name: test-pe
             type: Nutanix
         status:
           platform: Nutanix

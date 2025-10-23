@@ -1029,6 +1029,7 @@ type BareMetalPlatformSpec struct {
 // BareMetalPlatformStatus holds the current status of the BareMetal infrastructure provider.
 // For more information about the network architecture used with the BareMetal platform type, see:
 // https://github.com/openshift/installer/blob/master/docs/design/baremetal/networking-infrastructure.md
+// +kubebuilder:validation:XValidation:rule="!has(self.dnsRecordsType) || self.dnsRecordsType == 'Internal' || (has(self.loadBalancer) && self.loadBalancer.type == 'UserManaged')",message="dnsRecordsType may only be set to External when loadBalancer.type is UserManaged"
 type BareMetalPlatformStatus struct {
 	// apiServerInternalIP is an IP address to contact the Kubernetes API server that can be used
 	// by components inside the cluster, like kubelets using the infrastructure rather
@@ -1092,7 +1093,6 @@ type BareMetalPlatformStatus struct {
 	// to choose reasonable defaults. These defaults are subject to change over time.
 	// The current default is `Internal`.
 	// +kubebuilder:validation:Enum=Internal;External
-	// +kubebuilder:validation:XValidation:rule="!has(self.dnsRecordsType) || self.dnsRecordsType == 'Internal' || (has(self.loadBalancer) && self.loadBalancer.type == 'UserManaged')",message="dnsRecordsType may only be set to External when loadBalancer.type is UserManaged"
 	// +openshift:enable:FeatureGate=OnPremDNSRecords
 	// +optional
 	DNSRecordsType DNSRecordsType `json:"dnsRecordsType,omitempty"`
@@ -1173,6 +1173,7 @@ type OpenStackPlatformSpec struct {
 }
 
 // OpenStackPlatformStatus holds the current status of the OpenStack infrastructure provider.
+// +kubebuilder:validation:XValidation:rule="!has(self.dnsRecordsType) || self.dnsRecordsType == 'Internal' || (has(self.loadBalancer) && self.loadBalancer.type == 'UserManaged')",message="dnsRecordsType may only be set to External when loadBalancer.type is UserManaged"
 type OpenStackPlatformStatus struct {
 	// apiServerInternalIP is an IP address to contact the Kubernetes API server that can be used
 	// by components inside the cluster, like kubelets using the infrastructure rather
@@ -1240,7 +1241,6 @@ type OpenStackPlatformStatus struct {
 	// to choose reasonable defaults. These defaults are subject to change over time.
 	// The current default is `Internal`.
 	// +kubebuilder:validation:Enum=Internal;External
-	// +kubebuilder:validation:XValidation:rule="!has(self.dnsRecordsType) || self.dnsRecordsType == 'Internal' || (has(self.loadBalancer) && self.loadBalancer.type == 'UserManaged')",message="dnsRecordsType may only be set to External when loadBalancer.type is UserManaged"
 	// +openshift:enable:FeatureGate=OnPremDNSRecords
 	// +optional
 	DNSRecordsType DNSRecordsType `json:"dnsRecordsType,omitempty"`
@@ -1279,6 +1279,7 @@ type OvirtPlatformLoadBalancer struct {
 type OvirtPlatformSpec struct{}
 
 // OvirtPlatformStatus holds the current status of the  oVirt infrastructure provider.
+// +kubebuilder:validation:XValidation:rule="!has(self.dnsRecordsType) || self.dnsRecordsType == 'Internal' || (has(self.loadBalancer) && self.loadBalancer.type == 'UserManaged')",message="dnsRecordsType may only be set to External when loadBalancer.type is UserManaged"
 type OvirtPlatformStatus struct {
 	// apiServerInternalIP is an IP address to contact the Kubernetes API server that can be used
 	// by components inside the cluster, like kubelets using the infrastructure rather
@@ -1337,7 +1338,6 @@ type OvirtPlatformStatus struct {
 	// to choose reasonable defaults. These defaults are subject to change over time.
 	// The current default is `Internal`.
 	// +kubebuilder:validation:Enum=Internal;External
-	// +kubebuilder:validation:XValidation:rule="!has(self.dnsRecordsType) || self.dnsRecordsType == 'Internal' || (has(self.loadBalancer) && self.loadBalancer.type == 'UserManaged')",message="dnsRecordsType may only be set to External when loadBalancer.type is UserManaged"
 	// +openshift:enable:FeatureGate=OnPremDNSRecords
 	// +optional
 	DNSRecordsType DNSRecordsType `json:"dnsRecordsType,omitempty"`
@@ -1738,6 +1738,7 @@ type VSpherePlatformSpec struct {
 }
 
 // VSpherePlatformStatus holds the current status of the vSphere infrastructure provider.
+// +kubebuilder:validation:XValidation:rule="!has(self.dnsRecordsType) || self.dnsRecordsType == 'Internal' || (has(self.loadBalancer) && self.loadBalancer.type == 'UserManaged')",message="dnsRecordsType may only be set to External when loadBalancer.type is UserManaged"
 type VSpherePlatformStatus struct {
 	// apiServerInternalIP is an IP address to contact the Kubernetes API server that can be used
 	// by components inside the cluster, like kubelets using the infrastructure rather
@@ -1801,7 +1802,6 @@ type VSpherePlatformStatus struct {
 	// to choose reasonable defaults. These defaults are subject to change over time.
 	// The current default is `Internal`.
 	// +kubebuilder:validation:Enum=Internal;External
-	// +kubebuilder:validation:XValidation:rule="!has(self.dnsRecordsType) || self.dnsRecordsType == 'Internal' || (has(self.loadBalancer) && self.loadBalancer.type == 'UserManaged')",message="dnsRecordsType may only be set to External when loadBalancer.type is UserManaged"
 	// +openshift:enable:FeatureGate=OnPremDNSRecords
 	// +optional
 	DNSRecordsType DNSRecordsType `json:"dnsRecordsType,omitempty"`
@@ -2179,6 +2179,7 @@ type NutanixPrismElementEndpoint struct {
 }
 
 // NutanixPlatformStatus holds the current status of the Nutanix infrastructure provider.
+// +kubebuilder:validation:XValidation:rule="!has(self.dnsRecordsType) || self.dnsRecordsType == 'Internal' || (has(self.loadBalancer) && self.loadBalancer.type == 'UserManaged')",message="dnsRecordsType may only be set to External when loadBalancer.type is UserManaged"
 type NutanixPlatformStatus struct {
 	// apiServerInternalIP is an IP address to contact the Kubernetes API server that can be used
 	// by components inside the cluster, like kubelets using the infrastructure rather
@@ -2234,7 +2235,6 @@ type NutanixPlatformStatus struct {
 	// to choose reasonable defaults. These defaults are subject to change over time.
 	// The current default is `Internal`.
 	// +kubebuilder:validation:Enum=Internal;External
-	// +kubebuilder:validation:XValidation:rule="!has(self.dnsRecordsType) || self.dnsRecordsType == 'Internal' || (has(self.loadBalancer) && self.loadBalancer.type == 'UserManaged')",message="dnsRecordsType may only be set to External when loadBalancer.type is UserManaged"
 	// +openshift:enable:FeatureGate=OnPremDNSRecords
 	// +optional
 	DNSRecordsType DNSRecordsType `json:"dnsRecordsType,omitempty"`

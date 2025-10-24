@@ -144,13 +144,7 @@
                         "name": "MachineAPIOperatorDisableMachineHealthCheckController"
                     },
                     {
-                        "name": "ManagedBootImagesAzure"
-                    },
-                    {
                         "name": "ManagedBootImagesCPMS"
-                    },
-                    {
-                        "name": "ManagedBootImagesvSphere"
                     },
                     {
                         "name": "MaxUnavailableStatefulSet"
@@ -166,6 +160,9 @@
                     },
                     {
                         "name": "MultiDiskSetup"
+                    },
+                    {
+                        "name": "MutableCSINodeAllocatableCount"
                     },
                     {
                         "name": "MutatingAdmissionPolicy"
@@ -192,10 +189,10 @@
                         "name": "NutanixMultiSubnets"
                     },
                     {
-                        "name": "OVNObservability"
+                        "name": "OSStreams"
                     },
                     {
-                        "name": "PreconfiguredUDNAddresses"
+                        "name": "OVNObservability"
                     },
                     {
                         "name": "SELinuxMount"
@@ -281,6 +278,12 @@
                         "name": "ManagedBootImagesAWS"
                     },
                     {
+                        "name": "ManagedBootImagesAzure"
+                    },
+                    {
+                        "name": "ManagedBootImagesvSphere"
+                    },
+                    {
                         "name": "MetricsCollectionProfiles"
                     },
                     {
@@ -297,6 +300,9 @@
                     },
                     {
                         "name": "PinnedImages"
+                    },
+                    {
+                        "name": "PreconfiguredUDNAddresses"
                     },
                     {
                         "name": "ProcMountType"

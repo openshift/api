@@ -28,6 +28,12 @@ You MUST use this EXACT format for ALL review feedback:
 
 I'll run a comprehensive API review for OpenShift API changes. This can review either a specific GitHub PR or local changes against upstream master.
 
+I always take the latest OpenShift API conventions into account:
+https://github.com/openshift/enhancements/blob/master/dev-guide/api-conventions.md
+
+On top of that, the code must adhere to the official Kubernetes API conventions:
+https://github.com/kubernetes/community/blob/master/contributors/devel/sig-architecture/api-conventions.md
+
 ## Step 1: Pre-flight checks and determine review mode
 
 First, I'll check the arguments and determine whether to review a PR or local changes:
@@ -138,6 +144,8 @@ For each changed API file, I'll validate:
 1. **Field Documentation**: All struct fields must have documentation comments
 2. **Optional Field Behavior**: Optional fields must explain what happens when they are omitted
 3. **Validation Documentation**: Validation rules must be documented and match markers
+4. **Naming Conventions**: All new fields should adhere to the OpenShift and
+   Kubernetes naming conventions to avoid any conflicts.
 
 Let me check each changed file for these requirements:
 

@@ -1884,6 +1884,31 @@ type IngressControllerTuningOptions struct {
 	// +optional
 	ConnectTimeout *metav1.Duration `json:"connectTimeout,omitempty"`
 
+	// httpKeepAliveTimeout defines the maximum allowed time to wait for
+	// a new HTTP request to appear on a connection from the client to the router.
+	//
+	// This field expects an unsigned duration string of decimal numbers, each with optional
+	// fraction and a unit suffix, e.g. "300ms", "1.5h" or "2h45m".
+	// Valid time units are "ns", "us" (or "µs" U+00B5 or "μs" U+03BC), "ms", "s", "m", "h".
+	//
+	// When omitted, this means the user has no opinion and the platform is left
+	// to choose a reasonable default. This default is subject to change over time.
+	// The current default is 300s.
+	//
+	// Low values (milliseconds or less) can cause clients to close and reopen connections
+	// for each request, leading to reduced connection sharing.
+	// For HTTP/2, special care should be taken with low values.
+	// A few seconds is a reasonable starting point to avoid holding idle connections open
+	// while still allowing subsequent requests to reuse the connection.
+	//
+	// High values (minutes or more) favor connection reuse but may cause idle
+	// connections to linger longer.
+	//
+	// +kubebuilder:validation:Pattern=^(0|([0-9]+(\.[0-9]+)?(ns|us|µs|μs|ms|s|m|h))+)$
+	// +kubebuilder:validation:Type:=string
+	// +optional
+	HTTPKeepAliveTimeout *metav1.Duration `json:"httpKeepAliveTimeout,omitempty"`
+
 	// tlsInspectDelay defines how long the router can hold data to find a
 	// matching route.
 	//

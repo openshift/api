@@ -144,13 +144,7 @@
                         "name": "MachineAPIOperatorDisableMachineHealthCheckController"
                     },
                     {
-                        "name": "ManagedBootImagesAzure"
-                    },
-                    {
                         "name": "ManagedBootImagesCPMS"
-                    },
-                    {
-                        "name": "ManagedBootImagesvSphere"
                     },
                     {
                         "name": "MaxUnavailableStatefulSet"
@@ -166,6 +160,9 @@
                     },
                     {
                         "name": "MultiDiskSetup"
+                    },
+                    {
+                        "name": "MutableCSINodeAllocatableCount"
                     },
                     {
                         "name": "MutatingAdmissionPolicy"
@@ -193,9 +190,6 @@
                     },
                     {
                         "name": "OVNObservability"
-                    },
-                    {
-                        "name": "PreconfiguredUDNAddresses"
                     },
                     {
                         "name": "SELinuxMount"
@@ -281,6 +275,12 @@
                         "name": "ManagedBootImagesAWS"
                     },
                     {
+                        "name": "ManagedBootImagesAzure"
+                    },
+                    {
+                        "name": "ManagedBootImagesvSphere"
+                    },
+                    {
                         "name": "MetricsCollectionProfiles"
                     },
                     {
@@ -297,6 +297,9 @@
                     },
                     {
                         "name": "PinnedImages"
+                    },
+                    {
+                        "name": "PreconfiguredUDNAddresses"
                     },
                     {
                         "name": "ProcMountType"

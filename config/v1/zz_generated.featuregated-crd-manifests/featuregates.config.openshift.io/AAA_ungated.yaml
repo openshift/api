@@ -93,8 +93,8 @@ spec:
                 - message: DevPreviewNoUpgrade may not be changed
                   rule: 'oldSelf == ''DevPreviewNoUpgrade'' ? self == ''DevPreviewNoUpgrade''
                     : true'
-                - message: OKD may not be changed
-                  rule: 'oldSelf == ''OKD'' ? self == ''OKD'' : true'
+                - message: OKD cannot transition to Default
+                  rule: 'oldSelf == ''OKD'' ? self != '''' : true'
             type: object
             x-kubernetes-validations:
             - message: .spec.featureSet cannot be removed

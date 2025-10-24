@@ -54,6 +54,9 @@
                         "name": "CBORServingAndStorage"
                     },
                     {
+                        "name": "CRDCompatibilityRequirementOperator"
+                    },
+                    {
                         "name": "ClientsAllowCBOR"
                     },
                     {
@@ -64,6 +67,9 @@
                     },
                     {
                         "name": "ClusterAPIInstallIBMCloud"
+                    },
+                    {
+                        "name": "ClusterAPIMachineManagement"
                     },
                     {
                         "name": "ClusterAPIMachineManagementVSphere"
@@ -82,9 +88,6 @@
                     },
                     {
                         "name": "DyanmicServiceEndpointIBMCloud"
-                    },
-                    {
-                        "name": "DynamicResourceAllocation"
                     },
                     {
                         "name": "EtcdBackendQuota"
@@ -120,9 +123,6 @@
                         "name": "ImageModeStatusReporting"
                     },
                     {
-                        "name": "ImageStreamImportMode"
-                    },
-                    {
                         "name": "IngressControllerDynamicConfigurationManager"
                     },
                     {
@@ -144,13 +144,7 @@
                         "name": "MachineAPIOperatorDisableMachineHealthCheckController"
                     },
                     {
-                        "name": "ManagedBootImagesAzure"
-                    },
-                    {
                         "name": "ManagedBootImagesCPMS"
-                    },
-                    {
-                        "name": "ManagedBootImagesvSphere"
                     },
                     {
                         "name": "MaxUnavailableStatefulSet"
@@ -168,10 +162,16 @@
                         "name": "MultiDiskSetup"
                     },
                     {
+                        "name": "MutableCSINodeAllocatableCount"
+                    },
+                    {
                         "name": "MutatingAdmissionPolicy"
                     },
                     {
                         "name": "NewOLM"
+                    },
+                    {
+                        "name": "NewOLMBoxCutterRuntime"
                     },
                     {
                         "name": "NewOLMCatalogdAPIV1Metas"
@@ -186,16 +186,22 @@
                         "name": "NewOLMWebhookProviderOpenshiftServiceCA"
                     },
                     {
-                        "name": "NoRegistryClusterOperations"
+                        "name": "NoRegistryClusterInstall"
                     },
                     {
                         "name": "NutanixMultiSubnets"
                     },
                     {
+                        "name": "OSStreams"
+                    },
+                    {
                         "name": "OVNObservability"
                     },
                     {
-                        "name": "PreconfiguredUDNAddresses"
+                        "name": "OnPremDNSRecords"
+                    },
+                    {
+                        "name": "ProvisioningRequestAvailable"
                     },
                     {
                         "name": "SELinuxMount"
@@ -205,12 +211,6 @@
                     },
                     {
                         "name": "SignatureStores"
-                    },
-                    {
-                        "name": "SigstoreImageVerificationPKI"
-                    },
-                    {
-                        "name": "TranslateStreamCloseWebsocketRequests"
                     },
                     {
                         "name": "VSphereConfigurableMaxAllowedBlockVolumesPerNode"
@@ -266,6 +266,12 @@
                         "name": "HighlyAvailableArbiter"
                     },
                     {
+                        "name": "HyperShiftOnlyDynamicResourceAllocation"
+                    },
+                    {
+                        "name": "ImageStreamImportMode"
+                    },
+                    {
                         "name": "ImageVolume"
                     },
                     {
@@ -279,6 +285,12 @@
                     },
                     {
                         "name": "ManagedBootImagesAWS"
+                    },
+                    {
+                        "name": "ManagedBootImagesAzure"
+                    },
+                    {
+                        "name": "ManagedBootImagesvSphere"
                     },
                     {
                         "name": "MetricsCollectionProfiles"
@@ -299,6 +311,9 @@
                         "name": "PinnedImages"
                     },
                     {
+                        "name": "PreconfiguredUDNAddresses"
+                    },
+                    {
                         "name": "ProcMountType"
                     },
                     {
@@ -312,6 +327,9 @@
                     },
                     {
                         "name": "SigstoreImageVerification"
+                    },
+                    {
+                        "name": "SigstoreImageVerificationPKI"
                     },
                     {
                         "name": "StoragePerformantSecurityPolicy"

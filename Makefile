@@ -71,6 +71,7 @@ verify-non-codegen:
 	bash -x hack/verify-prerelease-lifecycle-gen.sh
 	hack/verify-payload-crds.sh
 	hack/verify-payload-featuregates.sh
+	hack/verify-okd-featuregates.sh
 
 .PHONY: verify-scripts
 verify-scripts: verify-non-codegen verify-codegen

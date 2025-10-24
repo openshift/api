@@ -920,26 +920,26 @@ spec:
                   following occurs: \n - A new request is received on the connection,
                   in which case HAProxy handles it in the old process and closes the
                   connection after sending the response. \n - HAProxy's `timeout http-keep-alive`
-                  duration expires (300 seconds in OpenShift's configuration, not
-                  configurable). \n - The client's keep-alive timeout expires, causing
-                  the client to close the connection. \n Setting Deferred can help
-                  prevent errors in clients or load balancers that do not properly
-                  handle connection resets. Additionally, this option allows you to
-                  retain the pre-2.4 HAProxy behaviour: in HAProxy version 2.2 (OpenShift
-                  versions < 4.14), maintaining idle connections during a soft reload
-                  was the default behaviour, but starting with HAProxy 2.4, the default
-                  changed to closing idle connections immediately. \n Important Consideration:
-                  \n - Using Deferred will result in temporary inconsistencies for
-                  the first request on each persistent connection after a route update
-                  and router reload. This request will be processed by the old HAProxy
-                  process using its old configuration. Subsequent requests will use
-                  the updated configuration. \n Operational Considerations: \n - Keeping
-                  idle connections open during reloads may lead to an accumulation
-                  of old HAProxy processes if connections remain idle for extended
-                  periods, especially in environments where frequent reloads occur.
-                  \n - Consider monitoring the number of HAProxy processes in the
-                  router pods when Deferred is set. \n - You may need to enable or
-                  adjust the `ingress.operator.openshift.io/hard-stop-after` duration
+                  duration expires. By default this is 300 seconds, but it can be
+                  changed using httpKeepAliveTimeout tuning option. \n - The client's
+                  keep-alive timeout expires, causing the client to close the connection.
+                  \n Setting Deferred can help prevent errors in clients or load balancers
+                  that do not properly handle connection resets. Additionally, this
+                  option allows you to retain the pre-2.4 HAProxy behaviour: in HAProxy
+                  version 2.2 (OpenShift versions < 4.14), maintaining idle connections
+                  during a soft reload was the default behaviour, but starting with
+                  HAProxy 2.4, the default changed to closing idle connections immediately.
+                  \n Important Consideration: \n - Using Deferred will result in temporary
+                  inconsistencies for the first request on each persistent connection
+                  after a route update and router reload. This request will be processed
+                  by the old HAProxy process using its old configuration. Subsequent
+                  requests will use the updated configuration. \n Operational Considerations:
+                  \n - Keeping idle connections open during reloads may lead to an
+                  accumulation of old HAProxy processes if connections remain idle
+                  for extended periods, especially in environments where frequent
+                  reloads occur. \n - Consider monitoring the number of HAProxy processes
+                  in the router pods when Deferred is set. \n - You may need to enable
+                  or adjust the `ingress.operator.openshift.io/hard-stop-after` duration
                   (configured via an annotation on the IngressController resource)
                   in environments with frequent reloads to prevent resource exhaustion."
                 enum:
@@ -1656,6 +1656,40 @@ spec:
                       are subject to change over time."
                     pattern: ^(0|([0-9]+(\.[0-9]+)?(ns|us|µs|μs|ms|s|m|h))+)$
                     type: string
+                  httpKeepAliveTimeout:
+                    description: "httpKeepAliveTimeout defines the maximum allowed
+                      time to wait for a new HTTP request to appear on a connection
+                      from the client to the router. \n This field expects an unsigned
+                      duration string of a decimal number, with optional fraction
+                      and a unit suffix, e.g. \"300ms\", \"1.5s\" or \"2m45s\". Valid
+                      time units are \"ms\", \"s\", \"m\". The allowed range is from
+                      1 millisecond to 15 minutes. \n When omitted, this means the
+                      user has no opinion and the platform is left to choose a reasonable
+                      default. This default is subject to change over time. The current
+                      default is 300s. \n Low values (tens of milliseconds or less)
+                      can cause clients to close and reopen connections for each request,
+                      leading to reduced connection sharing. For HTTP/2, special care
+                      should be taken with low values. A few seconds is a reasonable
+                      starting point to avoid holding idle connections open while
+                      still allowing subsequent requests to reuse the connection.
+                      \n High values (minutes or more) favor connection reuse but
+                      may cause idle connections to linger longer."
+                    maxLength: 16
+                    minLength: 1
+                    type: string
+                    x-kubernetes-validations:
+                    - message: httpKeepAliveTimeout must be a valid duration string
+                        composed of an unsigned integer value, optionally followed
+                        by a decimal fraction and a unit suffix (ms, s, m)
+                      rule: self.matches('^([0-9]+(\\.[0-9]+)?(ms|s|m))+$')
+                    - message: httpKeepAliveTimeout must be less than or equal to
+                        15 minutes
+                      rule: '!self.matches(''^([0-9]+(\\.[0-9]+)?(ms|s|m))+$'') ||
+                        duration(self) <= duration(''15m'')'
+                    - message: httpKeepAliveTimeout must be greater than or equal
+                        to 1 millisecond
+                      rule: '!self.matches(''^([0-9]+(\\.[0-9]+)?(ms|s|m))+$'') ||
+                        duration(self) >= duration(''1ms'')'
                   maxConnections:
                     description: "maxConnections defines the maximum number of simultaneous
                       connections that can be established per HAProxy process. Increasing

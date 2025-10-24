@@ -269,6 +269,9 @@
                         "name": "NutanixMultiSubnets"
                     },
                     {
+                        "name": "OSStreams"
+                    },
+                    {
                         "name": "OVNObservability"
                     },
                     {

@@ -570,3 +570,113 @@ tests:
           tuningOptions:
             connectTimeout: "4 s"
       expectedError: "IngressController.operator.openshift.io \"default\" is invalid: spec.tuningOptions.connectTimeout: Invalid value: \"4 s\": spec.tuningOptions.connectTimeout in body should match '^(0|([0-9]+(\\.[0-9]+)?(ns|us|µs|μs|ms|s|m|h))+)$'"
+    - name: Should be able to create an IngressController with valid nominal httpKeepAlive timeout
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: IngressController
+        metadata:
+          name: default
+          namespace: openshift-ingress-operator
+        spec:
+          tuningOptions:
+            httpKeepAliveTimeout: 10s
+      expected: |
+        apiVersion: operator.openshift.io/v1
+        kind: IngressController
+        metadata:
+          name: default
+          namespace: openshift-ingress-operator
+        spec:
+          httpEmptyRequestsPolicy: Respond
+          idleConnectionTerminationPolicy: Immediate
+          closedClientConnectionPolicy: Continue
+          tuningOptions:
+            httpKeepAliveTimeout: 10s
+    - name: Should be able to create an IngressController with valid composite httpKeepAlive timeout
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: IngressController
+        metadata:
+          name: default
+          namespace: openshift-ingress-operator
+        spec:
+          tuningOptions:
+            httpKeepAliveTimeout: 100s300ms
+      expected: |
+        apiVersion: operator.openshift.io/v1
+        kind: IngressController
+        metadata:
+          name: default
+          namespace: openshift-ingress-operator
+        spec:
+          httpEmptyRequestsPolicy: Respond
+          idleConnectionTerminationPolicy: Immediate
+          closedClientConnectionPolicy: Continue
+          tuningOptions:
+            httpKeepAliveTimeout: 100s300ms
+    - name: Should be able to create an IngressController with valid fraction httpKeepAlive timeout
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: IngressController
+        metadata:
+          name: default
+          namespace: openshift-ingress-operator
+        spec:
+          tuningOptions:
+            httpKeepAliveTimeout: 1.5m
+      expected: |
+        apiVersion: operator.openshift.io/v1
+        kind: IngressController
+        metadata:
+          name: default
+          namespace: openshift-ingress-operator
+        spec:
+          httpEmptyRequestsPolicy: Respond
+          idleConnectionTerminationPolicy: Immediate
+          closedClientConnectionPolicy: Continue
+          tuningOptions:
+            httpKeepAliveTimeout: 1.5m
+    - name: Should not be able to create an IngressController with invalid unit httpKeepAlive timeout
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: IngressController
+        metadata:
+          name: default
+          namespace: openshift-ingress-operator
+        spec:
+          tuningOptions:
+            httpKeepAliveTimeout: 3d
+      expectedError: "IngressController.operator.openshift.io \"default\" is invalid: spec.tuningOptions.httpKeepAliveTimeout: Invalid value: \"string\": httpKeepAliveTimeout must be a valid duration string composed of an unsigned integer value, optionally followed by a decimal fraction and a unit suffix (ms, s, m)"
+    - name: Should not be able to create an IngressController with invalid space httpKeepAlive timeout
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: IngressController
+        metadata:
+          name: default
+          namespace: openshift-ingress-operator
+        spec:
+          tuningOptions:
+            httpKeepAliveTimeout: "4 s"
+      expectedError: "IngressController.operator.openshift.io \"default\" is invalid: spec.tuningOptions.httpKeepAliveTimeout: Invalid value: \"string\": httpKeepAliveTimeout must be a valid duration string composed of an unsigned integer value, optionally followed by a decimal fraction and a unit suffix (ms, s, m)"
+    - name: Should not be able to create an IngressController with httpKeepAlive timeout too big
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: IngressController
+        metadata:
+          name: default
+          namespace: openshift-ingress-operator
+        spec:
+          tuningOptions:
+            httpKeepAliveTimeout: 100m
+      expectedError: "IngressController.operator.openshift.io \"default\" is invalid: spec.tuningOptions.httpKeepAliveTimeout: Invalid value: \"string\": httpKeepAliveTimeout must be less than or equal to 15 minutes"
+    - name: Should not be able to create an IngressController with httpKeepAlive timeout too small
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: IngressController
+        metadata:
+          name: default
+          namespace: openshift-ingress-operator
+        spec:
+          tuningOptions:
+            httpKeepAliveTimeout: 0.001ms
+      expectedError: "IngressController.operator.openshift.io \"default\" is invalid: spec.tuningOptions.httpKeepAliveTimeout: Invalid value: \"string\": httpKeepAliveTimeout must be greater than or equal to 1 millisecond"

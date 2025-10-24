@@ -5,7 +5,7 @@ featureGates:
 - OnPremDNSRecords
 tests:
   onCreate:
-    - name: opnet Should be able to create a ControllerConfig for vSphere with external DNS records
+    - name: Should be able to create a ControllerConfig for vSphere with external DNS records
       initial: |
         apiVersion: machineconfiguration.openshift.io/v1
         kind: ControllerConfig

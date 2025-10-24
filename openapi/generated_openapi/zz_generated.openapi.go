@@ -150,6 +150,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"github.com/openshift/api/config/v1.APIServerStatus":                                                 schema_openshift_api_config_v1_APIServerStatus(ref),
 		"github.com/openshift/api/config/v1.AWSDNSSpec":                                                      schema_openshift_api_config_v1_AWSDNSSpec(ref),
 		"github.com/openshift/api/config/v1.AWSIngressSpec":                                                  schema_openshift_api_config_v1_AWSIngressSpec(ref),
+		"github.com/openshift/api/config/v1.AWSKMSConfig":                                                    schema_openshift_api_config_v1_AWSKMSConfig(ref),
 		"github.com/openshift/api/config/v1.AWSPlatformSpec":                                                 schema_openshift_api_config_v1_AWSPlatformSpec(ref),
 		"github.com/openshift/api/config/v1.AWSPlatformStatus":                                               schema_openshift_api_config_v1_AWSPlatformStatus(ref),
 		"github.com/openshift/api/config/v1.AWSResourceTag":                                                  schema_openshift_api_config_v1_AWSResourceTag(ref),
@@ -240,6 +241,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"github.com/openshift/api/config/v1.GCPPlatformStatus":                                               schema_openshift_api_config_v1_GCPPlatformStatus(ref),
 		"github.com/openshift/api/config/v1.GCPResourceLabel":                                                schema_openshift_api_config_v1_GCPResourceLabel(ref),
 		"github.com/openshift/api/config/v1.GCPResourceTag":                                                  schema_openshift_api_config_v1_GCPResourceTag(ref),
+		"github.com/openshift/api/config/v1.GCPServiceEndpoint":                                              schema_openshift_api_config_v1_GCPServiceEndpoint(ref),
 		"github.com/openshift/api/config/v1.GenericAPIServerConfig":                                          schema_openshift_api_config_v1_GenericAPIServerConfig(ref),
 		"github.com/openshift/api/config/v1.GenericControllerConfig":                                         schema_openshift_api_config_v1_GenericControllerConfig(ref),
 		"github.com/openshift/api/config/v1.GitHubIdentityProvider":                                          schema_openshift_api_config_v1_GitHubIdentityProvider(ref),
@@ -282,6 +284,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"github.com/openshift/api/config/v1.IngressSpec":                                                     schema_openshift_api_config_v1_IngressSpec(ref),
 		"github.com/openshift/api/config/v1.IngressStatus":                                                   schema_openshift_api_config_v1_IngressStatus(ref),
 		"github.com/openshift/api/config/v1.IntermediateTLSProfile":                                          schema_openshift_api_config_v1_IntermediateTLSProfile(ref),
+		"github.com/openshift/api/config/v1.KMSConfig":                                                       schema_openshift_api_config_v1_KMSConfig(ref),
 		"github.com/openshift/api/config/v1.KeystoneIdentityProvider":                                        schema_openshift_api_config_v1_KeystoneIdentityProvider(ref),
 		"github.com/openshift/api/config/v1.KubeClientConfig":                                                schema_openshift_api_config_v1_KubeClientConfig(ref),
 		"github.com/openshift/api/config/v1.KubevirtPlatformSpec":                                            schema_openshift_api_config_v1_KubevirtPlatformSpec(ref),
@@ -389,6 +392,9 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"github.com/openshift/api/config/v1.UpdateHistory":                                                   schema_openshift_api_config_v1_UpdateHistory(ref),
 		"github.com/openshift/api/config/v1.UsernameClaimMapping":                                            schema_openshift_api_config_v1_UsernameClaimMapping(ref),
 		"github.com/openshift/api/config/v1.UsernamePrefix":                                                  schema_openshift_api_config_v1_UsernamePrefix(ref),
+		"github.com/openshift/api/config/v1.VSphereFailureDomainHostGroup":                                   schema_openshift_api_config_v1_VSphereFailureDomainHostGroup(ref),
+		"github.com/openshift/api/config/v1.VSphereFailureDomainRegionAffinity":                              schema_openshift_api_config_v1_VSphereFailureDomainRegionAffinity(ref),
+		"github.com/openshift/api/config/v1.VSphereFailureDomainZoneAffinity":                                schema_openshift_api_config_v1_VSphereFailureDomainZoneAffinity(ref),
 		"github.com/openshift/api/config/v1.VSpherePlatformFailureDomainSpec":                                schema_openshift_api_config_v1_VSpherePlatformFailureDomainSpec(ref),
 		"github.com/openshift/api/config/v1.VSpherePlatformLoadBalancer":                                     schema_openshift_api_config_v1_VSpherePlatformLoadBalancer(ref),
 		"github.com/openshift/api/config/v1.VSpherePlatformNodeNetworking":                                   schema_openshift_api_config_v1_VSpherePlatformNodeNetworking(ref),
@@ -406,6 +412,10 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"github.com/openshift/api/config/v1alpha1.ClusterImagePolicyList":                                    schema_openshift_api_config_v1alpha1_ClusterImagePolicyList(ref),
 		"github.com/openshift/api/config/v1alpha1.ClusterImagePolicySpec":                                    schema_openshift_api_config_v1alpha1_ClusterImagePolicySpec(ref),
 		"github.com/openshift/api/config/v1alpha1.ClusterImagePolicyStatus":                                  schema_openshift_api_config_v1alpha1_ClusterImagePolicyStatus(ref),
+		"github.com/openshift/api/config/v1alpha1.ClusterMonitoring":                                         schema_openshift_api_config_v1alpha1_ClusterMonitoring(ref),
+		"github.com/openshift/api/config/v1alpha1.ClusterMonitoringList":                                     schema_openshift_api_config_v1alpha1_ClusterMonitoringList(ref),
+		"github.com/openshift/api/config/v1alpha1.ClusterMonitoringSpec":                                     schema_openshift_api_config_v1alpha1_ClusterMonitoringSpec(ref),
+		"github.com/openshift/api/config/v1alpha1.ClusterMonitoringStatus":                                   schema_openshift_api_config_v1alpha1_ClusterMonitoringStatus(ref),
 		"github.com/openshift/api/config/v1alpha1.EtcdBackupSpec":                                            schema_openshift_api_config_v1alpha1_EtcdBackupSpec(ref),
 		"github.com/openshift/api/config/v1alpha1.FulcioCAWithRekor":                                         schema_openshift_api_config_v1alpha1_FulcioCAWithRekor(ref),
 		"github.com/openshift/api/config/v1alpha1.GatherConfig":                                              schema_openshift_api_config_v1alpha1_GatherConfig(ref),
@@ -417,6 +427,10 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"github.com/openshift/api/config/v1alpha1.InsightsDataGatherList":                                    schema_openshift_api_config_v1alpha1_InsightsDataGatherList(ref),
 		"github.com/openshift/api/config/v1alpha1.InsightsDataGatherSpec":                                    schema_openshift_api_config_v1alpha1_InsightsDataGatherSpec(ref),
 		"github.com/openshift/api/config/v1alpha1.InsightsDataGatherStatus":                                  schema_openshift_api_config_v1alpha1_InsightsDataGatherStatus(ref),
+		"github.com/openshift/api/config/v1alpha1.PKI":                                                       schema_openshift_api_config_v1alpha1_PKI(ref),
+		"github.com/openshift/api/config/v1alpha1.PKICertificateSubject":                                     schema_openshift_api_config_v1alpha1_PKICertificateSubject(ref),
+		"github.com/openshift/api/config/v1alpha1.PersistentVolumeClaimReference":                            schema_openshift_api_config_v1alpha1_PersistentVolumeClaimReference(ref),
+		"github.com/openshift/api/config/v1alpha1.PersistentVolumeConfig":                                    schema_openshift_api_config_v1alpha1_PersistentVolumeConfig(ref),
 		"github.com/openshift/api/config/v1alpha1.Policy":                                                    schema_openshift_api_config_v1alpha1_Policy(ref),
 		"github.com/openshift/api/config/v1alpha1.PolicyFulcioSubject":                                       schema_openshift_api_config_v1alpha1_PolicyFulcioSubject(ref),
 		"github.com/openshift/api/config/v1alpha1.PolicyIdentity":                                            schema_openshift_api_config_v1alpha1_PolicyIdentity(ref),
@@ -427,6 +441,19 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"github.com/openshift/api/config/v1alpha1.RetentionNumberConfig":                                     schema_openshift_api_config_v1alpha1_RetentionNumberConfig(ref),
 		"github.com/openshift/api/config/v1alpha1.RetentionPolicy":                                           schema_openshift_api_config_v1alpha1_RetentionPolicy(ref),
 		"github.com/openshift/api/config/v1alpha1.RetentionSizeConfig":                                       schema_openshift_api_config_v1alpha1_RetentionSizeConfig(ref),
+		"github.com/openshift/api/config/v1alpha1.Storage":                                                   schema_openshift_api_config_v1alpha1_Storage(ref),
+		"github.com/openshift/api/config/v1alpha1.UserDefinedMonitoring":                                     schema_openshift_api_config_v1alpha1_UserDefinedMonitoring(ref),
+		"github.com/openshift/api/config/v1alpha2.Custom":                                                    schema_openshift_api_config_v1alpha2_Custom(ref),
+		"github.com/openshift/api/config/v1alpha2.GatherConfig":                                              schema_openshift_api_config_v1alpha2_GatherConfig(ref),
+		"github.com/openshift/api/config/v1alpha2.GathererConfig":                                            schema_openshift_api_config_v1alpha2_GathererConfig(ref),
+		"github.com/openshift/api/config/v1alpha2.Gatherers":                                                 schema_openshift_api_config_v1alpha2_Gatherers(ref),
+		"github.com/openshift/api/config/v1alpha2.InsightsDataGather":                                        schema_openshift_api_config_v1alpha2_InsightsDataGather(ref),
+		"github.com/openshift/api/config/v1alpha2.InsightsDataGatherList":                                    schema_openshift_api_config_v1alpha2_InsightsDataGatherList(ref),
+		"github.com/openshift/api/config/v1alpha2.InsightsDataGatherSpec":                                    schema_openshift_api_config_v1alpha2_InsightsDataGatherSpec(ref),
+		"github.com/openshift/api/config/v1alpha2.InsightsDataGatherStatus":                                  schema_openshift_api_config_v1alpha2_InsightsDataGatherStatus(ref),
+		"github.com/openshift/api/config/v1alpha2.PersistentVolumeClaimReference":                            schema_openshift_api_config_v1alpha2_PersistentVolumeClaimReference(ref),
+		"github.com/openshift/api/config/v1alpha2.PersistentVolumeConfig":                                    schema_openshift_api_config_v1alpha2_PersistentVolumeConfig(ref),
+		"github.com/openshift/api/config/v1alpha2.Storage":                                                   schema_openshift_api_config_v1alpha2_Storage(ref),
 		"github.com/openshift/api/console/v1.ApplicationMenuSpec":                                            schema_openshift_api_console_v1_ApplicationMenuSpec(ref),
 		"github.com/openshift/api/console/v1.CLIDownloadLink":                                                schema_openshift_api_console_v1_CLIDownloadLink(ref),
 		"github.com/openshift/api/console/v1.ConsoleCLIDownload":                                             schema_openshift_api_console_v1_ConsoleCLIDownload(ref),
@@ -477,6 +504,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"github.com/openshift/api/example/v1.StableConfigTypeList":                                           schema_openshift_api_example_v1_StableConfigTypeList(ref),
 		"github.com/openshift/api/example/v1.StableConfigTypeSpec":                                           schema_openshift_api_example_v1_StableConfigTypeSpec(ref),
 		"github.com/openshift/api/example/v1.StableConfigTypeStatus":                                         schema_openshift_api_example_v1_StableConfigTypeStatus(ref),
+		"github.com/openshift/api/example/v1.SubnetsWithExclusions":                                          schema_openshift_api_example_v1_SubnetsWithExclusions(ref),
 		"github.com/openshift/api/example/v1alpha1.NotStableConfigType":                                      schema_openshift_api_example_v1alpha1_NotStableConfigType(ref),
 		"github.com/openshift/api/example/v1alpha1.NotStableConfigTypeList":                                  schema_openshift_api_example_v1alpha1_NotStableConfigTypeList(ref),
 		"github.com/openshift/api/example/v1alpha1.NotStableConfigTypeSpec":                                  schema_openshift_api_example_v1alpha1_NotStableConfigTypeSpec(ref),
@@ -537,6 +565,9 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"github.com/openshift/api/insights/v1alpha1.HealthCheck":                                             schema_openshift_api_insights_v1alpha1_HealthCheck(ref),
 		"github.com/openshift/api/insights/v1alpha1.InsightsReport":                                          schema_openshift_api_insights_v1alpha1_InsightsReport(ref),
 		"github.com/openshift/api/insights/v1alpha1.ObjectReference":                                         schema_openshift_api_insights_v1alpha1_ObjectReference(ref),
+		"github.com/openshift/api/insights/v1alpha1.PersistentVolumeClaimReference":                          schema_openshift_api_insights_v1alpha1_PersistentVolumeClaimReference(ref),
+		"github.com/openshift/api/insights/v1alpha1.PersistentVolumeConfig":                                  schema_openshift_api_insights_v1alpha1_PersistentVolumeConfig(ref),
+		"github.com/openshift/api/insights/v1alpha1.Storage":                                                 schema_openshift_api_insights_v1alpha1_Storage(ref),
 		"github.com/openshift/api/kubecontrolplane/v1.AggregatorConfig":                                      schema_openshift_api_kubecontrolplane_v1_AggregatorConfig(ref),
 		"github.com/openshift/api/kubecontrolplane/v1.KubeAPIServerConfig":                                   schema_openshift_api_kubecontrolplane_v1_KubeAPIServerConfig(ref),
 		"github.com/openshift/api/kubecontrolplane/v1.KubeAPIServerImagePolicyConfig":                        schema_openshift_api_kubecontrolplane_v1_KubeAPIServerImagePolicyConfig(ref),
@@ -751,6 +782,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"github.com/openshift/api/machine/v1beta1.UEFISettings":                                              schema_openshift_api_machine_v1beta1_UEFISettings(ref),
 		"github.com/openshift/api/machine/v1beta1.UnhealthyCondition":                                        schema_openshift_api_machine_v1beta1_UnhealthyCondition(ref),
 		"github.com/openshift/api/machine/v1beta1.VMDiskSecurityProfile":                                     schema_openshift_api_machine_v1beta1_VMDiskSecurityProfile(ref),
+		"github.com/openshift/api/machine/v1beta1.VSphereDisk":                                               schema_openshift_api_machine_v1beta1_VSphereDisk(ref),
 		"github.com/openshift/api/machine/v1beta1.VSphereMachineProviderSpec":                                schema_openshift_api_machine_v1beta1_VSphereMachineProviderSpec(ref),
 		"github.com/openshift/api/machine/v1beta1.VSphereMachineProviderStatus":                              schema_openshift_api_machine_v1beta1_VSphereMachineProviderStatus(ref),
 		"github.com/openshift/api/machine/v1beta1.Workspace":                                                 schema_openshift_api_machine_v1beta1_Workspace(ref),
@@ -762,7 +794,6 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"github.com/openshift/api/machineconfiguration/v1alpha1.MachineConfigNodeList":                       schema_openshift_api_machineconfiguration_v1alpha1_MachineConfigNodeList(ref),
 		"github.com/openshift/api/machineconfiguration/v1alpha1.MachineConfigNodeSpec":                       schema_openshift_api_machineconfiguration_v1alpha1_MachineConfigNodeSpec(ref),
 		"github.com/openshift/api/machineconfiguration/v1alpha1.MachineConfigNodeSpecMachineConfigVersion":   schema_openshift_api_machineconfiguration_v1alpha1_MachineConfigNodeSpecMachineConfigVersion(ref),
-		"github.com/openshift/api/machineconfiguration/v1alpha1.MachineConfigNodeSpecPinnedImageSet":         schema_openshift_api_machineconfiguration_v1alpha1_MachineConfigNodeSpecPinnedImageSet(ref),
 		"github.com/openshift/api/machineconfiguration/v1alpha1.MachineConfigNodeStatus":                     schema_openshift_api_machineconfiguration_v1alpha1_MachineConfigNodeStatus(ref),
 		"github.com/openshift/api/machineconfiguration/v1alpha1.MachineConfigNodeStatusMachineConfigVersion": schema_openshift_api_machineconfiguration_v1alpha1_MachineConfigNodeStatusMachineConfigVersion(ref),
 		"github.com/openshift/api/machineconfiguration/v1alpha1.MachineConfigNodeStatusPinnedImageSet":       schema_openshift_api_machineconfiguration_v1alpha1_MachineConfigNodeStatusPinnedImageSet(ref),
@@ -893,6 +924,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"github.com/openshift/api/operator/v1.ClusterNetworkEntry":                                           schema_openshift_api_operator_v1_ClusterNetworkEntry(ref),
 		"github.com/openshift/api/operator/v1.Config":                                                        schema_openshift_api_operator_v1_Config(ref),
 		"github.com/openshift/api/operator/v1.ConfigList":                                                    schema_openshift_api_operator_v1_ConfigList(ref),
+		"github.com/openshift/api/operator/v1.ConfigMapFileReference":                                        schema_openshift_api_operator_v1_ConfigMapFileReference(ref),
 		"github.com/openshift/api/operator/v1.ConfigSpec":                                                    schema_openshift_api_operator_v1_ConfigSpec(ref),
 		"github.com/openshift/api/operator/v1.ConfigStatus":                                                  schema_openshift_api_operator_v1_ConfigStatus(ref),
 		"github.com/openshift/api/operator/v1.Console":                                                       schema_openshift_api_operator_v1_Console(ref),
@@ -924,6 +956,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"github.com/openshift/api/operator/v1.EtcdStatus":                                                    schema_openshift_api_operator_v1_EtcdStatus(ref),
 		"github.com/openshift/api/operator/v1.ExportNetworkFlows":                                            schema_openshift_api_operator_v1_ExportNetworkFlows(ref),
 		"github.com/openshift/api/operator/v1.FeaturesMigration":                                             schema_openshift_api_operator_v1_FeaturesMigration(ref),
+		"github.com/openshift/api/operator/v1.FileReferenceSource":                                           schema_openshift_api_operator_v1_FileReferenceSource(ref),
 		"github.com/openshift/api/operator/v1.ForwardPlugin":                                                 schema_openshift_api_operator_v1_ForwardPlugin(ref),
 		"github.com/openshift/api/operator/v1.GCPCSIDriverConfigSpec":                                        schema_openshift_api_operator_v1_GCPCSIDriverConfigSpec(ref),
 		"github.com/openshift/api/operator/v1.GCPKMSKeyReference":                                            schema_openshift_api_operator_v1_GCPKMSKeyReference(ref),
@@ -986,6 +1019,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"github.com/openshift/api/operator/v1.KubeStorageVersionMigratorStatus":                              schema_openshift_api_operator_v1_KubeStorageVersionMigratorStatus(ref),
 		"github.com/openshift/api/operator/v1.LoadBalancerStrategy":                                          schema_openshift_api_operator_v1_LoadBalancerStrategy(ref),
 		"github.com/openshift/api/operator/v1.LoggingDestination":                                            schema_openshift_api_operator_v1_LoggingDestination(ref),
+		"github.com/openshift/api/operator/v1.Logo":                                                          schema_openshift_api_operator_v1_Logo(ref),
 		"github.com/openshift/api/operator/v1.MTUMigration":                                                  schema_openshift_api_operator_v1_MTUMigration(ref),
 		"github.com/openshift/api/operator/v1.MTUMigrationValues":                                            schema_openshift_api_operator_v1_MTUMigrationValues(ref),
 		"github.com/openshift/api/operator/v1.MachineConfiguration":                                          schema_openshift_api_operator_v1_MachineConfiguration(ref),
@@ -1079,10 +1113,15 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"github.com/openshift/api/operator/v1.StorageSpec":                                                   schema_openshift_api_operator_v1_StorageSpec(ref),
 		"github.com/openshift/api/operator/v1.StorageStatus":                                                 schema_openshift_api_operator_v1_StorageStatus(ref),
 		"github.com/openshift/api/operator/v1.SyslogLoggingDestinationParameters":                            schema_openshift_api_operator_v1_SyslogLoggingDestinationParameters(ref),
+		"github.com/openshift/api/operator/v1.Theme":                                                         schema_openshift_api_operator_v1_Theme(ref),
 		"github.com/openshift/api/operator/v1.Upstream":                                                      schema_openshift_api_operator_v1_Upstream(ref),
 		"github.com/openshift/api/operator/v1.UpstreamResolvers":                                             schema_openshift_api_operator_v1_UpstreamResolvers(ref),
 		"github.com/openshift/api/operator/v1.VSphereCSIDriverConfigSpec":                                    schema_openshift_api_operator_v1_VSphereCSIDriverConfigSpec(ref),
 		"github.com/openshift/api/operator/v1alpha1.BackupJobReference":                                      schema_openshift_api_operator_v1alpha1_BackupJobReference(ref),
+		"github.com/openshift/api/operator/v1alpha1.ClusterVersionOperator":                                  schema_openshift_api_operator_v1alpha1_ClusterVersionOperator(ref),
+		"github.com/openshift/api/operator/v1alpha1.ClusterVersionOperatorList":                              schema_openshift_api_operator_v1alpha1_ClusterVersionOperatorList(ref),
+		"github.com/openshift/api/operator/v1alpha1.ClusterVersionOperatorSpec":                              schema_openshift_api_operator_v1alpha1_ClusterVersionOperatorSpec(ref),
+		"github.com/openshift/api/operator/v1alpha1.ClusterVersionOperatorStatus":                            schema_openshift_api_operator_v1alpha1_ClusterVersionOperatorStatus(ref),
 		"github.com/openshift/api/operator/v1alpha1.DelegatedAuthentication":                                 schema_openshift_api_operator_v1alpha1_DelegatedAuthentication(ref),
 		"github.com/openshift/api/operator/v1alpha1.DelegatedAuthorization":                                  schema_openshift_api_operator_v1alpha1_DelegatedAuthorization(ref),
 		"github.com/openshift/api/operator/v1alpha1.EtcdBackup":                                              schema_openshift_api_operator_v1alpha1_EtcdBackup(ref),
@@ -1681,8 +1720,10 @@ func schema_openshift_api_apiserver_v1_APIRequestCountStatus(ref common.Referenc
 					"conditions": {
 						VendorExtensible: spec.VendorExtensible{
 							Extensions: spec.Extensions{
-								"x-kubernetes-patch-merge-key": "type",
-								"x-kubernetes-patch-strategy":  "merge",
+								"x-kubernetes-list-map-keys": []interface{}{
+									"type",
+								},
+								"x-kubernetes-list-type": "map",
 							},
 						},
 						SchemaProps: spec.SchemaProps{
@@ -1735,7 +1776,7 @@ func schema_openshift_api_apiserver_v1_APIRequestCountStatus(ref common.Referenc
 						},
 					},
 				},
-				Required: []string{"conditions", "requestCount"},
+				Required: []string{"requestCount"},
 			},
 		},
 		Dependencies: []string{
@@ -1836,7 +1877,7 @@ func schema_openshift_api_apiserver_v1_PerUserAPIRequestCount(ref common.Referen
 				Properties: map[string]spec.Schema{
 					"username": {
 						SchemaProps: spec.SchemaProps{
-							Description: "userName that made the request.",
+							Description: "username that made the request.",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -1920,14 +1961,14 @@ func schema_openshift_api_apps_v1_CustomDeploymentStrategyParams(ref common.Refe
 				Properties: map[string]spec.Schema{
 					"image": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Image specifies a container image which can carry out a deployment.",
+							Description: "image specifies a container image which can carry out a deployment.",
 							Type:        []string{"string"},
 							Format:      "",
 						},
 					},
 					"environment": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Environment holds the environment which will be given to the container for Image.",
+							Description: "environment holds the environment which will be given to the container for Image.",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -1941,7 +1982,7 @@ func schema_openshift_api_apps_v1_CustomDeploymentStrategyParams(ref common.Refe
 					},
 					"command": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Command is optional and overrides CMD in the container Image.",
+							Description: "command is optional and overrides CMD in the container Image.",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -1971,7 +2012,7 @@ func schema_openshift_api_apps_v1_DeploymentCause(ref common.ReferenceCallback) 
 				Properties: map[string]spec.Schema{
 					"type": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Type of the trigger that resulted in the creation of a new deployment",
+							Description: "type of the trigger that resulted in the creation of a new deployment",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -1979,7 +2020,7 @@ func schema_openshift_api_apps_v1_DeploymentCause(ref common.ReferenceCallback) 
 					},
 					"imageTrigger": {
 						SchemaProps: spec.SchemaProps{
-							Description: "ImageTrigger contains the image trigger details, if this trigger was fired based on an image change",
+							Description: "imageTrigger contains the image trigger details, if this trigger was fired based on an image change",
 							Ref:         ref("github.com/openshift/api/apps/v1.DeploymentCauseImageTrigger"),
 						},
 					},
@@ -2001,7 +2042,7 @@ func schema_openshift_api_apps_v1_DeploymentCauseImageTrigger(ref common.Referen
 				Properties: map[string]spec.Schema{
 					"from": {
 						SchemaProps: spec.SchemaProps{
-							Description: "From is a reference to the changed object which triggered a deployment. The field may have the kinds DockerImage, ImageStreamTag, or ImageStreamImage.",
+							Description: "from is a reference to the changed object which triggered a deployment. The field may have the kinds DockerImage, ImageStreamTag, or ImageStreamImage.",
 							Default:     map[string]interface{}{},
 							Ref:         ref("k8s.io/api/core/v1.ObjectReference"),
 						},
@@ -2024,7 +2065,7 @@ func schema_openshift_api_apps_v1_DeploymentCondition(ref common.ReferenceCallba
 				Properties: map[string]spec.Schema{
 					"type": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Type of deployment condition.",
+							Description: "type of deployment condition.",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -2032,7 +2073,7 @@ func schema_openshift_api_apps_v1_DeploymentCondition(ref common.ReferenceCallba
 					},
 					"status": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Status of the condition, one of True, False, Unknown.",
+							Description: "status of the condition, one of True, False, Unknown.",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -2103,14 +2144,14 @@ func schema_openshift_api_apps_v1_DeploymentConfig(ref common.ReferenceCallback)
 					},
 					"spec": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Spec represents a desired deployment state and how to deploy to it.",
+							Description: "spec represents a desired deployment state and how to deploy to it.",
 							Default:     map[string]interface{}{},
 							Ref:         ref("github.com/openshift/api/apps/v1.DeploymentConfigSpec"),
 						},
 					},
 					"status": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Status represents the current deployment state.",
+							Description: "status represents the current deployment state.",
 							Default:     map[string]interface{}{},
 							Ref:         ref("github.com/openshift/api/apps/v1.DeploymentConfigStatus"),
 						},
@@ -2154,7 +2195,7 @@ func schema_openshift_api_apps_v1_DeploymentConfigList(ref common.ReferenceCallb
 					},
 					"items": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Items is a list of deployment configs",
+							Description: "items is a list of deployment configs",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -2198,7 +2239,7 @@ func schema_openshift_api_apps_v1_DeploymentConfigRollback(ref common.ReferenceC
 					},
 					"name": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Name of the deployment config that will be rolled back.",
+							Description: "name of the deployment config that will be rolled back.",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -2206,7 +2247,7 @@ func schema_openshift_api_apps_v1_DeploymentConfigRollback(ref common.ReferenceC
 					},
 					"updatedAnnotations": {
 						SchemaProps: spec.SchemaProps{
-							Description: "UpdatedAnnotations is a set of new annotations that will be added in the deployment config.",
+							Description: "updatedAnnotations is a set of new annotations that will be added in the deployment config.",
 							Type:        []string{"object"},
 							AdditionalProperties: &spec.SchemaOrBool{
 								Allows: true,
@@ -2222,7 +2263,7 @@ func schema_openshift_api_apps_v1_DeploymentConfigRollback(ref common.ReferenceC
 					},
 					"spec": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Spec defines the options to rollback generation.",
+							Description: "spec defines the options to rollback generation.",
 							Default:     map[string]interface{}{},
 							Ref:         ref("github.com/openshift/api/apps/v1.DeploymentConfigRollbackSpec"),
 						},
@@ -2245,21 +2286,21 @@ func schema_openshift_api_apps_v1_DeploymentConfigRollbackSpec(ref common.Refere
 				Properties: map[string]spec.Schema{
 					"from": {
 						SchemaProps: spec.SchemaProps{
-							Description: "From points to a ReplicationController which is a deployment.",
+							Description: "from points to a ReplicationController which is a deployment.",
 							Default:     map[string]interface{}{},
 							Ref:         ref("k8s.io/api/core/v1.ObjectReference"),
 						},
 					},
 					"revision": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Revision to rollback to. If set to 0, rollback to the last revision.",
+							Description: "revision to rollback to. If set to 0, rollback to the last revision.",
 							Type:        []string{"integer"},
 							Format:      "int64",
 						},
 					},
 					"includeTriggers": {
 						SchemaProps: spec.SchemaProps{
-							Description: "IncludeTriggers specifies whether to include config Triggers.",
+							Description: "includeTriggers specifies whether to include config Triggers.",
 							Default:     false,
 							Type:        []string{"boolean"},
 							Format:      "",
@@ -2267,7 +2308,7 @@ func schema_openshift_api_apps_v1_DeploymentConfigRollbackSpec(ref common.Refere
 					},
 					"includeTemplate": {
 						SchemaProps: spec.SchemaProps{
-							Description: "IncludeTemplate specifies whether to include the PodTemplateSpec.",
+							Description: "includeTemplate specifies whether to include the PodTemplateSpec.",
 							Default:     false,
 							Type:        []string{"boolean"},
 							Format:      "",
@@ -2275,7 +2316,7 @@ func schema_openshift_api_apps_v1_DeploymentConfigRollbackSpec(ref common.Refere
 					},
 					"includeReplicationMeta": {
 						SchemaProps: spec.SchemaProps{
-							Description: "IncludeReplicationMeta specifies whether to include the replica count and selector.",
+							Description: "includeReplicationMeta specifies whether to include the replica count and selector.",
 							Default:     false,
 							Type:        []string{"boolean"},
 							Format:      "",
@@ -2283,7 +2324,7 @@ func schema_openshift_api_apps_v1_DeploymentConfigRollbackSpec(ref common.Refere
 					},
 					"includeStrategy": {
 						SchemaProps: spec.SchemaProps{
-							Description: "IncludeStrategy specifies whether to include the deployment Strategy.",
+							Description: "includeStrategy specifies whether to include the deployment Strategy.",
 							Default:     false,
 							Type:        []string{"boolean"},
 							Format:      "",
@@ -2307,21 +2348,21 @@ func schema_openshift_api_apps_v1_DeploymentConfigSpec(ref common.ReferenceCallb
 				Properties: map[string]spec.Schema{
 					"strategy": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Strategy describes how a deployment is executed.",
+							Description: "strategy describes how a deployment is executed.",
 							Default:     map[string]interface{}{},
 							Ref:         ref("github.com/openshift/api/apps/v1.DeploymentStrategy"),
 						},
 					},
 					"minReadySeconds": {
 						SchemaProps: spec.SchemaProps{
-							Description: "MinReadySeconds is the minimum number of seconds for which a newly created pod should be ready without any of its container crashing, for it to be considered available. Defaults to 0 (pod will be considered available as soon as it is ready)",
+							Description: "minReadySeconds is the minimum number of seconds for which a newly created pod should be ready without any of its container crashing, for it to be considered available. Defaults to 0 (pod will be considered available as soon as it is ready)",
 							Type:        []string{"integer"},
 							Format:      "int32",
 						},
 					},
 					"triggers": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Triggers determine how updates to a DeploymentConfig result in new deployments. If no triggers are defined, a new deployment can only occur as a result of an explicit client update to the DeploymentConfig with a new LatestVersion. If null, defaults to having a config change trigger.",
+							Description: "triggers determine how updates to a DeploymentConfig result in new deployments. If no triggers are defined, a new deployment can only occur as a result of an explicit client update to the DeploymentConfig with a new LatestVersion. If null, defaults to having a config change trigger.",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -2335,7 +2376,7 @@ func schema_openshift_api_apps_v1_DeploymentConfigSpec(ref common.ReferenceCallb
 					},
 					"replicas": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Replicas is the number of desired replicas.",
+							Description: "replicas is the number of desired replicas.",
 							Default:     0,
 							Type:        []string{"integer"},
 							Format:      "int32",
@@ -2343,14 +2384,14 @@ func schema_openshift_api_apps_v1_DeploymentConfigSpec(ref common.ReferenceCallb
 					},
 					"revisionHistoryLimit": {
 						SchemaProps: spec.SchemaProps{
-							Description: "RevisionHistoryLimit is the number of old ReplicationControllers to retain to allow for rollbacks. This field is a pointer to allow for differentiation between an explicit zero and not specified. Defaults to 10. (This only applies to DeploymentConfigs created via the new group API resource, not the legacy resource.)",
+							Description: "revisionHistoryLimit is the number of old ReplicationControllers to retain to allow for rollbacks. This field is a pointer to allow for differentiation between an explicit zero and not specified. Defaults to 10. (This only applies to DeploymentConfigs created via the new group API resource, not the legacy resource.)",
 							Type:        []string{"integer"},
 							Format:      "int32",
 						},
 					},
 					"test": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Test ensures that this deployment config will have zero replicas except while a deployment is running. This allows the deployment config to be used as a continuous deployment test - triggering on images, running the deployment, and then succeeding or failing. Post strategy hooks and After actions can be used to integrate successful deployment with an action.",
+							Description: "test ensures that this deployment config will have zero replicas except while a deployment is running. This allows the deployment config to be used as a continuous deployment test - triggering on images, running the deployment, and then succeeding or failing. Post strategy hooks and After actions can be used to integrate successful deployment with an action.",
 							Default:     false,
 							Type:        []string{"boolean"},
 							Format:      "",
@@ -2358,14 +2399,14 @@ func schema_openshift_api_apps_v1_DeploymentConfigSpec(ref common.ReferenceCallb
 					},
 					"paused": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Paused indicates that the deployment config is paused resulting in no new deployments on template changes or changes in the template caused by other triggers.",
+							Description: "paused indicates that the deployment config is paused resulting in no new deployments on template changes or changes in the template caused by other triggers.",
 							Type:        []string{"boolean"},
 							Format:      "",
 						},
 					},
 					"selector": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Selector is a label query over pods that should match the Replicas count.",
+							Description: "selector is a label query over pods that should match the Replicas count.",
 							Type:        []string{"object"},
 							AdditionalProperties: &spec.SchemaOrBool{
 								Allows: true,
@@ -2381,7 +2422,7 @@ func schema_openshift_api_apps_v1_DeploymentConfigSpec(ref common.ReferenceCallb
 					},
 					"template": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Template is the object that describes the pod that will be created if insufficient replicas are detected.",
+							Description: "template is the object that describes the pod that will be created if insufficient replicas are detected.",
 							Ref:         ref("k8s.io/api/core/v1.PodTemplateSpec"),
 						},
 					},
@@ -2402,7 +2443,7 @@ func schema_openshift_api_apps_v1_DeploymentConfigStatus(ref common.ReferenceCal
 				Properties: map[string]spec.Schema{
 					"latestVersion": {
 						SchemaProps: spec.SchemaProps{
-							Description: "LatestVersion is used to determine whether the current deployment associated with a deployment config is out of sync.",
+							Description: "latestVersion is used to determine whether the current deployment associated with a deployment config is out of sync.",
 							Default:     0,
 							Type:        []string{"integer"},
 							Format:      "int64",
@@ -2410,7 +2451,7 @@ func schema_openshift_api_apps_v1_DeploymentConfigStatus(ref common.ReferenceCal
 					},
 					"observedGeneration": {
 						SchemaProps: spec.SchemaProps{
-							Description: "ObservedGeneration is the most recent generation observed by the deployment config controller.",
+							Description: "observedGeneration is the most recent generation observed by the deployment config controller.",
 							Default:     0,
 							Type:        []string{"integer"},
 							Format:      "int64",
@@ -2418,7 +2459,7 @@ func schema_openshift_api_apps_v1_DeploymentConfigStatus(ref common.ReferenceCal
 					},
 					"replicas": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Replicas is the total number of pods targeted by this deployment config.",
+							Description: "replicas is the total number of pods targeted by this deployment config.",
 							Default:     0,
 							Type:        []string{"integer"},
 							Format:      "int32",
@@ -2426,7 +2467,7 @@ func schema_openshift_api_apps_v1_DeploymentConfigStatus(ref common.ReferenceCal
 					},
 					"updatedReplicas": {
 						SchemaProps: spec.SchemaProps{
-							Description: "UpdatedReplicas is the total number of non-terminated pods targeted by this deployment config that have the desired template spec.",
+							Description: "updatedReplicas is the total number of non-terminated pods targeted by this deployment config that have the desired template spec.",
 							Default:     0,
 							Type:        []string{"integer"},
 							Format:      "int32",
@@ -2434,7 +2475,7 @@ func schema_openshift_api_apps_v1_DeploymentConfigStatus(ref common.ReferenceCal
 					},
 					"availableReplicas": {
 						SchemaProps: spec.SchemaProps{
-							Description: "AvailableReplicas is the total number of available pods targeted by this deployment config.",
+							Description: "availableReplicas is the total number of available pods targeted by this deployment config.",
 							Default:     0,
 							Type:        []string{"integer"},
 							Format:      "int32",
@@ -2442,7 +2483,7 @@ func schema_openshift_api_apps_v1_DeploymentConfigStatus(ref common.ReferenceCal
 					},
 					"unavailableReplicas": {
 						SchemaProps: spec.SchemaProps{
-							Description: "UnavailableReplicas is the total number of unavailable pods targeted by this deployment config.",
+							Description: "unavailableReplicas is the total number of unavailable pods targeted by this deployment config.",
 							Default:     0,
 							Type:        []string{"integer"},
 							Format:      "int32",
@@ -2450,7 +2491,7 @@ func schema_openshift_api_apps_v1_DeploymentConfigStatus(ref common.ReferenceCal
 					},
 					"details": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Details are the reasons for the update to this deployment config. This could be based on a change made by the user or caused by an automatic trigger",
+							Description: "details are the reasons for the update to this deployment config. This could be based on a change made by the user or caused by an automatic trigger",
 							Ref:         ref("github.com/openshift/api/apps/v1.DeploymentDetails"),
 						},
 					},
@@ -2462,7 +2503,7 @@ func schema_openshift_api_apps_v1_DeploymentConfigStatus(ref common.ReferenceCal
 							},
 						},
 						SchemaProps: spec.SchemaProps{
-							Description: "Conditions represents the latest available observations of a deployment config's current state.",
+							Description: "conditions represents the latest available observations of a deployment config's current state.",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -2499,14 +2540,14 @@ func schema_openshift_api_apps_v1_DeploymentDetails(ref common.ReferenceCallback
 				Properties: map[string]spec.Schema{
 					"message": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Message is the user specified change message, if this deployment was triggered manually by the user",
+							Description: "message is the user specified change message, if this deployment was triggered manually by the user",
 							Type:        []string{"string"},
 							Format:      "",
 						},
 					},
 					"causes": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Causes are extended data associated with all the causes for creating a new deployment",
+							Description: "causes are extended data associated with all the causes for creating a new deployment",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -2584,7 +2625,7 @@ func schema_openshift_api_apps_v1_DeploymentLogOptions(ref common.ReferenceCallb
 					},
 					"follow": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Follow if true indicates that the build log should be streamed until the build terminates.",
+							Description: "follow if true indicates that the build log should be streamed until the build terminates.",
 							Type:        []string{"boolean"},
 							Format:      "",
 						},
@@ -2632,14 +2673,14 @@ func schema_openshift_api_apps_v1_DeploymentLogOptions(ref common.ReferenceCallb
 					},
 					"nowait": {
 						SchemaProps: spec.SchemaProps{
-							Description: "NoWait if true causes the call to return immediately even if the deployment is not available yet. Otherwise the server will wait until the deployment has started.",
+							Description: "nowait if true causes the call to return immediately even if the deployment is not available yet. Otherwise the server will wait until the deployment has started.",
 							Type:        []string{"boolean"},
 							Format:      "",
 						},
 					},
 					"version": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Version of the deployment for which to view logs.",
+							Description: "version of the deployment for which to view logs.",
 							Type:        []string{"integer"},
 							Format:      "int64",
 						},
@@ -2675,7 +2716,7 @@ func schema_openshift_api_apps_v1_DeploymentRequest(ref common.ReferenceCallback
 					},
 					"name": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Name of the deployment config for requesting a new deployment.",
+							Description: "name of the deployment config for requesting a new deployment.",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -2683,7 +2724,7 @@ func schema_openshift_api_apps_v1_DeploymentRequest(ref common.ReferenceCallback
 					},
 					"latest": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Latest will update the deployment config with the latest state from all triggers.",
+							Description: "latest will update the deployment config with the latest state from all triggers.",
 							Default:     false,
 							Type:        []string{"boolean"},
 							Format:      "",
@@ -2691,7 +2732,7 @@ func schema_openshift_api_apps_v1_DeploymentRequest(ref common.ReferenceCallback
 					},
 					"force": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Force will try to force a new deployment to run. If the deployment config is paused, then setting this to true will return an Invalid error.",
+							Description: "force will try to force a new deployment to run. If the deployment config is paused, then setting this to true will return an Invalid error.",
 							Default:     false,
 							Type:        []string{"boolean"},
 							Format:      "",
@@ -2699,7 +2740,7 @@ func schema_openshift_api_apps_v1_DeploymentRequest(ref common.ReferenceCallback
 					},
 					"excludeTriggers": {
 						SchemaProps: spec.SchemaProps{
-							Description: "ExcludeTriggers instructs the instantiator to avoid processing the specified triggers. This field overrides the triggers from latest and allows clients to control specific logic. This field is ignored if not specified.",
+							Description: "excludeTriggers instructs the instantiator to avoid processing the specified triggers. This field overrides the triggers from latest and allows clients to control specific logic. This field is ignored if not specified.",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -2728,39 +2769,39 @@ func schema_openshift_api_apps_v1_DeploymentStrategy(ref common.ReferenceCallbac
 				Properties: map[string]spec.Schema{
 					"type": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Type is the name of a deployment strategy.",
+							Description: "type is the name of a deployment strategy.",
 							Type:        []string{"string"},
 							Format:      "",
 						},
 					},
 					"customParams": {
 						SchemaProps: spec.SchemaProps{
-							Description: "CustomParams are the input to the Custom deployment strategy, and may also be specified for the Recreate and Rolling strategies to customize the execution process that runs the deployment.",
+							Description: "customParams are the input to the Custom deployment strategy, and may also be specified for the Recreate and Rolling strategies to customize the execution process that runs the deployment.",
 							Ref:         ref("github.com/openshift/api/apps/v1.CustomDeploymentStrategyParams"),
 						},
 					},
 					"recreateParams": {
 						SchemaProps: spec.SchemaProps{
-							Description: "RecreateParams are the input to the Recreate deployment strategy.",
+							Description: "recreateParams are the input to the Recreate deployment strategy.",
 							Ref:         ref("github.com/openshift/api/apps/v1.RecreateDeploymentStrategyParams"),
 						},
 					},
 					"rollingParams": {
 						SchemaProps: spec.SchemaProps{
-							Description: "RollingParams are the input to the Rolling deployment strategy.",
+							Description: "rollingParams are the input to the Rolling deployment strategy.",
 							Ref:         ref("github.com/openshift/api/apps/v1.RollingDeploymentStrategyParams"),
 						},
 					},
 					"resources": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Resources contains resource requirements to execute the deployment and any hooks.",
+							Description: "resources contains resource requirements to execute the deployment and any hooks.",
 							Default:     map[string]interface{}{},
 							Ref:         ref("k8s.io/api/core/v1.ResourceRequirements"),
 						},
 					},
 					"labels": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Labels is a set of key, value pairs added to custom deployer and lifecycle pre/post hook pods.",
+							Description: "labels is a set of key, value pairs added to custom deployer and lifecycle pre/post hook pods.",
 							Type:        []string{"object"},
 							AdditionalProperties: &spec.SchemaOrBool{
 								Allows: true,
@@ -2776,7 +2817,7 @@ func schema_openshift_api_apps_v1_DeploymentStrategy(ref common.ReferenceCallbac
 					},
 					"annotations": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Annotations is a set of key, value pairs added to custom deployer and lifecycle pre/post hook pods.",
+							Description: "annotations is a set of key, value pairs added to custom deployer and lifecycle pre/post hook pods.",
 							Type:        []string{"object"},
 							AdditionalProperties: &spec.SchemaOrBool{
 								Allows: true,
@@ -2792,7 +2833,7 @@ func schema_openshift_api_apps_v1_DeploymentStrategy(ref common.ReferenceCallbac
 					},
 					"activeDeadlineSeconds": {
 						SchemaProps: spec.SchemaProps{
-							Description: "ActiveDeadlineSeconds is the duration in seconds that the deployer pods for this deployment config may be active on a node before the system actively tries to terminate them.",
+							Description: "activeDeadlineSeconds is the duration in seconds that the deployer pods for this deployment config may be active on a node before the system actively tries to terminate them.",
 							Type:        []string{"integer"},
 							Format:      "int64",
 						},
@@ -2814,14 +2855,14 @@ func schema_openshift_api_apps_v1_DeploymentTriggerImageChangeParams(ref common.
 				Properties: map[string]spec.Schema{
 					"automatic": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Automatic means that the detection of a new tag value should result in an image update inside the pod template.",
+							Description: "automatic means that the detection of a new tag value should result in an image update inside the pod template.",
 							Type:        []string{"boolean"},
 							Format:      "",
 						},
 					},
 					"containerNames": {
 						SchemaProps: spec.SchemaProps{
-							Description: "ContainerNames is used to restrict tag updates to the specified set of container names in a pod. If multiple triggers point to the same containers, the resulting behavior is undefined. Future API versions will make this a validation error. If ContainerNames does not point to a valid container, the trigger will be ignored. Future API versions will make this a validation error.",
+							Description: "containerNames is used to restrict tag updates to the specified set of container names in a pod. If multiple triggers point to the same containers, the resulting behavior is undefined. Future API versions will make this a validation error. If ContainerNames does not point to a valid container, the trigger will be ignored. Future API versions will make this a validation error.",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -2836,14 +2877,14 @@ func schema_openshift_api_apps_v1_DeploymentTriggerImageChangeParams(ref common.
 					},
 					"from": {
 						SchemaProps: spec.SchemaProps{
-							Description: "From is a reference to an image stream tag to watch for changes. From.Name is the only required subfield - if From.Namespace is blank, the namespace of the current deployment trigger will be used.",
+							Description: "from is a reference to an image stream tag to watch for changes. From.Name is the only required subfield - if From.Namespace is blank, the namespace of the current deployment trigger will be used.",
 							Default:     map[string]interface{}{},
 							Ref:         ref("k8s.io/api/core/v1.ObjectReference"),
 						},
 					},
 					"lastTriggeredImage": {
 						SchemaProps: spec.SchemaProps{
-							Description: "LastTriggeredImage is the last image to be triggered.",
+							Description: "lastTriggeredImage is the last image to be triggered.",
 							Type:        []string{"string"},
 							Format:      "",
 						},
@@ -2866,14 +2907,14 @@ func schema_openshift_api_apps_v1_DeploymentTriggerPolicy(ref common.ReferenceCa
 				Properties: map[string]spec.Schema{
 					"type": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Type of the trigger",
+							Description: "type of the trigger",
 							Type:        []string{"string"},
 							Format:      "",
 						},
 					},
 					"imageChangeParams": {
 						SchemaProps: spec.SchemaProps{
-							Description: "ImageChangeParams represents the parameters for the ImageChange trigger.",
+							Description: "imageChangeParams represents the parameters for the ImageChange trigger.",
 							Ref:         ref("github.com/openshift/api/apps/v1.DeploymentTriggerImageChangeParams"),
 						},
 					},
@@ -2894,7 +2935,7 @@ func schema_openshift_api_apps_v1_ExecNewPodHook(ref common.ReferenceCallback) c
 				Properties: map[string]spec.Schema{
 					"command": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Command is the action command and its arguments.",
+							Description: "command is the action command and its arguments.",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -2909,7 +2950,7 @@ func schema_openshift_api_apps_v1_ExecNewPodHook(ref common.ReferenceCallback) c
 					},
 					"env": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Env is a set of environment variables to supply to the hook pod's container.",
+							Description: "env is a set of environment variables to supply to the hook pod's container.",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -2923,7 +2964,7 @@ func schema_openshift_api_apps_v1_ExecNewPodHook(ref common.ReferenceCallback) c
 					},
 					"containerName": {
 						SchemaProps: spec.SchemaProps{
-							Description: "ContainerName is the name of a container in the deployment pod template whose container image will be used for the hook pod's container.",
+							Description: "containerName is the name of a container in the deployment pod template whose container image will be used for the hook pod's container.",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -2931,7 +2972,7 @@ func schema_openshift_api_apps_v1_ExecNewPodHook(ref common.ReferenceCallback) c
 					},
 					"volumes": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Volumes is a list of named volumes from the pod template which should be copied to the hook pod. Volumes names not found in pod spec are ignored. An empty list means no volumes will be copied.",
+							Description: "volumes is a list of named volumes from the pod template which should be copied to the hook pod. Volumes names not found in pod spec are ignored. An empty list means no volumes will be copied.",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -2962,7 +3003,7 @@ func schema_openshift_api_apps_v1_LifecycleHook(ref common.ReferenceCallback) co
 				Properties: map[string]spec.Schema{
 					"failurePolicy": {
 						SchemaProps: spec.SchemaProps{
-							Description: "FailurePolicy specifies what action to take if the hook fails.",
+							Description: "failurePolicy specifies what action to take if the hook fails.",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -2970,13 +3011,13 @@ func schema_openshift_api_apps_v1_LifecycleHook(ref common.ReferenceCallback) co
 					},
 					"execNewPod": {
 						SchemaProps: spec.SchemaProps{
-							Description: "ExecNewPod specifies the options for a lifecycle hook backed by a pod.",
+							Description: "execNewPod specifies the options for a lifecycle hook backed by a pod.",
 							Ref:         ref("github.com/openshift/api/apps/v1.ExecNewPodHook"),
 						},
 					},
 					"tagImages": {
 						SchemaProps: spec.SchemaProps{
-							Description: "TagImages instructs the deployer to tag the current image referenced under a container onto an image stream tag.",
+							Description: "tagImages instructs the deployer to tag the current image referenced under a container onto an image stream tag.",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -3006,26 +3047,26 @@ func schema_openshift_api_apps_v1_RecreateDeploymentStrategyParams(ref common.Re
 				Properties: map[string]spec.Schema{
 					"timeoutSeconds": {
 						SchemaProps: spec.SchemaProps{
-							Description: "TimeoutSeconds is the time to wait for updates before giving up. If the value is nil, a default will be used.",
+							Description: "timeoutSeconds is the time to wait for updates before giving up. If the value is nil, a default will be used.",
 							Type:        []string{"integer"},
 							Format:      "int64",
 						},
 					},
 					"pre": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Pre is a lifecycle hook which is executed before the strategy manipulates the deployment. All LifecycleHookFailurePolicy values are supported.",
+							Description: "pre is a lifecycle hook which is executed before the strategy manipulates the deployment. All LifecycleHookFailurePolicy values are supported.",
 							Ref:         ref("github.com/openshift/api/apps/v1.LifecycleHook"),
 						},
 					},
 					"mid": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Mid is a lifecycle hook which is executed while the deployment is scaled down to zero before the first new pod is created. All LifecycleHookFailurePolicy values are supported.",
+							Description: "mid is a lifecycle hook which is executed while the deployment is scaled down to zero before the first new pod is created. All LifecycleHookFailurePolicy values are supported.",
 							Ref:         ref("github.com/openshift/api/apps/v1.LifecycleHook"),
 						},
 					},
 					"post": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Post is a lifecycle hook which is executed after the strategy has finished all deployment logic. All LifecycleHookFailurePolicy values are supported.",
+							Description: "post is a lifecycle hook which is executed after the strategy has finished all deployment logic. All LifecycleHookFailurePolicy values are supported.",
 							Ref:         ref("github.com/openshift/api/apps/v1.LifecycleHook"),
 						},
 					},
@@ -3046,46 +3087,46 @@ func schema_openshift_api_apps_v1_RollingDeploymentStrategyParams(ref common.Ref
 				Properties: map[string]spec.Schema{
 					"updatePeriodSeconds": {
 						SchemaProps: spec.SchemaProps{
-							Description: "UpdatePeriodSeconds is the time to wait between individual pod updates. If the value is nil, a default will be used.",
+							Description: "updatePeriodSeconds is the time to wait between individual pod updates. If the value is nil, a default will be used.",
 							Type:        []string{"integer"},
 							Format:      "int64",
 						},
 					},
 					"intervalSeconds": {
 						SchemaProps: spec.SchemaProps{
-							Description: "IntervalSeconds is the time to wait between polling deployment status after update. If the value is nil, a default will be used.",
+							Description: "intervalSeconds is the time to wait between polling deployment status after update. If the value is nil, a default will be used.",
 							Type:        []string{"integer"},
 							Format:      "int64",
 						},
 					},
 					"timeoutSeconds": {
 						SchemaProps: spec.SchemaProps{
-							Description: "TimeoutSeconds is the time to wait for updates before giving up. If the value is nil, a default will be used.",
+							Description: "timeoutSeconds is the time to wait for updates before giving up. If the value is nil, a default will be used.",
 							Type:        []string{"integer"},
 							Format:      "int64",
 						},
 					},
 					"maxUnavailable": {
 						SchemaProps: spec.SchemaProps{
-							Description: "MaxUnavailable is the maximum number of pods that can be unavailable during the update. Value can be an absolute number (ex: 5) or a percentage of total pods at the start of update (ex: 10%). Absolute number is calculated from percentage by rounding down.\n\nThis cannot be 0 if MaxSurge is 0. By default, 25% is used.\n\nExample: when this is set to 30%, the old RC can be scaled down by 30% immediately when the rolling update starts. Once new pods are ready, old RC can be scaled down further, followed by scaling up the new RC, ensuring that at least 70% of original number of pods are available at all times during the update.",
+							Description: "maxUnavailable is the maximum number of pods that can be unavailable during the update. Value can be an absolute number (ex: 5) or a percentage of total pods at the start of update (ex: 10%). Absolute number is calculated from percentage by rounding down.\n\nThis cannot be 0 if MaxSurge is 0. By default, 25% is used.\n\nExample: when this is set to 30%, the old RC can be scaled down by 30% immediately when the rolling update starts. Once new pods are ready, old RC can be scaled down further, followed by scaling up the new RC, ensuring that at least 70% of original number of pods are available at all times during the update.",
 							Ref:         ref("k8s.io/apimachinery/pkg/util/intstr.IntOrString"),
 						},
 					},
 					"maxSurge": {
 						SchemaProps: spec.SchemaProps{
-							Description: "MaxSurge is the maximum number of pods that can be scheduled above the original number of pods. Value can be an absolute number (ex: 5) or a percentage of total pods at the start of the update (ex: 10%). Absolute number is calculated from percentage by rounding up.\n\nThis cannot be 0 if MaxUnavailable is 0. By default, 25% is used.\n\nExample: when this is set to 30%, the new RC can be scaled up by 30% immediately when the rolling update starts. Once old pods have been killed, new RC can be scaled up further, ensuring that total number of pods running at any time during the update is atmost 130% of original pods.",
+							Description: "maxSurge is the maximum number of pods that can be scheduled above the original number of pods. Value can be an absolute number (ex: 5) or a percentage of total pods at the start of the update (ex: 10%). Absolute number is calculated from percentage by rounding up.\n\nThis cannot be 0 if MaxUnavailable is 0. By default, 25% is used.\n\nExample: when this is set to 30%, the new RC can be scaled up by 30% immediately when the rolling update starts. Once old pods have been killed, new RC can be scaled up further, ensuring that total number of pods running at any time during the update is atmost 130% of original pods.",
 							Ref:         ref("k8s.io/apimachinery/pkg/util/intstr.IntOrString"),
 						},
 					},
 					"pre": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Pre is a lifecycle hook which is executed before the deployment process begins. All LifecycleHookFailurePolicy values are supported.",
+							Description: "pre is a lifecycle hook which is executed before the deployment process begins. All LifecycleHookFailurePolicy values are supported.",
 							Ref:         ref("github.com/openshift/api/apps/v1.LifecycleHook"),
 						},
 					},
 					"post": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Post is a lifecycle hook which is executed after the strategy has finished all deployment logic. All LifecycleHookFailurePolicy values are supported.",
+							Description: "post is a lifecycle hook which is executed after the strategy has finished all deployment logic. All LifecycleHookFailurePolicy values are supported.",
 							Ref:         ref("github.com/openshift/api/apps/v1.LifecycleHook"),
 						},
 					},
@@ -3106,7 +3147,7 @@ func schema_openshift_api_apps_v1_TagImageHook(ref common.ReferenceCallback) com
 				Properties: map[string]spec.Schema{
 					"containerName": {
 						SchemaProps: spec.SchemaProps{
-							Description: "ContainerName is the name of a container in the deployment config whose image value will be used as the source of the tag. If there is only a single container this value will be defaulted to the name of that container.",
+							Description: "containerName is the name of a container in the deployment config whose image value will be used as the source of the tag. If there is only a single container this value will be defaulted to the name of that container.",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -3114,7 +3155,7 @@ func schema_openshift_api_apps_v1_TagImageHook(ref common.ReferenceCallback) com
 					},
 					"to": {
 						SchemaProps: spec.SchemaProps{
-							Description: "To is the target ImageStreamTag to set the container's image onto.",
+							Description: "to is the target ImageStreamTag to set the container's image onto.",
 							Default:     map[string]interface{}{},
 							Ref:         ref("k8s.io/api/core/v1.ObjectReference"),
 						},
@@ -3137,7 +3178,7 @@ func schema_openshift_api_authorization_v1_Action(ref common.ReferenceCallback) 
 				Properties: map[string]spec.Schema{
 					"namespace": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Namespace is the namespace of the action being requested.  Currently, there is no distinction between no namespace and all namespaces",
+							Description: "namespace is the namespace of the action being requested.  Currently, there is no distinction between no namespace and all namespaces",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -3145,7 +3186,7 @@ func schema_openshift_api_authorization_v1_Action(ref common.ReferenceCallback) 
 					},
 					"verb": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Verb is one of: get, list, watch, create, update, delete",
+							Description: "verb is one of: get, list, watch, create, update, delete",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -3169,7 +3210,7 @@ func schema_openshift_api_authorization_v1_Action(ref common.ReferenceCallback) 
 					},
 					"resource": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Resource is one of the existing resource types",
+							Description: "resource is one of the existing resource types",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -3177,7 +3218,7 @@ func schema_openshift_api_authorization_v1_Action(ref common.ReferenceCallback) 
 					},
 					"resourceName": {
 						SchemaProps: spec.SchemaProps{
-							Description: "ResourceName is the name of the resource being requested for a \"get\" or deleted for a \"delete\"",
+							Description: "resourceName is the name of the resource being requested for a \"get\" or deleted for a \"delete\"",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -3185,7 +3226,7 @@ func schema_openshift_api_authorization_v1_Action(ref common.ReferenceCallback) 
 					},
 					"path": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Path is the path of a non resource URL",
+							Description: "path is the path of a non resource URL",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -3193,7 +3234,7 @@ func schema_openshift_api_authorization_v1_Action(ref common.ReferenceCallback) 
 					},
 					"isNonResourceURL": {
 						SchemaProps: spec.SchemaProps{
-							Description: "IsNonResourceURL is true if this is a request for a non-resource URL (outside of the resource hierarchy)",
+							Description: "isNonResourceURL is true if this is a request for a non-resource URL (outside of the resource hierarchy)",
 							Default:     false,
 							Type:        []string{"boolean"},
 							Format:      "",
@@ -3201,7 +3242,7 @@ func schema_openshift_api_authorization_v1_Action(ref common.ReferenceCallback) 
 					},
 					"content": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Content is the actual content of the request for create and update",
+							Description: "content is the actual content of the request for create and update",
 							Ref:         ref("k8s.io/apimachinery/pkg/runtime.RawExtension"),
 						},
 					},
@@ -3244,7 +3285,7 @@ func schema_openshift_api_authorization_v1_ClusterRole(ref common.ReferenceCallb
 					},
 					"rules": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Rules holds all the PolicyRules for this ClusterRole",
+							Description: "rules holds all the PolicyRules for this ClusterRole",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -3258,7 +3299,7 @@ func schema_openshift_api_authorization_v1_ClusterRole(ref common.ReferenceCallb
 					},
 					"aggregationRule": {
 						SchemaProps: spec.SchemaProps{
-							Description: "AggregationRule is an optional field that describes how to build the Rules for this ClusterRole. If AggregationRule is set, then the Rules are controller managed and direct changes to Rules will be stomped by the controller.",
+							Description: "aggregationRule is an optional field that describes how to build the Rules for this ClusterRole. If AggregationRule is set, then the Rules are controller managed and direct changes to Rules will be stomped by the controller.",
 							Ref:         ref("k8s.io/api/rbac/v1.AggregationRule"),
 						},
 					},
@@ -3301,7 +3342,7 @@ func schema_openshift_api_authorization_v1_ClusterRoleBinding(ref common.Referen
 					},
 					"userNames": {
 						SchemaProps: spec.SchemaProps{
-							Description: "UserNames holds all the usernames directly bound to the role. This field should only be specified when supporting legacy clients and servers. See Subjects for further details.",
+							Description: "userNames holds all the usernames directly bound to the role. This field should only be specified when supporting legacy clients and servers. See Subjects for further details.",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -3316,7 +3357,7 @@ func schema_openshift_api_authorization_v1_ClusterRoleBinding(ref common.Referen
 					},
 					"groupNames": {
 						SchemaProps: spec.SchemaProps{
-							Description: "GroupNames holds all the groups directly bound to the role. This field should only be specified when supporting legacy clients and servers. See Subjects for further details.",
+							Description: "groupNames holds all the groups directly bound to the role. This field should only be specified when supporting legacy clients and servers. See Subjects for further details.",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -3331,7 +3372,7 @@ func schema_openshift_api_authorization_v1_ClusterRoleBinding(ref common.Referen
 					},
 					"subjects": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Subjects hold object references to authorize with this rule. This field is ignored if UserNames or GroupNames are specified to support legacy clients and servers. Thus newer clients that do not need to support backwards compatibility should send only fully qualified Subjects and should omit the UserNames and GroupNames fields. Clients that need to support backwards compatibility can use this field to build the UserNames and GroupNames.",
+							Description: "subjects hold object references to authorize with this rule. This field is ignored if UserNames or GroupNames are specified to support legacy clients and servers. Thus newer clients that do not need to support backwards compatibility should send only fully qualified Subjects and should omit the UserNames and GroupNames fields. Clients that need to support backwards compatibility can use this field to build the UserNames and GroupNames.",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -3345,7 +3386,7 @@ func schema_openshift_api_authorization_v1_ClusterRoleBinding(ref common.Referen
 					},
 					"roleRef": {
 						SchemaProps: spec.SchemaProps{
-							Description: "RoleRef can only reference the current namespace and the global namespace. If the ClusterRoleRef cannot be resolved, the Authorizer must return an error. Since Policy is a singleton, this is sufficient knowledge to locate a role.",
+							Description: "roleRef can only reference the current namespace and the global namespace. If the ClusterRoleRef cannot be resolved, the Authorizer must return an error. Since Policy is a singleton, this is sufficient knowledge to locate a role.",
 							Default:     map[string]interface{}{},
 							Ref:         ref("k8s.io/api/core/v1.ObjectReference"),
 						},
@@ -3389,7 +3430,7 @@ func schema_openshift_api_authorization_v1_ClusterRoleBindingList(ref common.Ref
 					},
 					"items": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Items is a list of ClusterRoleBindings",
+							Description: "items is a list of ClusterRoleBindings",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -3440,7 +3481,7 @@ func schema_openshift_api_authorization_v1_ClusterRoleList(ref common.ReferenceC
 					},
 					"items": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Items is a list of ClusterRoles",
+							Description: "items is a list of ClusterRoles",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -3470,7 +3511,7 @@ func schema_openshift_api_authorization_v1_GroupRestriction(ref common.Reference
 				Properties: map[string]spec.Schema{
 					"groups": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Groups is a list of groups used to match against an individual user's groups. If the user is a member of one of the whitelisted groups, the user is allowed to be bound to a role.",
+							Description: "groups is a list of groups used to match against an individual user's groups. If the user is a member of one of the whitelisted groups, the user is allowed to be bound to a role.",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -3563,7 +3604,7 @@ func schema_openshift_api_authorization_v1_LocalResourceAccessReview(ref common.
 					},
 					"namespace": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Namespace is the namespace of the action being requested.  Currently, there is no distinction between no namespace and all namespaces",
+							Description: "namespace is the namespace of the action being requested.  Currently, there is no distinction between no namespace and all namespaces",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -3571,7 +3612,7 @@ func schema_openshift_api_authorization_v1_LocalResourceAccessReview(ref common.
 					},
 					"verb": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Verb is one of: get, list, watch, create, update, delete",
+							Description: "verb is one of: get, list, watch, create, update, delete",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -3595,7 +3636,7 @@ func schema_openshift_api_authorization_v1_LocalResourceAccessReview(ref common.
 					},
 					"resource": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Resource is one of the existing resource types",
+							Description: "resource is one of the existing resource types",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -3603,7 +3644,7 @@ func schema_openshift_api_authorization_v1_LocalResourceAccessReview(ref common.
 					},
 					"resourceName": {
 						SchemaProps: spec.SchemaProps{
-							Description: "ResourceName is the name of the resource being requested for a \"get\" or deleted for a \"delete\"",
+							Description: "resourceName is the name of the resource being requested for a \"get\" or deleted for a \"delete\"",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -3611,7 +3652,7 @@ func schema_openshift_api_authorization_v1_LocalResourceAccessReview(ref common.
 					},
 					"path": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Path is the path of a non resource URL",
+							Description: "path is the path of a non resource URL",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -3619,7 +3660,7 @@ func schema_openshift_api_authorization_v1_LocalResourceAccessReview(ref common.
 					},
 					"isNonResourceURL": {
 						SchemaProps: spec.SchemaProps{
-							Description: "IsNonResourceURL is true if this is a request for a non-resource URL (outside of the resource hierarchy)",
+							Description: "isNonResourceURL is true if this is a request for a non-resource URL (outside of the resource hierarchy)",
 							Default:     false,
 							Type:        []string{"boolean"},
 							Format:      "",
@@ -3627,7 +3668,7 @@ func schema_openshift_api_authorization_v1_LocalResourceAccessReview(ref common.
 					},
 					"content": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Content is the actual content of the request for create and update",
+							Description: "content is the actual content of the request for create and update",
 							Ref:         ref("k8s.io/apimachinery/pkg/runtime.RawExtension"),
 						},
 					},
@@ -3670,7 +3711,7 @@ func schema_openshift_api_authorization_v1_LocalSubjectAccessReview(ref common.R
 					},
 					"namespace": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Namespace is the namespace of the action being requested.  Currently, there is no distinction between no namespace and all namespaces",
+							Description: "namespace is the namespace of the action being requested.  Currently, there is no distinction between no namespace and all namespaces",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -3678,7 +3719,7 @@ func schema_openshift_api_authorization_v1_LocalSubjectAccessReview(ref common.R
 					},
 					"verb": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Verb is one of: get, list, watch, create, update, delete",
+							Description: "verb is one of: get, list, watch, create, update, delete",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -3702,7 +3743,7 @@ func schema_openshift_api_authorization_v1_LocalSubjectAccessReview(ref common.R
 					},
 					"resource": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Resource is one of the existing resource types",
+							Description: "resource is one of the existing resource types",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -3710,7 +3751,7 @@ func schema_openshift_api_authorization_v1_LocalSubjectAccessReview(ref common.R
 					},
 					"resourceName": {
 						SchemaProps: spec.SchemaProps{
-							Description: "ResourceName is the name of the resource being requested for a \"get\" or deleted for a \"delete\"",
+							Description: "resourceName is the name of the resource being requested for a \"get\" or deleted for a \"delete\"",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -3718,7 +3759,7 @@ func schema_openshift_api_authorization_v1_LocalSubjectAccessReview(ref common.R
 					},
 					"path": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Path is the path of a non resource URL",
+							Description: "path is the path of a non resource URL",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -3726,7 +3767,7 @@ func schema_openshift_api_authorization_v1_LocalSubjectAccessReview(ref common.R
 					},
 					"isNonResourceURL": {
 						SchemaProps: spec.SchemaProps{
-							Description: "IsNonResourceURL is true if this is a request for a non-resource URL (outside of the resource hierarchy)",
+							Description: "isNonResourceURL is true if this is a request for a non-resource URL (outside of the resource hierarchy)",
 							Default:     false,
 							Type:        []string{"boolean"},
 							Format:      "",
@@ -3734,13 +3775,13 @@ func schema_openshift_api_authorization_v1_LocalSubjectAccessReview(ref common.R
 					},
 					"content": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Content is the actual content of the request for create and update",
+							Description: "content is the actual content of the request for create and update",
 							Ref:         ref("k8s.io/apimachinery/pkg/runtime.RawExtension"),
 						},
 					},
 					"user": {
 						SchemaProps: spec.SchemaProps{
-							Description: "User is optional.  If both User and Groups are empty, the current authenticated user is used.",
+							Description: "user is optional.  If both User and Groups are empty, the current authenticated user is used.",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -3748,7 +3789,7 @@ func schema_openshift_api_authorization_v1_LocalSubjectAccessReview(ref common.R
 					},
 					"groups": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Groups is optional.  Groups is the list of groups to which the User belongs.",
+							Description: "groups is optional.  Groups is the list of groups to which the User belongs.",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -3763,7 +3804,7 @@ func schema_openshift_api_authorization_v1_LocalSubjectAccessReview(ref common.R
 					},
 					"scopes": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Scopes to use for the evaluation.  Empty means \"use the unscoped (full) permissions of the user/groups\". Nil for a self-SAR, means \"use the scopes on this request\". Nil for a regular SAR, means the same as empty.",
+							Description: "scopes to use for the evaluation.  Empty means \"use the unscoped (full) permissions of the user/groups\". Nil for a self-SAR, means \"use the scopes on this request\". Nil for a regular SAR, means the same as empty.",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -3794,7 +3835,7 @@ func schema_openshift_api_authorization_v1_NamedClusterRole(ref common.Reference
 				Properties: map[string]spec.Schema{
 					"name": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Name is the name of the cluster role",
+							Description: "name is the name of the cluster role",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -3802,7 +3843,7 @@ func schema_openshift_api_authorization_v1_NamedClusterRole(ref common.Reference
 					},
 					"role": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Role is the cluster role being named",
+							Description: "role is the cluster role being named",
 							Default:     map[string]interface{}{},
 							Ref:         ref("github.com/openshift/api/authorization/v1.ClusterRole"),
 						},
@@ -3825,7 +3866,7 @@ func schema_openshift_api_authorization_v1_NamedClusterRoleBinding(ref common.Re
 				Properties: map[string]spec.Schema{
 					"name": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Name is the name of the cluster role binding",
+							Description: "name is the name of the cluster role binding",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -3833,7 +3874,7 @@ func schema_openshift_api_authorization_v1_NamedClusterRoleBinding(ref common.Re
 					},
 					"roleBinding": {
 						SchemaProps: spec.SchemaProps{
-							Description: "RoleBinding is the cluster role binding being named",
+							Description: "roleBinding is the cluster role binding being named",
 							Default:     map[string]interface{}{},
 							Ref:         ref("github.com/openshift/api/authorization/v1.ClusterRoleBinding"),
 						},
@@ -3856,7 +3897,7 @@ func schema_openshift_api_authorization_v1_NamedRole(ref common.ReferenceCallbac
 				Properties: map[string]spec.Schema{
 					"name": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Name is the name of the role",
+							Description: "name is the name of the role",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -3864,7 +3905,7 @@ func schema_openshift_api_authorization_v1_NamedRole(ref common.ReferenceCallbac
 					},
 					"role": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Role is the role being named",
+							Description: "role is the role being named",
 							Default:     map[string]interface{}{},
 							Ref:         ref("github.com/openshift/api/authorization/v1.Role"),
 						},
@@ -3887,7 +3928,7 @@ func schema_openshift_api_authorization_v1_NamedRoleBinding(ref common.Reference
 				Properties: map[string]spec.Schema{
 					"name": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Name is the name of the role binding",
+							Description: "name is the name of the role binding",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -3895,7 +3936,7 @@ func schema_openshift_api_authorization_v1_NamedRoleBinding(ref common.Reference
 					},
 					"roleBinding": {
 						SchemaProps: spec.SchemaProps{
-							Description: "RoleBinding is the role binding being named",
+							Description: "roleBinding is the role binding being named",
 							Default:     map[string]interface{}{},
 							Ref:         ref("github.com/openshift/api/authorization/v1.RoleBinding"),
 						},
@@ -3918,7 +3959,7 @@ func schema_openshift_api_authorization_v1_PolicyRule(ref common.ReferenceCallba
 				Properties: map[string]spec.Schema{
 					"verbs": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Verbs is a list of Verbs that apply to ALL the ResourceKinds and AttributeRestrictions contained in this rule.  VerbAll represents all kinds.",
+							Description: "verbs is a list of Verbs that apply to ALL the ResourceKinds and AttributeRestrictions contained in this rule.  VerbAll represents all kinds.",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -3933,13 +3974,13 @@ func schema_openshift_api_authorization_v1_PolicyRule(ref common.ReferenceCallba
 					},
 					"attributeRestrictions": {
 						SchemaProps: spec.SchemaProps{
-							Description: "AttributeRestrictions will vary depending on what the Authorizer/AuthorizationAttributeBuilder pair supports. If the Authorizer does not recognize how to handle the AttributeRestrictions, the Authorizer should report an error.",
+							Description: "attributeRestrictions will vary depending on what the Authorizer/AuthorizationAttributeBuilder pair supports. If the Authorizer does not recognize how to handle the AttributeRestrictions, the Authorizer should report an error.",
 							Ref:         ref("k8s.io/apimachinery/pkg/runtime.RawExtension"),
 						},
 					},
 					"apiGroups": {
 						SchemaProps: spec.SchemaProps{
-							Description: "APIGroups is the name of the APIGroup that contains the resources.  If this field is empty, then both kubernetes and origin API groups are assumed. That means that if an action is requested against one of the enumerated resources in either the kubernetes or the origin API group, the request will be allowed",
+							Description: "apiGroups is the name of the APIGroup that contains the resources.  If this field is empty, then both kubernetes and origin API groups are assumed. That means that if an action is requested against one of the enumerated resources in either the kubernetes or the origin API group, the request will be allowed",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -3954,7 +3995,7 @@ func schema_openshift_api_authorization_v1_PolicyRule(ref common.ReferenceCallba
 					},
 					"resources": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Resources is a list of resources this rule applies to.  ResourceAll represents all resources.",
+							Description: "resources is a list of resources this rule applies to.  ResourceAll represents all resources.",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -3969,7 +4010,7 @@ func schema_openshift_api_authorization_v1_PolicyRule(ref common.ReferenceCallba
 					},
 					"resourceNames": {
 						SchemaProps: spec.SchemaProps{
-							Description: "ResourceNames is an optional white list of names that the rule applies to.  An empty set means that everything is allowed.",
+							Description: "resourceNames is an optional white list of names that the rule applies to.  An empty set means that everything is allowed.",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -4036,7 +4077,7 @@ func schema_openshift_api_authorization_v1_ResourceAccessReview(ref common.Refer
 					},
 					"namespace": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Namespace is the namespace of the action being requested.  Currently, there is no distinction between no namespace and all namespaces",
+							Description: "namespace is the namespace of the action being requested.  Currently, there is no distinction between no namespace and all namespaces",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -4044,7 +4085,7 @@ func schema_openshift_api_authorization_v1_ResourceAccessReview(ref common.Refer
 					},
 					"verb": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Verb is one of: get, list, watch, create, update, delete",
+							Description: "verb is one of: get, list, watch, create, update, delete",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -4068,7 +4109,7 @@ func schema_openshift_api_authorization_v1_ResourceAccessReview(ref common.Refer
 					},
 					"resource": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Resource is one of the existing resource types",
+							Description: "resource is one of the existing resource types",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -4076,7 +4117,7 @@ func schema_openshift_api_authorization_v1_ResourceAccessReview(ref common.Refer
 					},
 					"resourceName": {
 						SchemaProps: spec.SchemaProps{
-							Description: "ResourceName is the name of the resource being requested for a \"get\" or deleted for a \"delete\"",
+							Description: "resourceName is the name of the resource being requested for a \"get\" or deleted for a \"delete\"",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -4084,7 +4125,7 @@ func schema_openshift_api_authorization_v1_ResourceAccessReview(ref common.Refer
 					},
 					"path": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Path is the path of a non resource URL",
+							Description: "path is the path of a non resource URL",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -4092,7 +4133,7 @@ func schema_openshift_api_authorization_v1_ResourceAccessReview(ref common.Refer
 					},
 					"isNonResourceURL": {
 						SchemaProps: spec.SchemaProps{
-							Description: "IsNonResourceURL is true if this is a request for a non-resource URL (outside of the resource hierarchy)",
+							Description: "isNonResourceURL is true if this is a request for a non-resource URL (outside of the resource hierarchy)",
 							Default:     false,
 							Type:        []string{"boolean"},
 							Format:      "",
@@ -4100,7 +4141,7 @@ func schema_openshift_api_authorization_v1_ResourceAccessReview(ref common.Refer
 					},
 					"content": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Content is the actual content of the request for create and update",
+							Description: "content is the actual content of the request for create and update",
 							Ref:         ref("k8s.io/apimachinery/pkg/runtime.RawExtension"),
 						},
 					},
@@ -4136,7 +4177,7 @@ func schema_openshift_api_authorization_v1_ResourceAccessReviewResponse(ref comm
 					},
 					"namespace": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Namespace is the namespace used for the access review",
+							Description: "namespace is the namespace used for the access review",
 							Type:        []string{"string"},
 							Format:      "",
 						},
@@ -4216,7 +4257,7 @@ func schema_openshift_api_authorization_v1_Role(ref common.ReferenceCallback) co
 					},
 					"rules": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Rules holds all the PolicyRules for this Role",
+							Description: "rules holds all the PolicyRules for this Role",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -4267,7 +4308,7 @@ func schema_openshift_api_authorization_v1_RoleBinding(ref common.ReferenceCallb
 					},
 					"userNames": {
 						SchemaProps: spec.SchemaProps{
-							Description: "UserNames holds all the usernames directly bound to the role. This field should only be specified when supporting legacy clients and servers. See Subjects for further details.",
+							Description: "userNames holds all the usernames directly bound to the role. This field should only be specified when supporting legacy clients and servers. See Subjects for further details.",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -4282,7 +4323,7 @@ func schema_openshift_api_authorization_v1_RoleBinding(ref common.ReferenceCallb
 					},
 					"groupNames": {
 						SchemaProps: spec.SchemaProps{
-							Description: "GroupNames holds all the groups directly bound to the role. This field should only be specified when supporting legacy clients and servers. See Subjects for further details.",
+							Description: "groupNames holds all the groups directly bound to the role. This field should only be specified when supporting legacy clients and servers. See Subjects for further details.",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -4297,7 +4338,7 @@ func schema_openshift_api_authorization_v1_RoleBinding(ref common.ReferenceCallb
 					},
 					"subjects": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Subjects hold object references to authorize with this rule. This field is ignored if UserNames or GroupNames are specified to support legacy clients and servers. Thus newer clients that do not need to support backwards compatibility should send only fully qualified Subjects and should omit the UserNames and GroupNames fields. Clients that need to support backwards compatibility can use this field to build the UserNames and GroupNames.",
+							Description: "subjects hold object references to authorize with this rule. This field is ignored if UserNames or GroupNames are specified to support legacy clients and servers. Thus newer clients that do not need to support backwards compatibility should send only fully qualified Subjects and should omit the UserNames and GroupNames fields. Clients that need to support backwards compatibility can use this field to build the UserNames and GroupNames.",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -4311,7 +4352,7 @@ func schema_openshift_api_authorization_v1_RoleBinding(ref common.ReferenceCallb
 					},
 					"roleRef": {
 						SchemaProps: spec.SchemaProps{
-							Description: "RoleRef can only reference the current namespace and the global namespace. If the RoleRef cannot be resolved, the Authorizer must return an error. Since Policy is a singleton, this is sufficient knowledge to locate a role.",
+							Description: "roleRef can only reference the current namespace and the global namespace. If the RoleRef cannot be resolved, the Authorizer must return an error. Since Policy is a singleton, this is sufficient knowledge to locate a role.",
 							Default:     map[string]interface{}{},
 							Ref:         ref("k8s.io/api/core/v1.ObjectReference"),
 						},
@@ -4355,7 +4396,7 @@ func schema_openshift_api_authorization_v1_RoleBindingList(ref common.ReferenceC
 					},
 					"items": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Items is a list of RoleBindings",
+							Description: "items is a list of RoleBindings",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -4406,7 +4447,7 @@ func schema_openshift_api_authorization_v1_RoleBindingRestriction(ref common.Ref
 					},
 					"spec": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Spec defines the matcher.",
+							Description: "spec defines the matcher.",
 							Default:     map[string]interface{}{},
 							Ref:         ref("github.com/openshift/api/authorization/v1.RoleBindingRestrictionSpec"),
 						},
@@ -4450,7 +4491,7 @@ func schema_openshift_api_authorization_v1_RoleBindingRestrictionList(ref common
 					},
 					"items": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Items is a list of RoleBindingRestriction objects.",
+							Description: "items is a list of RoleBindingRestriction objects.",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -4480,19 +4521,19 @@ func schema_openshift_api_authorization_v1_RoleBindingRestrictionSpec(ref common
 				Properties: map[string]spec.Schema{
 					"userrestriction": {
 						SchemaProps: spec.SchemaProps{
-							Description: "UserRestriction matches against user subjects.",
+							Description: "userrestriction matches against user subjects.",
 							Ref:         ref("github.com/openshift/api/authorization/v1.UserRestriction"),
 						},
 					},
 					"grouprestriction": {
 						SchemaProps: spec.SchemaProps{
-							Description: "GroupRestriction matches against group subjects.",
+							Description: "grouprestriction matches against group subjects.",
 							Ref:         ref("github.com/openshift/api/authorization/v1.GroupRestriction"),
 						},
 					},
 					"serviceaccountrestriction": {
 						SchemaProps: spec.SchemaProps{
-							Description: "ServiceAccountRestriction matches against service-account subjects.",
+							Description: "serviceaccountrestriction matches against service-account subjects.",
 							Ref:         ref("github.com/openshift/api/authorization/v1.ServiceAccountRestriction"),
 						},
 					},
@@ -4535,7 +4576,7 @@ func schema_openshift_api_authorization_v1_RoleList(ref common.ReferenceCallback
 					},
 					"items": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Items is a list of Roles",
+							Description: "items is a list of Roles",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -4586,14 +4627,14 @@ func schema_openshift_api_authorization_v1_SelfSubjectRulesReview(ref common.Ref
 					},
 					"spec": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Spec adds information about how to conduct the check",
+							Description: "spec adds information about how to conduct the check",
 							Default:     map[string]interface{}{},
 							Ref:         ref("github.com/openshift/api/authorization/v1.SelfSubjectRulesReviewSpec"),
 						},
 					},
 					"status": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Status is completed by the server to tell which permissions you have",
+							Description: "status is completed by the server to tell which permissions you have",
 							Default:     map[string]interface{}{},
 							Ref:         ref("github.com/openshift/api/authorization/v1.SubjectRulesReviewStatus"),
 						},
@@ -4616,7 +4657,7 @@ func schema_openshift_api_authorization_v1_SelfSubjectRulesReviewSpec(ref common
 				Properties: map[string]spec.Schema{
 					"scopes": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Scopes to use for the evaluation.  Empty means \"use the unscoped (full) permissions of the user/groups\". Nil means \"use the scopes on this request\".",
+							Description: "scopes to use for the evaluation.  Empty means \"use the unscoped (full) permissions of the user/groups\". Nil means \"use the scopes on this request\".",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -4645,7 +4686,7 @@ func schema_openshift_api_authorization_v1_ServiceAccountReference(ref common.Re
 				Properties: map[string]spec.Schema{
 					"name": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Name is the name of the service account.",
+							Description: "name is the name of the service account.",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -4653,7 +4694,7 @@ func schema_openshift_api_authorization_v1_ServiceAccountReference(ref common.Re
 					},
 					"namespace": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Namespace is the namespace of the service account.  Service accounts from inside the whitelisted namespaces are allowed to be bound to roles.  If Namespace is empty, then the namespace of the RoleBindingRestriction in which the ServiceAccountReference is embedded is used.",
+							Description: "namespace is the namespace of the service account.  Service accounts from inside the whitelisted namespaces are allowed to be bound to roles.  If Namespace is empty, then the namespace of the RoleBindingRestriction in which the ServiceAccountReference is embedded is used.",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -4675,7 +4716,7 @@ func schema_openshift_api_authorization_v1_ServiceAccountRestriction(ref common.
 				Properties: map[string]spec.Schema{
 					"serviceaccounts": {
 						SchemaProps: spec.SchemaProps{
-							Description: "ServiceAccounts specifies a list of literal service-account names.",
+							Description: "serviceaccounts specifies a list of literal service-account names.",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -4689,7 +4730,7 @@ func schema_openshift_api_authorization_v1_ServiceAccountRestriction(ref common.
 					},
 					"namespaces": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Namespaces specifies a list of literal namespace names.",
+							Description: "namespaces specifies a list of literal namespace names.",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -4741,7 +4782,7 @@ func schema_openshift_api_authorization_v1_SubjectAccessReview(ref common.Refere
 					},
 					"namespace": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Namespace is the namespace of the action being requested.  Currently, there is no distinction between no namespace and all namespaces",
+							Description: "namespace is the namespace of the action being requested.  Currently, there is no distinction between no namespace and all namespaces",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -4749,7 +4790,7 @@ func schema_openshift_api_authorization_v1_SubjectAccessReview(ref common.Refere
 					},
 					"verb": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Verb is one of: get, list, watch, create, update, delete",
+							Description: "verb is one of: get, list, watch, create, update, delete",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -4773,7 +4814,7 @@ func schema_openshift_api_authorization_v1_SubjectAccessReview(ref common.Refere
 					},
 					"resource": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Resource is one of the existing resource types",
+							Description: "resource is one of the existing resource types",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -4781,7 +4822,7 @@ func schema_openshift_api_authorization_v1_SubjectAccessReview(ref common.Refere
 					},
 					"resourceName": {
 						SchemaProps: spec.SchemaProps{
-							Description: "ResourceName is the name of the resource being requested for a \"get\" or deleted for a \"delete\"",
+							Description: "resourceName is the name of the resource being requested for a \"get\" or deleted for a \"delete\"",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -4789,7 +4830,7 @@ func schema_openshift_api_authorization_v1_SubjectAccessReview(ref common.Refere
 					},
 					"path": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Path is the path of a non resource URL",
+							Description: "path is the path of a non resource URL",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -4797,7 +4838,7 @@ func schema_openshift_api_authorization_v1_SubjectAccessReview(ref common.Refere
 					},
 					"isNonResourceURL": {
 						SchemaProps: spec.SchemaProps{
-							Description: "IsNonResourceURL is true if this is a request for a non-resource URL (outside of the resource hierarchy)",
+							Description: "isNonResourceURL is true if this is a request for a non-resource URL (outside of the resource hierarchy)",
 							Default:     false,
 							Type:        []string{"boolean"},
 							Format:      "",
@@ -4805,13 +4846,13 @@ func schema_openshift_api_authorization_v1_SubjectAccessReview(ref common.Refere
 					},
 					"content": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Content is the actual content of the request for create and update",
+							Description: "content is the actual content of the request for create and update",
 							Ref:         ref("k8s.io/apimachinery/pkg/runtime.RawExtension"),
 						},
 					},
 					"user": {
 						SchemaProps: spec.SchemaProps{
-							Description: "User is optional. If both User and Groups are empty, the current authenticated user is used.",
+							Description: "user is optional. If both User and Groups are empty, the current authenticated user is used.",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -4834,7 +4875,7 @@ func schema_openshift_api_authorization_v1_SubjectAccessReview(ref common.Refere
 					},
 					"scopes": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Scopes to use for the evaluation.  Empty means \"use the unscoped (full) permissions of the user/groups\". Nil for a self-SAR, means \"use the scopes on this request\". Nil for a regular SAR, means the same as empty.",
+							Description: "scopes to use for the evaluation.  Empty means \"use the unscoped (full) permissions of the user/groups\". Nil for a self-SAR, means \"use the scopes on this request\". Nil for a regular SAR, means the same as empty.",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -4879,14 +4920,14 @@ func schema_openshift_api_authorization_v1_SubjectAccessReviewResponse(ref commo
 					},
 					"namespace": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Namespace is the namespace used for the access review",
+							Description: "namespace is the namespace used for the access review",
 							Type:        []string{"string"},
 							Format:      "",
 						},
 					},
 					"allowed": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Allowed is required.  True if the action would be allowed, false otherwise.",
+							Description: "allowed is required.  True if the action would be allowed, false otherwise.",
 							Default:     false,
 							Type:        []string{"boolean"},
 							Format:      "",
@@ -4894,14 +4935,14 @@ func schema_openshift_api_authorization_v1_SubjectAccessReviewResponse(ref commo
 					},
 					"reason": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Reason is optional.  It indicates why a request was allowed or denied.",
+							Description: "reason is optional.  It indicates why a request was allowed or denied.",
 							Type:        []string{"string"},
 							Format:      "",
 						},
 					},
 					"evaluationError": {
 						SchemaProps: spec.SchemaProps{
-							Description: "EvaluationError is an indication that some error occurred during the authorization check. It is entirely possible to get an error and be able to continue determine authorization status in spite of it.  This is most common when a bound role is missing, but enough roles are still present and bound to reason about the request.",
+							Description: "evaluationError is an indication that some error occurred during the authorization check. It is entirely possible to get an error and be able to continue determine authorization status in spite of it.  This is most common when a bound role is missing, but enough roles are still present and bound to reason about the request.",
 							Type:        []string{"string"},
 							Format:      "",
 						},
@@ -4943,14 +4984,14 @@ func schema_openshift_api_authorization_v1_SubjectRulesReview(ref common.Referen
 					},
 					"spec": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Spec adds information about how to conduct the check",
+							Description: "spec adds information about how to conduct the check",
 							Default:     map[string]interface{}{},
 							Ref:         ref("github.com/openshift/api/authorization/v1.SubjectRulesReviewSpec"),
 						},
 					},
 					"status": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Status is completed by the server to tell which permissions you have",
+							Description: "status is completed by the server to tell which permissions you have",
 							Default:     map[string]interface{}{},
 							Ref:         ref("github.com/openshift/api/authorization/v1.SubjectRulesReviewStatus"),
 						},
@@ -4973,7 +5014,7 @@ func schema_openshift_api_authorization_v1_SubjectRulesReviewSpec(ref common.Ref
 				Properties: map[string]spec.Schema{
 					"user": {
 						SchemaProps: spec.SchemaProps{
-							Description: "User is optional.  At least one of User and Groups must be specified.",
+							Description: "user is optional.  At least one of User and Groups must be specified.",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -4981,7 +5022,7 @@ func schema_openshift_api_authorization_v1_SubjectRulesReviewSpec(ref common.Ref
 					},
 					"groups": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Groups is optional.  Groups is the list of groups to which the User belongs.  At least one of User and Groups must be specified.",
+							Description: "groups is optional.  Groups is the list of groups to which the User belongs.  At least one of User and Groups must be specified.",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -4996,7 +5037,7 @@ func schema_openshift_api_authorization_v1_SubjectRulesReviewSpec(ref common.Ref
 					},
 					"scopes": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Scopes to use for the evaluation.  Empty means \"use the unscoped (full) permissions of the user/groups\".",
+							Description: "scopes to use for the evaluation.  Empty means \"use the unscoped (full) permissions of the user/groups\".",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -5025,7 +5066,7 @@ func schema_openshift_api_authorization_v1_SubjectRulesReviewStatus(ref common.R
 				Properties: map[string]spec.Schema{
 					"rules": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Rules is the list of rules (no particular sort) that are allowed for the subject",
+							Description: "rules is the list of rules (no particular sort) that are allowed for the subject",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -5039,7 +5080,7 @@ func schema_openshift_api_authorization_v1_SubjectRulesReviewStatus(ref common.R
 					},
 					"evaluationError": {
 						SchemaProps: spec.SchemaProps{
-							Description: "EvaluationError can appear in combination with Rules.  It means some error happened during evaluation that may have prevented additional rules from being populated.",
+							Description: "evaluationError can appear in combination with Rules.  It means some error happened during evaluation that may have prevented additional rules from being populated.",
 							Type:        []string{"string"},
 							Format:      "",
 						},
@@ -5062,7 +5103,7 @@ func schema_openshift_api_authorization_v1_UserRestriction(ref common.ReferenceC
 				Properties: map[string]spec.Schema{
 					"users": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Users specifies a list of literal user names.",
+							Description: "users specifies a list of literal user names.",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -5077,7 +5118,7 @@ func schema_openshift_api_authorization_v1_UserRestriction(ref common.ReferenceC
 					},
 					"groups": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Groups specifies a list of literal group names.",
+							Description: "groups specifies a list of literal group names.",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -5227,13 +5268,13 @@ func schema_openshift_api_build_v1_BitbucketWebHookCause(ref common.ReferenceCal
 				Properties: map[string]spec.Schema{
 					"revision": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Revision is the git source revision information of the trigger.",
+							Description: "revision is the git source revision information of the trigger.",
 							Ref:         ref("github.com/openshift/api/build/v1.SourceRevision"),
 						},
 					},
 					"secret": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Secret is the obfuscated webhook secret that triggered a build.",
+							Description: "secret is the obfuscated webhook secret that triggered a build.",
 							Type:        []string{"string"},
 							Format:      "",
 						},
@@ -5305,7 +5346,7 @@ func schema_openshift_api_build_v1_BuildCondition(ref common.ReferenceCallback) 
 				Properties: map[string]spec.Schema{
 					"type": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Type of build condition.",
+							Description: "type of build condition.",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -5313,7 +5354,7 @@ func schema_openshift_api_build_v1_BuildCondition(ref common.ReferenceCallback) 
 					},
 					"status": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Status of the condition, one of True, False, Unknown.",
+							Description: "status of the condition, one of True, False, Unknown.",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -5479,7 +5520,7 @@ func schema_openshift_api_build_v1_BuildConfigSpec(ref common.ReferenceCallback)
 					},
 					"runPolicy": {
 						SchemaProps: spec.SchemaProps{
-							Description: "RunPolicy describes how the new build created from this build configuration will be scheduled for execution. This is optional, if not specified we default to \"Serial\".",
+							Description: "runPolicy describes how the new build created from this build configuration will be scheduled for execution. This is optional, if not specified we default to \"Serial\".",
 							Type:        []string{"string"},
 							Format:      "",
 						},
@@ -5602,7 +5643,7 @@ func schema_openshift_api_build_v1_BuildConfigStatus(ref common.ReferenceCallbac
 					},
 					"imageChangeTriggers": {
 						SchemaProps: spec.SchemaProps{
-							Description: "ImageChangeTriggers captures the runtime state of any ImageChangeTrigger specified in the BuildConfigSpec, including the value reconciled by the OpenShift APIServer for the lastTriggeredImageID. There is a single entry in this array for each image change trigger in spec. Each trigger status references the ImageStreamTag that acts as the source of the trigger.",
+							Description: "imageChangeTriggers captures the runtime state of any ImageChangeTrigger specified in the BuildConfigSpec, including the value reconciled by the OpenShift APIServer for the lastTriggeredImageID. There is a single entry in this array for each image change trigger in spec. Each trigger status references the ImageStreamTag that acts as the source of the trigger.",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -5779,7 +5820,7 @@ func schema_openshift_api_build_v1_BuildLogOptions(ref common.ReferenceCallback)
 					},
 					"nowait": {
 						SchemaProps: spec.SchemaProps{
-							Description: "noWait if true causes the call to return immediately even if the build is not available yet. Otherwise the server will wait until the build has started.",
+							Description: "nowait if true causes the call to return immediately even if the build is not available yet. Otherwise the server will wait until the build has started.",
 							Type:        []string{"boolean"},
 							Format:      "",
 						},
@@ -5821,7 +5862,7 @@ func schema_openshift_api_build_v1_BuildOutput(ref common.ReferenceCallback) com
 					},
 					"pushSecret": {
 						SchemaProps: spec.SchemaProps{
-							Description: "PushSecret is the name of a Secret that would be used for setting up the authentication for executing the Docker push to authentication enabled Docker Registry (or Docker Hub).",
+							Description: "pushSecret is the name of a Secret that would be used for setting up the authentication for executing the Docker push to authentication enabled Docker Registry (or Docker Hub).",
 							Ref:         ref("k8s.io/api/core/v1.LocalObjectReference"),
 						},
 					},
@@ -5986,13 +6027,13 @@ func schema_openshift_api_build_v1_BuildRequest(ref common.ReferenceCallback) co
 					},
 					"dockerStrategyOptions": {
 						SchemaProps: spec.SchemaProps{
-							Description: "DockerStrategyOptions contains additional docker-strategy specific options for the build",
+							Description: "dockerStrategyOptions contains additional docker-strategy specific options for the build",
 							Ref:         ref("github.com/openshift/api/build/v1.DockerStrategyOptions"),
 						},
 					},
 					"sourceStrategyOptions": {
 						SchemaProps: spec.SchemaProps{
-							Description: "SourceStrategyOptions contains additional source-strategy specific options for the build",
+							Description: "sourceStrategyOptions contains additional source-strategy specific options for the build",
 							Ref:         ref("github.com/openshift/api/build/v1.SourceStrategyOptions"),
 						},
 					},
@@ -6312,7 +6353,7 @@ func schema_openshift_api_build_v1_BuildStatus(ref common.ReferenceCallback) com
 							},
 						},
 						SchemaProps: spec.SchemaProps{
-							Description: "Conditions represents the latest available observations of a build's current state.",
+							Description: "conditions represents the latest available observations of a build's current state.",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -6408,7 +6449,7 @@ func schema_openshift_api_build_v1_BuildStrategy(ref common.ReferenceCallback) c
 					},
 					"jenkinsPipelineStrategy": {
 						SchemaProps: spec.SchemaProps{
-							Description: "JenkinsPipelineStrategy holds the parameters to the Jenkins Pipeline build strategy. Deprecated: use OpenShift Pipelines",
+							Description: "jenkinsPipelineStrategy holds the parameters to the Jenkins Pipeline build strategy. Deprecated: use OpenShift Pipelines",
 							Ref:         ref("github.com/openshift/api/build/v1.JenkinsPipelineBuildStrategy"),
 						},
 					},
@@ -6442,7 +6483,7 @@ func schema_openshift_api_build_v1_BuildTriggerCause(ref common.ReferenceCallbac
 					},
 					"githubWebHook": {
 						SchemaProps: spec.SchemaProps{
-							Description: "gitHubWebHook represents data for a GitHub webhook that fired a specific build.",
+							Description: "githubWebHook represents data for a GitHub webhook that fired a specific build.",
 							Ref:         ref("github.com/openshift/api/build/v1.GitHubWebHookCause"),
 						},
 					},
@@ -6454,13 +6495,13 @@ func schema_openshift_api_build_v1_BuildTriggerCause(ref common.ReferenceCallbac
 					},
 					"gitlabWebHook": {
 						SchemaProps: spec.SchemaProps{
-							Description: "GitLabWebHook represents data for a GitLab webhook that fired a specific build.",
+							Description: "gitlabWebHook represents data for a GitLab webhook that fired a specific build.",
 							Ref:         ref("github.com/openshift/api/build/v1.GitLabWebHookCause"),
 						},
 					},
 					"bitbucketWebHook": {
 						SchemaProps: spec.SchemaProps{
-							Description: "BitbucketWebHook represents data for a Bitbucket webhook that fired a specific build.",
+							Description: "bitbucketWebHook represents data for a Bitbucket webhook that fired a specific build.",
 							Ref:         ref("github.com/openshift/api/build/v1.BitbucketWebHookCause"),
 						},
 					},
@@ -6748,13 +6789,13 @@ func schema_openshift_api_build_v1_CommonWebHookCause(ref common.ReferenceCallba
 				Properties: map[string]spec.Schema{
 					"revision": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Revision is the git source revision information of the trigger.",
+							Description: "revision is the git source revision information of the trigger.",
 							Ref:         ref("github.com/openshift/api/build/v1.SourceRevision"),
 						},
 					},
 					"secret": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Secret is the obfuscated webhook secret that triggered a build.",
+							Description: "secret is the obfuscated webhook secret that triggered a build.",
 							Type:        []string{"string"},
 							Format:      "",
 						},
@@ -7082,7 +7123,7 @@ func schema_openshift_api_build_v1_GenericWebHookEvent(ref common.ReferenceCallb
 					},
 					"dockerStrategyOptions": {
 						SchemaProps: spec.SchemaProps{
-							Description: "DockerStrategyOptions contains additional docker-strategy specific options for the build",
+							Description: "dockerStrategyOptions contains additional docker-strategy specific options for the build",
 							Ref:         ref("github.com/openshift/api/build/v1.DockerStrategyOptions"),
 						},
 					},
@@ -7245,7 +7286,7 @@ func schema_openshift_api_build_v1_GitInfo(ref common.ReferenceCallback) common.
 					},
 					"refs": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Refs is a list of GitRefs for the provided repo - generally sent when used from a post-receive hook. This field is optional and is used when sending multiple refs",
+							Description: "refs is a list of GitRefs for the provided repo - generally sent when used from a post-receive hook. This field is optional and is used when sending multiple refs",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -7275,13 +7316,13 @@ func schema_openshift_api_build_v1_GitLabWebHookCause(ref common.ReferenceCallba
 				Properties: map[string]spec.Schema{
 					"revision": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Revision is the git source revision information of the trigger.",
+							Description: "revision is the git source revision information of the trigger.",
 							Ref:         ref("github.com/openshift/api/build/v1.SourceRevision"),
 						},
 					},
 					"secret": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Secret is the obfuscated webhook secret that triggered a build.",
+							Description: "secret is the obfuscated webhook secret that triggered a build.",
 							Type:        []string{"string"},
 							Format:      "",
 						},
@@ -7668,14 +7709,14 @@ func schema_openshift_api_build_v1_JenkinsPipelineBuildStrategy(ref common.Refer
 				Properties: map[string]spec.Schema{
 					"jenkinsfilePath": {
 						SchemaProps: spec.SchemaProps{
-							Description: "JenkinsfilePath is the optional path of the Jenkinsfile that will be used to configure the pipeline relative to the root of the context (contextDir). If both JenkinsfilePath & Jenkinsfile are both not specified, this defaults to Jenkinsfile in the root of the specified contextDir.",
+							Description: "jenkinsfilePath is the optional path of the Jenkinsfile that will be used to configure the pipeline relative to the root of the context (contextDir). If both JenkinsfilePath & Jenkinsfile are both not specified, this defaults to Jenkinsfile in the root of the specified contextDir.",
 							Type:        []string{"string"},
 							Format:      "",
 						},
 					},
 					"jenkinsfile": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Jenkinsfile defines the optional raw contents of a Jenkinsfile which defines a Jenkins pipeline build.",
+							Description: "jenkinsfile defines the optional raw contents of a Jenkinsfile which defines a Jenkins pipeline build.",
 							Type:        []string{"string"},
 							Format:      "",
 						},
@@ -7775,7 +7816,7 @@ func schema_openshift_api_build_v1_SecretLocalReference(ref common.ReferenceCall
 				Properties: map[string]spec.Schema{
 					"name": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Name is the name of the resource in the same namespace being referenced",
+							Description: "name is the name of the resource in the same namespace being referenced",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -7951,7 +7992,7 @@ func schema_openshift_api_build_v1_SourceRevision(ref common.ReferenceCallback) 
 					},
 					"git": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Git contains information about git-based build source",
+							Description: "git contains information about git-based build source",
 							Ref:         ref("github.com/openshift/api/build/v1.GitSourceRevision"),
 						},
 					},
@@ -8191,6 +8232,16 @@ func schema_openshift_api_cloudnetwork_v1_CloudPrivateIPConfigStatus(ref common.
 						},
 					},
 					"conditions": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-map-keys": []interface{}{
+									"type",
+								},
+								"x-kubernetes-list-type":       "map",
+								"x-kubernetes-patch-merge-key": "type",
+								"x-kubernetes-patch-strategy":  "merge",
+							},
+						},
 						SchemaProps: spec.SchemaProps{
 							Description: "condition is the assignment condition of the private IP and its status",
 							Type:        []string{"array"},
@@ -8268,7 +8319,8 @@ func schema_openshift_api_config_v1_APIServerEncryption(ref common.ReferenceCall
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
-				Type: []string{"object"},
+				Description: "APIServerEncryption is used to encrypt sensitive resources on the cluster.",
+				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
 					"type": {
 						SchemaProps: spec.SchemaProps{
@@ -8277,9 +8329,29 @@ func schema_openshift_api_config_v1_APIServerEncryption(ref common.ReferenceCall
 							Format:      "",
 						},
 					},
+					"kms": {
+						SchemaProps: spec.SchemaProps{
+							Description: "kms defines the configuration for the external KMS instance that manages the encryption keys, when KMS encryption is enabled sensitive resources will be encrypted using keys managed by an externally configured KMS instance.\n\nThe Key Management Service (KMS) instance provides symmetric encryption and is responsible for managing the lifecyle of the encryption keys outside of the control plane. This allows integration with an external provider to manage the data encryption keys securely.",
+							Ref:         ref("github.com/openshift/api/config/v1.KMSConfig"),
+						},
+					},
+				},
+			},
+			VendorExtensible: spec.VendorExtensible{
+				Extensions: spec.Extensions{
+					"x-kubernetes-unions": []interface{}{
+						map[string]interface{}{
+							"discriminator": "type",
+							"fields-to-discriminateBy": map[string]interface{}{
+								"kms": "KMS",
+							},
+						},
+					},
 				},
 			},
 		},
+		Dependencies: []string{
+			"github.com/openshift/api/config/v1.KMSConfig"},
 	}
 }
 
@@ -8341,6 +8413,11 @@ func schema_openshift_api_config_v1_APIServerNamedServingCert(ref common.Referen
 				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
 					"names": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-type": "atomic",
+							},
+						},
 						SchemaProps: spec.SchemaProps{
 							Description: "names is a optional list of explicit DNS names (leading wildcards allowed) that should use this certificate to serve secure traffic. If no names are provided, the implicit names will be extracted from the certificates. Exact names trump over wildcard names. Explicit names defined here trump over extracted implicit names.",
 							Type:        []string{"array"},
@@ -8378,6 +8455,11 @@ func schema_openshift_api_config_v1_APIServerServingCerts(ref common.ReferenceCa
 				Type: []string{"object"},
 				Properties: map[string]spec.Schema{
 					"namedCertificates": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-type": "atomic",
+							},
+						},
 						SchemaProps: spec.SchemaProps{
 							Description: "namedCertificates references secrets containing the TLS cert info for serving secure traffic to specific hostnames. If no named certificates are provided, or no named certificates match the server name as understood by a client, the defaultServingCertificate will be used.",
 							Type:        []string{"array"},
@@ -8420,6 +8502,11 @@ func schema_openshift_api_config_v1_APIServerSpec(ref common.ReferenceCallback) 
 						},
 					},
 					"additionalCORSAllowedOrigins": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-type": "atomic",
+							},
+						},
 						SchemaProps: spec.SchemaProps{
 							Description: "additionalCORSAllowedOrigins lists additional, user-defined regular expressions describing hosts for which the API server allows access using the CORS headers. This may be needed to access the API and the integrated OAuth server from JavaScript applications. The values are regular expressions that correspond to the Golang regular expression language.",
 							Type:        []string{"array"},
@@ -8508,6 +8595,7 @@ func schema_openshift_api_config_v1_AWSIngressSpec(ref common.ReferenceCallback)
 						},
 					},
 				},
+				Required: []string{"type"},
 			},
 			VendorExtensible: spec.VendorExtensible{
 				Extensions: spec.Extensions{
@@ -8518,6 +8606,36 @@ func schema_openshift_api_config_v1_AWSIngressSpec(ref common.ReferenceCallback)
 						},
 					},
 				},
+			},
+		},
+	}
+}
+
+func schema_openshift_api_config_v1_AWSKMSConfig(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "AWSKMSConfig defines the KMS config specific to AWS KMS provider",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"keyARN": {
+						SchemaProps: spec.SchemaProps{
+							Description: "keyARN specifies the Amazon Resource Name (ARN) of the AWS KMS key used for encryption. The value must adhere to the format `arn:aws:kms:<region>:<account_id>:key/<key_id>`, where: - `<region>` is the AWS region consisting of lowercase letters and hyphens followed by a number. - `<account_id>` is a 12-digit numeric identifier for the AWS account. - `<key_id>` is a unique identifier for the KMS key, consisting of lowercase hexadecimal characters and hyphens.",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"region": {
+						SchemaProps: spec.SchemaProps{
+							Description: "region specifies the AWS region where the KMS instance exists, and follows the format `<region-prefix>-<region-name>-<number>`, e.g.: `us-east-1`. Only lowercase letters and hyphens followed by numbers are allowed.",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+				},
+				Required: []string{"keyARN", "region"},
 			},
 		},
 	}
@@ -8579,7 +8697,7 @@ func schema_openshift_api_config_v1_AWSPlatformStatus(ref common.ReferenceCallba
 							},
 						},
 						SchemaProps: spec.SchemaProps{
-							Description: "ServiceEndpoints list contains custom endpoints which will override default service endpoint of AWS Services. There must be only one ServiceEndpoint for a service.",
+							Description: "serviceEndpoints list contains custom endpoints which will override default service endpoint of AWS Services. There must be only one ServiceEndpoint for a service.",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -8753,7 +8871,7 @@ func schema_openshift_api_config_v1_AdmissionPluginConfig(ref common.ReferenceCa
 				Properties: map[string]spec.Schema{
 					"location": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Location is the path to a configuration file that contains the plugin's configuration",
+							Description: "location is the path to a configuration file that contains the plugin's configuration",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -8761,7 +8879,7 @@ func schema_openshift_api_config_v1_AdmissionPluginConfig(ref common.ReferenceCa
 					},
 					"configuration": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Configuration is an embedded configuration object to be used as the plugin's configuration. If present, it will be used instead of the path to the configuration file.",
+							Description: "configuration is an embedded configuration object to be used as the plugin's configuration. If present, it will be used instead of the path to the configuration file.",
 							Ref:         ref("k8s.io/apimachinery/pkg/runtime.RawExtension"),
 						},
 					},
@@ -8960,7 +9078,7 @@ func schema_openshift_api_config_v1_AuditConfig(ref common.ReferenceCallback) co
 					},
 					"policyFile": {
 						SchemaProps: spec.SchemaProps{
-							Description: "PolicyFile is a path to the file that defines the audit policy configuration.",
+							Description: "policyFile is a path to the file that defines the audit policy configuration.",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -8968,7 +9086,7 @@ func schema_openshift_api_config_v1_AuditConfig(ref common.ReferenceCallback) co
 					},
 					"policyConfiguration": {
 						SchemaProps: spec.SchemaProps{
-							Description: "PolicyConfiguration is an embedded policy configuration object to be used as the audit policy configuration. If present, it will be used instead of the path to the policy file.",
+							Description: "policyConfiguration is an embedded policy configuration object to be used as the audit policy configuration. If present, it will be used instead of the path to the policy file.",
 							Ref:         ref("k8s.io/apimachinery/pkg/runtime.RawExtension"),
 						},
 					},
@@ -9199,7 +9317,7 @@ func schema_openshift_api_config_v1_AuthenticationSpec(ref common.ReferenceCallb
 							},
 						},
 						SchemaProps: spec.SchemaProps{
-							Description: "OIDCProviders are OIDC identity providers that can issue tokens for this cluster Can only be set if \"Type\" is set to \"OIDC\".\n\nAt most one provider can be configured.",
+							Description: "oidcProviders are OIDC identity providers that can issue tokens for this cluster Can only be set if \"Type\" is set to \"OIDC\".\n\nAt most one provider can be configured.",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -9243,7 +9361,7 @@ func schema_openshift_api_config_v1_AuthenticationStatus(ref common.ReferenceCal
 							},
 						},
 						SchemaProps: spec.SchemaProps{
-							Description: "OIDCClients is where participating operators place the current OIDC client status for OIDC clients that can be customized by the cluster-admin.",
+							Description: "oidcClients is where participating operators place the current OIDC client status for OIDC clients that can be customized by the cluster-admin.",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -9652,7 +9770,7 @@ func schema_openshift_api_config_v1_Build(ref common.ReferenceCallback) common.O
 					},
 					"spec": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Spec holds user-settable values for the build controller configuration",
+							Description: "spec holds user-settable values for the build controller configuration",
 							Default:     map[string]interface{}{},
 							Ref:         ref("github.com/openshift/api/config/v1.BuildSpec"),
 						},
@@ -9674,19 +9792,19 @@ func schema_openshift_api_config_v1_BuildDefaults(ref common.ReferenceCallback) 
 				Properties: map[string]spec.Schema{
 					"defaultProxy": {
 						SchemaProps: spec.SchemaProps{
-							Description: "DefaultProxy contains the default proxy settings for all build operations, including image pull/push and source download.\n\nValues can be overrode by setting the `HTTP_PROXY`, `HTTPS_PROXY`, and `NO_PROXY` environment variables in the build config's strategy.",
+							Description: "defaultProxy contains the default proxy settings for all build operations, including image pull/push and source download.\n\nValues can be overrode by setting the `HTTP_PROXY`, `HTTPS_PROXY`, and `NO_PROXY` environment variables in the build config's strategy.",
 							Ref:         ref("github.com/openshift/api/config/v1.ProxySpec"),
 						},
 					},
 					"gitProxy": {
 						SchemaProps: spec.SchemaProps{
-							Description: "GitProxy contains the proxy settings for git operations only. If set, this will override any Proxy settings for all git commands, such as git clone.\n\nValues that are not set here will be inherited from DefaultProxy.",
+							Description: "gitProxy contains the proxy settings for git operations only. If set, this will override any Proxy settings for all git commands, such as git clone.\n\nValues that are not set here will be inherited from DefaultProxy.",
 							Ref:         ref("github.com/openshift/api/config/v1.ProxySpec"),
 						},
 					},
 					"env": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Env is a set of default environment variables that will be applied to the build if the specified variables do not exist on the build",
+							Description: "env is a set of default environment variables that will be applied to the build if the specified variables do not exist on the build",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -9700,7 +9818,7 @@ func schema_openshift_api_config_v1_BuildDefaults(ref common.ReferenceCallback) 
 					},
 					"imageLabels": {
 						SchemaProps: spec.SchemaProps{
-							Description: "ImageLabels is a list of docker labels that are applied to the resulting image. User can override a default label by providing a label with the same name in their Build/BuildConfig.",
+							Description: "imageLabels is a list of docker labels that are applied to the resulting image. User can override a default label by providing a label with the same name in their Build/BuildConfig.",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -9714,7 +9832,7 @@ func schema_openshift_api_config_v1_BuildDefaults(ref common.ReferenceCallback) 
 					},
 					"resources": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Resources defines resource requirements to execute the build.",
+							Description: "resources defines resource requirements to execute the build.",
 							Default:     map[string]interface{}{},
 							Ref:         ref("k8s.io/api/core/v1.ResourceRequirements"),
 						},
@@ -9785,7 +9903,7 @@ func schema_openshift_api_config_v1_BuildOverrides(ref common.ReferenceCallback)
 				Properties: map[string]spec.Schema{
 					"imageLabels": {
 						SchemaProps: spec.SchemaProps{
-							Description: "ImageLabels is a list of docker labels that are applied to the resulting image. If user provided a label in their Build/BuildConfig with the same name as one in this list, the user's label will be overwritten.",
+							Description: "imageLabels is a list of docker labels that are applied to the resulting image. If user provided a label in their Build/BuildConfig with the same name as one in this list, the user's label will be overwritten.",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -9799,7 +9917,7 @@ func schema_openshift_api_config_v1_BuildOverrides(ref common.ReferenceCallback)
 					},
 					"nodeSelector": {
 						SchemaProps: spec.SchemaProps{
-							Description: "NodeSelector is a selector which must be true for the build pod to fit on a node",
+							Description: "nodeSelector is a selector which must be true for the build pod to fit on a node",
 							Type:        []string{"object"},
 							AdditionalProperties: &spec.SchemaOrBool{
 								Allows: true,
@@ -9815,7 +9933,7 @@ func schema_openshift_api_config_v1_BuildOverrides(ref common.ReferenceCallback)
 					},
 					"tolerations": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Tolerations is a list of Tolerations that will override any existing tolerations set on a build pod.",
+							Description: "tolerations is a list of Tolerations that will override any existing tolerations set on a build pod.",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -9829,7 +9947,7 @@ func schema_openshift_api_config_v1_BuildOverrides(ref common.ReferenceCallback)
 					},
 					"forcePull": {
 						SchemaProps: spec.SchemaProps{
-							Description: "ForcePull overrides, if set, the equivalent value in the builds, i.e. false disables force pull for all builds, true enables force pull for all builds, independently of what each build specifies itself",
+							Description: "forcePull overrides, if set, the equivalent value in the builds, i.e. false disables force pull for all builds, true enables force pull for all builds, independently of what each build specifies itself",
 							Type:        []string{"boolean"},
 							Format:      "",
 						},
@@ -9850,21 +9968,21 @@ func schema_openshift_api_config_v1_BuildSpec(ref common.ReferenceCallback) comm
 				Properties: map[string]spec.Schema{
 					"additionalTrustedCA": {
 						SchemaProps: spec.SchemaProps{
-							Description: "AdditionalTrustedCA is a reference to a ConfigMap containing additional CAs that should be trusted for image pushes and pulls during builds. The namespace for this config map is openshift-config.\n\nDEPRECATED: Additional CAs for image pull and push should be set on image.config.openshift.io/cluster instead.",
+							Description: "additionalTrustedCA is a reference to a ConfigMap containing additional CAs that should be trusted for image pushes and pulls during builds. The namespace for this config map is openshift-config.\n\nDEPRECATED: Additional CAs for image pull and push should be set on image.config.openshift.io/cluster instead.",
 							Default:     map[string]interface{}{},
 							Ref:         ref("github.com/openshift/api/config/v1.ConfigMapNameReference"),
 						},
 					},
 					"buildDefaults": {
 						SchemaProps: spec.SchemaProps{
-							Description: "BuildDefaults controls the default information for Builds",
+							Description: "buildDefaults controls the default information for Builds",
 							Default:     map[string]interface{}{},
 							Ref:         ref("github.com/openshift/api/config/v1.BuildDefaults"),
 						},
 					},
 					"buildOverrides": {
 						SchemaProps: spec.SchemaProps{
-							Description: "BuildOverrides controls override settings for builds",
+							Description: "buildOverrides controls override settings for builds",
 							Default:     map[string]interface{}{},
 							Ref:         ref("github.com/openshift/api/config/v1.BuildOverrides"),
 						},
@@ -9886,7 +10004,7 @@ func schema_openshift_api_config_v1_CertInfo(ref common.ReferenceCallback) commo
 				Properties: map[string]spec.Schema{
 					"certFile": {
 						SchemaProps: spec.SchemaProps{
-							Description: "CertFile is a file containing a PEM-encoded certificate",
+							Description: "certFile is a file containing a PEM-encoded certificate",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -9894,7 +10012,7 @@ func schema_openshift_api_config_v1_CertInfo(ref common.ReferenceCallback) commo
 					},
 					"keyFile": {
 						SchemaProps: spec.SchemaProps{
-							Description: "KeyFile is a file containing a PEM-encoded private key for the certificate specified by CertFile",
+							Description: "keyFile is a file containing a PEM-encoded private key for the certificate specified by CertFile",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -10104,7 +10222,7 @@ func schema_openshift_api_config_v1_ClusterCondition(ref common.ReferenceCallbac
 					},
 					"promql": {
 						SchemaProps: spec.SchemaProps{
-							Description: "promQL represents a cluster condition based on PromQL.",
+							Description: "promql represents a cluster condition based on PromQL.",
 							Ref:         ref("github.com/openshift/api/config/v1.PromQLClusterCondition"),
 						},
 					},
@@ -10268,6 +10386,10 @@ func schema_openshift_api_config_v1_ClusterOperatorStatus(ref common.ReferenceCa
 					"conditions": {
 						VendorExtensible: spec.VendorExtensible{
 							Extensions: spec.Extensions{
+								"x-kubernetes-list-map-keys": []interface{}{
+									"type",
+								},
+								"x-kubernetes-list-type":       "map",
 								"x-kubernetes-patch-merge-key": "type",
 								"x-kubernetes-patch-strategy":  "merge",
 							},
@@ -10590,7 +10712,7 @@ func schema_openshift_api_config_v1_ClusterVersionSpec(ref common.ReferenceCallb
 					},
 					"desiredUpdate": {
 						SchemaProps: spec.SchemaProps{
-							Description: "desiredUpdate is an optional field that indicates the desired value of the cluster version. Setting this value will trigger an upgrade (if the current version does not match the desired version). The set of recommended update values is listed as part of available updates in status, and setting values outside that range may cause the upgrade to fail.\n\nSome of the fields are inter-related with restrictions and meanings described here. 1. image is specified, version is specified, architecture is specified. API validation error. 2. image is specified, version is specified, architecture is not specified. You should not do this. version is silently ignored and image is used. 3. image is specified, version is not specified, architecture is specified. API validation error. 4. image is specified, version is not specified, architecture is not specified. image is used. 5. image is not specified, version is specified, architecture is specified. version and desired architecture are used to select an image. 6. image is not specified, version is specified, architecture is not specified. version and current architecture are used to select an image. 7. image is not specified, version is not specified, architecture is specified. API validation error. 8. image is not specified, version is not specified, architecture is not specified. API validation error.\n\nIf an upgrade fails the operator will halt and report status about the failing component. Setting the desired update value back to the previous version will cause a rollback to be attempted. Not all rollbacks will succeed.",
+							Description: "desiredUpdate is an optional field that indicates the desired value of the cluster version. Setting this value will trigger an upgrade (if the current version does not match the desired version). The set of recommended update values is listed as part of available updates in status, and setting values outside that range may cause the upgrade to fail.\n\nSome of the fields are inter-related with restrictions and meanings described here. 1. image is specified, version is specified, architecture is specified. API validation error. 2. image is specified, version is specified, architecture is not specified. The version extracted from the referenced image must match the specified version. 3. image is specified, version is not specified, architecture is specified. API validation error. 4. image is specified, version is not specified, architecture is not specified. image is used. 5. image is not specified, version is specified, architecture is specified. version and desired architecture are used to select an image. 6. image is not specified, version is specified, architecture is not specified. version and current architecture are used to select an image. 7. image is not specified, version is not specified, architecture is specified. API validation error. 8. image is not specified, version is not specified, architecture is not specified. API validation error.\n\nIf an upgrade fails the operator will halt and report status about the failing component. Setting the desired update value back to the previous version will cause a rollback to be attempted. Not all rollbacks will succeed.",
 							Ref:         ref("github.com/openshift/api/config/v1.Update"),
 						},
 					},
@@ -11048,9 +11170,7 @@ func schema_openshift_api_config_v1_ConditionalUpdate(ref common.ReferenceCallba
 								"x-kubernetes-list-map-keys": []interface{}{
 									"type",
 								},
-								"x-kubernetes-list-type":       "map",
-								"x-kubernetes-patch-merge-key": "type",
-								"x-kubernetes-patch-strategy":  "merge",
+								"x-kubernetes-list-type": "map",
 							},
 						},
 						SchemaProps: spec.SchemaProps{
@@ -11150,7 +11270,7 @@ func schema_openshift_api_config_v1_ConfigMapFileReference(ref common.ReferenceC
 					},
 					"key": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Key allows pointing to a specific key/value inside of the configmap.  This is useful for logical file references.",
+							Description: "key allows pointing to a specific key/value inside of the configmap.  This is useful for logical file references.",
 							Type:        []string{"string"},
 							Format:      "",
 						},
@@ -11773,7 +11893,7 @@ func schema_openshift_api_config_v1_EtcdConnectionInfo(ref common.ReferenceCallb
 				Properties: map[string]spec.Schema{
 					"urls": {
 						SchemaProps: spec.SchemaProps{
-							Description: "URLs are the URLs for etcd",
+							Description: "urls are the URLs for etcd",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -11788,7 +11908,7 @@ func schema_openshift_api_config_v1_EtcdConnectionInfo(ref common.ReferenceCallb
 					},
 					"ca": {
 						SchemaProps: spec.SchemaProps{
-							Description: "CA is a file containing trusted roots for the etcd server certificates",
+							Description: "ca is a file containing trusted roots for the etcd server certificates",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -11796,7 +11916,7 @@ func schema_openshift_api_config_v1_EtcdConnectionInfo(ref common.ReferenceCallb
 					},
 					"certFile": {
 						SchemaProps: spec.SchemaProps{
-							Description: "CertFile is a file containing a PEM-encoded certificate",
+							Description: "certFile is a file containing a PEM-encoded certificate",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -11804,7 +11924,7 @@ func schema_openshift_api_config_v1_EtcdConnectionInfo(ref common.ReferenceCallb
 					},
 					"keyFile": {
 						SchemaProps: spec.SchemaProps{
-							Description: "KeyFile is a file containing a PEM-encoded private key for the certificate specified by CertFile",
+							Description: "keyFile is a file containing a PEM-encoded private key for the certificate specified by CertFile",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -11825,7 +11945,7 @@ func schema_openshift_api_config_v1_EtcdStorageConfig(ref common.ReferenceCallba
 				Properties: map[string]spec.Schema{
 					"urls": {
 						SchemaProps: spec.SchemaProps{
-							Description: "URLs are the URLs for etcd",
+							Description: "urls are the URLs for etcd",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -11840,7 +11960,7 @@ func schema_openshift_api_config_v1_EtcdStorageConfig(ref common.ReferenceCallba
 					},
 					"ca": {
 						SchemaProps: spec.SchemaProps{
-							Description: "CA is a file containing trusted roots for the etcd server certificates",
+							Description: "ca is a file containing trusted roots for the etcd server certificates",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -11848,7 +11968,7 @@ func schema_openshift_api_config_v1_EtcdStorageConfig(ref common.ReferenceCallba
 					},
 					"certFile": {
 						SchemaProps: spec.SchemaProps{
-							Description: "CertFile is a file containing a PEM-encoded certificate",
+							Description: "certFile is a file containing a PEM-encoded certificate",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -11856,7 +11976,7 @@ func schema_openshift_api_config_v1_EtcdStorageConfig(ref common.ReferenceCallba
 					},
 					"keyFile": {
 						SchemaProps: spec.SchemaProps{
-							Description: "KeyFile is a file containing a PEM-encoded private key for the certificate specified by CertFile",
+							Description: "keyFile is a file containing a PEM-encoded private key for the certificate specified by CertFile",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -11864,7 +11984,7 @@ func schema_openshift_api_config_v1_EtcdStorageConfig(ref common.ReferenceCallba
 					},
 					"storagePrefix": {
 						SchemaProps: spec.SchemaProps{
-							Description: "StoragePrefix is the path within etcd that the OpenShift resources will be rooted under. This value, if changed, will mean existing objects in etcd will no longer be located.",
+							Description: "storagePrefix is the path within etcd that the OpenShift resources will be rooted under. This value, if changed, will mean existing objects in etcd will no longer be located.",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -11980,7 +12100,7 @@ func schema_openshift_api_config_v1_ExternalPlatformSpec(ref common.ReferenceCal
 				Properties: map[string]spec.Schema{
 					"platformName": {
 						SchemaProps: spec.SchemaProps{
-							Description: "PlatformName holds the arbitrary string representing the infrastructure provider name, expected to be set at the installation time. This field is solely for informational and reporting purposes and is not expected to be used for decision-making.",
+							Description: "platformName holds the arbitrary string representing the infrastructure provider name, expected to be set at the installation time. This field is solely for informational and reporting purposes and is not expected to be used for decision-making.",
 							Default:     "Unknown",
 							Type:        []string{"string"},
 							Format:      "",
@@ -12362,7 +12482,7 @@ func schema_openshift_api_config_v1_FeatureGateTests(ref common.ReferenceCallbac
 				Properties: map[string]spec.Schema{
 					"featureGate": {
 						SchemaProps: spec.SchemaProps{
-							Description: "FeatureGate is the name of the FeatureGate as it appears in The FeatureGate CR instance.",
+							Description: "featureGate is the name of the FeatureGate as it appears in The FeatureGate CR instance.",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -12370,7 +12490,7 @@ func schema_openshift_api_config_v1_FeatureGateTests(ref common.ReferenceCallbac
 					},
 					"tests": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Tests contains an item for every TestName",
+							Description: "tests contains an item for every TestName",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -12476,12 +12596,34 @@ func schema_openshift_api_config_v1_GCPPlatformStatus(ref common.ReferenceCallba
 							Ref:         ref("github.com/openshift/api/config/v1.CloudLoadBalancerConfig"),
 						},
 					},
+					"serviceEndpoints": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-map-keys": []interface{}{
+									"name",
+								},
+								"x-kubernetes-list-type": "map",
+							},
+						},
+						SchemaProps: spec.SchemaProps{
+							Description: "serviceEndpoints specifies endpoints that override the default endpoints used when creating clients to interact with GCP services. When not specified, the default endpoint for the GCP region will be used. Only 1 endpoint override is permitted for each GCP service. The maximum number of endpoint overrides allowed is 9.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("github.com/openshift/api/config/v1.GCPServiceEndpoint"),
+									},
+								},
+							},
+						},
+					},
 				},
 				Required: []string{"projectID", "region"},
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/config/v1.CloudLoadBalancerConfig", "github.com/openshift/api/config/v1.GCPResourceLabel", "github.com/openshift/api/config/v1.GCPResourceTag"},
+			"github.com/openshift/api/config/v1.CloudLoadBalancerConfig", "github.com/openshift/api/config/v1.GCPResourceLabel", "github.com/openshift/api/config/v1.GCPResourceTag", "github.com/openshift/api/config/v1.GCPServiceEndpoint"},
 	}
 }
 
@@ -12548,6 +12690,36 @@ func schema_openshift_api_config_v1_GCPResourceTag(ref common.ReferenceCallback)
 					},
 				},
 				Required: []string{"parentID", "key", "value"},
+			},
+		},
+	}
+}
+
+func schema_openshift_api_config_v1_GCPServiceEndpoint(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "GCPServiceEndpoint store the configuration of a custom url to override existing defaults of GCP Services.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"name": {
+						SchemaProps: spec.SchemaProps{
+							Description: "name is the name of the GCP service whose endpoint is being overridden. This must be provided and cannot be empty.\n\nAllowed values are Compute, Container, CloudResourceManager, DNS, File, IAM, ServiceUsage, Storage, and TagManager.\n\nAs an example, when setting the name to Compute all requests made by the caller to the GCP Compute Service will be directed to the endpoint specified in the url field.",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"url": {
+						SchemaProps: spec.SchemaProps{
+							Description: "url is a fully qualified URI that overrides the default endpoint for a client using the GCP service specified in the name field. url is required, must use the scheme https, must not be more than 253 characters in length, and must be a valid URL according to Go's net/url package (https://pkg.go.dev/net/url#URL)\n\nAn example of a valid endpoint that overrides the Compute Service: \"https://compute-myendpoint1.p.googleapis.com\"",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+				},
+				Required: []string{"name", "url"},
 			},
 		},
 	}
@@ -12627,7 +12799,7 @@ func schema_openshift_api_config_v1_GenericControllerConfig(ref common.Reference
 				Properties: map[string]spec.Schema{
 					"servingInfo": {
 						SchemaProps: spec.SchemaProps{
-							Description: "ServingInfo is the HTTP serving information for the controller's endpoints",
+							Description: "servingInfo is the HTTP serving information for the controller's endpoints",
 							Default:     map[string]interface{}{},
 							Ref:         ref("github.com/openshift/api/config/v1.HTTPServingInfo"),
 						},
@@ -12855,7 +13027,7 @@ func schema_openshift_api_config_v1_HTTPServingInfo(ref common.ReferenceCallback
 				Properties: map[string]spec.Schema{
 					"bindAddress": {
 						SchemaProps: spec.SchemaProps{
-							Description: "BindAddress is the ip:port to serve on",
+							Description: "bindAddress is the ip:port to serve on",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -12863,7 +13035,7 @@ func schema_openshift_api_config_v1_HTTPServingInfo(ref common.ReferenceCallback
 					},
 					"bindNetwork": {
 						SchemaProps: spec.SchemaProps{
-							Description: "BindNetwork is the type of network to bind to - defaults to \"tcp4\", accepts \"tcp\", \"tcp4\", and \"tcp6\"",
+							Description: "bindNetwork is the type of network to bind to - defaults to \"tcp4\", accepts \"tcp\", \"tcp4\", and \"tcp6\"",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -12871,7 +13043,7 @@ func schema_openshift_api_config_v1_HTTPServingInfo(ref common.ReferenceCallback
 					},
 					"certFile": {
 						SchemaProps: spec.SchemaProps{
-							Description: "CertFile is a file containing a PEM-encoded certificate",
+							Description: "certFile is a file containing a PEM-encoded certificate",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -12879,7 +13051,7 @@ func schema_openshift_api_config_v1_HTTPServingInfo(ref common.ReferenceCallback
 					},
 					"keyFile": {
 						SchemaProps: spec.SchemaProps{
-							Description: "KeyFile is a file containing a PEM-encoded private key for the certificate specified by CertFile",
+							Description: "keyFile is a file containing a PEM-encoded private key for the certificate specified by CertFile",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -12887,14 +13059,14 @@ func schema_openshift_api_config_v1_HTTPServingInfo(ref common.ReferenceCallback
 					},
 					"clientCA": {
 						SchemaProps: spec.SchemaProps{
-							Description: "ClientCA is the certificate bundle for all the signers that you'll recognize for incoming client certificates",
+							Description: "clientCA is the certificate bundle for all the signers that you'll recognize for incoming client certificates",
 							Type:        []string{"string"},
 							Format:      "",
 						},
 					},
 					"namedCertificates": {
 						SchemaProps: spec.SchemaProps{
-							Description: "NamedCertificates is a list of certificates to use to secure requests to specific hostnames",
+							Description: "namedCertificates is a list of certificates to use to secure requests to specific hostnames",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -12908,14 +13080,14 @@ func schema_openshift_api_config_v1_HTTPServingInfo(ref common.ReferenceCallback
 					},
 					"minTLSVersion": {
 						SchemaProps: spec.SchemaProps{
-							Description: "MinTLSVersion is the minimum TLS version supported. Values must match version names from https://golang.org/pkg/crypto/tls/#pkg-constants",
+							Description: "minTLSVersion is the minimum TLS version supported. Values must match version names from https://golang.org/pkg/crypto/tls/#pkg-constants",
 							Type:        []string{"string"},
 							Format:      "",
 						},
 					},
 					"cipherSuites": {
 						SchemaProps: spec.SchemaProps{
-							Description: "CipherSuites contains an overridden list of ciphers for the server to support. Values must match cipher suite IDs from https://golang.org/pkg/crypto/tls/#pkg-constants",
+							Description: "cipherSuites contains an overridden list of ciphers for the server to support. Values must match cipher suite IDs from https://golang.org/pkg/crypto/tls/#pkg-constants",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -12930,7 +13102,7 @@ func schema_openshift_api_config_v1_HTTPServingInfo(ref common.ReferenceCallback
 					},
 					"maxRequestsInFlight": {
 						SchemaProps: spec.SchemaProps{
-							Description: "MaxRequestsInFlight is the number of concurrent requests allowed to the server. If zero, no limit.",
+							Description: "maxRequestsInFlight is the number of concurrent requests allowed to the server. If zero, no limit.",
 							Default:     0,
 							Type:        []string{"integer"},
 							Format:      "int64",
@@ -12938,7 +13110,7 @@ func schema_openshift_api_config_v1_HTTPServingInfo(ref common.ReferenceCallback
 					},
 					"requestTimeoutSeconds": {
 						SchemaProps: spec.SchemaProps{
-							Description: "RequestTimeoutSeconds is the number of seconds before requests are timed out. The default is 60 minutes, if -1 there is no limit on requests.",
+							Description: "requestTimeoutSeconds is the number of seconds before requests are timed out. The default is 60 minutes, if -1 there is no limit on requests.",
 							Default:     0,
 							Type:        []string{"integer"},
 							Format:      "int64",
@@ -13016,8 +13188,34 @@ func schema_openshift_api_config_v1_IBMCloudPlatformSpec(ref common.ReferenceCal
 			SchemaProps: spec.SchemaProps{
 				Description: "IBMCloudPlatformSpec holds the desired state of the IBMCloud infrastructure provider. This only includes fields that can be modified in the cluster.",
 				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"serviceEndpoints": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-map-keys": []interface{}{
+									"name",
+								},
+								"x-kubernetes-list-type": "map",
+							},
+						},
+						SchemaProps: spec.SchemaProps{
+							Description: "serviceEndpoints is a list of custom endpoints which will override the default service endpoints of an IBM service. These endpoints are used by components within the cluster when trying to reach the IBM Cloud Services that have been overriden. The CCCMO reads in the IBMCloudPlatformSpec and validates each endpoint is resolvable. Once validated, the cloud config and IBMCloudPlatformStatus are updated to reflect the same custom endpoints. A maximum of 13 service endpoints overrides are supported.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("github.com/openshift/api/config/v1.IBMCloudServiceEndpoint"),
+									},
+								},
+							},
+						},
+					},
+				},
 			},
 		},
+		Dependencies: []string{
+			"github.com/openshift/api/config/v1.IBMCloudServiceEndpoint"},
 	}
 }
 
@@ -13030,35 +13228,35 @@ func schema_openshift_api_config_v1_IBMCloudPlatformStatus(ref common.ReferenceC
 				Properties: map[string]spec.Schema{
 					"location": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Location is where the cluster has been deployed",
+							Description: "location is where the cluster has been deployed",
 							Type:        []string{"string"},
 							Format:      "",
 						},
 					},
 					"resourceGroupName": {
 						SchemaProps: spec.SchemaProps{
-							Description: "ResourceGroupName is the Resource Group for new IBMCloud resources created for the cluster.",
+							Description: "resourceGroupName is the Resource Group for new IBMCloud resources created for the cluster.",
 							Type:        []string{"string"},
 							Format:      "",
 						},
 					},
 					"providerType": {
 						SchemaProps: spec.SchemaProps{
-							Description: "ProviderType indicates the type of cluster that was created",
+							Description: "providerType indicates the type of cluster that was created",
 							Type:        []string{"string"},
 							Format:      "",
 						},
 					},
 					"cisInstanceCRN": {
 						SchemaProps: spec.SchemaProps{
-							Description: "CISInstanceCRN is the CRN of the Cloud Internet Services instance managing the DNS zone for the cluster's base domain",
+							Description: "cisInstanceCRN is the CRN of the Cloud Internet Services instance managing the DNS zone for the cluster's base domain",
 							Type:        []string{"string"},
 							Format:      "",
 						},
 					},
 					"dnsInstanceCRN": {
 						SchemaProps: spec.SchemaProps{
-							Description: "DNSInstanceCRN is the CRN of the DNS Services instance managing the DNS zone for the cluster's base domain",
+							Description: "dnsInstanceCRN is the CRN of the DNS Services instance managing the DNS zone for the cluster's base domain",
 							Type:        []string{"string"},
 							Format:      "",
 						},
@@ -13073,7 +13271,7 @@ func schema_openshift_api_config_v1_IBMCloudPlatformStatus(ref common.ReferenceC
 							},
 						},
 						SchemaProps: spec.SchemaProps{
-							Description: "serviceEndpoints is a list of custom endpoints which will override the default service endpoints of an IBM Cloud service. These endpoints are consumed by components within the cluster to reach the respective IBM Cloud Services.",
+							Description: "serviceEndpoints is a list of custom endpoints which will override the default service endpoints of an IBM service. These endpoints are used by components within the cluster when trying to reach the IBM Cloud Services that have been overriden. The CCCMO reads in the IBMCloudPlatformSpec and validates each endpoint is resolvable. Once validated, the cloud config and IBMCloudPlatformStatus are updated to reflect the same custom endpoints.",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -13110,7 +13308,7 @@ func schema_openshift_api_config_v1_IBMCloudServiceEndpoint(ref common.Reference
 					},
 					"url": {
 						SchemaProps: spec.SchemaProps{
-							Description: "url is fully qualified URI with scheme https, that overrides the default generated endpoint for a client. This must be provided and cannot be empty.",
+							Description: "url is fully qualified URI with scheme https, that overrides the default generated endpoint for a client. This must be provided and cannot be empty. The path must follow the pattern /v[0,9]+ or /api/v[0,9]+",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -13678,7 +13876,7 @@ func schema_openshift_api_config_v1_ImageLabel(ref common.ReferenceCallback) com
 				Properties: map[string]spec.Schema{
 					"name": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Name defines the name of the label. It must have non-zero length.",
+							Description: "name defines the name of the label. It must have non-zero length.",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -13686,7 +13884,7 @@ func schema_openshift_api_config_v1_ImageLabel(ref common.ReferenceCallback) com
 					},
 					"value": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Value defines the literal value of the label.",
+							Description: "value defines the literal value of the label.",
 							Type:        []string{"string"},
 							Format:      "",
 						},
@@ -14553,6 +14751,48 @@ func schema_openshift_api_config_v1_IntermediateTLSProfile(ref common.ReferenceC
 	}
 }
 
+func schema_openshift_api_config_v1_KMSConfig(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "KMSConfig defines the configuration for the KMS instance that will be used with KMSEncryptionProvider encryption",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"type": {
+						SchemaProps: spec.SchemaProps{
+							Description: "type defines the kind of platform for the KMS provider. Available provider types are AWS only.",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"aws": {
+						SchemaProps: spec.SchemaProps{
+							Description: "aws defines the key config for using an AWS KMS instance for the encryption. The AWS KMS instance is managed by the user outside the purview of the control plane.",
+							Ref:         ref("github.com/openshift/api/config/v1.AWSKMSConfig"),
+						},
+					},
+				},
+				Required: []string{"type"},
+			},
+			VendorExtensible: spec.VendorExtensible{
+				Extensions: spec.Extensions{
+					"x-kubernetes-unions": []interface{}{
+						map[string]interface{}{
+							"discriminator": "type",
+							"fields-to-discriminateBy": map[string]interface{}{
+								"aws": "AWS",
+							},
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"github.com/openshift/api/config/v1.AWSKMSConfig"},
+	}
+}
+
 func schema_openshift_api_config_v1_KeystoneIdentityProvider(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -14894,13 +15134,13 @@ func schema_openshift_api_config_v1_MTUMigration(ref common.ReferenceCallback) c
 				Properties: map[string]spec.Schema{
 					"network": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Network contains MTU migration configuration for the default network.",
+							Description: "network contains MTU migration configuration for the default network.",
 							Ref:         ref("github.com/openshift/api/config/v1.MTUMigrationValues"),
 						},
 					},
 					"machine": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Machine contains MTU migration configuration for the machine's uplink.",
+							Description: "machine contains MTU migration configuration for the machine's uplink.",
 							Ref:         ref("github.com/openshift/api/config/v1.MTUMigrationValues"),
 						},
 					},
@@ -14921,14 +15161,14 @@ func schema_openshift_api_config_v1_MTUMigrationValues(ref common.ReferenceCallb
 				Properties: map[string]spec.Schema{
 					"to": {
 						SchemaProps: spec.SchemaProps{
-							Description: "To is the MTU to migrate to.",
+							Description: "to is the MTU to migrate to.",
 							Type:        []string{"integer"},
 							Format:      "int64",
 						},
 					},
 					"from": {
 						SchemaProps: spec.SchemaProps{
-							Description: "From is the MTU to migrate from.",
+							Description: "from is the MTU to migrate from.",
 							Type:        []string{"integer"},
 							Format:      "int64",
 						},
@@ -14987,7 +15227,7 @@ func schema_openshift_api_config_v1_NamedCertificate(ref common.ReferenceCallbac
 				Properties: map[string]spec.Schema{
 					"names": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Names is a list of DNS names this certificate should be used to secure A name can be a normal DNS name, or can contain leading wildcard segments.",
+							Description: "names is a list of DNS names this certificate should be used to secure A name can be a normal DNS name, or can contain leading wildcard segments.",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -15002,7 +15242,7 @@ func schema_openshift_api_config_v1_NamedCertificate(ref common.ReferenceCallbac
 					},
 					"certFile": {
 						SchemaProps: spec.SchemaProps{
-							Description: "CertFile is a file containing a PEM-encoded certificate",
+							Description: "certFile is a file containing a PEM-encoded certificate",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -15010,7 +15250,7 @@ func schema_openshift_api_config_v1_NamedCertificate(ref common.ReferenceCallbac
 					},
 					"keyFile": {
 						SchemaProps: spec.SchemaProps{
-							Description: "KeyFile is a file containing a PEM-encoded private key for the certificate specified by CertFile",
+							Description: "keyFile is a file containing a PEM-encoded private key for the certificate specified by CertFile",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -15269,14 +15509,14 @@ func schema_openshift_api_config_v1_NetworkMigration(ref common.ReferenceCallbac
 				Properties: map[string]spec.Schema{
 					"networkType": {
 						SchemaProps: spec.SchemaProps{
-							Description: "NetworkType is the target plugin that is being deployed. DEPRECATED: network type migration is no longer supported, so this should always be unset.",
+							Description: "networkType is the target plugin that is being deployed. DEPRECATED: network type migration is no longer supported, so this should always be unset.",
 							Type:        []string{"string"},
 							Format:      "",
 						},
 					},
 					"mtu": {
 						SchemaProps: spec.SchemaProps{
-							Description: "MTU is the MTU configuration that is being deployed.",
+							Description: "mtu is the MTU configuration that is being deployed.",
 							Ref:         ref("github.com/openshift/api/config/v1.MTUMigration"),
 						},
 					},
@@ -15336,7 +15576,7 @@ func schema_openshift_api_config_v1_NetworkSpec(ref common.ReferenceCallback) co
 					},
 					"networkType": {
 						SchemaProps: spec.SchemaProps{
-							Description: "NetworkType is the plugin that is to be deployed (e.g. OVNKubernetes). This should match a value that the cluster-network-operator understands, or else no networking will be installed. Currently supported values are: - OVNKubernetes This field is immutable after installation.",
+							Description: "networkType is the plugin that is to be deployed (e.g. OVNKubernetes). This should match a value that the cluster-network-operator understands, or else no networking will be installed. Currently supported values are: - OVNKubernetes This field is immutable after installation.",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -15419,21 +15659,21 @@ func schema_openshift_api_config_v1_NetworkStatus(ref common.ReferenceCallback) 
 					},
 					"networkType": {
 						SchemaProps: spec.SchemaProps{
-							Description: "NetworkType is the plugin that is deployed (e.g. OVNKubernetes).",
+							Description: "networkType is the plugin that is deployed (e.g. OVNKubernetes).",
 							Type:        []string{"string"},
 							Format:      "",
 						},
 					},
 					"clusterNetworkMTU": {
 						SchemaProps: spec.SchemaProps{
-							Description: "ClusterNetworkMTU is the MTU for inter-pod networking.",
+							Description: "clusterNetworkMTU is the MTU for inter-pod networking.",
 							Type:        []string{"integer"},
 							Format:      "int32",
 						},
 					},
 					"migration": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Migration contains the cluster network migration configuration.",
+							Description: "migration contains the cluster network migration configuration.",
 							Ref:         ref("github.com/openshift/api/config/v1.NetworkMigration"),
 						},
 					},
@@ -15443,9 +15683,7 @@ func schema_openshift_api_config_v1_NetworkStatus(ref common.ReferenceCallback) 
 								"x-kubernetes-list-map-keys": []interface{}{
 									"type",
 								},
-								"x-kubernetes-list-type":       "map",
-								"x-kubernetes-patch-merge-key": "type",
-								"x-kubernetes-patch-strategy":  "merge",
+								"x-kubernetes-list-type": "map",
 							},
 						},
 						SchemaProps: spec.SchemaProps{
@@ -15578,14 +15816,14 @@ func schema_openshift_api_config_v1_NodeSpec(ref common.ReferenceCallback) commo
 				Properties: map[string]spec.Schema{
 					"cgroupMode": {
 						SchemaProps: spec.SchemaProps{
-							Description: "CgroupMode determines the cgroups version on the node",
+							Description: "cgroupMode determines the cgroups version on the node",
 							Type:        []string{"string"},
 							Format:      "",
 						},
 					},
 					"workerLatencyProfile": {
 						SchemaProps: spec.SchemaProps{
-							Description: "WorkerLatencyProfile determins the how fast the kubelet is updating the status and corresponding reaction of the cluster",
+							Description: "workerLatencyProfile determins the how fast the kubelet is updating the status and corresponding reaction of the cluster",
 							Type:        []string{"string"},
 							Format:      "",
 						},
@@ -15616,9 +15854,7 @@ func schema_openshift_api_config_v1_NodeStatus(ref common.ReferenceCallback) com
 								"x-kubernetes-list-map-keys": []interface{}{
 									"type",
 								},
-								"x-kubernetes-list-type":       "map",
-								"x-kubernetes-patch-merge-key": "type",
-								"x-kubernetes-patch-strategy":  "merge",
+								"x-kubernetes-list-type": "map",
 							},
 						},
 						SchemaProps: spec.SchemaProps{
@@ -16227,7 +16463,7 @@ func schema_openshift_api_config_v1_OIDCClientConfig(ref common.ReferenceCallbac
 				Properties: map[string]spec.Schema{
 					"componentName": {
 						SchemaProps: spec.SchemaProps{
-							Description: "ComponentName is the name of the component that is supposed to consume this client configuration",
+							Description: "componentName is the name of the component that is supposed to consume this client configuration",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -16235,7 +16471,7 @@ func schema_openshift_api_config_v1_OIDCClientConfig(ref common.ReferenceCallbac
 					},
 					"componentNamespace": {
 						SchemaProps: spec.SchemaProps{
-							Description: "ComponentNamespace is the namespace of the component that is supposed to consume this client configuration",
+							Description: "componentNamespace is the namespace of the component that is supposed to consume this client configuration",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -16243,7 +16479,7 @@ func schema_openshift_api_config_v1_OIDCClientConfig(ref common.ReferenceCallbac
 					},
 					"clientID": {
 						SchemaProps: spec.SchemaProps{
-							Description: "ClientID is the identifier of the OIDC client from the OIDC provider",
+							Description: "clientID is the identifier of the OIDC client from the OIDC provider",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -16251,7 +16487,7 @@ func schema_openshift_api_config_v1_OIDCClientConfig(ref common.ReferenceCallbac
 					},
 					"clientSecret": {
 						SchemaProps: spec.SchemaProps{
-							Description: "ClientSecret refers to a secret in the `openshift-config` namespace that contains the client secret in the `clientSecret` key of the `.data` field",
+							Description: "clientSecret refers to a secret in the `openshift-config` namespace that contains the client secret in the `clientSecret` key of the `.data` field",
 							Default:     map[string]interface{}{},
 							Ref:         ref("github.com/openshift/api/config/v1.SecretNameReference"),
 						},
@@ -16263,7 +16499,7 @@ func schema_openshift_api_config_v1_OIDCClientConfig(ref common.ReferenceCallbac
 							},
 						},
 						SchemaProps: spec.SchemaProps{
-							Description: "ExtraScopes is an optional set of scopes to request tokens with.",
+							Description: "extraScopes is an optional set of scopes to request tokens with.",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -16309,7 +16545,7 @@ func schema_openshift_api_config_v1_OIDCClientReference(ref common.ReferenceCall
 					},
 					"clientID": {
 						SchemaProps: spec.SchemaProps{
-							Description: "ClientID is the identifier of the OIDC client from the OIDC provider",
+							Description: "clientID is the identifier of the OIDC client from the OIDC provider",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -16330,7 +16566,7 @@ func schema_openshift_api_config_v1_OIDCClientStatus(ref common.ReferenceCallbac
 				Properties: map[string]spec.Schema{
 					"componentName": {
 						SchemaProps: spec.SchemaProps{
-							Description: "ComponentName is the name of the component that will consume a client configuration.",
+							Description: "componentName is the name of the component that will consume a client configuration.",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -16338,7 +16574,7 @@ func schema_openshift_api_config_v1_OIDCClientStatus(ref common.ReferenceCallbac
 					},
 					"componentNamespace": {
 						SchemaProps: spec.SchemaProps{
-							Description: "ComponentNamespace is the namespace of the component that will consume a client configuration.",
+							Description: "componentNamespace is the namespace of the component that will consume a client configuration.",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -16355,7 +16591,7 @@ func schema_openshift_api_config_v1_OIDCClientStatus(ref common.ReferenceCallbac
 							},
 						},
 						SchemaProps: spec.SchemaProps{
-							Description: "CurrentOIDCClients is a list of clients that the component is currently using.",
+							Description: "currentOIDCClients is a list of clients that the component is currently using.",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -16374,7 +16610,7 @@ func schema_openshift_api_config_v1_OIDCClientStatus(ref common.ReferenceCallbac
 							},
 						},
 						SchemaProps: spec.SchemaProps{
-							Description: "ConsumingUsers is a slice of ServiceAccounts that need to have read permission on the `clientSecret` secret.",
+							Description: "consumingUsers is a slice of ServiceAccounts that need to have read permission on the `clientSecret` secret.",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -16397,7 +16633,7 @@ func schema_openshift_api_config_v1_OIDCClientStatus(ref common.ReferenceCallbac
 							},
 						},
 						SchemaProps: spec.SchemaProps{
-							Description: "Conditions are used to communicate the state of the `oidcClients` entry.\n\nSupported conditions include Available, Degraded and Progressing.\n\nIf Available is true, the component is successfully using the configured client. If Degraded is true, that means something has gone wrong trying to handle the client configuration. If Progressing is true, that means the component is taking some action related to the `oidcClients` entry.",
+							Description: "conditions are used to communicate the state of the `oidcClients` entry.\n\nSupported conditions include Available, Degraded and Progressing.\n\nIf Available is true, the component is successfully using the configured client. If Degraded is true, that means something has gone wrong trying to handle the client configuration. If Progressing is true, that means the component is taking some action related to the `oidcClients` entry.",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -16426,7 +16662,7 @@ func schema_openshift_api_config_v1_OIDCProvider(ref common.ReferenceCallback) c
 				Properties: map[string]spec.Schema{
 					"name": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Name of the OIDC provider",
+							Description: "name of the OIDC provider",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -16434,7 +16670,7 @@ func schema_openshift_api_config_v1_OIDCProvider(ref common.ReferenceCallback) c
 					},
 					"issuer": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Issuer describes atributes of the OIDC token issuer",
+							Description: "issuer describes atributes of the OIDC token issuer",
 							Default:     map[string]interface{}{},
 							Ref:         ref("github.com/openshift/api/config/v1.TokenIssuer"),
 						},
@@ -16450,7 +16686,7 @@ func schema_openshift_api_config_v1_OIDCProvider(ref common.ReferenceCallback) c
 							},
 						},
 						SchemaProps: spec.SchemaProps{
-							Description: "OIDCClients contains configuration for the platform's clients that need to request tokens from the issuer",
+							Description: "oidcClients contains configuration for the platform's clients that need to request tokens from the issuer",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -16464,7 +16700,7 @@ func schema_openshift_api_config_v1_OIDCProvider(ref common.ReferenceCallback) c
 					},
 					"claimMappings": {
 						SchemaProps: spec.SchemaProps{
-							Description: "ClaimMappings describes rules on how to transform information from an ID token into a cluster identity",
+							Description: "claimMappings describes rules on how to transform information from an ID token into a cluster identity",
 							Default:     map[string]interface{}{},
 							Ref:         ref("github.com/openshift/api/config/v1.TokenClaimMappings"),
 						},
@@ -16476,7 +16712,7 @@ func schema_openshift_api_config_v1_OIDCProvider(ref common.ReferenceCallback) c
 							},
 						},
 						SchemaProps: spec.SchemaProps{
-							Description: "ClaimValidationRules are rules that are applied to validate token claims to authenticate users.",
+							Description: "claimValidationRules are rules that are applied to validate token claims to authenticate users.",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -17281,79 +17517,79 @@ func schema_openshift_api_config_v1_PlatformSpec(ref common.ReferenceCallback) c
 					},
 					"aws": {
 						SchemaProps: spec.SchemaProps{
-							Description: "AWS contains settings specific to the Amazon Web Services infrastructure provider.",
+							Description: "aws contains settings specific to the Amazon Web Services infrastructure provider.",
 							Ref:         ref("github.com/openshift/api/config/v1.AWSPlatformSpec"),
 						},
 					},
 					"azure": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Azure contains settings specific to the Azure infrastructure provider.",
+							Description: "azure contains settings specific to the Azure infrastructure provider.",
 							Ref:         ref("github.com/openshift/api/config/v1.AzurePlatformSpec"),
 						},
 					},
 					"gcp": {
 						SchemaProps: spec.SchemaProps{
-							Description: "GCP contains settings specific to the Google Cloud Platform infrastructure provider.",
+							Description: "gcp contains settings specific to the Google Cloud Platform infrastructure provider.",
 							Ref:         ref("github.com/openshift/api/config/v1.GCPPlatformSpec"),
 						},
 					},
 					"baremetal": {
 						SchemaProps: spec.SchemaProps{
-							Description: "BareMetal contains settings specific to the BareMetal platform.",
+							Description: "baremetal contains settings specific to the BareMetal platform.",
 							Ref:         ref("github.com/openshift/api/config/v1.BareMetalPlatformSpec"),
 						},
 					},
 					"openstack": {
 						SchemaProps: spec.SchemaProps{
-							Description: "OpenStack contains settings specific to the OpenStack infrastructure provider.",
+							Description: "openstack contains settings specific to the OpenStack infrastructure provider.",
 							Ref:         ref("github.com/openshift/api/config/v1.OpenStackPlatformSpec"),
 						},
 					},
 					"ovirt": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Ovirt contains settings specific to the oVirt infrastructure provider.",
+							Description: "ovirt contains settings specific to the oVirt infrastructure provider.",
 							Ref:         ref("github.com/openshift/api/config/v1.OvirtPlatformSpec"),
 						},
 					},
 					"vsphere": {
 						SchemaProps: spec.SchemaProps{
-							Description: "VSphere contains settings specific to the VSphere infrastructure provider.",
+							Description: "vsphere contains settings specific to the VSphere infrastructure provider.",
 							Ref:         ref("github.com/openshift/api/config/v1.VSpherePlatformSpec"),
 						},
 					},
 					"ibmcloud": {
 						SchemaProps: spec.SchemaProps{
-							Description: "IBMCloud contains settings specific to the IBMCloud infrastructure provider.",
+							Description: "ibmcloud contains settings specific to the IBMCloud infrastructure provider.",
 							Ref:         ref("github.com/openshift/api/config/v1.IBMCloudPlatformSpec"),
 						},
 					},
 					"kubevirt": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Kubevirt contains settings specific to the kubevirt infrastructure provider.",
+							Description: "kubevirt contains settings specific to the kubevirt infrastructure provider.",
 							Ref:         ref("github.com/openshift/api/config/v1.KubevirtPlatformSpec"),
 						},
 					},
 					"equinixMetal": {
 						SchemaProps: spec.SchemaProps{
-							Description: "EquinixMetal contains settings specific to the Equinix Metal infrastructure provider.",
+							Description: "equinixMetal contains settings specific to the Equinix Metal infrastructure provider.",
 							Ref:         ref("github.com/openshift/api/config/v1.EquinixMetalPlatformSpec"),
 						},
 					},
 					"powervs": {
 						SchemaProps: spec.SchemaProps{
-							Description: "PowerVS contains settings specific to the IBM Power Systems Virtual Servers infrastructure provider.",
+							Description: "powervs contains settings specific to the IBM Power Systems Virtual Servers infrastructure provider.",
 							Ref:         ref("github.com/openshift/api/config/v1.PowerVSPlatformSpec"),
 						},
 					},
 					"alibabaCloud": {
 						SchemaProps: spec.SchemaProps{
-							Description: "AlibabaCloud contains settings specific to the Alibaba Cloud infrastructure provider.",
+							Description: "alibabaCloud contains settings specific to the Alibaba Cloud infrastructure provider.",
 							Ref:         ref("github.com/openshift/api/config/v1.AlibabaCloudPlatformSpec"),
 						},
 					},
 					"nutanix": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Nutanix contains settings specific to the Nutanix infrastructure provider.",
+							Description: "nutanix contains settings specific to the Nutanix infrastructure provider.",
 							Ref:         ref("github.com/openshift/api/config/v1.NutanixPlatformSpec"),
 						},
 					},
@@ -17389,85 +17625,85 @@ func schema_openshift_api_config_v1_PlatformStatus(ref common.ReferenceCallback)
 					},
 					"aws": {
 						SchemaProps: spec.SchemaProps{
-							Description: "AWS contains settings specific to the Amazon Web Services infrastructure provider.",
+							Description: "aws contains settings specific to the Amazon Web Services infrastructure provider.",
 							Ref:         ref("github.com/openshift/api/config/v1.AWSPlatformStatus"),
 						},
 					},
 					"azure": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Azure contains settings specific to the Azure infrastructure provider.",
+							Description: "azure contains settings specific to the Azure infrastructure provider.",
 							Ref:         ref("github.com/openshift/api/config/v1.AzurePlatformStatus"),
 						},
 					},
 					"gcp": {
 						SchemaProps: spec.SchemaProps{
-							Description: "GCP contains settings specific to the Google Cloud Platform infrastructure provider.",
+							Description: "gcp contains settings specific to the Google Cloud Platform infrastructure provider.",
 							Ref:         ref("github.com/openshift/api/config/v1.GCPPlatformStatus"),
 						},
 					},
 					"baremetal": {
 						SchemaProps: spec.SchemaProps{
-							Description: "BareMetal contains settings specific to the BareMetal platform.",
+							Description: "baremetal contains settings specific to the BareMetal platform.",
 							Ref:         ref("github.com/openshift/api/config/v1.BareMetalPlatformStatus"),
 						},
 					},
 					"openstack": {
 						SchemaProps: spec.SchemaProps{
-							Description: "OpenStack contains settings specific to the OpenStack infrastructure provider.",
+							Description: "openstack contains settings specific to the OpenStack infrastructure provider.",
 							Ref:         ref("github.com/openshift/api/config/v1.OpenStackPlatformStatus"),
 						},
 					},
 					"ovirt": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Ovirt contains settings specific to the oVirt infrastructure provider.",
+							Description: "ovirt contains settings specific to the oVirt infrastructure provider.",
 							Ref:         ref("github.com/openshift/api/config/v1.OvirtPlatformStatus"),
 						},
 					},
 					"vsphere": {
 						SchemaProps: spec.SchemaProps{
-							Description: "VSphere contains settings specific to the VSphere infrastructure provider.",
+							Description: "vsphere contains settings specific to the VSphere infrastructure provider.",
 							Ref:         ref("github.com/openshift/api/config/v1.VSpherePlatformStatus"),
 						},
 					},
 					"ibmcloud": {
 						SchemaProps: spec.SchemaProps{
-							Description: "IBMCloud contains settings specific to the IBMCloud infrastructure provider.",
+							Description: "ibmcloud contains settings specific to the IBMCloud infrastructure provider.",
 							Ref:         ref("github.com/openshift/api/config/v1.IBMCloudPlatformStatus"),
 						},
 					},
 					"kubevirt": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Kubevirt contains settings specific to the kubevirt infrastructure provider.",
+							Description: "kubevirt contains settings specific to the kubevirt infrastructure provider.",
 							Ref:         ref("github.com/openshift/api/config/v1.KubevirtPlatformStatus"),
 						},
 					},
 					"equinixMetal": {
 						SchemaProps: spec.SchemaProps{
-							Description: "EquinixMetal contains settings specific to the Equinix Metal infrastructure provider.",
+							Description: "equinixMetal contains settings specific to the Equinix Metal infrastructure provider.",
 							Ref:         ref("github.com/openshift/api/config/v1.EquinixMetalPlatformStatus"),
 						},
 					},
 					"powervs": {
 						SchemaProps: spec.SchemaProps{
-							Description: "PowerVS contains settings specific to the Power Systems Virtual Servers infrastructure provider.",
+							Description: "powervs contains settings specific to the Power Systems Virtual Servers infrastructure provider.",
 							Ref:         ref("github.com/openshift/api/config/v1.PowerVSPlatformStatus"),
 						},
 					},
 					"alibabaCloud": {
 						SchemaProps: spec.SchemaProps{
-							Description: "AlibabaCloud contains settings specific to the Alibaba Cloud infrastructure provider.",
+							Description: "alibabaCloud contains settings specific to the Alibaba Cloud infrastructure provider.",
 							Ref:         ref("github.com/openshift/api/config/v1.AlibabaCloudPlatformStatus"),
 						},
 					},
 					"nutanix": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Nutanix contains settings specific to the Nutanix infrastructure provider.",
+							Description: "nutanix contains settings specific to the Nutanix infrastructure provider.",
 							Ref:         ref("github.com/openshift/api/config/v1.NutanixPlatformStatus"),
 						},
 					},
 					"external": {
 						SchemaProps: spec.SchemaProps{
-							Description: "External contains settings specific to the generic External infrastructure provider.",
+							Description: "external contains settings specific to the generic External infrastructure provider.",
 							Ref:         ref("github.com/openshift/api/config/v1.ExternalPlatformStatus"),
 						},
 					},
@@ -17572,14 +17808,14 @@ func schema_openshift_api_config_v1_PowerVSPlatformStatus(ref common.ReferenceCa
 					},
 					"cisInstanceCRN": {
 						SchemaProps: spec.SchemaProps{
-							Description: "CISInstanceCRN is the CRN of the Cloud Internet Services instance managing the DNS zone for the cluster's base domain",
+							Description: "cisInstanceCRN is the CRN of the Cloud Internet Services instance managing the DNS zone for the cluster's base domain",
 							Type:        []string{"string"},
 							Format:      "",
 						},
 					},
 					"dnsInstanceCRN": {
 						SchemaProps: spec.SchemaProps{
-							Description: "DNSInstanceCRN is the CRN of the DNS Services instance managing the DNS zone for the cluster's base domain",
+							Description: "dnsInstanceCRN is the CRN of the DNS Services instance managing the DNS zone for the cluster's base domain",
 							Type:        []string{"string"},
 							Format:      "",
 						},
@@ -17631,7 +17867,7 @@ func schema_openshift_api_config_v1_PrefixedClaimMapping(ref common.ReferenceCal
 				Properties: map[string]spec.Schema{
 					"claim": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Claim is a JWT token claim to be used in the mapping",
+							Description: "claim is a JWT token claim to be used in the mapping",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -17639,7 +17875,7 @@ func schema_openshift_api_config_v1_PrefixedClaimMapping(ref common.ReferenceCal
 					},
 					"prefix": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Prefix is a string to prefix the value from the token in the result of the claim mapping.\n\nBy default, no prefixing occurs.\n\nExample: if `prefix` is set to \"myoidc:\"\" and the `claim` in JWT contains an array of strings \"a\", \"b\" and  \"c\", the mapping will result in an array of string \"myoidc:a\", \"myoidc:b\" and \"myoidc:c\".",
+							Description: "prefix is a string to prefix the value from the token in the result of the claim mapping.\n\nBy default, no prefixing occurs.\n\nExample: if `prefix` is set to \"myoidc:\"\" and the `claim` in JWT contains an array of strings \"a\", \"b\" and  \"c\", the mapping will result in an array of string \"myoidc:a\", \"myoidc:b\" and \"myoidc:c\".",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -17823,7 +18059,7 @@ func schema_openshift_api_config_v1_PromQLClusterCondition(ref common.ReferenceC
 				Properties: map[string]spec.Schema{
 					"promql": {
 						SchemaProps: spec.SchemaProps{
-							Description: "PromQL is a PromQL query classifying clusters. This query query should return a 1 in the match case and a 0 in the does-not-match case. Queries which return no time series, or which return values besides 0 or 1, are evaluation failures.",
+							Description: "promql is a PromQL query classifying clusters. This query query should return a 1 in the match case and a 0 in the does-not-match case. Queries which return no time series, or which return values besides 0 or 1, are evaluation failures.",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -17866,7 +18102,7 @@ func schema_openshift_api_config_v1_Proxy(ref common.ReferenceCallback) common.O
 					},
 					"spec": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Spec holds user-settable values for the proxy configuration",
+							Description: "spec holds user-settable values for the proxy configuration",
 							Default:     map[string]interface{}{},
 							Ref:         ref("github.com/openshift/api/config/v1.ProxySpec"),
 						},
@@ -18224,7 +18460,7 @@ func schema_openshift_api_config_v1_RemoteConnectionInfo(ref common.ReferenceCal
 				Properties: map[string]spec.Schema{
 					"url": {
 						SchemaProps: spec.SchemaProps{
-							Description: "URL is the remote URL to connect to",
+							Description: "url is the remote URL to connect to",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -18232,7 +18468,7 @@ func schema_openshift_api_config_v1_RemoteConnectionInfo(ref common.ReferenceCal
 					},
 					"ca": {
 						SchemaProps: spec.SchemaProps{
-							Description: "CA is the CA for verifying TLS connections",
+							Description: "ca is the CA for verifying TLS connections",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -18240,7 +18476,7 @@ func schema_openshift_api_config_v1_RemoteConnectionInfo(ref common.ReferenceCal
 					},
 					"certFile": {
 						SchemaProps: spec.SchemaProps{
-							Description: "CertFile is a file containing a PEM-encoded certificate",
+							Description: "certFile is a file containing a PEM-encoded certificate",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -18248,7 +18484,7 @@ func schema_openshift_api_config_v1_RemoteConnectionInfo(ref common.ReferenceCal
 					},
 					"keyFile": {
 						SchemaProps: spec.SchemaProps{
-							Description: "KeyFile is a file containing a PEM-encoded private key for the certificate specified by CertFile",
+							Description: "keyFile is a file containing a PEM-encoded private key for the certificate specified by CertFile",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -18618,7 +18854,7 @@ func schema_openshift_api_config_v1_SchedulerSpec(ref common.ReferenceCallback) 
 					},
 					"mastersSchedulable": {
 						SchemaProps: spec.SchemaProps{
-							Description: "MastersSchedulable allows masters nodes to be schedulable. When this flag is turned on, all the master nodes in the cluster will be made schedulable, so that workload pods can run on them. The default value for this field is false, meaning none of the master nodes are schedulable. Important Note: Once the workload pods start running on the master nodes, extreme care must be taken to ensure that cluster-critical control plane components are not impacted. Please turn on this field after doing due diligence.",
+							Description: "mastersSchedulable allows masters nodes to be schedulable. When this flag is turned on, all the master nodes in the cluster will be made schedulable, so that workload pods can run on them. The default value for this field is false, meaning none of the master nodes are schedulable. Important Note: Once the workload pods start running on the master nodes, extreme care must be taken to ensure that cluster-critical control plane components are not impacted. Please turn on this field after doing due diligence.",
 							Default:     false,
 							Type:        []string{"boolean"},
 							Format:      "",
@@ -18673,7 +18909,7 @@ func schema_openshift_api_config_v1_ServingInfo(ref common.ReferenceCallback) co
 				Properties: map[string]spec.Schema{
 					"bindAddress": {
 						SchemaProps: spec.SchemaProps{
-							Description: "BindAddress is the ip:port to serve on",
+							Description: "bindAddress is the ip:port to serve on",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -18681,7 +18917,7 @@ func schema_openshift_api_config_v1_ServingInfo(ref common.ReferenceCallback) co
 					},
 					"bindNetwork": {
 						SchemaProps: spec.SchemaProps{
-							Description: "BindNetwork is the type of network to bind to - defaults to \"tcp4\", accepts \"tcp\", \"tcp4\", and \"tcp6\"",
+							Description: "bindNetwork is the type of network to bind to - defaults to \"tcp4\", accepts \"tcp\", \"tcp4\", and \"tcp6\"",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -18689,7 +18925,7 @@ func schema_openshift_api_config_v1_ServingInfo(ref common.ReferenceCallback) co
 					},
 					"certFile": {
 						SchemaProps: spec.SchemaProps{
-							Description: "CertFile is a file containing a PEM-encoded certificate",
+							Description: "certFile is a file containing a PEM-encoded certificate",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -18697,7 +18933,7 @@ func schema_openshift_api_config_v1_ServingInfo(ref common.ReferenceCallback) co
 					},
 					"keyFile": {
 						SchemaProps: spec.SchemaProps{
-							Description: "KeyFile is a file containing a PEM-encoded private key for the certificate specified by CertFile",
+							Description: "keyFile is a file containing a PEM-encoded private key for the certificate specified by CertFile",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -18705,14 +18941,14 @@ func schema_openshift_api_config_v1_ServingInfo(ref common.ReferenceCallback) co
 					},
 					"clientCA": {
 						SchemaProps: spec.SchemaProps{
-							Description: "ClientCA is the certificate bundle for all the signers that you'll recognize for incoming client certificates",
+							Description: "clientCA is the certificate bundle for all the signers that you'll recognize for incoming client certificates",
 							Type:        []string{"string"},
 							Format:      "",
 						},
 					},
 					"namedCertificates": {
 						SchemaProps: spec.SchemaProps{
-							Description: "NamedCertificates is a list of certificates to use to secure requests to specific hostnames",
+							Description: "namedCertificates is a list of certificates to use to secure requests to specific hostnames",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -18726,14 +18962,14 @@ func schema_openshift_api_config_v1_ServingInfo(ref common.ReferenceCallback) co
 					},
 					"minTLSVersion": {
 						SchemaProps: spec.SchemaProps{
-							Description: "MinTLSVersion is the minimum TLS version supported. Values must match version names from https://golang.org/pkg/crypto/tls/#pkg-constants",
+							Description: "minTLSVersion is the minimum TLS version supported. Values must match version names from https://golang.org/pkg/crypto/tls/#pkg-constants",
 							Type:        []string{"string"},
 							Format:      "",
 						},
 					},
 					"cipherSuites": {
 						SchemaProps: spec.SchemaProps{
-							Description: "CipherSuites contains an overridden list of ciphers for the server to support. Values must match cipher suite IDs from https://golang.org/pkg/crypto/tls/#pkg-constants",
+							Description: "cipherSuites contains an overridden list of ciphers for the server to support. Values must match cipher suite IDs from https://golang.org/pkg/crypto/tls/#pkg-constants",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -18795,7 +19031,7 @@ func schema_openshift_api_config_v1_StringSource(ref common.ReferenceCallback) c
 				Properties: map[string]spec.Schema{
 					"value": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Value specifies the cleartext value, or an encrypted value if keyFile is specified.",
+							Description: "value specifies the cleartext value, or an encrypted value if keyFile is specified.",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -18803,7 +19039,7 @@ func schema_openshift_api_config_v1_StringSource(ref common.ReferenceCallback) c
 					},
 					"env": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Env specifies an envvar containing the cleartext value, or an encrypted value if the keyFile is specified.",
+							Description: "env specifies an envvar containing the cleartext value, or an encrypted value if the keyFile is specified.",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -18811,7 +19047,7 @@ func schema_openshift_api_config_v1_StringSource(ref common.ReferenceCallback) c
 					},
 					"file": {
 						SchemaProps: spec.SchemaProps{
-							Description: "File references a file containing the cleartext value, or an encrypted value if a keyFile is specified.",
+							Description: "file references a file containing the cleartext value, or an encrypted value if a keyFile is specified.",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -18819,7 +19055,7 @@ func schema_openshift_api_config_v1_StringSource(ref common.ReferenceCallback) c
 					},
 					"keyFile": {
 						SchemaProps: spec.SchemaProps{
-							Description: "KeyFile references a file containing the key to use to decrypt the value.",
+							Description: "keyFile references a file containing the key to use to decrypt the value.",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -18841,7 +19077,7 @@ func schema_openshift_api_config_v1_StringSourceSpec(ref common.ReferenceCallbac
 				Properties: map[string]spec.Schema{
 					"value": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Value specifies the cleartext value, or an encrypted value if keyFile is specified.",
+							Description: "value specifies the cleartext value, or an encrypted value if keyFile is specified.",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -18849,7 +19085,7 @@ func schema_openshift_api_config_v1_StringSourceSpec(ref common.ReferenceCallbac
 					},
 					"env": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Env specifies an envvar containing the cleartext value, or an encrypted value if the keyFile is specified.",
+							Description: "env specifies an envvar containing the cleartext value, or an encrypted value if the keyFile is specified.",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -18857,7 +19093,7 @@ func schema_openshift_api_config_v1_StringSourceSpec(ref common.ReferenceCallbac
 					},
 					"file": {
 						SchemaProps: spec.SchemaProps{
-							Description: "File references a file containing the cleartext value, or an encrypted value if a keyFile is specified.",
+							Description: "file references a file containing the cleartext value, or an encrypted value if a keyFile is specified.",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -18865,7 +19101,7 @@ func schema_openshift_api_config_v1_StringSourceSpec(ref common.ReferenceCallbac
 					},
 					"keyFile": {
 						SchemaProps: spec.SchemaProps{
-							Description: "KeyFile references a file containing the key to use to decrypt the value.",
+							Description: "keyFile references a file containing the key to use to decrypt the value.",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -19012,7 +19248,7 @@ func schema_openshift_api_config_v1_TestDetails(ref common.ReferenceCallback) co
 				Properties: map[string]spec.Schema{
 					"testName": {
 						SchemaProps: spec.SchemaProps{
-							Description: "TestName is the name of the test as it appears in junit XMLs. It does not include the suite name since the same test can be executed in many suites.",
+							Description: "testName is the name of the test as it appears in junit XMLs. It does not include the suite name since the same test can be executed in many suites.",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -19083,7 +19319,7 @@ func schema_openshift_api_config_v1_TestReportingSpec(ref common.ReferenceCallba
 				Properties: map[string]spec.Schema{
 					"testsForFeatureGates": {
 						SchemaProps: spec.SchemaProps{
-							Description: "TestsForFeatureGates is a list, indexed by FeatureGate and includes information about testing.",
+							Description: "testsForFeatureGates is a list, indexed by FeatureGate and includes information about testing.",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -19122,7 +19358,7 @@ func schema_openshift_api_config_v1_TokenClaimMapping(ref common.ReferenceCallba
 				Properties: map[string]spec.Schema{
 					"claim": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Claim is a JWT token claim to be used in the mapping",
+							Description: "claim is a JWT token claim to be used in the mapping",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -19143,14 +19379,14 @@ func schema_openshift_api_config_v1_TokenClaimMappings(ref common.ReferenceCallb
 				Properties: map[string]spec.Schema{
 					"username": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Username is a name of the claim that should be used to construct usernames for the cluster identity.\n\nDefault value: \"sub\"",
+							Description: "username is a name of the claim that should be used to construct usernames for the cluster identity.\n\nDefault value: \"sub\"",
 							Default:     map[string]interface{}{},
 							Ref:         ref("github.com/openshift/api/config/v1.UsernameClaimMapping"),
 						},
 					},
 					"groups": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Groups is a name of the claim that should be used to construct groups for the cluster identity. The referenced claim must use array of strings values.",
+							Description: "groups is a name of the claim that should be used to construct groups for the cluster identity. The referenced claim must use array of strings values.",
 							Default:     map[string]interface{}{},
 							Ref:         ref("github.com/openshift/api/config/v1.PrefixedClaimMapping"),
 						},
@@ -19226,7 +19462,7 @@ func schema_openshift_api_config_v1_TokenClaimValidationRule(ref common.Referenc
 				Properties: map[string]spec.Schema{
 					"type": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Type sets the type of the validation rule",
+							Description: "type sets the type of the validation rule",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -19234,7 +19470,7 @@ func schema_openshift_api_config_v1_TokenClaimValidationRule(ref common.Referenc
 					},
 					"requiredClaim": {
 						SchemaProps: spec.SchemaProps{
-							Description: "RequiredClaim allows configuring a required claim name and its expected value",
+							Description: "requiredClaim allows configuring a required claim name and its expected value",
 							Ref:         ref("github.com/openshift/api/config/v1.TokenRequiredClaim"),
 						},
 					},
@@ -19303,7 +19539,7 @@ func schema_openshift_api_config_v1_TokenIssuer(ref common.ReferenceCallback) co
 							},
 						},
 						SchemaProps: spec.SchemaProps{
-							Description: "Audiences is an array of audiences that the token was issued for. Valid tokens must include at least one of these values in their \"aud\" claim. Must be set to exactly one value.",
+							Description: "audiences is an array of audiences that the token was issued for. Valid tokens must include at least one of these values in their \"aud\" claim. Must be set to exactly one value.",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -19340,7 +19576,7 @@ func schema_openshift_api_config_v1_TokenRequiredClaim(ref common.ReferenceCallb
 				Properties: map[string]spec.Schema{
 					"claim": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Claim is a name of a required claim. Only claims with string values are supported.",
+							Description: "claim is a name of a required claim. Only claims with string values are supported.",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -19348,7 +19584,7 @@ func schema_openshift_api_config_v1_TokenRequiredClaim(ref common.ReferenceCallb
 					},
 					"requiredValue": {
 						SchemaProps: spec.SchemaProps{
-							Description: "RequiredValue is the required value for the claim.",
+							Description: "requiredValue is the required value for the claim.",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -19378,7 +19614,7 @@ func schema_openshift_api_config_v1_Update(ref common.ReferenceCallback) common.
 					},
 					"version": {
 						SchemaProps: spec.SchemaProps{
-							Description: "version is a semantic version identifying the update version. version is ignored if image is specified and required if architecture is specified.",
+							Description: "version is a semantic version identifying the update version. version is required if architecture is specified. If both version and image are set, the version extracted from the referenced image must match the specified version.",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -19386,7 +19622,7 @@ func schema_openshift_api_config_v1_Update(ref common.ReferenceCallback) common.
 					},
 					"image": {
 						SchemaProps: spec.SchemaProps{
-							Description: "image is a container image location that contains the update. image should be used when the desired version does not exist in availableUpdates or history. When image is set, version is ignored. When image is set, version should be empty. When image is set, architecture cannot be specified.",
+							Description: "image is a container image location that contains the update. image should be used when the desired version does not exist in availableUpdates or history. When image is set, architecture cannot be specified. If both version and image are set, the version extracted from the referenced image must match the specified version.",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -19481,7 +19717,7 @@ func schema_openshift_api_config_v1_UsernameClaimMapping(ref common.ReferenceCal
 				Properties: map[string]spec.Schema{
 					"claim": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Claim is a JWT token claim to be used in the mapping",
+							Description: "claim is a JWT token claim to be used in the mapping",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -19489,7 +19725,7 @@ func schema_openshift_api_config_v1_UsernameClaimMapping(ref common.ReferenceCal
 					},
 					"prefixPolicy": {
 						SchemaProps: spec.SchemaProps{
-							Description: "PrefixPolicy specifies how a prefix should apply.\n\nBy default, claims other than `email` will be prefixed with the issuer URL to prevent naming clashes with other plugins.\n\nSet to \"NoPrefix\" to disable prefixing.\n\nExample:\n    (1) `prefix` is set to \"myoidc:\" and `claim` is set to \"username\".\n        If the JWT claim `username` contains value `userA`, the resulting\n        mapped value will be \"myoidc:userA\".\n    (2) `prefix` is set to \"myoidc:\" and `claim` is set to \"email\". If the\n        JWT `email` claim contains value \"userA@myoidc.tld\", the resulting\n        mapped value will be \"myoidc:userA@myoidc.tld\".\n    (3) `prefix` is unset, `issuerURL` is set to `https://myoidc.tld`,\n        the JWT claims include \"username\":\"userA\" and \"email\":\"userA@myoidc.tld\",\n        and `claim` is set to:\n        (a) \"username\": the mapped value will be \"https://myoidc.tld#userA\"\n        (b) \"email\": the mapped value will be \"userA@myoidc.tld\"",
+							Description: "prefixPolicy specifies how a prefix should apply.\n\nBy default, claims other than `email` will be prefixed with the issuer URL to prevent naming clashes with other plugins.\n\nSet to \"NoPrefix\" to disable prefixing.\n\nExample:\n    (1) `prefix` is set to \"myoidc:\" and `claim` is set to \"username\".\n        If the JWT claim `username` contains value `userA`, the resulting\n        mapped value will be \"myoidc:userA\".\n    (2) `prefix` is set to \"myoidc:\" and `claim` is set to \"email\". If the\n        JWT `email` claim contains value \"userA@myoidc.tld\", the resulting\n        mapped value will be \"myoidc:userA@myoidc.tld\".\n    (3) `prefix` is unset, `issuerURL` is set to `https://myoidc.tld`,\n        the JWT claims include \"username\":\"userA\" and \"email\":\"userA@myoidc.tld\",\n        and `claim` is set to:\n        (a) \"username\": the mapped value will be \"https://myoidc.tld#userA\"\n        (b) \"email\": the mapped value will be \"userA@myoidc.tld\"",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -19529,6 +19765,120 @@ func schema_openshift_api_config_v1_UsernamePrefix(ref common.ReferenceCallback)
 	}
 }
 
+func schema_openshift_api_config_v1_VSphereFailureDomainHostGroup(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "VSphereFailureDomainHostGroup holds the vmGroup and the hostGroup names in vCenter corresponds to a vm-host group of type Virtual Machine and Host respectively. Is also contains the vmHostRule which is an affinity vm-host rule in vCenter.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"vmGroup": {
+						SchemaProps: spec.SchemaProps{
+							Description: "vmGroup is the name of the vm-host group of type virtual machine within vCenter for this failure domain. vmGroup is limited to 80 characters. This field is required when the VSphereFailureDomain ZoneType is HostGroup",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"hostGroup": {
+						SchemaProps: spec.SchemaProps{
+							Description: "hostGroup is the name of the vm-host group of type host within vCenter for this failure domain. hostGroup is limited to 80 characters. This field is required when the VSphereFailureDomain ZoneType is HostGroup",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"vmHostRule": {
+						SchemaProps: spec.SchemaProps{
+							Description: "vmHostRule is the name of the affinity vm-host rule within vCenter for this failure domain. vmHostRule is limited to 80 characters. This field is required when the VSphereFailureDomain ZoneType is HostGroup",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+				},
+				Required: []string{"vmGroup", "hostGroup", "vmHostRule"},
+			},
+		},
+	}
+}
+
+func schema_openshift_api_config_v1_VSphereFailureDomainRegionAffinity(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "VSphereFailureDomainRegionAffinity contains the region type which is the string representation of the VSphereFailureDomainRegionType with available options of Datacenter and ComputeCluster.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"type": {
+						SchemaProps: spec.SchemaProps{
+							Description: "type determines the vSphere object type for a region within this failure domain. Available types are Datacenter and ComputeCluster. When set to Datacenter, this means the vCenter Datacenter defined is the region. When set to ComputeCluster, this means the vCenter cluster defined is the region.\n\nPossible enum values:\n - `\"ComputeCluster\"` is a failure domain region for a vCenter compute cluster.\n - `\"Datacenter\"` is a failure domain region for a vCenter datacenter.",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+							Enum:        []interface{}{"ComputeCluster", "Datacenter"},
+						},
+					},
+				},
+				Required: []string{"type"},
+			},
+			VendorExtensible: spec.VendorExtensible{
+				Extensions: spec.Extensions{
+					"x-kubernetes-unions": []interface{}{
+						map[string]interface{}{
+							"discriminator":            "type",
+							"fields-to-discriminateBy": map[string]interface{}{},
+						},
+					},
+				},
+			},
+		},
+	}
+}
+
+func schema_openshift_api_config_v1_VSphereFailureDomainZoneAffinity(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "VSphereFailureDomainZoneAffinity contains the vCenter cluster vm-host group (virtual machine and host types) and the vm-host affinity rule that together creates an affinity configuration for vm-host based zonal. This configuration within vCenter creates the required association between a failure domain, virtual machines and ESXi hosts to create a vm-host based zone.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"type": {
+						SchemaProps: spec.SchemaProps{
+							Description: "type determines the vSphere object type for a zone within this failure domain. Available types are ComputeCluster and HostGroup. When set to ComputeCluster, this means the vCenter cluster defined is the zone. When set to HostGroup, hostGroup must be configured with hostGroup, vmGroup and vmHostRule and this means the zone is defined by the grouping of those fields.\n\nPossible enum values:\n - `\"ComputeCluster\"` is a failure domain zone for a vCenter compute cluster.\n - `\"HostGroup\"` is a failure domain zone for a vCenter vm-host group.",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+							Enum:        []interface{}{"ComputeCluster", "HostGroup"},
+						},
+					},
+					"hostGroup": {
+						SchemaProps: spec.SchemaProps{
+							Description: "hostGroup holds the vmGroup and the hostGroup names in vCenter corresponds to a vm-host group of type Virtual Machine and Host respectively. Is also contains the vmHostRule which is an affinity vm-host rule in vCenter.",
+							Ref:         ref("github.com/openshift/api/config/v1.VSphereFailureDomainHostGroup"),
+						},
+					},
+				},
+				Required: []string{"type"},
+			},
+			VendorExtensible: spec.VendorExtensible{
+				Extensions: spec.Extensions{
+					"x-kubernetes-unions": []interface{}{
+						map[string]interface{}{
+							"discriminator": "type",
+							"fields-to-discriminateBy": map[string]interface{}{
+								"hostGroup": "HostGroup",
+							},
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"github.com/openshift/api/config/v1.VSphereFailureDomainHostGroup"},
+	}
+}
+
 func schema_openshift_api_config_v1_VSpherePlatformFailureDomainSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -19560,6 +19910,18 @@ func schema_openshift_api_config_v1_VSpherePlatformFailureDomainSpec(ref common.
 							Format:      "",
 						},
 					},
+					"regionAffinity": {
+						SchemaProps: spec.SchemaProps{
+							Description: "regionAffinity holds the type of region, Datacenter or ComputeCluster. When set to Datacenter, this means the region is a vCenter Datacenter as defined in topology. When set to ComputeCluster, this means the region is a vCenter Cluster as defined in topology.",
+							Ref:         ref("github.com/openshift/api/config/v1.VSphereFailureDomainRegionAffinity"),
+						},
+					},
+					"zoneAffinity": {
+						SchemaProps: spec.SchemaProps{
+							Description: "zoneAffinity holds the type of the zone and the hostGroup which vmGroup and the hostGroup names in vCenter corresponds to a vm-host group of type Virtual Machine and Host respectively. Is also contains the vmHostRule which is an affinity vm-host rule in vCenter.",
+							Ref:         ref("github.com/openshift/api/config/v1.VSphereFailureDomainZoneAffinity"),
+						},
+					},
 					"server": {
 						SchemaProps: spec.SchemaProps{
 							Description: "server is the fully-qualified domain name or the IP address of the vCenter server.",
@@ -19570,7 +19932,7 @@ func schema_openshift_api_config_v1_VSpherePlatformFailureDomainSpec(ref common.
 					},
 					"topology": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Topology describes a given failure domain using vSphere constructs",
+							Description: "topology describes a given failure domain using vSphere constructs",
 							Default:     map[string]interface{}{},
 							Ref:         ref("github.com/openshift/api/config/v1.VSpherePlatformTopology"),
 						},
@@ -19580,7 +19942,7 @@ func schema_openshift_api_config_v1_VSpherePlatformFailureDomainSpec(ref common.
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/config/v1.VSpherePlatformTopology"},
+			"github.com/openshift/api/config/v1.VSphereFailureDomainRegionAffinity", "github.com/openshift/api/config/v1.VSphereFailureDomainZoneAffinity", "github.com/openshift/api/config/v1.VSpherePlatformTopology"},
 	}
 }
 
@@ -20395,6 +20757,141 @@ func schema_openshift_api_config_v1alpha1_ClusterImagePolicyStatus(ref common.Re
 	}
 }
 
+func schema_openshift_api_config_v1alpha1_ClusterMonitoring(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "ClusterMonitoring is the Custom Resource object which holds the current status of Cluster Monitoring Operator. CMO is a central component of the monitoring stack.\n\nCompatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support. ClusterMonitoring is the Schema for the Cluster Monitoring Operators API",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"kind": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"apiVersion": {
+						SchemaProps: spec.SchemaProps{
+							Description: "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"metadata": {
+						SchemaProps: spec.SchemaProps{
+							Description: "metadata is the standard object metadata.",
+							Default:     map[string]interface{}{},
+							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"),
+						},
+					},
+					"spec": {
+						SchemaProps: spec.SchemaProps{
+							Description: "spec holds user configuration for the Cluster Monitoring Operator",
+							Default:     map[string]interface{}{},
+							Ref:         ref("github.com/openshift/api/config/v1alpha1.ClusterMonitoringSpec"),
+						},
+					},
+					"status": {
+						SchemaProps: spec.SchemaProps{
+							Description: "status holds observed values from the cluster. They may not be overridden.",
+							Default:     map[string]interface{}{},
+							Ref:         ref("github.com/openshift/api/config/v1alpha1.ClusterMonitoringStatus"),
+						},
+					},
+				},
+				Required: []string{"spec"},
+			},
+		},
+		Dependencies: []string{
+			"github.com/openshift/api/config/v1alpha1.ClusterMonitoringSpec", "github.com/openshift/api/config/v1alpha1.ClusterMonitoringStatus", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"},
+	}
+}
+
+func schema_openshift_api_config_v1alpha1_ClusterMonitoringList(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "Compatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"kind": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"apiVersion": {
+						SchemaProps: spec.SchemaProps{
+							Description: "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"metadata": {
+						SchemaProps: spec.SchemaProps{
+							Description: "metadata is the standard list metadata.",
+							Default:     map[string]interface{}{},
+							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"),
+						},
+					},
+					"items": {
+						SchemaProps: spec.SchemaProps{
+							Description: "items is a list of ClusterMonitoring",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("github.com/openshift/api/config/v1alpha1.ClusterMonitoring"),
+									},
+								},
+							},
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"github.com/openshift/api/config/v1alpha1.ClusterMonitoring", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"},
+	}
+}
+
+func schema_openshift_api_config_v1alpha1_ClusterMonitoringSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "ClusterMonitoringSpec defines the desired state of Cluster Monitoring Operator",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"userDefined": {
+						SchemaProps: spec.SchemaProps{
+							Description: "userDefined set the deployment mode for user-defined monitoring in addition to the default platform monitoring.",
+							Default:     map[string]interface{}{},
+							Ref:         ref("github.com/openshift/api/config/v1alpha1.UserDefinedMonitoring"),
+						},
+					},
+				},
+				Required: []string{"userDefined"},
+			},
+		},
+		Dependencies: []string{
+			"github.com/openshift/api/config/v1alpha1.UserDefinedMonitoring"},
+	}
+}
+
+func schema_openshift_api_config_v1alpha1_ClusterMonitoringStatus(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "MonitoringOperatorStatus defines the observed state of MonitoringOperator",
+				Type:        []string{"object"},
+			},
+		},
+	}
+}
+
 func schema_openshift_api_config_v1alpha1_EtcdBackupSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -20404,7 +20901,7 @@ func schema_openshift_api_config_v1alpha1_EtcdBackupSpec(ref common.ReferenceCal
 				Properties: map[string]spec.Schema{
 					"schedule": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Schedule defines the recurring backup schedule in Cron format every 2 hours: 0 */2 * * * every day at 3am: 0 3 * * * Empty string means no opinion and the platform is left to choose a reasonable default which is subject to change without notice. The current default is \"no backups\", but will change in the future.",
+							Description: "schedule defines the recurring backup schedule in Cron format every 2 hours: 0 */2 * * * every day at 3am: 0 3 * * * Empty string means no opinion and the platform is left to choose a reasonable default which is subject to change without notice. The current default is \"no backups\", but will change in the future.",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -20420,14 +20917,14 @@ func schema_openshift_api_config_v1alpha1_EtcdBackupSpec(ref common.ReferenceCal
 					},
 					"retentionPolicy": {
 						SchemaProps: spec.SchemaProps{
-							Description: "RetentionPolicy defines the retention policy for retaining and deleting existing backups.",
+							Description: "retentionPolicy defines the retention policy for retaining and deleting existing backups.",
 							Default:     map[string]interface{}{},
 							Ref:         ref("github.com/openshift/api/config/v1alpha1.RetentionPolicy"),
 						},
 					},
 					"pvcName": {
 						SchemaProps: spec.SchemaProps{
-							Description: "PVCName specifies the name of the PersistentVolumeClaim (PVC) which binds a PersistentVolume where the etcd backup files would be saved The PVC itself must always be created in the \"openshift-etcd\" namespace If the PVC is left unspecified \"\" then the platform will choose a reasonable default location to save the backup. In the future this would be backups saved across the control-plane master nodes.",
+							Description: "pvcName specifies the name of the PersistentVolumeClaim (PVC) which binds a PersistentVolume where the etcd backup files would be saved The PVC itself must always be created in the \"openshift-etcd\" namespace If the PVC is left unspecified \"\" then the platform will choose a reasonable default location to save the backup. In the future this would be backups saved across the control-plane master nodes.",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -20470,7 +20967,7 @@ func schema_openshift_api_config_v1alpha1_FulcioCAWithRekor(ref common.Reference
 						},
 					},
 				},
-				Required: []string{"fulcioCAData", "rekorKeyData"},
+				Required: []string{"fulcioCAData", "rekorKeyData", "fulcioSubject"},
 			},
 		},
 		Dependencies: []string{
@@ -20487,14 +20984,14 @@ func schema_openshift_api_config_v1alpha1_GatherConfig(ref common.ReferenceCallb
 				Properties: map[string]spec.Schema{
 					"dataPolicy": {
 						SchemaProps: spec.SchemaProps{
-							Description: "dataPolicy allows user to enable additional global obfuscation of the IP addresses and base domain in the Insights archive data. Valid values are \"None\" and \"ObfuscateNetworking\". When set to None the data is not obfuscated. When set to ObfuscateNetworking the IP addresses and the cluster domain name are obfuscated. When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time. The current default is None.",
+							Description: "dataPolicy allows user to enable additional global obfuscation of the IP addresses and base domain in the Insights archive data. Valid values are \"None\" and \"ObfuscateNetworking\". When set to None the data is not obfuscated. When set to ObfuscateNetworking the IP addresses and the cluster domain name are obfuscated. When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time.",
 							Type:        []string{"string"},
 							Format:      "",
 						},
 					},
 					"disabledGatherers": {
 						SchemaProps: spec.SchemaProps{
-							Description: "disabledGatherers is a list of gatherers to be excluded from the gathering. All the gatherers can be disabled by providing \"all\" value. If all the gatherers are disabled, the Insights operator does not gather any data. The particular gatherers IDs can be found at https://github.com/openshift/insights-operator/blob/master/docs/gathered-data.md. Run the following command to get the names of last active gatherers: \"oc get insightsoperators.operator.openshift.io cluster -o json | jq '.status.gatherStatus.gatherers[].name'\" An example of disabling gatherers looks like this: `disabledGatherers: [\"clusterconfig/machine_configs\", \"workloads/workload_info\"]`",
+							Description: "disabledGatherers is a list of gatherers to be excluded from the gathering. All the gatherers can be disabled by providing \"all\" value. If all the gatherers are disabled, the Insights operator does not gather any data. The format for the disabledGatherer should be: {gatherer}/{function} where the function is optional. Gatherer consists of a lowercase letters only that may include underscores (_). Function consists of a lowercase letters only that may include underscores (_) and is separated from the gatherer by a forward slash (/). The particular gatherers IDs can be found at https://github.com/openshift/insights-operator/blob/master/docs/gathered-data.md. Run the following command to get the names of last active gatherers: \"oc get insightsoperators.operator.openshift.io cluster -o json | jq '.status.gatherStatus.gatherers[].name'\" An example of disabling gatherers looks like this: `disabledGatherers: [\"clusterconfig/machine_configs\", \"workloads/workload_info\"]`",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -20507,9 +21004,17 @@ func schema_openshift_api_config_v1alpha1_GatherConfig(ref common.ReferenceCallb
 							},
 						},
 					},
+					"storage": {
+						SchemaProps: spec.SchemaProps{
+							Description: "storage is an optional field that allows user to define persistent storage for gathering jobs to store the Insights data archive. If omitted, the gathering job will use ephemeral storage.",
+							Ref:         ref("github.com/openshift/api/config/v1alpha1.Storage"),
+						},
+					},
 				},
 			},
 		},
+		Dependencies: []string{
+			"github.com/openshift/api/config/v1alpha1.Storage"},
 	}
 }
 
@@ -20825,6 +21330,122 @@ func schema_openshift_api_config_v1alpha1_InsightsDataGatherStatus(ref common.Re
 	}
 }
 
+func schema_openshift_api_config_v1alpha1_PKI(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "PKI defines the root of trust based on Root CA(s) and corresponding intermediate certificates.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"caRootsData": {
+						SchemaProps: spec.SchemaProps{
+							Description: "caRootsData contains base64-encoded data of a certificate bundle PEM file, which contains one or more CA roots in the PEM format. The total length of the data must not exceed 8192 characters.",
+							Type:        []string{"string"},
+							Format:      "byte",
+						},
+					},
+					"caIntermediatesData": {
+						SchemaProps: spec.SchemaProps{
+							Description: "caIntermediatesData contains base64-encoded data of a certificate bundle PEM file, which contains one or more intermediate certificates in the PEM format. The total length of the data must not exceed 8192 characters. caIntermediatesData requires caRootsData to be set.",
+							Type:        []string{"string"},
+							Format:      "byte",
+						},
+					},
+					"pkiCertificateSubject": {
+						SchemaProps: spec.SchemaProps{
+							Description: "pkiCertificateSubject defines the requirements imposed on the subject to which the certificate was issued.",
+							Default:     map[string]interface{}{},
+							Ref:         ref("github.com/openshift/api/config/v1alpha1.PKICertificateSubject"),
+						},
+					},
+				},
+				Required: []string{"caRootsData", "pkiCertificateSubject"},
+			},
+		},
+		Dependencies: []string{
+			"github.com/openshift/api/config/v1alpha1.PKICertificateSubject"},
+	}
+}
+
+func schema_openshift_api_config_v1alpha1_PKICertificateSubject(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "PKICertificateSubject defines the requirements imposed on the subject to which the certificate was issued.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"email": {
+						SchemaProps: spec.SchemaProps{
+							Description: "email specifies the expected email address imposed on the subject to which the certificate was issued, and must match the email address listed in the Subject Alternative Name (SAN) field of the certificate. The email should be a valid email address and at most 320 characters in length.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"hostname": {
+						SchemaProps: spec.SchemaProps{
+							Description: "hostname specifies the expected hostname imposed on the subject to which the certificate was issued, and it must match the hostname listed in the Subject Alternative Name (SAN) DNS field of the certificate. The hostname should be a valid dns 1123 subdomain name, optionally prefixed by '*.', and at most 253 characters in length. It should consist only of lowercase alphanumeric characters, hyphens, periods and the optional preceding asterisk.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+				},
+			},
+		},
+	}
+}
+
+func schema_openshift_api_config_v1alpha1_PersistentVolumeClaimReference(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "persistentVolumeClaimReference is a reference to a PersistentVolumeClaim.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"name": {
+						SchemaProps: spec.SchemaProps{
+							Description: "name is a string that follows the DNS1123 subdomain format. It must be at most 253 characters in length, and must consist only of lower case alphanumeric characters, '-' and '.', and must start and end with an alphanumeric character.",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+				},
+				Required: []string{"name"},
+			},
+		},
+	}
+}
+
+func schema_openshift_api_config_v1alpha1_PersistentVolumeConfig(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "persistentVolumeConfig provides configuration options for PersistentVolume storage.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"claim": {
+						SchemaProps: spec.SchemaProps{
+							Description: "claim is a required field that specifies the configuration of the PersistentVolumeClaim that will be used to store the Insights data archive. The PersistentVolumeClaim must be created in the openshift-insights namespace.",
+							Default:     map[string]interface{}{},
+							Ref:         ref("github.com/openshift/api/config/v1alpha1.PersistentVolumeClaimReference"),
+						},
+					},
+					"mountPath": {
+						SchemaProps: spec.SchemaProps{
+							Description: "mountPath is an optional field specifying the directory where the PVC will be mounted inside the Insights data gathering Pod. When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time. The current default mount path is /var/lib/insights-operator The path may not exceed 1024 characters and must not contain a colon.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+				},
+				Required: []string{"claim"},
+			},
+		},
+		Dependencies: []string{
+			"github.com/openshift/api/config/v1alpha1.PersistentVolumeClaimReference"},
+	}
+}
+
 func schema_openshift_api_config_v1alpha1_Policy(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -20993,7 +21614,7 @@ func schema_openshift_api_config_v1alpha1_PolicyRootOfTrust(ref common.Reference
 				Properties: map[string]spec.Schema{
 					"policyType": {
 						SchemaProps: spec.SchemaProps{
-							Description: "policyType serves as the union's discriminator. Users are required to assign a value to this field, choosing one of the policy types that define the root of trust. \"PublicKey\" indicates that the policy relies on a sigstore publicKey and may optionally use a Rekor verification. \"FulcioCAWithRekor\" indicates that the policy is based on the Fulcio certification and incorporates a Rekor verification.",
+							Description: "policyType serves as the union's discriminator. Users are required to assign a value to this field, choosing one of the policy types that define the root of trust. \"PublicKey\" indicates that the policy relies on a sigstore publicKey and may optionally use a Rekor verification. \"FulcioCAWithRekor\" indicates that the policy is based on the Fulcio certification and incorporates a Rekor verification. \"PKI\" is a DevPreview feature that indicates that the policy is based on the certificates from Bring Your Own Public Key Infrastructure (BYOPKI). This value is enabled by turning on the SigstoreImageVerificationPKI feature gate.",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -21011,6 +21632,12 @@ func schema_openshift_api_config_v1alpha1_PolicyRootOfTrust(ref common.Reference
 							Ref:         ref("github.com/openshift/api/config/v1alpha1.FulcioCAWithRekor"),
 						},
 					},
+					"pki": {
+						SchemaProps: spec.SchemaProps{
+							Description: "pki defines the root of trust based on Bring Your Own Public Key Infrastructure (BYOPKI) Root CA(s) and corresponding intermediate certificates.",
+							Ref:         ref("github.com/openshift/api/config/v1alpha1.PKI"),
+						},
+					},
 				},
 				Required: []string{"policyType"},
 			},
@@ -21021,6 +21648,7 @@ func schema_openshift_api_config_v1alpha1_PolicyRootOfTrust(ref common.Reference
 							"discriminator": "policyType",
 							"fields-to-discriminateBy": map[string]interface{}{
 								"fulcioCAWithRekor": "FulcioCAWithRekor",
+								"pki":               "PKI",
 								"publicKey":         "PublicKey",
 							},
 						},
@@ -21029,7 +21657,7 @@ func schema_openshift_api_config_v1alpha1_PolicyRootOfTrust(ref common.Reference
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/config/v1alpha1.FulcioCAWithRekor", "github.com/openshift/api/config/v1alpha1.PublicKey"},
+			"github.com/openshift/api/config/v1alpha1.FulcioCAWithRekor", "github.com/openshift/api/config/v1alpha1.PKI", "github.com/openshift/api/config/v1alpha1.PublicKey"},
 	}
 }
 
@@ -21070,7 +21698,7 @@ func schema_openshift_api_config_v1alpha1_RetentionNumberConfig(ref common.Refer
 				Properties: map[string]spec.Schema{
 					"maxNumberOfBackups": {
 						SchemaProps: spec.SchemaProps{
-							Description: "MaxNumberOfBackups defines the maximum number of backups to retain. If the existing number of backups saved is equal to MaxNumberOfBackups then the oldest backup will be removed before a new backup is initiated.",
+							Description: "maxNumberOfBackups defines the maximum number of backups to retain. If the existing number of backups saved is equal to MaxNumberOfBackups then the oldest backup will be removed before a new backup is initiated.",
 							Type:        []string{"integer"},
 							Format:      "int32",
 						},
@@ -21091,7 +21719,7 @@ func schema_openshift_api_config_v1alpha1_RetentionPolicy(ref common.ReferenceCa
 				Properties: map[string]spec.Schema{
 					"retentionType": {
 						SchemaProps: spec.SchemaProps{
-							Description: "RetentionType sets the type of retention policy. Currently, the only valid policies are retention by number of backups (RetentionNumber), by the size of backups (RetentionSize). More policies or types may be added in the future. Empty string means no opinion and the platform is left to choose a reasonable default which is subject to change without notice. The current default is RetentionNumber with 15 backups kept.\n\nPossible enum values:\n - `\"RetentionNumber\"` sets the retention policy based on the number of backup files saved\n - `\"RetentionSize\"` sets the retention policy based on the total size of the backup files saved",
+							Description: "retentionType sets the type of retention policy. Currently, the only valid policies are retention by number of backups (RetentionNumber), by the size of backups (RetentionSize). More policies or types may be added in the future. Empty string means no opinion and the platform is left to choose a reasonable default which is subject to change without notice. The current default is RetentionNumber with 15 backups kept.\n\nPossible enum values:\n - `\"RetentionNumber\"` sets the retention policy based on the number of backup files saved\n - `\"RetentionSize\"` sets the retention policy based on the total size of the backup files saved",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -21100,13 +21728,13 @@ func schema_openshift_api_config_v1alpha1_RetentionPolicy(ref common.ReferenceCa
 					},
 					"retentionNumber": {
 						SchemaProps: spec.SchemaProps{
-							Description: "RetentionNumber configures the retention policy based on the number of backups",
+							Description: "retentionNumber configures the retention policy based on the number of backups",
 							Ref:         ref("github.com/openshift/api/config/v1alpha1.RetentionNumberConfig"),
 						},
 					},
 					"retentionSize": {
 						SchemaProps: spec.SchemaProps{
-							Description: "RetentionSize configures the retention policy based on the size of backups",
+							Description: "retentionSize configures the retention policy based on the size of backups",
 							Ref:         ref("github.com/openshift/api/config/v1alpha1.RetentionSizeConfig"),
 						},
 					},
@@ -21141,7 +21769,7 @@ func schema_openshift_api_config_v1alpha1_RetentionSizeConfig(ref common.Referen
 				Properties: map[string]spec.Schema{
 					"maxSizeOfBackupsGb": {
 						SchemaProps: spec.SchemaProps{
-							Description: "MaxSizeOfBackupsGb defines the total size in GB of backups to retain. If the current total size backups exceeds MaxSizeOfBackupsGb then the oldest backup will be removed before a new backup is initiated.",
+							Description: "maxSizeOfBackupsGb defines the total size in GB of backups to retain. If the current total size backups exceeds MaxSizeOfBackupsGb then the oldest backup will be removed before a new backup is initiated.",
 							Type:        []string{"integer"},
 							Format:      "int32",
 						},
@@ -21150,6 +21778,420 @@ func schema_openshift_api_config_v1alpha1_RetentionSizeConfig(ref common.Referen
 				Required: []string{"maxSizeOfBackupsGb"},
 			},
 		},
+	}
+}
+
+func schema_openshift_api_config_v1alpha1_Storage(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "storage provides persistent storage configuration options for gathering jobs. If the type is set to PersistentVolume, then the PersistentVolume must be defined. If the type is set to Ephemeral, then the PersistentVolume must not be defined.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"type": {
+						SchemaProps: spec.SchemaProps{
+							Description: "type is a required field that specifies the type of storage that will be used to store the Insights data archive. Valid values are \"PersistentVolume\" and \"Ephemeral\". When set to Ephemeral, the Insights data archive is stored in the ephemeral storage of the gathering job. When set to PersistentVolume, the Insights data archive is stored in the PersistentVolume that is defined by the persistentVolume field.",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"persistentVolume": {
+						SchemaProps: spec.SchemaProps{
+							Description: "persistentVolume is an optional field that specifies the PersistentVolume that will be used to store the Insights data archive. The PersistentVolume must be created in the openshift-insights namespace.",
+							Ref:         ref("github.com/openshift/api/config/v1alpha1.PersistentVolumeConfig"),
+						},
+					},
+				},
+				Required: []string{"type"},
+			},
+		},
+		Dependencies: []string{
+			"github.com/openshift/api/config/v1alpha1.PersistentVolumeConfig"},
+	}
+}
+
+func schema_openshift_api_config_v1alpha1_UserDefinedMonitoring(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "UserDefinedMonitoring config for user-defined projects.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"mode": {
+						SchemaProps: spec.SchemaProps{
+							Description: "mode defines the different configurations of UserDefinedMonitoring Valid values are Disabled and NamespaceIsolated Disabled disables monitoring for user-defined projects. This restricts the default monitoring stack, installed in the openshift-monitoring project, to monitor only platform namespaces, which prevents any custom monitoring configurations or resources from being applied to user-defined namespaces. NamespaceIsolated enables monitoring for user-defined projects with namespace-scoped tenancy. This ensures that metrics, alerts, and monitoring data are isolated at the namespace level.\n\nPossible enum values:\n - `\"Disabled\"` disables monitoring for user-defined projects. This restricts the default monitoring stack, installed in the openshift-monitoring project, to monitor only platform namespaces, which prevents any custom monitoring configurations or resources from being applied to user-defined namespaces.\n - `\"NamespaceIsolated\"` enables monitoring for user-defined projects with namespace-scoped tenancy. This ensures that metrics, alerts, and monitoring data are isolated at the namespace level.",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+							Enum:        []interface{}{"Disabled", "NamespaceIsolated"},
+						},
+					},
+				},
+				Required: []string{"mode"},
+			},
+		},
+	}
+}
+
+func schema_openshift_api_config_v1alpha2_Custom(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "custom provides the custom configuration of gatherers",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"configs": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-map-keys": []interface{}{
+									"name",
+								},
+								"x-kubernetes-list-type": "map",
+							},
+						},
+						SchemaProps: spec.SchemaProps{
+							Description: "configs is a required list of gatherers configurations that can be used to enable or disable specific gatherers. It may not exceed 100 items and each gatherer can be present only once. It is possible to disable an entire set of gatherers while allowing a specific function within that set. The particular gatherers IDs can be found at https://github.com/openshift/insights-operator/blob/master/docs/gathered-data.md. Run the following command to get the names of last active gatherers: \"oc get insightsoperators.operator.openshift.io cluster -o json | jq '.status.gatherStatus.gatherers[].name'\"",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("github.com/openshift/api/config/v1alpha2.GathererConfig"),
+									},
+								},
+							},
+						},
+					},
+				},
+				Required: []string{"configs"},
+			},
+		},
+		Dependencies: []string{
+			"github.com/openshift/api/config/v1alpha2.GathererConfig"},
+	}
+}
+
+func schema_openshift_api_config_v1alpha2_GatherConfig(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "gatherConfig provides data gathering configuration options.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"dataPolicy": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-type": "atomic",
+							},
+						},
+						SchemaProps: spec.SchemaProps{
+							Description: "dataPolicy is an optional list of DataPolicyOptions that allows user to enable additional obfuscation of the Insights archive data. It may not exceed 2 items and must not contain duplicates. Valid values are ObfuscateNetworking and WorkloadNames. When set to ObfuscateNetworking the IP addresses and the cluster domain name are obfuscated. When set to WorkloadNames, the gathered data about cluster resources will not contain the workload names for your deployments. Resources UIDs will be used instead. When omitted no obfuscation is applied.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: "",
+										Type:    []string{"string"},
+										Format:  "",
+									},
+								},
+							},
+						},
+					},
+					"gatherers": {
+						SchemaProps: spec.SchemaProps{
+							Description: "gatherers is a required field that specifies the configuration of the gatherers.",
+							Default:     map[string]interface{}{},
+							Ref:         ref("github.com/openshift/api/config/v1alpha2.Gatherers"),
+						},
+					},
+					"storage": {
+						SchemaProps: spec.SchemaProps{
+							Description: "storage is an optional field that allows user to define persistent storage for gathering jobs to store the Insights data archive. If omitted, the gathering job will use ephemeral storage.",
+							Ref:         ref("github.com/openshift/api/config/v1alpha2.Storage"),
+						},
+					},
+				},
+				Required: []string{"gatherers"},
+			},
+		},
+		Dependencies: []string{
+			"github.com/openshift/api/config/v1alpha2.Gatherers", "github.com/openshift/api/config/v1alpha2.Storage"},
+	}
+}
+
+func schema_openshift_api_config_v1alpha2_GathererConfig(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "gathererConfig allows to configure specific gatherers",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"name": {
+						SchemaProps: spec.SchemaProps{
+							Description: "name is the required name of a specific gatherer It may not exceed 256 characters. The format for a gatherer name is: {gatherer}/{function} where the function is optional. Gatherer consists of a lowercase letters only that may include underscores (_). Function consists of a lowercase letters only that may include underscores (_) and is separated from the gatherer by a forward slash (/). The particular gatherers can be found at https://github.com/openshift/insights-operator/blob/master/docs/gathered-data.md. Run the following command to get the names of last active gatherers: \"oc get insightsoperators.operator.openshift.io cluster -o json | jq '.status.gatherStatus.gatherers[].name'\"",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"state": {
+						SchemaProps: spec.SchemaProps{
+							Description: "state is a required field that allows you to configure specific gatherer. Valid values are \"Enabled\" and \"Disabled\". When set to Enabled the gatherer will run. When set to Disabled the gatherer will not run.",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+				},
+				Required: []string{"name", "state"},
+			},
+		},
+	}
+}
+
+func schema_openshift_api_config_v1alpha2_Gatherers(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"mode": {
+						SchemaProps: spec.SchemaProps{
+							Description: "mode is a required field that specifies the mode for gatherers. Allowed values are All, None, and Custom. When set to All, all gatherers wil run and gather data. When set to None, all gatherers will be disabled and no data will be gathered. When set to Custom, the custom configuration from the custom field will be applied.",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"custom": {
+						SchemaProps: spec.SchemaProps{
+							Description: "custom provides gathering configuration. It is required when mode is Custom, and forbidden otherwise. Custom configuration allows user to disable only a subset of gatherers. Gatherers that are not explicitly disabled in custom configuration will run.",
+							Ref:         ref("github.com/openshift/api/config/v1alpha2.Custom"),
+						},
+					},
+				},
+				Required: []string{"mode"},
+			},
+		},
+		Dependencies: []string{
+			"github.com/openshift/api/config/v1alpha2.Custom"},
+	}
+}
+
+func schema_openshift_api_config_v1alpha2_InsightsDataGather(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "InsightsDataGather provides data gather configuration options for the the Insights Operator.\n\nCompatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"kind": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"apiVersion": {
+						SchemaProps: spec.SchemaProps{
+							Description: "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"metadata": {
+						SchemaProps: spec.SchemaProps{
+							Description: "metadata is the standard object's metadata. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata",
+							Default:     map[string]interface{}{},
+							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"),
+						},
+					},
+					"spec": {
+						SchemaProps: spec.SchemaProps{
+							Description: "spec holds user settable values for configuration",
+							Default:     map[string]interface{}{},
+							Ref:         ref("github.com/openshift/api/config/v1alpha2.InsightsDataGatherSpec"),
+						},
+					},
+					"status": {
+						SchemaProps: spec.SchemaProps{
+							Description: "status holds observed values from the cluster. They may not be overridden.",
+							Default:     map[string]interface{}{},
+							Ref:         ref("github.com/openshift/api/config/v1alpha2.InsightsDataGatherStatus"),
+						},
+					},
+				},
+				Required: []string{"spec"},
+			},
+		},
+		Dependencies: []string{
+			"github.com/openshift/api/config/v1alpha2.InsightsDataGatherSpec", "github.com/openshift/api/config/v1alpha2.InsightsDataGatherStatus", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"},
+	}
+}
+
+func schema_openshift_api_config_v1alpha2_InsightsDataGatherList(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "InsightsDataGatherList is a collection of items Compatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"kind": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"apiVersion": {
+						SchemaProps: spec.SchemaProps{
+							Description: "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"metadata": {
+						SchemaProps: spec.SchemaProps{
+							Description: "metadata is the required standard list's metadata. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata",
+							Default:     map[string]interface{}{},
+							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"),
+						},
+					},
+					"items": {
+						SchemaProps: spec.SchemaProps{
+							Description: "items is the required list of InsightsDataGather objects it may not exceed 100 items",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("github.com/openshift/api/config/v1alpha2.InsightsDataGather"),
+									},
+								},
+							},
+						},
+					},
+				},
+				Required: []string{"metadata", "items"},
+			},
+		},
+		Dependencies: []string{
+			"github.com/openshift/api/config/v1alpha2.InsightsDataGather", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"},
+	}
+}
+
+func schema_openshift_api_config_v1alpha2_InsightsDataGatherSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"gatherConfig": {
+						SchemaProps: spec.SchemaProps{
+							Description: "gatherConfig is an optional spec attribute that includes all the configuration options related to gathering of the Insights data and its uploading to the ingress.",
+							Default:     map[string]interface{}{},
+							Ref:         ref("github.com/openshift/api/config/v1alpha2.GatherConfig"),
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"github.com/openshift/api/config/v1alpha2.GatherConfig"},
+	}
+}
+
+func schema_openshift_api_config_v1alpha2_InsightsDataGatherStatus(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+			},
+		},
+	}
+}
+
+func schema_openshift_api_config_v1alpha2_PersistentVolumeClaimReference(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "persistentVolumeClaimReference is a reference to a PersistentVolumeClaim.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"name": {
+						SchemaProps: spec.SchemaProps{
+							Description: "name is a string that follows the DNS1123 subdomain format. It must be at most 253 characters in length, and must consist only of lower case alphanumeric characters, '-' and '.', and must start and end with an alphanumeric character.",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+				},
+				Required: []string{"name"},
+			},
+		},
+	}
+}
+
+func schema_openshift_api_config_v1alpha2_PersistentVolumeConfig(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "persistentVolumeConfig provides configuration options for PersistentVolume storage.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"claim": {
+						SchemaProps: spec.SchemaProps{
+							Description: "claim is a required field that specifies the configuration of the PersistentVolumeClaim that will be used to store the Insights data archive. The PersistentVolumeClaim must be created in the openshift-insights namespace.",
+							Default:     map[string]interface{}{},
+							Ref:         ref("github.com/openshift/api/config/v1alpha2.PersistentVolumeClaimReference"),
+						},
+					},
+					"mountPath": {
+						SchemaProps: spec.SchemaProps{
+							Description: "mountPath is an optional field specifying the directory where the PVC will be mounted inside the Insights data gathering Pod. When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time. The current default mount path is /var/lib/insights-operator The path may not exceed 1024 characters and must not contain a colon.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+				},
+				Required: []string{"claim"},
+			},
+		},
+		Dependencies: []string{
+			"github.com/openshift/api/config/v1alpha2.PersistentVolumeClaimReference"},
+	}
+}
+
+func schema_openshift_api_config_v1alpha2_Storage(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "storage provides persistent storage configuration options for gathering jobs. If the type is set to PersistentVolume, then the PersistentVolume must be defined. If the type is set to Ephemeral, then the PersistentVolume must not be defined.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"type": {
+						SchemaProps: spec.SchemaProps{
+							Description: "type is a required field that specifies the type of storage that will be used to store the Insights data archive. Valid values are \"PersistentVolume\" and \"Ephemeral\". When set to Ephemeral, the Insights data archive is stored in the ephemeral storage of the gathering job. When set to PersistentVolume, the Insights data archive is stored in the PersistentVolume that is defined by the persistentVolume field.",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"persistentVolume": {
+						SchemaProps: spec.SchemaProps{
+							Description: "persistentVolume is an optional field that specifies the PersistentVolume that will be used to store the Insights data archive. The PersistentVolume must be created in the openshift-insights namespace.",
+							Ref:         ref("github.com/openshift/api/config/v1alpha2.PersistentVolumeConfig"),
+						},
+					},
+				},
+				Required: []string{"type"},
+			},
+		},
+		Dependencies: []string{
+			"github.com/openshift/api/config/v1alpha2.PersistentVolumeConfig"},
 	}
 }
 
@@ -21170,7 +22212,7 @@ func schema_openshift_api_console_v1_ApplicationMenuSpec(ref common.ReferenceCal
 					},
 					"imageURL": {
 						SchemaProps: spec.SchemaProps{
-							Description: "imageUrl is the URL for the icon used in front of the link in the application menu. The URL must be an HTTPS URL or a Data URI. The image should be square and will be shown at 24x24 pixels.",
+							Description: "imageURL is the URL for the icon used in front of the link in the application menu. The URL must be an HTTPS URL or a Data URI. The image should be square and will be shown at 24x24 pixels.",
 							Type:        []string{"string"},
 							Format:      "",
 						},
@@ -21799,8 +22841,9 @@ func schema_openshift_api_console_v1_ConsolePlugin(ref common.ReferenceCallback)
 					},
 					"spec": {
 						SchemaProps: spec.SchemaProps{
-							Default: map[string]interface{}{},
-							Ref:     ref("github.com/openshift/api/console/v1.ConsolePluginSpec"),
+							Description: "spec contains the desired configuration for the console plugin.",
+							Default:     map[string]interface{}{},
+							Ref:         ref("github.com/openshift/api/console/v1.ConsolePluginSpec"),
 						},
 					},
 				},
@@ -21863,11 +22906,11 @@ func schema_openshift_api_console_v1_ConsolePluginCSP(ref common.ReferenceCallba
 				Properties: map[string]spec.Schema{
 					"directive": {
 						SchemaProps: spec.SchemaProps{
-							Description: "directive specifies which Content-Security-Policy directive to configure. Available directive types are DefaultSrc, ScriptSrc, StyleSrc, ImgSrc and FontSrc. DefaultSrc directive serves as a fallback for the other CSP fetch directives. For more information about the DefaultSrc directive, see: https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Security-Policy/default-src ScriptSrc directive specifies valid sources for JavaScript. For more information about the ScriptSrc directive, see: https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Security-Policy/script-src StyleSrc directive specifies valid sources for stylesheets. For more information about the StyleSrc directive, see: https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Security-Policy/style-src ImgSrc directive specifies a valid sources of images and favicons. For more information about the ImgSrc directive, see: https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Security-Policy/img-src FontSrc directive specifies valid sources for fonts loaded using @font-face. For more information about the FontSrc directive, see: https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Security-Policy/font-src\n\nPossible enum values:\n - `\"DefaultSrc\"` directive serves as a fallback for the other CSP fetch directives. For more information about the DefaultSrc directive, see: https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Security-Policy/default-src\n - `\"FontSrc\"` directive specifies valid sources for fonts loaded using @font-face. For more information about the FontSrcdirective, see: https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Security-Policy/font-src\n - `\"ImgSrc\"` directive specifies a valid sources of images and favicons. For more information about the ImgSrc directive, see: https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Security-Policy/img-src\n - `\"ScriptSrc\"` directive specifies valid sources for JavaScript. For more information about the ScriptSrc directive, see: https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Security-Policy/script-src\n - `\"StyleSrc\"` directive specifies valid sources for stylesheets. For more information about the StyleSrc directive, see: https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Security-Policy/style-src",
+							Description: "directive specifies which Content-Security-Policy directive to configure. Available directive types are DefaultSrc, ScriptSrc, StyleSrc, ImgSrc, FontSrc and ConnectSrc. DefaultSrc directive serves as a fallback for the other CSP fetch directives. For more information about the DefaultSrc directive, see: https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Security-Policy/default-src ScriptSrc directive specifies valid sources for JavaScript. For more information about the ScriptSrc directive, see: https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Security-Policy/script-src StyleSrc directive specifies valid sources for stylesheets. For more information about the StyleSrc directive, see: https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Security-Policy/style-src ImgSrc directive specifies a valid sources of images and favicons. For more information about the ImgSrc directive, see: https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Security-Policy/img-src FontSrc directive specifies valid sources for fonts loaded using @font-face. For more information about the FontSrc directive, see: https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Security-Policy/font-src ConnectSrc directive restricts the URLs which can be loaded using script interfaces. For more information about the ConnectSrc directive, see: https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Security-Policy/connect-src\n\nPossible enum values:\n - `\"ConnectSrc\"` directive restricts the URLs which can be loaded using script interfaces. For more information about the ConnectSrc directive, see: https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Security-Policy/connect-src\n - `\"DefaultSrc\"` directive serves as a fallback for the other CSP fetch directives. For more information about the DefaultSrc directive, see: https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Security-Policy/default-src\n - `\"FontSrc\"` directive specifies valid sources for fonts loaded using @font-face. For more information about the FontSrc directive, see: https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Security-Policy/font-src\n - `\"ImgSrc\"` directive specifies a valid sources of images and favicons. For more information about the ImgSrc directive, see: https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Security-Policy/img-src\n - `\"ScriptSrc\"` directive specifies valid sources for JavaScript. For more information about the ScriptSrc directive, see: https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Security-Policy/script-src\n - `\"StyleSrc\"` directive specifies valid sources for stylesheets. For more information about the StyleSrc directive, see: https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Security-Policy/style-src",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
-							Enum:        []interface{}{"DefaultSrc", "FontSrc", "ImgSrc", "ScriptSrc", "StyleSrc"},
+							Enum:        []interface{}{"ConnectSrc", "DefaultSrc", "FontSrc", "ImgSrc", "ScriptSrc", "StyleSrc"},
 						},
 					},
 					"values": {
@@ -22198,7 +23241,7 @@ func schema_openshift_api_console_v1_ConsolePluginSpec(ref common.ReferenceCallb
 							},
 						},
 						SchemaProps: spec.SchemaProps{
-							Description: "contentSecurityPolicy is a list of Content-Security-Policy (CSP) directives for the plugin. Each directive specifies a list of values, appropriate for the given directive type, for example a list of remote endpoints for fetch directives such as ScriptSrc. Console web application uses CSP to detect and mitigate certain types of attacks, such as cross-site scripting (XSS) and data injection attacks. Dynamic plugins should specify this field if need to load assets from outside the cluster or if violation reports are observed. Dynamic plugins should always prefer loading their assets from within the cluster, either by vendoring them, or fetching from a cluster service. CSP violation reports can be viewed in the browser's console logs during development and testing of the plugin in the OpenShift web console. Available directive types are DefaultSrc, ScriptSrc, StyleSrc, ImgSrc and FontSrc. Each of the available directives may be defined only once in the list. The value 'self' is automatically included in all fetch directives by the OpenShift web console's backend. For more information about the CSP directives, see: https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Security-Policy\n\nThe OpenShift web console server aggregates the CSP directives and values across its own default values and all enabled ConsolePlugin CRs, merging them into a single policy string that is sent to the browser via `Content-Security-Policy` HTTP response header.\n\nExample:\n  ConsolePlugin A directives:\n    script-src: https://script1.com/, https://script2.com/\n    font-src: https://font1.com/\n\n  ConsolePlugin B directives:\n    script-src: https://script2.com/, https://script3.com/\n    font-src: https://font2.com/\n    img-src: https://img1.com/\n\n  Unified set of CSP directives, passed to the OpenShift web console server:\n    script-src: https://script1.com/, https://script2.com/, https://script3.com/\n    font-src: https://font1.com/, https://font2.com/\n    img-src: https://img1.com/\n\n  OpenShift web console server CSP response header:\n    Content-Security-Policy: default-src 'self'; base-uri 'self'; script-src 'self' https://script1.com/ https://script2.com/ https://script3.com/; font-src 'self' https://font1.com/ https://font2.com/; img-src 'self' https://img1.com/; style-src 'self'; frame-src 'none'; object-src 'none'",
+							Description: "contentSecurityPolicy is a list of Content-Security-Policy (CSP) directives for the plugin. Each directive specifies a list of values, appropriate for the given directive type, for example a list of remote endpoints for fetch directives such as ScriptSrc. Console web application uses CSP to detect and mitigate certain types of attacks, such as cross-site scripting (XSS) and data injection attacks. Dynamic plugins should specify this field if need to load assets from outside the cluster or if violation reports are observed. Dynamic plugins should always prefer loading their assets from within the cluster, either by vendoring them, or fetching from a cluster service. CSP violation reports can be viewed in the browser's console logs during development and testing of the plugin in the OpenShift web console. Available directive types are DefaultSrc, ScriptSrc, StyleSrc, ImgSrc, FontSrc and ConnectSrc. Each of the available directives may be defined only once in the list. The value 'self' is automatically included in all fetch directives by the OpenShift web console's backend. For more information about the CSP directives, see: https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Security-Policy\n\nThe OpenShift web console server aggregates the CSP directives and values across its own default values and all enabled ConsolePlugin CRs, merging them into a single policy string that is sent to the browser via `Content-Security-Policy` HTTP response header.\n\nExample:\n  ConsolePlugin A directives:\n    script-src: https://script1.com/, https://script2.com/\n    font-src: https://font1.com/\n\n  ConsolePlugin B directives:\n    script-src: https://script2.com/, https://script3.com/\n    font-src: https://font2.com/\n    img-src: https://img1.com/\n\n  Unified set of CSP directives, passed to the OpenShift web console server:\n    script-src: https://script1.com/, https://script2.com/, https://script3.com/\n    font-src: https://font1.com/, https://font2.com/\n    img-src: https://img1.com/\n\n  OpenShift web console server CSP response header:\n    Content-Security-Policy: default-src 'self'; base-uri 'self'; script-src 'self' https://script1.com/ https://script2.com/ https://script3.com/; font-src 'self' https://font1.com/ https://font2.com/; img-src 'self' https://img1.com/; style-src 'self'; frame-src 'none'; object-src 'none'",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -23167,6 +24210,7 @@ func schema_openshift_api_example_v1_CELUnion(ref common.ReferenceCallback) comm
 						},
 					},
 				},
+				Required: []string{"type"},
 			},
 			VendorExtensible: spec.VendorExtensible{
 				Extensions: spec.Extensions{
@@ -23199,6 +24243,7 @@ func schema_openshift_api_example_v1_EvolvingUnion(ref common.ReferenceCallback)
 						},
 					},
 				},
+				Required: []string{"type"},
 			},
 		},
 	}
@@ -23400,12 +24445,26 @@ func schema_openshift_api_example_v1_StableConfigTypeSpec(ref common.ReferenceCa
 							},
 						},
 					},
+					"subdomainNameField": {
+						SchemaProps: spec.SchemaProps{
+							Description: "subdomainNameField represents a kubenetes name field. The intention is that it validates the name in the same way metadata.Name is validated. That is, it is a DNS-1123 subdomain.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"subnetsWithExclusions": {
+						SchemaProps: spec.SchemaProps{
+							Description: "subnetsWithExclusions demonstrates how to validate a list of subnets with exclusions",
+							Default:     map[string]interface{}{},
+							Ref:         ref("github.com/openshift/api/example/v1.SubnetsWithExclusions"),
+						},
+					},
 				},
 				Required: []string{"immutableField"},
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/example/v1.CELUnion", "github.com/openshift/api/example/v1.EvolvingUnion"},
+			"github.com/openshift/api/example/v1.CELUnion", "github.com/openshift/api/example/v1.EvolvingUnion", "github.com/openshift/api/example/v1.SubnetsWithExclusions"},
 	}
 }
 
@@ -23422,9 +24481,7 @@ func schema_openshift_api_example_v1_StableConfigTypeStatus(ref common.Reference
 								"x-kubernetes-list-map-keys": []interface{}{
 									"type",
 								},
-								"x-kubernetes-list-type":       "map",
-								"x-kubernetes-patch-merge-key": "type",
-								"x-kubernetes-patch-strategy":  "merge",
+								"x-kubernetes-list-type": "map",
 							},
 						},
 						SchemaProps: spec.SchemaProps{
@@ -23452,6 +24509,55 @@ func schema_openshift_api_example_v1_StableConfigTypeStatus(ref common.Reference
 		},
 		Dependencies: []string{
 			"k8s.io/apimachinery/pkg/apis/meta/v1.Condition"},
+	}
+}
+
+func schema_openshift_api_example_v1_SubnetsWithExclusions(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "SubnetsWithExclusions is used to validate a list of subnets with exclusions. It demonstrates how exclusions should be validated as subnetworks of the networks listed in the subnets field.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"subnets": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-type": "atomic",
+							},
+						},
+						SchemaProps: spec.SchemaProps{
+							Description: "subnets is a list of subnets. It may contain up to 2 subnets. The list may be either 1 IPv4 subnet, 1 IPv6 subnet, or 1 of each.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: "",
+										Type:    []string{"string"},
+										Format:  "",
+									},
+								},
+							},
+						},
+					},
+					"excludeSubnets": {
+						SchemaProps: spec.SchemaProps{
+							Description: "excludeSubnets is a list of CIDR exclusions. The subnets in this list must be subnetworks of the subnets in the subnets list.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: "",
+										Type:    []string{"string"},
+										Format:  "",
+									},
+								},
+							},
+						},
+					},
+				},
+				Required: []string{"subnets"},
+			},
+		},
 	}
 }
 
@@ -23590,9 +24696,7 @@ func schema_openshift_api_example_v1alpha1_NotStableConfigTypeStatus(ref common.
 								"x-kubernetes-list-map-keys": []interface{}{
 									"type",
 								},
-								"x-kubernetes-list-type":       "map",
-								"x-kubernetes-patch-merge-key": "type",
-								"x-kubernetes-patch-strategy":  "merge",
+								"x-kubernetes-list-type": "map",
 							},
 						},
 						SchemaProps: spec.SchemaProps{
@@ -23849,6 +24953,14 @@ func schema_openshift_api_helm_v1beta1_HelmChartRepositoryStatus(ref common.Refe
 				Type: []string{"object"},
 				Properties: map[string]spec.Schema{
 					"conditions": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-map-keys": []interface{}{
+									"type",
+								},
+								"x-kubernetes-list-type": "map",
+							},
+						},
 						SchemaProps: spec.SchemaProps{
 							Description: "conditions is a list of conditions and their statuses",
 							Type:        []string{"array"},
@@ -24073,7 +25185,7 @@ func schema_openshift_api_image_v1_Image(ref common.ReferenceCallback) common.Op
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
-				Description: "Image is an immutable representation of a container image and metadata at a point in time. Images are named by taking a hash of their contents (metadata and content) and any change in format, content, or metadata results in a new name. The images resource is primarily for use by cluster administrators and integrations like the cluster image registry - end users instead access images via the imagestreamtags or imagestreamimages resources. While image metadata is stored in the API, any integration that implements the container image registry API must provide its own storage for the raw manifest data, image config, and layer contents.\n\nCompatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).",
+				Description: "Image is an immutable representation of a container image and its metadata at a point in time. Images are named by taking a hash of their contents (metadata and content) and any change in format, content, or metadata results in a new name. The images resource is primarily for use by cluster administrators and integrations like the cluster image registry - end users, instead, access images via the imagestreamtags or imagestreamimages resources. While image metadata is stored in the API, any integration that implements the container image registry API must provide its own storage for the raw manifest data, image config, and layer contents.\n\nCompatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).",
 				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
 					"kind": {
@@ -24099,7 +25211,7 @@ func schema_openshift_api_image_v1_Image(ref common.ReferenceCallback) common.Op
 					},
 					"dockerImageReference": {
 						SchemaProps: spec.SchemaProps{
-							Description: "DockerImageReference is the string that can be used to pull this image.",
+							Description: "dockerImageReference is the string that can be used to pull this image.",
 							Type:        []string{"string"},
 							Format:      "",
 						},
@@ -24111,27 +25223,27 @@ func schema_openshift_api_image_v1_Image(ref common.ReferenceCallback) common.Op
 							},
 						},
 						SchemaProps: spec.SchemaProps{
-							Description: "DockerImageMetadata contains metadata about this image",
+							Description: "dockerImageMetadata contains metadata about this image",
 							Ref:         ref("k8s.io/apimachinery/pkg/runtime.RawExtension"),
 						},
 					},
 					"dockerImageMetadataVersion": {
 						SchemaProps: spec.SchemaProps{
-							Description: "DockerImageMetadataVersion conveys the version of the object, which if empty defaults to \"1.0\"",
+							Description: "dockerImageMetadataVersion conveys the version of the object, which if empty defaults to \"1.0\"",
 							Type:        []string{"string"},
 							Format:      "",
 						},
 					},
 					"dockerImageManifest": {
 						SchemaProps: spec.SchemaProps{
-							Description: "DockerImageManifest is the raw JSON of the manifest",
+							Description: "dockerImageManifest is the raw JSON of the manifest",
 							Type:        []string{"string"},
 							Format:      "",
 						},
 					},
 					"dockerImageLayers": {
 						SchemaProps: spec.SchemaProps{
-							Description: "DockerImageLayers represents the layers in the image. May not be set if the image does not define that data or if the image represents a manifest list.",
+							Description: "dockerImageLayers represents the layers in the image. May not be set if the image does not define that data or if the image represents a manifest list.",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -24151,7 +25263,7 @@ func schema_openshift_api_image_v1_Image(ref common.ReferenceCallback) common.Op
 							},
 						},
 						SchemaProps: spec.SchemaProps{
-							Description: "Signatures holds all signatures of the image.",
+							Description: "signatures holds all signatures of the image.",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -24165,7 +25277,7 @@ func schema_openshift_api_image_v1_Image(ref common.ReferenceCallback) common.Op
 					},
 					"dockerImageSignatures": {
 						SchemaProps: spec.SchemaProps{
-							Description: "DockerImageSignatures provides the signatures as opaque blobs. This is a part of manifest schema v1.",
+							Description: "dockerImageSignatures provides the signatures as opaque blobs. This is a part of manifest schema v1.",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -24179,21 +25291,21 @@ func schema_openshift_api_image_v1_Image(ref common.ReferenceCallback) common.Op
 					},
 					"dockerImageManifestMediaType": {
 						SchemaProps: spec.SchemaProps{
-							Description: "DockerImageManifestMediaType specifies the mediaType of manifest. This is a part of manifest schema v2.",
+							Description: "dockerImageManifestMediaType specifies the mediaType of manifest. This is a part of manifest schema v2.",
 							Type:        []string{"string"},
 							Format:      "",
 						},
 					},
 					"dockerImageConfig": {
 						SchemaProps: spec.SchemaProps{
-							Description: "DockerImageConfig is a JSON blob that the runtime uses to set up the container. This is a part of manifest schema v2. Will not be set when the image represents a manifest list.",
+							Description: "dockerImageConfig is a JSON blob that the runtime uses to set up the container. This is a part of manifest schema v2. Will not be set when the image represents a manifest list.",
 							Type:        []string{"string"},
 							Format:      "",
 						},
 					},
 					"dockerImageManifests": {
 						SchemaProps: spec.SchemaProps{
-							Description: "DockerImageManifests holds information about sub-manifests when the image represents a manifest list. When this field is present, no DockerImageLayers should be specified.",
+							Description: "dockerImageManifests holds information about sub-manifests when the image represents a manifest list. When this field is present, no DockerImageLayers should be specified.",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -24280,34 +25392,34 @@ func schema_openshift_api_image_v1_ImageImportSpec(ref common.ReferenceCallback)
 				Properties: map[string]spec.Schema{
 					"from": {
 						SchemaProps: spec.SchemaProps{
-							Description: "From is the source of an image to import; only kind DockerImage is allowed",
+							Description: "from is the source of an image to import; only kind DockerImage is allowed",
 							Default:     map[string]interface{}{},
 							Ref:         ref("k8s.io/api/core/v1.ObjectReference"),
 						},
 					},
 					"to": {
 						SchemaProps: spec.SchemaProps{
-							Description: "To is a tag in the current image stream to assign the imported image to, if name is not specified the default tag from from.name will be used",
+							Description: "to is a tag in the current image stream to assign the imported image to, if name is not specified the default tag from from.name will be used",
 							Ref:         ref("k8s.io/api/core/v1.LocalObjectReference"),
 						},
 					},
 					"importPolicy": {
 						SchemaProps: spec.SchemaProps{
-							Description: "ImportPolicy is the policy controlling how the image is imported",
+							Description: "importPolicy is the policy controlling how the image is imported",
 							Default:     map[string]interface{}{},
 							Ref:         ref("github.com/openshift/api/image/v1.TagImportPolicy"),
 						},
 					},
 					"referencePolicy": {
 						SchemaProps: spec.SchemaProps{
-							Description: "ReferencePolicy defines how other components should consume the image",
+							Description: "referencePolicy defines how other components should consume the image",
 							Default:     map[string]interface{}{},
 							Ref:         ref("github.com/openshift/api/image/v1.TagReferencePolicy"),
 						},
 					},
 					"includeManifest": {
 						SchemaProps: spec.SchemaProps{
-							Description: "IncludeManifest determines if the manifest for each image is returned in the response",
+							Description: "includeManifest determines if the manifest for each image is returned in the response",
 							Type:        []string{"boolean"},
 							Format:      "",
 						},
@@ -24330,27 +25442,27 @@ func schema_openshift_api_image_v1_ImageImportStatus(ref common.ReferenceCallbac
 				Properties: map[string]spec.Schema{
 					"status": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Status is the status of the image import, including errors encountered while retrieving the image",
+							Description: "status is the status of the image import, including errors encountered while retrieving the image",
 							Default:     map[string]interface{}{},
 							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.Status"),
 						},
 					},
 					"image": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Image is the metadata of that image, if the image was located",
+							Description: "image is the metadata of that image, if the image was located",
 							Ref:         ref("github.com/openshift/api/image/v1.Image"),
 						},
 					},
 					"tag": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Tag is the tag this image was located under, if any",
+							Description: "tag is the tag this image was located under, if any",
 							Type:        []string{"string"},
 							Format:      "",
 						},
 					},
 					"manifests": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Manifests holds sub-manifests metadata when importing a manifest list",
+							Description: "manifests holds sub-manifests metadata when importing a manifest list",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -24380,7 +25492,7 @@ func schema_openshift_api_image_v1_ImageLayer(ref common.ReferenceCallback) comm
 				Properties: map[string]spec.Schema{
 					"name": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Name of the layer as defined by the underlying store.",
+							Description: "name of the layer as defined by the underlying store.",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -24388,7 +25500,7 @@ func schema_openshift_api_image_v1_ImageLayer(ref common.ReferenceCallback) comm
 					},
 					"size": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Size of the layer in bytes as defined by the underlying store.",
+							Description: "size of the layer in bytes as defined by the underlying store.",
 							Default:     0,
 							Type:        []string{"integer"},
 							Format:      "int64",
@@ -24396,7 +25508,7 @@ func schema_openshift_api_image_v1_ImageLayer(ref common.ReferenceCallback) comm
 					},
 					"mediaType": {
 						SchemaProps: spec.SchemaProps{
-							Description: "MediaType of the referenced object.",
+							Description: "mediaType of the referenced object.",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -24418,14 +25530,14 @@ func schema_openshift_api_image_v1_ImageLayerData(ref common.ReferenceCallback) 
 				Properties: map[string]spec.Schema{
 					"size": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Size of the layer in bytes as defined by the underlying store. This field is optional if the necessary information about size is not available.",
+							Description: "size of the layer in bytes as defined by the underlying store. This field is optional if the necessary information about size is not available.",
 							Type:        []string{"integer"},
 							Format:      "int64",
 						},
 					},
 					"mediaType": {
 						SchemaProps: spec.SchemaProps{
-							Description: "MediaType of the referenced object.",
+							Description: "mediaType of the referenced object.",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -24468,7 +25580,7 @@ func schema_openshift_api_image_v1_ImageList(ref common.ReferenceCallback) commo
 					},
 					"items": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Items is a list of images",
+							Description: "items is a list of images",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -24520,7 +25632,7 @@ func schema_openshift_api_image_v1_ImageManifest(ref common.ReferenceCallback) c
 				Properties: map[string]spec.Schema{
 					"digest": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Digest is the unique identifier for the manifest. It refers to an Image object.",
+							Description: "digest is the unique identifier for the manifest. It refers to an Image object.",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -24528,7 +25640,7 @@ func schema_openshift_api_image_v1_ImageManifest(ref common.ReferenceCallback) c
 					},
 					"mediaType": {
 						SchemaProps: spec.SchemaProps{
-							Description: "MediaType defines the type of the manifest, possible values are application/vnd.oci.image.manifest.v1+json, application/vnd.docker.distribution.manifest.v2+json or application/vnd.docker.distribution.manifest.v1+json.",
+							Description: "mediaType defines the type of the manifest, possible values are application/vnd.oci.image.manifest.v1+json, application/vnd.docker.distribution.manifest.v2+json or application/vnd.docker.distribution.manifest.v1+json.",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -24536,7 +25648,7 @@ func schema_openshift_api_image_v1_ImageManifest(ref common.ReferenceCallback) c
 					},
 					"manifestSize": {
 						SchemaProps: spec.SchemaProps{
-							Description: "ManifestSize represents the size of the raw object contents, in bytes.",
+							Description: "manifestSize represents the size of the raw object contents, in bytes.",
 							Default:     0,
 							Type:        []string{"integer"},
 							Format:      "int64",
@@ -24544,7 +25656,7 @@ func schema_openshift_api_image_v1_ImageManifest(ref common.ReferenceCallback) c
 					},
 					"architecture": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Architecture specifies the supported CPU architecture, for example `amd64` or `ppc64le`.",
+							Description: "architecture specifies the supported CPU architecture, for example `amd64` or `ppc64le`.",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -24552,7 +25664,7 @@ func schema_openshift_api_image_v1_ImageManifest(ref common.ReferenceCallback) c
 					},
 					"os": {
 						SchemaProps: spec.SchemaProps{
-							Description: "OS specifies the operating system, for example `linux`.",
+							Description: "os specifies the operating system, for example `linux`.",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -24560,7 +25672,7 @@ func schema_openshift_api_image_v1_ImageManifest(ref common.ReferenceCallback) c
 					},
 					"variant": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Variant is an optional field repreenting a variant of the CPU, for example v6 to specify a particular CPU variant of the ARM CPU.",
+							Description: "variant is an optional field repreenting a variant of the CPU, for example v6 to specify a particular CPU variant of the ARM CPU.",
 							Type:        []string{"string"},
 							Format:      "",
 						},
@@ -24623,7 +25735,7 @@ func schema_openshift_api_image_v1_ImageSignature(ref common.ReferenceCallback) 
 							},
 						},
 						SchemaProps: spec.SchemaProps{
-							Description: "Conditions represent the latest available observations of a signature's current state.",
+							Description: "conditions represent the latest available observations of a signature's current state.",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -24715,14 +25827,14 @@ func schema_openshift_api_image_v1_ImageStream(ref common.ReferenceCallback) com
 					},
 					"spec": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Spec describes the desired state of this stream",
+							Description: "spec describes the desired state of this stream",
 							Default:     map[string]interface{}{},
 							Ref:         ref("github.com/openshift/api/image/v1.ImageStreamSpec"),
 						},
 					},
 					"status": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Status describes the current state of this stream",
+							Description: "status describes the current state of this stream",
 							Default:     map[string]interface{}{},
 							Ref:         ref("github.com/openshift/api/image/v1.ImageStreamStatus"),
 						},
@@ -24765,7 +25877,7 @@ func schema_openshift_api_image_v1_ImageStreamImage(ref common.ReferenceCallback
 					},
 					"image": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Image associated with the ImageStream and image name.",
+							Description: "image associated with the ImageStream and image name.",
 							Default:     map[string]interface{}{},
 							Ref:         ref("github.com/openshift/api/image/v1.Image"),
 						},
@@ -24809,14 +25921,14 @@ func schema_openshift_api_image_v1_ImageStreamImport(ref common.ReferenceCallbac
 					},
 					"spec": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Spec is a description of the images that the user wishes to import",
+							Description: "spec is a description of the images that the user wishes to import",
 							Default:     map[string]interface{}{},
 							Ref:         ref("github.com/openshift/api/image/v1.ImageStreamImportSpec"),
 						},
 					},
 					"status": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Status is the result of importing the image",
+							Description: "status is the result of importing the image",
 							Default:     map[string]interface{}{},
 							Ref:         ref("github.com/openshift/api/image/v1.ImageStreamImportStatus"),
 						},
@@ -24839,7 +25951,7 @@ func schema_openshift_api_image_v1_ImageStreamImportSpec(ref common.ReferenceCal
 				Properties: map[string]spec.Schema{
 					"import": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Import indicates whether to perform an import - if so, the specified tags are set on the spec and status of the image stream defined by the type meta.",
+							Description: "import indicates whether to perform an import - if so, the specified tags are set on the spec and status of the image stream defined by the type meta.",
 							Default:     false,
 							Type:        []string{"boolean"},
 							Format:      "",
@@ -24847,13 +25959,13 @@ func schema_openshift_api_image_v1_ImageStreamImportSpec(ref common.ReferenceCal
 					},
 					"repository": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Repository is an optional import of an entire container image repository. A maximum limit on the number of tags imported this way is imposed by the server.",
+							Description: "repository is an optional import of an entire container image repository. A maximum limit on the number of tags imported this way is imposed by the server.",
 							Ref:         ref("github.com/openshift/api/image/v1.RepositoryImportSpec"),
 						},
 					},
 					"images": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Images are a list of individual images to import.",
+							Description: "images are a list of individual images to import.",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -24883,19 +25995,19 @@ func schema_openshift_api_image_v1_ImageStreamImportStatus(ref common.ReferenceC
 				Properties: map[string]spec.Schema{
 					"import": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Import is the image stream that was successfully updated or created when 'to' was set.",
+							Description: "import is the image stream that was successfully updated or created when 'to' was set.",
 							Ref:         ref("github.com/openshift/api/image/v1.ImageStream"),
 						},
 					},
 					"repository": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Repository is set if spec.repository was set to the outcome of the import",
+							Description: "repository is set if spec.repository was set to the outcome of the import",
 							Ref:         ref("github.com/openshift/api/image/v1.RepositoryImportStatus"),
 						},
 					},
 					"images": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Images is set with the result of importing spec.images",
+							Description: "images is set with the result of importing spec.images",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -25012,7 +26124,7 @@ func schema_openshift_api_image_v1_ImageStreamList(ref common.ReferenceCallback)
 					},
 					"items": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Items is a list of imageStreams",
+							Description: "items is a list of imageStreams",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -25063,14 +26175,14 @@ func schema_openshift_api_image_v1_ImageStreamMapping(ref common.ReferenceCallba
 					},
 					"image": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Image is a container image.",
+							Description: "image is a container image.",
 							Default:     map[string]interface{}{},
 							Ref:         ref("github.com/openshift/api/image/v1.Image"),
 						},
 					},
 					"tag": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Tag is a string value this image can be located with inside the stream.",
+							Description: "tag is a string value this image can be located with inside the stream.",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -25143,7 +26255,7 @@ func schema_openshift_api_image_v1_ImageStreamStatus(ref common.ReferenceCallbac
 				Properties: map[string]spec.Schema{
 					"dockerImageRepository": {
 						SchemaProps: spec.SchemaProps{
-							Description: "DockerImageRepository represents the effective location this stream may be accessed at. May be empty until the server determines where the repository is located",
+							Description: "dockerImageRepository represents the effective location this stream may be accessed at. May be empty until the server determines where the repository is located",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -25151,7 +26263,7 @@ func schema_openshift_api_image_v1_ImageStreamStatus(ref common.ReferenceCallbac
 					},
 					"publicDockerImageRepository": {
 						SchemaProps: spec.SchemaProps{
-							Description: "PublicDockerImageRepository represents the public location from where the image can be pulled outside the cluster. This field may be empty if the administrator has not exposed the integrated registry externally.",
+							Description: "publicDockerImageRepository represents the public location from where the image can be pulled outside the cluster. This field may be empty if the administrator has not exposed the integrated registry externally.",
 							Type:        []string{"string"},
 							Format:      "",
 						},
@@ -25164,7 +26276,7 @@ func schema_openshift_api_image_v1_ImageStreamStatus(ref common.ReferenceCallbac
 							},
 						},
 						SchemaProps: spec.SchemaProps{
-							Description: "Tags are a historical record of images associated with each tag. The first entry in the TagEvent array is the currently tagged image.",
+							Description: "tags are a historical record of images associated with each tag. The first entry in the TagEvent array is the currently tagged image.",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -25294,7 +26406,7 @@ func schema_openshift_api_image_v1_ImageStreamTagList(ref common.ReferenceCallba
 					},
 					"items": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Items is the list of image stream tags",
+							Description: "items is the list of image stream tags",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -25319,7 +26431,7 @@ func schema_openshift_api_image_v1_ImageTag(ref common.ReferenceCallback) common
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
-				Description: "ImageTag represents a single tag within an image stream and includes the spec, the status history, and the currently referenced image (if any) of the provided tag. This type replaces the ImageStreamTag by providing a full view of the tag. ImageTags are returned for every spec or status tag present on the image stream. If no tag exists in either form a not found error will be returned by the API. A create operation will succeed if no spec tag has already been defined and the spec field is set. Delete will remove both spec and status elements from the image stream.\n\nCompatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).",
+				Description: "ImageTag represents a single tag within an image stream and includes the spec, the status history, and the currently referenced image (if any) of the provided tag. This type replaces the ImageStreamTag by providing a full view of the tag. ImageTags are returned for every spec or status tag present on the image stream. If no tag exists in either form, a not found error will be returned by the API. A create operation will succeed if no spec tag has already been defined and the spec field is set. Delete will remove both spec and status elements from the image stream.\n\nCompatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).",
 				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
 					"kind": {
@@ -25400,7 +26512,7 @@ func schema_openshift_api_image_v1_ImageTagList(ref common.ReferenceCallback) co
 					},
 					"items": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Items is the list of image stream tags",
+							Description: "items is the list of image stream tags",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -25430,7 +26542,7 @@ func schema_openshift_api_image_v1_NamedTagEventList(ref common.ReferenceCallbac
 				Properties: map[string]spec.Schema{
 					"tag": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Tag is the tag for which the history is recorded",
+							Description: "tag is the tag for which the history is recorded",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -25452,7 +26564,7 @@ func schema_openshift_api_image_v1_NamedTagEventList(ref common.ReferenceCallbac
 					},
 					"conditions": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Conditions is an array of conditions that apply to the tag event list.",
+							Description: "conditions is an array of conditions that apply to the tag event list.",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -25482,28 +26594,28 @@ func schema_openshift_api_image_v1_RepositoryImportSpec(ref common.ReferenceCall
 				Properties: map[string]spec.Schema{
 					"from": {
 						SchemaProps: spec.SchemaProps{
-							Description: "From is the source for the image repository to import; only kind DockerImage and a name of a container image repository is allowed",
+							Description: "from is the source for the image repository to import; only kind DockerImage and a name of a container image repository is allowed",
 							Default:     map[string]interface{}{},
 							Ref:         ref("k8s.io/api/core/v1.ObjectReference"),
 						},
 					},
 					"importPolicy": {
 						SchemaProps: spec.SchemaProps{
-							Description: "ImportPolicy is the policy controlling how the image is imported",
+							Description: "importPolicy is the policy controlling how the image is imported",
 							Default:     map[string]interface{}{},
 							Ref:         ref("github.com/openshift/api/image/v1.TagImportPolicy"),
 						},
 					},
 					"referencePolicy": {
 						SchemaProps: spec.SchemaProps{
-							Description: "ReferencePolicy defines how other components should consume the image",
+							Description: "referencePolicy defines how other components should consume the image",
 							Default:     map[string]interface{}{},
 							Ref:         ref("github.com/openshift/api/image/v1.TagReferencePolicy"),
 						},
 					},
 					"includeManifest": {
 						SchemaProps: spec.SchemaProps{
-							Description: "IncludeManifest determines if the manifest for each image is returned in the response",
+							Description: "includeManifest determines if the manifest for each image is returned in the response",
 							Type:        []string{"boolean"},
 							Format:      "",
 						},
@@ -25526,14 +26638,14 @@ func schema_openshift_api_image_v1_RepositoryImportStatus(ref common.ReferenceCa
 				Properties: map[string]spec.Schema{
 					"status": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Status reflects whether any failure occurred during import",
+							Description: "status reflects whether any failure occurred during import",
 							Default:     map[string]interface{}{},
 							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.Status"),
 						},
 					},
 					"images": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Images is a list of images successfully retrieved by the import of the repository.",
+							Description: "images is a list of images successfully retrieved by the import of the repository.",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -25547,7 +26659,7 @@ func schema_openshift_api_image_v1_RepositoryImportStatus(ref common.ReferenceCa
 					},
 					"additionalTags": {
 						SchemaProps: spec.SchemaProps{
-							Description: "AdditionalTags are tags that exist in the repository but were not imported because a maximum limit of automatic imports was applied.",
+							Description: "additionalTags are tags that exist in the repository but were not imported because a maximum limit of automatic imports was applied.",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -25628,7 +26740,7 @@ func schema_openshift_api_image_v1_SignatureCondition(ref common.ReferenceCallba
 				Properties: map[string]spec.Schema{
 					"type": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Type of signature condition, Complete or Failed.",
+							Description: "type of signature condition, Complete or Failed.",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -25636,7 +26748,7 @@ func schema_openshift_api_image_v1_SignatureCondition(ref common.ReferenceCallba
 					},
 					"status": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Status of the condition, one of True, False, Unknown.",
+							Description: "status of the condition, one of True, False, Unknown.",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -25686,7 +26798,7 @@ func schema_openshift_api_image_v1_SignatureGenericEntity(ref common.ReferenceCa
 				Properties: map[string]spec.Schema{
 					"organization": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Organization name.",
+							Description: "organization name.",
 							Type:        []string{"string"},
 							Format:      "",
 						},
@@ -25713,7 +26825,7 @@ func schema_openshift_api_image_v1_SignatureIssuer(ref common.ReferenceCallback)
 				Properties: map[string]spec.Schema{
 					"organization": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Organization name.",
+							Description: "organization name.",
 							Type:        []string{"string"},
 							Format:      "",
 						},
@@ -25740,7 +26852,7 @@ func schema_openshift_api_image_v1_SignatureSubject(ref common.ReferenceCallback
 				Properties: map[string]spec.Schema{
 					"organization": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Organization name.",
+							Description: "organization name.",
 							Type:        []string{"string"},
 							Format:      "",
 						},
@@ -25776,13 +26888,13 @@ func schema_openshift_api_image_v1_TagEvent(ref common.ReferenceCallback) common
 				Properties: map[string]spec.Schema{
 					"created": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Created holds the time the TagEvent was created",
+							Description: "created holds the time the TagEvent was created",
 							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.Time"),
 						},
 					},
 					"dockerImageReference": {
 						SchemaProps: spec.SchemaProps{
-							Description: "DockerImageReference is the string that can be used to pull this image",
+							Description: "dockerImageReference is the string that can be used to pull this image",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -25790,7 +26902,7 @@ func schema_openshift_api_image_v1_TagEvent(ref common.ReferenceCallback) common
 					},
 					"image": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Image is the image",
+							Description: "image is the image",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -25798,7 +26910,7 @@ func schema_openshift_api_image_v1_TagEvent(ref common.ReferenceCallback) common
 					},
 					"generation": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Generation is the spec tag generation that resulted in this tag being updated",
+							Description: "generation is the spec tag generation that resulted in this tag being updated",
 							Default:     0,
 							Type:        []string{"integer"},
 							Format:      "int64",
@@ -25822,7 +26934,7 @@ func schema_openshift_api_image_v1_TagEventCondition(ref common.ReferenceCallbac
 				Properties: map[string]spec.Schema{
 					"type": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Type of tag event condition, currently only ImportSuccess",
+							Description: "type of tag event condition, currently only ImportSuccess",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -25830,7 +26942,7 @@ func schema_openshift_api_image_v1_TagEventCondition(ref common.ReferenceCallbac
 					},
 					"status": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Status of the condition, one of True, False, Unknown.",
+							Description: "status of the condition, one of True, False, Unknown.",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -25838,27 +26950,27 @@ func schema_openshift_api_image_v1_TagEventCondition(ref common.ReferenceCallbac
 					},
 					"lastTransitionTime": {
 						SchemaProps: spec.SchemaProps{
-							Description: "LastTransitionTIme is the time the condition transitioned from one status to another.",
+							Description: "lastTransitionTime is the time the condition transitioned from one status to another.",
 							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.Time"),
 						},
 					},
 					"reason": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Reason is a brief machine readable explanation for the condition's last transition.",
+							Description: "reason is a brief machine readable explanation for the condition's last transition.",
 							Type:        []string{"string"},
 							Format:      "",
 						},
 					},
 					"message": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Message is a human readable description of the details about last transition, complementing reason.",
+							Description: "message is a human readable description of the details about last transition, complementing reason.",
 							Type:        []string{"string"},
 							Format:      "",
 						},
 					},
 					"generation": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Generation is the spec tag generation that this status corresponds to",
+							Description: "generation is the spec tag generation that this status corresponds to",
 							Default:     0,
 							Type:        []string{"integer"},
 							Format:      "int64",
@@ -25882,21 +26994,21 @@ func schema_openshift_api_image_v1_TagImportPolicy(ref common.ReferenceCallback)
 				Properties: map[string]spec.Schema{
 					"insecure": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Insecure is true if the server may bypass certificate verification or connect directly over HTTP during image import.",
+							Description: "insecure is true if the server may bypass certificate verification or connect directly over HTTP during image import.",
 							Type:        []string{"boolean"},
 							Format:      "",
 						},
 					},
 					"scheduled": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Scheduled indicates to the server that this tag should be periodically checked to ensure it is up to date, and imported",
+							Description: "scheduled indicates to the server that this tag should be periodically checked to ensure it is up to date, and imported",
 							Type:        []string{"boolean"},
 							Format:      "",
 						},
 					},
 					"importMode": {
 						SchemaProps: spec.SchemaProps{
-							Description: "ImportMode describes how to import an image manifest.",
+							Description: "importMode describes how to import an image manifest.",
 							Type:        []string{"string"},
 							Format:      "",
 						},
@@ -25916,7 +27028,7 @@ func schema_openshift_api_image_v1_TagReference(ref common.ReferenceCallback) co
 				Properties: map[string]spec.Schema{
 					"name": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Name of the tag",
+							Description: "name of the tag",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -25946,28 +27058,28 @@ func schema_openshift_api_image_v1_TagReference(ref common.ReferenceCallback) co
 					},
 					"reference": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Reference states if the tag will be imported. Default value is false, which means the tag will be imported.",
+							Description: "reference states if the tag will be imported. Default value is false, which means the tag will be imported.",
 							Type:        []string{"boolean"},
 							Format:      "",
 						},
 					},
 					"generation": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Generation is a counter that tracks mutations to the spec tag (user intent). When a tag reference is changed the generation is set to match the current stream generation (which is incremented every time spec is changed). Other processes in the system like the image importer observe that the generation of spec tag is newer than the generation recorded in the status and use that as a trigger to import the newest remote tag. To trigger a new import, clients may set this value to zero which will reset the generation to the latest stream generation. Legacy clients will send this value as nil which will be merged with the current tag generation.",
+							Description: "generation is a counter that tracks mutations to the spec tag (user intent). When a tag reference is changed the generation is set to match the current stream generation (which is incremented every time spec is changed). Other processes in the system like the image importer observe that the generation of spec tag is newer than the generation recorded in the status and use that as a trigger to import the newest remote tag. To trigger a new import, clients may set this value to zero which will reset the generation to the latest stream generation. Legacy clients will send this value as nil which will be merged with the current tag generation.",
 							Type:        []string{"integer"},
 							Format:      "int64",
 						},
 					},
 					"importPolicy": {
 						SchemaProps: spec.SchemaProps{
-							Description: "ImportPolicy is information that controls how images may be imported by the server.",
+							Description: "importPolicy is information that controls how images may be imported by the server.",
 							Default:     map[string]interface{}{},
 							Ref:         ref("github.com/openshift/api/image/v1.TagImportPolicy"),
 						},
 					},
 					"referencePolicy": {
 						SchemaProps: spec.SchemaProps{
-							Description: "ReferencePolicy defines how other components should consume the image.",
+							Description: "referencePolicy defines how other components should consume the image.",
 							Default:     map[string]interface{}{},
 							Ref:         ref("github.com/openshift/api/image/v1.TagReferencePolicy"),
 						},
@@ -25990,7 +27102,7 @@ func schema_openshift_api_image_v1_TagReferencePolicy(ref common.ReferenceCallba
 				Properties: map[string]spec.Schema{
 					"type": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Type determines how the image pull spec should be transformed when the image stream tag is used in deployment config triggers or new builds. The default value is `Source`, indicating the original location of the image should be used (if imported). The user may also specify `Local`, indicating that the pull spec should point to the integrated container image registry and leverage the registry's ability to proxy the pull to an upstream registry. `Local` allows the credentials used to pull this image to be managed from the image stream's namespace, so others on the platform can access a remote image but have no access to the remote secret. It also allows the image layers to be mirrored into the local registry which the images can still be pulled even if the upstream registry is unavailable.",
+							Description: "type determines how the image pull spec should be transformed when the image stream tag is used in deployment config triggers or new builds. The default value is `Source`, indicating the original location of the image should be used (if imported). The user may also specify `Local`, indicating that the pull spec should point to the integrated container image registry and leverage the registry's ability to proxy the pull to an upstream registry. `Local` allows the credentials used to pull this image to be managed from the image stream's namespace, so others on the platform can access a remote image but have no access to the remote secret. It also allows the image layers to be mirrored into the local registry which the images can still be pulled even if the upstream registry is unavailable.",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -26083,6 +27195,11 @@ func schema_openshift_api_insights_v1alpha1_DataGatherList(ref common.ReferenceC
 						},
 					},
 					"items": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-type": "atomic",
+							},
+						},
 						SchemaProps: spec.SchemaProps{
 							Description: "items contains a list of DataGather resources.",
 							Type:        []string{"array"},
@@ -26097,7 +27214,6 @@ func schema_openshift_api_insights_v1alpha1_DataGatherList(ref common.ReferenceC
 						},
 					},
 				},
-				Required: []string{"metadata", "items"},
 			},
 		},
 		Dependencies: []string{
@@ -26122,7 +27238,7 @@ func schema_openshift_api_insights_v1alpha1_DataGatherSpec(ref common.ReferenceC
 					},
 					"gatherers": {
 						SchemaProps: spec.SchemaProps{
-							Description: "gatherers is a list of gatherers configurations. The particular gatherers IDs can be found at https://github.com/openshift/insights-operator/blob/master/docs/gathered-data.md. Run the following command to get the names of last active gatherers: \"oc get insightsoperators.operator.openshift.io cluster -o json | jq '.status.gatherStatus.gatherers[].name'\"",
+							Description: "gatherers is an optional list of gatherers configurations. The list must not exceed 100 items. The particular gatherers IDs can be found at https://github.com/openshift/insights-operator/blob/master/docs/gathered-data.md. Run the following command to get the names of last active gatherers: \"oc get insightsoperators.operator.openshift.io cluster -o json | jq '.status.gatherStatus.gatherers[].name'\"",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -26134,11 +27250,17 @@ func schema_openshift_api_insights_v1alpha1_DataGatherSpec(ref common.ReferenceC
 							},
 						},
 					},
+					"storage": {
+						SchemaProps: spec.SchemaProps{
+							Description: "storage is an optional field that allows user to define persistent storage for gathering jobs to store the Insights data archive. If omitted, the gathering job will use ephemeral storage.",
+							Ref:         ref("github.com/openshift/api/insights/v1alpha1.Storage"),
+						},
+					},
 				},
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/insights/v1alpha1.GathererConfig"},
+			"github.com/openshift/api/insights/v1alpha1.GathererConfig", "github.com/openshift/api/insights/v1alpha1.Storage"},
 	}
 }
 
@@ -26155,9 +27277,7 @@ func schema_openshift_api_insights_v1alpha1_DataGatherStatus(ref common.Referenc
 								"x-kubernetes-list-map-keys": []interface{}{
 									"type",
 								},
-								"x-kubernetes-list-type":       "map",
-								"x-kubernetes-patch-merge-key": "type",
-								"x-kubernetes-patch-strategy":  "merge",
+								"x-kubernetes-list-type": "map",
 							},
 						},
 						SchemaProps: spec.SchemaProps{
@@ -26259,7 +27379,7 @@ func schema_openshift_api_insights_v1alpha1_GathererConfig(ref common.ReferenceC
 				Properties: map[string]spec.Schema{
 					"name": {
 						SchemaProps: spec.SchemaProps{
-							Description: "name is the name of specific gatherer",
+							Description: "name is the required name of specific gatherer It must be at most 256 characters in length. The format for the gatherer name should be: {gatherer}/{function} where the function is optional. Gatherer consists of a lowercase letters only that may include underscores (_). Function consists of a lowercase letters only that may include underscores (_) and is separated from the gatherer by a forward slash (/). The particular gatherers can be found at https://github.com/openshift/insights-operator/blob/master/docs/gathered-data.md.",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -26293,9 +27413,7 @@ func schema_openshift_api_insights_v1alpha1_GathererStatus(ref common.ReferenceC
 								"x-kubernetes-list-map-keys": []interface{}{
 									"type",
 								},
-								"x-kubernetes-list-type":       "map",
-								"x-kubernetes-patch-merge-key": "type",
-								"x-kubernetes-patch-strategy":  "merge",
+								"x-kubernetes-list-type": "map",
 							},
 						},
 						SchemaProps: spec.SchemaProps{
@@ -26359,7 +27477,7 @@ func schema_openshift_api_insights_v1alpha1_HealthCheck(ref common.ReferenceCall
 					},
 					"advisorURI": {
 						SchemaProps: spec.SchemaProps{
-							Description: "advisorURI provides the URL link to the Insights Advisor.",
+							Description: "advisorURI is required field that provides the URL link to the Insights Advisor. The link must be a valid HTTPS URL and the maximum length is 2048 characters.",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -26414,7 +27532,7 @@ func schema_openshift_api_insights_v1alpha1_InsightsReport(ref common.ReferenceC
 					},
 					"uri": {
 						SchemaProps: spec.SchemaProps{
-							Description: "uri provides the URL link from which the report was downloaded.",
+							Description: "uri is optional field that provides the URL link from which the report was downloaded. The link must be a valid HTTPS URL and the maximum length is 2048 characters.",
 							Type:        []string{"string"},
 							Format:      "",
 						},
@@ -26436,7 +27554,7 @@ func schema_openshift_api_insights_v1alpha1_ObjectReference(ref common.Reference
 				Properties: map[string]spec.Schema{
 					"group": {
 						SchemaProps: spec.SchemaProps{
-							Description: "group is the API Group of the Resource. Enter empty string for the core group. This value should consist of only lowercase alphanumeric characters, hyphens and periods. Example: \"\", \"apps\", \"build.openshift.io\", etc.",
+							Description: "group is the API Group of the Resource. Enter empty string for the core group. This value is empty or should follow the DNS1123 subdomain format and it must be at most 253 characters in length. Example: \"\", \"apps\", \"build.openshift.io\", etc.",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -26444,7 +27562,7 @@ func schema_openshift_api_insights_v1alpha1_ObjectReference(ref common.Reference
 					},
 					"resource": {
 						SchemaProps: spec.SchemaProps{
-							Description: "resource is the type that is being referenced. It is normally the plural form of the resource kind in lowercase. This value should consist of only lowercase alphanumeric characters and hyphens. Example: \"deployments\", \"deploymentconfigs\", \"pods\", etc.",
+							Description: "resource is required field of the type that is being referenced. It is normally the plural form of the resource kind in lowercase. This value should consist of only lowercase alphanumeric characters and hyphens. Example: \"deployments\", \"deploymentconfigs\", \"pods\", etc.",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -26452,7 +27570,7 @@ func schema_openshift_api_insights_v1alpha1_ObjectReference(ref common.Reference
 					},
 					"name": {
 						SchemaProps: spec.SchemaProps{
-							Description: "name of the referent.",
+							Description: "name of the referent that follows the DNS1123 subdomain format. It must be at most 256 characters in length.",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -26460,7 +27578,7 @@ func schema_openshift_api_insights_v1alpha1_ObjectReference(ref common.Reference
 					},
 					"namespace": {
 						SchemaProps: spec.SchemaProps{
-							Description: "namespace of the referent.",
+							Description: "namespace of the referent that follows the DNS1123 subdomain format. It must be at most 253 characters in length.",
 							Type:        []string{"string"},
 							Format:      "",
 						},
@@ -26469,6 +27587,88 @@ func schema_openshift_api_insights_v1alpha1_ObjectReference(ref common.Reference
 				Required: []string{"group", "resource", "name"},
 			},
 		},
+	}
+}
+
+func schema_openshift_api_insights_v1alpha1_PersistentVolumeClaimReference(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "persistentVolumeClaimReference is a reference to a PersistentVolumeClaim.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"name": {
+						SchemaProps: spec.SchemaProps{
+							Description: "name is a string that follows the DNS1123 subdomain format. It must be at most 253 characters in length, and must consist only of lower case alphanumeric characters, '-' and '.', and must start and end with an alphanumeric character.",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+				},
+				Required: []string{"name"},
+			},
+		},
+	}
+}
+
+func schema_openshift_api_insights_v1alpha1_PersistentVolumeConfig(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "persistentVolumeConfig provides configuration options for PersistentVolume storage.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"claim": {
+						SchemaProps: spec.SchemaProps{
+							Description: "claim is a required field that specifies the configuration of the PersistentVolumeClaim that will be used to store the Insights data archive. The PersistentVolumeClaim must be created in the openshift-insights namespace.",
+							Default:     map[string]interface{}{},
+							Ref:         ref("github.com/openshift/api/insights/v1alpha1.PersistentVolumeClaimReference"),
+						},
+					},
+					"mountPath": {
+						SchemaProps: spec.SchemaProps{
+							Description: "mountPath is an optional field specifying the directory where the PVC will be mounted inside the Insights data gathering Pod. When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time. The current default mount path is /var/lib/insights-operator The path may not exceed 1024 characters and must not contain a colon.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+				},
+				Required: []string{"claim"},
+			},
+		},
+		Dependencies: []string{
+			"github.com/openshift/api/insights/v1alpha1.PersistentVolumeClaimReference"},
+	}
+}
+
+func schema_openshift_api_insights_v1alpha1_Storage(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "storage provides persistent storage configuration options for gathering jobs. If the type is set to PersistentVolume, then the PersistentVolume must be defined. If the type is set to Ephemeral, then the PersistentVolume must not be defined.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"type": {
+						SchemaProps: spec.SchemaProps{
+							Description: "type is a required field that specifies the type of storage that will be used to store the Insights data archive. Valid values are \"PersistentVolume\" and \"Ephemeral\". When set to Ephemeral, the Insights data archive is stored in the ephemeral storage of the gathering job. When set to PersistentVolume, the Insights data archive is stored in the PersistentVolume that is defined by the PersistentVolume field.",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"persistentVolume": {
+						SchemaProps: spec.SchemaProps{
+							Description: "persistentVolume is an optional field that specifies the PersistentVolume that will be used to store the Insights data archive. The PersistentVolume must be created in the openshift-insights namespace.",
+							Ref:         ref("github.com/openshift/api/insights/v1alpha1.PersistentVolumeConfig"),
+						},
+					},
+				},
+				Required: []string{"type"},
+			},
+		},
+		Dependencies: []string{
+			"github.com/openshift/api/insights/v1alpha1.PersistentVolumeConfig"},
 	}
 }
 
@@ -26612,7 +27812,7 @@ func schema_openshift_api_kubecontrolplane_v1_KubeAPIServerConfig(ref common.Ref
 					},
 					"userAgentMatchingConfig": {
 						SchemaProps: spec.SchemaProps{
-							Description: "UserAgentMatchingConfig controls how API calls from *voluntarily* identifying clients will be handled.  THIS DOES NOT DEFEND AGAINST MALICIOUS CLIENTS!",
+							Description: "userAgentMatchingConfig controls how API calls from *voluntarily* identifying clients will be handled.  THIS DOES NOT DEFEND AGAINST MALICIOUS CLIENTS!",
 							Default:     map[string]interface{}{},
 							Ref:         ref("github.com/openshift/api/kubecontrolplane/v1.UserAgentMatchingConfig"),
 						},
@@ -26861,7 +28061,7 @@ func schema_openshift_api_kubecontrolplane_v1_KubeletConnectionInfo(ref common.R
 					},
 					"certFile": {
 						SchemaProps: spec.SchemaProps{
-							Description: "CertFile is a file containing a PEM-encoded certificate",
+							Description: "certFile is a file containing a PEM-encoded certificate",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -26869,7 +28069,7 @@ func schema_openshift_api_kubecontrolplane_v1_KubeletConnectionInfo(ref common.R
 					},
 					"keyFile": {
 						SchemaProps: spec.SchemaProps{
-							Description: "KeyFile is a file containing a PEM-encoded private key for the certificate specified by CertFile",
+							Description: "keyFile is a file containing a PEM-encoded private key for the certificate specified by CertFile",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -27017,7 +28217,7 @@ func schema_openshift_api_kubecontrolplane_v1_ServiceServingCert(ref common.Refe
 				Properties: map[string]spec.Schema{
 					"certFile": {
 						SchemaProps: spec.SchemaProps{
-							Description: "CertFile is a file containing a PEM-encoded certificate",
+							Description: "certFile is a file containing a PEM-encoded certificate",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -27062,7 +28262,7 @@ func schema_openshift_api_kubecontrolplane_v1_UserAgentDenyRule(ref common.Refer
 					},
 					"rejectionMessage": {
 						SchemaProps: spec.SchemaProps{
-							Description: "RejectionMessage is the message shown when rejecting a client.  If it is not a set, the default message is used.",
+							Description: "rejectionMessage is the message shown when rejecting a client.  If it is not a set, the default message is used.",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -27210,7 +28410,7 @@ func schema_openshift_api_legacyconfig_v1_ActiveDirectoryConfig(ref common.Refer
 					},
 					"userNameAttributes": {
 						SchemaProps: spec.SchemaProps{
-							Description: "UserNameAttributes defines which attributes on an LDAP user entry will be interpreted as its OpenShift user name.",
+							Description: "userNameAttributes defines which attributes on an LDAP user entry will be interpreted as its OpenShift user name.",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -27225,7 +28425,7 @@ func schema_openshift_api_legacyconfig_v1_ActiveDirectoryConfig(ref common.Refer
 					},
 					"groupMembershipAttributes": {
 						SchemaProps: spec.SchemaProps{
-							Description: "GroupMembershipAttributes defines which attributes on an LDAP user entry will be interpreted as the groups it is a member of",
+							Description: "groupMembershipAttributes defines which attributes on an LDAP user entry will be interpreted as the groups it is a member of",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -27256,7 +28456,7 @@ func schema_openshift_api_legacyconfig_v1_AdmissionConfig(ref common.ReferenceCa
 				Properties: map[string]spec.Schema{
 					"pluginConfig": {
 						SchemaProps: spec.SchemaProps{
-							Description: "PluginConfig allows specifying a configuration file per admission control plugin",
+							Description: "pluginConfig allows specifying a configuration file per admission control plugin",
 							Type:        []string{"object"},
 							AdditionalProperties: &spec.SchemaOrBool{
 								Allows: true,
@@ -27270,7 +28470,7 @@ func schema_openshift_api_legacyconfig_v1_AdmissionConfig(ref common.ReferenceCa
 					},
 					"pluginOrderOverride": {
 						SchemaProps: spec.SchemaProps{
-							Description: "PluginOrderOverride is a list of admission control plugin names that will be installed on the master. Order is significant. If empty, a default list of plugins is used.",
+							Description: "pluginOrderOverride is a list of admission control plugin names that will be installed on the master. Order is significant. If empty, a default list of plugins is used.",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -27301,7 +28501,7 @@ func schema_openshift_api_legacyconfig_v1_AdmissionPluginConfig(ref common.Refer
 				Properties: map[string]spec.Schema{
 					"location": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Location is the path to a configuration file that contains the plugin's configuration",
+							Description: "location is the path to a configuration file that contains the plugin's configuration",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -27309,7 +28509,7 @@ func schema_openshift_api_legacyconfig_v1_AdmissionPluginConfig(ref common.Refer
 					},
 					"configuration": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Configuration is an embedded configuration object to be used as the plugin's configuration. If present, it will be used instead of the path to the configuration file.",
+							Description: "configuration is an embedded configuration object to be used as the plugin's configuration. If present, it will be used instead of the path to the configuration file.",
 							Ref:         ref("k8s.io/apimachinery/pkg/runtime.RawExtension"),
 						},
 					},
@@ -27331,7 +28531,7 @@ func schema_openshift_api_legacyconfig_v1_AggregatorConfig(ref common.ReferenceC
 				Properties: map[string]spec.Schema{
 					"proxyClientInfo": {
 						SchemaProps: spec.SchemaProps{
-							Description: "ProxyClientInfo specifies the client cert/key to use when proxying to aggregated API servers",
+							Description: "proxyClientInfo specifies the client cert/key to use when proxying to aggregated API servers",
 							Default:     map[string]interface{}{},
 							Ref:         ref("github.com/openshift/api/legacyconfig/v1.CertInfo"),
 						},
@@ -27421,7 +28621,7 @@ func schema_openshift_api_legacyconfig_v1_AuditConfig(ref common.ReferenceCallba
 					},
 					"policyFile": {
 						SchemaProps: spec.SchemaProps{
-							Description: "PolicyFile is a path to the file that defines the audit policy configuration.",
+							Description: "policyFile is a path to the file that defines the audit policy configuration.",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -27429,7 +28629,7 @@ func schema_openshift_api_legacyconfig_v1_AuditConfig(ref common.ReferenceCallba
 					},
 					"policyConfiguration": {
 						SchemaProps: spec.SchemaProps{
-							Description: "PolicyConfiguration is an embedded policy configuration object to be used as the audit policy configuration. If present, it will be used instead of the path to the policy file.",
+							Description: "policyConfiguration is an embedded policy configuration object to be used as the audit policy configuration. If present, it will be used instead of the path to the policy file.",
 							Ref:         ref("k8s.io/apimachinery/pkg/runtime.RawExtension"),
 						},
 					},
@@ -27482,7 +28682,7 @@ func schema_openshift_api_legacyconfig_v1_AugmentedActiveDirectoryConfig(ref com
 					},
 					"userNameAttributes": {
 						SchemaProps: spec.SchemaProps{
-							Description: "UserNameAttributes defines which attributes on an LDAP user entry will be interpreted as its OpenShift user name.",
+							Description: "userNameAttributes defines which attributes on an LDAP user entry will be interpreted as its OpenShift user name.",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -27497,7 +28697,7 @@ func schema_openshift_api_legacyconfig_v1_AugmentedActiveDirectoryConfig(ref com
 					},
 					"groupMembershipAttributes": {
 						SchemaProps: spec.SchemaProps{
-							Description: "GroupMembershipAttributes defines which attributes on an LDAP user entry will be interpreted as the groups it is a member of",
+							Description: "groupMembershipAttributes defines which attributes on an LDAP user entry will be interpreted as the groups it is a member of",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -27527,7 +28727,7 @@ func schema_openshift_api_legacyconfig_v1_AugmentedActiveDirectoryConfig(ref com
 					},
 					"groupNameAttributes": {
 						SchemaProps: spec.SchemaProps{
-							Description: "GroupNameAttributes defines which attributes on an LDAP group entry will be interpreted as its name to use for an OpenShift group",
+							Description: "groupNameAttributes defines which attributes on an LDAP group entry will be interpreted as its name to use for an OpenShift group",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -27572,7 +28772,7 @@ func schema_openshift_api_legacyconfig_v1_BasicAuthPasswordIdentityProvider(ref 
 					},
 					"url": {
 						SchemaProps: spec.SchemaProps{
-							Description: "URL is the remote URL to connect to",
+							Description: "url is the remote URL to connect to",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -27580,7 +28780,7 @@ func schema_openshift_api_legacyconfig_v1_BasicAuthPasswordIdentityProvider(ref 
 					},
 					"ca": {
 						SchemaProps: spec.SchemaProps{
-							Description: "CA is the CA for verifying TLS connections",
+							Description: "ca is the CA for verifying TLS connections",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -27588,7 +28788,7 @@ func schema_openshift_api_legacyconfig_v1_BasicAuthPasswordIdentityProvider(ref 
 					},
 					"certFile": {
 						SchemaProps: spec.SchemaProps{
-							Description: "CertFile is a file containing a PEM-encoded certificate",
+							Description: "certFile is a file containing a PEM-encoded certificate",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -27596,7 +28796,7 @@ func schema_openshift_api_legacyconfig_v1_BasicAuthPasswordIdentityProvider(ref 
 					},
 					"keyFile": {
 						SchemaProps: spec.SchemaProps{
-							Description: "KeyFile is a file containing a PEM-encoded private key for the certificate specified by CertFile",
+							Description: "keyFile is a file containing a PEM-encoded private key for the certificate specified by CertFile",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -27839,7 +29039,7 @@ func schema_openshift_api_legacyconfig_v1_CertInfo(ref common.ReferenceCallback)
 				Properties: map[string]spec.Schema{
 					"certFile": {
 						SchemaProps: spec.SchemaProps{
-							Description: "CertFile is a file containing a PEM-encoded certificate",
+							Description: "certFile is a file containing a PEM-encoded certificate",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -27847,7 +29047,7 @@ func schema_openshift_api_legacyconfig_v1_CertInfo(ref common.ReferenceCallback)
 					},
 					"keyFile": {
 						SchemaProps: spec.SchemaProps{
-							Description: "KeyFile is a file containing a PEM-encoded private key for the certificate specified by CertFile",
+							Description: "keyFile is a file containing a PEM-encoded private key for the certificate specified by CertFile",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -27869,7 +29069,7 @@ func schema_openshift_api_legacyconfig_v1_ClientConnectionOverrides(ref common.R
 				Properties: map[string]spec.Schema{
 					"acceptContentTypes": {
 						SchemaProps: spec.SchemaProps{
-							Description: "AcceptContentTypes defines the Accept header sent by clients when connecting to a server, overriding the default value of 'application/json'. This field will control all connections to the server used by a particular client.",
+							Description: "acceptContentTypes defines the Accept header sent by clients when connecting to a server, overriding the default value of 'application/json'. This field will control all connections to the server used by a particular client.",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -27877,7 +29077,7 @@ func schema_openshift_api_legacyconfig_v1_ClientConnectionOverrides(ref common.R
 					},
 					"contentType": {
 						SchemaProps: spec.SchemaProps{
-							Description: "ContentType is the content type used when sending data to the server from this client.",
+							Description: "contentType is the content type used when sending data to the server from this client.",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -27885,7 +29085,7 @@ func schema_openshift_api_legacyconfig_v1_ClientConnectionOverrides(ref common.R
 					},
 					"qps": {
 						SchemaProps: spec.SchemaProps{
-							Description: "QPS controls the number of queries per second allowed for this connection.",
+							Description: "qps controls the number of queries per second allowed for this connection.",
 							Default:     0,
 							Type:        []string{"number"},
 							Format:      "float",
@@ -27893,7 +29093,7 @@ func schema_openshift_api_legacyconfig_v1_ClientConnectionOverrides(ref common.R
 					},
 					"burst": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Burst allows extra queries to accumulate when a client is exceeding its rate.",
+							Description: "burst allows extra queries to accumulate when a client is exceeding its rate.",
 							Default:     0,
 							Type:        []string{"integer"},
 							Format:      "int32",
@@ -27915,7 +29115,7 @@ func schema_openshift_api_legacyconfig_v1_ClusterNetworkEntry(ref common.Referen
 				Properties: map[string]spec.Schema{
 					"cidr": {
 						SchemaProps: spec.SchemaProps{
-							Description: "CIDR defines the total range of a cluster networks address space.",
+							Description: "cidr defines the total range of a cluster networks address space.",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -27923,7 +29123,7 @@ func schema_openshift_api_legacyconfig_v1_ClusterNetworkEntry(ref common.Referen
 					},
 					"hostSubnetLength": {
 						SchemaProps: spec.SchemaProps{
-							Description: "HostSubnetLength is the number of bits of the accompanying CIDR address to allocate to each node. eg, 8 would mean that each node would have a /24 slice of the overlay network for its pod.",
+							Description: "hostSubnetLength is the number of bits of the accompanying CIDR address to allocate to each node. eg, 8 would mean that each node would have a /24 slice of the overlay network for its pod.",
 							Default:     0,
 							Type:        []string{"integer"},
 							Format:      "int64",
@@ -27945,7 +29145,7 @@ func schema_openshift_api_legacyconfig_v1_ControllerConfig(ref common.ReferenceC
 				Properties: map[string]spec.Schema{
 					"controllers": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Controllers is a list of controllers to enable.  '*' enables all on-by-default controllers, 'foo' enables the controller \"+ named 'foo', '-foo' disables the controller named 'foo'. Defaults to \"*\".",
+							Description: "controllers is a list of controllers to enable.  '*' enables all on-by-default controllers, 'foo' enables the controller \"+ named 'foo', '-foo' disables the controller named 'foo'. Defaults to \"*\".",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -27960,13 +29160,13 @@ func schema_openshift_api_legacyconfig_v1_ControllerConfig(ref common.ReferenceC
 					},
 					"election": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Election defines the configuration for electing a controller instance to make changes to the cluster. If unspecified, the ControllerTTL value is checked to determine whether the legacy direct etcd election code will be used.",
+							Description: "election defines the configuration for electing a controller instance to make changes to the cluster. If unspecified, the ControllerTTL value is checked to determine whether the legacy direct etcd election code will be used.",
 							Ref:         ref("github.com/openshift/api/legacyconfig/v1.ControllerElectionConfig"),
 						},
 					},
 					"serviceServingCert": {
 						SchemaProps: spec.SchemaProps{
-							Description: "ServiceServingCert holds configuration for service serving cert signer which creates cert/key pairs for pods fulfilling a service to serve with.",
+							Description: "serviceServingCert holds configuration for service serving cert signer which creates cert/key pairs for pods fulfilling a service to serve with.",
 							Default:     map[string]interface{}{},
 							Ref:         ref("github.com/openshift/api/legacyconfig/v1.ServiceServingCert"),
 						},
@@ -27989,7 +29189,7 @@ func schema_openshift_api_legacyconfig_v1_ControllerElectionConfig(ref common.Re
 				Properties: map[string]spec.Schema{
 					"lockName": {
 						SchemaProps: spec.SchemaProps{
-							Description: "LockName is the resource name used to act as the lock for determining which controller instance should lead.",
+							Description: "lockName is the resource name used to act as the lock for determining which controller instance should lead.",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -27997,7 +29197,7 @@ func schema_openshift_api_legacyconfig_v1_ControllerElectionConfig(ref common.Re
 					},
 					"lockNamespace": {
 						SchemaProps: spec.SchemaProps{
-							Description: "LockNamespace is the resource namespace used to act as the lock for determining which controller instance should lead. It defaults to \"kube-system\"",
+							Description: "lockNamespace is the resource namespace used to act as the lock for determining which controller instance should lead. It defaults to \"kube-system\"",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -28005,7 +29205,7 @@ func schema_openshift_api_legacyconfig_v1_ControllerElectionConfig(ref common.Re
 					},
 					"lockResource": {
 						SchemaProps: spec.SchemaProps{
-							Description: "LockResource is the group and resource name to use to coordinate for the controller lock. If unset, defaults to \"configmaps\".",
+							Description: "lockResource is the group and resource name to use to coordinate for the controller lock. If unset, defaults to \"configmaps\".",
 							Default:     map[string]interface{}{},
 							Ref:         ref("github.com/openshift/api/legacyconfig/v1.GroupResource"),
 						},
@@ -28028,7 +29228,7 @@ func schema_openshift_api_legacyconfig_v1_DNSConfig(ref common.ReferenceCallback
 				Properties: map[string]spec.Schema{
 					"bindAddress": {
 						SchemaProps: spec.SchemaProps{
-							Description: "BindAddress is the ip:port to serve DNS on",
+							Description: "bindAddress is the ip:port to serve DNS on",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -28036,7 +29236,7 @@ func schema_openshift_api_legacyconfig_v1_DNSConfig(ref common.ReferenceCallback
 					},
 					"bindNetwork": {
 						SchemaProps: spec.SchemaProps{
-							Description: "BindNetwork is the type of network to bind to - defaults to \"tcp4\", accepts \"tcp\", \"tcp4\", and \"tcp6\"",
+							Description: "bindNetwork is the type of network to bind to - defaults to \"tcp4\", accepts \"tcp\", \"tcp4\", and \"tcp6\"",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -28044,7 +29244,7 @@ func schema_openshift_api_legacyconfig_v1_DNSConfig(ref common.ReferenceCallback
 					},
 					"allowRecursiveQueries": {
 						SchemaProps: spec.SchemaProps{
-							Description: "AllowRecursiveQueries allows the DNS server on the master to answer queries recursively. Note that open resolvers can be used for DNS amplification attacks and the master DNS should not be made accessible to public networks.",
+							Description: "allowRecursiveQueries allows the DNS server on the master to answer queries recursively. Note that open resolvers can be used for DNS amplification attacks and the master DNS should not be made accessible to public networks.",
 							Default:     false,
 							Type:        []string{"boolean"},
 							Format:      "",
@@ -28080,7 +29280,7 @@ func schema_openshift_api_legacyconfig_v1_DefaultAdmissionConfig(ref common.Refe
 					},
 					"disable": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Disable turns off an admission plugin that is enabled by default.",
+							Description: "disable turns off an admission plugin that is enabled by default.",
 							Default:     false,
 							Type:        []string{"boolean"},
 							Format:      "",
@@ -28129,7 +29329,7 @@ func schema_openshift_api_legacyconfig_v1_DockerConfig(ref common.ReferenceCallb
 				Properties: map[string]spec.Schema{
 					"execHandlerName": {
 						SchemaProps: spec.SchemaProps{
-							Description: "ExecHandlerName is the name of the handler to use for executing commands in containers.",
+							Description: "execHandlerName is the name of the handler to use for executing commands in containers.",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -28137,7 +29337,7 @@ func schema_openshift_api_legacyconfig_v1_DockerConfig(ref common.ReferenceCallb
 					},
 					"dockerShimSocket": {
 						SchemaProps: spec.SchemaProps{
-							Description: "DockerShimSocket is the location of the dockershim socket the kubelet uses. Currently unix socket is supported on Linux, and tcp is supported on windows. Examples:'unix:///var/run/dockershim.sock', 'tcp://localhost:3735'",
+							Description: "dockerShimSocket is the location of the dockershim socket the kubelet uses. Currently unix socket is supported on Linux, and tcp is supported on windows. Examples:'unix:///var/run/dockershim.sock', 'tcp://localhost:3735'",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -28145,7 +29345,7 @@ func schema_openshift_api_legacyconfig_v1_DockerConfig(ref common.ReferenceCallb
 					},
 					"dockerShimRootDirectory": {
 						SchemaProps: spec.SchemaProps{
-							Description: "DockershimRootDirectory is the dockershim root directory.",
+							Description: "dockerShimRootDirectory is the dockershim root directory.",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -28167,14 +29367,14 @@ func schema_openshift_api_legacyconfig_v1_EtcdConfig(ref common.ReferenceCallbac
 				Properties: map[string]spec.Schema{
 					"servingInfo": {
 						SchemaProps: spec.SchemaProps{
-							Description: "ServingInfo describes how to start serving the etcd master",
+							Description: "servingInfo describes how to start serving the etcd master",
 							Default:     map[string]interface{}{},
 							Ref:         ref("github.com/openshift/api/legacyconfig/v1.ServingInfo"),
 						},
 					},
 					"address": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Address is the advertised host:port for client connections to etcd",
+							Description: "address is the advertised host:port for client connections to etcd",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -28182,14 +29382,14 @@ func schema_openshift_api_legacyconfig_v1_EtcdConfig(ref common.ReferenceCallbac
 					},
 					"peerServingInfo": {
 						SchemaProps: spec.SchemaProps{
-							Description: "PeerServingInfo describes how to start serving the etcd peer",
+							Description: "peerServingInfo describes how to start serving the etcd peer",
 							Default:     map[string]interface{}{},
 							Ref:         ref("github.com/openshift/api/legacyconfig/v1.ServingInfo"),
 						},
 					},
 					"peerAddress": {
 						SchemaProps: spec.SchemaProps{
-							Description: "PeerAddress is the advertised host:port for peer connections to etcd",
+							Description: "peerAddress is the advertised host:port for peer connections to etcd",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -28221,7 +29421,7 @@ func schema_openshift_api_legacyconfig_v1_EtcdConnectionInfo(ref common.Referenc
 				Properties: map[string]spec.Schema{
 					"urls": {
 						SchemaProps: spec.SchemaProps{
-							Description: "URLs are the URLs for etcd",
+							Description: "urls are the URLs for etcd",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -28236,7 +29436,7 @@ func schema_openshift_api_legacyconfig_v1_EtcdConnectionInfo(ref common.Referenc
 					},
 					"ca": {
 						SchemaProps: spec.SchemaProps{
-							Description: "CA is a file containing trusted roots for the etcd server certificates",
+							Description: "ca is a file containing trusted roots for the etcd server certificates",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -28244,7 +29444,7 @@ func schema_openshift_api_legacyconfig_v1_EtcdConnectionInfo(ref common.Referenc
 					},
 					"certFile": {
 						SchemaProps: spec.SchemaProps{
-							Description: "CertFile is a file containing a PEM-encoded certificate",
+							Description: "certFile is a file containing a PEM-encoded certificate",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -28252,7 +29452,7 @@ func schema_openshift_api_legacyconfig_v1_EtcdConnectionInfo(ref common.Referenc
 					},
 					"keyFile": {
 						SchemaProps: spec.SchemaProps{
-							Description: "KeyFile is a file containing a PEM-encoded private key for the certificate specified by CertFile",
+							Description: "keyFile is a file containing a PEM-encoded private key for the certificate specified by CertFile",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -28274,7 +29474,7 @@ func schema_openshift_api_legacyconfig_v1_EtcdStorageConfig(ref common.Reference
 				Properties: map[string]spec.Schema{
 					"kubernetesStorageVersion": {
 						SchemaProps: spec.SchemaProps{
-							Description: "KubernetesStorageVersion is the API version that Kube resources in etcd should be serialized to. This value should *not* be advanced until all clients in the cluster that read from etcd have code that allows them to read the new version.",
+							Description: "kubernetesStorageVersion is the API version that Kube resources in etcd should be serialized to. This value should *not* be advanced until all clients in the cluster that read from etcd have code that allows them to read the new version.",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -28282,7 +29482,7 @@ func schema_openshift_api_legacyconfig_v1_EtcdStorageConfig(ref common.Reference
 					},
 					"kubernetesStoragePrefix": {
 						SchemaProps: spec.SchemaProps{
-							Description: "KubernetesStoragePrefix is the path within etcd that the Kubernetes resources will be rooted under. This value, if changed, will mean existing objects in etcd will no longer be located. The default value is 'kubernetes.io'.",
+							Description: "kubernetesStoragePrefix is the path within etcd that the Kubernetes resources will be rooted under. This value, if changed, will mean existing objects in etcd will no longer be located. The default value is 'kubernetes.io'.",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -28290,7 +29490,7 @@ func schema_openshift_api_legacyconfig_v1_EtcdStorageConfig(ref common.Reference
 					},
 					"openShiftStorageVersion": {
 						SchemaProps: spec.SchemaProps{
-							Description: "OpenShiftStorageVersion is the API version that OS resources in etcd should be serialized to. This value should *not* be advanced until all clients in the cluster that read from etcd have code that allows them to read the new version.",
+							Description: "openShiftStorageVersion is the API version that OS resources in etcd should be serialized to. This value should *not* be advanced until all clients in the cluster that read from etcd have code that allows them to read the new version.",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -28298,7 +29498,7 @@ func schema_openshift_api_legacyconfig_v1_EtcdStorageConfig(ref common.Reference
 					},
 					"openShiftStoragePrefix": {
 						SchemaProps: spec.SchemaProps{
-							Description: "OpenShiftStoragePrefix is the path within etcd that the OpenShift resources will be rooted under. This value, if changed, will mean existing objects in etcd will no longer be located. The default value is 'openshift.io'.",
+							Description: "openShiftStoragePrefix is the path within etcd that the OpenShift resources will be rooted under. This value, if changed, will mean existing objects in etcd will no longer be located. The default value is 'openshift.io'.",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -28334,7 +29534,7 @@ func schema_openshift_api_legacyconfig_v1_GitHubIdentityProvider(ref common.Refe
 					},
 					"clientID": {
 						SchemaProps: spec.SchemaProps{
-							Description: "ClientID is the oauth client ID",
+							Description: "clientID is the oauth client ID",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -28342,13 +29542,13 @@ func schema_openshift_api_legacyconfig_v1_GitHubIdentityProvider(ref common.Refe
 					},
 					"clientSecret": {
 						SchemaProps: spec.SchemaProps{
-							Description: "ClientSecret is the oauth client secret",
+							Description: "clientSecret is the oauth client secret",
 							Ref:         ref("github.com/openshift/api/legacyconfig/v1.StringSource"),
 						},
 					},
 					"organizations": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Organizations optionally restricts which organizations are allowed to log in",
+							Description: "organizations optionally restricts which organizations are allowed to log in",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -28363,7 +29563,7 @@ func schema_openshift_api_legacyconfig_v1_GitHubIdentityProvider(ref common.Refe
 					},
 					"teams": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Teams optionally restricts which teams are allowed to log in. Format is <org>/<team>.",
+							Description: "teams optionally restricts which teams are allowed to log in. Format is <org>/<team>.",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -28378,7 +29578,7 @@ func schema_openshift_api_legacyconfig_v1_GitHubIdentityProvider(ref common.Refe
 					},
 					"hostname": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Hostname is the optional domain (e.g. \"mycompany.com\") for use with a hosted instance of GitHub Enterprise. It must match the GitHub Enterprise settings value that is configured at /setup/settings#hostname.",
+							Description: "hostname is the optional domain (e.g. \"mycompany.com\") for use with a hosted instance of GitHub Enterprise. It must match the GitHub Enterprise settings value that is configured at /setup/settings#hostname.",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -28386,7 +29586,7 @@ func schema_openshift_api_legacyconfig_v1_GitHubIdentityProvider(ref common.Refe
 					},
 					"ca": {
 						SchemaProps: spec.SchemaProps{
-							Description: "CA is the optional trusted certificate authority bundle to use when making requests to the server. If empty, the default system roots are used.  This can only be configured when hostname is set to a non-empty value.",
+							Description: "ca is the optional trusted certificate authority bundle to use when making requests to the server. If empty, the default system roots are used.  This can only be configured when hostname is set to a non-empty value.",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -28424,7 +29624,7 @@ func schema_openshift_api_legacyconfig_v1_GitLabIdentityProvider(ref common.Refe
 					},
 					"ca": {
 						SchemaProps: spec.SchemaProps{
-							Description: "CA is the optional trusted certificate authority bundle to use when making requests to the server If empty, the default system roots are used",
+							Description: "ca is the optional trusted certificate authority bundle to use when making requests to the server If empty, the default system roots are used",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -28432,7 +29632,7 @@ func schema_openshift_api_legacyconfig_v1_GitLabIdentityProvider(ref common.Refe
 					},
 					"url": {
 						SchemaProps: spec.SchemaProps{
-							Description: "URL is the oauth server base URL",
+							Description: "url is the oauth server base URL",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -28440,7 +29640,7 @@ func schema_openshift_api_legacyconfig_v1_GitLabIdentityProvider(ref common.Refe
 					},
 					"clientID": {
 						SchemaProps: spec.SchemaProps{
-							Description: "ClientID is the oauth client ID",
+							Description: "clientID is the oauth client ID",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -28448,13 +29648,13 @@ func schema_openshift_api_legacyconfig_v1_GitLabIdentityProvider(ref common.Refe
 					},
 					"clientSecret": {
 						SchemaProps: spec.SchemaProps{
-							Description: "ClientSecret is the oauth client secret",
+							Description: "clientSecret is the oauth client secret",
 							Ref:         ref("github.com/openshift/api/legacyconfig/v1.StringSource"),
 						},
 					},
 					"legacy": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Legacy determines if OAuth2 or OIDC should be used If true, OAuth2 is used If false, OIDC is used If nil and the URL's host is gitlab.com, OIDC is used Otherwise, OAuth2 is used In a future release, nil will default to using OIDC Eventually this flag will be removed and only OIDC will be used",
+							Description: "legacy determines if OAuth2 or OIDC should be used If true, OAuth2 is used If false, OIDC is used If nil and the URL's host is gitlab.com, OIDC is used Otherwise, OAuth2 is used In a future release, nil will default to using OIDC Eventually this flag will be removed and only OIDC will be used",
 							Type:        []string{"boolean"},
 							Format:      "",
 						},
@@ -28491,7 +29691,7 @@ func schema_openshift_api_legacyconfig_v1_GoogleIdentityProvider(ref common.Refe
 					},
 					"clientID": {
 						SchemaProps: spec.SchemaProps{
-							Description: "ClientID is the oauth client ID",
+							Description: "clientID is the oauth client ID",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -28499,13 +29699,13 @@ func schema_openshift_api_legacyconfig_v1_GoogleIdentityProvider(ref common.Refe
 					},
 					"clientSecret": {
 						SchemaProps: spec.SchemaProps{
-							Description: "ClientSecret is the oauth client secret",
+							Description: "clientSecret is the oauth client secret",
 							Ref:         ref("github.com/openshift/api/legacyconfig/v1.StringSource"),
 						},
 					},
 					"hostedDomain": {
 						SchemaProps: spec.SchemaProps{
-							Description: "HostedDomain is the optional Google App domain (e.g. \"mycompany.com\") to restrict logins to",
+							Description: "hostedDomain is the optional Google App domain (e.g. \"mycompany.com\") to restrict logins to",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -28529,7 +29729,7 @@ func schema_openshift_api_legacyconfig_v1_GrantConfig(ref common.ReferenceCallba
 				Properties: map[string]spec.Schema{
 					"method": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Method determines the default strategy to use when an OAuth client requests a grant. This method will be used only if the specific OAuth client doesn't provide a strategy of their own. Valid grant handling methods are:\n - auto:   always approves grant requests, useful for trusted clients\n - prompt: prompts the end user for approval of grant requests, useful for third-party clients\n - deny:   always denies grant requests, useful for black-listed clients",
+							Description: "method determines the default strategy to use when an OAuth client requests a grant. This method will be used only if the specific OAuth client doesn't provide a strategy of their own. Valid grant handling methods are:\n - auto:   always approves grant requests, useful for trusted clients\n - prompt: prompts the end user for approval of grant requests, useful for third-party clients\n - deny:   always denies grant requests, useful for black-listed clients",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -28537,7 +29737,7 @@ func schema_openshift_api_legacyconfig_v1_GrantConfig(ref common.ReferenceCallba
 					},
 					"serviceAccountMethod": {
 						SchemaProps: spec.SchemaProps{
-							Description: "ServiceAccountMethod is used for determining client authorization for service account oauth client. It must be either: deny, prompt",
+							Description: "serviceAccountMethod is used for determining client authorization for service account oauth client. It must be either: deny, prompt",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -28559,7 +29759,7 @@ func schema_openshift_api_legacyconfig_v1_GroupResource(ref common.ReferenceCall
 				Properties: map[string]spec.Schema{
 					"group": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Group is the name of an API group",
+							Description: "group is the name of an API group",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -28567,7 +29767,7 @@ func schema_openshift_api_legacyconfig_v1_GroupResource(ref common.ReferenceCall
 					},
 					"resource": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Resource is the name of a resource.",
+							Description: "resource is the name of a resource.",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -28603,7 +29803,7 @@ func schema_openshift_api_legacyconfig_v1_HTPasswdPasswordIdentityProvider(ref c
 					},
 					"file": {
 						SchemaProps: spec.SchemaProps{
-							Description: "File is a reference to your htpasswd file",
+							Description: "file is a reference to your htpasswd file",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -28625,7 +29825,7 @@ func schema_openshift_api_legacyconfig_v1_HTTPServingInfo(ref common.ReferenceCa
 				Properties: map[string]spec.Schema{
 					"bindAddress": {
 						SchemaProps: spec.SchemaProps{
-							Description: "BindAddress is the ip:port to serve on",
+							Description: "bindAddress is the ip:port to serve on",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -28633,7 +29833,7 @@ func schema_openshift_api_legacyconfig_v1_HTTPServingInfo(ref common.ReferenceCa
 					},
 					"bindNetwork": {
 						SchemaProps: spec.SchemaProps{
-							Description: "BindNetwork is the type of network to bind to - defaults to \"tcp4\", accepts \"tcp\", \"tcp4\", and \"tcp6\"",
+							Description: "bindNetwork is the type of network to bind to - defaults to \"tcp4\", accepts \"tcp\", \"tcp4\", and \"tcp6\"",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -28641,7 +29841,7 @@ func schema_openshift_api_legacyconfig_v1_HTTPServingInfo(ref common.ReferenceCa
 					},
 					"certFile": {
 						SchemaProps: spec.SchemaProps{
-							Description: "CertFile is a file containing a PEM-encoded certificate",
+							Description: "certFile is a file containing a PEM-encoded certificate",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -28649,7 +29849,7 @@ func schema_openshift_api_legacyconfig_v1_HTTPServingInfo(ref common.ReferenceCa
 					},
 					"keyFile": {
 						SchemaProps: spec.SchemaProps{
-							Description: "KeyFile is a file containing a PEM-encoded private key for the certificate specified by CertFile",
+							Description: "keyFile is a file containing a PEM-encoded private key for the certificate specified by CertFile",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -28657,7 +29857,7 @@ func schema_openshift_api_legacyconfig_v1_HTTPServingInfo(ref common.ReferenceCa
 					},
 					"clientCA": {
 						SchemaProps: spec.SchemaProps{
-							Description: "ClientCA is the certificate bundle for all the signers that you'll recognize for incoming client certificates",
+							Description: "clientCA is the certificate bundle for all the signers that you'll recognize for incoming client certificates",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -28665,7 +29865,7 @@ func schema_openshift_api_legacyconfig_v1_HTTPServingInfo(ref common.ReferenceCa
 					},
 					"namedCertificates": {
 						SchemaProps: spec.SchemaProps{
-							Description: "NamedCertificates is a list of certificates to use to secure requests to specific hostnames",
+							Description: "namedCertificates is a list of certificates to use to secure requests to specific hostnames",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -28679,14 +29879,14 @@ func schema_openshift_api_legacyconfig_v1_HTTPServingInfo(ref common.ReferenceCa
 					},
 					"minTLSVersion": {
 						SchemaProps: spec.SchemaProps{
-							Description: "MinTLSVersion is the minimum TLS version supported. Values must match version names from https://golang.org/pkg/crypto/tls/#pkg-constants",
+							Description: "minTLSVersion is the minimum TLS version supported. Values must match version names from https://golang.org/pkg/crypto/tls/#pkg-constants",
 							Type:        []string{"string"},
 							Format:      "",
 						},
 					},
 					"cipherSuites": {
 						SchemaProps: spec.SchemaProps{
-							Description: "CipherSuites contains an overridden list of ciphers for the server to support. Values must match cipher suite IDs from https://golang.org/pkg/crypto/tls/#pkg-constants",
+							Description: "cipherSuites contains an overridden list of ciphers for the server to support. Values must match cipher suite IDs from https://golang.org/pkg/crypto/tls/#pkg-constants",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -28701,7 +29901,7 @@ func schema_openshift_api_legacyconfig_v1_HTTPServingInfo(ref common.ReferenceCa
 					},
 					"maxRequestsInFlight": {
 						SchemaProps: spec.SchemaProps{
-							Description: "MaxRequestsInFlight is the number of concurrent requests allowed to the server. If zero, no limit.",
+							Description: "maxRequestsInFlight is the number of concurrent requests allowed to the server. If zero, no limit.",
 							Default:     0,
 							Type:        []string{"integer"},
 							Format:      "int32",
@@ -28709,7 +29909,7 @@ func schema_openshift_api_legacyconfig_v1_HTTPServingInfo(ref common.ReferenceCa
 					},
 					"requestTimeoutSeconds": {
 						SchemaProps: spec.SchemaProps{
-							Description: "RequestTimeoutSeconds is the number of seconds before requests are timed out. The default is 60 minutes, if -1 there is no limit on requests.",
+							Description: "requestTimeoutSeconds is the number of seconds before requests are timed out. The default is 60 minutes, if -1 there is no limit on requests.",
 							Default:     0,
 							Type:        []string{"integer"},
 							Format:      "int32",
@@ -28733,7 +29933,7 @@ func schema_openshift_api_legacyconfig_v1_IdentityProvider(ref common.ReferenceC
 				Properties: map[string]spec.Schema{
 					"name": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Name is used to qualify the identities returned by this provider",
+							Description: "name is used to qualify the identities returned by this provider",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -28757,7 +29957,7 @@ func schema_openshift_api_legacyconfig_v1_IdentityProvider(ref common.ReferenceC
 					},
 					"mappingMethod": {
 						SchemaProps: spec.SchemaProps{
-							Description: "MappingMethod determines how identities from this provider are mapped to users",
+							Description: "mappingMethod determines how identities from this provider are mapped to users",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -28765,7 +29965,7 @@ func schema_openshift_api_legacyconfig_v1_IdentityProvider(ref common.ReferenceC
 					},
 					"provider": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Provider contains the information about how to set up a specific identity provider",
+							Description: "provider contains the information about how to set up a specific identity provider",
 							Ref:         ref("k8s.io/apimachinery/pkg/runtime.RawExtension"),
 						},
 					},
@@ -28787,7 +29987,7 @@ func schema_openshift_api_legacyconfig_v1_ImageConfig(ref common.ReferenceCallba
 				Properties: map[string]spec.Schema{
 					"format": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Format is the format of the name to be built for the system component",
+							Description: "format is the format of the name to be built for the system component",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -28795,7 +29995,7 @@ func schema_openshift_api_legacyconfig_v1_ImageConfig(ref common.ReferenceCallba
 					},
 					"latest": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Latest determines if the latest tag will be pulled from the registry",
+							Description: "latest determines if the latest tag will be pulled from the registry",
 							Default:     false,
 							Type:        []string{"boolean"},
 							Format:      "",
@@ -28817,7 +30017,7 @@ func schema_openshift_api_legacyconfig_v1_ImagePolicyConfig(ref common.Reference
 				Properties: map[string]spec.Schema{
 					"maxImagesBulkImportedPerRepository": {
 						SchemaProps: spec.SchemaProps{
-							Description: "MaxImagesBulkImportedPerRepository controls the number of images that are imported when a user does a bulk import of a container repository. This number defaults to 50 to prevent users from importing large numbers of images accidentally. Set -1 for no limit.",
+							Description: "maxImagesBulkImportedPerRepository controls the number of images that are imported when a user does a bulk import of a container repository. This number defaults to 50 to prevent users from importing large numbers of images accidentally. Set -1 for no limit.",
 							Default:     0,
 							Type:        []string{"integer"},
 							Format:      "int32",
@@ -28825,7 +30025,7 @@ func schema_openshift_api_legacyconfig_v1_ImagePolicyConfig(ref common.Reference
 					},
 					"disableScheduledImport": {
 						SchemaProps: spec.SchemaProps{
-							Description: "DisableScheduledImport allows scheduled background import of images to be disabled.",
+							Description: "disableScheduledImport allows scheduled background import of images to be disabled.",
 							Default:     false,
 							Type:        []string{"boolean"},
 							Format:      "",
@@ -28833,7 +30033,7 @@ func schema_openshift_api_legacyconfig_v1_ImagePolicyConfig(ref common.Reference
 					},
 					"scheduledImageImportMinimumIntervalSeconds": {
 						SchemaProps: spec.SchemaProps{
-							Description: "ScheduledImageImportMinimumIntervalSeconds is the minimum number of seconds that can elapse between when image streams scheduled for background import are checked against the upstream repository. The default value is 15 minutes.",
+							Description: "scheduledImageImportMinimumIntervalSeconds is the minimum number of seconds that can elapse between when image streams scheduled for background import are checked against the upstream repository. The default value is 15 minutes.",
 							Default:     0,
 							Type:        []string{"integer"},
 							Format:      "int32",
@@ -28841,7 +30041,7 @@ func schema_openshift_api_legacyconfig_v1_ImagePolicyConfig(ref common.Reference
 					},
 					"maxScheduledImageImportsPerMinute": {
 						SchemaProps: spec.SchemaProps{
-							Description: "MaxScheduledImageImportsPerMinute is the maximum number of scheduled image streams that will be imported in the background per minute. The default value is 60. Set to -1 for unlimited.",
+							Description: "maxScheduledImageImportsPerMinute is the maximum number of scheduled image streams that will be imported in the background per minute. The default value is 60. Set to -1 for unlimited.",
 							Default:     0,
 							Type:        []string{"integer"},
 							Format:      "int32",
@@ -28849,7 +30049,7 @@ func schema_openshift_api_legacyconfig_v1_ImagePolicyConfig(ref common.Reference
 					},
 					"allowedRegistriesForImport": {
 						SchemaProps: spec.SchemaProps{
-							Description: "AllowedRegistriesForImport limits the container image registries that normal users may import images from. Set this list to the registries that you trust to contain valid Docker images and that you want applications to be able to import from. Users with permission to create Images or ImageStreamMappings via the API are not affected by this policy - typically only administrators or system integrations will have those permissions.",
+							Description: "allowedRegistriesForImport limits the container image registries that normal users may import images from. Set this list to the registries that you trust to contain valid Docker images and that you want applications to be able to import from. Users with permission to create Images or ImageStreamMappings via the API are not affected by this policy - typically only administrators or system integrations will have those permissions.",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -28863,21 +30063,21 @@ func schema_openshift_api_legacyconfig_v1_ImagePolicyConfig(ref common.Reference
 					},
 					"internalRegistryHostname": {
 						SchemaProps: spec.SchemaProps{
-							Description: "InternalRegistryHostname sets the hostname for the default internal image registry. The value must be in \"hostname[:port]\" format.",
+							Description: "internalRegistryHostname sets the hostname for the default internal image registry. The value must be in \"hostname[:port]\" format.",
 							Type:        []string{"string"},
 							Format:      "",
 						},
 					},
 					"externalRegistryHostname": {
 						SchemaProps: spec.SchemaProps{
-							Description: "ExternalRegistryHostname sets the hostname for the default external image registry. The external hostname should be set only when the image registry is exposed externally. The value is used in 'publicDockerImageRepository' field in ImageStreams. The value must be in \"hostname[:port]\" format.",
+							Description: "externalRegistryHostname sets the hostname for the default external image registry. The external hostname should be set only when the image registry is exposed externally. The value is used in 'publicDockerImageRepository' field in ImageStreams. The value must be in \"hostname[:port]\" format.",
 							Type:        []string{"string"},
 							Format:      "",
 						},
 					},
 					"additionalTrustedCA": {
 						SchemaProps: spec.SchemaProps{
-							Description: "AdditionalTrustedCA is a path to a pem bundle file containing additional CAs that should be trusted during imagestream import.",
+							Description: "additionalTrustedCA is a path to a pem bundle file containing additional CAs that should be trusted during imagestream import.",
 							Type:        []string{"string"},
 							Format:      "",
 						},
@@ -28900,14 +30100,14 @@ func schema_openshift_api_legacyconfig_v1_JenkinsPipelineConfig(ref common.Refer
 				Properties: map[string]spec.Schema{
 					"autoProvisionEnabled": {
 						SchemaProps: spec.SchemaProps{
-							Description: "AutoProvisionEnabled determines whether a Jenkins server will be spawned from the provided template when the first build config in the project with type JenkinsPipeline is created. When not specified this option defaults to true.",
+							Description: "autoProvisionEnabled determines whether a Jenkins server will be spawned from the provided template when the first build config in the project with type JenkinsPipeline is created. When not specified this option defaults to true.",
 							Type:        []string{"boolean"},
 							Format:      "",
 						},
 					},
 					"templateNamespace": {
 						SchemaProps: spec.SchemaProps{
-							Description: "TemplateNamespace contains the namespace name where the Jenkins template is stored",
+							Description: "templateNamespace contains the namespace name where the Jenkins template is stored",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -28915,7 +30115,7 @@ func schema_openshift_api_legacyconfig_v1_JenkinsPipelineConfig(ref common.Refer
 					},
 					"templateName": {
 						SchemaProps: spec.SchemaProps{
-							Description: "TemplateName is the name of the default Jenkins template",
+							Description: "templateName is the name of the default Jenkins template",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -28923,7 +30123,7 @@ func schema_openshift_api_legacyconfig_v1_JenkinsPipelineConfig(ref common.Refer
 					},
 					"serviceName": {
 						SchemaProps: spec.SchemaProps{
-							Description: "ServiceName is the name of the Jenkins service OpenShift uses to detect whether a Jenkins pipeline handler has already been installed in a project. This value *must* match a service name in the provided template.",
+							Description: "serviceName is the name of the Jenkins service OpenShift uses to detect whether a Jenkins pipeline handler has already been installed in a project. This value *must* match a service name in the provided template.",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -28931,7 +30131,7 @@ func schema_openshift_api_legacyconfig_v1_JenkinsPipelineConfig(ref common.Refer
 					},
 					"parameters": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Parameters specifies a set of optional parameters to the Jenkins template.",
+							Description: "parameters specifies a set of optional parameters to the Jenkins template.",
 							Type:        []string{"object"},
 							AdditionalProperties: &spec.SchemaOrBool{
 								Allows: true,
@@ -28975,7 +30175,7 @@ func schema_openshift_api_legacyconfig_v1_KeystonePasswordIdentityProvider(ref c
 					},
 					"url": {
 						SchemaProps: spec.SchemaProps{
-							Description: "URL is the remote URL to connect to",
+							Description: "url is the remote URL to connect to",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -28983,7 +30183,7 @@ func schema_openshift_api_legacyconfig_v1_KeystonePasswordIdentityProvider(ref c
 					},
 					"ca": {
 						SchemaProps: spec.SchemaProps{
-							Description: "CA is the CA for verifying TLS connections",
+							Description: "ca is the CA for verifying TLS connections",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -28991,7 +30191,7 @@ func schema_openshift_api_legacyconfig_v1_KeystonePasswordIdentityProvider(ref c
 					},
 					"certFile": {
 						SchemaProps: spec.SchemaProps{
-							Description: "CertFile is a file containing a PEM-encoded certificate",
+							Description: "certFile is a file containing a PEM-encoded certificate",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -28999,7 +30199,7 @@ func schema_openshift_api_legacyconfig_v1_KeystonePasswordIdentityProvider(ref c
 					},
 					"keyFile": {
 						SchemaProps: spec.SchemaProps{
-							Description: "KeyFile is a file containing a PEM-encoded private key for the certificate specified by CertFile",
+							Description: "keyFile is a file containing a PEM-encoded private key for the certificate specified by CertFile",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -29015,7 +30215,7 @@ func schema_openshift_api_legacyconfig_v1_KeystonePasswordIdentityProvider(ref c
 					},
 					"useKeystoneIdentity": {
 						SchemaProps: spec.SchemaProps{
-							Description: "UseKeystoneIdentity flag indicates that user should be authenticated by keystone ID, not by username",
+							Description: "useKeystoneIdentity flag indicates that user should be authenticated by keystone ID, not by username",
 							Default:     false,
 							Type:        []string{"boolean"},
 							Format:      "",
@@ -29037,7 +30237,7 @@ func schema_openshift_api_legacyconfig_v1_KubeletConnectionInfo(ref common.Refer
 				Properties: map[string]spec.Schema{
 					"port": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Port is the port to connect to kubelets on",
+							Description: "port is the port to connect to kubelets on",
 							Default:     0,
 							Type:        []string{"integer"},
 							Format:      "int32",
@@ -29045,7 +30245,7 @@ func schema_openshift_api_legacyconfig_v1_KubeletConnectionInfo(ref common.Refer
 					},
 					"ca": {
 						SchemaProps: spec.SchemaProps{
-							Description: "CA is the CA for verifying TLS connections to kubelets",
+							Description: "ca is the CA for verifying TLS connections to kubelets",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -29053,7 +30253,7 @@ func schema_openshift_api_legacyconfig_v1_KubeletConnectionInfo(ref common.Refer
 					},
 					"certFile": {
 						SchemaProps: spec.SchemaProps{
-							Description: "CertFile is a file containing a PEM-encoded certificate",
+							Description: "certFile is a file containing a PEM-encoded certificate",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -29061,7 +30261,7 @@ func schema_openshift_api_legacyconfig_v1_KubeletConnectionInfo(ref common.Refer
 					},
 					"keyFile": {
 						SchemaProps: spec.SchemaProps{
-							Description: "KeyFile is a file containing a PEM-encoded private key for the certificate specified by CertFile",
+							Description: "keyFile is a file containing a PEM-encoded private key for the certificate specified by CertFile",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -29083,7 +30283,7 @@ func schema_openshift_api_legacyconfig_v1_KubernetesMasterConfig(ref common.Refe
 				Properties: map[string]spec.Schema{
 					"apiLevels": {
 						SchemaProps: spec.SchemaProps{
-							Description: "APILevels is a list of API levels that should be enabled on startup: v1 as examples",
+							Description: "apiLevels is a list of API levels that should be enabled on startup: v1 as examples",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -29098,7 +30298,7 @@ func schema_openshift_api_legacyconfig_v1_KubernetesMasterConfig(ref common.Refe
 					},
 					"disabledAPIGroupVersions": {
 						SchemaProps: spec.SchemaProps{
-							Description: "DisabledAPIGroupVersions is a map of groups to the versions (or *) that should be disabled.",
+							Description: "disabledAPIGroupVersions is a map of groups to the versions (or *) that should be disabled.",
 							Type:        []string{"object"},
 							AdditionalProperties: &spec.SchemaOrBool{
 								Allows: true,
@@ -29121,7 +30321,7 @@ func schema_openshift_api_legacyconfig_v1_KubernetesMasterConfig(ref common.Refe
 					},
 					"masterIP": {
 						SchemaProps: spec.SchemaProps{
-							Description: "MasterIP is the public IP address of kubernetes stuff.  If empty, the first result from net.InterfaceAddrs will be used.",
+							Description: "masterIP is the public IP address of kubernetes stuff.  If empty, the first result from net.InterfaceAddrs will be used.",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -29129,7 +30329,7 @@ func schema_openshift_api_legacyconfig_v1_KubernetesMasterConfig(ref common.Refe
 					},
 					"masterEndpointReconcileTTL": {
 						SchemaProps: spec.SchemaProps{
-							Description: "MasterEndpointReconcileTTL sets the time to live in seconds of an endpoint record recorded by each master. The endpoints are checked at an interval that is 2/3 of this value and this value defaults to 15s if unset. In very large clusters, this value may be increased to reduce the possibility that the master endpoint record expires (due to other load on the etcd server) and causes masters to drop in and out of the kubernetes service record. It is not recommended to set this value below 15s.",
+							Description: "masterEndpointReconcileTTL sets the time to live in seconds of an endpoint record recorded by each master. The endpoints are checked at an interval that is 2/3 of this value and this value defaults to 15s if unset. In very large clusters, this value may be increased to reduce the possibility that the master endpoint record expires (due to other load on the etcd server) and causes masters to drop in and out of the kubernetes service record. It is not recommended to set this value below 15s.",
 							Default:     0,
 							Type:        []string{"integer"},
 							Format:      "int32",
@@ -29137,7 +30337,7 @@ func schema_openshift_api_legacyconfig_v1_KubernetesMasterConfig(ref common.Refe
 					},
 					"servicesSubnet": {
 						SchemaProps: spec.SchemaProps{
-							Description: "ServicesSubnet is the subnet to use for assigning service IPs",
+							Description: "servicesSubnet is the subnet to use for assigning service IPs",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -29145,7 +30345,7 @@ func schema_openshift_api_legacyconfig_v1_KubernetesMasterConfig(ref common.Refe
 					},
 					"servicesNodePortRange": {
 						SchemaProps: spec.SchemaProps{
-							Description: "ServicesNodePortRange is the range to use for assigning service public ports on a host.",
+							Description: "servicesNodePortRange is the range to use for assigning service public ports on a host.",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -29153,7 +30353,7 @@ func schema_openshift_api_legacyconfig_v1_KubernetesMasterConfig(ref common.Refe
 					},
 					"schedulerConfigFile": {
 						SchemaProps: spec.SchemaProps{
-							Description: "SchedulerConfigFile points to a file that describes how to set up the scheduler. If empty, you get the default scheduling rules.",
+							Description: "schedulerConfigFile points to a file that describes how to set up the scheduler. If empty, you get the default scheduling rules.",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -29161,7 +30361,7 @@ func schema_openshift_api_legacyconfig_v1_KubernetesMasterConfig(ref common.Refe
 					},
 					"podEvictionTimeout": {
 						SchemaProps: spec.SchemaProps{
-							Description: "PodEvictionTimeout controls grace period for deleting pods on failed nodes. It takes valid time duration string. If empty, you get the default pod eviction timeout.",
+							Description: "podEvictionTimeout controls grace period for deleting pods on failed nodes. It takes valid time duration string. If empty, you get the default pod eviction timeout.",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -29169,14 +30369,14 @@ func schema_openshift_api_legacyconfig_v1_KubernetesMasterConfig(ref common.Refe
 					},
 					"proxyClientInfo": {
 						SchemaProps: spec.SchemaProps{
-							Description: "ProxyClientInfo specifies the client cert/key to use when proxying to pods",
+							Description: "proxyClientInfo specifies the client cert/key to use when proxying to pods",
 							Default:     map[string]interface{}{},
 							Ref:         ref("github.com/openshift/api/legacyconfig/v1.CertInfo"),
 						},
 					},
 					"apiServerArguments": {
 						SchemaProps: spec.SchemaProps{
-							Description: "APIServerArguments are key value pairs that will be passed directly to the Kube apiserver that match the apiservers's command line arguments.  These are not migrated, but if you reference a value that does not exist the server will not start. These values may override other settings in KubernetesMasterConfig which may cause invalid configurations.",
+							Description: "apiServerArguments are key value pairs that will be passed directly to the Kube apiserver that match the apiservers's command line arguments.  These are not migrated, but if you reference a value that does not exist the server will not start. These values may override other settings in KubernetesMasterConfig which may cause invalid configurations.",
 							Type:        []string{"object"},
 							AdditionalProperties: &spec.SchemaOrBool{
 								Allows: true,
@@ -29199,7 +30399,7 @@ func schema_openshift_api_legacyconfig_v1_KubernetesMasterConfig(ref common.Refe
 					},
 					"controllerArguments": {
 						SchemaProps: spec.SchemaProps{
-							Description: "ControllerArguments are key value pairs that will be passed directly to the Kube controller manager that match the controller manager's command line arguments.  These are not migrated, but if you reference a value that does not exist the server will not start. These values may override other settings in KubernetesMasterConfig which may cause invalid configurations.",
+							Description: "controllerArguments are key value pairs that will be passed directly to the Kube controller manager that match the controller manager's command line arguments.  These are not migrated, but if you reference a value that does not exist the server will not start. These values may override other settings in KubernetesMasterConfig which may cause invalid configurations.",
 							Type:        []string{"object"},
 							AdditionalProperties: &spec.SchemaOrBool{
 								Allows: true,
@@ -29222,7 +30422,7 @@ func schema_openshift_api_legacyconfig_v1_KubernetesMasterConfig(ref common.Refe
 					},
 					"schedulerArguments": {
 						SchemaProps: spec.SchemaProps{
-							Description: "SchedulerArguments are key value pairs that will be passed directly to the Kube scheduler that match the scheduler's command line arguments.  These are not migrated, but if you reference a value that does not exist the server will not start. These values may override other settings in KubernetesMasterConfig which may cause invalid configurations.",
+							Description: "schedulerArguments are key value pairs that will be passed directly to the Kube scheduler that match the scheduler's command line arguments.  These are not migrated, but if you reference a value that does not exist the server will not start. These values may override other settings in KubernetesMasterConfig which may cause invalid configurations.",
 							Type:        []string{"object"},
 							AdditionalProperties: &spec.SchemaOrBool{
 								Allows: true,
@@ -29261,7 +30461,7 @@ func schema_openshift_api_legacyconfig_v1_LDAPAttributeMapping(ref common.Refere
 				Properties: map[string]spec.Schema{
 					"id": {
 						SchemaProps: spec.SchemaProps{
-							Description: "ID is the list of attributes whose values should be used as the user ID. Required. LDAP standard identity attribute is \"dn\"",
+							Description: "id is the list of attributes whose values should be used as the user ID. Required. LDAP standard identity attribute is \"dn\"",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -29276,7 +30476,7 @@ func schema_openshift_api_legacyconfig_v1_LDAPAttributeMapping(ref common.Refere
 					},
 					"preferredUsername": {
 						SchemaProps: spec.SchemaProps{
-							Description: "PreferredUsername is the list of attributes whose values should be used as the preferred username. LDAP standard login attribute is \"uid\"",
+							Description: "preferredUsername is the list of attributes whose values should be used as the preferred username. LDAP standard login attribute is \"uid\"",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -29291,7 +30491,7 @@ func schema_openshift_api_legacyconfig_v1_LDAPAttributeMapping(ref common.Refere
 					},
 					"name": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Name is the list of attributes whose values should be used as the display name. Optional. If unspecified, no display name is set for the identity LDAP standard display name attribute is \"cn\"",
+							Description: "name is the list of attributes whose values should be used as the display name. Optional. If unspecified, no display name is set for the identity LDAP standard display name attribute is \"cn\"",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -29306,7 +30506,7 @@ func schema_openshift_api_legacyconfig_v1_LDAPAttributeMapping(ref common.Refere
 					},
 					"email": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Email is the list of attributes whose values should be used as the email address. Optional. If unspecified, no email is set for the identity",
+							Description: "email is the list of attributes whose values should be used as the email address. Optional. If unspecified, no email is set for the identity",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -29349,7 +30549,7 @@ func schema_openshift_api_legacyconfig_v1_LDAPPasswordIdentityProvider(ref commo
 					},
 					"url": {
 						SchemaProps: spec.SchemaProps{
-							Description: "URL is an RFC 2255 URL which specifies the LDAP search parameters to use. The syntax of the URL is\n   ldap://host:port/basedn?attribute?scope?filter",
+							Description: "url is an RFC 2255 URL which specifies the LDAP search parameters to use. The syntax of the URL is\n   ldap://host:port/basedn?attribute?scope?filter",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -29357,7 +30557,7 @@ func schema_openshift_api_legacyconfig_v1_LDAPPasswordIdentityProvider(ref commo
 					},
 					"bindDN": {
 						SchemaProps: spec.SchemaProps{
-							Description: "BindDN is an optional DN to bind with during the search phase.",
+							Description: "bindDN is an optional DN to bind with during the search phase.",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -29365,7 +30565,7 @@ func schema_openshift_api_legacyconfig_v1_LDAPPasswordIdentityProvider(ref commo
 					},
 					"bindPassword": {
 						SchemaProps: spec.SchemaProps{
-							Description: "BindPassword is an optional password to bind with during the search phase.",
+							Description: "bindPassword is an optional password to bind with during the search phase.",
 							Ref:         ref("github.com/openshift/api/legacyconfig/v1.StringSource"),
 						},
 					},
@@ -29379,7 +30579,7 @@ func schema_openshift_api_legacyconfig_v1_LDAPPasswordIdentityProvider(ref commo
 					},
 					"ca": {
 						SchemaProps: spec.SchemaProps{
-							Description: "CA is the optional trusted certificate authority bundle to use when making requests to the server If empty, the default system roots are used",
+							Description: "ca is the optional trusted certificate authority bundle to use when making requests to the server If empty, the default system roots are used",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -29387,7 +30587,7 @@ func schema_openshift_api_legacyconfig_v1_LDAPPasswordIdentityProvider(ref commo
 					},
 					"attributes": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Attributes maps LDAP attributes to identities",
+							Description: "attributes maps LDAP attributes to identities",
 							Default:     map[string]interface{}{},
 							Ref:         ref("github.com/openshift/api/legacyconfig/v1.LDAPAttributeMapping"),
 						},
@@ -29442,7 +30642,7 @@ func schema_openshift_api_legacyconfig_v1_LDAPQuery(ref common.ReferenceCallback
 					},
 					"filter": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Filter is a valid LDAP search filter that retrieves all relevant entries from the LDAP server with the base DN",
+							Description: "filter is a valid LDAP search filter that retrieves all relevant entries from the LDAP server with the base DN",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -29450,7 +30650,7 @@ func schema_openshift_api_legacyconfig_v1_LDAPQuery(ref common.ReferenceCallback
 					},
 					"pageSize": {
 						SchemaProps: spec.SchemaProps{
-							Description: "PageSize is the maximum preferred page size, measured in LDAP entries. A page size of 0 means no paging will be done.",
+							Description: "pageSize is the maximum preferred page size, measured in LDAP entries. A page size of 0 means no paging will be done.",
 							Default:     0,
 							Type:        []string{"integer"},
 							Format:      "int32",
@@ -29494,7 +30694,7 @@ func schema_openshift_api_legacyconfig_v1_LDAPSyncConfig(ref common.ReferenceCal
 					},
 					"bindDN": {
 						SchemaProps: spec.SchemaProps{
-							Description: "BindDN is an optional DN to bind to the LDAP server with",
+							Description: "bindDN is an optional DN to bind to the LDAP server with",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -29502,7 +30702,7 @@ func schema_openshift_api_legacyconfig_v1_LDAPSyncConfig(ref common.ReferenceCal
 					},
 					"bindPassword": {
 						SchemaProps: spec.SchemaProps{
-							Description: "BindPassword is an optional password to bind with during the search phase.",
+							Description: "bindPassword is an optional password to bind with during the search phase.",
 							Ref:         ref("github.com/openshift/api/legacyconfig/v1.StringSource"),
 						},
 					},
@@ -29516,7 +30716,7 @@ func schema_openshift_api_legacyconfig_v1_LDAPSyncConfig(ref common.ReferenceCal
 					},
 					"ca": {
 						SchemaProps: spec.SchemaProps{
-							Description: "CA is the optional trusted certificate authority bundle to use when making requests to the server If empty, the default system roots are used",
+							Description: "ca is the optional trusted certificate authority bundle to use when making requests to the server If empty, the default system roots are used",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -29596,7 +30796,7 @@ func schema_openshift_api_legacyconfig_v1_MasterAuthConfig(ref common.ReferenceC
 				Properties: map[string]spec.Schema{
 					"requestHeader": {
 						SchemaProps: spec.SchemaProps{
-							Description: "RequestHeader holds options for setting up a front proxy against the API.  It is optional.",
+							Description: "requestHeader holds options for setting up a front proxy against the API.  It is optional.",
 							Ref:         ref("github.com/openshift/api/legacyconfig/v1.RequestHeaderAuthenticationOptions"),
 						},
 					},
@@ -29616,7 +30816,7 @@ func schema_openshift_api_legacyconfig_v1_MasterAuthConfig(ref common.ReferenceC
 					},
 					"oauthMetadataFile": {
 						SchemaProps: spec.SchemaProps{
-							Description: "OAuthMetadataFile is a path to a file containing the discovery endpoint for OAuth 2.0 Authorization Server Metadata for an external OAuth server. See IETF Draft: // https://tools.ietf.org/html/draft-ietf-oauth-discovery-04#section-2 This option is mutually exclusive with OAuthConfig",
+							Description: "oauthMetadataFile is a path to a file containing the discovery endpoint for OAuth 2.0 Authorization Server Metadata for an external OAuth server. See IETF Draft: // https://tools.ietf.org/html/draft-ietf-oauth-discovery-04#section-2 This option is mutually exclusive with OAuthConfig",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -29640,7 +30840,7 @@ func schema_openshift_api_legacyconfig_v1_MasterClients(ref common.ReferenceCall
 				Properties: map[string]spec.Schema{
 					"openshiftLoopbackKubeConfig": {
 						SchemaProps: spec.SchemaProps{
-							Description: "OpenShiftLoopbackKubeConfig is a .kubeconfig filename for system components to loopback to this master",
+							Description: "openshiftLoopbackKubeConfig is a .kubeconfig filename for system components to loopback to this master",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -29648,7 +30848,7 @@ func schema_openshift_api_legacyconfig_v1_MasterClients(ref common.ReferenceCall
 					},
 					"openshiftLoopbackClientConnectionOverrides": {
 						SchemaProps: spec.SchemaProps{
-							Description: "OpenShiftLoopbackClientConnectionOverrides specifies client overrides for system components to loop back to this master.",
+							Description: "openshiftLoopbackClientConnectionOverrides specifies client overrides for system components to loop back to this master.",
 							Ref:         ref("github.com/openshift/api/legacyconfig/v1.ClientConnectionOverrides"),
 						},
 					},
@@ -29684,21 +30884,21 @@ func schema_openshift_api_legacyconfig_v1_MasterConfig(ref common.ReferenceCallb
 					},
 					"servingInfo": {
 						SchemaProps: spec.SchemaProps{
-							Description: "ServingInfo describes how to start serving",
+							Description: "servingInfo describes how to start serving",
 							Default:     map[string]interface{}{},
 							Ref:         ref("github.com/openshift/api/legacyconfig/v1.HTTPServingInfo"),
 						},
 					},
 					"authConfig": {
 						SchemaProps: spec.SchemaProps{
-							Description: "AuthConfig configures authentication options in addition to the standard oauth token and client certificate authenticators",
+							Description: "authConfig configures authentication options in addition to the standard oauth token and client certificate authenticators",
 							Default:     map[string]interface{}{},
 							Ref:         ref("github.com/openshift/api/legacyconfig/v1.MasterAuthConfig"),
 						},
 					},
 					"aggregatorConfig": {
 						SchemaProps: spec.SchemaProps{
-							Description: "AggregatorConfig has options for configuring the aggregator component of the API server.",
+							Description: "aggregatorConfig has options for configuring the aggregator component of the API server.",
 							Default:     map[string]interface{}{},
 							Ref:         ref("github.com/openshift/api/legacyconfig/v1.AggregatorConfig"),
 						},
@@ -29720,7 +30920,7 @@ func schema_openshift_api_legacyconfig_v1_MasterConfig(ref common.ReferenceCallb
 					},
 					"apiLevels": {
 						SchemaProps: spec.SchemaProps{
-							Description: "APILevels is a list of API levels that should be enabled on startup: v1 as examples",
+							Description: "apiLevels is a list of API levels that should be enabled on startup: v1 as examples",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -29735,7 +30935,7 @@ func schema_openshift_api_legacyconfig_v1_MasterConfig(ref common.ReferenceCallb
 					},
 					"masterPublicURL": {
 						SchemaProps: spec.SchemaProps{
-							Description: "MasterPublicURL is how clients can access the OpenShift API server",
+							Description: "masterPublicURL is how clients can access the OpenShift API server",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -29743,7 +30943,7 @@ func schema_openshift_api_legacyconfig_v1_MasterConfig(ref common.ReferenceCallb
 					},
 					"controllers": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Controllers is a list of the controllers that should be started. If set to \"none\", no controllers will start automatically. The default value is \"*\" which will start all controllers. When using \"*\", you may exclude controllers by prepending a \"-\" in front of their name. No other values are recognized at this time.",
+							Description: "controllers is a list of the controllers that should be started. If set to \"none\", no controllers will start automatically. The default value is \"*\" which will start all controllers. When using \"*\", you may exclude controllers by prepending a \"-\" in front of their name. No other values are recognized at this time.",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -29751,35 +30951,35 @@ func schema_openshift_api_legacyconfig_v1_MasterConfig(ref common.ReferenceCallb
 					},
 					"admissionConfig": {
 						SchemaProps: spec.SchemaProps{
-							Description: "AdmissionConfig contains admission control plugin configuration.",
+							Description: "admissionConfig contains admission control plugin configuration.",
 							Default:     map[string]interface{}{},
 							Ref:         ref("github.com/openshift/api/legacyconfig/v1.AdmissionConfig"),
 						},
 					},
 					"controllerConfig": {
 						SchemaProps: spec.SchemaProps{
-							Description: "ControllerConfig holds configuration values for controllers",
+							Description: "controllerConfig holds configuration values for controllers",
 							Default:     map[string]interface{}{},
 							Ref:         ref("github.com/openshift/api/legacyconfig/v1.ControllerConfig"),
 						},
 					},
 					"etcdStorageConfig": {
 						SchemaProps: spec.SchemaProps{
-							Description: "EtcdStorageConfig contains information about how API resources are stored in Etcd. These values are only relevant when etcd is the backing store for the cluster.",
+							Description: "etcdStorageConfig contains information about how API resources are stored in Etcd. These values are only relevant when etcd is the backing store for the cluster.",
 							Default:     map[string]interface{}{},
 							Ref:         ref("github.com/openshift/api/legacyconfig/v1.EtcdStorageConfig"),
 						},
 					},
 					"etcdClientInfo": {
 						SchemaProps: spec.SchemaProps{
-							Description: "EtcdClientInfo contains information about how to connect to etcd",
+							Description: "etcdClientInfo contains information about how to connect to etcd",
 							Default:     map[string]interface{}{},
 							Ref:         ref("github.com/openshift/api/legacyconfig/v1.EtcdConnectionInfo"),
 						},
 					},
 					"kubeletClientInfo": {
 						SchemaProps: spec.SchemaProps{
-							Description: "KubeletClientInfo contains information about how to connect to kubelets",
+							Description: "kubeletClientInfo contains information about how to connect to kubelets",
 							Default:     map[string]interface{}{},
 							Ref:         ref("github.com/openshift/api/legacyconfig/v1.KubeletConnectionInfo"),
 						},
@@ -29811,56 +31011,56 @@ func schema_openshift_api_legacyconfig_v1_MasterConfig(ref common.ReferenceCallb
 					},
 					"serviceAccountConfig": {
 						SchemaProps: spec.SchemaProps{
-							Description: "ServiceAccountConfig holds options related to service accounts",
+							Description: "serviceAccountConfig holds options related to service accounts",
 							Default:     map[string]interface{}{},
 							Ref:         ref("github.com/openshift/api/legacyconfig/v1.ServiceAccountConfig"),
 						},
 					},
 					"masterClients": {
 						SchemaProps: spec.SchemaProps{
-							Description: "MasterClients holds all the client connection information for controllers and other system components",
+							Description: "masterClients holds all the client connection information for controllers and other system components",
 							Default:     map[string]interface{}{},
 							Ref:         ref("github.com/openshift/api/legacyconfig/v1.MasterClients"),
 						},
 					},
 					"imageConfig": {
 						SchemaProps: spec.SchemaProps{
-							Description: "ImageConfig holds options that describe how to build image names for system components",
+							Description: "imageConfig holds options that describe how to build image names for system components",
 							Default:     map[string]interface{}{},
 							Ref:         ref("github.com/openshift/api/legacyconfig/v1.ImageConfig"),
 						},
 					},
 					"imagePolicyConfig": {
 						SchemaProps: spec.SchemaProps{
-							Description: "ImagePolicyConfig controls limits and behavior for importing images",
+							Description: "imagePolicyConfig controls limits and behavior for importing images",
 							Default:     map[string]interface{}{},
 							Ref:         ref("github.com/openshift/api/legacyconfig/v1.ImagePolicyConfig"),
 						},
 					},
 					"policyConfig": {
 						SchemaProps: spec.SchemaProps{
-							Description: "PolicyConfig holds information about where to locate critical pieces of bootstrapping policy",
+							Description: "policyConfig holds information about where to locate critical pieces of bootstrapping policy",
 							Default:     map[string]interface{}{},
 							Ref:         ref("github.com/openshift/api/legacyconfig/v1.PolicyConfig"),
 						},
 					},
 					"projectConfig": {
 						SchemaProps: spec.SchemaProps{
-							Description: "ProjectConfig holds information about project creation and defaults",
+							Description: "projectConfig holds information about project creation and defaults",
 							Default:     map[string]interface{}{},
 							Ref:         ref("github.com/openshift/api/legacyconfig/v1.ProjectConfig"),
 						},
 					},
 					"routingConfig": {
 						SchemaProps: spec.SchemaProps{
-							Description: "RoutingConfig holds information about routing and route generation",
+							Description: "routingConfig holds information about routing and route generation",
 							Default:     map[string]interface{}{},
 							Ref:         ref("github.com/openshift/api/legacyconfig/v1.RoutingConfig"),
 						},
 					},
 					"networkConfig": {
 						SchemaProps: spec.SchemaProps{
-							Description: "NetworkConfig to be passed to the compiled in network plugin",
+							Description: "networkConfig to be passed to the compiled in network plugin",
 							Default:     map[string]interface{}{},
 							Ref:         ref("github.com/openshift/api/legacyconfig/v1.MasterNetworkConfig"),
 						},
@@ -29874,14 +31074,14 @@ func schema_openshift_api_legacyconfig_v1_MasterConfig(ref common.ReferenceCallb
 					},
 					"jenkinsPipelineConfig": {
 						SchemaProps: spec.SchemaProps{
-							Description: "JenkinsPipelineConfig holds information about the default Jenkins template used for JenkinsPipeline build strategy.",
+							Description: "jenkinsPipelineConfig holds information about the default Jenkins template used for JenkinsPipeline build strategy.",
 							Default:     map[string]interface{}{},
 							Ref:         ref("github.com/openshift/api/legacyconfig/v1.JenkinsPipelineConfig"),
 						},
 					},
 					"auditConfig": {
 						SchemaProps: spec.SchemaProps{
-							Description: "AuditConfig holds information related to auditing capabilities.",
+							Description: "auditConfig holds information related to auditing capabilities.",
 							Default:     map[string]interface{}{},
 							Ref:         ref("github.com/openshift/api/legacyconfig/v1.AuditConfig"),
 						},
@@ -29904,7 +31104,7 @@ func schema_openshift_api_legacyconfig_v1_MasterNetworkConfig(ref common.Referen
 				Properties: map[string]spec.Schema{
 					"networkPluginName": {
 						SchemaProps: spec.SchemaProps{
-							Description: "NetworkPluginName is the name of the network plugin to use",
+							Description: "networkPluginName is the name of the network plugin to use",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -29912,14 +31112,14 @@ func schema_openshift_api_legacyconfig_v1_MasterNetworkConfig(ref common.Referen
 					},
 					"clusterNetworkCIDR": {
 						SchemaProps: spec.SchemaProps{
-							Description: "ClusterNetworkCIDR is the CIDR string to specify the global overlay network's L3 space.  Deprecated, but maintained for backwards compatibility, use ClusterNetworks instead.",
+							Description: "clusterNetworkCIDR is the CIDR string to specify the global overlay network's L3 space.  Deprecated, but maintained for backwards compatibility, use ClusterNetworks instead.",
 							Type:        []string{"string"},
 							Format:      "",
 						},
 					},
 					"clusterNetworks": {
 						SchemaProps: spec.SchemaProps{
-							Description: "ClusterNetworks is a list of ClusterNetwork objects that defines the global overlay network's L3 space by specifying a set of CIDR and netmasks that the SDN can allocate addressed from.  If this is specified, then ClusterNetworkCIDR and HostSubnetLength may not be set.",
+							Description: "clusterNetworks is a list of ClusterNetwork objects that defines the global overlay network's L3 space by specifying a set of CIDR and netmasks that the SDN can allocate addressed from.  If this is specified, then ClusterNetworkCIDR and HostSubnetLength may not be set.",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -29933,7 +31133,7 @@ func schema_openshift_api_legacyconfig_v1_MasterNetworkConfig(ref common.Referen
 					},
 					"hostSubnetLength": {
 						SchemaProps: spec.SchemaProps{
-							Description: "HostSubnetLength is the number of bits to allocate to each host's subnet e.g. 8 would mean a /24 network on the host.  Deprecated, but maintained for backwards compatibility, use ClusterNetworks instead.",
+							Description: "hostSubnetLength is the number of bits to allocate to each host's subnet e.g. 8 would mean a /24 network on the host.  Deprecated, but maintained for backwards compatibility, use ClusterNetworks instead.",
 							Type:        []string{"integer"},
 							Format:      "int64",
 						},
@@ -29948,7 +31148,7 @@ func schema_openshift_api_legacyconfig_v1_MasterNetworkConfig(ref common.Referen
 					},
 					"externalIPNetworkCIDRs": {
 						SchemaProps: spec.SchemaProps{
-							Description: "ExternalIPNetworkCIDRs controls what values are acceptable for the service external IP field. If empty, no externalIP may be set. It may contain a list of CIDRs which are checked for access. If a CIDR is prefixed with !, IPs in that CIDR will be rejected. Rejections will be applied first, then the IP checked against one of the allowed CIDRs. You should ensure this range does not overlap with your nodes, pods, or service CIDRs for security reasons.",
+							Description: "externalIPNetworkCIDRs controls what values are acceptable for the service external IP field. If empty, no externalIP may be set. It may contain a list of CIDRs which are checked for access. If a CIDR is prefixed with !, IPs in that CIDR will be rejected. Rejections will be applied first, then the IP checked against one of the allowed CIDRs. You should ensure this range does not overlap with your nodes, pods, or service CIDRs for security reasons.",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -29963,7 +31163,7 @@ func schema_openshift_api_legacyconfig_v1_MasterNetworkConfig(ref common.Referen
 					},
 					"ingressIPNetworkCIDR": {
 						SchemaProps: spec.SchemaProps{
-							Description: "IngressIPNetworkCIDR controls the range to assign ingress ips from for services of type LoadBalancer on bare metal. If empty, ingress ips will not be assigned. It may contain a single CIDR that will be allocated from. For security reasons, you should ensure that this range does not overlap with the CIDRs reserved for external ips, nodes, pods, or services.",
+							Description: "ingressIPNetworkCIDR controls the range to assign ingress ips from for services of type LoadBalancer on bare metal. If empty, ingress ips will not be assigned. It may contain a single CIDR that will be allocated from. For security reasons, you should ensure that this range does not overlap with the CIDRs reserved for external ips, nodes, pods, or services.",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -29971,7 +31171,7 @@ func schema_openshift_api_legacyconfig_v1_MasterNetworkConfig(ref common.Referen
 					},
 					"vxlanPort": {
 						SchemaProps: spec.SchemaProps{
-							Description: "VXLANPort is the VXLAN port used by the cluster defaults. If it is not set, 4789 is the default value",
+							Description: "vxlanPort is the VXLAN port used by the cluster defaults. If it is not set, 4789 is the default value",
 							Type:        []string{"integer"},
 							Format:      "int64",
 						},
@@ -29994,7 +31194,7 @@ func schema_openshift_api_legacyconfig_v1_MasterVolumeConfig(ref common.Referenc
 				Properties: map[string]spec.Schema{
 					"dynamicProvisioningEnabled": {
 						SchemaProps: spec.SchemaProps{
-							Description: "DynamicProvisioningEnabled is a boolean that toggles dynamic provisioning off when false, defaults to true",
+							Description: "dynamicProvisioningEnabled is a boolean that toggles dynamic provisioning off when false, defaults to true",
 							Type:        []string{"boolean"},
 							Format:      "",
 						},
@@ -30015,7 +31215,7 @@ func schema_openshift_api_legacyconfig_v1_NamedCertificate(ref common.ReferenceC
 				Properties: map[string]spec.Schema{
 					"names": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Names is a list of DNS names this certificate should be used to secure A name can be a normal DNS name, or can contain leading wildcard segments.",
+							Description: "names is a list of DNS names this certificate should be used to secure A name can be a normal DNS name, or can contain leading wildcard segments.",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -30030,7 +31230,7 @@ func schema_openshift_api_legacyconfig_v1_NamedCertificate(ref common.ReferenceC
 					},
 					"certFile": {
 						SchemaProps: spec.SchemaProps{
-							Description: "CertFile is a file containing a PEM-encoded certificate",
+							Description: "certFile is a file containing a PEM-encoded certificate",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -30038,7 +31238,7 @@ func schema_openshift_api_legacyconfig_v1_NamedCertificate(ref common.ReferenceC
 					},
 					"keyFile": {
 						SchemaProps: spec.SchemaProps{
-							Description: "KeyFile is a file containing a PEM-encoded private key for the certificate specified by CertFile",
+							Description: "keyFile is a file containing a PEM-encoded private key for the certificate specified by CertFile",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -30060,7 +31260,7 @@ func schema_openshift_api_legacyconfig_v1_NodeAuthConfig(ref common.ReferenceCal
 				Properties: map[string]spec.Schema{
 					"authenticationCacheTTL": {
 						SchemaProps: spec.SchemaProps{
-							Description: "AuthenticationCacheTTL indicates how long an authentication result should be cached. It takes a valid time duration string (e.g. \"5m\"). If empty, you get the default timeout. If zero (e.g. \"0m\"), caching is disabled",
+							Description: "authenticationCacheTTL indicates how long an authentication result should be cached. It takes a valid time duration string (e.g. \"5m\"). If empty, you get the default timeout. If zero (e.g. \"0m\"), caching is disabled",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -30068,7 +31268,7 @@ func schema_openshift_api_legacyconfig_v1_NodeAuthConfig(ref common.ReferenceCal
 					},
 					"authenticationCacheSize": {
 						SchemaProps: spec.SchemaProps{
-							Description: "AuthenticationCacheSize indicates how many authentication results should be cached. If 0, the default cache size is used.",
+							Description: "authenticationCacheSize indicates how many authentication results should be cached. If 0, the default cache size is used.",
 							Default:     0,
 							Type:        []string{"integer"},
 							Format:      "int32",
@@ -30076,7 +31276,7 @@ func schema_openshift_api_legacyconfig_v1_NodeAuthConfig(ref common.ReferenceCal
 					},
 					"authorizationCacheTTL": {
 						SchemaProps: spec.SchemaProps{
-							Description: "AuthorizationCacheTTL indicates how long an authorization result should be cached. It takes a valid time duration string (e.g. \"5m\"). If empty, you get the default timeout. If zero (e.g. \"0m\"), caching is disabled",
+							Description: "authorizationCacheTTL indicates how long an authorization result should be cached. It takes a valid time duration string (e.g. \"5m\"). If empty, you get the default timeout. If zero (e.g. \"0m\"), caching is disabled",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -30084,7 +31284,7 @@ func schema_openshift_api_legacyconfig_v1_NodeAuthConfig(ref common.ReferenceCal
 					},
 					"authorizationCacheSize": {
 						SchemaProps: spec.SchemaProps{
-							Description: "AuthorizationCacheSize indicates how many authorization results should be cached. If 0, the default cache size is used.",
+							Description: "authorizationCacheSize indicates how many authorization results should be cached. If 0, the default cache size is used.",
 							Default:     0,
 							Type:        []string{"integer"},
 							Format:      "int32",
@@ -30120,7 +31320,7 @@ func schema_openshift_api_legacyconfig_v1_NodeConfig(ref common.ReferenceCallbac
 					},
 					"nodeName": {
 						SchemaProps: spec.SchemaProps{
-							Description: "NodeName is the value used to identify this particular node in the cluster.  If possible, this should be your fully qualified hostname. If you're describing a set of static nodes to the master, this value must match one of the values in the list",
+							Description: "nodeName is the value used to identify this particular node in the cluster.  If possible, this should be your fully qualified hostname. If you're describing a set of static nodes to the master, this value must match one of the values in the list",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -30136,14 +31336,14 @@ func schema_openshift_api_legacyconfig_v1_NodeConfig(ref common.ReferenceCallbac
 					},
 					"servingInfo": {
 						SchemaProps: spec.SchemaProps{
-							Description: "ServingInfo describes how to start serving",
+							Description: "servingInfo describes how to start serving",
 							Default:     map[string]interface{}{},
 							Ref:         ref("github.com/openshift/api/legacyconfig/v1.ServingInfo"),
 						},
 					},
 					"masterKubeConfig": {
 						SchemaProps: spec.SchemaProps{
-							Description: "MasterKubeConfig is a filename for the .kubeconfig file that describes how to connect this node to the master",
+							Description: "masterKubeConfig is a filename for the .kubeconfig file that describes how to connect this node to the master",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -30151,13 +31351,13 @@ func schema_openshift_api_legacyconfig_v1_NodeConfig(ref common.ReferenceCallbac
 					},
 					"masterClientConnectionOverrides": {
 						SchemaProps: spec.SchemaProps{
-							Description: "MasterClientConnectionOverrides provides overrides to the client connection used to connect to the master.",
+							Description: "masterClientConnectionOverrides provides overrides to the client connection used to connect to the master.",
 							Ref:         ref("github.com/openshift/api/legacyconfig/v1.ClientConnectionOverrides"),
 						},
 					},
 					"dnsDomain": {
 						SchemaProps: spec.SchemaProps{
-							Description: "DNSDomain holds the domain suffix that will be used for the DNS search path inside each container. Defaults to 'cluster.local'.",
+							Description: "dnsDomain holds the domain suffix that will be used for the DNS search path inside each container. Defaults to 'cluster.local'.",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -30165,7 +31365,7 @@ func schema_openshift_api_legacyconfig_v1_NodeConfig(ref common.ReferenceCallbac
 					},
 					"dnsIP": {
 						SchemaProps: spec.SchemaProps{
-							Description: "DNSIP is the IP address that pods will use to access cluster DNS. Defaults to the service IP of the Kubernetes master. This IP must be listening on port 53 for compatibility with libc resolvers (which cannot be configured to resolve names from any other port). When running more complex local DNS configurations, this is often set to the local address of a DNS proxy like dnsmasq, which then will consult either the local DNS (see dnsBindAddress) or the master DNS.",
+							Description: "dnsIP is the IP address that pods will use to access cluster DNS. Defaults to the service IP of the Kubernetes master. This IP must be listening on port 53 for compatibility with libc resolvers (which cannot be configured to resolve names from any other port). When running more complex local DNS configurations, this is often set to the local address of a DNS proxy like dnsmasq, which then will consult either the local DNS (see dnsBindAddress) or the master DNS.",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -30173,7 +31373,7 @@ func schema_openshift_api_legacyconfig_v1_NodeConfig(ref common.ReferenceCallbac
 					},
 					"dnsBindAddress": {
 						SchemaProps: spec.SchemaProps{
-							Description: "DNSBindAddress is the ip:port to serve DNS on. If this is not set, the DNS server will not be started. Because most DNS resolvers will only listen on port 53, if you select an alternative port you will need a DNS proxy like dnsmasq to answer queries for containers. A common configuration is dnsmasq configured on a node IP listening on 53 and delegating queries for dnsDomain to this process, while sending other queries to the host environments nameservers.",
+							Description: "dnsBindAddress is the ip:port to serve DNS on. If this is not set, the DNS server will not be started. Because most DNS resolvers will only listen on port 53, if you select an alternative port you will need a DNS proxy like dnsmasq to answer queries for containers. A common configuration is dnsmasq configured on a node IP listening on 53 and delegating queries for dnsDomain to this process, while sending other queries to the host environments nameservers.",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -30181,7 +31381,7 @@ func schema_openshift_api_legacyconfig_v1_NodeConfig(ref common.ReferenceCallbac
 					},
 					"dnsNameservers": {
 						SchemaProps: spec.SchemaProps{
-							Description: "DNSNameservers is a list of ip:port values of recursive nameservers to forward queries to when running a local DNS server if dnsBindAddress is set. If this value is empty, the DNS server will default to the nameservers listed in /etc/resolv.conf. If you have configured dnsmasq or another DNS proxy on the system, this value should be set to the upstream nameservers dnsmasq resolves with.",
+							Description: "dnsNameservers is a list of ip:port values of recursive nameservers to forward queries to when running a local DNS server if dnsBindAddress is set. If this value is empty, the DNS server will default to the nameservers listed in /etc/resolv.conf. If you have configured dnsmasq or another DNS proxy on the system, this value should be set to the upstream nameservers dnsmasq resolves with.",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -30196,7 +31396,7 @@ func schema_openshift_api_legacyconfig_v1_NodeConfig(ref common.ReferenceCallbac
 					},
 					"dnsRecursiveResolvConf": {
 						SchemaProps: spec.SchemaProps{
-							Description: "DNSRecursiveResolvConf is a path to a resolv.conf file that contains settings for an upstream server. Only the nameservers and port fields are used. The file must exist and parse correctly. It adds extra nameservers to DNSNameservers if set.",
+							Description: "dnsRecursiveResolvConf is a path to a resolv.conf file that contains settings for an upstream server. Only the nameservers and port fields are used. The file must exist and parse correctly. It adds extra nameservers to DNSNameservers if set.",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -30211,14 +31411,14 @@ func schema_openshift_api_legacyconfig_v1_NodeConfig(ref common.ReferenceCallbac
 					},
 					"networkConfig": {
 						SchemaProps: spec.SchemaProps{
-							Description: "NetworkConfig provides network options for the node",
+							Description: "networkConfig provides network options for the node",
 							Default:     map[string]interface{}{},
 							Ref:         ref("github.com/openshift/api/legacyconfig/v1.NodeNetworkConfig"),
 						},
 					},
 					"volumeDirectory": {
 						SchemaProps: spec.SchemaProps{
-							Description: "VolumeDirectory is the directory that volumes will be stored under",
+							Description: "volumeDirectory is the directory that volumes will be stored under",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -30226,14 +31426,14 @@ func schema_openshift_api_legacyconfig_v1_NodeConfig(ref common.ReferenceCallbac
 					},
 					"imageConfig": {
 						SchemaProps: spec.SchemaProps{
-							Description: "ImageConfig holds options that describe how to build image names for system components",
+							Description: "imageConfig holds options that describe how to build image names for system components",
 							Default:     map[string]interface{}{},
 							Ref:         ref("github.com/openshift/api/legacyconfig/v1.ImageConfig"),
 						},
 					},
 					"allowDisabledDocker": {
 						SchemaProps: spec.SchemaProps{
-							Description: "AllowDisabledDocker if true, the Kubelet will ignore errors from Docker.  This means that a node can start on a machine that doesn't have docker started.",
+							Description: "allowDisabledDocker if true, the Kubelet will ignore errors from Docker.  This means that a node can start on a machine that doesn't have docker started.",
 							Default:     false,
 							Type:        []string{"boolean"},
 							Format:      "",
@@ -30241,27 +31441,27 @@ func schema_openshift_api_legacyconfig_v1_NodeConfig(ref common.ReferenceCallbac
 					},
 					"podManifestConfig": {
 						SchemaProps: spec.SchemaProps{
-							Description: "PodManifestConfig holds the configuration for enabling the Kubelet to create pods based from a manifest file(s) placed locally on the node",
+							Description: "podManifestConfig holds the configuration for enabling the Kubelet to create pods based from a manifest file(s) placed locally on the node",
 							Ref:         ref("github.com/openshift/api/legacyconfig/v1.PodManifestConfig"),
 						},
 					},
 					"authConfig": {
 						SchemaProps: spec.SchemaProps{
-							Description: "AuthConfig holds authn/authz configuration options",
+							Description: "authConfig holds authn/authz configuration options",
 							Default:     map[string]interface{}{},
 							Ref:         ref("github.com/openshift/api/legacyconfig/v1.NodeAuthConfig"),
 						},
 					},
 					"dockerConfig": {
 						SchemaProps: spec.SchemaProps{
-							Description: "DockerConfig holds Docker related configuration options.",
+							Description: "dockerConfig holds Docker related configuration options.",
 							Default:     map[string]interface{}{},
 							Ref:         ref("github.com/openshift/api/legacyconfig/v1.DockerConfig"),
 						},
 					},
 					"kubeletArguments": {
 						SchemaProps: spec.SchemaProps{
-							Description: "KubeletArguments are key value pairs that will be passed directly to the Kubelet that match the Kubelet's command line arguments.  These are not migrated or validated, so if you use them they may become invalid. These values override other settings in NodeConfig which may cause invalid configurations.",
+							Description: "kubeletArguments are key value pairs that will be passed directly to the Kubelet that match the Kubelet's command line arguments.  These are not migrated or validated, so if you use them they may become invalid. These values override other settings in NodeConfig which may cause invalid configurations.",
 							Type:        []string{"object"},
 							AdditionalProperties: &spec.SchemaOrBool{
 								Allows: true,
@@ -30284,7 +31484,7 @@ func schema_openshift_api_legacyconfig_v1_NodeConfig(ref common.ReferenceCallbac
 					},
 					"proxyArguments": {
 						SchemaProps: spec.SchemaProps{
-							Description: "ProxyArguments are key value pairs that will be passed directly to the Proxy that match the Proxy's command line arguments.  These are not migrated or validated, so if you use them they may become invalid. These values override other settings in NodeConfig which may cause invalid configurations.",
+							Description: "proxyArguments are key value pairs that will be passed directly to the Proxy that match the Proxy's command line arguments.  These are not migrated or validated, so if you use them they may become invalid. These values override other settings in NodeConfig which may cause invalid configurations.",
 							Type:        []string{"object"},
 							AdditionalProperties: &spec.SchemaOrBool{
 								Allows: true,
@@ -30307,7 +31507,7 @@ func schema_openshift_api_legacyconfig_v1_NodeConfig(ref common.ReferenceCallbac
 					},
 					"iptablesSyncPeriod": {
 						SchemaProps: spec.SchemaProps{
-							Description: "IPTablesSyncPeriod is how often iptable rules are refreshed",
+							Description: "iptablesSyncPeriod is how often iptable rules are refreshed",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -30315,14 +31515,14 @@ func schema_openshift_api_legacyconfig_v1_NodeConfig(ref common.ReferenceCallbac
 					},
 					"enableUnidling": {
 						SchemaProps: spec.SchemaProps{
-							Description: "EnableUnidling controls whether or not the hybrid unidling proxy will be set up",
+							Description: "enableUnidling controls whether or not the hybrid unidling proxy will be set up",
 							Type:        []string{"boolean"},
 							Format:      "",
 						},
 					},
 					"volumeConfig": {
 						SchemaProps: spec.SchemaProps{
-							Description: "VolumeConfig contains options for configuring volumes on the node.",
+							Description: "volumeConfig contains options for configuring volumes on the node.",
 							Default:     map[string]interface{}{},
 							Ref:         ref("github.com/openshift/api/legacyconfig/v1.NodeVolumeConfig"),
 						},
@@ -30345,7 +31545,7 @@ func schema_openshift_api_legacyconfig_v1_NodeNetworkConfig(ref common.Reference
 				Properties: map[string]spec.Schema{
 					"networkPluginName": {
 						SchemaProps: spec.SchemaProps{
-							Description: "NetworkPluginName is a string specifying the networking plugin",
+							Description: "networkPluginName is a string specifying the networking plugin",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -30375,7 +31575,7 @@ func schema_openshift_api_legacyconfig_v1_NodeVolumeConfig(ref common.ReferenceC
 				Properties: map[string]spec.Schema{
 					"localQuota": {
 						SchemaProps: spec.SchemaProps{
-							Description: "LocalQuota contains options for controlling local volume quota on the node.",
+							Description: "localQuota contains options for controlling local volume quota on the node.",
 							Default:     map[string]interface{}{},
 							Ref:         ref("github.com/openshift/api/legacyconfig/v1.LocalQuota"),
 						},
@@ -30398,14 +31598,14 @@ func schema_openshift_api_legacyconfig_v1_OAuthConfig(ref common.ReferenceCallba
 				Properties: map[string]spec.Schema{
 					"masterCA": {
 						SchemaProps: spec.SchemaProps{
-							Description: "MasterCA is the CA for verifying the TLS connection back to the MasterURL.",
+							Description: "masterCA is the CA for verifying the TLS connection back to the MasterURL.",
 							Type:        []string{"string"},
 							Format:      "",
 						},
 					},
 					"masterURL": {
 						SchemaProps: spec.SchemaProps{
-							Description: "MasterURL is used for making server-to-server calls to exchange authorization codes for access tokens",
+							Description: "masterURL is used for making server-to-server calls to exchange authorization codes for access tokens",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -30413,7 +31613,7 @@ func schema_openshift_api_legacyconfig_v1_OAuthConfig(ref common.ReferenceCallba
 					},
 					"masterPublicURL": {
 						SchemaProps: spec.SchemaProps{
-							Description: "MasterPublicURL is used for building valid client redirect URLs for internal and external access",
+							Description: "masterPublicURL is used for building valid client redirect URLs for internal and external access",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -30421,7 +31621,7 @@ func schema_openshift_api_legacyconfig_v1_OAuthConfig(ref common.ReferenceCallba
 					},
 					"assetPublicURL": {
 						SchemaProps: spec.SchemaProps{
-							Description: "AssetPublicURL is used for building valid client redirect URLs for external access",
+							Description: "assetPublicURL is used for building valid client redirect URLs for external access",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -30429,7 +31629,7 @@ func schema_openshift_api_legacyconfig_v1_OAuthConfig(ref common.ReferenceCallba
 					},
 					"alwaysShowProviderSelection": {
 						SchemaProps: spec.SchemaProps{
-							Description: "AlwaysShowProviderSelection will force the provider selection page to render even when there is only a single provider.",
+							Description: "alwaysShowProviderSelection will force the provider selection page to render even when there is only a single provider.",
 							Default:     false,
 							Type:        []string{"boolean"},
 							Format:      "",
@@ -30437,7 +31637,7 @@ func schema_openshift_api_legacyconfig_v1_OAuthConfig(ref common.ReferenceCallba
 					},
 					"identityProviders": {
 						SchemaProps: spec.SchemaProps{
-							Description: "IdentityProviders is an ordered list of ways for a user to identify themselves",
+							Description: "identityProviders is an ordered list of ways for a user to identify themselves",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -30451,27 +31651,27 @@ func schema_openshift_api_legacyconfig_v1_OAuthConfig(ref common.ReferenceCallba
 					},
 					"grantConfig": {
 						SchemaProps: spec.SchemaProps{
-							Description: "GrantConfig describes how to handle grants",
+							Description: "grantConfig describes how to handle grants",
 							Default:     map[string]interface{}{},
 							Ref:         ref("github.com/openshift/api/legacyconfig/v1.GrantConfig"),
 						},
 					},
 					"sessionConfig": {
 						SchemaProps: spec.SchemaProps{
-							Description: "SessionConfig hold information about configuring sessions.",
+							Description: "sessionConfig hold information about configuring sessions.",
 							Ref:         ref("github.com/openshift/api/legacyconfig/v1.SessionConfig"),
 						},
 					},
 					"tokenConfig": {
 						SchemaProps: spec.SchemaProps{
-							Description: "TokenConfig contains options for authorization and access tokens",
+							Description: "tokenConfig contains options for authorization and access tokens",
 							Default:     map[string]interface{}{},
 							Ref:         ref("github.com/openshift/api/legacyconfig/v1.TokenConfig"),
 						},
 					},
 					"templates": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Templates allow you to customize pages like the login page.",
+							Description: "templates allow you to customize pages like the login page.",
 							Ref:         ref("github.com/openshift/api/legacyconfig/v1.OAuthTemplates"),
 						},
 					},
@@ -30493,7 +31693,7 @@ func schema_openshift_api_legacyconfig_v1_OAuthTemplates(ref common.ReferenceCal
 				Properties: map[string]spec.Schema{
 					"login": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Login is a path to a file containing a go template used to render the login page. If unspecified, the default login page is used.",
+							Description: "login is a path to a file containing a go template used to render the login page. If unspecified, the default login page is used.",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -30501,7 +31701,7 @@ func schema_openshift_api_legacyconfig_v1_OAuthTemplates(ref common.ReferenceCal
 					},
 					"providerSelection": {
 						SchemaProps: spec.SchemaProps{
-							Description: "ProviderSelection is a path to a file containing a go template used to render the provider selection page. If unspecified, the default provider selection page is used.",
+							Description: "providerSelection is a path to a file containing a go template used to render the provider selection page. If unspecified, the default provider selection page is used.",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -30509,7 +31709,7 @@ func schema_openshift_api_legacyconfig_v1_OAuthTemplates(ref common.ReferenceCal
 					},
 					"error": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Error is a path to a file containing a go template used to render error pages during the authentication or grant flow If unspecified, the default error page is used.",
+							Description: "error is a path to a file containing a go template used to render error pages during the authentication or grant flow If unspecified, the default error page is used.",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -30531,7 +31731,7 @@ func schema_openshift_api_legacyconfig_v1_OpenIDClaims(ref common.ReferenceCallb
 				Properties: map[string]spec.Schema{
 					"id": {
 						SchemaProps: spec.SchemaProps{
-							Description: "ID is the list of claims whose values should be used as the user ID. Required. OpenID standard identity claim is \"sub\"",
+							Description: "id is the list of claims whose values should be used as the user ID. Required. OpenID standard identity claim is \"sub\"",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -30546,7 +31746,7 @@ func schema_openshift_api_legacyconfig_v1_OpenIDClaims(ref common.ReferenceCallb
 					},
 					"preferredUsername": {
 						SchemaProps: spec.SchemaProps{
-							Description: "PreferredUsername is the list of claims whose values should be used as the preferred username. If unspecified, the preferred username is determined from the value of the id claim",
+							Description: "preferredUsername is the list of claims whose values should be used as the preferred username. If unspecified, the preferred username is determined from the value of the id claim",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -30561,7 +31761,7 @@ func schema_openshift_api_legacyconfig_v1_OpenIDClaims(ref common.ReferenceCallb
 					},
 					"name": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Name is the list of claims whose values should be used as the display name. Optional. If unspecified, no display name is set for the identity",
+							Description: "name is the list of claims whose values should be used as the display name. Optional. If unspecified, no display name is set for the identity",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -30576,7 +31776,7 @@ func schema_openshift_api_legacyconfig_v1_OpenIDClaims(ref common.ReferenceCallb
 					},
 					"email": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Email is the list of claims whose values should be used as the email address. Optional. If unspecified, no email is set for the identity",
+							Description: "email is the list of claims whose values should be used as the email address. Optional. If unspecified, no email is set for the identity",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -30619,7 +31819,7 @@ func schema_openshift_api_legacyconfig_v1_OpenIDIdentityProvider(ref common.Refe
 					},
 					"ca": {
 						SchemaProps: spec.SchemaProps{
-							Description: "CA is the optional trusted certificate authority bundle to use when making requests to the server If empty, the default system roots are used",
+							Description: "ca is the optional trusted certificate authority bundle to use when making requests to the server If empty, the default system roots are used",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -30627,7 +31827,7 @@ func schema_openshift_api_legacyconfig_v1_OpenIDIdentityProvider(ref common.Refe
 					},
 					"clientID": {
 						SchemaProps: spec.SchemaProps{
-							Description: "ClientID is the oauth client ID",
+							Description: "clientID is the oauth client ID",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -30635,13 +31835,13 @@ func schema_openshift_api_legacyconfig_v1_OpenIDIdentityProvider(ref common.Refe
 					},
 					"clientSecret": {
 						SchemaProps: spec.SchemaProps{
-							Description: "ClientSecret is the oauth client secret",
+							Description: "clientSecret is the oauth client secret",
 							Ref:         ref("github.com/openshift/api/legacyconfig/v1.StringSource"),
 						},
 					},
 					"extraScopes": {
 						SchemaProps: spec.SchemaProps{
-							Description: "ExtraScopes are any scopes to request in addition to the standard \"openid\" scope.",
+							Description: "extraScopes are any scopes to request in addition to the standard \"openid\" scope.",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -30656,7 +31856,7 @@ func schema_openshift_api_legacyconfig_v1_OpenIDIdentityProvider(ref common.Refe
 					},
 					"extraAuthorizeParameters": {
 						SchemaProps: spec.SchemaProps{
-							Description: "ExtraAuthorizeParameters are any custom parameters to add to the authorize request.",
+							Description: "extraAuthorizeParameters are any custom parameters to add to the authorize request.",
 							Type:        []string{"object"},
 							AdditionalProperties: &spec.SchemaOrBool{
 								Allows: true,
@@ -30672,14 +31872,14 @@ func schema_openshift_api_legacyconfig_v1_OpenIDIdentityProvider(ref common.Refe
 					},
 					"urls": {
 						SchemaProps: spec.SchemaProps{
-							Description: "URLs to use to authenticate",
+							Description: "urls to use to authenticate",
 							Default:     map[string]interface{}{},
 							Ref:         ref("github.com/openshift/api/legacyconfig/v1.OpenIDURLs"),
 						},
 					},
 					"claims": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Claims mappings",
+							Description: "claims mappings",
 							Default:     map[string]interface{}{},
 							Ref:         ref("github.com/openshift/api/legacyconfig/v1.OpenIDClaims"),
 						},
@@ -30702,7 +31902,7 @@ func schema_openshift_api_legacyconfig_v1_OpenIDURLs(ref common.ReferenceCallbac
 				Properties: map[string]spec.Schema{
 					"authorize": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Authorize is the oauth authorization URL",
+							Description: "authorize is the oauth authorization URL",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -30710,7 +31910,7 @@ func schema_openshift_api_legacyconfig_v1_OpenIDURLs(ref common.ReferenceCallbac
 					},
 					"token": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Token is the oauth token granting URL",
+							Description: "token is the oauth token granting URL",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -30718,7 +31918,7 @@ func schema_openshift_api_legacyconfig_v1_OpenIDURLs(ref common.ReferenceCallbac
 					},
 					"userInfo": {
 						SchemaProps: spec.SchemaProps{
-							Description: "UserInfo is the optional userinfo URL. If present, a granted access_token is used to request claims If empty, a granted id_token is parsed for claims",
+							Description: "userInfo is the optional userinfo URL. If present, a granted access_token is used to request claims If empty, a granted id_token is parsed for claims",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -30740,7 +31940,7 @@ func schema_openshift_api_legacyconfig_v1_PodManifestConfig(ref common.Reference
 				Properties: map[string]spec.Schema{
 					"path": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Path specifies the path for the pod manifest file or directory If its a directory, its expected to contain on or more manifest files This is used by the Kubelet to create pods on the node",
+							Description: "path specifies the path for the pod manifest file or directory If its a directory, its expected to contain on or more manifest files This is used by the Kubelet to create pods on the node",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -30748,7 +31948,7 @@ func schema_openshift_api_legacyconfig_v1_PodManifestConfig(ref common.Reference
 					},
 					"fileCheckIntervalSeconds": {
 						SchemaProps: spec.SchemaProps{
-							Description: "FileCheckIntervalSeconds is the interval in seconds for checking the manifest file(s) for new data The interval needs to be a positive value",
+							Description: "fileCheckIntervalSeconds is the interval in seconds for checking the manifest file(s) for new data The interval needs to be a positive value",
 							Default:     0,
 							Type:        []string{"integer"},
 							Format:      "int64",
@@ -30770,7 +31970,7 @@ func schema_openshift_api_legacyconfig_v1_PolicyConfig(ref common.ReferenceCallb
 				Properties: map[string]spec.Schema{
 					"userAgentMatchingConfig": {
 						SchemaProps: spec.SchemaProps{
-							Description: "UserAgentMatchingConfig controls how API calls from *voluntarily* identifying clients will be handled.  THIS DOES NOT DEFEND AGAINST MALICIOUS CLIENTS!",
+							Description: "userAgentMatchingConfig controls how API calls from *voluntarily* identifying clients will be handled.  THIS DOES NOT DEFEND AGAINST MALICIOUS CLIENTS!",
 							Default:     map[string]interface{}{},
 							Ref:         ref("github.com/openshift/api/legacyconfig/v1.UserAgentMatchingConfig"),
 						},
@@ -30793,7 +31993,7 @@ func schema_openshift_api_legacyconfig_v1_ProjectConfig(ref common.ReferenceCall
 				Properties: map[string]spec.Schema{
 					"defaultNodeSelector": {
 						SchemaProps: spec.SchemaProps{
-							Description: "DefaultNodeSelector holds default project node label selector",
+							Description: "defaultNodeSelector holds default project node label selector",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -30801,7 +32001,7 @@ func schema_openshift_api_legacyconfig_v1_ProjectConfig(ref common.ReferenceCall
 					},
 					"projectRequestMessage": {
 						SchemaProps: spec.SchemaProps{
-							Description: "ProjectRequestMessage is the string presented to a user if they are unable to request a project via the projectrequest api endpoint",
+							Description: "projectRequestMessage is the string presented to a user if they are unable to request a project via the projectrequest api endpoint",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -30809,7 +32009,7 @@ func schema_openshift_api_legacyconfig_v1_ProjectConfig(ref common.ReferenceCall
 					},
 					"projectRequestTemplate": {
 						SchemaProps: spec.SchemaProps{
-							Description: "ProjectRequestTemplate is the template to use for creating projects in response to projectrequest. It is in the format namespace/template and it is optional. If it is not specified, a default template is used.",
+							Description: "projectRequestTemplate is the template to use for creating projects in response to projectrequest. It is in the format namespace/template and it is optional. If it is not specified, a default template is used.",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -30817,7 +32017,7 @@ func schema_openshift_api_legacyconfig_v1_ProjectConfig(ref common.ReferenceCall
 					},
 					"securityAllocator": {
 						SchemaProps: spec.SchemaProps{
-							Description: "SecurityAllocator controls the automatic allocation of UIDs and MCS labels to a project. If nil, allocation is disabled.",
+							Description: "securityAllocator controls the automatic allocation of UIDs and MCS labels to a project. If nil, allocation is disabled.",
 							Ref:         ref("github.com/openshift/api/legacyconfig/v1.SecurityAllocator"),
 						},
 					},
@@ -30854,7 +32054,7 @@ func schema_openshift_api_legacyconfig_v1_RFC2307Config(ref common.ReferenceCall
 					},
 					"groupNameAttributes": {
 						SchemaProps: spec.SchemaProps{
-							Description: "GroupNameAttributes defines which attributes on an LDAP group entry will be interpreted as its name to use for an OpenShift group",
+							Description: "groupNameAttributes defines which attributes on an LDAP group entry will be interpreted as its name to use for an OpenShift group",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -30869,7 +32069,7 @@ func schema_openshift_api_legacyconfig_v1_RFC2307Config(ref common.ReferenceCall
 					},
 					"groupMembershipAttributes": {
 						SchemaProps: spec.SchemaProps{
-							Description: "GroupMembershipAttributes defines which attributes on an LDAP group entry will be interpreted  as its members. The values contained in those attributes must be queryable by your UserUIDAttribute",
+							Description: "groupMembershipAttributes defines which attributes on an LDAP group entry will be interpreted  as its members. The values contained in those attributes must be queryable by your UserUIDAttribute",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -30891,7 +32091,7 @@ func schema_openshift_api_legacyconfig_v1_RFC2307Config(ref common.ReferenceCall
 					},
 					"userUIDAttribute": {
 						SchemaProps: spec.SchemaProps{
-							Description: "UserUIDAttribute defines which attribute on an LDAP user entry will be interpreted as its unique identifier. It must correspond to values that will be found from the GroupMembershipAttributes",
+							Description: "userUIDAttribute defines which attribute on an LDAP user entry will be interpreted as its unique identifier. It must correspond to values that will be found from the GroupMembershipAttributes",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -30899,7 +32099,7 @@ func schema_openshift_api_legacyconfig_v1_RFC2307Config(ref common.ReferenceCall
 					},
 					"userNameAttributes": {
 						SchemaProps: spec.SchemaProps{
-							Description: "UserNameAttributes defines which attributes on an LDAP user entry will be used, in order, as its OpenShift user name. The first attribute with a non-empty value is used. This should match your PreferredUsername setting for your LDAPPasswordIdentityProvider",
+							Description: "userNameAttributes defines which attributes on an LDAP user entry will be used, in order, as its OpenShift user name. The first attribute with a non-empty value is used. This should match your PreferredUsername setting for your LDAPPasswordIdentityProvider",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -30914,7 +32114,7 @@ func schema_openshift_api_legacyconfig_v1_RFC2307Config(ref common.ReferenceCall
 					},
 					"tolerateMemberNotFoundErrors": {
 						SchemaProps: spec.SchemaProps{
-							Description: "TolerateMemberNotFoundErrors determines the behavior of the LDAP sync job when missing user entries are encountered. If 'true', an LDAP query for users that doesn't find any will be tolerated and an only and error will be logged. If 'false', the LDAP sync job will fail if a query for users doesn't find any. The default value is 'false'. Misconfigured LDAP sync jobs with this flag set to 'true' can cause group membership to be removed, so it is recommended to use this flag with caution.",
+							Description: "tolerateMemberNotFoundErrors determines the behavior of the LDAP sync job when missing user entries are encountered. If 'true', an LDAP query for users that doesn't find any will be tolerated and an only and error will be logged. If 'false', the LDAP sync job will fail if a query for users doesn't find any. The default value is 'false'. Misconfigured LDAP sync jobs with this flag set to 'true' can cause group membership to be removed, so it is recommended to use this flag with caution.",
 							Default:     false,
 							Type:        []string{"boolean"},
 							Format:      "",
@@ -30922,7 +32122,7 @@ func schema_openshift_api_legacyconfig_v1_RFC2307Config(ref common.ReferenceCall
 					},
 					"tolerateMemberOutOfScopeErrors": {
 						SchemaProps: spec.SchemaProps{
-							Description: "TolerateMemberOutOfScopeErrors determines the behavior of the LDAP sync job when out-of-scope user entries are encountered. If 'true', an LDAP query for a user that falls outside of the base DN given for the all user query will be tolerated and only an error will be logged. If 'false', the LDAP sync job will fail if a user query would search outside of the base DN specified by the all user query. Misconfigured LDAP sync jobs with this flag set to 'true' can result in groups missing users, so it is recommended to use this flag with caution.",
+							Description: "tolerateMemberOutOfScopeErrors determines the behavior of the LDAP sync job when out-of-scope user entries are encountered. If 'true', an LDAP query for a user that falls outside of the base DN given for the all user query will be tolerated and only an error will be logged. If 'false', the LDAP sync job will fail if a user query would search outside of the base DN specified by the all user query. Misconfigured LDAP sync jobs with this flag set to 'true' can result in groups missing users, so it is recommended to use this flag with caution.",
 							Default:     false,
 							Type:        []string{"boolean"},
 							Format:      "",
@@ -30946,7 +32146,7 @@ func schema_openshift_api_legacyconfig_v1_RegistryLocation(ref common.ReferenceC
 				Properties: map[string]spec.Schema{
 					"domainName": {
 						SchemaProps: spec.SchemaProps{
-							Description: "DomainName specifies a domain name for the registry In case the registry use non-standard (80 or 443) port, the port should be included in the domain name as well.",
+							Description: "domainName specifies a domain name for the registry In case the registry use non-standard (80 or 443) port, the port should be included in the domain name as well.",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -30954,7 +32154,7 @@ func schema_openshift_api_legacyconfig_v1_RegistryLocation(ref common.ReferenceC
 					},
 					"insecure": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Insecure indicates whether the registry is secure (https) or insecure (http) By default (if not specified) the registry is assumed as secure.",
+							Description: "insecure indicates whether the registry is secure (https) or insecure (http) By default (if not specified) the registry is assumed as secure.",
 							Type:        []string{"boolean"},
 							Format:      "",
 						},
@@ -30975,7 +32175,7 @@ func schema_openshift_api_legacyconfig_v1_RemoteConnectionInfo(ref common.Refere
 				Properties: map[string]spec.Schema{
 					"url": {
 						SchemaProps: spec.SchemaProps{
-							Description: "URL is the remote URL to connect to",
+							Description: "url is the remote URL to connect to",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -30983,7 +32183,7 @@ func schema_openshift_api_legacyconfig_v1_RemoteConnectionInfo(ref common.Refere
 					},
 					"ca": {
 						SchemaProps: spec.SchemaProps{
-							Description: "CA is the CA for verifying TLS connections",
+							Description: "ca is the CA for verifying TLS connections",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -30991,7 +32191,7 @@ func schema_openshift_api_legacyconfig_v1_RemoteConnectionInfo(ref common.Refere
 					},
 					"certFile": {
 						SchemaProps: spec.SchemaProps{
-							Description: "CertFile is a file containing a PEM-encoded certificate",
+							Description: "certFile is a file containing a PEM-encoded certificate",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -30999,7 +32199,7 @@ func schema_openshift_api_legacyconfig_v1_RemoteConnectionInfo(ref common.Refere
 					},
 					"keyFile": {
 						SchemaProps: spec.SchemaProps{
-							Description: "KeyFile is a file containing a PEM-encoded private key for the certificate specified by CertFile",
+							Description: "keyFile is a file containing a PEM-encoded private key for the certificate specified by CertFile",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -31021,7 +32221,7 @@ func schema_openshift_api_legacyconfig_v1_RequestHeaderAuthenticationOptions(ref
 				Properties: map[string]spec.Schema{
 					"clientCA": {
 						SchemaProps: spec.SchemaProps{
-							Description: "ClientCA is a file with the trusted signer certs.  It is required.",
+							Description: "clientCA is a file with the trusted signer certs.  It is required.",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -31029,7 +32229,7 @@ func schema_openshift_api_legacyconfig_v1_RequestHeaderAuthenticationOptions(ref
 					},
 					"clientCommonNames": {
 						SchemaProps: spec.SchemaProps{
-							Description: "ClientCommonNames is a required list of common names to require a match from.",
+							Description: "clientCommonNames is a required list of common names to require a match from.",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -31044,7 +32244,7 @@ func schema_openshift_api_legacyconfig_v1_RequestHeaderAuthenticationOptions(ref
 					},
 					"usernameHeaders": {
 						SchemaProps: spec.SchemaProps{
-							Description: "UsernameHeaders is the list of headers to check for user information.  First hit wins.",
+							Description: "usernameHeaders is the list of headers to check for user information.  First hit wins.",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -31074,7 +32274,7 @@ func schema_openshift_api_legacyconfig_v1_RequestHeaderAuthenticationOptions(ref
 					},
 					"extraHeaderPrefixes": {
 						SchemaProps: spec.SchemaProps{
-							Description: "ExtraHeaderPrefixes is the set of request header prefixes to inspect for user extra. X-Remote-Extra- is suggested.",
+							Description: "extraHeaderPrefixes is the set of request header prefixes to inspect for user extra. X-Remote-Extra- is suggested.",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -31117,7 +32317,7 @@ func schema_openshift_api_legacyconfig_v1_RequestHeaderIdentityProvider(ref comm
 					},
 					"loginURL": {
 						SchemaProps: spec.SchemaProps{
-							Description: "LoginURL is a URL to redirect unauthenticated /authorize requests to Unauthenticated requests from OAuth clients which expect interactive logins will be redirected here ${url} is replaced with the current URL, escaped to be safe in a query parameter\n  https://www.example.com/sso-login?then=${url}\n${query} is replaced with the current query string\n  https://www.example.com/auth-proxy/oauth/authorize?${query}",
+							Description: "loginURL is a URL to redirect unauthenticated /authorize requests to Unauthenticated requests from OAuth clients which expect interactive logins will be redirected here ${url} is replaced with the current URL, escaped to be safe in a query parameter\n  https://www.example.com/sso-login?then=${url}\n${query} is replaced with the current query string\n  https://www.example.com/auth-proxy/oauth/authorize?${query}",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -31125,7 +32325,7 @@ func schema_openshift_api_legacyconfig_v1_RequestHeaderIdentityProvider(ref comm
 					},
 					"challengeURL": {
 						SchemaProps: spec.SchemaProps{
-							Description: "ChallengeURL is a URL to redirect unauthenticated /authorize requests to Unauthenticated requests from OAuth clients which expect WWW-Authenticate challenges will be redirected here ${url} is replaced with the current URL, escaped to be safe in a query parameter\n  https://www.example.com/sso-login?then=${url}\n${query} is replaced with the current query string\n  https://www.example.com/auth-proxy/oauth/authorize?${query}",
+							Description: "challengeURL is a URL to redirect unauthenticated /authorize requests to Unauthenticated requests from OAuth clients which expect WWW-Authenticate challenges will be redirected here ${url} is replaced with the current URL, escaped to be safe in a query parameter\n  https://www.example.com/sso-login?then=${url}\n${query} is replaced with the current query string\n  https://www.example.com/auth-proxy/oauth/authorize?${query}",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -31133,7 +32333,7 @@ func schema_openshift_api_legacyconfig_v1_RequestHeaderIdentityProvider(ref comm
 					},
 					"clientCA": {
 						SchemaProps: spec.SchemaProps{
-							Description: "ClientCA is a file with the trusted signer certs.  If empty, no request verification is done, and any direct request to the OAuth server can impersonate any identity from this provider, merely by setting a request header.",
+							Description: "clientCA is a file with the trusted signer certs.  If empty, no request verification is done, and any direct request to the OAuth server can impersonate any identity from this provider, merely by setting a request header.",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -31141,7 +32341,7 @@ func schema_openshift_api_legacyconfig_v1_RequestHeaderIdentityProvider(ref comm
 					},
 					"clientCommonNames": {
 						SchemaProps: spec.SchemaProps{
-							Description: "ClientCommonNames is an optional list of common names to require a match from. If empty, any client certificate validated against the clientCA bundle is considered authoritative.",
+							Description: "clientCommonNames is an optional list of common names to require a match from. If empty, any client certificate validated against the clientCA bundle is considered authoritative.",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -31156,7 +32356,7 @@ func schema_openshift_api_legacyconfig_v1_RequestHeaderIdentityProvider(ref comm
 					},
 					"headers": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Headers is the set of headers to check for identity information",
+							Description: "headers is the set of headers to check for identity information",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -31171,7 +32371,7 @@ func schema_openshift_api_legacyconfig_v1_RequestHeaderIdentityProvider(ref comm
 					},
 					"preferredUsernameHeaders": {
 						SchemaProps: spec.SchemaProps{
-							Description: "PreferredUsernameHeaders is the set of headers to check for the preferred username",
+							Description: "preferredUsernameHeaders is the set of headers to check for the preferred username",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -31186,7 +32386,7 @@ func schema_openshift_api_legacyconfig_v1_RequestHeaderIdentityProvider(ref comm
 					},
 					"nameHeaders": {
 						SchemaProps: spec.SchemaProps{
-							Description: "NameHeaders is the set of headers to check for the display name",
+							Description: "nameHeaders is the set of headers to check for the display name",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -31201,7 +32401,7 @@ func schema_openshift_api_legacyconfig_v1_RequestHeaderIdentityProvider(ref comm
 					},
 					"emailHeaders": {
 						SchemaProps: spec.SchemaProps{
-							Description: "EmailHeaders is the set of headers to check for the email address",
+							Description: "emailHeaders is the set of headers to check for the email address",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -31230,7 +32430,7 @@ func schema_openshift_api_legacyconfig_v1_RoutingConfig(ref common.ReferenceCall
 				Properties: map[string]spec.Schema{
 					"subdomain": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Subdomain is the suffix appended to $service.$namespace. to form the default route hostname DEPRECATED: This field is being replaced by routers setting their own defaults. This is the \"default\" route.",
+							Description: "subdomain is the suffix appended to $service.$namespace. to form the default route hostname DEPRECATED: This field is being replaced by routers setting their own defaults. This is the \"default\" route.",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -31252,7 +32452,7 @@ func schema_openshift_api_legacyconfig_v1_SecurityAllocator(ref common.Reference
 				Properties: map[string]spec.Schema{
 					"uidAllocatorRange": {
 						SchemaProps: spec.SchemaProps{
-							Description: "UIDAllocatorRange defines the total set of Unix user IDs (UIDs) that will be allocated to projects automatically, and the size of the block each namespace gets. For example, 1000-1999/10 will allocate ten UIDs per namespace, and will be able to allocate up to 100 blocks before running out of space. The default is to allocate from 1 billion to 2 billion in 10k blocks (which is the expected size of the ranges container images will use once user namespaces are started).",
+							Description: "uidAllocatorRange defines the total set of Unix user IDs (UIDs) that will be allocated to projects automatically, and the size of the block each namespace gets. For example, 1000-1999/10 will allocate ten UIDs per namespace, and will be able to allocate up to 100 blocks before running out of space. The default is to allocate from 1 billion to 2 billion in 10k blocks (which is the expected size of the ranges container images will use once user namespaces are started).",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -31260,7 +32460,7 @@ func schema_openshift_api_legacyconfig_v1_SecurityAllocator(ref common.Reference
 					},
 					"mcsAllocatorRange": {
 						SchemaProps: spec.SchemaProps{
-							Description: "MCSAllocatorRange defines the range of MCS categories that will be assigned to namespaces. The format is \"<prefix>/<numberOfLabels>[,<maxCategory>]\". The default is \"s0/2\" and will allocate from c0 -> c1023, which means a total of 535k labels are available (1024 choose 2 ~ 535k). If this value is changed after startup, new projects may receive labels that are already allocated to other projects. Prefix may be any valid SELinux set of terms (including user, role, and type), although leaving them as the default will allow the server to set them automatically.\n\nExamples: * s0:/2     - Allocate labels from s0:c0,c0 to s0:c511,c511 * s0:/2,512 - Allocate labels from s0:c0,c0,c0 to s0:c511,c511,511",
+							Description: "mcsAllocatorRange defines the range of MCS categories that will be assigned to namespaces. The format is \"<prefix>/<numberOfLabels>[,<maxCategory>]\". The default is \"s0/2\" and will allocate from c0 -> c1023, which means a total of 535k labels are available (1024 choose 2 ~ 535k). If this value is changed after startup, new projects may receive labels that are already allocated to other projects. Prefix may be any valid SELinux set of terms (including user, role, and type), although leaving them as the default will allow the server to set them automatically.\n\nExamples: * s0:/2     - Allocate labels from s0:c0,c0 to s0:c511,c511 * s0:/2,512 - Allocate labels from s0:c0,c0,c0 to s0:c511,c511,511",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -31268,7 +32468,7 @@ func schema_openshift_api_legacyconfig_v1_SecurityAllocator(ref common.Reference
 					},
 					"mcsLabelsPerProject": {
 						SchemaProps: spec.SchemaProps{
-							Description: "MCSLabelsPerProject defines the number of labels that should be reserved per project. The default is 5 to match the default UID and MCS ranges (100k namespaces, 535k/5 labels).",
+							Description: "mcsLabelsPerProject defines the number of labels that should be reserved per project. The default is 5 to match the default UID and MCS ranges (100k namespaces, 535k/5 labels).",
 							Default:     0,
 							Type:        []string{"integer"},
 							Format:      "int32",
@@ -31290,7 +32490,7 @@ func schema_openshift_api_legacyconfig_v1_ServiceAccountConfig(ref common.Refere
 				Properties: map[string]spec.Schema{
 					"managedNames": {
 						SchemaProps: spec.SchemaProps{
-							Description: "ManagedNames is a list of service account names that will be auto-created in every namespace. If no names are specified, the ServiceAccountsController will not be started.",
+							Description: "managedNames is a list of service account names that will be auto-created in every namespace. If no names are specified, the ServiceAccountsController will not be started.",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -31305,7 +32505,7 @@ func schema_openshift_api_legacyconfig_v1_ServiceAccountConfig(ref common.Refere
 					},
 					"limitSecretReferences": {
 						SchemaProps: spec.SchemaProps{
-							Description: "LimitSecretReferences controls whether or not to allow a service account to reference any secret in a namespace without explicitly referencing them",
+							Description: "limitSecretReferences controls whether or not to allow a service account to reference any secret in a namespace without explicitly referencing them",
 							Default:     false,
 							Type:        []string{"boolean"},
 							Format:      "",
@@ -31313,7 +32513,7 @@ func schema_openshift_api_legacyconfig_v1_ServiceAccountConfig(ref common.Refere
 					},
 					"privateKeyFile": {
 						SchemaProps: spec.SchemaProps{
-							Description: "PrivateKeyFile is a file containing a PEM-encoded private RSA key, used to sign service account tokens. If no private key is specified, the service account TokensController will not be started.",
+							Description: "privateKeyFile is a file containing a PEM-encoded private RSA key, used to sign service account tokens. If no private key is specified, the service account TokensController will not be started.",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -31321,7 +32521,7 @@ func schema_openshift_api_legacyconfig_v1_ServiceAccountConfig(ref common.Refere
 					},
 					"publicKeyFiles": {
 						SchemaProps: spec.SchemaProps{
-							Description: "PublicKeyFiles is a list of files, each containing a PEM-encoded public RSA key. (If any file contains a private key, the public portion of the key is used) The list of public keys is used to verify presented service account tokens. Each key is tried in order until the list is exhausted or verification succeeds. If no keys are specified, no service account authentication will be available.",
+							Description: "publicKeyFiles is a list of files, each containing a PEM-encoded public RSA key. (If any file contains a private key, the public portion of the key is used) The list of public keys is used to verify presented service account tokens. Each key is tried in order until the list is exhausted or verification succeeds. If no keys are specified, no service account authentication will be available.",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -31336,7 +32536,7 @@ func schema_openshift_api_legacyconfig_v1_ServiceAccountConfig(ref common.Refere
 					},
 					"masterCA": {
 						SchemaProps: spec.SchemaProps{
-							Description: "MasterCA is the CA for verifying the TLS connection back to the master.  The service account controller will automatically inject the contents of this file into pods so they can verify connections to the master.",
+							Description: "masterCA is the CA for verifying the TLS connection back to the master.  The service account controller will automatically inject the contents of this file into pods so they can verify connections to the master.",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -31358,7 +32558,7 @@ func schema_openshift_api_legacyconfig_v1_ServiceServingCert(ref common.Referenc
 				Properties: map[string]spec.Schema{
 					"signer": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Signer holds the signing information used to automatically sign serving certificates. If this value is nil, then certs are not signed automatically.",
+							Description: "signer holds the signing information used to automatically sign serving certificates. If this value is nil, then certs are not signed automatically.",
 							Ref:         ref("github.com/openshift/api/legacyconfig/v1.CertInfo"),
 						},
 					},
@@ -31380,7 +32580,7 @@ func schema_openshift_api_legacyconfig_v1_ServingInfo(ref common.ReferenceCallba
 				Properties: map[string]spec.Schema{
 					"bindAddress": {
 						SchemaProps: spec.SchemaProps{
-							Description: "BindAddress is the ip:port to serve on",
+							Description: "bindAddress is the ip:port to serve on",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -31388,7 +32588,7 @@ func schema_openshift_api_legacyconfig_v1_ServingInfo(ref common.ReferenceCallba
 					},
 					"bindNetwork": {
 						SchemaProps: spec.SchemaProps{
-							Description: "BindNetwork is the type of network to bind to - defaults to \"tcp4\", accepts \"tcp\", \"tcp4\", and \"tcp6\"",
+							Description: "bindNetwork is the type of network to bind to - defaults to \"tcp4\", accepts \"tcp\", \"tcp4\", and \"tcp6\"",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -31396,7 +32596,7 @@ func schema_openshift_api_legacyconfig_v1_ServingInfo(ref common.ReferenceCallba
 					},
 					"certFile": {
 						SchemaProps: spec.SchemaProps{
-							Description: "CertFile is a file containing a PEM-encoded certificate",
+							Description: "certFile is a file containing a PEM-encoded certificate",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -31404,7 +32604,7 @@ func schema_openshift_api_legacyconfig_v1_ServingInfo(ref common.ReferenceCallba
 					},
 					"keyFile": {
 						SchemaProps: spec.SchemaProps{
-							Description: "KeyFile is a file containing a PEM-encoded private key for the certificate specified by CertFile",
+							Description: "keyFile is a file containing a PEM-encoded private key for the certificate specified by CertFile",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -31412,7 +32612,7 @@ func schema_openshift_api_legacyconfig_v1_ServingInfo(ref common.ReferenceCallba
 					},
 					"clientCA": {
 						SchemaProps: spec.SchemaProps{
-							Description: "ClientCA is the certificate bundle for all the signers that you'll recognize for incoming client certificates",
+							Description: "clientCA is the certificate bundle for all the signers that you'll recognize for incoming client certificates",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -31420,7 +32620,7 @@ func schema_openshift_api_legacyconfig_v1_ServingInfo(ref common.ReferenceCallba
 					},
 					"namedCertificates": {
 						SchemaProps: spec.SchemaProps{
-							Description: "NamedCertificates is a list of certificates to use to secure requests to specific hostnames",
+							Description: "namedCertificates is a list of certificates to use to secure requests to specific hostnames",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -31434,14 +32634,14 @@ func schema_openshift_api_legacyconfig_v1_ServingInfo(ref common.ReferenceCallba
 					},
 					"minTLSVersion": {
 						SchemaProps: spec.SchemaProps{
-							Description: "MinTLSVersion is the minimum TLS version supported. Values must match version names from https://golang.org/pkg/crypto/tls/#pkg-constants",
+							Description: "minTLSVersion is the minimum TLS version supported. Values must match version names from https://golang.org/pkg/crypto/tls/#pkg-constants",
 							Type:        []string{"string"},
 							Format:      "",
 						},
 					},
 					"cipherSuites": {
 						SchemaProps: spec.SchemaProps{
-							Description: "CipherSuites contains an overridden list of ciphers for the server to support. Values must match cipher suite IDs from https://golang.org/pkg/crypto/tls/#pkg-constants",
+							Description: "cipherSuites contains an overridden list of ciphers for the server to support. Values must match cipher suite IDs from https://golang.org/pkg/crypto/tls/#pkg-constants",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -31472,7 +32672,7 @@ func schema_openshift_api_legacyconfig_v1_SessionConfig(ref common.ReferenceCall
 				Properties: map[string]spec.Schema{
 					"sessionSecretsFile": {
 						SchemaProps: spec.SchemaProps{
-							Description: "SessionSecretsFile is a reference to a file containing a serialized SessionSecrets object If no file is specified, a random signing and encryption key are generated at each server start",
+							Description: "sessionSecretsFile is a reference to a file containing a serialized SessionSecrets object If no file is specified, a random signing and encryption key are generated at each server start",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -31480,7 +32680,7 @@ func schema_openshift_api_legacyconfig_v1_SessionConfig(ref common.ReferenceCall
 					},
 					"sessionMaxAgeSeconds": {
 						SchemaProps: spec.SchemaProps{
-							Description: "SessionMaxAgeSeconds specifies how long created sessions last. Used by AuthRequestHandlerSession",
+							Description: "sessionMaxAgeSeconds specifies how long created sessions last. Used by AuthRequestHandlerSession",
 							Default:     0,
 							Type:        []string{"integer"},
 							Format:      "int32",
@@ -31488,7 +32688,7 @@ func schema_openshift_api_legacyconfig_v1_SessionConfig(ref common.ReferenceCall
 					},
 					"sessionName": {
 						SchemaProps: spec.SchemaProps{
-							Description: "SessionName is the cookie name used to store the session",
+							Description: "sessionName is the cookie name used to store the session",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -31510,7 +32710,7 @@ func schema_openshift_api_legacyconfig_v1_SessionSecret(ref common.ReferenceCall
 				Properties: map[string]spec.Schema{
 					"authentication": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Authentication is used to authenticate sessions using HMAC. Recommended to use a secret with 32 or 64 bytes.",
+							Description: "authentication is used to authenticate sessions using HMAC. Recommended to use a secret with 32 or 64 bytes.",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -31518,7 +32718,7 @@ func schema_openshift_api_legacyconfig_v1_SessionSecret(ref common.ReferenceCall
 					},
 					"encryption": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Encryption is used to encrypt sessions. Must be 16, 24, or 32 characters long, to select AES-128, AES-",
+							Description: "encryption is used to encrypt sessions. Must be 16, 24, or 32 characters long, to select AES-128, AES-",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -31554,7 +32754,7 @@ func schema_openshift_api_legacyconfig_v1_SessionSecrets(ref common.ReferenceCal
 					},
 					"secrets": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Secrets is a list of secrets New sessions are signed and encrypted using the first secret. Existing sessions are decrypted/authenticated by each secret until one succeeds. This allows rotating secrets.",
+							Description: "secrets is a list of secrets New sessions are signed and encrypted using the first secret. Existing sessions are decrypted/authenticated by each secret until one succeeds. This allows rotating secrets.",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -31604,7 +32804,7 @@ func schema_openshift_api_legacyconfig_v1_StringSource(ref common.ReferenceCallb
 				Properties: map[string]spec.Schema{
 					"value": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Value specifies the cleartext value, or an encrypted value if keyFile is specified.",
+							Description: "value specifies the cleartext value, or an encrypted value if keyFile is specified.",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -31612,7 +32812,7 @@ func schema_openshift_api_legacyconfig_v1_StringSource(ref common.ReferenceCallb
 					},
 					"env": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Env specifies an envvar containing the cleartext value, or an encrypted value if the keyFile is specified.",
+							Description: "env specifies an envvar containing the cleartext value, or an encrypted value if the keyFile is specified.",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -31620,7 +32820,7 @@ func schema_openshift_api_legacyconfig_v1_StringSource(ref common.ReferenceCallb
 					},
 					"file": {
 						SchemaProps: spec.SchemaProps{
-							Description: "File references a file containing the cleartext value, or an encrypted value if a keyFile is specified.",
+							Description: "file references a file containing the cleartext value, or an encrypted value if a keyFile is specified.",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -31628,7 +32828,7 @@ func schema_openshift_api_legacyconfig_v1_StringSource(ref common.ReferenceCallb
 					},
 					"keyFile": {
 						SchemaProps: spec.SchemaProps{
-							Description: "KeyFile references a file containing the key to use to decrypt the value.",
+							Description: "keyFile references a file containing the key to use to decrypt the value.",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -31650,7 +32850,7 @@ func schema_openshift_api_legacyconfig_v1_StringSourceSpec(ref common.ReferenceC
 				Properties: map[string]spec.Schema{
 					"value": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Value specifies the cleartext value, or an encrypted value if keyFile is specified.",
+							Description: "value specifies the cleartext value, or an encrypted value if keyFile is specified.",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -31658,7 +32858,7 @@ func schema_openshift_api_legacyconfig_v1_StringSourceSpec(ref common.ReferenceC
 					},
 					"env": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Env specifies an envvar containing the cleartext value, or an encrypted value if the keyFile is specified.",
+							Description: "env specifies an envvar containing the cleartext value, or an encrypted value if the keyFile is specified.",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -31666,7 +32866,7 @@ func schema_openshift_api_legacyconfig_v1_StringSourceSpec(ref common.ReferenceC
 					},
 					"file": {
 						SchemaProps: spec.SchemaProps{
-							Description: "File references a file containing the cleartext value, or an encrypted value if a keyFile is specified.",
+							Description: "file references a file containing the cleartext value, or an encrypted value if a keyFile is specified.",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -31674,7 +32874,7 @@ func schema_openshift_api_legacyconfig_v1_StringSourceSpec(ref common.ReferenceC
 					},
 					"keyFile": {
 						SchemaProps: spec.SchemaProps{
-							Description: "KeyFile references a file containing the key to use to decrypt the value.",
+							Description: "keyFile references a file containing the key to use to decrypt the value.",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -31696,7 +32896,7 @@ func schema_openshift_api_legacyconfig_v1_TokenConfig(ref common.ReferenceCallba
 				Properties: map[string]spec.Schema{
 					"authorizeTokenMaxAgeSeconds": {
 						SchemaProps: spec.SchemaProps{
-							Description: "AuthorizeTokenMaxAgeSeconds defines the maximum age of authorize tokens",
+							Description: "authorizeTokenMaxAgeSeconds defines the maximum age of authorize tokens",
 							Default:     0,
 							Type:        []string{"integer"},
 							Format:      "int32",
@@ -31704,7 +32904,7 @@ func schema_openshift_api_legacyconfig_v1_TokenConfig(ref common.ReferenceCallba
 					},
 					"accessTokenMaxAgeSeconds": {
 						SchemaProps: spec.SchemaProps{
-							Description: "AccessTokenMaxAgeSeconds defines the maximum age of access tokens",
+							Description: "accessTokenMaxAgeSeconds defines the maximum age of access tokens",
 							Default:     0,
 							Type:        []string{"integer"},
 							Format:      "int32",
@@ -31712,7 +32912,7 @@ func schema_openshift_api_legacyconfig_v1_TokenConfig(ref common.ReferenceCallba
 					},
 					"accessTokenInactivityTimeoutSeconds": {
 						SchemaProps: spec.SchemaProps{
-							Description: "AccessTokenInactivityTimeoutSeconds defined the default token inactivity timeout for tokens granted by any client. Setting it to nil means the feature is completely disabled (default) The default setting can be overriden on OAuthClient basis. The value represents the maximum amount of time that can occur between consecutive uses of the token. Tokens become invalid if they are not used within this temporal window. The user will need to acquire a new token to regain access once a token times out. Valid values are: - 0: Tokens never time out - X: Tokens time out if there is no activity for X seconds The current minimum allowed value for X is 300 (5 minutes)",
+							Description: "accessTokenInactivityTimeoutSeconds defined the default token inactivity timeout for tokens granted by any client. Setting it to nil means the feature is completely disabled (default) The default setting can be overriden on OAuthClient basis. The value represents the maximum amount of time that can occur between consecutive uses of the token. Tokens become invalid if they are not used within this temporal window. The user will need to acquire a new token to regain access once a token times out. Valid values are: - 0: Tokens never time out - X: Tokens time out if there is no activity for X seconds The current minimum allowed value for X is 300 (5 minutes)",
 							Type:        []string{"integer"},
 							Format:      "int32",
 						},
@@ -31741,7 +32941,7 @@ func schema_openshift_api_legacyconfig_v1_UserAgentDenyRule(ref common.Reference
 					},
 					"httpVerbs": {
 						SchemaProps: spec.SchemaProps{
-							Description: "HTTPVerbs specifies which HTTP verbs should be matched.  An empty list means \"match all verbs\".",
+							Description: "httpVerbs specifies which HTTP verbs should be matched.  An empty list means \"match all verbs\".",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -31756,7 +32956,7 @@ func schema_openshift_api_legacyconfig_v1_UserAgentDenyRule(ref common.Reference
 					},
 					"rejectionMessage": {
 						SchemaProps: spec.SchemaProps{
-							Description: "RejectionMessage is the message shown when rejecting a client.  If it is not a set, the default message is used.",
+							Description: "rejectionMessage is the message shown when rejecting a client.  If it is not a set, the default message is used.",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -31786,7 +32986,7 @@ func schema_openshift_api_legacyconfig_v1_UserAgentMatchRule(ref common.Referenc
 					},
 					"httpVerbs": {
 						SchemaProps: spec.SchemaProps{
-							Description: "HTTPVerbs specifies which HTTP verbs should be matched.  An empty list means \"match all verbs\".",
+							Description: "httpVerbs specifies which HTTP verbs should be matched.  An empty list means \"match all verbs\".",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -31843,7 +33043,7 @@ func schema_openshift_api_legacyconfig_v1_UserAgentMatchingConfig(ref common.Ref
 					},
 					"defaultRejectionMessage": {
 						SchemaProps: spec.SchemaProps{
-							Description: "DefaultRejectionMessage is the message shown when rejecting a client.  If it is not a set, a generic message is given.",
+							Description: "defaultRejectionMessage is the message shown when rejecting a client.  If it is not a set, a generic message is given.",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -31867,7 +33067,7 @@ func schema_openshift_api_legacyconfig_v1_WebhookTokenAuthenticator(ref common.R
 				Properties: map[string]spec.Schema{
 					"configFile": {
 						SchemaProps: spec.SchemaProps{
-							Description: "ConfigFile is a path to a Kubeconfig file with the webhook configuration",
+							Description: "configFile is a path to a Kubeconfig file with the webhook configuration",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -31875,7 +33075,7 @@ func schema_openshift_api_legacyconfig_v1_WebhookTokenAuthenticator(ref common.R
 					},
 					"cacheTTL": {
 						SchemaProps: spec.SchemaProps{
-							Description: "CacheTTL indicates how long an authentication result should be cached. It takes a valid time duration string (e.g. \"5m\"). If empty, you get a default timeout of 2 minutes. If zero (e.g. \"0m\"), caching is disabled",
+							Description: "cacheTTL indicates how long an authentication result should be cached. It takes a valid time duration string (e.g. \"5m\"). If empty, you get a default timeout of 2 minutes. If zero (e.g. \"0m\"), caching is disabled",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -31897,13 +33097,13 @@ func schema_openshift_api_machine_v1_AWSFailureDomain(ref common.ReferenceCallba
 				Properties: map[string]spec.Schema{
 					"subnet": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Subnet is a reference to the subnet to use for this instance.",
+							Description: "subnet is a reference to the subnet to use for this instance.",
 							Ref:         ref("github.com/openshift/api/machine/v1.AWSResourceReference"),
 						},
 					},
 					"placement": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Placement configures the placement information for this instance.",
+							Description: "placement configures the placement information for this instance.",
 							Default:     map[string]interface{}{},
 							Ref:         ref("github.com/openshift/api/machine/v1.AWSFailureDomainPlacement"),
 						},
@@ -31925,7 +33125,7 @@ func schema_openshift_api_machine_v1_AWSFailureDomainPlacement(ref common.Refere
 				Properties: map[string]spec.Schema{
 					"availabilityZone": {
 						SchemaProps: spec.SchemaProps{
-							Description: "AvailabilityZone is the availability zone of the instance.",
+							Description: "availabilityZone is the availability zone of the instance.",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -31947,7 +33147,7 @@ func schema_openshift_api_machine_v1_AWSResourceFilter(ref common.ReferenceCallb
 				Properties: map[string]spec.Schema{
 					"name": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Name of the filter. Filter names are case-sensitive.",
+							Description: "name of the filter. Filter names are case-sensitive.",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -31960,7 +33160,7 @@ func schema_openshift_api_machine_v1_AWSResourceFilter(ref common.ReferenceCallb
 							},
 						},
 						SchemaProps: spec.SchemaProps{
-							Description: "Values includes one or more filter values. Filter values are case-sensitive.",
+							Description: "values includes one or more filter values. Filter values are case-sensitive.",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -31989,7 +33189,7 @@ func schema_openshift_api_machine_v1_AWSResourceReference(ref common.ReferenceCa
 				Properties: map[string]spec.Schema{
 					"type": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Type determines how the reference will fetch the AWS resource.",
+							Description: "type determines how the reference will fetch the AWS resource.",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -31997,14 +33197,14 @@ func schema_openshift_api_machine_v1_AWSResourceReference(ref common.ReferenceCa
 					},
 					"id": {
 						SchemaProps: spec.SchemaProps{
-							Description: "ID of resource.",
+							Description: "id of resource.",
 							Type:        []string{"string"},
 							Format:      "",
 						},
 					},
 					"arn": {
 						SchemaProps: spec.SchemaProps{
-							Description: "ARN of resource.",
+							Description: "arn of resource.",
 							Type:        []string{"string"},
 							Format:      "",
 						},
@@ -32016,7 +33216,7 @@ func schema_openshift_api_machine_v1_AWSResourceReference(ref common.ReferenceCa
 							},
 						},
 						SchemaProps: spec.SchemaProps{
-							Description: "Filters is a set of filters used to identify a resource.",
+							Description: "filters is a set of filters used to identify a resource.",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -32135,7 +33335,7 @@ func schema_openshift_api_machine_v1_AlibabaCloudMachineProviderConfig(ref commo
 					},
 					"securityGroups": {
 						SchemaProps: spec.SchemaProps{
-							Description: "SecurityGroups is a list of security group references to assign to the instance. A reference holds either the security group ID, the resource name, or the required tags to search. When more than one security group is returned for a tag search, all the groups are associated with the instance up to the maximum number of security groups to which an instance can belong. For more information, see the \"Security group limits\" section in Limits. https://www.alibabacloud.com/help/en/doc-detail/25412.htm",
+							Description: "securityGroups is a list of security group references to assign to the instance. A reference holds either the security group ID, the resource name, or the required tags to search. When more than one security group is returned for a tag search, all the groups are associated with the instance up to the maximum number of security groups to which an instance can belong. For more information, see the \"Security group limits\" section in Limits. https://www.alibabacloud.com/help/en/doc-detail/25412.htm",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -32149,55 +33349,55 @@ func schema_openshift_api_machine_v1_AlibabaCloudMachineProviderConfig(ref commo
 					},
 					"bandwidth": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Bandwidth describes the internet bandwidth strategy for the instance",
+							Description: "bandwidth describes the internet bandwidth strategy for the instance",
 							Default:     map[string]interface{}{},
 							Ref:         ref("github.com/openshift/api/machine/v1.BandwidthProperties"),
 						},
 					},
 					"systemDisk": {
 						SchemaProps: spec.SchemaProps{
-							Description: "SystemDisk holds the properties regarding the system disk for the instance",
+							Description: "systemDisk holds the properties regarding the system disk for the instance",
 							Default:     map[string]interface{}{},
 							Ref:         ref("github.com/openshift/api/machine/v1.SystemDiskProperties"),
 						},
 					},
 					"vSwitch": {
 						SchemaProps: spec.SchemaProps{
-							Description: "VSwitch is a reference to the vswitch to use for this instance. A reference holds either the vSwitch ID, the resource name, or the required tags to search. When more than one vSwitch is returned for a tag search, only the first vSwitch returned will be used. This parameter is required when you create an instance of the VPC type. You can call the DescribeVSwitches operation to query the created vSwitches.",
+							Description: "vSwitch is a reference to the vswitch to use for this instance. A reference holds either the vSwitch ID, the resource name, or the required tags to search. When more than one vSwitch is returned for a tag search, only the first vSwitch returned will be used. This parameter is required when you create an instance of the VPC type. You can call the DescribeVSwitches operation to query the created vSwitches.",
 							Default:     map[string]interface{}{},
 							Ref:         ref("github.com/openshift/api/machine/v1.AlibabaResourceReference"),
 						},
 					},
 					"ramRoleName": {
 						SchemaProps: spec.SchemaProps{
-							Description: "RAMRoleName is the name of the instance Resource Access Management (RAM) role. This allows the instance to perform API calls as this specified RAM role.",
+							Description: "ramRoleName is the name of the instance Resource Access Management (RAM) role. This allows the instance to perform API calls as this specified RAM role.",
 							Type:        []string{"string"},
 							Format:      "",
 						},
 					},
 					"resourceGroup": {
 						SchemaProps: spec.SchemaProps{
-							Description: "ResourceGroup references the resource group to which to assign the instance. A reference holds either the resource group ID, the resource name, or the required tags to search. When more than one resource group are returned for a search, an error will be produced and the Machine will not be created. Resource Groups do not support searching by tags.",
+							Description: "resourceGroup references the resource group to which to assign the instance. A reference holds either the resource group ID, the resource name, or the required tags to search. When more than one resource group are returned for a search, an error will be produced and the Machine will not be created. Resource Groups do not support searching by tags.",
 							Default:     map[string]interface{}{},
 							Ref:         ref("github.com/openshift/api/machine/v1.AlibabaResourceReference"),
 						},
 					},
 					"tenancy": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Tenancy specifies whether to create the instance on a dedicated host. Valid values:\n\ndefault: creates the instance on a non-dedicated host. host: creates the instance on a dedicated host. If you do not specify the DedicatedHostID parameter, Alibaba Cloud automatically selects a dedicated host for the instance. Empty value means no opinion and the platform chooses the a default, which is subject to change over time. Currently the default is `default`.",
+							Description: "tenancy specifies whether to create the instance on a dedicated host. Valid values:\n\ndefault: creates the instance on a non-dedicated host. host: creates the instance on a dedicated host. If you do not specify the DedicatedHostID parameter, Alibaba Cloud automatically selects a dedicated host for the instance. Empty value means no opinion and the platform chooses the a default, which is subject to change over time. Currently the default is `default`.",
 							Type:        []string{"string"},
 							Format:      "",
 						},
 					},
 					"userDataSecret": {
 						SchemaProps: spec.SchemaProps{
-							Description: "UserDataSecret contains a local reference to a secret that contains the UserData to apply to the instance",
+							Description: "userDataSecret contains a local reference to a secret that contains the UserData to apply to the instance",
 							Ref:         ref("k8s.io/api/core/v1.LocalObjectReference"),
 						},
 					},
 					"credentialsSecret": {
 						SchemaProps: spec.SchemaProps{
-							Description: "CredentialsSecret is a reference to the secret with alibabacloud credentials. Otherwise, defaults to permissions provided by attached RAM role where the actuator is running.",
+							Description: "credentialsSecret is a reference to the secret with alibabacloud credentials. Otherwise, defaults to permissions provided by attached RAM role where the actuator is running.",
 							Ref:         ref("k8s.io/api/core/v1.LocalObjectReference"),
 						},
 					},
@@ -32304,21 +33504,29 @@ func schema_openshift_api_machine_v1_AlibabaCloudMachineProviderStatus(ref commo
 					},
 					"instanceId": {
 						SchemaProps: spec.SchemaProps{
-							Description: "InstanceID is the instance ID of the machine created in alibabacloud",
+							Description: "instanceId is the instance ID of the machine created in alibabacloud",
 							Type:        []string{"string"},
 							Format:      "",
 						},
 					},
 					"instanceState": {
 						SchemaProps: spec.SchemaProps{
-							Description: "InstanceState is the state of the alibabacloud instance for this machine",
+							Description: "instanceState is the state of the alibabacloud instance for this machine",
 							Type:        []string{"string"},
 							Format:      "",
 						},
 					},
 					"conditions": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-map-keys": []interface{}{
+									"type",
+								},
+								"x-kubernetes-list-type": "map",
+							},
+						},
 						SchemaProps: spec.SchemaProps{
-							Description: "Conditions is a set of conditions associated with the Machine to indicate errors or other status",
+							Description: "conditions is a set of conditions associated with the Machine to indicate errors or other status",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -32355,21 +33563,21 @@ func schema_openshift_api_machine_v1_AlibabaResourceReference(ref common.Referen
 					},
 					"id": {
 						SchemaProps: spec.SchemaProps{
-							Description: "ID of resource",
+							Description: "id of resource",
 							Type:        []string{"string"},
 							Format:      "",
 						},
 					},
 					"name": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Name of the resource",
+							Description: "name of the resource",
 							Type:        []string{"string"},
 							Format:      "",
 						},
 					},
 					"tags": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Tags is a set of metadata based upon ECS object tags used to identify a resource. For details about usage when multiple resources are found, please see the owning parent field documentation.",
+							Description: "tags is a set of metadata based upon ECS object tags used to identify a resource. For details about usage when multiple resources are found, please see the owning parent field documentation.",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -32428,14 +33636,14 @@ func schema_openshift_api_machine_v1_BandwidthProperties(ref common.ReferenceCal
 				Properties: map[string]spec.Schema{
 					"internetMaxBandwidthIn": {
 						SchemaProps: spec.SchemaProps{
-							Description: "InternetMaxBandwidthIn is the maximum inbound public bandwidth. Unit: Mbit/s. Valid values: When the purchased outbound public bandwidth is less than or equal to 10 Mbit/s, the valid values of this parameter are 1 to 10. Currently the default is `10` when outbound bandwidth is less than or equal to 10 Mbit/s. When the purchased outbound public bandwidth is greater than 10, the valid values are 1 to the InternetMaxBandwidthOut value. Currently the default is the value used for `InternetMaxBandwidthOut` when outbound public bandwidth is greater than 10.",
+							Description: "internetMaxBandwidthIn is the maximum inbound public bandwidth. Unit: Mbit/s. Valid values: When the purchased outbound public bandwidth is less than or equal to 10 Mbit/s, the valid values of this parameter are 1 to 10. Currently the default is `10` when outbound bandwidth is less than or equal to 10 Mbit/s. When the purchased outbound public bandwidth is greater than 10, the valid values are 1 to the InternetMaxBandwidthOut value. Currently the default is the value used for `InternetMaxBandwidthOut` when outbound public bandwidth is greater than 10.",
 							Type:        []string{"integer"},
 							Format:      "int64",
 						},
 					},
 					"internetMaxBandwidthOut": {
 						SchemaProps: spec.SchemaProps{
-							Description: "InternetMaxBandwidthOut is the maximum outbound public bandwidth. Unit: Mbit/s. Valid values: 0 to 100. When a value greater than 0 is used then a public IP address is assigned to the instance. Empty value means no opinion and the platform chooses the a default, which is subject to change over time. Currently the default is `0`",
+							Description: "internetMaxBandwidthOut is the maximum outbound public bandwidth. Unit: Mbit/s. Valid values: 0 to 100. When a value greater than 0 is used then a public IP address is assigned to the instance. Empty value means no opinion and the platform chooses the a default, which is subject to change over time. Currently the default is `0`",
 							Type:        []string{"integer"},
 							Format:      "int64",
 						},
@@ -32551,9 +33759,16 @@ func schema_openshift_api_machine_v1_ControlPlaneMachineSetSpec(ref common.Refer
 				Description: "ControlPlaneMachineSet represents the configuration of the ControlPlaneMachineSet.",
 				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
+					"machineNamePrefix": {
+						SchemaProps: spec.SchemaProps{
+							Description: "machineNamePrefix is the prefix used when creating machine names. Each machine name will consist of this prefix, followed by a randomly generated string of 5 characters, and the index of the machine. It must be a lowercase RFC 1123 subdomain, consisting of lowercase alphanumeric characters, hyphens ('-'), and periods ('.'). Each block, separated by periods, must start and end with an alphanumeric character. Hyphens are not allowed at the start or end of a block, and consecutive periods are not permitted. The prefix must be between 1 and 245 characters in length. For example, if machineNamePrefix is set to 'control-plane', and three machines are created, their names might be: control-plane-abcde-0, control-plane-fghij-1, control-plane-klmno-2",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
 					"state": {
 						SchemaProps: spec.SchemaProps{
-							Description: "State defines whether the ControlPlaneMachineSet is Active or Inactive. When Inactive, the ControlPlaneMachineSet will not take any action on the state of the Machines within the cluster. When Active, the ControlPlaneMachineSet will reconcile the Machines and will update the Machines as necessary. Once Active, a ControlPlaneMachineSet cannot be made Inactive. To prevent further action please remove the ControlPlaneMachineSet.",
+							Description: "state defines whether the ControlPlaneMachineSet is Active or Inactive. When Inactive, the ControlPlaneMachineSet will not take any action on the state of the Machines within the cluster. When Active, the ControlPlaneMachineSet will reconcile the Machines and will update the Machines as necessary. Once Active, a ControlPlaneMachineSet cannot be made Inactive. To prevent further action please remove the ControlPlaneMachineSet.",
 							Default:     "Inactive",
 							Type:        []string{"string"},
 							Format:      "",
@@ -32561,14 +33776,14 @@ func schema_openshift_api_machine_v1_ControlPlaneMachineSetSpec(ref common.Refer
 					},
 					"replicas": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Replicas defines how many Control Plane Machines should be created by this ControlPlaneMachineSet. This field is immutable and cannot be changed after cluster installation. The ControlPlaneMachineSet only operates with 3 or 5 node control planes, 3 and 5 are the only valid values for this field.",
+							Description: "replicas defines how many Control Plane Machines should be created by this ControlPlaneMachineSet. This field is immutable and cannot be changed after cluster installation. The ControlPlaneMachineSet only operates with 3 or 5 node control planes, 3 and 5 are the only valid values for this field.",
 							Type:        []string{"integer"},
 							Format:      "int32",
 						},
 					},
 					"strategy": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Strategy defines how the ControlPlaneMachineSet will update Machines when it detects a change to the ProviderSpec.",
+							Description: "strategy defines how the ControlPlaneMachineSet will update Machines when it detects a change to the ProviderSpec.",
 							Default:     map[string]interface{}{},
 							Ref:         ref("github.com/openshift/api/machine/v1.ControlPlaneMachineSetStrategy"),
 						},
@@ -32582,7 +33797,7 @@ func schema_openshift_api_machine_v1_ControlPlaneMachineSetSpec(ref common.Refer
 					},
 					"template": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Template describes the Control Plane Machines that will be created by this ControlPlaneMachineSet.",
+							Description: "template describes the Control Plane Machines that will be created by this ControlPlaneMachineSet.",
 							Default:     map[string]interface{}{},
 							Ref:         ref("github.com/openshift/api/machine/v1.ControlPlaneMachineSetTemplate"),
 						},
@@ -32609,13 +33824,11 @@ func schema_openshift_api_machine_v1_ControlPlaneMachineSetStatus(ref common.Ref
 								"x-kubernetes-list-map-keys": []interface{}{
 									"type",
 								},
-								"x-kubernetes-list-type":       "map",
-								"x-kubernetes-patch-merge-key": "type",
-								"x-kubernetes-patch-strategy":  "merge",
+								"x-kubernetes-list-type": "map",
 							},
 						},
 						SchemaProps: spec.SchemaProps{
-							Description: "Conditions represents the observations of the ControlPlaneMachineSet's current state. Known .status.conditions.type are: Available, Degraded and Progressing.",
+							Description: "conditions represents the observations of the ControlPlaneMachineSet's current state. Known .status.conditions.type are: Available, Degraded and Progressing.",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -32629,35 +33842,35 @@ func schema_openshift_api_machine_v1_ControlPlaneMachineSetStatus(ref common.Ref
 					},
 					"observedGeneration": {
 						SchemaProps: spec.SchemaProps{
-							Description: "ObservedGeneration is the most recent generation observed for this ControlPlaneMachineSet. It corresponds to the ControlPlaneMachineSets's generation, which is updated on mutation by the API Server.",
+							Description: "observedGeneration is the most recent generation observed for this ControlPlaneMachineSet. It corresponds to the ControlPlaneMachineSets's generation, which is updated on mutation by the API Server.",
 							Type:        []string{"integer"},
 							Format:      "int64",
 						},
 					},
 					"replicas": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Replicas is the number of Control Plane Machines created by the ControlPlaneMachineSet controller. Note that during update operations this value may differ from the desired replica count.",
+							Description: "replicas is the number of Control Plane Machines created by the ControlPlaneMachineSet controller. Note that during update operations this value may differ from the desired replica count.",
 							Type:        []string{"integer"},
 							Format:      "int32",
 						},
 					},
 					"readyReplicas": {
 						SchemaProps: spec.SchemaProps{
-							Description: "ReadyReplicas is the number of Control Plane Machines created by the ControlPlaneMachineSet controller which are ready. Note that this value may be higher than the desired number of replicas while rolling updates are in-progress.",
+							Description: "readyReplicas is the number of Control Plane Machines created by the ControlPlaneMachineSet controller which are ready. Note that this value may be higher than the desired number of replicas while rolling updates are in-progress.",
 							Type:        []string{"integer"},
 							Format:      "int32",
 						},
 					},
 					"updatedReplicas": {
 						SchemaProps: spec.SchemaProps{
-							Description: "UpdatedReplicas is the number of non-terminated Control Plane Machines created by the ControlPlaneMachineSet controller that have the desired provider spec and are ready. This value is set to 0 when a change is detected to the desired spec. When the update strategy is RollingUpdate, this will also coincide with starting the process of updating the Machines. When the update strategy is OnDelete, this value will remain at 0 until a user deletes an existing replica and its replacement has become ready.",
+							Description: "updatedReplicas is the number of non-terminated Control Plane Machines created by the ControlPlaneMachineSet controller that have the desired provider spec and are ready. This value is set to 0 when a change is detected to the desired spec. When the update strategy is RollingUpdate, this will also coincide with starting the process of updating the Machines. When the update strategy is OnDelete, this value will remain at 0 until a user deletes an existing replica and its replacement has become ready.",
 							Type:        []string{"integer"},
 							Format:      "int32",
 						},
 					},
 					"unavailableReplicas": {
 						SchemaProps: spec.SchemaProps{
-							Description: "UnavailableReplicas is the number of Control Plane Machines that are still required before the ControlPlaneMachineSet reaches the desired available capacity. When this value is non-zero, the number of ReadyReplicas is less than the desired Replicas.",
+							Description: "unavailableReplicas is the number of Control Plane Machines that are still required before the ControlPlaneMachineSet reaches the desired available capacity. When this value is non-zero, the number of ReadyReplicas is less than the desired Replicas.",
 							Type:        []string{"integer"},
 							Format:      "int32",
 						},
@@ -32679,7 +33892,7 @@ func schema_openshift_api_machine_v1_ControlPlaneMachineSetStrategy(ref common.R
 				Properties: map[string]spec.Schema{
 					"type": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Type defines the type of update strategy that should be used when updating Machines owned by the ControlPlaneMachineSet. Valid values are \"RollingUpdate\" and \"OnDelete\". The current default value is \"RollingUpdate\".",
+							Description: "type defines the type of update strategy that should be used when updating Machines owned by the ControlPlaneMachineSet. Valid values are \"RollingUpdate\" and \"OnDelete\". The current default value is \"RollingUpdate\".",
 							Default:     "RollingUpdate",
 							Type:        []string{"string"},
 							Format:      "",
@@ -32700,7 +33913,7 @@ func schema_openshift_api_machine_v1_ControlPlaneMachineSetTemplate(ref common.R
 				Properties: map[string]spec.Schema{
 					"machineType": {
 						SchemaProps: spec.SchemaProps{
-							Description: "MachineType determines the type of Machines that should be managed by the ControlPlaneMachineSet. Currently, the only valid value is machines_v1beta1_machine_openshift_io.",
+							Description: "machineType determines the type of Machines that should be managed by the ControlPlaneMachineSet. Currently, the only valid value is machines_v1beta1_machine_openshift_io.",
 							Type:        []string{"string"},
 							Format:      "",
 						},
@@ -32712,6 +33925,7 @@ func schema_openshift_api_machine_v1_ControlPlaneMachineSetTemplate(ref common.R
 						},
 					},
 				},
+				Required: []string{"machineType"},
 			},
 			VendorExtensible: spec.VendorExtensible{
 				Extensions: spec.Extensions{
@@ -32756,7 +33970,7 @@ func schema_openshift_api_machine_v1_ControlPlaneMachineSetTemplateObjectMeta(re
 					},
 					"annotations": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Annotations is an unstructured key value map stored with a resource that may be set by external tools to store and retrieve arbitrary metadata. They are not queryable and should be preserved when modifying objects. More info: http://kubernetes.io/docs/user-guide/annotations",
+							Description: "annotations is an unstructured key value map stored with a resource that may be set by external tools to store and retrieve arbitrary metadata. They are not queryable and should be preserved when modifying objects. More info: http://kubernetes.io/docs/user-guide/annotations",
 							Type:        []string{"object"},
 							AdditionalProperties: &spec.SchemaOrBool{
 								Allows: true,
@@ -32863,7 +34077,7 @@ func schema_openshift_api_machine_v1_FailureDomains(ref common.ReferenceCallback
 				Properties: map[string]spec.Schema{
 					"platform": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Platform identifies the platform for which the FailureDomain represents. Currently supported values are AWS, Azure, GCP, OpenStack, VSphere and Nutanix.",
+							Description: "platform identifies the platform for which the FailureDomain represents. Currently supported values are AWS, Azure, GCP, OpenStack, VSphere and Nutanix.",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -32876,7 +34090,7 @@ func schema_openshift_api_machine_v1_FailureDomains(ref common.ReferenceCallback
 							},
 						},
 						SchemaProps: spec.SchemaProps{
-							Description: "AWS configures failure domain information for the AWS platform.",
+							Description: "aws configures failure domain information for the AWS platform.",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -32895,7 +34109,7 @@ func schema_openshift_api_machine_v1_FailureDomains(ref common.ReferenceCallback
 							},
 						},
 						SchemaProps: spec.SchemaProps{
-							Description: "Azure configures failure domain information for the Azure platform.",
+							Description: "azure configures failure domain information for the Azure platform.",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -32914,7 +34128,7 @@ func schema_openshift_api_machine_v1_FailureDomains(ref common.ReferenceCallback
 							},
 						},
 						SchemaProps: spec.SchemaProps{
-							Description: "GCP configures failure domain information for the GCP platform.",
+							Description: "gcp configures failure domain information for the GCP platform.",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -32955,7 +34169,7 @@ func schema_openshift_api_machine_v1_FailureDomains(ref common.ReferenceCallback
 							},
 						},
 						SchemaProps: spec.SchemaProps{
-							Description: "OpenStack configures failure domain information for the OpenStack platform.",
+							Description: "openstack configures failure domain information for the OpenStack platform.",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -33024,7 +34238,7 @@ func schema_openshift_api_machine_v1_GCPFailureDomain(ref common.ReferenceCallba
 				Properties: map[string]spec.Schema{
 					"zone": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Zone is the zone in which the GCP machine provider will create the VM.",
+							Description: "zone is the zone in which the GCP machine provider will create the VM.",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -33376,6 +34590,14 @@ func schema_openshift_api_machine_v1_NutanixMachineProviderStatus(ref common.Ref
 						},
 					},
 					"conditions": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-map-keys": []interface{}{
+									"type",
+								},
+								"x-kubernetes-list-type": "map",
+							},
+						},
 						SchemaProps: spec.SchemaProps{
 							Description: "conditions is a set of conditions associated with the Machine to indicate errors or other status",
 							Type:        []string{"array"},
@@ -33413,7 +34635,7 @@ func schema_openshift_api_machine_v1_NutanixResourceIdentifier(ref common.Refere
 				Properties: map[string]spec.Schema{
 					"type": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Type is the identifier type to use for this resource.",
+							Description: "type is the identifier type to use for this resource.",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -33564,7 +34786,7 @@ func schema_openshift_api_machine_v1_NutanixVMDiskDeviceProperties(ref common.Re
 						},
 					},
 				},
-				Required: []string{"deviceType"},
+				Required: []string{"deviceType", "adapterType", "deviceIndex"},
 			},
 		},
 	}
@@ -33609,7 +34831,7 @@ func schema_openshift_api_machine_v1_OpenShiftMachineV1Beta1MachineTemplate(ref 
 				Properties: map[string]spec.Schema{
 					"failureDomains": {
 						SchemaProps: spec.SchemaProps{
-							Description: "FailureDomains is the list of failure domains (sometimes called availability zones) in which the ControlPlaneMachineSet should balance the Control Plane Machines. This will be merged into the ProviderSpec given in the template. This field is optional on platforms that do not require placement information.",
+							Description: "failureDomains is the list of failure domains (sometimes called availability zones) in which the ControlPlaneMachineSet should balance the Control Plane Machines. This will be merged into the ProviderSpec given in the template. This field is optional on platforms that do not require placement information.",
 							Ref:         ref("github.com/openshift/api/machine/v1.FailureDomains"),
 						},
 					},
@@ -33622,7 +34844,7 @@ func schema_openshift_api_machine_v1_OpenShiftMachineV1Beta1MachineTemplate(ref 
 					},
 					"spec": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Spec contains the desired configuration of the Control Plane Machines. The ProviderSpec within contains platform specific details for creating the Control Plane Machines. The ProviderSe should be complete apart from the platform specific failure domain field. This will be overriden when the Machines are created based on the FailureDomains field.",
+							Description: "spec contains the desired configuration of the Control Plane Machines. The ProviderSpec within contains platform specific details for creating the Control Plane Machines. The ProviderSe should be complete apart from the platform specific failure domain field. This will be overriden when the Machines are created based on the FailureDomains field.",
 							Default:     map[string]interface{}{},
 							Ref:         ref("github.com/openshift/api/machine/v1beta1.MachineSpec"),
 						},
@@ -33809,9 +35031,7 @@ func schema_openshift_api_machine_v1_PowerVSMachineProviderStatus(ref common.Ref
 								"x-kubernetes-list-map-keys": []interface{}{
 									"type",
 								},
-								"x-kubernetes-list-type":       "map",
-								"x-kubernetes-patch-merge-key": "type",
-								"x-kubernetes-patch-strategy":  "merge",
+								"x-kubernetes-list-type": "map",
 							},
 						},
 						SchemaProps: spec.SchemaProps{
@@ -33865,28 +35085,28 @@ func schema_openshift_api_machine_v1_PowerVSResource(ref common.ReferenceCallbac
 				Properties: map[string]spec.Schema{
 					"type": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Type identifies the resource type for this entry. Valid values are ID, Name and RegEx",
+							Description: "type identifies the resource type for this entry. Valid values are ID, Name and RegEx",
 							Type:        []string{"string"},
 							Format:      "",
 						},
 					},
 					"id": {
 						SchemaProps: spec.SchemaProps{
-							Description: "ID of resource",
+							Description: "id of resource",
 							Type:        []string{"string"},
 							Format:      "",
 						},
 					},
 					"name": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Name of resource",
+							Description: "name of resource",
 							Type:        []string{"string"},
 							Format:      "",
 						},
 					},
 					"regex": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Regex to find resource Regex contains the pattern to match to find a resource",
+							Description: "regex to find resource Regex contains the pattern to match to find a resource",
 							Type:        []string{"string"},
 							Format:      "",
 						},
@@ -33920,7 +35140,7 @@ func schema_openshift_api_machine_v1_PowerVSSecretReference(ref common.Reference
 				Properties: map[string]spec.Schema{
 					"name": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Name of the secret.",
+							Description: "name of the secret.",
 							Type:        []string{"string"},
 							Format:      "",
 						},
@@ -33974,28 +35194,28 @@ func schema_openshift_api_machine_v1_SystemDiskProperties(ref common.ReferenceCa
 				Properties: map[string]spec.Schema{
 					"category": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Category is the category of the system disk. Valid values: cloud_essd: ESSD. When the parameter is set to this value, you can use the SystemDisk.PerformanceLevel parameter to specify the performance level of the disk. cloud_efficiency: ultra disk. cloud_ssd: standard SSD. cloud: basic disk. Empty value means no opinion and the platform chooses the a default, which is subject to change over time. Currently for non-I/O optimized instances of retired instance types, the default is `cloud`. Currently for other instances, the default is `cloud_efficiency`.",
+							Description: "category is the category of the system disk. Valid values: cloud_essd: ESSD. When the parameter is set to this value, you can use the SystemDisk.PerformanceLevel parameter to specify the performance level of the disk. cloud_efficiency: ultra disk. cloud_ssd: standard SSD. cloud: basic disk. Empty value means no opinion and the platform chooses the a default, which is subject to change over time. Currently for non-I/O optimized instances of retired instance types, the default is `cloud`. Currently for other instances, the default is `cloud_efficiency`.",
 							Type:        []string{"string"},
 							Format:      "",
 						},
 					},
 					"performanceLevel": {
 						SchemaProps: spec.SchemaProps{
-							Description: "PerformanceLevel is the performance level of the ESSD used as the system disk. Valid values:\n\nPL0: A single ESSD can deliver up to 10,000 random read/write IOPS. PL1: A single ESSD can deliver up to 50,000 random read/write IOPS. PL2: A single ESSD can deliver up to 100,000 random read/write IOPS. PL3: A single ESSD can deliver up to 1,000,000 random read/write IOPS. Empty value means no opinion and the platform chooses a default, which is subject to change over time. Currently the default is `PL1`. For more information about ESSD performance levels, see ESSDs.",
+							Description: "performanceLevel is the performance level of the ESSD used as the system disk. Valid values:\n\nPL0: A single ESSD can deliver up to 10,000 random read/write IOPS. PL1: A single ESSD can deliver up to 50,000 random read/write IOPS. PL2: A single ESSD can deliver up to 100,000 random read/write IOPS. PL3: A single ESSD can deliver up to 1,000,000 random read/write IOPS. Empty value means no opinion and the platform chooses a default, which is subject to change over time. Currently the default is `PL1`. For more information about ESSD performance levels, see ESSDs.",
 							Type:        []string{"string"},
 							Format:      "",
 						},
 					},
 					"name": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Name is the name of the system disk. If the name is specified the name must be 2 to 128 characters in length. It must start with a letter and cannot start with http:// or https://. It can contain letters, digits, colons (:), underscores (_), and hyphens (-). Empty value means the platform chooses a default, which is subject to change over time. Currently the default is `\"\"`.",
+							Description: "name is the name of the system disk. If the name is specified the name must be 2 to 128 characters in length. It must start with a letter and cannot start with http:// or https://. It can contain letters, digits, colons (:), underscores (_), and hyphens (-). Empty value means the platform chooses a default, which is subject to change over time. Currently the default is `\"\"`.",
 							Type:        []string{"string"},
 							Format:      "",
 						},
 					},
 					"size": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Size is the size of the system disk. Unit: GiB. Valid values: 20 to 500. The value must be at least 20 and greater than or equal to the size of the image. Empty value means the platform chooses a default, which is subject to change over time. Currently the default is `40` or the size of the image depending on whichever is greater.",
+							Description: "size is the size of the system disk. Unit: GiB. Valid values: 20 to 500. The value must be at least 20 and greater than or equal to the size of the image. Empty value means the platform chooses a default, which is subject to change over time. Currently the default is `40` or the size of the image depending on whichever is greater.",
 							Type:        []string{"integer"},
 							Format:      "int64",
 						},
@@ -34357,7 +35577,7 @@ func schema_openshift_api_machine_v1alpha1_NetworkParam(ref common.ReferenceCall
 					},
 					"fixedIp": {
 						SchemaProps: spec.SchemaProps{
-							Description: "A fixed IPv4 address for the NIC.",
+							Description: "A fixed IPv4 address for the NIC. Deprecated: fixedIP is silently ignored. Use subnets instead.",
 							Type:        []string{"string"},
 							Format:      "",
 						},
@@ -34385,14 +35605,14 @@ func schema_openshift_api_machine_v1alpha1_NetworkParam(ref common.ReferenceCall
 					},
 					"noAllowedAddressPairs": {
 						SchemaProps: spec.SchemaProps{
-							Description: "NoAllowedAddressPairs disables creation of allowed address pairs for the network ports",
+							Description: "noAllowedAddressPairs disables creation of allowed address pairs for the network ports",
 							Type:        []string{"boolean"},
 							Format:      "",
 						},
 					},
 					"portTags": {
 						SchemaProps: spec.SchemaProps{
-							Description: "PortTags allows users to specify a list of tags to add to ports created in a given network",
+							Description: "portTags allows users to specify a list of tags to add to ports created in a given network",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -34430,7 +35650,7 @@ func schema_openshift_api_machine_v1alpha1_NetworkParam(ref common.ReferenceCall
 					},
 					"portSecurity": {
 						SchemaProps: spec.SchemaProps{
-							Description: "PortSecurity optionally enables or disables security on ports managed by OpenStack",
+							Description: "portSecurity optionally enables or disables security on ports managed by OpenStack",
 							Type:        []string{"boolean"},
 							Format:      "",
 						},
@@ -34510,7 +35730,7 @@ func schema_openshift_api_machine_v1alpha1_OpenstackProviderSpec(ref common.Refe
 					},
 					"sshUserName": {
 						SchemaProps: spec.SchemaProps{
-							Description: "The machine ssh username",
+							Description: "The machine ssh username Deprecated: sshUserName is silently ignored.",
 							Type:        []string{"string"},
 							Format:      "",
 						},
@@ -34666,7 +35886,7 @@ func schema_openshift_api_machine_v1alpha1_OpenstackProviderSpec(ref common.Refe
 					},
 					"primarySubnet": {
 						SchemaProps: spec.SchemaProps{
-							Description: "The subnet that a set of machines will get ingress/egress traffic from",
+							Description: "The subnet that a set of machines will get ingress/egress traffic from Deprecated: primarySubnet is silently ignored. Use subnets instead.",
 							Type:        []string{"string"},
 							Format:      "",
 						},
@@ -34738,14 +35958,14 @@ func schema_openshift_api_machine_v1alpha1_PortOpts(ref common.ReferenceCallback
 					},
 					"tenantID": {
 						SchemaProps: spec.SchemaProps{
-							Description: "tenantID specifies the tenant ID of the created port. Note that this requires OpenShift to have administrative permissions, which is typically not the case. Use of this field is not recommended. Deprecated: use projectID instead. It will be ignored if projectID is set.",
+							Description: "tenantID specifies the tenant ID of the created port. Note that this requires OpenShift to have administrative permissions, which is typically not the case. Use of this field is not recommended. Deprecated: tenantID is silently ignored.",
 							Type:        []string{"string"},
 							Format:      "",
 						},
 					},
 					"projectID": {
 						SchemaProps: spec.SchemaProps{
-							Description: "projectID specifies the project ID of the created port. Note that this requires OpenShift to have administrative permissions, which is typically not the case. Use of this field is not recommended.",
+							Description: "projectID specifies the project ID of the created port. Note that this requires OpenShift to have administrative permissions, which is typically not the case. Use of this field is not recommended. Deprecated: projectID is silently ignored.",
 							Type:        []string{"string"},
 							Format:      "",
 						},
@@ -34869,7 +36089,7 @@ func schema_openshift_api_machine_v1alpha1_RootVolume(ref common.ReferenceCallba
 					},
 					"diskSize": {
 						SchemaProps: spec.SchemaProps{
-							Description: "diskSize specifies the size, in GB, of the created root volume.",
+							Description: "diskSize specifies the size, in GiB, of the created root volume.",
 							Type:        []string{"integer"},
 							Format:      "int32",
 						},
@@ -35124,7 +36344,7 @@ func schema_openshift_api_machine_v1alpha1_SubnetFilter(ref common.ReferenceCall
 					},
 					"subnetpoolId": {
 						SchemaProps: spec.SchemaProps{
-							Description: "subnetpoolId filters subnets by subnet pool ID.",
+							Description: "subnetpoolId filters subnets by subnet pool ID. Deprecated: subnetpoolId is silently ignored.",
 							Type:        []string{"string"},
 							Format:      "",
 						},
@@ -35220,7 +36440,7 @@ func schema_openshift_api_machine_v1alpha1_SubnetParam(ref common.ReferenceCallb
 					},
 					"portTags": {
 						SchemaProps: spec.SchemaProps{
-							Description: "PortTags are tags that are added to ports created on this subnet",
+							Description: "portTags are tags that are added to ports created on this subnet",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -35235,7 +36455,7 @@ func schema_openshift_api_machine_v1alpha1_SubnetParam(ref common.ReferenceCallb
 					},
 					"portSecurity": {
 						SchemaProps: spec.SchemaProps{
-							Description: "PortSecurity optionally enables or disables security on ports managed by OpenStack",
+							Description: "portSecurity optionally enables or disables security on ports managed by OpenStack Deprecated: portSecurity is silently ignored. Set portSecurity on the parent network instead.",
 							Type:        []string{"boolean"},
 							Format:      "",
 						},
@@ -35277,14 +36497,14 @@ func schema_openshift_api_machine_v1beta1_AWSMachineProviderConfig(ref common.Re
 					},
 					"ami": {
 						SchemaProps: spec.SchemaProps{
-							Description: "AMI is the reference to the AMI from which to create the machine instance.",
+							Description: "ami is the reference to the AMI from which to create the machine instance.",
 							Default:     map[string]interface{}{},
 							Ref:         ref("github.com/openshift/api/machine/v1beta1.AWSResourceReference"),
 						},
 					},
 					"instanceType": {
 						SchemaProps: spec.SchemaProps{
-							Description: "InstanceType is the type of instance to create. Example: m4.xlarge",
+							Description: "instanceType is the type of instance to create. Example: m4.xlarge",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -35292,7 +36512,7 @@ func schema_openshift_api_machine_v1beta1_AWSMachineProviderConfig(ref common.Re
 					},
 					"tags": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Tags is the set of tags to add to apply to an instance, in addition to the ones added by default by the actuator. These tags are additive. The actuator will ensure these tags are present, but will not remove any other tags that may exist on the instance.",
+							Description: "tags is the set of tags to add to apply to an instance, in addition to the ones added by default by the actuator. These tags are additive. The actuator will ensure these tags are present, but will not remove any other tags that may exist on the instance.",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -35306,32 +36526,32 @@ func schema_openshift_api_machine_v1beta1_AWSMachineProviderConfig(ref common.Re
 					},
 					"iamInstanceProfile": {
 						SchemaProps: spec.SchemaProps{
-							Description: "IAMInstanceProfile is a reference to an IAM role to assign to the instance",
+							Description: "iamInstanceProfile is a reference to an IAM role to assign to the instance",
 							Ref:         ref("github.com/openshift/api/machine/v1beta1.AWSResourceReference"),
 						},
 					},
 					"userDataSecret": {
 						SchemaProps: spec.SchemaProps{
-							Description: "UserDataSecret contains a local reference to a secret that contains the UserData to apply to the instance",
+							Description: "userDataSecret contains a local reference to a secret that contains the UserData to apply to the instance",
 							Ref:         ref("k8s.io/api/core/v1.LocalObjectReference"),
 						},
 					},
 					"credentialsSecret": {
 						SchemaProps: spec.SchemaProps{
-							Description: "CredentialsSecret is a reference to the secret with AWS credentials. Otherwise, defaults to permissions provided by attached IAM role where the actuator is running.",
+							Description: "credentialsSecret is a reference to the secret with AWS credentials. Otherwise, defaults to permissions provided by attached IAM role where the actuator is running.",
 							Ref:         ref("k8s.io/api/core/v1.LocalObjectReference"),
 						},
 					},
 					"keyName": {
 						SchemaProps: spec.SchemaProps{
-							Description: "KeyName is the name of the KeyPair to use for SSH",
+							Description: "keyName is the name of the KeyPair to use for SSH",
 							Type:        []string{"string"},
 							Format:      "",
 						},
 					},
 					"deviceIndex": {
 						SchemaProps: spec.SchemaProps{
-							Description: "DeviceIndex is the index of the device on the instance for the network interface attachment. Defaults to 0.",
+							Description: "deviceIndex is the index of the device on the instance for the network interface attachment. Defaults to 0.",
 							Default:     0,
 							Type:        []string{"integer"},
 							Format:      "int64",
@@ -35339,21 +36559,21 @@ func schema_openshift_api_machine_v1beta1_AWSMachineProviderConfig(ref common.Re
 					},
 					"publicIp": {
 						SchemaProps: spec.SchemaProps{
-							Description: "PublicIP specifies whether the instance should get a public IP. If not present, it should use the default of its subnet.",
+							Description: "publicIp specifies whether the instance should get a public IP. If not present, it should use the default of its subnet.",
 							Type:        []string{"boolean"},
 							Format:      "",
 						},
 					},
 					"networkInterfaceType": {
 						SchemaProps: spec.SchemaProps{
-							Description: "NetworkInterfaceType specifies the type of network interface to be used for the primary network interface. Valid values are \"ENA\", \"EFA\", and omitted, which means no opinion and the platform chooses a good default which may change over time. The current default value is \"ENA\". Please visit https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/efa.html to learn more about the AWS Elastic Fabric Adapter interface option.",
+							Description: "networkInterfaceType specifies the type of network interface to be used for the primary network interface. Valid values are \"ENA\", \"EFA\", and omitted, which means no opinion and the platform chooses a good default which may change over time. The current default value is \"ENA\". Please visit https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/efa.html to learn more about the AWS Elastic Fabric Adapter interface option.",
 							Type:        []string{"string"},
 							Format:      "",
 						},
 					},
 					"securityGroups": {
 						SchemaProps: spec.SchemaProps{
-							Description: "SecurityGroups is an array of references to security groups that should be applied to the instance.",
+							Description: "securityGroups is an array of references to security groups that should be applied to the instance.",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -35367,21 +36587,21 @@ func schema_openshift_api_machine_v1beta1_AWSMachineProviderConfig(ref common.Re
 					},
 					"subnet": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Subnet is a reference to the subnet to use for this instance",
+							Description: "subnet is a reference to the subnet to use for this instance",
 							Default:     map[string]interface{}{},
 							Ref:         ref("github.com/openshift/api/machine/v1beta1.AWSResourceReference"),
 						},
 					},
 					"placement": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Placement specifies where to create the instance in AWS",
+							Description: "placement specifies where to create the instance in AWS",
 							Default:     map[string]interface{}{},
 							Ref:         ref("github.com/openshift/api/machine/v1beta1.Placement"),
 						},
 					},
 					"loadBalancers": {
 						SchemaProps: spec.SchemaProps{
-							Description: "LoadBalancers is the set of load balancers to which the new instance should be added once it is created.",
+							Description: "loadBalancers is the set of load balancers to which the new instance should be added once it is created.",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -35395,7 +36615,7 @@ func schema_openshift_api_machine_v1beta1_AWSMachineProviderConfig(ref common.Re
 					},
 					"blockDevices": {
 						SchemaProps: spec.SchemaProps{
-							Description: "BlockDevices is the set of block device mapping associated to this instance, block device without a name will be used as a root device and only one device without a name is allowed https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/block-device-mapping-concepts.html",
+							Description: "blockDevices is the set of block device mapping associated to this instance, block device without a name will be used as a root device and only one device without a name is allowed https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/block-device-mapping-concepts.html",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -35409,20 +36629,20 @@ func schema_openshift_api_machine_v1beta1_AWSMachineProviderConfig(ref common.Re
 					},
 					"spotMarketOptions": {
 						SchemaProps: spec.SchemaProps{
-							Description: "SpotMarketOptions allows users to configure instances to be run using AWS Spot instances.",
+							Description: "spotMarketOptions allows users to configure instances to be run using AWS Spot instances.",
 							Ref:         ref("github.com/openshift/api/machine/v1beta1.SpotMarketOptions"),
 						},
 					},
 					"metadataServiceOptions": {
 						SchemaProps: spec.SchemaProps{
-							Description: "MetadataServiceOptions allows users to configure instance metadata service interaction options. If nothing specified, default AWS IMDS settings will be applied. https://docs.aws.amazon.com/AWSEC2/latest/APIReference/API_InstanceMetadataOptionsRequest.html",
+							Description: "metadataServiceOptions allows users to configure instance metadata service interaction options. If nothing specified, default AWS IMDS settings will be applied. https://docs.aws.amazon.com/AWSEC2/latest/APIReference/API_InstanceMetadataOptionsRequest.html",
 							Default:     map[string]interface{}{},
 							Ref:         ref("github.com/openshift/api/machine/v1beta1.MetadataServiceOptions"),
 						},
 					},
 					"placementGroupName": {
 						SchemaProps: spec.SchemaProps{
-							Description: "PlacementGroupName specifies the name of the placement group in which to launch the instance. The placement group must already be created and may use any placement strategy. When omitted, no placement group is used when creating the EC2 instance.",
+							Description: "placementGroupName specifies the name of the placement group in which to launch the instance. The placement group must already be created and may use any placement strategy. When omitted, no placement group is used when creating the EC2 instance.",
 							Type:        []string{"string"},
 							Format:      "",
 						},
@@ -35438,6 +36658,13 @@ func schema_openshift_api_machine_v1beta1_AWSMachineProviderConfig(ref common.Re
 						SchemaProps: spec.SchemaProps{
 							Description: "capacityReservationId specifies the target Capacity Reservation into which the instance should be launched. The field size should be greater than 0 and the field input must start with cr-***",
 							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"marketType": {
+						SchemaProps: spec.SchemaProps{
+							Description: "marketType specifies the type of market for the EC2 instance. Valid values are OnDemand, Spot, CapacityBlock and omitted.\n\nDefaults to OnDemand. When SpotMarketOptions is provided, the marketType defaults to \"Spot\".\n\nWhen set to OnDemand the instance runs as a standard OnDemand instance. When set to Spot the instance runs as a Spot instance. When set to CapacityBlock the instance utilizes pre-purchased compute capacity (capacity blocks) with AWS Capacity Reservations. If this value is selected, capacityReservationID must be specified to identify the target reservation.",
 							Type:        []string{"string"},
 							Format:      "",
 						},
@@ -35523,21 +36750,29 @@ func schema_openshift_api_machine_v1beta1_AWSMachineProviderStatus(ref common.Re
 					},
 					"instanceId": {
 						SchemaProps: spec.SchemaProps{
-							Description: "InstanceID is the instance ID of the machine created in AWS",
+							Description: "instanceId is the instance ID of the machine created in AWS",
 							Type:        []string{"string"},
 							Format:      "",
 						},
 					},
 					"instanceState": {
 						SchemaProps: spec.SchemaProps{
-							Description: "InstanceState is the state of the AWS instance for this machine",
+							Description: "instanceState is the state of the AWS instance for this machine",
 							Type:        []string{"string"},
 							Format:      "",
 						},
 					},
 					"conditions": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-map-keys": []interface{}{
+									"type",
+								},
+								"x-kubernetes-list-type": "map",
+							},
+						},
 						SchemaProps: spec.SchemaProps{
-							Description: "Conditions is a set of conditions associated with the Machine to indicate errors or other status",
+							Description: "conditions is a set of conditions associated with the Machine to indicate errors or other status",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -35566,21 +36801,21 @@ func schema_openshift_api_machine_v1beta1_AWSResourceReference(ref common.Refere
 				Properties: map[string]spec.Schema{
 					"id": {
 						SchemaProps: spec.SchemaProps{
-							Description: "ID of resource",
+							Description: "id of resource",
 							Type:        []string{"string"},
 							Format:      "",
 						},
 					},
 					"arn": {
 						SchemaProps: spec.SchemaProps{
-							Description: "ARN of resource",
+							Description: "arn of resource",
 							Type:        []string{"string"},
 							Format:      "",
 						},
 					},
 					"filters": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Filters is a set of filters used to identify a resource",
+							Description: "filters is a set of filters used to identify a resource",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -35647,7 +36882,7 @@ func schema_openshift_api_machine_v1beta1_AzureBootDiagnostics(ref common.Refere
 				Properties: map[string]spec.Schema{
 					"storageAccountType": {
 						SchemaProps: spec.SchemaProps{
-							Description: "StorageAccountType determines if the storage account for storing the diagnostics data should be provisioned by Azure (AzureManaged) or by the customer (CustomerManaged).",
+							Description: "storageAccountType determines if the storage account for storing the diagnostics data should be provisioned by Azure (AzureManaged) or by the customer (CustomerManaged).",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -35655,7 +36890,7 @@ func schema_openshift_api_machine_v1beta1_AzureBootDiagnostics(ref common.Refere
 					},
 					"customerManaged": {
 						SchemaProps: spec.SchemaProps{
-							Description: "CustomerManaged provides reference to the customer manager storage account.",
+							Description: "customerManaged provides reference to the customer manager storage account.",
 							Ref:         ref("github.com/openshift/api/machine/v1beta1.AzureCustomerManagedBootDiagnostics"),
 						},
 					},
@@ -35689,7 +36924,7 @@ func schema_openshift_api_machine_v1beta1_AzureCustomerManagedBootDiagnostics(re
 				Properties: map[string]spec.Schema{
 					"storageAccountURI": {
 						SchemaProps: spec.SchemaProps{
-							Description: "StorageAccountURI is the URI of the customer managed storage account. The URI typically will be `https://<mystorageaccountname>.blob.core.windows.net/` but may differ if you are using Azure DNS zone endpoints. You can find the correct endpoint by looking for the Blob Primary Endpoint in the endpoints tab in the Azure console.",
+							Description: "storageAccountURI is the URI of the customer managed storage account. The URI typically will be `https://<mystorageaccountname>.blob.core.windows.net/` but may differ if you are using Azure DNS zone endpoints. You can find the correct endpoint by looking for the Blob Primary Endpoint in the endpoints tab in the Azure console.",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -35752,40 +36987,40 @@ func schema_openshift_api_machine_v1beta1_AzureMachineProviderSpec(ref common.Re
 					},
 					"userDataSecret": {
 						SchemaProps: spec.SchemaProps{
-							Description: "UserDataSecret contains a local reference to a secret that contains the UserData to apply to the instance",
+							Description: "userDataSecret contains a local reference to a secret that contains the UserData to apply to the instance",
 							Ref:         ref("k8s.io/api/core/v1.SecretReference"),
 						},
 					},
 					"credentialsSecret": {
 						SchemaProps: spec.SchemaProps{
-							Description: "CredentialsSecret is a reference to the secret with Azure credentials.",
+							Description: "credentialsSecret is a reference to the secret with Azure credentials.",
 							Ref:         ref("k8s.io/api/core/v1.SecretReference"),
 						},
 					},
 					"location": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Location is the region to use to create the instance",
+							Description: "location is the region to use to create the instance",
 							Type:        []string{"string"},
 							Format:      "",
 						},
 					},
 					"vmSize": {
 						SchemaProps: spec.SchemaProps{
-							Description: "VMSize is the size of the VM to create.",
+							Description: "vmSize is the size of the VM to create.",
 							Type:        []string{"string"},
 							Format:      "",
 						},
 					},
 					"image": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Image is the OS image to use to create the instance.",
+							Description: "image is the OS image to use to create the instance.",
 							Default:     map[string]interface{}{},
 							Ref:         ref("github.com/openshift/api/machine/v1beta1.Image"),
 						},
 					},
 					"osDisk": {
 						SchemaProps: spec.SchemaProps{
-							Description: "OSDisk represents the parameters for creating the OS disk.",
+							Description: "osDisk represents the parameters for creating the OS disk.",
 							Default:     map[string]interface{}{},
 							Ref:         ref("github.com/openshift/api/machine/v1beta1.OSDisk"),
 						},
@@ -35806,14 +37041,14 @@ func schema_openshift_api_machine_v1beta1_AzureMachineProviderSpec(ref common.Re
 					},
 					"sshPublicKey": {
 						SchemaProps: spec.SchemaProps{
-							Description: "SSHPublicKey is the public key to use to SSH to the virtual machine.",
+							Description: "sshPublicKey is the public key to use to SSH to the virtual machine.",
 							Type:        []string{"string"},
 							Format:      "",
 						},
 					},
 					"publicIP": {
 						SchemaProps: spec.SchemaProps{
-							Description: "PublicIP if true a public IP will be used",
+							Description: "publicIP if true a public IP will be used",
 							Default:     false,
 							Type:        []string{"boolean"},
 							Format:      "",
@@ -35821,7 +37056,7 @@ func schema_openshift_api_machine_v1beta1_AzureMachineProviderSpec(ref common.Re
 					},
 					"tags": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Tags is a list of tags to apply to the machine.",
+							Description: "tags is a list of tags to apply to the machine.",
 							Type:        []string{"object"},
 							AdditionalProperties: &spec.SchemaOrBool{
 								Allows: true,
@@ -35859,7 +37094,7 @@ func schema_openshift_api_machine_v1beta1_AzureMachineProviderSpec(ref common.Re
 					},
 					"subnet": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Subnet to use for this instance",
+							Description: "subnet to use for this instance",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -35867,7 +37102,7 @@ func schema_openshift_api_machine_v1beta1_AzureMachineProviderSpec(ref common.Re
 					},
 					"publicLoadBalancer": {
 						SchemaProps: spec.SchemaProps{
-							Description: "PublicLoadBalancer to use for this instance",
+							Description: "publicLoadBalancer to use for this instance",
 							Type:        []string{"string"},
 							Format:      "",
 						},
@@ -35881,21 +37116,21 @@ func schema_openshift_api_machine_v1beta1_AzureMachineProviderSpec(ref common.Re
 					},
 					"natRule": {
 						SchemaProps: spec.SchemaProps{
-							Description: "NatRule to set inbound NAT rule of the load balancer",
+							Description: "natRule to set inbound NAT rule of the load balancer",
 							Type:        []string{"integer"},
 							Format:      "int64",
 						},
 					},
 					"managedIdentity": {
 						SchemaProps: spec.SchemaProps{
-							Description: "ManagedIdentity to set managed identity name",
+							Description: "managedIdentity to set managed identity name",
 							Type:        []string{"string"},
 							Format:      "",
 						},
 					},
 					"vnet": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Vnet to set virtual network name",
+							Description: "vnet to set virtual network name",
 							Type:        []string{"string"},
 							Format:      "",
 						},
@@ -35909,54 +37144,54 @@ func schema_openshift_api_machine_v1beta1_AzureMachineProviderSpec(ref common.Re
 					},
 					"networkResourceGroup": {
 						SchemaProps: spec.SchemaProps{
-							Description: "NetworkResourceGroup is the resource group for the virtual machine's network",
+							Description: "networkResourceGroup is the resource group for the virtual machine's network",
 							Type:        []string{"string"},
 							Format:      "",
 						},
 					},
 					"resourceGroup": {
 						SchemaProps: spec.SchemaProps{
-							Description: "ResourceGroup is the resource group for the virtual machine",
+							Description: "resourceGroup is the resource group for the virtual machine",
 							Type:        []string{"string"},
 							Format:      "",
 						},
 					},
 					"spotVMOptions": {
 						SchemaProps: spec.SchemaProps{
-							Description: "SpotVMOptions allows the ability to specify the Machine should use a Spot VM",
+							Description: "spotVMOptions allows the ability to specify the Machine should use a Spot VM",
 							Ref:         ref("github.com/openshift/api/machine/v1beta1.SpotVMOptions"),
 						},
 					},
 					"securityProfile": {
 						SchemaProps: spec.SchemaProps{
-							Description: "SecurityProfile specifies the Security profile settings for a virtual machine.",
+							Description: "securityProfile specifies the Security profile settings for a virtual machine.",
 							Ref:         ref("github.com/openshift/api/machine/v1beta1.SecurityProfile"),
 						},
 					},
 					"ultraSSDCapability": {
 						SchemaProps: spec.SchemaProps{
-							Description: "UltraSSDCapability enables or disables Azure UltraSSD capability for a virtual machine. This can be used to allow/disallow binding of Azure UltraSSD to the Machine both as Data Disks or via Persistent Volumes. This Azure feature is subject to a specific scope and certain limitations. More informations on this can be found in the official Azure documentation for Ultra Disks: (https://docs.microsoft.com/en-us/azure/virtual-machines/disks-enable-ultra-ssd?tabs=azure-portal#ga-scope-and-limitations).\n\nWhen omitted, if at least one Data Disk of type UltraSSD is specified, the platform will automatically enable the capability. If a Perisistent Volume backed by an UltraSSD is bound to a Pod on the Machine, when this field is ommitted, the platform will *not* automatically enable the capability (unless already enabled by the presence of an UltraSSD as Data Disk). This may manifest in the Pod being stuck in `ContainerCreating` phase. This defaulting behaviour may be subject to change in future.\n\nWhen set to \"Enabled\", if the capability is available for the Machine based on the scope and limitations described above, the capability will be set on the Machine. This will thus allow UltraSSD both as Data Disks and Persistent Volumes. If set to \"Enabled\" when the capability can't be available due to scope and limitations, the Machine will go into \"Failed\" state.\n\nWhen set to \"Disabled\", UltraSSDs will not be allowed either as Data Disks nor as Persistent Volumes. In this case if any UltraSSDs are specified as Data Disks on a Machine, the Machine will go into a \"Failed\" state. If instead any UltraSSDs are backing the volumes (via Persistent Volumes) of any Pods scheduled on a Node which is backed by the Machine, the Pod may get stuck in `ContainerCreating` phase.",
+							Description: "ultraSSDCapability enables or disables Azure UltraSSD capability for a virtual machine. This can be used to allow/disallow binding of Azure UltraSSD to the Machine both as Data Disks or via Persistent Volumes. This Azure feature is subject to a specific scope and certain limitations. More informations on this can be found in the official Azure documentation for Ultra Disks: (https://docs.microsoft.com/en-us/azure/virtual-machines/disks-enable-ultra-ssd?tabs=azure-portal#ga-scope-and-limitations).\n\nWhen omitted, if at least one Data Disk of type UltraSSD is specified, the platform will automatically enable the capability. If a Perisistent Volume backed by an UltraSSD is bound to a Pod on the Machine, when this field is ommitted, the platform will *not* automatically enable the capability (unless already enabled by the presence of an UltraSSD as Data Disk). This may manifest in the Pod being stuck in `ContainerCreating` phase. This defaulting behaviour may be subject to change in future.\n\nWhen set to \"Enabled\", if the capability is available for the Machine based on the scope and limitations described above, the capability will be set on the Machine. This will thus allow UltraSSD both as Data Disks and Persistent Volumes. If set to \"Enabled\" when the capability can't be available due to scope and limitations, the Machine will go into \"Failed\" state.\n\nWhen set to \"Disabled\", UltraSSDs will not be allowed either as Data Disks nor as Persistent Volumes. In this case if any UltraSSDs are specified as Data Disks on a Machine, the Machine will go into a \"Failed\" state. If instead any UltraSSDs are backing the volumes (via Persistent Volumes) of any Pods scheduled on a Node which is backed by the Machine, the Pod may get stuck in `ContainerCreating` phase.",
 							Type:        []string{"string"},
 							Format:      "",
 						},
 					},
 					"acceleratedNetworking": {
 						SchemaProps: spec.SchemaProps{
-							Description: "AcceleratedNetworking enables or disables Azure accelerated networking feature. Set to false by default. If true, then this will depend on whether the requested VMSize is supported. If set to true with an unsupported VMSize, Azure will return an error.",
+							Description: "acceleratedNetworking enables or disables Azure accelerated networking feature. Set to false by default. If true, then this will depend on whether the requested VMSize is supported. If set to true with an unsupported VMSize, Azure will return an error.",
 							Type:        []string{"boolean"},
 							Format:      "",
 						},
 					},
 					"availabilitySet": {
 						SchemaProps: spec.SchemaProps{
-							Description: "AvailabilitySet specifies the availability set to use for this instance. Availability set should be precreated, before using this field.",
+							Description: "availabilitySet specifies the availability set to use for this instance. Availability set should be precreated, before using this field.",
 							Type:        []string{"string"},
 							Format:      "",
 						},
 					},
 					"diagnostics": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Diagnostics configures the diagnostics settings for the virtual machine. This allows you to configure boot diagnostics such as capturing serial output from the virtual machine on boot. This is useful for debugging software based launch issues.",
+							Description: "diagnostics configures the diagnostics settings for the virtual machine. This allows you to configure boot diagnostics such as capturing serial output from the virtual machine on boot. This is useful for debugging software based launch issues.",
 							Default:     map[string]interface{}{},
 							Ref:         ref("github.com/openshift/api/machine/v1beta1.AzureDiagnostics"),
 						},
@@ -36006,21 +37241,29 @@ func schema_openshift_api_machine_v1beta1_AzureMachineProviderStatus(ref common.
 					},
 					"vmId": {
 						SchemaProps: spec.SchemaProps{
-							Description: "VMID is the ID of the virtual machine created in Azure.",
+							Description: "vmId is the ID of the virtual machine created in Azure.",
 							Type:        []string{"string"},
 							Format:      "",
 						},
 					},
 					"vmState": {
 						SchemaProps: spec.SchemaProps{
-							Description: "VMState is the provisioning state of the Azure virtual machine.",
+							Description: "vmState is the provisioning state of the Azure virtual machine.",
 							Type:        []string{"string"},
 							Format:      "",
 						},
 					},
 					"conditions": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-map-keys": []interface{}{
+									"type",
+								},
+								"x-kubernetes-list-type": "map",
+							},
+						},
 						SchemaProps: spec.SchemaProps{
-							Description: "Conditions is a set of conditions associated with the Machine to indicate errors or other status.",
+							Description: "conditions is a set of conditions associated with the Machine to indicate errors or other status.",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -36091,7 +37334,7 @@ func schema_openshift_api_machine_v1beta1_Condition(ref common.ReferenceCallback
 				Properties: map[string]spec.Schema{
 					"type": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Type of condition in CamelCase or in foo.example.com/CamelCase. Many .condition.type values are consistent across resources like Available, but because arbitrary conditions can be useful (see .node.status.conditions), the ability to deconflict is important.",
+							Description: "type of condition in CamelCase or in foo.example.com/CamelCase. Many .condition.type values are consistent across resources like Available, but because arbitrary conditions can be useful (see .node.status.conditions), the ability to deconflict is important.",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -36099,7 +37342,7 @@ func schema_openshift_api_machine_v1beta1_Condition(ref common.ReferenceCallback
 					},
 					"status": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Status of the condition, one of True, False, Unknown.",
+							Description: "status of the condition, one of True, False, Unknown.",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -36107,7 +37350,7 @@ func schema_openshift_api_machine_v1beta1_Condition(ref common.ReferenceCallback
 					},
 					"severity": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Severity provides an explicit classification of Reason code, so the users or machines can immediately understand the current situation and act accordingly. The Severity field MUST be set only when Status=False.",
+							Description: "severity provides an explicit classification of Reason code, so the users or machines can immediately understand the current situation and act accordingly. The Severity field MUST be set only when Status=False.",
 							Type:        []string{"string"},
 							Format:      "",
 						},
@@ -36156,6 +37399,7 @@ func schema_openshift_api_machine_v1beta1_ConfidentialVM(ref common.ReferenceCal
 						},
 					},
 				},
+				Required: []string{"uefiSettings"},
 			},
 		},
 		Dependencies: []string{
@@ -36172,7 +37416,7 @@ func schema_openshift_api_machine_v1beta1_DataDisk(ref common.ReferenceCallback)
 				Properties: map[string]spec.Schema{
 					"nameSuffix": {
 						SchemaProps: spec.SchemaProps{
-							Description: "NameSuffix is the suffix to be appended to the machine name to generate the disk name. Each disk name will be in format <machineName>_<nameSuffix>. NameSuffix name must start and finish with an alphanumeric character and can only contain letters, numbers, underscores, periods or hyphens. The overall disk name must not exceed 80 chars in length.",
+							Description: "nameSuffix is the suffix to be appended to the machine name to generate the disk name. Each disk name will be in format <machineName>_<nameSuffix>. NameSuffix name must start and finish with an alphanumeric character and can only contain letters, numbers, underscores, periods or hyphens. The overall disk name must not exceed 80 chars in length.",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -36180,7 +37424,7 @@ func schema_openshift_api_machine_v1beta1_DataDisk(ref common.ReferenceCallback)
 					},
 					"diskSizeGB": {
 						SchemaProps: spec.SchemaProps{
-							Description: "DiskSizeGB is the size in GB to assign to the data disk.",
+							Description: "diskSizeGB is the size in GB to assign to the data disk.",
 							Default:     0,
 							Type:        []string{"integer"},
 							Format:      "int32",
@@ -36188,35 +37432,35 @@ func schema_openshift_api_machine_v1beta1_DataDisk(ref common.ReferenceCallback)
 					},
 					"managedDisk": {
 						SchemaProps: spec.SchemaProps{
-							Description: "ManagedDisk specifies the Managed Disk parameters for the data disk. Empty value means no opinion and the platform chooses a default, which is subject to change over time. Currently the default is a ManagedDisk with with storageAccountType: \"Premium_LRS\" and diskEncryptionSet.id: \"Default\".",
+							Description: "managedDisk specifies the Managed Disk parameters for the data disk. Empty value means no opinion and the platform chooses a default, which is subject to change over time. Currently the default is a ManagedDisk with with storageAccountType: \"Premium_LRS\" and diskEncryptionSet.id: \"Default\".",
 							Default:     map[string]interface{}{},
 							Ref:         ref("github.com/openshift/api/machine/v1beta1.DataDiskManagedDiskParameters"),
 						},
 					},
 					"lun": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Lun Specifies the logical unit number of the data disk. This value is used to identify data disks within the VM and therefore must be unique for each data disk attached to a VM. This value is also needed for referencing the data disks devices within userdata to perform disk initialization through Ignition (e.g. partition/format/mount). The value must be between 0 and 63.",
+							Description: "lun Specifies the logical unit number of the data disk. This value is used to identify data disks within the VM and therefore must be unique for each data disk attached to a VM. This value is also needed for referencing the data disks devices within userdata to perform disk initialization through Ignition (e.g. partition/format/mount). The value must be between 0 and 63.",
 							Type:        []string{"integer"},
 							Format:      "int32",
 						},
 					},
 					"cachingType": {
 						SchemaProps: spec.SchemaProps{
-							Description: "CachingType specifies the caching requirements. Empty value means no opinion and the platform chooses a default, which is subject to change over time. Currently the default is CachingTypeNone.",
+							Description: "cachingType specifies the caching requirements. Empty value means no opinion and the platform chooses a default, which is subject to change over time. Currently the default is CachingTypeNone.",
 							Type:        []string{"string"},
 							Format:      "",
 						},
 					},
 					"deletionPolicy": {
 						SchemaProps: spec.SchemaProps{
-							Description: "DeletionPolicy specifies the data disk deletion policy upon Machine deletion. Possible values are \"Delete\",\"Detach\". When \"Delete\" is used the data disk is deleted when the Machine is deleted. When \"Detach\" is used the data disk is detached from the Machine and retained when the Machine is deleted.",
+							Description: "deletionPolicy specifies the data disk deletion policy upon Machine deletion. Possible values are \"Delete\",\"Detach\". When \"Delete\" is used the data disk is deleted when the Machine is deleted. When \"Detach\" is used the data disk is detached from the Machine and retained when the Machine is deleted.",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
 						},
 					},
 				},
-				Required: []string{"nameSuffix", "diskSizeGB", "deletionPolicy"},
+				Required: []string{"nameSuffix", "diskSizeGB", "lun", "deletionPolicy"},
 			},
 		},
 		Dependencies: []string{
@@ -36233,7 +37477,7 @@ func schema_openshift_api_machine_v1beta1_DataDiskManagedDiskParameters(ref comm
 				Properties: map[string]spec.Schema{
 					"storageAccountType": {
 						SchemaProps: spec.SchemaProps{
-							Description: "StorageAccountType is the storage account type to use. Possible values include \"Standard_LRS\", \"Premium_LRS\" and \"UltraSSD_LRS\".",
+							Description: "storageAccountType is the storage account type to use. Possible values include \"Standard_LRS\", \"Premium_LRS\" and \"UltraSSD_LRS\".",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -36241,7 +37485,7 @@ func schema_openshift_api_machine_v1beta1_DataDiskManagedDiskParameters(ref comm
 					},
 					"diskEncryptionSet": {
 						SchemaProps: spec.SchemaProps{
-							Description: "DiskEncryptionSet is the disk encryption set properties. Empty value means no opinion and the platform chooses a default, which is subject to change over time. Currently the default is a DiskEncryptionSet with id: \"Default\".",
+							Description: "diskEncryptionSet is the disk encryption set properties. Empty value means no opinion and the platform chooses a default, which is subject to change over time. Currently the default is a DiskEncryptionSet with id: \"Default\".",
 							Ref:         ref("github.com/openshift/api/machine/v1beta1.DiskEncryptionSetParameters"),
 						},
 					},
@@ -36263,7 +37507,7 @@ func schema_openshift_api_machine_v1beta1_DiskEncryptionSetParameters(ref common
 				Properties: map[string]spec.Schema{
 					"id": {
 						SchemaProps: spec.SchemaProps{
-							Description: "ID is the disk encryption set ID Empty value means no opinion and the platform chooses a default, which is subject to change over time. Currently the default is: \"Default\".",
+							Description: "id is the disk encryption set ID Empty value means no opinion and the platform chooses a default, which is subject to change over time. Currently the default is: \"Default\".",
 							Type:        []string{"string"},
 							Format:      "",
 						},
@@ -36283,7 +37527,7 @@ func schema_openshift_api_machine_v1beta1_DiskSettings(ref common.ReferenceCallb
 				Properties: map[string]spec.Schema{
 					"ephemeralStorageLocation": {
 						SchemaProps: spec.SchemaProps{
-							Description: "EphemeralStorageLocation enables ephemeral OS when set to 'Local'. Possible values include: 'Local'. See https://docs.microsoft.com/en-us/azure/virtual-machines/ephemeral-os-disks for full details. Empty value means no opinion and the platform chooses a default, which is subject to change over time. Currently the default is that disks are saved to remote Azure storage.",
+							Description: "ephemeralStorageLocation enables ephemeral OS when set to 'Local'. Possible values include: 'Local'. See https://docs.microsoft.com/en-us/azure/virtual-machines/ephemeral-os-disks for full details. Empty value means no opinion and the platform chooses a default, which is subject to change over time. Currently the default is that disks are saved to remote Azure storage.",
 							Type:        []string{"string"},
 							Format:      "",
 						},
@@ -36360,7 +37604,7 @@ func schema_openshift_api_machine_v1beta1_Filter(ref common.ReferenceCallback) c
 				Properties: map[string]spec.Schema{
 					"name": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Name of the filter. Filter names are case-sensitive.",
+							Description: "name of the filter. Filter names are case-sensitive.",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -36368,7 +37612,7 @@ func schema_openshift_api_machine_v1beta1_Filter(ref common.ReferenceCallback) c
 					},
 					"values": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Values includes one or more filter values. Filter values are case-sensitive.",
+							Description: "values includes one or more filter values. Filter values are case-sensitive.",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -36397,7 +37641,7 @@ func schema_openshift_api_machine_v1beta1_GCPDisk(ref common.ReferenceCallback) 
 				Properties: map[string]spec.Schema{
 					"autoDelete": {
 						SchemaProps: spec.SchemaProps{
-							Description: "AutoDelete indicates if the disk will be auto-deleted when the instance is deleted (default false).",
+							Description: "autoDelete indicates if the disk will be auto-deleted when the instance is deleted (default false).",
 							Default:     false,
 							Type:        []string{"boolean"},
 							Format:      "",
@@ -36405,7 +37649,7 @@ func schema_openshift_api_machine_v1beta1_GCPDisk(ref common.ReferenceCallback) 
 					},
 					"boot": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Boot indicates if this is a boot disk (default false).",
+							Description: "boot indicates if this is a boot disk (default false).",
 							Default:     false,
 							Type:        []string{"boolean"},
 							Format:      "",
@@ -36413,7 +37657,7 @@ func schema_openshift_api_machine_v1beta1_GCPDisk(ref common.ReferenceCallback) 
 					},
 					"sizeGb": {
 						SchemaProps: spec.SchemaProps{
-							Description: "SizeGB is the size of the disk (in GB).",
+							Description: "sizeGb is the size of the disk (in GB).",
 							Default:     0,
 							Type:        []string{"integer"},
 							Format:      "int64",
@@ -36421,7 +37665,7 @@ func schema_openshift_api_machine_v1beta1_GCPDisk(ref common.ReferenceCallback) 
 					},
 					"type": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Type is the type of the disk (eg: pd-standard).",
+							Description: "type is the type of the disk (eg: pd-standard).",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -36429,7 +37673,7 @@ func schema_openshift_api_machine_v1beta1_GCPDisk(ref common.ReferenceCallback) 
 					},
 					"image": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Image is the source image to create this disk.",
+							Description: "image is the source image to create this disk.",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -36437,7 +37681,7 @@ func schema_openshift_api_machine_v1beta1_GCPDisk(ref common.ReferenceCallback) 
 					},
 					"labels": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Labels list of labels to apply to the disk.",
+							Description: "labels list of labels to apply to the disk.",
 							Type:        []string{"object"},
 							AdditionalProperties: &spec.SchemaOrBool{
 								Allows: true,
@@ -36453,7 +37697,7 @@ func schema_openshift_api_machine_v1beta1_GCPDisk(ref common.ReferenceCallback) 
 					},
 					"encryptionKey": {
 						SchemaProps: spec.SchemaProps{
-							Description: "EncryptionKey is the customer-supplied encryption key of the disk.",
+							Description: "encryptionKey is the customer-supplied encryption key of the disk.",
 							Ref:         ref("github.com/openshift/api/machine/v1beta1.GCPEncryptionKeyReference"),
 						},
 					},
@@ -36481,7 +37725,7 @@ func schema_openshift_api_machine_v1beta1_GCPEncryptionKeyReference(ref common.R
 					},
 					"kmsKeyServiceAccount": {
 						SchemaProps: spec.SchemaProps{
-							Description: "KMSKeyServiceAccount is the service account being used for the encryption request for the given KMS key. If absent, the Compute Engine default service account is used. See https://cloud.google.com/compute/docs/access/service-accounts#compute_engine_service_account for details on the default service account.",
+							Description: "kmsKeyServiceAccount is the service account being used for the encryption request for the given KMS key. If absent, the Compute Engine default service account is used. See https://cloud.google.com/compute/docs/access/service-accounts#compute_engine_service_account for details on the default service account.",
 							Type:        []string{"string"},
 							Format:      "",
 						},
@@ -36503,7 +37747,7 @@ func schema_openshift_api_machine_v1beta1_GCPGPUConfig(ref common.ReferenceCallb
 				Properties: map[string]spec.Schema{
 					"count": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Count is the number of GPUs to be attached to an instance.",
+							Description: "count is the number of GPUs to be attached to an instance.",
 							Default:     0,
 							Type:        []string{"integer"},
 							Format:      "int32",
@@ -36511,7 +37755,7 @@ func schema_openshift_api_machine_v1beta1_GCPGPUConfig(ref common.ReferenceCallb
 					},
 					"type": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Type is the type of GPU to be attached to an instance. Supported GPU types are: nvidia-tesla-k80, nvidia-tesla-p100, nvidia-tesla-v100, nvidia-tesla-p4, nvidia-tesla-t4",
+							Description: "type is the type of GPU to be attached to an instance. Supported GPU types are: nvidia-tesla-k80, nvidia-tesla-p100, nvidia-tesla-v100, nvidia-tesla-p4, nvidia-tesla-t4",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -36533,7 +37777,7 @@ func schema_openshift_api_machine_v1beta1_GCPKMSKeyReference(ref common.Referenc
 				Properties: map[string]spec.Schema{
 					"name": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Name is the name of the customer managed encryption key to be used for the disk encryption.",
+							Description: "name is the name of the customer managed encryption key to be used for the disk encryption.",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -36541,7 +37785,7 @@ func schema_openshift_api_machine_v1beta1_GCPKMSKeyReference(ref common.Referenc
 					},
 					"keyRing": {
 						SchemaProps: spec.SchemaProps{
-							Description: "KeyRing is the name of the KMS Key Ring which the KMS Key belongs to.",
+							Description: "keyRing is the name of the KMS Key Ring which the KMS Key belongs to.",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -36549,14 +37793,14 @@ func schema_openshift_api_machine_v1beta1_GCPKMSKeyReference(ref common.Referenc
 					},
 					"projectID": {
 						SchemaProps: spec.SchemaProps{
-							Description: "ProjectID is the ID of the Project in which the KMS Key Ring exists. Defaults to the VM ProjectID if not set.",
+							Description: "projectID is the ID of the Project in which the KMS Key Ring exists. Defaults to the VM ProjectID if not set.",
 							Type:        []string{"string"},
 							Format:      "",
 						},
 					},
 					"location": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Location is the GCP location in which the Key Ring exists.",
+							Description: "location is the GCP location in which the Key Ring exists.",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -36599,19 +37843,19 @@ func schema_openshift_api_machine_v1beta1_GCPMachineProviderSpec(ref common.Refe
 					},
 					"userDataSecret": {
 						SchemaProps: spec.SchemaProps{
-							Description: "UserDataSecret contains a local reference to a secret that contains the UserData to apply to the instance",
+							Description: "userDataSecret contains a local reference to a secret that contains the UserData to apply to the instance",
 							Ref:         ref("k8s.io/api/core/v1.LocalObjectReference"),
 						},
 					},
 					"credentialsSecret": {
 						SchemaProps: spec.SchemaProps{
-							Description: "CredentialsSecret is a reference to the secret with GCP credentials.",
+							Description: "credentialsSecret is a reference to the secret with GCP credentials.",
 							Ref:         ref("k8s.io/api/core/v1.LocalObjectReference"),
 						},
 					},
 					"canIPForward": {
 						SchemaProps: spec.SchemaProps{
-							Description: "CanIPForward Allows this instance to send and receive packets with non-matching destination or source IPs. This is required if you plan to use this instance to forward routes.",
+							Description: "canIPForward Allows this instance to send and receive packets with non-matching destination or source IPs. This is required if you plan to use this instance to forward routes.",
 							Default:     false,
 							Type:        []string{"boolean"},
 							Format:      "",
@@ -36619,7 +37863,7 @@ func schema_openshift_api_machine_v1beta1_GCPMachineProviderSpec(ref common.Refe
 					},
 					"deletionProtection": {
 						SchemaProps: spec.SchemaProps{
-							Description: "DeletionProtection whether the resource should be protected against deletion.",
+							Description: "deletionProtection whether the resource should be protected against deletion.",
 							Default:     false,
 							Type:        []string{"boolean"},
 							Format:      "",
@@ -36627,7 +37871,7 @@ func schema_openshift_api_machine_v1beta1_GCPMachineProviderSpec(ref common.Refe
 					},
 					"disks": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Disks is a list of disks to be attached to the VM.",
+							Description: "disks is a list of disks to be attached to the VM.",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -36640,7 +37884,7 @@ func schema_openshift_api_machine_v1beta1_GCPMachineProviderSpec(ref common.Refe
 					},
 					"labels": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Labels list of labels to apply to the VM.",
+							Description: "labels list of labels to apply to the VM.",
 							Type:        []string{"object"},
 							AdditionalProperties: &spec.SchemaOrBool{
 								Allows: true,
@@ -36669,7 +37913,7 @@ func schema_openshift_api_machine_v1beta1_GCPMachineProviderSpec(ref common.Refe
 					},
 					"networkInterfaces": {
 						SchemaProps: spec.SchemaProps{
-							Description: "NetworkInterfaces is a list of network interfaces to be attached to the VM.",
+							Description: "networkInterfaces is a list of network interfaces to be attached to the VM.",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -36682,7 +37926,7 @@ func schema_openshift_api_machine_v1beta1_GCPMachineProviderSpec(ref common.Refe
 					},
 					"serviceAccounts": {
 						SchemaProps: spec.SchemaProps{
-							Description: "ServiceAccounts is a list of GCP service accounts to be used by the VM.",
+							Description: "serviceAccounts is a list of GCP service accounts to be used by the VM.",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -36696,7 +37940,7 @@ func schema_openshift_api_machine_v1beta1_GCPMachineProviderSpec(ref common.Refe
 					},
 					"tags": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Tags list of network tags to apply to the VM.",
+							Description: "tags list of network tags to apply to the VM.",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -36711,7 +37955,7 @@ func schema_openshift_api_machine_v1beta1_GCPMachineProviderSpec(ref common.Refe
 					},
 					"targetPools": {
 						SchemaProps: spec.SchemaProps{
-							Description: "TargetPools are used for network TCP/UDP load balancing. A target pool references member instances, an associated legacy HttpHealthCheck resource, and, optionally, a backup target pool",
+							Description: "targetPools are used for network TCP/UDP load balancing. A target pool references member instances, an associated legacy HttpHealthCheck resource, and, optionally, a backup target pool",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -36726,7 +37970,7 @@ func schema_openshift_api_machine_v1beta1_GCPMachineProviderSpec(ref common.Refe
 					},
 					"machineType": {
 						SchemaProps: spec.SchemaProps{
-							Description: "MachineType is the machine type to use for the VM.",
+							Description: "machineType is the machine type to use for the VM.",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -36734,7 +37978,7 @@ func schema_openshift_api_machine_v1beta1_GCPMachineProviderSpec(ref common.Refe
 					},
 					"region": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Region is the region in which the GCP machine provider will create the VM.",
+							Description: "region is the region in which the GCP machine provider will create the VM.",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -36742,7 +37986,7 @@ func schema_openshift_api_machine_v1beta1_GCPMachineProviderSpec(ref common.Refe
 					},
 					"zone": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Zone is the zone in which the GCP machine provider will create the VM.",
+							Description: "zone is the zone in which the GCP machine provider will create the VM.",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -36750,14 +37994,14 @@ func schema_openshift_api_machine_v1beta1_GCPMachineProviderSpec(ref common.Refe
 					},
 					"projectID": {
 						SchemaProps: spec.SchemaProps{
-							Description: "ProjectID is the project in which the GCP machine provider will create the VM.",
+							Description: "projectID is the project in which the GCP machine provider will create the VM.",
 							Type:        []string{"string"},
 							Format:      "",
 						},
 					},
 					"gpus": {
 						SchemaProps: spec.SchemaProps{
-							Description: "GPUs is a list of GPUs to be attached to the VM.",
+							Description: "gpus is a list of GPUs to be attached to the VM.",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -36771,35 +38015,35 @@ func schema_openshift_api_machine_v1beta1_GCPMachineProviderSpec(ref common.Refe
 					},
 					"preemptible": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Preemptible indicates if created instance is preemptible.",
+							Description: "preemptible indicates if created instance is preemptible.",
 							Type:        []string{"boolean"},
 							Format:      "",
 						},
 					},
 					"onHostMaintenance": {
 						SchemaProps: spec.SchemaProps{
-							Description: "OnHostMaintenance determines the behavior when a maintenance event occurs that might cause the instance to reboot. This is required to be set to \"Terminate\" if you want to provision machine with attached GPUs. Otherwise, allowed values are \"Migrate\" and \"Terminate\". If omitted, the platform chooses a default, which is subject to change over time, currently that default is \"Migrate\".",
+							Description: "onHostMaintenance determines the behavior when a maintenance event occurs that might cause the instance to reboot. This is required to be set to \"Terminate\" if you want to provision machine with attached GPUs. Otherwise, allowed values are \"Migrate\" and \"Terminate\". If omitted, the platform chooses a default, which is subject to change over time, currently that default is \"Migrate\".",
 							Type:        []string{"string"},
 							Format:      "",
 						},
 					},
 					"restartPolicy": {
 						SchemaProps: spec.SchemaProps{
-							Description: "RestartPolicy determines the behavior when an instance crashes or the underlying infrastructure provider stops the instance as part of a maintenance event (default \"Always\"). Cannot be \"Always\" with preemptible instances. Otherwise, allowed values are \"Always\" and \"Never\". If omitted, the platform chooses a default, which is subject to change over time, currently that default is \"Always\". RestartPolicy represents AutomaticRestart in GCP compute api",
+							Description: "restartPolicy determines the behavior when an instance crashes or the underlying infrastructure provider stops the instance as part of a maintenance event (default \"Always\"). Cannot be \"Always\" with preemptible instances. Otherwise, allowed values are \"Always\" and \"Never\". If omitted, the platform chooses a default, which is subject to change over time, currently that default is \"Always\". RestartPolicy represents AutomaticRestart in GCP compute api",
 							Type:        []string{"string"},
 							Format:      "",
 						},
 					},
 					"shieldedInstanceConfig": {
 						SchemaProps: spec.SchemaProps{
-							Description: "ShieldedInstanceConfig is the Shielded VM configuration for the VM",
+							Description: "shieldedInstanceConfig is the Shielded VM configuration for the VM",
 							Default:     map[string]interface{}{},
 							Ref:         ref("github.com/openshift/api/machine/v1beta1.GCPShieldedInstanceConfig"),
 						},
 					},
 					"confidentialCompute": {
 						SchemaProps: spec.SchemaProps{
-							Description: "confidentialCompute Defines whether the instance should have confidential compute enabled. If enabled OnHostMaintenance is required to be set to \"Terminate\". If omitted, the platform chooses a default, which is subject to change over time, currently that default is false.",
+							Description: "confidentialCompute is an optional field defining whether the instance should have confidential compute enabled or not, and the confidential computing technology of choice. Allowed values are omitted, Disabled, Enabled, AMDEncryptedVirtualization, AMDEncryptedVirtualizationNestedPaging, and IntelTrustedDomainExtensions When set to Disabled, the machine will not be configured to be a confidential computing instance. When set to Enabled, the machine will be configured as a confidential computing instance with no preference on the confidential compute policy used. In this mode, the platform chooses a default that is subject to change over time. Currently, the default is to use AMD Secure Encrypted Virtualization. When set to AMDEncryptedVirtualization, the machine will be configured as a confidential computing instance with AMD Secure Encrypted Virtualization (AMD SEV) as the confidential computing technology. When set to AMDEncryptedVirtualizationNestedPaging, the machine will be configured as a confidential computing instance with AMD Secure Encrypted Virtualization Secure Nested Paging (AMD SEV-SNP) as the confidential computing technology. When set to IntelTrustedDomainExtensions, the machine will be configured as a confidential computing instance with Intel Trusted Domain Extensions (Intel TDX) as the confidential computing technology. If any value other than Disabled is set the selected machine type must support that specific confidential computing technology. The machine series supporting confidential computing technologies can be checked at https://cloud.google.com/confidential-computing/confidential-vm/docs/supported-configurations#all-confidential-vm-instances Currently, AMDEncryptedVirtualization is supported in c2d, n2d, and c3d machines. AMDEncryptedVirtualizationNestedPaging is supported in n2d machines. IntelTrustedDomainExtensions is supported in c3 machines. If any value other than Disabled is set, the selected region must support that specific confidential computing technology. The list of regions supporting confidential computing technologies can be checked at https://cloud.google.com/confidential-computing/confidential-vm/docs/supported-configurations#supported-zones If any value other than Disabled is set onHostMaintenance is required to be set to \"Terminate\". If omitted, the platform chooses a default, which is subject to change over time, currently that default is Disabled.",
 							Type:        []string{"string"},
 							Format:      "",
 						},
@@ -36864,21 +38108,29 @@ func schema_openshift_api_machine_v1beta1_GCPMachineProviderStatus(ref common.Re
 					},
 					"instanceId": {
 						SchemaProps: spec.SchemaProps{
-							Description: "InstanceID is the ID of the instance in GCP",
+							Description: "instanceId is the ID of the instance in GCP",
 							Type:        []string{"string"},
 							Format:      "",
 						},
 					},
 					"instanceState": {
 						SchemaProps: spec.SchemaProps{
-							Description: "InstanceState is the provisioning state of the GCP Instance.",
+							Description: "instanceState is the provisioning state of the GCP Instance.",
 							Type:        []string{"string"},
 							Format:      "",
 						},
 					},
 					"conditions": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-map-keys": []interface{}{
+									"type",
+								},
+								"x-kubernetes-list-type": "map",
+							},
+						},
 						SchemaProps: spec.SchemaProps{
-							Description: "Conditions is a set of conditions associated with the Machine to indicate errors or other status",
+							Description: "conditions is a set of conditions associated with the Machine to indicate errors or other status",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -36907,7 +38159,7 @@ func schema_openshift_api_machine_v1beta1_GCPMetadata(ref common.ReferenceCallba
 				Properties: map[string]spec.Schema{
 					"key": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Key is the metadata key.",
+							Description: "key is the metadata key.",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -36915,7 +38167,7 @@ func schema_openshift_api_machine_v1beta1_GCPMetadata(ref common.ReferenceCallba
 					},
 					"value": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Value is the metadata value.",
+							Description: "value is the metadata value.",
 							Type:        []string{"string"},
 							Format:      "",
 						},
@@ -36936,28 +38188,28 @@ func schema_openshift_api_machine_v1beta1_GCPNetworkInterface(ref common.Referen
 				Properties: map[string]spec.Schema{
 					"publicIP": {
 						SchemaProps: spec.SchemaProps{
-							Description: "PublicIP indicates if true a public IP will be used",
+							Description: "publicIP indicates if true a public IP will be used",
 							Type:        []string{"boolean"},
 							Format:      "",
 						},
 					},
 					"network": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Network is the network name.",
+							Description: "network is the network name.",
 							Type:        []string{"string"},
 							Format:      "",
 						},
 					},
 					"projectID": {
 						SchemaProps: spec.SchemaProps{
-							Description: "ProjectID is the project in which the GCP machine provider will create the VM.",
+							Description: "projectID is the project in which the GCP machine provider will create the VM.",
 							Type:        []string{"string"},
 							Format:      "",
 						},
 					},
 					"subnetwork": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Subnetwork is the subnetwork name.",
+							Description: "subnetwork is the subnetwork name.",
 							Type:        []string{"string"},
 							Format:      "",
 						},
@@ -36977,7 +38229,7 @@ func schema_openshift_api_machine_v1beta1_GCPServiceAccount(ref common.Reference
 				Properties: map[string]spec.Schema{
 					"email": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Email is the service account email.",
+							Description: "email is the service account email.",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -36985,7 +38237,7 @@ func schema_openshift_api_machine_v1beta1_GCPServiceAccount(ref common.Reference
 					},
 					"scopes": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Scopes list of scopes to be assigned to the service account.",
+							Description: "scopes list of scopes to be assigned to the service account.",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -37014,21 +38266,21 @@ func schema_openshift_api_machine_v1beta1_GCPShieldedInstanceConfig(ref common.R
 				Properties: map[string]spec.Schema{
 					"secureBoot": {
 						SchemaProps: spec.SchemaProps{
-							Description: "SecureBoot Defines whether the instance should have secure boot enabled. Secure Boot verify the digital signature of all boot components, and halting the boot process if signature verification fails. If omitted, the platform chooses a default, which is subject to change over time, currently that default is Disabled.",
+							Description: "secureBoot Defines whether the instance should have secure boot enabled. Secure Boot verify the digital signature of all boot components, and halting the boot process if signature verification fails. If omitted, the platform chooses a default, which is subject to change over time, currently that default is Disabled.",
 							Type:        []string{"string"},
 							Format:      "",
 						},
 					},
 					"virtualizedTrustedPlatformModule": {
 						SchemaProps: spec.SchemaProps{
-							Description: "VirtualizedTrustedPlatformModule enable virtualized trusted platform module measurements to create a known good boot integrity policy baseline. The integrity policy baseline is used for comparison with measurements from subsequent VM boots to determine if anything has changed. This is required to be set to \"Enabled\" if IntegrityMonitoring is enabled. If omitted, the platform chooses a default, which is subject to change over time, currently that default is Enabled.",
+							Description: "virtualizedTrustedPlatformModule enable virtualized trusted platform module measurements to create a known good boot integrity policy baseline. The integrity policy baseline is used for comparison with measurements from subsequent VM boots to determine if anything has changed. This is required to be set to \"Enabled\" if IntegrityMonitoring is enabled. If omitted, the platform chooses a default, which is subject to change over time, currently that default is Enabled.",
 							Type:        []string{"string"},
 							Format:      "",
 						},
 					},
 					"integrityMonitoring": {
 						SchemaProps: spec.SchemaProps{
-							Description: "IntegrityMonitoring determines whether the instance should have integrity monitoring that verify the runtime boot integrity. Compares the most recent boot measurements to the integrity policy baseline and return a pair of pass/fail results depending on whether they match or not. If omitted, the platform chooses a default, which is subject to change over time, currently that default is Enabled.",
+							Description: "integrityMonitoring determines whether the instance should have integrity monitoring that verify the runtime boot integrity. Compares the most recent boot measurements to the integrity policy baseline and return a pair of pass/fail results depending on whether they match or not. If omitted, the platform chooses a default, which is subject to change over time, currently that default is Enabled.",
 							Type:        []string{"string"},
 							Format:      "",
 						},
@@ -37048,7 +38300,7 @@ func schema_openshift_api_machine_v1beta1_Image(ref common.ReferenceCallback) co
 				Properties: map[string]spec.Schema{
 					"publisher": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Publisher is the name of the organization that created the image",
+							Description: "publisher is the name of the organization that created the image",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -37056,7 +38308,7 @@ func schema_openshift_api_machine_v1beta1_Image(ref common.ReferenceCallback) co
 					},
 					"offer": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Offer specifies the name of a group of related images created by the publisher. For example, UbuntuServer, WindowsServer",
+							Description: "offer specifies the name of a group of related images created by the publisher. For example, UbuntuServer, WindowsServer",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -37064,7 +38316,7 @@ func schema_openshift_api_machine_v1beta1_Image(ref common.ReferenceCallback) co
 					},
 					"sku": {
 						SchemaProps: spec.SchemaProps{
-							Description: "SKU specifies an instance of an offer, such as a major release of a distribution. For example, 18.04-LTS, 2019-Datacenter",
+							Description: "sku specifies an instance of an offer, such as a major release of a distribution. For example, 18.04-LTS, 2019-Datacenter",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -37072,7 +38324,7 @@ func schema_openshift_api_machine_v1beta1_Image(ref common.ReferenceCallback) co
 					},
 					"version": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Version specifies the version of an image sku. The allowed formats are Major.Minor.Build or 'latest'. Major, Minor, and Build are decimal numbers. Specify 'latest' to use the latest version of an image available at deploy time. Even if you use 'latest', the VM image will not automatically update after deploy time even if a new version becomes available.",
+							Description: "version specifies the version of an image sku. The allowed formats are Major.Minor.Build or 'latest'. Major, Minor, and Build are decimal numbers. Specify 'latest' to use the latest version of an image available at deploy time. Even if you use 'latest', the VM image will not automatically update after deploy time even if a new version becomes available.",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -37080,7 +38332,7 @@ func schema_openshift_api_machine_v1beta1_Image(ref common.ReferenceCallback) co
 					},
 					"resourceID": {
 						SchemaProps: spec.SchemaProps{
-							Description: "ResourceID specifies an image to use by ID",
+							Description: "resourceID specifies an image to use by ID",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -37088,7 +38340,7 @@ func schema_openshift_api_machine_v1beta1_Image(ref common.ReferenceCallback) co
 					},
 					"type": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Type identifies the source of the image and related information, such as purchase plans. Valid values are \"ID\", \"MarketplaceWithPlan\", \"MarketplaceNoPlan\", and omitted, which means no opinion and the platform chooses a good default which may change over time. Currently that default is \"MarketplaceNoPlan\" if publisher data is supplied, or \"ID\" if not. For more information about purchase plans, see: https://docs.microsoft.com/en-us/azure/virtual-machines/linux/cli-ps-findimage#check-the-purchase-plan-information",
+							Description: "type identifies the source of the image and related information, such as purchase plans. Valid values are \"ID\", \"MarketplaceWithPlan\", \"MarketplaceNoPlan\", and omitted, which means no opinion and the platform chooses a good default which may change over time. Currently that default is \"MarketplaceNoPlan\" if publisher data is supplied, or \"ID\" if not. For more information about purchase plans, see: https://docs.microsoft.com/en-us/azure/virtual-machines/linux/cli-ps-findimage#check-the-purchase-plan-information",
 							Type:        []string{"string"},
 							Format:      "",
 						},
@@ -37109,27 +38361,27 @@ func schema_openshift_api_machine_v1beta1_LastOperation(ref common.ReferenceCall
 				Properties: map[string]spec.Schema{
 					"description": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Description is the human-readable description of the last operation.",
+							Description: "description is the human-readable description of the last operation.",
 							Type:        []string{"string"},
 							Format:      "",
 						},
 					},
 					"lastUpdated": {
 						SchemaProps: spec.SchemaProps{
-							Description: "LastUpdated is the timestamp at which LastOperation API was last-updated.",
+							Description: "lastUpdated is the timestamp at which LastOperation API was last-updated.",
 							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.Time"),
 						},
 					},
 					"state": {
 						SchemaProps: spec.SchemaProps{
-							Description: "State is the current status of the last performed operation. E.g. Processing, Failed, Successful etc",
+							Description: "state is the current status of the last performed operation. E.g. Processing, Failed, Successful etc",
 							Type:        []string{"string"},
 							Format:      "",
 						},
 					},
 					"type": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Type is the type of operation which was last performed. E.g. Create, Delete, Update etc",
+							Description: "type is the type of operation which was last performed. E.g. Create, Delete, Update etc",
 							Type:        []string{"string"},
 							Format:      "",
 						},
@@ -37151,7 +38403,7 @@ func schema_openshift_api_machine_v1beta1_LifecycleHook(ref common.ReferenceCall
 				Properties: map[string]spec.Schema{
 					"name": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Name defines a unique name for the lifcycle hook. The name should be unique and descriptive, ideally 1-3 words, in CamelCase or it may be namespaced, eg. foo.example.com/CamelCase. Names must be unique and should only be managed by a single entity.",
+							Description: "name defines a unique name for the lifcycle hook. The name should be unique and descriptive, ideally 1-3 words, in CamelCase or it may be namespaced, eg. foo.example.com/CamelCase. Names must be unique and should only be managed by a single entity.",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -37159,7 +38411,7 @@ func schema_openshift_api_machine_v1beta1_LifecycleHook(ref common.ReferenceCall
 					},
 					"owner": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Owner defines the owner of the lifecycle hook. This should be descriptive enough so that users can identify who/what is responsible for blocking the lifecycle. This could be the name of a controller (e.g. clusteroperator/etcd) or an administrator managing the hook.",
+							Description: "owner defines the owner of the lifecycle hook. This should be descriptive enough so that users can identify who/what is responsible for blocking the lifecycle. This could be the name of a controller (e.g. clusteroperator/etcd) or an administrator managing the hook.",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -37189,7 +38441,7 @@ func schema_openshift_api_machine_v1beta1_LifecycleHooks(ref common.ReferenceCal
 							},
 						},
 						SchemaProps: spec.SchemaProps{
-							Description: "PreDrain hooks prevent the machine from being drained. This also blocks further lifecycle events, such as termination.",
+							Description: "preDrain hooks prevent the machine from being drained. This also blocks further lifecycle events, such as termination.",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -37211,7 +38463,7 @@ func schema_openshift_api_machine_v1beta1_LifecycleHooks(ref common.ReferenceCal
 							},
 						},
 						SchemaProps: spec.SchemaProps{
-							Description: "PreTerminate hooks prevent the machine from being terminated. PreTerminate hooks be actioned after the Machine has been drained.",
+							Description: "preTerminate hooks prevent the machine from being terminated. PreTerminate hooks be actioned after the Machine has been drained.",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -37423,7 +38675,7 @@ func schema_openshift_api_machine_v1beta1_MachineHealthCheckSpec(ref common.Refe
 					},
 					"unhealthyConditions": {
 						SchemaProps: spec.SchemaProps{
-							Description: "UnhealthyConditions contains a list of the conditions that determine whether a node is considered unhealthy.  The conditions are combined in a logical OR, i.e. if any of the conditions is met, the node is unhealthy.",
+							Description: "unhealthyConditions contains a list of the conditions that determine whether a node is considered unhealthy.  The conditions are combined in a logical OR, i.e. if any of the conditions is met, the node is unhealthy.",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -37437,7 +38689,7 @@ func schema_openshift_api_machine_v1beta1_MachineHealthCheckSpec(ref common.Refe
 					},
 					"maxUnhealthy": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Any farther remediation is only allowed if at most \"MaxUnhealthy\" machines selected by \"selector\" are not healthy. Expects either a postive integer value or a percentage value. Percentage values must be positive whole numbers and are capped at 100%. Both 0 and 0% are valid and will block all remediation.",
+							Description: "Any farther remediation is only allowed if at most \"MaxUnhealthy\" machines selected by \"selector\" are not healthy. Expects either a postive integer value or a percentage value. Percentage values must be positive whole numbers and are capped at 100%. Both 0 and 0% are valid and will block all remediation. Defaults to 100% if not set.",
 							Ref:         ref("k8s.io/apimachinery/pkg/util/intstr.IntOrString"),
 						},
 					},
@@ -37449,7 +38701,7 @@ func schema_openshift_api_machine_v1beta1_MachineHealthCheckSpec(ref common.Refe
 					},
 					"remediationTemplate": {
 						SchemaProps: spec.SchemaProps{
-							Description: "RemediationTemplate is a reference to a remediation template provided by an infrastructure provider.\n\nThis field is completely optional, when filled, the MachineHealthCheck controller creates a new object from the template referenced and hands off remediation of the machine to a controller that lives outside of Machine API Operator.",
+							Description: "remediationTemplate is a reference to a remediation template provided by an infrastructure provider.\n\nThis field is completely optional, when filled, the MachineHealthCheck controller creates a new object from the template referenced and hands off remediation of the machine to a controller that lives outside of Machine API Operator.",
 							Ref:         ref("k8s.io/api/core/v1.ObjectReference"),
 						},
 					},
@@ -37485,7 +38737,7 @@ func schema_openshift_api_machine_v1beta1_MachineHealthCheckStatus(ref common.Re
 					},
 					"remediationsAllowed": {
 						SchemaProps: spec.SchemaProps{
-							Description: "RemediationsAllowed is the number of further remediations allowed by this machine health check before maxUnhealthy short circuiting will be applied",
+							Description: "remediationsAllowed is the number of further remediations allowed by this machine health check before maxUnhealthy short circuiting will be applied",
 							Default:     0,
 							Type:        []string{"integer"},
 							Format:      "int32",
@@ -37501,7 +38753,7 @@ func schema_openshift_api_machine_v1beta1_MachineHealthCheckStatus(ref common.Re
 							},
 						},
 						SchemaProps: spec.SchemaProps{
-							Description: "Conditions defines the current state of the MachineHealthCheck",
+							Description: "conditions defines the current state of the MachineHealthCheck",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -37679,35 +38931,35 @@ func schema_openshift_api_machine_v1beta1_MachineSetSpec(ref common.ReferenceCal
 				Properties: map[string]spec.Schema{
 					"replicas": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Replicas is the number of desired replicas. This is a pointer to distinguish between explicit zero and unspecified. Defaults to 1.",
+							Description: "replicas is the number of desired replicas. This is a pointer to distinguish between explicit zero and unspecified. Defaults to 1.",
 							Type:        []string{"integer"},
 							Format:      "int32",
 						},
 					},
 					"minReadySeconds": {
 						SchemaProps: spec.SchemaProps{
-							Description: "MinReadySeconds is the minimum number of seconds for which a newly created machine should be ready. Defaults to 0 (machine will be considered available as soon as it is ready)",
+							Description: "minReadySeconds is the minimum number of seconds for which a newly created machine should be ready. Defaults to 0 (machine will be considered available as soon as it is ready)",
 							Type:        []string{"integer"},
 							Format:      "int32",
 						},
 					},
 					"deletePolicy": {
 						SchemaProps: spec.SchemaProps{
-							Description: "DeletePolicy defines the policy used to identify nodes to delete when downscaling. Defaults to \"Random\".  Valid values are \"Random, \"Newest\", \"Oldest\"",
+							Description: "deletePolicy defines the policy used to identify nodes to delete when downscaling. Defaults to \"Random\".  Valid values are \"Random, \"Newest\", \"Oldest\"",
 							Type:        []string{"string"},
 							Format:      "",
 						},
 					},
 					"selector": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Selector is a label query over machines that should match the replica count. Label keys and values that must match in order to be controlled by this MachineSet. It must match the machine template's labels. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/#label-selectors",
+							Description: "selector is a label query over machines that should match the replica count. Label keys and values that must match in order to be controlled by this MachineSet. It must match the machine template's labels. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/#label-selectors",
 							Default:     map[string]interface{}{},
 							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.LabelSelector"),
 						},
 					},
 					"template": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Template is the object that describes the machine that will be created if insufficient replicas are detected.",
+							Description: "template is the object that describes the machine that will be created if insufficient replicas are detected.",
 							Default:     map[string]interface{}{},
 							Ref:         ref("github.com/openshift/api/machine/v1beta1.MachineTemplateSpec"),
 						},
@@ -37738,7 +38990,7 @@ func schema_openshift_api_machine_v1beta1_MachineSetStatus(ref common.ReferenceC
 				Properties: map[string]spec.Schema{
 					"replicas": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Replicas is the most recently observed number of replicas.",
+							Description: "replicas is the most recently observed number of replicas.",
 							Default:     0,
 							Type:        []string{"integer"},
 							Format:      "int32",
@@ -37767,7 +39019,7 @@ func schema_openshift_api_machine_v1beta1_MachineSetStatus(ref common.ReferenceC
 					},
 					"observedGeneration": {
 						SchemaProps: spec.SchemaProps{
-							Description: "ObservedGeneration reflects the generation of the most recently observed MachineSet.",
+							Description: "observedGeneration reflects the generation of the most recently observed MachineSet.",
 							Type:        []string{"integer"},
 							Format:      "int64",
 						},
@@ -37795,7 +39047,7 @@ func schema_openshift_api_machine_v1beta1_MachineSetStatus(ref common.ReferenceC
 							},
 						},
 						SchemaProps: spec.SchemaProps{
-							Description: "Conditions defines the current state of the MachineSet",
+							Description: "conditions defines the current state of the MachineSet",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -37846,7 +39098,7 @@ func schema_openshift_api_machine_v1beta1_MachineSpec(ref common.ReferenceCallba
 					},
 					"lifecycleHooks": {
 						SchemaProps: spec.SchemaProps{
-							Description: "LifecycleHooks allow users to pause operations on the machine at certain predefined points within the machine lifecycle.",
+							Description: "lifecycleHooks allow users to pause operations on the machine at certain predefined points within the machine lifecycle.",
 							Default:     map[string]interface{}{},
 							Ref:         ref("github.com/openshift/api/machine/v1beta1.LifecycleHooks"),
 						},
@@ -37872,14 +39124,14 @@ func schema_openshift_api_machine_v1beta1_MachineSpec(ref common.ReferenceCallba
 					},
 					"providerSpec": {
 						SchemaProps: spec.SchemaProps{
-							Description: "ProviderSpec details Provider-specific configuration to use during node creation.",
+							Description: "providerSpec details Provider-specific configuration to use during node creation.",
 							Default:     map[string]interface{}{},
 							Ref:         ref("github.com/openshift/api/machine/v1beta1.ProviderSpec"),
 						},
 					},
 					"providerID": {
 						SchemaProps: spec.SchemaProps{
-							Description: "ProviderID is the identification ID of the machine provided by the provider. This field must match the provider ID as seen on the node object corresponding to this machine. This field is required by higher level consumers of cluster-api. Example use case is cluster autoscaler with cluster-api as provider. Clean-up logic in the autoscaler compares machines to nodes to find out machines at provider which could not get registered as Kubernetes nodes. With cluster-api as a generic out-of-tree provider for autoscaler, this field is required by autoscaler to be able to have a provider view of the list of machines. Another list of nodes is queried from the k8s apiserver and then a comparison is done to find out unregistered machines and are marked for delete. This field will be set by the actuators and consumed by higher level entities like autoscaler that will be interfacing with cluster-api as generic provider.",
+							Description: "providerID is the identification ID of the machine provided by the provider. This field must match the provider ID as seen on the node object corresponding to this machine. This field is required by higher level consumers of cluster-api. Example use case is cluster autoscaler with cluster-api as provider. Clean-up logic in the autoscaler compares machines to nodes to find out machines at provider which could not get registered as Kubernetes nodes. With cluster-api as a generic out-of-tree provider for autoscaler, this field is required by autoscaler to be able to have a provider view of the list of machines. Another list of nodes is queried from the k8s apiserver and then a comparison is done to find out unregistered machines and are marked for delete. This field will be set by the actuators and consumed by higher level entities like autoscaler that will be interfacing with cluster-api as generic provider.",
 							Type:        []string{"string"},
 							Format:      "",
 						},
@@ -37909,33 +39161,33 @@ func schema_openshift_api_machine_v1beta1_MachineStatus(ref common.ReferenceCall
 				Properties: map[string]spec.Schema{
 					"nodeRef": {
 						SchemaProps: spec.SchemaProps{
-							Description: "NodeRef will point to the corresponding Node if it exists.",
+							Description: "nodeRef will point to the corresponding Node if it exists.",
 							Ref:         ref("k8s.io/api/core/v1.ObjectReference"),
 						},
 					},
 					"lastUpdated": {
 						SchemaProps: spec.SchemaProps{
-							Description: "LastUpdated identifies when this status was last observed.",
+							Description: "lastUpdated identifies when this status was last observed.",
 							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.Time"),
 						},
 					},
 					"errorReason": {
 						SchemaProps: spec.SchemaProps{
-							Description: "ErrorReason will be set in the event that there is a terminal problem reconciling the Machine and will contain a succinct value suitable for machine interpretation.\n\nThis field should not be set for transitive errors that a controller faces that are expected to be fixed automatically over time (like service outages), but instead indicate that something is fundamentally wrong with the Machine's spec or the configuration of the controller, and that manual intervention is required. Examples of terminal errors would be invalid combinations of settings in the spec, values that are unsupported by the controller, or the responsible controller itself being critically misconfigured.\n\nAny transient errors that occur during the reconciliation of Machines can be added as events to the Machine object and/or logged in the controller's output.",
+							Description: "errorReason will be set in the event that there is a terminal problem reconciling the Machine and will contain a succinct value suitable for machine interpretation.\n\nThis field should not be set for transitive errors that a controller faces that are expected to be fixed automatically over time (like service outages), but instead indicate that something is fundamentally wrong with the Machine's spec or the configuration of the controller, and that manual intervention is required. Examples of terminal errors would be invalid combinations of settings in the spec, values that are unsupported by the controller, or the responsible controller itself being critically misconfigured.\n\nAny transient errors that occur during the reconciliation of Machines can be added as events to the Machine object and/or logged in the controller's output.",
 							Type:        []string{"string"},
 							Format:      "",
 						},
 					},
 					"errorMessage": {
 						SchemaProps: spec.SchemaProps{
-							Description: "ErrorMessage will be set in the event that there is a terminal problem reconciling the Machine and will contain a more verbose string suitable for logging and human consumption.\n\nThis field should not be set for transitive errors that a controller faces that are expected to be fixed automatically over time (like service outages), but instead indicate that something is fundamentally wrong with the Machine's spec or the configuration of the controller, and that manual intervention is required. Examples of terminal errors would be invalid combinations of settings in the spec, values that are unsupported by the controller, or the responsible controller itself being critically misconfigured.\n\nAny transient errors that occur during the reconciliation of Machines can be added as events to the Machine object and/or logged in the controller's output.",
+							Description: "errorMessage will be set in the event that there is a terminal problem reconciling the Machine and will contain a more verbose string suitable for logging and human consumption.\n\nThis field should not be set for transitive errors that a controller faces that are expected to be fixed automatically over time (like service outages), but instead indicate that something is fundamentally wrong with the Machine's spec or the configuration of the controller, and that manual intervention is required. Examples of terminal errors would be invalid combinations of settings in the spec, values that are unsupported by the controller, or the responsible controller itself being critically misconfigured.\n\nAny transient errors that occur during the reconciliation of Machines can be added as events to the Machine object and/or logged in the controller's output.",
 							Type:        []string{"string"},
 							Format:      "",
 						},
 					},
 					"providerStatus": {
 						SchemaProps: spec.SchemaProps{
-							Description: "ProviderStatus details a Provider-specific status. It is recommended that providers maintain their own versioned API types that should be serialized/deserialized from this field.",
+							Description: "providerStatus details a Provider-specific status. It is recommended that providers maintain their own versioned API types that should be serialized/deserialized from this field.",
 							Ref:         ref("k8s.io/apimachinery/pkg/runtime.RawExtension"),
 						},
 					},
@@ -37946,7 +39198,7 @@ func schema_openshift_api_machine_v1beta1_MachineStatus(ref common.ReferenceCall
 							},
 						},
 						SchemaProps: spec.SchemaProps{
-							Description: "Addresses is a list of addresses assigned to the machine. Queried from cloud provider, if available.",
+							Description: "addresses is a list of addresses assigned to the machine. Queried from cloud provider, if available.",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -37960,13 +39212,13 @@ func schema_openshift_api_machine_v1beta1_MachineStatus(ref common.ReferenceCall
 					},
 					"lastOperation": {
 						SchemaProps: spec.SchemaProps{
-							Description: "LastOperation describes the last-operation performed by the machine-controller. This API should be useful as a history in terms of the latest operation performed on the specific machine. It should also convey the state of the latest-operation for example if it is still on-going, failed or completed successfully.",
+							Description: "lastOperation describes the last-operation performed by the machine-controller. This API should be useful as a history in terms of the latest operation performed on the specific machine. It should also convey the state of the latest-operation for example if it is still on-going, failed or completed successfully.",
 							Ref:         ref("github.com/openshift/api/machine/v1beta1.LastOperation"),
 						},
 					},
 					"phase": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Phase represents the current phase of machine actuation. One of: Failed, Provisioning, Provisioned, Running, Deleting",
+							Description: "phase represents the current phase of machine actuation. One of: Failed, Provisioning, Provisioned, Running, Deleting",
 							Type:        []string{"string"},
 							Format:      "",
 						},
@@ -37981,7 +39233,7 @@ func schema_openshift_api_machine_v1beta1_MachineStatus(ref common.ReferenceCall
 							},
 						},
 						SchemaProps: spec.SchemaProps{
-							Description: "Conditions defines the current state of the Machine",
+							Description: "conditions defines the current state of the Machine",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -38053,7 +39305,7 @@ func schema_openshift_api_machine_v1beta1_MetadataServiceOptions(ref common.Refe
 				Properties: map[string]spec.Schema{
 					"authentication": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Authentication determines whether or not the host requires the use of authentication when interacting with the metadata service. When using authentication, this enforces v2 interaction method (IMDSv2) with the metadata service. When omitted, this means the user has no opinion and the value is left to the platform to choose a good default, which is subject to change over time. The current default is optional. At this point this field represents `HttpTokens` parameter from `InstanceMetadataOptionsRequest` structure in AWS EC2 API https://docs.aws.amazon.com/AWSEC2/latest/APIReference/API_InstanceMetadataOptionsRequest.html",
+							Description: "authentication determines whether or not the host requires the use of authentication when interacting with the metadata service. When using authentication, this enforces v2 interaction method (IMDSv2) with the metadata service. When omitted, this means the user has no opinion and the value is left to the platform to choose a good default, which is subject to change over time. The current default is optional. At this point this field represents `HttpTokens` parameter from `InstanceMetadataOptionsRequest` structure in AWS EC2 API https://docs.aws.amazon.com/AWSEC2/latest/APIReference/API_InstanceMetadataOptionsRequest.html",
 							Type:        []string{"string"},
 							Format:      "",
 						},
@@ -38146,7 +39398,7 @@ func schema_openshift_api_machine_v1beta1_NetworkSpec(ref common.ReferenceCallba
 				Properties: map[string]spec.Schema{
 					"devices": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Devices defines the virtual machine's network interfaces.",
+							Description: "devices defines the virtual machine's network interfaces.",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -38175,7 +39427,7 @@ func schema_openshift_api_machine_v1beta1_OSDisk(ref common.ReferenceCallback) c
 				Properties: map[string]spec.Schema{
 					"osType": {
 						SchemaProps: spec.SchemaProps{
-							Description: "OSType is the operating system type of the OS disk. Possible values include \"Linux\" and \"Windows\".",
+							Description: "osType is the operating system type of the OS disk. Possible values include \"Linux\" and \"Windows\".",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -38183,14 +39435,14 @@ func schema_openshift_api_machine_v1beta1_OSDisk(ref common.ReferenceCallback) c
 					},
 					"managedDisk": {
 						SchemaProps: spec.SchemaProps{
-							Description: "ManagedDisk specifies the Managed Disk parameters for the OS disk.",
+							Description: "managedDisk specifies the Managed Disk parameters for the OS disk.",
 							Default:     map[string]interface{}{},
 							Ref:         ref("github.com/openshift/api/machine/v1beta1.OSDiskManagedDiskParameters"),
 						},
 					},
 					"diskSizeGB": {
 						SchemaProps: spec.SchemaProps{
-							Description: "DiskSizeGB is the size in GB to assign to the data disk.",
+							Description: "diskSizeGB is the size in GB to assign to the data disk.",
 							Default:     0,
 							Type:        []string{"integer"},
 							Format:      "int32",
@@ -38198,14 +39450,14 @@ func schema_openshift_api_machine_v1beta1_OSDisk(ref common.ReferenceCallback) c
 					},
 					"diskSettings": {
 						SchemaProps: spec.SchemaProps{
-							Description: "DiskSettings describe ephemeral disk settings for the os disk.",
+							Description: "diskSettings describe ephemeral disk settings for the os disk.",
 							Default:     map[string]interface{}{},
 							Ref:         ref("github.com/openshift/api/machine/v1beta1.DiskSettings"),
 						},
 					},
 					"cachingType": {
 						SchemaProps: spec.SchemaProps{
-							Description: "CachingType specifies the caching requirements. Possible values include: 'None', 'ReadOnly', 'ReadWrite'. Empty value means no opinion and the platform chooses a default, which is subject to change over time. Currently the default is `None`.",
+							Description: "cachingType specifies the caching requirements. Possible values include: 'None', 'ReadOnly', 'ReadWrite'. Empty value means no opinion and the platform chooses a default, which is subject to change over time. Currently the default is `None`.",
 							Type:        []string{"string"},
 							Format:      "",
 						},
@@ -38228,7 +39480,7 @@ func schema_openshift_api_machine_v1beta1_OSDiskManagedDiskParameters(ref common
 				Properties: map[string]spec.Schema{
 					"storageAccountType": {
 						SchemaProps: spec.SchemaProps{
-							Description: "StorageAccountType is the storage account type to use. Possible values include \"Standard_LRS\", \"Premium_LRS\".",
+							Description: "storageAccountType is the storage account type to use. Possible values include \"Standard_LRS\", \"Premium_LRS\".",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -38236,7 +39488,7 @@ func schema_openshift_api_machine_v1beta1_OSDiskManagedDiskParameters(ref common
 					},
 					"diskEncryptionSet": {
 						SchemaProps: spec.SchemaProps{
-							Description: "DiskEncryptionSet is the disk encryption set properties",
+							Description: "diskEncryptionSet is the disk encryption set properties",
 							Ref:         ref("github.com/openshift/api/machine/v1beta1.DiskEncryptionSetParameters"),
 						},
 					},
@@ -38265,21 +39517,21 @@ func schema_openshift_api_machine_v1beta1_ObjectMeta(ref common.ReferenceCallbac
 				Properties: map[string]spec.Schema{
 					"name": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Name must be unique within a namespace. Is required when creating resources, although some resources may allow a client to request the generation of an appropriate name automatically. Name is primarily intended for creation idempotence and configuration definition. Cannot be updated. More info: http://kubernetes.io/docs/user-guide/identifiers#names",
+							Description: "name must be unique within a namespace. Is required when creating resources, although some resources may allow a client to request the generation of an appropriate name automatically. Name is primarily intended for creation idempotence and configuration definition. Cannot be updated. More info: http://kubernetes.io/docs/user-guide/identifiers#names",
 							Type:        []string{"string"},
 							Format:      "",
 						},
 					},
 					"generateName": {
 						SchemaProps: spec.SchemaProps{
-							Description: "GenerateName is an optional prefix, used by the server, to generate a unique name ONLY IF the Name field has not been provided. If this field is used, the name returned to the client will be different than the name passed. This value will also be combined with a unique suffix. The provided value has the same validation rules as the Name field, and may be truncated by the length of the suffix required to make the value unique on the server.\n\nIf this field is specified and the generated name exists, the server will NOT return a 409 - instead, it will either return 201 Created or 500 with Reason ServerTimeout indicating a unique name could not be found in the time allotted, and the client should retry (optionally after the time indicated in the Retry-After header).\n\nApplied only if Name is not specified. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#idempotency",
+							Description: "generateName is an optional prefix, used by the server, to generate a unique name ONLY IF the Name field has not been provided. If this field is used, the name returned to the client will be different than the name passed. This value will also be combined with a unique suffix. The provided value has the same validation rules as the Name field, and may be truncated by the length of the suffix required to make the value unique on the server.\n\nIf this field is specified and the generated name exists, the server will NOT return a 409 - instead, it will either return 201 Created or 500 with Reason ServerTimeout indicating a unique name could not be found in the time allotted, and the client should retry (optionally after the time indicated in the Retry-After header).\n\nApplied only if Name is not specified. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#idempotency",
 							Type:        []string{"string"},
 							Format:      "",
 						},
 					},
 					"namespace": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Namespace defines the space within each name must be unique. An empty namespace is equivalent to the \"default\" namespace, but \"default\" is the canonical representation. Not all objects are required to be scoped to a namespace - the value of this field for those objects will be empty.\n\nMust be a DNS_LABEL. Cannot be updated. More info: http://kubernetes.io/docs/user-guide/namespaces",
+							Description: "namespace defines the space within each name must be unique. An empty namespace is equivalent to the \"default\" namespace, but \"default\" is the canonical representation. Not all objects are required to be scoped to a namespace - the value of this field for those objects will be empty.\n\nMust be a DNS_LABEL. Cannot be updated. More info: http://kubernetes.io/docs/user-guide/namespaces",
 							Type:        []string{"string"},
 							Format:      "",
 						},
@@ -38302,7 +39554,7 @@ func schema_openshift_api_machine_v1beta1_ObjectMeta(ref common.ReferenceCallbac
 					},
 					"annotations": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Annotations is an unstructured key value map stored with a resource that may be set by external tools to store and retrieve arbitrary metadata. They are not queryable and should be preserved when modifying objects. More info: http://kubernetes.io/docs/user-guide/annotations",
+							Description: "annotations is an unstructured key value map stored with a resource that may be set by external tools to store and retrieve arbitrary metadata. They are not queryable and should be preserved when modifying objects. More info: http://kubernetes.io/docs/user-guide/annotations",
 							Type:        []string{"object"},
 							AdditionalProperties: &spec.SchemaOrBool{
 								Allows: true,
@@ -38357,21 +39609,21 @@ func schema_openshift_api_machine_v1beta1_Placement(ref common.ReferenceCallback
 				Properties: map[string]spec.Schema{
 					"region": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Region is the region to use to create the instance",
+							Description: "region is the region to use to create the instance",
 							Type:        []string{"string"},
 							Format:      "",
 						},
 					},
 					"availabilityZone": {
 						SchemaProps: spec.SchemaProps{
-							Description: "AvailabilityZone is the availability zone of the instance",
+							Description: "availabilityZone is the availability zone of the instance",
 							Type:        []string{"string"},
 							Format:      "",
 						},
 					},
 					"tenancy": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Tenancy indicates if instance should run on shared or single-tenant hardware. There are supported 3 options: default, dedicated and host.",
+							Description: "tenancy indicates if instance should run on shared or single-tenant hardware. There are supported 3 options: default, dedicated and host.",
 							Type:        []string{"string"},
 							Format:      "",
 						},
@@ -38391,7 +39643,7 @@ func schema_openshift_api_machine_v1beta1_ProviderSpec(ref common.ReferenceCallb
 				Properties: map[string]spec.Schema{
 					"value": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Value is an inlined, serialized representation of the resource configuration. It is recommended that providers maintain their own versioned API types that should be serialized/deserialized from this field, akin to component config.",
+							Description: "value is an inlined, serialized representation of the resource configuration. It is recommended that providers maintain their own versioned API types that should be serialized/deserialized from this field, akin to component config.",
 							Ref:         ref("k8s.io/apimachinery/pkg/runtime.RawExtension"),
 						},
 					},
@@ -38497,6 +39749,7 @@ func schema_openshift_api_machine_v1beta1_SecuritySettings(ref common.ReferenceC
 						},
 					},
 				},
+				Required: []string{"securityType"},
 			},
 			VendorExtensible: spec.VendorExtensible{
 				Extensions: spec.Extensions{
@@ -38546,7 +39799,7 @@ func schema_openshift_api_machine_v1beta1_SpotVMOptions(ref common.ReferenceCall
 				Properties: map[string]spec.Schema{
 					"maxPrice": {
 						SchemaProps: spec.SchemaProps{
-							Description: "MaxPrice defines the maximum price the user is willing to pay for Spot VM instances",
+							Description: "maxPrice defines the maximum price the user is willing to pay for Spot VM instances",
 							Ref:         ref("k8s.io/apimachinery/pkg/api/resource.Quantity"),
 						},
 					},
@@ -38567,7 +39820,7 @@ func schema_openshift_api_machine_v1beta1_TagSpecification(ref common.ReferenceC
 				Properties: map[string]spec.Schema{
 					"name": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Name of the tag",
+							Description: "name of the tag",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -38575,7 +39828,7 @@ func schema_openshift_api_machine_v1beta1_TagSpecification(ref common.ReferenceC
 					},
 					"value": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Value of the tag",
+							Description: "value of the tag",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -38603,6 +39856,7 @@ func schema_openshift_api_machine_v1beta1_TrustedLaunch(ref common.ReferenceCall
 						},
 					},
 				},
+				Required: []string{"uefiSettings"},
 			},
 		},
 		Dependencies: []string{
@@ -38702,6 +39956,43 @@ func schema_openshift_api_machine_v1beta1_VMDiskSecurityProfile(ref common.Refer
 	}
 }
 
+func schema_openshift_api_machine_v1beta1_VSphereDisk(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "VSphereDisk describes additional disks for vSphere.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"name": {
+						SchemaProps: spec.SchemaProps{
+							Description: "name is used to identify the disk definition. name is required needs to be unique so that it can be used to clearly identify purpose of the disk. It must be at most 80 characters in length and must consist only of alphanumeric characters, hyphens and underscores, and must start and end with an alphanumeric character.",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"sizeGiB": {
+						SchemaProps: spec.SchemaProps{
+							Description: "sizeGiB is the size of the disk in GiB. The maximum supported size 16384 GiB.",
+							Default:     0,
+							Type:        []string{"integer"},
+							Format:      "int32",
+						},
+					},
+					"provisioningMode": {
+						SchemaProps: spec.SchemaProps{
+							Description: "provisioningMode is an optional field that specifies the provisioning type to be used by this vSphere data disk. Allowed values are \"Thin\", \"Thick\", \"EagerlyZeroed\", and omitted. When set to Thin, the disk will be made using thin provisioning allocating the bare minimum space. When set to Thick, the full disk size will be allocated when disk is created. When set to EagerlyZeroed, the disk will be created using eager zero provisioning. An eager zeroed thick disk has all space allocated and wiped clean of any previous contents on the physical media at creation time. Such disks may take longer time during creation compared to other disk formats. When omitted, no setting will be applied to the data disk and the provisioning mode for the disk will be determined by the default storage policy configured for the datastore in vSphere.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+				},
+				Required: []string{"name", "sizeGiB"},
+			},
+		},
+	}
+}
+
 func schema_openshift_api_machine_v1beta1_VSphereMachineProviderSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -38731,19 +40022,19 @@ func schema_openshift_api_machine_v1beta1_VSphereMachineProviderSpec(ref common.
 					},
 					"userDataSecret": {
 						SchemaProps: spec.SchemaProps{
-							Description: "UserDataSecret contains a local reference to a secret that contains the UserData to apply to the instance",
+							Description: "userDataSecret contains a local reference to a secret that contains the UserData to apply to the instance",
 							Ref:         ref("k8s.io/api/core/v1.LocalObjectReference"),
 						},
 					},
 					"credentialsSecret": {
 						SchemaProps: spec.SchemaProps{
-							Description: "CredentialsSecret is a reference to the secret with vSphere credentials.",
+							Description: "credentialsSecret is a reference to the secret with vSphere credentials.",
 							Ref:         ref("k8s.io/api/core/v1.LocalObjectReference"),
 						},
 					},
 					"template": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Template is the name, inventory path, or instance UUID of the template used to clone new machines.",
+							Description: "template is the name, inventory path, or instance UUID of the template used to clone new machines.",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -38751,20 +40042,20 @@ func schema_openshift_api_machine_v1beta1_VSphereMachineProviderSpec(ref common.
 					},
 					"workspace": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Workspace describes the workspace to use for the machine.",
+							Description: "workspace describes the workspace to use for the machine.",
 							Ref:         ref("github.com/openshift/api/machine/v1beta1.Workspace"),
 						},
 					},
 					"network": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Network is the network configuration for this machine's VM.",
+							Description: "network is the network configuration for this machine's VM.",
 							Default:     map[string]interface{}{},
 							Ref:         ref("github.com/openshift/api/machine/v1beta1.NetworkSpec"),
 						},
 					},
 					"numCPUs": {
 						SchemaProps: spec.SchemaProps{
-							Description: "NumCPUs is the number of virtual processors in a virtual machine. Defaults to the analogue property value in the template from which this machine is cloned.",
+							Description: "numCPUs is the number of virtual processors in a virtual machine. Defaults to the analogue property value in the template from which this machine is cloned.",
 							Type:        []string{"integer"},
 							Format:      "int32",
 						},
@@ -38778,14 +40069,14 @@ func schema_openshift_api_machine_v1beta1_VSphereMachineProviderSpec(ref common.
 					},
 					"memoryMiB": {
 						SchemaProps: spec.SchemaProps{
-							Description: "MemoryMiB is the size of a virtual machine's memory, in MiB. Defaults to the analogue property value in the template from which this machine is cloned.",
+							Description: "memoryMiB is the size of a virtual machine's memory, in MiB. Defaults to the analogue property value in the template from which this machine is cloned.",
 							Type:        []string{"integer"},
 							Format:      "int64",
 						},
 					},
 					"diskGiB": {
 						SchemaProps: spec.SchemaProps{
-							Description: "DiskGiB is the size of a virtual machine's disk, in GiB. Defaults to the analogue property value in the template from which this machine is cloned. This parameter will be ignored if 'LinkedClone' CloneMode is set.",
+							Description: "diskGiB is the size of a virtual machine's disk, in GiB. Defaults to the analogue property value in the template from which this machine is cloned. This parameter will be ignored if 'LinkedClone' CloneMode is set.",
 							Type:        []string{"integer"},
 							Format:      "int32",
 						},
@@ -38807,7 +40098,7 @@ func schema_openshift_api_machine_v1beta1_VSphereMachineProviderSpec(ref common.
 					},
 					"snapshot": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Snapshot is the name of the snapshot from which the VM was cloned",
+							Description: "snapshot is the name of the snapshot from which the VM was cloned",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -38815,9 +40106,31 @@ func schema_openshift_api_machine_v1beta1_VSphereMachineProviderSpec(ref common.
 					},
 					"cloneMode": {
 						SchemaProps: spec.SchemaProps{
-							Description: "CloneMode specifies the type of clone operation. The LinkedClone mode is only support for templates that have at least one snapshot. If the template has no snapshots, then CloneMode defaults to FullClone. When LinkedClone mode is enabled the DiskGiB field is ignored as it is not possible to expand disks of linked clones. Defaults to FullClone. When using LinkedClone, if no snapshots exist for the source template, falls back to FullClone.",
+							Description: "cloneMode specifies the type of clone operation. The LinkedClone mode is only support for templates that have at least one snapshot. If the template has no snapshots, then CloneMode defaults to FullClone. When LinkedClone mode is enabled the DiskGiB field is ignored as it is not possible to expand disks of linked clones. Defaults to FullClone. When using LinkedClone, if no snapshots exist for the source template, falls back to FullClone.",
 							Type:        []string{"string"},
 							Format:      "",
+						},
+					},
+					"dataDisks": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-map-keys": []interface{}{
+									"name",
+								},
+								"x-kubernetes-list-type": "map",
+							},
+						},
+						SchemaProps: spec.SchemaProps{
+							Description: "dataDisks is a list of non OS disks to be created and attached to the VM.  The max number of disk allowed to be attached is currently 29.  The max number of disks for any controller is 30, but VM template will always have OS disk so that will leave 29 disks on any controller type.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("github.com/openshift/api/machine/v1beta1.VSphereDisk"),
+									},
+								},
+							},
 						},
 					},
 				},
@@ -38825,7 +40138,7 @@ func schema_openshift_api_machine_v1beta1_VSphereMachineProviderSpec(ref common.
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/machine/v1beta1.NetworkSpec", "github.com/openshift/api/machine/v1beta1.Workspace", "k8s.io/api/core/v1.LocalObjectReference", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"},
+			"github.com/openshift/api/machine/v1beta1.NetworkSpec", "github.com/openshift/api/machine/v1beta1.VSphereDisk", "github.com/openshift/api/machine/v1beta1.Workspace", "k8s.io/api/core/v1.LocalObjectReference", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"},
 	}
 }
 
@@ -38852,21 +40165,29 @@ func schema_openshift_api_machine_v1beta1_VSphereMachineProviderStatus(ref commo
 					},
 					"instanceId": {
 						SchemaProps: spec.SchemaProps{
-							Description: "InstanceID is the ID of the instance in VSphere",
+							Description: "instanceId is the ID of the instance in VSphere",
 							Type:        []string{"string"},
 							Format:      "",
 						},
 					},
 					"instanceState": {
 						SchemaProps: spec.SchemaProps{
-							Description: "InstanceState is the provisioning state of the VSphere Instance.",
+							Description: "instanceState is the provisioning state of the VSphere Instance.",
 							Type:        []string{"string"},
 							Format:      "",
 						},
 					},
 					"conditions": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-map-keys": []interface{}{
+									"type",
+								},
+								"x-kubernetes-list-type": "map",
+							},
+						},
 						SchemaProps: spec.SchemaProps{
-							Description: "Conditions is a set of conditions associated with the Machine to indicate errors or other status",
+							Description: "conditions is a set of conditions associated with the Machine to indicate errors or other status",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -38880,7 +40201,7 @@ func schema_openshift_api_machine_v1beta1_VSphereMachineProviderStatus(ref commo
 					},
 					"taskRef": {
 						SchemaProps: spec.SchemaProps{
-							Description: "TaskRef is a managed object reference to a Task related to the machine. This value is set automatically at runtime and should not be set or modified by users.",
+							Description: "taskRef is a managed object reference to a Task related to the machine. This value is set automatically at runtime and should not be set or modified by users.",
 							Type:        []string{"string"},
 							Format:      "",
 						},
@@ -38902,35 +40223,42 @@ func schema_openshift_api_machine_v1beta1_Workspace(ref common.ReferenceCallback
 				Properties: map[string]spec.Schema{
 					"server": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Server is the IP address or FQDN of the vSphere endpoint.",
+							Description: "server is the IP address or FQDN of the vSphere endpoint.",
 							Type:        []string{"string"},
 							Format:      "",
 						},
 					},
 					"datacenter": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Datacenter is the datacenter in which VMs are created/located.",
+							Description: "datacenter is the datacenter in which VMs are created/located.",
 							Type:        []string{"string"},
 							Format:      "",
 						},
 					},
 					"folder": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Folder is the folder in which VMs are created/located.",
+							Description: "folder is the folder in which VMs are created/located.",
 							Type:        []string{"string"},
 							Format:      "",
 						},
 					},
 					"datastore": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Datastore is the datastore in which VMs are created/located.",
+							Description: "datastore is the datastore in which VMs are created/located.",
 							Type:        []string{"string"},
 							Format:      "",
 						},
 					},
 					"resourcePool": {
 						SchemaProps: spec.SchemaProps{
-							Description: "ResourcePool is the resource pool in which VMs are created/located.",
+							Description: "resourcePool is the resource pool in which VMs are created/located.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"vmGroup": {
+						SchemaProps: spec.SchemaProps{
+							Description: "vmGroup is the cluster vm group in which virtual machines will be added for vm host group based zonal.",
 							Type:        []string{"string"},
 							Format:      "",
 						},
@@ -39094,7 +40422,7 @@ func schema_openshift_api_machineconfiguration_v1alpha1_MCOObjectReference(ref c
 				Properties: map[string]spec.Schema{
 					"name": {
 						SchemaProps: spec.SchemaProps{
-							Description: "name is the object name. Must be a lowercase RFC-1123 hostname (https://tools.ietf.org/html/rfc1123) It may consist of only alphanumeric characters, hyphens (-) and periods (.) and must be at most 253 characters in length.",
+							Description: "name is the name of the object being referenced. For example, this can represent a machine config pool or node name. Must be a lowercase RFC-1123 subdomain name (https://tools.ietf.org/html/rfc1123) consisting of only lowercase alphanumeric characters, hyphens (-), and periods (.), and must start and end with an alphanumeric character, and be at most 253 characters in length.",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -39130,8 +40458,9 @@ func schema_openshift_api_machineconfiguration_v1alpha1_MachineConfigNode(ref co
 					},
 					"metadata": {
 						SchemaProps: spec.SchemaProps{
-							Default: map[string]interface{}{},
-							Ref:     ref("k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"),
+							Description: "metadata is the standard object metadata.",
+							Default:     map[string]interface{}{},
+							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"),
 						},
 					},
 					"spec": {
@@ -39180,13 +40509,15 @@ func schema_openshift_api_machineconfiguration_v1alpha1_MachineConfigNodeList(re
 					},
 					"metadata": {
 						SchemaProps: spec.SchemaProps{
-							Default: map[string]interface{}{},
-							Ref:     ref("k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"),
+							Description: "metadata is the standard list metadata.",
+							Default:     map[string]interface{}{},
+							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"),
 						},
 					},
 					"items": {
 						SchemaProps: spec.SchemaProps{
-							Type: []string{"array"},
+							Description: "items contains a collection of MachineConfigNode resources.",
+							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
 									SchemaProps: spec.SchemaProps{
@@ -39198,7 +40529,6 @@ func schema_openshift_api_machineconfiguration_v1alpha1_MachineConfigNodeList(re
 						},
 					},
 				},
-				Required: []string{"metadata", "items"},
 			},
 		},
 		Dependencies: []string{
@@ -39229,31 +40559,9 @@ func schema_openshift_api_machineconfiguration_v1alpha1_MachineConfigNodeSpec(re
 					},
 					"configVersion": {
 						SchemaProps: spec.SchemaProps{
-							Description: "configVersion holds the desired config version for the node targeted by this machine config node resource. The desired version represents the machine config the node will attempt to update to. This gets set before the machine config operator validates the new machine config against the current machine config.",
+							Description: "configVersion holds the desired config version for the node targeted by this machine config node resource. The desired version represents the machine config the node will attempt to update to and gets set before the machine config operator validates the new machine config against the current machine config.",
 							Default:     map[string]interface{}{},
 							Ref:         ref("github.com/openshift/api/machineconfiguration/v1alpha1.MachineConfigNodeSpecMachineConfigVersion"),
-						},
-					},
-					"pinnedImageSets": {
-						VendorExtensible: spec.VendorExtensible{
-							Extensions: spec.Extensions{
-								"x-kubernetes-list-map-keys": []interface{}{
-									"name",
-								},
-								"x-kubernetes-list-type": "map",
-							},
-						},
-						SchemaProps: spec.SchemaProps{
-							Description: "pinnedImageSets holds the desired pinned image sets that this node should pin and pull.",
-							Type:        []string{"array"},
-							Items: &spec.SchemaOrArray{
-								Schema: &spec.Schema{
-									SchemaProps: spec.SchemaProps{
-										Default: map[string]interface{}{},
-										Ref:     ref("github.com/openshift/api/machineconfiguration/v1alpha1.MachineConfigNodeSpecPinnedImageSet"),
-									},
-								},
-							},
 						},
 					},
 				},
@@ -39261,7 +40569,7 @@ func schema_openshift_api_machineconfiguration_v1alpha1_MachineConfigNodeSpec(re
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/machineconfiguration/v1alpha1.MCOObjectReference", "github.com/openshift/api/machineconfiguration/v1alpha1.MachineConfigNodeSpecMachineConfigVersion", "github.com/openshift/api/machineconfiguration/v1alpha1.MachineConfigNodeSpecPinnedImageSet"},
+			"github.com/openshift/api/machineconfiguration/v1alpha1.MCOObjectReference", "github.com/openshift/api/machineconfiguration/v1alpha1.MachineConfigNodeSpecMachineConfigVersion"},
 	}
 }
 
@@ -39269,12 +40577,12 @@ func schema_openshift_api_machineconfiguration_v1alpha1_MachineConfigNodeSpecMac
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
-				Description: "MachineConfigNodeSpecMachineConfigVersion holds the desired config version for the current observed machine config node. When Current is not equal to Desired; the MachineConfigOperator is in an upgrade phase and the machine config node will take account of upgrade related events. Otherwise they will be ignored given that certain operations happen both during the MCO's upgrade mode and the daily operations mode.",
+				Description: "MachineConfigNodeSpecMachineConfigVersion holds the desired config version for the current observed machine config node. When Current is not equal to Desired, the MachineConfigOperator is in an upgrade phase and the machine config node will take account of upgrade related events. Otherwise, they will be ignored given that certain operations happen both during the MCO's upgrade mode and the daily operations mode.",
 				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
 					"desired": {
 						SchemaProps: spec.SchemaProps{
-							Description: "desired is the name of the machine config that the the node should be upgraded to. This value is set when the machine config pool generates a new version of its rendered configuration. When this value is changed, the machine config daemon starts the node upgrade process. This value gets set in the machine config node spec once the machine config has been targeted for upgrade and before it is validated. Must be a lowercase RFC-1123 hostname (https://tools.ietf.org/html/rfc1123) It may consist of only alphanumeric characters, hyphens (-) and periods (.) and must be at most 253 characters in length.",
+							Description: "desired is the name of the machine config that the the node should be upgraded to. This value is set when the machine config pool generates a new version of its rendered configuration. When this value is changed, the machine config daemon starts the node upgrade process. This value gets set in the machine config node spec once the machine config has been targeted for upgrade and before it is validated. Must be a lowercase RFC-1123 subdomain name (https://tools.ietf.org/html/rfc1123) consisting of only lowercase alphanumeric characters, hyphens (-), and periods (.), and must start and end with an alphanumeric character, and be at most 253 characters in length.",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -39282,27 +40590,6 @@ func schema_openshift_api_machineconfiguration_v1alpha1_MachineConfigNodeSpecMac
 					},
 				},
 				Required: []string{"desired"},
-			},
-		},
-	}
-}
-
-func schema_openshift_api_machineconfiguration_v1alpha1_MachineConfigNodeSpecPinnedImageSet(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Type: []string{"object"},
-				Properties: map[string]spec.Schema{
-					"name": {
-						SchemaProps: spec.SchemaProps{
-							Description: "name is the name of the pinned image set. Must be a lowercase RFC-1123 hostname (https://tools.ietf.org/html/rfc1123) It may consist of only alphanumeric characters, hyphens (-) and periods (.) and must be at most 253 characters in length.",
-							Default:     "",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-				},
-				Required: []string{"name"},
 			},
 		},
 	}
@@ -39321,9 +40608,7 @@ func schema_openshift_api_machineconfiguration_v1alpha1_MachineConfigNodeStatus(
 								"x-kubernetes-list-map-keys": []interface{}{
 									"type",
 								},
-								"x-kubernetes-list-type":       "map",
-								"x-kubernetes-patch-merge-key": "type",
-								"x-kubernetes-patch-strategy":  "merge",
+								"x-kubernetes-list-type": "map",
 							},
 						},
 						SchemaProps: spec.SchemaProps{
@@ -39341,14 +40626,14 @@ func schema_openshift_api_machineconfiguration_v1alpha1_MachineConfigNodeStatus(
 					},
 					"observedGeneration": {
 						SchemaProps: spec.SchemaProps{
-							Description: "observedGeneration represents the generation observed by the controller. This field is updated when the controller observes a change to the desiredConfig in the configVersion of the machine config node spec.",
+							Description: "observedGeneration represents the generation of the MachineConfigNode object observed by the Machine Config Operator's controller. This field is updated when the controller observes a change to the desiredConfig in the configVersion of the machine config node spec.",
 							Type:        []string{"integer"},
 							Format:      "int64",
 						},
 					},
 					"configVersion": {
 						SchemaProps: spec.SchemaProps{
-							Description: "configVersion describes the current and desired machine config for this node. The current version represents the current machine config for the node and is updated after a successful update. The desired version represents the machine config the node will attempt to update to. This desired machine config has been compared to the current machine config and has been validated by the machine config operator as one that is valid and that exists.",
+							Description: "configVersion describes the current and desired machine config version for this node.",
 							Default:     map[string]interface{}{},
 							Ref:         ref("github.com/openshift/api/machineconfiguration/v1alpha1.MachineConfigNodeStatusMachineConfigVersion"),
 						},
@@ -39363,7 +40648,7 @@ func schema_openshift_api_machineconfiguration_v1alpha1_MachineConfigNodeStatus(
 							},
 						},
 						SchemaProps: spec.SchemaProps{
-							Description: "pinnedImageSets describes the current and desired pinned image sets for this node. The current version is the generation of the pinned image set that has most recently been successfully pulled and pinned on this node. The desired version is the generation of the pinned image set that is targeted to be pulled and pinned on this node.",
+							Description: "pinnedImageSets describes the current and desired pinned image sets for this node.",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -39388,12 +40673,12 @@ func schema_openshift_api_machineconfiguration_v1alpha1_MachineConfigNodeStatusM
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
-				Description: "MachineConfigNodeStatusMachineConfigVersion holds the current and desired config versions as last updated in the MCN status. When the current and desired versions are not matched, the machine config pool is processing an upgrade and the machine config node will monitor the upgrade process. When the current and desired versions do not match, the machine config node will ignore these events given that certain operations happen both during the MCO's upgrade mode and the daily operations mode.",
+				Description: "MachineConfigNodeStatusMachineConfigVersion holds the current and desired config versions as last updated in the MCN status. When the current and desired versions do not match, the machine config pool is processing an upgrade and the machine config node will monitor the upgrade process. When the current and desired versions do match, the machine config node will ignore these events given that certain operations happen both during the MCO's upgrade mode and the daily operations mode.",
 				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
 					"current": {
 						SchemaProps: spec.SchemaProps{
-							Description: "current is the name of the machine config currently in use on the node. This value is updated once the machine config daemon has completed the update of the configuration for the node. This value should match the desired version unless an upgrade is in progress. Must be a lowercase RFC-1123 hostname (https://tools.ietf.org/html/rfc1123) It may consist of only alphanumeric characters, hyphens (-) and periods (.) and must be at most 253 characters in length.",
+							Description: "current is the name of the machine config currently in use on the node. This value is updated once the machine config daemon has completed the update of the configuration for the node. This value should match the desired version unless an upgrade is in progress. Must be a lowercase RFC-1123 subdomain name (https://tools.ietf.org/html/rfc1123) consisting of only lowercase alphanumeric characters, hyphens (-), and periods (.), and must start and end with an alphanumeric character, and be at most 253 characters in length.",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -39401,7 +40686,7 @@ func schema_openshift_api_machineconfiguration_v1alpha1_MachineConfigNodeStatusM
 					},
 					"desired": {
 						SchemaProps: spec.SchemaProps{
-							Description: "desired is the MachineConfig the node wants to upgrade to. This value gets set in the machine config node status once the machine config has been validated against the current machine config. Must be a lowercase RFC-1123 hostname (https://tools.ietf.org/html/rfc1123) It may consist of only alphanumeric characters, hyphens (-) and periods (.) and must be at most 253 characters in length.",
+							Description: "desired is the MachineConfig the node wants to upgrade to. This value gets set in the machine config node status once the machine config has been validated against the current machine config. Must be a lowercase RFC-1123 subdomain name (https://tools.ietf.org/html/rfc1123) consisting of only lowercase alphanumeric characters, hyphens (-), and periods (.), and must start and end with an alphanumeric character, and be at most 253 characters in length.",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -39418,11 +40703,12 @@ func schema_openshift_api_machineconfiguration_v1alpha1_MachineConfigNodeStatusP
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
-				Type: []string{"object"},
+				Description: "MachineConfigNodeStatusPinnedImageSet holds information about the current, desired, and failed pinned image sets for the observed machine config node.",
+				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
 					"name": {
 						SchemaProps: spec.SchemaProps{
-							Description: "name is the name of the pinned image set. Must be a lowercase RFC-1123 hostname (https://tools.ietf.org/html/rfc1123) It may consist of only alphanumeric characters, hyphens (-) and periods (.) and must be at most 253 characters in length.",
+							Description: "name is the name of the pinned image set. Must be a lowercase RFC-1123 subdomain name (https://tools.ietf.org/html/rfc1123) consisting of only lowercase alphanumeric characters, hyphens (-), and periods (.), and must start and end with an alphanumeric character, and be at most 253 characters in length.",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -39437,7 +40723,7 @@ func schema_openshift_api_machineconfiguration_v1alpha1_MachineConfigNodeStatusP
 					},
 					"desiredGeneration": {
 						SchemaProps: spec.SchemaProps{
-							Description: "desiredGeneration version is the generation of the pinned image set that is targeted to be pulled and pinned on this node.",
+							Description: "desiredGeneration is the generation of the pinned image set that is targeted to be pulled and pinned on this node.",
 							Type:        []string{"integer"},
 							Format:      "int32",
 						},
@@ -39449,19 +40735,11 @@ func schema_openshift_api_machineconfiguration_v1alpha1_MachineConfigNodeStatusP
 							Format:      "int32",
 						},
 					},
-					"lastFailedGenerationErrors": {
+					"lastFailedGenerationError": {
 						SchemaProps: spec.SchemaProps{
-							Description: "lastFailedGenerationErrors is a list of errors why the lastFailed generation failed to be pulled and pinned.",
-							Type:        []string{"array"},
-							Items: &spec.SchemaOrArray{
-								Schema: &spec.Schema{
-									SchemaProps: spec.SchemaProps{
-										Default: "",
-										Type:    []string{"string"},
-										Format:  "",
-									},
-								},
-							},
+							Description: "lastFailedGenerationError is the error explaining why the desired images failed to be pulled and pinned. The error is an empty string if the image pull and pin is successful.",
+							Type:        []string{"string"},
+							Format:      "",
 						},
 					},
 				},
@@ -39659,9 +40937,7 @@ func schema_openshift_api_machineconfiguration_v1alpha1_MachineOSBuildStatus(ref
 								"x-kubernetes-list-map-keys": []interface{}{
 									"type",
 								},
-								"x-kubernetes-list-type":       "map",
-								"x-kubernetes-patch-merge-key": "type",
-								"x-kubernetes-patch-strategy":  "merge",
+								"x-kubernetes-list-type": "map",
 							},
 						},
 						SchemaProps: spec.SchemaProps{
@@ -39734,7 +41010,7 @@ func schema_openshift_api_machineconfiguration_v1alpha1_MachineOSBuilderReferenc
 				Properties: map[string]spec.Schema{
 					"imageBuilderType": {
 						SchemaProps: spec.SchemaProps{
-							Description: "ImageBuilderType describes the image builder set in the MachineOSConfig",
+							Description: "imageBuilderType describes the image builder set in the MachineOSConfig",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -39938,9 +41214,7 @@ func schema_openshift_api_machineconfiguration_v1alpha1_MachineOSConfigStatus(re
 								"x-kubernetes-list-map-keys": []interface{}{
 									"type",
 								},
-								"x-kubernetes-list-type":       "map",
-								"x-kubernetes-patch-merge-key": "type",
-								"x-kubernetes-patch-strategy":  "merge",
+								"x-kubernetes-list-type": "map",
 							},
 						},
 						SchemaProps: spec.SchemaProps{
@@ -39971,6 +41245,7 @@ func schema_openshift_api_machineconfiguration_v1alpha1_MachineOSConfigStatus(re
 						},
 					},
 				},
+				Required: []string{"observedGeneration"},
 			},
 		},
 		Dependencies: []string{
@@ -40246,9 +41521,7 @@ func schema_openshift_api_machineconfiguration_v1alpha1_PinnedImageSetStatus(ref
 								"x-kubernetes-list-map-keys": []interface{}{
 									"type",
 								},
-								"x-kubernetes-list-type":       "map",
-								"x-kubernetes-patch-merge-key": "type",
-								"x-kubernetes-patch-strategy":  "merge",
+								"x-kubernetes-list-type": "map",
 							},
 						},
 						SchemaProps: spec.SchemaProps{
@@ -40380,14 +41653,14 @@ func schema_openshift_api_monitoring_v1_AlertRelabelConfigList(ref common.Refere
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
 									SchemaProps: spec.SchemaProps{
-										Ref: ref("github.com/openshift/api/monitoring/v1.AlertRelabelConfig"),
+										Default: map[string]interface{}{},
+										Ref:     ref("github.com/openshift/api/monitoring/v1.AlertRelabelConfig"),
 									},
 								},
 							},
 						},
 					},
 				},
-				Required: []string{"items"},
 			},
 		},
 		Dependencies: []string{
@@ -40433,6 +41706,14 @@ func schema_openshift_api_monitoring_v1_AlertRelabelConfigStatus(ref common.Refe
 				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
 					"conditions": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-map-keys": []interface{}{
+									"type",
+								},
+								"x-kubernetes-list-type": "map",
+							},
+						},
 						SchemaProps: spec.SchemaProps{
 							Description: "conditions contains details on the state of the AlertRelabelConfig, may be empty.",
 							Type:        []string{"array"},
@@ -40548,7 +41829,6 @@ func schema_openshift_api_monitoring_v1_AlertingRuleList(ref common.ReferenceCal
 						},
 					},
 				},
-				Required: []string{"items"},
 			},
 		},
 		Dependencies: []string{
@@ -40859,21 +42139,21 @@ func schema_openshift_api_network_v1_ClusterNetwork(ref common.ReferenceCallback
 					},
 					"network": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Network is a CIDR string specifying the global overlay network's L3 space",
+							Description: "network is a CIDR string specifying the global overlay network's L3 space",
 							Type:        []string{"string"},
 							Format:      "",
 						},
 					},
 					"hostsubnetlength": {
 						SchemaProps: spec.SchemaProps{
-							Description: "HostSubnetLength is the number of bits of network to allocate to each node. eg, 8 would mean that each node would have a /24 slice of the overlay network for its pods",
+							Description: "hostsubnetlength is the number of bits of network to allocate to each node. eg, 8 would mean that each node would have a /24 slice of the overlay network for its pods",
 							Type:        []string{"integer"},
 							Format:      "int64",
 						},
 					},
 					"serviceNetwork": {
 						SchemaProps: spec.SchemaProps{
-							Description: "ServiceNetwork is the CIDR range that Service IP addresses are allocated from",
+							Description: "serviceNetwork is the CIDR range that Service IP addresses are allocated from",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -40881,14 +42161,14 @@ func schema_openshift_api_network_v1_ClusterNetwork(ref common.ReferenceCallback
 					},
 					"pluginName": {
 						SchemaProps: spec.SchemaProps{
-							Description: "PluginName is the name of the network plugin being used",
+							Description: "pluginName is the name of the network plugin being used",
 							Type:        []string{"string"},
 							Format:      "",
 						},
 					},
 					"clusterNetworks": {
 						SchemaProps: spec.SchemaProps{
-							Description: "ClusterNetworks is a list of ClusterNetwork objects that defines the global overlay network's L3 space by specifying a set of CIDR and netmasks that the SDN can allocate addresses from.",
+							Description: "clusterNetworks is a list of ClusterNetwork objects that defines the global overlay network's L3 space by specifying a set of CIDR and netmasks that the SDN can allocate addresses from.",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -40902,14 +42182,14 @@ func schema_openshift_api_network_v1_ClusterNetwork(ref common.ReferenceCallback
 					},
 					"vxlanPort": {
 						SchemaProps: spec.SchemaProps{
-							Description: "VXLANPort sets the VXLAN destination port used by the cluster. It is set by the master configuration file on startup and cannot be edited manually. Valid values for VXLANPort are integers 1-65535 inclusive and if unset defaults to 4789. Changing VXLANPort allows users to resolve issues between openshift SDN and other software trying to use the same VXLAN destination port.",
+							Description: "vxlanPort sets the VXLAN destination port used by the cluster. It is set by the master configuration file on startup and cannot be edited manually. Valid values for VXLANPort are integers 1-65535 inclusive and if unset defaults to 4789. Changing VXLANPort allows users to resolve issues between openshift SDN and other software trying to use the same VXLAN destination port.",
 							Type:        []string{"integer"},
 							Format:      "int64",
 						},
 					},
 					"mtu": {
 						SchemaProps: spec.SchemaProps{
-							Description: "MTU is the MTU for the overlay network. This should be 50 less than the MTU of the network connecting the nodes. It is normally autodetected by the cluster network operator.",
+							Description: "mtu is the MTU for the overlay network. This should be 50 less than the MTU of the network connecting the nodes. It is normally autodetected by the cluster network operator.",
 							Type:        []string{"integer"},
 							Format:      "int64",
 						},
@@ -40940,7 +42220,7 @@ func schema_openshift_api_network_v1_ClusterNetworkEntry(ref common.ReferenceCal
 					},
 					"hostSubnetLength": {
 						SchemaProps: spec.SchemaProps{
-							Description: "HostSubnetLength is the number of bits of the accompanying CIDR address to allocate to each node. eg, 8 would mean that each node would have a /24 slice of the overlay network for its pods.",
+							Description: "hostSubnetLength is the number of bits of the accompanying CIDR address to allocate to each node. eg, 8 would mean that each node would have a /24 slice of the overlay network for its pods.",
 							Default:     0,
 							Type:        []string{"integer"},
 							Format:      "int64",
@@ -40983,7 +42263,7 @@ func schema_openshift_api_network_v1_ClusterNetworkList(ref common.ReferenceCall
 					},
 					"items": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Items is the list of cluster networks",
+							Description: "items is the list of cluster networks",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -41108,14 +42388,14 @@ func schema_openshift_api_network_v1_EgressNetworkPolicyPeer(ref common.Referenc
 				Properties: map[string]spec.Schema{
 					"cidrSelector": {
 						SchemaProps: spec.SchemaProps{
-							Description: "CIDRSelector is the CIDR range to allow/deny traffic to. If this is set, dnsName must be unset Ideally we would have liked to use the cidr openapi format for this property. But openshift-sdn only supports v4 while specifying the cidr format allows both v4 and v6 cidrs We are therefore using a regex pattern to validate instead.",
+							Description: "cidrSelector is the CIDR range to allow/deny traffic to. If this is set, dnsName must be unset Ideally we would have liked to use the cidr openapi format for this property. But openshift-sdn only supports v4 while specifying the cidr format allows both v4 and v6 cidrs We are therefore using a regex pattern to validate instead.",
 							Type:        []string{"string"},
 							Format:      "",
 						},
 					},
 					"dnsName": {
 						SchemaProps: spec.SchemaProps{
-							Description: "DNSName is the domain name to allow/deny traffic to. If this is set, cidrSelector must be unset",
+							Description: "dnsName is the domain name to allow/deny traffic to. If this is set, cidrSelector must be unset",
 							Type:        []string{"string"},
 							Format:      "",
 						},
@@ -41217,7 +42497,7 @@ func schema_openshift_api_network_v1_HostSubnet(ref common.ReferenceCallback) co
 					},
 					"host": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Host is the name of the node. (This is the same as the object's name, but both fields must be set.)",
+							Description: "host is the name of the node. (This is the same as the object's name, but both fields must be set.)",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -41225,7 +42505,7 @@ func schema_openshift_api_network_v1_HostSubnet(ref common.ReferenceCallback) co
 					},
 					"hostIP": {
 						SchemaProps: spec.SchemaProps{
-							Description: "HostIP is the IP address to be used as a VTEP by other nodes in the overlay network",
+							Description: "hostIP is the IP address to be used as a VTEP by other nodes in the overlay network",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -41233,7 +42513,7 @@ func schema_openshift_api_network_v1_HostSubnet(ref common.ReferenceCallback) co
 					},
 					"subnet": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Subnet is the CIDR range of the overlay network assigned to the node for its pods",
+							Description: "subnet is the CIDR range of the overlay network assigned to the node for its pods",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -41241,7 +42521,7 @@ func schema_openshift_api_network_v1_HostSubnet(ref common.ReferenceCallback) co
 					},
 					"egressIPs": {
 						SchemaProps: spec.SchemaProps{
-							Description: "EgressIPs is the list of automatic egress IP addresses currently hosted by this node. If EgressCIDRs is empty, this can be set by hand; if EgressCIDRs is set then the master will overwrite the value here with its own allocation of egress IPs.",
+							Description: "egressIPs is the list of automatic egress IP addresses currently hosted by this node. If EgressCIDRs is empty, this can be set by hand; if EgressCIDRs is set then the master will overwrite the value here with its own allocation of egress IPs.",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -41256,7 +42536,7 @@ func schema_openshift_api_network_v1_HostSubnet(ref common.ReferenceCallback) co
 					},
 					"egressCIDRs": {
 						SchemaProps: spec.SchemaProps{
-							Description: "EgressCIDRs is the list of CIDR ranges available for automatically assigning egress IPs to this node from. If this field is set then EgressIPs should be treated as read-only.",
+							Description: "egressCIDRs is the list of CIDR ranges available for automatically assigning egress IPs to this node from. If this field is set then EgressIPs should be treated as read-only.",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -41308,7 +42588,7 @@ func schema_openshift_api_network_v1_HostSubnetList(ref common.ReferenceCallback
 					},
 					"items": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Items is the list of host subnets",
+							Description: "items is the list of host subnets",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -41359,7 +42639,7 @@ func schema_openshift_api_network_v1_NetNamespace(ref common.ReferenceCallback) 
 					},
 					"netname": {
 						SchemaProps: spec.SchemaProps{
-							Description: "NetName is the name of the network namespace. (This is the same as the object's name, but both fields must be set.)",
+							Description: "netname is the name of the network namespace. (This is the same as the object's name, but both fields must be set.)",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -41367,7 +42647,7 @@ func schema_openshift_api_network_v1_NetNamespace(ref common.ReferenceCallback) 
 					},
 					"netid": {
 						SchemaProps: spec.SchemaProps{
-							Description: "NetID is the network identifier of the network namespace assigned to each overlay network packet. This can be manipulated with the \"oc adm pod-network\" commands.",
+							Description: "netid is the network identifier of the network namespace assigned to each overlay network packet. This can be manipulated with the \"oc adm pod-network\" commands.",
 							Default:     0,
 							Type:        []string{"integer"},
 							Format:      "int64",
@@ -41375,7 +42655,7 @@ func schema_openshift_api_network_v1_NetNamespace(ref common.ReferenceCallback) 
 					},
 					"egressIPs": {
 						SchemaProps: spec.SchemaProps{
-							Description: "EgressIPs is a list of reserved IPs that will be used as the source for external traffic coming from pods in this namespace. (If empty, external traffic will be masqueraded to Node IPs.)",
+							Description: "egressIPs is a list of reserved IPs that will be used as the source for external traffic coming from pods in this namespace. (If empty, external traffic will be masqueraded to Node IPs.)",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -41427,7 +42707,7 @@ func schema_openshift_api_network_v1_NetNamespaceList(ref common.ReferenceCallba
 					},
 					"items": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Items is the list of net namespaces",
+							Description: "items is the list of net namespaces",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -41784,7 +43064,7 @@ func schema_openshift_api_networkoperator_v1_EgressRouterSpec(ref common.Referen
 				Properties: map[string]spec.Schema{
 					"mode": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Mode depicts the mode that is used for the egress router. The default mode is \"Redirect\" and is the only supported mode currently.",
+							Description: "mode depicts the mode that is used for the egress router. The default mode is \"Redirect\" and is the only supported mode currently.",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -41792,7 +43072,7 @@ func schema_openshift_api_networkoperator_v1_EgressRouterSpec(ref common.Referen
 					},
 					"redirect": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Redirect represents the configuration parameters specific to redirect mode.",
+							Description: "redirect represents the configuration parameters specific to redirect mode.",
 							Ref:         ref("github.com/openshift/api/networkoperator/v1.RedirectConfig"),
 						},
 					},
@@ -41835,7 +43115,7 @@ func schema_openshift_api_oauth_v1_ClusterRoleScopeRestriction(ref common.Refere
 				Properties: map[string]spec.Schema{
 					"roleNames": {
 						SchemaProps: spec.SchemaProps{
-							Description: "RoleNames is the list of cluster roles that can referenced.  * means anything",
+							Description: "roleNames is the list of cluster roles that can referenced.  * means anything",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -41850,7 +43130,7 @@ func schema_openshift_api_oauth_v1_ClusterRoleScopeRestriction(ref common.Refere
 					},
 					"namespaces": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Namespaces is the list of namespaces that can be referenced.  * means any of them (including *)",
+							Description: "namespaces is the list of namespaces that can be referenced.  * means any of them (including *)",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -41865,7 +43145,7 @@ func schema_openshift_api_oauth_v1_ClusterRoleScopeRestriction(ref common.Refere
 					},
 					"allowEscalation": {
 						SchemaProps: spec.SchemaProps{
-							Description: "AllowEscalation indicates whether you can request roles and their escalating resources",
+							Description: "allowEscalation indicates whether you can request roles and their escalating resources",
 							Default:     false,
 							Type:        []string{"boolean"},
 							Format:      "",
@@ -41908,21 +43188,21 @@ func schema_openshift_api_oauth_v1_OAuthAccessToken(ref common.ReferenceCallback
 					},
 					"clientName": {
 						SchemaProps: spec.SchemaProps{
-							Description: "ClientName references the client that created this token.",
+							Description: "clientName references the client that created this token.",
 							Type:        []string{"string"},
 							Format:      "",
 						},
 					},
 					"expiresIn": {
 						SchemaProps: spec.SchemaProps{
-							Description: "ExpiresIn is the seconds from CreationTime before this token expires.",
+							Description: "expiresIn is the seconds from CreationTime before this token expires.",
 							Type:        []string{"integer"},
 							Format:      "int64",
 						},
 					},
 					"scopes": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Scopes is an array of the requested scopes.",
+							Description: "scopes is an array of the requested scopes.",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -41937,42 +43217,42 @@ func schema_openshift_api_oauth_v1_OAuthAccessToken(ref common.ReferenceCallback
 					},
 					"redirectURI": {
 						SchemaProps: spec.SchemaProps{
-							Description: "RedirectURI is the redirection associated with the token.",
+							Description: "redirectURI is the redirection associated with the token.",
 							Type:        []string{"string"},
 							Format:      "",
 						},
 					},
 					"userName": {
 						SchemaProps: spec.SchemaProps{
-							Description: "UserName is the user name associated with this token",
+							Description: "userName is the user name associated with this token",
 							Type:        []string{"string"},
 							Format:      "",
 						},
 					},
 					"userUID": {
 						SchemaProps: spec.SchemaProps{
-							Description: "UserUID is the unique UID associated with this token",
+							Description: "userUID is the unique UID associated with this token",
 							Type:        []string{"string"},
 							Format:      "",
 						},
 					},
 					"authorizeToken": {
 						SchemaProps: spec.SchemaProps{
-							Description: "AuthorizeToken contains the token that authorized this token",
+							Description: "authorizeToken contains the token that authorized this token",
 							Type:        []string{"string"},
 							Format:      "",
 						},
 					},
 					"refreshToken": {
 						SchemaProps: spec.SchemaProps{
-							Description: "RefreshToken is the value by which this token can be renewed. Can be blank.",
+							Description: "refreshToken is the value by which this token can be renewed. Can be blank.",
 							Type:        []string{"string"},
 							Format:      "",
 						},
 					},
 					"inactivityTimeoutSeconds": {
 						SchemaProps: spec.SchemaProps{
-							Description: "InactivityTimeoutSeconds is the value in seconds, from the CreationTimestamp, after which this token can no longer be used. The value is automatically incremented when the token is used.",
+							Description: "inactivityTimeoutSeconds is the value in seconds, from the CreationTimestamp, after which this token can no longer be used. The value is automatically incremented when the token is used.",
 							Type:        []string{"integer"},
 							Format:      "int32",
 						},
@@ -42015,7 +43295,7 @@ func schema_openshift_api_oauth_v1_OAuthAccessTokenList(ref common.ReferenceCall
 					},
 					"items": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Items is the list of OAuth access tokens",
+							Description: "items is the list of OAuth access tokens",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -42066,21 +43346,21 @@ func schema_openshift_api_oauth_v1_OAuthAuthorizeToken(ref common.ReferenceCallb
 					},
 					"clientName": {
 						SchemaProps: spec.SchemaProps{
-							Description: "ClientName references the client that created this token.",
+							Description: "clientName references the client that created this token.",
 							Type:        []string{"string"},
 							Format:      "",
 						},
 					},
 					"expiresIn": {
 						SchemaProps: spec.SchemaProps{
-							Description: "ExpiresIn is the seconds from CreationTime before this token expires.",
+							Description: "expiresIn is the seconds from CreationTime before this token expires.",
 							Type:        []string{"integer"},
 							Format:      "int64",
 						},
 					},
 					"scopes": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Scopes is an array of the requested scopes.",
+							Description: "scopes is an array of the requested scopes.",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -42095,42 +43375,42 @@ func schema_openshift_api_oauth_v1_OAuthAuthorizeToken(ref common.ReferenceCallb
 					},
 					"redirectURI": {
 						SchemaProps: spec.SchemaProps{
-							Description: "RedirectURI is the redirection associated with the token.",
+							Description: "redirectURI is the redirection associated with the token.",
 							Type:        []string{"string"},
 							Format:      "",
 						},
 					},
 					"state": {
 						SchemaProps: spec.SchemaProps{
-							Description: "State data from request",
+							Description: "state data from request",
 							Type:        []string{"string"},
 							Format:      "",
 						},
 					},
 					"userName": {
 						SchemaProps: spec.SchemaProps{
-							Description: "UserName is the user name associated with this token",
+							Description: "userName is the user name associated with this token",
 							Type:        []string{"string"},
 							Format:      "",
 						},
 					},
 					"userUID": {
 						SchemaProps: spec.SchemaProps{
-							Description: "UserUID is the unique UID associated with this token. UserUID and UserName must both match for this token to be valid.",
+							Description: "userUID is the unique UID associated with this token. UserUID and UserName must both match for this token to be valid.",
 							Type:        []string{"string"},
 							Format:      "",
 						},
 					},
 					"codeChallenge": {
 						SchemaProps: spec.SchemaProps{
-							Description: "CodeChallenge is the optional code_challenge associated with this authorization code, as described in rfc7636",
+							Description: "codeChallenge is the optional code_challenge associated with this authorization code, as described in rfc7636",
 							Type:        []string{"string"},
 							Format:      "",
 						},
 					},
 					"codeChallengeMethod": {
 						SchemaProps: spec.SchemaProps{
-							Description: "CodeChallengeMethod is the optional code_challenge_method associated with this authorization code, as described in rfc7636",
+							Description: "codeChallengeMethod is the optional code_challenge_method associated with this authorization code, as described in rfc7636",
 							Type:        []string{"string"},
 							Format:      "",
 						},
@@ -42173,7 +43453,7 @@ func schema_openshift_api_oauth_v1_OAuthAuthorizeTokenList(ref common.ReferenceC
 					},
 					"items": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Items is the list of OAuth authorization tokens",
+							Description: "items is the list of OAuth authorization tokens",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -42224,14 +43504,14 @@ func schema_openshift_api_oauth_v1_OAuthClient(ref common.ReferenceCallback) com
 					},
 					"secret": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Secret is the unique secret associated with a client",
+							Description: "secret is the unique secret associated with a client",
 							Type:        []string{"string"},
 							Format:      "",
 						},
 					},
 					"additionalSecrets": {
 						SchemaProps: spec.SchemaProps{
-							Description: "AdditionalSecrets holds other secrets that may be used to identify the client.  This is useful for rotation and for service account token validation",
+							Description: "additionalSecrets holds other secrets that may be used to identify the client.  This is useful for rotation and for service account token validation",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -42246,7 +43526,7 @@ func schema_openshift_api_oauth_v1_OAuthClient(ref common.ReferenceCallback) com
 					},
 					"respondWithChallenges": {
 						SchemaProps: spec.SchemaProps{
-							Description: "RespondWithChallenges indicates whether the client wants authentication needed responses made in the form of challenges instead of redirects",
+							Description: "respondWithChallenges indicates whether the client wants authentication needed responses made in the form of challenges instead of redirects",
 							Type:        []string{"boolean"},
 							Format:      "",
 						},
@@ -42258,7 +43538,7 @@ func schema_openshift_api_oauth_v1_OAuthClient(ref common.ReferenceCallback) com
 							},
 						},
 						SchemaProps: spec.SchemaProps{
-							Description: "RedirectURIs is the valid redirection URIs associated with a client",
+							Description: "redirectURIs is the valid redirection URIs associated with a client",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -42273,14 +43553,14 @@ func schema_openshift_api_oauth_v1_OAuthClient(ref common.ReferenceCallback) com
 					},
 					"grantMethod": {
 						SchemaProps: spec.SchemaProps{
-							Description: "GrantMethod is a required field which determines how to handle grants for this client. Valid grant handling methods are:\n - auto:   always approves grant requests, useful for trusted clients\n - prompt: prompts the end user for approval of grant requests, useful for third-party clients",
+							Description: "grantMethod is a required field which determines how to handle grants for this client. Valid grant handling methods are:\n - auto:   always approves grant requests, useful for trusted clients\n - prompt: prompts the end user for approval of grant requests, useful for third-party clients",
 							Type:        []string{"string"},
 							Format:      "",
 						},
 					},
 					"scopeRestrictions": {
 						SchemaProps: spec.SchemaProps{
-							Description: "ScopeRestrictions describes which scopes this client can request.  Each requested scope is checked against each restriction.  If any restriction matches, then the scope is allowed. If no restriction matches, then the scope is denied.",
+							Description: "scopeRestrictions describes which scopes this client can request.  Each requested scope is checked against each restriction.  If any restriction matches, then the scope is allowed. If no restriction matches, then the scope is denied.",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -42294,14 +43574,14 @@ func schema_openshift_api_oauth_v1_OAuthClient(ref common.ReferenceCallback) com
 					},
 					"accessTokenMaxAgeSeconds": {
 						SchemaProps: spec.SchemaProps{
-							Description: "AccessTokenMaxAgeSeconds overrides the default access token max age for tokens granted to this client. 0 means no expiration.",
+							Description: "accessTokenMaxAgeSeconds overrides the default access token max age for tokens granted to this client. 0 means no expiration.",
 							Type:        []string{"integer"},
 							Format:      "int32",
 						},
 					},
 					"accessTokenInactivityTimeoutSeconds": {
 						SchemaProps: spec.SchemaProps{
-							Description: "AccessTokenInactivityTimeoutSeconds overrides the default token inactivity timeout for tokens granted to this client. The value represents the maximum amount of time that can occur between consecutive uses of the token. Tokens become invalid if they are not used within this temporal window. The user will need to acquire a new token to regain access once a token times out. This value needs to be set only if the default set in configuration is not appropriate for this client. Valid values are: - 0: Tokens for this client never time out - X: Tokens time out if there is no activity for X seconds The current minimum allowed value for X is 300 (5 minutes)\n\nWARNING: existing tokens' timeout will not be affected (lowered) by changing this value",
+							Description: "accessTokenInactivityTimeoutSeconds overrides the default token inactivity timeout for tokens granted to this client. The value represents the maximum amount of time that can occur between consecutive uses of the token. Tokens become invalid if they are not used within this temporal window. The user will need to acquire a new token to regain access once a token times out. This value needs to be set only if the default set in configuration is not appropriate for this client. Valid values are: - 0: Tokens for this client never time out - X: Tokens time out if there is no activity for X seconds The current minimum allowed value for X is 300 (5 minutes)\n\nWARNING: existing tokens' timeout will not be affected (lowered) by changing this value",
 							Type:        []string{"integer"},
 							Format:      "int32",
 						},
@@ -42344,28 +43624,28 @@ func schema_openshift_api_oauth_v1_OAuthClientAuthorization(ref common.Reference
 					},
 					"clientName": {
 						SchemaProps: spec.SchemaProps{
-							Description: "ClientName references the client that created this authorization",
+							Description: "clientName references the client that created this authorization",
 							Type:        []string{"string"},
 							Format:      "",
 						},
 					},
 					"userName": {
 						SchemaProps: spec.SchemaProps{
-							Description: "UserName is the user name that authorized this client",
+							Description: "userName is the user name that authorized this client",
 							Type:        []string{"string"},
 							Format:      "",
 						},
 					},
 					"userUID": {
 						SchemaProps: spec.SchemaProps{
-							Description: "UserUID is the unique UID associated with this authorization. UserUID and UserName must both match for this authorization to be valid.",
+							Description: "userUID is the unique UID associated with this authorization. UserUID and UserName must both match for this authorization to be valid.",
 							Type:        []string{"string"},
 							Format:      "",
 						},
 					},
 					"scopes": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Scopes is an array of the granted scopes.",
+							Description: "scopes is an array of the granted scopes.",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -42416,7 +43696,7 @@ func schema_openshift_api_oauth_v1_OAuthClientAuthorizationList(ref common.Refer
 					},
 					"items": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Items is the list of OAuth client authorizations",
+							Description: "items is the list of OAuth client authorizations",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -42467,7 +43747,7 @@ func schema_openshift_api_oauth_v1_OAuthClientList(ref common.ReferenceCallback)
 					},
 					"items": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Items is the list of OAuth clients",
+							Description: "items is the list of OAuth clients",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -42593,7 +43873,7 @@ func schema_openshift_api_oauth_v1_ScopeRestriction(ref common.ReferenceCallback
 					},
 					"clusterRole": {
 						SchemaProps: spec.SchemaProps{
-							Description: "ClusterRole describes a set of restrictions for cluster role scoping.",
+							Description: "clusterRole describes a set of restrictions for cluster role scoping.",
 							Ref:         ref("github.com/openshift/api/oauth/v1.ClusterRoleScopeRestriction"),
 						},
 					},
@@ -42635,21 +43915,21 @@ func schema_openshift_api_oauth_v1_UserOAuthAccessToken(ref common.ReferenceCall
 					},
 					"clientName": {
 						SchemaProps: spec.SchemaProps{
-							Description: "ClientName references the client that created this token.",
+							Description: "clientName references the client that created this token.",
 							Type:        []string{"string"},
 							Format:      "",
 						},
 					},
 					"expiresIn": {
 						SchemaProps: spec.SchemaProps{
-							Description: "ExpiresIn is the seconds from CreationTime before this token expires.",
+							Description: "expiresIn is the seconds from CreationTime before this token expires.",
 							Type:        []string{"integer"},
 							Format:      "int64",
 						},
 					},
 					"scopes": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Scopes is an array of the requested scopes.",
+							Description: "scopes is an array of the requested scopes.",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -42664,42 +43944,42 @@ func schema_openshift_api_oauth_v1_UserOAuthAccessToken(ref common.ReferenceCall
 					},
 					"redirectURI": {
 						SchemaProps: spec.SchemaProps{
-							Description: "RedirectURI is the redirection associated with the token.",
+							Description: "redirectURI is the redirection associated with the token.",
 							Type:        []string{"string"},
 							Format:      "",
 						},
 					},
 					"userName": {
 						SchemaProps: spec.SchemaProps{
-							Description: "UserName is the user name associated with this token",
+							Description: "userName is the user name associated with this token",
 							Type:        []string{"string"},
 							Format:      "",
 						},
 					},
 					"userUID": {
 						SchemaProps: spec.SchemaProps{
-							Description: "UserUID is the unique UID associated with this token",
+							Description: "userUID is the unique UID associated with this token",
 							Type:        []string{"string"},
 							Format:      "",
 						},
 					},
 					"authorizeToken": {
 						SchemaProps: spec.SchemaProps{
-							Description: "AuthorizeToken contains the token that authorized this token",
+							Description: "authorizeToken contains the token that authorized this token",
 							Type:        []string{"string"},
 							Format:      "",
 						},
 					},
 					"refreshToken": {
 						SchemaProps: spec.SchemaProps{
-							Description: "RefreshToken is the value by which this token can be renewed. Can be blank.",
+							Description: "refreshToken is the value by which this token can be renewed. Can be blank.",
 							Type:        []string{"string"},
 							Format:      "",
 						},
 					},
 					"inactivityTimeoutSeconds": {
 						SchemaProps: spec.SchemaProps{
-							Description: "InactivityTimeoutSeconds is the value in seconds, from the CreationTimestamp, after which this token can no longer be used. The value is automatically incremented when the token is used.",
+							Description: "inactivityTimeoutSeconds is the value in seconds, from the CreationTimestamp, after which this token can no longer be used. The value is automatically incremented when the token is used.",
 							Type:        []string{"integer"},
 							Format:      "int32",
 						},
@@ -43058,7 +44338,7 @@ func schema_openshift_api_openshiftcontrolplane_v1_ClusterNetworkEntry(ref commo
 				Properties: map[string]spec.Schema{
 					"cidr": {
 						SchemaProps: spec.SchemaProps{
-							Description: "CIDR defines the total range of a cluster networks address space.",
+							Description: "cidr defines the total range of a cluster networks address space.",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -43066,7 +44346,7 @@ func schema_openshift_api_openshiftcontrolplane_v1_ClusterNetworkEntry(ref commo
 					},
 					"hostSubnetLength": {
 						SchemaProps: spec.SchemaProps{
-							Description: "HostSubnetLength is the number of bits of the accompanying CIDR address to allocate to each node. eg, 8 would mean that each node would have a /24 slice of the overlay network for its pod.",
+							Description: "hostSubnetLength is the number of bits of the accompanying CIDR address to allocate to each node. eg, 8 would mean that each node would have a /24 slice of the overlay network for its pod.",
 							Default:     0,
 							Type:        []string{"integer"},
 							Format:      "int64",
@@ -43226,7 +44506,7 @@ func schema_openshift_api_openshiftcontrolplane_v1_ImageConfig(ref common.Refere
 				Properties: map[string]spec.Schema{
 					"format": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Format is the format of the name to be built for the system component",
+							Description: "format is the format of the name to be built for the system component",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -43234,7 +44514,7 @@ func schema_openshift_api_openshiftcontrolplane_v1_ImageConfig(ref common.Refere
 					},
 					"latest": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Latest determines if the latest tag will be pulled from the registry",
+							Description: "latest determines if the latest tag will be pulled from the registry",
 							Default:     false,
 							Type:        []string{"boolean"},
 							Format:      "",
@@ -43889,7 +45169,7 @@ func schema_openshift_api_openshiftcontrolplane_v1_RegistryLocation(ref common.R
 				Properties: map[string]spec.Schema{
 					"domainName": {
 						SchemaProps: spec.SchemaProps{
-							Description: "DomainName specifies a domain name for the registry In case the registry use non-standard (80 or 443) port, the port should be included in the domain name as well.",
+							Description: "domainName specifies a domain name for the registry In case the registry use non-standard (80 or 443) port, the port should be included in the domain name as well.",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -43897,7 +45177,7 @@ func schema_openshift_api_openshiftcontrolplane_v1_RegistryLocation(ref common.R
 					},
 					"insecure": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Insecure indicates whether the registry is secure (https) or insecure (http) By default (if not specified) the registry is assumed as secure.",
+							Description: "insecure indicates whether the registry is secure (https) or insecure (http) By default (if not specified) the registry is assumed as secure.",
 							Type:        []string{"boolean"},
 							Format:      "",
 						},
@@ -43972,7 +45252,7 @@ func schema_openshift_api_openshiftcontrolplane_v1_SecurityAllocator(ref common.
 				Properties: map[string]spec.Schema{
 					"uidAllocatorRange": {
 						SchemaProps: spec.SchemaProps{
-							Description: "UIDAllocatorRange defines the total set of Unix user IDs (UIDs) that will be allocated to projects automatically, and the size of the block each namespace gets. For example, 1000-1999/10 will allocate ten UIDs per namespace, and will be able to allocate up to 100 blocks before running out of space. The default is to allocate from 1 billion to 2 billion in 10k blocks (which is the expected size of the ranges container images will use once user namespaces are started).",
+							Description: "uidAllocatorRange defines the total set of Unix user IDs (UIDs) that will be allocated to projects automatically, and the size of the block each namespace gets. For example, 1000-1999/10 will allocate ten UIDs per namespace, and will be able to allocate up to 100 blocks before running out of space. The default is to allocate from 1 billion to 2 billion in 10k blocks (which is the expected size of the ranges container images will use once user namespaces are started).",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -43980,7 +45260,7 @@ func schema_openshift_api_openshiftcontrolplane_v1_SecurityAllocator(ref common.
 					},
 					"mcsAllocatorRange": {
 						SchemaProps: spec.SchemaProps{
-							Description: "MCSAllocatorRange defines the range of MCS categories that will be assigned to namespaces. The format is \"<prefix>/<numberOfLabels>[,<maxCategory>]\". The default is \"s0/2\" and will allocate from c0 -> c1023, which means a total of 535k labels are available (1024 choose 2 ~ 535k). If this value is changed after startup, new projects may receive labels that are already allocated to other projects. Prefix may be any valid SELinux set of terms (including user, role, and type), although leaving them as the default will allow the server to set them automatically.\n\nExamples: * s0:/2     - Allocate labels from s0:c0,c0 to s0:c511,c511 * s0:/2,512 - Allocate labels from s0:c0,c0,c0 to s0:c511,c511,511",
+							Description: "mcsAllocatorRange defines the range of MCS categories that will be assigned to namespaces. The format is \"<prefix>/<numberOfLabels>[,<maxCategory>]\". The default is \"s0/2\" and will allocate from c0 -> c1023, which means a total of 535k labels are available (1024 choose 2 ~ 535k). If this value is changed after startup, new projects may receive labels that are already allocated to other projects. Prefix may be any valid SELinux set of terms (including user, role, and type), although leaving them as the default will allow the server to set them automatically.\n\nExamples: * s0:/2     - Allocate labels from s0:c0,c0 to s0:c511,c511 * s0:/2,512 - Allocate labels from s0:c0,c0,c0 to s0:c511,c511,511",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -43988,7 +45268,7 @@ func schema_openshift_api_openshiftcontrolplane_v1_SecurityAllocator(ref common.
 					},
 					"mcsLabelsPerProject": {
 						SchemaProps: spec.SchemaProps{
-							Description: "MCSLabelsPerProject defines the number of labels that should be reserved per project. The default is 5 to match the default UID and MCS ranges (100k namespaces, 535k/5 labels).",
+							Description: "mcsLabelsPerProject defines the number of labels that should be reserved per project. The default is 5 to match the default UID and MCS ranges (100k namespaces, 535k/5 labels).",
 							Default:     0,
 							Type:        []string{"integer"},
 							Format:      "int32",
@@ -44038,7 +45318,7 @@ func schema_openshift_api_openshiftcontrolplane_v1_ServiceServingCert(ref common
 				Properties: map[string]spec.Schema{
 					"signer": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Signer holds the signing information used to automatically sign serving certificates. If this value is nil, then certs are not signed automatically.",
+							Description: "signer holds the signing information used to automatically sign serving certificates. If this value is nil, then certs are not signed automatically.",
 							Ref:         ref("github.com/openshift/api/config/v1.CertInfo"),
 						},
 					},
@@ -44468,7 +45748,7 @@ func schema_openshift_api_operator_v1_AdditionalNetworkDefinition(ref common.Ref
 					},
 					"simpleMacvlanConfig": {
 						SchemaProps: spec.SchemaProps{
-							Description: "SimpleMacvlanConfig configures the macvlan interface in case of type:NetworkTypeSimpleMacvlan",
+							Description: "simpleMacvlanConfig configures the macvlan interface in case of type:NetworkTypeSimpleMacvlan",
 							Ref:         ref("github.com/openshift/api/operator/v1.SimpleMacvlanConfig"),
 						},
 					},
@@ -44671,7 +45951,7 @@ func schema_openshift_api_operator_v1_AuthenticationStatus(ref common.ReferenceC
 				Properties: map[string]spec.Schema{
 					"oauthAPIServer": {
 						SchemaProps: spec.SchemaProps{
-							Description: "OAuthAPIServer holds status specific only to oauth-apiserver",
+							Description: "oauthAPIServer holds status specific only to oauth-apiserver",
 							Default:     map[string]interface{}{},
 							Ref:         ref("github.com/openshift/api/operator/v1.OAuthAPIServerStatus"),
 						},
@@ -44861,7 +46141,7 @@ func schema_openshift_api_operator_v1_CSIDriverConfigSpec(ref common.ReferenceCa
 					},
 					"vSphere": {
 						SchemaProps: spec.SchemaProps{
-							Description: "vsphere is used to configure the vsphere CSI driver.",
+							Description: "vSphere is used to configure the vsphere CSI driver.",
 							Ref:         ref("github.com/openshift/api/operator/v1.VSphereCSIDriverConfigSpec"),
 						},
 					},
@@ -45389,7 +46669,7 @@ func schema_openshift_api_operator_v1_CloudCredentialSpec(ref common.ReferenceCa
 					},
 					"credentialsMode": {
 						SchemaProps: spec.SchemaProps{
-							Description: "CredentialsMode allows informing CCO that it should not attempt to dynamically determine the root cloud credentials capabilities, and it should just run in the specified mode. It also allows putting the operator into \"manual\" mode if desired. Leaving the field in default mode runs CCO so that the cluster's cloud credentials will be dynamically probed for capabilities (on supported clouds/platforms). Supported modes:\n  AWS/Azure/GCP: \"\" (Default), \"Mint\", \"Passthrough\", \"Manual\"\n  Others: Do not set value as other platforms only support running in \"Passthrough\"",
+							Description: "credentialsMode allows informing CCO that it should not attempt to dynamically determine the root cloud credentials capabilities, and it should just run in the specified mode. It also allows putting the operator into \"manual\" mode if desired. Leaving the field in default mode runs CCO so that the cluster's cloud credentials will be dynamically probed for capabilities (on supported clouds/platforms). Supported modes:\n  AWS/Azure/GCP: \"\" (Default), \"Mint\", \"Passthrough\", \"Manual\"\n  Others: Do not set value as other platforms only support running in \"Passthrough\"",
 							Type:        []string{"string"},
 							Format:      "",
 						},
@@ -45639,7 +46919,7 @@ func schema_openshift_api_operator_v1_ClusterCSIDriverSpec(ref common.ReferenceC
 					},
 					"storageClassState": {
 						SchemaProps: spec.SchemaProps{
-							Description: "StorageClassState determines if CSI operator should create and manage storage classes. If this field value is empty or Managed - CSI operator will continuously reconcile storage class and create if necessary. If this field value is Unmanaged - CSI operator will not reconcile any previously created storage class. If this field value is Removed - CSI operator will delete the storage class it created previously. When omitted, this means the user has no opinion and the platform chooses a reasonable default, which is subject to change over time. The current default behaviour is Managed.",
+							Description: "storageClassState determines if CSI operator should create and manage storage classes. If this field value is empty or Managed - CSI operator will continuously reconcile storage class and create if necessary. If this field value is Unmanaged - CSI operator will not reconcile any previously created storage class. If this field value is Removed - CSI operator will delete the storage class it created previously. When omitted, this means the user has no opinion and the platform chooses a reasonable default, which is subject to change over time. The current default behaviour is Managed.",
 							Type:        []string{"string"},
 							Format:      "",
 						},
@@ -45860,7 +47140,7 @@ func schema_openshift_api_operator_v1_ConfigList(ref common.ReferenceCallback) c
 					},
 					"items": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Items contains the items",
+							Description: "items contains the items",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -45878,6 +47158,36 @@ func schema_openshift_api_operator_v1_ConfigList(ref common.ReferenceCallback) c
 		},
 		Dependencies: []string{
 			"github.com/openshift/api/operator/v1.Config", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"},
+	}
+}
+
+func schema_openshift_api_operator_v1_ConfigMapFileReference(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "ConfigMapFileReference references a specific file within a ConfigMap.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"name": {
+						SchemaProps: spec.SchemaProps{
+							Description: "name is the name of the ConfigMap. name is a required field. Must consist of lower case alphanumeric characters, '-' or '.', and must start and end with an alphanumeric character. Must be at most 253 characters in length.",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"key": {
+						SchemaProps: spec.SchemaProps{
+							Description: "key is the logo key inside the referenced ConfigMap. Must consist only of alphanumeric characters, dashes (-), underscores (_), and periods (.). Must be at most 253 characters in length. Must end in a valid file extension. A valid file extension must consist of a period followed by 2 to 5 alpha characters.",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+				},
+				Required: []string{"name", "key"},
+			},
+		},
 	}
 }
 
@@ -46105,9 +47415,31 @@ func schema_openshift_api_operator_v1_ConsoleCustomization(ref common.ReferenceC
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
-				Description: "ConsoleCustomization defines a list of optional configuration for the console UI.",
+				Description: "ConsoleCustomization defines a list of optional configuration for the console UI. Ensure that Logos and CustomLogoFile cannot be set at the same time.",
 				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
+					"logos": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-map-keys": []interface{}{
+									"type",
+								},
+								"x-kubernetes-list-type": "map",
+							},
+						},
+						SchemaProps: spec.SchemaProps{
+							Description: "logos is used to replace the OpenShift Masthead and Favicon logos in the console UI with custom logos. logos is an optional field that allows a list of logos. Only one of logos or customLogoFile can be set at a time. If logos is set, customLogoFile must be unset. When specified, there must be at least one entry and no more than 2 entries. Each type must appear only once in the list.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("github.com/openshift/api/operator/v1.Logo"),
+									},
+								},
+							},
+						},
+					},
 					"capabilities": {
 						VendorExtensible: spec.VendorExtensible{
 							Extensions: spec.Extensions{
@@ -46153,7 +47485,7 @@ func schema_openshift_api_operator_v1_ConsoleCustomization(ref common.ReferenceC
 					},
 					"customLogoFile": {
 						SchemaProps: spec.SchemaProps{
-							Description: "customLogoFile replaces the default OpenShift logo in the masthead and about dialog. It is a reference to a ConfigMap in the openshift-config namespace. This can be created with a command like 'oc create configmap custom-logo --from-file=/path/to/file -n openshift-config'. Image size must be less than 1 MB due to constraints on the ConfigMap size. The ConfigMap key should include a file extension so that the console serves the file with the correct MIME type. Recommended logo specifications: Dimensions: Max height of 68px and max width of 200px SVG format preferred",
+							Description: "customLogoFile replaces the default OpenShift logo in the masthead and about dialog. It is a reference to a Only one of customLogoFile or logos can be set at a time. ConfigMap in the openshift-config namespace. This can be created with a command like 'oc create configmap custom-logo --from-file=/path/to/file -n openshift-config'. Image size must be less than 1 MB due to constraints on the ConfigMap size. The ConfigMap key should include a file extension so that the console serves the file with the correct MIME type. The recommended file format for the logo is SVG, but other file formats are allowed if supported by the browser. Deprecated: Use logos instead.",
 							Default:     map[string]interface{}{},
 							Ref:         ref("github.com/openshift/api/config/v1.ConfigMapFileReference"),
 						},
@@ -46212,7 +47544,7 @@ func schema_openshift_api_operator_v1_ConsoleCustomization(ref common.ReferenceC
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/config/v1.ConfigMapFileReference", "github.com/openshift/api/operator/v1.AddPage", "github.com/openshift/api/operator/v1.Capability", "github.com/openshift/api/operator/v1.DeveloperConsoleCatalogCustomization", "github.com/openshift/api/operator/v1.Perspective", "github.com/openshift/api/operator/v1.ProjectAccess", "github.com/openshift/api/operator/v1.QuickStarts"},
+			"github.com/openshift/api/config/v1.ConfigMapFileReference", "github.com/openshift/api/operator/v1.AddPage", "github.com/openshift/api/operator/v1.Capability", "github.com/openshift/api/operator/v1.DeveloperConsoleCatalogCustomization", "github.com/openshift/api/operator/v1.Logo", "github.com/openshift/api/operator/v1.Perspective", "github.com/openshift/api/operator/v1.ProjectAccess", "github.com/openshift/api/operator/v1.QuickStarts"},
 	}
 }
 
@@ -46875,7 +48207,7 @@ func schema_openshift_api_operator_v1_DefaultNetworkDefinition(ref common.Refere
 					},
 					"openshiftSDNConfig": {
 						SchemaProps: spec.SchemaProps{
-							Description: "openShiftSDNConfig was previously used to configure the openshift-sdn plugin. DEPRECATED: OpenShift SDN is no longer supported.",
+							Description: "openshiftSDNConfig was previously used to configure the openshift-sdn plugin. DEPRECATED: OpenShift SDN is no longer supported.",
 							Ref:         ref("github.com/openshift/api/operator/v1.OpenShiftSDNConfig"),
 						},
 					},
@@ -46903,7 +48235,7 @@ func schema_openshift_api_operator_v1_DeveloperConsoleCatalogCategory(ref common
 				Properties: map[string]spec.Schema{
 					"id": {
 						SchemaProps: spec.SchemaProps{
-							Description: "ID is an identifier used in the URL to enable deep linking in console. ID is required and must have 1-32 URL safe (A-Z, a-z, 0-9, - and _) characters.",
+							Description: "id is an identifier used in the URL to enable deep linking in console. ID is required and must have 1-32 URL safe (A-Z, a-z, 0-9, - and _) characters.",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -46964,7 +48296,7 @@ func schema_openshift_api_operator_v1_DeveloperConsoleCatalogCategoryMeta(ref co
 				Properties: map[string]spec.Schema{
 					"id": {
 						SchemaProps: spec.SchemaProps{
-							Description: "ID is an identifier used in the URL to enable deep linking in console. ID is required and must have 1-32 URL safe (A-Z, a-z, 0-9, - and _) characters.",
+							Description: "id is an identifier used in the URL to enable deep linking in console. ID is required and must have 1-32 URL safe (A-Z, a-z, 0-9, - and _) characters.",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -47092,6 +48424,7 @@ func schema_openshift_api_operator_v1_DeveloperConsoleCatalogTypes(ref common.Re
 						},
 					},
 				},
+				Required: []string{"state"},
 			},
 			VendorExtensible: spec.VendorExtensible{
 				Extensions: spec.Extensions{
@@ -47272,7 +48605,7 @@ func schema_openshift_api_operator_v1_EtcdList(ref common.ReferenceCallback) com
 					},
 					"items": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Items contains the items",
+							Description: "items contains the items",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -47575,6 +48908,37 @@ func schema_openshift_api_operator_v1_FeaturesMigration(ref common.ReferenceCall
 	}
 }
 
+func schema_openshift_api_operator_v1_FileReferenceSource(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "FileReferenceSource is used by the console to locate the specified file containing a custom logo.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"from": {
+						SchemaProps: spec.SchemaProps{
+							Description: "from is a required field to specify the source type of the file reference. Allowed values are ConfigMap. When set to ConfigMap, the file will be sourced from a ConfigMap in the openshift-config namespace. The configMap field must be set when from is set to ConfigMap.\n\nPossible enum values:\n - `\"ConfigMap\"` represents a ConfigMap source.",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+							Enum:        []interface{}{"ConfigMap"},
+						},
+					},
+					"configMap": {
+						SchemaProps: spec.SchemaProps{
+							Description: "configMap specifies the ConfigMap sourcing details such as the name of the ConfigMap and the key for the file. The ConfigMap must exist in the openshift-config namespace. Required when from is \"ConfigMap\", and forbidden otherwise.",
+							Ref:         ref("github.com/openshift/api/operator/v1.ConfigMapFileReference"),
+						},
+					},
+				},
+				Required: []string{"from"},
+			},
+		},
+		Dependencies: []string{
+			"github.com/openshift/api/operator/v1.ConfigMapFileReference"},
+	}
+}
+
 func schema_openshift_api_operator_v1_ForwardPlugin(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -47723,14 +49087,14 @@ func schema_openshift_api_operator_v1_GatewayConfig(ref common.ReferenceCallback
 				Properties: map[string]spec.Schema{
 					"routingViaHost": {
 						SchemaProps: spec.SchemaProps{
-							Description: "RoutingViaHost allows pod egress traffic to exit via the ovn-k8s-mp0 management port into the host before sending it out. If this is not set, traffic will always egress directly from OVN to outside without touching the host stack. Setting this to true means hardware offload will not be supported. Default is false if GatewayConfig is specified.",
+							Description: "routingViaHost allows pod egress traffic to exit via the ovn-k8s-mp0 management port into the host before sending it out. If this is not set, traffic will always egress directly from OVN to outside without touching the host stack. Setting this to true means hardware offload will not be supported. Default is false if GatewayConfig is specified.",
 							Type:        []string{"boolean"},
 							Format:      "",
 						},
 					},
 					"ipForwarding": {
 						SchemaProps: spec.SchemaProps{
-							Description: "IPForwarding controls IP forwarding for all traffic on OVN-Kubernetes managed interfaces (such as br-ex). By default this is set to Restricted, and Kubernetes related traffic is still forwarded appropriately, but other IP traffic will not be routed by the OCP node. If there is a desire to allow the host to forward traffic across OVN-Kubernetes managed interfaces, then set this field to \"Global\". The supported values are \"Restricted\" and \"Global\".",
+							Description: "ipForwarding controls IP forwarding for all traffic on OVN-Kubernetes managed interfaces (such as br-ex). By default this is set to Restricted, and Kubernetes related traffic is still forwarded appropriately, but other IP traffic will not be routed by the OCP node. If there is a desire to allow the host to forward traffic across OVN-Kubernetes managed interfaces, then set this field to \"Global\". The supported values are \"Restricted\" and \"Global\".",
 							Type:        []string{"string"},
 							Format:      "",
 						},
@@ -48047,7 +49411,7 @@ func schema_openshift_api_operator_v1_HybridOverlayConfig(ref common.ReferenceCa
 							},
 						},
 						SchemaProps: spec.SchemaProps{
-							Description: "HybridClusterNetwork defines a network space given to nodes on an additional overlay network.",
+							Description: "hybridClusterNetwork defines a network space given to nodes on an additional overlay network.",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -48061,7 +49425,7 @@ func schema_openshift_api_operator_v1_HybridOverlayConfig(ref common.ReferenceCa
 					},
 					"hybridOverlayVXLANPort": {
 						SchemaProps: spec.SchemaProps{
-							Description: "HybridOverlayVXLANPort defines the VXLAN port number to be used by the additional overlay network. Default is 4789",
+							Description: "hybridOverlayVXLANPort defines the VXLAN port number to be used by the additional overlay network. Default is 4789",
 							Type:        []string{"integer"},
 							Format:      "int64",
 						},
@@ -48126,7 +49490,7 @@ func schema_openshift_api_operator_v1_IPAMConfig(ref common.ReferenceCallback) c
 				Properties: map[string]spec.Schema{
 					"type": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Type is the type of IPAM module will be used for IP Address Management(IPAM). The supported values are IPAMTypeDHCP, IPAMTypeStatic",
+							Description: "type is the type of IPAM module will be used for IP Address Management(IPAM). The supported values are IPAMTypeDHCP, IPAMTypeStatic",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -48134,7 +49498,7 @@ func schema_openshift_api_operator_v1_IPAMConfig(ref common.ReferenceCallback) c
 					},
 					"staticIPAMConfig": {
 						SchemaProps: spec.SchemaProps{
-							Description: "StaticIPAMConfig configures the static IP address in case of type:IPAMTypeStatic",
+							Description: "staticIPAMConfig configures the static IP address in case of type:IPAMTypeStatic",
 							Ref:         ref("github.com/openshift/api/operator/v1.StaticIPAMConfig"),
 						},
 					},
@@ -48319,7 +49683,7 @@ func schema_openshift_api_operator_v1_IPv6OVNKubernetesConfig(ref common.Referen
 					},
 					"internalJoinSubnet": {
 						SchemaProps: spec.SchemaProps{
-							Description: "internalJoinSubnet is a v6 subnet used internally by ovn-kubernetes in case the default one is being already used by something else. It must not overlap with any other subnet being used by OpenShift or by the node network. The size of the subnet must be larger than the number of nodes. The value cannot be changed after installation. The subnet must be large enough to accomadate one IP per node in your cluster The current default value is fd98::/48 The value must be in proper IPV6 CIDR format Note that IPV6 dual addresses are not permitted",
+							Description: "internalJoinSubnet is a v6 subnet used internally by ovn-kubernetes in case the default one is being already used by something else. It must not overlap with any other subnet being used by OpenShift or by the node network. The size of the subnet must be larger than the number of nodes. The value cannot be changed after installation. The subnet must be large enough to accomadate one IP per node in your cluster The current default value is fd98::/64 The value must be in proper IPV6 CIDR format Note that IPV6 dual addresses are not permitted",
 							Type:        []string{"string"},
 							Format:      "",
 						},
@@ -48804,7 +50168,7 @@ func schema_openshift_api_operator_v1_IngressControllerHTTPUniqueIdHeaderPolicy(
 					},
 					"format": {
 						SchemaProps: spec.SchemaProps{
-							Description: "format specifies the format for the injected HTTP header's value. This field has no effect unless name is specified.  For the HAProxy-based ingress controller implementation, this format uses the same syntax as the HTTP log format.  If the field is empty, the default value is \"%{+X}o\\ %ci:%cp_%fi:%fp_%Ts_%rt:%pid\"; see the corresponding HAProxy documentation: http://cbonte.github.io/haproxy-dconv/2.0/configuration.html#8.2.3",
+							Description: "format specifies the format for the injected HTTP header's value. This field has no effect unless name is specified.  For the HAProxy-based ingress controller implementation, this format uses the same syntax as the HTTP log format.  If the field is empty, the default value is \"%{+X}o\\\\ %ci:%cp_%fi:%fp_%Ts_%rt:%pid\"; see the corresponding HAProxy documentation: http://cbonte.github.io/haproxy-dconv/2.0/configuration.html#8.2.3",
 							Type:        []string{"string"},
 							Format:      "",
 						},
@@ -49026,8 +50390,8 @@ func schema_openshift_api_operator_v1_IngressControllerSpec(ref common.Reference
 					},
 					"idleConnectionTerminationPolicy": {
 						SchemaProps: spec.SchemaProps{
-							Description: "idleConnectionTerminationPolicy maps directly to HAProxy's idle-close-on-response option and controls whether HAProxy keeps idle frontend connections open during a soft stop (router reload).\n\nAllowed values for this field are \"Immediate\" and \"Deferred\". The default value is \"Deferred\".\n\nWhen set to \"Immediate\", idle connections are closed immediately during router reloads. This ensures immediate propagation of route changes but may impact clients sensitive to connection resets.\n\nWhen set to \"Deferred\", HAProxy will maintain idle connections during a soft reload instead of closing them immediately. These connections remain open until any of the following occurs:\n\n  - A new request is received on the connection, in which\n    case HAProxy handles it in the old process and closes\n    the connection after sending the response.\n\n  - HAProxy's `timeout http-keep-alive` duration expires\n    (300 seconds in OpenShift's configuration, not\n    configurable).\n\n  - The client's keep-alive timeout expires, causing the\n    client to close the connection.\n\nSetting Deferred can help prevent errors in clients or load balancers that do not properly handle connection resets. Additionally, this option allows you to retain the pre-2.4 HAProxy behaviour: in HAProxy version 2.2 (OpenShift versions < 4.14), maintaining idle connections during a soft reload was the default behaviour, but starting with HAProxy 2.4, the default changed to closing idle connections immediately.\n\nImportant Consideration:\n\n  - Using Deferred will result in temporary inconsistencies\n    for the first request on each persistent connection\n    after a route update and router reload. This request\n    will be processed by the old HAProxy process using its\n    old configuration. Subsequent requests will use the\n    updated configuration.\n\nOperational Considerations:\n\n  - Keeping idle connections open during reloads may lead\n    to an accumulation of old HAProxy processes if\n    connections remain idle for extended periods,\n    especially in environments where frequent reloads\n    occur.\n\n  - Consider monitoring the number of HAProxy processes in\n    the router pods when Deferred is set.\n\n  - You may need to enable or adjust the\n    `ingress.operator.openshift.io/hard-stop-after`\n    duration (configured via an annotation on the\n    IngressController resource) in environments with\n    frequent reloads to prevent resource exhaustion.",
-							Default:     "Deferred",
+							Description: "idleConnectionTerminationPolicy maps directly to HAProxy's idle-close-on-response option and controls whether HAProxy keeps idle frontend connections open during a soft stop (router reload).\n\nAllowed values for this field are \"Immediate\" and \"Deferred\". The default value is \"Immediate\".\n\nWhen set to \"Immediate\", idle connections are closed immediately during router reloads. This ensures immediate propagation of route changes but may impact clients sensitive to connection resets.\n\nWhen set to \"Deferred\", HAProxy will maintain idle connections during a soft reload instead of closing them immediately. These connections remain open until any of the following occurs:\n\n  - A new request is received on the connection, in which\n    case HAProxy handles it in the old process and closes\n    the connection after sending the response.\n\n  - HAProxy's `timeout http-keep-alive` duration expires.\n    By default this is 300 seconds, but it can be changed\n    using httpKeepAliveTimeout tuning option.\n\n  - The client's keep-alive timeout expires, causing the\n    client to close the connection.\n\nSetting Deferred can help prevent errors in clients or load balancers that do not properly handle connection resets. Additionally, this option allows you to retain the pre-2.4 HAProxy behaviour: in HAProxy version 2.2 (OpenShift versions < 4.14), maintaining idle connections during a soft reload was the default behaviour, but starting with HAProxy 2.4, the default changed to closing idle connections immediately.\n\nImportant Consideration:\n\n  - Using Deferred will result in temporary inconsistencies\n    for the first request on each persistent connection\n    after a route update and router reload. This request\n    will be processed by the old HAProxy process using its\n    old configuration. Subsequent requests will use the\n    updated configuration.\n\nOperational Considerations:\n\n  - Keeping idle connections open during reloads may lead\n    to an accumulation of old HAProxy processes if\n    connections remain idle for extended periods,\n    especially in environments where frequent reloads\n    occur.\n\n  - Consider monitoring the number of HAProxy processes in\n    the router pods when Deferred is set.\n\n  - You may need to enable or adjust the\n    `ingress.operator.openshift.io/hard-stop-after`\n    duration (configured via an annotation on the\n    IngressController resource) in environments with\n    frequent reloads to prevent resource exhaustion.",
+							Default:     "Immediate",
 							Type:        []string{"string"},
 							Format:      "",
 						},
@@ -49201,7 +50565,13 @@ func schema_openshift_api_operator_v1_IngressControllerTuningOptions(ref common.
 					},
 					"connectTimeout": {
 						SchemaProps: spec.SchemaProps{
-							Description: "ConnectTimeout defines the maximum time to wait for a connection attempt to a server/backend to succeed.\n\nThis field expects an unsigned duration string of decimal numbers, each with optional fraction and a unit suffix, e.g. \"300ms\", \"1.5h\" or \"2h45m\". Valid time units are \"ns\", \"us\" (or \"µs\" U+00B5 or \"μs\" U+03BC), \"ms\", \"s\", \"m\", \"h\".\n\nWhen omitted, this means the user has no opinion and the platform is left to choose a reasonable default. This default is subject to change over time. The current default is 5s.",
+							Description: "connectTimeout defines the maximum time to wait for a connection attempt to a server/backend to succeed.\n\nThis field expects an unsigned duration string of decimal numbers, each with optional fraction and a unit suffix, e.g. \"300ms\", \"1.5h\" or \"2h45m\". Valid time units are \"ns\", \"us\" (or \"µs\" U+00B5 or \"μs\" U+03BC), \"ms\", \"s\", \"m\", \"h\".\n\nWhen omitted, this means the user has no opinion and the platform is left to choose a reasonable default. This default is subject to change over time. The current default is 5s.",
+							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.Duration"),
+						},
+					},
+					"httpKeepAliveTimeout": {
+						SchemaProps: spec.SchemaProps{
+							Description: "httpKeepAliveTimeout defines the maximum allowed time to wait for a new HTTP request to appear on a connection from the client to the router.\n\nThis field expects an unsigned duration string of a decimal number, with optional fraction and a unit suffix, e.g. \"300ms\", \"1.5s\" or \"2m45s\". Valid time units are \"ms\", \"s\", \"m\". The allowed range is from 1 millisecond to 15 minutes.\n\nWhen omitted, this means the user has no opinion and the platform is left to choose a reasonable default. This default is subject to change over time. The current default is 300s.\n\nLow values (tens of milliseconds or less) can cause clients to close and reopen connections for each request, leading to reduced connection sharing. For HTTP/2, special care should be taken with low values. A few seconds is a reasonable starting point to avoid holding idle connections open while still allowing subsequent requests to reuse the connection.\n\nHigh values (minutes or more) favor connection reuse but may cause idle connections to linger longer.",
 							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.Duration"),
 						},
 					},
@@ -49614,7 +50984,7 @@ func schema_openshift_api_operator_v1_KubeAPIServerList(ref common.ReferenceCall
 					},
 					"items": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Items contains the items",
+							Description: "items contains the items",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -49921,7 +51291,7 @@ func schema_openshift_api_operator_v1_KubeControllerManagerList(ref common.Refer
 					},
 					"items": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Items contains the items",
+							Description: "items contains the items",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -50222,7 +51592,7 @@ func schema_openshift_api_operator_v1_KubeSchedulerList(ref common.ReferenceCall
 					},
 					"items": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Items contains the items",
+							Description: "items contains the items",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -50513,7 +51883,7 @@ func schema_openshift_api_operator_v1_KubeStorageVersionMigratorList(ref common.
 					},
 					"items": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Items contains the items",
+							Description: "items contains the items",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -50724,7 +52094,7 @@ func schema_openshift_api_operator_v1_LoadBalancerStrategy(ref common.ReferenceC
 						},
 					},
 				},
-				Required: []string{"scope"},
+				Required: []string{"scope", "dnsManagementPolicy"},
 			},
 		},
 		Dependencies: []string{
@@ -50778,6 +52148,53 @@ func schema_openshift_api_operator_v1_LoggingDestination(ref common.ReferenceCal
 		},
 		Dependencies: []string{
 			"github.com/openshift/api/operator/v1.ContainerLoggingDestinationParameters", "github.com/openshift/api/operator/v1.SyslogLoggingDestinationParameters"},
+	}
+}
+
+func schema_openshift_api_operator_v1_Logo(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "Logo defines a configuration based on theme modes for the console UI logo.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"type": {
+						SchemaProps: spec.SchemaProps{
+							Description: "type specifies the type of the logo for the console UI. It determines whether the logo is for the masthead or favicon. type is a required field that allows values of Masthead and Favicon. When set to \"Masthead\", the logo will be used in the masthead and about modal of the console UI. When set to \"Favicon\", the logo will be used as the favicon of the console UI.\n\nPossible enum values:\n - `\"Favicon\"` Favicon represents the favicon logo.\n - `\"Masthead\"` Masthead represents the logo in the masthead.",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+							Enum:        []interface{}{"Favicon", "Masthead"},
+						},
+					},
+					"themes": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-map-keys": []interface{}{
+									"mode",
+								},
+								"x-kubernetes-list-type": "map",
+							},
+						},
+						SchemaProps: spec.SchemaProps{
+							Description: "themes specifies the themes for the console UI logo. themes is a required field that allows a list of themes. Each item in the themes list must have a unique mode and a source field. Each mode determines whether the logo is for the dark or light mode of the console UI. If a theme is not specified, the default OpenShift logo will be displayed for that theme. There must be at least one entry and no more than 2 entries.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("github.com/openshift/api/operator/v1.Theme"),
+									},
+								},
+							},
+						},
+					},
+				},
+				Required: []string{"type", "themes"},
+			},
+		},
+		Dependencies: []string{
+			"github.com/openshift/api/operator/v1.Theme"},
 	}
 }
 
@@ -50917,7 +52334,7 @@ func schema_openshift_api_operator_v1_MachineConfigurationList(ref common.Refere
 					},
 					"items": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Items contains the items",
+							Description: "items contains the items",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -51002,7 +52419,7 @@ func schema_openshift_api_operator_v1_MachineConfigurationSpec(ref common.Refere
 					},
 					"managedBootImages": {
 						SchemaProps: spec.SchemaProps{
-							Description: "managedBootImages allows configuration for the management of boot images for machine resources within the cluster. This configuration allows users to select resources that should be updated to the latest boot images during cluster upgrades, ensuring that new machines always boot with the current cluster version's boot image. When omitted, no boot images will be updated.",
+							Description: "managedBootImages allows configuration for the management of boot images for machine resources within the cluster. This configuration allows users to select resources that should be updated to the latest boot images during cluster upgrades, ensuring that new machines always boot with the current cluster version's boot image. When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time. The default for each machine manager mode is All for GCP and AWS platforms, and None for all other platforms.",
 							Default:     map[string]interface{}{},
 							Ref:         ref("github.com/openshift/api/operator/v1.ManagedBootImages"),
 						},
@@ -51042,9 +52459,7 @@ func schema_openshift_api_operator_v1_MachineConfigurationStatus(ref common.Refe
 								"x-kubernetes-list-map-keys": []interface{}{
 									"type",
 								},
-								"x-kubernetes-list-type":       "map",
-								"x-kubernetes-patch-merge-key": "type",
-								"x-kubernetes-patch-strategy":  "merge",
+								"x-kubernetes-list-type": "map",
 							},
 						},
 						SchemaProps: spec.SchemaProps{
@@ -51067,11 +52482,18 @@ func schema_openshift_api_operator_v1_MachineConfigurationStatus(ref common.Refe
 							Ref:         ref("github.com/openshift/api/operator/v1.NodeDisruptionPolicyStatus"),
 						},
 					},
+					"managedBootImagesStatus": {
+						SchemaProps: spec.SchemaProps{
+							Description: "managedBootImagesStatus reflects what the latest cluster-validated boot image configuration is and will be used by Machine Config Controller while performing boot image updates.",
+							Default:     map[string]interface{}{},
+							Ref:         ref("github.com/openshift/api/operator/v1.ManagedBootImages"),
+						},
+					},
 				},
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/operator/v1.NodeDisruptionPolicyStatus", "k8s.io/apimachinery/pkg/apis/meta/v1.Condition"},
+			"github.com/openshift/api/operator/v1.ManagedBootImages", "github.com/openshift/api/operator/v1.NodeDisruptionPolicyStatus", "k8s.io/apimachinery/pkg/apis/meta/v1.Condition"},
 	}
 }
 
@@ -51122,7 +52544,7 @@ func schema_openshift_api_operator_v1_MachineManagerSelector(ref common.Referenc
 				Properties: map[string]spec.Schema{
 					"mode": {
 						SchemaProps: spec.SchemaProps{
-							Description: "mode determines how machine managers will be selected for updates. Valid values are All and Partial. All means that every resource matched by the machine manager will be updated. Partial requires specified selector(s) and allows customisation of which resources matched by the machine manager will be updated.",
+							Description: "mode determines how machine managers will be selected for updates. Valid values are All and Partial. All means that every resource matched by the machine manager will be updated. Partial requires specified selector(s) and allows customisation of which resources matched by the machine manager will be updated. None means that every resource matched by the machine manager will not be updated.",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -51663,7 +53085,7 @@ func schema_openshift_api_operator_v1_NetworkSpec(ref common.ReferenceCallback) 
 					},
 					"disableMultiNetwork": {
 						SchemaProps: spec.SchemaProps{
-							Description: "disableMultiNetwork specifies whether or not multiple pod network support should be disabled. If unset, this property defaults to 'false' and multiple network support is enabled.",
+							Description: "disableMultiNetwork defaults to 'false' and this setting enables the pod multi-networking capability. disableMultiNetwork when set to 'true' at cluster install time does not install the components, typically the Multus CNI and the network-attachment-definition CRD, that enable the pod multi-networking capability. Setting the parameter to 'true' might be useful when you need install third-party CNI plugins, but these plugins are not supported by Red Hat. Changing the parameter value as a postinstallation cluster task has no effect.",
 							Type:        []string{"boolean"},
 							Format:      "",
 						},
@@ -52082,7 +53504,7 @@ func schema_openshift_api_operator_v1_NodeDisruptionPolicySpecUnit(ref common.Re
 				Properties: map[string]spec.Schema{
 					"name": {
 						SchemaProps: spec.SchemaProps{
-							Description: "name represents the service name of a systemd service managed through a MachineConfig Actions specified will be applied for changes to the named service. Service names should be of the format ${NAME}${SERVICETYPE} and can up to 255 characters long. ${NAME} must be atleast 1 character long and can only consist of alphabets, digits, \":\", \"-\", \"_\", \".\", and \"\". ${SERVICETYPE} must be one of \".service\", \".socket\", \".device\", \".mount\", \".automount\", \".swap\", \".target\", \".path\", \".timer\", \".snapshot\", \".slice\" or \".scope\".",
+							Description: "name represents the service name of a systemd service managed through a MachineConfig Actions specified will be applied for changes to the named service. Service names should be of the format ${NAME}${SERVICETYPE} and can up to 255 characters long. ${NAME} must be atleast 1 character long and can only consist of alphabets, digits, \":\", \"-\", \"_\", \".\", and \"\\\". ${SERVICETYPE} must be one of \".service\", \".socket\", \".device\", \".mount\", \".automount\", \".swap\", \".target\", \".path\", \".timer\", \".snapshot\", \".slice\" or \".scope\".",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -52272,7 +53694,7 @@ func schema_openshift_api_operator_v1_NodeDisruptionPolicyStatusUnit(ref common.
 				Properties: map[string]spec.Schema{
 					"name": {
 						SchemaProps: spec.SchemaProps{
-							Description: "name represents the service name of a systemd service managed through a MachineConfig Actions specified will be applied for changes to the named service. Service names should be of the format ${NAME}${SERVICETYPE} and can up to 255 characters long. ${NAME} must be atleast 1 character long and can only consist of alphabets, digits, \":\", \"-\", \"_\", \".\", and \"\". ${SERVICETYPE} must be one of \".service\", \".socket\", \".device\", \".mount\", \".automount\", \".swap\", \".target\", \".path\", \".timer\", \".snapshot\", \".slice\" or \".scope\".",
+							Description: "name represents the service name of a systemd service managed through a MachineConfig Actions specified will be applied for changes to the named service. Service names should be of the format ${NAME}${SERVICETYPE} and can up to 255 characters long. ${NAME} must be atleast 1 character long and can only consist of alphabets, digits, \":\", \"-\", \"_\", \".\", and \"\\\". ${SERVICETYPE} must be one of \".service\", \".socket\", \".device\", \".mount\", \".automount\", \".swap\", \".target\", \".path\", \".timer\", \".snapshot\", \".slice\" or \".scope\".",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -52466,7 +53888,7 @@ func schema_openshift_api_operator_v1_OAuthAPIServerStatus(ref common.ReferenceC
 				Properties: map[string]spec.Schema{
 					"latestAvailableRevision": {
 						SchemaProps: spec.SchemaProps{
-							Description: "LatestAvailableRevision is the latest revision used as suffix of revisioned secrets like encryption-config. A new revision causes a new deployment of pods.",
+							Description: "latestAvailableRevision is the latest revision used as suffix of revisioned secrets like encryption-config. A new revision causes a new deployment of pods.",
 							Type:        []string{"integer"},
 							Format:      "int32",
 						},
@@ -52558,7 +53980,7 @@ func schema_openshift_api_operator_v1_OLMList(ref common.ReferenceCallback) comm
 					},
 					"items": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Items contains the items",
+							Description: "items contains the items",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -52742,7 +54164,7 @@ func schema_openshift_api_operator_v1_OVNKubernetesConfig(ref common.ReferenceCa
 					},
 					"hybridOverlayConfig": {
 						SchemaProps: spec.SchemaProps{
-							Description: "HybridOverlayConfig configures an additional overlay network for peers that are not using OVN.",
+							Description: "hybridOverlayConfig configures an additional overlay network for peers that are not using OVN.",
 							Ref:         ref("github.com/openshift/api/operator/v1.HybridOverlayConfig"),
 						},
 					},
@@ -52774,7 +54196,7 @@ func schema_openshift_api_operator_v1_OVNKubernetesConfig(ref common.ReferenceCa
 					},
 					"v6InternalSubnet": {
 						SchemaProps: spec.SchemaProps{
-							Description: "v6InternalSubnet is a v6 subnet used internally by ovn-kubernetes in case the default one is being already used by something else. It must not overlap with any other subnet being used by OpenShift or by the node network. The size of the subnet must be larger than the number of nodes. The value cannot be changed after installation. Default is fd98::/48",
+							Description: "v6InternalSubnet is a v6 subnet used internally by ovn-kubernetes in case the default one is being already used by something else. It must not overlap with any other subnet being used by OpenShift or by the node network. The size of the subnet must be larger than the number of nodes. The value cannot be changed after installation. Default is fd98::/64",
 							Type:        []string{"string"},
 							Format:      "",
 						},
@@ -52894,7 +54316,7 @@ func schema_openshift_api_operator_v1_OpenShiftAPIServerList(ref common.Referenc
 					},
 					"items": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Items contains the items",
+							Description: "items contains the items",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -53134,7 +54556,7 @@ func schema_openshift_api_operator_v1_OpenShiftControllerManagerList(ref common.
 					},
 					"items": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Items contains the items",
+							Description: "items contains the items",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -53570,6 +54992,7 @@ func schema_openshift_api_operator_v1_PartialSelector(ref common.ReferenceCallba
 						},
 					},
 				},
+				Required: []string{"machineResourceSelector"},
 			},
 		},
 		Dependencies: []string{
@@ -53947,7 +55370,7 @@ func schema_openshift_api_operator_v1_ReloadService(ref common.ReferenceCallback
 				Properties: map[string]spec.Schema{
 					"serviceName": {
 						SchemaProps: spec.SchemaProps{
-							Description: "serviceName is the full name (e.g. crio.service) of the service to be reloaded Service names should be of the format ${NAME}${SERVICETYPE} and can up to 255 characters long. ${NAME} must be atleast 1 character long and can only consist of alphabets, digits, \":\", \"-\", \"_\", \".\", and \"\". ${SERVICETYPE} must be one of \".service\", \".socket\", \".device\", \".mount\", \".automount\", \".swap\", \".target\", \".path\", \".timer\", \".snapshot\", \".slice\" or \".scope\".",
+							Description: "serviceName is the full name (e.g. crio.service) of the service to be reloaded Service names should be of the format ${NAME}${SERVICETYPE} and can up to 255 characters long. ${NAME} must be atleast 1 character long and can only consist of alphabets, digits, \":\", \"-\", \"_\", \".\", and \"\\\". ${SERVICETYPE} must be one of \".service\", \".socket\", \".device\", \".mount\", \".automount\", \".swap\", \".target\", \".path\", \".timer\", \".snapshot\", \".slice\" or \".scope\".",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -54012,7 +55435,7 @@ func schema_openshift_api_operator_v1_RestartService(ref common.ReferenceCallbac
 				Properties: map[string]spec.Schema{
 					"serviceName": {
 						SchemaProps: spec.SchemaProps{
-							Description: "serviceName is the full name (e.g. crio.service) of the service to be restarted Service names should be of the format ${NAME}${SERVICETYPE} and can up to 255 characters long. ${NAME} must be atleast 1 character long and can only consist of alphabets, digits, \":\", \"-\", \"_\", \".\", and \"\". ${SERVICETYPE} must be one of \".service\", \".socket\", \".device\", \".mount\", \".automount\", \".swap\", \".target\", \".path\", \".timer\", \".snapshot\", \".slice\" or \".scope\".",
+							Description: "serviceName is the full name (e.g. crio.service) of the service to be restarted Service names should be of the format ${NAME}${SERVICETYPE} and can up to 255 characters long. ${NAME} must be atleast 1 character long and can only consist of alphabets, digits, \":\", \"-\", \"_\", \".\", and \"\\\". ${SERVICETYPE} must be one of \".service\", \".socket\", \".device\", \".mount\", \".automount\", \".swap\", \".target\", \".path\", \".timer\", \".snapshot\", \".slice\" or \".scope\".",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -54240,7 +55663,7 @@ func schema_openshift_api_operator_v1_ServiceCAList(ref common.ReferenceCallback
 					},
 					"items": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Items contains the items",
+							Description: "items contains the items",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -54480,7 +55903,7 @@ func schema_openshift_api_operator_v1_ServiceCatalogAPIServerList(ref common.Ref
 					},
 					"items": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Items contains the items",
+							Description: "items contains the items",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -54720,7 +56143,7 @@ func schema_openshift_api_operator_v1_ServiceCatalogControllerManagerList(ref co
 					},
 					"items": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Items contains the items",
+							Description: "items contains the items",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -54897,7 +56320,7 @@ func schema_openshift_api_operator_v1_SimpleMacvlanConfig(ref common.ReferenceCa
 					},
 					"ipamConfig": {
 						SchemaProps: spec.SchemaProps{
-							Description: "IPAMConfig configures IPAM module will be used for IP Address Management (IPAM).",
+							Description: "ipamConfig configures IPAM module will be used for IP Address Management (IPAM).",
 							Ref:         ref("github.com/openshift/api/operator/v1.IPAMConfig"),
 						},
 					},
@@ -54932,7 +56355,7 @@ func schema_openshift_api_operator_v1_StaticIPAMAddresses(ref common.ReferenceCa
 				Properties: map[string]spec.Schema{
 					"address": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Address is the IP address in CIDR format",
+							Description: "address is the IP address in CIDR format",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -54940,7 +56363,7 @@ func schema_openshift_api_operator_v1_StaticIPAMAddresses(ref common.ReferenceCa
 					},
 					"gateway": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Gateway is IP inside of subnet to designate as the gateway",
+							Description: "gateway is IP inside of subnet to designate as the gateway",
 							Type:        []string{"string"},
 							Format:      "",
 						},
@@ -54965,7 +56388,7 @@ func schema_openshift_api_operator_v1_StaticIPAMConfig(ref common.ReferenceCallb
 							},
 						},
 						SchemaProps: spec.SchemaProps{
-							Description: "Addresses configures IP address for the interface",
+							Description: "addresses configures IP address for the interface",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -54984,7 +56407,7 @@ func schema_openshift_api_operator_v1_StaticIPAMConfig(ref common.ReferenceCallb
 							},
 						},
 						SchemaProps: spec.SchemaProps{
-							Description: "Routes configures IP routes for the interface",
+							Description: "routes configures IP routes for the interface",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -54998,7 +56421,7 @@ func schema_openshift_api_operator_v1_StaticIPAMConfig(ref common.ReferenceCallb
 					},
 					"dns": {
 						SchemaProps: spec.SchemaProps{
-							Description: "DNS configures DNS for the interface",
+							Description: "dns configures DNS for the interface",
 							Ref:         ref("github.com/openshift/api/operator/v1.StaticIPAMDNS"),
 						},
 					},
@@ -55024,7 +56447,7 @@ func schema_openshift_api_operator_v1_StaticIPAMDNS(ref common.ReferenceCallback
 							},
 						},
 						SchemaProps: spec.SchemaProps{
-							Description: "Nameservers points DNS servers for IP lookup",
+							Description: "nameservers points DNS servers for IP lookup",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -55039,7 +56462,7 @@ func schema_openshift_api_operator_v1_StaticIPAMDNS(ref common.ReferenceCallback
 					},
 					"domain": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Domain configures the domainname the local domain used for short hostname lookups",
+							Description: "domain configures the domainname the local domain used for short hostname lookups",
 							Type:        []string{"string"},
 							Format:      "",
 						},
@@ -55051,7 +56474,7 @@ func schema_openshift_api_operator_v1_StaticIPAMDNS(ref common.ReferenceCallback
 							},
 						},
 						SchemaProps: spec.SchemaProps{
-							Description: "Search configures priority ordered search domains for short hostname lookups",
+							Description: "search configures priority ordered search domains for short hostname lookups",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -55079,7 +56502,7 @@ func schema_openshift_api_operator_v1_StaticIPAMRoutes(ref common.ReferenceCallb
 				Properties: map[string]spec.Schema{
 					"destination": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Destination points the IP route destination",
+							Description: "destination points the IP route destination",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -55087,7 +56510,7 @@ func schema_openshift_api_operator_v1_StaticIPAMRoutes(ref common.ReferenceCallb
 					},
 					"gateway": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Gateway is the route's next-hop IP address If unset, a default gateway is assumed (as determined by the CNI plugin).",
+							Description: "gateway is the route's next-hop IP address If unset, a default gateway is assumed (as determined by the CNI plugin).",
 							Type:        []string{"string"},
 							Format:      "",
 						},
@@ -55458,7 +56881,7 @@ func schema_openshift_api_operator_v1_StorageSpec(ref common.ReferenceCallback) 
 					},
 					"vsphereStorageDriver": {
 						SchemaProps: spec.SchemaProps{
-							Description: "VSphereStorageDriver indicates the storage driver to use on VSphere clusters. Once this field is set to CSIWithMigrationDriver, it can not be changed. If this is empty, the platform will choose a good default, which may change over time without notice. The current default is CSIWithMigrationDriver and may not be changed. DEPRECATED: This field will be removed in a future release.",
+							Description: "vsphereStorageDriver indicates the storage driver to use on VSphere clusters. Once this field is set to CSIWithMigrationDriver, it can not be changed. If this is empty, the platform will choose a good default, which may change over time without notice. The current default is CSIWithMigrationDriver and may not be changed. DEPRECATED: This field will be removed in a future release.",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -55609,6 +57032,38 @@ func schema_openshift_api_operator_v1_SyslogLoggingDestinationParameters(ref com
 	}
 }
 
+func schema_openshift_api_operator_v1_Theme(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "Theme defines a theme mode for the console UI.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"mode": {
+						SchemaProps: spec.SchemaProps{
+							Description: "mode is used to specify what theme mode a logo will apply to in the console UI. mode is a required field that allows values of Dark and Light. When set to Dark, the logo file referenced in the 'file' field will be used when an end-user of the console UI enables the Dark mode. When set to Light, the logo file referenced in the 'file' field will be used when an end-user of the console UI enables the Light mode.\n\nPossible enum values:\n - `\"Dark\"` represents the dark mode for a console theme.\n - `\"Light\"` represents the light mode for a console theme.",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+							Enum:        []interface{}{"Dark", "Light"},
+						},
+					},
+					"source": {
+						SchemaProps: spec.SchemaProps{
+							Description: "source is used by the console to locate the specified file containing a custom logo. source is a required field that references a ConfigMap name and key that contains the custom logo file in the openshift-config namespace. You can create it with a command like: - 'oc create configmap custom-logos-config --namespace=openshift-config --from-file=/path/to/file' The ConfigMap key must include the file extension so that the console serves the file with the correct MIME type. The recommended file format for the Masthead and Favicon logos is SVG, but other file formats are allowed if supported by the browser. The logo image size must be less than 1 MB due to constraints on the ConfigMap size. For more information, see the documentation: https://docs.redhat.com/en/documentation/openshift_container_platform/4.19/html/web_console/customizing-web-console#customizing-web-console",
+							Default:     map[string]interface{}{},
+							Ref:         ref("github.com/openshift/api/operator/v1.FileReferenceSource"),
+						},
+					},
+				},
+				Required: []string{"mode", "source"},
+			},
+		},
+		Dependencies: []string{
+			"github.com/openshift/api/operator/v1.FileReferenceSource"},
+	}
+}
+
 func schema_openshift_api_operator_v1_Upstream(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -55618,7 +57073,7 @@ func schema_openshift_api_operator_v1_Upstream(ref common.ReferenceCallback) com
 				Properties: map[string]spec.Schema{
 					"type": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Type defines whether this upstream contains an IP/IP:port resolver or the local /etc/resolv.conf. Type accepts 2 possible values: SystemResolvConf or Network.\n\n* When SystemResolvConf is used, the Upstream structure does not require any further fields to be defined:\n  /etc/resolv.conf will be used\n* When Network is used, the Upstream structure must contain at least an Address",
+							Description: "type defines whether this upstream contains an IP/IP:port resolver or the local /etc/resolv.conf. Type accepts 2 possible values: SystemResolvConf or Network.\n\n* When SystemResolvConf is used, the Upstream structure does not require any further fields to be defined:\n  /etc/resolv.conf will be used\n* When Network is used, the Upstream structure must contain at least an Address",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -55626,14 +57081,14 @@ func schema_openshift_api_operator_v1_Upstream(ref common.ReferenceCallback) com
 					},
 					"address": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Address must be defined when Type is set to Network. It will be ignored otherwise. It must be a valid ipv4 or ipv6 address.",
+							Description: "address must be defined when Type is set to Network. It will be ignored otherwise. It must be a valid ipv4 or ipv6 address.",
 							Type:        []string{"string"},
 							Format:      "",
 						},
 					},
 					"port": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Port may be defined when Type is set to Network. It will be ignored otherwise. Port must be between 65535",
+							Description: "port may be defined when Type is set to Network. It will be ignored otherwise. Port must be between 65535",
 							Type:        []string{"integer"},
 							Format:      "int64",
 						},
@@ -55654,7 +57109,7 @@ func schema_openshift_api_operator_v1_UpstreamResolvers(ref common.ReferenceCall
 				Properties: map[string]spec.Schema{
 					"upstreams": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Upstreams is a list of resolvers to forward name queries for the \".\" domain. Each instance of CoreDNS performs health checking of Upstreams. When a healthy upstream returns an error during the exchange, another resolver is tried from Upstreams. The Upstreams are selected in the order specified in Policy.\n\nA maximum of 15 upstreams is allowed per ForwardPlugin. If no Upstreams are specified, /etc/resolv.conf is used by default",
+							Description: "upstreams is a list of resolvers to forward name queries for the \".\" domain. Each instance of CoreDNS performs health checking of Upstreams. When a healthy upstream returns an error during the exchange, another resolver is tried from Upstreams. The Upstreams are selected in the order specified in Policy.\n\nA maximum of 15 upstreams is allowed per ForwardPlugin. If no Upstreams are specified, /etc/resolv.conf is used by default",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -55668,7 +57123,7 @@ func schema_openshift_api_operator_v1_UpstreamResolvers(ref common.ReferenceCall
 					},
 					"policy": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Policy is used to determine the order in which upstream servers are selected for querying. Any one of the following values may be specified:\n\n* \"Random\" picks a random upstream server for each query. * \"RoundRobin\" picks upstream servers in a round-robin order, moving to the next server for each new query. * \"Sequential\" tries querying upstream servers in a sequential order until one responds, starting with the first server for each new query.\n\nThe default value is \"Sequential\"",
+							Description: "policy is used to determine the order in which upstream servers are selected for querying. Any one of the following values may be specified:\n\n* \"Random\" picks a random upstream server for each query. * \"RoundRobin\" picks upstream servers in a round-robin order, moving to the next server for each new query. * \"Sequential\" tries querying upstream servers in a sequential order until one responds, starting with the first server for each new query.\n\nThe default value is \"Sequential\"",
 							Type:        []string{"string"},
 							Format:      "",
 						},
@@ -55744,6 +57199,13 @@ func schema_openshift_api_operator_v1_VSphereCSIDriverConfigSpec(ref common.Refe
 							Format:      "int64",
 						},
 					},
+					"maxAllowedBlockVolumesPerNode": {
+						SchemaProps: spec.SchemaProps{
+							Description: "maxAllowedBlockVolumesPerNode is an optional configuration parameter that allows setting a custom value for the limit of the number of PersistentVolumes attached to a node. In vSphere version 7 this limit was set to 59 by default, however in vSphere version 8 this limit was increased to 255. Before increasing this value above 59 the cluster administrator needs to ensure that every node forming the cluster is updated to ESXi version 8 or higher and that all nodes are running the same version. The limit must be between 1 and 255, which matches the vSphere version 8 maximum. When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time. The current default is 59, which matches the limit for vSphere version 7.",
+							Type:        []string{"integer"},
+							Format:      "int32",
+						},
+					},
 				},
 			},
 		},
@@ -55775,6 +57237,148 @@ func schema_openshift_api_operator_v1alpha1_BackupJobReference(ref common.Refere
 					},
 				},
 				Required: []string{"namespace", "name"},
+			},
+		},
+	}
+}
+
+func schema_openshift_api_operator_v1alpha1_ClusterVersionOperator(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "ClusterVersionOperator holds cluster-wide information about the Cluster Version Operator.\n\nCompatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"kind": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"apiVersion": {
+						SchemaProps: spec.SchemaProps{
+							Description: "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"metadata": {
+						SchemaProps: spec.SchemaProps{
+							Description: "metadata is the standard object's metadata. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata",
+							Default:     map[string]interface{}{},
+							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"),
+						},
+					},
+					"spec": {
+						SchemaProps: spec.SchemaProps{
+							Description: "spec is the specification of the desired behavior of the Cluster Version Operator.",
+							Default:     map[string]interface{}{},
+							Ref:         ref("github.com/openshift/api/operator/v1alpha1.ClusterVersionOperatorSpec"),
+						},
+					},
+					"status": {
+						SchemaProps: spec.SchemaProps{
+							Description: "status is the most recently observed status of the Cluster Version Operator.",
+							Default:     map[string]interface{}{},
+							Ref:         ref("github.com/openshift/api/operator/v1alpha1.ClusterVersionOperatorStatus"),
+						},
+					},
+				},
+				Required: []string{"metadata", "spec"},
+			},
+		},
+		Dependencies: []string{
+			"github.com/openshift/api/operator/v1alpha1.ClusterVersionOperatorSpec", "github.com/openshift/api/operator/v1alpha1.ClusterVersionOperatorStatus", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"},
+	}
+}
+
+func schema_openshift_api_operator_v1alpha1_ClusterVersionOperatorList(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "ClusterVersionOperatorList is a collection of ClusterVersionOperators.\n\nCompatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"kind": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"apiVersion": {
+						SchemaProps: spec.SchemaProps{
+							Description: "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"metadata": {
+						SchemaProps: spec.SchemaProps{
+							Description: "metadata is the standard list's metadata. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata",
+							Default:     map[string]interface{}{},
+							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"),
+						},
+					},
+					"items": {
+						SchemaProps: spec.SchemaProps{
+							Description: "items is a list of ClusterVersionOperators.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("github.com/openshift/api/operator/v1alpha1.ClusterVersionOperator"),
+									},
+								},
+							},
+						},
+					},
+				},
+				Required: []string{"metadata"},
+			},
+		},
+		Dependencies: []string{
+			"github.com/openshift/api/operator/v1alpha1.ClusterVersionOperator", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"},
+	}
+}
+
+func schema_openshift_api_operator_v1alpha1_ClusterVersionOperatorSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "ClusterVersionOperatorSpec is the specification of the desired behavior of the Cluster Version Operator.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"operatorLogLevel": {
+						SchemaProps: spec.SchemaProps{
+							Description: "operatorLogLevel is an intent based logging for the operator itself.  It does not give fine grained control, but it is a simple way to manage coarse grained logging choices that operators have to interpret for themselves.\n\nValid values are: \"Normal\", \"Debug\", \"Trace\", \"TraceAll\". Defaults to \"Normal\".",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+				},
+			},
+		},
+	}
+}
+
+func schema_openshift_api_operator_v1alpha1_ClusterVersionOperatorStatus(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "ClusterVersionOperatorStatus defines the observed status of the Cluster Version Operator.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"observedGeneration": {
+						SchemaProps: spec.SchemaProps{
+							Description: "observedGeneration represents the most recent generation observed by the operator and specifies the version of the spec field currently being synced.",
+							Type:        []string{"integer"},
+							Format:      "int64",
+						},
+					},
+				},
 			},
 		},
 	}
@@ -55927,7 +57531,7 @@ func schema_openshift_api_operator_v1alpha1_EtcdBackupSpec(ref common.ReferenceC
 				Properties: map[string]spec.Schema{
 					"pvcName": {
 						SchemaProps: spec.SchemaProps{
-							Description: "PVCName specifies the name of the PersistentVolumeClaim (PVC) which binds a PersistentVolume where the etcd backup file would be saved The PVC itself must always be created in the \"openshift-etcd\" namespace If the PVC is left unspecified \"\" then the platform will choose a reasonable default location to save the backup. In the future this would be backups saved across the control-plane master nodes.",
+							Description: "pvcName specifies the name of the PersistentVolumeClaim (PVC) which binds a PersistentVolume where the etcd backup file would be saved The PVC itself must always be created in the \"openshift-etcd\" namespace If the PVC is left unspecified \"\" then the platform will choose a reasonable default location to save the backup. In the future this would be backups saved across the control-plane master nodes.",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -55951,9 +57555,7 @@ func schema_openshift_api_operator_v1alpha1_EtcdBackupStatus(ref common.Referenc
 								"x-kubernetes-list-map-keys": []interface{}{
 									"type",
 								},
-								"x-kubernetes-list-type":       "map",
-								"x-kubernetes-patch-merge-key": "type",
-								"x-kubernetes-patch-strategy":  "merge",
+								"x-kubernetes-list-type": "map",
 							},
 						},
 						SchemaProps: spec.SchemaProps{
@@ -55976,7 +57578,6 @@ func schema_openshift_api_operator_v1alpha1_EtcdBackupStatus(ref common.Referenc
 						},
 					},
 				},
-				Required: []string{"backupJob"},
 			},
 		},
 		Dependencies: []string{
@@ -56061,7 +57662,7 @@ func schema_openshift_api_operator_v1alpha1_GenericOperatorConfig(ref common.Ref
 					},
 					"servingInfo": {
 						SchemaProps: spec.SchemaProps{
-							Description: "ServingInfo is the HTTP serving information for the controller's endpoints",
+							Description: "servingInfo is the HTTP serving information for the controller's endpoints",
 							Default:     map[string]interface{}{},
 							Ref:         ref("github.com/openshift/api/config/v1.HTTPServingInfo"),
 						},
@@ -56390,7 +57991,7 @@ func schema_openshift_api_operator_v1alpha1_OLMList(ref common.ReferenceCallback
 					},
 					"items": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Items contains the items",
+							Description: "items contains the items",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -56921,7 +58522,7 @@ func schema_openshift_api_operatorcontrolplane_v1alpha1_LogEntry(ref common.Refe
 					},
 					"success": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Success indicates if the log entry indicates a success or failure.",
+							Description: "success indicates if the log entry indicates a success or failure.",
 							Default:     false,
 							Type:        []string{"boolean"},
 							Format:      "",
@@ -56929,21 +58530,21 @@ func schema_openshift_api_operatorcontrolplane_v1alpha1_LogEntry(ref common.Refe
 					},
 					"reason": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Reason for status in a machine readable format.",
+							Description: "reason for status in a machine readable format.",
 							Type:        []string{"string"},
 							Format:      "",
 						},
 					},
 					"message": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Message explaining status in a human readable format.",
+							Description: "message explaining status in a human readable format.",
 							Type:        []string{"string"},
 							Format:      "",
 						},
 					},
 					"latency": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Latency records how long the action mentioned in the entry took.",
+							Description: "latency records how long the action mentioned in the entry took.",
 							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.Duration"),
 						},
 					},
@@ -56965,19 +58566,19 @@ func schema_openshift_api_operatorcontrolplane_v1alpha1_OutageEntry(ref common.R
 				Properties: map[string]spec.Schema{
 					"start": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Start of outage detected",
+							Description: "start of outage detected",
 							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.Time"),
 						},
 					},
 					"end": {
 						SchemaProps: spec.SchemaProps{
-							Description: "End of outage detected",
+							Description: "end of outage detected",
 							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.Time"),
 						},
 					},
 					"startLogs": {
 						SchemaProps: spec.SchemaProps{
-							Description: "StartLogs contains log entries related to the start of this outage. Should contain the original failure, any entries where the failure mode changed.",
+							Description: "startLogs contains log entries related to the start of this outage. Should contain the original failure, any entries where the failure mode changed.",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -56991,7 +58592,7 @@ func schema_openshift_api_operatorcontrolplane_v1alpha1_OutageEntry(ref common.R
 					},
 					"endLogs": {
 						SchemaProps: spec.SchemaProps{
-							Description: "EndLogs contains log entries related to the end of this outage. Should contain the success entry that resolved the outage and possibly a few of the failure log entries that preceded it.",
+							Description: "endLogs contains log entries related to the end of this outage. Should contain the success entry that resolved the outage and possibly a few of the failure log entries that preceded it.",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -57005,7 +58606,7 @@ func schema_openshift_api_operatorcontrolplane_v1alpha1_OutageEntry(ref common.R
 					},
 					"message": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Message summarizes outage details in a human readable format.",
+							Description: "message summarizes outage details in a human readable format.",
 							Type:        []string{"string"},
 							Format:      "",
 						},
@@ -57049,14 +58650,14 @@ func schema_openshift_api_operatorcontrolplane_v1alpha1_PodNetworkConnectivityCh
 					},
 					"spec": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Spec defines the source and target of the connectivity check",
+							Description: "spec defines the source and target of the connectivity check",
 							Default:     map[string]interface{}{},
 							Ref:         ref("github.com/openshift/api/operatorcontrolplane/v1alpha1.PodNetworkConnectivityCheckSpec"),
 						},
 					},
 					"status": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Status contains the observed status of the connectivity check",
+							Description: "status contains the observed status of the connectivity check",
 							Default:     map[string]interface{}{},
 							Ref:         ref("github.com/openshift/api/operatorcontrolplane/v1alpha1.PodNetworkConnectivityCheckStatus"),
 						},
@@ -57079,7 +58680,7 @@ func schema_openshift_api_operatorcontrolplane_v1alpha1_PodNetworkConnectivityCh
 				Properties: map[string]spec.Schema{
 					"type": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Type of the condition",
+							Description: "type of the condition",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -57087,7 +58688,7 @@ func schema_openshift_api_operatorcontrolplane_v1alpha1_PodNetworkConnectivityCh
 					},
 					"status": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Status of the condition",
+							Description: "status of the condition",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -57095,14 +58696,14 @@ func schema_openshift_api_operatorcontrolplane_v1alpha1_PodNetworkConnectivityCh
 					},
 					"reason": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Reason for the condition's last status transition in a machine readable format.",
+							Description: "reason for the condition's last status transition in a machine readable format.",
 							Type:        []string{"string"},
 							Format:      "",
 						},
 					},
 					"message": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Message indicating details about last transition in a human readable format.",
+							Description: "message indicating details about last transition in a human readable format.",
 							Type:        []string{"string"},
 							Format:      "",
 						},
@@ -57152,7 +58753,7 @@ func schema_openshift_api_operatorcontrolplane_v1alpha1_PodNetworkConnectivityCh
 					},
 					"items": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Items contains the items",
+							Description: "items contains the items",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -57181,7 +58782,7 @@ func schema_openshift_api_operatorcontrolplane_v1alpha1_PodNetworkConnectivityCh
 				Properties: map[string]spec.Schema{
 					"sourcePod": {
 						SchemaProps: spec.SchemaProps{
-							Description: "SourcePod names the pod from which the condition will be checked",
+							Description: "sourcePod names the pod from which the condition will be checked",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -57219,7 +58820,7 @@ func schema_openshift_api_operatorcontrolplane_v1alpha1_PodNetworkConnectivityCh
 				Properties: map[string]spec.Schema{
 					"successes": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Successes contains logs successful check actions",
+							Description: "successes contains logs successful check actions",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -57233,7 +58834,7 @@ func schema_openshift_api_operatorcontrolplane_v1alpha1_PodNetworkConnectivityCh
 					},
 					"failures": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Failures contains logs of unsuccessful check actions",
+							Description: "failures contains logs of unsuccessful check actions",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -57247,7 +58848,7 @@ func schema_openshift_api_operatorcontrolplane_v1alpha1_PodNetworkConnectivityCh
 					},
 					"outages": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Outages contains logs of time periods of outages",
+							Description: "outages contains logs of time periods of outages",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -57267,7 +58868,7 @@ func schema_openshift_api_operatorcontrolplane_v1alpha1_PodNetworkConnectivityCh
 							},
 						},
 						SchemaProps: spec.SchemaProps{
-							Description: "Conditions summarize the status of the check",
+							Description: "conditions summarize the status of the check",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -57443,7 +59044,7 @@ func schema_openshift_api_operatoringress_v1_DNSRecordSpec(ref common.ReferenceC
 						},
 					},
 				},
-				Required: []string{"dnsName", "targets", "recordType", "recordTTL"},
+				Required: []string{"dnsName", "targets", "recordType", "recordTTL", "dnsManagementPolicy"},
 			},
 		},
 	}
@@ -57619,7 +59220,7 @@ func schema_openshift_api_osin_v1_BasicAuthPasswordIdentityProvider(ref common.R
 					},
 					"url": {
 						SchemaProps: spec.SchemaProps{
-							Description: "URL is the remote URL to connect to",
+							Description: "url is the remote URL to connect to",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -57627,7 +59228,7 @@ func schema_openshift_api_osin_v1_BasicAuthPasswordIdentityProvider(ref common.R
 					},
 					"ca": {
 						SchemaProps: spec.SchemaProps{
-							Description: "CA is the CA for verifying TLS connections",
+							Description: "ca is the CA for verifying TLS connections",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -57635,7 +59236,7 @@ func schema_openshift_api_osin_v1_BasicAuthPasswordIdentityProvider(ref common.R
 					},
 					"certFile": {
 						SchemaProps: spec.SchemaProps{
-							Description: "CertFile is a file containing a PEM-encoded certificate",
+							Description: "certFile is a file containing a PEM-encoded certificate",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -57643,7 +59244,7 @@ func schema_openshift_api_osin_v1_BasicAuthPasswordIdentityProvider(ref common.R
 					},
 					"keyFile": {
 						SchemaProps: spec.SchemaProps{
-							Description: "KeyFile is a file containing a PEM-encoded private key for the certificate specified by CertFile",
+							Description: "keyFile is a file containing a PEM-encoded private key for the certificate specified by CertFile",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -58035,7 +59636,7 @@ func schema_openshift_api_osin_v1_KeystonePasswordIdentityProvider(ref common.Re
 					},
 					"url": {
 						SchemaProps: spec.SchemaProps{
-							Description: "URL is the remote URL to connect to",
+							Description: "url is the remote URL to connect to",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -58043,7 +59644,7 @@ func schema_openshift_api_osin_v1_KeystonePasswordIdentityProvider(ref common.Re
 					},
 					"ca": {
 						SchemaProps: spec.SchemaProps{
-							Description: "CA is the CA for verifying TLS connections",
+							Description: "ca is the CA for verifying TLS connections",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -58051,7 +59652,7 @@ func schema_openshift_api_osin_v1_KeystonePasswordIdentityProvider(ref common.Re
 					},
 					"certFile": {
 						SchemaProps: spec.SchemaProps{
-							Description: "CertFile is a file containing a PEM-encoded certificate",
+							Description: "certFile is a file containing a PEM-encoded certificate",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -58059,7 +59660,7 @@ func schema_openshift_api_osin_v1_KeystonePasswordIdentityProvider(ref common.Re
 					},
 					"keyFile": {
 						SchemaProps: spec.SchemaProps{
-							Description: "KeyFile is a file containing a PEM-encoded private key for the certificate specified by CertFile",
+							Description: "keyFile is a file containing a PEM-encoded private key for the certificate specified by CertFile",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -58862,7 +60463,7 @@ func schema_openshift_api_osin_v1_SessionSecret(ref common.ReferenceCallback) co
 				Properties: map[string]spec.Schema{
 					"authentication": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Authentication is used to authenticate sessions using HMAC. Recommended to use a secret with 32 or 64 bytes.",
+							Description: "authentication is used to authenticate sessions using HMAC. Recommended to use a secret with 32 or 64 bytes.",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -58870,7 +60471,7 @@ func schema_openshift_api_osin_v1_SessionSecret(ref common.ReferenceCallback) co
 					},
 					"encryption": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Encryption is used to encrypt sessions. Must be 16, 24, or 32 characters long, to select AES-128, AES-",
+							Description: "encryption is used to encrypt sessions. Must be 16, 24, or 32 characters long, to select AES-128, AES-",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -58906,7 +60507,7 @@ func schema_openshift_api_osin_v1_SessionSecrets(ref common.ReferenceCallback) c
 					},
 					"secrets": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Secrets is a list of secrets New sessions are signed and encrypted using the first secret. Existing sessions are decrypted/authenticated by each secret until one succeeds. This allows rotating secrets.",
+							Description: "secrets is a list of secrets New sessions are signed and encrypted using the first secret. Existing sessions are decrypted/authenticated by each secret until one succeeds. This allows rotating secrets.",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -59148,9 +60749,7 @@ func schema_openshift_api_platform_v1alpha1_PlatformOperatorStatus(ref common.Re
 								"x-kubernetes-list-map-keys": []interface{}{
 									"type",
 								},
-								"x-kubernetes-list-type":       "map",
-								"x-kubernetes-patch-merge-key": "type",
-								"x-kubernetes-patch-strategy":  "merge",
+								"x-kubernetes-list-type": "map",
 							},
 						},
 						SchemaProps: spec.SchemaProps{
@@ -59211,14 +60810,14 @@ func schema_openshift_api_project_v1_Project(ref common.ReferenceCallback) commo
 					},
 					"spec": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Spec defines the behavior of the Namespace.",
+							Description: "spec defines the behavior of the Namespace.",
 							Default:     map[string]interface{}{},
 							Ref:         ref("github.com/openshift/api/project/v1.ProjectSpec"),
 						},
 					},
 					"status": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Status describes the current status of a Namespace",
+							Description: "status describes the current status of a Namespace",
 							Default:     map[string]interface{}{},
 							Ref:         ref("github.com/openshift/api/project/v1.ProjectStatus"),
 						},
@@ -59261,7 +60860,7 @@ func schema_openshift_api_project_v1_ProjectList(ref common.ReferenceCallback) c
 					},
 					"items": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Items is the list of projects",
+							Description: "items is the list of projects",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -59312,14 +60911,14 @@ func schema_openshift_api_project_v1_ProjectRequest(ref common.ReferenceCallback
 					},
 					"displayName": {
 						SchemaProps: spec.SchemaProps{
-							Description: "DisplayName is the display name to apply to a project",
+							Description: "displayName is the display name to apply to a project",
 							Type:        []string{"string"},
 							Format:      "",
 						},
 					},
 					"description": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Description is the description to apply to a project",
+							Description: "description is the description to apply to a project",
 							Type:        []string{"string"},
 							Format:      "",
 						},
@@ -59341,7 +60940,7 @@ func schema_openshift_api_project_v1_ProjectSpec(ref common.ReferenceCallback) c
 				Properties: map[string]spec.Schema{
 					"finalizers": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Finalizers is an opaque list of values that must be empty to permanently remove object from storage",
+							Description: "finalizers is an opaque list of values that must be empty to permanently remove object from storage",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -59369,7 +60968,7 @@ func schema_openshift_api_project_v1_ProjectStatus(ref common.ReferenceCallback)
 				Properties: map[string]spec.Schema{
 					"phase": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Phase is the current lifecycle phase of the project\n\nPossible enum values:\n - `\"Active\"` means the namespace is available for use in the system\n - `\"Terminating\"` means the namespace is undergoing graceful termination",
+							Description: "phase is the current lifecycle phase of the project\n\nPossible enum values:\n - `\"Active\"` means the namespace is available for use in the system\n - `\"Terminating\"` means the namespace is undergoing graceful termination",
 							Type:        []string{"string"},
 							Format:      "",
 							Enum:        []interface{}{"Active", "Terminating"},
@@ -59433,14 +61032,14 @@ func schema_openshift_api_quota_v1_AppliedClusterResourceQuota(ref common.Refere
 					},
 					"spec": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Spec defines the desired quota",
+							Description: "spec defines the desired quota",
 							Default:     map[string]interface{}{},
 							Ref:         ref("github.com/openshift/api/quota/v1.ClusterResourceQuotaSpec"),
 						},
 					},
 					"status": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Status defines the actual enforced quota and its current usage",
+							Description: "status defines the actual enforced quota and its current usage",
 							Default:     map[string]interface{}{},
 							Ref:         ref("github.com/openshift/api/quota/v1.ClusterResourceQuotaStatus"),
 						},
@@ -59484,7 +61083,7 @@ func schema_openshift_api_quota_v1_AppliedClusterResourceQuotaList(ref common.Re
 					},
 					"items": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Items is a list of AppliedClusterResourceQuota",
+							Description: "items is a list of AppliedClusterResourceQuota",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -59535,14 +61134,14 @@ func schema_openshift_api_quota_v1_ClusterResourceQuota(ref common.ReferenceCall
 					},
 					"spec": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Spec defines the desired quota",
+							Description: "spec defines the desired quota",
 							Default:     map[string]interface{}{},
 							Ref:         ref("github.com/openshift/api/quota/v1.ClusterResourceQuotaSpec"),
 						},
 					},
 					"status": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Status defines the actual enforced quota and its current usage",
+							Description: "status defines the actual enforced quota and its current usage",
 							Default:     map[string]interface{}{},
 							Ref:         ref("github.com/openshift/api/quota/v1.ClusterResourceQuotaStatus"),
 						},
@@ -59586,7 +61185,7 @@ func schema_openshift_api_quota_v1_ClusterResourceQuotaList(ref common.Reference
 					},
 					"items": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Items is a list of ClusterResourceQuotas",
+							Description: "items is a list of ClusterResourceQuotas",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -59653,14 +61252,14 @@ func schema_openshift_api_quota_v1_ClusterResourceQuotaSpec(ref common.Reference
 				Properties: map[string]spec.Schema{
 					"selector": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Selector is the selector used to match projects. It should only select active projects on the scale of dozens (though it can select many more less active projects).  These projects will contend on object creation through this resource.",
+							Description: "selector is the selector used to match projects. It should only select active projects on the scale of dozens (though it can select many more less active projects).  These projects will contend on object creation through this resource.",
 							Default:     map[string]interface{}{},
 							Ref:         ref("github.com/openshift/api/quota/v1.ClusterResourceQuotaSelector"),
 						},
 					},
 					"quota": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Quota defines the desired quota",
+							Description: "quota defines the desired quota",
 							Default:     map[string]interface{}{},
 							Ref:         ref("k8s.io/api/core/v1.ResourceQuotaSpec"),
 						},
@@ -59683,14 +61282,14 @@ func schema_openshift_api_quota_v1_ClusterResourceQuotaStatus(ref common.Referen
 				Properties: map[string]spec.Schema{
 					"total": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Total defines the actual enforced quota and its current usage across all projects",
+							Description: "total defines the actual enforced quota and its current usage across all projects",
 							Default:     map[string]interface{}{},
 							Ref:         ref("k8s.io/api/core/v1.ResourceQuotaStatus"),
 						},
 					},
 					"namespaces": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Namespaces slices the usage by project.  This division allows for quick resolution of deletion reconciliation inside of a single project without requiring a recalculation across all projects.  This can be used to pull the deltas for a given project.",
+							Description: "namespaces slices the usage by project.  This division allows for quick resolution of deletion reconciliation inside of a single project without requiring a recalculation across all projects.  This can be used to pull the deltas for a given project.",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -59720,7 +61319,7 @@ func schema_openshift_api_quota_v1_ResourceQuotaStatusByNamespace(ref common.Ref
 				Properties: map[string]spec.Schema{
 					"namespace": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Namespace the project this status applies to",
+							Description: "namespace the project this status applies to",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -59728,7 +61327,7 @@ func schema_openshift_api_quota_v1_ResourceQuotaStatusByNamespace(ref common.Ref
 					},
 					"status": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Status indicates how many resources have been consumed by this project",
+							Description: "status indicates how many resources have been consumed by this project",
 							Default:     map[string]interface{}{},
 							Ref:         ref("k8s.io/api/core/v1.ResourceQuotaStatus"),
 						},
@@ -59981,7 +61580,7 @@ func schema_openshift_api_route_v1_RouteIngress(ref common.ReferenceCallback) co
 				Properties: map[string]spec.Schema{
 					"host": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Host is the host string under which the route is exposed; this value is required",
+							Description: "host is the host string under which the route is exposed; this value is required",
 							Type:        []string{"string"},
 							Format:      "",
 						},
@@ -60003,7 +61602,7 @@ func schema_openshift_api_route_v1_RouteIngress(ref common.ReferenceCallback) co
 							},
 						},
 						SchemaProps: spec.SchemaProps{
-							Description: "Conditions is the state of the route, may be empty.",
+							Description: "conditions is the state of the route, may be empty.",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -60046,7 +61645,7 @@ func schema_openshift_api_route_v1_RouteIngressCondition(ref common.ReferenceCal
 				Properties: map[string]spec.Schema{
 					"type": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Type is the type of the condition. Currently only Admitted or UnservableInFutureVersions.",
+							Description: "type is the type of the condition. Currently only Admitted or UnservableInFutureVersions.",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -60054,7 +61653,7 @@ func schema_openshift_api_route_v1_RouteIngressCondition(ref common.ReferenceCal
 					},
 					"status": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Status is the status of the condition. Can be True, False, Unknown.",
+							Description: "status is the status of the condition. Can be True, False, Unknown.",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -60429,7 +62028,7 @@ func schema_openshift_api_route_v1_TLSConfig(ref common.ReferenceCallback) commo
 					},
 					"externalCertificate": {
 						SchemaProps: spec.SchemaProps{
-							Description: "externalCertificate provides certificate contents as a secret reference. This should be a single serving certificate, not a certificate chain. Do not include a CA certificate. The secret referenced should be present in the same namespace as that of the Route. Forbidden when `certificate` is set.",
+							Description: "externalCertificate provides certificate contents as a secret reference. This should be a single serving certificate, not a certificate chain. Do not include a CA certificate. The secret referenced should be present in the same namespace as that of the Route. Forbidden when `certificate` is set. The router service account needs to be granted with read-only access to this secret, please refer to openshift docs for additional details.",
 							Ref:         ref("github.com/openshift/api/route/v1.LocalObjectReference"),
 						},
 					},
@@ -60837,7 +62436,7 @@ func schema_openshift_api_security_v1_AllowedFlexVolume(ref common.ReferenceCall
 				Properties: map[string]spec.Schema{
 					"driver": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Driver is the name of the Flexvolume driver.",
+							Description: "driver is the name of the Flexvolume driver.",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -60859,7 +62458,7 @@ func schema_openshift_api_security_v1_FSGroupStrategyOptions(ref common.Referenc
 				Properties: map[string]spec.Schema{
 					"type": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Type is the strategy that will dictate what FSGroup is used in the SecurityContext.",
+							Description: "type is the strategy that will dictate what FSGroup is used in the SecurityContext.",
 							Type:        []string{"string"},
 							Format:      "",
 						},
@@ -60871,7 +62470,7 @@ func schema_openshift_api_security_v1_FSGroupStrategyOptions(ref common.Referenc
 							},
 						},
 						SchemaProps: spec.SchemaProps{
-							Description: "Ranges are the allowed ranges of fs groups.  If you would like to force a single fs group then supply a single range with the same start and end.",
+							Description: "ranges are the allowed ranges of fs groups.  If you would like to force a single fs group then supply a single range with the same start and end.",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -60900,14 +62499,14 @@ func schema_openshift_api_security_v1_IDRange(ref common.ReferenceCallback) comm
 				Properties: map[string]spec.Schema{
 					"min": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Min is the start of the range, inclusive.",
+							Description: "min is the start of the range, inclusive.",
 							Type:        []string{"integer"},
 							Format:      "int64",
 						},
 					},
 					"max": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Max is the end of the range, inclusive.",
+							Description: "max is the end of the range, inclusive.",
 							Type:        []string{"integer"},
 							Format:      "int64",
 						},
@@ -61354,28 +62953,28 @@ func schema_openshift_api_security_v1_RunAsUserStrategyOptions(ref common.Refere
 				Properties: map[string]spec.Schema{
 					"type": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Type is the strategy that will dictate what RunAsUser is used in the SecurityContext.",
+							Description: "type is the strategy that will dictate what RunAsUser is used in the SecurityContext.",
 							Type:        []string{"string"},
 							Format:      "",
 						},
 					},
 					"uid": {
 						SchemaProps: spec.SchemaProps{
-							Description: "UID is the user id that containers must run as.  Required for the MustRunAs strategy if not using namespace/service account allocated uids.",
+							Description: "uid is the user id that containers must run as.  Required for the MustRunAs strategy if not using namespace/service account allocated uids.",
 							Type:        []string{"integer"},
 							Format:      "int64",
 						},
 					},
 					"uidRangeMin": {
 						SchemaProps: spec.SchemaProps{
-							Description: "UIDRangeMin defines the min value for a strategy that allocates by range.",
+							Description: "uidRangeMin defines the min value for a strategy that allocates by range.",
 							Type:        []string{"integer"},
 							Format:      "int64",
 						},
 					},
 					"uidRangeMax": {
 						SchemaProps: spec.SchemaProps{
-							Description: "UIDRangeMax defines the max value for a strategy that allocates by range.",
+							Description: "uidRangeMax defines the max value for a strategy that allocates by range.",
 							Type:        []string{"integer"},
 							Format:      "int64",
 						},
@@ -61395,7 +62994,7 @@ func schema_openshift_api_security_v1_SELinuxContextStrategyOptions(ref common.R
 				Properties: map[string]spec.Schema{
 					"type": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Type is the strategy that will dictate what SELinux context is used in the SecurityContext.",
+							Description: "type is the strategy that will dictate what SELinux context is used in the SecurityContext.",
 							Type:        []string{"string"},
 							Format:      "",
 						},
@@ -61444,14 +63043,14 @@ func schema_openshift_api_security_v1_SecurityContextConstraints(ref common.Refe
 					},
 					"priority": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Priority influences the sort order of SCCs when evaluating which SCCs to try first for a given pod request based on access in the Users and Groups fields.  The higher the int, the higher priority. An unset value is considered a 0 priority. If scores for multiple SCCs are equal they will be sorted from most restrictive to least restrictive. If both priorities and restrictions are equal the SCCs will be sorted by name.",
+							Description: "priority influences the sort order of SCCs when evaluating which SCCs to try first for a given pod request based on access in the Users and Groups fields.  The higher the int, the higher priority. An unset value is considered a 0 priority. If scores for multiple SCCs are equal they will be sorted from most restrictive to least restrictive. If both priorities and restrictions are equal the SCCs will be sorted by name.",
 							Type:        []string{"integer"},
 							Format:      "int32",
 						},
 					},
 					"allowPrivilegedContainer": {
 						SchemaProps: spec.SchemaProps{
-							Description: "AllowPrivilegedContainer determines if a container can request to be run as privileged.",
+							Description: "allowPrivilegedContainer determines if a container can request to be run as privileged.",
 							Default:     false,
 							Type:        []string{"boolean"},
 							Format:      "",
@@ -61464,7 +63063,7 @@ func schema_openshift_api_security_v1_SecurityContextConstraints(ref common.Refe
 							},
 						},
 						SchemaProps: spec.SchemaProps{
-							Description: "DefaultAddCapabilities is the default set of capabilities that will be added to the container unless the pod spec specifically drops the capability.  You may not list a capabiility in both DefaultAddCapabilities and RequiredDropCapabilities.",
+							Description: "defaultAddCapabilities is the default set of capabilities that will be added to the container unless the pod spec specifically drops the capability.  You may not list a capabiility in both DefaultAddCapabilities and RequiredDropCapabilities.",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -61484,7 +63083,7 @@ func schema_openshift_api_security_v1_SecurityContextConstraints(ref common.Refe
 							},
 						},
 						SchemaProps: spec.SchemaProps{
-							Description: "RequiredDropCapabilities are the capabilities that will be dropped from the container.  These are required to be dropped and cannot be added.",
+							Description: "requiredDropCapabilities are the capabilities that will be dropped from the container.  These are required to be dropped and cannot be added.",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -61504,7 +63103,7 @@ func schema_openshift_api_security_v1_SecurityContextConstraints(ref common.Refe
 							},
 						},
 						SchemaProps: spec.SchemaProps{
-							Description: "AllowedCapabilities is a list of capabilities that can be requested to add to the container. Capabilities in this field maybe added at the pod author's discretion. You must not list a capability in both AllowedCapabilities and RequiredDropCapabilities. To allow all capabilities you may use '*'.",
+							Description: "allowedCapabilities is a list of capabilities that can be requested to add to the container. Capabilities in this field maybe added at the pod author's discretion. You must not list a capability in both AllowedCapabilities and RequiredDropCapabilities. To allow all capabilities you may use '*'.",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -61519,7 +63118,7 @@ func schema_openshift_api_security_v1_SecurityContextConstraints(ref common.Refe
 					},
 					"allowHostDirVolumePlugin": {
 						SchemaProps: spec.SchemaProps{
-							Description: "AllowHostDirVolumePlugin determines if the policy allow containers to use the HostDir volume plugin",
+							Description: "allowHostDirVolumePlugin determines if the policy allow containers to use the HostDir volume plugin",
 							Default:     false,
 							Type:        []string{"boolean"},
 							Format:      "",
@@ -61532,7 +63131,7 @@ func schema_openshift_api_security_v1_SecurityContextConstraints(ref common.Refe
 							},
 						},
 						SchemaProps: spec.SchemaProps{
-							Description: "Volumes is a white list of allowed volume plugins.  FSType corresponds directly with the field names of a VolumeSource (azureFile, configMap, emptyDir).  To allow all volumes you may use \"*\". To allow no volumes, set to [\"none\"].",
+							Description: "volumes is a white list of allowed volume plugins.  FSType corresponds directly with the field names of a VolumeSource (azureFile, configMap, emptyDir).  To allow all volumes you may use \"*\". To allow no volumes, set to [\"none\"].",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -61552,7 +63151,7 @@ func schema_openshift_api_security_v1_SecurityContextConstraints(ref common.Refe
 							},
 						},
 						SchemaProps: spec.SchemaProps{
-							Description: "AllowedFlexVolumes is a whitelist of allowed Flexvolumes.  Empty or nil indicates that all Flexvolumes may be used.  This parameter is effective only when the usage of the Flexvolumes is allowed in the \"Volumes\" field.",
+							Description: "allowedFlexVolumes is a whitelist of allowed Flexvolumes.  Empty or nil indicates that all Flexvolumes may be used.  This parameter is effective only when the usage of the Flexvolumes is allowed in the \"Volumes\" field.",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -61566,7 +63165,7 @@ func schema_openshift_api_security_v1_SecurityContextConstraints(ref common.Refe
 					},
 					"allowHostNetwork": {
 						SchemaProps: spec.SchemaProps{
-							Description: "AllowHostNetwork determines if the policy allows the use of HostNetwork in the pod spec.",
+							Description: "allowHostNetwork determines if the policy allows the use of HostNetwork in the pod spec.",
 							Default:     false,
 							Type:        []string{"boolean"},
 							Format:      "",
@@ -61574,7 +63173,7 @@ func schema_openshift_api_security_v1_SecurityContextConstraints(ref common.Refe
 					},
 					"allowHostPorts": {
 						SchemaProps: spec.SchemaProps{
-							Description: "AllowHostPorts determines if the policy allows host ports in the containers.",
+							Description: "allowHostPorts determines if the policy allows host ports in the containers.",
 							Default:     false,
 							Type:        []string{"boolean"},
 							Format:      "",
@@ -61582,7 +63181,7 @@ func schema_openshift_api_security_v1_SecurityContextConstraints(ref common.Refe
 					},
 					"allowHostPID": {
 						SchemaProps: spec.SchemaProps{
-							Description: "AllowHostPID determines if the policy allows host pid in the containers.",
+							Description: "allowHostPID determines if the policy allows host pid in the containers.",
 							Default:     false,
 							Type:        []string{"boolean"},
 							Format:      "",
@@ -61590,7 +63189,7 @@ func schema_openshift_api_security_v1_SecurityContextConstraints(ref common.Refe
 					},
 					"allowHostIPC": {
 						SchemaProps: spec.SchemaProps{
-							Description: "AllowHostIPC determines if the policy allows host ipc in the containers.",
+							Description: "allowHostIPC determines if the policy allows host ipc in the containers.",
 							Default:     false,
 							Type:        []string{"boolean"},
 							Format:      "",
@@ -61606,49 +63205,49 @@ func schema_openshift_api_security_v1_SecurityContextConstraints(ref common.Refe
 					},
 					"defaultAllowPrivilegeEscalation": {
 						SchemaProps: spec.SchemaProps{
-							Description: "DefaultAllowPrivilegeEscalation controls the default setting for whether a process can gain more privileges than its parent process.",
+							Description: "defaultAllowPrivilegeEscalation controls the default setting for whether a process can gain more privileges than its parent process.",
 							Type:        []string{"boolean"},
 							Format:      "",
 						},
 					},
 					"allowPrivilegeEscalation": {
 						SchemaProps: spec.SchemaProps{
-							Description: "AllowPrivilegeEscalation determines if a pod can request to allow privilege escalation. If unspecified, defaults to true.",
+							Description: "allowPrivilegeEscalation determines if a pod can request to allow privilege escalation. If unspecified, defaults to true.",
 							Type:        []string{"boolean"},
 							Format:      "",
 						},
 					},
 					"seLinuxContext": {
 						SchemaProps: spec.SchemaProps{
-							Description: "SELinuxContext is the strategy that will dictate what labels will be set in the SecurityContext.",
+							Description: "seLinuxContext is the strategy that will dictate what labels will be set in the SecurityContext.",
 							Default:     map[string]interface{}{},
 							Ref:         ref("github.com/openshift/api/security/v1.SELinuxContextStrategyOptions"),
 						},
 					},
 					"runAsUser": {
 						SchemaProps: spec.SchemaProps{
-							Description: "RunAsUser is the strategy that will dictate what RunAsUser is used in the SecurityContext.",
+							Description: "runAsUser is the strategy that will dictate what RunAsUser is used in the SecurityContext.",
 							Default:     map[string]interface{}{},
 							Ref:         ref("github.com/openshift/api/security/v1.RunAsUserStrategyOptions"),
 						},
 					},
 					"supplementalGroups": {
 						SchemaProps: spec.SchemaProps{
-							Description: "SupplementalGroups is the strategy that will dictate what supplemental groups are used by the SecurityContext.",
+							Description: "supplementalGroups is the strategy that will dictate what supplemental groups are used by the SecurityContext.",
 							Default:     map[string]interface{}{},
 							Ref:         ref("github.com/openshift/api/security/v1.SupplementalGroupsStrategyOptions"),
 						},
 					},
 					"fsGroup": {
 						SchemaProps: spec.SchemaProps{
-							Description: "FSGroup is the strategy that will dictate what fs group is used by the SecurityContext.",
+							Description: "fsGroup is the strategy that will dictate what fs group is used by the SecurityContext.",
 							Default:     map[string]interface{}{},
 							Ref:         ref("github.com/openshift/api/security/v1.FSGroupStrategyOptions"),
 						},
 					},
 					"readOnlyRootFilesystem": {
 						SchemaProps: spec.SchemaProps{
-							Description: "ReadOnlyRootFilesystem when set to true will force containers to run with a read only root file system.  If the container specifically requests to run with a non-read only root file system the SCC should deny the pod. If set to false the container may run with a read only root file system if it wishes but it will not be forced to.",
+							Description: "readOnlyRootFilesystem when set to true will force containers to run with a read only root file system.  If the container specifically requests to run with a non-read only root file system the SCC should deny the pod. If set to false the container may run with a read only root file system if it wishes but it will not be forced to.",
 							Default:     false,
 							Type:        []string{"boolean"},
 							Format:      "",
@@ -61701,7 +63300,7 @@ func schema_openshift_api_security_v1_SecurityContextConstraints(ref common.Refe
 							},
 						},
 						SchemaProps: spec.SchemaProps{
-							Description: "SeccompProfiles lists the allowed profiles that may be set for the pod or container's seccomp annotations.  An unset (nil) or empty value means that no profiles may be specifid by the pod or container.\tThe wildcard '*' may be used to allow all profiles.  When used to generate a value for a pod the first non-wildcard profile will be used as the default.",
+							Description: "seccompProfiles lists the allowed profiles that may be set for the pod or container's seccomp annotations.  An unset (nil) or empty value means that no profiles may be specifid by the pod or container.\tThe wildcard '*' may be used to allow all profiles.  When used to generate a value for a pod the first non-wildcard profile will be used as the default.",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -61721,7 +63320,7 @@ func schema_openshift_api_security_v1_SecurityContextConstraints(ref common.Refe
 							},
 						},
 						SchemaProps: spec.SchemaProps{
-							Description: "AllowedUnsafeSysctls is a list of explicitly allowed unsafe sysctls, defaults to none. Each entry is either a plain sysctl name or ends in \"*\" in which case it is considered as a prefix of allowed sysctls. Single * means all unsafe sysctls are allowed. Kubelet has to whitelist all allowed unsafe sysctls explicitly to avoid rejection.\n\nExamples: e.g. \"foo/*\" allows \"foo/bar\", \"foo/baz\", etc. e.g. \"foo.*\" allows \"foo.bar\", \"foo.baz\", etc.",
+							Description: "allowedUnsafeSysctls is a list of explicitly allowed unsafe sysctls, defaults to none. Each entry is either a plain sysctl name or ends in \"*\" in which case it is considered as a prefix of allowed sysctls. Single * means all unsafe sysctls are allowed. Kubelet has to whitelist all allowed unsafe sysctls explicitly to avoid rejection.\n\nExamples: e.g. \"foo/*\" allows \"foo/bar\", \"foo/baz\", etc. e.g. \"foo.*\" allows \"foo.bar\", \"foo.baz\", etc.",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -61741,7 +63340,7 @@ func schema_openshift_api_security_v1_SecurityContextConstraints(ref common.Refe
 							},
 						},
 						SchemaProps: spec.SchemaProps{
-							Description: "ForbiddenSysctls is a list of explicitly forbidden sysctls, defaults to none. Each entry is either a plain sysctl name or ends in \"*\" in which case it is considered as a prefix of forbidden sysctls. Single * means all sysctls are forbidden.\n\nExamples: e.g. \"foo/*\" forbids \"foo/bar\", \"foo/baz\", etc. e.g. \"foo.*\" forbids \"foo.bar\", \"foo.baz\", etc.",
+							Description: "forbiddenSysctls is a list of explicitly forbidden sysctls, defaults to none. Each entry is either a plain sysctl name or ends in \"*\" in which case it is considered as a prefix of forbidden sysctls. Single * means all sysctls are forbidden.\n\nExamples: e.g. \"foo/*\" forbids \"foo/bar\", \"foo/baz\", etc. e.g. \"foo.*\" forbids \"foo.bar\", \"foo.baz\", etc.",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -61867,7 +63466,7 @@ func schema_openshift_api_security_v1_SupplementalGroupsStrategyOptions(ref comm
 				Properties: map[string]spec.Schema{
 					"type": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Type is the strategy that will dictate what supplemental groups is used in the SecurityContext.",
+							Description: "type is the strategy that will dictate what supplemental groups is used in the SecurityContext.",
 							Type:        []string{"string"},
 							Format:      "",
 						},
@@ -61879,7 +63478,7 @@ func schema_openshift_api_security_v1_SupplementalGroupsStrategyOptions(ref comm
 							},
 						},
 						SchemaProps: spec.SchemaProps{
-							Description: "Ranges are the allowed ranges of supplemental groups.  If you would like to force a single supplemental group then supply a single range with the same start and end.",
+							Description: "ranges are the allowed ranges of supplemental groups.  If you would like to force a single supplemental group then supply a single range with the same start and end.",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -62081,7 +63680,7 @@ func schema_openshift_api_servicecertsigner_v1alpha1_ServiceCertSignerOperatorCo
 					},
 					"items": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Items contains the items",
+							Description: "items contains the items",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -62246,7 +63845,7 @@ func schema_openshift_api_sharedresource_v1alpha1_SharedConfigMap(ref common.Ref
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
-				Description: "SharedConfigMap allows a ConfigMap to be shared across namespaces. Pods can mount the shared ConfigMap by adding a CSI volume to the pod specification using the \"csi.sharedresource.openshift.io\" CSI driver and a reference to the SharedConfigMap in the volume attributes:\n\nspec:\n volumes:\n - name: shared-configmap\n   csi:\n     driver: csi.sharedresource.openshift.io\n     volumeAttributes:\n       sharedConfigMap: my-share\n\nFor the mount to be successful, the pod's service account must be granted permission to 'use' the named SharedConfigMap object within its namespace with an appropriate Role and RoleBinding. For compactness, here are example `oc` invocations for creating such Role and RoleBinding objects.\n\n `oc create role shared-resource-my-share --verb=use --resource=sharedconfigmaps.sharedresource.openshift.io --resource-name=my-share`\n `oc create rolebinding shared-resource-my-share --role=shared-resource-my-share --serviceaccount=my-namespace:default`\n\nShared resource objects, in this case ConfigMaps, have default permissions of list, get, and watch for system authenticated users.\n\nCompatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support. These capabilities should not be used by applications needing long term support.",
+				Description: "SharedConfigMap allows a ConfigMap to be shared across namespaces. Pods can mount the shared ConfigMap by adding a CSI volume to the pod specification using the \"csi.sharedresource.openshift.io\" CSI driver and a reference to the SharedConfigMap in the volume attributes:\n\nspec:\n\n\tvolumes:\n\t- name: shared-configmap\n\t  csi:\n\t    driver: csi.sharedresource.openshift.io\n\t    volumeAttributes:\n\t      sharedConfigMap: my-share\n\nFor the mount to be successful, the pod's service account must be granted permission to 'use' the named SharedConfigMap object within its namespace with an appropriate Role and RoleBinding. For compactness, here are example `oc` invocations for creating such Role and RoleBinding objects.\n\n\t`oc create role shared-resource-my-share --verb=use --resource=sharedconfigmaps.sharedresource.openshift.io --resource-name=my-share`\n\t`oc create rolebinding shared-resource-my-share --role=shared-resource-my-share --serviceaccount=my-namespace:default`\n\nShared resource objects, in this case ConfigMaps, have default permissions of list, get, and watch for system authenticated users.\n\nCompatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support. These capabilities should not be used by applications needing long term support.",
 				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
 					"kind": {
@@ -62285,6 +63884,7 @@ func schema_openshift_api_sharedresource_v1alpha1_SharedConfigMap(ref common.Ref
 						},
 					},
 				},
+				Required: []string{"spec"},
 			},
 		},
 		Dependencies: []string{
@@ -62412,8 +64012,10 @@ func schema_openshift_api_sharedresource_v1alpha1_SharedConfigMapStatus(ref comm
 					"conditions": {
 						VendorExtensible: spec.VendorExtensible{
 							Extensions: spec.Extensions{
-								"x-kubernetes-patch-merge-key": "type",
-								"x-kubernetes-patch-strategy":  "merge",
+								"x-kubernetes-list-map-keys": []interface{}{
+									"type",
+								},
+								"x-kubernetes-list-type": "map",
 							},
 						},
 						SchemaProps: spec.SchemaProps{
@@ -62441,7 +64043,7 @@ func schema_openshift_api_sharedresource_v1alpha1_SharedSecret(ref common.Refere
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
-				Description: "SharedSecret allows a Secret to be shared across namespaces. Pods can mount the shared Secret by adding a CSI volume to the pod specification using the \"csi.sharedresource.openshift.io\" CSI driver and a reference to the SharedSecret in the volume attributes:\n\nspec:\n volumes:\n - name: shared-secret\n   csi:\n     driver: csi.sharedresource.openshift.io\n     volumeAttributes:\n       sharedSecret: my-share\n\nFor the mount to be successful, the pod's service account must be granted permission to 'use' the named SharedSecret object within its namespace with an appropriate Role and RoleBinding. For compactness, here are example `oc` invocations for creating such Role and RoleBinding objects.\n\n `oc create role shared-resource-my-share --verb=use --resource=sharedsecrets.sharedresource.openshift.io --resource-name=my-share`\n `oc create rolebinding shared-resource-my-share --role=shared-resource-my-share --serviceaccount=my-namespace:default`\n\nShared resource objects, in this case Secrets, have default permissions of list, get, and watch for system authenticated users.\n\nCompatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support. These capabilities should not be used by applications needing long term support.",
+				Description: "SharedSecret allows a Secret to be shared across namespaces. Pods can mount the shared Secret by adding a CSI volume to the pod specification using the \"csi.sharedresource.openshift.io\" CSI driver and a reference to the SharedSecret in the volume attributes:\n\nspec:\n\n\tvolumes:\n\t- name: shared-secret\n\t  csi:\n\t    driver: csi.sharedresource.openshift.io\n\t    volumeAttributes:\n\t      sharedSecret: my-share\n\nFor the mount to be successful, the pod's service account must be granted permission to 'use' the named SharedSecret object within its namespace with an appropriate Role and RoleBinding. For compactness, here are example `oc` invocations for creating such Role and RoleBinding objects.\n\n\t`oc create role shared-resource-my-share --verb=use --resource=sharedsecrets.sharedresource.openshift.io --resource-name=my-share`\n\t`oc create rolebinding shared-resource-my-share --role=shared-resource-my-share --serviceaccount=my-namespace:default`\n\nShared resource objects, in this case Secrets, have default permissions of list, get, and watch for system authenticated users.\n\nCompatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support. These capabilities should not be used by applications needing long term support.",
 				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
 					"kind": {
@@ -62480,6 +64082,7 @@ func schema_openshift_api_sharedresource_v1alpha1_SharedSecret(ref common.Refere
 						},
 					},
 				},
+				Required: []string{"spec"},
 			},
 		},
 		Dependencies: []string{
@@ -62607,8 +64210,10 @@ func schema_openshift_api_sharedresource_v1alpha1_SharedSecretStatus(ref common.
 					"conditions": {
 						VendorExtensible: spec.VendorExtensible{
 							Extensions: spec.Extensions{
-								"x-kubernetes-patch-merge-key": "type",
-								"x-kubernetes-patch-strategy":  "merge",
+								"x-kubernetes-list-map-keys": []interface{}{
+									"type",
+								},
+								"x-kubernetes-list-type": "map",
 							},
 						},
 						SchemaProps: spec.SchemaProps{
@@ -62736,7 +64341,7 @@ func schema_openshift_api_template_v1_BrokerTemplateInstanceSpec(ref common.Refe
 				Properties: map[string]spec.Schema{
 					"templateInstance": {
 						SchemaProps: spec.SchemaProps{
-							Description: "templateinstance is a reference to a TemplateInstance object residing in a namespace.",
+							Description: "templateInstance is a reference to a TemplateInstance object residing in a namespace.",
 							Default:     map[string]interface{}{},
 							Ref:         ref("k8s.io/api/core/v1.ObjectReference"),
 						},
@@ -62750,7 +64355,7 @@ func schema_openshift_api_template_v1_BrokerTemplateInstanceSpec(ref common.Refe
 					},
 					"bindingIDs": {
 						SchemaProps: spec.SchemaProps{
-							Description: "bindingids is a list of 'binding_id's provided during successive bind calls to the template service broker.",
+							Description: "bindingIDs is a list of 'binding_id's provided during successive bind calls to the template service broker.",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -62781,7 +64386,7 @@ func schema_openshift_api_template_v1_Parameter(ref common.ReferenceCallback) co
 				Properties: map[string]spec.Schema{
 					"name": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Name must be set and it can be referenced in Template Items using ${PARAMETER_NAME}. Required.",
+							Description: "name must be set and it can be referenced in Template Items using ${PARAMETER_NAME}. Required.",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -62796,14 +64401,14 @@ func schema_openshift_api_template_v1_Parameter(ref common.ReferenceCallback) co
 					},
 					"description": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Description of a parameter. Optional.",
+							Description: "description of a parameter. Optional.",
 							Type:        []string{"string"},
 							Format:      "",
 						},
 					},
 					"value": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Value holds the Parameter data. If specified, the generator will be ignored. The value replaces all occurrences of the Parameter ${Name} expression during the Template to Config transformation. Optional.",
+							Description: "value holds the Parameter data. If specified, the generator will be ignored. The value replaces all occurrences of the Parameter ${Name} expression during the Template to Config transformation. Optional.",
 							Type:        []string{"string"},
 							Format:      "",
 						},
@@ -62817,7 +64422,7 @@ func schema_openshift_api_template_v1_Parameter(ref common.ReferenceCallback) co
 					},
 					"from": {
 						SchemaProps: spec.SchemaProps{
-							Description: "From is an input value for the generator. Optional.",
+							Description: "from is an input value for the generator. Optional.",
 							Type:        []string{"string"},
 							Format:      "",
 						},
@@ -62983,7 +64588,7 @@ func schema_openshift_api_template_v1_TemplateInstanceCondition(ref common.Refer
 				Properties: map[string]spec.Schema{
 					"type": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Type of the condition, currently Ready or InstantiateFailure.",
+							Description: "type of the condition, currently Ready or InstantiateFailure.",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -62991,7 +64596,7 @@ func schema_openshift_api_template_v1_TemplateInstanceCondition(ref common.Refer
 					},
 					"status": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Status of the condition, one of True, False or Unknown.",
+							Description: "status of the condition, one of True, False or Unknown.",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -62999,13 +64604,13 @@ func schema_openshift_api_template_v1_TemplateInstanceCondition(ref common.Refer
 					},
 					"lastTransitionTime": {
 						SchemaProps: spec.SchemaProps{
-							Description: "LastTransitionTime is the last time a condition status transitioned from one state to another.",
+							Description: "lastTransitionTime is the last time a condition status transitioned from one state to another.",
 							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.Time"),
 						},
 					},
 					"reason": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Reason is a brief machine readable explanation for the condition's last transition.",
+							Description: "reason is a brief machine readable explanation for the condition's last transition.",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -63013,7 +64618,7 @@ func schema_openshift_api_template_v1_TemplateInstanceCondition(ref common.Refer
 					},
 					"message": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Message is a human readable description of the details of the last transition, complementing reason.",
+							Description: "message is a human readable description of the details of the last transition, complementing reason.",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -63224,7 +64829,7 @@ func schema_openshift_api_template_v1_TemplateInstanceStatus(ref common.Referenc
 					},
 					"objects": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Objects references the objects created by the TemplateInstance.",
+							Description: "objects references the objects created by the TemplateInstance.",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -63274,7 +64879,7 @@ func schema_openshift_api_template_v1_TemplateList(ref common.ReferenceCallback)
 					},
 					"items": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Items is a list of templates",
+							Description: "items is a list of templates",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -63325,7 +64930,7 @@ func schema_openshift_api_user_v1_Group(ref common.ReferenceCallback) common.Ope
 					},
 					"users": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Users is the list of users in this group.",
+							Description: "users is the list of users in this group.",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -63377,7 +64982,7 @@ func schema_openshift_api_user_v1_GroupList(ref common.ReferenceCallback) common
 					},
 					"items": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Items is the list of groups",
+							Description: "items is the list of groups",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -63428,7 +65033,7 @@ func schema_openshift_api_user_v1_Identity(ref common.ReferenceCallback) common.
 					},
 					"providerName": {
 						SchemaProps: spec.SchemaProps{
-							Description: "ProviderName is the source of identity information",
+							Description: "providerName is the source of identity information",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -63436,7 +65041,7 @@ func schema_openshift_api_user_v1_Identity(ref common.ReferenceCallback) common.
 					},
 					"providerUserName": {
 						SchemaProps: spec.SchemaProps{
-							Description: "ProviderUserName uniquely represents this identity in the scope of the provider",
+							Description: "providerUserName uniquely represents this identity in the scope of the provider",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -63444,14 +65049,14 @@ func schema_openshift_api_user_v1_Identity(ref common.ReferenceCallback) common.
 					},
 					"user": {
 						SchemaProps: spec.SchemaProps{
-							Description: "User is a reference to the user this identity is associated with Both Name and UID must be set",
+							Description: "user is a reference to the user this identity is associated with Both Name and UID must be set",
 							Default:     map[string]interface{}{},
 							Ref:         ref("k8s.io/api/core/v1.ObjectReference"),
 						},
 					},
 					"extra": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Extra holds extra information about this identity",
+							Description: "extra holds extra information about this identity",
 							Type:        []string{"object"},
 							AdditionalProperties: &spec.SchemaOrBool{
 								Allows: true,
@@ -63504,7 +65109,7 @@ func schema_openshift_api_user_v1_IdentityList(ref common.ReferenceCallback) com
 					},
 					"items": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Items is the list of identities",
+							Description: "items is the list of identities",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -63555,14 +65160,14 @@ func schema_openshift_api_user_v1_User(ref common.ReferenceCallback) common.Open
 					},
 					"fullName": {
 						SchemaProps: spec.SchemaProps{
-							Description: "FullName is the full name of user",
+							Description: "fullName is the full name of user",
 							Type:        []string{"string"},
 							Format:      "",
 						},
 					},
 					"identities": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Identities are the identities associated with this user",
+							Description: "identities are the identities associated with this user",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -63577,7 +65182,7 @@ func schema_openshift_api_user_v1_User(ref common.ReferenceCallback) common.Open
 					},
 					"groups": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Groups specifies group names this user is a member of. This field is deprecated and will be removed in a future release. Instead, create a Group object containing the name of this User.",
+							Description: "groups specifies group names this user is a member of. This field is deprecated and will be removed in a future release. Instead, create a Group object containing the name of this User.",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -63629,14 +65234,14 @@ func schema_openshift_api_user_v1_UserIdentityMapping(ref common.ReferenceCallba
 					},
 					"identity": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Identity is a reference to an identity",
+							Description: "identity is a reference to an identity",
 							Default:     map[string]interface{}{},
 							Ref:         ref("k8s.io/api/core/v1.ObjectReference"),
 						},
 					},
 					"user": {
 						SchemaProps: spec.SchemaProps{
-							Description: "User is a reference to a user",
+							Description: "user is a reference to a user",
 							Default:     map[string]interface{}{},
 							Ref:         ref("k8s.io/api/core/v1.ObjectReference"),
 						},
@@ -63679,7 +65284,7 @@ func schema_openshift_api_user_v1_UserList(ref common.ReferenceCallback) common.
 					},
 					"items": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Items is the list of users",
+							Description: "items is the list of users",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -64811,7 +66416,7 @@ func schema_k8sio_api_core_v1_Binding(ref common.ReferenceCallback) common.OpenA
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
-				Description: "Binding ties one object to another; for example, a pod is bound to a node by a scheduler. Deprecated in 1.7, please use the bindings subresource of pods instead.",
+				Description: "Binding ties one object to another; for example, a pod is bound to a node by a scheduler.",
 				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
 					"kind": {
@@ -64855,7 +66460,7 @@ func schema_k8sio_api_core_v1_CSIPersistentVolumeSource(ref common.ReferenceCall
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
-				Description: "Represents storage that is managed by an external CSI volume driver (Beta feature)",
+				Description: "Represents storage that is managed by an external CSI volume driver",
 				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
 					"driver": {
@@ -68332,7 +69937,8 @@ func schema_k8sio_api_core_v1_GRPCAction(ref common.ReferenceCallback) common.Op
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
-				Type: []string{"object"},
+				Description: "GRPCAction specifies an action involving a GRPC service.",
+				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
 					"port": {
 						SchemaProps: spec.SchemaProps{
@@ -68980,25 +70586,25 @@ func schema_k8sio_api_core_v1_LifecycleHandler(ref common.ReferenceCallback) com
 				Properties: map[string]spec.Schema{
 					"exec": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Exec specifies the action to take.",
+							Description: "Exec specifies a command to execute in the container.",
 							Ref:         ref("k8s.io/api/core/v1.ExecAction"),
 						},
 					},
 					"httpGet": {
 						SchemaProps: spec.SchemaProps{
-							Description: "HTTPGet specifies the http request to perform.",
+							Description: "HTTPGet specifies an HTTP GET request to perform.",
 							Ref:         ref("k8s.io/api/core/v1.HTTPGetAction"),
 						},
 					},
 					"tcpSocket": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Deprecated. TCPSocket is NOT supported as a LifecycleHandler and kept for the backward compatibility. There are no validation of this field and lifecycle hooks will fail in runtime when tcp handler is specified.",
+							Description: "Deprecated. TCPSocket is NOT supported as a LifecycleHandler and kept for backward compatibility. There is no validation of this field and lifecycle hooks will fail at runtime when it is specified.",
 							Ref:         ref("k8s.io/api/core/v1.TCPSocketAction"),
 						},
 					},
 					"sleep": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Sleep represents the duration that the container should sleep before being terminated.",
+							Description: "Sleep represents a duration that the container should sleep.",
 							Ref:         ref("k8s.io/api/core/v1.SleepAction"),
 						},
 					},
@@ -69452,7 +71058,7 @@ func schema_k8sio_api_core_v1_LocalVolumeSource(ref common.ReferenceCallback) co
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
-				Description: "Local represents directly-attached storage with node affinity (Beta feature)",
+				Description: "Local represents directly-attached storage with node affinity",
 				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
 					"path": {
@@ -69619,19 +71225,22 @@ func schema_k8sio_api_core_v1_NamespaceCondition(ref common.ReferenceCallback) c
 					},
 					"lastTransitionTime": {
 						SchemaProps: spec.SchemaProps{
-							Ref: ref("k8s.io/apimachinery/pkg/apis/meta/v1.Time"),
+							Description: "Last time the condition transitioned from one status to another.",
+							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.Time"),
 						},
 					},
 					"reason": {
 						SchemaProps: spec.SchemaProps{
-							Type:   []string{"string"},
-							Format: "",
+							Description: "Unique, one-word, CamelCase reason for the condition's last transition.",
+							Type:        []string{"string"},
+							Format:      "",
 						},
 					},
 					"message": {
 						SchemaProps: spec.SchemaProps{
-							Type:   []string{"string"},
-							Format: "",
+							Description: "Human-readable message indicating details about last transition.",
+							Type:        []string{"string"},
+							Format:      "",
 						},
 					},
 				},
@@ -70489,7 +72098,7 @@ func schema_k8sio_api_core_v1_NodeStatus(ref common.ReferenceCallback) common.Op
 							},
 						},
 						SchemaProps: spec.SchemaProps{
-							Description: "Conditions is an array of current observed node conditions. More info: https://kubernetes.io/docs/concepts/nodes/node/#condition",
+							Description: "Conditions is an array of current observed node conditions. More info: https://kubernetes.io/docs/reference/node/node-status/#condition",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -70513,7 +72122,7 @@ func schema_k8sio_api_core_v1_NodeStatus(ref common.ReferenceCallback) common.Op
 							},
 						},
 						SchemaProps: spec.SchemaProps{
-							Description: "List of addresses reachable to the node. Queried from cloud provider, if available. More info: https://kubernetes.io/docs/concepts/nodes/node/#addresses Note: This field is declared as mergeable, but the merge key is not sufficiently unique, which can cause data corruption when it is merged. Callers should instead use a full-replacement patch. See https://pr.k8s.io/79391 for an example. Consumers should assume that addresses can change during the lifetime of a Node. However, there are some exceptions where this may not be possible, such as Pods that inherit a Node's address in its own status or consumers of the downward API (status.hostIP).",
+							Description: "List of addresses reachable to the node. Queried from cloud provider, if available. More info: https://kubernetes.io/docs/reference/node/node-status/#addresses Note: This field is declared as mergeable, but the merge key is not sufficiently unique, which can cause data corruption when it is merged. Callers should instead use a full-replacement patch. See https://pr.k8s.io/79391 for an example. Consumers should assume that addresses can change during the lifetime of a Node. However, there are some exceptions where this may not be possible, such as Pods that inherit a Node's address in its own status or consumers of the downward API (status.hostIP).",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -70534,7 +72143,7 @@ func schema_k8sio_api_core_v1_NodeStatus(ref common.ReferenceCallback) common.Op
 					},
 					"nodeInfo": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Set of ids/uuids to uniquely identify the node. More info: https://kubernetes.io/docs/concepts/nodes/node/#info",
+							Description: "Set of ids/uuids to uniquely identify the node. More info: https://kubernetes.io/docs/reference/node/node-status/#info",
 							Default:     map[string]interface{}{},
 							Ref:         ref("k8s.io/api/core/v1.NodeSystemInfo"),
 						},
@@ -70940,16 +72549,18 @@ func schema_k8sio_api_core_v1_PersistentVolumeClaimCondition(ref common.Referenc
 				Properties: map[string]spec.Schema{
 					"type": {
 						SchemaProps: spec.SchemaProps{
-							Default: "",
-							Type:    []string{"string"},
-							Format:  "",
+							Description: "Type is the type of the condition. More info: https://kubernetes.io/docs/reference/kubernetes-api/config-and-storage-resources/persistent-volume-claim-v1/#:~:text=set%20to%20%27ResizeStarted%27.-,PersistentVolumeClaimCondition,-contains%20details%20about",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
 						},
 					},
 					"status": {
 						SchemaProps: spec.SchemaProps{
-							Default: "",
-							Type:    []string{"string"},
-							Format:  "",
+							Description: "Status is the status of the condition. Can be True, False, Unknown. More info: https://kubernetes.io/docs/reference/kubernetes-api/config-and-storage-resources/persistent-volume-claim-v1/#:~:text=state%20of%20pvc-,conditions.status,-(string)%2C%20required",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
 						},
 					},
 					"lastProbeTime": {
@@ -71378,13 +72989,13 @@ func schema_k8sio_api_core_v1_PersistentVolumeSource(ref common.ReferenceCallbac
 				Properties: map[string]spec.Schema{
 					"gcePersistentDisk": {
 						SchemaProps: spec.SchemaProps{
-							Description: "gcePersistentDisk represents a GCE Disk resource that is attached to a kubelet's host machine and then exposed to the pod. Provisioned by an admin. More info: https://kubernetes.io/docs/concepts/storage/volumes#gcepersistentdisk",
+							Description: "gcePersistentDisk represents a GCE Disk resource that is attached to a kubelet's host machine and then exposed to the pod. Provisioned by an admin. Deprecated: GCEPersistentDisk is deprecated. All operations for the in-tree gcePersistentDisk type are redirected to the pd.csi.storage.gke.io CSI driver. More info: https://kubernetes.io/docs/concepts/storage/volumes#gcepersistentdisk",
 							Ref:         ref("k8s.io/api/core/v1.GCEPersistentDiskVolumeSource"),
 						},
 					},
 					"awsElasticBlockStore": {
 						SchemaProps: spec.SchemaProps{
-							Description: "awsElasticBlockStore represents an AWS Disk resource that is attached to a kubelet's host machine and then exposed to the pod. More info: https://kubernetes.io/docs/concepts/storage/volumes#awselasticblockstore",
+							Description: "awsElasticBlockStore represents an AWS Disk resource that is attached to a kubelet's host machine and then exposed to the pod. Deprecated: AWSElasticBlockStore is deprecated. All operations for the in-tree awsElasticBlockStore type are redirected to the ebs.csi.aws.com CSI driver. More info: https://kubernetes.io/docs/concepts/storage/volumes#awselasticblockstore",
 							Ref:         ref("k8s.io/api/core/v1.AWSElasticBlockStoreVolumeSource"),
 						},
 					},
@@ -71396,7 +73007,7 @@ func schema_k8sio_api_core_v1_PersistentVolumeSource(ref common.ReferenceCallbac
 					},
 					"glusterfs": {
 						SchemaProps: spec.SchemaProps{
-							Description: "glusterfs represents a Glusterfs volume that is attached to a host and exposed to the pod. Provisioned by an admin. More info: https://examples.k8s.io/volumes/glusterfs/README.md",
+							Description: "glusterfs represents a Glusterfs volume that is attached to a host and exposed to the pod. Provisioned by an admin. Deprecated: Glusterfs is deprecated and the in-tree glusterfs type is no longer supported. More info: https://examples.k8s.io/volumes/glusterfs/README.md",
 							Ref:         ref("k8s.io/api/core/v1.GlusterfsPersistentVolumeSource"),
 						},
 					},
@@ -71408,7 +73019,7 @@ func schema_k8sio_api_core_v1_PersistentVolumeSource(ref common.ReferenceCallbac
 					},
 					"rbd": {
 						SchemaProps: spec.SchemaProps{
-							Description: "rbd represents a Rados Block Device mount on the host that shares a pod's lifetime. More info: https://examples.k8s.io/volumes/rbd/README.md",
+							Description: "rbd represents a Rados Block Device mount on the host that shares a pod's lifetime. Deprecated: RBD is deprecated and the in-tree rbd type is no longer supported. More info: https://examples.k8s.io/volumes/rbd/README.md",
 							Ref:         ref("k8s.io/api/core/v1.RBDPersistentVolumeSource"),
 						},
 					},
@@ -71420,13 +73031,13 @@ func schema_k8sio_api_core_v1_PersistentVolumeSource(ref common.ReferenceCallbac
 					},
 					"cinder": {
 						SchemaProps: spec.SchemaProps{
-							Description: "cinder represents a cinder volume attached and mounted on kubelets host machine. More info: https://examples.k8s.io/mysql-cinder-pd/README.md",
+							Description: "cinder represents a cinder volume attached and mounted on kubelets host machine. Deprecated: Cinder is deprecated. All operations for the in-tree cinder type are redirected to the cinder.csi.openstack.org CSI driver. More info: https://examples.k8s.io/mysql-cinder-pd/README.md",
 							Ref:         ref("k8s.io/api/core/v1.CinderPersistentVolumeSource"),
 						},
 					},
 					"cephfs": {
 						SchemaProps: spec.SchemaProps{
-							Description: "cephFS represents a Ceph FS mount on the host that shares a pod's lifetime",
+							Description: "cephFS represents a Ceph FS mount on the host that shares a pod's lifetime. Deprecated: CephFS is deprecated and the in-tree cephfs type is no longer supported.",
 							Ref:         ref("k8s.io/api/core/v1.CephFSPersistentVolumeSource"),
 						},
 					},
@@ -71438,55 +73049,55 @@ func schema_k8sio_api_core_v1_PersistentVolumeSource(ref common.ReferenceCallbac
 					},
 					"flocker": {
 						SchemaProps: spec.SchemaProps{
-							Description: "flocker represents a Flocker volume attached to a kubelet's host machine and exposed to the pod for its usage. This depends on the Flocker control service being running",
+							Description: "flocker represents a Flocker volume attached to a kubelet's host machine and exposed to the pod for its usage. This depends on the Flocker control service being running. Deprecated: Flocker is deprecated and the in-tree flocker type is no longer supported.",
 							Ref:         ref("k8s.io/api/core/v1.FlockerVolumeSource"),
 						},
 					},
 					"flexVolume": {
 						SchemaProps: spec.SchemaProps{
-							Description: "flexVolume represents a generic volume resource that is provisioned/attached using an exec based plugin.",
+							Description: "flexVolume represents a generic volume resource that is provisioned/attached using an exec based plugin. Deprecated: FlexVolume is deprecated. Consider using a CSIDriver instead.",
 							Ref:         ref("k8s.io/api/core/v1.FlexPersistentVolumeSource"),
 						},
 					},
 					"azureFile": {
 						SchemaProps: spec.SchemaProps{
-							Description: "azureFile represents an Azure File Service mount on the host and bind mount to the pod.",
+							Description: "azureFile represents an Azure File Service mount on the host and bind mount to the pod. Deprecated: AzureFile is deprecated. All operations for the in-tree azureFile type are redirected to the file.csi.azure.com CSI driver.",
 							Ref:         ref("k8s.io/api/core/v1.AzureFilePersistentVolumeSource"),
 						},
 					},
 					"vsphereVolume": {
 						SchemaProps: spec.SchemaProps{
-							Description: "vsphereVolume represents a vSphere volume attached and mounted on kubelets host machine",
+							Description: "vsphereVolume represents a vSphere volume attached and mounted on kubelets host machine. Deprecated: VsphereVolume is deprecated. All operations for the in-tree vsphereVolume type are redirected to the csi.vsphere.vmware.com CSI driver.",
 							Ref:         ref("k8s.io/api/core/v1.VsphereVirtualDiskVolumeSource"),
 						},
 					},
 					"quobyte": {
 						SchemaProps: spec.SchemaProps{
-							Description: "quobyte represents a Quobyte mount on the host that shares a pod's lifetime",
+							Description: "quobyte represents a Quobyte mount on the host that shares a pod's lifetime. Deprecated: Quobyte is deprecated and the in-tree quobyte type is no longer supported.",
 							Ref:         ref("k8s.io/api/core/v1.QuobyteVolumeSource"),
 						},
 					},
 					"azureDisk": {
 						SchemaProps: spec.SchemaProps{
-							Description: "azureDisk represents an Azure Data Disk mount on the host and bind mount to the pod.",
+							Description: "azureDisk represents an Azure Data Disk mount on the host and bind mount to the pod. Deprecated: AzureDisk is deprecated. All operations for the in-tree azureDisk type are redirected to the disk.csi.azure.com CSI driver.",
 							Ref:         ref("k8s.io/api/core/v1.AzureDiskVolumeSource"),
 						},
 					},
 					"photonPersistentDisk": {
 						SchemaProps: spec.SchemaProps{
-							Description: "photonPersistentDisk represents a PhotonController persistent disk attached and mounted on kubelets host machine",
+							Description: "photonPersistentDisk represents a PhotonController persistent disk attached and mounted on kubelets host machine. Deprecated: PhotonPersistentDisk is deprecated and the in-tree photonPersistentDisk type is no longer supported.",
 							Ref:         ref("k8s.io/api/core/v1.PhotonPersistentDiskVolumeSource"),
 						},
 					},
 					"portworxVolume": {
 						SchemaProps: spec.SchemaProps{
-							Description: "portworxVolume represents a portworx volume attached and mounted on kubelets host machine",
+							Description: "portworxVolume represents a portworx volume attached and mounted on kubelets host machine. Deprecated: PortworxVolume is deprecated. All operations for the in-tree portworxVolume type are redirected to the pxd.portworx.com CSI driver when the CSIMigrationPortworx feature-gate is on.",
 							Ref:         ref("k8s.io/api/core/v1.PortworxVolumeSource"),
 						},
 					},
 					"scaleIO": {
 						SchemaProps: spec.SchemaProps{
-							Description: "scaleIO represents a ScaleIO persistent volume attached and mounted on Kubernetes nodes.",
+							Description: "scaleIO represents a ScaleIO persistent volume attached and mounted on Kubernetes nodes. Deprecated: ScaleIO is deprecated and the in-tree scaleIO type is no longer supported.",
 							Ref:         ref("k8s.io/api/core/v1.ScaleIOPersistentVolumeSource"),
 						},
 					},
@@ -71498,13 +73109,13 @@ func schema_k8sio_api_core_v1_PersistentVolumeSource(ref common.ReferenceCallbac
 					},
 					"storageos": {
 						SchemaProps: spec.SchemaProps{
-							Description: "storageOS represents a StorageOS volume that is attached to the kubelet's host machine and mounted into the pod More info: https://examples.k8s.io/volumes/storageos/README.md",
+							Description: "storageOS represents a StorageOS volume that is attached to the kubelet's host machine and mounted into the pod. Deprecated: StorageOS is deprecated and the in-tree storageos type is no longer supported. More info: https://examples.k8s.io/volumes/storageos/README.md",
 							Ref:         ref("k8s.io/api/core/v1.StorageOSPersistentVolumeSource"),
 						},
 					},
 					"csi": {
 						SchemaProps: spec.SchemaProps{
-							Description: "csi represents storage that is handled by an external CSI driver (Beta feature).",
+							Description: "csi represents storage that is handled by an external CSI driver.",
 							Ref:         ref("k8s.io/api/core/v1.CSIPersistentVolumeSource"),
 						},
 					},
@@ -71539,13 +73150,13 @@ func schema_k8sio_api_core_v1_PersistentVolumeSpec(ref common.ReferenceCallback)
 					},
 					"gcePersistentDisk": {
 						SchemaProps: spec.SchemaProps{
-							Description: "gcePersistentDisk represents a GCE Disk resource that is attached to a kubelet's host machine and then exposed to the pod. Provisioned by an admin. More info: https://kubernetes.io/docs/concepts/storage/volumes#gcepersistentdisk",
+							Description: "gcePersistentDisk represents a GCE Disk resource that is attached to a kubelet's host machine and then exposed to the pod. Provisioned by an admin. Deprecated: GCEPersistentDisk is deprecated. All operations for the in-tree gcePersistentDisk type are redirected to the pd.csi.storage.gke.io CSI driver. More info: https://kubernetes.io/docs/concepts/storage/volumes#gcepersistentdisk",
 							Ref:         ref("k8s.io/api/core/v1.GCEPersistentDiskVolumeSource"),
 						},
 					},
 					"awsElasticBlockStore": {
 						SchemaProps: spec.SchemaProps{
-							Description: "awsElasticBlockStore represents an AWS Disk resource that is attached to a kubelet's host machine and then exposed to the pod. More info: https://kubernetes.io/docs/concepts/storage/volumes#awselasticblockstore",
+							Description: "awsElasticBlockStore represents an AWS Disk resource that is attached to a kubelet's host machine and then exposed to the pod. Deprecated: AWSElasticBlockStore is deprecated. All operations for the in-tree awsElasticBlockStore type are redirected to the ebs.csi.aws.com CSI driver. More info: https://kubernetes.io/docs/concepts/storage/volumes#awselasticblockstore",
 							Ref:         ref("k8s.io/api/core/v1.AWSElasticBlockStoreVolumeSource"),
 						},
 					},
@@ -71557,7 +73168,7 @@ func schema_k8sio_api_core_v1_PersistentVolumeSpec(ref common.ReferenceCallback)
 					},
 					"glusterfs": {
 						SchemaProps: spec.SchemaProps{
-							Description: "glusterfs represents a Glusterfs volume that is attached to a host and exposed to the pod. Provisioned by an admin. More info: https://examples.k8s.io/volumes/glusterfs/README.md",
+							Description: "glusterfs represents a Glusterfs volume that is attached to a host and exposed to the pod. Provisioned by an admin. Deprecated: Glusterfs is deprecated and the in-tree glusterfs type is no longer supported. More info: https://examples.k8s.io/volumes/glusterfs/README.md",
 							Ref:         ref("k8s.io/api/core/v1.GlusterfsPersistentVolumeSource"),
 						},
 					},
@@ -71569,7 +73180,7 @@ func schema_k8sio_api_core_v1_PersistentVolumeSpec(ref common.ReferenceCallback)
 					},
 					"rbd": {
 						SchemaProps: spec.SchemaProps{
-							Description: "rbd represents a Rados Block Device mount on the host that shares a pod's lifetime. More info: https://examples.k8s.io/volumes/rbd/README.md",
+							Description: "rbd represents a Rados Block Device mount on the host that shares a pod's lifetime. Deprecated: RBD is deprecated and the in-tree rbd type is no longer supported. More info: https://examples.k8s.io/volumes/rbd/README.md",
 							Ref:         ref("k8s.io/api/core/v1.RBDPersistentVolumeSource"),
 						},
 					},
@@ -71581,13 +73192,13 @@ func schema_k8sio_api_core_v1_PersistentVolumeSpec(ref common.ReferenceCallback)
 					},
 					"cinder": {
 						SchemaProps: spec.SchemaProps{
-							Description: "cinder represents a cinder volume attached and mounted on kubelets host machine. More info: https://examples.k8s.io/mysql-cinder-pd/README.md",
+							Description: "cinder represents a cinder volume attached and mounted on kubelets host machine. Deprecated: Cinder is deprecated. All operations for the in-tree cinder type are redirected to the cinder.csi.openstack.org CSI driver. More info: https://examples.k8s.io/mysql-cinder-pd/README.md",
 							Ref:         ref("k8s.io/api/core/v1.CinderPersistentVolumeSource"),
 						},
 					},
 					"cephfs": {
 						SchemaProps: spec.SchemaProps{
-							Description: "cephFS represents a Ceph FS mount on the host that shares a pod's lifetime",
+							Description: "cephFS represents a Ceph FS mount on the host that shares a pod's lifetime. Deprecated: CephFS is deprecated and the in-tree cephfs type is no longer supported.",
 							Ref:         ref("k8s.io/api/core/v1.CephFSPersistentVolumeSource"),
 						},
 					},
@@ -71599,55 +73210,55 @@ func schema_k8sio_api_core_v1_PersistentVolumeSpec(ref common.ReferenceCallback)
 					},
 					"flocker": {
 						SchemaProps: spec.SchemaProps{
-							Description: "flocker represents a Flocker volume attached to a kubelet's host machine and exposed to the pod for its usage. This depends on the Flocker control service being running",
+							Description: "flocker represents a Flocker volume attached to a kubelet's host machine and exposed to the pod for its usage. This depends on the Flocker control service being running. Deprecated: Flocker is deprecated and the in-tree flocker type is no longer supported.",
 							Ref:         ref("k8s.io/api/core/v1.FlockerVolumeSource"),
 						},
 					},
 					"flexVolume": {
 						SchemaProps: spec.SchemaProps{
-							Description: "flexVolume represents a generic volume resource that is provisioned/attached using an exec based plugin.",
+							Description: "flexVolume represents a generic volume resource that is provisioned/attached using an exec based plugin. Deprecated: FlexVolume is deprecated. Consider using a CSIDriver instead.",
 							Ref:         ref("k8s.io/api/core/v1.FlexPersistentVolumeSource"),
 						},
 					},
 					"azureFile": {
 						SchemaProps: spec.SchemaProps{
-							Description: "azureFile represents an Azure File Service mount on the host and bind mount to the pod.",
+							Description: "azureFile represents an Azure File Service mount on the host and bind mount to the pod. Deprecated: AzureFile is deprecated. All operations for the in-tree azureFile type are redirected to the file.csi.azure.com CSI driver.",
 							Ref:         ref("k8s.io/api/core/v1.AzureFilePersistentVolumeSource"),
 						},
 					},
 					"vsphereVolume": {
 						SchemaProps: spec.SchemaProps{
-							Description: "vsphereVolume represents a vSphere volume attached and mounted on kubelets host machine",
+							Description: "vsphereVolume represents a vSphere volume attached and mounted on kubelets host machine. Deprecated: VsphereVolume is deprecated. All operations for the in-tree vsphereVolume type are redirected to the csi.vsphere.vmware.com CSI driver.",
 							Ref:         ref("k8s.io/api/core/v1.VsphereVirtualDiskVolumeSource"),
 						},
 					},
 					"quobyte": {
 						SchemaProps: spec.SchemaProps{
-							Description: "quobyte represents a Quobyte mount on the host that shares a pod's lifetime",
+							Description: "quobyte represents a Quobyte mount on the host that shares a pod's lifetime. Deprecated: Quobyte is deprecated and the in-tree quobyte type is no longer supported.",
 							Ref:         ref("k8s.io/api/core/v1.QuobyteVolumeSource"),
 						},
 					},
 					"azureDisk": {
 						SchemaProps: spec.SchemaProps{
-							Description: "azureDisk represents an Azure Data Disk mount on the host and bind mount to the pod.",
+							Description: "azureDisk represents an Azure Data Disk mount on the host and bind mount to the pod. Deprecated: AzureDisk is deprecated. All operations for the in-tree azureDisk type are redirected to the disk.csi.azure.com CSI driver.",
 							Ref:         ref("k8s.io/api/core/v1.AzureDiskVolumeSource"),
 						},
 					},
 					"photonPersistentDisk": {
 						SchemaProps: spec.SchemaProps{
-							Description: "photonPersistentDisk represents a PhotonController persistent disk attached and mounted on kubelets host machine",
+							Description: "photonPersistentDisk represents a PhotonController persistent disk attached and mounted on kubelets host machine. Deprecated: PhotonPersistentDisk is deprecated and the in-tree photonPersistentDisk type is no longer supported.",
 							Ref:         ref("k8s.io/api/core/v1.PhotonPersistentDiskVolumeSource"),
 						},
 					},
 					"portworxVolume": {
 						SchemaProps: spec.SchemaProps{
-							Description: "portworxVolume represents a portworx volume attached and mounted on kubelets host machine",
+							Description: "portworxVolume represents a portworx volume attached and mounted on kubelets host machine. Deprecated: PortworxVolume is deprecated. All operations for the in-tree portworxVolume type are redirected to the pxd.portworx.com CSI driver when the CSIMigrationPortworx feature-gate is on.",
 							Ref:         ref("k8s.io/api/core/v1.PortworxVolumeSource"),
 						},
 					},
 					"scaleIO": {
 						SchemaProps: spec.SchemaProps{
-							Description: "scaleIO represents a ScaleIO persistent volume attached and mounted on Kubernetes nodes.",
+							Description: "scaleIO represents a ScaleIO persistent volume attached and mounted on Kubernetes nodes. Deprecated: ScaleIO is deprecated and the in-tree scaleIO type is no longer supported.",
 							Ref:         ref("k8s.io/api/core/v1.ScaleIOPersistentVolumeSource"),
 						},
 					},
@@ -71659,13 +73270,13 @@ func schema_k8sio_api_core_v1_PersistentVolumeSpec(ref common.ReferenceCallback)
 					},
 					"storageos": {
 						SchemaProps: spec.SchemaProps{
-							Description: "storageOS represents a StorageOS volume that is attached to the kubelet's host machine and mounted into the pod More info: https://examples.k8s.io/volumes/storageos/README.md",
+							Description: "storageOS represents a StorageOS volume that is attached to the kubelet's host machine and mounted into the pod. Deprecated: StorageOS is deprecated and the in-tree storageos type is no longer supported. More info: https://examples.k8s.io/volumes/storageos/README.md",
 							Ref:         ref("k8s.io/api/core/v1.StorageOSPersistentVolumeSource"),
 						},
 					},
 					"csi": {
 						SchemaProps: spec.SchemaProps{
-							Description: "csi represents storage that is handled by an external CSI driver (Beta feature).",
+							Description: "csi represents storage that is handled by an external CSI driver.",
 							Ref:         ref("k8s.io/api/core/v1.CSIPersistentVolumeSource"),
 						},
 					},
@@ -72292,15 +73903,16 @@ func schema_k8sio_api_core_v1_PodDNSConfigOption(ref common.ReferenceCallback) c
 				Properties: map[string]spec.Schema{
 					"name": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Required.",
+							Description: "Name is this DNS resolver option's name. Required.",
 							Type:        []string{"string"},
 							Format:      "",
 						},
 					},
 					"value": {
 						SchemaProps: spec.SchemaProps{
-							Type:   []string{"string"},
-							Format: "",
+							Description: "Value is this DNS resolver option's value.",
+							Type:        []string{"string"},
+							Format:      "",
 						},
 					},
 				},
@@ -72529,7 +74141,7 @@ func schema_k8sio_api_core_v1_PodLogOptions(ref common.ReferenceCallback) common
 					},
 					"tailLines": {
 						SchemaProps: spec.SchemaProps{
-							Description: "If set, the number of lines from the end of the logs to show. If not specified, logs are shown from the creation of the container or sinceSeconds or sinceTime",
+							Description: "If set, the number of lines from the end of the logs to show. If not specified, logs are shown from the creation of the container or sinceSeconds or sinceTime. Note that when \"TailLines\" is specified, \"Stream\" can only be set to nil or \"All\".",
 							Type:        []string{"integer"},
 							Format:      "int64",
 						},
@@ -72545,6 +74157,13 @@ func schema_k8sio_api_core_v1_PodLogOptions(ref common.ReferenceCallback) common
 						SchemaProps: spec.SchemaProps{
 							Description: "insecureSkipTLSVerifyBackend indicates that the apiserver should not confirm the validity of the serving certificate of the backend it is connecting to.  This will make the HTTPS connection between the apiserver and the backend insecure. This means the apiserver cannot verify the log data it is receiving came from the real kubelet.  If the kubelet is configured to verify the apiserver's TLS credentials, it does not mean the connection to the real kubelet is vulnerable to a man in the middle attack (e.g. an attacker could not intercept the actual log data coming from the real kubelet).",
 							Type:        []string{"boolean"},
+							Format:      "",
+						},
+					},
+					"stream": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Specify which container log stream to return to the client. Acceptable values are \"All\", \"Stdout\" and \"Stderr\". If not specified, \"All\" is used, and both stdout and stderr are returned interleaved. Note that when \"TailLines\" is specified, \"Stream\" can only be set to nil or \"All\".",
+							Type:        []string{"string"},
 							Format:      "",
 						},
 					},
@@ -72880,6 +74499,13 @@ func schema_k8sio_api_core_v1_PodSecurityContext(ref common.ReferenceCallback) c
 						SchemaProps: spec.SchemaProps{
 							Description: "appArmorProfile is the AppArmor options to use by the containers in this pod. Note that this field cannot be set when spec.os.name is windows.",
 							Ref:         ref("k8s.io/api/core/v1.AppArmorProfile"),
+						},
+					},
+					"seLinuxChangePolicy": {
+						SchemaProps: spec.SchemaProps{
+							Description: "seLinuxChangePolicy defines how the container's SELinux label is applied to all volumes used by the Pod. It has no effect on nodes that do not support SELinux or to volumes does not support SELinux. Valid values are \"MountOption\" and \"Recursive\".\n\n\"Recursive\" means relabeling of all files on all Pod volumes by the container runtime. This may be slow for large volumes, but allows mixing privileged and unprivileged Pods sharing the same volume on the same node.\n\n\"MountOption\" mounts all eligible Pod volumes with `-o context` mount option. This requires all Pods that share the same volume to use the same SELinux label. It is not possible to share the same volume among privileged and unprivileged Pods. Eligible volumes are in-tree FibreChannel and iSCSI volumes, and all CSI volumes whose CSI driver announces SELinux support by setting spec.seLinuxMount: true in their CSIDriver instance. Other volumes are always re-labelled recursively. \"MountOption\" value is allowed only when SELinuxMount feature gate is enabled.\n\nIf not specified and SELinuxMount feature gate is enabled, \"MountOption\" is used. If not specified and SELinuxMount feature gate is disabled, \"MountOption\" is used for ReadWriteOncePod volumes and \"Recursive\" for all other volumes.\n\nThis field affects only Pods that have SELinux label set, either in PodSecurityContext or in SecurityContext of all containers.\n\nAll Pods that use the same volume should use the same seLinuxChangePolicy, otherwise some pods can get stuck in ContainerCreating state. Note that this field cannot be set when spec.os.name is windows.",
+							Type:        []string{"string"},
+							Format:      "",
 						},
 					},
 				},
@@ -73323,7 +74949,7 @@ func schema_k8sio_api_core_v1_PodSpec(ref common.ReferenceCallback) common.OpenA
 					},
 					"setHostnameAsFQDN": {
 						SchemaProps: spec.SchemaProps{
-							Description: "If true the pod's hostname will be configured as the pod's FQDN, rather than the leaf name (the default). In Linux containers, this means setting the FQDN in the hostname field of the kernel (the nodename field of struct utsname). In Windows containers, this means setting the registry value of hostname for the registry key HKEY_LOCAL_MACHINE\\SYSTEM\\CurrentControlSet\\Services\\Tcpip\\Parameters to FQDN. If a pod does not have FQDN, this has no effect. Default to false.",
+							Description: "If true the pod's hostname will be configured as the pod's FQDN, rather than the leaf name (the default). In Linux containers, this means setting the FQDN in the hostname field of the kernel (the nodename field of struct utsname). In Windows containers, this means setting the registry value of hostname for the registry key HKEY_LOCAL_MACHINE\\\\SYSTEM\\\\CurrentControlSet\\\\Services\\\\Tcpip\\\\Parameters to FQDN. If a pod does not have FQDN, this has no effect. Default to false.",
 							Type:        []string{"boolean"},
 							Format:      "",
 						},
@@ -73389,12 +75015,18 @@ func schema_k8sio_api_core_v1_PodSpec(ref common.ReferenceCallback) common.OpenA
 							},
 						},
 					},
+					"resources": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Resources is the total amount of CPU and Memory resources required by all containers in the pod. It supports specifying Requests and Limits for \"cpu\" and \"memory\" resource names only. ResourceClaims are not supported.\n\nThis field enables fine-grained control over resource allocation for the entire pod, allowing resource sharing among containers in a pod.\n\nThis is an alpha field and requires enabling the PodLevelResources feature gate.",
+							Ref:         ref("k8s.io/api/core/v1.ResourceRequirements"),
+						},
+					},
 				},
 				Required: []string{"containers"},
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.Affinity", "k8s.io/api/core/v1.Container", "k8s.io/api/core/v1.EphemeralContainer", "k8s.io/api/core/v1.HostAlias", "k8s.io/api/core/v1.LocalObjectReference", "k8s.io/api/core/v1.PodDNSConfig", "k8s.io/api/core/v1.PodOS", "k8s.io/api/core/v1.PodReadinessGate", "k8s.io/api/core/v1.PodResourceClaim", "k8s.io/api/core/v1.PodSchedulingGate", "k8s.io/api/core/v1.PodSecurityContext", "k8s.io/api/core/v1.Toleration", "k8s.io/api/core/v1.TopologySpreadConstraint", "k8s.io/api/core/v1.Volume", "k8s.io/apimachinery/pkg/api/resource.Quantity"},
+			"k8s.io/api/core/v1.Affinity", "k8s.io/api/core/v1.Container", "k8s.io/api/core/v1.EphemeralContainer", "k8s.io/api/core/v1.HostAlias", "k8s.io/api/core/v1.LocalObjectReference", "k8s.io/api/core/v1.PodDNSConfig", "k8s.io/api/core/v1.PodOS", "k8s.io/api/core/v1.PodReadinessGate", "k8s.io/api/core/v1.PodResourceClaim", "k8s.io/api/core/v1.PodSchedulingGate", "k8s.io/api/core/v1.PodSecurityContext", "k8s.io/api/core/v1.ResourceRequirements", "k8s.io/api/core/v1.Toleration", "k8s.io/api/core/v1.TopologySpreadConstraint", "k8s.io/api/core/v1.Volume", "k8s.io/apimachinery/pkg/api/resource.Quantity"},
 	}
 }
 
@@ -73530,7 +75162,7 @@ func schema_k8sio_api_core_v1_PodStatus(ref common.ReferenceCallback) common.Ope
 							},
 						},
 						SchemaProps: spec.SchemaProps{
-							Description: "The list has one entry per init container in the manifest. The most recent successful init container will have ready = true, the most recently started container will have startTime set. More info: https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle#pod-and-container-status",
+							Description: "Statuses of init containers in this pod. The most recent successful non-restartable init container will have ready = true, the most recently started container will have startTime set. Each init container in the pod should have at most one status in this list, and all statuses should be for containers in the pod. However this is not enforced. If a status for a non-existent container is present in the list, or the list has duplicate names, the behavior of various Kubernetes components is not defined and those statuses might be ignored. More info: https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle/#pod-and-container-status",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -73549,7 +75181,7 @@ func schema_k8sio_api_core_v1_PodStatus(ref common.ReferenceCallback) common.Ope
 							},
 						},
 						SchemaProps: spec.SchemaProps{
-							Description: "The list has one entry per container in the manifest. More info: https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle#pod-and-container-status",
+							Description: "Statuses of containers in this pod. Each container in the pod should have at most one status in this list, and all statuses should be for containers in the pod. However this is not enforced. If a status for a non-existent container is present in the list, or the list has duplicate names, the behavior of various Kubernetes components is not defined and those statuses might be ignored. More info: https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle#pod-and-container-status",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -73576,7 +75208,7 @@ func schema_k8sio_api_core_v1_PodStatus(ref common.ReferenceCallback) common.Ope
 							},
 						},
 						SchemaProps: spec.SchemaProps{
-							Description: "Status for any ephemeral containers that have run in this pod.",
+							Description: "Statuses for any ephemeral containers that have run in this pod. Each ephemeral container in the pod should have at most one status in this list, and all statuses should be for containers in the pod. However this is not enforced. If a status for a non-existent container is present in the list, or the list has duplicate names, the behavior of various Kubernetes components is not defined and those statuses might be ignored. More info: https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle#pod-and-container-status",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -73797,7 +75429,8 @@ func schema_k8sio_api_core_v1_PortStatus(ref common.ReferenceCallback) common.Op
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
-				Type: []string{"object"},
+				Description: "PortStatus represents the error condition of a service port",
+				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
 					"port": {
 						SchemaProps: spec.SchemaProps{
@@ -73949,25 +75582,25 @@ func schema_k8sio_api_core_v1_Probe(ref common.ReferenceCallback) common.OpenAPI
 				Properties: map[string]spec.Schema{
 					"exec": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Exec specifies the action to take.",
+							Description: "Exec specifies a command to execute in the container.",
 							Ref:         ref("k8s.io/api/core/v1.ExecAction"),
 						},
 					},
 					"httpGet": {
 						SchemaProps: spec.SchemaProps{
-							Description: "HTTPGet specifies the http request to perform.",
+							Description: "HTTPGet specifies an HTTP GET request to perform.",
 							Ref:         ref("k8s.io/api/core/v1.HTTPGetAction"),
 						},
 					},
 					"tcpSocket": {
 						SchemaProps: spec.SchemaProps{
-							Description: "TCPSocket specifies an action involving a TCP port.",
+							Description: "TCPSocket specifies a connection to a TCP port.",
 							Ref:         ref("k8s.io/api/core/v1.TCPSocketAction"),
 						},
 					},
 					"grpc": {
 						SchemaProps: spec.SchemaProps{
-							Description: "GRPC specifies an action involving a GRPC port.",
+							Description: "GRPC specifies a GRPC HealthCheckRequest.",
 							Ref:         ref("k8s.io/api/core/v1.GRPCAction"),
 						},
 					},
@@ -74030,25 +75663,25 @@ func schema_k8sio_api_core_v1_ProbeHandler(ref common.ReferenceCallback) common.
 				Properties: map[string]spec.Schema{
 					"exec": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Exec specifies the action to take.",
+							Description: "Exec specifies a command to execute in the container.",
 							Ref:         ref("k8s.io/api/core/v1.ExecAction"),
 						},
 					},
 					"httpGet": {
 						SchemaProps: spec.SchemaProps{
-							Description: "HTTPGet specifies the http request to perform.",
+							Description: "HTTPGet specifies an HTTP GET request to perform.",
 							Ref:         ref("k8s.io/api/core/v1.HTTPGetAction"),
 						},
 					},
 					"tcpSocket": {
 						SchemaProps: spec.SchemaProps{
-							Description: "TCPSocket specifies an action involving a TCP port.",
+							Description: "TCPSocket specifies a connection to a TCP port.",
 							Ref:         ref("k8s.io/api/core/v1.TCPSocketAction"),
 						},
 					},
 					"grpc": {
 						SchemaProps: spec.SchemaProps{
-							Description: "GRPC specifies an action involving a GRPC port.",
+							Description: "GRPC specifies a GRPC HealthCheckRequest.",
 							Ref:         ref("k8s.io/api/core/v1.GRPCAction"),
 						},
 					},
@@ -74747,7 +76380,7 @@ func schema_k8sio_api_core_v1_ResourceHealth(ref common.ReferenceCallback) commo
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
-				Description: "ResourceHealth represents the health of a resource. It has the latest device health information. This is a part of KEP https://kep.k8s.io/4680 and historical health changes are planned to be added in future iterations of a KEP.",
+				Description: "ResourceHealth represents the health of a resource. It has the latest device health information. This is a part of KEP https://kep.k8s.io/4680.",
 				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
 					"resourceID": {
@@ -75041,11 +76674,12 @@ func schema_k8sio_api_core_v1_ResourceStatus(ref common.ReferenceCallback) commo
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
-				Type: []string{"object"},
+				Description: "ResourceStatus represents the status of a single resource allocated to a Pod.",
+				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
 					"name": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Name of the resource. Must be unique within the pod and match one of the resources from the pod spec.",
+							Description: "Name of the resource. Must be unique within the pod and in case of non-DRA resource, match one of the resources from the pod spec. For DRA resources, the value must be \"claim:<claim_name>/<request>\". When this status is reported about a container, the \"claim_name\" and \"request\" must match one of the claims of this container.",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -75061,7 +76695,7 @@ func schema_k8sio_api_core_v1_ResourceStatus(ref common.ReferenceCallback) commo
 							},
 						},
 						SchemaProps: spec.SchemaProps{
-							Description: "List of unique Resources health. Each element in the list contains an unique resource ID and resource health. At a minimum, ResourceID must uniquely identify the Resource allocated to the Pod on the Node for the lifetime of a Pod. See ResourceID type for it's definition.",
+							Description: "List of unique resources health. Each element in the list contains an unique resource ID and its health. At a minimum, for the lifetime of a Pod, resource ID must uniquely identify the resource allocated to the Pod on the Node. If other Pod on the same Node reports the status with the same resource ID, it must be the same resource they share. See ResourceID type definition for a specific format it has in various use cases.",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -75993,7 +77627,7 @@ func schema_k8sio_api_core_v1_ServiceAccount(ref common.ReferenceCallback) commo
 							},
 						},
 						SchemaProps: spec.SchemaProps{
-							Description: "Secrets is a list of the secrets in the same namespace that pods running using this ServiceAccount are allowed to use. Pods are only limited to this list if this service account has a \"kubernetes.io/enforce-mountable-secrets\" annotation set to \"true\". This field should not be used to find auto-generated service account token secrets for use outside of pods. Instead, tokens can be requested directly using the TokenRequest API, or service account token secrets can be manually created. More info: https://kubernetes.io/docs/concepts/configuration/secret",
+							Description: "Secrets is a list of the secrets in the same namespace that pods running using this ServiceAccount are allowed to use. Pods are only limited to this list if this service account has a \"kubernetes.io/enforce-mountable-secrets\" annotation set to \"true\". The \"kubernetes.io/enforce-mountable-secrets\" annotation is deprecated since v1.32. Prefer separate namespaces to isolate access to mounted secrets. This field should not be used to find auto-generated service account token secrets for use outside of pods. Instead, tokens can be requested directly using the TokenRequest API, or service account token secrets can be manually created. More info: https://kubernetes.io/docs/concepts/configuration/secret",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -76502,7 +78136,7 @@ func schema_k8sio_api_core_v1_ServiceSpec(ref common.ReferenceCallback) common.O
 					},
 					"trafficDistribution": {
 						SchemaProps: spec.SchemaProps{
-							Description: "TrafficDistribution offers a way to express preferences for how traffic is distributed to Service endpoints. Implementations can use this field as a hint, but are not required to guarantee strict adherence. If the field is not set, the implementation will apply its default routing strategy. If set to \"PreferClose\", implementations should prioritize endpoints that are topologically close (e.g., same zone). This is an alpha field and requires enabling ServiceTrafficDistribution feature.",
+							Description: "TrafficDistribution offers a way to express preferences for how traffic is distributed to Service endpoints. Implementations can use this field as a hint, but are not required to guarantee strict adherence. If the field is not set, the implementation will apply its default routing strategy. If set to \"PreferClose\", implementations should prioritize endpoints that are topologically close (e.g., same zone). This is a beta field and requires enabling ServiceTrafficDistribution feature.",
 							Type:        []string{"string"},
 							Format:      "",
 						},
@@ -77074,7 +78708,8 @@ func schema_k8sio_api_core_v1_TypedObjectReference(ref common.ReferenceCallback)
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
-				Type: []string{"object"},
+				Description: "TypedObjectReference contains enough information to let you locate the typed referenced object",
+				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
 					"apiGroup": {
 						SchemaProps: spec.SchemaProps{
@@ -77142,19 +78777,19 @@ func schema_k8sio_api_core_v1_Volume(ref common.ReferenceCallback) common.OpenAP
 					},
 					"gcePersistentDisk": {
 						SchemaProps: spec.SchemaProps{
-							Description: "gcePersistentDisk represents a GCE Disk resource that is attached to a kubelet's host machine and then exposed to the pod. More info: https://kubernetes.io/docs/concepts/storage/volumes#gcepersistentdisk",
+							Description: "gcePersistentDisk represents a GCE Disk resource that is attached to a kubelet's host machine and then exposed to the pod. Deprecated: GCEPersistentDisk is deprecated. All operations for the in-tree gcePersistentDisk type are redirected to the pd.csi.storage.gke.io CSI driver. More info: https://kubernetes.io/docs/concepts/storage/volumes#gcepersistentdisk",
 							Ref:         ref("k8s.io/api/core/v1.GCEPersistentDiskVolumeSource"),
 						},
 					},
 					"awsElasticBlockStore": {
 						SchemaProps: spec.SchemaProps{
-							Description: "awsElasticBlockStore represents an AWS Disk resource that is attached to a kubelet's host machine and then exposed to the pod. More info: https://kubernetes.io/docs/concepts/storage/volumes#awselasticblockstore",
+							Description: "awsElasticBlockStore represents an AWS Disk resource that is attached to a kubelet's host machine and then exposed to the pod. Deprecated: AWSElasticBlockStore is deprecated. All operations for the in-tree awsElasticBlockStore type are redirected to the ebs.csi.aws.com CSI driver. More info: https://kubernetes.io/docs/concepts/storage/volumes#awselasticblockstore",
 							Ref:         ref("k8s.io/api/core/v1.AWSElasticBlockStoreVolumeSource"),
 						},
 					},
 					"gitRepo": {
 						SchemaProps: spec.SchemaProps{
-							Description: "gitRepo represents a git repository at a particular revision. DEPRECATED: GitRepo is deprecated. To provision a container with a git repo, mount an EmptyDir into an InitContainer that clones the repo using git, then mount the EmptyDir into the Pod's container.",
+							Description: "gitRepo represents a git repository at a particular revision. Deprecated: GitRepo is deprecated. To provision a container with a git repo, mount an EmptyDir into an InitContainer that clones the repo using git, then mount the EmptyDir into the Pod's container.",
 							Ref:         ref("k8s.io/api/core/v1.GitRepoVolumeSource"),
 						},
 					},
@@ -77178,7 +78813,7 @@ func schema_k8sio_api_core_v1_Volume(ref common.ReferenceCallback) common.OpenAP
 					},
 					"glusterfs": {
 						SchemaProps: spec.SchemaProps{
-							Description: "glusterfs represents a Glusterfs mount on the host that shares a pod's lifetime. More info: https://examples.k8s.io/volumes/glusterfs/README.md",
+							Description: "glusterfs represents a Glusterfs mount on the host that shares a pod's lifetime. Deprecated: Glusterfs is deprecated and the in-tree glusterfs type is no longer supported. More info: https://examples.k8s.io/volumes/glusterfs/README.md",
 							Ref:         ref("k8s.io/api/core/v1.GlusterfsVolumeSource"),
 						},
 					},
@@ -77190,31 +78825,31 @@ func schema_k8sio_api_core_v1_Volume(ref common.ReferenceCallback) common.OpenAP
 					},
 					"rbd": {
 						SchemaProps: spec.SchemaProps{
-							Description: "rbd represents a Rados Block Device mount on the host that shares a pod's lifetime. More info: https://examples.k8s.io/volumes/rbd/README.md",
+							Description: "rbd represents a Rados Block Device mount on the host that shares a pod's lifetime. Deprecated: RBD is deprecated and the in-tree rbd type is no longer supported. More info: https://examples.k8s.io/volumes/rbd/README.md",
 							Ref:         ref("k8s.io/api/core/v1.RBDVolumeSource"),
 						},
 					},
 					"flexVolume": {
 						SchemaProps: spec.SchemaProps{
-							Description: "flexVolume represents a generic volume resource that is provisioned/attached using an exec based plugin.",
+							Description: "flexVolume represents a generic volume resource that is provisioned/attached using an exec based plugin. Deprecated: FlexVolume is deprecated. Consider using a CSIDriver instead.",
 							Ref:         ref("k8s.io/api/core/v1.FlexVolumeSource"),
 						},
 					},
 					"cinder": {
 						SchemaProps: spec.SchemaProps{
-							Description: "cinder represents a cinder volume attached and mounted on kubelets host machine. More info: https://examples.k8s.io/mysql-cinder-pd/README.md",
+							Description: "cinder represents a cinder volume attached and mounted on kubelets host machine. Deprecated: Cinder is deprecated. All operations for the in-tree cinder type are redirected to the cinder.csi.openstack.org CSI driver. More info: https://examples.k8s.io/mysql-cinder-pd/README.md",
 							Ref:         ref("k8s.io/api/core/v1.CinderVolumeSource"),
 						},
 					},
 					"cephfs": {
 						SchemaProps: spec.SchemaProps{
-							Description: "cephFS represents a Ceph FS mount on the host that shares a pod's lifetime",
+							Description: "cephFS represents a Ceph FS mount on the host that shares a pod's lifetime. Deprecated: CephFS is deprecated and the in-tree cephfs type is no longer supported.",
 							Ref:         ref("k8s.io/api/core/v1.CephFSVolumeSource"),
 						},
 					},
 					"flocker": {
 						SchemaProps: spec.SchemaProps{
-							Description: "flocker represents a Flocker volume attached to a kubelet's host machine. This depends on the Flocker control service being running",
+							Description: "flocker represents a Flocker volume attached to a kubelet's host machine. This depends on the Flocker control service being running. Deprecated: Flocker is deprecated and the in-tree flocker type is no longer supported.",
 							Ref:         ref("k8s.io/api/core/v1.FlockerVolumeSource"),
 						},
 					},
@@ -77232,7 +78867,7 @@ func schema_k8sio_api_core_v1_Volume(ref common.ReferenceCallback) common.OpenAP
 					},
 					"azureFile": {
 						SchemaProps: spec.SchemaProps{
-							Description: "azureFile represents an Azure File Service mount on the host and bind mount to the pod.",
+							Description: "azureFile represents an Azure File Service mount on the host and bind mount to the pod. Deprecated: AzureFile is deprecated. All operations for the in-tree azureFile type are redirected to the file.csi.azure.com CSI driver.",
 							Ref:         ref("k8s.io/api/core/v1.AzureFileVolumeSource"),
 						},
 					},
@@ -77244,25 +78879,25 @@ func schema_k8sio_api_core_v1_Volume(ref common.ReferenceCallback) common.OpenAP
 					},
 					"vsphereVolume": {
 						SchemaProps: spec.SchemaProps{
-							Description: "vsphereVolume represents a vSphere volume attached and mounted on kubelets host machine",
+							Description: "vsphereVolume represents a vSphere volume attached and mounted on kubelets host machine. Deprecated: VsphereVolume is deprecated. All operations for the in-tree vsphereVolume type are redirected to the csi.vsphere.vmware.com CSI driver.",
 							Ref:         ref("k8s.io/api/core/v1.VsphereVirtualDiskVolumeSource"),
 						},
 					},
 					"quobyte": {
 						SchemaProps: spec.SchemaProps{
-							Description: "quobyte represents a Quobyte mount on the host that shares a pod's lifetime",
+							Description: "quobyte represents a Quobyte mount on the host that shares a pod's lifetime. Deprecated: Quobyte is deprecated and the in-tree quobyte type is no longer supported.",
 							Ref:         ref("k8s.io/api/core/v1.QuobyteVolumeSource"),
 						},
 					},
 					"azureDisk": {
 						SchemaProps: spec.SchemaProps{
-							Description: "azureDisk represents an Azure Data Disk mount on the host and bind mount to the pod.",
+							Description: "azureDisk represents an Azure Data Disk mount on the host and bind mount to the pod. Deprecated: AzureDisk is deprecated. All operations for the in-tree azureDisk type are redirected to the disk.csi.azure.com CSI driver.",
 							Ref:         ref("k8s.io/api/core/v1.AzureDiskVolumeSource"),
 						},
 					},
 					"photonPersistentDisk": {
 						SchemaProps: spec.SchemaProps{
-							Description: "photonPersistentDisk represents a PhotonController persistent disk attached and mounted on kubelets host machine",
+							Description: "photonPersistentDisk represents a PhotonController persistent disk attached and mounted on kubelets host machine. Deprecated: PhotonPersistentDisk is deprecated and the in-tree photonPersistentDisk type is no longer supported.",
 							Ref:         ref("k8s.io/api/core/v1.PhotonPersistentDiskVolumeSource"),
 						},
 					},
@@ -77274,25 +78909,25 @@ func schema_k8sio_api_core_v1_Volume(ref common.ReferenceCallback) common.OpenAP
 					},
 					"portworxVolume": {
 						SchemaProps: spec.SchemaProps{
-							Description: "portworxVolume represents a portworx volume attached and mounted on kubelets host machine",
+							Description: "portworxVolume represents a portworx volume attached and mounted on kubelets host machine. Deprecated: PortworxVolume is deprecated. All operations for the in-tree portworxVolume type are redirected to the pxd.portworx.com CSI driver when the CSIMigrationPortworx feature-gate is on.",
 							Ref:         ref("k8s.io/api/core/v1.PortworxVolumeSource"),
 						},
 					},
 					"scaleIO": {
 						SchemaProps: spec.SchemaProps{
-							Description: "scaleIO represents a ScaleIO persistent volume attached and mounted on Kubernetes nodes.",
+							Description: "scaleIO represents a ScaleIO persistent volume attached and mounted on Kubernetes nodes. Deprecated: ScaleIO is deprecated and the in-tree scaleIO type is no longer supported.",
 							Ref:         ref("k8s.io/api/core/v1.ScaleIOVolumeSource"),
 						},
 					},
 					"storageos": {
 						SchemaProps: spec.SchemaProps{
-							Description: "storageOS represents a StorageOS volume attached and mounted on Kubernetes nodes.",
+							Description: "storageOS represents a StorageOS volume attached and mounted on Kubernetes nodes. Deprecated: StorageOS is deprecated and the in-tree storageos type is no longer supported.",
 							Ref:         ref("k8s.io/api/core/v1.StorageOSVolumeSource"),
 						},
 					},
 					"csi": {
 						SchemaProps: spec.SchemaProps{
-							Description: "csi (Container Storage Interface) represents ephemeral storage that is handled by certain external CSI drivers (Beta feature).",
+							Description: "csi (Container Storage Interface) represents ephemeral storage that is handled by certain external CSI drivers.",
 							Ref:         ref("k8s.io/api/core/v1.CSIVolumeSource"),
 						},
 					},
@@ -77587,19 +79222,19 @@ func schema_k8sio_api_core_v1_VolumeSource(ref common.ReferenceCallback) common.
 					},
 					"gcePersistentDisk": {
 						SchemaProps: spec.SchemaProps{
-							Description: "gcePersistentDisk represents a GCE Disk resource that is attached to a kubelet's host machine and then exposed to the pod. More info: https://kubernetes.io/docs/concepts/storage/volumes#gcepersistentdisk",
+							Description: "gcePersistentDisk represents a GCE Disk resource that is attached to a kubelet's host machine and then exposed to the pod. Deprecated: GCEPersistentDisk is deprecated. All operations for the in-tree gcePersistentDisk type are redirected to the pd.csi.storage.gke.io CSI driver. More info: https://kubernetes.io/docs/concepts/storage/volumes#gcepersistentdisk",
 							Ref:         ref("k8s.io/api/core/v1.GCEPersistentDiskVolumeSource"),
 						},
 					},
 					"awsElasticBlockStore": {
 						SchemaProps: spec.SchemaProps{
-							Description: "awsElasticBlockStore represents an AWS Disk resource that is attached to a kubelet's host machine and then exposed to the pod. More info: https://kubernetes.io/docs/concepts/storage/volumes#awselasticblockstore",
+							Description: "awsElasticBlockStore represents an AWS Disk resource that is attached to a kubelet's host machine and then exposed to the pod. Deprecated: AWSElasticBlockStore is deprecated. All operations for the in-tree awsElasticBlockStore type are redirected to the ebs.csi.aws.com CSI driver. More info: https://kubernetes.io/docs/concepts/storage/volumes#awselasticblockstore",
 							Ref:         ref("k8s.io/api/core/v1.AWSElasticBlockStoreVolumeSource"),
 						},
 					},
 					"gitRepo": {
 						SchemaProps: spec.SchemaProps{
-							Description: "gitRepo represents a git repository at a particular revision. DEPRECATED: GitRepo is deprecated. To provision a container with a git repo, mount an EmptyDir into an InitContainer that clones the repo using git, then mount the EmptyDir into the Pod's container.",
+							Description: "gitRepo represents a git repository at a particular revision. Deprecated: GitRepo is deprecated. To provision a container with a git repo, mount an EmptyDir into an InitContainer that clones the repo using git, then mount the EmptyDir into the Pod's container.",
 							Ref:         ref("k8s.io/api/core/v1.GitRepoVolumeSource"),
 						},
 					},
@@ -77623,7 +79258,7 @@ func schema_k8sio_api_core_v1_VolumeSource(ref common.ReferenceCallback) common.
 					},
 					"glusterfs": {
 						SchemaProps: spec.SchemaProps{
-							Description: "glusterfs represents a Glusterfs mount on the host that shares a pod's lifetime. More info: https://examples.k8s.io/volumes/glusterfs/README.md",
+							Description: "glusterfs represents a Glusterfs mount on the host that shares a pod's lifetime. Deprecated: Glusterfs is deprecated and the in-tree glusterfs type is no longer supported. More info: https://examples.k8s.io/volumes/glusterfs/README.md",
 							Ref:         ref("k8s.io/api/core/v1.GlusterfsVolumeSource"),
 						},
 					},
@@ -77635,31 +79270,31 @@ func schema_k8sio_api_core_v1_VolumeSource(ref common.ReferenceCallback) common.
 					},
 					"rbd": {
 						SchemaProps: spec.SchemaProps{
-							Description: "rbd represents a Rados Block Device mount on the host that shares a pod's lifetime. More info: https://examples.k8s.io/volumes/rbd/README.md",
+							Description: "rbd represents a Rados Block Device mount on the host that shares a pod's lifetime. Deprecated: RBD is deprecated and the in-tree rbd type is no longer supported. More info: https://examples.k8s.io/volumes/rbd/README.md",
 							Ref:         ref("k8s.io/api/core/v1.RBDVolumeSource"),
 						},
 					},
 					"flexVolume": {
 						SchemaProps: spec.SchemaProps{
-							Description: "flexVolume represents a generic volume resource that is provisioned/attached using an exec based plugin.",
+							Description: "flexVolume represents a generic volume resource that is provisioned/attached using an exec based plugin. Deprecated: FlexVolume is deprecated. Consider using a CSIDriver instead.",
 							Ref:         ref("k8s.io/api/core/v1.FlexVolumeSource"),
 						},
 					},
 					"cinder": {
 						SchemaProps: spec.SchemaProps{
-							Description: "cinder represents a cinder volume attached and mounted on kubelets host machine. More info: https://examples.k8s.io/mysql-cinder-pd/README.md",
+							Description: "cinder represents a cinder volume attached and mounted on kubelets host machine. Deprecated: Cinder is deprecated. All operations for the in-tree cinder type are redirected to the cinder.csi.openstack.org CSI driver. More info: https://examples.k8s.io/mysql-cinder-pd/README.md",
 							Ref:         ref("k8s.io/api/core/v1.CinderVolumeSource"),
 						},
 					},
 					"cephfs": {
 						SchemaProps: spec.SchemaProps{
-							Description: "cephFS represents a Ceph FS mount on the host that shares a pod's lifetime",
+							Description: "cephFS represents a Ceph FS mount on the host that shares a pod's lifetime. Deprecated: CephFS is deprecated and the in-tree cephfs type is no longer supported.",
 							Ref:         ref("k8s.io/api/core/v1.CephFSVolumeSource"),
 						},
 					},
 					"flocker": {
 						SchemaProps: spec.SchemaProps{
-							Description: "flocker represents a Flocker volume attached to a kubelet's host machine. This depends on the Flocker control service being running",
+							Description: "flocker represents a Flocker volume attached to a kubelet's host machine. This depends on the Flocker control service being running. Deprecated: Flocker is deprecated and the in-tree flocker type is no longer supported.",
 							Ref:         ref("k8s.io/api/core/v1.FlockerVolumeSource"),
 						},
 					},
@@ -77677,7 +79312,7 @@ func schema_k8sio_api_core_v1_VolumeSource(ref common.ReferenceCallback) common.
 					},
 					"azureFile": {
 						SchemaProps: spec.SchemaProps{
-							Description: "azureFile represents an Azure File Service mount on the host and bind mount to the pod.",
+							Description: "azureFile represents an Azure File Service mount on the host and bind mount to the pod. Deprecated: AzureFile is deprecated. All operations for the in-tree azureFile type are redirected to the file.csi.azure.com CSI driver.",
 							Ref:         ref("k8s.io/api/core/v1.AzureFileVolumeSource"),
 						},
 					},
@@ -77689,25 +79324,25 @@ func schema_k8sio_api_core_v1_VolumeSource(ref common.ReferenceCallback) common.
 					},
 					"vsphereVolume": {
 						SchemaProps: spec.SchemaProps{
-							Description: "vsphereVolume represents a vSphere volume attached and mounted on kubelets host machine",
+							Description: "vsphereVolume represents a vSphere volume attached and mounted on kubelets host machine. Deprecated: VsphereVolume is deprecated. All operations for the in-tree vsphereVolume type are redirected to the csi.vsphere.vmware.com CSI driver.",
 							Ref:         ref("k8s.io/api/core/v1.VsphereVirtualDiskVolumeSource"),
 						},
 					},
 					"quobyte": {
 						SchemaProps: spec.SchemaProps{
-							Description: "quobyte represents a Quobyte mount on the host that shares a pod's lifetime",
+							Description: "quobyte represents a Quobyte mount on the host that shares a pod's lifetime. Deprecated: Quobyte is deprecated and the in-tree quobyte type is no longer supported.",
 							Ref:         ref("k8s.io/api/core/v1.QuobyteVolumeSource"),
 						},
 					},
 					"azureDisk": {
 						SchemaProps: spec.SchemaProps{
-							Description: "azureDisk represents an Azure Data Disk mount on the host and bind mount to the pod.",
+							Description: "azureDisk represents an Azure Data Disk mount on the host and bind mount to the pod. Deprecated: AzureDisk is deprecated. All operations for the in-tree azureDisk type are redirected to the disk.csi.azure.com CSI driver.",
 							Ref:         ref("k8s.io/api/core/v1.AzureDiskVolumeSource"),
 						},
 					},
 					"photonPersistentDisk": {
 						SchemaProps: spec.SchemaProps{
-							Description: "photonPersistentDisk represents a PhotonController persistent disk attached and mounted on kubelets host machine",
+							Description: "photonPersistentDisk represents a PhotonController persistent disk attached and mounted on kubelets host machine. Deprecated: PhotonPersistentDisk is deprecated and the in-tree photonPersistentDisk type is no longer supported.",
 							Ref:         ref("k8s.io/api/core/v1.PhotonPersistentDiskVolumeSource"),
 						},
 					},
@@ -77719,25 +79354,25 @@ func schema_k8sio_api_core_v1_VolumeSource(ref common.ReferenceCallback) common.
 					},
 					"portworxVolume": {
 						SchemaProps: spec.SchemaProps{
-							Description: "portworxVolume represents a portworx volume attached and mounted on kubelets host machine",
+							Description: "portworxVolume represents a portworx volume attached and mounted on kubelets host machine. Deprecated: PortworxVolume is deprecated. All operations for the in-tree portworxVolume type are redirected to the pxd.portworx.com CSI driver when the CSIMigrationPortworx feature-gate is on.",
 							Ref:         ref("k8s.io/api/core/v1.PortworxVolumeSource"),
 						},
 					},
 					"scaleIO": {
 						SchemaProps: spec.SchemaProps{
-							Description: "scaleIO represents a ScaleIO persistent volume attached and mounted on Kubernetes nodes.",
+							Description: "scaleIO represents a ScaleIO persistent volume attached and mounted on Kubernetes nodes. Deprecated: ScaleIO is deprecated and the in-tree scaleIO type is no longer supported.",
 							Ref:         ref("k8s.io/api/core/v1.ScaleIOVolumeSource"),
 						},
 					},
 					"storageos": {
 						SchemaProps: spec.SchemaProps{
-							Description: "storageOS represents a StorageOS volume attached and mounted on Kubernetes nodes.",
+							Description: "storageOS represents a StorageOS volume attached and mounted on Kubernetes nodes. Deprecated: StorageOS is deprecated and the in-tree storageos type is no longer supported.",
 							Ref:         ref("k8s.io/api/core/v1.StorageOSVolumeSource"),
 						},
 					},
 					"csi": {
 						SchemaProps: spec.SchemaProps{
-							Description: "csi (Container Storage Interface) represents ephemeral storage that is handled by certain external CSI drivers (Beta feature).",
+							Description: "csi (Container Storage Interface) represents ephemeral storage that is handled by certain external CSI drivers.",
 							Ref:         ref("k8s.io/api/core/v1.CSIVolumeSource"),
 						},
 					},
@@ -79242,6 +80877,13 @@ func schema_pkg_apis_meta_v1_DeleteOptions(ref common.ReferenceCallback) common.
 									},
 								},
 							},
+						},
+					},
+					"ignoreStoreReadErrorWithClusterBreakingPotential": {
+						SchemaProps: spec.SchemaProps{
+							Description: "if set to true, it will trigger an unsafe deletion of the resource in case the normal deletion flow fails with a corrupt object error. A resource is considered corrupt if it can not be retrieved from the underlying storage successfully because of a) its data can not be transformed e.g. decryption failure, or b) it fails to decode into an object. NOTE: unsafe deletion ignores finalizer constraints, skips precondition checks, and removes the object from the storage. WARNING: This may potentially break the cluster if the workload associated with the resource being unsafe-deleted relies on normal deletion flow. Use only if you REALLY know what you are doing. The default value is false, and the user must opt in to enable it",
+							Type:        []string{"boolean"},
+							Format:      "",
 						},
 					},
 				},

@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 if [ ! -f ./_output/tools/bin/yq ]; then
     mkdir -p ./_output/tools/bin

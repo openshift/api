@@ -893,4 +893,11 @@ var (
 							enhancementPR("https://github.com/kubernetes/enhancements/issues/4876").
 							enableIn(configv1.DevPreviewNoUpgrade, configv1.TechPreviewNoUpgrade).
 							mustRegister()
+	FeatureGateOSStreams = newFeatureGate("OSStreams").
+				reportProblemsToJiraComponent("MachineConfigOperator").
+				contactPerson("pabrodri").
+				productScope(ocpSpecific).
+				enhancementPR("https://github.com/openshift/enhancements/pull/1874").
+				enableIn(configv1.DevPreviewNoUpgrade, configv1.TechPreviewNoUpgrade).
+				mustRegister()
 )

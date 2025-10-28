@@ -104,22 +104,12 @@ func (CustomResourceDefinitionSchemaValidation) SwaggerDoc() map[string]string {
 	return map_CustomResourceDefinitionSchemaValidation
 }
 
-var map_MatchCondition = map[string]string{
-	"":           "MatchCondition represents a condition which must by fulfilled for a request to be sent to a webhook. It is a copy of the MatchCondition type from the admissionregistration.k8s.io/v1 API group. It has identical semantics to the upstream type.",
-	"name":       "name is an identifier for this match condition, used for strategic merging of MatchConditions, as well as providing an identifier for logging purposes. A good name should be descriptive of the associated expression. Name must be a qualified name consisting of alphanumeric characters, '-', '_' or '.', and must start and end with an alphanumeric character (e.g. 'MyName',  or 'my.name',  or '123-abc', regex used for validation is '([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9]') with an optional DNS subdomain prefix and '/' (e.g. 'example.com/MyName')",
-	"expression": "expression represents the expression which will be evaluated by CEL. Must evaluate to bool. CEL expressions have access to the contents of the AdmissionRequest and Authorizer, organized into CEL variables:\n\n'object' - The object from the incoming request. The value is null for DELETE requests. 'oldObject' - The existing object. The value is null for CREATE requests. 'request' - Attributes of the admission request(/pkg/apis/admission/types.go#AdmissionRequest). 'authorizer' - A CEL Authorizer. May be used to perform authorization checks for the principal (user or service account) of the request.\n  See https://pkg.go.dev/k8s.io/apiserver/pkg/cel/library#Authz\n'authorizer.requestResource' - A CEL ResourceCheck constructed from the 'authorizer' and configured with the\n  request resource.\nDocumentation on CEL: https://kubernetes.io/docs/reference/using-api/cel/",
-}
-
-func (MatchCondition) SwaggerDoc() map[string]string {
-	return map_MatchCondition
-}
-
 var map_ObjectSchemaValidation = map[string]string{
 	"":                  "ObjectSchemaValidation ensures that matching objects conform to the compatibilitySchema.",
 	"action":            "action determines whether violations are rejected (Deny) or admitted with an API warning (Warn). Valid options are:\n  Deny - incompatible Objects will be rejected and not admitted to the cluster.\n  Warn - incompatible Objects will be allowed but a warning will be generated in the API response.\nThis field is required.",
 	"namespaceSelector": "namespaceSelector defines a label selector for namespaces. If defined, only objects in a namespace with matching labels will be subject to validation. When not specified, objects for validation will not be filtered by namespace.",
 	"objectSelector":    "objectSelector defines a label selector for objects. If defined, only objects with matching labels will be subject to validation. When not specified, objects for validation will not be filtered by label.",
-	"matchConditions":   "matchConditions defines the matchConditions field of the resulting ValidatingWebhookConfiguration. When present, must contain between 1 and 64 match conditions. When not specified, the webhook will match all requests according to its other selectors. FIXME(chrischdi): should we embed this type? Or maintain our own copy of MatchCondition?",
+	"matchConditions":   "matchConditions defines the matchConditions field of the resulting ValidatingWebhookConfiguration. When present, must contain between 1 and 64 match conditions. When not specified, the webhook will match all requests according to its other selectors.",
 }
 
 func (ObjectSchemaValidation) SwaggerDoc() map[string]string {

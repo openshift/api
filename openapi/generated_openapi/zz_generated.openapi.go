@@ -25,7 +25,6 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"github.com/openshift/api/apiextensions/v1alpha1.CompatibilityRequirementStatus":                     schema_openshift_api_apiextensions_v1alpha1_CompatibilityRequirementStatus(ref),
 		"github.com/openshift/api/apiextensions/v1alpha1.CompatibilitySchema":                                schema_openshift_api_apiextensions_v1alpha1_CompatibilitySchema(ref),
 		"github.com/openshift/api/apiextensions/v1alpha1.CustomResourceDefinitionSchemaValidation":           schema_openshift_api_apiextensions_v1alpha1_CustomResourceDefinitionSchemaValidation(ref),
-		"github.com/openshift/api/apiextensions/v1alpha1.MatchCondition":                                     schema_openshift_api_apiextensions_v1alpha1_MatchCondition(ref),
 		"github.com/openshift/api/apiextensions/v1alpha1.ObjectSchemaValidation":                             schema_openshift_api_apiextensions_v1alpha1_ObjectSchemaValidation(ref),
 		"github.com/openshift/api/apiextensions/v1alpha1.ObservedCRD":                                        schema_openshift_api_apiextensions_v1alpha1_ObservedCRD(ref),
 		"github.com/openshift/api/apiserver/v1.APIRequestCount":                                              schema_openshift_api_apiserver_v1_APIRequestCount(ref),
@@ -2008,34 +2007,6 @@ func schema_openshift_api_apiextensions_v1alpha1_CustomResourceDefinitionSchemaV
 	}
 }
 
-func schema_openshift_api_apiextensions_v1alpha1_MatchCondition(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Description: "MatchCondition represents a condition which must by fulfilled for a request to be sent to a webhook. It is a copy of the MatchCondition type from the admissionregistration.k8s.io/v1 API group. It has identical semantics to the upstream type.",
-				Type:        []string{"object"},
-				Properties: map[string]spec.Schema{
-					"name": {
-						SchemaProps: spec.SchemaProps{
-							Description: "name is an identifier for this match condition, used for strategic merging of MatchConditions, as well as providing an identifier for logging purposes. A good name should be descriptive of the associated expression. Name must be a qualified name consisting of alphanumeric characters, '-', '_' or '.', and must start and end with an alphanumeric character (e.g. 'MyName',  or 'my.name',  or '123-abc', regex used for validation is '([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9]') with an optional DNS subdomain prefix and '/' (e.g. 'example.com/MyName')",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"expression": {
-						SchemaProps: spec.SchemaProps{
-							Description: "expression represents the expression which will be evaluated by CEL. Must evaluate to bool. CEL expressions have access to the contents of the AdmissionRequest and Authorizer, organized into CEL variables:\n\n'object' - The object from the incoming request. The value is null for DELETE requests. 'oldObject' - The existing object. The value is null for CREATE requests. 'request' - Attributes of the admission request(/pkg/apis/admission/types.go#AdmissionRequest). 'authorizer' - A CEL Authorizer. May be used to perform authorization checks for the principal (user or service account) of the request.\n  See https://pkg.go.dev/k8s.io/apiserver/pkg/cel/library#Authz\n'authorizer.requestResource' - A CEL ResourceCheck constructed from the 'authorizer' and configured with the\n  request resource.\nDocumentation on CEL: https://kubernetes.io/docs/reference/using-api/cel/",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-				},
-				Required: []string{"name", "expression"},
-			},
-		},
-	}
-}
-
 func schema_openshift_api_apiextensions_v1alpha1_ObjectSchemaValidation(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -2074,13 +2045,13 @@ func schema_openshift_api_apiextensions_v1alpha1_ObjectSchemaValidation(ref comm
 							},
 						},
 						SchemaProps: spec.SchemaProps{
-							Description: "matchConditions defines the matchConditions field of the resulting ValidatingWebhookConfiguration. When present, must contain between 1 and 64 match conditions. When not specified, the webhook will match all requests according to its other selectors. FIXME(chrischdi): should we embed this type? Or maintain our own copy of MatchCondition?",
+							Description: "matchConditions defines the matchConditions field of the resulting ValidatingWebhookConfiguration. When present, must contain between 1 and 64 match conditions. When not specified, the webhook will match all requests according to its other selectors.",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
 									SchemaProps: spec.SchemaProps{
 										Default: map[string]interface{}{},
-										Ref:     ref("github.com/openshift/api/apiextensions/v1alpha1.MatchCondition"),
+										Ref:     ref("k8s.io/api/admissionregistration/v1.MatchCondition"),
 									},
 								},
 							},
@@ -2091,7 +2062,7 @@ func schema_openshift_api_apiextensions_v1alpha1_ObjectSchemaValidation(ref comm
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/apiextensions/v1alpha1.MatchCondition", "k8s.io/apimachinery/pkg/apis/meta/v1.LabelSelector"},
+			"k8s.io/api/admissionregistration/v1.MatchCondition", "k8s.io/apimachinery/pkg/apis/meta/v1.LabelSelector"},
 	}
 }
 

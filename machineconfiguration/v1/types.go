@@ -452,6 +452,29 @@ type MachineConfigPoolSpec struct {
 	// +listMapKey=name
 	// +kubebuilder:validation:MaxItems=100
 	PinnedImageSets []PinnedImageSetRef `json:"pinnedImageSets,omitempty"`
+
+	// osImageStream specifies an OS stream to be used for the pool.
+	//
+	// When set, the referenced stream overrides the cluster-wide OS
+	// images for the pool with the OS and Extensions associated to stream.
+	// When omitted, the pool uses the cluster-wide default OS images.
+	//
+	// +openshift:enable:FeatureGate=OSStreams
+	// +optional
+	OSImageStream OSImageStreamReference `json:"osImageStream,omitempty,omitzero"`
+}
+
+type OSImageStreamReference struct {
+	// name is a reference to an OSImageStream stream to be used for the pool.
+	//
+	// This value should be between 1 and 253 characters, and must contain only lowercase
+	// alphanumeric characters, hyphens and periods, and should start and end with an alphanumeric character.
+	//
+	// +required
+	// +kubebuilder:validation:MinLength:=1
+	// +kubebuilder:validation:MaxLength:=253
+	// +kubebuilder:validation:XValidation:rule="!format.dns1123Subdomain().validate(self).hasValue()",message="a lowercase RFC 1123 subdomain must consist of lower case alphanumeric characters, '-' or '.', and must start and end with an alphanumeric character."
+	Name string `json:"name,omitempty"`
 }
 
 type PinnedImageSetRef struct {
@@ -517,6 +540,13 @@ type MachineConfigPoolStatus struct {
 	// +listMapKey=poolSynchronizerType
 	// +optional
 	PoolSynchronizersStatus []PoolSynchronizerStatus `json:"poolSynchronizersStatus,omitempty"`
+
+	// osImageStream specifies the last updated OSImageStream stream for the pool.
+	//
+	// When omitted, the pool is using the cluster-wide default OS images.
+	// +openshift:enable:FeatureGate=OSStreams
+	// +optional
+	OSImageStream OSImageStreamReference `json:"osImageStream,omitempty,omitzero"`
 }
 
 // +kubebuilder:validation:XValidation:rule="self.machineCount >= self.updatedMachineCount", message="machineCount must be greater than or equal to updatedMachineCount"

@@ -1,6 +1,7 @@
 package v1alpha1
 
 import (
+	admissionregistrationv1 "k8s.io/api/admissionregistration/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
@@ -176,46 +177,6 @@ type CustomResourceDefinitionSchemaValidation struct {
 	Action CRDAdmitAction `json:"action,omitempty"`
 }
 
-// This fork of MatchCondition exists because we wanted more control over its
-// validation rules, and we believe upstream may change them in the near future.
-// We should remove it as soon as we are confident that the upstream rules are
-// stable.
-
-// MatchCondition represents a condition which must by fulfilled for a request to be sent to a webhook.
-// It is a copy of the MatchCondition type from the admissionregistration.k8s.io/v1 API group.
-// It has identical semantics to the upstream type.
-type MatchCondition struct {
-	// name is an identifier for this match condition, used for strategic merging of MatchConditions,
-	// as well as providing an identifier for logging purposes. A good name should be descriptive of
-	// the associated expression.
-	// Name must be a qualified name consisting of alphanumeric characters, '-', '_' or '.', and
-	// must start and end with an alphanumeric character (e.g. 'MyName',  or 'my.name',  or
-	// '123-abc', regex used for validation is '([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9]') with an
-	// optional DNS subdomain prefix and '/' (e.g. 'example.com/MyName')
-	//
-	// +kubebuilder:validation:MinLength=1
-	// +kubebuilder:validation:MaxLength=253
-	// +kubebuilder:validation:XValidation:rule="!format.qualifiedName().validate(self).hasValue()",message="name must be a qualified name consisting of alphanumeric characters, '-', '_' or '.', and must start and end with an alphanumeric character with an optional subdomain prefix and '/' (e.g. 'example.com/MyName')"
-	// +required
-	Name string `json:"name,omitempty"`
-
-	// expression represents the expression which will be evaluated by CEL. Must evaluate to bool.
-	// CEL expressions have access to the contents of the AdmissionRequest and Authorizer, organized into CEL variables:
-	//
-	// 'object' - The object from the incoming request. The value is null for DELETE requests.
-	// 'oldObject' - The existing object. The value is null for CREATE requests.
-	// 'request' - Attributes of the admission request(/pkg/apis/admission/types.go#AdmissionRequest).
-	// 'authorizer' - A CEL Authorizer. May be used to perform authorization checks for the principal (user or service account) of the request.
-	//   See https://pkg.go.dev/k8s.io/apiserver/pkg/cel/library#Authz
-	// 'authorizer.requestResource' - A CEL ResourceCheck constructed from the 'authorizer' and configured with the
-	//   request resource.
-	// Documentation on CEL: https://kubernetes.io/docs/reference/using-api/cel/
-	// +kubebuilder:validation:MinLength=1
-	// +kubebuilder:validation:MaxLength=1024
-	// +required
-	Expression string `json:"expression,omitempty"`
-}
-
 // ObjectSchemaValidation ensures that matching objects conform to the compatibilitySchema.
 type ObjectSchemaValidation struct {
 	// action determines whether violations are rejected (Deny) or admitted with an API warning (Warn).
@@ -242,13 +203,12 @@ type ObjectSchemaValidation struct {
 	// matchConditions defines the matchConditions field of the resulting ValidatingWebhookConfiguration.
 	// When present, must contain between 1 and 64 match conditions.
 	// When not specified, the webhook will match all requests according to its other selectors.
-	// FIXME(chrischdi): should we embed this type? Or maintain our own copy of MatchCondition?
 	// +listType=map
 	// +listMapKey=name
 	// +kubebuilder:validation:MinItems=1
 	// +kubebuilder:validation:MaxItems=64
 	// +optional
-	MatchConditions []MatchCondition `json:"matchConditions,omitempty"`
+	MatchConditions []admissionregistrationv1.MatchCondition `json:"matchConditions,omitempty"`
 }
 
 // CRDAdmitAction determines the action taken when a CRD is not compatible.

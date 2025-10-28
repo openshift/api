@@ -172,6 +172,7 @@ type MachineConfigNodeStatusInternalReleaseImage struct {
 	// releases is a list of the release bundles currently owned and managed by the
 	// cluster, indicating that their images can be safely pulled by any cluster entity
 	// requiring them.
+	// Entries must be unique, keyed on the name field.
 	// This field can contain between 1 and 5 entries.
 	// +listType=map
 	// +listMapKey=name
@@ -183,10 +184,9 @@ type MachineConfigNodeStatusInternalReleaseImage struct {
 
 // MachineConfigNodeStatusInternalReleaseImageRef is used to provide a more detailed reference for
 // a release bundle.
-// +openshift:enable:FeatureGate=NoRegistryClusterOperations
 type MachineConfigNodeStatusInternalReleaseImageRef struct {
-	// conditions represent the observations of an internal release image current state. See InternalReleaseImageConditionType for the possible
-	// type values.
+	// conditions represent the observations of an internal release image current state. Valid types are:
+	// Mounted, Installing, Available, Removing and Degraded.
 	// +listType=map
 	// +listMapKey=type
 	// +kubebuilder:validation:MinItems=1
@@ -201,12 +201,13 @@ type MachineConfigNodeStatusInternalReleaseImageRef struct {
 	// image is an OCP release image referenced by digest.
 	// The format of the image pull spec is: host[:port][/namespace]/name@sha256:<digest>,
 	// where the digest must be 64 characters long, and consist only of lowercase hexadecimal characters, a-f and 0-9.
-	// The length of the whole spec must be between 1 to 447 characters.
+	// The length of the whole spec must be between 0 to 447 characters.
+	// The field is optional, and it will be provided after a release will be successfully installed.
 	// +kubebuilder:validation:MinLength=1
 	// +kubebuilder:validation:MaxLength=447
-	// +kubebuilder:validation:XValidation:rule=`(self.split('@').size() == 2 && self.split('@')[1].matches('^sha256:[a-f0-9]{64}$'))`,message="the OCI Image reference must end with a valid '@sha256:<digest>' suffix, where '<digest>' is 64 characters long"
-	// +kubebuilder:validation:XValidation:rule=`(self.split('@')[0].matches('^([a-zA-Z0-9-]+\\.)+[a-zA-Z0-9-]+(:[0-9]{2,5})?/([a-zA-Z0-9-_]{0,61}/)?[a-zA-Z0-9-_.]*?$'))`,message="the OCI Image name should follow the host[:port][/namespace]/name format, resembling a valid URL without the scheme"
-	// +required
+	// +kubebuilder:validation:XValidation:rule=`self == '' || (self.split('@').size() == 2 && self.split('@')[1].matches('^sha256:[a-f0-9]{64}$'))`,message="the OCI Image reference must end with a valid '@sha256:<digest>' suffix, where '<digest>' is 64 characters long"
+	// +kubebuilder:validation:XValidation:rule=`self == '' || (self.split('@')[0].matches('^([a-zA-Z0-9-]+\\.)+[a-zA-Z0-9-]+(:[0-9]{2,5})?/([a-zA-Z0-9-_]{0,61}/)?[a-zA-Z0-9-_.]*?$'))`,message="the OCI Image name should follow the host[:port][/namespace]/name format, resembling a valid URL without the scheme"
+	// +optional
 	Image string `json:"image,omitempty"`
 }
 

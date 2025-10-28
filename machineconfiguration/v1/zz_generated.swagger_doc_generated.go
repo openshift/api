@@ -465,7 +465,7 @@ func (MachineConfigNodeStatusConfigImage) SwaggerDoc() map[string]string {
 
 var map_MachineConfigNodeStatusInternalReleaseImage = map[string]string{
 	"":         "MachineConfigNodeStatusInternalReleaseImage holds information about the current and discovered release bundles for the observed machine config node.",
-	"releases": "releases is a list of the release bundles currently owned and managed by the cluster, indicating that their images can be safely pulled by any cluster entity requiring them. This field can contain between 1 and 5 entries.",
+	"releases": "releases is a list of the release bundles currently owned and managed by the cluster, indicating that their images can be safely pulled by any cluster entity requiring them. Entries must be unique, keyed on the name field. This field can contain between 1 and 5 entries.",
 }
 
 func (MachineConfigNodeStatusInternalReleaseImage) SwaggerDoc() map[string]string {
@@ -474,9 +474,9 @@ func (MachineConfigNodeStatusInternalReleaseImage) SwaggerDoc() map[string]strin
 
 var map_MachineConfigNodeStatusInternalReleaseImageRef = map[string]string{
 	"":           "MachineConfigNodeStatusInternalReleaseImageRef is used to provide a more detailed reference for a release bundle.",
-	"conditions": "conditions represent the observations of an internal release image current state. See InternalReleaseImageConditionType for the possible type values.",
+	"conditions": "conditions represent the observations of an internal release image current state. Valid types are: Mounted, Installing, Available, Removing and Degraded.",
 	"name":       "name indicates the desired release bundle identifier. This field is required and must be between 1 and 64 characters long.",
-	"image":      "image is an OCP release image referenced by digest. The format of the image pull spec is: host[:port][/namespace]/name@sha256:<digest>, where the digest must be 64 characters long, and consist only of lowercase hexadecimal characters, a-f and 0-9. The length of the whole spec must be between 1 to 447 characters.",
+	"image":      "image is an OCP release image referenced by digest. The format of the image pull spec is: host[:port][/namespace]/name@sha256:<digest>, where the digest must be 64 characters long, and consist only of lowercase hexadecimal characters, a-f and 0-9. The length of the whole spec must be between 0 to 447 characters. The field is optional, and it will be provided after a release will be successfully installed.",
 }
 
 func (MachineConfigNodeStatusInternalReleaseImageRef) SwaggerDoc() map[string]string {

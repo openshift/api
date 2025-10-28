@@ -22,16 +22,6 @@ func (InternalReleaseImage) SwaggerDoc() map[string]string {
 	return map_InternalReleaseImage
 }
 
-var map_InternalReleaseImageDetailedRef = map[string]string{
-	"":      "InternalReleaseImageDetailedRef is used to provide a more detailed reference for a release bundle.",
-	"name":  "name indicates the desired release bundle identifier. This field is required and must be between 1 and 64 characters long.",
-	"image": "image is an OCP release image referenced by digest. The format of the image pull spec is: host[:port][/namespace]/name@sha256:<digest>, where the digest must be 64 characters long, and consist only of lowercase hexadecimal characters, a-f and 0-9. The length of the whole spec must be between 1 to 447 characters.",
-}
-
-func (InternalReleaseImageDetailedRef) SwaggerDoc() map[string]string {
-	return map_InternalReleaseImageDetailedRef
-}
-
 var map_InternalReleaseImageList = map[string]string{
 	"":         "InternalReleaseImageList is a list of InternalReleaseImage resources\n\nCompatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.",
 	"metadata": "metadata is the standard list's metadata. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata",
@@ -52,7 +42,7 @@ func (InternalReleaseImageRef) SwaggerDoc() map[string]string {
 
 var map_InternalReleaseImageSpec = map[string]string{
 	"":         "InternalReleaseImageSpec defines the desired state of a InternalReleaseImage.",
-	"releases": "releases is a list of release bundle identifiers that the user wants to add/remove to/from the control plane nodes. This field can contain between 1 and 5 entries.",
+	"releases": "releases is a list of release bundle identifiers that the user wants to add/remove to/from the control plane nodes. Entries must be unique, keyed on the name field. This field can contain between 1 and 5 entries.",
 }
 
 func (InternalReleaseImageSpec) SwaggerDoc() map[string]string {
@@ -60,13 +50,22 @@ func (InternalReleaseImageSpec) SwaggerDoc() map[string]string {
 }
 
 var map_InternalReleaseImageStatus = map[string]string{
-	"":                  "InternalReleaseImageStatus describes the current state of a InternalReleaseImage.",
-	"mountedReleases":   "mountedReleases is a list of release bundle identifiers currently detected from the ISO attached to one of the control plane nodes. Any reported identifier can be used to amend the `spec.Releases` field to add a new release bundle to the cluster. An empty value indicates that no ISOs are currently being detected on any control plane node. Must not exceed 5 entries.",
-	"availableReleases": "availableReleases is a list of the release bundles currently owned and managed by the cluster, indicating that their images can be safely pulled by any cluster entity requiring them. This field can contain between 1 and 5 entries.",
+	"":         "InternalReleaseImageStatus describes the current state of a InternalReleaseImage.",
+	"releases": "releases is a list of the release bundles currently owned and managed by the cluster, indicating that their images can be safely pulled by any cluster entity requiring them. Entries must be unique, keyed on the name field. This field can contain between 1 and 5 entries.",
 }
 
 func (InternalReleaseImageStatus) SwaggerDoc() map[string]string {
 	return map_InternalReleaseImageStatus
+}
+
+var map_InternalReleaseImageStatusRef = map[string]string{
+	"conditions": "conditions represent the observations of an internal release image current state. Valid types are: Mounted, Installing, Available, Removing and Degraded.",
+	"name":       "name indicates the desired release bundle identifier. This field is required and must be between 1 and 64 characters long.",
+	"image":      "image is an OCP release image referenced by digest. The format of the image pull spec is: host[:port][/namespace]/name@sha256:<digest>, where the digest must be 64 characters long, and consist only of lowercase hexadecimal characters, a-f and 0-9. The length of the whole spec must be between 0 to 447 characters. The field is optional, and it will be provided after a release will be successfully installed.",
+}
+
+func (InternalReleaseImageStatusRef) SwaggerDoc() map[string]string {
+	return map_InternalReleaseImageStatusRef
 }
 
 var map_MCOObjectReference = map[string]string{

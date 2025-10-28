@@ -3,7 +3,7 @@ name: "[TechPreview] InternalReleaseImage"
 crdName: machineconfignodes.machineconfiguration.openshift.io
 featureGates:
 - MachineConfigNodes
-- NoRegistryClusterOperations
+- NoRegistryClusterInstall
 tests:
   onUpdate:
     - name: Should be able to update a MachineConfigNode with a minimal internalReleaseImage status field.

@@ -852,7 +852,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"github.com/openshift/api/machine/v1beta1.VSphereMachineProviderStatus":                              schema_openshift_api_machine_v1beta1_VSphereMachineProviderStatus(ref),
 		"github.com/openshift/api/machine/v1beta1.Workspace":                                                 schema_openshift_api_machine_v1beta1_Workspace(ref),
 		"github.com/openshift/api/machineconfiguration/v1alpha1.InternalReleaseImage":                        schema_openshift_api_machineconfiguration_v1alpha1_InternalReleaseImage(ref),
-		"github.com/openshift/api/machineconfiguration/v1alpha1.InternalReleaseImageDetailedRef":             schema_openshift_api_machineconfiguration_v1alpha1_InternalReleaseImageDetailedRef(ref),
+		"github.com/openshift/api/machineconfiguration/v1alpha1.InternalReleaseImageBundleStatus":            schema_openshift_api_machineconfiguration_v1alpha1_InternalReleaseImageBundleStatus(ref),
 		"github.com/openshift/api/machineconfiguration/v1alpha1.InternalReleaseImageList":                    schema_openshift_api_machineconfiguration_v1alpha1_InternalReleaseImageList(ref),
 		"github.com/openshift/api/machineconfiguration/v1alpha1.InternalReleaseImageRef":                     schema_openshift_api_machineconfiguration_v1alpha1_InternalReleaseImageRef(ref),
 		"github.com/openshift/api/machineconfiguration/v1alpha1.InternalReleaseImageSpec":                    schema_openshift_api_machineconfiguration_v1alpha1_InternalReleaseImageSpec(ref),
@@ -43406,11 +43406,12 @@ func schema_openshift_api_machineconfiguration_v1alpha1_InternalReleaseImage(ref
 					"status": {
 						SchemaProps: spec.SchemaProps{
 							Description: "status describes the last observed state of this internal release image.",
+							Default:     map[string]interface{}{},
 							Ref:         ref("github.com/openshift/api/machineconfiguration/v1alpha1.InternalReleaseImageStatus"),
 						},
 					},
 				},
-				Required: []string{"spec"},
+				Required: []string{"metadata", "spec"},
 			},
 		},
 		Dependencies: []string{
@@ -43418,31 +43419,54 @@ func schema_openshift_api_machineconfiguration_v1alpha1_InternalReleaseImage(ref
 	}
 }
 
-func schema_openshift_api_machineconfiguration_v1alpha1_InternalReleaseImageDetailedRef(ref common.ReferenceCallback) common.OpenAPIDefinition {
+func schema_openshift_api_machineconfiguration_v1alpha1_InternalReleaseImageBundleStatus(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
-				Description: "InternalReleaseImageDetailedRef is used to provide a more detailed reference for a release bundle.",
-				Type:        []string{"object"},
+				Type: []string{"object"},
 				Properties: map[string]spec.Schema{
+					"conditions": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-map-keys": []interface{}{
+									"type",
+								},
+								"x-kubernetes-list-type": "map",
+							},
+						},
+						SchemaProps: spec.SchemaProps{
+							Description: "conditions represent the observations of an internal release image current state. Valid types are: Mounted, Installing, Available, Removing and Degraded.\n\nIf Mounted is true, that means that a valid ISO has been discovered and mounted on one of the cluster nodes. If Installing is true, that means that a new release bundle is currently being copied on one (or more) cluster nodes, and not yet completed. If Available is true, it means that the release has been previously installed on all the cluster nodes, and it can be used. If Removing is true, it means that a release deletion is in progress on one (or more) cluster nodes, and not yet completed. If Degraded is true, that means something has gone wrong (possibly on one or more cluster nodes).\n\nIn general, after installing a new release bundle, it is required to wait for the Conditions \"Available\" to become \"True\" (and all the other conditions to be equal to \"False\") before being able to pull its content.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("k8s.io/apimachinery/pkg/apis/meta/v1.Condition"),
+									},
+								},
+							},
+						},
+					},
 					"name": {
 						SchemaProps: spec.SchemaProps{
-							Description: "name indicates the desired release bundle identifier. This field is required and must be between 1 and 64 characters long.",
+							Description: "name indicates the desired release bundle identifier. This field is required and must be between 1 and 64 characters long. The expected name format is ocp-release-bundle-<version>-<arch|stream>.",
 							Type:        []string{"string"},
 							Format:      "",
 						},
 					},
 					"image": {
 						SchemaProps: spec.SchemaProps{
-							Description: "image is an OCP release image referenced by digest. The format of the image pull spec is: host[:port][/namespace]/name@sha256:<digest>, where the digest must be 64 characters long, and consist only of lowercase hexadecimal characters, a-f and 0-9. The length of the whole spec must be between 1 to 447 characters.",
+							Description: "image is an OCP release image referenced by digest. The format of the image pull spec is: host[:port][/namespace]/name@sha256:<digest>, where the digest must be 64 characters long, and consist only of lowercase hexadecimal characters, a-f and 0-9. The length of the whole spec must be between 1 to 447 characters. The field is optional, and it will be provided after a release will be successfully installed.",
 							Type:        []string{"string"},
 							Format:      "",
 						},
 					},
 				},
-				Required: []string{"name", "image"},
+				Required: []string{"name"},
 			},
 		},
+		Dependencies: []string{
+			"k8s.io/apimachinery/pkg/apis/meta/v1.Condition"},
 	}
 }
 
@@ -43505,7 +43529,7 @@ func schema_openshift_api_machineconfiguration_v1alpha1_InternalReleaseImageRef(
 				Properties: map[string]spec.Schema{
 					"name": {
 						SchemaProps: spec.SchemaProps{
-							Description: "name indicates the desired release bundle identifier. This field is required and must be between 1 and 64 characters long.",
+							Description: "name indicates the desired release bundle identifier. This field is required and must be between 1 and 64 characters long. The expected name format is ocp-release-bundle-<version>-<arch|stream>.",
 							Type:        []string{"string"},
 							Format:      "",
 						},
@@ -43534,7 +43558,7 @@ func schema_openshift_api_machineconfiguration_v1alpha1_InternalReleaseImageSpec
 							},
 						},
 						SchemaProps: spec.SchemaProps{
-							Description: "releases is a list of release bundle identifiers that the user wants to add/remove to/from the control plane nodes. This field can contain between 1 and 5 entries.",
+							Description: "releases is a list of release bundle identifiers that the user wants to add/remove to/from the control plane nodes. Entries must be unique, keyed on the name field. releases must contain at least one entry and must not exceed 16 entries.",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -43562,7 +43586,7 @@ func schema_openshift_api_machineconfiguration_v1alpha1_InternalReleaseImageStat
 				Description: "InternalReleaseImageStatus describes the current state of a InternalReleaseImage.",
 				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
-					"mountedReleases": {
+					"releases": {
 						VendorExtensible: spec.VendorExtensible{
 							Extensions: spec.Extensions{
 								"x-kubernetes-list-map-keys": []interface{}{
@@ -43572,45 +43596,24 @@ func schema_openshift_api_machineconfiguration_v1alpha1_InternalReleaseImageStat
 							},
 						},
 						SchemaProps: spec.SchemaProps{
-							Description: "mountedReleases is a list of release bundle identifiers currently detected from the ISO attached to one of the control plane nodes. Any reported identifier can be used to amend the `spec.Releases` field to add a new release bundle to the cluster. An empty value indicates that no ISOs are currently being detected on any control plane node. Must not exceed 5 entries.",
+							Description: "releases is a list of the release bundles currently owned and managed by the cluster. A release bundle content could be safely pulled only when its Conditions field contains at least an Available entry set to \"True\" and Degraded to \"False\". Entries must be unique, keyed on the name field. releases must contain at least one entry and must not exceed 32 entries.",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
 									SchemaProps: spec.SchemaProps{
 										Default: map[string]interface{}{},
-										Ref:     ref("github.com/openshift/api/machineconfiguration/v1alpha1.InternalReleaseImageRef"),
-									},
-								},
-							},
-						},
-					},
-					"availableReleases": {
-						VendorExtensible: spec.VendorExtensible{
-							Extensions: spec.Extensions{
-								"x-kubernetes-list-map-keys": []interface{}{
-									"name",
-								},
-								"x-kubernetes-list-type": "map",
-							},
-						},
-						SchemaProps: spec.SchemaProps{
-							Description: "availableReleases is a list of the release bundles currently owned and managed by the cluster, indicating that their images can be safely pulled by any cluster entity requiring them. This field can contain between 1 and 5 entries.",
-							Type:        []string{"array"},
-							Items: &spec.SchemaOrArray{
-								Schema: &spec.Schema{
-									SchemaProps: spec.SchemaProps{
-										Default: map[string]interface{}{},
-										Ref:     ref("github.com/openshift/api/machineconfiguration/v1alpha1.InternalReleaseImageDetailedRef"),
+										Ref:     ref("github.com/openshift/api/machineconfiguration/v1alpha1.InternalReleaseImageBundleStatus"),
 									},
 								},
 							},
 						},
 					},
 				},
+				Required: []string{"releases"},
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/machineconfiguration/v1alpha1.InternalReleaseImageDetailedRef", "github.com/openshift/api/machineconfiguration/v1alpha1.InternalReleaseImageRef"},
+			"github.com/openshift/api/machineconfiguration/v1alpha1.InternalReleaseImageBundleStatus"},
 	}
 }
 

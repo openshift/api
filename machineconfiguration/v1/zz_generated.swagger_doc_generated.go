@@ -475,7 +475,7 @@ func (MachineConfigNodeStatusConfigImage) SwaggerDoc() map[string]string {
 
 var map_MachineConfigNodeStatusInternalReleaseImage = map[string]string{
 	"":         "MachineConfigNodeStatusInternalReleaseImage holds information about the current and discovered release bundles for the observed machine config node.",
-	"releases": "releases is a list of the release bundles currently owned and managed by the cluster, indicating that their images can be safely pulled by any cluster entity requiring them. This field can contain between 1 and 5 entries.",
+	"releases": "releases is a list of the release bundles currently owned and managed by the cluster. A release bundle content could be safely pulled only when its Conditions field contains at least an Available entry set to \"True\" and Degraded to \"False\". Entries must be unique, keyed on the name field. releases must contain at least one entry and must not exceed 32 entries.",
 }
 
 func (MachineConfigNodeStatusInternalReleaseImage) SwaggerDoc() map[string]string {
@@ -484,9 +484,9 @@ func (MachineConfigNodeStatusInternalReleaseImage) SwaggerDoc() map[string]strin
 
 var map_MachineConfigNodeStatusInternalReleaseImageRef = map[string]string{
 	"":           "MachineConfigNodeStatusInternalReleaseImageRef is used to provide a more detailed reference for a release bundle.",
-	"conditions": "conditions represent the observations of an internal release image current state. See InternalReleaseImageConditionType for the possible type values.",
-	"name":       "name indicates the desired release bundle identifier. This field is required and must be between 1 and 64 characters long.",
-	"image":      "image is an OCP release image referenced by digest. The format of the image pull spec is: host[:port][/namespace]/name@sha256:<digest>, where the digest must be 64 characters long, and consist only of lowercase hexadecimal characters, a-f and 0-9. The length of the whole spec must be between 1 to 447 characters.",
+	"conditions": "conditions represent the observations of an internal release image current state. Valid types are: Mounted, Installing, Available, Removing and Degraded.\n\nIf Mounted is true, that means that a valid ISO has been mounted on the current node. If Installing is true, that means that a new release bundle is currently being copied on the current node, and not yet completed. If Available is true, it means that the release has been previously installed on the current node, and it can be used. If Removing is true, it means that a release deletion is in progress on the current node, and not yet completed. If Degraded is true, that means something has gone wrong in the current node.",
+	"name":       "name indicates the desired release bundle identifier. This field is required and must be between 1 and 64 characters long. The expected name format is ocp-release-bundle-<version>-<arch|stream>.",
+	"image":      "image is an OCP release image referenced by digest. The format of the image pull spec is: host[:port][/namespace]/name@sha256:<digest>, where the digest must be 64 characters long, and consist only of lowercase hexadecimal characters, a-f and 0-9. The length of the whole spec must be between 1 to 447 characters. The field is optional, and it will be provided after a release will be successfully installed.",
 }
 
 func (MachineConfigNodeStatusInternalReleaseImageRef) SwaggerDoc() map[string]string {

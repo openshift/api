@@ -1,8 +1,10 @@
 package tagliatelle
 
 import (
+	"maps"
+	"strings"
+
 	"github.com/ldez/tagliatelle"
-	"golang.org/x/tools/go/analysis"
 
 	"github.com/golangci/golangci-lint/v2/pkg/config"
 	"github.com/golangci/golangci-lint/v2/pkg/goanalysis"
@@ -20,9 +22,7 @@ func New(settings *config.TagliatelleSettings) *goanalysis.Linter {
 	}
 
 	if settings != nil {
-		for k, v := range settings.Case.Rules {
-			cfg.Rules[k] = v
-		}
+		maps.Copy(cfg.Rules, settings.Case.Rules)
 
 		cfg.ExtendedRules = toExtendedRules(settings.Case.ExtendedRules)
 		cfg.UseFieldName = settings.Case.UseFieldName
@@ -42,24 +42,24 @@ func New(settings *config.TagliatelleSettings) *goanalysis.Linter {
 		}
 	}
 
-	a := tagliatelle.New(cfg)
-
-	return goanalysis.NewLinter(
-		a.Name,
-		a.Doc,
-		[]*analysis.Analyzer{a},
-		nil,
-	).WithLoadMode(goanalysis.LoadModeTypesInfo)
+	return goanalysis.
+		NewLinterFromAnalyzer(tagliatelle.New(cfg)).
+		WithLoadMode(goanalysis.LoadModeTypesInfo)
 }
 
 func toExtendedRules(src map[string]config.TagliatelleExtendedRule) map[string]tagliatelle.ExtendedRule {
 	result := make(map[string]tagliatelle.ExtendedRule, len(src))
 
 	for k, v := range src {
+		initialismOverrides := make(map[string]bool, len(v.InitialismOverrides))
+		for ki, vi := range v.InitialismOverrides {
+			initialismOverrides[strings.ToUpper(ki)] = vi
+		}
+
 		result[k] = tagliatelle.ExtendedRule{
 			Case:                v.Case,
 			ExtraInitialisms:    v.ExtraInitialisms,
-			InitialismOverrides: v.InitialismOverrides,
+			InitialismOverrides: initialismOverrides,
 		}
 	}
 

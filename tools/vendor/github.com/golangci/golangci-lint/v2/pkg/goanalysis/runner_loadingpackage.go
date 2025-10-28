@@ -1,6 +1,7 @@
 package goanalysis
 
 import (
+	"context"
 	"errors"
 	"fmt"
 	"go/ast"
@@ -14,6 +15,7 @@ import (
 	"sync"
 	"sync/atomic"
 
+	"golang.org/x/sync/errgroup"
 	"golang.org/x/tools/go/gcexportdata"
 	"golang.org/x/tools/go/packages"
 
@@ -39,54 +41,85 @@ type loadingPackage struct {
 	decUseMutex sync.Mutex
 }
 
-func (lp *loadingPackage) analyzeRecursive(loadMode LoadMode, loadSem chan struct{}) {
+func (lp *loadingPackage) analyzeRecursive(ctx context.Context, cancel context.CancelFunc, loadMode LoadMode, loadSem chan struct{}) {
 	lp.analyzeOnce.Do(func() {
 		// Load the direct dependencies, in parallel.
 		var wg sync.WaitGroup
+
 		wg.Add(len(lp.imports))
+
 		for _, imp := range lp.imports {
 			go func(imp *loadingPackage) {
-				imp.analyzeRecursive(loadMode, loadSem)
+				imp.analyzeRecursive(ctx, cancel, loadMode, loadSem)
+
 				wg.Done()
 			}(imp)
 		}
+
 		wg.Wait()
-		lp.analyze(loadMode, loadSem)
+
+		lp.analyze(ctx, cancel, loadMode, loadSem)
 	})
 }
 
-func (lp *loadingPackage) analyze(loadMode LoadMode, loadSem chan struct{}) {
+func (lp *loadingPackage) analyze(ctx context.Context, cancel context.CancelFunc, loadMode LoadMode, loadSem chan struct{}) {
 	loadSem <- struct{}{}
 	defer func() {
 		<-loadSem
 	}()
 
+	select {
+	case <-ctx.Done():
+		return
+	default:
+	}
+
 	// Save memory on unused more fields.
 	defer lp.decUse(loadMode < LoadModeWholeProgram)
 
 	if err := lp.loadWithFacts(loadMode); err != nil {
+		// Note: this error is ignored when there is no facts loading (e.g. with 98% of linters).
+		// But this is not a problem because the errors are added to the package.Errors.
+		// You through an error, try to add it to actions, but there is no action annnddd it's gone!
 		werr := fmt.Errorf("failed to load package %s: %w", lp.pkg.Name, err)
+
 		// Don't need to write error to errCh, it will be extracted and reported on another layer.
 		// Unblock depending on actions and propagate error.
 		for _, act := range lp.actions {
 			close(act.analysisDoneCh)
+
 			act.Err = werr
 		}
+
+		if len(lp.actions) == 0 {
+			lp.log.Warnf("no action but there is an error: %v", err)
+		}
+
 		return
 	}
 
-	var actsWg sync.WaitGroup
-	actsWg.Add(len(lp.actions))
-	for _, act := range lp.actions {
-		go func(act *action) {
-			defer actsWg.Done()
+	actsWg, ctxGroup := errgroup.WithContext(ctx)
 
-			act.waitUntilDependingAnalyzersWorked()
+	for _, act := range lp.actions {
+		actsWg.Go(func() error {
+			act.waitUntilDependingAnalyzersWorked(ctxGroup)
+
+			select {
+			case <-ctxGroup.Done():
+				return nil
+			default:
+			}
 
 			act.analyzeSafe()
-		}(act)
+
+			return act.Err
+		})
 	}
-	actsWg.Wait()
+
+	err := actsWg.Wait()
+	if err != nil {
+		cancel()
+	}
 }
 
 func (lp *loadingPackage) loadFromSource(loadMode LoadMode) error {
@@ -213,9 +246,11 @@ func (lp *loadingPackage) loadFromExportData() error {
 			return fmt.Errorf("dependency %q hasn't been loaded yet", path)
 		}
 	}
+
 	if pkg.ExportFile == "" {
 		return fmt.Errorf("no export data for %q", pkg.ID)
 	}
+
 	f, err := os.Open(pkg.ExportFile)
 	if err != nil {
 		return err
@@ -306,13 +341,15 @@ func (lp *loadingPackage) loadImportedPackageWithFacts(loadMode LoadMode) error 
 			if srcErr := lp.loadFromSource(loadMode); srcErr != nil {
 				return srcErr
 			}
+
 			// Make sure this package can't be imported successfully
 			pkg.Errors = append(pkg.Errors, packages.Error{
 				Pos:  "-",
 				Msg:  fmt.Sprintf("could not load export data: %s", err),
 				Kind: packages.ParseError,
 			})
-			return fmt.Errorf("could not load export data: %w", err)
+
+			return nil
 		}
 	}
 

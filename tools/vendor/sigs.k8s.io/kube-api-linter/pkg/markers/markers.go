@@ -155,6 +155,9 @@ const (
 
 	// KubebuilderListMapKeyMarker is the marker used to specify the key field for map-type lists.
 	KubebuilderListMapKeyMarker = "listMapKey"
+
+	// KubebuilderSchemaLessMarker is the marker that indicates that a struct is schemaless.
+	KubebuilderSchemaLessMarker = "kubebuilder:validation:Schemaless"
 )
 
 const (
@@ -163,4 +166,40 @@ const (
 
 	// K8sRequiredMarker is the marker that indicates that a field is required in k8s declarative validation.
 	K8sRequiredMarker = "k8s:required"
+
+	// K8sFormatMarker is the marker that indicates that a field has a format in k8s declarative validation.
+	K8sFormatMarker = "k8s:format"
+
+	// K8sMinLengthMarker is the marker that indicates that a field has a minimum length in k8s declarative validation.
+	K8sMinLengthMarker = "k8s:minLength"
+
+	// K8sMaxLengthMarker is the marker that indicates that a field has a maximum length in k8s declarative validation.
+	K8sMaxLengthMarker = "k8s:maxLength"
+
+	// K8sMinItemsMarker is the marker that indicates that a field has a minimum number of items in k8s declarative validation.
+	K8sMinItemsMarker = "k8s:minItems"
+
+	// K8sMaxItemsMarker is the marker that indicates that a field has a maximum number of items in k8s declarative validation.
+	K8sMaxItemsMarker = "k8s:maxItems"
+
+	// K8sEnumMarker is the marker that indicates that a field has an enum in k8s declarative validation.
+	K8sEnumMarker = "k8s:enum"
+
+	// K8sMinimumMarker is the marker that indicates that a field has a minimum value in k8s declarative validation.
+	K8sMinimumMarker = "k8s:minimum"
+
+	// K8sMaximumMarker is the marker that indicates that a field has a maximum value in k8s declarative validation.
+	K8sMaximumMarker = "k8s:maximum"
+
+	// K8sExclusiveMaximumMarker is the marker that indicates that a field has an exclusive maximum value in k8s declarative validation.
+	K8sExclusiveMaximumMarker = "k8s:exclusiveMaximum"
+
+	// K8sExclusiveMinimumMarker is the marker that indicates that a field has an exclusive minimum value in k8s declarative validation.
+	K8sExclusiveMinimumMarker = "k8s:exclusiveMinimum"
+
+	// K8sListTypeMarker is the marker that indicates that a field is a list in k8s declarative validation.
+	K8sListTypeMarker = "k8s:listType"
+
+	// K8sListMapKeyMarker is the marker that indicates that a field is a map in k8s declarative validation.
+	K8sListMapKeyMarker = "k8s:listMapKey"
 )

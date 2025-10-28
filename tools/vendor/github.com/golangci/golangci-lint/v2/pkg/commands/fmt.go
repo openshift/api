@@ -37,22 +37,20 @@ type fmtCommand struct {
 
 	runner *goformat.Runner
 
-	log    logutils.Log
-	debugf logutils.DebugFunc
+	log logutils.Log
 }
 
 func newFmtCommand(logger logutils.Log, info BuildInfo) *fmtCommand {
 	c := &fmtCommand{
 		viper:     viper.New(),
 		log:       logger,
-		debugf:    logutils.Debug(logutils.DebugKeyExec),
 		cfg:       config.NewDefault(),
 		buildInfo: info,
 	}
 
 	fmtCmd := &cobra.Command{
 		Use:               "fmt",
-		Short:             "Format Go source files",
+		Short:             "Format Go source files.",
 		RunE:              c.execute,
 		PreRunE:           c.preRunE,
 		PersistentPreRunE: c.persistentPreRunE,

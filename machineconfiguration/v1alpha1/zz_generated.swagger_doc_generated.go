@@ -22,14 +22,14 @@ func (InternalReleaseImage) SwaggerDoc() map[string]string {
 	return map_InternalReleaseImage
 }
 
-var map_InternalReleaseImageDetailedRef = map[string]string{
-	"":      "InternalReleaseImageDetailedRef is used to provide a more detailed reference for a release bundle.",
-	"name":  "name indicates the desired release bundle identifier. This field is required and must be between 1 and 64 characters long.",
-	"image": "image is an OCP release image referenced by digest. The format of the image pull spec is: host[:port][/namespace]/name@sha256:<digest>, where the digest must be 64 characters long, and consist only of lowercase hexadecimal characters, a-f and 0-9. The length of the whole spec must be between 1 to 447 characters.",
+var map_InternalReleaseImageBundleStatus = map[string]string{
+	"conditions": "conditions represent the observations of an internal release image current state. Valid types are: Mounted, Installing, Available, Removing and Degraded.\n\nIf Mounted is true, that means that a valid ISO has been discovered and mounted on one of the cluster nodes. If Installing is true, that means that a new release bundle is currently being copied on one (or more) cluster nodes, and not yet completed. If Available is true, it means that the release has been previously installed on all the cluster nodes, and it can be used. If Removing is true, it means that a release deletion is in progress on one (or more) cluster nodes, and not yet completed. If Degraded is true, that means something has gone wrong (possibly on one or more cluster nodes).\n\nIn general, after installing a new release bundle, it is required to wait for the Conditions \"Available\" to become \"True\" (and all the other conditions to be equal to \"False\") before being able to pull its content.",
+	"name":       "name indicates the desired release bundle identifier. This field is required and must be between 1 and 64 characters long. The expected name format is ocp-release-bundle-<version>-<arch|stream>.",
+	"image":      "image is an OCP release image referenced by digest. The format of the image pull spec is: host[:port][/namespace]/name@sha256:<digest>, where the digest must be 64 characters long, and consist only of lowercase hexadecimal characters, a-f and 0-9. The length of the whole spec must be between 1 to 447 characters. The field is optional, and it will be provided after a release will be successfully installed.",
 }
 
-func (InternalReleaseImageDetailedRef) SwaggerDoc() map[string]string {
-	return map_InternalReleaseImageDetailedRef
+func (InternalReleaseImageBundleStatus) SwaggerDoc() map[string]string {
+	return map_InternalReleaseImageBundleStatus
 }
 
 var map_InternalReleaseImageList = map[string]string{
@@ -43,7 +43,7 @@ func (InternalReleaseImageList) SwaggerDoc() map[string]string {
 
 var map_InternalReleaseImageRef = map[string]string{
 	"":     "InternalReleaseImageRef is used to provide a simple reference for a release bundle. Currently it contains only the name field.",
-	"name": "name indicates the desired release bundle identifier. This field is required and must be between 1 and 64 characters long.",
+	"name": "name indicates the desired release bundle identifier. This field is required and must be between 1 and 64 characters long. The expected name format is ocp-release-bundle-<version>-<arch|stream>.",
 }
 
 func (InternalReleaseImageRef) SwaggerDoc() map[string]string {
@@ -52,7 +52,7 @@ func (InternalReleaseImageRef) SwaggerDoc() map[string]string {
 
 var map_InternalReleaseImageSpec = map[string]string{
 	"":         "InternalReleaseImageSpec defines the desired state of a InternalReleaseImage.",
-	"releases": "releases is a list of release bundle identifiers that the user wants to add/remove to/from the control plane nodes. This field can contain between 1 and 5 entries.",
+	"releases": "releases is a list of release bundle identifiers that the user wants to add/remove to/from the control plane nodes. Entries must be unique, keyed on the name field. releases must contain at least one entry and must not exceed 16 entries.",
 }
 
 func (InternalReleaseImageSpec) SwaggerDoc() map[string]string {
@@ -60,9 +60,8 @@ func (InternalReleaseImageSpec) SwaggerDoc() map[string]string {
 }
 
 var map_InternalReleaseImageStatus = map[string]string{
-	"":                  "InternalReleaseImageStatus describes the current state of a InternalReleaseImage.",
-	"mountedReleases":   "mountedReleases is a list of release bundle identifiers currently detected from the ISO attached to one of the control plane nodes. Any reported identifier can be used to amend the `spec.Releases` field to add a new release bundle to the cluster. An empty value indicates that no ISOs are currently being detected on any control plane node. Must not exceed 5 entries.",
-	"availableReleases": "availableReleases is a list of the release bundles currently owned and managed by the cluster, indicating that their images can be safely pulled by any cluster entity requiring them. This field can contain between 1 and 5 entries.",
+	"":         "InternalReleaseImageStatus describes the current state of a InternalReleaseImage.",
+	"releases": "releases is a list of the release bundles currently owned and managed by the cluster. A release bundle content could be safely pulled only when its Conditions field contains at least an Available entry set to \"True\" and Degraded to \"False\". Entries must be unique, keyed on the name field. releases must contain at least one entry and must not exceed 32 entries.",
 }
 
 func (InternalReleaseImageStatus) SwaggerDoc() map[string]string {

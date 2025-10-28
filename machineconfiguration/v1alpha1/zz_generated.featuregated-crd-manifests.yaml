@@ -5,7 +5,7 @@ internalreleaseimages.machineconfiguration.openshift.io:
   Capability: ""
   Category: ""
   FeatureGates:
-  - NoRegistryClusterOperations
+  - NoRegistryClusterInstall
   FilenameOperatorName: machine-config
   FilenameOperatorOrdering: "01"
   FilenameRunLevel: "0000_80"
@@ -19,7 +19,7 @@ internalreleaseimages.machineconfiguration.openshift.io:
   Scope: Cluster
   ShortNames: null
   TopLevelFeatureGates:
-  - NoRegistryClusterOperations
+  - NoRegistryClusterInstall
   Version: v1alpha1
 
 machineconfignodes.machineconfiguration.openshift.io:

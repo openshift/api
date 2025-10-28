@@ -25085,6 +25085,114 @@
         }
       }
     },
+    "com.github.openshift.api.machineconfiguration.v1alpha1.OSImageStream": {
+      "description": "OSImageStream describes a set of streams and associated URLs available for the MachineConfigPools to be used as base OS images.\n\nCompatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.",
+      "type": "object",
+      "required": [
+        "spec"
+      ],
+      "properties": {
+        "apiVersion": {
+          "description": "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+          "type": "string"
+        },
+        "kind": {
+          "description": "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+          "type": "string"
+        },
+        "metadata": {
+          "description": "metadata is the standard object's metadata. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata",
+          "default": {},
+          "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.ObjectMeta"
+        },
+        "spec": {
+          "description": "spec contains the desired OSImageStream config configuration.",
+          "$ref": "#/definitions/com.github.openshift.api.machineconfiguration.v1alpha1.OSImageStreamSpec"
+        },
+        "status": {
+          "description": "status describes the last observed state of this OSImageStream. Populated by the MachineConfigOperator after reading release metadata. When not present, the controller has not yet reconciled this resource.",
+          "$ref": "#/definitions/com.github.openshift.api.machineconfiguration.v1alpha1.OSImageStreamStatus"
+        }
+      }
+    },
+    "com.github.openshift.api.machineconfiguration.v1alpha1.OSImageStreamList": {
+      "description": "OSImageStreamList is a list of OSImageStream resources\n\nCompatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.",
+      "type": "object",
+      "required": [
+        "metadata",
+        "items"
+      ],
+      "properties": {
+        "apiVersion": {
+          "description": "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+          "type": "string"
+        },
+        "items": {
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/com.github.openshift.api.machineconfiguration.v1alpha1.OSImageStream"
+          }
+        },
+        "kind": {
+          "description": "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+          "type": "string"
+        },
+        "metadata": {
+          "description": "metadata is the standard list's metadata. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata",
+          "default": {},
+          "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.ListMeta"
+        }
+      }
+    },
+    "com.github.openshift.api.machineconfiguration.v1alpha1.OSImageStreamSpec": {
+      "description": "OSImageStreamSpec defines the desired state of a OSImageStream.",
+      "type": "object"
+    },
+    "com.github.openshift.api.machineconfiguration.v1alpha1.OSImageStreamStatus": {
+      "description": "OSImageStreamStatus describes the current state of a OSImageStream.",
+      "type": "object",
+      "properties": {
+        "availableStreams": {
+          "description": "availableStreams is a list of the available OS Image Streams available and their associated URLs for both OS and Extensions images.\n\nA maximum of 100 streams may be specified.",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/com.github.openshift.api.machineconfiguration.v1alpha1.OSImageStreamURLSet"
+          },
+          "x-kubernetes-list-map-keys": [
+            "name"
+          ],
+          "x-kubernetes-list-type": "map"
+        },
+        "defaultStream": {
+          "description": "defaultStream is the name of the stream that should be used as the default when no specific stream is requested by a MachineConfigPool. Must reference the name of one of the streams in availableStreams. Must be set when availableStreams is not empty. When not set and availableStreams is empty, controllers should use the default one stated in the release image.",
+          "type": "string"
+        }
+      }
+    },
+    "com.github.openshift.api.machineconfiguration.v1alpha1.OSImageStreamURLSet": {
+      "type": "object",
+      "required": [
+        "name",
+        "osImageURL",
+        "osExtensionsImageURL"
+      ],
+      "properties": {
+        "name": {
+          "description": "name is the identifier of the stream.\n\nMust not be empty and must not exceed 70 characters in length. Must only contain alphanumeric characters, hyphens ('-'), or dots ('.').",
+          "type": "string"
+        },
+        "osExtensionsImageURL": {
+          "description": "osExtensionsImageURL is an OS Extensions Image referenced by digest.\n\nThe format of the URL ref is: host[:port][/namespace]/name@sha256:<digest>",
+          "type": "string"
+        },
+        "osImageURL": {
+          "description": "osImageURL is an OS Image referenced by digest.\n\nThe format of the URL ref is: host[:port][/namespace]/name@sha256:<digest>",
+          "type": "string"
+        }
+      }
+    },
     "com.github.openshift.api.machineconfiguration.v1alpha1.PinnedImageRef": {
       "type": "object",
       "required": [

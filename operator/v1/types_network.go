@@ -399,6 +399,11 @@ type OpenShiftSDNConfig struct {
 
 // ovnKubernetesConfig contains the configuration parameters for networks
 // using the ovn-kubernetes network project
+// +kubebuilder:validation:XValidation:rule='self.defaultNetworkTransport == "NoOverlay" || !has(self.defaultNetworkNoOverlayOptions)',message="defaultNetworkNoOverlayOptions is only supported for no-overlay networks"
+// +kubebuilder:validation:XValidation:rule='!(self.defaultNetworkTransport == "NoOverlay" && has(self.defaultNetworkNoOverlayOptions) && self.defaultNetworkNoOverlayOptions.routing == "Managed") || has(self.bgpManagedConfig)',message="bgpManagedConfig is required when DefaultNetworkTransport is NoOverlay, DefaultNetworkNoOverlayOptions is set and DefaultNetworkNoOverlayOptions.Routing=\"Managed\""
+// +kubebuilder:validation:XValidation:rule='self.defaultNetworkTransport == oldSelf.defaultNetworkTransport',message="DefaultNetworkTransport field is immutable"
+// +kubebuilder:validation:XValidation:rule='self.defaultNetworkNoOverlayOptions == oldSelf.defaultNetworkNoOverlayOptions',message="defaultNetworkNoOverlayOptions field is immutable"
+// +kubebuilder:validation:XValidation:rule='self.bgpManagedConfig == oldSelf.bgpManagedConfig',message="bgpManagedConfig field is immutable"
 type OVNKubernetesConfig struct {
 	// mtu is the MTU to use for the tunnel interface. This must be 100
 	// bytes smaller than the uplink mtu.
@@ -468,6 +473,44 @@ type OVNKubernetesConfig struct {
 	// +openshift:enable:FeatureGate=RouteAdvertisements
 	// +optional
 	RouteAdvertisements RouteAdvertisementsEnablement `json:"routeAdvertisements,omitempty"`
+
+	// DefaultNetworkTransport describes the transport protocol for east-west traffic for the default network.
+	// Allowed values are "NoOverlay" and "Geneve".
+	// - "NoOverlay": The default network operates in no-overlay mode.
+	// - "Geneve": The default network uses Geneve overlay.
+	// Defaults to "Geneve".
+	// +kubebuilder:validation:Enum=NoOverlay;Geneve
+	// +kubebuilder:default=Geneve
+	// +optional
+	DefaultNetworkTransport TransportOption `json:"defaultNetworkTransport,omitempty"`
+	// DefaultNetworkNoOverlayOptions contains configuration for no-overlay mode for the default network.
+	// It is required when DefaultNetworkTransport is "NoOverlay".
+	// +optional
+	DefaultNetworkNoOverlayOptions *NoOverlayOptions `json:"defaultNetworkNoOverlayOptions,omitempty"`
+
+	// NoOverlayManagedConfig configures the BGP properties for networks (default network or CUDNs)
+	// in no-overlay mode that specify routing="managed" in their NoOverlayOptions.
+	// It is required when DefaultNetworkNoOverlayOptions.Routing is set to "Managed".
+	// +optional
+	BGPManagedConfig *bgpManagedConfig `json:"BGPManagedConfig,omitempty"`
+}
+
+// NoOverlayManagedConfig contains configuration options for BGP when routing is "Managed".
+type bgpManagedConfig struct {
+	// ASNumber is the 2-byte or 4-byte Autonomous System Number (ASN)
+	// to be used in the generated FRR configuration. It is required
+	// when NoOverlayOptions.Routing is "Managed".
+	// +kubebuilder:validation:Minimum=1
+	// +kubebuilder:validation:Maximum=4294967295
+	ASNumber *uint32 `json:"asNumber,omitempty"`
+
+	// BGPTopology defines the BGP topology to be used. Allowed values
+	// are "fullMesh".
+	// - "fullMesh": Every node deploys a BGP router, forming a BGP full mesh.
+	// Defaults to "fullMesh".
+	// +kubebuilder:validation:Enum=fullMesh
+	// +optional
+	BGPTopology BGPTopology `json:"bgpTopology,omitempty"`
 }
 
 type IPv4OVNKubernetesConfig struct {
@@ -897,4 +940,35 @@ type AdditionalRoutingCapabilities struct {
 	// +kubebuilder:validation:MaxItems=1
 	// +kubebuilder:validation:XValidation:rule="self.all(x, self.exists_one(y, x == y))"
 	Providers []RoutingCapabilitiesProvider `json:"providers"`
+}
+
+type TransportOption string
+type SnatOption string
+type RoutingOption string
+type BGPTopology string
+
+const (
+	TransportOptionNoOverlay TransportOption = "NoOverlay"
+	TransportOptionGeneve    TransportOption = "Geneve"
+
+	SnatEnable  SnatOption = "Enable"
+	SnatDisable SnatOption = "Disable"
+
+	RoutingManaged   RoutingOption = "Managed"
+	RoutingUnmanaged RoutingOption = "Unmanaged"
+
+	// BGPTopologyRouteReflector BGPTopology = "routeReflector" // TODO: Enable when route reflector is implemented in FRR-Kubernetes (and OVN-Kubernetes)
+	BGPTopologyFullMesh BGPTopology = "fullMesh"
+)
+
+// NoOverlayOptions contains configuration options for networks operating in no-overlay mode.
+type NoOverlayOptions struct {
+	// OutboundSNAT defines the SNAT behavior for outbound traffic from pods.
+	// +kubebuilder:validation:Enum=Enable;Disable
+	// +required
+	OutboundSNAT SnatOption `json:"outboundSNAT,omitempty"`
+	// Routing specifies whether the pod network routing is managed by OVN-Kubernetes or users.
+	// +kubebuilder:validation:Enum=Managed;Unmanaged
+	// +required
+	Routing RoutingOption `json:"routing,omitempty"`
 }

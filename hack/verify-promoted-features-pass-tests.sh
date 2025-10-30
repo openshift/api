@@ -35,4 +35,10 @@ if [ -z "${CODEGEN:-}" ];then
   CODEGEN="${TOOLS_OUTPUT}/codegen"
 fi
 
+# There's 2 commands to run, so we need to disable errexit so both commands can run
+set +e
+
 "${CODEGEN}" featuregate-test-analyzer
+
+# Verifies that all featuregates enabled in the Default featureset are also enabled in the OKD featureset
+"${CODEGEN}" verify-okd-featuregates

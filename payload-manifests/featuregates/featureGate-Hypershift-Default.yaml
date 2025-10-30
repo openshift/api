@@ -82,9 +82,6 @@
                         "name": "DyanmicServiceEndpointIBMCloud"
                     },
                     {
-                        "name": "DynamicResourceAllocation"
-                    },
-                    {
                         "name": "EtcdBackendQuota"
                     },
                     {
@@ -241,6 +238,9 @@
                     },
                     {
                         "name": "ConsolePluginContentSecurityPolicy"
+                    },
+                    {
+                        "name": "DynamicResourceAllocation"
                     },
                     {
                         "name": "ExternalOIDC"

@@ -9,6 +9,7 @@ import (
 	"github.com/openshift/api/tools/codegen/pkg/generation"
 	"github.com/openshift/api/tools/codegen/pkg/utils"
 	"k8s.io/gengo/v2/parser"
+	"k8s.io/gengo/v2/types"
 	"k8s.io/klog/v2"
 
 	"k8s.io/code-generator/cmd/deepcopy-gen/args"
@@ -18,7 +19,7 @@ import (
 )
 
 // generateDeepcopyFunctions generates the DeepCopy functions for the given API package paths.
-func generateDeepcopyFunctions(p *parser.Parser, path, packagePath, outputBaseFileName, headerFilePath string, verify bool) error {
+func generateDeepcopyFunctions(p *parser.Parser, universe types.Universe, path, packagePath, outputBaseFileName, headerFilePath string, verify bool) error {
 	wd, err := os.Getwd()
 	if err != nil {
 		return fmt.Errorf("failed to get working directory: %w", err)
@@ -39,7 +40,7 @@ func generateDeepcopyFunctions(p *parser.Parser, path, packagePath, outputBaseFi
 	}
 
 	args := &args.Args{
-		BoundingDirs: []string{inputPath},
+		BoundingDirs: []string{packagePath},
 		GoHeaderFile: headerFilePath,
 		OutputFile:   outputBaseFileName,
 	}
@@ -50,10 +51,11 @@ func generateDeepcopyFunctions(p *parser.Parser, path, packagePath, outputBaseFi
 		return generators.GetTargets(context, args)
 	}
 
-	if err := generation.Execute(p,
+	if err := generation.Execute(p, universe,
 		generators.NameSystems(),
 		generators.DefaultNameSystem(),
 		myTargets,
+		[]string{packagePath},
 	); err != nil {
 		return fmt.Errorf("error executing deepcopy generator: %w", err)
 	}

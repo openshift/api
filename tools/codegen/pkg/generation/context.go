@@ -12,6 +12,8 @@ import (
 	"golang.org/x/tools/go/packages"
 	"k8s.io/apimachinery/pkg/runtime/schema"
 	"k8s.io/apimachinery/pkg/util/sets"
+	"k8s.io/gengo/v2"
+	"k8s.io/gengo/v2/parser"
 	"k8s.io/klog/v2"
 )
 
@@ -59,6 +61,9 @@ type APIVersionContext struct {
 
 	// PackageName is the golang packagh name for the API version.
 	PackageName string
+
+	// GengoParser is the parser for the API version.
+	GengoParser *parser.Parser
 }
 
 // Options represents the base configuration used to generate a context.
@@ -196,11 +201,17 @@ func findAPIGroups(goPackages map[string]*packages.Package, desiredGroupVersions
 				group := gvv.groupVersion.Group
 				version := gvv.groupVersion.Version
 
+				p, err := newGengoParser(pkgPath)
+				if err != nil {
+					return nil, fmt.Errorf("could not build Gengo parser: %w", err)
+				}
+
 				apiGroups[group] = append(apiGroups[group], APIVersionContext{
 					Name:        version,
 					Path:        pkgPath,
 					PackagePath: pkg.PkgPath,
 					PackageName: pkg.Name,
+					GengoParser: p,
 				})
 			} else {
 				klog.V(3).Infof("No GroupVersion found in path %s", pkgPath)
@@ -322,4 +333,13 @@ func getValueOf(value *ast.CompositeLit, name string) (string, error) {
 	}
 
 	return "", nil
+}
+
+func newGengoParser(pkgPath string) (*parser.Parser, error) {
+	p := parser.NewWithOptions(parser.Options{BuildTags: []string{gengo.StdBuildTag}})
+	if err := p.LoadPackages(pkgPath); err != nil {
+		return nil, fmt.Errorf("failed making a parser: %v", err)
+	}
+
+	return p, nil
 }

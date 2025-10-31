@@ -6,8 +6,8 @@ import (
 	"path/filepath"
 
 	"github.com/openshift/api/tools/codegen/pkg/generation"
-	"k8s.io/gengo/v2"
 	"k8s.io/gengo/v2/generator"
+	"k8s.io/gengo/v2/parser"
 	"k8s.io/klog/v2"
 )
 
@@ -83,7 +83,7 @@ func (g *emptyPartialSchemasGenerator) GenGroup(groupCtx generation.APIGroupCont
 
 		klog.Infof("%s %q functions for for %s/%s", action, g.Name(), groupCtx.Name, version.Name)
 
-		if err := g.generatePartialSchemaFiles(version.Path, version.PackagePath, g.verify); err != nil {
+		if err := g.generatePartialSchemaFiles(version.GengoParser, version.Path, version.PackagePath, g.verify); err != nil {
 			return nil, fmt.Errorf("could not generate %v functions for %s/%s: %w", g.Name(), groupCtx.Name, version.Name, err)
 		}
 	}
@@ -92,7 +92,7 @@ func (g *emptyPartialSchemasGenerator) GenGroup(groupCtx generation.APIGroupCont
 }
 
 // generatePartialSchemaFiles generates the DeepCopy functions for the given API package paths.
-func (g *emptyPartialSchemasGenerator) generatePartialSchemaFiles(path, packagePath string, verify bool) error {
+func (g *emptyPartialSchemasGenerator) generatePartialSchemaFiles(p *parser.Parser, path, packagePath string, verify bool) error {
 	wd, err := os.Getwd()
 	if err != nil {
 		return fmt.Errorf("failed to get working directory: %w", err)
@@ -118,12 +118,10 @@ func (g *emptyPartialSchemasGenerator) generatePartialSchemaFiles(path, packageP
 		return gengoGeneratorResults.GetTargets(context)
 	}
 
-	if err := gengo.Execute(
+	if err := generation.Execute(p,
 		NameSystems(),
 		DefaultNameSystem(),
 		myTargets,
-		gengo.StdBuildTag,
-		[]string{inputPath},
 	); err != nil {
 		return fmt.Errorf("error executing %v generator: %w", g.Name(), err)
 	}

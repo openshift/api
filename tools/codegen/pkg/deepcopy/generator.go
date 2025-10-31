@@ -106,7 +106,7 @@ func (g *generator) GenGroup(groupCtx generation.APIGroupContext) ([]generation.
 
 		klog.V(1).Infof("%s deepcopy functions for for %s/%s", action, groupCtx.Name, version.Name)
 
-		if err := generateDeepcopyFunctions(version.Path, version.PackagePath, g.outputBaseFileName, headerFilePath, g.verify); err != nil {
+		if err := generateDeepcopyFunctions(version.GengoParser, version.Path, version.PackagePath, g.outputBaseFileName, headerFilePath, g.verify); err != nil {
 			return nil, fmt.Errorf("could not generate deepcopy functions for %s/%s: %w", groupCtx.Name, version.Name, err)
 		}
 	}

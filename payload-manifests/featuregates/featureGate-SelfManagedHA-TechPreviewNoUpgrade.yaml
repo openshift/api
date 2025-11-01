@@ -104,6 +104,9 @@
                         "name": "CPMSMachineNamePrefix"
                     },
                     {
+                        "name": "CRIOCredentialProviderConfig"
+                    },
+                    {
                         "name": "ClientsAllowCBOR"
                     },
                     {

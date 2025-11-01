@@ -366,6 +366,114 @@ func (PublicKey) SwaggerDoc() map[string]string {
 	return map_PublicKey
 }
 
+var map_DefaultIngressControllerConfig = map[string]string{
+	"":             "DefaultIngressControllerConfig represents the configuration for the default ingress controller deployment. defaultIngressControllerConfig provides configuration options for the default ingress controller instance that runs in the `openshift-ingress` namespace. Use this configuration to control how the default ingress controller is deployed, how it logs, and how its pods are scheduled.",
+	"logLevel":     "logLevel defines the verbosity of logs emitted by the ingress controller. This field allows users to control the amount and severity of logs generated, which can be useful for debugging issues or reducing noise in production environments. Allowed values are Error, Warn, Info, and Debug. When set to Error, only errors will be logged. When set to Warn, both warnings and errors will be logged. When set to Info, general information, warnings, and errors will all be logged. When set to Debug, detailed debugging information will be logged. When omitted, this means no opinion and the platform is left to choose a reasonable default, that is subject to change over time. The current default value is `Info`.",
+	"nodeSelector": "nodeSelector defines the nodes on which the ingress controller Pods are scheduled nodeSelector is optional.\n\nWhen omitted, this means the user has no opinion and the platform is left to choose reasonable defaults. These defaults are subject to change over time. The current default value is `kubernetes.io/os: linux`.",
+	"resources":    "resources defines the compute resource requests and limits for the ingress controller container. This includes CPU, memory and HugePages constraints to help control scheduling and resource usage. When not specified, defaults are used by the platform. Requests cannot exceed limits. This field is optional. More info: https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/ This is a simplified API that maps to Kubernetes ResourceRequirements. The current default values are:\n  resources:\n   - name: cpu\n     request: 100m\n     limit: null\n   - name: memory\n     request: 256Mi\n     limit: null\nMaximum length for this list is 10. Minimum length for this list is 1.",
+	"replicas":     "replicas defines the desired number of ingress controller replicas. This field allows users to control the availability and load distribution of the ingress controller. When not specified, defaults are used by the platform based on the cluster topology. The current default behavior is: - SingleReplica topology: 1 replica - HighlyAvailable topology: 2 replicas",
+	"tolerations":  "tolerations defines the tolerations for ingress controller pods. This allows the ingress controller to be scheduled on nodes with matching taints. When not specified, no tolerations are applied.",
+	"affinity":     "affinity defines the affinity rules for ingress controller pods. This allows users to control pod placement for high availability or performance optimization. When not specified, no affinity rules are applied.",
+}
+
+func (DefaultIngressControllerConfig) SwaggerDoc() map[string]string {
+	return map_DefaultIngressControllerConfig
+}
+
+var map_IngressControllerBufferSizes = map[string]string{
+	"":                        "IngressControllerBufferSizes defines buffer size settings for ingress controllers.",
+	"requestHeaderBufferSize": "requestHeaderBufferSize defines the size of the buffer for request headers. This affects the maximum size of request headers that can be processed. When not specified, the platform default is used.",
+	"responseBufferSize":      "responseBufferSize defines the size of the buffer for responses. This affects buffering behavior for responses from backend servers. When not specified, the platform default is used.",
+}
+
+func (IngressControllerBufferSizes) SwaggerDoc() map[string]string {
+	return map_IngressControllerBufferSizes
+}
+
+var map_IngressControllerConfig = map[string]string{
+	"":         "IngressControllerConfig is the Custom Resource object which holds the current configuration of Ingress Controllers. This provides a cluster-level configuration API for managing ingress controller operational settings.\n\nCompatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.",
+	"metadata": "metadata is the standard object metadata.",
+	"spec":     "spec holds user configuration for the Ingress Controllers",
+	"status":   "status holds observed values from the cluster. They may not be overridden.",
+}
+
+func (IngressControllerConfig) SwaggerDoc() map[string]string {
+	return map_IngressControllerConfig
+}
+
+var map_IngressControllerConfigList = map[string]string{
+	"":         "Compatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.",
+	"metadata": "metadata is the standard list metadata.",
+	"items":    "items is a list of IngressControllerConfig",
+}
+
+func (IngressControllerConfigList) SwaggerDoc() map[string]string {
+	return map_IngressControllerConfigList
+}
+
+var map_IngressControllerConfigSpec = map[string]string{
+	"":                        "IngressControllerConfigSpec defines the desired state of Ingress Controller operational configuration",
+	"defaultControllerConfig": "defaultControllerConfig allows users to configure how the default ingress controller instance should be deployed and managed. defaultControllerConfig is optional. When omitted, this means no opinion and the platform is left to choose a reasonable default, that is subject to change over time.",
+	"performanceTuning":       "performanceTuning provides configuration options for performance optimization of ingress controllers. performanceTuning is optional. When omitted, this means no opinion and the platform is left to choose a reasonable default, that is subject to change over time.",
+}
+
+func (IngressControllerConfigSpec) SwaggerDoc() map[string]string {
+	return map_IngressControllerConfigSpec
+}
+
+var map_IngressControllerConfigStatus = map[string]string{
+	"":           "IngressControllerConfigStatus defines the observed state of IngressControllerConfig",
+	"conditions": "conditions represent the latest available observations of the IngressControllerConfig's current state.",
+}
+
+func (IngressControllerConfigStatus) SwaggerDoc() map[string]string {
+	return map_IngressControllerConfigStatus
+}
+
+var map_IngressControllerConnectionLimits = map[string]string{
+	"":                         "IngressControllerConnectionLimits defines connection-related limits for ingress controllers.",
+	"maxConnections":           "maxConnections defines the maximum number of concurrent connections. This helps prevent resource exhaustion under high load. When not specified, the platform default is used.",
+	"maxConnectionsPerBackend": "maxConnectionsPerBackend defines the maximum number of connections per backend server. This helps distribute load evenly across backend servers. When not specified, the platform default is used.",
+	"maxRequestsPerConnection": "maxRequestsPerConnection defines the maximum number of requests per connection. This controls connection reuse behavior. When not specified, the platform default is used.",
+}
+
+func (IngressControllerConnectionLimits) SwaggerDoc() map[string]string {
+	return map_IngressControllerConnectionLimits
+}
+
+var map_IngressControllerContainerResource = map[string]string{
+	"":        "IngressControllerContainerResource defines a single resource requirement for an ingress controller container.",
+	"name":    "name of the resource (e.g. \"cpu\", \"memory\", \"hugepages-2Mi\"). This field is required. name must consist only of alphanumeric characters, `-`, `_` and `.` and must start and end with an alphanumeric character.",
+	"request": "request is the minimum amount of the resource required (e.g. \"2Mi\", \"1Gi\"). This field is optional. When limit is specified, request cannot be greater than limit.",
+	"limit":   "limit is the maximum amount of the resource allowed (e.g. \"2Mi\", \"1Gi\"). This field is optional. When request is specified, limit cannot be less than request. The value must be greater than 0 when specified.",
+}
+
+func (IngressControllerContainerResource) SwaggerDoc() map[string]string {
+	return map_IngressControllerContainerResource
+}
+
+var map_IngressControllerPerformanceTuning = map[string]string{
+	"":                 "IngressControllerPerformanceTuning provides configuration options for performance optimization of ingress controllers. Use this configuration to control connection limits, timeouts, and other performance-related settings.",
+	"connectionLimits": "connectionLimits defines limits on connections handled by the ingress controller. connectionLimits is optional. When omitted, this means no opinion and the platform is left to choose reasonable defaults.",
+	"timeouts":         "timeouts defines timeout settings for the ingress controller. timeouts is optional. When omitted, this means no opinion and the platform is left to choose reasonable defaults.",
+	"bufferSizes":      "bufferSizes defines buffer size settings for the ingress controller. bufferSizes is optional. When omitted, this means no opinion and the platform is left to choose reasonable defaults.",
+}
+
+func (IngressControllerPerformanceTuning) SwaggerDoc() map[string]string {
+	return map_IngressControllerPerformanceTuning
+}
+
+var map_IngressControllerTimeouts = map[string]string{
+	"":               "IngressControllerTimeouts defines timeout settings for ingress controllers.",
+	"clientTimeout":  "clientTimeout defines the timeout for client connections. This is the maximum time to wait for a client to send a request. When not specified, the platform default is used.",
+	"serverTimeout":  "serverTimeout defines the timeout for backend server connections. This is the maximum time to wait for a response from a backend server. When not specified, the platform default is used.",
+	"connectTimeout": "connectTimeout defines the timeout for establishing connections to backend servers. This is the maximum time to wait when establishing a connection to a backend. When not specified, the platform default is used.",
+}
+
+func (IngressControllerTimeouts) SwaggerDoc() map[string]string {
+	return map_IngressControllerTimeouts
+}
+
 var map_GatherConfig = map[string]string{
 	"":                  "gatherConfig provides data gathering configuration options.",
 	"dataPolicy":        "dataPolicy allows user to enable additional global obfuscation of the IP addresses and base domain in the Insights archive data. Valid values are \"None\" and \"ObfuscateNetworking\". When set to None the data is not obfuscated. When set to ObfuscateNetworking the IP addresses and the cluster domain name are obfuscated. When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time.",

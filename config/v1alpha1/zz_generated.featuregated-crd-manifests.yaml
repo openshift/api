@@ -93,6 +93,30 @@ imagepolicies.config.openshift.io:
   - SigstoreImageVerification
   Version: v1alpha1
 
+ingresscontrollerconfigs.config.openshift.io:
+  Annotations:
+    description: Ingress Controller configuration API
+  ApprovedPRNumber: https://github.com/openshift/api/pull/XXXX
+  CRDName: ingresscontrollerconfigs.config.openshift.io
+  Capability: ""
+  Category: ""
+  FeatureGates:
+  - IngressControllerConfig
+  FilenameOperatorName: config-operator
+  FilenameOperatorOrdering: "01"
+  FilenameRunLevel: "0000_10"
+  GroupName: config.openshift.io
+  HasStatus: true
+  KindName: IngressControllerConfig
+  Labels: {}
+  PluralName: ingresscontrollerconfigs
+  PrinterColumns: []
+  Scope: Cluster
+  ShortNames: null
+  TopLevelFeatureGates:
+  - IngressControllerConfig
+  Version: v1alpha1
+
 insightsdatagathers.config.openshift.io:
   Annotations: {}
   ApprovedPRNumber: https://github.com/openshift/api/pull/1245

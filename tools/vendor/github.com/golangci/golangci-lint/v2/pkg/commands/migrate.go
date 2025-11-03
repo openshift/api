@@ -51,7 +51,7 @@ func newMigrateCommand(log logutils.Log, info BuildInfo) *migrateCommand {
 
 	migrateCmd := &cobra.Command{
 		Use:               "migrate",
-		Short:             "Migrate configuration file from v1 to v2",
+		Short:             "Migrate configuration file from v1 to v2.",
 		SilenceUsage:      true,
 		SilenceErrors:     true,
 		Args:              cobra.NoArgs,
@@ -81,10 +81,6 @@ func newMigrateCommand(log logutils.Log, info BuildInfo) *migrateCommand {
 }
 
 func (c *migrateCommand) execute(_ *cobra.Command, _ []string) error {
-	if c.cfg.Version != "" {
-		return fmt.Errorf("configuration version is already set: %s", c.cfg.Version)
-	}
-
 	srcPath := c.viper.ConfigFileUsed()
 	if srcPath == "" {
 		c.log.Warnf("No config file detected")
@@ -97,7 +93,7 @@ func (c *migrateCommand) execute(_ *cobra.Command, _ []string) error {
 	}
 
 	c.log.Warnf("The configuration comments are not migrated.")
-	c.log.Warnf("Details about the migration: https://golangci-lint.run/product/migration-guide/")
+	c.log.Warnf("Details about the migration: https://golangci-lint.run/docs/product/migration-guide/")
 
 	c.log.Infof("Migrating v1 configuration file: %s", srcPath)
 
@@ -139,6 +135,10 @@ func (c *migrateCommand) preRunE(cmd *cobra.Command, _ []string) error {
 		// Valid format.
 	default:
 		return fmt.Errorf("unsupported format: %s", c.opts.format)
+	}
+
+	if c.cfg.Version != "" {
+		return fmt.Errorf("configuration version is already set: %s", c.cfg.Version)
 	}
 
 	if c.opts.skipValidation {

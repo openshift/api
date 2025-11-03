@@ -15,9 +15,6 @@
             {
                 "disabled": [
                     {
-                        "name": "BootImageSkewEnforcement"
-                    },
-                    {
                         "name": "ClusterAPIInstall"
                     },
                     {
@@ -90,6 +87,9 @@
                     },
                     {
                         "name": "AzureWorkloadIdentity"
+                    },
+                    {
+                        "name": "BootImageSkewEnforcement"
                     },
                     {
                         "name": "BootcNodeManagement"

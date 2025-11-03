@@ -9738,7 +9738,7 @@ func schema_openshift_api_config_v1_BareMetalPlatformStatus(ref common.Reference
 					},
 					"dnsRecordsType": {
 						SchemaProps: spec.SchemaProps{
-							Description: "dnsRecordsType determines whether records for api, api-int, and ingress are provided by the internal DNS service or externally. Allowed values are `Internal`, `External`, and omitted. When set to `Internal`, records are provided by the internal infrastructure When set to `External`, records are not provided by the internal infrastructure and must be configured by the user. This value may only be set when a user-managed loadbalancer is configured. When omitted, this means the user has no opinion and the platform is left to choose reasonable defaults. These defaults are subject to change over time. The current default is `Internal`.",
+							Description: "dnsRecordsType determines whether records for api, api-int, and ingress are provided by the internal DNS service or externally. Allowed values are `Internal`, `External`, and omitted. When set to `Internal`, records are provided by the internal infrastructure When set to `External`, records are not provided by the internal infrastructure and must be configured by the user. This value may only be set when loadBalancer.type is set to UserManaged. When omitted, this means the user has no opinion and the platform is left to choose reasonable defaults. These defaults are subject to change over time. The current default is `Internal`.",
 							Type:        []string{"string"},
 							Format:      "",
 						},

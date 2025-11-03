@@ -353,6 +353,7 @@ var (
 						contactPerson("rofeldma").
 						productScope(kubernetes).
 						enableIn(configv1.DevPreviewNoUpgrade, configv1.TechPreviewNoUpgrade).
+						enableForClusterProfile(Hypershift, configv1.Default).
 						mustRegister()
 
 	FeatureStreamingCollectionEncodingToProtobuf = newFeatureGate("StreamingCollectionEncodingToProtobuf").
@@ -360,6 +361,7 @@ var (
 						contactPerson("rofeldma").
 						productScope(kubernetes).
 						enableIn(configv1.DevPreviewNoUpgrade, configv1.TechPreviewNoUpgrade).
+						enableForClusterProfile(Hypershift, configv1.Default).
 						mustRegister()
 
 	FeatureGateSignatureStores = newFeatureGate("SignatureStores").

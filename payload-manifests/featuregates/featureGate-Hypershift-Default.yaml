@@ -137,12 +137,6 @@
                         "name": "SigstoreImageVerification"
                     },
                     {
-                        "name": "StreamingCollectionEncodingToJSON"
-                    },
-                    {
-                        "name": "StreamingCollectionEncodingToProtobuf"
-                    },
-                    {
                         "name": "TranslateStreamCloseWebsocketRequests"
                     },
                     {
@@ -224,6 +218,12 @@
                     },
                     {
                         "name": "PrivateHostedZoneAWS"
+                    },
+                    {
+                        "name": "StreamingCollectionEncodingToJSON"
+                    },
+                    {
+                        "name": "StreamingCollectionEncodingToProtobuf"
                     },
                     {
                         "name": "VSphereControlPlaneMachineSet"

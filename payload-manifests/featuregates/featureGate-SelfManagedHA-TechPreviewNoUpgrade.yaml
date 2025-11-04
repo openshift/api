@@ -104,6 +104,9 @@
                         "name": "CPMSMachineNamePrefix"
                     },
                     {
+                        "name": "CRDCompatibilityRequirementOperator"
+                    },
+                    {
                         "name": "ClientsAllowCBOR"
                     },
                     {

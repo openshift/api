@@ -135,6 +135,46 @@ func (VersionAvailability) SwaggerDoc() map[string]string {
 	return map_VersionAvailability
 }
 
+var map_ClusterAPI = map[string]string{
+	"":         "ClusterAPI provides configuration for the capi-operator.\n\nCompatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.",
+	"metadata": "metadata is the standard object's metadata. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata",
+	"spec":     "spec is the specification of the desired behavior of the capi-operator.",
+	"status":   "status defines the observed status of the capi-operator.",
+}
+
+func (ClusterAPI) SwaggerDoc() map[string]string {
+	return map_ClusterAPI
+}
+
+var map_ClusterAPIList = map[string]string{
+	"":         "ClusterAPIList contains a list of ClusterAPI configurations\n\nCompatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.",
+	"metadata": "metadata is the standard list's metadata. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata",
+	"items":    "items contains the items",
+}
+
+func (ClusterAPIList) SwaggerDoc() map[string]string {
+	return map_ClusterAPIList
+}
+
+var map_ClusterAPISpec = map[string]string{
+	"":                                   "ClusterAPISpec defines the desired configuration of the capi-operator.",
+	"unmanagedCustomResourceDefinitions": "unmanagedCustomResourceDefinitions is a list of ClusterResourceDefinition (CRD) names that should not be managed by the capi-operator installer controller. This allows external actors to own specific CRDs while capi-operator manages others.\n\nEach CRD name must be a valid DNS-1123 subdomain consisting of lowercase alphanumeric characters, '-' or '.', and must start and end with an alphanumeric character, with a maximum length of 253 characters. Example: \"clusters.cluster.x-k8s.io\"\n\nItems cannot be removed from this list once added.\n\nThe maximum number of unmanagedCustomResourceDefinitions is 128.",
+}
+
+func (ClusterAPISpec) SwaggerDoc() map[string]string {
+	return map_ClusterAPISpec
+}
+
+var map_ClusterAPIStatus = map[string]string{
+	"":                 "ClusterAPIStatus describes the current state of the capi-operator.",
+	"targetConfigMaps": "targetConfigMaps is a list of ConfigMap names that the staging controller has validated and approved for reconciliation. The installer controller will reconcile these ConfigMaps.\n\nEach ConfigMap name must be a valid DNS-1123 label consisting of lowercase alphanumeric characters or hyphens, starting and ending with an alphanumeric character, with a maximum length of 63 characters.\n\nThis field is owned by the staging controller and is updated atomically to a consistent set of transport ConfigMaps that have passed validation checks.\n\nThe maximum number of targetConfigMaps is 128.",
+	"activeConfigMaps": "activeConfigMaps is a list of ConfigMap names that the installer controller has successfully reconciled. This represents the currently deployed CAPI provider components.\n\nEach ConfigMap name must be a valid DNS-1123 label consisting of lowercase alphanumeric characters or hyphens, starting and ending with an alphanumeric character, with a maximum length of 63 characters.\n\nThis field is owned by the installer controller and is updated atomically after a successful reconciliation.\n\nThe maximum number of activeConfigMaps is 128.",
+}
+
+func (ClusterAPIStatus) SwaggerDoc() map[string]string {
+	return map_ClusterAPIStatus
+}
+
 var map_ClusterVersionOperator = map[string]string{
 	"":         "ClusterVersionOperator holds cluster-wide information about the Cluster Version Operator.\n\nCompatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.",
 	"metadata": "metadata is the standard object's metadata. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata",

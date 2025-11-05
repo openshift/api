@@ -12,6 +12,9 @@ import (
 	"golang.org/x/tools/go/packages"
 	"k8s.io/apimachinery/pkg/runtime/schema"
 	"k8s.io/apimachinery/pkg/util/sets"
+	"k8s.io/gengo/v2"
+	"k8s.io/gengo/v2/parser"
+	"k8s.io/gengo/v2/types"
 	"k8s.io/klog/v2"
 )
 
@@ -30,6 +33,13 @@ type Context struct {
 	// APIGroups contains a list of API Groups and information regarding
 	// their generation.
 	APIGroups []APIGroupContext
+
+	// GlobalParser is the parser for the global package.
+	// This loads all packages found in the base directory.
+	GlobalParser *parser.Parser
+
+	// Universe is the universe for the global package.
+	Universe types.Universe
 }
 
 // APIGroupContext is the context gathered for a particular API group.
@@ -87,9 +97,16 @@ func NewContext(opts Options) (Context, error) {
 		return Context{}, fmt.Errorf("could not get API Group configs: %w", err)
 	}
 
+	p, universe, err := newGlobalGengoParser(apiGroups)
+	if err != nil {
+		return Context{}, fmt.Errorf("could not create global Gengo parser: %w", err)
+	}
+
 	return Context{
-		BaseDir:   baseDir,
-		APIGroups: apiGroups,
+		BaseDir:      baseDir,
+		APIGroups:    apiGroups,
+		GlobalParser: p,
+		Universe:     universe,
 	}, nil
 }
 
@@ -322,4 +339,46 @@ func getValueOf(value *ast.CompositeLit, name string) (string, error) {
 	}
 
 	return "", nil
+}
+
+func newGlobalGengoParser(apiGroups []APIGroupContext) (*parser.Parser, types.Universe, error) {
+	// inputPaths contains the default list of input paths for the OpenAPI generator.
+	// We can't import from the openapi package as it will cause a circular dependency.
+	inputPaths := []string{
+		"k8s.io/apimachinery/pkg/apis/meta/v1",
+		"k8s.io/apimachinery/pkg/runtime",
+		"k8s.io/apimachinery/pkg/util/intstr",
+		"k8s.io/apimachinery/pkg/api/resource",
+		"k8s.io/apimachinery/pkg/version/...", // Make version optional as it is not imported anywhere. It will be picked up if somebody starts using it in the future.
+		"k8s.io/api/core/v1",
+		"k8s.io/api/rbac/v1",
+		"k8s.io/api/authorization/v1",
+	}
+
+	for _, group := range apiGroups {
+		for _, version := range group.Versions {
+			inputPaths = append(inputPaths, version.PackagePath)
+		}
+	}
+
+	p, err := newGengoParser(inputPaths...)
+	if err != nil {
+		return nil, nil, fmt.Errorf("failed making a parser: %v", err)
+	}
+
+	universe, err := p.NewUniverse()
+	if err != nil {
+		return nil, nil, fmt.Errorf("failed making a universe: %v", err)
+	}
+
+	return p, universe, nil
+}
+
+func newGengoParser(pkgPaths ...string) (*parser.Parser, error) {
+	p := parser.NewWithOptions(parser.Options{BuildTags: []string{gengo.StdBuildTag}})
+	if err := p.LoadPackages(pkgPaths...); err != nil {
+		return nil, fmt.Errorf("failed making a parser: %v", err)
+	}
+
+	return p, nil
 }

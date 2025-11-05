@@ -204,7 +204,7 @@ spec:
                         properties:
                           expressionRule:
                             description: |-
-                              ExpressionRule configures a CEL expression that will be used
+                              expressionRule configures a CEL expression that will be used
                               by the Kubernetes API server to validate if an incoming JWT
                               is valid for this identity provider. The CEL expression must
                               return a boolean value where 'true' signals a valid state.
@@ -287,7 +287,7 @@ spec:
                       properties:
                         audienceMatchPolicy:
                           description: |-
-                            AudienceMatchPolicy specifies how token audiences are matched.
+                            audienceMatchPolicy specifies how token audiences are matched.
                             Allowed values are `MatchAny`.
                             When set to `MatchAny`, the token is accepted if any of its audiences match any of the configured audiences.
                             When omitted, the system applies a default policy. Currently, the default is `MatchAny`.
@@ -487,7 +487,7 @@ spec:
                       x-kubernetes-list-type: map
                     userValidationRules:
                       description: |-
-                        UserValidationRules defines the set of rules used to validate claims in a user's token.
+                        userValidationRules defines the set of rules used to validate claims in a user's token.
                         Each rule is evaluated independently to determine whether the token subject is considered valid.
                         Rules can either require specific claims and values to be present,
                         or define CEL expressions that must evaluate to true for the token to be accepted.
@@ -521,9 +521,6 @@ spec:
                       type: array
                       x-kubernetes-list-type: atomic
                       x-kubernetes-validations:
-                      - message: user validation rules are not supported when StructuredAuthenticationConfiguration
-                          feature gate is disabled
-                        rule: self.size() == 0 || <feature-gate-enabled-check>
                       - message: each expression must be non-empty
                         rule: self.all(x, x.expression.size() > 0)
                       - message: expressions must be unique

@@ -17154,7 +17154,7 @@ func schema_openshift_api_config_v1_OIDCProvider(ref common.ReferenceCallback) c
 							},
 						},
 						SchemaProps: spec.SchemaProps{
-							Description: "UserValidationRules defines the set of rules used to validate claims in a user's token. Each rule is evaluated independently to determine whether the token subject is considered valid. Rules can either require specific claims and values to be present, or define CEL expressions that must evaluate to true for the token to be accepted. If the expression in a rule evaluates to false, the token is rejected. At least one rule must evaluate to true for the token to be considered valid. A maximum of 64 rules can be specified. This field is optional.\n\nSee https://kubernetes.io/docs/reference/using-api/cel/ for CEL syntax.",
+							Description: "userValidationRules defines the set of rules used to validate claims in a user's token. Each rule is evaluated independently to determine whether the token subject is considered valid. Rules can either require specific claims and values to be present, or define CEL expressions that must evaluate to true for the token to be accepted. If the expression in a rule evaluates to false, the token is rejected. At least one rule must evaluate to true for the token to be considered valid. A maximum of 64 rules can be specified. This field is optional.\n\nSee https://kubernetes.io/docs/reference/using-api/cel/ for CEL syntax.",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -20243,7 +20243,8 @@ func schema_openshift_api_config_v1_TokenClaimValidationRule(ref common.Referenc
 					},
 					"expressionRule": {
 						SchemaProps: spec.SchemaProps{
-							Description: "ExpressionRule configures a CEL expression that will be used by the Kubernetes API server to validate if an incoming JWT is valid for this identity provider. The CEL expression must return a boolean value where 'true' signals a valid state. ExpressionRule must be set when 'type' is 'Expression', and is forbidden otherwise.",
+							Description: "expressionRule configures a CEL expression that will be used by the Kubernetes API server to validate if an incoming JWT is valid for this identity provider. The CEL expression must return a boolean value where 'true' signals a valid state. ExpressionRule must be set when 'type' is 'Expression', and is forbidden otherwise.",
+							Default:     map[string]interface{}{},
 							Ref:         ref("github.com/openshift/api/config/v1.TokenExpressionRule"),
 						},
 					},
@@ -20367,7 +20368,7 @@ func schema_openshift_api_config_v1_TokenIssuer(ref common.ReferenceCallback) co
 					},
 					"audienceMatchPolicy": {
 						SchemaProps: spec.SchemaProps{
-							Description: "AudienceMatchPolicy specifies how token audiences are matched. Allowed values are `MatchAny`. When set to `MatchAny`, the token is accepted if any of its audiences match any of the configured audiences. When omitted, the system applies a default policy. Currently, the default is `MatchAny`.",
+							Description: "audienceMatchPolicy specifies how token audiences are matched. Allowed values are `MatchAny`. When set to `MatchAny`, the token is accepted if any of its audiences match any of the configured audiences. When omitted, the system applies a default policy. Currently, the default is `MatchAny`.",
 							Type:        []string{"string"},
 							Format:      "",
 						},

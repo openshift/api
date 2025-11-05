@@ -245,7 +245,7 @@ type OIDCProvider struct {
 	// +optional
 	ClaimValidationRules []TokenClaimValidationRule `json:"claimValidationRules,omitempty"`
 
-	// UserValidationRules defines the set of rules used to validate claims in a user's token.
+	// userValidationRules defines the set of rules used to validate claims in a user's token.
 	// Each rule is evaluated independently to determine whether the token subject is considered valid.
 	// Rules can either require specific claims and values to be present,
 	// or define CEL expressions that must evaluate to true for the token to be accepted.
@@ -256,7 +256,6 @@ type OIDCProvider struct {
 	// See https://kubernetes.io/docs/reference/using-api/cel/ for CEL syntax.
 	// +listType=atomic
 	// +kubebuilder:validation:MaxItems=64
-	// +kubebuilder:validation:XValidation:rule="self.size() == 0 || <feature-gate-enabled-check>",message="user validation rules are not supported when StructuredAuthenticationConfiguration feature gate is disabled"
 	// +kubebuilder:validation:XValidation:rule="self.all(x, x.expression.size() > 0)",message="each expression must be non-empty"
 	// +kubebuilder:validation:XValidation:rule="self.map(x, x.expression).countDistinct() == self.size()",message="expressions must be unique"
 	// +optional
@@ -330,16 +329,16 @@ type TokenIssuer struct {
 	// +kubebuilder:validation:XValidation:rule="!(self.matches('^https:\\/\\/.+:.+@{1}.+\\/.*$'))",message="discoveryURL must not contain user info"
 	// +kubebuilder:validation:MinLength=1
 	// +kubebuilder:validation:MaxLength=2048
-	DiscoveryURL *string `json:"discoveryURL,omitempty"`
+	DiscoveryURL string `json:"discoveryURL,omitempty"`
 
-	// AudienceMatchPolicy specifies how token audiences are matched.
+	// audienceMatchPolicy specifies how token audiences are matched.
 	// Allowed values are `MatchAny`.
 	// When set to `MatchAny`, the token is accepted if any of its audiences match any of the configured audiences.
 	// When omitted, the system applies a default policy. Currently, the default is `MatchAny`.
 	//
 	// +optional
 	// +openshift:enable:FeatureGate=ExternalOIDCWithUpstreamParity
-	AudienceMatchPolicy *AudienceMatchPolicy `json:"audienceMatchPolicy,omitempty"`
+	AudienceMatchPolicy AudienceMatchPolicy `json:"audienceMatchPolicy,omitempty"`
 }
 
 // AudienceMatchPolicyType is a set of valid values for Issuer.AudienceMatchPolicy.
@@ -822,7 +821,7 @@ type TokenClaimValidationRule struct {
 	// +optional
 	RequiredClaim *TokenRequiredClaim `json:"requiredClaim,omitempty"`
 
-	// ExpressionRule configures a CEL expression that will be used
+	// expressionRule configures a CEL expression that will be used
 	// by the Kubernetes API server to validate if an incoming JWT
 	// is valid for this identity provider. The CEL expression must
 	// return a boolean value where 'true' signals a valid state.
@@ -831,7 +830,7 @@ type TokenClaimValidationRule struct {
 	//
 	// +optional
 	// +openshift:enable:FeatureGate=ExternalOIDCWithUpstreamParity
-	ExpressionRule *TokenExpressionRule `json:"expressionRule,omitempty"`
+	ExpressionRule TokenExpressionRule `json:"expressionRule,omitzero,omitempty"`
 }
 
 type TokenRequiredClaim struct {
@@ -866,12 +865,10 @@ type TokenExpressionRule struct {
 	// +openshift:enable:FeatureGate=ExternalOIDCWithUpstreamParity
 	Expression string `json:"expression,omitempty"`
 
-	// Message allows configuring a human-readable message that is logged by the Kubernetes API server
+	// message allows configuring a human-readable message that is logged by the Kubernetes API server
 	// when a token fails validation based on the CEL expression defined in 'Expression'.
 	// This field is optional. If provided, the message must be at least 1 character long
 	// and cannot exceed 256 characters. This message is logged and not returned to the caller.
-
-	//
 	// +optional
 	// +kubebuilder:validation:MinLength=1
 	// +kubebuilder:validation:MaxLength=256
@@ -892,11 +889,10 @@ type TokenUserValidationRule struct {
 	// +kubebuilder:validation:MaxLength=1024
 	// +openshift:enable:FeatureGate=ExternalOIDCWithUpstreamParity
 	Expression string `json:"expression,omitempty"`
-	// Message allows configuring a human-readable message that is logged by the Kubernetes API server
+	// message allows configuring a human-readable message that is logged by the Kubernetes API server
 	// when a token fails validation based on the CEL expression defined in 'Expression'.
 	// This field is optional. If provided, the message must be at least 1 character long
 	// and cannot exceed 256 characters. This message is logged and not returned to the caller.
-
 	// +optional
 	// +kubebuilder:validation:MinLength=1
 	// +kubebuilder:validation:MaxLength=256

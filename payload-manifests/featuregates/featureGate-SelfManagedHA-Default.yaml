@@ -106,12 +106,6 @@
                         "name": "GCPClusterHostedDNS"
                     },
                     {
-                        "name": "GCPCustomAPIEndpoints"
-                    },
-                    {
-                        "name": "GCPCustomAPIEndpointsInstall"
-                    },
-                    {
                         "name": "GCPDualStackInstall"
                     },
                     {

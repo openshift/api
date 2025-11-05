@@ -330,29 +330,7 @@ type TokenIssuer struct {
 	// +kubebuilder:validation:MinLength=1
 	// +kubebuilder:validation:MaxLength=2048
 	DiscoveryURL string `json:"discoveryURL,omitempty"`
-
-	// audienceMatchPolicy specifies how token audiences are matched.
-	// Allowed values are `MatchAny`.
-	// When set to `MatchAny`, the token is accepted if any of its audiences match any of the configured audiences.
-	// When omitted, the system applies a default policy. Currently, the default is `MatchAny`.
-	//
-	// +optional
-	// +openshift:enable:FeatureGate=ExternalOIDCWithUpstreamParity
-	AudienceMatchPolicy AudienceMatchPolicy `json:"audienceMatchPolicy,omitempty"`
 }
-
-// AudienceMatchPolicyType is a set of valid values for Issuer.AudienceMatchPolicy.
-// When omitted, the system applies the default policy, which currently behaves as `MatchAny`.
-// Valid values are:
-// - "MatchAny": The token is accepted if any of its audiences match any of the configured audiences.
-//
-// +kubebuilder:validation:Enum=MatchAny
-type AudienceMatchPolicy string
-
-// Valid types for AudienceMatchPolicyType
-const (
-	AudienceMatchPolicyMatchAny AudienceMatchPolicy = "MatchAny"
-)
 
 type TokenClaimMappings struct {
 	// username is a required field that configures how the username of a cluster identity

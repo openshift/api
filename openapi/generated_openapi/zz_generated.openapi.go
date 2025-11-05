@@ -20307,8 +20307,9 @@ func schema_openshift_api_config_v1_TokenExpressionRule(ref common.ReferenceCall
 					},
 					"message": {
 						SchemaProps: spec.SchemaProps{
-							Type:   []string{"string"},
-							Format: "",
+							Description: "message allows configuring a human-readable message that is logged by the Kubernetes API server when a token fails validation based on the CEL expression defined in 'Expression'. This field is optional. If provided, the message must be at least 1 character long and cannot exceed 256 characters. This message is logged and not returned to the caller.",
+							Type:        []string{"string"},
+							Format:      "",
 						},
 					},
 				},
@@ -20362,13 +20363,6 @@ func schema_openshift_api_config_v1_TokenIssuer(ref common.ReferenceCallback) co
 					"discoveryURL": {
 						SchemaProps: spec.SchemaProps{
 							Description: "discoveryURL is an optional field that, if specified, overrides the default discovery endpoint used to retrieve OIDC configuration metadata. By default, the discovery URL is derived from `issuerURL` as \"{url}/.well-known/openid-configuration\".\n\nThe discoveryURL must:\n  - Be a valid absolute URL.\n  - Use the HTTPS scheme.\n  - Not contain query parameters, user info, or fragments.\n  - Be different from the value of `url` (ignoring trailing slashes)",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"audienceMatchPolicy": {
-						SchemaProps: spec.SchemaProps{
-							Description: "audienceMatchPolicy specifies how token audiences are matched. Allowed values are `MatchAny`. When set to `MatchAny`, the token is accepted if any of its audiences match any of the configured audiences. When omitted, the system applies a default policy. Currently, the default is `MatchAny`.",
 							Type:        []string{"string"},
 							Format:      "",
 						},
@@ -20427,8 +20421,9 @@ func schema_openshift_api_config_v1_TokenUserValidationRule(ref common.Reference
 					},
 					"message": {
 						SchemaProps: spec.SchemaProps{
-							Type:   []string{"string"},
-							Format: "",
+							Description: "message allows configuring a human-readable message that is logged by the Kubernetes API server when a token fails validation based on the CEL expression defined in 'Expression'. This field is optional. If provided, the message must be at least 1 character long and cannot exceed 256 characters. This message is logged and not returned to the caller.",
+							Type:        []string{"string"},
+							Format:      "",
 						},
 					},
 				},

@@ -6214,7 +6214,7 @@ func (in *TokenClaimValidationRule) DeepCopyInto(out *TokenClaimValidationRule) 
 		*out = new(TokenRequiredClaim)
 		**out = **in
 	}
-	out.ExpressionRule = in.ExpressionRule
+	out.Expression = in.Expression
 	return
 }
 

@@ -351,15 +351,15 @@ spec:
                         description: |-
                           TokenClaimValidationRule represents a validation rule based on token claims.
                           If type is RequiredClaim, requiredClaim must be set.
-                          If type is Expression, expressionRule must be set.
+                          If type is Expression, expression must be set.
                         properties:
-                          expressionRule:
+                          expression:
                             description: |-
-                              expressionRule configures a CEL expression that will be used
+                              expression configures a CEL expression that will be used
                               by the Kubernetes API server to validate if an incoming JWT
                               is valid for this identity provider. The CEL expression must
                               return a boolean value where 'true' signals a valid state.
-                              ExpressionRule must be set when 'type' is 'Expression', and
+                              Expression must be set when 'type' is 'Expression', and
                               is forbidden otherwise.
                             properties:
                               expression:
@@ -372,6 +372,11 @@ spec:
                                 minLength: 1
                                 type: string
                               message:
+                                description: |-
+                                  message allows configuring a human-readable message that is logged by the Kubernetes API server
+                                  when a token fails validation based on the CEL expression defined in 'Expression'.
+                                  This field is optional. If provided, the message must be at least 1 character long
+                                  and cannot exceed 256 characters. This message is logged and not returned to the caller.
                                 maxLength: 256
                                 minLength: 1
                                 type: string
@@ -379,6 +384,10 @@ spec:
                             - expression
                             type: object
                           requiredClaim:
+                            description: |-
+                              requiredClaim allows configuring a required claim name and its expected value.
+                              When type is RequiredClaim, this field is used by the Kubernetes API server
+                              to validate if an incoming JWT is valid for this identity provider.
                             properties:
                               claim:
                                 description: |-
@@ -414,9 +423,8 @@ spec:
                               When set to 'Expression', the Kubernetes API server will be configured
                               to validate the incoming JWT against the configured CEL expression.
                             enum:
-                            - RequiredClaim;Expression
-                            - StableValue
-                            - TechPreviewOnlyValue
+                            - RequiredClaim
+                            - Expression
                             type: string
                         type: object
                         x-kubernetes-validations:
@@ -436,15 +444,6 @@ spec:
                         with the identity provider and how tokens issued from the identity provider
                         are evaluated by the Kubernetes API server.
                       properties:
-                        audienceMatchPolicy:
-                          description: |-
-                            audienceMatchPolicy specifies how token audiences are matched.
-                            Allowed values are `MatchAny`.
-                            When set to `MatchAny`, the token is accepted if any of its audiences match any of the configured audiences.
-                            When omitted, the system applies a default policy. Currently, the default is `MatchAny`.
-                          enum:
-                          - MatchAny
-                          type: string
                         audiences:
                           description: |-
                             audiences is a required field that configures the acceptable audiences
@@ -475,13 +474,11 @@ spec:
                           type: string
                           x-kubernetes-validations:
                           - message: discoveryURL must be a valid URL
-                            rule: 'self.size() > 0 ? isURL(self) : true'
+                            rule: isURL(self)
                           - message: discoveryURL must be a valid https URL
-                            rule: 'self.size() > 0 ? (isURL(self) && url(self).getScheme()
-                              == ''https'') : true'
+                            rule: url(self).getScheme() == 'https'
                           - message: discoveryURL must not contain query parameters
-                            rule: 'self.size() > 0 ? url(self).getQuery().size() ==
-                              0 : true'
+                            rule: url(self).getQuery().size() == 0
                           - message: discoveryURL must not contain fragments
                             rule: self.matches('^[^#]*$')
                           - message: discoveryURL must not contain user info
@@ -662,6 +659,11 @@ spec:
                             minLength: 1
                             type: string
                           message:
+                            description: |-
+                              message allows configuring a human-readable message that is logged by the Kubernetes API server
+                              when a token fails validation based on the CEL expression defined in 'Expression'.
+                              This field is optional. If provided, the message must be at least 1 character long
+                              and cannot exceed 256 characters. This message is logged and not returned to the caller.
                             maxLength: 256
                             minLength: 1
                             type: string
@@ -670,12 +672,9 @@ spec:
                         type: object
                       maxItems: 64
                       type: array
-                      x-kubernetes-list-type: atomic
-                      x-kubernetes-validations:
-                      - message: each expression must be non-empty
-                        rule: self.all(x, x.expression.size() > 0)
-                      - message: expressions must be unique
-                        rule: self.map(x, x.expression).countDistinct() == self.size()
+                      x-kubernetes-list-map-keys:
+                      - expression
+                      x-kubernetes-list-type: map
                   required:
                   - claimMappings
                   - issuer

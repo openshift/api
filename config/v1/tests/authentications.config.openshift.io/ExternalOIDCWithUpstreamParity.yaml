@@ -227,7 +227,7 @@ tests:
                   prefixString: "myoidc:"
       expectedError: "requiredClaim must be set when type is 'RequiredClaim'"
 
-    - name: Valid ExpressionRule configuration
+    - name: Valid expression configuration
       initial: |
         apiVersion: config.openshift.io/v1
         kind: Authentication
@@ -246,7 +246,7 @@ tests:
                   prefixString: "myoidc:"
             claimValidationRules:
               - type: Expression
-                expressionRule:
+                expression:
                   expression: "claims.email.endsWith('@example.com')"
                   message: "email must be from example.com"
       expected: |
@@ -261,7 +261,7 @@ tests:
               audiences: ['openshift-aud']
             claimValidationRules:
               - type: Expression
-                expressionRule:
+                expression:
                   expression: "claims.email.endsWith('@example.com')"
                   message: "email must be from example.com"
             claimMappings:
@@ -271,7 +271,7 @@ tests:
                 prefix:
                   prefixString: "myoidc:"
 
-    - name: Missing expressionRule for Expression type
+    - name: Missing expression for Expression type
       initial: |
         apiVersion: config.openshift.io/v1
         kind: Authentication
@@ -290,7 +290,7 @@ tests:
                   prefixString: "myoidc:"
             claimValidationRules:
               - type: Expression
-      expectedError: "expressionRule must be set when type is 'Expression', and forbidden otherwise"
+      expectedError: "expression must be set when type is 'Expression', and forbidden otherwise"
 
     - name: Expression too long
       initial: |

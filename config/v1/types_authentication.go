@@ -256,8 +256,8 @@ type OIDCProvider struct {
 	// See https://kubernetes.io/docs/reference/using-api/cel/ for CEL syntax.
 	// +listType=atomic
 	// +kubebuilder:validation:MaxItems=64
-	// +kubebuilder:validation:XValidation:rule="self.all(x, x.expression.size() > 0)",message="each expression must be non-empty"
-	// +kubebuilder:validation:XValidation:rule="self.map(x, x.expression).countDistinct() == self.size()",message="expressions must be unique"
+	// +listType=map
+	// +listMapKey=expression
 	// +optional
 	// +openshift:enable:FeatureGate=ExternalOIDCWithUpstreamParity
 	UserValidationRules []TokenUserValidationRule `json:"userValidationRules,omitempty"`
@@ -322,9 +322,9 @@ type TokenIssuer struct {
 	//
 	// +optional
 	// +openshift:enable:FeatureGate=ExternalOIDCWithUpstreamParity
-	// +kubebuilder:validation:XValidation:rule="self.size() > 0 ? isURL(self) : true",message="discoveryURL must be a valid URL"
-	// +kubebuilder:validation:XValidation:rule="self.size() > 0 ? (isURL(self) && url(self).getScheme() == 'https') : true",message="discoveryURL must be a valid https URL"
-	// +kubebuilder:validation:XValidation:rule="self.size() > 0 ? url(self).getQuery().size() == 0 : true",message="discoveryURL must not contain query parameters"
+	// +kubebuilder:validation:XValidation:rule="isURL(self)",message="discoveryURL must be a valid URL"
+	// +kubebuilder:validation:XValidation:rule="url(self).getScheme() == 'https'",message="discoveryURL must be a valid https URL"
+	// +kubebuilder:validation:XValidation:rule="url(self).getQuery().size() == 0",message="discoveryURL must not contain query parameters"
 	// +kubebuilder:validation:XValidation:rule="self.matches('^[^#]*$')",message="discoveryURL must not contain fragments"
 	// +kubebuilder:validation:XValidation:rule="!(self.matches('^https:\\/\\/.+:.+@{1}.+\\/.*$'))",message="discoveryURL must not contain user info"
 	// +kubebuilder:validation:MinLength=1
@@ -757,10 +757,9 @@ type PrefixedClaimMapping struct {
 }
 
 // TokenValidationRuleType defines the type of token validation rule.
-//
-// +kubebuilder:validation:Type=string
-// +openshift:validation:FeatureGateAwareEnum:featureGate="",enum="RequiredClaim";StableValue
-// +openshift:validation:FeatureGateAwareEnum:featureGate=ExternalOIDCWithUpstreamParity,enum="RequiredClaim;Expression";StableValue;TechPreviewOnlyValue
+// +enum
+// +openshift:validation:FeatureGateAwareEnum:featureGate="",enum="RequiredClaim";
+// +openshift:validation:FeatureGateAwareEnum:featureGate=ExternalOIDCWithUpstreamParity,enum="RequiredClaim";"Expression"
 // +required
 type TokenValidationRuleType string
 
@@ -775,10 +774,10 @@ const (
 
 // TokenClaimValidationRule represents a validation rule based on token claims.
 // If type is RequiredClaim, requiredClaim must be set.
-// If type is Expression, expressionRule must be set.
+// If type is Expression, expression must be set.
 //
 // +kubebuilder:validation:XValidation:rule="has(self.type) && self.type == 'RequiredClaim' ? has(self.requiredClaim) : !has(self.requiredClaim)",message="requiredClaim must be set when type is 'RequiredClaim', and forbidden otherwise"
-// +openshift:validation:FeatureGateAwareXValidation:featureGate=ExternalOIDCWithUpstreamParity,rule="has(self.type) && self.type == 'Expression' ? has(self.expressionRule) : !has(self.expressionRule)",message="expressionRule must be set when type is 'Expression', and forbidden otherwise"
+// +openshift:validation:FeatureGateAwareXValidation:featureGate=ExternalOIDCWithUpstreamParity,rule="has(self.type) && self.type == 'Expression' ? has(self.expression) : !has(self.expression)",message="expression must be set when type is 'Expression', and forbidden otherwise"
 type TokenClaimValidationRule struct {
 	// type is an optional field that configures the type of the validation rule.
 	//
@@ -795,20 +794,20 @@ type TokenClaimValidationRule struct {
 	// requiredClaim allows configuring a required claim name and its expected value.
 	// When type is RequiredClaim, this field is used by the Kubernetes API server
 	// to validate if an incoming JWT is valid for this identity provider.
-
+	//
 	// +optional
 	RequiredClaim *TokenRequiredClaim `json:"requiredClaim,omitempty"`
 
-	// expressionRule configures a CEL expression that will be used
+	// expression configures a CEL expression that will be used
 	// by the Kubernetes API server to validate if an incoming JWT
 	// is valid for this identity provider. The CEL expression must
 	// return a boolean value where 'true' signals a valid state.
-	// ExpressionRule must be set when 'type' is 'Expression', and
+	// Expression must be set when 'type' is 'Expression', and
 	// is forbidden otherwise.
 	//
 	// +optional
 	// +openshift:enable:FeatureGate=ExternalOIDCWithUpstreamParity
-	ExpressionRule TokenExpressionRule `json:"expressionRule,omitzero,omitempty"`
+	Expression TokenExpressionRule `json:"expression,omitzero,omitempty"`
 }
 
 type TokenRequiredClaim struct {

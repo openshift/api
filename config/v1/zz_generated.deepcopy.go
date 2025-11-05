@@ -6439,11 +6439,7 @@ func (in *TokenClaimValidationRule) DeepCopyInto(out *TokenClaimValidationRule) 
 		*out = new(TokenRequiredClaim)
 		**out = **in
 	}
-	if in.ExpressionRule != nil {
-		in, out := &in.ExpressionRule, &out.ExpressionRule
-		*out = new(TokenExpressionRule)
-		**out = **in
-	}
+	out.ExpressionRule = in.ExpressionRule
 	return
 }
 
@@ -6503,16 +6499,6 @@ func (in *TokenIssuer) DeepCopyInto(out *TokenIssuer) {
 		copy(*out, *in)
 	}
 	out.CertificateAuthority = in.CertificateAuthority
-	if in.DiscoveryURL != nil {
-		in, out := &in.DiscoveryURL, &out.DiscoveryURL
-		*out = new(string)
-		**out = **in
-	}
-	if in.AudienceMatchPolicy != nil {
-		in, out := &in.AudienceMatchPolicy, &out.AudienceMatchPolicy
-		*out = new(AudienceMatchPolicy)
-		**out = **in
-	}
 	return
 }
 

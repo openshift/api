@@ -221,6 +221,11 @@ spec:
                                 minLength: 1
                                 type: string
                               message:
+                                description: |-
+                                  message allows configuring a human-readable message that is logged by the Kubernetes API server
+                                  when a token fails validation based on the CEL expression defined in 'Expression'.
+                                  This field is optional. If provided, the message must be at least 1 character long
+                                  and cannot exceed 256 characters. This message is logged and not returned to the caller.
                                 maxLength: 256
                                 minLength: 1
                                 type: string
@@ -285,15 +290,6 @@ spec:
                         with the identity provider and how tokens issued from the identity provider
                         are evaluated by the Kubernetes API server.
                       properties:
-                        audienceMatchPolicy:
-                          description: |-
-                            audienceMatchPolicy specifies how token audiences are matched.
-                            Allowed values are `MatchAny`.
-                            When set to `MatchAny`, the token is accepted if any of its audiences match any of the configured audiences.
-                            When omitted, the system applies a default policy. Currently, the default is `MatchAny`.
-                          enum:
-                          - MatchAny
-                          type: string
                         audiences:
                           description: |-
                             audiences is a required field that configures the acceptable audiences
@@ -511,6 +507,11 @@ spec:
                             minLength: 1
                             type: string
                           message:
+                            description: |-
+                              message allows configuring a human-readable message that is logged by the Kubernetes API server
+                              when a token fails validation based on the CEL expression defined in 'Expression'.
+                              This field is optional. If provided, the message must be at least 1 character long
+                              and cannot exceed 256 characters. This message is logged and not returned to the caller.
                             maxLength: 256
                             minLength: 1
                             type: string

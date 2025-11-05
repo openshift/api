@@ -507,6 +507,7 @@ func (TokenClaimValidationRule) SwaggerDoc() map[string]string {
 
 var map_TokenExpressionRule = map[string]string{
 	"expression": "expression is a CEL expression evaluated against token claims. The expression must be a non-empty string and no longer than 1024 characters. The expression must return a boolean value where 'true' signals a valid token and 'false' an invalid one. This field is required.",
+	"message":    "message allows configuring a human-readable message that is logged by the Kubernetes API server when a token fails validation based on the CEL expression defined in 'Expression'. This field is optional. If provided, the message must be at least 1 character long and cannot exceed 256 characters. This message is logged and not returned to the caller.",
 }
 
 func (TokenExpressionRule) SwaggerDoc() map[string]string {
@@ -518,7 +519,6 @@ var map_TokenIssuer = map[string]string{
 	"audiences":                  "audiences is a required field that configures the acceptable audiences the JWT token, issued by the identity provider, must be issued to. At least one of the entries must match the 'aud' claim in the JWT token.\n\naudiences must contain at least one entry and must not exceed ten entries.",
 	"issuerCertificateAuthority": "issuerCertificateAuthority is an optional field that configures the certificate authority, used by the Kubernetes API server, to validate the connection to the identity provider when fetching discovery information.\n\nWhen not specified, the system trust is used.\n\nWhen specified, it must reference a ConfigMap in the openshift-config namespace containing the PEM-encoded CA certificates under the 'ca-bundle.crt' key in the data field of the ConfigMap.",
 	"discoveryURL":               "discoveryURL is an optional field that, if specified, overrides the default discovery endpoint used to retrieve OIDC configuration metadata. By default, the discovery URL is derived from `issuerURL` as \"{url}/.well-known/openid-configuration\".\n\nThe discoveryURL must:\n  - Be a valid absolute URL.\n  - Use the HTTPS scheme.\n  - Not contain query parameters, user info, or fragments.\n  - Be different from the value of `url` (ignoring trailing slashes)",
-	"audienceMatchPolicy":        "audienceMatchPolicy specifies how token audiences are matched. Allowed values are `MatchAny`. When set to `MatchAny`, the token is accepted if any of its audiences match any of the configured audiences. When omitted, the system applies a default policy. Currently, the default is `MatchAny`.",
 }
 
 func (TokenIssuer) SwaggerDoc() map[string]string {
@@ -537,6 +537,7 @@ func (TokenRequiredClaim) SwaggerDoc() map[string]string {
 var map_TokenUserValidationRule = map[string]string{
 	"":           "TokenUserValidationRule provides a CEL-based rule used to validate a token subject. Each rule contains a CEL expression that is evaluated against the token’s claims.",
 	"expression": "expression is a CEL expression that must evaluate to true for the token to be accepted. The expression is evaluated against the token's user information (e.g., username, groups). This field must be non-empty and may not exceed 1024 characters.",
+	"message":    "message allows configuring a human-readable message that is logged by the Kubernetes API server when a token fails validation based on the CEL expression defined in 'Expression'. This field is optional. If provided, the message must be at least 1 character long and cannot exceed 256 characters. This message is logged and not returned to the caller.",
 }
 
 func (TokenUserValidationRule) SwaggerDoc() map[string]string {

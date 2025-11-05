@@ -17473,7 +17473,13 @@ func schema_openshift_api_config_v1_OIDCProvider(ref common.ReferenceCallback) c
 					"userValidationRules": {
 						VendorExtensible: spec.VendorExtensible{
 							Extensions: spec.Extensions{
-								"x-kubernetes-list-type": "atomic",
+								"x-kubernetes-list-map-keys": []interface{}{
+									"expression",
+								},
+								"x-kubernetes-list-type": []interface{}{
+									"atomic",
+									"map",
+								},
 							},
 						},
 						SchemaProps: spec.SchemaProps{
@@ -20625,7 +20631,7 @@ func schema_openshift_api_config_v1_TokenClaimValidationRule(ref common.Referenc
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
-				Description: "TokenClaimValidationRule represents a validation rule based on token claims. If type is RequiredClaim, requiredClaim must be set. If type is Expression, expressionRule must be set.",
+				Description: "TokenClaimValidationRule represents a validation rule based on token claims. If type is RequiredClaim, requiredClaim must be set. If type is Expression, expression must be set.",
 				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
 					"type": {
@@ -20634,16 +20640,18 @@ func schema_openshift_api_config_v1_TokenClaimValidationRule(ref common.Referenc
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
+							Enum:        []interface{}{},
 						},
 					},
 					"requiredClaim": {
 						SchemaProps: spec.SchemaProps{
-							Ref: ref("github.com/openshift/api/config/v1.TokenRequiredClaim"),
+							Description: "requiredClaim allows configuring a required claim name and its expected value. When type is RequiredClaim, this field is used by the Kubernetes API server to validate if an incoming JWT is valid for this identity provider.",
+							Ref:         ref("github.com/openshift/api/config/v1.TokenRequiredClaim"),
 						},
 					},
-					"expressionRule": {
+					"expression": {
 						SchemaProps: spec.SchemaProps{
-							Description: "expressionRule configures a CEL expression that will be used by the Kubernetes API server to validate if an incoming JWT is valid for this identity provider. The CEL expression must return a boolean value where 'true' signals a valid state. ExpressionRule must be set when 'type' is 'Expression', and is forbidden otherwise.",
+							Description: "expression configures a CEL expression that will be used by the Kubernetes API server to validate if an incoming JWT is valid for this identity provider. The CEL expression must return a boolean value where 'true' signals a valid state. Expression must be set when 'type' is 'Expression', and is forbidden otherwise.",
 							Default:     map[string]interface{}{},
 							Ref:         ref("github.com/openshift/api/config/v1.TokenExpressionRule"),
 						},

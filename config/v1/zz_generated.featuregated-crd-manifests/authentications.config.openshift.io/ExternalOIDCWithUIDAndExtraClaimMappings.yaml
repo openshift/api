@@ -351,9 +351,13 @@ spec:
                         description: |-
                           TokenClaimValidationRule represents a validation rule based on token claims.
                           If type is RequiredClaim, requiredClaim must be set.
-                          If type is Expression, expressionRule must be set.
+                          If type is Expression, expression must be set.
                         properties:
                           requiredClaim:
+                            description: |-
+                              requiredClaim allows configuring a required claim name and its expected value.
+                              When type is RequiredClaim, this field is used by the Kubernetes API server
+                              to validate if an incoming JWT is valid for this identity provider.
                             properties:
                               claim:
                                 description: |-

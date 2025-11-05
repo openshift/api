@@ -496,9 +496,10 @@ func (TokenClaimOrExpressionMapping) SwaggerDoc() map[string]string {
 }
 
 var map_TokenClaimValidationRule = map[string]string{
-	"":               "TokenClaimValidationRule represents a validation rule based on token claims. If type is RequiredClaim, requiredClaim must be set. If type is Expression, expressionRule must be set.",
-	"type":           "type is an optional field that configures the type of the validation rule.\n\nAllowed values are \"RequiredClaim\" and \"Expression\".\n\nWhen set to 'RequiredClaim', the Kubernetes API server will be configured to validate that the incoming JWT contains the required claim and that its value matches the required value.\n\nWhen set to 'Expression', the Kubernetes API server will be configured to validate the incoming JWT against the configured CEL expression.",
-	"expressionRule": "expressionRule configures a CEL expression that will be used by the Kubernetes API server to validate if an incoming JWT is valid for this identity provider. The CEL expression must return a boolean value where 'true' signals a valid state. ExpressionRule must be set when 'type' is 'Expression', and is forbidden otherwise.",
+	"":              "TokenClaimValidationRule represents a validation rule based on token claims. If type is RequiredClaim, requiredClaim must be set. If type is Expression, expression must be set.",
+	"type":          "type is an optional field that configures the type of the validation rule.\n\nAllowed values are \"RequiredClaim\" and \"Expression\".\n\nWhen set to 'RequiredClaim', the Kubernetes API server will be configured to validate that the incoming JWT contains the required claim and that its value matches the required value.\n\nWhen set to 'Expression', the Kubernetes API server will be configured to validate the incoming JWT against the configured CEL expression.",
+	"requiredClaim": "requiredClaim allows configuring a required claim name and its expected value. When type is RequiredClaim, this field is used by the Kubernetes API server to validate if an incoming JWT is valid for this identity provider.",
+	"expression":    "expression configures a CEL expression that will be used by the Kubernetes API server to validate if an incoming JWT is valid for this identity provider. The CEL expression must return a boolean value where 'true' signals a valid state. Expression must be set when 'type' is 'Expression', and is forbidden otherwise.",
 }
 
 func (TokenClaimValidationRule) SwaggerDoc() map[string]string {

@@ -689,7 +689,7 @@ const (
 )
 
 // GCPServiceEndpointName is the name of the GCP Service Endpoint.
-// +kubebuilder:validation:Enum=Compute;Container;CloudResourceManager;DNS;File;IAM;ServiceUsage;Storage
+// +kubebuilder:validation:Enum=Compute;Container;CloudResourceManager;DNS;File;IAM;ServiceUsage;Storage;TagManager
 type GCPServiceEndpointName string
 
 const (
@@ -716,6 +716,9 @@ const (
 
 	// GCPServiceEndpointNameStorage is the name used for the GCP Storage Service endpoint.
 	GCPServiceEndpointNameStorage GCPServiceEndpointName = "Storage"
+
+	// GCPServiceEndpointNameTagManager is the name used for the GCP Tag Manager Service endpoint.
+	GCPServiceEndpointNameTagManager GCPServiceEndpointName = "TagManager"
 )
 
 // GCPServiceEndpoint store the configuration of a custom url to
@@ -809,7 +812,7 @@ type GCPPlatformStatus struct {
 	// The maximum number of endpoint overrides allowed is 9.
 	// +listType=map
 	// +listMapKey=name
-	// +kubebuilder:validation:MaxItems=8
+	// +kubebuilder:validation:MaxItems=9
 	// +kubebuilder:validation:XValidation:rule="self.all(x, self.exists_one(y, x.name == y.name))",message="only 1 endpoint override is permitted per GCP service name"
 	// +optional
 	// +openshift:enable:FeatureGate=GCPCustomAPIEndpointsInstall

@@ -213,7 +213,7 @@ tests:
                 dnsType: PlatformDefault
               serviceEndpoints:
                 - {name: "UnknownService", url: "https://compute-myendpoint1.p.googleapis.com"}
-      expectedStatusError: "[status.platformStatus.gcp.serviceEndpoints[0].name: Unsupported value: \"UnknownService\": supported values: \"Compute\", \"Container\", \"CloudResourceManager\", \"DNS\", \"File\", \"IAM\", \"ServiceUsage\", \"Storage\", <nil>: Invalid value: \"null\": some validation rules were not checked because the object was invalid; correct the existing errors to complete validation"
+      expectedStatusError: "[status.platformStatus.gcp.serviceEndpoints[0].name: Unsupported value: \"UnknownService\": supported values: \"Compute\", \"Container\", \"CloudResourceManager\", \"DNS\", \"File\", \"IAM\", \"ServiceUsage\", \"Storage\", \"TagManager\", <nil>: Invalid value: \"null\": some validation rules were not checked because the object was invalid; correct the existing errors to complete validation"
     - name: Service Endpoint End Slash
       initial: |
         apiVersion: config.openshift.io/v1

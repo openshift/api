@@ -5,7 +5,6 @@
         "annotations": {
             "include.release.openshift.io/ibm-cloud-managed": "false-except-for-the-config-operator"
         },
-        "creationTimestamp": null,
         "name": "cluster"
     },
     "spec": {
@@ -108,6 +107,9 @@
                         "name": "CPMSMachineNamePrefix"
                     },
                     {
+                        "name": "CRDCompatibilityRequirementOperator"
+                    },
+                    {
                         "name": "ClientsAllowCBOR"
                     },
                     {
@@ -115,6 +117,9 @@
                     },
                     {
                         "name": "ClusterAPIInstallIBMCloud"
+                    },
+                    {
+                        "name": "ClusterAPIMachineManagement"
                     },
                     {
                         "name": "ClusterAPIMachineManagementVSphere"
@@ -142,6 +147,9 @@
                     },
                     {
                         "name": "EtcdBackendQuota"
+                    },
+                    {
+                        "name": "EventTTL"
                     },
                     {
                         "name": "Example"
@@ -195,9 +203,6 @@
                         "name": "IngressControllerDynamicConfigurationManager"
                     },
                     {
-                        "name": "IngressControllerLBSubnetsAWS"
-                    },
-                    {
                         "name": "InsightsConfig"
                     },
                     {
@@ -228,6 +233,9 @@
                         "name": "ManagedBootImagesAzure"
                     },
                     {
+                        "name": "ManagedBootImagesCPMS"
+                    },
+                    {
                         "name": "ManagedBootImagesvSphere"
                     },
                     {
@@ -246,6 +254,9 @@
                         "name": "MultiDiskSetup"
                     },
                     {
+                        "name": "MutableCSINodeAllocatableCount"
+                    },
+                    {
                         "name": "MutatingAdmissionPolicy"
                     },
                     {
@@ -258,10 +269,10 @@
                         "name": "NetworkSegmentation"
                     },
                     {
-                        "name": "NodeSwap"
+                        "name": "NutanixMultiSubnets"
                     },
                     {
-                        "name": "NutanixMultiSubnets"
+                        "name": "OSStreams"
                     },
                     {
                         "name": "OVNObservability"
@@ -289,9 +300,6 @@
                     },
                     {
                         "name": "ServiceAccountTokenNodeBinding"
-                    },
-                    {
-                        "name": "SetEIPForNLBIngressController"
                     },
                     {
                         "name": "SignatureStores"

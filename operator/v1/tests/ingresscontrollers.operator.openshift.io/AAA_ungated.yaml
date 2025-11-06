@@ -1,8 +1,6 @@
 apiVersion: apiextensions.k8s.io/v1 # Hack because controller-gen complains if we don't have this
 name: "IngressController"
 crdName: ingresscontrollers.operator.openshift.io
-featureGates:
-- SetEIPForNLBIngressController
 tests:
   onCreate:
     - name: Should be able to create a minimal IngressController
@@ -565,3 +563,152 @@ tests:
           tuningOptions:
             connectTimeout: "4 s"
       expectedError: "IngressController.operator.openshift.io \"default\" is invalid: spec.tuningOptions.connectTimeout: Invalid value: \"4 s\": spec.tuningOptions.connectTimeout in body should match '^(0|([0-9]+(\\.[0-9]+)?(ns|us|µs|μs|ms|s|m|h))+)$'"
+    - name: Should be able to create an IngressController with valid domain
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: IngressController
+        metadata:
+          name: ic-spec-domain-test
+          namespace: openshift-ingress-operator
+        spec:
+          domain: "this-label-has-exactly-63-characters-validating-at-the-boundary.com"
+      expected: |
+        apiVersion: operator.openshift.io/v1
+        kind: IngressController
+        metadata:
+          name: ic-spec-domain-test
+          namespace: openshift-ingress-operator
+        spec:
+          httpEmptyRequestsPolicy: Respond
+          idleConnectionTerminationPolicy: Immediate
+          domain: "this-label-has-exactly-63-characters-validating-at-the-boundary.com"
+    - name: Should not be able to create an IngressController with invalid domain
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: IngressController
+        metadata:
+          name: ic-spec-domain-test
+          namespace: openshift-ingress-operator
+        spec:
+          domain: "*.foo.com"
+      expectedError: "domain must consist of lower case alphanumeric characters, '-' or '.', and must start and end with an alphanumeric character"
+    - name: Should not be able to create an IngressController with domain label exceeding 63 characters
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: IngressController
+        metadata:
+          name: ic-spec-domain-test
+          namespace: openshift-ingress-operator
+        spec:
+          domain: "foo.this-label-exceeds-63-characters-for-the-purpose-of-testing-the-domain-validation.com"
+      expectedError: "each DNS label must not exceed 63 characters"
+    - name: Should not be able to create an IngressController with the domain exceeding 244 characters
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: IngressController
+        metadata:
+          name: a
+          namespace: openshift-ingress-operator
+        spec:
+          domain: "this-domain.has-exactly-245-characters.for-the-purpose-of-testing.the-spec-domain-field-length-validation.it-exceeds-the-limit-set-on-the-spec-domain-field.by-one-character-to-test-the-error.message-from-this-validation.otherwise-it-is-valid.com"
+      expectedError: "Too long: may not be more than 244 bytes"
+    - name: Should not be able to create an IngressController with the combined canonical domain exceeding 253 characters
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: IngressController
+        metadata:
+          name: ic-name-containing-exactly-40-characters
+          namespace: openshift-ingress-operator
+        spec:
+          domain: "this-domain.has-208-characters.which-on.its-own-would-not-exceed.the-limit-of-253-chars.but-combined-with-the-ingress-controller-name.with-40-chars.and-the-router-prefix.ends-up-as-a-too-long.canonical-domain"
+      expectedError: "The combined 'router-' + metadata.name + '.' + .spec.domain cannot exceed 253 characters"
+  onUpdate:
+    - name: Should be able to update invalid domain to a valid domain
+      initialCRDPatches:
+        - op: remove
+          path: /spec/versions/0/schema/openAPIV3Schema/properties/spec/properties/domain/x-kubernetes-validations
+        - op: remove
+          path: /spec/versions/0/schema/openAPIV3Schema/properties/spec/properties/domain/maxLength
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: IngressController
+        metadata:
+          name: ic-spec-domain-test
+          namespace: openshift-ingress-operator
+        spec:
+          domain: "*.foo.com"
+      updated: |
+        apiVersion: operator.openshift.io/v1
+        kind: IngressController
+        metadata:
+          name: ic-spec-domain-test
+          namespace: openshift-ingress-operator
+        spec:
+          domain: "123-foo.com"
+      expected: |
+        apiVersion: operator.openshift.io/v1
+        kind: IngressController
+        metadata:
+          name: ic-spec-domain-test
+          namespace: openshift-ingress-operator
+        spec:
+          httpEmptyRequestsPolicy: Respond
+          idleConnectionTerminationPolicy: Immediate
+          domain: "123-foo.com"
+    - name: Should not be able to update already invalid domain to another invalid domain
+      initialCRDPatches:
+        - op: remove
+          path: /spec/versions/0/schema/openAPIV3Schema/properties/spec/properties/domain/x-kubernetes-validations
+        - op: remove
+          path: /spec/versions/0/schema/openAPIV3Schema/properties/spec/properties/domain/maxLength
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: IngressController
+        metadata:
+          name: ic-spec-domain-test
+          namespace: openshift-ingress-operator
+        spec:
+          domain: "*.foo.com"
+      updated: |
+        apiVersion: operator.openshift.io/v1
+        kind: IngressController
+        metadata:
+          name: ic-spec-domain-test
+          namespace: openshift-ingress-operator
+        spec:
+          domain: "foo.*.com"
+      expectedError: "domain must consist of lower case alphanumeric characters, '-' or '.', and must start and end with an alphanumeric character"
+    - name: Should be able to update other fields while retaining invalid domain due to ratcheting
+      initialCRDPatches:
+        - op: remove
+          path: /spec/versions/0/schema/openAPIV3Schema/properties/spec/properties/domain/x-kubernetes-validations
+        - op: remove
+          path: /spec/versions/0/schema/openAPIV3Schema/properties/spec/properties/domain/maxLength
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: IngressController
+        metadata:
+          name: ic-spec-domain-test
+          namespace: openshift-ingress-operator
+        spec:
+          domain: "*.foo.com"
+      updated: |
+        apiVersion: operator.openshift.io/v1
+        kind: IngressController
+        metadata:
+          name: ic-spec-domain-test
+          namespace: openshift-ingress-operator
+        spec:
+          domain: "*.foo.com"
+          replicas: 3
+      expected: |
+        apiVersion: operator.openshift.io/v1
+        kind: IngressController
+        metadata:
+          name: ic-spec-domain-test
+          namespace: openshift-ingress-operator
+        spec:
+          httpEmptyRequestsPolicy: Respond
+          idleConnectionTerminationPolicy: Immediate
+          domain: "*.foo.com"
+          replicas: 3

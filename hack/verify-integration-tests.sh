@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 set -o nounset
 set -o pipefail
@@ -68,7 +68,7 @@ validate_suite_files() {
   done
 }
 
-for groupVersion in ${API_GROUP_VERSIONS}; do
+for groupVersion in ${API_GROUP_VERSION_PATHS}; do
   echo "Validating integration tests for ${groupVersion}"
   validate_suite_files ${SCRIPT_ROOT}/${groupVersion}
 done

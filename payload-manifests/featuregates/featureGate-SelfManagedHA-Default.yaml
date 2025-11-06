@@ -5,7 +5,6 @@
         "annotations": {
             "include.release.openshift.io/self-managed-high-availability": "false-except-for-the-config-operator"
         },
-        "creationTimestamp": null,
         "name": "cluster"
     },
     "spec": {},
@@ -53,6 +52,9 @@
                         "name": "CBORServingAndStorage"
                     },
                     {
+                        "name": "CRDCompatibilityRequirementOperator"
+                    },
+                    {
                         "name": "ClientsAllowCBOR"
                     },
                     {
@@ -63,6 +65,9 @@
                     },
                     {
                         "name": "ClusterAPIInstallIBMCloud"
+                    },
+                    {
+                        "name": "ClusterAPIMachineManagement"
                     },
                     {
                         "name": "ClusterAPIMachineManagementVSphere"
@@ -89,6 +94,9 @@
                         "name": "EtcdBackendQuota"
                     },
                     {
+                        "name": "EventTTL"
+                    },
+                    {
                         "name": "EventedPLEG"
                     },
                     {
@@ -96,12 +104,6 @@
                     },
                     {
                         "name": "Example2"
-                    },
-                    {
-                        "name": "ExternalOIDC"
-                    },
-                    {
-                        "name": "ExternalOIDCWithUIDAndExtraClaimMappings"
                     },
                     {
                         "name": "ExternalSnapshotMetadata"
@@ -146,10 +148,7 @@
                         "name": "MachineAPIOperatorDisableMachineHealthCheckController"
                     },
                     {
-                        "name": "ManagedBootImagesAzure"
-                    },
-                    {
-                        "name": "ManagedBootImagesvSphere"
+                        "name": "ManagedBootImagesCPMS"
                     },
                     {
                         "name": "MaxUnavailableStatefulSet"
@@ -167,6 +166,9 @@
                         "name": "MultiDiskSetup"
                     },
                     {
+                        "name": "MutableCSINodeAllocatableCount"
+                    },
+                    {
                         "name": "MutatingAdmissionPolicy"
                     },
                     {
@@ -179,22 +181,16 @@
                         "name": "NewOLMPreflightPermissionChecks"
                     },
                     {
-                        "name": "NewOLMWebhookProviderOpenshiftServiceCA"
-                    },
-                    {
                         "name": "NoRegistryClusterOperations"
-                    },
-                    {
-                        "name": "NodeSwap"
                     },
                     {
                         "name": "NutanixMultiSubnets"
                     },
                     {
-                        "name": "OVNObservability"
+                        "name": "OSStreams"
                     },
                     {
-                        "name": "PreconfiguredUDNAddresses"
+                        "name": "OVNObservability"
                     },
                     {
                         "name": "SELinuxMount"
@@ -219,9 +215,6 @@
                     },
                     {
                         "name": "VSphereMixedNodeEnv"
-                    },
-                    {
-                        "name": "VolumeAttributesClass"
                     },
                     {
                         "name": "VolumeGroupSnapshot"
@@ -250,6 +243,12 @@
                         "name": "ConsolePluginContentSecurityPolicy"
                     },
                     {
+                        "name": "ExternalOIDC"
+                    },
+                    {
+                        "name": "ExternalOIDCWithUIDAndExtraClaimMappings"
+                    },
+                    {
                         "name": "GCPClusterHostedDNSInstall"
                     },
                     {
@@ -265,9 +264,6 @@
                         "name": "ImageVolume"
                     },
                     {
-                        "name": "IngressControllerLBSubnetsAWS"
-                    },
-                    {
                         "name": "KMSv1"
                     },
                     {
@@ -278,6 +274,12 @@
                     },
                     {
                         "name": "ManagedBootImagesAWS"
+                    },
+                    {
+                        "name": "ManagedBootImagesAzure"
+                    },
+                    {
+                        "name": "ManagedBootImagesvSphere"
                     },
                     {
                         "name": "MetricsCollectionProfiles"
@@ -295,10 +297,16 @@
                         "name": "NewOLM"
                     },
                     {
+                        "name": "NewOLMWebhookProviderOpenshiftServiceCA"
+                    },
+                    {
                         "name": "OpenShiftPodSecurityAdmission"
                     },
                     {
                         "name": "PinnedImages"
+                    },
+                    {
+                        "name": "PreconfiguredUDNAddresses"
                     },
                     {
                         "name": "ProcMountType"
@@ -311,9 +319,6 @@
                     },
                     {
                         "name": "ServiceAccountTokenNodeBinding"
-                    },
-                    {
-                        "name": "SetEIPForNLBIngressController"
                     },
                     {
                         "name": "SigstoreImageVerification"
@@ -335,6 +340,9 @@
                     },
                     {
                         "name": "VSphereMultiNetworks"
+                    },
+                    {
+                        "name": "VolumeAttributesClass"
                     }
                 ],
                 "version": ""

@@ -5,7 +5,6 @@
         "annotations": {
             "include.release.openshift.io/self-managed-high-availability": "false-except-for-the-config-operator"
         },
-        "creationTimestamp": null,
         "name": "cluster"
     },
     "spec": {
@@ -15,9 +14,6 @@
         "featureGates": [
             {
                 "disabled": [
-                    {
-                        "name": "BootImageSkewEnforcement"
-                    },
                     {
                         "name": "ClusterAPIInstall"
                     },
@@ -32,6 +28,9 @@
                     },
                     {
                         "name": "ExternalSnapshotMetadata"
+                    },
+                    {
+                        "name": "IngressControllerDynamicConfigurationManager"
                     },
                     {
                         "name": "MachineAPIOperatorDisableMachineHealthCheckController"
@@ -90,6 +89,9 @@
                         "name": "AzureWorkloadIdentity"
                     },
                     {
+                        "name": "BootImageSkewEnforcement"
+                    },
+                    {
                         "name": "BootcNodeManagement"
                     },
                     {
@@ -102,6 +104,9 @@
                         "name": "CPMSMachineNamePrefix"
                     },
                     {
+                        "name": "CRDCompatibilityRequirementOperator"
+                    },
+                    {
                         "name": "ClientsAllowCBOR"
                     },
                     {
@@ -109,6 +114,9 @@
                     },
                     {
                         "name": "ClusterAPIInstallIBMCloud"
+                    },
+                    {
+                        "name": "ClusterAPIMachineManagement"
                     },
                     {
                         "name": "ClusterMonitoringConfig"
@@ -133,6 +141,9 @@
                     },
                     {
                         "name": "EtcdBackendQuota"
+                    },
+                    {
+                        "name": "EventTTL"
                     },
                     {
                         "name": "Example"
@@ -177,12 +188,6 @@
                         "name": "ImageVolume"
                     },
                     {
-                        "name": "IngressControllerDynamicConfigurationManager"
-                    },
-                    {
-                        "name": "IngressControllerLBSubnetsAWS"
-                    },
-                    {
                         "name": "InsightsConfig"
                     },
                     {
@@ -213,6 +218,9 @@
                         "name": "ManagedBootImagesAzure"
                     },
                     {
+                        "name": "ManagedBootImagesCPMS"
+                    },
+                    {
                         "name": "ManagedBootImagesvSphere"
                     },
                     {
@@ -229,6 +237,9 @@
                     },
                     {
                         "name": "MultiDiskSetup"
+                    },
+                    {
+                        "name": "MutableCSINodeAllocatableCount"
                     },
                     {
                         "name": "MutatingAdmissionPolicy"
@@ -261,10 +272,10 @@
                         "name": "NoRegistryClusterOperations"
                     },
                     {
-                        "name": "NodeSwap"
+                        "name": "NutanixMultiSubnets"
                     },
                     {
-                        "name": "NutanixMultiSubnets"
+                        "name": "OSStreams"
                     },
                     {
                         "name": "OVNObservability"
@@ -292,9 +303,6 @@
                     },
                     {
                         "name": "ServiceAccountTokenNodeBinding"
-                    },
-                    {
-                        "name": "SetEIPForNLBIngressController"
                     },
                     {
                         "name": "SignatureStores"

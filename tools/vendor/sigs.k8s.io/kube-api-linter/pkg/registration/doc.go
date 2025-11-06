@@ -23,16 +23,20 @@ Instead, use blank imports in your own registry invocation.
 package registration
 
 import (
+	_ "sigs.k8s.io/kube-api-linter/pkg/analysis/arrayofstruct"
 	_ "sigs.k8s.io/kube-api-linter/pkg/analysis/commentstart"
 	_ "sigs.k8s.io/kube-api-linter/pkg/analysis/conditions"
 	_ "sigs.k8s.io/kube-api-linter/pkg/analysis/conflictingmarkers"
 	_ "sigs.k8s.io/kube-api-linter/pkg/analysis/duplicatemarkers"
+	_ "sigs.k8s.io/kube-api-linter/pkg/analysis/forbiddenmarkers"
 	_ "sigs.k8s.io/kube-api-linter/pkg/analysis/integers"
 	_ "sigs.k8s.io/kube-api-linter/pkg/analysis/jsontags"
 	_ "sigs.k8s.io/kube-api-linter/pkg/analysis/maxlength"
 	_ "sigs.k8s.io/kube-api-linter/pkg/analysis/nobools"
+	_ "sigs.k8s.io/kube-api-linter/pkg/analysis/nodurations"
 	_ "sigs.k8s.io/kube-api-linter/pkg/analysis/nofloats"
 	_ "sigs.k8s.io/kube-api-linter/pkg/analysis/nomaps"
+	_ "sigs.k8s.io/kube-api-linter/pkg/analysis/nonullable"
 	_ "sigs.k8s.io/kube-api-linter/pkg/analysis/nophase"
 	_ "sigs.k8s.io/kube-api-linter/pkg/analysis/notimestamp"
 	_ "sigs.k8s.io/kube-api-linter/pkg/analysis/optionalfields"

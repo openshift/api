@@ -52,6 +52,9 @@
                         "name": "CBORServingAndStorage"
                     },
                     {
+                        "name": "CRDCompatibilityRequirementOperator"
+                    },
+                    {
                         "name": "ClientsAllowCBOR"
                     },
                     {

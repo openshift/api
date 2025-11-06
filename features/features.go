@@ -900,4 +900,12 @@ var (
 				enhancementPR("https://github.com/openshift/enhancements/pull/1874").
 				enableIn(configv1.DevPreviewNoUpgrade, configv1.TechPreviewNoUpgrade).
 				mustRegister()
+
+	FeatureGateCRDCompatibilityRequirementOperator = newFeatureGate("CRDCompatibilityRequirementOperator").
+							reportProblemsToJiraComponent("Cloud Compute / Cluster API Providers").
+							contactPerson("ddonati").
+							productScope(ocpSpecific).
+							enhancementPR("https://github.com/openshift/enhancements/pull/1845").
+							enableIn(configv1.DevPreviewNoUpgrade, configv1.TechPreviewNoUpgrade).
+							mustRegister()
 )

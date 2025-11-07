@@ -149,12 +149,6 @@
                         "name": "SigstoreImageVerification"
                     },
                     {
-                        "name": "StreamingCollectionEncodingToJSON"
-                    },
-                    {
-                        "name": "StreamingCollectionEncodingToProtobuf"
-                    },
-                    {
                         "name": "TranslateStreamCloseWebsocketRequests"
                     },
                     {
@@ -254,6 +248,12 @@
                     },
                     {
                         "name": "SetEIPForNLBIngressController"
+                    },
+                    {
+                        "name": "StreamingCollectionEncodingToJSON"
+                    },
+                    {
+                        "name": "StreamingCollectionEncodingToProtobuf"
                     },
                     {
                         "name": "VSphereControlPlaneMachineSet"

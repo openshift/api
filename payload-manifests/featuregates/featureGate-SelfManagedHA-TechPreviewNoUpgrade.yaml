@@ -39,6 +39,9 @@
                         "name": "MultiArchInstallAzure"
                     },
                     {
+                        "name": "ProvisioningRequestAvailable"
+                    },
+                    {
                         "name": "ShortCertRotation"
                     }
                 ],

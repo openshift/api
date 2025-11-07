@@ -31,6 +31,7 @@ tests:
         spec:
           httpEmptyRequestsPolicy: Respond
           idleConnectionTerminationPolicy: Immediate
+          closedClientConnectionPolicy: Continue
           endpointPublishingStrategy:
             type: LoadBalancerService
             loadBalancer:
@@ -73,6 +74,7 @@ tests:
         spec:
           httpEmptyRequestsPolicy: Respond
           idleConnectionTerminationPolicy: Immediate
+          closedClientConnectionPolicy: Continue
           endpointPublishingStrategy:
             type: LoadBalancerService
             loadBalancer:
@@ -187,6 +189,7 @@ tests:
         spec:
           httpEmptyRequestsPolicy: Respond
           idleConnectionTerminationPolicy: Immediate
+          closedClientConnectionPolicy: Continue
           endpointPublishingStrategy:
             type: LoadBalancerService
             loadBalancer:
@@ -478,6 +481,7 @@ tests:
         spec:
           httpEmptyRequestsPolicy: Respond
           idleConnectionTerminationPolicy: Immediate
+          closedClientConnectionPolicy: Continue
           endpointPublishingStrategy:
             type: LoadBalancerService
             loadBalancer:
@@ -536,6 +540,7 @@ tests:
         spec:
           httpEmptyRequestsPolicy: Respond
           idleConnectionTerminationPolicy: Immediate
+          closedClientConnectionPolicy: Continue
           endpointPublishingStrategy:
             type: LoadBalancerService
             loadBalancer:
@@ -586,6 +591,7 @@ tests:
         spec:
           httpEmptyRequestsPolicy: Respond
           idleConnectionTerminationPolicy: Immediate
+          closedClientConnectionPolicy: Continue
           endpointPublishingStrategy:
             type: LoadBalancerService
             loadBalancer:

@@ -16,6 +16,7 @@ tests:
         spec:
           httpEmptyRequestsPolicy: Respond
           idleConnectionTerminationPolicy: Immediate
+          closedClientConnectionPolicy: Continue
     - name: Should allow to set NLB parameters when LBType is NLB.
       initial: |
         apiVersion: operator.openshift.io/v1
@@ -45,6 +46,7 @@ tests:
         spec:
           httpEmptyRequestsPolicy: Respond
           idleConnectionTerminationPolicy: Immediate
+          closedClientConnectionPolicy: Continue
           endpointPublishingStrategy:
             loadBalancer:
               dnsManagementPolicy: Managed
@@ -301,6 +303,7 @@ tests:
         spec:
           httpEmptyRequestsPolicy: Respond
           idleConnectionTerminationPolicy: Immediate
+          closedClientConnectionPolicy: Continue
           endpointPublishingStrategy:
             loadBalancer:
               dnsManagementPolicy: Managed
@@ -323,6 +326,7 @@ tests:
         spec:
           httpEmptyRequestsPolicy: Respond
           idleConnectionTerminationPolicy: Immediate
+          closedClientConnectionPolicy: Continue
           endpointPublishingStrategy:
             loadBalancer:
               dnsManagementPolicy: Managed

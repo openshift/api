@@ -14,6 +14,7 @@ tests:
         spec:
           httpEmptyRequestsPolicy: Respond
           idleConnectionTerminationPolicy: Immediate
+          closedClientConnectionPolicy: Continue
     - name: Should be able to create an IngressController with valid Actions
       initial: |
         apiVersion: operator.openshift.io/v1
@@ -75,6 +76,7 @@ tests:
         spec:
           httpEmptyRequestsPolicy: Respond
           idleConnectionTerminationPolicy: Immediate
+          closedClientConnectionPolicy: Continue
           httpHeaders:
             actions:
               response:
@@ -497,6 +499,7 @@ tests:
         spec:
           httpEmptyRequestsPolicy: Respond
           idleConnectionTerminationPolicy: Immediate
+          closedClientConnectionPolicy: Continue
           tuningOptions:
             connectTimeout: 10s
     - name: Should be able to create an IngressController with valid composite connect timeout
@@ -518,6 +521,7 @@ tests:
         spec:
           httpEmptyRequestsPolicy: Respond
           idleConnectionTerminationPolicy: Immediate
+          closedClientConnectionPolicy: Continue
           tuningOptions:
             connectTimeout: 100ms300μs
     - name: Should be able to create an IngressController with valid fraction connect timeout
@@ -539,6 +543,7 @@ tests:
         spec:
           httpEmptyRequestsPolicy: Respond
           idleConnectionTerminationPolicy: Immediate
+          closedClientConnectionPolicy: Continue
           tuningOptions:
             connectTimeout: 1.5m
     - name: Should not be able to create an IngressController with invalid unit connect timeout
@@ -582,6 +587,7 @@ tests:
         spec:
           httpEmptyRequestsPolicy: Respond
           idleConnectionTerminationPolicy: Immediate
+          closedClientConnectionPolicy: Continue
           tuningOptions:
             httpKeepAliveTimeout: 10s
     - name: Should be able to create an IngressController with valid composite httpKeepAlive timeout
@@ -603,6 +609,7 @@ tests:
         spec:
           httpEmptyRequestsPolicy: Respond
           idleConnectionTerminationPolicy: Immediate
+          closedClientConnectionPolicy: Continue
           tuningOptions:
             httpKeepAliveTimeout: 100s300ms
     - name: Should be able to create an IngressController with valid fraction httpKeepAlive timeout
@@ -624,6 +631,7 @@ tests:
         spec:
           httpEmptyRequestsPolicy: Respond
           idleConnectionTerminationPolicy: Immediate
+          closedClientConnectionPolicy: Continue
           tuningOptions:
             httpKeepAliveTimeout: 1.5m
     - name: Should not be able to create an IngressController with invalid unit httpKeepAlive timeout
@@ -688,6 +696,7 @@ tests:
         spec:
           httpEmptyRequestsPolicy: Respond
           idleConnectionTerminationPolicy: Immediate
+          closedClientConnectionPolicy: Continue
           domain: "this-label-has-exactly-63-characters-validating-at-the-boundary.com"
     - name: Should not be able to create an IngressController with invalid domain
       initial: |
@@ -761,6 +770,7 @@ tests:
         spec:
           httpEmptyRequestsPolicy: Respond
           idleConnectionTerminationPolicy: Immediate
+          closedClientConnectionPolicy: Continue
           domain: "123-foo.com"
     - name: Should not be able to update already invalid domain to another invalid domain
       initialCRDPatches:
@@ -817,5 +827,6 @@ tests:
         spec:
           httpEmptyRequestsPolicy: Respond
           idleConnectionTerminationPolicy: Immediate
+          closedClientConnectionPolicy: Continue
           domain: "*.foo.com"
           replicas: 3

@@ -52867,6 +52867,14 @@ func schema_openshift_api_operator_v1_IngressControllerSpec(ref common.Reference
 							Format:      "",
 						},
 					},
+					"closedClientConnectionPolicy": {
+						SchemaProps: spec.SchemaProps{
+							Description: "closedClientConnectionPolicy controls how the IngressController behaves when the client closes the TCP connection while the TLS handshake or HTTP request is in progress. This option maps directly to HAProxy’s \"abortonclose\" option.\n\nValid values are: \"Abort\" and \"Continue\". The default value is \"Continue\".\n\nWhen set to \"Abort\", the router will stop processing the TLS handshake if it is in progress, and it will not send an HTTP request to the backend server if the request has not yet been sent when the client closes the connection.\n\nWhen set to \"Continue\", the router will complete the TLS handshake if it is in progress, or send an HTTP request to the backend server and wait for the backend server's response, regardless of whether the client has closed the connection.\n\nSetting \"Abort\" can help free CPU resources otherwise spent on TLS computation for connections the client has already closed, and can reduce request queue size, thereby reducing the load on saturated backend servers.\n\nImportant Considerations:\n\n  - The default policy (\"Continue\") is HTTP-compliant, and requests\n    for aborted client connections will still be served.\n    Use the \"Continue\" policy to allow a client to send a request\n    and then immediately close its side of the connection while\n    still receiving a response on the half-closed connection.\n\n  - When clients use keep-alive connections, the most common case for premature\n    closure is when the user wants to cancel the transfer or when a timeout\n    occurs. In that case, the \"Abort\" policy may be used to reduce resource consumption.\n\n  - Using RSA keys larger than 2048 bits can significantly slow down\n    TLS computations. Consider using the \"Abort\" policy to reduce CPU usage.",
+							Default:     "Continue",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
 				},
 			},
 		},

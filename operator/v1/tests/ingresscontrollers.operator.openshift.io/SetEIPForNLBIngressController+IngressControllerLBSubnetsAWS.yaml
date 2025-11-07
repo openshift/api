@@ -14,6 +14,7 @@ tests:
         spec:
           httpEmptyRequestsPolicy: Respond
           idleConnectionTerminationPolicy: Immediate
+          closedClientConnectionPolicy: Continue
     - name: Should not allow ingress controller creation if sum of number subnets name and id provided is not equal to the number of eipAllocations.
       initial: |
         apiVersion: operator.openshift.io/v1
@@ -125,6 +126,7 @@ tests:
         spec:
           httpEmptyRequestsPolicy: Respond
           idleConnectionTerminationPolicy: Immediate
+          closedClientConnectionPolicy: Continue
           endpointPublishingStrategy:
             loadBalancer:
               dnsManagementPolicy: Managed
@@ -180,6 +182,7 @@ tests:
         spec:
           httpEmptyRequestsPolicy: Respond
           idleConnectionTerminationPolicy: Immediate
+          closedClientConnectionPolicy: Continue
           endpointPublishingStrategy:
             loadBalancer:
               dnsManagementPolicy: Managed
@@ -234,6 +237,7 @@ tests:
         spec:
           httpEmptyRequestsPolicy: Respond
           idleConnectionTerminationPolicy: Immediate
+          closedClientConnectionPolicy: Continue
           endpointPublishingStrategy:
             loadBalancer:
               dnsManagementPolicy: Managed

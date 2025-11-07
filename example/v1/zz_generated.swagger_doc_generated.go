@@ -22,6 +22,19 @@ func (CELUnion) SwaggerDoc() map[string]string {
 	return map_CELUnion
 }
 
+var map_EscapingExamples = map[string]string{
+	"":                          "EscapingExamples demonstrates regex escaping requirements across different validation contexts. Each field validates the same pattern (lowercase letter + digits) but uses different string literal types, requiring different escaping.",
+	"escapingTestPattern":       "escapingTestPattern demonstrates use of the Pattern marker with raw string literal (backticks). Must match format: lowercase letter followed by one or more digits (e.g., \"a123\", \"z99\"). Pattern uses raw string literal (backticks), so single backslash.",
+	"escapingTestPatternQuoted": "escapingTestPatternQuoted demonstrates use of the Pattern marker with Go quoted string. Must match format: lowercase letter followed by one or more digits (e.g., \"b456\", \"c789\"). Quoted strings interpret escape sequences, requiring double backslash for regex metacharacters.",
+	"escapingTestCELQuoted":     "escapingTestCELQuoted demonstrates use of CEL .matches() with Go quoted string. Must match format: lowercase letter followed by one or more digits (e.g., \"a123\", \"z99\"). Quoted strings require double backslash for regex metacharacters.",
+	"escapingTestCELRaw":        "escapingTestCELRaw demonstrates use of CEL .matches() with raw string literal (backticks). Must match format: lowercase letter followed by one or more digits (e.g., \"a123\", \"z99\"). Raw string literals (backticks) preserve backslashes literally, same as Pattern.",
+	"escapingTestCELRawPrefix":  "escapingTestCELRawPrefix demonstrates use of CEL .matches() with raw string literal (backticks) + CEL raw string (r prefix). Must match format: lowercase letter followed by one or more digits (e.g., \"a123\", \"z99\"). Tests whether CEL's r'...' raw string syntax reduces backslash requirements.",
+}
+
+func (EscapingExamples) SwaggerDoc() map[string]string {
+	return map_EscapingExamples
+}
+
 var map_EvolvingUnion = map[string]string{
 	"type": "type is the discriminator. It has different values for Default and for TechPreviewNoUpgrade",
 }
@@ -63,6 +76,7 @@ var map_StableConfigTypeSpec = map[string]string{
 	"set":                    "set demonstrates how to define and validate set of strings",
 	"subdomainNameField":     "subdomainNameField represents a kubenetes name field. The intention is that it validates the name in the same way metadata.Name is validated. That is, it is a DNS-1123 subdomain.",
 	"subnetsWithExclusions":  "subnetsWithExclusions demonstrates how to validate a list of subnets with exclusions",
+	"escapingExamples":       "escapingExamples demonstrates regex escaping requirements across different validation contexts. This field provides comprehensive examples of how to properly escape regex patterns depending on whether you're using Pattern markers or CEL expressions with various string types.",
 }
 
 func (StableConfigTypeSpec) SwaggerDoc() map[string]string {

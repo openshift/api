@@ -172,6 +172,9 @@
                         "name": "MutatingAdmissionPolicy"
                     },
                     {
+                        "name": "NewOLMBoxCutterRuntime"
+                    },
+                    {
                         "name": "NewOLMCatalogdAPIV1Metas"
                     },
                     {

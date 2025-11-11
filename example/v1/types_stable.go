@@ -100,6 +100,12 @@ type StableConfigTypeSpec struct {
 	// subnetsWithExclusions demonstrates how to validate a list of subnets with exclusions
 	// +optional
 	SubnetsWithExclusions SubnetsWithExclusions `json:"subnetsWithExclusions,omitempty"`
+
+	// escapingExamples demonstrates regex escaping requirements across different validation contexts.
+	// This field provides comprehensive examples of how to properly escape regex patterns
+	// depending on whether you're using Pattern markers or CEL expressions with various string types.
+	// +optional
+	EscapingExamples *EscapingExamples `json:"escapingExamples,omitempty"`
 }
 
 // SetValue defines the types allowed in string set type
@@ -207,6 +213,57 @@ type SubnetsWithExclusions struct {
 // +kubebuilder:validation:XValidation:rule="isCIDR(self)",message="value must be a valid CIDR"
 // +kubebuilder:validation:MaxLength:=43
 type CIDR string
+
+// EscapingExamples demonstrates regex escaping requirements across different validation contexts.
+// Each field validates the same pattern (lowercase letter + digits) but uses different
+// string literal types, requiring different escaping.
+type EscapingExamples struct {
+	// escapingTestPattern demonstrates use of the Pattern marker with raw string literal (backticks).
+	// Must match format: lowercase letter followed by one or more digits (e.g., "a123", "z99").
+	// Pattern uses raw string literal (backticks), so single backslash.
+	// +kubebuilder:validation:Pattern=`^[a-z]\d+$`
+	// +kubebuilder:validation:MinLength=1
+	// +kubebuilder:validation:MaxLength=15
+	// +optional
+	EscapingTestPattern *string `json:"escapingTestPattern,omitempty"`
+
+	// escapingTestPatternQuoted demonstrates use of the Pattern marker with Go quoted string.
+	// Must match format: lowercase letter followed by one or more digits (e.g., "b456", "c789").
+	// Quoted strings interpret escape sequences, requiring double backslash for regex metacharacters.
+	// +kubebuilder:validation:Pattern="^[a-z]\\d+$"
+	// +kubebuilder:validation:MinLength=1
+	// +kubebuilder:validation:MaxLength=15
+	// +optional
+	EscapingTestPatternQuoted *string `json:"escapingTestPatternQuoted,omitempty"`
+
+	// escapingTestCELQuoted demonstrates use of CEL .matches() with Go quoted string.
+	// Must match format: lowercase letter followed by one or more digits (e.g., "a123", "z99").
+	// Quoted strings require double backslash for regex metacharacters.
+	// +kubebuilder:validation:XValidation:rule="self.matches('^[a-z]\\\\d+$')",message="must match pattern with quoted string escaping"
+	// +kubebuilder:validation:MinLength=1
+	// +kubebuilder:validation:MaxLength=15
+	// +optional
+	EscapingTestCELQuoted *string `json:"escapingTestCELQuoted,omitempty"`
+
+	// escapingTestCELRaw demonstrates use of CEL .matches() with raw string literal (backticks).
+	// Must match format: lowercase letter followed by one or more digits (e.g., "a123", "z99").
+	// Raw string literals (backticks) preserve backslashes literally, same as Pattern.
+	// +kubebuilder:validation:XValidation:rule=`self.matches('^[a-z]\\d+$')`,message="must match pattern with raw string escaping"
+	// +kubebuilder:validation:MinLength=1
+	// +kubebuilder:validation:MaxLength=15
+	// +optional
+	EscapingTestCELRaw *string `json:"escapingTestCELRaw,omitempty"`
+
+	// escapingTestCELRawPrefix demonstrates use of CEL .matches() with raw
+	// string literal (backticks) + CEL raw string (r prefix).
+	// Must match format: lowercase letter followed by one or more digits (e.g., "a123", "z99").
+	// Tests whether CEL's r'...' raw string syntax reduces backslash requirements.
+	// +kubebuilder:validation:XValidation:rule=`self.matches(r'^[a-z]\d+$')`,message="must match pattern with CEL raw string"
+	// +kubebuilder:validation:MinLength=1
+	// +kubebuilder:validation:MaxLength=15
+	// +optional
+	EscapingTestCELRawPrefix *string `json:"escapingTestCELRawPrefix,omitempty"`
+}
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 // +openshift:compatibility-gen:level=1

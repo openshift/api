@@ -80,6 +80,65 @@ spec:
                 description: coolNewField is a field that is for tech preview only.  On
                   normal clusters this shouldn't be present
                 type: string
+              escapingExamples:
+                description: |-
+                  escapingExamples demonstrates regex escaping requirements across different validation contexts.
+                  This field provides comprehensive examples of how to properly escape regex patterns
+                  depending on whether you're using Pattern markers or CEL expressions with various string types.
+                properties:
+                  escapingTestCELQuoted:
+                    description: |-
+                      escapingTestCELQuoted demonstrates use of CEL .matches() with Go quoted string.
+                      Must match format: lowercase letter followed by one or more digits (e.g., "a123", "z99").
+                      Quoted strings require double backslash for regex metacharacters.
+                    maxLength: 15
+                    minLength: 1
+                    type: string
+                    x-kubernetes-validations:
+                    - message: must match pattern with quoted string escaping
+                      rule: self.matches('^[a-z]\\d+$')
+                  escapingTestCELRaw:
+                    description: |-
+                      escapingTestCELRaw demonstrates use of CEL .matches() with raw string literal (backticks).
+                      Must match format: lowercase letter followed by one or more digits (e.g., "a123", "z99").
+                      Raw string literals (backticks) preserve backslashes literally, same as Pattern.
+                    maxLength: 15
+                    minLength: 1
+                    type: string
+                    x-kubernetes-validations:
+                    - message: must match pattern with raw string escaping
+                      rule: self.matches('^[a-z]\\d+$')
+                  escapingTestCELRawPrefix:
+                    description: |-
+                      escapingTestCELRawPrefix demonstrates use of CEL .matches() with raw
+                      string literal (backticks) + CEL raw string (r prefix).
+                      Must match format: lowercase letter followed by one or more digits (e.g., "a123", "z99").
+                      Tests whether CEL's r'...' raw string syntax reduces backslash requirements.
+                    maxLength: 15
+                    minLength: 1
+                    type: string
+                    x-kubernetes-validations:
+                    - message: must match pattern with CEL raw string
+                      rule: self.matches(r'^[a-z]\d+$')
+                  escapingTestPattern:
+                    description: |-
+                      escapingTestPattern demonstrates use of the Pattern marker with raw string literal (backticks).
+                      Must match format: lowercase letter followed by one or more digits (e.g., "a123", "z99").
+                      Pattern uses raw string literal (backticks), so single backslash.
+                    maxLength: 15
+                    minLength: 1
+                    pattern: ^[a-z]\d+$
+                    type: string
+                  escapingTestPatternQuoted:
+                    description: |-
+                      escapingTestPatternQuoted demonstrates use of the Pattern marker with Go quoted string.
+                      Must match format: lowercase letter followed by one or more digits (e.g., "b456", "c789").
+                      Quoted strings interpret escape sequences, requiring double backslash for regex metacharacters.
+                    maxLength: 15
+                    minLength: 1
+                    pattern: ^[a-z]\d+$
+                    type: string
+                type: object
               evolvingCollection:
                 description: |-
                   evolvingCollection demonstrates how to have a collection where the maximum number of items varies on cluster type.

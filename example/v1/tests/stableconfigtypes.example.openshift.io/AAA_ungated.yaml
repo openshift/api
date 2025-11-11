@@ -183,6 +183,144 @@ tests:
             requiredMember: foo
           immutableField: foo
       expectedError: "Invalid value: \"object\": requiredMember is required when type is RequiredMember, and forbidden otherwise"
+
+    # Escaping test fields - validating Pattern vs CEL escaping behavior
+    - name: Should accept valid value for escapingTestPattern (Pattern marker)
+      initial: |
+        apiVersion: example.openshift.io/v1
+        kind: StableConfigType
+        spec:
+          immutableField: foo
+          escapingExamples:
+            escapingTestPattern: "a123"
+      expected: |
+        apiVersion: example.openshift.io/v1
+        kind: StableConfigType
+        spec:
+          immutableField: foo
+          nonZeroDefault: 8
+          escapingExamples:
+            escapingTestPattern: "a123"
+
+    - name: Should reject invalid value for escapingTestPattern (Pattern marker)
+      initial: |
+        apiVersion: example.openshift.io/v1
+        kind: StableConfigType
+        spec:
+          immutableField: foo
+          escapingExamples:
+            escapingTestPattern: "A123"
+      expectedError: "should match"
+
+    - name: Should accept valid value for escapingTestPatternQuoted (Pattern marker with quoted string)
+      initial: |
+        apiVersion: example.openshift.io/v1
+        kind: StableConfigType
+        spec:
+          immutableField: foo
+          escapingExamples:
+            escapingTestPatternQuoted: "b456"
+      expected: |
+        apiVersion: example.openshift.io/v1
+        kind: StableConfigType
+        spec:
+          immutableField: foo
+          nonZeroDefault: 8
+          escapingExamples:
+            escapingTestPatternQuoted: "b456"
+
+    - name: Should reject invalid value for escapingTestPatternQuoted (Pattern marker with quoted string)
+      initial: |
+        apiVersion: example.openshift.io/v1
+        kind: StableConfigType
+        spec:
+          immutableField: foo
+          escapingExamples:
+            escapingTestPatternQuoted: "B456"
+      expectedError: "should match"
+
+    - name: Should accept valid value for escapingTestCELQuoted (CEL with quoted string)
+      initial: |
+        apiVersion: example.openshift.io/v1
+        kind: StableConfigType
+        spec:
+          immutableField: foo
+          escapingExamples:
+            escapingTestCELQuoted: "z99"
+      expected: |
+        apiVersion: example.openshift.io/v1
+        kind: StableConfigType
+        spec:
+          immutableField: foo
+          nonZeroDefault: 8
+          escapingExamples:
+            escapingTestCELQuoted: "z99"
+
+    - name: Should reject invalid value for escapingTestCELQuoted (CEL with quoted string)
+      initial: |
+        apiVersion: example.openshift.io/v1
+        kind: StableConfigType
+        spec:
+          immutableField: foo
+          escapingExamples:
+            escapingTestCELQuoted: "123"
+      expectedError: "must match pattern with quoted string escaping"
+
+    - name: Should accept valid value for escapingTestCELRaw (CEL with raw string)
+      initial: |
+        apiVersion: example.openshift.io/v1
+        kind: StableConfigType
+        spec:
+          immutableField: foo
+          escapingExamples:
+            escapingTestCELRaw: "b456"
+      expected: |
+        apiVersion: example.openshift.io/v1
+        kind: StableConfigType
+        spec:
+          immutableField: foo
+          nonZeroDefault: 8
+          escapingExamples:
+            escapingTestCELRaw: "b456"
+
+    - name: Should reject invalid value for escapingTestCELRaw (CEL with raw string)
+      initial: |
+        apiVersion: example.openshift.io/v1
+        kind: StableConfigType
+        spec:
+          immutableField: foo
+          escapingExamples:
+            escapingTestCELRaw: "B456"
+      expectedError: "must match pattern with raw string escaping"
+
+    # Tests for CEL raw string prefix (r'...')
+    - name: Should accept valid value for escapingTestCELRawPrefix (CEL raw string with r prefix)
+      initial: |
+        apiVersion: example.openshift.io/v1
+        kind: StableConfigType
+        spec:
+          immutableField: foo
+          escapingExamples:
+            escapingTestCELRawPrefix: "c789"
+      expected: |
+        apiVersion: example.openshift.io/v1
+        kind: StableConfigType
+        spec:
+          immutableField: foo
+          nonZeroDefault: 8
+          escapingExamples:
+            escapingTestCELRawPrefix: "c789"
+
+    - name: Should reject invalid value for escapingTestCELRawPrefix (CEL raw string with r prefix)
+      initial: |
+        apiVersion: example.openshift.io/v1
+        kind: StableConfigType
+        spec:
+          immutableField: foo
+          escapingExamples:
+            escapingTestCELRawPrefix: "C789"
+      expectedError: "must match pattern with CEL raw string"
+
   onUpdate:
     - name: Should not allow changing an immutable field
       initial: |

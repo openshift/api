@@ -532,6 +532,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"github.com/openshift/api/console/v1.Link":                                                           schema_openshift_api_console_v1_Link(ref),
 		"github.com/openshift/api/console/v1.NamespaceDashboardSpec":                                         schema_openshift_api_console_v1_NamespaceDashboardSpec(ref),
 		"github.com/openshift/api/example/v1.CELUnion":                                                       schema_openshift_api_example_v1_CELUnion(ref),
+		"github.com/openshift/api/example/v1.EscapingExamples":                                               schema_openshift_api_example_v1_EscapingExamples(ref),
 		"github.com/openshift/api/example/v1.EvolvingUnion":                                                  schema_openshift_api_example_v1_EvolvingUnion(ref),
 		"github.com/openshift/api/example/v1.StableConfigType":                                               schema_openshift_api_example_v1_StableConfigType(ref),
 		"github.com/openshift/api/example/v1.StableConfigTypeList":                                           schema_openshift_api_example_v1_StableConfigTypeList(ref),
@@ -25731,6 +25732,54 @@ func schema_openshift_api_example_v1_CELUnion(ref common.ReferenceCallback) comm
 	}
 }
 
+func schema_openshift_api_example_v1_EscapingExamples(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "EscapingExamples demonstrates regex escaping requirements across different validation contexts. Each field validates the same pattern (lowercase letter + digits) but uses different string literal types, requiring different escaping.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"escapingTestPattern": {
+						SchemaProps: spec.SchemaProps{
+							Description: "escapingTestPattern demonstrates use of the Pattern marker with raw string literal (backticks). Must match format: lowercase letter followed by one or more digits (e.g., \"a123\", \"z99\"). Pattern uses raw string literal (backticks), so single backslash.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"escapingTestPatternQuoted": {
+						SchemaProps: spec.SchemaProps{
+							Description: "escapingTestPatternQuoted demonstrates use of the Pattern marker with Go quoted string. Must match format: lowercase letter followed by one or more digits (e.g., \"b456\", \"c789\"). Quoted strings interpret escape sequences, requiring double backslash for regex metacharacters.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"escapingTestCELQuoted": {
+						SchemaProps: spec.SchemaProps{
+							Description: "escapingTestCELQuoted demonstrates use of CEL .matches() with Go quoted string. Must match format: lowercase letter followed by one or more digits (e.g., \"a123\", \"z99\"). Quoted strings require double backslash for regex metacharacters.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"escapingTestCELRaw": {
+						SchemaProps: spec.SchemaProps{
+							Description: "escapingTestCELRaw demonstrates use of CEL .matches() with raw string literal (backticks). Must match format: lowercase letter followed by one or more digits (e.g., \"a123\", \"z99\"). Raw string literals (backticks) preserve backslashes literally, same as Pattern.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"escapingTestCELRawPrefix": {
+						SchemaProps: spec.SchemaProps{
+							Description: "escapingTestCELRawPrefix demonstrates use of CEL .matches() with raw string literal (backticks) + CEL raw string (r prefix). Must match format: lowercase letter followed by one or more digits (e.g., \"a123\", \"z99\"). Tests whether CEL's r'...' raw string syntax reduces backslash requirements.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+				},
+			},
+		},
+	}
+}
+
 func schema_openshift_api_example_v1_EvolvingUnion(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -25962,12 +26011,18 @@ func schema_openshift_api_example_v1_StableConfigTypeSpec(ref common.ReferenceCa
 							Ref:         ref("github.com/openshift/api/example/v1.SubnetsWithExclusions"),
 						},
 					},
+					"escapingExamples": {
+						SchemaProps: spec.SchemaProps{
+							Description: "escapingExamples demonstrates regex escaping requirements across different validation contexts. This field provides comprehensive examples of how to properly escape regex patterns depending on whether you're using Pattern markers or CEL expressions with various string types.",
+							Ref:         ref("github.com/openshift/api/example/v1.EscapingExamples"),
+						},
+					},
 				},
 				Required: []string{"immutableField"},
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/example/v1.CELUnion", "github.com/openshift/api/example/v1.EvolvingUnion", "github.com/openshift/api/example/v1.SubnetsWithExclusions"},
+			"github.com/openshift/api/example/v1.CELUnion", "github.com/openshift/api/example/v1.EscapingExamples", "github.com/openshift/api/example/v1.EvolvingUnion", "github.com/openshift/api/example/v1.SubnetsWithExclusions"},
 	}
 }
 

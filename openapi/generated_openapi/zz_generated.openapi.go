@@ -795,6 +795,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"github.com/openshift/api/machine/v1beta1.ConfidentialVM":                                            schema_openshift_api_machine_v1beta1_ConfidentialVM(ref),
 		"github.com/openshift/api/machine/v1beta1.DataDisk":                                                  schema_openshift_api_machine_v1beta1_DataDisk(ref),
 		"github.com/openshift/api/machine/v1beta1.DataDiskManagedDiskParameters":                             schema_openshift_api_machine_v1beta1_DataDiskManagedDiskParameters(ref),
+		"github.com/openshift/api/machine/v1beta1.DedicatedHost":                                             schema_openshift_api_machine_v1beta1_DedicatedHost(ref),
 		"github.com/openshift/api/machine/v1beta1.DiskEncryptionSetParameters":                               schema_openshift_api_machine_v1beta1_DiskEncryptionSetParameters(ref),
 		"github.com/openshift/api/machine/v1beta1.DiskSettings":                                              schema_openshift_api_machine_v1beta1_DiskSettings(ref),
 		"github.com/openshift/api/machine/v1beta1.EBSBlockDeviceSpec":                                        schema_openshift_api_machine_v1beta1_EBSBlockDeviceSpec(ref),
@@ -809,6 +810,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"github.com/openshift/api/machine/v1beta1.GCPNetworkInterface":                                       schema_openshift_api_machine_v1beta1_GCPNetworkInterface(ref),
 		"github.com/openshift/api/machine/v1beta1.GCPServiceAccount":                                         schema_openshift_api_machine_v1beta1_GCPServiceAccount(ref),
 		"github.com/openshift/api/machine/v1beta1.GCPShieldedInstanceConfig":                                 schema_openshift_api_machine_v1beta1_GCPShieldedInstanceConfig(ref),
+		"github.com/openshift/api/machine/v1beta1.HostPlacement":                                             schema_openshift_api_machine_v1beta1_HostPlacement(ref),
 		"github.com/openshift/api/machine/v1beta1.Image":                                                     schema_openshift_api_machine_v1beta1_Image(ref),
 		"github.com/openshift/api/machine/v1beta1.LastOperation":                                             schema_openshift_api_machine_v1beta1_LastOperation(ref),
 		"github.com/openshift/api/machine/v1beta1.LifecycleHook":                                             schema_openshift_api_machine_v1beta1_LifecycleHook(ref),
@@ -39613,12 +39615,18 @@ func schema_openshift_api_machine_v1beta1_AWSMachineProviderConfig(ref common.Re
 							Format:      "",
 						},
 					},
+					"hostPlacement": {
+						SchemaProps: spec.SchemaProps{
+							Description: "hostPlacement configures placement on AWS Dedicated Hosts. This allows admins to assign instances to specific host for a variety of needs including for regulatory compliance, to leverage existing per-socket or per-core software licenses (BYOL), and to gain visibility and control over instance placement on a physical server. When omitted, the instance is not constrained to a dedicated host.",
+							Ref:         ref("github.com/openshift/api/machine/v1beta1.HostPlacement"),
+						},
+					},
 				},
 				Required: []string{"ami", "instanceType", "deviceIndex", "subnet", "placement"},
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/machine/v1beta1.AWSResourceReference", "github.com/openshift/api/machine/v1beta1.BlockDeviceMappingSpec", "github.com/openshift/api/machine/v1beta1.CPUOptions", "github.com/openshift/api/machine/v1beta1.LoadBalancerReference", "github.com/openshift/api/machine/v1beta1.MetadataServiceOptions", "github.com/openshift/api/machine/v1beta1.Placement", "github.com/openshift/api/machine/v1beta1.SpotMarketOptions", "github.com/openshift/api/machine/v1beta1.TagSpecification", "k8s.io/api/core/v1.LocalObjectReference", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"},
+			"github.com/openshift/api/machine/v1beta1.AWSResourceReference", "github.com/openshift/api/machine/v1beta1.BlockDeviceMappingSpec", "github.com/openshift/api/machine/v1beta1.CPUOptions", "github.com/openshift/api/machine/v1beta1.HostPlacement", "github.com/openshift/api/machine/v1beta1.LoadBalancerReference", "github.com/openshift/api/machine/v1beta1.MetadataServiceOptions", "github.com/openshift/api/machine/v1beta1.Placement", "github.com/openshift/api/machine/v1beta1.SpotMarketOptions", "github.com/openshift/api/machine/v1beta1.TagSpecification", "k8s.io/api/core/v1.LocalObjectReference", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"},
 	}
 }
 
@@ -40463,6 +40471,27 @@ func schema_openshift_api_machine_v1beta1_DataDiskManagedDiskParameters(ref comm
 	}
 }
 
+func schema_openshift_api_machine_v1beta1_DedicatedHost(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "DedicatedHost represents the configuration for the usage of dedicated host.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"id": {
+						SchemaProps: spec.SchemaProps{
+							Description: "id identifies the AWS Dedicated Host on which the instance must run. The value must start with \"h-\" followed by 17 lowercase hexadecimal characters (0-9 and a-f). Must be exactly 19 characters in length.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+				},
+				Required: []string{"id"},
+			},
+		},
+	}
+}
+
 func schema_openshift_api_machine_v1beta1_DiskEncryptionSetParameters(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -41260,6 +41289,47 @@ func schema_openshift_api_machine_v1beta1_GCPShieldedInstanceConfig(ref common.R
 				},
 			},
 		},
+	}
+}
+
+func schema_openshift_api_machine_v1beta1_HostPlacement(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "HostPlacement is the type that will be used to configure the placement of AWS instances.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"affinity": {
+						SchemaProps: spec.SchemaProps{
+							Description: "affinity specifies the affinity setting for the instance. Allowed values are AnyAvailable and DedicatedHost. When Affinity is set to DedicatedHost, an instance started onto a specific host always restarts on the same host if stopped. In this scenario, the `dedicatedHost` field must be set. When Affinity is set to AnyAvailable, and you stop and restart the instance, it can be restarted on any available host.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"dedicatedHost": {
+						SchemaProps: spec.SchemaProps{
+							Description: "dedicatedHost specifies the exact host that an instance should be restarted on if stopped. dedicatedHost is required when 'affinity' is set to DedicatedHost, and forbidden otherwise.",
+							Ref:         ref("github.com/openshift/api/machine/v1beta1.DedicatedHost"),
+						},
+					},
+				},
+				Required: []string{"affinity"},
+			},
+			VendorExtensible: spec.VendorExtensible{
+				Extensions: spec.Extensions{
+					"x-kubernetes-unions": []interface{}{
+						map[string]interface{}{
+							"discriminator": "affinity",
+							"fields-to-discriminateBy": map[string]interface{}{
+								"dedicatedHost": "DedicatedHost",
+							},
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"github.com/openshift/api/machine/v1beta1.DedicatedHost"},
 	}
 }
 

@@ -31,6 +31,7 @@ var AllowAllCapabilities corev1.Capability = "*"
 // +kubebuilder:printcolumn:name="SELinux",type=string,JSONPath=.seLinuxContext.type,description="Strategy that will dictate what labels will be set in the SecurityContext"
 // +kubebuilder:printcolumn:name="RunAsUser",type=string,JSONPath=.runAsUser.type,description="Strategy that will dictate what RunAsUser is used in the SecurityContext"
 // +kubebuilder:printcolumn:name="FSGroup",type=string,JSONPath=.fsGroup.type,description="Strategy that will dictate what fs group is used by the SecurityContext"
+// +kubebuilder:printcolumn:name="RunAsGroup",type=string,JSONPath=.runAsGroup.type,description="Strategy that will dictate what RunAsGroup is used by the SecurityContext"
 // +kubebuilder:printcolumn:name="SupGroup",type=string,JSONPath=.supplementalGroups.type,description="Strategy that will dictate what supplemental groups are used by the SecurityContext"
 // +kubebuilder:printcolumn:name="Priority",type=string,JSONPath=.priority,description="Sort order of SCCs"
 // +kubebuilder:printcolumn:name="ReadOnlyRootFS",type=string,JSONPath=.readOnlyRootFilesystem,description="Force containers to run with a read only root file system"
@@ -131,6 +132,10 @@ type SecurityContextConstraints struct {
 	// fsGroup is the strategy that will dictate what fs group is used by the SecurityContext.
 	// +nullable
 	FSGroup FSGroupStrategyOptions `json:"fsGroup,omitempty" protobuf:"bytes,16,opt,name=fsGroup"`
+	// runAsGroup is the strategy that will dictate what RunAsGroup is used in the SecurityContext.
+	// When omitted, the RunAsGroup strategy will not be enforced and containers may run with any group ID.
+	// +optional
+	RunAsGroup RunAsGroupStrategyOptions `json:"runAsGroup,omitzero" protobuf:"bytes,27,opt,name=runAsGroup"`
 	// readOnlyRootFilesystem when set to true will force containers to run with a read only root file
 	// system.  If the container specifically requests to run with a non-read only root file system
 	// the SCC should deny the pod.
@@ -268,6 +273,42 @@ type SupplementalGroupsStrategyOptions struct {
 	Ranges []IDRange `json:"ranges,omitempty" protobuf:"bytes,2,rep,name=ranges"`
 }
 
+// RunAsGroupStrategyOptions defines the strategy type and options used to create the strategy.
+type RunAsGroupStrategyOptions struct {
+	// type is the strategy that will dictate what RunAsGroup is used in the SecurityContext.
+	// Valid values are "MustRunAs", "MustRunAsRange", and "RunAsAny".
+	// +required
+	// +kubebuilder:validation:Enum=MustRunAs;MustRunAsRange;RunAsAny
+	Type RunAsGroupStrategyType `json:"type,omitempty" protobuf:"bytes,1,opt,name=type,casttype=RunAsGroupStrategyType"`
+	// gid is the group id that containers must run as. Required for the MustRunAs strategy if not using
+	// namespace/service account allocated gids.
+	// +optional
+	GID *int64 `json:"gid,omitempty" protobuf:"varint,2,opt,name=gid"`
+	// gidRangeMin defines the min value for a strategy that allocates by range.
+	// +optional
+	GIDRangeMin *int64 `json:"gidRangeMin,omitempty" protobuf:"varint,3,opt,name=gidRangeMin"`
+	// gidRangeMax defines the max value for a strategy that allocates by range.
+	// +optional
+	GIDRangeMax *int64 `json:"gidRangeMax,omitempty" protobuf:"varint,4,opt,name=gidRangeMax"`
+	// ranges are the allowed ranges of gids.  If you would like to force a single
+	// gid then supply a single range with the same start and end.
+	// When omitted, any gid is allowed (equivalent to RunAsAny strategy).
+	// +optional
+	// +listType=atomic
+	// +kubebuilder:validation:MaxItems=256
+	Ranges []RunAsGroupIDRange `json:"ranges,omitempty" protobuf:"bytes,5,rep,name=ranges"`
+}
+
+// RunAsGroupIDRange provides a min/max of an allowed range of group IDs for RunAsGroup strategy.
+type RunAsGroupIDRange struct {
+	// min is the start of the range, inclusive.
+	// +required
+	Min *int64 `json:"min,omitempty" protobuf:"varint,1,opt,name=min"`
+	// max is the end of the range, inclusive.
+	// +required
+	Max *int64 `json:"max,omitempty" protobuf:"varint,2,opt,name=max"`
+}
+
 // IDRange provides a min/max of an allowed range of IDs.
 // TODO: this could be reused for UIDs.
 type IDRange struct {
@@ -296,6 +337,10 @@ type SupplementalGroupsStrategyType string
 // SecurityContext
 type FSGroupStrategyType string
 
+// RunAsGroupStrategyType denotes strategy types for generating RunAsGroup values for a
+// SecurityContext
+type RunAsGroupStrategyType string
+
 const (
 	// NamespaceLevelAllowHost allows a pod to set `hostUsers` field to either `true` or `false`
 	NamespaceLevelAllowHost NamespaceLevelType = "AllowHostLevel"
@@ -320,6 +365,13 @@ const (
 	FSGroupStrategyMustRunAs FSGroupStrategyType = "MustRunAs"
 	// container may make requests for any FSGroup labels.
 	FSGroupStrategyRunAsAny FSGroupStrategyType = "RunAsAny"
+
+	// container must have RunAsGroup of X applied.
+	RunAsGroupStrategyMustRunAs RunAsGroupStrategyType = "MustRunAs"
+	// container must run with a gid in a range.
+	RunAsGroupStrategyMustRunAsRange RunAsGroupStrategyType = "MustRunAsRange"
+	// container may make requests for any RunAsGroup.
+	RunAsGroupStrategyRunAsAny RunAsGroupStrategyType = "RunAsAny"
 
 	// container must run as a particular gid.
 	SupplementalGroupsStrategyMustRunAs SupplementalGroupsStrategyType = "MustRunAs"

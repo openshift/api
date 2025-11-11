@@ -1278,6 +1278,8 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"github.com/openshift/api/security/v1.PodSecurityPolicySubjectReviewStatus":                          schema_openshift_api_security_v1_PodSecurityPolicySubjectReviewStatus(ref),
 		"github.com/openshift/api/security/v1.RangeAllocation":                                               schema_openshift_api_security_v1_RangeAllocation(ref),
 		"github.com/openshift/api/security/v1.RangeAllocationList":                                           schema_openshift_api_security_v1_RangeAllocationList(ref),
+		"github.com/openshift/api/security/v1.RunAsGroupIDRange":                                             schema_openshift_api_security_v1_RunAsGroupIDRange(ref),
+		"github.com/openshift/api/security/v1.RunAsGroupStrategyOptions":                                     schema_openshift_api_security_v1_RunAsGroupStrategyOptions(ref),
 		"github.com/openshift/api/security/v1.RunAsUserStrategyOptions":                                      schema_openshift_api_security_v1_RunAsUserStrategyOptions(ref),
 		"github.com/openshift/api/security/v1.SELinuxContextStrategyOptions":                                 schema_openshift_api_security_v1_SELinuxContextStrategyOptions(ref),
 		"github.com/openshift/api/security/v1.SecurityContextConstraints":                                    schema_openshift_api_security_v1_SecurityContextConstraints(ref),
@@ -65128,6 +65130,97 @@ func schema_openshift_api_security_v1_RangeAllocationList(ref common.ReferenceCa
 	}
 }
 
+func schema_openshift_api_security_v1_RunAsGroupIDRange(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "RunAsGroupIDRange provides a min/max of an allowed range of group IDs for RunAsGroup strategy.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"min": {
+						SchemaProps: spec.SchemaProps{
+							Description: "min is the start of the range, inclusive.",
+							Type:        []string{"integer"},
+							Format:      "int64",
+						},
+					},
+					"max": {
+						SchemaProps: spec.SchemaProps{
+							Description: "max is the end of the range, inclusive.",
+							Type:        []string{"integer"},
+							Format:      "int64",
+						},
+					},
+				},
+				Required: []string{"min", "max"},
+			},
+		},
+	}
+}
+
+func schema_openshift_api_security_v1_RunAsGroupStrategyOptions(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "RunAsGroupStrategyOptions defines the strategy type and options used to create the strategy.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"type": {
+						SchemaProps: spec.SchemaProps{
+							Description: "type is the strategy that will dictate what RunAsGroup is used in the SecurityContext. Valid values are \"MustRunAs\", \"MustRunAsRange\", and \"RunAsAny\".",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"gid": {
+						SchemaProps: spec.SchemaProps{
+							Description: "gid is the group id that containers must run as. Required for the MustRunAs strategy if not using namespace/service account allocated gids.",
+							Type:        []string{"integer"},
+							Format:      "int64",
+						},
+					},
+					"gidRangeMin": {
+						SchemaProps: spec.SchemaProps{
+							Description: "gidRangeMin defines the min value for a strategy that allocates by range.",
+							Type:        []string{"integer"},
+							Format:      "int64",
+						},
+					},
+					"gidRangeMax": {
+						SchemaProps: spec.SchemaProps{
+							Description: "gidRangeMax defines the max value for a strategy that allocates by range.",
+							Type:        []string{"integer"},
+							Format:      "int64",
+						},
+					},
+					"ranges": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-type": "atomic",
+							},
+						},
+						SchemaProps: spec.SchemaProps{
+							Description: "ranges are the allowed ranges of gids.  If you would like to force a single gid then supply a single range with the same start and end. When omitted, any gid is allowed (equivalent to RunAsAny strategy).",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("github.com/openshift/api/security/v1.RunAsGroupIDRange"),
+									},
+								},
+							},
+						},
+					},
+				},
+				Required: []string{"type"},
+			},
+		},
+		Dependencies: []string{
+			"github.com/openshift/api/security/v1.RunAsGroupIDRange"},
+	}
+}
+
 func schema_openshift_api_security_v1_RunAsUserStrategyOptions(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -65429,6 +65522,13 @@ func schema_openshift_api_security_v1_SecurityContextConstraints(ref common.Refe
 							Ref:         ref("github.com/openshift/api/security/v1.FSGroupStrategyOptions"),
 						},
 					},
+					"runAsGroup": {
+						SchemaProps: spec.SchemaProps{
+							Description: "runAsGroup is the strategy that will dictate what RunAsGroup is used in the SecurityContext. When omitted, the RunAsGroup strategy will not be enforced and containers may run with any group ID.",
+							Default:     map[string]interface{}{},
+							Ref:         ref("github.com/openshift/api/security/v1.RunAsGroupStrategyOptions"),
+						},
+					},
 					"readOnlyRootFilesystem": {
 						SchemaProps: spec.SchemaProps{
 							Description: "readOnlyRootFilesystem when set to true will force containers to run with a read only root file system.  If the container specifically requests to run with a non-read only root file system the SCC should deny the pod. If set to false the container may run with a read only root file system if it wishes but it will not be forced to.",
@@ -65542,7 +65642,7 @@ func schema_openshift_api_security_v1_SecurityContextConstraints(ref common.Refe
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/security/v1.AllowedFlexVolume", "github.com/openshift/api/security/v1.FSGroupStrategyOptions", "github.com/openshift/api/security/v1.RunAsUserStrategyOptions", "github.com/openshift/api/security/v1.SELinuxContextStrategyOptions", "github.com/openshift/api/security/v1.SupplementalGroupsStrategyOptions", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"},
+			"github.com/openshift/api/security/v1.AllowedFlexVolume", "github.com/openshift/api/security/v1.FSGroupStrategyOptions", "github.com/openshift/api/security/v1.RunAsGroupStrategyOptions", "github.com/openshift/api/security/v1.RunAsUserStrategyOptions", "github.com/openshift/api/security/v1.SELinuxContextStrategyOptions", "github.com/openshift/api/security/v1.SupplementalGroupsStrategyOptions", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"},
 	}
 }
 

@@ -38166,6 +38166,11 @@
             "default": ""
           },
           "x-kubernetes-list-type": "atomic"
+        },
+        "runAsGroup": {
+          "description": "runAsGroup is the strategy that will dictate what RunAsGroup is used in the SecurityContext. When omitted, the RunAsGroup strategy will not be enforced and containers may run with any group ID.",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.security.v1.RunAsGroupStrategyOptions"
         }
       }
     },
@@ -49833,6 +49838,63 @@
       "description": "IntOrString is a type that can hold an int32 or a string.  When used in JSON or YAML marshalling and unmarshalling, it produces or consumes the inner type.  This allows you to have, for example, a JSON field that can accept a name or number.",
       "type": "string",
       "format": "int-or-string"
+    },
+    "com.github.openshift.api.security.v1.RunAsGroupIDRange": {
+      "description": "RunAsGroupIDRange provides a min/max of an allowed range of group IDs for RunAsGroup strategy.",
+      "type": "object",
+      "required": [
+        "min",
+        "max"
+      ],
+      "properties": {
+        "max": {
+          "description": "max is the end of the range, inclusive.",
+          "type": "integer",
+          "format": "int64"
+        },
+        "min": {
+          "description": "min is the start of the range, inclusive.",
+          "type": "integer",
+          "format": "int64"
+        }
+      }
+    },
+    "com.github.openshift.api.security.v1.RunAsGroupStrategyOptions": {
+      "description": "RunAsGroupStrategyOptions defines the strategy type and options used to create the strategy.",
+      "type": "object",
+      "required": [
+        "type"
+      ],
+      "properties": {
+        "gid": {
+          "description": "gid is the group id that containers must run as. Required for the MustRunAs strategy if not using namespace/service account allocated gids.",
+          "type": "integer",
+          "format": "int64"
+        },
+        "gidRangeMax": {
+          "description": "gidRangeMax defines the max value for a strategy that allocates by range.",
+          "type": "integer",
+          "format": "int64"
+        },
+        "gidRangeMin": {
+          "description": "gidRangeMin defines the min value for a strategy that allocates by range.",
+          "type": "integer",
+          "format": "int64"
+        },
+        "ranges": {
+          "description": "ranges are the allowed ranges of gids.  If you would like to force a single gid then supply a single range with the same start and end. When omitted, any gid is allowed (equivalent to RunAsAny strategy).",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/com.github.openshift.api.security.v1.RunAsGroupIDRange"
+          },
+          "x-kubernetes-list-type": "atomic"
+        },
+        "type": {
+          "description": "type is the strategy that will dictate what RunAsGroup is used in the SecurityContext. Valid values are \"MustRunAs\", \"MustRunAsRange\", and \"RunAsAny\".",
+          "type": "string"
+        }
+      }
     }
   }
 }

@@ -30,6 +30,30 @@ func (EvolvingUnion) SwaggerDoc() map[string]string {
 	return map_EvolvingUnion
 }
 
+var map_FormatMarkerExamples = map[string]string{
+	"":              "FormatMarkerExamples demonstrates all Kubebuilder Format markers supported as of Kubernetes 1.33. This struct provides a comprehensive reference for format marker validation. Each field uses a different format marker to validate its value.",
+	"ipv4Address":   "ipv4Address must be a valid IPv4 address in dotted-quad notation. Valid values range from 0.0.0.0 to 255.255.255.255 (e.g., 192.168.1.1).\n\nUse of Format=ipv4 is not recommended due to CVE-2021-29923 and CVE-2024-24790. Instead, use the CEL expression `isIP(self) && ip(self).family() == 4` to validate IPv4 addresses.",
+	"ipv6Address":   "ipv6Address must be a valid IPv6 address. Valid examples include full form (2001:0db8:0000:0000:0000:0000:0000:0001) or compressed form (2001:db8::1 or ::1).\n\nUse of Format=ipv6 is not recommended due to CVE-2021-29923 and CVE-2024-24790. Instead, use the CEL expression `isIP(self) && ip(self).family() == 6` to validate IPv6 addresses.",
+	"cidrNotation":  "cidrNotation must be a valid CIDR notation IP address range. Valid examples include IPv4 CIDR (10.0.0.0/8, 192.168.1.0/24) or IPv6 CIDR (fd00::/8, 2001:db8::/32).\n\nUse of Format=cidr is not recommended due to CVE-2021-29923 and CVE-2024-24790. Instead, use the CEL expression `isCIDR(self)` to validate CIDR notation. Additionally, use `isCIDR(self) && cidr(self).ip().family() == X` to validate IPvX specifically.",
+	"uriField":      "uriField must be a valid URI following RFC 3986 syntax. Valid examples include https://example.com/path?query=value or /absolute-path.",
+	"emailAddress":  "emailAddress must be a valid email address. Valid examples include user@example.com or firstname.lastname@company.co.uk.",
+	"hostnameField": "hostnameField must be a valid Internet hostname per RFC 1034. Valid examples include example.com, api.example.com, or my-service.",
+	"macAddress":    "macAddress must be a valid MAC address. Valid examples include 00:1A:2B:3C:4D:5E or 00-1A-2B-3C-4D-5E.",
+	"uuidField":     "uuidField must be a valid UUID (any version) in 8-4-4-4-12 format. Valid examples include 550e8400-e29b-41d4-a716-446655440000 or 123e4567-e89b-12d3-a456-426614174000.",
+	"uuid3Field":    "uuid3Field must be a valid UUID version 3 (MD5 hash-based). Version 3 UUIDs are generated using MD5 hashing of a namespace and name. Valid example: a3bb189e-8bf9-3888-9912-ace4e6543002.",
+	"uuid4Field":    "uuid4Field must be a valid UUID version 4 (random). Version 4 UUIDs are randomly generated. Valid example: 550e8400-e29b-41d4-a716-446655440000.",
+	"uuid5Field":    "uuid5Field must be a valid UUID version 5 (SHA-1 hash-based). Version 5 UUIDs are generated using SHA-1 hashing of a namespace and name. Valid example: 74738ff5-5367-5958-9aee-98fffdcd1876.",
+	"dateField":     "dateField must be a valid date in RFC 3339 full-date format (YYYY-MM-DD). Valid examples include 2024-01-15 or 2023-12-31.",
+	"dateTimeField": "dateTimeField must be a valid RFC 3339 date-time. Valid examples include 2024-01-15T14:30:00Z, 2024-01-15T14:30:00+00:00, or 2024-01-15T14:30:00.123Z.",
+	"durationField": "durationField must be a valid duration string parseable by Go's time.ParseDuration. Valid time units are ns, us (or µs), ms, s, m, h. Valid examples include 30s, 5m, 1h30m, 100ms, or 1h.",
+	"base64Data":    "base64Data must be valid base64-encoded data. Valid examples include aGVsbG8= (encodes \"hello\") or SGVsbG8gV29ybGQh (encodes \"Hello World!\").",
+	"passwordField": "passwordField is a marker for sensitive data. Note that the password format marker does not perform any actual validation - it accepts any string value. This marker is primarily used to signal that the field contains sensitive information.",
+}
+
+func (FormatMarkerExamples) SwaggerDoc() map[string]string {
+	return map_FormatMarkerExamples
+}
+
 var map_StableConfigType = map[string]string{
 	"":         "StableConfigType is a stable config type that may include TechPreviewNoUpgrade fields.\n\nCompatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).",
 	"metadata": "metadata is the standard object's metadata. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata",
@@ -63,6 +87,7 @@ var map_StableConfigTypeSpec = map[string]string{
 	"set":                    "set demonstrates how to define and validate set of strings",
 	"subdomainNameField":     "subdomainNameField represents a kubenetes name field. The intention is that it validates the name in the same way metadata.Name is validated. That is, it is a DNS-1123 subdomain.",
 	"subnetsWithExclusions":  "subnetsWithExclusions demonstrates how to validate a list of subnets with exclusions",
+	"formatMarkerExamples":   "formatMarkerExamples demonstrates all Kubebuilder Format markers supported as of Kubernetes 1.33. This field serves as a comprehensive reference for format marker validation.",
 }
 
 func (StableConfigTypeSpec) SwaggerDoc() map[string]string {

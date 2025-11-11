@@ -533,6 +533,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"github.com/openshift/api/console/v1.NamespaceDashboardSpec":                                         schema_openshift_api_console_v1_NamespaceDashboardSpec(ref),
 		"github.com/openshift/api/example/v1.CELUnion":                                                       schema_openshift_api_example_v1_CELUnion(ref),
 		"github.com/openshift/api/example/v1.EvolvingUnion":                                                  schema_openshift_api_example_v1_EvolvingUnion(ref),
+		"github.com/openshift/api/example/v1.FormatMarkerExamples":                                           schema_openshift_api_example_v1_FormatMarkerExamples(ref),
 		"github.com/openshift/api/example/v1.StableConfigType":                                               schema_openshift_api_example_v1_StableConfigType(ref),
 		"github.com/openshift/api/example/v1.StableConfigTypeList":                                           schema_openshift_api_example_v1_StableConfigTypeList(ref),
 		"github.com/openshift/api/example/v1.StableConfigTypeSpec":                                           schema_openshift_api_example_v1_StableConfigTypeSpec(ref),
@@ -25752,6 +25753,131 @@ func schema_openshift_api_example_v1_EvolvingUnion(ref common.ReferenceCallback)
 	}
 }
 
+func schema_openshift_api_example_v1_FormatMarkerExamples(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "FormatMarkerExamples demonstrates all Kubebuilder Format markers supported as of Kubernetes 1.33. This struct provides a comprehensive reference for format marker validation. Each field uses a different format marker to validate its value.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"ipv4Address": {
+						SchemaProps: spec.SchemaProps{
+							Description: "ipv4Address must be a valid IPv4 address in dotted-quad notation. Valid values range from 0.0.0.0 to 255.255.255.255 (e.g., 192.168.1.1).\n\nUse of Format=ipv4 is not recommended due to CVE-2021-29923 and CVE-2024-24790. Instead, use the CEL expression `isIP(self) && ip(self).family() == 4` to validate IPv4 addresses.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"ipv6Address": {
+						SchemaProps: spec.SchemaProps{
+							Description: "ipv6Address must be a valid IPv6 address. Valid examples include full form (2001:0db8:0000:0000:0000:0000:0000:0001) or compressed form (2001:db8::1 or ::1).\n\nUse of Format=ipv6 is not recommended due to CVE-2021-29923 and CVE-2024-24790. Instead, use the CEL expression `isIP(self) && ip(self).family() == 6` to validate IPv6 addresses.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"cidrNotation": {
+						SchemaProps: spec.SchemaProps{
+							Description: "cidrNotation must be a valid CIDR notation IP address range. Valid examples include IPv4 CIDR (10.0.0.0/8, 192.168.1.0/24) or IPv6 CIDR (fd00::/8, 2001:db8::/32).\n\nUse of Format=cidr is not recommended due to CVE-2021-29923 and CVE-2024-24790. Instead, use the CEL expression `isCIDR(self)` to validate CIDR notation. Additionally, use `isCIDR(self) && cidr(self).ip().family() == X` to validate IPvX specifically.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"uriField": {
+						SchemaProps: spec.SchemaProps{
+							Description: "uriField must be a valid URI following RFC 3986 syntax. Valid examples include https://example.com/path?query=value or /absolute-path.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"emailAddress": {
+						SchemaProps: spec.SchemaProps{
+							Description: "emailAddress must be a valid email address. Valid examples include user@example.com or firstname.lastname@company.co.uk.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"hostnameField": {
+						SchemaProps: spec.SchemaProps{
+							Description: "hostnameField must be a valid Internet hostname per RFC 1034. Valid examples include example.com, api.example.com, or my-service.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"macAddress": {
+						SchemaProps: spec.SchemaProps{
+							Description: "macAddress must be a valid MAC address. Valid examples include 00:1A:2B:3C:4D:5E or 00-1A-2B-3C-4D-5E.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"uuidField": {
+						SchemaProps: spec.SchemaProps{
+							Description: "uuidField must be a valid UUID (any version) in 8-4-4-4-12 format. Valid examples include 550e8400-e29b-41d4-a716-446655440000 or 123e4567-e89b-12d3-a456-426614174000.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"uuid3Field": {
+						SchemaProps: spec.SchemaProps{
+							Description: "uuid3Field must be a valid UUID version 3 (MD5 hash-based). Version 3 UUIDs are generated using MD5 hashing of a namespace and name. Valid example: a3bb189e-8bf9-3888-9912-ace4e6543002.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"uuid4Field": {
+						SchemaProps: spec.SchemaProps{
+							Description: "uuid4Field must be a valid UUID version 4 (random). Version 4 UUIDs are randomly generated. Valid example: 550e8400-e29b-41d4-a716-446655440000.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"uuid5Field": {
+						SchemaProps: spec.SchemaProps{
+							Description: "uuid5Field must be a valid UUID version 5 (SHA-1 hash-based). Version 5 UUIDs are generated using SHA-1 hashing of a namespace and name. Valid example: 74738ff5-5367-5958-9aee-98fffdcd1876.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"dateField": {
+						SchemaProps: spec.SchemaProps{
+							Description: "dateField must be a valid date in RFC 3339 full-date format (YYYY-MM-DD). Valid examples include 2024-01-15 or 2023-12-31.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"dateTimeField": {
+						SchemaProps: spec.SchemaProps{
+							Description: "dateTimeField must be a valid RFC 3339 date-time. Valid examples include 2024-01-15T14:30:00Z, 2024-01-15T14:30:00+00:00, or 2024-01-15T14:30:00.123Z.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"durationField": {
+						SchemaProps: spec.SchemaProps{
+							Description: "durationField must be a valid duration string parseable by Go's time.ParseDuration. Valid time units are ns, us (or µs), ms, s, m, h. Valid examples include 30s, 5m, 1h30m, 100ms, or 1h.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"base64Data": {
+						SchemaProps: spec.SchemaProps{
+							Description: "base64Data must be valid base64-encoded data. Valid examples include aGVsbG8= (encodes \"hello\") or SGVsbG8gV29ybGQh (encodes \"Hello World!\").",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"passwordField": {
+						SchemaProps: spec.SchemaProps{
+							Description: "passwordField is a marker for sensitive data. Note that the password format marker does not perform any actual validation - it accepts any string value. This marker is primarily used to signal that the field contains sensitive information.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+				},
+			},
+		},
+	}
+}
+
 func schema_openshift_api_example_v1_StableConfigType(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -25962,12 +26088,18 @@ func schema_openshift_api_example_v1_StableConfigTypeSpec(ref common.ReferenceCa
 							Ref:         ref("github.com/openshift/api/example/v1.SubnetsWithExclusions"),
 						},
 					},
+					"formatMarkerExamples": {
+						SchemaProps: spec.SchemaProps{
+							Description: "formatMarkerExamples demonstrates all Kubebuilder Format markers supported as of Kubernetes 1.33. This field serves as a comprehensive reference for format marker validation.",
+							Ref:         ref("github.com/openshift/api/example/v1.FormatMarkerExamples"),
+						},
+					},
 				},
 				Required: []string{"immutableField"},
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/example/v1.CELUnion", "github.com/openshift/api/example/v1.EvolvingUnion", "github.com/openshift/api/example/v1.SubnetsWithExclusions"},
+			"github.com/openshift/api/example/v1.CELUnion", "github.com/openshift/api/example/v1.EvolvingUnion", "github.com/openshift/api/example/v1.FormatMarkerExamples", "github.com/openshift/api/example/v1.SubnetsWithExclusions"},
 	}
 }
 

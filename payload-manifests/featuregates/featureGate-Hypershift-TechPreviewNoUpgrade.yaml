@@ -58,9 +58,6 @@
                     },
                     {
                         "name": "ShortCertRotation"
-                    },
-                    {
-                        "name": "VSphereMixedNodeEnv"
                     }
                 ],
                 "enabled": [
@@ -333,6 +330,9 @@
                     },
                     {
                         "name": "VSphereHostVMGroupZonal"
+                    },
+                    {
+                        "name": "VSphereMixedNodeEnv"
                     },
                     {
                         "name": "VSphereMultiDisk"

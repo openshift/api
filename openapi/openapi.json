@@ -6280,6 +6280,15 @@
           },
           "x-kubernetes-list-type": "atomic"
         },
+        "curves": {
+          "description": "curves is used to specify the elliptic curves that are used during the TLS handshake.  Operators may remove entries their operands do not support.\n\nTLSProfiles Old, Intermediate, Modern are including by default the following curves: X25519, P-256, P-384, P-521, X25519MLKEM768, SecP256r1MLKEM1024, SecP384r1MLKEM1024. TLSProfiles Custom do not include any curves by default. NOTE: since this field is optional, if no curves are specified, the default curves used by the underlying TLS library will be used.\n\nFor example, to use X25519 and P-256 (yaml):\n\n# Example: Force PQC-only encryption apiVersion: config.openshift.io/v1 kind: APIServer spec:\n  tlsSecurityProfile:\n    type: Custom\n    custom:\n      ciphers:\n\t       - TLS_AES_128_GCM_SHA256\n        - TLS_AES_256_GCM_SHA384\n        - TLS_CHACHA20_POLY1305_SHA256\n      curves:\n        - X25519MLKEM768  # PQC-only: only hybrid quantum-resistant curve\n      minTLSVersion: VersionTLS13",
+          "type": "array",
+          "items": {
+            "type": "string",
+            "default": ""
+          },
+          "x-kubernetes-list-type": "set"
+        },
         "minTLSVersion": {
           "description": "minTLSVersion is used to specify the minimal version of the TLS protocol that is negotiated during the TLS handshake. For example, to use TLS versions 1.1, 1.2 and 1.3 (yaml):\n\n  minTLSVersion: VersionTLS11\n\nNOTE: currently the highest minTLSVersion allowed is VersionTLS12",
           "type": "string",
@@ -10158,7 +10167,7 @@
           "$ref": "#/definitions/com.github.openshift.api.config.v1.PKI"
         },
         "policyType": {
-          "description": "policyType is a required field specifies the type of the policy for verification. This field must correspond to how the policy was generated. Allowed values are \"PublicKey\", \"FulcioCAWithRekor\", and \"PKI\". When set to \"PublicKey\", the policy relies on a sigstore publicKey and may optionally use a Rekor verification. When set to \"FulcioCAWithRekor\", the policy is based on the Fulcio certification and incorporates a Rekor verification. When set to \"PKI\", the policy is based on the certificates from Bring Your Own Public Key Infrastructure (BYOPKI). This value is enabled by turning on the SigstoreImageVerificationPKI feature gate.",
+          "description": "policyType is a required field specifies the type of the policy for verification. This field must correspond to how the policy was generated. Allowed values are \"PublicKey\", \"FulcioCAWithRekor\", and \"PKI\". When set to \"PublicKey\", the policy relies on a sigstore publicKey and may optionally use a Rekor verification. When set to \"FulcioCAWithRekor\", the policy is based on the Fulcio certification and incorporates a Rekor verification. When set to \"PKI\", the policy is based on the certificates from Bring Your Own Public Key Infrastructure (BYOPKI).",
           "type": "string",
           "default": ""
         },
@@ -11038,6 +11047,15 @@
             "default": ""
           },
           "x-kubernetes-list-type": "atomic"
+        },
+        "curves": {
+          "description": "curves is used to specify the elliptic curves that are used during the TLS handshake.  Operators may remove entries their operands do not support.\n\nTLSProfiles Old, Intermediate, Modern are including by default the following curves: X25519, P-256, P-384, P-521, X25519MLKEM768, SecP256r1MLKEM1024, SecP384r1MLKEM1024. TLSProfiles Custom do not include any curves by default. NOTE: since this field is optional, if no curves are specified, the default curves used by the underlying TLS library will be used.\n\nFor example, to use X25519 and P-256 (yaml):\n\n# Example: Force PQC-only encryption apiVersion: config.openshift.io/v1 kind: APIServer spec:\n  tlsSecurityProfile:\n    type: Custom\n    custom:\n      ciphers:\n\t       - TLS_AES_128_GCM_SHA256\n        - TLS_AES_256_GCM_SHA384\n        - TLS_CHACHA20_POLY1305_SHA256\n      curves:\n        - X25519MLKEM768  # PQC-only: only hybrid quantum-resistant curve\n      minTLSVersion: VersionTLS13",
+          "type": "array",
+          "items": {
+            "type": "string",
+            "default": ""
+          },
+          "x-kubernetes-list-type": "set"
         },
         "minTLSVersion": {
           "description": "minTLSVersion is used to specify the minimal version of the TLS protocol that is negotiated during the TLS handshake. For example, to use TLS versions 1.1, 1.2 and 1.3 (yaml):\n\n  minTLSVersion: VersionTLS11\n\nNOTE: currently the highest minTLSVersion allowed is VersionTLS12",

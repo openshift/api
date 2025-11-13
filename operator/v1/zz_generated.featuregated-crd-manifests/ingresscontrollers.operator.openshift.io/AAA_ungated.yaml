@@ -2013,6 +2013,38 @@ spec:
                           type: string
                         type: array
                         x-kubernetes-list-type: atomic
+                      curves:
+                        description: "curves is used to specify the elliptic curves
+                          that are used during\nthe TLS handshake.  Operators may
+                          remove entries their operands do\nnot support.\n\nTLSProfiles
+                          Old, Intermediate, Modern are including by default the following\ncurves:
+                          X25519, P-256, P-384, X25519MLKEM768\nTLSProfiles Custom
+                          do not include any curves by default.\nNOTE: since this
+                          field is optional, if no curves are specified, the default
+                          curves\nused by the underlying TLS library will be used.\n\nFor
+                          example, to use X25519 and P-256 (yaml):\n\n# Example: Force
+                          PQC-only encryption\napiVersion: config.openshift.io/v1\nkind:
+                          APIServer\nspec:\n  tlsSecurityProfile:\n    type: Custom\n
+                          \   custom:\n      ciphers:\n\t       - TLS_AES_128_GCM_SHA256\n
+                          \       - TLS_AES_256_GCM_SHA384\n        - TLS_CHACHA20_POLY1305_SHA256\n
+                          \     curves:\n        - X25519MLKEM768  # PQC-only: only
+                          hybrid quantum-resistant curve\n      minTLSVersion: VersionTLS13"
+                        items:
+                          description: |-
+                            TLSCurve is a named curve identifier that can be used in TLSProfile.Curves.
+                            There is a one-to-one mapping between these names and the curve IDs defined
+                            in crypto/tls package based on IANA's "TLS Supported Groups" registry:
+                            https://www.iana.org/assignments/tls-parameters/tls-parameters.xhtml#tls-parameters-8
+                          enum:
+                          - X25519
+                          - P-256
+                          - P-384
+                          - P-521
+                          - X25519MLKEM768
+                          type: string
+                        maxItems: 5
+                        type: array
+                        x-kubernetes-list-type: atomic
                       minTLSVersion:
                         description: |-
                           minTLSVersion is used to specify the minimal version of the TLS protocol
@@ -3297,6 +3329,37 @@ spec:
                           - DES-CBC3-SHA
                     items:
                       type: string
+                    type: array
+                    x-kubernetes-list-type: atomic
+                  curves:
+                    description: "curves is used to specify the elliptic curves that
+                      are used during\nthe TLS handshake.  Operators may remove entries
+                      their operands do\nnot support.\n\nTLSProfiles Old, Intermediate,
+                      Modern are including by default the following\ncurves: X25519,
+                      P-256, P-384, X25519MLKEM768\nTLSProfiles Custom do not include
+                      any curves by default.\nNOTE: since this field is optional,
+                      if no curves are specified, the default curves\nused by the
+                      underlying TLS library will be used.\n\nFor example, to use
+                      X25519 and P-256 (yaml):\n\n# Example: Force PQC-only encryption\napiVersion:
+                      config.openshift.io/v1\nkind: APIServer\nspec:\n  tlsSecurityProfile:\n
+                      \   type: Custom\n    custom:\n      ciphers:\n\t       - TLS_AES_128_GCM_SHA256\n
+                      \       - TLS_AES_256_GCM_SHA384\n        - TLS_CHACHA20_POLY1305_SHA256\n
+                      \     curves:\n        - X25519MLKEM768  # PQC-only: only hybrid
+                      quantum-resistant curve\n      minTLSVersion: VersionTLS13"
+                    items:
+                      description: |-
+                        TLSCurve is a named curve identifier that can be used in TLSProfile.Curves.
+                        There is a one-to-one mapping between these names and the curve IDs defined
+                        in crypto/tls package based on IANA's "TLS Supported Groups" registry:
+                        https://www.iana.org/assignments/tls-parameters/tls-parameters.xhtml#tls-parameters-8
+                      enum:
+                      - X25519
+                      - P-256
+                      - P-384
+                      - P-521
+                      - X25519MLKEM768
+                      type: string
+                    maxItems: 5
                     type: array
                     x-kubernetes-list-type: atomic
                   minTLSVersion:

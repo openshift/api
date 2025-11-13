@@ -1971,6 +1971,19 @@ spec:
                           type: string
                         type: array
                         x-kubernetes-list-type: atomic
+                      curves:
+                        description: |-
+                          curves is used to specify the elliptic curves that are used during
+                          the TLS handshake.  Operators may remove entries their operands do
+                          not support.  For example, to use X25519 and P-256 (yaml):
+
+                            curves:
+                              - X25519
+                              - P-256
+                        items:
+                          type: string
+                        type: array
+                        x-kubernetes-list-type: atomic
                       minTLSVersion:
                         description: |-
                           minTLSVersion is used to specify the minimal version of the TLS protocol
@@ -3215,6 +3228,19 @@ spec:
 
                         ciphers:
                           - DES-CBC3-SHA
+                    items:
+                      type: string
+                    type: array
+                    x-kubernetes-list-type: atomic
+                  curves:
+                    description: |-
+                      curves is used to specify the elliptic curves that are used during
+                      the TLS handshake.  Operators may remove entries their operands do
+                      not support.  For example, to use X25519 and P-256 (yaml):
+
+                        curves:
+                          - X25519
+                          - P-256
                     items:
                       type: string
                     type: array

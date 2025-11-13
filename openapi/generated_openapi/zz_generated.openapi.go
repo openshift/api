@@ -11828,6 +11828,26 @@ func schema_openshift_api_config_v1_CustomTLSProfile(ref common.ReferenceCallbac
 							},
 						},
 					},
+					"curves": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-type": "atomic",
+							},
+						},
+						SchemaProps: spec.SchemaProps{
+							Description: "curves is used to specify the elliptic curves that are used during the TLS handshake.  Operators may remove entries their operands do not support.  For example, to use X25519 and P-256 (yaml):\n\n  curves:\n    - X25519\n    - P-256",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: "",
+										Type:    []string{"string"},
+										Format:  "",
+									},
+								},
+							},
+						},
+					},
 					"minTLSVersion": {
 						SchemaProps: spec.SchemaProps{
 							Description: "minTLSVersion is used to specify the minimal version of the TLS protocol that is negotiated during the TLS handshake. For example, to use TLS versions 1.1, 1.2 and 1.3 (yaml):\n\n  minTLSVersion: VersionTLS11\n\nNOTE: currently the highest minTLSVersion allowed is VersionTLS12",
@@ -20276,6 +20296,26 @@ func schema_openshift_api_config_v1_TLSProfileSpec(ref common.ReferenceCallback)
 						},
 						SchemaProps: spec.SchemaProps{
 							Description: "ciphers is used to specify the cipher algorithms that are negotiated during the TLS handshake.  Operators may remove entries their operands do not support.  For example, to use DES-CBC3-SHA  (yaml):\n\n  ciphers:\n    - DES-CBC3-SHA",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: "",
+										Type:    []string{"string"},
+										Format:  "",
+									},
+								},
+							},
+						},
+					},
+					"curves": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-type": "atomic",
+							},
+						},
+						SchemaProps: spec.SchemaProps{
+							Description: "curves is used to specify the elliptic curves that are used during the TLS handshake.  Operators may remove entries their operands do not support.  For example, to use X25519 and P-256 (yaml):\n\n  curves:\n    - X25519\n    - P-256",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{

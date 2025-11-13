@@ -212,12 +212,12 @@ var (
 					mustRegister()
 
 	FeatureGateEVPN = newFeatureGate("EVPN").
-				reportProblemsToJiraComponent("Networking/ovn-kubernetes").
-				contactPerson("jcaamano").
-				productScope(ocpSpecific).
-				enhancementPR("https://github.com/openshift/enhancements/pull/1862").
-				enableIn(configv1.DevPreviewNoUpgrade, configv1.TechPreviewNoUpgrade).
-				mustRegister()
+			reportProblemsToJiraComponent("Networking/ovn-kubernetes").
+			contactPerson("jcaamano").
+			productScope(ocpSpecific).
+			enhancementPR("https://github.com/openshift/enhancements/pull/1862").
+			enableIn(configv1.DevPreviewNoUpgrade, configv1.TechPreviewNoUpgrade).
+			mustRegister()
 
 	FeatureGateNetworkLiveMigration = newFeatureGate("NetworkLiveMigration").
 					reportProblemsToJiraComponent("Networking/ovn-kubernetes").
@@ -969,4 +969,12 @@ var (
 					enhancementPR("https://github.com/openshift/enhancements/pull/1882").
 					enableIn(configv1.DevPreviewNoUpgrade, configv1.TechPreviewNoUpgrade).
 					mustRegister()
+
+	FeatureGateTLSCurvesConfiguration = newFeatureGate("TLSCurvesConfiguration").
+						reportProblemsToJiraComponent("Networking").
+						contactPerson("davidesalerno").
+						productScope(ocpSpecific).
+						enhancementPR("https://github.com/openshift/enhancements/pull/1894").
+						enableIn(configv1.TechPreviewNoUpgrade).
+						mustRegister()
 )

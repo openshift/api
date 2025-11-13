@@ -25,6 +25,9 @@ type TLSSecurityProfile struct {
 	// The cipher list includes TLS 1.3 ciphers for forward compatibility, followed
 	// by the "old" profile ciphers.
 	//
+	// The curve list is including by default the following curves:
+	// X25519, P-256, P-384, P-521, X25519MLKEM768, P256r1MLKEM1024, P384r1MLKEM1024.
+	//
 	// This profile is equivalent to a Custom profile specified as:
 	//   minTLSVersion: VersionTLS10
 	//   ciphers:
@@ -69,6 +72,9 @@ type TLSSecurityProfile struct {
 	// The cipher list includes TLS 1.3 ciphers for forward compatibility, followed
 	// by the "intermediate" profile ciphers.
 	//
+	// The curve list is including by default the following curves:
+	// X25519, P-256, P-384, P-521, X25519MLKEM768, P256r1MLKEM1024, P384r1MLKEM1024.
+	//
 	// This profile is equivalent to a Custom profile specified as:
 	//   minTLSVersion: VersionTLS12
 	//   ciphers:
@@ -90,7 +96,8 @@ type TLSSecurityProfile struct {
 
 	// modern is a TLS security profile for use with clients that support TLS 1.3 and
 	// do not need backward compatibility for older clients.
-	//
+	// the curve list is including by default the following curves:
+	// X25519, P-256, P-384, P-521, X25519MLKEM768, P256r1MLKEM1024, P384r1MLKEM1024.
 	// This profile is equivalent to a Custom profile specified as:
 	//   minTLSVersion: VersionTLS13
 	//   ciphers:
@@ -103,8 +110,11 @@ type TLSSecurityProfile struct {
 	Modern *ModernTLSProfile `json:"modern,omitempty"`
 
 	// custom is a user-defined TLS security profile. Be extremely careful using a custom
-	// profile as invalid configurations can be catastrophic. An example custom profile
-	// looks like this:
+	// profile as invalid configurations can be catastrophic.
+	//
+	// The curve list for this profile is empty by default.
+	//
+	// An example custom profile looks like this:
 	//
 	//   minTLSVersion: VersionTLS11
 	//   ciphers:
@@ -157,6 +167,31 @@ const (
 	TLSProfileCustomType TLSProfileType = "Custom"
 )
 
+// TLSCurve is a named curve identifier that can be used in TLSProfile.Curves.
+// There is a one-to-one mapping between these names and the curve IDs defined
+// in crypto/tls package based on IANA's "TLS Supported Groups" registry:
+// https://www.iana.org/assignments/tls-parameters/tls-parameters.xhtml#tls-parameters-8
+//
+// +kubebuilder:validation:Enum=X25519;P-256;P-384;P-521;X25519MLKEM768;P256r1MLKEM768;P384r1MLKEM1024
+type TLSCurve string
+
+const (
+	// TLSCurveX25519 represents X25519.
+	TLSCurveX25519 TLSCurve = "X25519"
+	// TLSCurveP256 represents P-256 (secp256r1).
+	TLSCurveP256 TLSCurve = "P-256"
+	// TLSCurveP384 represents P-384 (secp384r1).
+	TLSCurveP384 TLSCurve = "P-384"
+	// TLSCurveP521 represents P-521 (secp521r1).
+	TLSCurveP521 TLSCurve = "P-521"
+	// TLSCurveX25519MLKEM768 represents X25519MLKEM768.
+	TLSCurveX25519MLKEM768 TLSCurve = "X25519MLKEM768"
+	// TLSCurveP256r1MLKEM768 represents P256r1MLKEM768 (secp256r1MLKEM768).
+	TLSCurveP256r1MLKEM768 TLSCurve = "P256r1MLKEM768"
+	// TLSCurveP384r1MLKEM1024 represents P384r1MLKEM1024 (secp384r1MLKEM1024).
+	TLSCurveP384r1MLKEM1024 TLSCurve = "P384r1MLKEM1024"
+)
+
 // TLSProfileSpec is the desired behavior of a TLSSecurityProfile.
 type TLSProfileSpec struct {
 	// ciphers is used to specify the cipher algorithms that are negotiated
@@ -168,6 +203,24 @@ type TLSProfileSpec struct {
 	//
 	// +listType=atomic
 	Ciphers []string `json:"ciphers"`
+	// curves is used to specify the elliptic curves that are used during
+	// the TLS handshake.  Operators may remove entries their operands do
+	// not support.
+	//
+	// When omitted, this means no opinion and the platform is left to choose reasonable defaults which are subject to
+	// change over time and may be different per platform component depending on the underlying TLS libraries they use.
+	//
+	// For example, to use X25519 and P-256 (yaml):
+	//
+	//   curves:
+	//     - X25519
+	//     - P-256
+	//
+	// +optional
+	// +listType=set
+	// +kubebuilder:validation:MaxItems=7
+	// +openshift:enable:FeatureGate=TLSCurvesConfiguration
+	Curves []TLSCurve `json:"curves,omitempty"`
 	// minTLSVersion is used to specify the minimal version of the TLS protocol
 	// that is negotiated during the TLS handshake. For example, to use TLS
 	// versions 1.1, 1.2 and 1.3 (yaml):
@@ -203,6 +256,9 @@ const (
 // These profiles are based on version 5.0 of the Mozilla Server Side TLS
 // configuration guidelines (2019-06-28) with TLS 1.3 cipher suites prepended for
 // forward compatibility. See: https://ssl-config.mozilla.org/guidelines/5.0.json
+//
+// TLSProfiles Old, Intermediate, Modern are including by default the following
+// curves: X25519, P-256, P-384, P-521, X25519MLKEM768
 //
 // NOTE: The caller needs to make sure to check that these constants are valid
 // for their binary. Not all entries map to values for all binaries. In the case
@@ -241,6 +297,12 @@ var TLSProfiles = map[TLSProfileType]*TLSProfileSpec{
 			"AES256-SHA",
 			"DES-CBC3-SHA",
 		},
+		Curves: []TLSCurve{
+			TLSCurveX25519,
+			TLSCurveP256,
+			TLSCurveP384,
+			TLSCurveX25519MLKEM768,
+		},
 		MinTLSVersion: VersionTLS10,
 	},
 	TLSProfileIntermediateType: {
@@ -257,6 +319,12 @@ var TLSProfiles = map[TLSProfileType]*TLSProfileSpec{
 			"DHE-RSA-AES128-GCM-SHA256",
 			"DHE-RSA-AES256-GCM-SHA384",
 		},
+		Curves: []TLSCurve{
+			TLSCurveX25519,
+			TLSCurveP256,
+			TLSCurveP384,
+			TLSCurveX25519MLKEM768,
+		},
 		MinTLSVersion: VersionTLS12,
 	},
 	TLSProfileModernType: {
@@ -264,6 +332,12 @@ var TLSProfiles = map[TLSProfileType]*TLSProfileSpec{
 			"TLS_AES_128_GCM_SHA256",
 			"TLS_AES_256_GCM_SHA384",
 			"TLS_CHACHA20_POLY1305_SHA256",
+		},
+		Curves: []TLSCurve{
+			TLSCurveX25519,
+			TLSCurveP256,
+			TLSCurveP384,
+			TLSCurveX25519MLKEM768,
 		},
 		MinTLSVersion: VersionTLS13,
 	},

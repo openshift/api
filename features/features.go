@@ -969,4 +969,12 @@ var (
 					enhancementPR("https://github.com/openshift/enhancements/pull/1882").
 					enableIn(configv1.DevPreviewNoUpgrade, configv1.TechPreviewNoUpgrade).
 					mustRegister()
+	
+	FeatureGateTLSCurvesConfiguration = newFeatureGate("TLSCurvesConfiguration").
+		reportProblemsToJiraComponent("Networking").
+		contactPerson("davidesalerno").
+		productScope(ocpSpecific).
+		enhancementPR("https://github.com/openshift/enhancements/pull/1894").
+		enableIn(configv1.DevPreviewNoUpgrade).
+		mustRegister()
 )

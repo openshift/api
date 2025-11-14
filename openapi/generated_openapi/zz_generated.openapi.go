@@ -26177,6 +26177,11 @@ func schema_openshift_api_example_v1_SubnetsWithExclusions(ref common.ReferenceC
 						},
 					},
 					"excludeSubnets": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-type": "atomic",
+							},
+						},
 						SchemaProps: spec.SchemaProps{
 							Description: "excludeSubnets is a list of CIDR exclusions. The subnets in this list must be subnetworks of the subnets in the subnets list.",
 							Type:        []string{"array"},

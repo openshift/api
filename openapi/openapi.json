@@ -14506,7 +14506,8 @@
           "items": {
             "type": "string",
             "default": ""
-          }
+          },
+          "x-kubernetes-list-type": "atomic"
         },
         "subnets": {
           "description": "subnets is a list of subnets. It may contain up to 2 subnets. The list may be either 1 IPv4 subnet, 1 IPv6 subnet, or 1 of each.",

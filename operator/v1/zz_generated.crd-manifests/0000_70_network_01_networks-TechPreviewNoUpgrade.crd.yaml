@@ -3,10 +3,10 @@ kind: CustomResourceDefinition
 metadata:
   annotations:
     api-approved.openshift.io: https://github.com/openshift/api/pull/475
-    api.openshift.io/filename-cvo-runlevel: "0000_70"
-    api.openshift.io/filename-operator: network
-    api.openshift.io/filename-ordering: "01"
-    feature-gate.release.openshift.io/RouteAdvertisements: "true"
+    api.openshift.io/merged-by-featuregates: "true"
+    include.release.openshift.io/ibm-cloud-managed: "true"
+    include.release.openshift.io/self-managed-high-availability: "true"
+    release.openshift.io/feature-set: TechPreviewNoUpgrade
   name: networks.operator.openshift.io
 spec:
   group: operator.openshift.io
@@ -178,6 +178,39 @@ spec:
                 x-kubernetes-list-map-keys:
                 - name
                 x-kubernetes-list-type: map
+              additionalRoutingCapabilities:
+                description: |-
+                  additionalRoutingCapabilities describes components and relevant
+                  configuration providing additional routing capabilities. When set, it
+                  enables such components and the usage of the routing capabilities they
+                  provide for the machine network. Upstream operators, like MetalLB
+                  operator, requiring these capabilities may rely on, or automatically set
+                  this attribute. Network plugins may leverage advanced routing
+                  capabilities acquired through the enablement of these components but may
+                  require specific configuration on their side to do so; refer to their
+                  respective documentation and configuration options.
+                properties:
+                  providers:
+                    description: |-
+                      providers is a set of enabled components that provide additional routing
+                      capabilities. Entries on this list must be unique. The  only valid value
+                      is currrently "FRR" which provides FRR routing capabilities through the
+                      deployment of FRR.
+                    items:
+                      description: RoutingCapabilitiesProvider is a component providing
+                        routing capabilities.
+                      enum:
+                      - FRR
+                      type: string
+                    maxItems: 1
+                    minItems: 1
+                    type: array
+                    x-kubernetes-list-type: atomic
+                    x-kubernetes-validations:
+                    - rule: self.all(x, self.exists_one(y, x == y))
+                required:
+                - providers
+                type: object
               clusterNetwork:
                 description: |-
                   clusterNetwork is the IP address pool to use for pod IPs.
@@ -240,6 +273,82 @@ spec:
                     description: ovnKubernetesConfig configures the ovn-kubernetes
                       plugin.
                     properties:
+                      bgpManagedConfig:
+                        description: |-
+                          bgpManagedConfig configures the BGP properties for networks (default network or CUDNs)
+                          in no-overlay mode that specify routing="Managed" in their NoOverlayOptions.
+                          It is required when DefaultNetworkNoOverlayOptions.Routing is set to "Managed".
+                          When omitted, this means the user does not configure BGP for managed routing.
+                        properties:
+                          asNumber:
+                            description: |-
+                              asNumber is the 2-byte or 4-byte Autonomous System Number (ASN)
+                              to be used in the generated FRR configuration. It is required
+                              when NoOverlayOptions.Routing is "Managed".
+                              Valid values are 1 to 4294967295.
+                            format: int32
+                            maximum: 4294967295
+                            minimum: 1
+                            type: integer
+                          bgpTopology:
+                            default: fullMesh
+                            description: |-
+                              bgpTopology defines the BGP topology to be used.
+                              Allowed values are "fullMesh".
+                              When set to "fullMesh", every node deploys a BGP router, forming a BGP full mesh.
+                              When omitted, this means the user has no opinion and the platform chooses a reasonable default which is subject to change over time.
+                              The current default is "fullMesh".
+                            enum:
+                            - fullMesh
+                            type: string
+                        required:
+                        - asNumber
+                        type: object
+                      defaultNetworkNoOverlayOptions:
+                        description: |-
+                          defaultNetworkNoOverlayOptions contains configuration for no-overlay mode for the default network.
+                          It is required when DefaultNetworkTransport is "NoOverlay".
+                          When omitted, this means the user does not configure no-overlay mode options.
+                        properties:
+                          outboundSNAT:
+                            description: |-
+                              outboundSNAT defines the SNAT behavior for outbound traffic from pods.
+                              Allowed values are "Enable" and "Disable".
+                              When set to "Enable", SNAT is performed on outbound traffic from pods.
+                              When set to "Disable", SNAT is not performed and pod IPs are preserved in outbound traffic.
+                              This field is required when the network operates in no-overlay mode.
+                            enum:
+                            - Enable
+                            - Disable
+                            type: string
+                          routing:
+                            description: |-
+                              routing specifies whether the pod network routing is managed by OVN-Kubernetes or users.
+                              Allowed values are "Managed" and "Unmanaged".
+                              When set to "Managed", OVN-Kubernetes manages the pod network routing configuration through BGP.
+                              When set to "Unmanaged", users are responsible for configuring the pod network routing.
+                              This field is required when the network operates in no-overlay mode.
+                            enum:
+                            - Managed
+                            - Unmanaged
+                            type: string
+                        required:
+                        - outboundSNAT
+                        - routing
+                        type: object
+                      defaultNetworkTransport:
+                        default: Geneve
+                        description: |-
+                          defaultNetworkTransport describes the transport protocol for east-west traffic for the default network.
+                          Allowed values are "NoOverlay" and "Geneve".
+                          When set to "NoOverlay", the default network operates in no-overlay mode.
+                          When set to "Geneve", the default network uses Geneve overlay.
+                          When omitted, this means the user has no opinion and the platform chooses a reasonable default which is subject to change over time.
+                          The current default is "Geneve".
+                        enum:
+                        - NoOverlay
+                        - Geneve
+                        type: string
                       egressIPConfig:
                         description: egressIPConfig holds the configuration for EgressIP
                           options.
@@ -838,6 +947,11 @@ spec:
                       the configuration.
                     type: string
                 type: object
+                x-kubernetes-validations:
+                - message: networkType migration in mode other than 'Live' may not
+                    be configured at the same time as mtu migration
+                  rule: '!has(self.mtu) || !has(self.networkType) || self.networkType
+                    == "" || has(self.mode) && self.mode == ''Live'''
               observedConfig:
                 description: |-
                   observedConfig holds a sparse config that controller has observed from the cluster state.  It exists in spec because

@@ -27,6 +27,9 @@
                         "name": "MultiArchInstallAzure"
                     },
                     {
+                        "name": "NoOverlayMode"
+                    },
+                    {
                         "name": "ShortCertRotation"
                     }
                 ],

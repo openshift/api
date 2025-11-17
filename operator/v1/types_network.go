@@ -399,6 +399,11 @@ type OpenShiftSDNConfig struct {
 
 // ovnKubernetesConfig contains the configuration parameters for networks
 // using the ovn-kubernetes network project
+// +kubebuilder:validation:XValidation:rule='self.defaultNetworkTransport == "NoOverlay" || !has(self.defaultNetworkNoOverlayOptions)',message="defaultNetworkNoOverlayOptions is only supported for no-overlay networks"
+// +kubebuilder:validation:XValidation:rule='!(self.defaultNetworkTransport == "NoOverlay" && has(self.defaultNetworkNoOverlayOptions) && self.defaultNetworkNoOverlayOptions.routing == "Managed") || has(self.bgpManagedConfig)',message="bgpManagedConfig is required when DefaultNetworkTransport is NoOverlay, DefaultNetworkNoOverlayOptions is set and DefaultNetworkNoOverlayOptions.Routing=\"Managed\""
+// +kubebuilder:validation:XValidation:rule='self.defaultNetworkTransport == oldSelf.defaultNetworkTransport',message="DefaultNetworkTransport field is immutable"
+// +kubebuilder:validation:XValidation:rule='self.defaultNetworkNoOverlayOptions == oldSelf.defaultNetworkNoOverlayOptions',message="defaultNetworkNoOverlayOptions field is immutable"
+// +kubebuilder:validation:XValidation:rule='self.bgpManagedConfig == oldSelf.bgpManagedConfig',message="bgpManagedConfig field is immutable"
 type OVNKubernetesConfig struct {
 	// mtu is the MTU to use for the tunnel interface. This must be 100
 	// bytes smaller than the uplink mtu.
@@ -468,6 +473,33 @@ type OVNKubernetesConfig struct {
 	// +openshift:enable:FeatureGate=RouteAdvertisements
 	// +optional
 	RouteAdvertisements RouteAdvertisementsEnablement `json:"routeAdvertisements,omitempty"`
+
+	// defaultNetworkTransport describes the transport protocol for east-west traffic for the default network.
+	// Allowed values are "NoOverlay" and "Geneve".
+	// When set to "NoOverlay", the default network operates in no-overlay mode.
+	// When set to "Geneve", the default network uses Geneve overlay.
+	// When omitted, this means the user has no opinion and the platform chooses a reasonable default which is subject to change over time.
+	// The current default is "Geneve".
+	// +openshift:enable:FeatureGate=NoOverlayMode
+	// +kubebuilder:validation:Enum=NoOverlay;Geneve
+	// +kubebuilder:default=Geneve
+	// +optional
+	DefaultNetworkTransport TransportOption `json:"defaultNetworkTransport,omitempty"`
+
+	// defaultNetworkNoOverlayOptions contains configuration for no-overlay mode for the default network.
+	// It is required when DefaultNetworkTransport is "NoOverlay".
+	// When omitted, this means the user does not configure no-overlay mode options.
+	// +openshift:enable:FeatureGate=NoOverlayMode
+	// +optional
+	DefaultNetworkNoOverlayOptions *NoOverlayOptions `json:"defaultNetworkNoOverlayOptions,omitempty"`
+
+	// bgpManagedConfig configures the BGP properties for networks (default network or CUDNs)
+	// in no-overlay mode that specify routing="Managed" in their NoOverlayOptions.
+	// It is required when DefaultNetworkNoOverlayOptions.Routing is set to "Managed".
+	// When omitted, this means the user does not configure BGP for managed routing.
+	// +openshift:enable:FeatureGate=NoOverlayMode
+	// +optional
+	BGPManagedConfig *BGPManagedConfig `json:"bgpManagedConfig,omitempty"`
 }
 
 type IPv4OVNKubernetesConfig struct {
@@ -897,4 +929,79 @@ type AdditionalRoutingCapabilities struct {
 	// +kubebuilder:validation:MaxItems=1
 	// +kubebuilder:validation:XValidation:rule="self.all(x, self.exists_one(y, x == y))"
 	Providers []RoutingCapabilitiesProvider `json:"providers"`
+}
+
+// TransportOption is the type for network transport options
+type TransportOption string
+
+// SNATOption is the type for SNAT configuration options
+type SNATOption string
+
+// RoutingOption is the type for routing configuration options
+type RoutingOption string
+
+// BGPTopology is the type for BGP topology configuration
+type BGPTopology string
+
+const (
+	// TransportOptionNoOverlay indicates the network operates in no-overlay mode
+	TransportOptionNoOverlay TransportOption = "NoOverlay"
+	// TransportOptionGeneve indicates the network uses Geneve overlay
+	TransportOptionGeneve TransportOption = "Geneve"
+
+	// SNATEnable indicates outbound SNAT is enabled
+	SNATEnable SNATOption = "Enable"
+	// SNATDisable indicates outbound SNAT is disabled
+	SNATDisable SNATOption = "Disable"
+
+	// RoutingManaged indicates routing is managed by OVN-Kubernetes
+	RoutingManaged RoutingOption = "Managed"
+	// RoutingUnmanaged indicates routing is managed by users
+	RoutingUnmanaged RoutingOption = "Unmanaged"
+
+	// BGPTopologyFullMesh indicates every node deploys a BGP router, forming a BGP full mesh
+	BGPTopologyFullMesh BGPTopology = "fullMesh"
+)
+
+// NoOverlayOptions contains configuration options for networks operating in no-overlay mode.
+type NoOverlayOptions struct {
+	// outboundSNAT defines the SNAT behavior for outbound traffic from pods.
+	// Allowed values are "Enable" and "Disable".
+	// When set to "Enable", SNAT is performed on outbound traffic from pods.
+	// When set to "Disable", SNAT is not performed and pod IPs are preserved in outbound traffic.
+	// This field is required when the network operates in no-overlay mode.
+	// +kubebuilder:validation:Enum=Enable;Disable
+	// +required
+	OutboundSNAT SNATOption `json:"outboundSNAT"`
+
+	// routing specifies whether the pod network routing is managed by OVN-Kubernetes or users.
+	// Allowed values are "Managed" and "Unmanaged".
+	// When set to "Managed", OVN-Kubernetes manages the pod network routing configuration through BGP.
+	// When set to "Unmanaged", users are responsible for configuring the pod network routing.
+	// This field is required when the network operates in no-overlay mode.
+	// +kubebuilder:validation:Enum=Managed;Unmanaged
+	// +required
+	Routing RoutingOption `json:"routing"`
+}
+
+// BGPManagedConfig contains configuration options for BGP when routing is "Managed".
+type BGPManagedConfig struct {
+	// asNumber is the 2-byte or 4-byte Autonomous System Number (ASN)
+	// to be used in the generated FRR configuration. It is required
+	// when NoOverlayOptions.Routing is "Managed".
+	// Valid values are 1 to 4294967295.
+	// +kubebuilder:validation:Minimum=1
+	// +kubebuilder:validation:Maximum=4294967295
+	// +required
+	ASNumber uint32 `json:"asNumber"`
+
+	// bgpTopology defines the BGP topology to be used.
+	// Allowed values are "fullMesh".
+	// When set to "fullMesh", every node deploys a BGP router, forming a BGP full mesh.
+	// When omitted, this means the user has no opinion and the platform chooses a reasonable default which is subject to change over time.
+	// The current default is "fullMesh".
+	// +kubebuilder:validation:Enum=fullMesh
+	// +kubebuilder:default=fullMesh
+	// +optional
+	BGPTopology BGPTopology `json:"bgpTopology,omitempty"`
 }

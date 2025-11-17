@@ -619,6 +619,21 @@ spec:
                           Default is fd98::/64
                         type: string
                     type: object
+                    x-kubernetes-validations:
+                    - message: defaultNetworkNoOverlayOptions is only supported for
+                        no-overlay networks
+                      rule: '''self.defaultNetworkTransport == "NoOverlay" || !has(self.defaultNetworkNoOverlayOptions)'''
+                    - message: bgpManagedConfig is required when DefaultNetworkTransport
+                        is NoOverlay, DefaultNetworkNoOverlayOptions is set and DefaultNetworkNoOverlayOptions.Routing="Managed"
+                      rule: '''!(self.defaultNetworkTransport == "NoOverlay" && has(self.defaultNetworkNoOverlayOptions)
+                        && self.defaultNetworkNoOverlayOptions.routing == "Managed")
+                        || has(self.bgpManagedConfig)'''
+                    - message: DefaultNetworkTransport field is immutable
+                      rule: '''self.defaultNetworkTransport == oldSelf.defaultNetworkTransport'''
+                    - message: defaultNetworkNoOverlayOptions field is immutable
+                      rule: '''self.defaultNetworkNoOverlayOptions == oldSelf.defaultNetworkNoOverlayOptions'''
+                    - message: bgpManagedConfig field is immutable
+                      rule: '''self.bgpManagedConfig == oldSelf.bgpManagedConfig'''
                   type:
                     description: |-
                       type is the type of network

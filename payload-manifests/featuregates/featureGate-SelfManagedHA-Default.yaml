@@ -205,6 +205,9 @@
                         "name": "NoOverlayMode"
                     },
                     {
+                        "name": "NoOverlayMode"
+                    },
+                    {
                         "name": "NoRegistryClusterInstall"
                     },
                     {

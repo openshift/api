@@ -187,6 +187,14 @@ var (
 					enableIn(configv1.Default, configv1.OKD, configv1.DevPreviewNoUpgrade, configv1.TechPreviewNoUpgrade).
 					mustRegister()
 
+	FeatureGateNoOverlayMode = newFeatureGate("NoOverlayMode").
+					reportProblemsToJiraComponent("Networking/ovn-kubernetes").
+					contactPerson("pliurh").
+					productScope(ocpSpecific).
+					enhancementPR("https://github.com/openshift/enhancements/pull/1859").
+					enableIn(configv1.TechPreviewNoUpgrade).
+					mustRegister()
+
 	FeatureGateAdditionalRoutingCapabilities = newFeatureGate("AdditionalRoutingCapabilities").
 							reportProblemsToJiraComponent("Networking/cluster-network-operator").
 							contactPerson("jcaamano").

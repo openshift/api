@@ -278,6 +278,9 @@
                         "name": "NetworkSegmentation"
                     },
                     {
+                        "name": "NoOverlayMode"
+                    },
+                    {
                         "name": "NutanixMultiSubnets"
                     },
                     {

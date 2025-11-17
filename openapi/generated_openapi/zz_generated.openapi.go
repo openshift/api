@@ -67476,6 +67476,7 @@ func schema_openshift_api_user_v1_User(ref common.ReferenceCallback) common.Open
 					"groups": {
 						SchemaProps: spec.SchemaProps{
 							Description: "groups specifies group names this user is a member of. This field is deprecated and will be removed in a future release. Instead, create a Group object containing the name of this User.",
+							Default:     []interface{}{},
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{

@@ -36,6 +36,7 @@ type User struct {
 	// groups specifies group names this user is a member of.
 	// This field is deprecated and will be removed in a future release.
 	// Instead, create a Group object containing the name of this User.
+	// +default=[]
 	Groups []string `json:"groups" protobuf:"bytes,4,rep,name=groups"`
 }
 

@@ -181,7 +181,7 @@
                         "name": "NewOLMPreflightPermissionChecks"
                     },
                     {
-                        "name": "NoRegistryClusterOperations"
+                        "name": "NoRegistryClusterInstall"
                     },
                     {
                         "name": "NutanixMultiSubnets"

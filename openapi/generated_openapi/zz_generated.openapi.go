@@ -61526,7 +61526,7 @@ func schema_openshift_api_operatoringress_v1_DNSRecordSpec(ref common.ReferenceC
 					},
 					"recordType": {
 						SchemaProps: spec.SchemaProps{
-							Description: "recordType is the DNS record type. For example, \"A\" or \"CNAME\".",
+							Description: "recordType is the DNS record type. For example, \"A\", \"AAAA\", or \"CNAME\".",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",

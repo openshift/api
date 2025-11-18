@@ -1,0 +1,261 @@
+apiVersion: apiextensions.k8s.io/v1 # Hack because controller-gen complains if we don't have this
+name: "ClusterAPI"
+crdName: clusterapis.operator.openshift.io
+featureGate: ClusterAPIMachineManagement
+tests:
+  onCreate:
+    - name: Should be able to create a minimal ClusterAPI
+      initial: |
+        apiVersion: operator.openshift.io/v1alpha1
+        kind: ClusterAPI
+        metadata:
+          name: cluster
+      expected: |
+        apiVersion: operator.openshift.io/v1alpha1
+        kind: ClusterAPI
+        metadata:
+          name: cluster
+
+    - name: Should be able to create ClusterAPI with unmanagedCustomResourceDefinitions
+      initial: |
+        apiVersion: operator.openshift.io/v1alpha1
+        kind: ClusterAPI
+        metadata:
+          name: cluster
+        spec:
+          unmanagedCustomResourceDefinitions:
+            - clusters.cluster.x-k8s.io
+            - machines.cluster.x-k8s.io
+      expected: |
+        apiVersion: operator.openshift.io/v1alpha1
+        kind: ClusterAPI
+        metadata:
+          name: cluster
+        spec:
+          unmanagedCustomResourceDefinitions:
+            - clusters.cluster.x-k8s.io
+            - machines.cluster.x-k8s.io
+
+    - name: Should reject empty string in unmanagedCustomResourceDefinitions
+      initial: |
+        apiVersion: operator.openshift.io/v1alpha1
+        kind: ClusterAPI
+        metadata:
+          name: cluster
+        spec:
+          unmanagedCustomResourceDefinitions:
+            - ""
+      expectedError: "a lowercase RFC 1123 subdomain must consist of lower case alphanumeric characters"
+
+    - name: Should reject CRD name which is not a valid DNS-1123 subdomain in unmanagedCustomResourceDefinitions
+      initial: |
+        apiVersion: operator.openshift.io/v1alpha1
+        kind: ClusterAPI
+        metadata:
+          name: cluster
+        spec:
+          unmanagedCustomResourceDefinitions:
+            - Clusters.cluster.x-k8s.io
+      expectedError: "a lowercase RFC 1123 subdomain must consist of lower case alphanumeric characters"
+
+    - name: Should accept valid CRD names with hyphens and dots in unmanagedCustomResourceDefinitions
+      initial: |
+        apiVersion: operator.openshift.io/v1alpha1
+        kind: ClusterAPI
+        metadata:
+          name: cluster
+        spec:
+          unmanagedCustomResourceDefinitions:
+            - a.b.c.d
+            - name-with-hyphens.domain-with-hyphens.io
+            - valid-name.example.io
+      expected: |
+        apiVersion: operator.openshift.io/v1alpha1
+        kind: ClusterAPI
+        metadata:
+          name: cluster
+        spec:
+          unmanagedCustomResourceDefinitions:
+            - a.b.c.d
+            - name-with-hyphens.domain-with-hyphens.io
+            - valid-name.example.io
+
+  onUpdate:
+    - name: Should not allow removing items from unmanagedCustomResourceDefinitions
+      initial: |
+        apiVersion: operator.openshift.io/v1alpha1
+        kind: ClusterAPI
+        metadata:
+          name: cluster
+        spec:
+          unmanagedCustomResourceDefinitions:
+            - clusters.cluster.x-k8s.io
+            - machines.cluster.x-k8s.io
+      updated: |
+        apiVersion: operator.openshift.io/v1alpha1
+        kind: ClusterAPI
+        metadata:
+          name: cluster
+        spec:
+          unmanagedCustomResourceDefinitions:
+            - clusters.cluster.x-k8s.io
+      expectedError: "items cannot be removed from unmanagedCustomResourceDefinitions list"
+
+    - name: Should not allow unsetting unmanagedCustomResourceDefinitions once set
+      initial: |
+        apiVersion: operator.openshift.io/v1alpha1
+        kind: ClusterAPI
+        metadata:
+          name: cluster
+        spec:
+          unmanagedCustomResourceDefinitions:
+            - clusters.cluster.x-k8s.io
+            - machines.cluster.x-k8s.io
+      updated: |
+        apiVersion: operator.openshift.io/v1alpha1
+        kind: ClusterAPI
+        metadata:
+          name: cluster
+      expectedError: "unmanagedCustomResourceDefinitions cannot be unset once set"
+
+    - name: Should allow adding items to unmanagedCustomResourceDefinitions
+      initial: |
+        apiVersion: operator.openshift.io/v1alpha1
+        kind: ClusterAPI
+        metadata:
+          name: cluster
+        spec:
+          unmanagedCustomResourceDefinitions:
+            - clusters.cluster.x-k8s.io
+      updated: |
+        apiVersion: operator.openshift.io/v1alpha1
+        kind: ClusterAPI
+        metadata:
+          name: cluster
+        spec:
+          unmanagedCustomResourceDefinitions:
+            - clusters.cluster.x-k8s.io
+            - machinehealthchecks.cluster.x-k8s.io
+            - machines.cluster.x-k8s.io
+      expected: |
+        apiVersion: operator.openshift.io/v1alpha1
+        kind: ClusterAPI
+        metadata:
+          name: cluster
+        spec:
+          unmanagedCustomResourceDefinitions:
+            - clusters.cluster.x-k8s.io
+            - machinehealthchecks.cluster.x-k8s.io
+            - machines.cluster.x-k8s.io
+
+    - name: Should reject invalid ConfigMap name in targetConfigMaps
+      initial: |
+        apiVersion: operator.openshift.io/v1alpha1
+        kind: ClusterAPI
+        metadata:
+          name: cluster
+        spec:
+          unmanagedCustomResourceDefinitions: []
+      updated: |
+        apiVersion: operator.openshift.io/v1alpha1
+        kind: ClusterAPI
+        metadata:
+          name: cluster
+        spec:
+          unmanagedCustomResourceDefinitions: []
+        status:
+          targetConfigMaps:
+            - invalid.name.with.dots
+      expectedStatusError: "each ConfigMap name must be a valid DNS1123 label"
+
+    - name: Should accept valid ConfigMap names in targetConfigMaps
+      initial: |
+        apiVersion: operator.openshift.io/v1alpha1
+        kind: ClusterAPI
+        metadata:
+          name: cluster
+        spec:
+          unmanagedCustomResourceDefinitions: []
+      updated: |
+        apiVersion: operator.openshift.io/v1alpha1
+        kind: ClusterAPI
+        metadata:
+          name: cluster
+        spec:
+          unmanagedCustomResourceDefinitions: []
+        status:
+          targetConfigMaps:
+            - valid-configmap-name
+            - another-valid-name
+            - name123
+      expected: |
+        apiVersion: operator.openshift.io/v1alpha1
+        kind: ClusterAPI
+        metadata:
+          name: cluster
+        spec:
+          unmanagedCustomResourceDefinitions: []
+        status:
+          targetConfigMaps:
+            - valid-configmap-name
+            - another-valid-name
+            - name123
+
+    - name: Should reject invalid ConfigMap name in activeConfigMaps
+      initial: |
+        apiVersion: operator.openshift.io/v1alpha1
+        kind: ClusterAPI
+        metadata:
+          name: cluster
+        spec:
+          unmanagedCustomResourceDefinitions: []
+        status:
+          activeConfigMaps:
+            - valid-configmap-name
+      updated: |
+        apiVersion: operator.openshift.io/v1alpha1
+        kind: ClusterAPI
+        metadata:
+          name: cluster
+        spec:
+          unmanagedCustomResourceDefinitions: []
+        status:
+          activeConfigMaps:
+            - invalid.name.with.dots
+      expectedStatusError: "each ConfigMap name must be a valid DNS1123 label"
+
+    - name: Should accept valid ConfigMap names in activeConfigMaps
+      initial: |
+        apiVersion: operator.openshift.io/v1alpha1
+        kind: ClusterAPI
+        metadata:
+          name: cluster
+        spec:
+          unmanagedCustomResourceDefinitions: []
+        status:
+          activeConfigMaps:
+            - oldname
+      updated: |
+        apiVersion: operator.openshift.io/v1alpha1
+        kind: ClusterAPI
+        metadata:
+          name: cluster
+        spec:
+          unmanagedCustomResourceDefinitions: []
+        status:
+          activeConfigMaps:
+            - valid-configmap-name
+            - another-valid-name
+            - name123
+      expected: |
+        apiVersion: operator.openshift.io/v1alpha1
+        kind: ClusterAPI
+        metadata:
+          name: cluster
+        spec:
+          unmanagedCustomResourceDefinitions: []
+        status:
+          activeConfigMaps:
+            - valid-configmap-name
+            - another-valid-name
+            - name123

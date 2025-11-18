@@ -28043,6 +28043,25 @@
         }
       }
     },
+    "com.github.openshift.api.operator.v1.BGPManagedConfig": {
+      "description": "BGPManagedConfig contains configuration options for BGP when routing is \"Managed\".",
+      "type": "object",
+      "required": [
+        "asNumber"
+      ],
+      "properties": {
+        "asNumber": {
+          "description": "asNumber is the 2-byte or 4-byte Autonomous System Number (ASN) to be used in the generated FRR configuration. It is required when NoOverlayOptions.Routing is \"Managed\". Valid values are 1 to 4294967295.",
+          "type": "integer",
+          "format": "int64",
+          "default": 0
+        },
+        "bgpTopology": {
+          "description": "bgpTopology defines the BGP topology to be used. Allowed values are \"fullMesh\". When set to \"fullMesh\", every node deploys a BGP router, forming a BGP full mesh. When omitted, this means the user has no opinion and the platform chooses a reasonable default which is subject to change over time. The current default is \"fullMesh\".",
+          "type": "string"
+        }
+      }
+    },
     "com.github.openshift.api.operator.v1.BootImageSkewEnforcementConfig": {
       "description": "BootImageSkewEnforcementConfig is used to configure how boot image version skew is enforced on the cluster.",
       "type": "object",
@@ -32405,6 +32424,26 @@
         }
       }
     },
+    "com.github.openshift.api.operator.v1.NoOverlayOptions": {
+      "description": "NoOverlayOptions contains configuration options for networks operating in no-overlay mode.",
+      "type": "object",
+      "required": [
+        "outboundSNAT",
+        "routing"
+      ],
+      "properties": {
+        "outboundSNAT": {
+          "description": "outboundSNAT defines the SNAT behavior for outbound traffic from pods. Allowed values are \"Enable\" and \"Disable\". When set to \"Enable\", SNAT is performed on outbound traffic from pods. When set to \"Disable\", SNAT is not performed and pod IPs are preserved in outbound traffic. This field is required when the network operates in no-overlay mode.",
+          "type": "string",
+          "default": ""
+        },
+        "routing": {
+          "description": "routing specifies whether the pod network routing is managed by OVN-Kubernetes or users. Allowed values are \"Managed\" and \"Unmanaged\". When set to \"Managed\", OVN-Kubernetes manages the pod network routing configuration through BGP. When set to \"Unmanaged\", users are responsible for configuring the pod network routing. This field is required when the network operates in no-overlay mode.",
+          "type": "string",
+          "default": ""
+        }
+      }
+    },
     "com.github.openshift.api.operator.v1.NodeDisruptionPolicyClusterStatus": {
       "description": "NodeDisruptionPolicyClusterStatus is the type for the status object, rendered by the controller as a merge of cluster defaults and user provided policies",
       "type": "object",
@@ -32921,6 +32960,18 @@
       "description": "ovnKubernetesConfig contains the configuration parameters for networks using the ovn-kubernetes network project",
       "type": "object",
       "properties": {
+        "bgpManagedConfig": {
+          "description": "bgpManagedConfig configures the BGP properties for networks (default network or CUDNs) in no-overlay mode that specify routing=\"Managed\" in their NoOverlayOptions. It is required when DefaultNetworkNoOverlayOptions.Routing is set to \"Managed\". When omitted, this means the user does not configure BGP for managed routing.",
+          "$ref": "#/definitions/com.github.openshift.api.operator.v1.BGPManagedConfig"
+        },
+        "defaultNetworkNoOverlayOptions": {
+          "description": "defaultNetworkNoOverlayOptions contains configuration for no-overlay mode for the default network. It is required when DefaultNetworkTransport is \"NoOverlay\". When omitted, this means the user does not configure no-overlay mode options.",
+          "$ref": "#/definitions/com.github.openshift.api.operator.v1.NoOverlayOptions"
+        },
+        "defaultNetworkTransport": {
+          "description": "defaultNetworkTransport describes the transport protocol for east-west traffic for the default network. Allowed values are \"NoOverlay\" and \"Geneve\". When set to \"NoOverlay\", the default network operates in no-overlay mode. When set to \"Geneve\", the default network uses Geneve overlay. When omitted, this means the user has no opinion and the platform chooses a reasonable default which is subject to change over time. The current default is \"Geneve\".",
+          "type": "string"
+        },
         "egressIPConfig": {
           "description": "egressIPConfig holds the configuration for EgressIP options.",
           "default": {},

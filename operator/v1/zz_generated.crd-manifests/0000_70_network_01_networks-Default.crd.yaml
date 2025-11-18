@@ -3,10 +3,10 @@ kind: CustomResourceDefinition
 metadata:
   annotations:
     api-approved.openshift.io: https://github.com/openshift/api/pull/475
-    api.openshift.io/filename-cvo-runlevel: "0000_70"
-    api.openshift.io/filename-operator: network
-    api.openshift.io/filename-ordering: "01"
-    feature-gate.release.openshift.io/RouteAdvertisements: "true"
+    api.openshift.io/merged-by-featuregates: "true"
+    include.release.openshift.io/ibm-cloud-managed: "true"
+    include.release.openshift.io/self-managed-high-availability: "true"
+    release.openshift.io/feature-set: Default
   name: networks.operator.openshift.io
 spec:
   group: operator.openshift.io
@@ -178,6 +178,39 @@ spec:
                 x-kubernetes-list-map-keys:
                 - name
                 x-kubernetes-list-type: map
+              additionalRoutingCapabilities:
+                description: |-
+                  additionalRoutingCapabilities describes components and relevant
+                  configuration providing additional routing capabilities. When set, it
+                  enables such components and the usage of the routing capabilities they
+                  provide for the machine network. Upstream operators, like MetalLB
+                  operator, requiring these capabilities may rely on, or automatically set
+                  this attribute. Network plugins may leverage advanced routing
+                  capabilities acquired through the enablement of these components but may
+                  require specific configuration on their side to do so; refer to their
+                  respective documentation and configuration options.
+                properties:
+                  providers:
+                    description: |-
+                      providers is a set of enabled components that provide additional routing
+                      capabilities. Entries on this list must be unique. The  only valid value
+                      is currrently "FRR" which provides FRR routing capabilities through the
+                      deployment of FRR.
+                    items:
+                      description: RoutingCapabilitiesProvider is a component providing
+                        routing capabilities.
+                      enum:
+                      - FRR
+                      type: string
+                    maxItems: 1
+                    minItems: 1
+                    type: array
+                    x-kubernetes-list-type: atomic
+                    x-kubernetes-validations:
+                    - rule: self.all(x, self.exists_one(y, x == y))
+                required:
+                - providers
+                type: object
               clusterNetwork:
                 description: |-
                   clusterNetwork is the IP address pool to use for pod IPs.
@@ -838,6 +871,11 @@ spec:
                       the configuration.
                     type: string
                 type: object
+                x-kubernetes-validations:
+                - message: networkType migration in mode other than 'Live' may not
+                    be configured at the same time as mtu migration
+                  rule: '!has(self.mtu) || !has(self.networkType) || self.networkType
+                    == "" || has(self.mode) && self.mode == ''Live'''
               observedConfig:
                 description: |-
                   observedConfig holds a sparse config that controller has observed from the cluster state.  It exists in spec because

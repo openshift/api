@@ -952,6 +952,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"github.com/openshift/api/operator/v1.AuthenticationStatus":                                          schema_openshift_api_operator_v1_AuthenticationStatus(ref),
 		"github.com/openshift/api/operator/v1.AzureCSIDriverConfigSpec":                                      schema_openshift_api_operator_v1_AzureCSIDriverConfigSpec(ref),
 		"github.com/openshift/api/operator/v1.AzureDiskEncryptionSet":                                        schema_openshift_api_operator_v1_AzureDiskEncryptionSet(ref),
+		"github.com/openshift/api/operator/v1.BGPManagedConfig":                                              schema_openshift_api_operator_v1_BGPManagedConfig(ref),
 		"github.com/openshift/api/operator/v1.BootImageSkewEnforcementConfig":                                schema_openshift_api_operator_v1_BootImageSkewEnforcementConfig(ref),
 		"github.com/openshift/api/operator/v1.BootImageSkewEnforcementStatus":                                schema_openshift_api_operator_v1_BootImageSkewEnforcementStatus(ref),
 		"github.com/openshift/api/operator/v1.CSIDriverConfigSpec":                                           schema_openshift_api_operator_v1_CSIDriverConfigSpec(ref),
@@ -1090,6 +1091,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"github.com/openshift/api/operator/v1.NetworkMigration":                                              schema_openshift_api_operator_v1_NetworkMigration(ref),
 		"github.com/openshift/api/operator/v1.NetworkSpec":                                                   schema_openshift_api_operator_v1_NetworkSpec(ref),
 		"github.com/openshift/api/operator/v1.NetworkStatus":                                                 schema_openshift_api_operator_v1_NetworkStatus(ref),
+		"github.com/openshift/api/operator/v1.NoOverlayOptions":                                              schema_openshift_api_operator_v1_NoOverlayOptions(ref),
 		"github.com/openshift/api/operator/v1.NodeDisruptionPolicyClusterStatus":                             schema_openshift_api_operator_v1_NodeDisruptionPolicyClusterStatus(ref),
 		"github.com/openshift/api/operator/v1.NodeDisruptionPolicyConfig":                                    schema_openshift_api_operator_v1_NodeDisruptionPolicyConfig(ref),
 		"github.com/openshift/api/operator/v1.NodeDisruptionPolicySpecAction":                                schema_openshift_api_operator_v1_NodeDisruptionPolicySpecAction(ref),
@@ -48408,6 +48410,35 @@ func schema_openshift_api_operator_v1_AzureDiskEncryptionSet(ref common.Referenc
 	}
 }
 
+func schema_openshift_api_operator_v1_BGPManagedConfig(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "BGPManagedConfig contains configuration options for BGP when routing is \"Managed\".",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"asNumber": {
+						SchemaProps: spec.SchemaProps{
+							Description: "asNumber is the 2-byte or 4-byte Autonomous System Number (ASN) to be used in the generated FRR configuration. It is required when NoOverlayOptions.Routing is \"Managed\". Valid values are 1 to 4294967295.",
+							Default:     0,
+							Type:        []string{"integer"},
+							Format:      "int64",
+						},
+					},
+					"bgpTopology": {
+						SchemaProps: spec.SchemaProps{
+							Description: "bgpTopology defines the BGP topology to be used. Allowed values are \"fullMesh\". When set to \"fullMesh\", every node deploys a BGP router, forming a BGP full mesh. When omitted, this means the user has no opinion and the platform chooses a reasonable default which is subject to change over time. The current default is \"fullMesh\".",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+				},
+				Required: []string{"asNumber"},
+			},
+		},
+	}
+}
+
 func schema_openshift_api_operator_v1_BootImageSkewEnforcementConfig(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -55752,6 +55783,36 @@ func schema_openshift_api_operator_v1_NetworkStatus(ref common.ReferenceCallback
 	}
 }
 
+func schema_openshift_api_operator_v1_NoOverlayOptions(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "NoOverlayOptions contains configuration options for networks operating in no-overlay mode.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"outboundSNAT": {
+						SchemaProps: spec.SchemaProps{
+							Description: "outboundSNAT defines the SNAT behavior for outbound traffic from pods. Allowed values are \"Enable\" and \"Disable\". When set to \"Enable\", SNAT is performed on outbound traffic from pods. When set to \"Disable\", SNAT is not performed and pod IPs are preserved in outbound traffic. This field is required when the network operates in no-overlay mode.",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"routing": {
+						SchemaProps: spec.SchemaProps{
+							Description: "routing specifies whether the pod network routing is managed by OVN-Kubernetes or users. Allowed values are \"Managed\" and \"Unmanaged\". When set to \"Managed\", OVN-Kubernetes manages the pod network routing configuration through BGP. When set to \"Unmanaged\", users are responsible for configuring the pod network routing. This field is required when the network operates in no-overlay mode.",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+				},
+				Required: []string{"outboundSNAT", "routing"},
+			},
+		},
+	}
+}
+
 func schema_openshift_api_operator_v1_NodeDisruptionPolicyClusterStatus(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -56741,11 +56802,30 @@ func schema_openshift_api_operator_v1_OVNKubernetesConfig(ref common.ReferenceCa
 							Format:      "",
 						},
 					},
+					"defaultNetworkTransport": {
+						SchemaProps: spec.SchemaProps{
+							Description: "defaultNetworkTransport describes the transport protocol for east-west traffic for the default network. Allowed values are \"NoOverlay\" and \"Geneve\". When set to \"NoOverlay\", the default network operates in no-overlay mode. When set to \"Geneve\", the default network uses Geneve overlay. When omitted, this means the user has no opinion and the platform chooses a reasonable default which is subject to change over time. The current default is \"Geneve\".",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"defaultNetworkNoOverlayOptions": {
+						SchemaProps: spec.SchemaProps{
+							Description: "defaultNetworkNoOverlayOptions contains configuration for no-overlay mode for the default network. It is required when DefaultNetworkTransport is \"NoOverlay\". When omitted, this means the user does not configure no-overlay mode options.",
+							Ref:         ref("github.com/openshift/api/operator/v1.NoOverlayOptions"),
+						},
+					},
+					"bgpManagedConfig": {
+						SchemaProps: spec.SchemaProps{
+							Description: "bgpManagedConfig configures the BGP properties for networks (default network or CUDNs) in no-overlay mode that specify routing=\"Managed\" in their NoOverlayOptions. It is required when DefaultNetworkNoOverlayOptions.Routing is set to \"Managed\". When omitted, this means the user does not configure BGP for managed routing.",
+							Ref:         ref("github.com/openshift/api/operator/v1.BGPManagedConfig"),
+						},
+					},
 				},
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/operator/v1.EgressIPConfig", "github.com/openshift/api/operator/v1.GatewayConfig", "github.com/openshift/api/operator/v1.HybridOverlayConfig", "github.com/openshift/api/operator/v1.IPsecConfig", "github.com/openshift/api/operator/v1.IPv4OVNKubernetesConfig", "github.com/openshift/api/operator/v1.IPv6OVNKubernetesConfig", "github.com/openshift/api/operator/v1.PolicyAuditConfig"},
+			"github.com/openshift/api/operator/v1.BGPManagedConfig", "github.com/openshift/api/operator/v1.EgressIPConfig", "github.com/openshift/api/operator/v1.GatewayConfig", "github.com/openshift/api/operator/v1.HybridOverlayConfig", "github.com/openshift/api/operator/v1.IPsecConfig", "github.com/openshift/api/operator/v1.IPv4OVNKubernetesConfig", "github.com/openshift/api/operator/v1.IPv6OVNKubernetesConfig", "github.com/openshift/api/operator/v1.NoOverlayOptions", "github.com/openshift/api/operator/v1.PolicyAuditConfig"},
 	}
 }
 

@@ -2,7 +2,7 @@ apiVersion: apiextensions.k8s.io/v1 # Hack because controller-gen complains if w
 name: "Infrastructure"
 crdName: infrastructures.config.openshift.io
 featureGates:
-- -AWSClusterHostedDNSInstall
+- -AzureClusterHostedDNSInstall
 tests:
   onCreate:
     - name: Should be able to create a minimal Infrastructure
@@ -1692,6 +1692,8 @@ tests:
           platform: AWS
           platformStatus:
             aws:
+              cloudLoadBalancerConfig:
+                dnsType: PlatformDefault
               region: us-east-1
               resourceTags:
               - key: key with space
@@ -1711,6 +1713,8 @@ tests:
           platform: AWS
           platformStatus:
             aws:
+              cloudLoadBalancerConfig:
+                dnsType: PlatformDefault
               region: us-east-1
               resourceTags:
               - key: key with space
@@ -1730,6 +1734,8 @@ tests:
           platform: AWS
           platformStatus:
             aws:
+              cloudLoadBalancerConfig:
+                dnsType: PlatformDefault
               region: us-east-1
               resourceTags:
               - key: key with space
@@ -1757,6 +1763,8 @@ tests:
           platform: AWS
           platformStatus:
             aws:
+              cloudLoadBalancerConfig:
+                dnsType: PlatformDefault
               region: us-east-1
               resourceTags:
               - key: key:_./=+-@
@@ -1776,6 +1784,8 @@ tests:
           platform: AWS
           platformStatus:
             aws:
+              cloudLoadBalancerConfig:
+                dnsType: PlatformDefault
               region: us-east-1
               resourceTags:
               - key: key:_./=+-@

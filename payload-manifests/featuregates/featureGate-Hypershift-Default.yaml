@@ -205,6 +205,9 @@
                         "name": "OnPremDNSRecords"
                     },
                     {
+                        "name": "ProvisioningRequestAvailable"
+                    },
+                    {
                         "name": "SELinuxMount"
                     },
                     {

@@ -931,4 +931,12 @@ var (
 					enhancementPR("https://github.com/openshift/enhancements/pull/1803").
 					enableIn(configv1.DevPreviewNoUpgrade, configv1.TechPreviewNoUpgrade).
 					mustRegister()
+
+	FeatureGateProvisioningRequestAvailable = newFeatureGate("ProvisioningRequestAvailable").
+						reportProblemsToJiraComponent("Cluster Autoscaler").
+						contactPerson("elmiko").
+						productScope(ocpSpecific).
+						enhancementPR("https://github.com/openshift/enhancements/pull/1752").
+						enableIn(configv1.DevPreviewNoUpgrade).
+						mustRegister()
 )

@@ -939,4 +939,12 @@ var (
 						enhancementPR("https://github.com/openshift/enhancements/pull/1752").
 						enableIn(configv1.DevPreviewNoUpgrade).
 						mustRegister()
+
+	FeatureGateProvisioningRequestAvailable = newFeatureGate("TLSCurvesConfiguration").
+		reportProblemsToJiraComponent("kube-apiserver").
+		contactPerson("richardsonnick").
+		productScope(ocpSpecific).
+		enhancementPR("https://github.com/openshift/enhancements/pull/1894").
+		enableIn(configv1.DevPreviewNoUpgrade).
+		mustRegister()
 )

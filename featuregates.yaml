@@ -1,0 +1,123 @@
+apiVersion: config.openshift.io/v1
+kind: FeatureGate
+metadata:
+  annotations:
+    include.release.openshift.io/self-managed-high-availability: "true"
+  creationTimestamp: "2025-11-20T17:08:34Z"
+  generation: 1
+  name: cluster
+  resourceVersion: "705"
+  uid: 7c6d82c7-dccb-4fe0-9a67-1687dedb3bd0
+spec:
+  featureSet: TechPreviewNoUpgrade
+status:
+  featureGates:
+  - disabled:
+    - name: BootImageSkewEnforcement
+    - name: ClusterAPIInstall
+    - name: ClusterAPIMachineManagementVSphere
+    - name: EventedPLEG
+    - name: Example2
+    - name: ExternalSnapshotMetadata
+    - name: MachineAPIOperatorDisableMachineHealthCheckController
+    - name: MultiArchInstallAzure
+    - name: ShortCertRotation
+    - name: VSphereMixedNodeEnv
+    - name: NewOLMPreflightPermissionChecks
+    enabled:
+    - name: AWSClusterHostedDNS
+    - name: AWSClusterHostedDNSInstall
+    - name: AWSDedicatedHosts
+    - name: AWSDualStackInstall
+    - name: AWSServiceLBNetworkSecurityGroup
+    - name: AdditionalRoutingCapabilities
+    - name: AdminNetworkPolicy
+    - name: AlibabaPlatform
+    - name: AutomatedEtcdBackup
+    - name: AzureClusterHostedDNSInstall
+    - name: AzureDedicatedHosts
+    - name: AzureDualStackInstall
+    - name: AzureMultiDisk
+    - name: AzureWorkloadIdentity
+    - name: BootcNodeManagement
+    - name: BuildCSIVolumes
+    - name: CBORServingAndStorage
+    - name: CPMSMachineNamePrefix
+    - name: ClientsAllowCBOR
+    - name: ClientsPreferCBOR
+    - name: ClusterAPIInstallIBMCloud
+    - name: ClusterMonitoringConfig
+    - name: ClusterVersionOperatorConfiguration
+    - name: ConsolePluginContentSecurityPolicy
+    - name: DNSNameResolver
+    - name: DualReplica
+    - name: DyanmicServiceEndpointIBMCloud
+    - name: DynamicResourceAllocation
+    - name: EtcdBackendQuota
+    - name: EventTTL
+    - name: Example
+    - name: ExternalOIDC
+    - name: ExternalOIDCWithUIDAndExtraClaimMappings
+    - name: GCPClusterHostedDNS
+    - name: GCPClusterHostedDNSInstall
+    - name: GCPCustomAPIEndpoints
+    - name: GCPCustomAPIEndpointsInstall
+    - name: GCPDualStackInstall
+    - name: GatewayAPI
+    - name: GatewayAPIController
+    - name: HighlyAvailableArbiter
+    - name: ImageModeStatusReporting
+    - name: ImageStreamImportMode
+    - name: ImageVolume
+    - name: IngressControllerDynamicConfigurationManager
+    - name: InsightsConfig
+    - name: InsightsOnDemandDataGather
+    - name: IrreconcilableMachineConfig
+    - name: KMSEncryptionProvider
+    - name: KMSv1
+    - name: MachineAPIMigration
+    - name: MachineConfigNodes
+    - name: ManagedBootImages
+    - name: ManagedBootImagesAWS
+    - name: ManagedBootImagesAzure
+    - name: ManagedBootImagesCPMS
+    - name: ManagedBootImagesvSphere
+    - name: MaxUnavailableStatefulSet
+    - name: MetricsCollectionProfiles
+    - name: MinimumKubeletVersion
+    - name: MixedCPUsAllocation
+    - name: MultiDiskSetup
+    - name: MutatingAdmissionPolicy
+    - name: NetworkDiagnosticsConfig
+    - name: NetworkLiveMigration
+    - name: NetworkSegmentation
+    - name: NewOLM
+    - name: NewOLMCatalogdAPIV1Metas
+    - name: NewOLMOwnSingleNamespace
+    - name: NewOLMWebhookProviderOpenshiftServiceCA
+    - name: NoRegistryClusterOperations
+    - name: NutanixMultiSubnets
+    - name: OVNObservability
+    - name: OpenShiftPodSecurityAdmission
+    - name: PinnedImages
+    - name: PreconfiguredUDNAddresses
+    - name: ProcMountType
+    - name: RouteAdvertisements
+    - name: RouteExternalCertificate
+    - name: SELinuxMount
+    - name: ServiceAccountTokenNodeBinding
+    - name: SignatureStores
+    - name: SigstoreImageVerification
+    - name: SigstoreImageVerificationPKI
+    - name: StoragePerformantSecurityPolicy
+    - name: TranslateStreamCloseWebsocketRequests
+    - name: UpgradeStatus
+    - name: UserNamespacesPodSecurityStandards
+    - name: UserNamespacesSupport
+    - name: VSphereConfigurableMaxAllowedBlockVolumesPerNode
+    - name: VSphereHostVMGroupZonal
+    - name: VSphereMultiDisk
+    - name: VSphereMultiNetworks
+    - name: VolumeAttributesClass
+    - name: VolumeGroupSnapshot
+    version: 4.21.0-0-2025-11-20-165113-test-ci-ln-1i8di3k-latest

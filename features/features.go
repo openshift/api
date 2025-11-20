@@ -980,9 +980,9 @@ var (
 						mustRegister()
 
 	FeatureGateTLSCurvesConfiguration = newFeatureGate("TLSCurvesConfiguration").
-						reportProblemsToJiraComponent("Networking").
-						contactPerson("davidesalerno").
-						productScope(kubernetes).
+						reportProblemsToJiraComponent("kube-apiserver").
+						contactPerson("richardsonnick").
+						productScope(ocpSpecific).
 						enhancementPR("https://github.com/openshift/enhancements/pull/1894").
 						enableIn(configv1.DevPreviewNoUpgrade).
 						mustRegister()

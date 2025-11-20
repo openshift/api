@@ -77,6 +77,9 @@
                         "name": "AdminNetworkPolicy"
                     },
                     {
+                        "name": "AlibabaPlatform"
+                    },
+                    {
                         "name": "AutomatedEtcdBackup"
                     },
                     {
@@ -116,12 +119,6 @@
                         "name": "ClientsPreferCBOR"
                     },
                     {
-                        "name": "ClusterAPIComputeInstall"
-                    },
-                    {
-                        "name": "ClusterAPIControlPlaneInstall"
-                    },
-                    {
                         "name": "ClusterAPIInstallIBMCloud"
                     },
                     {
@@ -134,13 +131,7 @@
                         "name": "ClusterMonitoringConfig"
                     },
                     {
-                        "name": "ClusterUpdateAcceptRisks"
-                    },
-                    {
                         "name": "ClusterVersionOperatorConfiguration"
-                    },
-                    {
-                        "name": "ConfigurablePKI"
                     },
                     {
                         "name": "ConsolePluginContentSecurityPolicy"
@@ -155,7 +146,7 @@
                         "name": "DyanmicServiceEndpointIBMCloud"
                     },
                     {
-                        "name": "EVPN"
+                        "name": "DynamicResourceAllocation"
                     },
                     {
                         "name": "EtcdBackendQuota"
@@ -174,9 +165,6 @@
                     },
                     {
                         "name": "ExternalOIDCWithUIDAndExtraClaimMappings"
-                    },
-                    {
-                        "name": "ExternalOIDCWithUpstreamParity"
                     },
                     {
                         "name": "ExternalSnapshotMetadata"
@@ -230,9 +218,6 @@
                         "name": "IrreconcilableMachineConfig"
                     },
                     {
-                        "name": "KMSEncryption"
-                    },
-                    {
                         "name": "KMSEncryptionProvider"
                     },
                     {
@@ -281,9 +266,6 @@
                         "name": "MutatingAdmissionPolicy"
                     },
                     {
-                        "name": "NetworkConnect"
-                    },
-                    {
                         "name": "NetworkDiagnosticsConfig"
                     },
                     {
@@ -314,6 +296,9 @@
                         "name": "PreconfiguredUDNAddresses"
                     },
                     {
+                        "name": "ProcMountType"
+                    },
+                    {
                         "name": "ProvisioningRequestAvailable"
                     },
                     {
@@ -339,6 +324,12 @@
                     },
                     {
                         "name": "StoragePerformantSecurityPolicy"
+                    },
+                    {
+                        "name": "TLSCurvesConfiguration"
+                    },
+                    {
+                        "name": "TranslateStreamCloseWebsocketRequests"
                     },
                     {
                         "name": "UpgradeStatus"

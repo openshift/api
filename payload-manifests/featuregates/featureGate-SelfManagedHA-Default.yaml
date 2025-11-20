@@ -88,6 +88,9 @@
                         "name": "DyanmicServiceEndpointIBMCloud"
                     },
                     {
+                        "name": "DynamicResourceAllocation"
+                    },
+                    {
                         "name": "EtcdBackendQuota"
                     },
                     {
@@ -122,6 +125,9 @@
                     },
                     {
                         "name": "ImageModeStatusReporting"
+                    },
+                    {
+                        "name": "ImageStreamImportMode"
                     },
                     {
                         "name": "IngressControllerDynamicConfigurationManager"
@@ -169,9 +175,6 @@
                         "name": "MutatingAdmissionPolicy"
                     },
                     {
-                        "name": "NetworkConnect"
-                    },
-                    {
                         "name": "NewOLMBoxCutterRuntime"
                     },
                     {
@@ -209,6 +212,15 @@
                     },
                     {
                         "name": "SignatureStores"
+                    },
+                    {
+                        "name": "SigstoreImageVerificationPKI"
+                    },
+                    {
+                        "name": "TLSCurvesConfiguration"
+                    },
+                    {
+                        "name": "TranslateStreamCloseWebsocketRequests"
                     },
                     {
                         "name": "VSphereConfigurableMaxAllowedBlockVolumesPerNode"
@@ -262,9 +274,6 @@
                     },
                     {
                         "name": "HighlyAvailableArbiter"
-                    },
-                    {
-                        "name": "ImageStreamImportMode"
                     },
                     {
                         "name": "ImageVolume"
@@ -328,9 +337,6 @@
                     },
                     {
                         "name": "SigstoreImageVerification"
-                    },
-                    {
-                        "name": "SigstoreImageVerificationPKI"
                     },
                     {
                         "name": "StoragePerformantSecurityPolicy"

@@ -945,4 +945,12 @@ var (
 								enhancementPR("https://github.com/kubernetes/enhancements/issues/4381").
 								enableForClusterProfile(Hypershift, configv1.DevPreviewNoUpgrade, configv1.TechPreviewNoUpgrade, configv1.Default).
 								mustRegister()
+
+	FeatureGateTLSCurvesConfiguration = newFeatureGate("TLSCurvesConfiguration").
+		reportProblemsToJiraComponent("Networking").
+		contactPerson("davidesalerno").
+		productScope(kubernetes).
+		enhancementPR("https://github.com/openshift/enhancements/pull/1894").
+		enableIn(configv1.DevPreviewNoUpgrade).
+		mustRegister()
 )

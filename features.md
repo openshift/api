@@ -16,6 +16,7 @@
 | NewOLMPreflightPermissionChecks| | | | <span style="background-color: #519450">Enabled</span> | | <span style="background-color: #519450">Enabled</span>  |
 | NoRegistryClusterInstall| | | | <span style="background-color: #519450">Enabled</span> | | <span style="background-color: #519450">Enabled</span>  |
 | ProvisioningRequestAvailable| | | <span style="background-color: #519450">Enabled</span> | <span style="background-color: #519450">Enabled</span> | |  |
+| TLSCurvesConfiguration| | | <span style="background-color: #519450">Enabled</span> | <span style="background-color: #519450">Enabled</span> | |  |
 | HyperShiftOnlyDynamicResourceAllocation| <span style="background-color: #519450">Enabled</span> | | <span style="background-color: #519450">Enabled</span> | | <span style="background-color: #519450">Enabled</span> |  |
 | NewOLM| | <span style="background-color: #519450">Enabled</span> | | <span style="background-color: #519450">Enabled</span> | | <span style="background-color: #519450">Enabled</span>  |
 | NewOLMWebhookProviderOpenshiftServiceCA| | <span style="background-color: #519450">Enabled</span> | | <span style="background-color: #519450">Enabled</span> | | <span style="background-color: #519450">Enabled</span>  |

@@ -883,7 +883,6 @@ var (
 					contactPerson("benluddy").
 					productScope(kubernetes).
 					enhancementPR("https://github.com/kubernetes/enhancements/issues/4222").
-					enableIn(configv1.DevPreviewNoUpgrade, configv1.TechPreviewNoUpgrade).
 					mustRegister()
 
 	FeatureClientsPreferCBOR = newFeatureGate("ClientsPreferCBOR").

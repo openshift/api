@@ -40607,6 +40607,13 @@ func schema_openshift_api_machine_v1beta1_EBSBlockDeviceSpec(ref common.Referenc
 							Format:      "int64",
 						},
 					},
+					"throughputMib": {
+						SchemaProps: spec.SchemaProps{
+							Description: "throughputMib to provision in MiB/s supported for the volume type. Not applicable to all types.\n\nThis parameter is valid only for gp3 volumes. Valid Range: Minimum value of 125. Maximum value of 2000.\n\nWhen omitted, this means no opinion, and the platform is left to choose a reasonable default, which is subject to change over time. The current default is 125.",
+							Type:        []string{"integer"},
+							Format:      "int32",
+						},
+					},
 					"volumeSize": {
 						SchemaProps: spec.SchemaProps{
 							Description: "The size of the volume, in GiB.\n\nConstraints: 1-16384 for General Purpose SSD (gp2), 4-16384 for Provisioned IOPS SSD (io1), 500-16384 for Throughput Optimized HDD (st1), 500-16384 for Cold HDD (sc1), and 1-1024 for Magnetic (standard) volumes. If you specify a snapshot, the volume size must be equal to or larger than the snapshot size.\n\nDefault: If you're creating the volume from a snapshot and don't specify a volume size, the default is the snapshot size.",
@@ -40616,7 +40623,7 @@ func schema_openshift_api_machine_v1beta1_EBSBlockDeviceSpec(ref common.Referenc
 					},
 					"volumeType": {
 						SchemaProps: spec.SchemaProps{
-							Description: "The volume type: gp2, io1, st1, sc1, or standard. Default: standard",
+							Description: "volumeType can be of type gp2, gp3, io1, st1, sc1, or standard. Default: standard",
 							Type:        []string{"string"},
 							Format:      "",
 						},

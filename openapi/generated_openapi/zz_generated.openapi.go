@@ -19977,7 +19977,7 @@ func schema_openshift_api_config_v1_SchedulerSpec(ref common.ReferenceCallback) 
 					},
 					"profileCustomizations": {
 						SchemaProps: spec.SchemaProps{
-							Description: "profileCustomizations contains configuration for modifying the default behavior of existing scheduler profiles.",
+							Description: "profileCustomizations contains configuration for modifying the default behavior of existing scheduler profiles. Deprecated: no longer needed, since DRA is GA starting with 4.21, and is enabled by' default in the cluster, this field will be removed in 4.24.",
 							Default:     map[string]interface{}{},
 							Ref:         ref("github.com/openshift/api/config/v1.ProfileCustomizations"),
 						},

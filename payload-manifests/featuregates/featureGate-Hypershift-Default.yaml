@@ -276,6 +276,9 @@
                         "name": "HighlyAvailableArbiter"
                     },
                     {
+                        "name": "HyperShiftOnlyDynamicResourceAllocation"
+                    },
+                    {
                         "name": "ImageVolume"
                     },
                     {

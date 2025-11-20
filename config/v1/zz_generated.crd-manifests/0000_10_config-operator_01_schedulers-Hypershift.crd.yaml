@@ -3,10 +3,8 @@ kind: CustomResourceDefinition
 metadata:
   annotations:
     api-approved.openshift.io: https://github.com/openshift/api/pull/470
-    api.openshift.io/filename-cvo-runlevel: "0000_10"
-    api.openshift.io/filename-operator: config-operator
-    api.openshift.io/filename-ordering: "01"
-    feature-gate.release.openshift.io/DynamicResourceAllocation: "true"
+    api.openshift.io/merged-by-featuregates: "true"
+    include.release.openshift.io/ibm-cloud-managed: "true"
     release.openshift.io/bootstrap-required: "true"
   name: schedulers.config.openshift.io
 spec:

@@ -24177,7 +24177,7 @@ func schema_openshift_api_console_v1_ConsoleLinkSpec(ref common.ReferenceCallbac
 					},
 					"href": {
 						SchemaProps: spec.SchemaProps{
-							Description: "href is the absolute secure URL for the link (must use https)",
+							Description: "href is the absolute URL for the link. Must use https:// for web URLs or mailto: for email links.",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -25676,7 +25676,7 @@ func schema_openshift_api_console_v1_Link(ref common.ReferenceCallback) common.O
 					},
 					"href": {
 						SchemaProps: spec.SchemaProps{
-							Description: "href is the absolute secure URL for the link (must use https)",
+							Description: "href is the absolute URL for the link. Must use https:// for web URLs or mailto: for email links.",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",

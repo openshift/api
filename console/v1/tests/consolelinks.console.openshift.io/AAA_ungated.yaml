@@ -18,3 +18,18 @@ tests:
           href: "https://"
           location: HelpMenu
           text: foo
+    - name: Should be able to create a ConsoleLink with mailto href
+      initial: |
+        apiVersion: console.openshift.io/v1
+        kind: ConsoleLink
+        spec:
+          href: "mailto:platform-team@example.com"
+          location: HelpMenu
+          text: Contact Platform Team
+      expected: |
+        apiVersion: console.openshift.io/v1
+        kind: ConsoleLink
+        spec:
+          href: "mailto:platform-team@example.com"
+          location: HelpMenu
+          text: Contact Platform Team

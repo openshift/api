@@ -940,7 +940,7 @@ var (
 						enableIn(configv1.DevPreviewNoUpgrade).
 						mustRegister()
 
-	FeatureGateProvisioningRequestAvailable = newFeatureGate("TLSCurvesConfiguration").
+	FeatureGateTLSCurvesConfiguration = newFeatureGate("TLSCurvesConfiguration").
 		reportProblemsToJiraComponent("kube-apiserver").
 		contactPerson("richardsonnick").
 		productScope(ocpSpecific).

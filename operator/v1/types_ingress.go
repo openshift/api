@@ -1912,7 +1912,7 @@ type IngressControllerTuningOptions struct {
 	// +kubebuilder:validation:MinLength=1
 	// +kubebuilder:validation:MaxLength=16
 	// +optional
-	HTTPKeepAliveTimeout metav1.Duration `json:"httpKeepAliveTimeout,omitempty"`
+	HTTPKeepAliveTimeout *metav1.Duration `json:"httpKeepAliveTimeout,omitempty"`
 
 	// tlsInspectDelay defines how long the router can hold data to find a
 	// matching route.

@@ -813,8 +813,7 @@ var (
 		contactPerson("rofeldma").
 		productScope(kubernetes).
 		enhancementPR("https://github.com/kubernetes/enhancements/issues/5116").
-		enableIn(configv1.DevPreviewNoUpgrade, configv1.TechPreviewNoUpgrade).
-		enableForClusterProfile(Hypershift, configv1.Default).
+		enableIn(configv1.Default, configv1.DevPreviewNoUpgrade, configv1.TechPreviewNoUpgrade).
 		mustRegister()
 
 	FeatureStreamingCollectionEncodingToProtobuf = newFeatureGate("StreamingCollectionEncodingToProtobuf").
@@ -822,8 +821,7 @@ var (
 		contactPerson("rofeldma").
 		productScope(kubernetes).
 		enhancementPR("https://github.com/kubernetes/enhancements/issues/5116").
-		enableIn(configv1.DevPreviewNoUpgrade, configv1.TechPreviewNoUpgrade).
-		enableForClusterProfile(Hypershift, configv1.Default).
+		enableIn(configv1.Default, configv1.DevPreviewNoUpgrade, configv1.TechPreviewNoUpgrade).
 		mustRegister()
 
 	FeatureGateGatewayAPIController = newFeatureGate("GatewayAPIController").

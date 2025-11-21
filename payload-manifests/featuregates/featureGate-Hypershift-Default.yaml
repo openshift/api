@@ -124,9 +124,6 @@
                         "name": "ImageModeStatusReporting"
                     },
                     {
-                        "name": "ImageStreamImportMode"
-                    },
-                    {
                         "name": "IngressControllerDynamicConfigurationManager"
                     },
                     {
@@ -274,6 +271,9 @@
                     },
                     {
                         "name": "HighlyAvailableArbiter"
+                    },
+                    {
+                        "name": "ImageStreamImportMode"
                     },
                     {
                         "name": "ImageVolume"

@@ -146,6 +146,9 @@
                         "name": "ExternalOIDCWithUIDAndExtraClaimMappings"
                     },
                     {
+                        "name": "ExternalOIDCWithUpstreamParity"
+                    },
+                    {
                         "name": "ExternalSnapshotMetadata"
                     },
                     {

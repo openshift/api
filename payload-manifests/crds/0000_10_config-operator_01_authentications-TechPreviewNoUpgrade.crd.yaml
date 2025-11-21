@@ -3,11 +3,11 @@ kind: CustomResourceDefinition
 metadata:
   annotations:
     api-approved.openshift.io: https://github.com/openshift/api/pull/470
-    api.openshift.io/filename-cvo-runlevel: "0000_10"
-    api.openshift.io/filename-operator: config-operator
-    api.openshift.io/filename-ordering: "01"
-    feature-gate.release.openshift.io/ExternalOIDCWithUIDAndExtraClaimMappings: "true"
+    api.openshift.io/merged-by-featuregates: "true"
+    include.release.openshift.io/ibm-cloud-managed: "true"
+    include.release.openshift.io/self-managed-high-availability: "true"
     release.openshift.io/bootstrap-required: "true"
+    release.openshift.io/feature-set: TechPreviewNoUpgrade
   name: authentications.config.openshift.io
 spec:
   group: config.openshift.io
@@ -353,6 +353,36 @@ spec:
                           If type is RequiredClaim, requiredClaim must be set.
                           If type is Expression, expression must be set.
                         properties:
+                          expression:
+                            description: |-
+                              expression configures a CEL expression that will be used
+                              by the Kubernetes API server to validate if an incoming JWT
+                              is valid for this identity provider. The CEL expression must
+                              return a boolean value where 'true' signals a valid state.
+                              Expression must be set when 'type' is 'Expression', and
+                              is forbidden otherwise.
+                            properties:
+                              expression:
+                                description: |-
+                                  expression is a CEL expression evaluated against token claims.
+                                  The expression must be a non-empty string and no longer than 1024 characters.
+                                  The expression must return a boolean value where 'true' signals a valid token and 'false' an invalid one.
+                                  This field is required.
+                                maxLength: 1024
+                                minLength: 1
+                                type: string
+                              message:
+                                description: |-
+                                  message allows configuring a human-readable message that is logged by the Kubernetes API server
+                                  when a token fails validation based on the CEL expression defined in 'Expression'.
+                                  This field is optional. If provided, the message must be at least 1 character long
+                                  and cannot exceed 256 characters. This message is logged and not returned to the caller.
+                                maxLength: 256
+                                minLength: 1
+                                type: string
+                            required:
+                            - expression
+                            type: object
                           requiredClaim:
                             description: |-
                               requiredClaim allows configuring a required claim name and its expected value.
@@ -392,9 +422,16 @@ spec:
 
                               When set to 'Expression', the Kubernetes API server will be configured
                               to validate the incoming JWT against the configured CEL expression.
+                            enum:
+                            - RequiredClaim
+                            - Expression
                             type: string
                         type: object
                         x-kubernetes-validations:
+                        - message: expressionRule must be set when type is 'Expression',
+                            and forbidden otherwise
+                          rule: 'has(self.type) && self.type == ''Expression'' ? has(self.expressionRule)
+                            : !has(self.expressionRule)'
                         - message: requiredClaim must be set when type is 'RequiredClaim',
                             and forbidden otherwise
                           rule: 'has(self.type) && self.type == ''RequiredClaim''
@@ -421,6 +458,31 @@ spec:
                           minItems: 1
                           type: array
                           x-kubernetes-list-type: set
+                        discoveryURL:
+                          description: |-
+                            discoveryURL is an optional field that, if specified, overrides the default discovery endpoint
+                            used to retrieve OIDC configuration metadata. By default, the discovery URL is derived from `issuerURL`
+                            as "{url}/.well-known/openid-configuration".
+
+                            The discoveryURL must:
+                              - Be a valid absolute URL.
+                              - Use the HTTPS scheme.
+                              - Not contain query parameters, user info, or fragments.
+                              - Be different from the value of `url` (ignoring trailing slashes)
+                          maxLength: 2048
+                          minLength: 1
+                          type: string
+                          x-kubernetes-validations:
+                          - message: discoveryURL must be a valid URL
+                            rule: isURL(self)
+                          - message: discoveryURL must be a valid https URL
+                            rule: url(self).getScheme() == 'https'
+                          - message: discoveryURL must not contain query parameters
+                            rule: url(self).getQuery().size() == 0
+                          - message: discoveryURL must not contain fragments
+                            rule: self.matches('^[^#]*$')
+                          - message: discoveryURL must not contain user info
+                            rule: '!(self.matches(''^https:\/\/.+:.+@{1}.+\/.*$''))'
                         issuerCertificateAuthority:
                           description: |-
                             issuerCertificateAuthority is an optional field that configures the
@@ -467,6 +529,11 @@ spec:
                       - audiences
                       - issuerURL
                       type: object
+                      x-kubernetes-validations:
+                      - message: discoveryURL must be different from issuerURL
+                        rule: 'self.?discoveryURL.orValue("").size() > 0 ? (self.issuerURL.size()
+                          == 0 || self.discoveryURL.find(''^.+[^/]'') != self.issuerURL.find(''^.+[^/]''))
+                          : true'
                     name:
                       description: |-
                         name is a required field that configures the unique human-readable identifier
@@ -565,6 +632,48 @@ spec:
                       x-kubernetes-list-map-keys:
                       - componentNamespace
                       - componentName
+                      x-kubernetes-list-type: map
+                    userValidationRules:
+                      description: |-
+                        userValidationRules defines the set of rules used to validate claims in a user's token.
+                        Each rule is evaluated independently to determine whether the token subject is considered valid.
+                        Rules can either require specific claims and values to be present,
+                        or define CEL expressions that must evaluate to true for the token to be accepted.
+                        If the expression in a rule evaluates to false, the token is rejected.
+                        At least one rule must evaluate to true for the token to be considered valid.
+                        A maximum of 64 rules can be specified. This field is optional.
+
+                        See https://kubernetes.io/docs/reference/using-api/cel/ for CEL syntax.
+                      items:
+                        description: |-
+                          TokenUserValidationRule provides a CEL-based rule used to validate a token subject.
+                          Each rule contains a CEL expression that is evaluated against the token’s claims.
+                        properties:
+                          expression:
+                            description: |-
+                              expression is a CEL expression that must evaluate
+                              to true for the token to be accepted. The expression is evaluated against the token's
+                              user information (e.g., username, groups).
+                              This field must be non-empty and may not exceed 1024 characters.
+                            maxLength: 1024
+                            minLength: 1
+                            type: string
+                          message:
+                            description: |-
+                              message allows configuring a human-readable message that is logged by the Kubernetes API server
+                              when a token fails validation based on the CEL expression defined in 'Expression'.
+                              This field is optional. If provided, the message must be at least 1 character long
+                              and cannot exceed 256 characters. This message is logged and not returned to the caller.
+                            maxLength: 256
+                            minLength: 1
+                            type: string
+                        required:
+                        - expression
+                        type: object
+                      maxItems: 64
+                      type: array
+                      x-kubernetes-list-map-keys:
+                      - expression
                       x-kubernetes-list-type: map
                   required:
                   - claimMappings

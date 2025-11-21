@@ -39,6 +39,9 @@
                         "name": "MultiArchInstallAzure"
                     },
                     {
+                        "name": "NewOLMPreflightPermissionChecks"
+                    },
+                    {
                         "name": "ProvisioningRequestAvailable"
                     },
                     {
@@ -264,9 +267,6 @@
                     },
                     {
                         "name": "NewOLMOwnSingleNamespace"
-                    },
-                    {
-                        "name": "NewOLMPreflightPermissionChecks"
                     },
                     {
                         "name": "NewOLMWebhookProviderOpenshiftServiceCA"

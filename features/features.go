@@ -940,7 +940,7 @@ var (
 
 	FeatureGateTLSCurvesConfiguration = newFeatureGate("TLSCurvesConfiguration").
 		reportProblemsToJiraComponent("Networking").
-		contactPerson("richardsonnick").
+		contactPerson("davidesalerno").
 		productScope(ocpSpecific).
 		enhancementPR("https://github.com/openshift/enhancements/pull/1894").
 		enableIn(configv1.DevPreviewNoUpgrade).

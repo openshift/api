@@ -939,4 +939,12 @@ var (
 						enhancementPR("https://github.com/openshift/enhancements/pull/1752").
 						enableIn(configv1.DevPreviewNoUpgrade).
 						mustRegister()
+
+	FeatureGateHyperShiftOnlyDynamicResourceAllocation = newFeatureGate("HyperShiftOnlyDynamicResourceAllocation").
+								reportProblemsToJiraComponent("hypershift").
+								contactPerson("csrwng").
+								productScope(ocpSpecific).
+								enhancementPR("https://github.com/kubernetes/enhancements/issues/4381").
+								enableForClusterProfile(Hypershift, configv1.DevPreviewNoUpgrade, configv1.TechPreviewNoUpgrade, configv1.Default).
+								mustRegister()
 )

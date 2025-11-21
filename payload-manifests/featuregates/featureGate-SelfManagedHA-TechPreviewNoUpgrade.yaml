@@ -30,6 +30,9 @@
                         "name": "ExternalSnapshotMetadata"
                     },
                     {
+                        "name": "HyperShiftOnlyDynamicResourceAllocation"
+                    },
+                    {
                         "name": "IngressControllerDynamicConfigurationManager"
                     },
                     {

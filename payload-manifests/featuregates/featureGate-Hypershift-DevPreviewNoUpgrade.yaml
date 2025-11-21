@@ -194,6 +194,9 @@
                         "name": "HighlyAvailableArbiter"
                     },
                     {
+                        "name": "HyperShiftOnlyDynamicResourceAllocation"
+                    },
+                    {
                         "name": "ImageModeStatusReporting"
                     },
                     {

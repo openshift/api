@@ -121,6 +121,9 @@
                         "name": "GCPDualStackInstall"
                     },
                     {
+                        "name": "HyperShiftOnlyDynamicResourceAllocation"
+                    },
+                    {
                         "name": "ImageModeStatusReporting"
                     },
                     {

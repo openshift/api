@@ -15,6 +15,9 @@
             {
                 "disabled": [
                     {
+                        "name": "ClientsAllowCBOR"
+                    },
+                    {
                         "name": "ClusterAPIInstall"
                     },
                     {
@@ -93,9 +96,6 @@
                     },
                     {
                         "name": "CRDCompatibilityRequirementOperator"
-                    },
-                    {
-                        "name": "ClientsAllowCBOR"
                     },
                     {
                         "name": "ClientsPreferCBOR"

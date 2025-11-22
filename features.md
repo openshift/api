@@ -1,5 +1,6 @@
 | FeatureGate | Default on Hypershift | Default on SelfManagedHA | DevPreviewNoUpgrade on Hypershift | DevPreviewNoUpgrade on SelfManagedHA | TechPreviewNoUpgrade on Hypershift | TechPreviewNoUpgrade on SelfManagedHA  |
 | ------ | --- | --- | --- | --- | --- | ---  |
+| ClientsAllowCBOR| | | | | |  |
 | ClusterAPIInstall| | | | | |  |
 | EventedPLEG| | | | | |  |
 | MachineAPIOperatorDisableMachineHealthCheckController| | | | | |  |
@@ -32,7 +33,6 @@
 | BootcNodeManagement| | | <span style="background-color: #519450">Enabled</span> | <span style="background-color: #519450">Enabled</span> | <span style="background-color: #519450">Enabled</span> | <span style="background-color: #519450">Enabled</span>  |
 | CBORServingAndStorage| | | <span style="background-color: #519450">Enabled</span> | <span style="background-color: #519450">Enabled</span> | <span style="background-color: #519450">Enabled</span> | <span style="background-color: #519450">Enabled</span>  |
 | CRDCompatibilityRequirementOperator| | | <span style="background-color: #519450">Enabled</span> | <span style="background-color: #519450">Enabled</span> | <span style="background-color: #519450">Enabled</span> | <span style="background-color: #519450">Enabled</span>  |
-| ClientsAllowCBOR| | | <span style="background-color: #519450">Enabled</span> | <span style="background-color: #519450">Enabled</span> | <span style="background-color: #519450">Enabled</span> | <span style="background-color: #519450">Enabled</span>  |
 | ClientsPreferCBOR| | | <span style="background-color: #519450">Enabled</span> | <span style="background-color: #519450">Enabled</span> | <span style="background-color: #519450">Enabled</span> | <span style="background-color: #519450">Enabled</span>  |
 | ClusterAPIInstallIBMCloud| | | <span style="background-color: #519450">Enabled</span> | <span style="background-color: #519450">Enabled</span> | <span style="background-color: #519450">Enabled</span> | <span style="background-color: #519450">Enabled</span>  |
 | ClusterAPIMachineManagement| | | <span style="background-color: #519450">Enabled</span> | <span style="background-color: #519450">Enabled</span> | <span style="background-color: #519450">Enabled</span> | <span style="background-color: #519450">Enabled</span>  |

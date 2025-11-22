@@ -6226,6 +6226,11 @@ func (in *TLSProfileSpec) DeepCopyInto(out *TLSProfileSpec) {
 		*out = make([]string, len(*in))
 		copy(*out, *in)
 	}
+	if in.Curves != nil {
+		in, out := &in.Curves, &out.Curves
+		*out = make([]string, len(*in))
+		copy(*out, *in)
+	}
 	return
 }
 

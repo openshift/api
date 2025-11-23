@@ -217,9 +217,6 @@
                         "name": "SignatureStores"
                     },
                     {
-                        "name": "SigstoreImageVerificationPKI"
-                    },
-                    {
                         "name": "TranslateStreamCloseWebsocketRequests"
                     },
                     {
@@ -334,6 +331,9 @@
                     },
                     {
                         "name": "SigstoreImageVerification"
+                    },
+                    {
+                        "name": "SigstoreImageVerificationPKI"
                     },
                     {
                         "name": "StoragePerformantSecurityPolicy"

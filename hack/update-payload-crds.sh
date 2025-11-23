@@ -30,6 +30,7 @@ crd_globs="\
     operator/v1/zz_generated.crd-manifests/*_csi-driver_01_clustercsidrivers*.crd.yaml
     insights/v1alpha2/zz_generated.crd-manifests/0000_10_insights_01_datagathers*.crd.yaml
     config/v1alpha2/zz_generated.crd-manifests/0000_10_config-operator_01_insightsdatagathers*.crd.yaml
+    etcd/v1alpha1/zz_generated.crd-manifests/0000_25_etcd_01_pacemakerclusters*.crd.yaml
     "
 
 # To allow the crd_globs to be sourced in the verify script,

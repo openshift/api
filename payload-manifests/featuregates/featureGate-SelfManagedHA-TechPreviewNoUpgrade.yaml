@@ -45,6 +45,9 @@
                         "name": "MultiArchInstallAzure"
                     },
                     {
+                        "name": "NewOLMBoxCutterRuntime"
+                    },
+                    {
                         "name": "ProvisioningRequestAvailable"
                     },
                     {
@@ -258,9 +261,6 @@
                     },
                     {
                         "name": "NewOLM"
-                    },
-                    {
-                        "name": "NewOLMBoxCutterRuntime"
                     },
                     {
                         "name": "NewOLMCatalogdAPIV1Metas"

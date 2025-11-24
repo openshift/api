@@ -205,7 +205,7 @@ type MachineConfigNodeStatusInternalReleaseImageRef struct {
 	// The expected name format is ocp-release-bundle-<version>-<arch|stream>.
 	// +kubebuilder:validation:MinLength=1
 	// +kubebuilder:validation:MaxLength=64
-	// +kubebuilder:validation:XValidation:rule=`self.matches('^ocp-release-bundle-[0-9]+\\.[0-9]+\\.[0-9]+-[A-Za-z0-9_-]+$')`,message="must be ocp-release-bundle-<version>-<arch|stream> and <= 64 chars"
+	// +kubebuilder:validation:XValidation:rule=`self.matches('^ocp-release-bundle-[0-9]+\\.[0-9]+\\.[0-9]+-[A-Za-z0-9._-]+$')`,message="must be ocp-release-bundle-<version>-<arch|stream> and <= 64 chars"
 	// +required
 	Name string `json:"name,omitempty"`
 	// image is an OCP release image referenced by digest.

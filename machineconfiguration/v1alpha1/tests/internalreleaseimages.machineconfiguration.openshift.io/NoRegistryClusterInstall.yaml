@@ -21,6 +21,31 @@ tests:
       spec:
         releases:
           - name: ocp-release-bundle-4.18.0-x86_64
+  - name: Valid release names
+    initial: |
+      apiVersion: machineconfiguration.openshift.io/v1alpha1
+      kind: InternalReleaseImage
+      metadata:
+        name: cluster
+      spec:
+        releases:
+          - name: ocp-release-bundle-4.21.0-ec.3-x86_64
+          - name: ocp-release-bundle-4.20.5-x86_64
+          - name: ocp-release-bundle-4.14.0-0.nightly-2025-11-23-025204
+          - name: ocp-release-bundle-4.21.0-ec.2-s390x
+          - name: ocp-release-bundle-4.15.0-0.ci-2025-11-22-162639
+    expected: |
+      apiVersion: machineconfiguration.openshift.io/v1alpha1
+      kind: InternalReleaseImage
+      metadata:
+        name: cluster
+      spec:
+        releases:
+          - name: ocp-release-bundle-4.21.0-ec.3-x86_64
+          - name: ocp-release-bundle-4.20.5-x86_64
+          - name: ocp-release-bundle-4.14.0-0.nightly-2025-11-23-025204
+          - name: ocp-release-bundle-4.21.0-ec.2-s390x
+          - name: ocp-release-bundle-4.15.0-0.ci-2025-11-22-162639
   - name: Invalid undefined releases
     initial: |
       apiVersion: machineconfiguration.openshift.io/v1alpha1

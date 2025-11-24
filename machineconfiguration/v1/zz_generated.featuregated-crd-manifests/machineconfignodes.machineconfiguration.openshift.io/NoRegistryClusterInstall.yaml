@@ -402,7 +402,7 @@ spec:
                           x-kubernetes-validations:
                           - message: must be ocp-release-bundle-<version>-<arch|stream>
                               and <= 64 chars
-                            rule: self.matches('^ocp-release-bundle-[0-9]+\\.[0-9]+\\.[0-9]+-[A-Za-z0-9_-]+$')
+                            rule: self.matches('^ocp-release-bundle-[0-9]+\\.[0-9]+\\.[0-9]+-[A-Za-z0-9._-]+$')
                       required:
                       - name
                       type: object

@@ -1,2 +1,0 @@
-enum values Light and Dark not documented in comment
-optional field theme does not explain behavior when omitted

@@ -20,14 +20,56 @@ const (
 	claudeTimeout    = 5 * time.Minute
 	cloneURL         = "https://github.com/openshift/api.git"
 	testdataDir      = "testdata"
+	goldenDir        = "golden"
+	integrationDir   = "integration"
 	patchFileName    = "patch.diff"
 	expectedFileName = "expected.txt"
+
+	// Setting everything to haiku for development is cheap and quick.
+	// Opus is expensive, and seems best for the integration tests
+	// but often hallucinates more.
+	sonnetModel = "claude-sonnet-4-5@20250929"
+	opusModel   = "claude-opus-4-5@20251101"
+	haikuModel  = "claude-haiku-4-5@20251001"
+
+	defaultGoldenModel      = sonnetModel
+	defaultIntegrationModel = opusModel
+	defaultJudgeModel       = haikuModel
+
+	judgePromptTemplate = `You are a judge evaluating an API review output against expected issues.
+
+API review output:
+%s
+
+Expected issues (one per line):
+%s
+
+Compare using SEMANTIC matching - focus on whether the same fundamental problems were identified, not exact wording or action item counts.
+
+You should return pass=true ONLY if BOTH conditions are met:
+1. ALL expected issues are semantically covered in the output (the same core problem is identified, even if described differently or split into sub-items)
+2. NO unrelated issues are reported - if the review identifies a problem that is NOT semantically related to any expected issue, you should return pass=false
+
+Expanding on an expected issue is OK (e.g., "missing FeatureGate" expanding to include "register in features.go").
+Reporting an entirely different issue is NOT OK (e.g., if "missing length validation" is not in expected list, you should return pass=false).
+
+Examples of semantic matches:
+- "missing FeatureGate" matches "needs FeatureGate and must register it in features.go"
+- "optional field missing omitted behavior" matches "field does not document what happens when not specified"
+
+You MUST respond with ONLY a raw JSON object. Do NOT wrap in markdown code blocks. Do NOT include any other text.
+{"pass": true, "reason": "Brief summary of matched issues"}
+or
+{"pass": false, "reason": "Explanation of what was missing or what unexpected issue was found"}`
 )
 
 var (
-	tempDir       string
-	localRepoRoot string
-	testCases     []string
+	tempDir          string
+	localRepoRoot    string
+	testCases        []string
+	goldenModel      string
+	integrationModel string
+	judgeModel       string
 )
 
 func TestEval(t *testing.T) {
@@ -35,7 +77,18 @@ func TestEval(t *testing.T) {
 	RunSpecs(t, "API Review Eval Suite")
 }
 
+func envOrDefault(key, defaultVal string) string {
+	if val, ok := os.LookupEnv(key); ok {
+		return val
+	}
+	return defaultVal
+}
+
 var _ = BeforeSuite(func() {
+	goldenModel = envOrDefault("EVAL_GOLDEN_MODEL", defaultGoldenModel)
+	integrationModel = envOrDefault("EVAL_INTEGRATION_MODEL", defaultIntegrationModel)
+	judgeModel = envOrDefault("EVAL_JUDGE_MODEL", defaultJudgeModel)
+
 	var err error
 	localRepoRoot, err = filepath.Abs(filepath.Join("..", ".."))
 	Expect(err).NotTo(HaveOccurred())
@@ -59,10 +112,10 @@ var _ = BeforeSuite(func() {
 
 	copyLocalFiles()
 
-	testdataPath := filepath.Join(localRepoRoot, "tests", "eval", testdataDir)
-	testCases, err = discoverTestCases(testdataPath)
+	goldenPath := filepath.Join(localRepoRoot, "tests", "eval", testdataDir, goldenDir)
+	testCases, err = discoverTestCases(goldenPath)
 	Expect(err).NotTo(HaveOccurred())
-	Expect(testCases).NotTo(BeEmpty(), "no test cases found in testdata directory")
+	Expect(testCases).NotTo(BeEmpty(), "no test cases found in testdata/golden directory")
 })
 
 var _ = AfterSuite(func() {
@@ -140,12 +193,12 @@ func discoverTestCases(testdataPath string) ([]string, error) {
 	return cases, nil
 }
 
-func loadTableEntries() []TableEntry {
+func loadGoldenEntries() []TableEntry {
 	cwd, err := os.Getwd()
 	Expect(err).NotTo(HaveOccurred())
 
-	testdataPath := filepath.Join(cwd, testdataDir)
-	cases, err := discoverTestCases(testdataPath)
+	goldenPath := filepath.Join(cwd, testdataDir, goldenDir)
+	cases, err := discoverTestCases(goldenPath)
 	Expect(err).NotTo(HaveOccurred())
 
 	var entries []TableEntry
@@ -155,98 +208,132 @@ func loadTableEntries() []TableEntry {
 	return entries
 }
 
-var _ = Describe("API Review Evaluation", func() {
-	tableEntries := loadTableEntries()
+func loadIntegrationEntries() []TableEntry {
+	cwd, err := os.Getwd()
+	Expect(err).NotTo(HaveOccurred())
 
-	DescribeTable("should correctly review",
-		func(tc string) {
-			resetRepo()
+	integrationPath := filepath.Join(cwd, testdataDir, integrationDir)
+	cases, err := discoverTestCases(integrationPath)
+	if err != nil || len(cases) == 0 {
+		return nil
+	}
 
-			testCaseDir := filepath.Join(localRepoRoot, "tests", "eval", testdataDir, tc)
-			patchPath := filepath.Join(testCaseDir, patchFileName)
-			expectedPath := filepath.Join(testCaseDir, expectedFileName)
+	var entries []TableEntry
+	for _, tc := range cases {
+		entries = append(entries, Entry(tc, tc))
+	}
+	return entries
+}
 
-			By("reading patch file")
-			patchContent, err := os.ReadFile(patchPath)
-			Expect(err).NotTo(HaveOccurred())
+type evalResult struct {
+	Pass   bool   `json:"pass"`
+	Reason string `json:"reason"`
+}
 
-			By("applying patch")
-			cmd := exec.Command("git", "apply", "-")
-			cmd.Dir = tempDir
-			cmd.Stdin = bytes.NewReader(patchContent)
-			output, err := cmd.CombinedOutput()
-			Expect(err).NotTo(HaveOccurred(), "git apply failed: %s", string(output))
+func stripMarkdownCodeBlock(s string) string {
+	s = strings.TrimSpace(s)
+	s = strings.TrimPrefix(s, "```json")
+	s = strings.TrimPrefix(s, "```")
+	s = strings.TrimSuffix(s, "```")
+	return strings.TrimSpace(s)
+}
 
-			By("reading expected issues")
-			expectedContent, err := os.ReadFile(expectedPath)
-			Expect(err).NotTo(HaveOccurred())
+func readAndApplyPatch(patchPath string) {
+	By("reading and applying patch")
+	patchContent, err := os.ReadFile(patchPath)
+	Expect(err).NotTo(HaveOccurred())
 
-			By("running API review via Claude")
-			ctx, cancel := context.WithTimeout(context.Background(), claudeTimeout)
-			defer cancel()
+	cmd := exec.Command("git", "apply", "-")
+	cmd.Dir = tempDir
+	cmd.Stdin = bytes.NewReader(patchContent)
+	output, err := cmd.CombinedOutput()
+	Expect(err).NotTo(HaveOccurred(), "git apply failed: %s", string(output))
+}
 
-			reviewCmd := exec.CommandContext(ctx, "claude",
-				"--print",
-				"--dangerously-skip-permissions",
-				"-p", "/api-review",
-				"--allowedTools", "Bash,Read,Grep,Glob,Task",
-			)
-			reviewCmd.Dir = tempDir
+// runAPIReview and runJudge can probably share some common code.
+func runAPIReview(model string) string {
+	By(fmt.Sprintf("running API review via Claude (%s)", model))
+	ctx, cancel := context.WithTimeout(context.Background(), claudeTimeout)
+	defer cancel()
 
-			reviewOutput, err := reviewCmd.CombinedOutput()
-			Expect(err).NotTo(HaveOccurred(), "claude command failed: %s", string(reviewOutput))
-
-			reviewResult := string(reviewOutput)
-
-			By("comparing results with Claude")
-			expectedStr := strings.TrimSpace(string(expectedContent))
-
-			comparePrompt := `You are a judge evaluating an API review output against expected issues.
-
-API review output:
-` + reviewResult + `
-
-Expected issues (one per line):
-` + expectedStr + `
-
-Compare using SEMANTIC matching - focus on whether the same fundamental problems were identified, not exact wording or action item counts.
-
-You should return pass=true ONLY if BOTH conditions are met:
-1. ALL expected issues are semantically covered in the output (the same core problem is identified, even if described differently or split into sub-items)
-2. NO unrelated issues are reported - if the review identifies a problem that is NOT semantically related to any expected issue, you should return pass=false
-
-Expanding on an expected issue is OK (e.g., "missing FeatureGate" expanding to include "register in features.go").
-Reporting an entirely different issue is NOT OK (e.g., if "missing length validation" is not in expected list, you should return pass=false).
-
-Examples of semantic matches:
-- "missing FeatureGate" matches "needs FeatureGate and must register it in features.go"
-- "optional field missing omitted behavior" matches "field does not document what happens when not specified"
-
-You should respond with ONLY a JSON object in this exact format (no markdown, no other text):
-{"pass": true, "reason": "Brief summary of matched issues"}
-or
-{"pass": false, "reason": "Explanation of what was missing or what unexpected issue was found"}`
-
-			ctx2, cancel2 := context.WithTimeout(context.Background(), claudeTimeout)
-			defer cancel2()
-
-			compareCmd := exec.CommandContext(ctx2, "claude", "--print", "--dangerously-skip-permissions", "-p", comparePrompt)
-			compareCmd.Dir = tempDir
-
-			compareOutput, err := compareCmd.CombinedOutput()
-			Expect(err).NotTo(HaveOccurred(), "claude compare command failed: %s", string(compareOutput))
-
-			var judgeResult struct {
-				Pass   bool   `json:"pass"`
-				Reason string `json:"reason"`
-			}
-			compareStr := strings.TrimSpace(string(compareOutput))
-			err = json.Unmarshal([]byte(compareStr), &judgeResult)
-			Expect(err).NotTo(HaveOccurred(), "failed to parse judge response as JSON: %s", compareStr)
-
-			GinkgoWriter.Printf("Judge result: pass=%v, reason=%s\n", judgeResult.Pass, judgeResult.Reason)
-			Expect(judgeResult.Pass).To(BeTrue(), "API review did not match expected issues.\nJudge reason: %s\nReview output:\n%s\nExpected issues:\n%s", judgeResult.Reason, reviewResult, expectedStr)
-		},
-		tableEntries,
+	cmd := exec.CommandContext(ctx, "claude",
+		"--print",
+		"--dangerously-skip-permissions",
+		"--model", model,
+		"-p", "/api-review",
+		"--allowedTools", "Bash,Read,Grep,Glob,Task",
 	)
+	cmd.Dir = tempDir
+
+	output, err := cmd.CombinedOutput()
+	Expect(err).NotTo(HaveOccurred(), "claude command failed: %s", string(output))
+	return string(output)
+}
+
+func runJudge(model, reviewOutput, expectedIssues string) evalResult {
+	By(fmt.Sprintf("comparing results with Claude judge (%s)", model))
+	ctx, cancel := context.WithTimeout(context.Background(), claudeTimeout)
+	defer cancel()
+
+	prompt := fmt.Sprintf(judgePromptTemplate, reviewOutput, expectedIssues)
+	cmd := exec.CommandContext(ctx, "claude",
+		"--print",
+		"--dangerously-skip-permissions",
+		"--model", model,
+		"-p", prompt,
+	)
+	cmd.Dir = tempDir
+
+	output, err := cmd.CombinedOutput()
+	Expect(err).NotTo(HaveOccurred(), "claude judge command failed: %s", string(output))
+
+	var result evalResult
+	jsonStr := stripMarkdownCodeBlock(string(output))
+	err = json.Unmarshal([]byte(jsonStr), &result)
+	Expect(err).NotTo(HaveOccurred(), "failed to parse judge response as JSON: %s", string(output))
+	return result
+}
+
+func runTestCase(tier, tc, reviewModel, judgeModelName string) {
+	resetRepo()
+
+	testCaseDir := filepath.Join(localRepoRoot, "tests", "eval", testdataDir, tier, tc)
+	readAndApplyPatch(filepath.Join(testCaseDir, patchFileName))
+
+	expectedContent, err := os.ReadFile(filepath.Join(testCaseDir, expectedFileName))
+	Expect(err).NotTo(HaveOccurred())
+	expectedIssues := strings.TrimSpace(string(expectedContent))
+
+	reviewOutput := runAPIReview(reviewModel)
+	result := runJudge(judgeModelName, reviewOutput, expectedIssues)
+
+	GinkgoWriter.Printf("Judge result: pass=%v, reason=%s\n", result.Pass, result.Reason)
+	Expect(result.Pass).To(BeTrue(), "API review did not match expected issues.\nJudge reason: %s\nReview output:\n%s\nExpected issues:\n%s", result.Reason, reviewOutput, expectedIssues)
+}
+
+var _ = Describe("API Review Evaluation", func() {
+	Context("Golden Tests", func() {
+		goldenEntries := loadGoldenEntries()
+
+		DescribeTable("should correctly identify single issues",
+			func(tc string) {
+				runTestCase(goldenDir, tc, goldenModel, judgeModel)
+			},
+			goldenEntries,
+		)
+	})
+
+	Context("Integration Tests", func() {
+		integrationEntries := loadIntegrationEntries()
+		if len(integrationEntries) == 0 {
+			return
+		}
+
+		DescribeTable("should correctly identify multiple issues",
+			func(tc string) {
+				runTestCase(integrationDir, tc, integrationModel, judgeModel)
+			},
+			integrationEntries,
+		)
+	})
 })

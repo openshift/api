@@ -13,15 +13,20 @@ tests/eval/
 ├── eval_test.go              # Main Ginkgo test suite
 ├── DESIGN.md                 # This file
 ├── testdata/
-│   ├── missing-optional-doc/
-│   │   ├── patch.diff        # Git patch to apply
-│   │   └── expected.txt      # Expected issues (one per line)
-│   ├── undocumented-enum/
-│   │   ├── patch.diff
-│   │   └── expected.txt
-│   └── valid-api-change/
-│       ├── patch.diff
-│       └── expected.txt      # Empty file = no issues expected
+│   ├── golden/               # Single-issue tests
+│   │   ├── missing-optional-doc/
+│   │   │   ├── patch.diff
+│   │   │   └── expected.txt
+│   │   ├── undocumented-enum/
+│   │   │   ├── patch.diff
+│   │   │   └── expected.txt
+│   │   └── valid-api-change/
+│   │       ├── patch.diff
+│   │       └── expected.txt  # Empty file = no issues expected
+│   └── integration/          # Multi-issue tests
+│       └── new-field-multiple-issues/
+│           ├── patch.diff
+│           └── expected.txt
 ```
 
 ## Test Case Format
@@ -148,18 +153,105 @@ These are copied into the temp clone so that any local modifications to the revi
 
 ---
 
-## Phase 2 (Future Work)
+## Phase 2
+
+### Cost Tracking
+
+Use `--output-format json` to capture `total_cost_usd` from each Claude invocation. Accumulate across all calls (review + judge) and print the total in `AfterSuite`.
+
+### Test Structure Reorganization ✅ IMPLEMENTED
+
+Reorganize `testdata/` into two categories:
+
+```
+tests/eval/testdata/
+├── golden/                     # Base truth tests - single isolated issues
+│   ├── missing-optional-doc/
+│   │   ├── patch.diff          # Triggers ONLY missing-optional-doc
+│   │   └── expected.txt
+│   ├── undocumented-enum/
+│   │   ├── patch.diff          # Triggers ONLY undocumented-enum
+│   │   └── expected.txt
+│   ├── missing-featuregate/
+│   │   ├── patch.diff          # Triggers ONLY missing-featuregate
+│   │   └── expected.txt
+│   └── valid-api-change/
+│       ├── patch.diff          # Triggers NO issues
+│       └── expected.txt
+└── integration/                # Complex scenarios - multiple issues
+    ├── new-field-all-issues/
+    │   ├── patch.diff          # Triggers multiple issues together
+    │   └── expected.txt
+    └── partial-documentation/
+        ├── patch.diff
+        └── expected.txt
+```
+
+**Golden tests**: Each patch is carefully crafted to trigger exactly one issue type. These validate that the review command correctly identifies individual issue categories in isolation.
+
+**Integration tests**: Patches that trigger multiple issues, testing the review command's ability to identify combinations of problems in realistic scenarios.
+
+### Model Selection ✅ IMPLEMENTED
+
+Each test tier has a default model, overridable via environment variable:
+
+| Test Type | Default Model | Override Env Var |
+|-----------|---------------|------------------|
+| Golden tests | Sonnet | `EVAL_GOLDEN_MODEL` |
+| Integration tests | Opus | `EVAL_INTEGRATION_MODEL` |
+| Judge LLM | Haiku | `EVAL_JUDGE_MODEL` |
+
+The test suite reads these at startup and applies per-tier:
+
+```go
+goldenModel := getEnvOrDefault("EVAL_GOLDEN_MODEL", "claude-sonnet-4-5@20250929")
+integrationModel := getEnvOrDefault("EVAL_INTEGRATION_MODEL", "claude-opus-4-5@20251101")
+judgeModel := getEnvOrDefault("EVAL_JUDGE_MODEL", "claude-haiku-4-5-20251001")
+```
+
+Usage:
+```bash
+# Use defaults
+go test ./tests/eval/...
+
+# Override golden tests to use Haiku
+EVAL_GOLDEN_MODEL=claude-3-haiku-20240307 go test ./tests/eval/...
+
+# Override all models
+EVAL_GOLDEN_MODEL=claude-3-haiku-20240307 \
+EVAL_INTEGRATION_MODEL=claude-sonnet-4-20250514 \
+go test ./tests/eval/...
+```
 
 ### Patch Stability
 
-Patches may fail to apply as `origin/master` evolves over time. Need a strategy to handle this (e.g., pinning to a specific commit).
+Patches may fail to apply as `origin/master` evolves over time. Strategies:
+
+- Pin to a specific commit SHA in the clone step
+- Use `git apply --3way` for better conflict handling
+- Periodic patch refresh CI job
 
 ### Error Handling
 
 Current design does not address failure scenarios:
 
 - Patch application failures
-- Claude CLI timeouts or crashes
-- Empty or malformed output from Claude
-- Authentication failures
 - Resource cleanup on test failures
+
+Using `--output-format json` also enables better error handling in future phases:
+
+- Claude CLI timeouts or crashes (detect via JSON parse failure or missing fields)
+- Empty or malformed output (validate JSON structure)
+- Authentication failures (check for error fields in JSON response)
+
+### Performance Optimizations
+
+The API review step is the slowest part of the eval suite. Options to improve:
+
+1. **Skip linting by default** - Update api-review command to skip `make lint` unless explicitly requested. Linting adds significant time.
+
+2. **Cache review outputs** - For development, cache the review output keyed by patch hash. Skip re-running if cached result exists. Clear cache on command changes.
+
+3. **Parallel test execution** - Run golden tests in parallel (requires separate repo clones per test).
+
+4. **Smaller/faster model for development** - Use Haiku for rapid iteration, Sonnet/Opus for CI validation.

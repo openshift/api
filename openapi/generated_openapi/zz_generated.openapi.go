@@ -16,6 +16,17 @@ import (
 
 func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenAPIDefinition {
 	return map[string]common.OpenAPIDefinition{
+		"github.com/openshift/api/apiextensions/v1alpha1.APIExcludedField":                                   schema_openshift_api_apiextensions_v1alpha1_APIExcludedField(ref),
+		"github.com/openshift/api/apiextensions/v1alpha1.APIVersions":                                        schema_openshift_api_apiextensions_v1alpha1_APIVersions(ref),
+		"github.com/openshift/api/apiextensions/v1alpha1.CRDData":                                            schema_openshift_api_apiextensions_v1alpha1_CRDData(ref),
+		"github.com/openshift/api/apiextensions/v1alpha1.CompatibilityRequirement":                           schema_openshift_api_apiextensions_v1alpha1_CompatibilityRequirement(ref),
+		"github.com/openshift/api/apiextensions/v1alpha1.CompatibilityRequirementList":                       schema_openshift_api_apiextensions_v1alpha1_CompatibilityRequirementList(ref),
+		"github.com/openshift/api/apiextensions/v1alpha1.CompatibilityRequirementSpec":                       schema_openshift_api_apiextensions_v1alpha1_CompatibilityRequirementSpec(ref),
+		"github.com/openshift/api/apiextensions/v1alpha1.CompatibilityRequirementStatus":                     schema_openshift_api_apiextensions_v1alpha1_CompatibilityRequirementStatus(ref),
+		"github.com/openshift/api/apiextensions/v1alpha1.CompatibilitySchema":                                schema_openshift_api_apiextensions_v1alpha1_CompatibilitySchema(ref),
+		"github.com/openshift/api/apiextensions/v1alpha1.CustomResourceDefinitionSchemaValidation":           schema_openshift_api_apiextensions_v1alpha1_CustomResourceDefinitionSchemaValidation(ref),
+		"github.com/openshift/api/apiextensions/v1alpha1.ObjectSchemaValidation":                             schema_openshift_api_apiextensions_v1alpha1_ObjectSchemaValidation(ref),
+		"github.com/openshift/api/apiextensions/v1alpha1.ObservedCRD":                                        schema_openshift_api_apiextensions_v1alpha1_ObservedCRD(ref),
 		"github.com/openshift/api/apiserver/v1.APIRequestCount":                                              schema_openshift_api_apiserver_v1_APIRequestCount(ref),
 		"github.com/openshift/api/apiserver/v1.APIRequestCountList":                                          schema_openshift_api_apiserver_v1_APIRequestCountList(ref),
 		"github.com/openshift/api/apiserver/v1.APIRequestCountSpec":                                          schema_openshift_api_apiserver_v1_APIRequestCountSpec(ref),
@@ -1650,6 +1661,449 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"k8s.io/apimachinery/pkg/runtime.TypeMeta":                                                           schema_k8sio_apimachinery_pkg_runtime_TypeMeta(ref),
 		"k8s.io/apimachinery/pkg/runtime.Unknown":                                                            schema_k8sio_apimachinery_pkg_runtime_Unknown(ref),
 		"k8s.io/apimachinery/pkg/util/intstr.IntOrString":                                                    schema_apimachinery_pkg_util_intstr_IntOrString(ref),
+	}
+}
+
+func schema_openshift_api_apiextensions_v1alpha1_APIExcludedField(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "APIExcludedField describes a field in the schema which will not be validated by crdSchemaValidation or objectSchemaValidation.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"path": {
+						SchemaProps: spec.SchemaProps{
+							Description: "path is the path to the field in the schema. Paths are dot-separated field names (e.g., \"fieldA.fieldB.fieldC\") representing nested object fields. Each field name must be a valid Kubernetes CRD field name: start with a letter, contain only letters, digits, and underscores, and be between 1 and 63 characters in length. A path may contain at most 16 fields.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"version": {
+						SchemaProps: spec.SchemaProps{
+							Description: "version is the API version the field is excluded from. When not specified, the field is excluded from all versions.\n\nWhen present, must be at most 63 characters in length, and must must consist of only lowercase alphanumeric characters and hyphens, and must start with an alphabetic character and end with an alphanumeric character.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+				},
+				Required: []string{"path"},
+			},
+		},
+	}
+}
+
+func schema_openshift_api_apiextensions_v1alpha1_APIVersions(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "APIVersions specifies a set of API versions of a CRD.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"defaultSelection": {
+						SchemaProps: spec.SchemaProps{
+							Description: "defaultSelection specifies a method for automatically selecting a set of versions to require.\n\nValid options are StorageOnly and AllServed. When set to StorageOnly, only the storage version is selected for compatibility assessment. When set to AllServed, all served versions are selected for compatibility assessment.\n\nThis field is required.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"additionalVersions": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-type": "set",
+							},
+						},
+						SchemaProps: spec.SchemaProps{
+							Description: "additionalVersions specifies a set api versions to require in addition to the default selection. It is explicitly permitted to specify a version in additionalVersions which was also selected by the default selection. The selections will be merged and deduplicated.\n\nEach item must be at most 63 characters in length, and must must consist of only lowercase alphanumeric characters and hyphens, and must start with an alphabetic character and end with an alphanumeric character.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: "",
+										Type:    []string{"string"},
+										Format:  "",
+									},
+								},
+							},
+						},
+					},
+				},
+				Required: []string{"defaultSelection"},
+			},
+		},
+	}
+}
+
+func schema_openshift_api_apiextensions_v1alpha1_CRDData(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "CRDData contains the complete definition of a CRD.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"type": {
+						SchemaProps: spec.SchemaProps{
+							Description: "type indicates the type of the CRD data. The only supported type is \"yaml\". This field is required.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"data": {
+						SchemaProps: spec.SchemaProps{
+							Description: "data contains the complete definition of the CRD. This field must be in the format specified by the type field. It may not be longer than 1572864 characters. This field is required.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+				},
+				Required: []string{"type", "data"},
+			},
+		},
+	}
+}
+
+func schema_openshift_api_apiextensions_v1alpha1_CompatibilityRequirement(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "CompatibilityRequirement expresses a set of requirements on a target CRD. It is used to ensure compatibility between different actors using the same CRD.\n\nCompatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"kind": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"apiVersion": {
+						SchemaProps: spec.SchemaProps{
+							Description: "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"metadata": {
+						SchemaProps: spec.SchemaProps{
+							Description: "metadata is the standard object's metadata. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata",
+							Default:     map[string]interface{}{},
+							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"),
+						},
+					},
+					"spec": {
+						SchemaProps: spec.SchemaProps{
+							Description: "spec is the specification of the desired behavior of the Compatibility Requirement.",
+							Default:     map[string]interface{}{},
+							Ref:         ref("github.com/openshift/api/apiextensions/v1alpha1.CompatibilityRequirementSpec"),
+						},
+					},
+					"status": {
+						SchemaProps: spec.SchemaProps{
+							Description: "status is the most recently observed status of the Compatibility Requirement.",
+							Default:     map[string]interface{}{},
+							Ref:         ref("github.com/openshift/api/apiextensions/v1alpha1.CompatibilityRequirementStatus"),
+						},
+					},
+				},
+				Required: []string{"metadata", "spec"},
+			},
+		},
+		Dependencies: []string{
+			"github.com/openshift/api/apiextensions/v1alpha1.CompatibilityRequirementSpec", "github.com/openshift/api/apiextensions/v1alpha1.CompatibilityRequirementStatus", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"},
+	}
+}
+
+func schema_openshift_api_apiextensions_v1alpha1_CompatibilityRequirementList(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "CompatibilityRequirementList is a collection of CompatibilityRequirements.\n\nCompatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"kind": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"apiVersion": {
+						SchemaProps: spec.SchemaProps{
+							Description: "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"metadata": {
+						SchemaProps: spec.SchemaProps{
+							Description: "metadata is the standard list's metadata. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata",
+							Default:     map[string]interface{}{},
+							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"),
+						},
+					},
+					"items": {
+						SchemaProps: spec.SchemaProps{
+							Description: "items is a list of CompatibilityRequirements.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("github.com/openshift/api/apiextensions/v1alpha1.CompatibilityRequirement"),
+									},
+								},
+							},
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"github.com/openshift/api/apiextensions/v1alpha1.CompatibilityRequirement", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"},
+	}
+}
+
+func schema_openshift_api_apiextensions_v1alpha1_CompatibilityRequirementSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "CompatibilityRequirementSpec is the specification of the desired behavior of the Compatibility Requirement.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"compatibilitySchema": {
+						SchemaProps: spec.SchemaProps{
+							Description: "compatibilitySchema defines the schema used by customResourceDefinitionSchemaValidation and objectSchemaValidation. This field is required.",
+							Default:     map[string]interface{}{},
+							Ref:         ref("github.com/openshift/api/apiextensions/v1alpha1.CompatibilitySchema"),
+						},
+					},
+					"customResourceDefinitionSchemaValidation": {
+						SchemaProps: spec.SchemaProps{
+							Description: "customResourceDefinitionSchemaValidation ensures that updates to the installed CRD are compatible with this compatibility requirement. If not specified, admission of the target CRD will not be validated. This field is optional.",
+							Default:     map[string]interface{}{},
+							Ref:         ref("github.com/openshift/api/apiextensions/v1alpha1.CustomResourceDefinitionSchemaValidation"),
+						},
+					},
+					"objectSchemaValidation": {
+						SchemaProps: spec.SchemaProps{
+							Description: "objectSchemaValidation ensures that matching resources conform to compatibilitySchema. If not specified, admission of matching resources will not be validated. This field is optional.",
+							Default:     map[string]interface{}{},
+							Ref:         ref("github.com/openshift/api/apiextensions/v1alpha1.ObjectSchemaValidation"),
+						},
+					},
+				},
+				Required: []string{"compatibilitySchema"},
+			},
+		},
+		Dependencies: []string{
+			"github.com/openshift/api/apiextensions/v1alpha1.CompatibilitySchema", "github.com/openshift/api/apiextensions/v1alpha1.CustomResourceDefinitionSchemaValidation", "github.com/openshift/api/apiextensions/v1alpha1.ObjectSchemaValidation"},
+	}
+}
+
+func schema_openshift_api_apiextensions_v1alpha1_CompatibilityRequirementStatus(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "CompatibilityRequirementStatus defines the observed status of the Compatibility Requirement.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"conditions": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-map-keys": []interface{}{
+									"type",
+								},
+								"x-kubernetes-list-type": "map",
+							},
+						},
+						SchemaProps: spec.SchemaProps{
+							Description: "conditions is a list of conditions and their status. Known condition types are Progressing, Admitted, and Compatible.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("k8s.io/apimachinery/pkg/apis/meta/v1.Condition"),
+									},
+								},
+							},
+						},
+					},
+					"observedCRD": {
+						SchemaProps: spec.SchemaProps{
+							Description: "observedCRD documents the uid and generation of the CRD object when the current status was written. This field will be omitted if the target CRD does not exist or could not be retrieved.",
+							Default:     map[string]interface{}{},
+							Ref:         ref("github.com/openshift/api/apiextensions/v1alpha1.ObservedCRD"),
+						},
+					},
+					"crdName": {
+						SchemaProps: spec.SchemaProps{
+							Description: "crdName is the name of the target CRD. The target CRD is not required to exist, as we may legitimately place requirements on it before it is created.  The observed CRD is given in status.observedCRD, which will be empty if no CRD is observed. When present, must be between 1 and 253 characters and conform to RFC 1123 subdomain format: lowercase alphanumeric characters, '-' or '.', starting and ending with alphanumeric characters. When not specified, the requirement applies to any CRD name discovered from the compatibility schema. This field is optional. Once set, the value cannot be changed and must always remain set.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"github.com/openshift/api/apiextensions/v1alpha1.ObservedCRD", "k8s.io/apimachinery/pkg/apis/meta/v1.Condition"},
+	}
+}
+
+func schema_openshift_api_apiextensions_v1alpha1_CompatibilitySchema(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "CompatibilitySchema defines the schema used by crdSchemaValidation and objectSchemaValidation.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"customResourceDefinition": {
+						SchemaProps: spec.SchemaProps{
+							Description: "customResourceDefinition contains the complete definition of the CRD for schema and object validation purposes. This field is required.",
+							Default:     map[string]interface{}{},
+							Ref:         ref("github.com/openshift/api/apiextensions/v1alpha1.CRDData"),
+						},
+					},
+					"requiredVersions": {
+						SchemaProps: spec.SchemaProps{
+							Description: "requiredVersions specifies a subset of the CRD's API versions which will be asserted for compatibility. This field is required.",
+							Default:     map[string]interface{}{},
+							Ref:         ref("github.com/openshift/api/apiextensions/v1alpha1.APIVersions"),
+						},
+					},
+					"excludedFields": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-type": "atomic",
+							},
+						},
+						SchemaProps: spec.SchemaProps{
+							Description: "excludedFields is a set of fields in the schema which will not be validated by crdSchemaValidation or objectSchemaValidation. The list may contain at most 64 fields. When not specified, all fields in the schema will be validated.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("github.com/openshift/api/apiextensions/v1alpha1.APIExcludedField"),
+									},
+								},
+							},
+						},
+					},
+				},
+				Required: []string{"customResourceDefinition", "requiredVersions"},
+			},
+		},
+		Dependencies: []string{
+			"github.com/openshift/api/apiextensions/v1alpha1.APIExcludedField", "github.com/openshift/api/apiextensions/v1alpha1.APIVersions", "github.com/openshift/api/apiextensions/v1alpha1.CRDData"},
+	}
+}
+
+func schema_openshift_api_apiextensions_v1alpha1_CustomResourceDefinitionSchemaValidation(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "CustomResourceDefinitionSchemaValidation ensures that updates to the installed CRD are compatible with this compatibility requirement.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"action": {
+						SchemaProps: spec.SchemaProps{
+							Description: "action determines whether violations are rejected (Deny) or admitted with an API warning (Warn). Valid options are Deny and Warn. When set to Deny, incompatible CRDs will be rejected and not admitted to the cluster. When set to Warn, incompatible CRDs will be allowed but a warning will be generated in the API response. This field is required.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+				},
+				Required: []string{"action"},
+			},
+		},
+	}
+}
+
+func schema_openshift_api_apiextensions_v1alpha1_ObjectSchemaValidation(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "ObjectSchemaValidation ensures that matching objects conform to the compatibilitySchema.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"action": {
+						SchemaProps: spec.SchemaProps{
+							Description: "action determines whether violations are rejected (Deny) or admitted with an API warning (Warn). Valid options are Deny and Warn. When set to Deny, incompatible Objects will be rejected and not admitted to the cluster. When set to Warn, incompatible Objects will be allowed but a warning will be generated in the API response. This field is required.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"namespaceSelector": {
+						SchemaProps: spec.SchemaProps{
+							Description: "namespaceSelector defines a label selector for namespaces. If defined, only objects in a namespace with matching labels will be subject to validation. When not specified, objects for validation will not be filtered by namespace.",
+							Default:     map[string]interface{}{},
+							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.LabelSelector"),
+						},
+					},
+					"objectSelector": {
+						SchemaProps: spec.SchemaProps{
+							Description: "objectSelector defines a label selector for objects. If defined, only objects with matching labels will be subject to validation. When not specified, objects for validation will not be filtered by label.",
+							Default:     map[string]interface{}{},
+							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.LabelSelector"),
+						},
+					},
+					"matchConditions": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-map-keys": []interface{}{
+									"name",
+								},
+								"x-kubernetes-list-type": "map",
+							},
+						},
+						SchemaProps: spec.SchemaProps{
+							Description: "matchConditions defines the matchConditions field of the resulting ValidatingWebhookConfiguration. When present, must contain between 1 and 64 match conditions. When not specified, the webhook will match all requests according to its other selectors.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("k8s.io/api/admissionregistration/v1.MatchCondition"),
+									},
+								},
+							},
+						},
+					},
+				},
+				Required: []string{"action"},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/api/admissionregistration/v1.MatchCondition", "k8s.io/apimachinery/pkg/apis/meta/v1.LabelSelector"},
+	}
+}
+
+func schema_openshift_api_apiextensions_v1alpha1_ObservedCRD(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "ObservedCRD contains information about the observed target CRD.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"uid": {
+						SchemaProps: spec.SchemaProps{
+							Description: "uid is the uid of the observed CRD. Must be a valid UUID consisting of lowercase hexadecimal digits in 5 hyphenated blocks (8-4-4-4-12 format). Length must be between 1 and 36 characters.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"generation": {
+						SchemaProps: spec.SchemaProps{
+							Description: "generation is the observed generation of the CRD. Must be a positive integer (minimum value of 1).",
+							Type:        []string{"integer"},
+							Format:      "int64",
+						},
+					},
+				},
+				Required: []string{"uid", "generation"},
+			},
+		},
 	}
 }
 

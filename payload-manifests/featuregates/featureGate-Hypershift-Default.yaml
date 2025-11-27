@@ -217,6 +217,9 @@
                         "name": "SigstoreImageVerificationPKI"
                     },
                     {
+                        "name": "TLSCurvesConfiguration"
+                    },
+                    {
                         "name": "TranslateStreamCloseWebsocketRequests"
                     },
                     {

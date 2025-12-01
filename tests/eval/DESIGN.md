@@ -155,7 +155,8 @@ These are copied into the temp clone so that any local modifications to the revi
 
 ## Phase 2
 
-### Cost Tracking
+### Cost Tracking ✅ IMPLEMENTED
+
 
 Use `--output-format json` to capture `total_cost_usd` from each Claude invocation. Accumulate across all calls (review + judge) and print the total in `AfterSuite`.
 

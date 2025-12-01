@@ -382,15 +382,13 @@ spec:
                                 type: string
                             required:
                             - expression
+                            - message
                             type: object
                           requiredClaim:
-                            description: |-
-                              requiredClaim allows configuring a required claim name and its expected value.
-                              When type is RequiredClaim, this field is used by the Kubernetes API server
-                              to validate if an incoming JWT is valid for this identity provider.
                             properties:
                               claim:
                                 description: |-
+                                  claim is a required field that configures the name of the required claim.
                                   When taken from the JWT claims, claim must be a string value.
 
                                   claim must not be an empty string ("").
@@ -428,10 +426,10 @@ spec:
                             type: string
                         type: object
                         x-kubernetes-validations:
-                        - message: expressionRule must be set when type is 'Expression',
+                        - message: expression must be set when type is 'Expression',
                             and forbidden otherwise
-                          rule: 'has(self.type) && self.type == ''Expression'' ? has(self.expressionRule)
-                            : !has(self.expressionRule)'
+                          rule: 'has(self.type) && self.type == ''Expression'' ? has(self.expression)
+                            : !has(self.expression)'
                         - message: requiredClaim must be set when type is 'RequiredClaim',
                             and forbidden otherwise
                           rule: 'has(self.type) && self.type == ''RequiredClaim''
@@ -462,13 +460,11 @@ spec:
                           description: |-
                             discoveryURL is an optional field that, if specified, overrides the default discovery endpoint
                             used to retrieve OIDC configuration metadata. By default, the discovery URL is derived from `issuerURL`
-                            as "{url}/.well-known/openid-configuration".
+                            as "{issuerURL}/.well-known/openid-configuration".
 
-                            The discoveryURL must:
-                              - Be a valid absolute URL.
-                              - Use the HTTPS scheme.
-                              - Not contain query parameters, user info, or fragments.
-                              - Be different from the value of `url` (ignoring trailing slashes)
+                            The discoveryURL must be a valid absolute HTTPS URL. It must not contain query
+                            parameters, user information, or fragments. Additionally, it must differ from
+                            the value of `url` (ignoring trailing slashes).
                           maxLength: 2048
                           minLength: 1
                           type: string
@@ -482,7 +478,7 @@ spec:
                           - message: discoveryURL must not contain fragments
                             rule: self.matches('^[^#]*$')
                           - message: discoveryURL must not contain user info
-                            rule: '!(self.matches(''^https:\/\/.+:.+@{1}.+\/.*$''))'
+                            rule: '!self.matches(''^https://.+:.+@.+/.*$'')'
                         issuerCertificateAuthority:
                           description: |-
                             issuerCertificateAuthority is an optional field that configures the
@@ -639,8 +635,8 @@ spec:
                         Each rule is evaluated independently to determine whether the token subject is considered valid.
                         Rules can either require specific claims and values to be present,
                         or define CEL expressions that must evaluate to true for the token to be accepted.
-                        If the expression in a rule evaluates to false, the token is rejected.
-                        At least one rule must evaluate to true for the token to be considered valid.
+                        All rules must evaluate to true for the token to be accepted.
+                        If any rule evaluates to false, the token is rejected.
                         A maximum of 64 rules can be specified. This field is optional.
 
                         See https://kubernetes.io/docs/reference/using-api/cel/ for CEL syntax.
@@ -669,8 +665,10 @@ spec:
                             type: string
                         required:
                         - expression
+                        - message
                         type: object
                       maxItems: 64
+                      minItems: 1
                       type: array
                       x-kubernetes-list-map-keys:
                       - expression

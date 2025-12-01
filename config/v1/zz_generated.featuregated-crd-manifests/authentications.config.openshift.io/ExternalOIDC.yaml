@@ -203,13 +203,10 @@ spec:
                           If type is Expression, expression must be set.
                         properties:
                           requiredClaim:
-                            description: |-
-                              requiredClaim allows configuring a required claim name and its expected value.
-                              When type is RequiredClaim, this field is used by the Kubernetes API server
-                              to validate if an incoming JWT is valid for this identity provider.
                             properties:
                               claim:
                                 description: |-
+                                  claim is a required field that configures the name of the required claim.
                                   When taken from the JWT claims, claim must be a string value.
 
                                   claim must not be an empty string ("").

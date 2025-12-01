@@ -17153,14 +17153,11 @@ func schema_openshift_api_config_v1_OIDCProvider(ref common.ReferenceCallback) c
 								"x-kubernetes-list-map-keys": []interface{}{
 									"expression",
 								},
-								"x-kubernetes-list-type": []interface{}{
-									"atomic",
-									"map",
-								},
+								"x-kubernetes-list-type": "map",
 							},
 						},
 						SchemaProps: spec.SchemaProps{
-							Description: "userValidationRules defines the set of rules used to validate claims in a user's token. Each rule is evaluated independently to determine whether the token subject is considered valid. Rules can either require specific claims and values to be present, or define CEL expressions that must evaluate to true for the token to be accepted. If the expression in a rule evaluates to false, the token is rejected. At least one rule must evaluate to true for the token to be considered valid. A maximum of 64 rules can be specified. This field is optional.\n\nSee https://kubernetes.io/docs/reference/using-api/cel/ for CEL syntax.",
+							Description: "userValidationRules defines the set of rules used to validate claims in a user's token. Each rule is evaluated independently to determine whether the token subject is considered valid. Rules can either require specific claims and values to be present, or define CEL expressions that must evaluate to true for the token to be accepted. All rules must evaluate to true for the token to be accepted. If any rule evaluates to false, the token is rejected. A maximum of 64 rules can be specified. This field is optional.\n\nSee https://kubernetes.io/docs/reference/using-api/cel/ for CEL syntax.",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -20245,8 +20242,7 @@ func schema_openshift_api_config_v1_TokenClaimValidationRule(ref common.Referenc
 					},
 					"requiredClaim": {
 						SchemaProps: spec.SchemaProps{
-							Description: "requiredClaim allows configuring a required claim name and its expected value. When type is RequiredClaim, this field is used by the Kubernetes API server to validate if an incoming JWT is valid for this identity provider.",
-							Ref:         ref("github.com/openshift/api/config/v1.TokenRequiredClaim"),
+							Ref: ref("github.com/openshift/api/config/v1.TokenRequiredClaim"),
 						},
 					},
 					"expression": {
@@ -20321,7 +20317,7 @@ func schema_openshift_api_config_v1_TokenExpressionRule(ref common.ReferenceCall
 						},
 					},
 				},
-				Required: []string{"expression"},
+				Required: []string{"expression", "message"},
 			},
 		},
 	}
@@ -20370,7 +20366,7 @@ func schema_openshift_api_config_v1_TokenIssuer(ref common.ReferenceCallback) co
 					},
 					"discoveryURL": {
 						SchemaProps: spec.SchemaProps{
-							Description: "discoveryURL is an optional field that, if specified, overrides the default discovery endpoint used to retrieve OIDC configuration metadata. By default, the discovery URL is derived from `issuerURL` as \"{url}/.well-known/openid-configuration\".\n\nThe discoveryURL must:\n  - Be a valid absolute URL.\n  - Use the HTTPS scheme.\n  - Not contain query parameters, user info, or fragments.\n  - Be different from the value of `url` (ignoring trailing slashes)",
+							Description: "discoveryURL is an optional field that, if specified, overrides the default discovery endpoint used to retrieve OIDC configuration metadata. By default, the discovery URL is derived from `issuerURL` as \"{issuerURL}/.well-known/openid-configuration\".\n\nThe discoveryURL must be a valid absolute HTTPS URL. It must not contain query parameters, user information, or fragments. Additionally, it must differ from the value of `url` (ignoring trailing slashes).",
 							Type:        []string{"string"},
 							Format:      "",
 						},
@@ -20392,7 +20388,7 @@ func schema_openshift_api_config_v1_TokenRequiredClaim(ref common.ReferenceCallb
 				Properties: map[string]spec.Schema{
 					"claim": {
 						SchemaProps: spec.SchemaProps{
-							Description: "When taken from the JWT claims, claim must be a string value.\n\nclaim must not be an empty string (\"\").",
+							Description: "claim is a required field that configures the name of the required claim. When taken from the JWT claims, claim must be a string value.\n\nclaim must not be an empty string (\"\").",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -20435,7 +20431,7 @@ func schema_openshift_api_config_v1_TokenUserValidationRule(ref common.Reference
 						},
 					},
 				},
-				Required: []string{"expression"},
+				Required: []string{"expression", "message"},
 			},
 		},
 	}

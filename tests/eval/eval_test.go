@@ -64,13 +64,21 @@ or
 )
 
 var (
-	tempDir          string
-	localRepoRoot    string
-	testCases        []string
-	goldenModel      string
-	integrationModel string
-	judgeModel       string
+	tempDir           string
+	localRepoRoot     string
+	testCases         []string
+	goldenModel       string
+	integrationModel  string
+	judgeModel        string
+	totalReviewerCost float64
+	totalJudgeCost    float64
 )
+
+type claudeOutput struct {
+	Type         string  `json:"type"`
+	Result       string  `json:"result"`
+	TotalCostUSD float64 `json:"total_cost_usd"`
+}
 
 func TestEval(t *testing.T) {
 	RegisterFailHandler(Fail)
@@ -123,6 +131,7 @@ var _ = AfterSuite(func() {
 		By("cleaning up temp directory")
 		os.RemoveAll(tempDir)
 	}
+	fmt.Printf("\nTotal Cost: $%.4f (Reviewer: $%.4f, Judge: $%.4f)\n", totalReviewerCost+totalJudgeCost, totalReviewerCost, totalJudgeCost)
 })
 
 func copyLocalFiles() {
@@ -251,7 +260,7 @@ func readAndApplyPatch(patchPath string) {
 }
 
 // runAPIReview and runJudge can probably share some common code.
-func runAPIReview(model string) string {
+func runAPIReview(model string) (string, float64) {
 	By(fmt.Sprintf("running API review via Claude (%s)", model))
 	ctx, cancel := context.WithTimeout(context.Background(), claudeTimeout)
 	defer cancel()
@@ -262,15 +271,22 @@ func runAPIReview(model string) string {
 		"--model", model,
 		"-p", "/api-review",
 		"--allowedTools", "Bash,Read,Grep,Glob,Task",
+		"--output-format", "json",
 	)
 	cmd.Dir = tempDir
 
 	output, err := cmd.CombinedOutput()
 	Expect(err).NotTo(HaveOccurred(), "claude command failed: %s", string(output))
-	return string(output)
+
+	var parsed claudeOutput
+	err = json.Unmarshal(output, &parsed)
+	Expect(err).NotTo(HaveOccurred(), "failed to parse claude output: %s", string(output))
+
+	totalReviewerCost += parsed.TotalCostUSD
+	return parsed.Result, parsed.TotalCostUSD
 }
 
-func runJudge(model, reviewOutput, expectedIssues string) evalResult {
+func runJudge(model, reviewOutput, expectedIssues string) (evalResult, float64) {
 	By(fmt.Sprintf("comparing results with Claude judge (%s)", model))
 	ctx, cancel := context.WithTimeout(context.Background(), claudeTimeout)
 	defer cancel()
@@ -281,17 +297,24 @@ func runJudge(model, reviewOutput, expectedIssues string) evalResult {
 		"--dangerously-skip-permissions",
 		"--model", model,
 		"-p", prompt,
+		"--output-format", "json",
 	)
 	cmd.Dir = tempDir
 
 	output, err := cmd.CombinedOutput()
 	Expect(err).NotTo(HaveOccurred(), "claude judge command failed: %s", string(output))
 
+	var parsed claudeOutput
+	err = json.Unmarshal(output, &parsed)
+	Expect(err).NotTo(HaveOccurred(), "failed to parse judge output: %s", string(output))
+
+	totalJudgeCost += parsed.TotalCostUSD
+
 	var result evalResult
-	jsonStr := stripMarkdownCodeBlock(string(output))
+	jsonStr := stripMarkdownCodeBlock(parsed.Result)
 	err = json.Unmarshal([]byte(jsonStr), &result)
-	Expect(err).NotTo(HaveOccurred(), "failed to parse judge response as JSON: %s", string(output))
-	return result
+	Expect(err).NotTo(HaveOccurred(), "failed to parse judge response as JSON: %s", parsed.Result)
+	return result, parsed.TotalCostUSD
 }
 
 func runTestCase(tier, tc, reviewModel, judgeModelName string) {
@@ -304,9 +327,10 @@ func runTestCase(tier, tc, reviewModel, judgeModelName string) {
 	Expect(err).NotTo(HaveOccurred())
 	expectedIssues := strings.TrimSpace(string(expectedContent))
 
-	reviewOutput := runAPIReview(reviewModel)
-	result := runJudge(judgeModelName, reviewOutput, expectedIssues)
+	reviewOutput, reviewCost := runAPIReview(reviewModel)
+	result, judgeCost := runJudge(judgeModelName, reviewOutput, expectedIssues)
 
+	GinkgoWriter.Printf("Cost: Reviewer=$%.4f, Judge=$%.4f, Total=$%.4f\n", reviewCost, judgeCost, reviewCost+judgeCost)
 	GinkgoWriter.Printf("Judge result: pass=%v, reason=%s\n", result.Pass, result.Reason)
 	Expect(result.Pass).To(BeTrue(), "API review did not match expected issues.\nJudge reason: %s\nReview output:\n%s\nExpected issues:\n%s", result.Reason, reviewOutput, expectedIssues)
 }

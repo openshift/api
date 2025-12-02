@@ -6630,18 +6630,6 @@
             "key"
           ],
           "x-kubernetes-list-type": "map"
-        },
-        "serviceEndpoints": {
-          "description": "serviceEndpoints specifies endpoints that override the default endpoints used when creating clients to interact with GCP services. When not specified, the default endpoint for the GCP region will be used. Only 1 endpoint override is permitted for each GCP service. The maximum number of endpoint overrides allowed is 11.",
-          "type": "array",
-          "items": {
-            "default": {},
-            "$ref": "#/definitions/com.github.openshift.api.config.v1.GCPServiceEndpoint"
-          },
-          "x-kubernetes-list-map-keys": [
-            "name"
-          ],
-          "x-kubernetes-list-type": "map"
         }
       }
     },
@@ -6686,26 +6674,6 @@
         },
         "value": {
           "description": "value is the value part of the tag. A tag value can have a maximum of 63 characters and cannot be empty. Tag value must begin and end with an alphanumeric character, and must contain only uppercase, lowercase alphanumeric characters, and the following special characters `_-.@%=+:,*#&(){}[]` and spaces.",
-          "type": "string",
-          "default": ""
-        }
-      }
-    },
-    "com.github.openshift.api.config.v1.GCPServiceEndpoint": {
-      "description": "GCPServiceEndpoint store the configuration of a custom url to override existing defaults of GCP Services.",
-      "type": "object",
-      "required": [
-        "name",
-        "url"
-      ],
-      "properties": {
-        "name": {
-          "description": "name is the name of the GCP service whose endpoint is being overridden. This must be provided and cannot be empty.\n\nAllowed values are Compute, Container, CloudResourceManager, DNS, File, IAM, ServiceUsage, Storage, and TagManager.\n\nAs an example, when setting the name to Compute all requests made by the caller to the GCP Compute Service will be directed to the endpoint specified in the url field.",
-          "type": "string",
-          "default": ""
-        },
-        "url": {
-          "description": "url is a fully qualified URI that overrides the default endpoint for a client using the GCP service specified in the name field. url is required, must use the scheme https, must not be more than 253 characters in length, and must be a valid URL according to Go's net/url package (https://pkg.go.dev/net/url#URL)\n\nAn example of a valid endpoint that overrides the Compute Service: \"https://compute-myendpoint1.p.googleapis.com\"",
           "type": "string",
           "default": ""
         }
@@ -10615,7 +10583,7 @@
           "type": "string"
         },
         "profileCustomizations": {
-          "description": "profileCustomizations contains configuration for modifying the default behavior of existing scheduler profiles.",
+          "description": "profileCustomizations contains configuration for modifying the default behavior of existing scheduler profiles. Deprecated: no longer needed, since DRA is GA starting with 4.21, and is enabled by' default in the cluster, this field will be removed in 4.24.",
           "default": {},
           "$ref": "#/definitions/com.github.openshift.api.config.v1.ProfileCustomizations"
         }
@@ -24564,6 +24532,18 @@
         "releases"
       ],
       "properties": {
+        "conditions": {
+          "description": "conditions represent the observations of the InternalReleaseImage controller current state. Valid types are: Degraded. If Degraded is true, that means something has gone wrong in the controller.",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Condition"
+          },
+          "x-kubernetes-list-map-keys": [
+            "type"
+          ],
+          "x-kubernetes-list-type": "map"
+        },
         "releases": {
           "description": "releases is a list of the release bundles currently owned and managed by the cluster. A release bundle content could be safely pulled only when its Conditions field contains at least an Available entry set to \"True\" and Degraded to \"False\". Entries must be unique, keyed on the name field. releases must contain at least one entry and must not exceed 32 entries.",
           "type": "array",
@@ -24787,7 +24767,7 @@
       }
     },
     "com.github.openshift.api.machineconfiguration.v1alpha1.OSImageStream": {
-      "description": "OSImageStream describes a set of streams and associated URLs available for the MachineConfigPools to be used as base OS images.\n\nCompatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.",
+      "description": "OSImageStream describes a set of streams and associated images available for the MachineConfigPools to be used as base OS images.\n\nThe resource is a singleton named \"cluster\".\n\nCompatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.",
       "type": "object",
       "required": [
         "spec"
@@ -24812,6 +24792,7 @@
         },
         "status": {
           "description": "status describes the last observed state of this OSImageStream. Populated by the MachineConfigOperator after reading release metadata. When not present, the controller has not yet reconciled this resource.",
+          "default": {},
           "$ref": "#/definitions/com.github.openshift.api.machineconfiguration.v1alpha1.OSImageStreamStatus"
         }
       }
@@ -24846,20 +24827,46 @@
         }
       }
     },
+    "com.github.openshift.api.machineconfiguration.v1alpha1.OSImageStreamSet": {
+      "type": "object",
+      "required": [
+        "name",
+        "osImage",
+        "osExtensionsImage"
+      ],
+      "properties": {
+        "name": {
+          "description": "name is the required identifier of the stream.\n\nname is determined by the operator based on the OCI label of the discovered OS or Extension Image.\n\nMust be a valid RFC 1123 subdomain between 1 and 253 characters in length, consisting of lowercase alphanumeric characters, hyphens ('-'), and periods ('.').",
+          "type": "string"
+        },
+        "osExtensionsImage": {
+          "description": "osExtensionsImage is a required OS Extensions Image referenced by digest.\n\nosExtensionsImage bundles the extra repositories used to enable extensions, augmenting the base operating system without modifying the underlying immutable osImage.\n\nThe format of the image pull spec is: host[:port][/namespace]/name@sha256:<digest>, where the digest must be 64 characters long, and consist only of lowercase hexadecimal characters, a-f and 0-9. The length of the whole spec must be between 1 to 447 characters.",
+          "type": "string"
+        },
+        "osImage": {
+          "description": "osImage is a required OS Image referenced by digest.\n\nosImage contains the immutable, fundamental operating system components, including the kernel and base utilities, that define the core environment for the node's host operating system.\n\nThe format of the image pull spec is: host[:port][/namespace]/name@sha256:<digest>, where the digest must be 64 characters long, and consist only of lowercase hexadecimal characters, a-f and 0-9. The length of the whole spec must be between 1 to 447 characters.",
+          "type": "string"
+        }
+      }
+    },
     "com.github.openshift.api.machineconfiguration.v1alpha1.OSImageStreamSpec": {
       "description": "OSImageStreamSpec defines the desired state of a OSImageStream.",
       "type": "object"
     },
     "com.github.openshift.api.machineconfiguration.v1alpha1.OSImageStreamStatus": {
-      "description": "OSImageStreamStatus describes the current state of a OSImageStream.",
+      "description": "OSImageStreamStatus describes the current state of a OSImageStream",
       "type": "object",
+      "required": [
+        "availableStreams",
+        "defaultStream"
+      ],
       "properties": {
         "availableStreams": {
-          "description": "availableStreams is a list of the available OS Image Streams available and their associated URLs for both OS and Extensions images.\n\nA maximum of 100 streams may be specified.",
+          "description": "availableStreams is a list of the available OS Image Streams that can be used as the base image for MachineConfigPools. availableStreams is required, must have at least one item, must not exceed 100 items, and must have unique entries keyed on the name field.",
           "type": "array",
           "items": {
             "default": {},
-            "$ref": "#/definitions/com.github.openshift.api.machineconfiguration.v1alpha1.OSImageStreamURLSet"
+            "$ref": "#/definitions/com.github.openshift.api.machineconfiguration.v1alpha1.OSImageStreamSet"
           },
           "x-kubernetes-list-map-keys": [
             "name"
@@ -24867,29 +24874,7 @@
           "x-kubernetes-list-type": "map"
         },
         "defaultStream": {
-          "description": "defaultStream is the name of the stream that should be used as the default when no specific stream is requested by a MachineConfigPool. Must reference the name of one of the streams in availableStreams. Must be set when availableStreams is not empty. When not set and availableStreams is empty, controllers should use the default one stated in the release image.",
-          "type": "string"
-        }
-      }
-    },
-    "com.github.openshift.api.machineconfiguration.v1alpha1.OSImageStreamURLSet": {
-      "type": "object",
-      "required": [
-        "name",
-        "osImageURL",
-        "osExtensionsImageURL"
-      ],
-      "properties": {
-        "name": {
-          "description": "name is the identifier of the stream.\n\nMust not be empty and must not exceed 70 characters in length. Must only contain alphanumeric characters, hyphens ('-'), or dots ('.').",
-          "type": "string"
-        },
-        "osExtensionsImageURL": {
-          "description": "osExtensionsImageURL is an OS Extensions Image referenced by digest.\n\nThe format of the URL ref is: host[:port][/namespace]/name@sha256:<digest>",
-          "type": "string"
-        },
-        "osImageURL": {
-          "description": "osImageURL is an OS Image referenced by digest.\n\nThe format of the URL ref is: host[:port][/namespace]/name@sha256:<digest>",
+          "description": "defaultStream is the name of the stream that should be used as the default when no specific stream is requested by a MachineConfigPool.\n\nIt must be a valid RFC 1123 subdomain between 1 and 253 characters in length, consisting of lowercase alphanumeric characters, hyphens ('-'), and periods ('.'), and must reference the name of one of the streams in availableStreams.",
           "type": "string"
         }
       }
@@ -24901,9 +24886,8 @@
       ],
       "properties": {
         "name": {
-          "description": "name is an OCI Image referenced by digest.\n\nThe format of the image ref is: host[:port][/namespace]/name@sha256:<digest>",
-          "type": "string",
-          "default": ""
+          "description": "name is an OCI Image referenced by digest. The format of the image pull spec is: host[:port][/namespace]/name@sha256:<digest>, where the digest must be 64 characters long, and consist only of lowercase hexadecimal characters, a-f and 0-9. The length of the whole spec must be between 1 to 447 characters.",
+          "type": "string"
         }
       }
     },

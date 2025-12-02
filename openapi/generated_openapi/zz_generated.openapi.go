@@ -1676,8 +1676,7 @@ func schema_openshift_api_apiserver_v1_APIRequestCount(ref common.ReferenceCallb
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/apiserver/v1.APIRequestCountSpec", "github.com/openshift/api/apiserver/v1.APIRequestCountStatus", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta",
-		},
+			"github.com/openshift/api/apiserver/v1.APIRequestCountSpec", "github.com/openshift/api/apiserver/v1.APIRequestCountStatus", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"},
 	}
 }
 
@@ -1727,8 +1726,7 @@ func schema_openshift_api_apiserver_v1_APIRequestCountList(ref common.ReferenceC
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/apiserver/v1.APIRequestCount", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta",
-		},
+			"github.com/openshift/api/apiserver/v1.APIRequestCount", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"},
 	}
 }
 
@@ -1821,8 +1819,7 @@ func schema_openshift_api_apiserver_v1_APIRequestCountStatus(ref common.Referenc
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/apiserver/v1.PerResourceAPIRequestLog", "k8s.io/apimachinery/pkg/apis/meta/v1.Condition",
-		},
+			"github.com/openshift/api/apiserver/v1.PerResourceAPIRequestLog", "k8s.io/apimachinery/pkg/apis/meta/v1.Condition"},
 	}
 }
 
@@ -1868,8 +1865,7 @@ func schema_openshift_api_apiserver_v1_PerNodeAPIRequestLog(ref common.Reference
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/apiserver/v1.PerUserAPIRequestCount",
-		},
+			"github.com/openshift/api/apiserver/v1.PerUserAPIRequestCount"},
 	}
 }
 
@@ -1907,8 +1903,7 @@ func schema_openshift_api_apiserver_v1_PerResourceAPIRequestLog(ref common.Refer
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/apiserver/v1.PerNodeAPIRequestLog",
-		},
+			"github.com/openshift/api/apiserver/v1.PerNodeAPIRequestLog"},
 	}
 }
 
@@ -1962,8 +1957,7 @@ func schema_openshift_api_apiserver_v1_PerUserAPIRequestCount(ref common.Referen
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/apiserver/v1.PerVerbAPIRequestCount",
-		},
+			"github.com/openshift/api/apiserver/v1.PerVerbAPIRequestCount"},
 	}
 }
 
@@ -2044,8 +2038,7 @@ func schema_openshift_api_apps_v1_CustomDeploymentStrategyParams(ref common.Refe
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.EnvVar",
-		},
+			"k8s.io/api/core/v1.EnvVar"},
 	}
 }
 
@@ -2075,8 +2068,7 @@ func schema_openshift_api_apps_v1_DeploymentCause(ref common.ReferenceCallback) 
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/apps/v1.DeploymentCauseImageTrigger",
-		},
+			"github.com/openshift/api/apps/v1.DeploymentCauseImageTrigger"},
 	}
 }
 
@@ -2099,8 +2091,7 @@ func schema_openshift_api_apps_v1_DeploymentCauseImageTrigger(ref common.Referen
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.ObjectReference",
-		},
+			"k8s.io/api/core/v1.ObjectReference"},
 	}
 }
 
@@ -2158,8 +2149,7 @@ func schema_openshift_api_apps_v1_DeploymentCondition(ref common.ReferenceCallba
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/apimachinery/pkg/apis/meta/v1.Time",
-		},
+			"k8s.io/apimachinery/pkg/apis/meta/v1.Time"},
 	}
 }
 
@@ -2210,8 +2200,7 @@ func schema_openshift_api_apps_v1_DeploymentConfig(ref common.ReferenceCallback)
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/apps/v1.DeploymentConfigSpec", "github.com/openshift/api/apps/v1.DeploymentConfigStatus", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta",
-		},
+			"github.com/openshift/api/apps/v1.DeploymentConfigSpec", "github.com/openshift/api/apps/v1.DeploymentConfigStatus", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"},
 	}
 }
 
@@ -2262,8 +2251,7 @@ func schema_openshift_api_apps_v1_DeploymentConfigList(ref common.ReferenceCallb
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/apps/v1.DeploymentConfig", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta",
-		},
+			"github.com/openshift/api/apps/v1.DeploymentConfig", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"},
 	}
 }
 
@@ -2324,8 +2312,7 @@ func schema_openshift_api_apps_v1_DeploymentConfigRollback(ref common.ReferenceC
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/apps/v1.DeploymentConfigRollbackSpec",
-		},
+			"github.com/openshift/api/apps/v1.DeploymentConfigRollbackSpec"},
 	}
 }
 
@@ -2387,8 +2374,7 @@ func schema_openshift_api_apps_v1_DeploymentConfigRollbackSpec(ref common.Refere
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.ObjectReference",
-		},
+			"k8s.io/api/core/v1.ObjectReference"},
 	}
 }
 
@@ -2483,8 +2469,7 @@ func schema_openshift_api_apps_v1_DeploymentConfigSpec(ref common.ReferenceCallb
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/apps/v1.DeploymentStrategy", "github.com/openshift/api/apps/v1.DeploymentTriggerPolicy", "k8s.io/api/core/v1.PodTemplateSpec",
-		},
+			"github.com/openshift/api/apps/v1.DeploymentStrategy", "github.com/openshift/api/apps/v1.DeploymentTriggerPolicy", "k8s.io/api/core/v1.PodTemplateSpec"},
 	}
 }
 
@@ -2580,8 +2565,7 @@ func schema_openshift_api_apps_v1_DeploymentConfigStatus(ref common.ReferenceCal
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/apps/v1.DeploymentCondition", "github.com/openshift/api/apps/v1.DeploymentDetails",
-		},
+			"github.com/openshift/api/apps/v1.DeploymentCondition", "github.com/openshift/api/apps/v1.DeploymentDetails"},
 	}
 }
 
@@ -2618,8 +2602,7 @@ func schema_openshift_api_apps_v1_DeploymentDetails(ref common.ReferenceCallback
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/apps/v1.DeploymentCause",
-		},
+			"github.com/openshift/api/apps/v1.DeploymentCause"},
 	}
 }
 
@@ -2744,8 +2727,7 @@ func schema_openshift_api_apps_v1_DeploymentLogOptions(ref common.ReferenceCallb
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/apimachinery/pkg/apis/meta/v1.Time",
-		},
+			"k8s.io/apimachinery/pkg/apis/meta/v1.Time"},
 	}
 }
 
@@ -2898,8 +2880,7 @@ func schema_openshift_api_apps_v1_DeploymentStrategy(ref common.ReferenceCallbac
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/apps/v1.CustomDeploymentStrategyParams", "github.com/openshift/api/apps/v1.RecreateDeploymentStrategyParams", "github.com/openshift/api/apps/v1.RollingDeploymentStrategyParams", "k8s.io/api/core/v1.ResourceRequirements",
-		},
+			"github.com/openshift/api/apps/v1.CustomDeploymentStrategyParams", "github.com/openshift/api/apps/v1.RecreateDeploymentStrategyParams", "github.com/openshift/api/apps/v1.RollingDeploymentStrategyParams", "k8s.io/api/core/v1.ResourceRequirements"},
 	}
 }
 
@@ -2951,8 +2932,7 @@ func schema_openshift_api_apps_v1_DeploymentTriggerImageChangeParams(ref common.
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.ObjectReference",
-		},
+			"k8s.io/api/core/v1.ObjectReference"},
 	}
 }
 
@@ -2980,8 +2960,7 @@ func schema_openshift_api_apps_v1_DeploymentTriggerPolicy(ref common.ReferenceCa
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/apps/v1.DeploymentTriggerImageChangeParams",
-		},
+			"github.com/openshift/api/apps/v1.DeploymentTriggerImageChangeParams"},
 	}
 }
 
@@ -3049,8 +3028,7 @@ func schema_openshift_api_apps_v1_ExecNewPodHook(ref common.ReferenceCallback) c
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.EnvVar",
-		},
+			"k8s.io/api/core/v1.EnvVar"},
 	}
 }
 
@@ -3094,8 +3072,7 @@ func schema_openshift_api_apps_v1_LifecycleHook(ref common.ReferenceCallback) co
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/apps/v1.ExecNewPodHook", "github.com/openshift/api/apps/v1.TagImageHook",
-		},
+			"github.com/openshift/api/apps/v1.ExecNewPodHook", "github.com/openshift/api/apps/v1.TagImageHook"},
 	}
 }
 
@@ -3135,8 +3112,7 @@ func schema_openshift_api_apps_v1_RecreateDeploymentStrategyParams(ref common.Re
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/apps/v1.LifecycleHook",
-		},
+			"github.com/openshift/api/apps/v1.LifecycleHook"},
 	}
 }
 
@@ -3196,8 +3172,7 @@ func schema_openshift_api_apps_v1_RollingDeploymentStrategyParams(ref common.Ref
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/apps/v1.LifecycleHook", "k8s.io/apimachinery/pkg/util/intstr.IntOrString",
-		},
+			"github.com/openshift/api/apps/v1.LifecycleHook", "k8s.io/apimachinery/pkg/util/intstr.IntOrString"},
 	}
 }
 
@@ -3228,8 +3203,7 @@ func schema_openshift_api_apps_v1_TagImageHook(ref common.ReferenceCallback) com
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.ObjectReference",
-		},
+			"k8s.io/api/core/v1.ObjectReference"},
 	}
 }
 
@@ -3315,8 +3289,7 @@ func schema_openshift_api_authorization_v1_Action(ref common.ReferenceCallback) 
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/apimachinery/pkg/runtime.RawExtension",
-		},
+			"k8s.io/apimachinery/pkg/runtime.RawExtension"},
 	}
 }
 
@@ -3373,8 +3346,7 @@ func schema_openshift_api_authorization_v1_ClusterRole(ref common.ReferenceCallb
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/authorization/v1.PolicyRule", "k8s.io/api/rbac/v1.AggregationRule", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta",
-		},
+			"github.com/openshift/api/authorization/v1.PolicyRule", "k8s.io/api/rbac/v1.AggregationRule", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"},
 	}
 }
 
@@ -3462,8 +3434,7 @@ func schema_openshift_api_authorization_v1_ClusterRoleBinding(ref common.Referen
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.ObjectReference", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta",
-		},
+			"k8s.io/api/core/v1.ObjectReference", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"},
 	}
 }
 
@@ -3514,8 +3485,7 @@ func schema_openshift_api_authorization_v1_ClusterRoleBindingList(ref common.Ref
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/authorization/v1.ClusterRoleBinding", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta",
-		},
+			"github.com/openshift/api/authorization/v1.ClusterRoleBinding", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"},
 	}
 }
 
@@ -3566,8 +3536,7 @@ func schema_openshift_api_authorization_v1_ClusterRoleList(ref common.ReferenceC
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/authorization/v1.ClusterRole", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta",
-		},
+			"github.com/openshift/api/authorization/v1.ClusterRole", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"},
 	}
 }
 
@@ -3612,8 +3581,7 @@ func schema_openshift_api_authorization_v1_GroupRestriction(ref common.Reference
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/apimachinery/pkg/apis/meta/v1.LabelSelector",
-		},
+			"k8s.io/apimachinery/pkg/apis/meta/v1.LabelSelector"},
 	}
 }
 
@@ -3747,8 +3715,7 @@ func schema_openshift_api_authorization_v1_LocalResourceAccessReview(ref common.
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta", "k8s.io/apimachinery/pkg/runtime.RawExtension",
-		},
+			"k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta", "k8s.io/apimachinery/pkg/runtime.RawExtension"},
 	}
 }
 
@@ -3893,8 +3860,7 @@ func schema_openshift_api_authorization_v1_LocalSubjectAccessReview(ref common.R
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta", "k8s.io/apimachinery/pkg/runtime.RawExtension",
-		},
+			"k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta", "k8s.io/apimachinery/pkg/runtime.RawExtension"},
 	}
 }
 
@@ -3925,8 +3891,7 @@ func schema_openshift_api_authorization_v1_NamedClusterRole(ref common.Reference
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/authorization/v1.ClusterRole",
-		},
+			"github.com/openshift/api/authorization/v1.ClusterRole"},
 	}
 }
 
@@ -3957,8 +3922,7 @@ func schema_openshift_api_authorization_v1_NamedClusterRoleBinding(ref common.Re
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/authorization/v1.ClusterRoleBinding",
-		},
+			"github.com/openshift/api/authorization/v1.ClusterRoleBinding"},
 	}
 }
 
@@ -3989,8 +3953,7 @@ func schema_openshift_api_authorization_v1_NamedRole(ref common.ReferenceCallbac
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/authorization/v1.Role",
-		},
+			"github.com/openshift/api/authorization/v1.Role"},
 	}
 }
 
@@ -4021,8 +3984,7 @@ func schema_openshift_api_authorization_v1_NamedRoleBinding(ref common.Reference
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/authorization/v1.RoleBinding",
-		},
+			"github.com/openshift/api/authorization/v1.RoleBinding"},
 	}
 }
 
@@ -4119,8 +4081,7 @@ func schema_openshift_api_authorization_v1_PolicyRule(ref common.ReferenceCallba
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/apimachinery/pkg/runtime.RawExtension",
-		},
+			"k8s.io/apimachinery/pkg/runtime.RawExtension"},
 	}
 }
 
@@ -4227,8 +4188,7 @@ func schema_openshift_api_authorization_v1_ResourceAccessReview(ref common.Refer
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta", "k8s.io/apimachinery/pkg/runtime.RawExtension",
-		},
+			"k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta", "k8s.io/apimachinery/pkg/runtime.RawExtension"},
 	}
 }
 
@@ -4352,8 +4312,7 @@ func schema_openshift_api_authorization_v1_Role(ref common.ReferenceCallback) co
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/authorization/v1.PolicyRule", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta",
-		},
+			"github.com/openshift/api/authorization/v1.PolicyRule", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"},
 	}
 }
 
@@ -4441,8 +4400,7 @@ func schema_openshift_api_authorization_v1_RoleBinding(ref common.ReferenceCallb
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.ObjectReference", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta",
-		},
+			"k8s.io/api/core/v1.ObjectReference", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"},
 	}
 }
 
@@ -4493,8 +4451,7 @@ func schema_openshift_api_authorization_v1_RoleBindingList(ref common.ReferenceC
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/authorization/v1.RoleBinding", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta",
-		},
+			"github.com/openshift/api/authorization/v1.RoleBinding", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"},
 	}
 }
 
@@ -4538,8 +4495,7 @@ func schema_openshift_api_authorization_v1_RoleBindingRestriction(ref common.Ref
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/authorization/v1.RoleBindingRestrictionSpec", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta",
-		},
+			"github.com/openshift/api/authorization/v1.RoleBindingRestrictionSpec", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"},
 	}
 }
 
@@ -4590,8 +4546,7 @@ func schema_openshift_api_authorization_v1_RoleBindingRestrictionList(ref common
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/authorization/v1.RoleBindingRestriction", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta",
-		},
+			"github.com/openshift/api/authorization/v1.RoleBindingRestriction", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"},
 	}
 }
 
@@ -4625,8 +4580,7 @@ func schema_openshift_api_authorization_v1_RoleBindingRestrictionSpec(ref common
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/authorization/v1.GroupRestriction", "github.com/openshift/api/authorization/v1.ServiceAccountRestriction", "github.com/openshift/api/authorization/v1.UserRestriction",
-		},
+			"github.com/openshift/api/authorization/v1.GroupRestriction", "github.com/openshift/api/authorization/v1.ServiceAccountRestriction", "github.com/openshift/api/authorization/v1.UserRestriction"},
 	}
 }
 
@@ -4677,8 +4631,7 @@ func schema_openshift_api_authorization_v1_RoleList(ref common.ReferenceCallback
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/authorization/v1.Role", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta",
-		},
+			"github.com/openshift/api/authorization/v1.Role", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"},
 	}
 }
 
@@ -4729,8 +4682,7 @@ func schema_openshift_api_authorization_v1_SelfSubjectRulesReview(ref common.Ref
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/authorization/v1.SelfSubjectRulesReviewSpec", "github.com/openshift/api/authorization/v1.SubjectRulesReviewStatus", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta",
-		},
+			"github.com/openshift/api/authorization/v1.SelfSubjectRulesReviewSpec", "github.com/openshift/api/authorization/v1.SubjectRulesReviewStatus", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"},
 	}
 }
 
@@ -4834,8 +4786,7 @@ func schema_openshift_api_authorization_v1_ServiceAccountRestriction(ref common.
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/authorization/v1.ServiceAccountReference",
-		},
+			"github.com/openshift/api/authorization/v1.ServiceAccountReference"},
 	}
 }
 
@@ -4980,8 +4931,7 @@ func schema_openshift_api_authorization_v1_SubjectAccessReview(ref common.Refere
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta", "k8s.io/apimachinery/pkg/runtime.RawExtension",
-		},
+			"k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta", "k8s.io/apimachinery/pkg/runtime.RawExtension"},
 	}
 }
 
@@ -5089,8 +5039,7 @@ func schema_openshift_api_authorization_v1_SubjectRulesReview(ref common.Referen
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/authorization/v1.SubjectRulesReviewSpec", "github.com/openshift/api/authorization/v1.SubjectRulesReviewStatus", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta",
-		},
+			"github.com/openshift/api/authorization/v1.SubjectRulesReviewSpec", "github.com/openshift/api/authorization/v1.SubjectRulesReviewStatus", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"},
 	}
 }
 
@@ -5178,8 +5127,7 @@ func schema_openshift_api_authorization_v1_SubjectRulesReviewStatus(ref common.R
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/authorization/v1.PolicyRule",
-		},
+			"github.com/openshift/api/authorization/v1.PolicyRule"},
 	}
 }
 
@@ -5239,8 +5187,7 @@ func schema_openshift_api_authorization_v1_UserRestriction(ref common.ReferenceC
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/apimachinery/pkg/apis/meta/v1.LabelSelector",
-		},
+			"k8s.io/apimachinery/pkg/apis/meta/v1.LabelSelector"},
 	}
 }
 
@@ -5325,8 +5272,7 @@ func schema_openshift_api_build_v1_BinaryBuildRequestOptions(ref common.Referenc
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta",
-		},
+			"k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"},
 	}
 }
 
@@ -5374,8 +5320,7 @@ func schema_openshift_api_build_v1_BitbucketWebHookCause(ref common.ReferenceCal
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/build/v1.SourceRevision",
-		},
+			"github.com/openshift/api/build/v1.SourceRevision"},
 	}
 }
 
@@ -5425,8 +5370,7 @@ func schema_openshift_api_build_v1_Build(ref common.ReferenceCallback) common.Op
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/build/v1.BuildSpec", "github.com/openshift/api/build/v1.BuildStatus", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta",
-		},
+			"github.com/openshift/api/build/v1.BuildSpec", "github.com/openshift/api/build/v1.BuildStatus", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"},
 	}
 }
 
@@ -5484,8 +5428,7 @@ func schema_openshift_api_build_v1_BuildCondition(ref common.ReferenceCallback) 
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/apimachinery/pkg/apis/meta/v1.Time",
-		},
+			"k8s.io/apimachinery/pkg/apis/meta/v1.Time"},
 	}
 }
 
@@ -5536,8 +5479,7 @@ func schema_openshift_api_build_v1_BuildConfig(ref common.ReferenceCallback) com
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/build/v1.BuildConfigSpec", "github.com/openshift/api/build/v1.BuildConfigStatus", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta",
-		},
+			"github.com/openshift/api/build/v1.BuildConfigSpec", "github.com/openshift/api/build/v1.BuildConfigStatus", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"},
 	}
 }
 
@@ -5588,8 +5530,7 @@ func schema_openshift_api_build_v1_BuildConfigList(ref common.ReferenceCallback)
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/build/v1.BuildConfig", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta",
-		},
+			"github.com/openshift/api/build/v1.BuildConfig", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"},
 	}
 }
 
@@ -5718,8 +5659,7 @@ func schema_openshift_api_build_v1_BuildConfigSpec(ref common.ReferenceCallback)
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/build/v1.BuildOutput", "github.com/openshift/api/build/v1.BuildPostCommitSpec", "github.com/openshift/api/build/v1.BuildSource", "github.com/openshift/api/build/v1.BuildStrategy", "github.com/openshift/api/build/v1.BuildTriggerPolicy", "github.com/openshift/api/build/v1.SourceRevision", "k8s.io/api/core/v1.ResourceRequirements",
-		},
+			"github.com/openshift/api/build/v1.BuildOutput", "github.com/openshift/api/build/v1.BuildPostCommitSpec", "github.com/openshift/api/build/v1.BuildSource", "github.com/openshift/api/build/v1.BuildStrategy", "github.com/openshift/api/build/v1.BuildTriggerPolicy", "github.com/openshift/api/build/v1.SourceRevision", "k8s.io/api/core/v1.ResourceRequirements"},
 	}
 }
 
@@ -5756,8 +5696,7 @@ func schema_openshift_api_build_v1_BuildConfigStatus(ref common.ReferenceCallbac
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/build/v1.ImageChangeTriggerStatus",
-		},
+			"github.com/openshift/api/build/v1.ImageChangeTriggerStatus"},
 	}
 }
 
@@ -5808,8 +5747,7 @@ func schema_openshift_api_build_v1_BuildList(ref common.ReferenceCallback) commo
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/build/v1.Build", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta",
-		},
+			"github.com/openshift/api/build/v1.Build", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"},
 	}
 }
 
@@ -5941,8 +5879,7 @@ func schema_openshift_api_build_v1_BuildLogOptions(ref common.ReferenceCallback)
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/apimachinery/pkg/apis/meta/v1.Time",
-		},
+			"k8s.io/apimachinery/pkg/apis/meta/v1.Time"},
 	}
 }
 
@@ -5983,8 +5920,7 @@ func schema_openshift_api_build_v1_BuildOutput(ref common.ReferenceCallback) com
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/build/v1.ImageLabel", "k8s.io/api/core/v1.LocalObjectReference", "k8s.io/api/core/v1.ObjectReference",
-		},
+			"github.com/openshift/api/build/v1.ImageLabel", "k8s.io/api/core/v1.LocalObjectReference", "k8s.io/api/core/v1.ObjectReference"},
 	}
 }
 
@@ -6141,8 +6077,7 @@ func schema_openshift_api_build_v1_BuildRequest(ref common.ReferenceCallback) co
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/build/v1.BinaryBuildSource", "github.com/openshift/api/build/v1.BuildTriggerCause", "github.com/openshift/api/build/v1.DockerStrategyOptions", "github.com/openshift/api/build/v1.SourceRevision", "github.com/openshift/api/build/v1.SourceStrategyOptions", "k8s.io/api/core/v1.EnvVar", "k8s.io/api/core/v1.ObjectReference", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta",
-		},
+			"github.com/openshift/api/build/v1.BinaryBuildSource", "github.com/openshift/api/build/v1.BuildTriggerCause", "github.com/openshift/api/build/v1.DockerStrategyOptions", "github.com/openshift/api/build/v1.SourceRevision", "github.com/openshift/api/build/v1.SourceStrategyOptions", "k8s.io/api/core/v1.EnvVar", "k8s.io/api/core/v1.ObjectReference", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"},
 	}
 }
 
@@ -6238,8 +6173,7 @@ func schema_openshift_api_build_v1_BuildSource(ref common.ReferenceCallback) com
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/build/v1.BinaryBuildSource", "github.com/openshift/api/build/v1.ConfigMapBuildSource", "github.com/openshift/api/build/v1.GitBuildSource", "github.com/openshift/api/build/v1.ImageSource", "github.com/openshift/api/build/v1.SecretBuildSource", "k8s.io/api/core/v1.LocalObjectReference",
-		},
+			"github.com/openshift/api/build/v1.BinaryBuildSource", "github.com/openshift/api/build/v1.ConfigMapBuildSource", "github.com/openshift/api/build/v1.GitBuildSource", "github.com/openshift/api/build/v1.ImageSource", "github.com/openshift/api/build/v1.SecretBuildSource", "k8s.io/api/core/v1.LocalObjectReference"},
 	}
 }
 
@@ -6347,8 +6281,7 @@ func schema_openshift_api_build_v1_BuildSpec(ref common.ReferenceCallback) commo
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/build/v1.BuildOutput", "github.com/openshift/api/build/v1.BuildPostCommitSpec", "github.com/openshift/api/build/v1.BuildSource", "github.com/openshift/api/build/v1.BuildStrategy", "github.com/openshift/api/build/v1.BuildTriggerCause", "github.com/openshift/api/build/v1.SourceRevision", "k8s.io/api/core/v1.ResourceRequirements",
-		},
+			"github.com/openshift/api/build/v1.BuildOutput", "github.com/openshift/api/build/v1.BuildPostCommitSpec", "github.com/openshift/api/build/v1.BuildSource", "github.com/openshift/api/build/v1.BuildStrategy", "github.com/openshift/api/build/v1.BuildTriggerCause", "github.com/openshift/api/build/v1.SourceRevision", "k8s.io/api/core/v1.ResourceRequirements"},
 	}
 }
 
@@ -6472,8 +6405,7 @@ func schema_openshift_api_build_v1_BuildStatus(ref common.ReferenceCallback) com
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/build/v1.BuildCondition", "github.com/openshift/api/build/v1.BuildStatusOutput", "github.com/openshift/api/build/v1.StageInfo", "k8s.io/api/core/v1.ObjectReference", "k8s.io/apimachinery/pkg/apis/meta/v1.Time",
-		},
+			"github.com/openshift/api/build/v1.BuildCondition", "github.com/openshift/api/build/v1.BuildStatusOutput", "github.com/openshift/api/build/v1.StageInfo", "k8s.io/api/core/v1.ObjectReference", "k8s.io/apimachinery/pkg/apis/meta/v1.Time"},
 	}
 }
 
@@ -6494,8 +6426,7 @@ func schema_openshift_api_build_v1_BuildStatusOutput(ref common.ReferenceCallbac
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/build/v1.BuildStatusOutputTo",
-		},
+			"github.com/openshift/api/build/v1.BuildStatusOutputTo"},
 	}
 }
 
@@ -6561,8 +6492,7 @@ func schema_openshift_api_build_v1_BuildStrategy(ref common.ReferenceCallback) c
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/build/v1.CustomBuildStrategy", "github.com/openshift/api/build/v1.DockerBuildStrategy", "github.com/openshift/api/build/v1.JenkinsPipelineBuildStrategy", "github.com/openshift/api/build/v1.SourceBuildStrategy",
-		},
+			"github.com/openshift/api/build/v1.CustomBuildStrategy", "github.com/openshift/api/build/v1.DockerBuildStrategy", "github.com/openshift/api/build/v1.JenkinsPipelineBuildStrategy", "github.com/openshift/api/build/v1.SourceBuildStrategy"},
 	}
 }
 
@@ -6614,8 +6544,7 @@ func schema_openshift_api_build_v1_BuildTriggerCause(ref common.ReferenceCallbac
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/build/v1.BitbucketWebHookCause", "github.com/openshift/api/build/v1.GenericWebHookCause", "github.com/openshift/api/build/v1.GitHubWebHookCause", "github.com/openshift/api/build/v1.GitLabWebHookCause", "github.com/openshift/api/build/v1.ImageChangeCause",
-		},
+			"github.com/openshift/api/build/v1.BitbucketWebHookCause", "github.com/openshift/api/build/v1.GenericWebHookCause", "github.com/openshift/api/build/v1.GitHubWebHookCause", "github.com/openshift/api/build/v1.GitLabWebHookCause", "github.com/openshift/api/build/v1.ImageChangeCause"},
 	}
 }
 
@@ -6669,8 +6598,7 @@ func schema_openshift_api_build_v1_BuildTriggerPolicy(ref common.ReferenceCallba
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/build/v1.ImageChangeTrigger", "github.com/openshift/api/build/v1.WebHookTrigger",
-		},
+			"github.com/openshift/api/build/v1.ImageChangeTrigger", "github.com/openshift/api/build/v1.WebHookTrigger"},
 	}
 }
 
@@ -6725,8 +6653,7 @@ func schema_openshift_api_build_v1_BuildVolume(ref common.ReferenceCallback) com
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/build/v1.BuildVolumeMount", "github.com/openshift/api/build/v1.BuildVolumeSource",
-		},
+			"github.com/openshift/api/build/v1.BuildVolumeMount", "github.com/openshift/api/build/v1.BuildVolumeSource"},
 	}
 }
 
@@ -6790,8 +6717,7 @@ func schema_openshift_api_build_v1_BuildVolumeSource(ref common.ReferenceCallbac
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.CSIVolumeSource", "k8s.io/api/core/v1.ConfigMapVolumeSource", "k8s.io/api/core/v1.SecretVolumeSource",
-		},
+			"k8s.io/api/core/v1.CSIVolumeSource", "k8s.io/api/core/v1.ConfigMapVolumeSource", "k8s.io/api/core/v1.SecretVolumeSource"},
 	}
 }
 
@@ -6885,8 +6811,7 @@ func schema_openshift_api_build_v1_CommonSpec(ref common.ReferenceCallback) comm
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/build/v1.BuildOutput", "github.com/openshift/api/build/v1.BuildPostCommitSpec", "github.com/openshift/api/build/v1.BuildSource", "github.com/openshift/api/build/v1.BuildStrategy", "github.com/openshift/api/build/v1.SourceRevision", "k8s.io/api/core/v1.ResourceRequirements",
-		},
+			"github.com/openshift/api/build/v1.BuildOutput", "github.com/openshift/api/build/v1.BuildPostCommitSpec", "github.com/openshift/api/build/v1.BuildSource", "github.com/openshift/api/build/v1.BuildStrategy", "github.com/openshift/api/build/v1.SourceRevision", "k8s.io/api/core/v1.ResourceRequirements"},
 	}
 }
 
@@ -6914,8 +6839,7 @@ func schema_openshift_api_build_v1_CommonWebHookCause(ref common.ReferenceCallba
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/build/v1.SourceRevision",
-		},
+			"github.com/openshift/api/build/v1.SourceRevision"},
 	}
 }
 
@@ -6945,8 +6869,7 @@ func schema_openshift_api_build_v1_ConfigMapBuildSource(ref common.ReferenceCall
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.LocalObjectReference",
-		},
+			"k8s.io/api/core/v1.LocalObjectReference"},
 	}
 }
 
@@ -7024,8 +6947,7 @@ func schema_openshift_api_build_v1_CustomBuildStrategy(ref common.ReferenceCallb
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/build/v1.SecretSpec", "k8s.io/api/core/v1.EnvVar", "k8s.io/api/core/v1.LocalObjectReference", "k8s.io/api/core/v1.ObjectReference",
-		},
+			"github.com/openshift/api/build/v1.SecretSpec", "k8s.io/api/core/v1.EnvVar", "k8s.io/api/core/v1.LocalObjectReference", "k8s.io/api/core/v1.ObjectReference"},
 	}
 }
 
@@ -7132,8 +7054,7 @@ func schema_openshift_api_build_v1_DockerBuildStrategy(ref common.ReferenceCallb
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/build/v1.BuildVolume", "k8s.io/api/core/v1.EnvVar", "k8s.io/api/core/v1.LocalObjectReference", "k8s.io/api/core/v1.ObjectReference",
-		},
+			"github.com/openshift/api/build/v1.BuildVolume", "k8s.io/api/core/v1.EnvVar", "k8s.io/api/core/v1.LocalObjectReference", "k8s.io/api/core/v1.ObjectReference"},
 	}
 }
 
@@ -7169,8 +7090,7 @@ func schema_openshift_api_build_v1_DockerStrategyOptions(ref common.ReferenceCal
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.EnvVar",
-		},
+			"k8s.io/api/core/v1.EnvVar"},
 	}
 }
 
@@ -7198,8 +7118,7 @@ func schema_openshift_api_build_v1_GenericWebHookCause(ref common.ReferenceCallb
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/build/v1.SourceRevision",
-		},
+			"github.com/openshift/api/build/v1.SourceRevision"},
 	}
 }
 
@@ -7247,8 +7166,7 @@ func schema_openshift_api_build_v1_GenericWebHookEvent(ref common.ReferenceCallb
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/build/v1.DockerStrategyOptions", "github.com/openshift/api/build/v1.GitInfo", "k8s.io/api/core/v1.EnvVar",
-		},
+			"github.com/openshift/api/build/v1.DockerStrategyOptions", "github.com/openshift/api/build/v1.GitInfo", "k8s.io/api/core/v1.EnvVar"},
 	}
 }
 
@@ -7326,8 +7244,7 @@ func schema_openshift_api_build_v1_GitHubWebHookCause(ref common.ReferenceCallba
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/build/v1.SourceRevision",
-		},
+			"github.com/openshift/api/build/v1.SourceRevision"},
 	}
 }
 
@@ -7421,8 +7338,7 @@ func schema_openshift_api_build_v1_GitInfo(ref common.ReferenceCallback) common.
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/build/v1.GitRefInfo", "github.com/openshift/api/build/v1.SourceControlUser",
-		},
+			"github.com/openshift/api/build/v1.GitRefInfo", "github.com/openshift/api/build/v1.SourceControlUser"},
 	}
 }
 
@@ -7450,8 +7366,7 @@ func schema_openshift_api_build_v1_GitLabWebHookCause(ref common.ReferenceCallba
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/build/v1.SourceRevision",
-		},
+			"github.com/openshift/api/build/v1.SourceRevision"},
 	}
 }
 
@@ -7531,8 +7446,7 @@ func schema_openshift_api_build_v1_GitRefInfo(ref common.ReferenceCallback) comm
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/build/v1.SourceControlUser",
-		},
+			"github.com/openshift/api/build/v1.SourceControlUser"},
 	}
 }
 
@@ -7575,8 +7489,7 @@ func schema_openshift_api_build_v1_GitSourceRevision(ref common.ReferenceCallbac
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/build/v1.SourceControlUser",
-		},
+			"github.com/openshift/api/build/v1.SourceControlUser"},
 	}
 }
 
@@ -7604,8 +7517,7 @@ func schema_openshift_api_build_v1_ImageChangeCause(ref common.ReferenceCallback
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.ObjectReference",
-		},
+			"k8s.io/api/core/v1.ObjectReference"},
 	}
 }
 
@@ -7640,8 +7552,7 @@ func schema_openshift_api_build_v1_ImageChangeTrigger(ref common.ReferenceCallba
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.ObjectReference",
-		},
+			"k8s.io/api/core/v1.ObjectReference"},
 	}
 }
 
@@ -7676,8 +7587,7 @@ func schema_openshift_api_build_v1_ImageChangeTriggerStatus(ref common.Reference
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/build/v1.ImageStreamTagReference", "k8s.io/apimachinery/pkg/apis/meta/v1.Time",
-		},
+			"github.com/openshift/api/build/v1.ImageStreamTagReference", "k8s.io/apimachinery/pkg/apis/meta/v1.Time"},
 	}
 }
 
@@ -7764,8 +7674,7 @@ func schema_openshift_api_build_v1_ImageSource(ref common.ReferenceCallback) com
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/build/v1.ImageSourcePath", "k8s.io/api/core/v1.LocalObjectReference", "k8s.io/api/core/v1.ObjectReference",
-		},
+			"github.com/openshift/api/build/v1.ImageSourcePath", "k8s.io/api/core/v1.LocalObjectReference", "k8s.io/api/core/v1.ObjectReference"},
 	}
 }
 
@@ -7865,8 +7774,7 @@ func schema_openshift_api_build_v1_JenkinsPipelineBuildStrategy(ref common.Refer
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.EnvVar",
-		},
+			"k8s.io/api/core/v1.EnvVar"},
 	}
 }
 
@@ -7930,8 +7838,7 @@ func schema_openshift_api_build_v1_SecretBuildSource(ref common.ReferenceCallbac
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.LocalObjectReference",
-		},
+			"k8s.io/api/core/v1.LocalObjectReference"},
 	}
 }
 
@@ -7984,8 +7891,7 @@ func schema_openshift_api_build_v1_SecretSpec(ref common.ReferenceCallback) comm
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.LocalObjectReference",
-		},
+			"k8s.io/api/core/v1.LocalObjectReference"},
 	}
 }
 
@@ -8073,8 +7979,7 @@ func schema_openshift_api_build_v1_SourceBuildStrategy(ref common.ReferenceCallb
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/build/v1.BuildVolume", "k8s.io/api/core/v1.EnvVar", "k8s.io/api/core/v1.LocalObjectReference", "k8s.io/api/core/v1.ObjectReference",
-		},
+			"github.com/openshift/api/build/v1.BuildVolume", "k8s.io/api/core/v1.EnvVar", "k8s.io/api/core/v1.LocalObjectReference", "k8s.io/api/core/v1.ObjectReference"},
 	}
 }
 
@@ -8131,8 +8036,7 @@ func schema_openshift_api_build_v1_SourceRevision(ref common.ReferenceCallback) 
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/build/v1.GitSourceRevision",
-		},
+			"github.com/openshift/api/build/v1.GitSourceRevision"},
 	}
 }
 
@@ -8201,8 +8105,7 @@ func schema_openshift_api_build_v1_StageInfo(ref common.ReferenceCallback) commo
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/build/v1.StepInfo", "k8s.io/apimachinery/pkg/apis/meta/v1.Time",
-		},
+			"github.com/openshift/api/build/v1.StepInfo", "k8s.io/apimachinery/pkg/apis/meta/v1.Time"},
 	}
 }
 
@@ -8237,8 +8140,7 @@ func schema_openshift_api_build_v1_StepInfo(ref common.ReferenceCallback) common
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/apimachinery/pkg/apis/meta/v1.Time",
-		},
+			"k8s.io/apimachinery/pkg/apis/meta/v1.Time"},
 	}
 }
 
@@ -8273,8 +8175,7 @@ func schema_openshift_api_build_v1_WebHookTrigger(ref common.ReferenceCallback) 
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/build/v1.SecretLocalReference",
-		},
+			"github.com/openshift/api/build/v1.SecretLocalReference"},
 	}
 }
 
@@ -8325,8 +8226,7 @@ func schema_openshift_api_cloudnetwork_v1_CloudPrivateIPConfig(ref common.Refere
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/cloudnetwork/v1.CloudPrivateIPConfigSpec", "github.com/openshift/api/cloudnetwork/v1.CloudPrivateIPConfigStatus", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta",
-		},
+			"github.com/openshift/api/cloudnetwork/v1.CloudPrivateIPConfigSpec", "github.com/openshift/api/cloudnetwork/v1.CloudPrivateIPConfigStatus", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"},
 	}
 }
 
@@ -8395,8 +8295,7 @@ func schema_openshift_api_cloudnetwork_v1_CloudPrivateIPConfigStatus(ref common.
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/apimachinery/pkg/apis/meta/v1.Condition",
-		},
+			"k8s.io/apimachinery/pkg/apis/meta/v1.Condition"},
 	}
 }
 
@@ -8447,8 +8346,7 @@ func schema_openshift_api_config_v1_APIServer(ref common.ReferenceCallback) comm
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/config/v1.APIServerSpec", "github.com/openshift/api/config/v1.APIServerStatus", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta",
-		},
+			"github.com/openshift/api/config/v1.APIServerSpec", "github.com/openshift/api/config/v1.APIServerStatus", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"},
 	}
 }
 
@@ -8488,8 +8386,7 @@ func schema_openshift_api_config_v1_APIServerEncryption(ref common.ReferenceCall
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/config/v1.KMSConfig",
-		},
+			"github.com/openshift/api/config/v1.KMSConfig"},
 	}
 }
 
@@ -8539,8 +8436,7 @@ func schema_openshift_api_config_v1_APIServerList(ref common.ReferenceCallback) 
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/config/v1.APIServer", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta",
-		},
+			"github.com/openshift/api/config/v1.APIServer", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"},
 	}
 }
 
@@ -8583,8 +8479,7 @@ func schema_openshift_api_config_v1_APIServerNamedServingCert(ref common.Referen
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/config/v1.SecretNameReference",
-		},
+			"github.com/openshift/api/config/v1.SecretNameReference"},
 	}
 }
 
@@ -8617,8 +8512,7 @@ func schema_openshift_api_config_v1_APIServerServingCerts(ref common.ReferenceCa
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/config/v1.APIServerNamedServingCert",
-		},
+			"github.com/openshift/api/config/v1.APIServerNamedServingCert"},
 	}
 }
 
@@ -8686,8 +8580,7 @@ func schema_openshift_api_config_v1_APIServerSpec(ref common.ReferenceCallback) 
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/config/v1.APIServerEncryption", "github.com/openshift/api/config/v1.APIServerServingCerts", "github.com/openshift/api/config/v1.Audit", "github.com/openshift/api/config/v1.ConfigMapNameReference", "github.com/openshift/api/config/v1.TLSSecurityProfile",
-		},
+			"github.com/openshift/api/config/v1.APIServerEncryption", "github.com/openshift/api/config/v1.APIServerServingCerts", "github.com/openshift/api/config/v1.Audit", "github.com/openshift/api/config/v1.ConfigMapNameReference", "github.com/openshift/api/config/v1.TLSSecurityProfile"},
 	}
 }
 
@@ -8814,8 +8707,7 @@ func schema_openshift_api_config_v1_AWSPlatformSpec(ref common.ReferenceCallback
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/config/v1.AWSServiceEndpoint",
-		},
+			"github.com/openshift/api/config/v1.AWSServiceEndpoint"},
 	}
 }
 
@@ -8892,8 +8784,7 @@ func schema_openshift_api_config_v1_AWSPlatformStatus(ref common.ReferenceCallba
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/config/v1.AWSResourceTag", "github.com/openshift/api/config/v1.AWSServiceEndpoint", "github.com/openshift/api/config/v1.CloudLoadBalancerConfig",
-		},
+			"github.com/openshift/api/config/v1.AWSResourceTag", "github.com/openshift/api/config/v1.AWSServiceEndpoint", "github.com/openshift/api/config/v1.CloudLoadBalancerConfig"},
 	}
 }
 
@@ -9011,8 +8902,7 @@ func schema_openshift_api_config_v1_AdmissionConfig(ref common.ReferenceCallback
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/config/v1.AdmissionPluginConfig",
-		},
+			"github.com/openshift/api/config/v1.AdmissionPluginConfig"},
 	}
 }
 
@@ -9042,8 +8932,7 @@ func schema_openshift_api_config_v1_AdmissionPluginConfig(ref common.ReferenceCa
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/apimachinery/pkg/runtime.RawExtension",
-		},
+			"k8s.io/apimachinery/pkg/runtime.RawExtension"},
 	}
 }
 
@@ -9107,8 +8996,7 @@ func schema_openshift_api_config_v1_AlibabaCloudPlatformStatus(ref common.Refere
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/config/v1.AlibabaCloudResourceTag",
-		},
+			"github.com/openshift/api/config/v1.AlibabaCloudResourceTag"},
 	}
 }
 
@@ -9181,8 +9069,7 @@ func schema_openshift_api_config_v1_Audit(ref common.ReferenceCallback) common.O
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/config/v1.AuditCustomRule",
-		},
+			"github.com/openshift/api/config/v1.AuditCustomRule"},
 	}
 }
 
@@ -9276,8 +9163,7 @@ func schema_openshift_api_config_v1_AuditConfig(ref common.ReferenceCallback) co
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/apimachinery/pkg/runtime.RawExtension",
-		},
+			"k8s.io/apimachinery/pkg/runtime.RawExtension"},
 	}
 }
 
@@ -9358,8 +9244,7 @@ func schema_openshift_api_config_v1_Authentication(ref common.ReferenceCallback)
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/config/v1.AuthenticationSpec", "github.com/openshift/api/config/v1.AuthenticationStatus", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta",
-		},
+			"github.com/openshift/api/config/v1.AuthenticationSpec", "github.com/openshift/api/config/v1.AuthenticationStatus", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"},
 	}
 }
 
@@ -9409,8 +9294,7 @@ func schema_openshift_api_config_v1_AuthenticationList(ref common.ReferenceCallb
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/config/v1.Authentication", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta",
-		},
+			"github.com/openshift/api/config/v1.Authentication", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"},
 	}
 }
 
@@ -9494,8 +9378,7 @@ func schema_openshift_api_config_v1_AuthenticationSpec(ref common.ReferenceCallb
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/config/v1.ConfigMapNameReference", "github.com/openshift/api/config/v1.DeprecatedWebhookTokenAuthenticator", "github.com/openshift/api/config/v1.OIDCProvider", "github.com/openshift/api/config/v1.WebhookTokenAuthenticator",
-		},
+			"github.com/openshift/api/config/v1.ConfigMapNameReference", "github.com/openshift/api/config/v1.DeprecatedWebhookTokenAuthenticator", "github.com/openshift/api/config/v1.OIDCProvider", "github.com/openshift/api/config/v1.WebhookTokenAuthenticator"},
 	}
 }
 
@@ -9539,8 +9422,7 @@ func schema_openshift_api_config_v1_AuthenticationStatus(ref common.ReferenceCal
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/config/v1.ConfigMapNameReference", "github.com/openshift/api/config/v1.OIDCClientStatus",
-		},
+			"github.com/openshift/api/config/v1.ConfigMapNameReference", "github.com/openshift/api/config/v1.OIDCClientStatus"},
 	}
 }
 
@@ -9630,8 +9512,7 @@ func schema_openshift_api_config_v1_AzurePlatformStatus(ref common.ReferenceCall
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/config/v1.AzureResourceTag", "github.com/openshift/api/config/v1.CloudLoadBalancerConfig",
-		},
+			"github.com/openshift/api/config/v1.AzureResourceTag", "github.com/openshift/api/config/v1.CloudLoadBalancerConfig"},
 	}
 }
 
@@ -9877,8 +9758,7 @@ func schema_openshift_api_config_v1_BareMetalPlatformStatus(ref common.Reference
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/config/v1.BareMetalPlatformLoadBalancer",
-		},
+			"github.com/openshift/api/config/v1.BareMetalPlatformLoadBalancer"},
 	}
 }
 
@@ -9923,8 +9803,7 @@ func schema_openshift_api_config_v1_BasicAuthIdentityProvider(ref common.Referen
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/config/v1.ConfigMapNameReference", "github.com/openshift/api/config/v1.SecretNameReference",
-		},
+			"github.com/openshift/api/config/v1.ConfigMapNameReference", "github.com/openshift/api/config/v1.SecretNameReference"},
 	}
 }
 
@@ -9968,8 +9847,7 @@ func schema_openshift_api_config_v1_Build(ref common.ReferenceCallback) common.O
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/config/v1.BuildSpec", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta",
-		},
+			"github.com/openshift/api/config/v1.BuildSpec", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"},
 	}
 }
 
@@ -10030,8 +9908,7 @@ func schema_openshift_api_config_v1_BuildDefaults(ref common.ReferenceCallback) 
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/config/v1.ImageLabel", "github.com/openshift/api/config/v1.ProxySpec", "k8s.io/api/core/v1.EnvVar", "k8s.io/api/core/v1.ResourceRequirements",
-		},
+			"github.com/openshift/api/config/v1.ImageLabel", "github.com/openshift/api/config/v1.ProxySpec", "k8s.io/api/core/v1.EnvVar", "k8s.io/api/core/v1.ResourceRequirements"},
 	}
 }
 
@@ -10081,8 +9958,7 @@ func schema_openshift_api_config_v1_BuildList(ref common.ReferenceCallback) comm
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/config/v1.Build", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta",
-		},
+			"github.com/openshift/api/config/v1.Build", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"},
 	}
 }
 
@@ -10147,8 +10023,7 @@ func schema_openshift_api_config_v1_BuildOverrides(ref common.ReferenceCallback)
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/config/v1.ImageLabel", "k8s.io/api/core/v1.Toleration",
-		},
+			"github.com/openshift/api/config/v1.ImageLabel", "k8s.io/api/core/v1.Toleration"},
 	}
 }
 
@@ -10183,8 +10058,7 @@ func schema_openshift_api_config_v1_BuildSpec(ref common.ReferenceCallback) comm
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/config/v1.BuildDefaults", "github.com/openshift/api/config/v1.BuildOverrides", "github.com/openshift/api/config/v1.ConfigMapNameReference",
-		},
+			"github.com/openshift/api/config/v1.BuildDefaults", "github.com/openshift/api/config/v1.BuildOverrides", "github.com/openshift/api/config/v1.ConfigMapNameReference"},
 	}
 }
 
@@ -10321,8 +10195,7 @@ func schema_openshift_api_config_v1_CloudLoadBalancerConfig(ref common.Reference
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/config/v1.CloudLoadBalancerIPs",
-		},
+			"github.com/openshift/api/config/v1.CloudLoadBalancerIPs"},
 	}
 }
 
@@ -10425,8 +10298,7 @@ func schema_openshift_api_config_v1_ClusterCondition(ref common.ReferenceCallbac
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/config/v1.PromQLClusterCondition",
-		},
+			"github.com/openshift/api/config/v1.PromQLClusterCondition"},
 	}
 }
 
@@ -10477,8 +10349,7 @@ func schema_openshift_api_config_v1_ClusterImagePolicy(ref common.ReferenceCallb
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/config/v1.ClusterImagePolicySpec", "github.com/openshift/api/config/v1.ClusterImagePolicyStatus", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta",
-		},
+			"github.com/openshift/api/config/v1.ClusterImagePolicySpec", "github.com/openshift/api/config/v1.ClusterImagePolicyStatus", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"},
 	}
 }
 
@@ -10529,8 +10400,7 @@ func schema_openshift_api_config_v1_ClusterImagePolicyList(ref common.ReferenceC
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/config/v1.ClusterImagePolicy", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta",
-		},
+			"github.com/openshift/api/config/v1.ClusterImagePolicy", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"},
 	}
 }
 
@@ -10573,8 +10443,7 @@ func schema_openshift_api_config_v1_ClusterImagePolicySpec(ref common.ReferenceC
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/config/v1.Policy",
-		},
+			"github.com/openshift/api/config/v1.Policy"},
 	}
 }
 
@@ -10610,8 +10479,7 @@ func schema_openshift_api_config_v1_ClusterImagePolicyStatus(ref common.Referenc
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/apimachinery/pkg/apis/meta/v1.Condition",
-		},
+			"k8s.io/apimachinery/pkg/apis/meta/v1.Condition"},
 	}
 }
 
@@ -10691,8 +10559,7 @@ func schema_openshift_api_config_v1_ClusterOperator(ref common.ReferenceCallback
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/config/v1.ClusterOperatorSpec", "github.com/openshift/api/config/v1.ClusterOperatorStatus", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta",
-		},
+			"github.com/openshift/api/config/v1.ClusterOperatorSpec", "github.com/openshift/api/config/v1.ClusterOperatorStatus", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"},
 	}
 }
 
@@ -10742,8 +10609,7 @@ func schema_openshift_api_config_v1_ClusterOperatorList(ref common.ReferenceCall
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/config/v1.ClusterOperator", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta",
-		},
+			"github.com/openshift/api/config/v1.ClusterOperator", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"},
 	}
 }
 
@@ -10827,8 +10693,7 @@ func schema_openshift_api_config_v1_ClusterOperatorStatus(ref common.ReferenceCa
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/config/v1.ClusterOperatorStatusCondition", "github.com/openshift/api/config/v1.ObjectReference", "github.com/openshift/api/config/v1.OperandVersion", "k8s.io/apimachinery/pkg/runtime.RawExtension",
-		},
+			"github.com/openshift/api/config/v1.ClusterOperatorStatusCondition", "github.com/openshift/api/config/v1.ObjectReference", "github.com/openshift/api/config/v1.OperandVersion", "k8s.io/apimachinery/pkg/runtime.RawExtension"},
 	}
 }
 
@@ -10880,8 +10745,7 @@ func schema_openshift_api_config_v1_ClusterOperatorStatusCondition(ref common.Re
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/apimachinery/pkg/apis/meta/v1.Time",
-		},
+			"k8s.io/apimachinery/pkg/apis/meta/v1.Time"},
 	}
 }
 
@@ -10932,8 +10796,7 @@ func schema_openshift_api_config_v1_ClusterVersion(ref common.ReferenceCallback)
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/config/v1.ClusterVersionSpec", "github.com/openshift/api/config/v1.ClusterVersionStatus", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta",
-		},
+			"github.com/openshift/api/config/v1.ClusterVersionSpec", "github.com/openshift/api/config/v1.ClusterVersionStatus", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"},
 	}
 }
 
@@ -11076,8 +10939,7 @@ func schema_openshift_api_config_v1_ClusterVersionList(ref common.ReferenceCallb
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/config/v1.ClusterVersion", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta",
-		},
+			"github.com/openshift/api/config/v1.ClusterVersion", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"},
 	}
 }
 
@@ -11174,8 +11036,7 @@ func schema_openshift_api_config_v1_ClusterVersionSpec(ref common.ReferenceCallb
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/config/v1.ClusterVersionCapabilitiesSpec", "github.com/openshift/api/config/v1.ComponentOverride", "github.com/openshift/api/config/v1.SignatureStore", "github.com/openshift/api/config/v1.Update",
-		},
+			"github.com/openshift/api/config/v1.ClusterVersionCapabilitiesSpec", "github.com/openshift/api/config/v1.ComponentOverride", "github.com/openshift/api/config/v1.SignatureStore", "github.com/openshift/api/config/v1.Update"},
 	}
 }
 
@@ -11302,8 +11163,7 @@ func schema_openshift_api_config_v1_ClusterVersionStatus(ref common.ReferenceCal
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/config/v1.ClusterOperatorStatusCondition", "github.com/openshift/api/config/v1.ClusterVersionCapabilitiesStatus", "github.com/openshift/api/config/v1.ConditionalUpdate", "github.com/openshift/api/config/v1.Release", "github.com/openshift/api/config/v1.UpdateHistory",
-		},
+			"github.com/openshift/api/config/v1.ClusterOperatorStatusCondition", "github.com/openshift/api/config/v1.ClusterVersionCapabilitiesStatus", "github.com/openshift/api/config/v1.ConditionalUpdate", "github.com/openshift/api/config/v1.Release", "github.com/openshift/api/config/v1.UpdateHistory"},
 	}
 }
 
@@ -11404,8 +11264,7 @@ func schema_openshift_api_config_v1_ComponentRouteSpec(ref common.ReferenceCallb
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/config/v1.SecretNameReference",
-		},
+			"github.com/openshift/api/config/v1.SecretNameReference"},
 	}
 }
 
@@ -11511,8 +11370,7 @@ func schema_openshift_api_config_v1_ComponentRouteStatus(ref common.ReferenceCal
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/config/v1.ObjectReference", "k8s.io/apimachinery/pkg/apis/meta/v1.Condition",
-		},
+			"github.com/openshift/api/config/v1.ObjectReference", "k8s.io/apimachinery/pkg/apis/meta/v1.Condition"},
 	}
 }
 
@@ -11581,8 +11439,7 @@ func schema_openshift_api_config_v1_ConditionalUpdate(ref common.ReferenceCallba
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/config/v1.ConditionalUpdateRisk", "github.com/openshift/api/config/v1.Release", "k8s.io/apimachinery/pkg/apis/meta/v1.Condition",
-		},
+			"github.com/openshift/api/config/v1.ConditionalUpdateRisk", "github.com/openshift/api/config/v1.Release", "k8s.io/apimachinery/pkg/apis/meta/v1.Condition"},
 	}
 }
 
@@ -11641,8 +11498,7 @@ func schema_openshift_api_config_v1_ConditionalUpdateRisk(ref common.ReferenceCa
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/config/v1.ClusterCondition",
-		},
+			"github.com/openshift/api/config/v1.ClusterCondition"},
 	}
 }
 
@@ -11743,8 +11599,7 @@ func schema_openshift_api_config_v1_Console(ref common.ReferenceCallback) common
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/config/v1.ConsoleSpec", "github.com/openshift/api/config/v1.ConsoleStatus", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta",
-		},
+			"github.com/openshift/api/config/v1.ConsoleSpec", "github.com/openshift/api/config/v1.ConsoleStatus", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"},
 	}
 }
 
@@ -11814,8 +11669,7 @@ func schema_openshift_api_config_v1_ConsoleList(ref common.ReferenceCallback) co
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/config/v1.Console", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta",
-		},
+			"github.com/openshift/api/config/v1.Console", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"},
 	}
 }
 
@@ -11836,8 +11690,7 @@ func schema_openshift_api_config_v1_ConsoleSpec(ref common.ReferenceCallback) co
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/config/v1.ConsoleAuthentication",
-		},
+			"github.com/openshift/api/config/v1.ConsoleAuthentication"},
 	}
 }
 
@@ -11993,8 +11846,7 @@ func schema_openshift_api_config_v1_DNS(ref common.ReferenceCallback) common.Ope
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/config/v1.DNSSpec", "github.com/openshift/api/config/v1.DNSStatus", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta",
-		},
+			"github.com/openshift/api/config/v1.DNSSpec", "github.com/openshift/api/config/v1.DNSStatus", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"},
 	}
 }
 
@@ -12044,8 +11896,7 @@ func schema_openshift_api_config_v1_DNSList(ref common.ReferenceCallback) common
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/config/v1.DNS", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta",
-		},
+			"github.com/openshift/api/config/v1.DNS", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"},
 	}
 }
 
@@ -12087,8 +11938,7 @@ func schema_openshift_api_config_v1_DNSPlatformSpec(ref common.ReferenceCallback
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/config/v1.AWSDNSSpec",
-		},
+			"github.com/openshift/api/config/v1.AWSDNSSpec"},
 	}
 }
 
@@ -12130,8 +11980,7 @@ func schema_openshift_api_config_v1_DNSSpec(ref common.ReferenceCallback) common
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/config/v1.DNSPlatformSpec", "github.com/openshift/api/config/v1.DNSZone",
-		},
+			"github.com/openshift/api/config/v1.DNSPlatformSpec", "github.com/openshift/api/config/v1.DNSZone"},
 	}
 }
 
@@ -12240,8 +12089,7 @@ func schema_openshift_api_config_v1_DeprecatedWebhookTokenAuthenticator(ref comm
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/config/v1.SecretNameReference",
-		},
+			"github.com/openshift/api/config/v1.SecretNameReference"},
 	}
 }
 
@@ -12433,8 +12281,7 @@ func schema_openshift_api_config_v1_ExternalIPConfig(ref common.ReferenceCallbac
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/config/v1.ExternalIPPolicy",
-		},
+			"github.com/openshift/api/config/v1.ExternalIPPolicy"},
 	}
 }
 
@@ -12530,8 +12377,7 @@ func schema_openshift_api_config_v1_ExternalPlatformStatus(ref common.ReferenceC
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/config/v1.CloudControllerManagerStatus",
-		},
+			"github.com/openshift/api/config/v1.CloudControllerManagerStatus"},
 	}
 }
 
@@ -12612,8 +12458,7 @@ func schema_openshift_api_config_v1_FeatureGate(ref common.ReferenceCallback) co
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/config/v1.FeatureGateSpec", "github.com/openshift/api/config/v1.FeatureGateStatus", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta",
-		},
+			"github.com/openshift/api/config/v1.FeatureGateSpec", "github.com/openshift/api/config/v1.FeatureGateStatus", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"},
 	}
 }
 
@@ -12685,8 +12530,7 @@ func schema_openshift_api_config_v1_FeatureGateDetails(ref common.ReferenceCallb
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/config/v1.FeatureGateAttributes",
-		},
+			"github.com/openshift/api/config/v1.FeatureGateAttributes"},
 	}
 }
 
@@ -12736,8 +12580,7 @@ func schema_openshift_api_config_v1_FeatureGateList(ref common.ReferenceCallback
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/config/v1.FeatureGate", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta",
-		},
+			"github.com/openshift/api/config/v1.FeatureGate", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"},
 	}
 }
 
@@ -12776,8 +12619,7 @@ func schema_openshift_api_config_v1_FeatureGateSelection(ref common.ReferenceCal
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/config/v1.CustomFeatureGates",
-		},
+			"github.com/openshift/api/config/v1.CustomFeatureGates"},
 	}
 }
 
@@ -12816,8 +12658,7 @@ func schema_openshift_api_config_v1_FeatureGateSpec(ref common.ReferenceCallback
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/config/v1.CustomFeatureGates",
-		},
+			"github.com/openshift/api/config/v1.CustomFeatureGates"},
 	}
 }
 
@@ -12875,8 +12716,7 @@ func schema_openshift_api_config_v1_FeatureGateStatus(ref common.ReferenceCallba
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/config/v1.FeatureGateDetails", "k8s.io/apimachinery/pkg/apis/meta/v1.Condition",
-		},
+			"github.com/openshift/api/config/v1.FeatureGateDetails", "k8s.io/apimachinery/pkg/apis/meta/v1.Condition"},
 	}
 }
 
@@ -12913,8 +12753,7 @@ func schema_openshift_api_config_v1_FeatureGateTests(ref common.ReferenceCallbac
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/config/v1.TestDetails",
-		},
+			"github.com/openshift/api/config/v1.TestDetails"},
 	}
 }
 
@@ -12951,8 +12790,7 @@ func schema_openshift_api_config_v1_FulcioCAWithRekor(ref common.ReferenceCallba
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/config/v1.PolicyFulcioSubject",
-		},
+			"github.com/openshift/api/config/v1.PolicyFulcioSubject"},
 	}
 }
 
@@ -13046,8 +12884,7 @@ func schema_openshift_api_config_v1_GCPPlatformStatus(ref common.ReferenceCallba
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/config/v1.CloudLoadBalancerConfig", "github.com/openshift/api/config/v1.GCPResourceLabel", "github.com/openshift/api/config/v1.GCPResourceTag",
-		},
+			"github.com/openshift/api/config/v1.CloudLoadBalancerConfig", "github.com/openshift/api/config/v1.GCPResourceLabel", "github.com/openshift/api/config/v1.GCPResourceTag"},
 	}
 }
 
@@ -13180,8 +13017,7 @@ func schema_openshift_api_config_v1_GenericAPIServerConfig(ref common.ReferenceC
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/config/v1.AdmissionConfig", "github.com/openshift/api/config/v1.AuditConfig", "github.com/openshift/api/config/v1.EtcdStorageConfig", "github.com/openshift/api/config/v1.HTTPServingInfo", "github.com/openshift/api/config/v1.KubeClientConfig",
-		},
+			"github.com/openshift/api/config/v1.AdmissionConfig", "github.com/openshift/api/config/v1.AuditConfig", "github.com/openshift/api/config/v1.EtcdStorageConfig", "github.com/openshift/api/config/v1.HTTPServingInfo", "github.com/openshift/api/config/v1.KubeClientConfig"},
 	}
 }
 
@@ -13225,8 +13061,7 @@ func schema_openshift_api_config_v1_GenericControllerConfig(ref common.Reference
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/config/v1.DelegatedAuthentication", "github.com/openshift/api/config/v1.DelegatedAuthorization", "github.com/openshift/api/config/v1.HTTPServingInfo", "github.com/openshift/api/config/v1.LeaderElection",
-		},
+			"github.com/openshift/api/config/v1.DelegatedAuthentication", "github.com/openshift/api/config/v1.DelegatedAuthorization", "github.com/openshift/api/config/v1.HTTPServingInfo", "github.com/openshift/api/config/v1.LeaderElection"},
 	}
 }
 
@@ -13302,8 +13137,7 @@ func schema_openshift_api_config_v1_GitHubIdentityProvider(ref common.ReferenceC
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/config/v1.ConfigMapNameReference", "github.com/openshift/api/config/v1.SecretNameReference",
-		},
+			"github.com/openshift/api/config/v1.ConfigMapNameReference", "github.com/openshift/api/config/v1.SecretNameReference"},
 	}
 }
 
@@ -13349,8 +13183,7 @@ func schema_openshift_api_config_v1_GitLabIdentityProvider(ref common.ReferenceC
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/config/v1.ConfigMapNameReference", "github.com/openshift/api/config/v1.SecretNameReference",
-		},
+			"github.com/openshift/api/config/v1.ConfigMapNameReference", "github.com/openshift/api/config/v1.SecretNameReference"},
 	}
 }
 
@@ -13389,8 +13222,7 @@ func schema_openshift_api_config_v1_GoogleIdentityProvider(ref common.ReferenceC
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/config/v1.SecretNameReference",
-		},
+			"github.com/openshift/api/config/v1.SecretNameReference"},
 	}
 }
 
@@ -13413,8 +13245,7 @@ func schema_openshift_api_config_v1_HTPasswdIdentityProvider(ref common.Referenc
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/config/v1.SecretNameReference",
-		},
+			"github.com/openshift/api/config/v1.SecretNameReference"},
 	}
 }
 
@@ -13521,8 +13352,7 @@ func schema_openshift_api_config_v1_HTTPServingInfo(ref common.ReferenceCallback
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/config/v1.NamedCertificate",
-		},
+			"github.com/openshift/api/config/v1.NamedCertificate"},
 	}
 }
 
@@ -13616,8 +13446,7 @@ func schema_openshift_api_config_v1_IBMCloudPlatformSpec(ref common.ReferenceCal
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/config/v1.IBMCloudServiceEndpoint",
-		},
+			"github.com/openshift/api/config/v1.IBMCloudServiceEndpoint"},
 	}
 }
 
@@ -13689,8 +13518,7 @@ func schema_openshift_api_config_v1_IBMCloudPlatformStatus(ref common.ReferenceC
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/config/v1.IBMCloudServiceEndpoint",
-		},
+			"github.com/openshift/api/config/v1.IBMCloudServiceEndpoint"},
 	}
 }
 
@@ -13813,8 +13641,7 @@ func schema_openshift_api_config_v1_IdentityProvider(ref common.ReferenceCallbac
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/config/v1.BasicAuthIdentityProvider", "github.com/openshift/api/config/v1.GitHubIdentityProvider", "github.com/openshift/api/config/v1.GitLabIdentityProvider", "github.com/openshift/api/config/v1.GoogleIdentityProvider", "github.com/openshift/api/config/v1.HTPasswdIdentityProvider", "github.com/openshift/api/config/v1.KeystoneIdentityProvider", "github.com/openshift/api/config/v1.LDAPIdentityProvider", "github.com/openshift/api/config/v1.OpenIDIdentityProvider", "github.com/openshift/api/config/v1.RequestHeaderIdentityProvider",
-		},
+			"github.com/openshift/api/config/v1.BasicAuthIdentityProvider", "github.com/openshift/api/config/v1.GitHubIdentityProvider", "github.com/openshift/api/config/v1.GitLabIdentityProvider", "github.com/openshift/api/config/v1.GoogleIdentityProvider", "github.com/openshift/api/config/v1.HTPasswdIdentityProvider", "github.com/openshift/api/config/v1.KeystoneIdentityProvider", "github.com/openshift/api/config/v1.LDAPIdentityProvider", "github.com/openshift/api/config/v1.OpenIDIdentityProvider", "github.com/openshift/api/config/v1.RequestHeaderIdentityProvider"},
 	}
 }
 
@@ -13892,8 +13719,7 @@ func schema_openshift_api_config_v1_IdentityProviderConfig(ref common.ReferenceC
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/config/v1.BasicAuthIdentityProvider", "github.com/openshift/api/config/v1.GitHubIdentityProvider", "github.com/openshift/api/config/v1.GitLabIdentityProvider", "github.com/openshift/api/config/v1.GoogleIdentityProvider", "github.com/openshift/api/config/v1.HTPasswdIdentityProvider", "github.com/openshift/api/config/v1.KeystoneIdentityProvider", "github.com/openshift/api/config/v1.LDAPIdentityProvider", "github.com/openshift/api/config/v1.OpenIDIdentityProvider", "github.com/openshift/api/config/v1.RequestHeaderIdentityProvider",
-		},
+			"github.com/openshift/api/config/v1.BasicAuthIdentityProvider", "github.com/openshift/api/config/v1.GitHubIdentityProvider", "github.com/openshift/api/config/v1.GitLabIdentityProvider", "github.com/openshift/api/config/v1.GoogleIdentityProvider", "github.com/openshift/api/config/v1.HTPasswdIdentityProvider", "github.com/openshift/api/config/v1.KeystoneIdentityProvider", "github.com/openshift/api/config/v1.LDAPIdentityProvider", "github.com/openshift/api/config/v1.OpenIDIdentityProvider", "github.com/openshift/api/config/v1.RequestHeaderIdentityProvider"},
 	}
 }
 
@@ -13944,8 +13770,7 @@ func schema_openshift_api_config_v1_Image(ref common.ReferenceCallback) common.O
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/config/v1.ImageSpec", "github.com/openshift/api/config/v1.ImageStatus", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta",
-		},
+			"github.com/openshift/api/config/v1.ImageSpec", "github.com/openshift/api/config/v1.ImageStatus", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"},
 	}
 }
 
@@ -13989,8 +13814,7 @@ func schema_openshift_api_config_v1_ImageContentPolicy(ref common.ReferenceCallb
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/config/v1.ImageContentPolicySpec", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta",
-		},
+			"github.com/openshift/api/config/v1.ImageContentPolicySpec", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"},
 	}
 }
 
@@ -14040,8 +13864,7 @@ func schema_openshift_api_config_v1_ImageContentPolicyList(ref common.ReferenceC
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/config/v1.ImageContentPolicy", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta",
-		},
+			"github.com/openshift/api/config/v1.ImageContentPolicy", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"},
 	}
 }
 
@@ -14078,8 +13901,7 @@ func schema_openshift_api_config_v1_ImageContentPolicySpec(ref common.ReferenceC
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/config/v1.RepositoryDigestMirrors",
-		},
+			"github.com/openshift/api/config/v1.RepositoryDigestMirrors"},
 	}
 }
 
@@ -14130,8 +13952,7 @@ func schema_openshift_api_config_v1_ImageDigestMirrorSet(ref common.ReferenceCal
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/config/v1.ImageDigestMirrorSetSpec", "github.com/openshift/api/config/v1.ImageDigestMirrorSetStatus", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta",
-		},
+			"github.com/openshift/api/config/v1.ImageDigestMirrorSetSpec", "github.com/openshift/api/config/v1.ImageDigestMirrorSetStatus", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"},
 	}
 }
 
@@ -14181,8 +14002,7 @@ func schema_openshift_api_config_v1_ImageDigestMirrorSetList(ref common.Referenc
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/config/v1.ImageDigestMirrorSet", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta",
-		},
+			"github.com/openshift/api/config/v1.ImageDigestMirrorSet", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"},
 	}
 }
 
@@ -14216,8 +14036,7 @@ func schema_openshift_api_config_v1_ImageDigestMirrorSetSpec(ref common.Referenc
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/config/v1.ImageDigestMirrors",
-		},
+			"github.com/openshift/api/config/v1.ImageDigestMirrors"},
 	}
 }
 
@@ -14354,8 +14173,7 @@ func schema_openshift_api_config_v1_ImageList(ref common.ReferenceCallback) comm
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/config/v1.Image", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta",
-		},
+			"github.com/openshift/api/config/v1.Image", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"},
 	}
 }
 
@@ -14406,8 +14224,7 @@ func schema_openshift_api_config_v1_ImagePolicy(ref common.ReferenceCallback) co
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/config/v1.ImagePolicySpec", "github.com/openshift/api/config/v1.ImagePolicyStatus", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta",
-		},
+			"github.com/openshift/api/config/v1.ImagePolicySpec", "github.com/openshift/api/config/v1.ImagePolicyStatus", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"},
 	}
 }
 
@@ -14458,8 +14275,7 @@ func schema_openshift_api_config_v1_ImagePolicyList(ref common.ReferenceCallback
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/config/v1.ImagePolicy", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta",
-		},
+			"github.com/openshift/api/config/v1.ImagePolicy", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"},
 	}
 }
 
@@ -14502,8 +14318,7 @@ func schema_openshift_api_config_v1_ImagePolicySpec(ref common.ReferenceCallback
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/config/v1.Policy",
-		},
+			"github.com/openshift/api/config/v1.Policy"},
 	}
 }
 
@@ -14539,8 +14354,7 @@ func schema_openshift_api_config_v1_ImagePolicyStatus(ref common.ReferenceCallba
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/apimachinery/pkg/apis/meta/v1.Condition",
-		},
+			"k8s.io/apimachinery/pkg/apis/meta/v1.Condition"},
 	}
 }
 
@@ -14616,8 +14430,7 @@ func schema_openshift_api_config_v1_ImageSpec(ref common.ReferenceCallback) comm
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/config/v1.ConfigMapNameReference", "github.com/openshift/api/config/v1.RegistryLocation", "github.com/openshift/api/config/v1.RegistrySources",
-		},
+			"github.com/openshift/api/config/v1.ConfigMapNameReference", "github.com/openshift/api/config/v1.RegistryLocation", "github.com/openshift/api/config/v1.RegistrySources"},
 	}
 }
 
@@ -14715,8 +14528,7 @@ func schema_openshift_api_config_v1_ImageTagMirrorSet(ref common.ReferenceCallba
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/config/v1.ImageTagMirrorSetSpec", "github.com/openshift/api/config/v1.ImageTagMirrorSetStatus", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta",
-		},
+			"github.com/openshift/api/config/v1.ImageTagMirrorSetSpec", "github.com/openshift/api/config/v1.ImageTagMirrorSetStatus", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"},
 	}
 }
 
@@ -14766,8 +14578,7 @@ func schema_openshift_api_config_v1_ImageTagMirrorSetList(ref common.ReferenceCa
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/config/v1.ImageTagMirrorSet", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta",
-		},
+			"github.com/openshift/api/config/v1.ImageTagMirrorSet", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"},
 	}
 }
 
@@ -14801,8 +14612,7 @@ func schema_openshift_api_config_v1_ImageTagMirrorSetSpec(ref common.ReferenceCa
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/config/v1.ImageTagMirrors",
-		},
+			"github.com/openshift/api/config/v1.ImageTagMirrors"},
 	}
 }
 
@@ -14912,8 +14722,7 @@ func schema_openshift_api_config_v1_Infrastructure(ref common.ReferenceCallback)
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/config/v1.InfrastructureSpec", "github.com/openshift/api/config/v1.InfrastructureStatus", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta",
-		},
+			"github.com/openshift/api/config/v1.InfrastructureSpec", "github.com/openshift/api/config/v1.InfrastructureStatus", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"},
 	}
 }
 
@@ -14963,8 +14772,7 @@ func schema_openshift_api_config_v1_InfrastructureList(ref common.ReferenceCallb
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/config/v1.Infrastructure", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta",
-		},
+			"github.com/openshift/api/config/v1.Infrastructure", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"},
 	}
 }
 
@@ -14993,8 +14801,7 @@ func schema_openshift_api_config_v1_InfrastructureSpec(ref common.ReferenceCallb
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/config/v1.ConfigMapFileReference", "github.com/openshift/api/config/v1.PlatformSpec",
-		},
+			"github.com/openshift/api/config/v1.ConfigMapFileReference", "github.com/openshift/api/config/v1.PlatformSpec"},
 	}
 }
 
@@ -15077,8 +14884,7 @@ func schema_openshift_api_config_v1_InfrastructureStatus(ref common.ReferenceCal
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/config/v1.PlatformStatus",
-		},
+			"github.com/openshift/api/config/v1.PlatformStatus"},
 	}
 }
 
@@ -15129,8 +14935,7 @@ func schema_openshift_api_config_v1_Ingress(ref common.ReferenceCallback) common
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/config/v1.IngressSpec", "github.com/openshift/api/config/v1.IngressStatus", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta",
-		},
+			"github.com/openshift/api/config/v1.IngressSpec", "github.com/openshift/api/config/v1.IngressStatus", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"},
 	}
 }
 
@@ -15180,8 +14985,7 @@ func schema_openshift_api_config_v1_IngressList(ref common.ReferenceCallback) co
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/config/v1.Ingress", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta",
-		},
+			"github.com/openshift/api/config/v1.Ingress", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"},
 	}
 }
 
@@ -15223,8 +15027,7 @@ func schema_openshift_api_config_v1_IngressPlatformSpec(ref common.ReferenceCall
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/config/v1.AWSIngressSpec",
-		},
+			"github.com/openshift/api/config/v1.AWSIngressSpec"},
 	}
 }
 
@@ -15298,8 +15101,7 @@ func schema_openshift_api_config_v1_IngressSpec(ref common.ReferenceCallback) co
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/config/v1.ComponentRouteSpec", "github.com/openshift/api/config/v1.LoadBalancer", "github.com/openshift/api/config/v1.RequiredHSTSPolicy",
-		},
+			"github.com/openshift/api/config/v1.ComponentRouteSpec", "github.com/openshift/api/config/v1.LoadBalancer", "github.com/openshift/api/config/v1.RequiredHSTSPolicy"},
 	}
 }
 
@@ -15344,8 +15146,7 @@ func schema_openshift_api_config_v1_IngressStatus(ref common.ReferenceCallback) 
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/config/v1.ComponentRouteStatus",
-		},
+			"github.com/openshift/api/config/v1.ComponentRouteStatus"},
 	}
 }
 
@@ -15398,8 +15199,7 @@ func schema_openshift_api_config_v1_KMSConfig(ref common.ReferenceCallback) comm
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/config/v1.AWSKMSConfig",
-		},
+			"github.com/openshift/api/config/v1.AWSKMSConfig"},
 	}
 }
 
@@ -15452,8 +15252,7 @@ func schema_openshift_api_config_v1_KeystoneIdentityProvider(ref common.Referenc
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/config/v1.ConfigMapNameReference", "github.com/openshift/api/config/v1.SecretNameReference",
-		},
+			"github.com/openshift/api/config/v1.ConfigMapNameReference", "github.com/openshift/api/config/v1.SecretNameReference"},
 	}
 }
 
@@ -15483,8 +15282,7 @@ func schema_openshift_api_config_v1_KubeClientConfig(ref common.ReferenceCallbac
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/config/v1.ClientConnectionOverrides",
-		},
+			"github.com/openshift/api/config/v1.ClientConnectionOverrides"},
 	}
 }
 
@@ -15657,8 +15455,7 @@ func schema_openshift_api_config_v1_LDAPIdentityProvider(ref common.ReferenceCal
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/config/v1.ConfigMapNameReference", "github.com/openshift/api/config/v1.LDAPAttributeMapping", "github.com/openshift/api/config/v1.SecretNameReference",
-		},
+			"github.com/openshift/api/config/v1.ConfigMapNameReference", "github.com/openshift/api/config/v1.LDAPAttributeMapping", "github.com/openshift/api/config/v1.SecretNameReference"},
 	}
 }
 
@@ -15713,8 +15510,7 @@ func schema_openshift_api_config_v1_LeaderElection(ref common.ReferenceCallback)
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/apimachinery/pkg/apis/meta/v1.Duration",
-		},
+			"k8s.io/apimachinery/pkg/apis/meta/v1.Duration"},
 	}
 }
 
@@ -15735,8 +15531,7 @@ func schema_openshift_api_config_v1_LoadBalancer(ref common.ReferenceCallback) c
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/config/v1.IngressPlatformSpec",
-		},
+			"github.com/openshift/api/config/v1.IngressPlatformSpec"},
 	}
 }
 
@@ -15763,8 +15558,7 @@ func schema_openshift_api_config_v1_MTUMigration(ref common.ReferenceCallback) c
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/config/v1.MTUMigrationValues",
-		},
+			"github.com/openshift/api/config/v1.MTUMigrationValues"},
 	}
 }
 
@@ -15926,8 +15720,7 @@ func schema_openshift_api_config_v1_Network(ref common.ReferenceCallback) common
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/config/v1.NetworkSpec", "github.com/openshift/api/config/v1.NetworkStatus", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta",
-		},
+			"github.com/openshift/api/config/v1.NetworkSpec", "github.com/openshift/api/config/v1.NetworkStatus", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"},
 	}
 }
 
@@ -15963,8 +15756,7 @@ func schema_openshift_api_config_v1_NetworkDiagnostics(ref common.ReferenceCallb
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/config/v1.NetworkDiagnosticsSourcePlacement", "github.com/openshift/api/config/v1.NetworkDiagnosticsTargetPlacement",
-		},
+			"github.com/openshift/api/config/v1.NetworkDiagnosticsSourcePlacement", "github.com/openshift/api/config/v1.NetworkDiagnosticsTargetPlacement"},
 	}
 }
 
@@ -16014,8 +15806,7 @@ func schema_openshift_api_config_v1_NetworkDiagnosticsSourcePlacement(ref common
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.Toleration",
-		},
+			"k8s.io/api/core/v1.Toleration"},
 	}
 }
 
@@ -16065,8 +15856,7 @@ func schema_openshift_api_config_v1_NetworkDiagnosticsTargetPlacement(ref common
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.Toleration",
-		},
+			"k8s.io/api/core/v1.Toleration"},
 	}
 }
 
@@ -16116,8 +15906,7 @@ func schema_openshift_api_config_v1_NetworkList(ref common.ReferenceCallback) co
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/config/v1.Network", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta",
-		},
+			"github.com/openshift/api/config/v1.Network", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"},
 	}
 }
 
@@ -16145,8 +15934,7 @@ func schema_openshift_api_config_v1_NetworkMigration(ref common.ReferenceCallbac
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/config/v1.MTUMigration",
-		},
+			"github.com/openshift/api/config/v1.MTUMigration"},
 	}
 }
 
@@ -16229,8 +16017,7 @@ func schema_openshift_api_config_v1_NetworkSpec(ref common.ReferenceCallback) co
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/config/v1.ClusterNetworkEntry", "github.com/openshift/api/config/v1.ExternalIPConfig", "github.com/openshift/api/config/v1.NetworkDiagnostics",
-		},
+			"github.com/openshift/api/config/v1.ClusterNetworkEntry", "github.com/openshift/api/config/v1.ExternalIPConfig", "github.com/openshift/api/config/v1.NetworkDiagnostics"},
 	}
 }
 
@@ -16326,8 +16113,7 @@ func schema_openshift_api_config_v1_NetworkStatus(ref common.ReferenceCallback) 
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/config/v1.ClusterNetworkEntry", "github.com/openshift/api/config/v1.NetworkMigration", "k8s.io/apimachinery/pkg/apis/meta/v1.Condition",
-		},
+			"github.com/openshift/api/config/v1.ClusterNetworkEntry", "github.com/openshift/api/config/v1.NetworkMigration", "k8s.io/apimachinery/pkg/apis/meta/v1.Condition"},
 	}
 }
 
@@ -16378,8 +16164,7 @@ func schema_openshift_api_config_v1_Node(ref common.ReferenceCallback) common.Op
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/config/v1.NodeSpec", "github.com/openshift/api/config/v1.NodeStatus", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta",
-		},
+			"github.com/openshift/api/config/v1.NodeSpec", "github.com/openshift/api/config/v1.NodeStatus", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"},
 	}
 }
 
@@ -16429,8 +16214,7 @@ func schema_openshift_api_config_v1_NodeList(ref common.ReferenceCallback) commo
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/config/v1.Node", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta",
-		},
+			"github.com/openshift/api/config/v1.Node", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"},
 	}
 }
 
@@ -16500,8 +16284,7 @@ func schema_openshift_api_config_v1_NodeStatus(ref common.ReferenceCallback) com
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/apimachinery/pkg/apis/meta/v1.Condition",
-		},
+			"k8s.io/apimachinery/pkg/apis/meta/v1.Condition"},
 	}
 }
 
@@ -16551,8 +16334,7 @@ func schema_openshift_api_config_v1_NutanixFailureDomain(ref common.ReferenceCal
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/config/v1.NutanixResourceIdentifier",
-		},
+			"github.com/openshift/api/config/v1.NutanixResourceIdentifier"},
 	}
 }
 
@@ -16650,8 +16432,7 @@ func schema_openshift_api_config_v1_NutanixPlatformSpec(ref common.ReferenceCall
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/config/v1.NutanixFailureDomain", "github.com/openshift/api/config/v1.NutanixPrismElementEndpoint", "github.com/openshift/api/config/v1.NutanixPrismEndpoint",
-		},
+			"github.com/openshift/api/config/v1.NutanixFailureDomain", "github.com/openshift/api/config/v1.NutanixPrismElementEndpoint", "github.com/openshift/api/config/v1.NutanixPrismEndpoint"},
 	}
 }
 
@@ -16736,8 +16517,7 @@ func schema_openshift_api_config_v1_NutanixPlatformStatus(ref common.ReferenceCa
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/config/v1.NutanixPlatformLoadBalancer",
-		},
+			"github.com/openshift/api/config/v1.NutanixPlatformLoadBalancer"},
 	}
 }
 
@@ -16768,8 +16548,7 @@ func schema_openshift_api_config_v1_NutanixPrismElementEndpoint(ref common.Refer
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/config/v1.NutanixPrismEndpoint",
-		},
+			"github.com/openshift/api/config/v1.NutanixPrismEndpoint"},
 	}
 }
 
@@ -16899,8 +16678,7 @@ func schema_openshift_api_config_v1_OAuth(ref common.ReferenceCallback) common.O
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/config/v1.OAuthSpec", "github.com/openshift/api/config/v1.OAuthStatus", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta",
-		},
+			"github.com/openshift/api/config/v1.OAuthSpec", "github.com/openshift/api/config/v1.OAuthStatus", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"},
 	}
 }
 
@@ -16950,8 +16728,7 @@ func schema_openshift_api_config_v1_OAuthList(ref common.ReferenceCallback) comm
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/config/v1.OAuth", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta",
-		},
+			"github.com/openshift/api/config/v1.OAuth", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"},
 	}
 }
 
@@ -16996,8 +16773,7 @@ func schema_openshift_api_config_v1_OAuthRemoteConnectionInfo(ref common.Referen
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/config/v1.ConfigMapNameReference", "github.com/openshift/api/config/v1.SecretNameReference",
-		},
+			"github.com/openshift/api/config/v1.ConfigMapNameReference", "github.com/openshift/api/config/v1.SecretNameReference"},
 	}
 }
 
@@ -17046,8 +16822,7 @@ func schema_openshift_api_config_v1_OAuthSpec(ref common.ReferenceCallback) comm
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/config/v1.IdentityProvider", "github.com/openshift/api/config/v1.OAuthTemplates", "github.com/openshift/api/config/v1.TokenConfig",
-		},
+			"github.com/openshift/api/config/v1.IdentityProvider", "github.com/openshift/api/config/v1.OAuthTemplates", "github.com/openshift/api/config/v1.TokenConfig"},
 	}
 }
 
@@ -17094,8 +16869,7 @@ func schema_openshift_api_config_v1_OAuthTemplates(ref common.ReferenceCallback)
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/config/v1.SecretNameReference",
-		},
+			"github.com/openshift/api/config/v1.SecretNameReference"},
 	}
 }
 
@@ -17162,8 +16936,7 @@ func schema_openshift_api_config_v1_OIDCClientConfig(ref common.ReferenceCallbac
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/config/v1.SecretNameReference",
-		},
+			"github.com/openshift/api/config/v1.SecretNameReference"},
 	}
 }
 
@@ -17298,8 +17071,7 @@ func schema_openshift_api_config_v1_OIDCClientStatus(ref common.ReferenceCallbac
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/config/v1.OIDCClientReference", "k8s.io/apimachinery/pkg/apis/meta/v1.Condition",
-		},
+			"github.com/openshift/api/config/v1.OIDCClientReference", "k8s.io/apimachinery/pkg/apis/meta/v1.Condition"},
 	}
 }
 
@@ -17378,8 +17150,7 @@ func schema_openshift_api_config_v1_OIDCProvider(ref common.ReferenceCallback) c
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/config/v1.OIDCClientConfig", "github.com/openshift/api/config/v1.TokenClaimMappings", "github.com/openshift/api/config/v1.TokenClaimValidationRule", "github.com/openshift/api/config/v1.TokenIssuer",
-		},
+			"github.com/openshift/api/config/v1.OIDCClientConfig", "github.com/openshift/api/config/v1.TokenClaimMappings", "github.com/openshift/api/config/v1.TokenClaimValidationRule", "github.com/openshift/api/config/v1.TokenIssuer"},
 	}
 }
 
@@ -17612,8 +17383,7 @@ func schema_openshift_api_config_v1_OpenIDIdentityProvider(ref common.ReferenceC
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/config/v1.ConfigMapNameReference", "github.com/openshift/api/config/v1.OpenIDClaims", "github.com/openshift/api/config/v1.SecretNameReference",
-		},
+			"github.com/openshift/api/config/v1.ConfigMapNameReference", "github.com/openshift/api/config/v1.OpenIDClaims", "github.com/openshift/api/config/v1.SecretNameReference"},
 	}
 }
 
@@ -17836,8 +17606,7 @@ func schema_openshift_api_config_v1_OpenStackPlatformStatus(ref common.Reference
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/config/v1.OpenStackPlatformLoadBalancer",
-		},
+			"github.com/openshift/api/config/v1.OpenStackPlatformLoadBalancer"},
 	}
 }
 
@@ -17915,8 +17684,7 @@ func schema_openshift_api_config_v1_OperatorHub(ref common.ReferenceCallback) co
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/config/v1.OperatorHubSpec", "github.com/openshift/api/config/v1.OperatorHubStatus", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta",
-		},
+			"github.com/openshift/api/config/v1.OperatorHubSpec", "github.com/openshift/api/config/v1.OperatorHubStatus", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"},
 	}
 }
 
@@ -17966,8 +17734,7 @@ func schema_openshift_api_config_v1_OperatorHubList(ref common.ReferenceCallback
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/config/v1.OperatorHub", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta",
-		},
+			"github.com/openshift/api/config/v1.OperatorHub", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"},
 	}
 }
 
@@ -18003,8 +17770,7 @@ func schema_openshift_api_config_v1_OperatorHubSpec(ref common.ReferenceCallback
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/config/v1.HubSource",
-		},
+			"github.com/openshift/api/config/v1.HubSource"},
 	}
 }
 
@@ -18033,8 +17799,7 @@ func schema_openshift_api_config_v1_OperatorHubStatus(ref common.ReferenceCallba
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/config/v1.HubSourceStatus",
-		},
+			"github.com/openshift/api/config/v1.HubSourceStatus"},
 	}
 }
 
@@ -18168,8 +17933,7 @@ func schema_openshift_api_config_v1_OvirtPlatformStatus(ref common.ReferenceCall
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/config/v1.OvirtPlatformLoadBalancer",
-		},
+			"github.com/openshift/api/config/v1.OvirtPlatformLoadBalancer"},
 	}
 }
 
@@ -18206,8 +17970,7 @@ func schema_openshift_api_config_v1_PKI(ref common.ReferenceCallback) common.Ope
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/config/v1.PKICertificateSubject",
-		},
+			"github.com/openshift/api/config/v1.PKICertificateSubject"},
 	}
 }
 
@@ -18342,8 +18105,7 @@ func schema_openshift_api_config_v1_PlatformSpec(ref common.ReferenceCallback) c
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/config/v1.AWSPlatformSpec", "github.com/openshift/api/config/v1.AlibabaCloudPlatformSpec", "github.com/openshift/api/config/v1.AzurePlatformSpec", "github.com/openshift/api/config/v1.BareMetalPlatformSpec", "github.com/openshift/api/config/v1.EquinixMetalPlatformSpec", "github.com/openshift/api/config/v1.ExternalPlatformSpec", "github.com/openshift/api/config/v1.GCPPlatformSpec", "github.com/openshift/api/config/v1.IBMCloudPlatformSpec", "github.com/openshift/api/config/v1.KubevirtPlatformSpec", "github.com/openshift/api/config/v1.NutanixPlatformSpec", "github.com/openshift/api/config/v1.OpenStackPlatformSpec", "github.com/openshift/api/config/v1.OvirtPlatformSpec", "github.com/openshift/api/config/v1.PowerVSPlatformSpec", "github.com/openshift/api/config/v1.VSpherePlatformSpec",
-		},
+			"github.com/openshift/api/config/v1.AWSPlatformSpec", "github.com/openshift/api/config/v1.AlibabaCloudPlatformSpec", "github.com/openshift/api/config/v1.AzurePlatformSpec", "github.com/openshift/api/config/v1.BareMetalPlatformSpec", "github.com/openshift/api/config/v1.EquinixMetalPlatformSpec", "github.com/openshift/api/config/v1.ExternalPlatformSpec", "github.com/openshift/api/config/v1.GCPPlatformSpec", "github.com/openshift/api/config/v1.IBMCloudPlatformSpec", "github.com/openshift/api/config/v1.KubevirtPlatformSpec", "github.com/openshift/api/config/v1.NutanixPlatformSpec", "github.com/openshift/api/config/v1.OpenStackPlatformSpec", "github.com/openshift/api/config/v1.OvirtPlatformSpec", "github.com/openshift/api/config/v1.PowerVSPlatformSpec", "github.com/openshift/api/config/v1.VSpherePlatformSpec"},
 	}
 }
 
@@ -18451,8 +18213,7 @@ func schema_openshift_api_config_v1_PlatformStatus(ref common.ReferenceCallback)
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/config/v1.AWSPlatformStatus", "github.com/openshift/api/config/v1.AlibabaCloudPlatformStatus", "github.com/openshift/api/config/v1.AzurePlatformStatus", "github.com/openshift/api/config/v1.BareMetalPlatformStatus", "github.com/openshift/api/config/v1.EquinixMetalPlatformStatus", "github.com/openshift/api/config/v1.ExternalPlatformStatus", "github.com/openshift/api/config/v1.GCPPlatformStatus", "github.com/openshift/api/config/v1.IBMCloudPlatformStatus", "github.com/openshift/api/config/v1.KubevirtPlatformStatus", "github.com/openshift/api/config/v1.NutanixPlatformStatus", "github.com/openshift/api/config/v1.OpenStackPlatformStatus", "github.com/openshift/api/config/v1.OvirtPlatformStatus", "github.com/openshift/api/config/v1.PowerVSPlatformStatus", "github.com/openshift/api/config/v1.VSpherePlatformStatus",
-		},
+			"github.com/openshift/api/config/v1.AWSPlatformStatus", "github.com/openshift/api/config/v1.AlibabaCloudPlatformStatus", "github.com/openshift/api/config/v1.AzurePlatformStatus", "github.com/openshift/api/config/v1.BareMetalPlatformStatus", "github.com/openshift/api/config/v1.EquinixMetalPlatformStatus", "github.com/openshift/api/config/v1.ExternalPlatformStatus", "github.com/openshift/api/config/v1.GCPPlatformStatus", "github.com/openshift/api/config/v1.IBMCloudPlatformStatus", "github.com/openshift/api/config/v1.KubevirtPlatformStatus", "github.com/openshift/api/config/v1.NutanixPlatformStatus", "github.com/openshift/api/config/v1.OpenStackPlatformStatus", "github.com/openshift/api/config/v1.OvirtPlatformStatus", "github.com/openshift/api/config/v1.PowerVSPlatformStatus", "github.com/openshift/api/config/v1.VSpherePlatformStatus"},
 	}
 }
 
@@ -18481,8 +18242,7 @@ func schema_openshift_api_config_v1_Policy(ref common.ReferenceCallback) common.
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/config/v1.PolicyIdentity", "github.com/openshift/api/config/v1.PolicyRootOfTrust",
-		},
+			"github.com/openshift/api/config/v1.PolicyIdentity", "github.com/openshift/api/config/v1.PolicyRootOfTrust"},
 	}
 }
 
@@ -18561,8 +18321,7 @@ func schema_openshift_api_config_v1_PolicyIdentity(ref common.ReferenceCallback)
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/config/v1.PolicyMatchExactRepository", "github.com/openshift/api/config/v1.PolicyMatchRemapIdentity",
-		},
+			"github.com/openshift/api/config/v1.PolicyMatchExactRepository", "github.com/openshift/api/config/v1.PolicyMatchRemapIdentity"},
 	}
 }
 
@@ -18668,8 +18427,7 @@ func schema_openshift_api_config_v1_PolicyRootOfTrust(ref common.ReferenceCallba
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/config/v1.FulcioCAWithRekor", "github.com/openshift/api/config/v1.PKI", "github.com/openshift/api/config/v1.PublicKey",
-		},
+			"github.com/openshift/api/config/v1.FulcioCAWithRekor", "github.com/openshift/api/config/v1.PKI", "github.com/openshift/api/config/v1.PublicKey"},
 	}
 }
 
@@ -18706,8 +18464,7 @@ func schema_openshift_api_config_v1_PowerVSPlatformSpec(ref common.ReferenceCall
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/config/v1.PowerVSServiceEndpoint",
-		},
+			"github.com/openshift/api/config/v1.PowerVSServiceEndpoint"},
 	}
 }
 
@@ -18783,8 +18540,7 @@ func schema_openshift_api_config_v1_PowerVSPlatformStatus(ref common.ReferenceCa
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/config/v1.PowerVSServiceEndpoint",
-		},
+			"github.com/openshift/api/config/v1.PowerVSServiceEndpoint"},
 	}
 }
 
@@ -18916,8 +18672,7 @@ func schema_openshift_api_config_v1_Project(ref common.ReferenceCallback) common
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/config/v1.ProjectSpec", "github.com/openshift/api/config/v1.ProjectStatus", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta",
-		},
+			"github.com/openshift/api/config/v1.ProjectSpec", "github.com/openshift/api/config/v1.ProjectStatus", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"},
 	}
 }
 
@@ -18967,8 +18722,7 @@ func schema_openshift_api_config_v1_ProjectList(ref common.ReferenceCallback) co
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/config/v1.Project", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta",
-		},
+			"github.com/openshift/api/config/v1.Project", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"},
 	}
 }
 
@@ -18998,8 +18752,7 @@ func schema_openshift_api_config_v1_ProjectSpec(ref common.ReferenceCallback) co
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/config/v1.TemplateReference",
-		},
+			"github.com/openshift/api/config/v1.TemplateReference"},
 	}
 }
 
@@ -19082,8 +18835,7 @@ func schema_openshift_api_config_v1_Proxy(ref common.ReferenceCallback) common.O
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/config/v1.ProxySpec", "github.com/openshift/api/config/v1.ProxyStatus", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta",
-		},
+			"github.com/openshift/api/config/v1.ProxySpec", "github.com/openshift/api/config/v1.ProxyStatus", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"},
 	}
 }
 
@@ -19133,8 +18885,7 @@ func schema_openshift_api_config_v1_ProxyList(ref common.ReferenceCallback) comm
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/config/v1.Proxy", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta",
-		},
+			"github.com/openshift/api/config/v1.Proxy", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"},
 	}
 }
 
@@ -19192,8 +18943,7 @@ func schema_openshift_api_config_v1_ProxySpec(ref common.ReferenceCallback) comm
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/config/v1.ConfigMapNameReference",
-		},
+			"github.com/openshift/api/config/v1.ConfigMapNameReference"},
 	}
 }
 
@@ -19650,8 +19400,7 @@ func schema_openshift_api_config_v1_RequestHeaderIdentityProvider(ref common.Ref
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/config/v1.ConfigMapNameReference",
-		},
+			"github.com/openshift/api/config/v1.ConfigMapNameReference"},
 	}
 }
 
@@ -19708,8 +19457,7 @@ func schema_openshift_api_config_v1_RequiredHSTSPolicy(ref common.ReferenceCallb
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/config/v1.MaxAgePolicy", "k8s.io/apimachinery/pkg/apis/meta/v1.LabelSelector",
-		},
+			"github.com/openshift/api/config/v1.MaxAgePolicy", "k8s.io/apimachinery/pkg/apis/meta/v1.LabelSelector"},
 	}
 }
 
@@ -19760,8 +19508,7 @@ func schema_openshift_api_config_v1_Scheduler(ref common.ReferenceCallback) comm
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/config/v1.SchedulerSpec", "github.com/openshift/api/config/v1.SchedulerStatus", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta",
-		},
+			"github.com/openshift/api/config/v1.SchedulerSpec", "github.com/openshift/api/config/v1.SchedulerStatus", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"},
 	}
 }
 
@@ -19811,8 +19558,7 @@ func schema_openshift_api_config_v1_SchedulerList(ref common.ReferenceCallback) 
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/config/v1.Scheduler", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta",
-		},
+			"github.com/openshift/api/config/v1.Scheduler", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"},
 	}
 }
 
@@ -19862,8 +19608,7 @@ func schema_openshift_api_config_v1_SchedulerSpec(ref common.ReferenceCallback) 
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/config/v1.ConfigMapNameReference", "github.com/openshift/api/config/v1.ProfileCustomizations",
-		},
+			"github.com/openshift/api/config/v1.ConfigMapNameReference", "github.com/openshift/api/config/v1.ProfileCustomizations"},
 	}
 }
 
@@ -19986,8 +19731,7 @@ func schema_openshift_api_config_v1_ServingInfo(ref common.ReferenceCallback) co
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/config/v1.NamedCertificate",
-		},
+			"github.com/openshift/api/config/v1.NamedCertificate"},
 	}
 }
 
@@ -20018,8 +19762,7 @@ func schema_openshift_api_config_v1_SignatureStore(ref common.ReferenceCallback)
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/config/v1.ConfigMapNameReference",
-		},
+			"github.com/openshift/api/config/v1.ConfigMapNameReference"},
 	}
 }
 
@@ -20215,8 +19958,7 @@ func schema_openshift_api_config_v1_TLSSecurityProfile(ref common.ReferenceCallb
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/config/v1.CustomTLSProfile", "github.com/openshift/api/config/v1.IntermediateTLSProfile", "github.com/openshift/api/config/v1.ModernTLSProfile", "github.com/openshift/api/config/v1.OldTLSProfile",
-		},
+			"github.com/openshift/api/config/v1.CustomTLSProfile", "github.com/openshift/api/config/v1.IntermediateTLSProfile", "github.com/openshift/api/config/v1.ModernTLSProfile", "github.com/openshift/api/config/v1.OldTLSProfile"},
 	}
 }
 
@@ -20309,8 +20051,7 @@ func schema_openshift_api_config_v1_TestReporting(ref common.ReferenceCallback) 
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/config/v1.TestReportingSpec", "github.com/openshift/api/config/v1.TestReportingStatus", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta",
-		},
+			"github.com/openshift/api/config/v1.TestReportingSpec", "github.com/openshift/api/config/v1.TestReportingStatus", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"},
 	}
 }
 
@@ -20339,8 +20080,7 @@ func schema_openshift_api_config_v1_TestReportingSpec(ref common.ReferenceCallba
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/config/v1.FeatureGateTests",
-		},
+			"github.com/openshift/api/config/v1.FeatureGateTests"},
 	}
 }
 
@@ -20429,8 +20169,7 @@ func schema_openshift_api_config_v1_TokenClaimMappings(ref common.ReferenceCallb
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/config/v1.ExtraMapping", "github.com/openshift/api/config/v1.PrefixedClaimMapping", "github.com/openshift/api/config/v1.TokenClaimOrExpressionMapping", "github.com/openshift/api/config/v1.UsernameClaimMapping",
-		},
+			"github.com/openshift/api/config/v1.ExtraMapping", "github.com/openshift/api/config/v1.PrefixedClaimMapping", "github.com/openshift/api/config/v1.TokenClaimOrExpressionMapping", "github.com/openshift/api/config/v1.UsernameClaimMapping"},
 	}
 }
 
@@ -20487,8 +20226,7 @@ func schema_openshift_api_config_v1_TokenClaimValidationRule(ref common.Referenc
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/config/v1.TokenRequiredClaim",
-		},
+			"github.com/openshift/api/config/v1.TokenRequiredClaim"},
 	}
 }
 
@@ -20523,8 +20261,7 @@ func schema_openshift_api_config_v1_TokenConfig(ref common.ReferenceCallback) co
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/apimachinery/pkg/apis/meta/v1.Duration",
-		},
+			"k8s.io/apimachinery/pkg/apis/meta/v1.Duration"},
 	}
 }
 
@@ -20574,8 +20311,7 @@ func schema_openshift_api_config_v1_TokenIssuer(ref common.ReferenceCallback) co
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/config/v1.ConfigMapNameReference",
-		},
+			"github.com/openshift/api/config/v1.ConfigMapNameReference"},
 	}
 }
 
@@ -20716,8 +20452,7 @@ func schema_openshift_api_config_v1_UpdateHistory(ref common.ReferenceCallback) 
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/apimachinery/pkg/apis/meta/v1.Time",
-		},
+			"k8s.io/apimachinery/pkg/apis/meta/v1.Time"},
 	}
 }
 
@@ -20768,8 +20503,7 @@ func schema_openshift_api_config_v1_UsernameClaimMapping(ref common.ReferenceCal
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/config/v1.UsernamePrefix",
-		},
+			"github.com/openshift/api/config/v1.UsernamePrefix"},
 	}
 }
 
@@ -20905,8 +20639,7 @@ func schema_openshift_api_config_v1_VSphereFailureDomainZoneAffinity(ref common.
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/config/v1.VSphereFailureDomainHostGroup",
-		},
+			"github.com/openshift/api/config/v1.VSphereFailureDomainHostGroup"},
 	}
 }
 
@@ -20973,8 +20706,7 @@ func schema_openshift_api_config_v1_VSpherePlatformFailureDomainSpec(ref common.
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/config/v1.VSphereFailureDomainRegionAffinity", "github.com/openshift/api/config/v1.VSphereFailureDomainZoneAffinity", "github.com/openshift/api/config/v1.VSpherePlatformTopology",
-		},
+			"github.com/openshift/api/config/v1.VSphereFailureDomainRegionAffinity", "github.com/openshift/api/config/v1.VSphereFailureDomainZoneAffinity", "github.com/openshift/api/config/v1.VSpherePlatformTopology"},
 	}
 }
 
@@ -21034,8 +20766,7 @@ func schema_openshift_api_config_v1_VSpherePlatformNodeNetworking(ref common.Ref
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/config/v1.VSpherePlatformNodeNetworkingSpec",
-		},
+			"github.com/openshift/api/config/v1.VSpherePlatformNodeNetworkingSpec"},
 	}
 }
 
@@ -21218,8 +20949,7 @@ func schema_openshift_api_config_v1_VSpherePlatformSpec(ref common.ReferenceCall
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/config/v1.VSpherePlatformFailureDomainSpec", "github.com/openshift/api/config/v1.VSpherePlatformNodeNetworking", "github.com/openshift/api/config/v1.VSpherePlatformVCenterSpec",
-		},
+			"github.com/openshift/api/config/v1.VSpherePlatformFailureDomainSpec", "github.com/openshift/api/config/v1.VSpherePlatformNodeNetworking", "github.com/openshift/api/config/v1.VSpherePlatformVCenterSpec"},
 	}
 }
 
@@ -21331,8 +21061,7 @@ func schema_openshift_api_config_v1_VSpherePlatformStatus(ref common.ReferenceCa
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/config/v1.VSpherePlatformLoadBalancer",
-		},
+			"github.com/openshift/api/config/v1.VSpherePlatformLoadBalancer"},
 	}
 }
 
@@ -21483,8 +21212,7 @@ func schema_openshift_api_config_v1_WebhookTokenAuthenticator(ref common.Referen
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/config/v1.SecretNameReference",
-		},
+			"github.com/openshift/api/config/v1.SecretNameReference"},
 	}
 }
 
@@ -21514,8 +21242,7 @@ func schema_openshift_api_config_v1alpha1_AlertmanagerConfig(ref common.Referenc
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/config/v1alpha1.AlertmanagerCustomConfig",
-		},
+			"github.com/openshift/api/config/v1alpha1.AlertmanagerCustomConfig"},
 	}
 }
 
@@ -21643,8 +21370,7 @@ func schema_openshift_api_config_v1alpha1_AlertmanagerCustomConfig(ref common.Re
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/config/v1alpha1.ContainerResource", "k8s.io/api/core/v1.PersistentVolumeClaim", "k8s.io/api/core/v1.Toleration", "k8s.io/api/core/v1.TopologySpreadConstraint",
-		},
+			"github.com/openshift/api/config/v1alpha1.ContainerResource", "k8s.io/api/core/v1.PersistentVolumeClaim", "k8s.io/api/core/v1.Toleration", "k8s.io/api/core/v1.TopologySpreadConstraint"},
 	}
 }
 
@@ -21716,8 +21442,7 @@ func schema_openshift_api_config_v1alpha1_Backup(ref common.ReferenceCallback) c
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/config/v1alpha1.BackupSpec", "github.com/openshift/api/config/v1alpha1.BackupStatus", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta",
-		},
+			"github.com/openshift/api/config/v1alpha1.BackupSpec", "github.com/openshift/api/config/v1alpha1.BackupStatus", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"},
 	}
 }
 
@@ -21767,8 +21492,7 @@ func schema_openshift_api_config_v1alpha1_BackupList(ref common.ReferenceCallbac
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/config/v1alpha1.Backup", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta",
-		},
+			"github.com/openshift/api/config/v1alpha1.Backup", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"},
 	}
 }
 
@@ -21790,8 +21514,7 @@ func schema_openshift_api_config_v1alpha1_BackupSpec(ref common.ReferenceCallbac
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/config/v1alpha1.EtcdBackupSpec",
-		},
+			"github.com/openshift/api/config/v1alpha1.EtcdBackupSpec"},
 	}
 }
 
@@ -21852,8 +21575,7 @@ func schema_openshift_api_config_v1alpha1_ClusterImagePolicy(ref common.Referenc
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/config/v1alpha1.ClusterImagePolicySpec", "github.com/openshift/api/config/v1alpha1.ClusterImagePolicyStatus", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta",
-		},
+			"github.com/openshift/api/config/v1alpha1.ClusterImagePolicySpec", "github.com/openshift/api/config/v1alpha1.ClusterImagePolicyStatus", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"},
 	}
 }
 
@@ -21903,8 +21625,7 @@ func schema_openshift_api_config_v1alpha1_ClusterImagePolicyList(ref common.Refe
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/config/v1alpha1.ClusterImagePolicy", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta",
-		},
+			"github.com/openshift/api/config/v1alpha1.ClusterImagePolicy", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"},
 	}
 }
 
@@ -21947,8 +21668,7 @@ func schema_openshift_api_config_v1alpha1_ClusterImagePolicySpec(ref common.Refe
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/config/v1alpha1.Policy",
-		},
+			"github.com/openshift/api/config/v1alpha1.Policy"},
 	}
 }
 
@@ -21984,8 +21704,7 @@ func schema_openshift_api_config_v1alpha1_ClusterImagePolicyStatus(ref common.Re
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/apimachinery/pkg/apis/meta/v1.Condition",
-		},
+			"k8s.io/apimachinery/pkg/apis/meta/v1.Condition"},
 	}
 }
 
@@ -22036,8 +21755,7 @@ func schema_openshift_api_config_v1alpha1_ClusterMonitoring(ref common.Reference
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/config/v1alpha1.ClusterMonitoringSpec", "github.com/openshift/api/config/v1alpha1.ClusterMonitoringStatus", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta",
-		},
+			"github.com/openshift/api/config/v1alpha1.ClusterMonitoringSpec", "github.com/openshift/api/config/v1alpha1.ClusterMonitoringStatus", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"},
 	}
 }
 
@@ -22087,8 +21805,7 @@ func schema_openshift_api_config_v1alpha1_ClusterMonitoringList(ref common.Refer
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/config/v1alpha1.ClusterMonitoring", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta",
-		},
+			"github.com/openshift/api/config/v1alpha1.ClusterMonitoring", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"},
 	}
 }
 
@@ -22124,8 +21841,7 @@ func schema_openshift_api_config_v1alpha1_ClusterMonitoringSpec(ref common.Refer
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/config/v1alpha1.AlertmanagerConfig", "github.com/openshift/api/config/v1alpha1.MetricsServerConfig", "github.com/openshift/api/config/v1alpha1.UserDefinedMonitoring",
-		},
+			"github.com/openshift/api/config/v1alpha1.AlertmanagerConfig", "github.com/openshift/api/config/v1alpha1.MetricsServerConfig", "github.com/openshift/api/config/v1alpha1.UserDefinedMonitoring"},
 	}
 }
 
@@ -22171,8 +21887,7 @@ func schema_openshift_api_config_v1alpha1_ContainerResource(ref common.Reference
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/apimachinery/pkg/api/resource.Quantity",
-		},
+			"k8s.io/apimachinery/pkg/api/resource.Quantity"},
 	}
 }
 
@@ -22218,8 +21933,7 @@ func schema_openshift_api_config_v1alpha1_EtcdBackupSpec(ref common.ReferenceCal
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/config/v1alpha1.RetentionPolicy",
-		},
+			"github.com/openshift/api/config/v1alpha1.RetentionPolicy"},
 	}
 }
 
@@ -22256,8 +21970,7 @@ func schema_openshift_api_config_v1alpha1_FulcioCAWithRekor(ref common.Reference
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/config/v1alpha1.PolicyFulcioSubject",
-		},
+			"github.com/openshift/api/config/v1alpha1.PolicyFulcioSubject"},
 	}
 }
 
@@ -22300,8 +22013,7 @@ func schema_openshift_api_config_v1alpha1_GatherConfig(ref common.ReferenceCallb
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/config/v1alpha1.Storage",
-		},
+			"github.com/openshift/api/config/v1alpha1.Storage"},
 	}
 }
 
@@ -22352,8 +22064,7 @@ func schema_openshift_api_config_v1alpha1_ImagePolicy(ref common.ReferenceCallba
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/config/v1alpha1.ImagePolicySpec", "github.com/openshift/api/config/v1alpha1.ImagePolicyStatus", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta",
-		},
+			"github.com/openshift/api/config/v1alpha1.ImagePolicySpec", "github.com/openshift/api/config/v1alpha1.ImagePolicyStatus", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"},
 	}
 }
 
@@ -22403,8 +22114,7 @@ func schema_openshift_api_config_v1alpha1_ImagePolicyList(ref common.ReferenceCa
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/config/v1alpha1.ImagePolicy", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta",
-		},
+			"github.com/openshift/api/config/v1alpha1.ImagePolicy", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"},
 	}
 }
 
@@ -22447,8 +22157,7 @@ func schema_openshift_api_config_v1alpha1_ImagePolicySpec(ref common.ReferenceCa
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/config/v1alpha1.Policy",
-		},
+			"github.com/openshift/api/config/v1alpha1.Policy"},
 	}
 }
 
@@ -22484,8 +22193,7 @@ func schema_openshift_api_config_v1alpha1_ImagePolicyStatus(ref common.Reference
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/apimachinery/pkg/apis/meta/v1.Condition",
-		},
+			"k8s.io/apimachinery/pkg/apis/meta/v1.Condition"},
 	}
 }
 
@@ -22536,8 +22244,7 @@ func schema_openshift_api_config_v1alpha1_InsightsDataGather(ref common.Referenc
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/config/v1alpha1.InsightsDataGatherSpec", "github.com/openshift/api/config/v1alpha1.InsightsDataGatherStatus", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta",
-		},
+			"github.com/openshift/api/config/v1alpha1.InsightsDataGatherSpec", "github.com/openshift/api/config/v1alpha1.InsightsDataGatherStatus", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"},
 	}
 }
 
@@ -22587,8 +22294,7 @@ func schema_openshift_api_config_v1alpha1_InsightsDataGatherList(ref common.Refe
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/config/v1alpha1.InsightsDataGather", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta",
-		},
+			"github.com/openshift/api/config/v1alpha1.InsightsDataGather", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"},
 	}
 }
 
@@ -22609,8 +22315,7 @@ func schema_openshift_api_config_v1alpha1_InsightsDataGatherSpec(ref common.Refe
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/config/v1alpha1.GatherConfig",
-		},
+			"github.com/openshift/api/config/v1alpha1.GatherConfig"},
 	}
 }
 
@@ -22729,8 +22434,7 @@ func schema_openshift_api_config_v1alpha1_MetricsServerConfig(ref common.Referen
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/config/v1alpha1.Audit", "github.com/openshift/api/config/v1alpha1.ContainerResource", "k8s.io/api/core/v1.Toleration", "k8s.io/api/core/v1.TopologySpreadConstraint",
-		},
+			"github.com/openshift/api/config/v1alpha1.Audit", "github.com/openshift/api/config/v1alpha1.ContainerResource", "k8s.io/api/core/v1.Toleration", "k8s.io/api/core/v1.TopologySpreadConstraint"},
 	}
 }
 
@@ -22767,8 +22471,7 @@ func schema_openshift_api_config_v1alpha1_PKI(ref common.ReferenceCallback) comm
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/config/v1alpha1.PKICertificateSubject",
-		},
+			"github.com/openshift/api/config/v1alpha1.PKICertificateSubject"},
 	}
 }
 
@@ -22847,8 +22550,7 @@ func schema_openshift_api_config_v1alpha1_PersistentVolumeConfig(ref common.Refe
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/config/v1alpha1.PersistentVolumeClaimReference",
-		},
+			"github.com/openshift/api/config/v1alpha1.PersistentVolumeClaimReference"},
 	}
 }
 
@@ -22878,8 +22580,7 @@ func schema_openshift_api_config_v1alpha1_Policy(ref common.ReferenceCallback) c
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/config/v1alpha1.PolicyIdentity", "github.com/openshift/api/config/v1alpha1.PolicyRootOfTrust",
-		},
+			"github.com/openshift/api/config/v1alpha1.PolicyIdentity", "github.com/openshift/api/config/v1alpha1.PolicyRootOfTrust"},
 	}
 }
 
@@ -22958,8 +22659,7 @@ func schema_openshift_api_config_v1alpha1_PolicyIdentity(ref common.ReferenceCal
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/config/v1alpha1.PolicyMatchExactRepository", "github.com/openshift/api/config/v1alpha1.PolicyMatchRemapIdentity",
-		},
+			"github.com/openshift/api/config/v1alpha1.PolicyMatchExactRepository", "github.com/openshift/api/config/v1alpha1.PolicyMatchRemapIdentity"},
 	}
 }
 
@@ -23065,8 +22765,7 @@ func schema_openshift_api_config_v1alpha1_PolicyRootOfTrust(ref common.Reference
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/config/v1alpha1.FulcioCAWithRekor", "github.com/openshift/api/config/v1alpha1.PKI", "github.com/openshift/api/config/v1alpha1.PublicKey",
-		},
+			"github.com/openshift/api/config/v1alpha1.FulcioCAWithRekor", "github.com/openshift/api/config/v1alpha1.PKI", "github.com/openshift/api/config/v1alpha1.PublicKey"},
 	}
 }
 
@@ -23166,8 +22865,7 @@ func schema_openshift_api_config_v1alpha1_RetentionPolicy(ref common.ReferenceCa
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/config/v1alpha1.RetentionNumberConfig", "github.com/openshift/api/config/v1alpha1.RetentionSizeConfig",
-		},
+			"github.com/openshift/api/config/v1alpha1.RetentionNumberConfig", "github.com/openshift/api/config/v1alpha1.RetentionSizeConfig"},
 	}
 }
 
@@ -23219,8 +22917,7 @@ func schema_openshift_api_config_v1alpha1_Storage(ref common.ReferenceCallback) 
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/config/v1alpha1.PersistentVolumeConfig",
-		},
+			"github.com/openshift/api/config/v1alpha1.PersistentVolumeConfig"},
 	}
 }
 
@@ -23281,8 +22978,7 @@ func schema_openshift_api_config_v1alpha2_Custom(ref common.ReferenceCallback) c
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/config/v1alpha2.GathererConfig",
-		},
+			"github.com/openshift/api/config/v1alpha2.GathererConfig"},
 	}
 }
 
@@ -23331,8 +23027,7 @@ func schema_openshift_api_config_v1alpha2_GatherConfig(ref common.ReferenceCallb
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/config/v1alpha2.Gatherers", "github.com/openshift/api/config/v1alpha2.Storage",
-		},
+			"github.com/openshift/api/config/v1alpha2.Gatherers", "github.com/openshift/api/config/v1alpha2.Storage"},
 	}
 }
 
@@ -23391,8 +23086,7 @@ func schema_openshift_api_config_v1alpha2_Gatherers(ref common.ReferenceCallback
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/config/v1alpha2.Custom",
-		},
+			"github.com/openshift/api/config/v1alpha2.Custom"},
 	}
 }
 
@@ -23443,8 +23137,7 @@ func schema_openshift_api_config_v1alpha2_InsightsDataGather(ref common.Referenc
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/config/v1alpha2.InsightsDataGatherSpec", "github.com/openshift/api/config/v1alpha2.InsightsDataGatherStatus", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta",
-		},
+			"github.com/openshift/api/config/v1alpha2.InsightsDataGatherSpec", "github.com/openshift/api/config/v1alpha2.InsightsDataGatherStatus", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"},
 	}
 }
 
@@ -23495,8 +23188,7 @@ func schema_openshift_api_config_v1alpha2_InsightsDataGatherList(ref common.Refe
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/config/v1alpha2.InsightsDataGather", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta",
-		},
+			"github.com/openshift/api/config/v1alpha2.InsightsDataGather", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"},
 	}
 }
 
@@ -23517,8 +23209,7 @@ func schema_openshift_api_config_v1alpha2_InsightsDataGatherSpec(ref common.Refe
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/config/v1alpha2.GatherConfig",
-		},
+			"github.com/openshift/api/config/v1alpha2.GatherConfig"},
 	}
 }
 
@@ -23580,8 +23271,7 @@ func schema_openshift_api_config_v1alpha2_PersistentVolumeConfig(ref common.Refe
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/config/v1alpha2.PersistentVolumeClaimReference",
-		},
+			"github.com/openshift/api/config/v1alpha2.PersistentVolumeClaimReference"},
 	}
 }
 
@@ -23611,8 +23301,7 @@ func schema_openshift_api_config_v1alpha2_Storage(ref common.ReferenceCallback) 
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/config/v1alpha2.PersistentVolumeConfig",
-		},
+			"github.com/openshift/api/config/v1alpha2.PersistentVolumeConfig"},
 	}
 }
 
@@ -23713,8 +23402,7 @@ func schema_openshift_api_console_v1_ConsoleCLIDownload(ref common.ReferenceCall
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/console/v1.ConsoleCLIDownloadSpec", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta",
-		},
+			"github.com/openshift/api/console/v1.ConsoleCLIDownloadSpec", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"},
 	}
 }
 
@@ -23764,8 +23452,7 @@ func schema_openshift_api_console_v1_ConsoleCLIDownloadList(ref common.Reference
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/console/v1.ConsoleCLIDownload", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta",
-		},
+			"github.com/openshift/api/console/v1.ConsoleCLIDownload", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"},
 	}
 }
 
@@ -23811,8 +23498,7 @@ func schema_openshift_api_console_v1_ConsoleCLIDownloadSpec(ref common.Reference
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/console/v1.CLIDownloadLink",
-		},
+			"github.com/openshift/api/console/v1.CLIDownloadLink"},
 	}
 }
 
@@ -23855,8 +23541,7 @@ func schema_openshift_api_console_v1_ConsoleExternalLogLink(ref common.Reference
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/console/v1.ConsoleExternalLogLinkSpec", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta",
-		},
+			"github.com/openshift/api/console/v1.ConsoleExternalLogLinkSpec", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"},
 	}
 }
 
@@ -23906,8 +23591,7 @@ func schema_openshift_api_console_v1_ConsoleExternalLogLinkList(ref common.Refer
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/console/v1.ConsoleExternalLogLink", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta",
-		},
+			"github.com/openshift/api/console/v1.ConsoleExternalLogLink", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"},
 	}
 }
 
@@ -23987,8 +23671,7 @@ func schema_openshift_api_console_v1_ConsoleLink(ref common.ReferenceCallback) c
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/console/v1.ConsoleLinkSpec", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta",
-		},
+			"github.com/openshift/api/console/v1.ConsoleLinkSpec", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"},
 	}
 }
 
@@ -24038,8 +23721,7 @@ func schema_openshift_api_console_v1_ConsoleLinkList(ref common.ReferenceCallbac
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/console/v1.ConsoleLink", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta",
-		},
+			"github.com/openshift/api/console/v1.ConsoleLink", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"},
 	}
 }
 
@@ -24091,8 +23773,7 @@ func schema_openshift_api_console_v1_ConsoleLinkSpec(ref common.ReferenceCallbac
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/console/v1.ApplicationMenuSpec", "github.com/openshift/api/console/v1.NamespaceDashboardSpec",
-		},
+			"github.com/openshift/api/console/v1.ApplicationMenuSpec", "github.com/openshift/api/console/v1.NamespaceDashboardSpec"},
 	}
 }
 
@@ -24135,8 +23816,7 @@ func schema_openshift_api_console_v1_ConsoleNotification(ref common.ReferenceCal
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/console/v1.ConsoleNotificationSpec", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta",
-		},
+			"github.com/openshift/api/console/v1.ConsoleNotificationSpec", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"},
 	}
 }
 
@@ -24186,8 +23866,7 @@ func schema_openshift_api_console_v1_ConsoleNotificationList(ref common.Referenc
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/console/v1.ConsoleNotification", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta",
-		},
+			"github.com/openshift/api/console/v1.ConsoleNotification", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"},
 	}
 }
 
@@ -24238,8 +23917,7 @@ func schema_openshift_api_console_v1_ConsoleNotificationSpec(ref common.Referenc
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/console/v1.Link",
-		},
+			"github.com/openshift/api/console/v1.Link"},
 	}
 }
 
@@ -24283,8 +23961,7 @@ func schema_openshift_api_console_v1_ConsolePlugin(ref common.ReferenceCallback)
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/console/v1.ConsolePluginSpec", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta",
-		},
+			"github.com/openshift/api/console/v1.ConsolePluginSpec", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"},
 	}
 }
 
@@ -24326,8 +24003,7 @@ func schema_openshift_api_console_v1_ConsolePluginBackend(ref common.ReferenceCa
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/console/v1.ConsolePluginService",
-		},
+			"github.com/openshift/api/console/v1.ConsolePluginService"},
 	}
 }
 
@@ -24442,8 +24118,7 @@ func schema_openshift_api_console_v1_ConsolePluginList(ref common.ReferenceCallb
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/console/v1.ConsolePlugin", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta",
-		},
+			"github.com/openshift/api/console/v1.ConsolePlugin", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"},
 	}
 }
 
@@ -24488,8 +24163,7 @@ func schema_openshift_api_console_v1_ConsolePluginProxy(ref common.ReferenceCall
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/console/v1.ConsolePluginProxyEndpoint",
-		},
+			"github.com/openshift/api/console/v1.ConsolePluginProxyEndpoint"},
 	}
 }
 
@@ -24531,8 +24205,7 @@ func schema_openshift_api_console_v1_ConsolePluginProxyEndpoint(ref common.Refer
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/console/v1.ConsolePluginProxyServiceConfig",
-		},
+			"github.com/openshift/api/console/v1.ConsolePluginProxyServiceConfig"},
 	}
 }
 
@@ -24694,8 +24367,7 @@ func schema_openshift_api_console_v1_ConsolePluginSpec(ref common.ReferenceCallb
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/console/v1.ConsolePluginBackend", "github.com/openshift/api/console/v1.ConsolePluginCSP", "github.com/openshift/api/console/v1.ConsolePluginI18n", "github.com/openshift/api/console/v1.ConsolePluginProxy",
-		},
+			"github.com/openshift/api/console/v1.ConsolePluginBackend", "github.com/openshift/api/console/v1.ConsolePluginCSP", "github.com/openshift/api/console/v1.ConsolePluginI18n", "github.com/openshift/api/console/v1.ConsolePluginProxy"},
 	}
 }
 
@@ -24738,8 +24410,7 @@ func schema_openshift_api_console_v1_ConsoleQuickStart(ref common.ReferenceCallb
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/console/v1.ConsoleQuickStartSpec", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta",
-		},
+			"github.com/openshift/api/console/v1.ConsoleQuickStartSpec", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"},
 	}
 }
 
@@ -24789,8 +24460,7 @@ func schema_openshift_api_console_v1_ConsoleQuickStartList(ref common.ReferenceC
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/console/v1.ConsoleQuickStart", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta",
-		},
+			"github.com/openshift/api/console/v1.ConsoleQuickStart", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"},
 	}
 }
 
@@ -24925,8 +24595,7 @@ func schema_openshift_api_console_v1_ConsoleQuickStartSpec(ref common.ReferenceC
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/console/v1.ConsoleQuickStartTask", "k8s.io/api/authorization/v1.ResourceAttributes",
-		},
+			"github.com/openshift/api/console/v1.ConsoleQuickStartTask", "k8s.io/api/authorization/v1.ResourceAttributes"},
 	}
 }
 
@@ -24970,8 +24639,7 @@ func schema_openshift_api_console_v1_ConsoleQuickStartTask(ref common.ReferenceC
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/console/v1.ConsoleQuickStartTaskReview", "github.com/openshift/api/console/v1.ConsoleQuickStartTaskSummary",
-		},
+			"github.com/openshift/api/console/v1.ConsoleQuickStartTaskReview", "github.com/openshift/api/console/v1.ConsoleQuickStartTaskSummary"},
 	}
 }
 
@@ -25075,8 +24743,7 @@ func schema_openshift_api_console_v1_ConsoleSample(ref common.ReferenceCallback)
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/console/v1.ConsoleSampleSpec", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta",
-		},
+			"github.com/openshift/api/console/v1.ConsoleSampleSpec", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"},
 	}
 }
 
@@ -25107,8 +24774,7 @@ func schema_openshift_api_console_v1_ConsoleSampleContainerImportSource(ref comm
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/console/v1.ConsoleSampleContainerImportSourceService",
-		},
+			"github.com/openshift/api/console/v1.ConsoleSampleContainerImportSourceService"},
 	}
 }
 
@@ -25158,8 +24824,7 @@ func schema_openshift_api_console_v1_ConsoleSampleGitImportSource(ref common.Ref
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/console/v1.ConsoleSampleGitImportSourceRepository", "github.com/openshift/api/console/v1.ConsoleSampleGitImportSourceService",
-		},
+			"github.com/openshift/api/console/v1.ConsoleSampleGitImportSourceRepository", "github.com/openshift/api/console/v1.ConsoleSampleGitImportSourceService"},
 	}
 }
 
@@ -25267,8 +24932,7 @@ func schema_openshift_api_console_v1_ConsoleSampleList(ref common.ReferenceCallb
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/console/v1.ConsoleSample", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta",
-		},
+			"github.com/openshift/api/console/v1.ConsoleSample", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"},
 	}
 }
 
@@ -25317,8 +24981,7 @@ func schema_openshift_api_console_v1_ConsoleSampleSource(ref common.ReferenceCal
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/console/v1.ConsoleSampleContainerImportSource", "github.com/openshift/api/console/v1.ConsoleSampleGitImportSource",
-		},
+			"github.com/openshift/api/console/v1.ConsoleSampleContainerImportSource", "github.com/openshift/api/console/v1.ConsoleSampleGitImportSource"},
 	}
 }
 
@@ -25409,8 +25072,7 @@ func schema_openshift_api_console_v1_ConsoleSampleSpec(ref common.ReferenceCallb
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/console/v1.ConsoleSampleSource",
-		},
+			"github.com/openshift/api/console/v1.ConsoleSampleSource"},
 	}
 }
 
@@ -25453,8 +25115,7 @@ func schema_openshift_api_console_v1_ConsoleYAMLSample(ref common.ReferenceCallb
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/console/v1.ConsoleYAMLSampleSpec", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta",
-		},
+			"github.com/openshift/api/console/v1.ConsoleYAMLSampleSpec", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"},
 	}
 }
 
@@ -25504,8 +25165,7 @@ func schema_openshift_api_console_v1_ConsoleYAMLSampleList(ref common.ReferenceC
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/console/v1.ConsoleYAMLSample", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta",
-		},
+			"github.com/openshift/api/console/v1.ConsoleYAMLSample", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"},
 	}
 }
 
@@ -25560,8 +25220,7 @@ func schema_openshift_api_console_v1_ConsoleYAMLSampleSpec(ref common.ReferenceC
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/apimachinery/pkg/apis/meta/v1.TypeMeta",
-		},
+			"k8s.io/apimachinery/pkg/apis/meta/v1.TypeMeta"},
 	}
 }
 
@@ -25627,8 +25286,7 @@ func schema_openshift_api_console_v1_NamespaceDashboardSpec(ref common.Reference
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/apimachinery/pkg/apis/meta/v1.LabelSelector",
-		},
+			"k8s.io/apimachinery/pkg/apis/meta/v1.LabelSelector"},
 	}
 }
 
@@ -25873,8 +25531,7 @@ func schema_openshift_api_example_v1_StableConfigType(ref common.ReferenceCallba
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/example/v1.StableConfigTypeSpec", "github.com/openshift/api/example/v1.StableConfigTypeStatus", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta",
-		},
+			"github.com/openshift/api/example/v1.StableConfigTypeSpec", "github.com/openshift/api/example/v1.StableConfigTypeStatus", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"},
 	}
 }
 
@@ -25924,8 +25581,7 @@ func schema_openshift_api_example_v1_StableConfigTypeList(ref common.ReferenceCa
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/example/v1.StableConfigType", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta",
-		},
+			"github.com/openshift/api/example/v1.StableConfigType", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"},
 	}
 }
 
@@ -26050,8 +25706,7 @@ func schema_openshift_api_example_v1_StableConfigTypeSpec(ref common.ReferenceCa
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/example/v1.CELUnion", "github.com/openshift/api/example/v1.EvolvingUnion", "github.com/openshift/api/example/v1.FormatMarkerExamples", "github.com/openshift/api/example/v1.SubnetsWithExclusions",
-		},
+			"github.com/openshift/api/example/v1.CELUnion", "github.com/openshift/api/example/v1.EvolvingUnion", "github.com/openshift/api/example/v1.FormatMarkerExamples", "github.com/openshift/api/example/v1.SubnetsWithExclusions"},
 	}
 }
 
@@ -26095,8 +25750,7 @@ func schema_openshift_api_example_v1_StableConfigTypeStatus(ref common.Reference
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/apimachinery/pkg/apis/meta/v1.Condition",
-		},
+			"k8s.io/apimachinery/pkg/apis/meta/v1.Condition"},
 	}
 }
 
@@ -26195,8 +25849,7 @@ func schema_openshift_api_example_v1alpha1_NotStableConfigType(ref common.Refere
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/example/v1alpha1.NotStableConfigTypeSpec", "github.com/openshift/api/example/v1alpha1.NotStableConfigTypeStatus", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta",
-		},
+			"github.com/openshift/api/example/v1alpha1.NotStableConfigTypeSpec", "github.com/openshift/api/example/v1alpha1.NotStableConfigTypeStatus", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"},
 	}
 }
 
@@ -26246,8 +25899,7 @@ func schema_openshift_api_example_v1alpha1_NotStableConfigTypeList(ref common.Re
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/example/v1alpha1.NotStableConfigType", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta",
-		},
+			"github.com/openshift/api/example/v1alpha1.NotStableConfigType", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"},
 	}
 }
 
@@ -26306,8 +25958,7 @@ func schema_openshift_api_example_v1alpha1_NotStableConfigTypeStatus(ref common.
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/apimachinery/pkg/apis/meta/v1.Condition",
-		},
+			"k8s.io/apimachinery/pkg/apis/meta/v1.Condition"},
 	}
 }
 
@@ -26344,8 +25995,7 @@ func schema_openshift_api_helm_v1beta1_ConnectionConfig(ref common.ReferenceCall
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/config/v1.ConfigMapNameReference", "github.com/openshift/api/config/v1.SecretNameReference",
-		},
+			"github.com/openshift/api/config/v1.ConfigMapNameReference", "github.com/openshift/api/config/v1.SecretNameReference"},
 	}
 }
 
@@ -26389,8 +26039,7 @@ func schema_openshift_api_helm_v1beta1_ConnectionConfigNamespaceScoped(ref commo
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/config/v1.ConfigMapNameReference", "github.com/openshift/api/config/v1.SecretNameReference",
-		},
+			"github.com/openshift/api/config/v1.ConfigMapNameReference", "github.com/openshift/api/config/v1.SecretNameReference"},
 	}
 }
 
@@ -26441,8 +26090,7 @@ func schema_openshift_api_helm_v1beta1_HelmChartRepository(ref common.ReferenceC
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/helm/v1beta1.HelmChartRepositorySpec", "github.com/openshift/api/helm/v1beta1.HelmChartRepositoryStatus", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta",
-		},
+			"github.com/openshift/api/helm/v1beta1.HelmChartRepositorySpec", "github.com/openshift/api/helm/v1beta1.HelmChartRepositoryStatus", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"},
 	}
 }
 
@@ -26492,8 +26140,7 @@ func schema_openshift_api_helm_v1beta1_HelmChartRepositoryList(ref common.Refere
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/helm/v1beta1.HelmChartRepository", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta",
-		},
+			"github.com/openshift/api/helm/v1beta1.HelmChartRepository", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"},
 	}
 }
 
@@ -26537,8 +26184,7 @@ func schema_openshift_api_helm_v1beta1_HelmChartRepositorySpec(ref common.Refere
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/helm/v1beta1.ConnectionConfig",
-		},
+			"github.com/openshift/api/helm/v1beta1.ConnectionConfig"},
 	}
 }
 
@@ -26574,8 +26220,7 @@ func schema_openshift_api_helm_v1beta1_HelmChartRepositoryStatus(ref common.Refe
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/apimachinery/pkg/apis/meta/v1.Condition",
-		},
+			"k8s.io/apimachinery/pkg/apis/meta/v1.Condition"},
 	}
 }
 
@@ -26626,8 +26271,7 @@ func schema_openshift_api_helm_v1beta1_ProjectHelmChartRepository(ref common.Ref
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/helm/v1beta1.HelmChartRepositoryStatus", "github.com/openshift/api/helm/v1beta1.ProjectHelmChartRepositorySpec", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta",
-		},
+			"github.com/openshift/api/helm/v1beta1.HelmChartRepositoryStatus", "github.com/openshift/api/helm/v1beta1.ProjectHelmChartRepositorySpec", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"},
 	}
 }
 
@@ -26677,8 +26321,7 @@ func schema_openshift_api_helm_v1beta1_ProjectHelmChartRepositoryList(ref common
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/helm/v1beta1.ProjectHelmChartRepository", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta",
-		},
+			"github.com/openshift/api/helm/v1beta1.ProjectHelmChartRepository", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"},
 	}
 }
 
@@ -26722,8 +26365,7 @@ func schema_openshift_api_helm_v1beta1_ProjectHelmChartRepositorySpec(ref common
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/helm/v1beta1.ConnectionConfigNamespaceScoped",
-		},
+			"github.com/openshift/api/helm/v1beta1.ConnectionConfigNamespaceScoped"},
 	}
 }
 
@@ -26921,8 +26563,7 @@ func schema_openshift_api_image_v1_Image(ref common.ReferenceCallback) common.Op
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/image/v1.ImageLayer", "github.com/openshift/api/image/v1.ImageManifest", "github.com/openshift/api/image/v1.ImageSignature", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta", "k8s.io/apimachinery/pkg/runtime.RawExtension",
-		},
+			"github.com/openshift/api/image/v1.ImageLayer", "github.com/openshift/api/image/v1.ImageManifest", "github.com/openshift/api/image/v1.ImageSignature", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta", "k8s.io/apimachinery/pkg/runtime.RawExtension"},
 	}
 }
 
@@ -27030,8 +26671,7 @@ func schema_openshift_api_image_v1_ImageImportSpec(ref common.ReferenceCallback)
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/image/v1.TagImportPolicy", "github.com/openshift/api/image/v1.TagReferencePolicy", "k8s.io/api/core/v1.LocalObjectReference", "k8s.io/api/core/v1.ObjectReference",
-		},
+			"github.com/openshift/api/image/v1.TagImportPolicy", "github.com/openshift/api/image/v1.TagReferencePolicy", "k8s.io/api/core/v1.LocalObjectReference", "k8s.io/api/core/v1.ObjectReference"},
 	}
 }
 
@@ -27081,8 +26721,7 @@ func schema_openshift_api_image_v1_ImageImportStatus(ref common.ReferenceCallbac
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/image/v1.Image", "k8s.io/apimachinery/pkg/apis/meta/v1.Status",
-		},
+			"github.com/openshift/api/image/v1.Image", "k8s.io/apimachinery/pkg/apis/meta/v1.Status"},
 	}
 }
 
@@ -27200,8 +26839,7 @@ func schema_openshift_api_image_v1_ImageList(ref common.ReferenceCallback) commo
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/image/v1.Image", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta",
-		},
+			"github.com/openshift/api/image/v1.Image", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"},
 	}
 }
 
@@ -27397,8 +27035,7 @@ func schema_openshift_api_image_v1_ImageSignature(ref common.ReferenceCallback) 
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/image/v1.SignatureCondition", "github.com/openshift/api/image/v1.SignatureIssuer", "github.com/openshift/api/image/v1.SignatureSubject", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta", "k8s.io/apimachinery/pkg/apis/meta/v1.Time",
-		},
+			"github.com/openshift/api/image/v1.SignatureCondition", "github.com/openshift/api/image/v1.SignatureIssuer", "github.com/openshift/api/image/v1.SignatureSubject", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta", "k8s.io/apimachinery/pkg/apis/meta/v1.Time"},
 	}
 }
 
@@ -27448,8 +27085,7 @@ func schema_openshift_api_image_v1_ImageStream(ref common.ReferenceCallback) com
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/image/v1.ImageStreamSpec", "github.com/openshift/api/image/v1.ImageStreamStatus", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta",
-		},
+			"github.com/openshift/api/image/v1.ImageStreamSpec", "github.com/openshift/api/image/v1.ImageStreamStatus", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"},
 	}
 }
 
@@ -27493,8 +27129,7 @@ func schema_openshift_api_image_v1_ImageStreamImage(ref common.ReferenceCallback
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/image/v1.Image", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta",
-		},
+			"github.com/openshift/api/image/v1.Image", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"},
 	}
 }
 
@@ -27545,8 +27180,7 @@ func schema_openshift_api_image_v1_ImageStreamImport(ref common.ReferenceCallbac
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/image/v1.ImageStreamImportSpec", "github.com/openshift/api/image/v1.ImageStreamImportStatus", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta",
-		},
+			"github.com/openshift/api/image/v1.ImageStreamImportSpec", "github.com/openshift/api/image/v1.ImageStreamImportStatus", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"},
 	}
 }
 
@@ -27590,8 +27224,7 @@ func schema_openshift_api_image_v1_ImageStreamImportSpec(ref common.ReferenceCal
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/image/v1.ImageImportSpec", "github.com/openshift/api/image/v1.RepositoryImportSpec",
-		},
+			"github.com/openshift/api/image/v1.ImageImportSpec", "github.com/openshift/api/image/v1.RepositoryImportSpec"},
 	}
 }
 
@@ -27632,8 +27265,7 @@ func schema_openshift_api_image_v1_ImageStreamImportStatus(ref common.ReferenceC
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/image/v1.ImageImportStatus", "github.com/openshift/api/image/v1.ImageStream", "github.com/openshift/api/image/v1.RepositoryImportStatus",
-		},
+			"github.com/openshift/api/image/v1.ImageImportStatus", "github.com/openshift/api/image/v1.ImageStream", "github.com/openshift/api/image/v1.RepositoryImportStatus"},
 	}
 }
 
@@ -27700,8 +27332,7 @@ func schema_openshift_api_image_v1_ImageStreamLayers(ref common.ReferenceCallbac
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/image/v1.ImageBlobReferences", "github.com/openshift/api/image/v1.ImageLayerData", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta",
-		},
+			"github.com/openshift/api/image/v1.ImageBlobReferences", "github.com/openshift/api/image/v1.ImageLayerData", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"},
 	}
 }
 
@@ -27752,8 +27383,7 @@ func schema_openshift_api_image_v1_ImageStreamList(ref common.ReferenceCallback)
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/image/v1.ImageStream", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta",
-		},
+			"github.com/openshift/api/image/v1.ImageStream", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"},
 	}
 }
 
@@ -27805,8 +27435,7 @@ func schema_openshift_api_image_v1_ImageStreamMapping(ref common.ReferenceCallba
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/image/v1.Image", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta",
-		},
+			"github.com/openshift/api/image/v1.Image", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"},
 	}
 }
 
@@ -27855,8 +27484,7 @@ func schema_openshift_api_image_v1_ImageStreamSpec(ref common.ReferenceCallback)
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/image/v1.ImageLookupPolicy", "github.com/openshift/api/image/v1.TagReference",
-		},
+			"github.com/openshift/api/image/v1.ImageLookupPolicy", "github.com/openshift/api/image/v1.TagReference"},
 	}
 }
 
@@ -27906,8 +27534,7 @@ func schema_openshift_api_image_v1_ImageStreamStatus(ref common.ReferenceCallbac
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/image/v1.NamedTagEventList",
-		},
+			"github.com/openshift/api/image/v1.NamedTagEventList"},
 	}
 }
 
@@ -27986,8 +27613,7 @@ func schema_openshift_api_image_v1_ImageStreamTag(ref common.ReferenceCallback) 
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/image/v1.Image", "github.com/openshift/api/image/v1.ImageLookupPolicy", "github.com/openshift/api/image/v1.TagEventCondition", "github.com/openshift/api/image/v1.TagReference", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta",
-		},
+			"github.com/openshift/api/image/v1.Image", "github.com/openshift/api/image/v1.ImageLookupPolicy", "github.com/openshift/api/image/v1.TagEventCondition", "github.com/openshift/api/image/v1.TagReference", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"},
 	}
 }
 
@@ -28038,8 +27664,7 @@ func schema_openshift_api_image_v1_ImageStreamTagList(ref common.ReferenceCallba
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/image/v1.ImageStreamTag", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta",
-		},
+			"github.com/openshift/api/image/v1.ImageStreamTag", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"},
 	}
 }
 
@@ -28094,8 +27719,7 @@ func schema_openshift_api_image_v1_ImageTag(ref common.ReferenceCallback) common
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/image/v1.Image", "github.com/openshift/api/image/v1.NamedTagEventList", "github.com/openshift/api/image/v1.TagReference", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta",
-		},
+			"github.com/openshift/api/image/v1.Image", "github.com/openshift/api/image/v1.NamedTagEventList", "github.com/openshift/api/image/v1.TagReference", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"},
 	}
 }
 
@@ -28146,8 +27770,7 @@ func schema_openshift_api_image_v1_ImageTagList(ref common.ReferenceCallback) co
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/image/v1.ImageTag", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta",
-		},
+			"github.com/openshift/api/image/v1.ImageTag", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"},
 	}
 }
 
@@ -28199,8 +27822,7 @@ func schema_openshift_api_image_v1_NamedTagEventList(ref common.ReferenceCallbac
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/image/v1.TagEvent", "github.com/openshift/api/image/v1.TagEventCondition",
-		},
+			"github.com/openshift/api/image/v1.TagEvent", "github.com/openshift/api/image/v1.TagEventCondition"},
 	}
 }
 
@@ -28244,8 +27866,7 @@ func schema_openshift_api_image_v1_RepositoryImportSpec(ref common.ReferenceCall
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/image/v1.TagImportPolicy", "github.com/openshift/api/image/v1.TagReferencePolicy", "k8s.io/api/core/v1.ObjectReference",
-		},
+			"github.com/openshift/api/image/v1.TagImportPolicy", "github.com/openshift/api/image/v1.TagReferencePolicy", "k8s.io/api/core/v1.ObjectReference"},
 	}
 }
 
@@ -28296,8 +27917,7 @@ func schema_openshift_api_image_v1_RepositoryImportStatus(ref common.ReferenceCa
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/image/v1.ImageImportStatus", "k8s.io/apimachinery/pkg/apis/meta/v1.Status",
-		},
+			"github.com/openshift/api/image/v1.ImageImportStatus", "k8s.io/apimachinery/pkg/apis/meta/v1.Status"},
 	}
 }
 
@@ -28348,8 +27968,7 @@ func schema_openshift_api_image_v1_SecretList(ref common.ReferenceCallback) comm
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.Secret", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta",
-		},
+			"k8s.io/api/core/v1.Secret", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"},
 	}
 }
 
@@ -28407,8 +28026,7 @@ func schema_openshift_api_image_v1_SignatureCondition(ref common.ReferenceCallba
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/apimachinery/pkg/apis/meta/v1.Time",
-		},
+			"k8s.io/apimachinery/pkg/apis/meta/v1.Time"},
 	}
 }
 
@@ -28544,8 +28162,7 @@ func schema_openshift_api_image_v1_TagEvent(ref common.ReferenceCallback) common
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/apimachinery/pkg/apis/meta/v1.Time",
-		},
+			"k8s.io/apimachinery/pkg/apis/meta/v1.Time"},
 	}
 }
 
@@ -28605,8 +28222,7 @@ func schema_openshift_api_image_v1_TagEventCondition(ref common.ReferenceCallbac
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/apimachinery/pkg/apis/meta/v1.Time",
-		},
+			"k8s.io/apimachinery/pkg/apis/meta/v1.Time"},
 	}
 }
 
@@ -28714,8 +28330,7 @@ func schema_openshift_api_image_v1_TagReference(ref common.ReferenceCallback) co
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/image/v1.TagImportPolicy", "github.com/openshift/api/image/v1.TagReferencePolicy", "k8s.io/api/core/v1.ObjectReference",
-		},
+			"github.com/openshift/api/image/v1.TagImportPolicy", "github.com/openshift/api/image/v1.TagReferencePolicy", "k8s.io/api/core/v1.ObjectReference"},
 	}
 }
 
@@ -28788,8 +28403,7 @@ func schema_openshift_api_insights_v1alpha1_DataGather(ref common.ReferenceCallb
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/insights/v1alpha1.DataGatherSpec", "github.com/openshift/api/insights/v1alpha1.DataGatherStatus", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta",
-		},
+			"github.com/openshift/api/insights/v1alpha1.DataGatherSpec", "github.com/openshift/api/insights/v1alpha1.DataGatherStatus", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"},
 	}
 }
 
@@ -28844,8 +28458,7 @@ func schema_openshift_api_insights_v1alpha1_DataGatherList(ref common.ReferenceC
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/insights/v1alpha1.DataGather", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta",
-		},
+			"github.com/openshift/api/insights/v1alpha1.DataGather", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"},
 	}
 }
 
@@ -28888,8 +28501,7 @@ func schema_openshift_api_insights_v1alpha1_DataGatherSpec(ref common.ReferenceC
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/insights/v1alpha1.GathererConfig", "github.com/openshift/api/insights/v1alpha1.Storage",
-		},
+			"github.com/openshift/api/insights/v1alpha1.GathererConfig", "github.com/openshift/api/insights/v1alpha1.Storage"},
 	}
 }
 
@@ -28995,8 +28607,7 @@ func schema_openshift_api_insights_v1alpha1_DataGatherStatus(ref common.Referenc
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/insights/v1alpha1.GathererStatus", "github.com/openshift/api/insights/v1alpha1.InsightsReport", "github.com/openshift/api/insights/v1alpha1.ObjectReference", "k8s.io/apimachinery/pkg/apis/meta/v1.Condition", "k8s.io/apimachinery/pkg/apis/meta/v1.Time",
-		},
+			"github.com/openshift/api/insights/v1alpha1.GathererStatus", "github.com/openshift/api/insights/v1alpha1.InsightsReport", "github.com/openshift/api/insights/v1alpha1.ObjectReference", "k8s.io/apimachinery/pkg/apis/meta/v1.Condition", "k8s.io/apimachinery/pkg/apis/meta/v1.Time"},
 	}
 }
 
@@ -29078,8 +28689,7 @@ func schema_openshift_api_insights_v1alpha1_GathererStatus(ref common.ReferenceC
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/apimachinery/pkg/apis/meta/v1.Condition", "k8s.io/apimachinery/pkg/apis/meta/v1.Duration",
-		},
+			"k8s.io/apimachinery/pkg/apis/meta/v1.Condition", "k8s.io/apimachinery/pkg/apis/meta/v1.Duration"},
 	}
 }
 
@@ -29172,8 +28782,7 @@ func schema_openshift_api_insights_v1alpha1_InsightsReport(ref common.ReferenceC
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/insights/v1alpha1.HealthCheck", "k8s.io/apimachinery/pkg/apis/meta/v1.Time",
-		},
+			"github.com/openshift/api/insights/v1alpha1.HealthCheck", "k8s.io/apimachinery/pkg/apis/meta/v1.Time"},
 	}
 }
 
@@ -29270,8 +28879,7 @@ func schema_openshift_api_insights_v1alpha1_PersistentVolumeConfig(ref common.Re
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/insights/v1alpha1.PersistentVolumeClaimReference",
-		},
+			"github.com/openshift/api/insights/v1alpha1.PersistentVolumeClaimReference"},
 	}
 }
 
@@ -29301,8 +28909,7 @@ func schema_openshift_api_insights_v1alpha1_Storage(ref common.ReferenceCallback
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/insights/v1alpha1.PersistentVolumeConfig",
-		},
+			"github.com/openshift/api/insights/v1alpha1.PersistentVolumeConfig"},
 	}
 }
 
@@ -29340,8 +28947,7 @@ func schema_openshift_api_insights_v1alpha2_Custom(ref common.ReferenceCallback)
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/insights/v1alpha2.GathererConfig",
-		},
+			"github.com/openshift/api/insights/v1alpha2.GathererConfig"},
 	}
 }
 
@@ -29392,8 +28998,7 @@ func schema_openshift_api_insights_v1alpha2_DataGather(ref common.ReferenceCallb
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/insights/v1alpha2.DataGatherSpec", "github.com/openshift/api/insights/v1alpha2.DataGatherStatus", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta",
-		},
+			"github.com/openshift/api/insights/v1alpha2.DataGatherSpec", "github.com/openshift/api/insights/v1alpha2.DataGatherStatus", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"},
 	}
 }
 
@@ -29448,8 +29053,7 @@ func schema_openshift_api_insights_v1alpha2_DataGatherList(ref common.ReferenceC
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/insights/v1alpha2.DataGather", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta",
-		},
+			"github.com/openshift/api/insights/v1alpha2.DataGather", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"},
 	}
 }
 
@@ -29496,8 +29100,7 @@ func schema_openshift_api_insights_v1alpha2_DataGatherSpec(ref common.ReferenceC
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/insights/v1alpha2.Gatherers", "github.com/openshift/api/insights/v1alpha2.Storage",
-		},
+			"github.com/openshift/api/insights/v1alpha2.Gatherers", "github.com/openshift/api/insights/v1alpha2.Storage"},
 	}
 }
 
@@ -29605,8 +29208,7 @@ func schema_openshift_api_insights_v1alpha2_DataGatherStatus(ref common.Referenc
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/insights/v1alpha2.GathererStatus", "github.com/openshift/api/insights/v1alpha2.InsightsReport", "github.com/openshift/api/insights/v1alpha2.ObjectReference", "k8s.io/apimachinery/pkg/apis/meta/v1.Condition", "k8s.io/apimachinery/pkg/apis/meta/v1.Time",
-		},
+			"github.com/openshift/api/insights/v1alpha2.GathererStatus", "github.com/openshift/api/insights/v1alpha2.InsightsReport", "github.com/openshift/api/insights/v1alpha2.ObjectReference", "k8s.io/apimachinery/pkg/apis/meta/v1.Condition", "k8s.io/apimachinery/pkg/apis/meta/v1.Time"},
 	}
 }
 
@@ -29690,8 +29292,7 @@ func schema_openshift_api_insights_v1alpha2_GathererStatus(ref common.ReferenceC
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/apimachinery/pkg/apis/meta/v1.Condition",
-		},
+			"k8s.io/apimachinery/pkg/apis/meta/v1.Condition"},
 	}
 }
 
@@ -29733,8 +29334,7 @@ func schema_openshift_api_insights_v1alpha2_Gatherers(ref common.ReferenceCallba
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/insights/v1alpha2.Custom",
-		},
+			"github.com/openshift/api/insights/v1alpha2.Custom"},
 	}
 }
 
@@ -29824,8 +29424,7 @@ func schema_openshift_api_insights_v1alpha2_InsightsReport(ref common.ReferenceC
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/insights/v1alpha2.HealthCheck", "k8s.io/apimachinery/pkg/apis/meta/v1.Time",
-		},
+			"github.com/openshift/api/insights/v1alpha2.HealthCheck", "k8s.io/apimachinery/pkg/apis/meta/v1.Time"},
 	}
 }
 
@@ -29923,8 +29522,7 @@ func schema_openshift_api_insights_v1alpha2_PersistentVolumeConfig(ref common.Re
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/insights/v1alpha2.PersistentVolumeClaimReference",
-		},
+			"github.com/openshift/api/insights/v1alpha2.PersistentVolumeClaimReference"},
 	}
 }
 
@@ -29966,8 +29564,7 @@ func schema_openshift_api_insights_v1alpha2_Storage(ref common.ReferenceCallback
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/insights/v1alpha2.PersistentVolumeConfig",
-		},
+			"github.com/openshift/api/insights/v1alpha2.PersistentVolumeConfig"},
 	}
 }
 
@@ -29990,8 +29587,7 @@ func schema_openshift_api_kubecontrolplane_v1_AggregatorConfig(ref common.Refere
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/config/v1.CertInfo",
-		},
+			"github.com/openshift/api/config/v1.CertInfo"},
 	}
 }
 
@@ -30187,8 +29783,7 @@ func schema_openshift_api_kubecontrolplane_v1_KubeAPIServerConfig(ref common.Ref
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/config/v1.AdmissionConfig", "github.com/openshift/api/config/v1.AuditConfig", "github.com/openshift/api/config/v1.EtcdStorageConfig", "github.com/openshift/api/config/v1.HTTPServingInfo", "github.com/openshift/api/config/v1.KubeClientConfig", "github.com/openshift/api/kubecontrolplane/v1.AggregatorConfig", "github.com/openshift/api/kubecontrolplane/v1.KubeAPIServerImagePolicyConfig", "github.com/openshift/api/kubecontrolplane/v1.KubeAPIServerProjectConfig", "github.com/openshift/api/kubecontrolplane/v1.KubeletConnectionInfo", "github.com/openshift/api/kubecontrolplane/v1.MasterAuthConfig", "github.com/openshift/api/kubecontrolplane/v1.UserAgentMatchingConfig", "github.com/openshift/api/osin/v1.OAuthConfig",
-		},
+			"github.com/openshift/api/config/v1.AdmissionConfig", "github.com/openshift/api/config/v1.AuditConfig", "github.com/openshift/api/config/v1.EtcdStorageConfig", "github.com/openshift/api/config/v1.HTTPServingInfo", "github.com/openshift/api/config/v1.KubeClientConfig", "github.com/openshift/api/kubecontrolplane/v1.AggregatorConfig", "github.com/openshift/api/kubecontrolplane/v1.KubeAPIServerImagePolicyConfig", "github.com/openshift/api/kubecontrolplane/v1.KubeAPIServerProjectConfig", "github.com/openshift/api/kubecontrolplane/v1.KubeletConnectionInfo", "github.com/openshift/api/kubecontrolplane/v1.MasterAuthConfig", "github.com/openshift/api/kubecontrolplane/v1.UserAgentMatchingConfig", "github.com/openshift/api/osin/v1.OAuthConfig"},
 	}
 }
 
@@ -30312,8 +29907,7 @@ func schema_openshift_api_kubecontrolplane_v1_KubeControllerManagerConfig(ref co
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/kubecontrolplane/v1.KubeControllerManagerProjectConfig", "github.com/openshift/api/kubecontrolplane/v1.ServiceServingCert",
-		},
+			"github.com/openshift/api/kubecontrolplane/v1.KubeControllerManagerProjectConfig", "github.com/openshift/api/kubecontrolplane/v1.ServiceServingCert"},
 	}
 }
 
@@ -30424,8 +30018,7 @@ func schema_openshift_api_kubecontrolplane_v1_MasterAuthConfig(ref common.Refere
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/kubecontrolplane/v1.RequestHeaderAuthenticationOptions", "github.com/openshift/api/kubecontrolplane/v1.WebhookTokenAuthenticator",
-		},
+			"github.com/openshift/api/kubecontrolplane/v1.RequestHeaderAuthenticationOptions", "github.com/openshift/api/kubecontrolplane/v1.WebhookTokenAuthenticator"},
 	}
 }
 
@@ -30663,8 +30256,7 @@ func schema_openshift_api_kubecontrolplane_v1_UserAgentMatchingConfig(ref common
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/kubecontrolplane/v1.UserAgentDenyRule", "github.com/openshift/api/kubecontrolplane/v1.UserAgentMatchRule",
-		},
+			"github.com/openshift/api/kubecontrolplane/v1.UserAgentDenyRule", "github.com/openshift/api/kubecontrolplane/v1.UserAgentMatchRule"},
 	}
 }
 
@@ -30747,8 +30339,7 @@ func schema_openshift_api_legacyconfig_v1_ActiveDirectoryConfig(ref common.Refer
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/legacyconfig/v1.LDAPQuery",
-		},
+			"github.com/openshift/api/legacyconfig/v1.LDAPQuery"},
 	}
 }
 
@@ -30793,8 +30384,7 @@ func schema_openshift_api_legacyconfig_v1_AdmissionConfig(ref common.ReferenceCa
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/legacyconfig/v1.AdmissionPluginConfig",
-		},
+			"github.com/openshift/api/legacyconfig/v1.AdmissionPluginConfig"},
 	}
 }
 
@@ -30824,8 +30414,7 @@ func schema_openshift_api_legacyconfig_v1_AdmissionPluginConfig(ref common.Refer
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/apimachinery/pkg/runtime.RawExtension",
-		},
+			"k8s.io/apimachinery/pkg/runtime.RawExtension"},
 	}
 }
 
@@ -30848,8 +30437,7 @@ func schema_openshift_api_legacyconfig_v1_AggregatorConfig(ref common.ReferenceC
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/legacyconfig/v1.CertInfo",
-		},
+			"github.com/openshift/api/legacyconfig/v1.CertInfo"},
 	}
 }
 
@@ -30970,8 +30558,7 @@ func schema_openshift_api_legacyconfig_v1_AuditConfig(ref common.ReferenceCallba
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/apimachinery/pkg/runtime.RawExtension",
-		},
+			"k8s.io/apimachinery/pkg/runtime.RawExtension"},
 	}
 }
 
@@ -31054,8 +30641,7 @@ func schema_openshift_api_legacyconfig_v1_AugmentedActiveDirectoryConfig(ref com
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/legacyconfig/v1.LDAPQuery",
-		},
+			"github.com/openshift/api/legacyconfig/v1.LDAPQuery"},
 	}
 }
 
@@ -31238,8 +30824,7 @@ func schema_openshift_api_legacyconfig_v1_BuildDefaultsConfig(ref common.Referen
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/build/v1.ImageLabel", "github.com/openshift/api/legacyconfig/v1.SourceStrategyDefaultsConfig", "k8s.io/api/core/v1.EnvVar", "k8s.io/api/core/v1.ResourceRequirements",
-		},
+			"github.com/openshift/api/build/v1.ImageLabel", "github.com/openshift/api/legacyconfig/v1.SourceStrategyDefaultsConfig", "k8s.io/api/core/v1.EnvVar", "k8s.io/api/core/v1.ResourceRequirements"},
 	}
 }
 
@@ -31337,8 +30922,7 @@ func schema_openshift_api_legacyconfig_v1_BuildOverridesConfig(ref common.Refere
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/build/v1.ImageLabel", "k8s.io/api/core/v1.Toleration",
-		},
+			"github.com/openshift/api/build/v1.ImageLabel", "k8s.io/api/core/v1.Toleration"},
 	}
 }
 
@@ -31488,8 +31072,7 @@ func schema_openshift_api_legacyconfig_v1_ControllerConfig(ref common.ReferenceC
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/legacyconfig/v1.ControllerElectionConfig", "github.com/openshift/api/legacyconfig/v1.ServiceServingCert",
-		},
+			"github.com/openshift/api/legacyconfig/v1.ControllerElectionConfig", "github.com/openshift/api/legacyconfig/v1.ServiceServingCert"},
 	}
 }
 
@@ -31528,8 +31111,7 @@ func schema_openshift_api_legacyconfig_v1_ControllerElectionConfig(ref common.Re
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/legacyconfig/v1.GroupResource",
-		},
+			"github.com/openshift/api/legacyconfig/v1.GroupResource"},
 	}
 }
 
@@ -31722,8 +31304,7 @@ func schema_openshift_api_legacyconfig_v1_EtcdConfig(ref common.ReferenceCallbac
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/legacyconfig/v1.ServingInfo",
-		},
+			"github.com/openshift/api/legacyconfig/v1.ServingInfo"},
 	}
 }
 
@@ -31912,8 +31493,7 @@ func schema_openshift_api_legacyconfig_v1_GitHubIdentityProvider(ref common.Refe
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/legacyconfig/v1.StringSource",
-		},
+			"github.com/openshift/api/legacyconfig/v1.StringSource"},
 	}
 }
 
@@ -31980,8 +31560,7 @@ func schema_openshift_api_legacyconfig_v1_GitLabIdentityProvider(ref common.Refe
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/legacyconfig/v1.StringSource",
-		},
+			"github.com/openshift/api/legacyconfig/v1.StringSource"},
 	}
 }
 
@@ -32033,8 +31612,7 @@ func schema_openshift_api_legacyconfig_v1_GoogleIdentityProvider(ref common.Refe
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/legacyconfig/v1.StringSource",
-		},
+			"github.com/openshift/api/legacyconfig/v1.StringSource"},
 	}
 }
 
@@ -32238,8 +31816,7 @@ func schema_openshift_api_legacyconfig_v1_HTTPServingInfo(ref common.ReferenceCa
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/legacyconfig/v1.NamedCertificate",
-		},
+			"github.com/openshift/api/legacyconfig/v1.NamedCertificate"},
 	}
 }
 
@@ -32293,8 +31870,7 @@ func schema_openshift_api_legacyconfig_v1_IdentityProvider(ref common.ReferenceC
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/apimachinery/pkg/runtime.RawExtension",
-		},
+			"k8s.io/apimachinery/pkg/runtime.RawExtension"},
 	}
 }
 
@@ -32407,8 +31983,7 @@ func schema_openshift_api_legacyconfig_v1_ImagePolicyConfig(ref common.Reference
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/legacyconfig/v1.RegistryLocation",
-		},
+			"github.com/openshift/api/legacyconfig/v1.RegistryLocation"},
 	}
 }
 
@@ -32769,8 +32344,7 @@ func schema_openshift_api_legacyconfig_v1_KubernetesMasterConfig(ref common.Refe
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/legacyconfig/v1.CertInfo",
-		},
+			"github.com/openshift/api/legacyconfig/v1.CertInfo"},
 	}
 }
 
@@ -32919,8 +32493,7 @@ func schema_openshift_api_legacyconfig_v1_LDAPPasswordIdentityProvider(ref commo
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/legacyconfig/v1.LDAPAttributeMapping", "github.com/openshift/api/legacyconfig/v1.StringSource",
-		},
+			"github.com/openshift/api/legacyconfig/v1.LDAPAttributeMapping", "github.com/openshift/api/legacyconfig/v1.StringSource"},
 	}
 }
 
@@ -33084,8 +32657,7 @@ func schema_openshift_api_legacyconfig_v1_LDAPSyncConfig(ref common.ReferenceCal
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/legacyconfig/v1.ActiveDirectoryConfig", "github.com/openshift/api/legacyconfig/v1.AugmentedActiveDirectoryConfig", "github.com/openshift/api/legacyconfig/v1.RFC2307Config", "github.com/openshift/api/legacyconfig/v1.StringSource",
-		},
+			"github.com/openshift/api/legacyconfig/v1.ActiveDirectoryConfig", "github.com/openshift/api/legacyconfig/v1.AugmentedActiveDirectoryConfig", "github.com/openshift/api/legacyconfig/v1.RFC2307Config", "github.com/openshift/api/legacyconfig/v1.StringSource"},
 	}
 }
 
@@ -33107,8 +32679,7 @@ func schema_openshift_api_legacyconfig_v1_LocalQuota(ref common.ReferenceCallbac
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/apimachinery/pkg/api/resource.Quantity",
-		},
+			"k8s.io/apimachinery/pkg/api/resource.Quantity"},
 	}
 }
 
@@ -33152,8 +32723,7 @@ func schema_openshift_api_legacyconfig_v1_MasterAuthConfig(ref common.ReferenceC
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/legacyconfig/v1.RequestHeaderAuthenticationOptions", "github.com/openshift/api/legacyconfig/v1.WebhookTokenAuthenticator",
-		},
+			"github.com/openshift/api/legacyconfig/v1.RequestHeaderAuthenticationOptions", "github.com/openshift/api/legacyconfig/v1.WebhookTokenAuthenticator"},
 	}
 }
 
@@ -33183,8 +32753,7 @@ func schema_openshift_api_legacyconfig_v1_MasterClients(ref common.ReferenceCall
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/legacyconfig/v1.ClientConnectionOverrides",
-		},
+			"github.com/openshift/api/legacyconfig/v1.ClientConnectionOverrides"},
 	}
 }
 
@@ -33418,8 +32987,7 @@ func schema_openshift_api_legacyconfig_v1_MasterConfig(ref common.ReferenceCallb
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/legacyconfig/v1.AdmissionConfig", "github.com/openshift/api/legacyconfig/v1.AggregatorConfig", "github.com/openshift/api/legacyconfig/v1.AuditConfig", "github.com/openshift/api/legacyconfig/v1.ControllerConfig", "github.com/openshift/api/legacyconfig/v1.DNSConfig", "github.com/openshift/api/legacyconfig/v1.EtcdConfig", "github.com/openshift/api/legacyconfig/v1.EtcdConnectionInfo", "github.com/openshift/api/legacyconfig/v1.EtcdStorageConfig", "github.com/openshift/api/legacyconfig/v1.HTTPServingInfo", "github.com/openshift/api/legacyconfig/v1.ImageConfig", "github.com/openshift/api/legacyconfig/v1.ImagePolicyConfig", "github.com/openshift/api/legacyconfig/v1.JenkinsPipelineConfig", "github.com/openshift/api/legacyconfig/v1.KubeletConnectionInfo", "github.com/openshift/api/legacyconfig/v1.KubernetesMasterConfig", "github.com/openshift/api/legacyconfig/v1.MasterAuthConfig", "github.com/openshift/api/legacyconfig/v1.MasterClients", "github.com/openshift/api/legacyconfig/v1.MasterNetworkConfig", "github.com/openshift/api/legacyconfig/v1.MasterVolumeConfig", "github.com/openshift/api/legacyconfig/v1.OAuthConfig", "github.com/openshift/api/legacyconfig/v1.PolicyConfig", "github.com/openshift/api/legacyconfig/v1.ProjectConfig", "github.com/openshift/api/legacyconfig/v1.RoutingConfig", "github.com/openshift/api/legacyconfig/v1.ServiceAccountConfig",
-		},
+			"github.com/openshift/api/legacyconfig/v1.AdmissionConfig", "github.com/openshift/api/legacyconfig/v1.AggregatorConfig", "github.com/openshift/api/legacyconfig/v1.AuditConfig", "github.com/openshift/api/legacyconfig/v1.ControllerConfig", "github.com/openshift/api/legacyconfig/v1.DNSConfig", "github.com/openshift/api/legacyconfig/v1.EtcdConfig", "github.com/openshift/api/legacyconfig/v1.EtcdConnectionInfo", "github.com/openshift/api/legacyconfig/v1.EtcdStorageConfig", "github.com/openshift/api/legacyconfig/v1.HTTPServingInfo", "github.com/openshift/api/legacyconfig/v1.ImageConfig", "github.com/openshift/api/legacyconfig/v1.ImagePolicyConfig", "github.com/openshift/api/legacyconfig/v1.JenkinsPipelineConfig", "github.com/openshift/api/legacyconfig/v1.KubeletConnectionInfo", "github.com/openshift/api/legacyconfig/v1.KubernetesMasterConfig", "github.com/openshift/api/legacyconfig/v1.MasterAuthConfig", "github.com/openshift/api/legacyconfig/v1.MasterClients", "github.com/openshift/api/legacyconfig/v1.MasterNetworkConfig", "github.com/openshift/api/legacyconfig/v1.MasterVolumeConfig", "github.com/openshift/api/legacyconfig/v1.OAuthConfig", "github.com/openshift/api/legacyconfig/v1.PolicyConfig", "github.com/openshift/api/legacyconfig/v1.ProjectConfig", "github.com/openshift/api/legacyconfig/v1.RoutingConfig", "github.com/openshift/api/legacyconfig/v1.ServiceAccountConfig"},
 	}
 }
 
@@ -33509,8 +33077,7 @@ func schema_openshift_api_legacyconfig_v1_MasterNetworkConfig(ref common.Referen
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/legacyconfig/v1.ClusterNetworkEntry",
-		},
+			"github.com/openshift/api/legacyconfig/v1.ClusterNetworkEntry"},
 	}
 }
 
@@ -33861,8 +33428,7 @@ func schema_openshift_api_legacyconfig_v1_NodeConfig(ref common.ReferenceCallbac
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/legacyconfig/v1.ClientConnectionOverrides", "github.com/openshift/api/legacyconfig/v1.DockerConfig", "github.com/openshift/api/legacyconfig/v1.ImageConfig", "github.com/openshift/api/legacyconfig/v1.NodeAuthConfig", "github.com/openshift/api/legacyconfig/v1.NodeNetworkConfig", "github.com/openshift/api/legacyconfig/v1.NodeVolumeConfig", "github.com/openshift/api/legacyconfig/v1.PodManifestConfig", "github.com/openshift/api/legacyconfig/v1.ServingInfo",
-		},
+			"github.com/openshift/api/legacyconfig/v1.ClientConnectionOverrides", "github.com/openshift/api/legacyconfig/v1.DockerConfig", "github.com/openshift/api/legacyconfig/v1.ImageConfig", "github.com/openshift/api/legacyconfig/v1.NodeAuthConfig", "github.com/openshift/api/legacyconfig/v1.NodeNetworkConfig", "github.com/openshift/api/legacyconfig/v1.NodeVolumeConfig", "github.com/openshift/api/legacyconfig/v1.PodManifestConfig", "github.com/openshift/api/legacyconfig/v1.ServingInfo"},
 	}
 }
 
@@ -33915,8 +33481,7 @@ func schema_openshift_api_legacyconfig_v1_NodeVolumeConfig(ref common.ReferenceC
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/legacyconfig/v1.LocalQuota",
-		},
+			"github.com/openshift/api/legacyconfig/v1.LocalQuota"},
 	}
 }
 
@@ -34011,8 +33576,7 @@ func schema_openshift_api_legacyconfig_v1_OAuthConfig(ref common.ReferenceCallba
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/legacyconfig/v1.GrantConfig", "github.com/openshift/api/legacyconfig/v1.IdentityProvider", "github.com/openshift/api/legacyconfig/v1.OAuthTemplates", "github.com/openshift/api/legacyconfig/v1.SessionConfig", "github.com/openshift/api/legacyconfig/v1.TokenConfig",
-		},
+			"github.com/openshift/api/legacyconfig/v1.GrantConfig", "github.com/openshift/api/legacyconfig/v1.IdentityProvider", "github.com/openshift/api/legacyconfig/v1.OAuthTemplates", "github.com/openshift/api/legacyconfig/v1.SessionConfig", "github.com/openshift/api/legacyconfig/v1.TokenConfig"},
 	}
 }
 
@@ -34221,8 +33785,7 @@ func schema_openshift_api_legacyconfig_v1_OpenIDIdentityProvider(ref common.Refe
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/legacyconfig/v1.OpenIDClaims", "github.com/openshift/api/legacyconfig/v1.OpenIDURLs", "github.com/openshift/api/legacyconfig/v1.StringSource",
-		},
+			"github.com/openshift/api/legacyconfig/v1.OpenIDClaims", "github.com/openshift/api/legacyconfig/v1.OpenIDURLs", "github.com/openshift/api/legacyconfig/v1.StringSource"},
 	}
 }
 
@@ -34313,8 +33876,7 @@ func schema_openshift_api_legacyconfig_v1_PolicyConfig(ref common.ReferenceCallb
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/legacyconfig/v1.UserAgentMatchingConfig",
-		},
+			"github.com/openshift/api/legacyconfig/v1.UserAgentMatchingConfig"},
 	}
 }
 
@@ -34360,8 +33922,7 @@ func schema_openshift_api_legacyconfig_v1_ProjectConfig(ref common.ReferenceCall
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/legacyconfig/v1.SecurityAllocator",
-		},
+			"github.com/openshift/api/legacyconfig/v1.SecurityAllocator"},
 	}
 }
 
@@ -34468,8 +34029,7 @@ func schema_openshift_api_legacyconfig_v1_RFC2307Config(ref common.ReferenceCall
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/legacyconfig/v1.LDAPQuery",
-		},
+			"github.com/openshift/api/legacyconfig/v1.LDAPQuery"},
 	}
 }
 
@@ -34903,8 +34463,7 @@ func schema_openshift_api_legacyconfig_v1_ServiceServingCert(ref common.Referenc
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/legacyconfig/v1.CertInfo",
-		},
+			"github.com/openshift/api/legacyconfig/v1.CertInfo"},
 	}
 }
 
@@ -34996,8 +34555,7 @@ func schema_openshift_api_legacyconfig_v1_ServingInfo(ref common.ReferenceCallba
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/legacyconfig/v1.NamedCertificate",
-		},
+			"github.com/openshift/api/legacyconfig/v1.NamedCertificate"},
 	}
 }
 
@@ -35109,8 +34667,7 @@ func schema_openshift_api_legacyconfig_v1_SessionSecrets(ref common.ReferenceCal
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/legacyconfig/v1.SessionSecret",
-		},
+			"github.com/openshift/api/legacyconfig/v1.SessionSecret"},
 	}
 }
 
@@ -35393,8 +34950,7 @@ func schema_openshift_api_legacyconfig_v1_UserAgentMatchingConfig(ref common.Ref
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/legacyconfig/v1.UserAgentDenyRule", "github.com/openshift/api/legacyconfig/v1.UserAgentMatchRule",
-		},
+			"github.com/openshift/api/legacyconfig/v1.UserAgentDenyRule", "github.com/openshift/api/legacyconfig/v1.UserAgentMatchRule"},
 	}
 }
 
@@ -35452,8 +35008,7 @@ func schema_openshift_api_machine_v1_AWSFailureDomain(ref common.ReferenceCallba
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/machine/v1.AWSFailureDomainPlacement", "github.com/openshift/api/machine/v1.AWSResourceReference",
-		},
+			"github.com/openshift/api/machine/v1.AWSFailureDomainPlacement", "github.com/openshift/api/machine/v1.AWSResourceReference"},
 	}
 }
 
@@ -35588,8 +35143,7 @@ func schema_openshift_api_machine_v1_AWSResourceReference(ref common.ReferenceCa
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/machine/v1.AWSResourceFilter",
-		},
+			"github.com/openshift/api/machine/v1.AWSResourceFilter"},
 	}
 }
 
@@ -35762,8 +35316,7 @@ func schema_openshift_api_machine_v1_AlibabaCloudMachineProviderConfig(ref commo
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/machine/v1.AlibabaResourceReference", "github.com/openshift/api/machine/v1.BandwidthProperties", "github.com/openshift/api/machine/v1.DataDiskProperties", "github.com/openshift/api/machine/v1.SystemDiskProperties", "github.com/openshift/api/machine/v1.Tag", "k8s.io/api/core/v1.LocalObjectReference", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta",
-		},
+			"github.com/openshift/api/machine/v1.AlibabaResourceReference", "github.com/openshift/api/machine/v1.BandwidthProperties", "github.com/openshift/api/machine/v1.DataDiskProperties", "github.com/openshift/api/machine/v1.SystemDiskProperties", "github.com/openshift/api/machine/v1.Tag", "k8s.io/api/core/v1.LocalObjectReference", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"},
 	}
 }
 
@@ -35813,8 +35366,7 @@ func schema_openshift_api_machine_v1_AlibabaCloudMachineProviderConfigList(ref c
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/machine/v1.AlibabaCloudMachineProviderConfig", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta",
-		},
+			"github.com/openshift/api/machine/v1.AlibabaCloudMachineProviderConfig", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"},
 	}
 }
 
@@ -35886,8 +35438,7 @@ func schema_openshift_api_machine_v1_AlibabaCloudMachineProviderStatus(ref commo
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/apimachinery/pkg/apis/meta/v1.Condition", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta",
-		},
+			"k8s.io/apimachinery/pkg/apis/meta/v1.Condition", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"},
 	}
 }
 
@@ -35939,8 +35490,7 @@ func schema_openshift_api_machine_v1_AlibabaResourceReference(ref common.Referen
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/machine/v1.Tag",
-		},
+			"github.com/openshift/api/machine/v1.Tag"},
 	}
 }
 
@@ -36044,8 +35594,7 @@ func schema_openshift_api_machine_v1_ControlPlaneMachineSet(ref common.Reference
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/machine/v1.ControlPlaneMachineSetSpec", "github.com/openshift/api/machine/v1.ControlPlaneMachineSetStatus", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta",
-		},
+			"github.com/openshift/api/machine/v1.ControlPlaneMachineSetSpec", "github.com/openshift/api/machine/v1.ControlPlaneMachineSetStatus", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"},
 	}
 }
 
@@ -36095,8 +35644,7 @@ func schema_openshift_api_machine_v1_ControlPlaneMachineSetList(ref common.Refer
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/machine/v1.ControlPlaneMachineSet", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta",
-		},
+			"github.com/openshift/api/machine/v1.ControlPlaneMachineSet", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"},
 	}
 }
 
@@ -36155,8 +35703,7 @@ func schema_openshift_api_machine_v1_ControlPlaneMachineSetSpec(ref common.Refer
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/machine/v1.ControlPlaneMachineSetStrategy", "github.com/openshift/api/machine/v1.ControlPlaneMachineSetTemplate", "k8s.io/apimachinery/pkg/apis/meta/v1.LabelSelector",
-		},
+			"github.com/openshift/api/machine/v1.ControlPlaneMachineSetStrategy", "github.com/openshift/api/machine/v1.ControlPlaneMachineSetTemplate", "k8s.io/apimachinery/pkg/apis/meta/v1.LabelSelector"},
 	}
 }
 
@@ -36228,8 +35775,7 @@ func schema_openshift_api_machine_v1_ControlPlaneMachineSetStatus(ref common.Ref
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/apimachinery/pkg/apis/meta/v1.Condition",
-		},
+			"k8s.io/apimachinery/pkg/apis/meta/v1.Condition"},
 	}
 }
 
@@ -36292,8 +35838,7 @@ func schema_openshift_api_machine_v1_ControlPlaneMachineSetTemplate(ref common.R
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/machine/v1.OpenShiftMachineV1Beta1MachineTemplate",
-		},
+			"github.com/openshift/api/machine/v1.OpenShiftMachineV1Beta1MachineTemplate"},
 	}
 }
 
@@ -36577,8 +36122,7 @@ func schema_openshift_api_machine_v1_FailureDomains(ref common.ReferenceCallback
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/machine/v1.AWSFailureDomain", "github.com/openshift/api/machine/v1.AzureFailureDomain", "github.com/openshift/api/machine/v1.GCPFailureDomain", "github.com/openshift/api/machine/v1.NutanixFailureDomainReference", "github.com/openshift/api/machine/v1.OpenStackFailureDomain", "github.com/openshift/api/machine/v1.VSphereFailureDomain",
-		},
+			"github.com/openshift/api/machine/v1.AWSFailureDomain", "github.com/openshift/api/machine/v1.AzureFailureDomain", "github.com/openshift/api/machine/v1.GCPFailureDomain", "github.com/openshift/api/machine/v1.NutanixFailureDomainReference", "github.com/openshift/api/machine/v1.OpenStackFailureDomain", "github.com/openshift/api/machine/v1.VSphereFailureDomain"},
 	}
 }
 
@@ -36917,8 +36461,7 @@ func schema_openshift_api_machine_v1_NutanixMachineProviderConfig(ref common.Ref
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/machine/v1.NutanixCategory", "github.com/openshift/api/machine/v1.NutanixFailureDomainReference", "github.com/openshift/api/machine/v1.NutanixGPU", "github.com/openshift/api/machine/v1.NutanixResourceIdentifier", "github.com/openshift/api/machine/v1.NutanixVMDisk", "k8s.io/api/core/v1.LocalObjectReference", "k8s.io/apimachinery/pkg/api/resource.Quantity", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta",
-		},
+			"github.com/openshift/api/machine/v1.NutanixCategory", "github.com/openshift/api/machine/v1.NutanixFailureDomainReference", "github.com/openshift/api/machine/v1.NutanixGPU", "github.com/openshift/api/machine/v1.NutanixResourceIdentifier", "github.com/openshift/api/machine/v1.NutanixVMDisk", "k8s.io/api/core/v1.LocalObjectReference", "k8s.io/apimachinery/pkg/api/resource.Quantity", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"},
 	}
 }
 
@@ -36976,8 +36519,7 @@ func schema_openshift_api_machine_v1_NutanixMachineProviderStatus(ref common.Ref
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/apimachinery/pkg/apis/meta/v1.Condition",
-		},
+			"k8s.io/apimachinery/pkg/apis/meta/v1.Condition"},
 	}
 }
 
@@ -37107,8 +36649,7 @@ func schema_openshift_api_machine_v1_NutanixVMDisk(ref common.ReferenceCallback)
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/machine/v1.NutanixResourceIdentifier", "github.com/openshift/api/machine/v1.NutanixVMDiskDeviceProperties", "github.com/openshift/api/machine/v1.NutanixVMStorageConfig", "k8s.io/apimachinery/pkg/api/resource.Quantity",
-		},
+			"github.com/openshift/api/machine/v1.NutanixResourceIdentifier", "github.com/openshift/api/machine/v1.NutanixVMDiskDeviceProperties", "github.com/openshift/api/machine/v1.NutanixVMStorageConfig", "k8s.io/apimachinery/pkg/api/resource.Quantity"},
 	}
 }
 
@@ -37175,8 +36716,7 @@ func schema_openshift_api_machine_v1_NutanixVMStorageConfig(ref common.Reference
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/machine/v1.NutanixStorageResourceIdentifier",
-		},
+			"github.com/openshift/api/machine/v1.NutanixStorageResourceIdentifier"},
 	}
 }
 
@@ -37212,8 +36752,7 @@ func schema_openshift_api_machine_v1_OpenShiftMachineV1Beta1MachineTemplate(ref 
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/machine/v1.ControlPlaneMachineSetTemplateObjectMeta", "github.com/openshift/api/machine/v1.FailureDomains", "github.com/openshift/api/machine/v1beta1.MachineSpec",
-		},
+			"github.com/openshift/api/machine/v1.ControlPlaneMachineSetTemplateObjectMeta", "github.com/openshift/api/machine/v1.FailureDomains", "github.com/openshift/api/machine/v1beta1.MachineSpec"},
 	}
 }
 
@@ -37241,8 +36780,7 @@ func schema_openshift_api_machine_v1_OpenStackFailureDomain(ref common.Reference
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/machine/v1.RootVolume",
-		},
+			"github.com/openshift/api/machine/v1.RootVolume"},
 	}
 }
 
@@ -37360,8 +36898,7 @@ func schema_openshift_api_machine_v1_PowerVSMachineProviderConfig(ref common.Ref
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/machine/v1.LoadBalancerReference", "github.com/openshift/api/machine/v1.PowerVSResource", "github.com/openshift/api/machine/v1.PowerVSSecretReference", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta", "k8s.io/apimachinery/pkg/util/intstr.IntOrString",
-		},
+			"github.com/openshift/api/machine/v1.LoadBalancerReference", "github.com/openshift/api/machine/v1.PowerVSResource", "github.com/openshift/api/machine/v1.PowerVSSecretReference", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta", "k8s.io/apimachinery/pkg/util/intstr.IntOrString"},
 	}
 }
 
@@ -37433,8 +36970,7 @@ func schema_openshift_api_machine_v1_PowerVSMachineProviderStatus(ref common.Ref
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/apimachinery/pkg/apis/meta/v1.Condition",
-		},
+			"k8s.io/apimachinery/pkg/apis/meta/v1.Condition"},
 	}
 }
 
@@ -37675,8 +37211,7 @@ func schema_openshift_api_machine_v1alpha1_AdditionalBlockDevice(ref common.Refe
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/machine/v1alpha1.BlockDeviceStorage",
-		},
+			"github.com/openshift/api/machine/v1alpha1.BlockDeviceStorage"},
 	}
 }
 
@@ -37742,8 +37277,7 @@ func schema_openshift_api_machine_v1alpha1_BlockDeviceStorage(ref common.Referen
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/machine/v1alpha1.BlockDeviceVolume",
-		},
+			"github.com/openshift/api/machine/v1alpha1.BlockDeviceVolume"},
 	}
 }
 
@@ -38023,8 +37557,7 @@ func schema_openshift_api_machine_v1alpha1_NetworkParam(ref common.ReferenceCall
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/machine/v1alpha1.Filter", "github.com/openshift/api/machine/v1alpha1.SubnetParam",
-		},
+			"github.com/openshift/api/machine/v1alpha1.Filter", "github.com/openshift/api/machine/v1alpha1.SubnetParam"},
 	}
 }
 
@@ -38261,8 +37794,7 @@ func schema_openshift_api_machine_v1alpha1_OpenstackProviderSpec(ref common.Refe
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/machine/v1alpha1.AdditionalBlockDevice", "github.com/openshift/api/machine/v1alpha1.NetworkParam", "github.com/openshift/api/machine/v1alpha1.PortOpts", "github.com/openshift/api/machine/v1alpha1.RootVolume", "github.com/openshift/api/machine/v1alpha1.SecurityGroupParam", "k8s.io/api/core/v1.SecretReference", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta",
-		},
+			"github.com/openshift/api/machine/v1alpha1.AdditionalBlockDevice", "github.com/openshift/api/machine/v1alpha1.NetworkParam", "github.com/openshift/api/machine/v1alpha1.PortOpts", "github.com/openshift/api/machine/v1alpha1.RootVolume", "github.com/openshift/api/machine/v1alpha1.SecurityGroupParam", "k8s.io/api/core/v1.SecretReference", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"},
 	}
 }
 
@@ -38429,8 +37961,7 @@ func schema_openshift_api_machine_v1alpha1_PortOpts(ref common.ReferenceCallback
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/machine/v1alpha1.AddressPair", "github.com/openshift/api/machine/v1alpha1.FixedIPs",
-		},
+			"github.com/openshift/api/machine/v1alpha1.AddressPair", "github.com/openshift/api/machine/v1alpha1.FixedIPs"},
 	}
 }
 
@@ -38622,8 +38153,7 @@ func schema_openshift_api_machine_v1alpha1_SecurityGroupParam(ref common.Referen
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/machine/v1alpha1.SecurityGroupFilter",
-		},
+			"github.com/openshift/api/machine/v1alpha1.SecurityGroupFilter"},
 	}
 }
 
@@ -38832,8 +38362,7 @@ func schema_openshift_api_machine_v1alpha1_SubnetParam(ref common.ReferenceCallb
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/machine/v1alpha1.SubnetFilter",
-		},
+			"github.com/openshift/api/machine/v1alpha1.SubnetFilter"},
 	}
 }
 
@@ -39055,8 +38584,7 @@ func schema_openshift_api_machine_v1beta1_AWSMachineProviderConfig(ref common.Re
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/machine/v1beta1.AWSResourceReference", "github.com/openshift/api/machine/v1beta1.BlockDeviceMappingSpec", "github.com/openshift/api/machine/v1beta1.CPUOptions", "github.com/openshift/api/machine/v1beta1.HostPlacement", "github.com/openshift/api/machine/v1beta1.LoadBalancerReference", "github.com/openshift/api/machine/v1beta1.MetadataServiceOptions", "github.com/openshift/api/machine/v1beta1.Placement", "github.com/openshift/api/machine/v1beta1.SpotMarketOptions", "github.com/openshift/api/machine/v1beta1.TagSpecification", "k8s.io/api/core/v1.LocalObjectReference", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta",
-		},
+			"github.com/openshift/api/machine/v1beta1.AWSResourceReference", "github.com/openshift/api/machine/v1beta1.BlockDeviceMappingSpec", "github.com/openshift/api/machine/v1beta1.CPUOptions", "github.com/openshift/api/machine/v1beta1.HostPlacement", "github.com/openshift/api/machine/v1beta1.LoadBalancerReference", "github.com/openshift/api/machine/v1beta1.MetadataServiceOptions", "github.com/openshift/api/machine/v1beta1.Placement", "github.com/openshift/api/machine/v1beta1.SpotMarketOptions", "github.com/openshift/api/machine/v1beta1.TagSpecification", "k8s.io/api/core/v1.LocalObjectReference", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"},
 	}
 }
 
@@ -39105,8 +38633,7 @@ func schema_openshift_api_machine_v1beta1_AWSMachineProviderConfigList(ref commo
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/machine/v1beta1.AWSMachineProviderConfig", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta",
-		},
+			"github.com/openshift/api/machine/v1beta1.AWSMachineProviderConfig", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"},
 	}
 }
 
@@ -39171,8 +38698,7 @@ func schema_openshift_api_machine_v1beta1_AWSMachineProviderStatus(ref common.Re
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/apimachinery/pkg/apis/meta/v1.Condition",
-		},
+			"k8s.io/apimachinery/pkg/apis/meta/v1.Condition"},
 	}
 }
 
@@ -39215,8 +38741,7 @@ func schema_openshift_api_machine_v1beta1_AWSResourceReference(ref common.Refere
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/machine/v1beta1.Filter",
-		},
+			"github.com/openshift/api/machine/v1beta1.Filter"},
 	}
 }
 
@@ -39296,8 +38821,7 @@ func schema_openshift_api_machine_v1beta1_AzureBootDiagnostics(ref common.Refere
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/machine/v1beta1.AzureCustomerManagedBootDiagnostics",
-		},
+			"github.com/openshift/api/machine/v1beta1.AzureCustomerManagedBootDiagnostics"},
 	}
 }
 
@@ -39340,8 +38864,7 @@ func schema_openshift_api_machine_v1beta1_AzureDiagnostics(ref common.ReferenceC
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/machine/v1beta1.AzureBootDiagnostics",
-		},
+			"github.com/openshift/api/machine/v1beta1.AzureBootDiagnostics"},
 	}
 }
 
@@ -39595,8 +39118,7 @@ func schema_openshift_api_machine_v1beta1_AzureMachineProviderSpec(ref common.Re
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/machine/v1beta1.AzureDiagnostics", "github.com/openshift/api/machine/v1beta1.DataDisk", "github.com/openshift/api/machine/v1beta1.Image", "github.com/openshift/api/machine/v1beta1.OSDisk", "github.com/openshift/api/machine/v1beta1.SecurityProfile", "github.com/openshift/api/machine/v1beta1.SpotVMOptions", "k8s.io/api/core/v1.SecretReference", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta",
-		},
+			"github.com/openshift/api/machine/v1beta1.AzureDiagnostics", "github.com/openshift/api/machine/v1beta1.DataDisk", "github.com/openshift/api/machine/v1beta1.Image", "github.com/openshift/api/machine/v1beta1.OSDisk", "github.com/openshift/api/machine/v1beta1.SecurityProfile", "github.com/openshift/api/machine/v1beta1.SpotVMOptions", "k8s.io/api/core/v1.SecretReference", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"},
 	}
 }
 
@@ -39667,8 +39189,7 @@ func schema_openshift_api_machine_v1beta1_AzureMachineProviderStatus(ref common.
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/apimachinery/pkg/apis/meta/v1.Condition", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta",
-		},
+			"k8s.io/apimachinery/pkg/apis/meta/v1.Condition", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"},
 	}
 }
 
@@ -39710,8 +39231,7 @@ func schema_openshift_api_machine_v1beta1_BlockDeviceMappingSpec(ref common.Refe
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/machine/v1beta1.EBSBlockDeviceSpec",
-		},
+			"github.com/openshift/api/machine/v1beta1.EBSBlockDeviceSpec"},
 	}
 }
 
@@ -39790,8 +39310,7 @@ func schema_openshift_api_machine_v1beta1_Condition(ref common.ReferenceCallback
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/apimachinery/pkg/apis/meta/v1.Time",
-		},
+			"k8s.io/apimachinery/pkg/apis/meta/v1.Time"},
 	}
 }
 
@@ -39814,8 +39333,7 @@ func schema_openshift_api_machine_v1beta1_ConfidentialVM(ref common.ReferenceCal
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/machine/v1beta1.UEFISettings",
-		},
+			"github.com/openshift/api/machine/v1beta1.UEFISettings"},
 	}
 }
 
@@ -39877,8 +39395,7 @@ func schema_openshift_api_machine_v1beta1_DataDisk(ref common.ReferenceCallback)
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/machine/v1beta1.DataDiskManagedDiskParameters",
-		},
+			"github.com/openshift/api/machine/v1beta1.DataDiskManagedDiskParameters"},
 	}
 }
 
@@ -39908,8 +39425,7 @@ func schema_openshift_api_machine_v1beta1_DataDiskManagedDiskParameters(ref comm
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/machine/v1beta1.DiskEncryptionSetParameters",
-		},
+			"github.com/openshift/api/machine/v1beta1.DiskEncryptionSetParameters"},
 	}
 }
 
@@ -40034,8 +39550,7 @@ func schema_openshift_api_machine_v1beta1_EBSBlockDeviceSpec(ref common.Referenc
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/machine/v1beta1.AWSResourceReference",
-		},
+			"github.com/openshift/api/machine/v1beta1.AWSResourceReference"},
 	}
 }
 
@@ -40150,8 +39665,7 @@ func schema_openshift_api_machine_v1beta1_GCPDisk(ref common.ReferenceCallback) 
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/machine/v1beta1.GCPEncryptionKeyReference",
-		},
+			"github.com/openshift/api/machine/v1beta1.GCPEncryptionKeyReference"},
 	}
 }
 
@@ -40179,8 +39693,7 @@ func schema_openshift_api_machine_v1beta1_GCPEncryptionKeyReference(ref common.R
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/machine/v1beta1.GCPKMSKeyReference",
-		},
+			"github.com/openshift/api/machine/v1beta1.GCPKMSKeyReference"},
 	}
 }
 
@@ -40528,8 +40041,7 @@ func schema_openshift_api_machine_v1beta1_GCPMachineProviderSpec(ref common.Refe
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/machine/v1beta1.GCPDisk", "github.com/openshift/api/machine/v1beta1.GCPGPUConfig", "github.com/openshift/api/machine/v1beta1.GCPMetadata", "github.com/openshift/api/machine/v1beta1.GCPNetworkInterface", "github.com/openshift/api/machine/v1beta1.GCPServiceAccount", "github.com/openshift/api/machine/v1beta1.GCPShieldedInstanceConfig", "github.com/openshift/api/machine/v1beta1.ResourceManagerTag", "k8s.io/api/core/v1.LocalObjectReference", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta",
-		},
+			"github.com/openshift/api/machine/v1beta1.GCPDisk", "github.com/openshift/api/machine/v1beta1.GCPGPUConfig", "github.com/openshift/api/machine/v1beta1.GCPMetadata", "github.com/openshift/api/machine/v1beta1.GCPNetworkInterface", "github.com/openshift/api/machine/v1beta1.GCPServiceAccount", "github.com/openshift/api/machine/v1beta1.GCPShieldedInstanceConfig", "github.com/openshift/api/machine/v1beta1.ResourceManagerTag", "k8s.io/api/core/v1.LocalObjectReference", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"},
 	}
 }
 
@@ -40600,8 +40112,7 @@ func schema_openshift_api_machine_v1beta1_GCPMachineProviderStatus(ref common.Re
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/apimachinery/pkg/apis/meta/v1.Condition", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta",
-		},
+			"k8s.io/apimachinery/pkg/apis/meta/v1.Condition", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"},
 	}
 }
 
@@ -40783,8 +40294,7 @@ func schema_openshift_api_machine_v1beta1_HostPlacement(ref common.ReferenceCall
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/machine/v1beta1.DedicatedHost",
-		},
+			"github.com/openshift/api/machine/v1beta1.DedicatedHost"},
 	}
 }
 
@@ -40887,8 +40397,7 @@ func schema_openshift_api_machine_v1beta1_LastOperation(ref common.ReferenceCall
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/apimachinery/pkg/apis/meta/v1.Time",
-		},
+			"k8s.io/apimachinery/pkg/apis/meta/v1.Time"},
 	}
 }
 
@@ -40977,8 +40486,7 @@ func schema_openshift_api_machine_v1beta1_LifecycleHooks(ref common.ReferenceCal
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/machine/v1beta1.LifecycleHook",
-		},
+			"github.com/openshift/api/machine/v1beta1.LifecycleHook"},
 	}
 }
 
@@ -41054,8 +40562,7 @@ func schema_openshift_api_machine_v1beta1_Machine(ref common.ReferenceCallback) 
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/machine/v1beta1.MachineSpec", "github.com/openshift/api/machine/v1beta1.MachineStatus", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta",
-		},
+			"github.com/openshift/api/machine/v1beta1.MachineSpec", "github.com/openshift/api/machine/v1beta1.MachineStatus", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"},
 	}
 }
 
@@ -41105,8 +40612,7 @@ func schema_openshift_api_machine_v1beta1_MachineHealthCheck(ref common.Referenc
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/machine/v1beta1.MachineHealthCheckSpec", "github.com/openshift/api/machine/v1beta1.MachineHealthCheckStatus", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta",
-		},
+			"github.com/openshift/api/machine/v1beta1.MachineHealthCheckSpec", "github.com/openshift/api/machine/v1beta1.MachineHealthCheckStatus", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"},
 	}
 }
 
@@ -41156,8 +40662,7 @@ func schema_openshift_api_machine_v1beta1_MachineHealthCheckList(ref common.Refe
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/machine/v1beta1.MachineHealthCheck", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta",
-		},
+			"github.com/openshift/api/machine/v1beta1.MachineHealthCheck", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"},
 	}
 }
 
@@ -41212,8 +40717,7 @@ func schema_openshift_api_machine_v1beta1_MachineHealthCheckSpec(ref common.Refe
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/machine/v1beta1.UnhealthyCondition", "k8s.io/api/core/v1.ObjectReference", "k8s.io/apimachinery/pkg/apis/meta/v1.Duration", "k8s.io/apimachinery/pkg/apis/meta/v1.LabelSelector", "k8s.io/apimachinery/pkg/util/intstr.IntOrString",
-		},
+			"github.com/openshift/api/machine/v1beta1.UnhealthyCondition", "k8s.io/api/core/v1.ObjectReference", "k8s.io/apimachinery/pkg/apis/meta/v1.Duration", "k8s.io/apimachinery/pkg/apis/meta/v1.LabelSelector", "k8s.io/apimachinery/pkg/util/intstr.IntOrString"},
 	}
 }
 
@@ -41272,8 +40776,7 @@ func schema_openshift_api_machine_v1beta1_MachineHealthCheckStatus(ref common.Re
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/machine/v1beta1.Condition",
-		},
+			"github.com/openshift/api/machine/v1beta1.Condition"},
 	}
 }
 
@@ -41323,8 +40826,7 @@ func schema_openshift_api_machine_v1beta1_MachineList(ref common.ReferenceCallba
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/machine/v1beta1.Machine", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta",
-		},
+			"github.com/openshift/api/machine/v1beta1.Machine", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"},
 	}
 }
 
@@ -41372,8 +40874,7 @@ func schema_openshift_api_machine_v1beta1_MachineSet(ref common.ReferenceCallbac
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/machine/v1beta1.MachineSetSpec", "github.com/openshift/api/machine/v1beta1.MachineSetStatus", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta",
-		},
+			"github.com/openshift/api/machine/v1beta1.MachineSetSpec", "github.com/openshift/api/machine/v1beta1.MachineSetStatus", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"},
 	}
 }
 
@@ -41423,8 +40924,7 @@ func schema_openshift_api_machine_v1beta1_MachineSetList(ref common.ReferenceCal
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/machine/v1beta1.MachineSet", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta",
-		},
+			"github.com/openshift/api/machine/v1beta1.MachineSet", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"},
 	}
 }
 
@@ -41483,8 +40983,7 @@ func schema_openshift_api_machine_v1beta1_MachineSetSpec(ref common.ReferenceCal
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/machine/v1beta1.MachineTemplateSpec", "k8s.io/apimachinery/pkg/apis/meta/v1.LabelSelector",
-		},
+			"github.com/openshift/api/machine/v1beta1.MachineTemplateSpec", "k8s.io/apimachinery/pkg/apis/meta/v1.LabelSelector"},
 	}
 }
 
@@ -41584,8 +41083,7 @@ func schema_openshift_api_machine_v1beta1_MachineSetStatus(ref common.ReferenceC
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/machine/v1beta1.Condition",
-		},
+			"github.com/openshift/api/machine/v1beta1.Condition"},
 	}
 }
 
@@ -41655,8 +41153,7 @@ func schema_openshift_api_machine_v1beta1_MachineSpec(ref common.ReferenceCallba
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/machine/v1beta1.LifecycleHooks", "github.com/openshift/api/machine/v1beta1.ObjectMeta", "github.com/openshift/api/machine/v1beta1.ProviderSpec", "k8s.io/api/core/v1.Taint",
-		},
+			"github.com/openshift/api/machine/v1beta1.LifecycleHooks", "github.com/openshift/api/machine/v1beta1.ObjectMeta", "github.com/openshift/api/machine/v1beta1.ProviderSpec", "k8s.io/api/core/v1.Taint"},
 	}
 }
 
@@ -41771,8 +41268,7 @@ func schema_openshift_api_machine_v1beta1_MachineStatus(ref common.ReferenceCall
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/machine/v1beta1.Condition", "github.com/openshift/api/machine/v1beta1.LastOperation", "k8s.io/api/core/v1.NodeAddress", "k8s.io/api/core/v1.ObjectReference", "k8s.io/apimachinery/pkg/apis/meta/v1.Time", "k8s.io/apimachinery/pkg/runtime.RawExtension",
-		},
+			"github.com/openshift/api/machine/v1beta1.Condition", "github.com/openshift/api/machine/v1beta1.LastOperation", "k8s.io/api/core/v1.NodeAddress", "k8s.io/api/core/v1.ObjectReference", "k8s.io/apimachinery/pkg/apis/meta/v1.Time", "k8s.io/apimachinery/pkg/runtime.RawExtension"},
 	}
 }
 
@@ -41801,8 +41297,7 @@ func schema_openshift_api_machine_v1beta1_MachineTemplateSpec(ref common.Referen
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/machine/v1beta1.MachineSpec", "github.com/openshift/api/machine/v1beta1.ObjectMeta",
-		},
+			"github.com/openshift/api/machine/v1beta1.MachineSpec", "github.com/openshift/api/machine/v1beta1.ObjectMeta"},
 	}
 }
 
@@ -41895,8 +41390,7 @@ func schema_openshift_api_machine_v1beta1_NetworkDeviceSpec(ref common.Reference
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/machine/v1beta1.AddressesFromPool",
-		},
+			"github.com/openshift/api/machine/v1beta1.AddressesFromPool"},
 	}
 }
 
@@ -41926,8 +41420,7 @@ func schema_openshift_api_machine_v1beta1_NetworkSpec(ref common.ReferenceCallba
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/machine/v1beta1.NetworkDeviceSpec",
-		},
+			"github.com/openshift/api/machine/v1beta1.NetworkDeviceSpec"},
 	}
 }
 
@@ -41979,8 +41472,7 @@ func schema_openshift_api_machine_v1beta1_OSDisk(ref common.ReferenceCallback) c
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/machine/v1beta1.DiskSettings", "github.com/openshift/api/machine/v1beta1.OSDiskManagedDiskParameters",
-		},
+			"github.com/openshift/api/machine/v1beta1.DiskSettings", "github.com/openshift/api/machine/v1beta1.OSDiskManagedDiskParameters"},
 	}
 }
 
@@ -42017,8 +41509,7 @@ func schema_openshift_api_machine_v1beta1_OSDiskManagedDiskParameters(ref common
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/machine/v1beta1.DiskEncryptionSetParameters", "github.com/openshift/api/machine/v1beta1.VMDiskSecurityProfile",
-		},
+			"github.com/openshift/api/machine/v1beta1.DiskEncryptionSetParameters", "github.com/openshift/api/machine/v1beta1.VMDiskSecurityProfile"},
 	}
 }
 
@@ -42110,8 +41601,7 @@ func schema_openshift_api_machine_v1beta1_ObjectMeta(ref common.ReferenceCallbac
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/apimachinery/pkg/apis/meta/v1.OwnerReference",
-		},
+			"k8s.io/apimachinery/pkg/apis/meta/v1.OwnerReference"},
 	}
 }
 
@@ -42166,8 +41656,7 @@ func schema_openshift_api_machine_v1beta1_ProviderSpec(ref common.ReferenceCallb
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/apimachinery/pkg/runtime.RawExtension",
-		},
+			"k8s.io/apimachinery/pkg/runtime.RawExtension"},
 	}
 }
 
@@ -42234,8 +41723,7 @@ func schema_openshift_api_machine_v1beta1_SecurityProfile(ref common.ReferenceCa
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/machine/v1beta1.SecuritySettings",
-		},
+			"github.com/openshift/api/machine/v1beta1.SecuritySettings"},
 	}
 }
 
@@ -42284,8 +41772,7 @@ func schema_openshift_api_machine_v1beta1_SecuritySettings(ref common.ReferenceC
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/machine/v1beta1.ConfidentialVM", "github.com/openshift/api/machine/v1beta1.TrustedLaunch",
-		},
+			"github.com/openshift/api/machine/v1beta1.ConfidentialVM", "github.com/openshift/api/machine/v1beta1.TrustedLaunch"},
 	}
 }
 
@@ -42326,8 +41813,7 @@ func schema_openshift_api_machine_v1beta1_SpotVMOptions(ref common.ReferenceCall
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/apimachinery/pkg/api/resource.Quantity",
-		},
+			"k8s.io/apimachinery/pkg/api/resource.Quantity"},
 	}
 }
 
@@ -42380,8 +41866,7 @@ func schema_openshift_api_machine_v1beta1_TrustedLaunch(ref common.ReferenceCall
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/machine/v1beta1.UEFISettings",
-		},
+			"github.com/openshift/api/machine/v1beta1.UEFISettings"},
 	}
 }
 
@@ -42444,8 +41929,7 @@ func schema_openshift_api_machine_v1beta1_UnhealthyCondition(ref common.Referenc
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/apimachinery/pkg/apis/meta/v1.Duration",
-		},
+			"k8s.io/apimachinery/pkg/apis/meta/v1.Duration"},
 	}
 }
 
@@ -42474,8 +41958,7 @@ func schema_openshift_api_machine_v1beta1_VMDiskSecurityProfile(ref common.Refer
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/machine/v1beta1.DiskEncryptionSetParameters",
-		},
+			"github.com/openshift/api/machine/v1beta1.DiskEncryptionSetParameters"},
 	}
 }
 
@@ -42661,8 +42144,7 @@ func schema_openshift_api_machine_v1beta1_VSphereMachineProviderSpec(ref common.
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/machine/v1beta1.NetworkSpec", "github.com/openshift/api/machine/v1beta1.VSphereDisk", "github.com/openshift/api/machine/v1beta1.Workspace", "k8s.io/api/core/v1.LocalObjectReference", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta",
-		},
+			"github.com/openshift/api/machine/v1beta1.NetworkSpec", "github.com/openshift/api/machine/v1beta1.VSphereDisk", "github.com/openshift/api/machine/v1beta1.Workspace", "k8s.io/api/core/v1.LocalObjectReference", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"},
 	}
 }
 
@@ -42734,8 +42216,7 @@ func schema_openshift_api_machine_v1beta1_VSphereMachineProviderStatus(ref commo
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/apimachinery/pkg/apis/meta/v1.Condition",
-		},
+			"k8s.io/apimachinery/pkg/apis/meta/v1.Condition"},
 	}
 }
 
@@ -42841,8 +42322,7 @@ func schema_openshift_api_machineconfiguration_v1alpha1_InternalReleaseImage(ref
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/machineconfiguration/v1alpha1.InternalReleaseImageSpec", "github.com/openshift/api/machineconfiguration/v1alpha1.InternalReleaseImageStatus", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta",
-		},
+			"github.com/openshift/api/machineconfiguration/v1alpha1.InternalReleaseImageSpec", "github.com/openshift/api/machineconfiguration/v1alpha1.InternalReleaseImageStatus", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"},
 	}
 }
 
@@ -42893,8 +42373,7 @@ func schema_openshift_api_machineconfiguration_v1alpha1_InternalReleaseImageBund
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/apimachinery/pkg/apis/meta/v1.Condition",
-		},
+			"k8s.io/apimachinery/pkg/apis/meta/v1.Condition"},
 	}
 }
 
@@ -42944,8 +42423,7 @@ func schema_openshift_api_machineconfiguration_v1alpha1_InternalReleaseImageList
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/machineconfiguration/v1alpha1.InternalReleaseImage", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta",
-		},
+			"github.com/openshift/api/machineconfiguration/v1alpha1.InternalReleaseImage", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"},
 	}
 }
 
@@ -43004,8 +42482,7 @@ func schema_openshift_api_machineconfiguration_v1alpha1_InternalReleaseImageSpec
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/machineconfiguration/v1alpha1.InternalReleaseImageRef",
-		},
+			"github.com/openshift/api/machineconfiguration/v1alpha1.InternalReleaseImageRef"},
 	}
 }
 
@@ -43043,8 +42520,7 @@ func schema_openshift_api_machineconfiguration_v1alpha1_InternalReleaseImageStat
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/machineconfiguration/v1alpha1.InternalReleaseImageBundleStatus",
-		},
+			"github.com/openshift/api/machineconfiguration/v1alpha1.InternalReleaseImageBundleStatus"},
 	}
 }
 
@@ -43117,8 +42593,7 @@ func schema_openshift_api_machineconfiguration_v1alpha1_MachineConfigNode(ref co
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/machineconfiguration/v1alpha1.MachineConfigNodeSpec", "github.com/openshift/api/machineconfiguration/v1alpha1.MachineConfigNodeStatus", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta",
-		},
+			"github.com/openshift/api/machineconfiguration/v1alpha1.MachineConfigNodeSpec", "github.com/openshift/api/machineconfiguration/v1alpha1.MachineConfigNodeStatus", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"},
 	}
 }
 
@@ -43168,8 +42643,7 @@ func schema_openshift_api_machineconfiguration_v1alpha1_MachineConfigNodeList(re
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/machineconfiguration/v1alpha1.MachineConfigNode", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta",
-		},
+			"github.com/openshift/api/machineconfiguration/v1alpha1.MachineConfigNode", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"},
 	}
 }
 
@@ -43206,8 +42680,7 @@ func schema_openshift_api_machineconfiguration_v1alpha1_MachineConfigNodeSpec(re
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/machineconfiguration/v1alpha1.MCOObjectReference", "github.com/openshift/api/machineconfiguration/v1alpha1.MachineConfigNodeSpecMachineConfigVersion",
-		},
+			"github.com/openshift/api/machineconfiguration/v1alpha1.MCOObjectReference", "github.com/openshift/api/machineconfiguration/v1alpha1.MachineConfigNodeSpecMachineConfigVersion"},
 	}
 }
 
@@ -43303,8 +42776,7 @@ func schema_openshift_api_machineconfiguration_v1alpha1_MachineConfigNodeStatus(
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/machineconfiguration/v1alpha1.MachineConfigNodeStatusMachineConfigVersion", "github.com/openshift/api/machineconfiguration/v1alpha1.MachineConfigNodeStatusPinnedImageSet", "k8s.io/apimachinery/pkg/apis/meta/v1.Condition",
-		},
+			"github.com/openshift/api/machineconfiguration/v1alpha1.MachineConfigNodeStatusMachineConfigVersion", "github.com/openshift/api/machineconfiguration/v1alpha1.MachineConfigNodeStatusPinnedImageSet", "k8s.io/apimachinery/pkg/apis/meta/v1.Condition"},
 	}
 }
 
@@ -43434,8 +42906,7 @@ func schema_openshift_api_machineconfiguration_v1alpha1_OSImageStream(ref common
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/machineconfiguration/v1alpha1.OSImageStreamSpec", "github.com/openshift/api/machineconfiguration/v1alpha1.OSImageStreamStatus", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta",
-		},
+			"github.com/openshift/api/machineconfiguration/v1alpha1.OSImageStreamSpec", "github.com/openshift/api/machineconfiguration/v1alpha1.OSImageStreamStatus", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"},
 	}
 }
 
@@ -43485,8 +42956,7 @@ func schema_openshift_api_machineconfiguration_v1alpha1_OSImageStreamList(ref co
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/machineconfiguration/v1alpha1.OSImageStream", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta",
-		},
+			"github.com/openshift/api/machineconfiguration/v1alpha1.OSImageStream", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"},
 	}
 }
 
@@ -43576,8 +43046,7 @@ func schema_openshift_api_machineconfiguration_v1alpha1_OSImageStreamStatus(ref 
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/machineconfiguration/v1alpha1.OSImageStreamSet",
-		},
+			"github.com/openshift/api/machineconfiguration/v1alpha1.OSImageStreamSet"},
 	}
 }
 
@@ -43647,8 +43116,7 @@ func schema_openshift_api_machineconfiguration_v1alpha1_PinnedImageSet(ref commo
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/machineconfiguration/v1alpha1.PinnedImageSetSpec", "github.com/openshift/api/machineconfiguration/v1alpha1.PinnedImageSetStatus", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta",
-		},
+			"github.com/openshift/api/machineconfiguration/v1alpha1.PinnedImageSetSpec", "github.com/openshift/api/machineconfiguration/v1alpha1.PinnedImageSetStatus", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"},
 	}
 }
 
@@ -43698,8 +43166,7 @@ func schema_openshift_api_machineconfiguration_v1alpha1_PinnedImageSetList(ref c
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/machineconfiguration/v1alpha1.PinnedImageSet", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta",
-		},
+			"github.com/openshift/api/machineconfiguration/v1alpha1.PinnedImageSet", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"},
 	}
 }
 
@@ -43737,8 +43204,7 @@ func schema_openshift_api_machineconfiguration_v1alpha1_PinnedImageSetSpec(ref c
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/machineconfiguration/v1alpha1.PinnedImageRef",
-		},
+			"github.com/openshift/api/machineconfiguration/v1alpha1.PinnedImageRef"},
 	}
 }
 
@@ -43775,8 +43241,7 @@ func schema_openshift_api_machineconfiguration_v1alpha1_PinnedImageSetStatus(ref
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/apimachinery/pkg/apis/meta/v1.Condition",
-		},
+			"k8s.io/apimachinery/pkg/apis/meta/v1.Condition"},
 	}
 }
 
@@ -43827,8 +43292,7 @@ func schema_openshift_api_monitoring_v1_AlertRelabelConfig(ref common.ReferenceC
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/monitoring/v1.AlertRelabelConfigSpec", "github.com/openshift/api/monitoring/v1.AlertRelabelConfigStatus", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta",
-		},
+			"github.com/openshift/api/monitoring/v1.AlertRelabelConfigSpec", "github.com/openshift/api/monitoring/v1.AlertRelabelConfigStatus", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"},
 	}
 }
 
@@ -43878,8 +43342,7 @@ func schema_openshift_api_monitoring_v1_AlertRelabelConfigList(ref common.Refere
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/monitoring/v1.AlertRelabelConfig", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta",
-		},
+			"github.com/openshift/api/monitoring/v1.AlertRelabelConfig", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"},
 	}
 }
 
@@ -43909,8 +43372,7 @@ func schema_openshift_api_monitoring_v1_AlertRelabelConfigSpec(ref common.Refere
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/monitoring/v1.RelabelConfig",
-		},
+			"github.com/openshift/api/monitoring/v1.RelabelConfig"},
 	}
 }
 
@@ -43947,8 +43409,7 @@ func schema_openshift_api_monitoring_v1_AlertRelabelConfigStatus(ref common.Refe
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/apimachinery/pkg/apis/meta/v1.Condition",
-		},
+			"k8s.io/apimachinery/pkg/apis/meta/v1.Condition"},
 	}
 }
 
@@ -43999,8 +43460,7 @@ func schema_openshift_api_monitoring_v1_AlertingRule(ref common.ReferenceCallbac
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/monitoring/v1.AlertingRuleSpec", "github.com/openshift/api/monitoring/v1.AlertingRuleStatus", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta",
-		},
+			"github.com/openshift/api/monitoring/v1.AlertingRuleSpec", "github.com/openshift/api/monitoring/v1.AlertingRuleStatus", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"},
 	}
 }
 
@@ -44050,8 +43510,7 @@ func schema_openshift_api_monitoring_v1_AlertingRuleList(ref common.ReferenceCal
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/monitoring/v1.AlertingRule", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta",
-		},
+			"github.com/openshift/api/monitoring/v1.AlertingRule", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"},
 	}
 }
 
@@ -44089,8 +43548,7 @@ func schema_openshift_api_monitoring_v1_AlertingRuleSpec(ref common.ReferenceCal
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/monitoring/v1.RuleGroup",
-		},
+			"github.com/openshift/api/monitoring/v1.RuleGroup"},
 	}
 }
 
@@ -44119,8 +43577,7 @@ func schema_openshift_api_monitoring_v1_AlertingRuleStatus(ref common.ReferenceC
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/monitoring/v1.PrometheusRuleRef",
-		},
+			"github.com/openshift/api/monitoring/v1.PrometheusRuleRef"},
 	}
 }
 
@@ -44281,8 +43738,7 @@ func schema_openshift_api_monitoring_v1_Rule(ref common.ReferenceCallback) commo
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/apimachinery/pkg/util/intstr.IntOrString",
-		},
+			"k8s.io/apimachinery/pkg/util/intstr.IntOrString"},
 	}
 }
 
@@ -44327,8 +43783,7 @@ func schema_openshift_api_monitoring_v1_RuleGroup(ref common.ReferenceCallback) 
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/monitoring/v1.Rule",
-		},
+			"github.com/openshift/api/monitoring/v1.Rule"},
 	}
 }
 
@@ -44422,8 +43877,7 @@ func schema_openshift_api_network_v1_ClusterNetwork(ref common.ReferenceCallback
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/network/v1.ClusterNetworkEntry", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta",
-		},
+			"github.com/openshift/api/network/v1.ClusterNetworkEntry", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"},
 	}
 }
 
@@ -44504,8 +43958,7 @@ func schema_openshift_api_network_v1_ClusterNetworkList(ref common.ReferenceCall
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/network/v1.ClusterNetwork", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta",
-		},
+			"github.com/openshift/api/network/v1.ClusterNetwork", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"},
 	}
 }
 
@@ -44549,8 +44002,7 @@ func schema_openshift_api_network_v1_EgressNetworkPolicy(ref common.ReferenceCal
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/network/v1.EgressNetworkPolicySpec", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta",
-		},
+			"github.com/openshift/api/network/v1.EgressNetworkPolicySpec", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"},
 	}
 }
 
@@ -44601,8 +44053,7 @@ func schema_openshift_api_network_v1_EgressNetworkPolicyList(ref common.Referenc
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/network/v1.EgressNetworkPolicy", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta",
-		},
+			"github.com/openshift/api/network/v1.EgressNetworkPolicy", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"},
 	}
 }
 
@@ -44660,8 +44111,7 @@ func schema_openshift_api_network_v1_EgressNetworkPolicyRule(ref common.Referenc
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/network/v1.EgressNetworkPolicyPeer",
-		},
+			"github.com/openshift/api/network/v1.EgressNetworkPolicyPeer"},
 	}
 }
 
@@ -44691,8 +44141,7 @@ func schema_openshift_api_network_v1_EgressNetworkPolicySpec(ref common.Referenc
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/network/v1.EgressNetworkPolicyRule",
-		},
+			"github.com/openshift/api/network/v1.EgressNetworkPolicyRule"},
 	}
 }
 
@@ -44783,8 +44232,7 @@ func schema_openshift_api_network_v1_HostSubnet(ref common.ReferenceCallback) co
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta",
-		},
+			"k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"},
 	}
 }
 
@@ -44835,8 +44283,7 @@ func schema_openshift_api_network_v1_HostSubnetList(ref common.ReferenceCallback
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/network/v1.HostSubnet", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta",
-		},
+			"github.com/openshift/api/network/v1.HostSubnet", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"},
 	}
 }
 
@@ -44904,8 +44351,7 @@ func schema_openshift_api_network_v1_NetNamespace(ref common.ReferenceCallback) 
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta",
-		},
+			"k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"},
 	}
 }
 
@@ -44956,8 +44402,7 @@ func schema_openshift_api_network_v1_NetNamespaceList(ref common.ReferenceCallba
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/network/v1.NetNamespace", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta",
-		},
+			"github.com/openshift/api/network/v1.NetNamespace", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"},
 	}
 }
 
@@ -45008,8 +44453,7 @@ func schema_openshift_api_network_v1alpha1_DNSNameResolver(ref common.ReferenceC
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/network/v1alpha1.DNSNameResolverSpec", "github.com/openshift/api/network/v1alpha1.DNSNameResolverStatus", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta",
-		},
+			"github.com/openshift/api/network/v1alpha1.DNSNameResolverSpec", "github.com/openshift/api/network/v1alpha1.DNSNameResolverStatus", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"},
 	}
 }
 
@@ -45060,8 +44504,7 @@ func schema_openshift_api_network_v1alpha1_DNSNameResolverList(ref common.Refere
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/network/v1alpha1.DNSNameResolver", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta",
-		},
+			"github.com/openshift/api/network/v1alpha1.DNSNameResolver", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"},
 	}
 }
 
@@ -45099,8 +44542,7 @@ func schema_openshift_api_network_v1alpha1_DNSNameResolverResolvedAddress(ref co
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/apimachinery/pkg/apis/meta/v1.Time",
-		},
+			"k8s.io/apimachinery/pkg/apis/meta/v1.Time"},
 	}
 }
 
@@ -45175,8 +44617,7 @@ func schema_openshift_api_network_v1alpha1_DNSNameResolverResolvedName(ref commo
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/network/v1alpha1.DNSNameResolverResolvedAddress", "k8s.io/apimachinery/pkg/apis/meta/v1.Condition",
-		},
+			"github.com/openshift/api/network/v1alpha1.DNSNameResolverResolvedAddress", "k8s.io/apimachinery/pkg/apis/meta/v1.Condition"},
 	}
 }
 
@@ -45237,8 +44678,7 @@ func schema_openshift_api_network_v1alpha1_DNSNameResolverStatus(ref common.Refe
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/network/v1alpha1.DNSNameResolverResolvedName",
-		},
+			"github.com/openshift/api/network/v1alpha1.DNSNameResolverResolvedName"},
 	}
 }
 
@@ -45289,8 +44729,7 @@ func schema_openshift_api_networkoperator_v1_EgressRouter(ref common.ReferenceCa
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/networkoperator/v1.EgressRouterSpec", "github.com/openshift/api/networkoperator/v1.EgressRouterStatus", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta",
-		},
+			"github.com/openshift/api/networkoperator/v1.EgressRouterSpec", "github.com/openshift/api/networkoperator/v1.EgressRouterStatus", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"},
 	}
 }
 
@@ -45341,8 +44780,7 @@ func schema_openshift_api_networkoperator_v1_EgressRouterSpec(ref common.Referen
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/networkoperator/v1.EgressRouterAddress", "github.com/openshift/api/networkoperator/v1.EgressRouterInterface", "github.com/openshift/api/networkoperator/v1.RedirectConfig",
-		},
+			"github.com/openshift/api/networkoperator/v1.EgressRouterAddress", "github.com/openshift/api/networkoperator/v1.EgressRouterInterface", "github.com/openshift/api/networkoperator/v1.RedirectConfig"},
 	}
 }
 
@@ -45501,8 +44939,7 @@ func schema_openshift_api_oauth_v1_OAuthAccessToken(ref common.ReferenceCallback
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta",
-		},
+			"k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"},
 	}
 }
 
@@ -45553,8 +44990,7 @@ func schema_openshift_api_oauth_v1_OAuthAccessTokenList(ref common.ReferenceCall
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/oauth/v1.OAuthAccessToken", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta",
-		},
+			"github.com/openshift/api/oauth/v1.OAuthAccessToken", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"},
 	}
 }
 
@@ -45661,8 +45097,7 @@ func schema_openshift_api_oauth_v1_OAuthAuthorizeToken(ref common.ReferenceCallb
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta",
-		},
+			"k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"},
 	}
 }
 
@@ -45713,8 +45148,7 @@ func schema_openshift_api_oauth_v1_OAuthAuthorizeTokenList(ref common.ReferenceC
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/oauth/v1.OAuthAuthorizeToken", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta",
-		},
+			"github.com/openshift/api/oauth/v1.OAuthAuthorizeToken", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"},
 	}
 }
 
@@ -45834,8 +45268,7 @@ func schema_openshift_api_oauth_v1_OAuthClient(ref common.ReferenceCallback) com
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/oauth/v1.ScopeRestriction", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta",
-		},
+			"github.com/openshift/api/oauth/v1.ScopeRestriction", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"},
 	}
 }
 
@@ -45907,8 +45340,7 @@ func schema_openshift_api_oauth_v1_OAuthClientAuthorization(ref common.Reference
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta",
-		},
+			"k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"},
 	}
 }
 
@@ -45959,8 +45391,7 @@ func schema_openshift_api_oauth_v1_OAuthClientAuthorizationList(ref common.Refer
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/oauth/v1.OAuthClientAuthorization", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta",
-		},
+			"github.com/openshift/api/oauth/v1.OAuthClientAuthorization", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"},
 	}
 }
 
@@ -46011,8 +45442,7 @@ func schema_openshift_api_oauth_v1_OAuthClientList(ref common.ReferenceCallback)
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/oauth/v1.OAuthClient", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta",
-		},
+			"github.com/openshift/api/oauth/v1.OAuthClient", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"},
 	}
 }
 
@@ -46055,8 +45485,7 @@ func schema_openshift_api_oauth_v1_OAuthRedirectReference(ref common.ReferenceCa
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/oauth/v1.RedirectReference", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta",
-		},
+			"github.com/openshift/api/oauth/v1.RedirectReference", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"},
 	}
 }
 
@@ -46130,8 +45559,7 @@ func schema_openshift_api_oauth_v1_ScopeRestriction(ref common.ReferenceCallback
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/oauth/v1.ClusterRoleScopeRestriction",
-		},
+			"github.com/openshift/api/oauth/v1.ClusterRoleScopeRestriction"},
 	}
 }
 
@@ -46238,8 +45666,7 @@ func schema_openshift_api_oauth_v1_UserOAuthAccessToken(ref common.ReferenceCall
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta",
-		},
+			"k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"},
 	}
 }
 
@@ -46289,8 +45716,7 @@ func schema_openshift_api_oauth_v1_UserOAuthAccessTokenList(ref common.Reference
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/oauth/v1.UserOAuthAccessToken", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta",
-		},
+			"github.com/openshift/api/oauth/v1.UserOAuthAccessToken", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"},
 	}
 }
 
@@ -46319,8 +45745,7 @@ func schema_openshift_api_openshiftcontrolplane_v1_APIServers(ref common.Referen
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/openshiftcontrolplane/v1.PerGroupOptions",
-		},
+			"github.com/openshift/api/openshiftcontrolplane/v1.PerGroupOptions"},
 	}
 }
 
@@ -46359,8 +45784,7 @@ func schema_openshift_api_openshiftcontrolplane_v1_BuildControllerConfig(ref com
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/openshiftcontrolplane/v1.BuildDefaultsConfig", "github.com/openshift/api/openshiftcontrolplane/v1.BuildOverridesConfig", "github.com/openshift/api/openshiftcontrolplane/v1.ImageConfig",
-		},
+			"github.com/openshift/api/openshiftcontrolplane/v1.BuildDefaultsConfig", "github.com/openshift/api/openshiftcontrolplane/v1.BuildOverridesConfig", "github.com/openshift/api/openshiftcontrolplane/v1.ImageConfig"},
 	}
 }
 
@@ -46483,8 +45907,7 @@ func schema_openshift_api_openshiftcontrolplane_v1_BuildDefaultsConfig(ref commo
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/build/v1.ImageLabel", "github.com/openshift/api/openshiftcontrolplane/v1.SourceStrategyDefaultsConfig", "k8s.io/api/core/v1.EnvVar", "k8s.io/api/core/v1.ResourceRequirements",
-		},
+			"github.com/openshift/api/build/v1.ImageLabel", "github.com/openshift/api/openshiftcontrolplane/v1.SourceStrategyDefaultsConfig", "k8s.io/api/core/v1.EnvVar", "k8s.io/api/core/v1.ResourceRequirements"},
 	}
 }
 
@@ -46580,8 +46003,7 @@ func schema_openshift_api_openshiftcontrolplane_v1_BuildOverridesConfig(ref comm
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/build/v1.ImageLabel", "k8s.io/api/core/v1.Toleration",
-		},
+			"github.com/openshift/api/build/v1.ImageLabel", "k8s.io/api/core/v1.Toleration"},
 	}
 }
 
@@ -46632,8 +46054,7 @@ func schema_openshift_api_openshiftcontrolplane_v1_DeployerControllerConfig(ref 
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/openshiftcontrolplane/v1.ImageConfig",
-		},
+			"github.com/openshift/api/openshiftcontrolplane/v1.ImageConfig"},
 	}
 }
 
@@ -46894,8 +46315,7 @@ func schema_openshift_api_openshiftcontrolplane_v1_ImagePolicyConfig(ref common.
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/openshiftcontrolplane/v1.RegistryLocation",
-		},
+			"github.com/openshift/api/openshiftcontrolplane/v1.RegistryLocation"},
 	}
 }
 
@@ -47028,8 +46448,7 @@ func schema_openshift_api_openshiftcontrolplane_v1_NetworkControllerConfig(ref c
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/openshiftcontrolplane/v1.ClusterNetworkEntry",
-		},
+			"github.com/openshift/api/openshiftcontrolplane/v1.ClusterNetworkEntry"},
 	}
 }
 
@@ -47188,8 +46607,7 @@ func schema_openshift_api_openshiftcontrolplane_v1_OpenShiftAPIServerConfig(ref 
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/config/v1.AdmissionConfig", "github.com/openshift/api/config/v1.AuditConfig", "github.com/openshift/api/config/v1.EtcdStorageConfig", "github.com/openshift/api/config/v1.HTTPServingInfo", "github.com/openshift/api/config/v1.KubeClientConfig", "github.com/openshift/api/openshiftcontrolplane/v1.APIServers", "github.com/openshift/api/openshiftcontrolplane/v1.FrontProxyConfig", "github.com/openshift/api/openshiftcontrolplane/v1.ImagePolicyConfig", "github.com/openshift/api/openshiftcontrolplane/v1.JenkinsPipelineConfig", "github.com/openshift/api/openshiftcontrolplane/v1.ProjectConfig", "github.com/openshift/api/openshiftcontrolplane/v1.RoutingConfig",
-		},
+			"github.com/openshift/api/config/v1.AdmissionConfig", "github.com/openshift/api/config/v1.AuditConfig", "github.com/openshift/api/config/v1.EtcdStorageConfig", "github.com/openshift/api/config/v1.HTTPServingInfo", "github.com/openshift/api/config/v1.KubeClientConfig", "github.com/openshift/api/openshiftcontrolplane/v1.APIServers", "github.com/openshift/api/openshiftcontrolplane/v1.FrontProxyConfig", "github.com/openshift/api/openshiftcontrolplane/v1.ImagePolicyConfig", "github.com/openshift/api/openshiftcontrolplane/v1.JenkinsPipelineConfig", "github.com/openshift/api/openshiftcontrolplane/v1.ProjectConfig", "github.com/openshift/api/openshiftcontrolplane/v1.RoutingConfig"},
 	}
 }
 
@@ -47322,8 +46740,7 @@ func schema_openshift_api_openshiftcontrolplane_v1_OpenShiftControllerManagerCon
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/config/v1.HTTPServingInfo", "github.com/openshift/api/config/v1.LeaderElection", "github.com/openshift/api/openshiftcontrolplane/v1.BuildControllerConfig", "github.com/openshift/api/openshiftcontrolplane/v1.DeployerControllerConfig", "github.com/openshift/api/openshiftcontrolplane/v1.DockerPullSecretControllerConfig", "github.com/openshift/api/openshiftcontrolplane/v1.ImageImportControllerConfig", "github.com/openshift/api/openshiftcontrolplane/v1.IngressControllerConfig", "github.com/openshift/api/openshiftcontrolplane/v1.NetworkControllerConfig", "github.com/openshift/api/openshiftcontrolplane/v1.ResourceQuotaControllerConfig", "github.com/openshift/api/openshiftcontrolplane/v1.SecurityAllocator", "github.com/openshift/api/openshiftcontrolplane/v1.ServiceAccountControllerConfig", "github.com/openshift/api/openshiftcontrolplane/v1.ServiceServingCert",
-		},
+			"github.com/openshift/api/config/v1.HTTPServingInfo", "github.com/openshift/api/config/v1.LeaderElection", "github.com/openshift/api/openshiftcontrolplane/v1.BuildControllerConfig", "github.com/openshift/api/openshiftcontrolplane/v1.DeployerControllerConfig", "github.com/openshift/api/openshiftcontrolplane/v1.DockerPullSecretControllerConfig", "github.com/openshift/api/openshiftcontrolplane/v1.ImageImportControllerConfig", "github.com/openshift/api/openshiftcontrolplane/v1.IngressControllerConfig", "github.com/openshift/api/openshiftcontrolplane/v1.NetworkControllerConfig", "github.com/openshift/api/openshiftcontrolplane/v1.ResourceQuotaControllerConfig", "github.com/openshift/api/openshiftcontrolplane/v1.SecurityAllocator", "github.com/openshift/api/openshiftcontrolplane/v1.ServiceAccountControllerConfig", "github.com/openshift/api/openshiftcontrolplane/v1.ServiceServingCert"},
 	}
 }
 
@@ -47472,8 +46889,7 @@ func schema_openshift_api_openshiftcontrolplane_v1_ResourceQuotaControllerConfig
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/apimachinery/pkg/apis/meta/v1.Duration",
-		},
+			"k8s.io/apimachinery/pkg/apis/meta/v1.Duration"},
 	}
 }
 
@@ -47583,8 +46999,7 @@ func schema_openshift_api_openshiftcontrolplane_v1_ServiceServingCert(ref common
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/config/v1.CertInfo",
-		},
+			"github.com/openshift/api/config/v1.CertInfo"},
 	}
 }
 
@@ -47632,8 +47047,7 @@ func schema_openshift_api_operator_v1_AWSCSIDriverConfigSpec(ref common.Referenc
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/operator/v1.AWSEFSVolumeMetrics",
-		},
+			"github.com/openshift/api/operator/v1.AWSEFSVolumeMetrics"},
 	}
 }
 
@@ -47660,8 +47074,7 @@ func schema_openshift_api_operator_v1_AWSClassicLoadBalancerParameters(ref commo
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/operator/v1.AWSSubnets", "k8s.io/apimachinery/pkg/apis/meta/v1.Duration",
-		},
+			"github.com/openshift/api/operator/v1.AWSSubnets", "k8s.io/apimachinery/pkg/apis/meta/v1.Duration"},
 	}
 }
 
@@ -47703,8 +47116,7 @@ func schema_openshift_api_operator_v1_AWSEFSVolumeMetrics(ref common.ReferenceCa
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/operator/v1.AWSEFSVolumeMetricsRecursiveWalkConfig",
-		},
+			"github.com/openshift/api/operator/v1.AWSEFSVolumeMetricsRecursiveWalkConfig"},
 	}
 }
 
@@ -47780,8 +47192,7 @@ func schema_openshift_api_operator_v1_AWSLoadBalancerParameters(ref common.Refer
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/operator/v1.AWSClassicLoadBalancerParameters", "github.com/openshift/api/operator/v1.AWSNetworkLoadBalancerParameters",
-		},
+			"github.com/openshift/api/operator/v1.AWSClassicLoadBalancerParameters", "github.com/openshift/api/operator/v1.AWSNetworkLoadBalancerParameters"},
 	}
 }
 
@@ -47822,8 +47233,7 @@ func schema_openshift_api_operator_v1_AWSNetworkLoadBalancerParameters(ref commo
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/operator/v1.AWSSubnets",
-		},
+			"github.com/openshift/api/operator/v1.AWSSubnets"},
 	}
 }
 
@@ -47939,8 +47349,7 @@ func schema_openshift_api_operator_v1_AccessLogging(ref common.ReferenceCallback
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/operator/v1.IngressControllerCaptureHTTPCookie", "github.com/openshift/api/operator/v1.IngressControllerCaptureHTTPHeaders", "github.com/openshift/api/operator/v1.LoggingDestination",
-		},
+			"github.com/openshift/api/operator/v1.IngressControllerCaptureHTTPCookie", "github.com/openshift/api/operator/v1.IngressControllerCaptureHTTPHeaders", "github.com/openshift/api/operator/v1.LoggingDestination"},
 	}
 }
 
@@ -48020,8 +47429,7 @@ func schema_openshift_api_operator_v1_AdditionalNetworkDefinition(ref common.Ref
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/operator/v1.SimpleMacvlanConfig",
-		},
+			"github.com/openshift/api/operator/v1.SimpleMacvlanConfig"},
 	}
 }
 
@@ -48104,8 +47512,7 @@ func schema_openshift_api_operator_v1_Authentication(ref common.ReferenceCallbac
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/operator/v1.AuthenticationSpec", "github.com/openshift/api/operator/v1.AuthenticationStatus", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta",
-		},
+			"github.com/openshift/api/operator/v1.AuthenticationSpec", "github.com/openshift/api/operator/v1.AuthenticationStatus", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"},
 	}
 }
 
@@ -48155,8 +47562,7 @@ func schema_openshift_api_operator_v1_AuthenticationList(ref common.ReferenceCal
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/operator/v1.Authentication", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta",
-		},
+			"github.com/openshift/api/operator/v1.Authentication", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"},
 	}
 }
 
@@ -48205,8 +47611,7 @@ func schema_openshift_api_operator_v1_AuthenticationSpec(ref common.ReferenceCal
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/apimachinery/pkg/runtime.RawExtension",
-		},
+			"k8s.io/apimachinery/pkg/runtime.RawExtension"},
 	}
 }
 
@@ -48303,8 +47708,7 @@ func schema_openshift_api_operator_v1_AuthenticationStatus(ref common.ReferenceC
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/operator/v1.GenerationStatus", "github.com/openshift/api/operator/v1.OAuthAPIServerStatus", "github.com/openshift/api/operator/v1.OperatorCondition",
-		},
+			"github.com/openshift/api/operator/v1.GenerationStatus", "github.com/openshift/api/operator/v1.OAuthAPIServerStatus", "github.com/openshift/api/operator/v1.OperatorCondition"},
 	}
 }
 
@@ -48325,8 +47729,7 @@ func schema_openshift_api_operator_v1_AzureCSIDriverConfigSpec(ref common.Refere
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/operator/v1.AzureDiskEncryptionSet",
-		},
+			"github.com/openshift/api/operator/v1.AzureDiskEncryptionSet"},
 	}
 }
 
@@ -48406,8 +47809,7 @@ func schema_openshift_api_operator_v1_BootImageSkewEnforcementConfig(ref common.
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/operator/v1.ClusterBootImageManual",
-		},
+			"github.com/openshift/api/operator/v1.ClusterBootImageManual"},
 	}
 }
 
@@ -48457,8 +47859,7 @@ func schema_openshift_api_operator_v1_BootImageSkewEnforcementStatus(ref common.
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/operator/v1.ClusterBootImageAutomatic", "github.com/openshift/api/operator/v1.ClusterBootImageManual",
-		},
+			"github.com/openshift/api/operator/v1.ClusterBootImageAutomatic", "github.com/openshift/api/operator/v1.ClusterBootImageManual"},
 	}
 }
 
@@ -48528,8 +47929,7 @@ func schema_openshift_api_operator_v1_CSIDriverConfigSpec(ref common.ReferenceCa
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/operator/v1.AWSCSIDriverConfigSpec", "github.com/openshift/api/operator/v1.AzureCSIDriverConfigSpec", "github.com/openshift/api/operator/v1.GCPCSIDriverConfigSpec", "github.com/openshift/api/operator/v1.IBMCloudCSIDriverConfigSpec", "github.com/openshift/api/operator/v1.VSphereCSIDriverConfigSpec",
-		},
+			"github.com/openshift/api/operator/v1.AWSCSIDriverConfigSpec", "github.com/openshift/api/operator/v1.AzureCSIDriverConfigSpec", "github.com/openshift/api/operator/v1.GCPCSIDriverConfigSpec", "github.com/openshift/api/operator/v1.IBMCloudCSIDriverConfigSpec", "github.com/openshift/api/operator/v1.VSphereCSIDriverConfigSpec"},
 	}
 }
 
@@ -48580,8 +47980,7 @@ func schema_openshift_api_operator_v1_CSISnapshotController(ref common.Reference
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/operator/v1.CSISnapshotControllerSpec", "github.com/openshift/api/operator/v1.CSISnapshotControllerStatus", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta",
-		},
+			"github.com/openshift/api/operator/v1.CSISnapshotControllerSpec", "github.com/openshift/api/operator/v1.CSISnapshotControllerStatus", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"},
 	}
 }
 
@@ -48631,8 +48030,7 @@ func schema_openshift_api_operator_v1_CSISnapshotControllerList(ref common.Refer
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/operator/v1.CSISnapshotController", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta",
-		},
+			"github.com/openshift/api/operator/v1.CSISnapshotController", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"},
 	}
 }
 
@@ -48682,8 +48080,7 @@ func schema_openshift_api_operator_v1_CSISnapshotControllerSpec(ref common.Refer
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/apimachinery/pkg/runtime.RawExtension",
-		},
+			"k8s.io/apimachinery/pkg/runtime.RawExtension"},
 	}
 }
 
@@ -48774,8 +48171,7 @@ func schema_openshift_api_operator_v1_CSISnapshotControllerStatus(ref common.Ref
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/operator/v1.GenerationStatus", "github.com/openshift/api/operator/v1.OperatorCondition",
-		},
+			"github.com/openshift/api/operator/v1.GenerationStatus", "github.com/openshift/api/operator/v1.OperatorCondition"},
 	}
 }
 
@@ -48806,8 +48202,7 @@ func schema_openshift_api_operator_v1_Capability(ref common.ReferenceCallback) c
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/operator/v1.CapabilityVisibility",
-		},
+			"github.com/openshift/api/operator/v1.CapabilityVisibility"},
 	}
 }
 
@@ -48890,8 +48285,7 @@ func schema_openshift_api_operator_v1_ClientTLS(ref common.ReferenceCallback) co
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/config/v1.ConfigMapNameReference",
-		},
+			"github.com/openshift/api/config/v1.ConfigMapNameReference"},
 	}
 }
 
@@ -48940,8 +48334,7 @@ func schema_openshift_api_operator_v1_CloudCredential(ref common.ReferenceCallba
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/operator/v1.CloudCredentialSpec", "github.com/openshift/api/operator/v1.CloudCredentialStatus", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta",
-		},
+			"github.com/openshift/api/operator/v1.CloudCredentialSpec", "github.com/openshift/api/operator/v1.CloudCredentialStatus", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"},
 	}
 }
 
@@ -48991,8 +48384,7 @@ func schema_openshift_api_operator_v1_CloudCredentialList(ref common.ReferenceCa
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/operator/v1.CloudCredential", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta",
-		},
+			"github.com/openshift/api/operator/v1.CloudCredential", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"},
 	}
 }
 
@@ -49049,8 +48441,7 @@ func schema_openshift_api_operator_v1_CloudCredentialSpec(ref common.ReferenceCa
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/apimachinery/pkg/runtime.RawExtension",
-		},
+			"k8s.io/apimachinery/pkg/runtime.RawExtension"},
 	}
 }
 
@@ -49141,8 +48532,7 @@ func schema_openshift_api_operator_v1_CloudCredentialStatus(ref common.Reference
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/operator/v1.GenerationStatus", "github.com/openshift/api/operator/v1.OperatorCondition",
-		},
+			"github.com/openshift/api/operator/v1.GenerationStatus", "github.com/openshift/api/operator/v1.OperatorCondition"},
 	}
 }
 
@@ -49268,8 +48658,7 @@ func schema_openshift_api_operator_v1_ClusterCSIDriver(ref common.ReferenceCallb
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/operator/v1.ClusterCSIDriverSpec", "github.com/openshift/api/operator/v1.ClusterCSIDriverStatus", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta",
-		},
+			"github.com/openshift/api/operator/v1.ClusterCSIDriverSpec", "github.com/openshift/api/operator/v1.ClusterCSIDriverStatus", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"},
 	}
 }
 
@@ -49319,8 +48708,7 @@ func schema_openshift_api_operator_v1_ClusterCSIDriverList(ref common.ReferenceC
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/operator/v1.ClusterCSIDriver", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta",
-		},
+			"github.com/openshift/api/operator/v1.ClusterCSIDriver", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"},
 	}
 }
 
@@ -49384,8 +48772,7 @@ func schema_openshift_api_operator_v1_ClusterCSIDriverSpec(ref common.ReferenceC
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/operator/v1.CSIDriverConfigSpec", "k8s.io/apimachinery/pkg/runtime.RawExtension",
-		},
+			"github.com/openshift/api/operator/v1.CSIDriverConfigSpec", "k8s.io/apimachinery/pkg/runtime.RawExtension"},
 	}
 }
 
@@ -49476,8 +48863,7 @@ func schema_openshift_api_operator_v1_ClusterCSIDriverStatus(ref common.Referenc
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/operator/v1.GenerationStatus", "github.com/openshift/api/operator/v1.OperatorCondition",
-		},
+			"github.com/openshift/api/operator/v1.GenerationStatus", "github.com/openshift/api/operator/v1.OperatorCondition"},
 	}
 }
 
@@ -49555,8 +48941,7 @@ func schema_openshift_api_operator_v1_Config(ref common.ReferenceCallback) commo
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/operator/v1.ConfigSpec", "github.com/openshift/api/operator/v1.ConfigStatus", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta",
-		},
+			"github.com/openshift/api/operator/v1.ConfigSpec", "github.com/openshift/api/operator/v1.ConfigStatus", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"},
 	}
 }
 
@@ -49607,8 +48992,7 @@ func schema_openshift_api_operator_v1_ConfigList(ref common.ReferenceCallback) c
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/operator/v1.Config", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta",
-		},
+			"github.com/openshift/api/operator/v1.Config", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"},
 	}
 }
 
@@ -49687,8 +49071,7 @@ func schema_openshift_api_operator_v1_ConfigSpec(ref common.ReferenceCallback) c
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/apimachinery/pkg/runtime.RawExtension",
-		},
+			"k8s.io/apimachinery/pkg/runtime.RawExtension"},
 	}
 }
 
@@ -49778,8 +49161,7 @@ func schema_openshift_api_operator_v1_ConfigStatus(ref common.ReferenceCallback)
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/operator/v1.GenerationStatus", "github.com/openshift/api/operator/v1.OperatorCondition",
-		},
+			"github.com/openshift/api/operator/v1.GenerationStatus", "github.com/openshift/api/operator/v1.OperatorCondition"},
 	}
 }
 
@@ -49828,8 +49210,7 @@ func schema_openshift_api_operator_v1_Console(ref common.ReferenceCallback) comm
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/operator/v1.ConsoleSpec", "github.com/openshift/api/operator/v1.ConsoleStatus", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta",
-		},
+			"github.com/openshift/api/operator/v1.ConsoleSpec", "github.com/openshift/api/operator/v1.ConsoleStatus", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"},
 	}
 }
 
@@ -49860,8 +49241,7 @@ func schema_openshift_api_operator_v1_ConsoleConfigRoute(ref common.ReferenceCal
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/config/v1.SecretNameReference",
-		},
+			"github.com/openshift/api/config/v1.SecretNameReference"},
 	}
 }
 
@@ -49998,8 +49378,7 @@ func schema_openshift_api_operator_v1_ConsoleCustomization(ref common.ReferenceC
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/config/v1.ConfigMapFileReference", "github.com/openshift/api/operator/v1.AddPage", "github.com/openshift/api/operator/v1.Capability", "github.com/openshift/api/operator/v1.DeveloperConsoleCatalogCustomization", "github.com/openshift/api/operator/v1.Logo", "github.com/openshift/api/operator/v1.Perspective", "github.com/openshift/api/operator/v1.ProjectAccess", "github.com/openshift/api/operator/v1.QuickStarts",
-		},
+			"github.com/openshift/api/config/v1.ConfigMapFileReference", "github.com/openshift/api/operator/v1.AddPage", "github.com/openshift/api/operator/v1.Capability", "github.com/openshift/api/operator/v1.DeveloperConsoleCatalogCustomization", "github.com/openshift/api/operator/v1.Logo", "github.com/openshift/api/operator/v1.Perspective", "github.com/openshift/api/operator/v1.ProjectAccess", "github.com/openshift/api/operator/v1.QuickStarts"},
 	}
 }
 
@@ -50049,8 +49428,7 @@ func schema_openshift_api_operator_v1_ConsoleList(ref common.ReferenceCallback) 
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/operator/v1.Console", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta",
-		},
+			"github.com/openshift/api/operator/v1.Console", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"},
 	}
 }
 
@@ -50071,8 +49449,7 @@ func schema_openshift_api_operator_v1_ConsoleProviders(ref common.ReferenceCallb
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/operator/v1.StatuspageProvider",
-		},
+			"github.com/openshift/api/operator/v1.StatuspageProvider"},
 	}
 }
 
@@ -50165,8 +49542,7 @@ func schema_openshift_api_operator_v1_ConsoleSpec(ref common.ReferenceCallback) 
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/operator/v1.ConsoleConfigRoute", "github.com/openshift/api/operator/v1.ConsoleCustomization", "github.com/openshift/api/operator/v1.ConsoleProviders", "github.com/openshift/api/operator/v1.Ingress", "k8s.io/apimachinery/pkg/runtime.RawExtension",
-		},
+			"github.com/openshift/api/operator/v1.ConsoleConfigRoute", "github.com/openshift/api/operator/v1.ConsoleCustomization", "github.com/openshift/api/operator/v1.ConsoleProviders", "github.com/openshift/api/operator/v1.Ingress", "k8s.io/apimachinery/pkg/runtime.RawExtension"},
 	}
 }
 
@@ -50257,8 +49633,7 @@ func schema_openshift_api_operator_v1_ConsoleStatus(ref common.ReferenceCallback
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/operator/v1.GenerationStatus", "github.com/openshift/api/operator/v1.OperatorCondition",
-		},
+			"github.com/openshift/api/operator/v1.GenerationStatus", "github.com/openshift/api/operator/v1.OperatorCondition"},
 	}
 }
 
@@ -50328,8 +49703,7 @@ func schema_openshift_api_operator_v1_DNS(ref common.ReferenceCallback) common.O
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/operator/v1.DNSSpec", "github.com/openshift/api/operator/v1.DNSStatus", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta",
-		},
+			"github.com/openshift/api/operator/v1.DNSSpec", "github.com/openshift/api/operator/v1.DNSStatus", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"},
 	}
 }
 
@@ -50356,8 +49730,7 @@ func schema_openshift_api_operator_v1_DNSCache(ref common.ReferenceCallback) com
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/apimachinery/pkg/apis/meta/v1.Duration",
-		},
+			"k8s.io/apimachinery/pkg/apis/meta/v1.Duration"},
 	}
 }
 
@@ -50407,8 +49780,7 @@ func schema_openshift_api_operator_v1_DNSList(ref common.ReferenceCallback) comm
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/operator/v1.DNS", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta",
-		},
+			"github.com/openshift/api/operator/v1.DNS", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"},
 	}
 }
 
@@ -50453,8 +49825,7 @@ func schema_openshift_api_operator_v1_DNSNodePlacement(ref common.ReferenceCallb
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.Toleration",
-		},
+			"k8s.io/api/core/v1.Toleration"},
 	}
 }
 
@@ -50485,8 +49856,7 @@ func schema_openshift_api_operator_v1_DNSOverTLSConfig(ref common.ReferenceCallb
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/config/v1.ConfigMapNameReference",
-		},
+			"github.com/openshift/api/config/v1.ConfigMapNameReference"},
 	}
 }
 
@@ -50557,8 +49927,7 @@ func schema_openshift_api_operator_v1_DNSSpec(ref common.ReferenceCallback) comm
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/operator/v1.DNSCache", "github.com/openshift/api/operator/v1.DNSNodePlacement", "github.com/openshift/api/operator/v1.Server", "github.com/openshift/api/operator/v1.UpstreamResolvers",
-		},
+			"github.com/openshift/api/operator/v1.DNSCache", "github.com/openshift/api/operator/v1.DNSNodePlacement", "github.com/openshift/api/operator/v1.Server", "github.com/openshift/api/operator/v1.UpstreamResolvers"},
 	}
 }
 
@@ -50610,8 +49979,7 @@ func schema_openshift_api_operator_v1_DNSStatus(ref common.ReferenceCallback) co
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/operator/v1.OperatorCondition",
-		},
+			"github.com/openshift/api/operator/v1.OperatorCondition"},
 	}
 }
 
@@ -50651,8 +50019,7 @@ func schema_openshift_api_operator_v1_DNSTransportConfig(ref common.ReferenceCal
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/operator/v1.DNSOverTLSConfig",
-		},
+			"github.com/openshift/api/operator/v1.DNSOverTLSConfig"},
 	}
 }
 
@@ -50688,8 +50055,7 @@ func schema_openshift_api_operator_v1_DefaultNetworkDefinition(ref common.Refere
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/operator/v1.OVNKubernetesConfig", "github.com/openshift/api/operator/v1.OpenShiftSDNConfig",
-		},
+			"github.com/openshift/api/operator/v1.OVNKubernetesConfig", "github.com/openshift/api/operator/v1.OpenShiftSDNConfig"},
 	}
 }
 
@@ -50750,8 +50116,7 @@ func schema_openshift_api_operator_v1_DeveloperConsoleCatalogCategory(ref common
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/operator/v1.DeveloperConsoleCatalogCategoryMeta",
-		},
+			"github.com/openshift/api/operator/v1.DeveloperConsoleCatalogCategoryMeta"},
 	}
 }
 
@@ -50832,8 +50197,7 @@ func schema_openshift_api_operator_v1_DeveloperConsoleCatalogCustomization(ref c
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/operator/v1.DeveloperConsoleCatalogCategory", "github.com/openshift/api/operator/v1.DeveloperConsoleCatalogTypes",
-		},
+			"github.com/openshift/api/operator/v1.DeveloperConsoleCatalogCategory", "github.com/openshift/api/operator/v1.DeveloperConsoleCatalogTypes"},
 	}
 }
 
@@ -50991,8 +50355,7 @@ func schema_openshift_api_operator_v1_EndpointPublishingStrategy(ref common.Refe
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/operator/v1.HostNetworkStrategy", "github.com/openshift/api/operator/v1.LoadBalancerStrategy", "github.com/openshift/api/operator/v1.NodePortStrategy", "github.com/openshift/api/operator/v1.PrivateStrategy",
-		},
+			"github.com/openshift/api/operator/v1.HostNetworkStrategy", "github.com/openshift/api/operator/v1.LoadBalancerStrategy", "github.com/openshift/api/operator/v1.NodePortStrategy", "github.com/openshift/api/operator/v1.PrivateStrategy"},
 	}
 }
 
@@ -51041,8 +50404,7 @@ func schema_openshift_api_operator_v1_Etcd(ref common.ReferenceCallback) common.
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/operator/v1.EtcdSpec", "github.com/openshift/api/operator/v1.EtcdStatus", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta",
-		},
+			"github.com/openshift/api/operator/v1.EtcdSpec", "github.com/openshift/api/operator/v1.EtcdStatus", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"},
 	}
 }
 
@@ -51093,8 +50455,7 @@ func schema_openshift_api_operator_v1_EtcdList(ref common.ReferenceCallback) com
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/operator/v1.Etcd", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta",
-		},
+			"github.com/openshift/api/operator/v1.Etcd", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"},
 	}
 }
 
@@ -51182,8 +50543,7 @@ func schema_openshift_api_operator_v1_EtcdSpec(ref common.ReferenceCallback) com
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/apimachinery/pkg/runtime.RawExtension",
-		},
+			"k8s.io/apimachinery/pkg/runtime.RawExtension"},
 	}
 }
 
@@ -51311,8 +50671,7 @@ func schema_openshift_api_operator_v1_EtcdStatus(ref common.ReferenceCallback) c
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/operator/v1.GenerationStatus", "github.com/openshift/api/operator/v1.NodeStatus", "github.com/openshift/api/operator/v1.OperatorCondition",
-		},
+			"github.com/openshift/api/operator/v1.GenerationStatus", "github.com/openshift/api/operator/v1.NodeStatus", "github.com/openshift/api/operator/v1.OperatorCondition"},
 	}
 }
 
@@ -51344,8 +50703,7 @@ func schema_openshift_api_operator_v1_ExportNetworkFlows(ref common.ReferenceCal
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/operator/v1.IPFIXConfig", "github.com/openshift/api/operator/v1.NetFlowConfig", "github.com/openshift/api/operator/v1.SFlowConfig",
-		},
+			"github.com/openshift/api/operator/v1.IPFIXConfig", "github.com/openshift/api/operator/v1.NetFlowConfig", "github.com/openshift/api/operator/v1.SFlowConfig"},
 	}
 }
 
@@ -51409,8 +50767,7 @@ func schema_openshift_api_operator_v1_FileReferenceSource(ref common.ReferenceCa
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/operator/v1.ConfigMapFileReference",
-		},
+			"github.com/openshift/api/operator/v1.ConfigMapFileReference"},
 	}
 }
 
@@ -51463,8 +50820,7 @@ func schema_openshift_api_operator_v1_ForwardPlugin(ref common.ReferenceCallback
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/operator/v1.DNSTransportConfig",
-		},
+			"github.com/openshift/api/operator/v1.DNSTransportConfig"},
 	}
 }
 
@@ -51485,8 +50841,7 @@ func schema_openshift_api_operator_v1_GCPCSIDriverConfigSpec(ref common.Referenc
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/operator/v1.GCPKMSKeyReference",
-		},
+			"github.com/openshift/api/operator/v1.GCPKMSKeyReference"},
 	}
 }
 
@@ -51594,8 +50949,7 @@ func schema_openshift_api_operator_v1_GatewayConfig(ref common.ReferenceCallback
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/operator/v1.IPv4GatewayConfig", "github.com/openshift/api/operator/v1.IPv6GatewayConfig",
-		},
+			"github.com/openshift/api/operator/v1.IPv4GatewayConfig", "github.com/openshift/api/operator/v1.IPv6GatewayConfig"},
 	}
 }
 
@@ -51641,8 +50995,7 @@ func schema_openshift_api_operator_v1_GatherStatus(ref common.ReferenceCallback)
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/operator/v1.GathererStatus", "k8s.io/apimachinery/pkg/apis/meta/v1.Duration", "k8s.io/apimachinery/pkg/apis/meta/v1.Time",
-		},
+			"github.com/openshift/api/operator/v1.GathererStatus", "k8s.io/apimachinery/pkg/apis/meta/v1.Duration", "k8s.io/apimachinery/pkg/apis/meta/v1.Time"},
 	}
 }
 
@@ -51691,8 +51044,7 @@ func schema_openshift_api_operator_v1_GathererStatus(ref common.ReferenceCallbac
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/apimachinery/pkg/apis/meta/v1.Condition", "k8s.io/apimachinery/pkg/apis/meta/v1.Duration",
-		},
+			"k8s.io/apimachinery/pkg/apis/meta/v1.Condition", "k8s.io/apimachinery/pkg/apis/meta/v1.Duration"},
 	}
 }
 
@@ -51915,8 +51267,7 @@ func schema_openshift_api_operator_v1_HybridOverlayConfig(ref common.ReferenceCa
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/operator/v1.ClusterNetworkEntry",
-		},
+			"github.com/openshift/api/operator/v1.ClusterNetworkEntry"},
 	}
 }
 
@@ -51988,8 +51339,7 @@ func schema_openshift_api_operator_v1_IPAMConfig(ref common.ReferenceCallback) c
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/operator/v1.StaticIPAMConfig",
-		},
+			"github.com/openshift/api/operator/v1.StaticIPAMConfig"},
 	}
 }
 
@@ -52060,8 +51410,7 @@ func schema_openshift_api_operator_v1_IPsecConfig(ref common.ReferenceCallback) 
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/operator/v1.IPsecFullModeConfig",
-		},
+			"github.com/openshift/api/operator/v1.IPsecFullModeConfig"},
 	}
 }
 
@@ -52252,8 +51601,7 @@ func schema_openshift_api_operator_v1_IngressController(ref common.ReferenceCall
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/operator/v1.IngressControllerSpec", "github.com/openshift/api/operator/v1.IngressControllerStatus", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta",
-		},
+			"github.com/openshift/api/operator/v1.IngressControllerSpec", "github.com/openshift/api/operator/v1.IngressControllerStatus", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"},
 	}
 }
 
@@ -52446,8 +51794,7 @@ func schema_openshift_api_operator_v1_IngressControllerCaptureHTTPHeaders(ref co
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/operator/v1.IngressControllerCaptureHTTPHeader",
-		},
+			"github.com/openshift/api/operator/v1.IngressControllerCaptureHTTPHeader"},
 	}
 }
 
@@ -52478,8 +51825,7 @@ func schema_openshift_api_operator_v1_IngressControllerHTTPHeader(ref common.Ref
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/operator/v1.IngressControllerHTTPHeaderActionUnion",
-		},
+			"github.com/openshift/api/operator/v1.IngressControllerHTTPHeaderActionUnion"},
 	}
 }
 
@@ -52521,8 +51867,7 @@ func schema_openshift_api_operator_v1_IngressControllerHTTPHeaderActionUnion(ref
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/operator/v1.IngressControllerSetHTTPHeader",
-		},
+			"github.com/openshift/api/operator/v1.IngressControllerSetHTTPHeader"},
 	}
 }
 
@@ -52581,8 +51926,7 @@ func schema_openshift_api_operator_v1_IngressControllerHTTPHeaderActions(ref com
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/operator/v1.IngressControllerHTTPHeader",
-		},
+			"github.com/openshift/api/operator/v1.IngressControllerHTTPHeader"},
 	}
 }
 
@@ -52638,8 +51982,7 @@ func schema_openshift_api_operator_v1_IngressControllerHTTPHeaders(ref common.Re
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/operator/v1.IngressControllerHTTPHeaderActions", "github.com/openshift/api/operator/v1.IngressControllerHTTPUniqueIdHeaderPolicy",
-		},
+			"github.com/openshift/api/operator/v1.IngressControllerHTTPHeaderActions", "github.com/openshift/api/operator/v1.IngressControllerHTTPUniqueIdHeaderPolicy"},
 	}
 }
 
@@ -52716,8 +52059,7 @@ func schema_openshift_api_operator_v1_IngressControllerList(ref common.Reference
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/operator/v1.IngressController", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta",
-		},
+			"github.com/openshift/api/operator/v1.IngressController", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"},
 	}
 }
 
@@ -52738,8 +52080,7 @@ func schema_openshift_api_operator_v1_IngressControllerLogging(ref common.Refere
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/operator/v1.AccessLogging",
-		},
+			"github.com/openshift/api/operator/v1.AccessLogging"},
 	}
 }
 
@@ -52901,8 +52242,7 @@ func schema_openshift_api_operator_v1_IngressControllerSpec(ref common.Reference
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/config/v1.ConfigMapNameReference", "github.com/openshift/api/config/v1.TLSSecurityProfile", "github.com/openshift/api/operator/v1.ClientTLS", "github.com/openshift/api/operator/v1.EndpointPublishingStrategy", "github.com/openshift/api/operator/v1.HTTPCompressionPolicy", "github.com/openshift/api/operator/v1.IngressControllerHTTPHeaders", "github.com/openshift/api/operator/v1.IngressControllerLogging", "github.com/openshift/api/operator/v1.IngressControllerTuningOptions", "github.com/openshift/api/operator/v1.NodePlacement", "github.com/openshift/api/operator/v1.RouteAdmissionPolicy", "k8s.io/api/core/v1.LocalObjectReference", "k8s.io/apimachinery/pkg/apis/meta/v1.LabelSelector", "k8s.io/apimachinery/pkg/runtime.RawExtension",
-		},
+			"github.com/openshift/api/config/v1.ConfigMapNameReference", "github.com/openshift/api/config/v1.TLSSecurityProfile", "github.com/openshift/api/operator/v1.ClientTLS", "github.com/openshift/api/operator/v1.EndpointPublishingStrategy", "github.com/openshift/api/operator/v1.HTTPCompressionPolicy", "github.com/openshift/api/operator/v1.IngressControllerHTTPHeaders", "github.com/openshift/api/operator/v1.IngressControllerLogging", "github.com/openshift/api/operator/v1.IngressControllerTuningOptions", "github.com/openshift/api/operator/v1.NodePlacement", "github.com/openshift/api/operator/v1.RouteAdmissionPolicy", "k8s.io/api/core/v1.LocalObjectReference", "k8s.io/apimachinery/pkg/apis/meta/v1.LabelSelector", "k8s.io/apimachinery/pkg/runtime.RawExtension"},
 	}
 }
 
@@ -52994,8 +52334,7 @@ func schema_openshift_api_operator_v1_IngressControllerStatus(ref common.Referen
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/config/v1.TLSProfileSpec", "github.com/openshift/api/operator/v1.EndpointPublishingStrategy", "github.com/openshift/api/operator/v1.OperatorCondition", "k8s.io/apimachinery/pkg/apis/meta/v1.LabelSelector",
-		},
+			"github.com/openshift/api/config/v1.TLSProfileSpec", "github.com/openshift/api/operator/v1.EndpointPublishingStrategy", "github.com/openshift/api/operator/v1.OperatorCondition", "k8s.io/apimachinery/pkg/apis/meta/v1.LabelSelector"},
 	}
 }
 
@@ -53098,8 +52437,7 @@ func schema_openshift_api_operator_v1_IngressControllerTuningOptions(ref common.
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/apimachinery/pkg/apis/meta/v1.Duration",
-		},
+			"k8s.io/apimachinery/pkg/apis/meta/v1.Duration"},
 	}
 }
 
@@ -53150,8 +52488,7 @@ func schema_openshift_api_operator_v1_InsightsOperator(ref common.ReferenceCallb
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/operator/v1.InsightsOperatorSpec", "github.com/openshift/api/operator/v1.InsightsOperatorStatus", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta",
-		},
+			"github.com/openshift/api/operator/v1.InsightsOperatorSpec", "github.com/openshift/api/operator/v1.InsightsOperatorStatus", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"},
 	}
 }
 
@@ -53201,8 +52538,7 @@ func schema_openshift_api_operator_v1_InsightsOperatorList(ref common.ReferenceC
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/operator/v1.InsightsOperator", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta",
-		},
+			"github.com/openshift/api/operator/v1.InsightsOperator", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"},
 	}
 }
 
@@ -53251,8 +52587,7 @@ func schema_openshift_api_operator_v1_InsightsOperatorSpec(ref common.ReferenceC
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/apimachinery/pkg/runtime.RawExtension",
-		},
+			"k8s.io/apimachinery/pkg/runtime.RawExtension"},
 	}
 }
 
@@ -53356,8 +52691,7 @@ func schema_openshift_api_operator_v1_InsightsOperatorStatus(ref common.Referenc
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/operator/v1.GatherStatus", "github.com/openshift/api/operator/v1.GenerationStatus", "github.com/openshift/api/operator/v1.InsightsReport", "github.com/openshift/api/operator/v1.OperatorCondition",
-		},
+			"github.com/openshift/api/operator/v1.GatherStatus", "github.com/openshift/api/operator/v1.GenerationStatus", "github.com/openshift/api/operator/v1.InsightsReport", "github.com/openshift/api/operator/v1.OperatorCondition"},
 	}
 }
 
@@ -53397,8 +52731,7 @@ func schema_openshift_api_operator_v1_InsightsReport(ref common.ReferenceCallbac
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/operator/v1.HealthCheck", "k8s.io/apimachinery/pkg/apis/meta/v1.Time",
-		},
+			"github.com/openshift/api/operator/v1.HealthCheck", "k8s.io/apimachinery/pkg/apis/meta/v1.Time"},
 	}
 }
 
@@ -53482,8 +52815,7 @@ func schema_openshift_api_operator_v1_KubeAPIServer(ref common.ReferenceCallback
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/operator/v1.KubeAPIServerSpec", "github.com/openshift/api/operator/v1.KubeAPIServerStatus", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta",
-		},
+			"github.com/openshift/api/operator/v1.KubeAPIServerSpec", "github.com/openshift/api/operator/v1.KubeAPIServerStatus", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"},
 	}
 }
 
@@ -53534,8 +52866,7 @@ func schema_openshift_api_operator_v1_KubeAPIServerList(ref common.ReferenceCall
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/operator/v1.KubeAPIServer", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta",
-		},
+			"github.com/openshift/api/operator/v1.KubeAPIServer", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"},
 	}
 }
 
@@ -53613,8 +52944,7 @@ func schema_openshift_api_operator_v1_KubeAPIServerSpec(ref common.ReferenceCall
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/apimachinery/pkg/runtime.RawExtension",
-		},
+			"k8s.io/apimachinery/pkg/runtime.RawExtension"},
 	}
 }
 
@@ -53752,8 +53082,7 @@ func schema_openshift_api_operator_v1_KubeAPIServerStatus(ref common.ReferenceCa
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/operator/v1.GenerationStatus", "github.com/openshift/api/operator/v1.NodeStatus", "github.com/openshift/api/operator/v1.OperatorCondition", "github.com/openshift/api/operator/v1.ServiceAccountIssuerStatus",
-		},
+			"github.com/openshift/api/operator/v1.GenerationStatus", "github.com/openshift/api/operator/v1.NodeStatus", "github.com/openshift/api/operator/v1.OperatorCondition", "github.com/openshift/api/operator/v1.ServiceAccountIssuerStatus"},
 	}
 }
 
@@ -53804,8 +53133,7 @@ func schema_openshift_api_operator_v1_KubeControllerManager(ref common.Reference
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/operator/v1.KubeControllerManagerSpec", "github.com/openshift/api/operator/v1.KubeControllerManagerStatus", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta",
-		},
+			"github.com/openshift/api/operator/v1.KubeControllerManagerSpec", "github.com/openshift/api/operator/v1.KubeControllerManagerStatus", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"},
 	}
 }
 
@@ -53856,8 +53184,7 @@ func schema_openshift_api_operator_v1_KubeControllerManagerList(ref common.Refer
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/operator/v1.KubeControllerManager", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta",
-		},
+			"github.com/openshift/api/operator/v1.KubeControllerManager", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"},
 	}
 }
 
@@ -53936,8 +53263,7 @@ func schema_openshift_api_operator_v1_KubeControllerManagerSpec(ref common.Refer
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/apimachinery/pkg/runtime.RawExtension",
-		},
+			"k8s.io/apimachinery/pkg/runtime.RawExtension"},
 	}
 }
 
@@ -54056,8 +53382,7 @@ func schema_openshift_api_operator_v1_KubeControllerManagerStatus(ref common.Ref
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/operator/v1.GenerationStatus", "github.com/openshift/api/operator/v1.NodeStatus", "github.com/openshift/api/operator/v1.OperatorCondition",
-		},
+			"github.com/openshift/api/operator/v1.GenerationStatus", "github.com/openshift/api/operator/v1.NodeStatus", "github.com/openshift/api/operator/v1.OperatorCondition"},
 	}
 }
 
@@ -54108,8 +53433,7 @@ func schema_openshift_api_operator_v1_KubeScheduler(ref common.ReferenceCallback
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/operator/v1.KubeSchedulerSpec", "github.com/openshift/api/operator/v1.KubeSchedulerStatus", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta",
-		},
+			"github.com/openshift/api/operator/v1.KubeSchedulerSpec", "github.com/openshift/api/operator/v1.KubeSchedulerStatus", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"},
 	}
 }
 
@@ -54160,8 +53484,7 @@ func schema_openshift_api_operator_v1_KubeSchedulerList(ref common.ReferenceCall
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/operator/v1.KubeScheduler", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta",
-		},
+			"github.com/openshift/api/operator/v1.KubeScheduler", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"},
 	}
 }
 
@@ -54232,8 +53555,7 @@ func schema_openshift_api_operator_v1_KubeSchedulerSpec(ref common.ReferenceCall
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/apimachinery/pkg/runtime.RawExtension",
-		},
+			"k8s.io/apimachinery/pkg/runtime.RawExtension"},
 	}
 }
 
@@ -54352,8 +53674,7 @@ func schema_openshift_api_operator_v1_KubeSchedulerStatus(ref common.ReferenceCa
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/operator/v1.GenerationStatus", "github.com/openshift/api/operator/v1.NodeStatus", "github.com/openshift/api/operator/v1.OperatorCondition",
-		},
+			"github.com/openshift/api/operator/v1.GenerationStatus", "github.com/openshift/api/operator/v1.NodeStatus", "github.com/openshift/api/operator/v1.OperatorCondition"},
 	}
 }
 
@@ -54402,8 +53723,7 @@ func schema_openshift_api_operator_v1_KubeStorageVersionMigrator(ref common.Refe
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/operator/v1.KubeStorageVersionMigratorSpec", "github.com/openshift/api/operator/v1.KubeStorageVersionMigratorStatus", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta",
-		},
+			"github.com/openshift/api/operator/v1.KubeStorageVersionMigratorSpec", "github.com/openshift/api/operator/v1.KubeStorageVersionMigratorStatus", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"},
 	}
 }
 
@@ -54454,8 +53774,7 @@ func schema_openshift_api_operator_v1_KubeStorageVersionMigratorList(ref common.
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/operator/v1.KubeStorageVersionMigrator", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta",
-		},
+			"github.com/openshift/api/operator/v1.KubeStorageVersionMigrator", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"},
 	}
 }
 
@@ -54504,8 +53823,7 @@ func schema_openshift_api_operator_v1_KubeStorageVersionMigratorSpec(ref common.
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/apimachinery/pkg/runtime.RawExtension",
-		},
+			"k8s.io/apimachinery/pkg/runtime.RawExtension"},
 	}
 }
 
@@ -54595,8 +53913,7 @@ func schema_openshift_api_operator_v1_KubeStorageVersionMigratorStatus(ref commo
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/operator/v1.GenerationStatus", "github.com/openshift/api/operator/v1.OperatorCondition",
-		},
+			"github.com/openshift/api/operator/v1.GenerationStatus", "github.com/openshift/api/operator/v1.OperatorCondition"},
 	}
 }
 
@@ -54654,8 +53971,7 @@ func schema_openshift_api_operator_v1_LoadBalancerStrategy(ref common.ReferenceC
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/operator/v1.ProviderLoadBalancerParameters",
-		},
+			"github.com/openshift/api/operator/v1.ProviderLoadBalancerParameters"},
 	}
 }
 
@@ -54704,8 +54020,7 @@ func schema_openshift_api_operator_v1_LoggingDestination(ref common.ReferenceCal
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/operator/v1.ContainerLoggingDestinationParameters", "github.com/openshift/api/operator/v1.SyslogLoggingDestinationParameters",
-		},
+			"github.com/openshift/api/operator/v1.ContainerLoggingDestinationParameters", "github.com/openshift/api/operator/v1.SyslogLoggingDestinationParameters"},
 	}
 }
 
@@ -54752,8 +54067,7 @@ func schema_openshift_api_operator_v1_Logo(ref common.ReferenceCallback) common.
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/operator/v1.Theme",
-		},
+			"github.com/openshift/api/operator/v1.Theme"},
 	}
 }
 
@@ -54780,8 +54094,7 @@ func schema_openshift_api_operator_v1_MTUMigration(ref common.ReferenceCallback)
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/operator/v1.MTUMigrationValues",
-		},
+			"github.com/openshift/api/operator/v1.MTUMigrationValues"},
 	}
 }
 
@@ -54860,8 +54173,7 @@ func schema_openshift_api_operator_v1_MachineConfiguration(ref common.ReferenceC
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/operator/v1.MachineConfigurationSpec", "github.com/openshift/api/operator/v1.MachineConfigurationStatus", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta",
-		},
+			"github.com/openshift/api/operator/v1.MachineConfigurationSpec", "github.com/openshift/api/operator/v1.MachineConfigurationStatus", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"},
 	}
 }
 
@@ -54912,8 +54224,7 @@ func schema_openshift_api_operator_v1_MachineConfigurationList(ref common.Refere
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/operator/v1.MachineConfiguration", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta",
-		},
+			"github.com/openshift/api/operator/v1.MachineConfiguration", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"},
 	}
 }
 
@@ -55012,8 +54323,7 @@ func schema_openshift_api_operator_v1_MachineConfigurationSpec(ref common.Refere
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/operator/v1.BootImageSkewEnforcementConfig", "github.com/openshift/api/operator/v1.IrreconcilableValidationOverrides", "github.com/openshift/api/operator/v1.ManagedBootImages", "github.com/openshift/api/operator/v1.NodeDisruptionPolicyConfig", "k8s.io/apimachinery/pkg/runtime.RawExtension",
-		},
+			"github.com/openshift/api/operator/v1.BootImageSkewEnforcementConfig", "github.com/openshift/api/operator/v1.IrreconcilableValidationOverrides", "github.com/openshift/api/operator/v1.ManagedBootImages", "github.com/openshift/api/operator/v1.NodeDisruptionPolicyConfig", "k8s.io/apimachinery/pkg/runtime.RawExtension"},
 	}
 }
 
@@ -55077,8 +54387,7 @@ func schema_openshift_api_operator_v1_MachineConfigurationStatus(ref common.Refe
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/operator/v1.BootImageSkewEnforcementStatus", "github.com/openshift/api/operator/v1.ManagedBootImages", "github.com/openshift/api/operator/v1.NodeDisruptionPolicyStatus", "k8s.io/apimachinery/pkg/apis/meta/v1.Condition",
-		},
+			"github.com/openshift/api/operator/v1.BootImageSkewEnforcementStatus", "github.com/openshift/api/operator/v1.ManagedBootImages", "github.com/openshift/api/operator/v1.NodeDisruptionPolicyStatus", "k8s.io/apimachinery/pkg/apis/meta/v1.Condition"},
 	}
 }
 
@@ -55117,8 +54426,7 @@ func schema_openshift_api_operator_v1_MachineManager(ref common.ReferenceCallbac
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/operator/v1.MachineManagerSelector",
-		},
+			"github.com/openshift/api/operator/v1.MachineManagerSelector"},
 	}
 }
 
@@ -55159,8 +54467,7 @@ func schema_openshift_api_operator_v1_MachineManagerSelector(ref common.Referenc
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/operator/v1.PartialSelector",
-		},
+			"github.com/openshift/api/operator/v1.PartialSelector"},
 	}
 }
 
@@ -55197,8 +54504,7 @@ func schema_openshift_api_operator_v1_ManagedBootImages(ref common.ReferenceCall
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/operator/v1.MachineManager",
-		},
+			"github.com/openshift/api/operator/v1.MachineManager"},
 	}
 }
 
@@ -55247,8 +54553,7 @@ func schema_openshift_api_operator_v1_MyOperatorResource(ref common.ReferenceCal
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/operator/v1.MyOperatorResourceSpec", "github.com/openshift/api/operator/v1.MyOperatorResourceStatus", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta",
-		},
+			"github.com/openshift/api/operator/v1.MyOperatorResourceSpec", "github.com/openshift/api/operator/v1.MyOperatorResourceStatus", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"},
 	}
 }
 
@@ -55297,8 +54602,7 @@ func schema_openshift_api_operator_v1_MyOperatorResourceSpec(ref common.Referenc
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/apimachinery/pkg/runtime.RawExtension",
-		},
+			"k8s.io/apimachinery/pkg/runtime.RawExtension"},
 	}
 }
 
@@ -55388,8 +54692,7 @@ func schema_openshift_api_operator_v1_MyOperatorResourceStatus(ref common.Refere
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/operator/v1.GenerationStatus", "github.com/openshift/api/operator/v1.OperatorCondition",
-		},
+			"github.com/openshift/api/operator/v1.GenerationStatus", "github.com/openshift/api/operator/v1.OperatorCondition"},
 	}
 }
 
@@ -55469,8 +54772,7 @@ func schema_openshift_api_operator_v1_Network(ref common.ReferenceCallback) comm
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/operator/v1.NetworkSpec", "github.com/openshift/api/operator/v1.NetworkStatus", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta",
-		},
+			"github.com/openshift/api/operator/v1.NetworkSpec", "github.com/openshift/api/operator/v1.NetworkStatus", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"},
 	}
 }
 
@@ -55520,8 +54822,7 @@ func schema_openshift_api_operator_v1_NetworkList(ref common.ReferenceCallback) 
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/operator/v1.Network", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta",
-		},
+			"github.com/openshift/api/operator/v1.Network", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"},
 	}
 }
 
@@ -55562,8 +54863,7 @@ func schema_openshift_api_operator_v1_NetworkMigration(ref common.ReferenceCallb
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/operator/v1.FeaturesMigration", "github.com/openshift/api/operator/v1.MTUMigration",
-		},
+			"github.com/openshift/api/operator/v1.FeaturesMigration", "github.com/openshift/api/operator/v1.MTUMigration"},
 	}
 }
 
@@ -55734,8 +55034,7 @@ func schema_openshift_api_operator_v1_NetworkSpec(ref common.ReferenceCallback) 
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/operator/v1.AdditionalNetworkDefinition", "github.com/openshift/api/operator/v1.AdditionalRoutingCapabilities", "github.com/openshift/api/operator/v1.ClusterNetworkEntry", "github.com/openshift/api/operator/v1.DefaultNetworkDefinition", "github.com/openshift/api/operator/v1.ExportNetworkFlows", "github.com/openshift/api/operator/v1.NetworkMigration", "github.com/openshift/api/operator/v1.ProxyConfig", "k8s.io/apimachinery/pkg/runtime.RawExtension",
-		},
+			"github.com/openshift/api/operator/v1.AdditionalNetworkDefinition", "github.com/openshift/api/operator/v1.AdditionalRoutingCapabilities", "github.com/openshift/api/operator/v1.ClusterNetworkEntry", "github.com/openshift/api/operator/v1.DefaultNetworkDefinition", "github.com/openshift/api/operator/v1.ExportNetworkFlows", "github.com/openshift/api/operator/v1.NetworkMigration", "github.com/openshift/api/operator/v1.ProxyConfig", "k8s.io/apimachinery/pkg/runtime.RawExtension"},
 	}
 }
 
@@ -55826,8 +55125,7 @@ func schema_openshift_api_operator_v1_NetworkStatus(ref common.ReferenceCallback
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/operator/v1.GenerationStatus", "github.com/openshift/api/operator/v1.OperatorCondition",
-		},
+			"github.com/openshift/api/operator/v1.GenerationStatus", "github.com/openshift/api/operator/v1.OperatorCondition"},
 	}
 }
 
@@ -55893,8 +55191,7 @@ func schema_openshift_api_operator_v1_NodeDisruptionPolicyClusterStatus(ref comm
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/operator/v1.NodeDisruptionPolicyStatusFile", "github.com/openshift/api/operator/v1.NodeDisruptionPolicyStatusSSHKey", "github.com/openshift/api/operator/v1.NodeDisruptionPolicyStatusUnit",
-		},
+			"github.com/openshift/api/operator/v1.NodeDisruptionPolicyStatusFile", "github.com/openshift/api/operator/v1.NodeDisruptionPolicyStatusSSHKey", "github.com/openshift/api/operator/v1.NodeDisruptionPolicyStatusUnit"},
 	}
 }
 
@@ -55960,8 +55257,7 @@ func schema_openshift_api_operator_v1_NodeDisruptionPolicyConfig(ref common.Refe
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/operator/v1.NodeDisruptionPolicySpecFile", "github.com/openshift/api/operator/v1.NodeDisruptionPolicySpecSSHKey", "github.com/openshift/api/operator/v1.NodeDisruptionPolicySpecUnit",
-		},
+			"github.com/openshift/api/operator/v1.NodeDisruptionPolicySpecFile", "github.com/openshift/api/operator/v1.NodeDisruptionPolicySpecSSHKey", "github.com/openshift/api/operator/v1.NodeDisruptionPolicySpecUnit"},
 	}
 }
 
@@ -56009,8 +55305,7 @@ func schema_openshift_api_operator_v1_NodeDisruptionPolicySpecAction(ref common.
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/operator/v1.ReloadService", "github.com/openshift/api/operator/v1.RestartService",
-		},
+			"github.com/openshift/api/operator/v1.ReloadService", "github.com/openshift/api/operator/v1.RestartService"},
 	}
 }
 
@@ -56053,8 +55348,7 @@ func schema_openshift_api_operator_v1_NodeDisruptionPolicySpecFile(ref common.Re
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/operator/v1.NodeDisruptionPolicySpecAction",
-		},
+			"github.com/openshift/api/operator/v1.NodeDisruptionPolicySpecAction"},
 	}
 }
 
@@ -56089,8 +55383,7 @@ func schema_openshift_api_operator_v1_NodeDisruptionPolicySpecSSHKey(ref common.
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/operator/v1.NodeDisruptionPolicySpecAction",
-		},
+			"github.com/openshift/api/operator/v1.NodeDisruptionPolicySpecAction"},
 	}
 }
 
@@ -56133,8 +55426,7 @@ func schema_openshift_api_operator_v1_NodeDisruptionPolicySpecUnit(ref common.Re
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/operator/v1.NodeDisruptionPolicySpecAction",
-		},
+			"github.com/openshift/api/operator/v1.NodeDisruptionPolicySpecAction"},
 	}
 }
 
@@ -56155,8 +55447,7 @@ func schema_openshift_api_operator_v1_NodeDisruptionPolicyStatus(ref common.Refe
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/operator/v1.NodeDisruptionPolicyClusterStatus",
-		},
+			"github.com/openshift/api/operator/v1.NodeDisruptionPolicyClusterStatus"},
 	}
 }
 
@@ -56204,8 +55495,7 @@ func schema_openshift_api_operator_v1_NodeDisruptionPolicyStatusAction(ref commo
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/operator/v1.ReloadService", "github.com/openshift/api/operator/v1.RestartService",
-		},
+			"github.com/openshift/api/operator/v1.ReloadService", "github.com/openshift/api/operator/v1.RestartService"},
 	}
 }
 
@@ -56248,8 +55538,7 @@ func schema_openshift_api_operator_v1_NodeDisruptionPolicyStatusFile(ref common.
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/operator/v1.NodeDisruptionPolicyStatusAction",
-		},
+			"github.com/openshift/api/operator/v1.NodeDisruptionPolicyStatusAction"},
 	}
 }
 
@@ -56284,8 +55573,7 @@ func schema_openshift_api_operator_v1_NodeDisruptionPolicyStatusSSHKey(ref commo
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/operator/v1.NodeDisruptionPolicyStatusAction",
-		},
+			"github.com/openshift/api/operator/v1.NodeDisruptionPolicyStatusAction"},
 	}
 }
 
@@ -56328,8 +55616,7 @@ func schema_openshift_api_operator_v1_NodeDisruptionPolicyStatusUnit(ref common.
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/operator/v1.NodeDisruptionPolicyStatusAction",
-		},
+			"github.com/openshift/api/operator/v1.NodeDisruptionPolicyStatusAction"},
 	}
 }
 
@@ -56369,8 +55656,7 @@ func schema_openshift_api_operator_v1_NodePlacement(ref common.ReferenceCallback
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.Toleration", "k8s.io/apimachinery/pkg/apis/meta/v1.LabelSelector",
-		},
+			"k8s.io/api/core/v1.Toleration", "k8s.io/apimachinery/pkg/apis/meta/v1.LabelSelector"},
 	}
 }
 
@@ -56482,8 +55768,7 @@ func schema_openshift_api_operator_v1_NodeStatus(ref common.ReferenceCallback) c
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/apimachinery/pkg/apis/meta/v1.Time",
-		},
+			"k8s.io/apimachinery/pkg/apis/meta/v1.Time"},
 	}
 }
 
@@ -56553,8 +55838,7 @@ func schema_openshift_api_operator_v1_OLM(ref common.ReferenceCallback) common.O
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/operator/v1.OLMSpec", "github.com/openshift/api/operator/v1.OLMStatus", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta",
-		},
+			"github.com/openshift/api/operator/v1.OLMSpec", "github.com/openshift/api/operator/v1.OLMStatus", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"},
 	}
 }
 
@@ -56605,8 +55889,7 @@ func schema_openshift_api_operator_v1_OLMList(ref common.ReferenceCallback) comm
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/operator/v1.OLM", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta",
-		},
+			"github.com/openshift/api/operator/v1.OLM", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"},
 	}
 }
 
@@ -56655,8 +55938,7 @@ func schema_openshift_api_operator_v1_OLMSpec(ref common.ReferenceCallback) comm
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/apimachinery/pkg/runtime.RawExtension",
-		},
+			"k8s.io/apimachinery/pkg/runtime.RawExtension"},
 	}
 }
 
@@ -56746,8 +56028,7 @@ func schema_openshift_api_operator_v1_OLMStatus(ref common.ReferenceCallback) co
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/operator/v1.GenerationStatus", "github.com/openshift/api/operator/v1.OperatorCondition",
-		},
+			"github.com/openshift/api/operator/v1.GenerationStatus", "github.com/openshift/api/operator/v1.OperatorCondition"},
 	}
 }
 
@@ -56841,8 +56122,7 @@ func schema_openshift_api_operator_v1_OVNKubernetesConfig(ref common.ReferenceCa
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/operator/v1.EgressIPConfig", "github.com/openshift/api/operator/v1.GatewayConfig", "github.com/openshift/api/operator/v1.HybridOverlayConfig", "github.com/openshift/api/operator/v1.IPsecConfig", "github.com/openshift/api/operator/v1.IPv4OVNKubernetesConfig", "github.com/openshift/api/operator/v1.IPv6OVNKubernetesConfig", "github.com/openshift/api/operator/v1.PolicyAuditConfig",
-		},
+			"github.com/openshift/api/operator/v1.EgressIPConfig", "github.com/openshift/api/operator/v1.GatewayConfig", "github.com/openshift/api/operator/v1.HybridOverlayConfig", "github.com/openshift/api/operator/v1.IPsecConfig", "github.com/openshift/api/operator/v1.IPv4OVNKubernetesConfig", "github.com/openshift/api/operator/v1.IPv6OVNKubernetesConfig", "github.com/openshift/api/operator/v1.PolicyAuditConfig"},
 	}
 }
 
@@ -56893,8 +56173,7 @@ func schema_openshift_api_operator_v1_OpenShiftAPIServer(ref common.ReferenceCal
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/operator/v1.OpenShiftAPIServerSpec", "github.com/openshift/api/operator/v1.OpenShiftAPIServerStatus", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta",
-		},
+			"github.com/openshift/api/operator/v1.OpenShiftAPIServerSpec", "github.com/openshift/api/operator/v1.OpenShiftAPIServerStatus", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"},
 	}
 }
 
@@ -56945,8 +56224,7 @@ func schema_openshift_api_operator_v1_OpenShiftAPIServerList(ref common.Referenc
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/operator/v1.OpenShiftAPIServer", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta",
-		},
+			"github.com/openshift/api/operator/v1.OpenShiftAPIServer", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"},
 	}
 }
 
@@ -56995,8 +56273,7 @@ func schema_openshift_api_operator_v1_OpenShiftAPIServerSpec(ref common.Referenc
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/apimachinery/pkg/runtime.RawExtension",
-		},
+			"k8s.io/apimachinery/pkg/runtime.RawExtension"},
 	}
 }
 
@@ -57086,8 +56363,7 @@ func schema_openshift_api_operator_v1_OpenShiftAPIServerStatus(ref common.Refere
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/operator/v1.GenerationStatus", "github.com/openshift/api/operator/v1.OperatorCondition",
-		},
+			"github.com/openshift/api/operator/v1.GenerationStatus", "github.com/openshift/api/operator/v1.OperatorCondition"},
 	}
 }
 
@@ -57136,8 +56412,7 @@ func schema_openshift_api_operator_v1_OpenShiftControllerManager(ref common.Refe
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/operator/v1.OpenShiftControllerManagerSpec", "github.com/openshift/api/operator/v1.OpenShiftControllerManagerStatus", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta",
-		},
+			"github.com/openshift/api/operator/v1.OpenShiftControllerManagerSpec", "github.com/openshift/api/operator/v1.OpenShiftControllerManagerStatus", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"},
 	}
 }
 
@@ -57188,8 +56463,7 @@ func schema_openshift_api_operator_v1_OpenShiftControllerManagerList(ref common.
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/operator/v1.OpenShiftControllerManager", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta",
-		},
+			"github.com/openshift/api/operator/v1.OpenShiftControllerManager", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"},
 	}
 }
 
@@ -57238,8 +56512,7 @@ func schema_openshift_api_operator_v1_OpenShiftControllerManagerSpec(ref common.
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/apimachinery/pkg/runtime.RawExtension",
-		},
+			"k8s.io/apimachinery/pkg/runtime.RawExtension"},
 	}
 }
 
@@ -57329,8 +56602,7 @@ func schema_openshift_api_operator_v1_OpenShiftControllerManagerStatus(ref commo
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/operator/v1.GenerationStatus", "github.com/openshift/api/operator/v1.OperatorCondition",
-		},
+			"github.com/openshift/api/operator/v1.GenerationStatus", "github.com/openshift/api/operator/v1.OperatorCondition"},
 	}
 }
 
@@ -57450,8 +56722,7 @@ func schema_openshift_api_operator_v1_OperatorCondition(ref common.ReferenceCall
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/apimachinery/pkg/apis/meta/v1.Time",
-		},
+			"k8s.io/apimachinery/pkg/apis/meta/v1.Time"},
 	}
 }
 
@@ -57501,8 +56772,7 @@ func schema_openshift_api_operator_v1_OperatorSpec(ref common.ReferenceCallback)
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/apimachinery/pkg/runtime.RawExtension",
-		},
+			"k8s.io/apimachinery/pkg/runtime.RawExtension"},
 	}
 }
 
@@ -57592,8 +56862,7 @@ func schema_openshift_api_operator_v1_OperatorStatus(ref common.ReferenceCallbac
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/operator/v1.GenerationStatus", "github.com/openshift/api/operator/v1.OperatorCondition",
-		},
+			"github.com/openshift/api/operator/v1.GenerationStatus", "github.com/openshift/api/operator/v1.OperatorCondition"},
 	}
 }
 
@@ -57615,8 +56884,7 @@ func schema_openshift_api_operator_v1_PartialSelector(ref common.ReferenceCallba
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/apimachinery/pkg/apis/meta/v1.LabelSelector",
-		},
+			"k8s.io/apimachinery/pkg/apis/meta/v1.LabelSelector"},
 	}
 }
 
@@ -57661,8 +56929,7 @@ func schema_openshift_api_operator_v1_Perspective(ref common.ReferenceCallback) 
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/operator/v1.PerspectiveVisibility", "github.com/openshift/api/operator/v1.PinnedResourceReference",
-		},
+			"github.com/openshift/api/operator/v1.PerspectiveVisibility", "github.com/openshift/api/operator/v1.PinnedResourceReference"},
 	}
 }
 
@@ -57704,8 +56971,7 @@ func schema_openshift_api_operator_v1_PerspectiveVisibility(ref common.Reference
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/operator/v1.ResourceAttributesAccessReview",
-		},
+			"github.com/openshift/api/operator/v1.ResourceAttributesAccessReview"},
 	}
 }
 
@@ -57901,8 +57167,7 @@ func schema_openshift_api_operator_v1_ProviderLoadBalancerParameters(ref common.
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/operator/v1.AWSLoadBalancerParameters", "github.com/openshift/api/operator/v1.GCPLoadBalancerParameters", "github.com/openshift/api/operator/v1.IBMLoadBalancerParameters", "github.com/openshift/api/operator/v1.OpenStackLoadBalancerParameters",
-		},
+			"github.com/openshift/api/operator/v1.AWSLoadBalancerParameters", "github.com/openshift/api/operator/v1.GCPLoadBalancerParameters", "github.com/openshift/api/operator/v1.IBMLoadBalancerParameters", "github.com/openshift/api/operator/v1.OpenStackLoadBalancerParameters"},
 	}
 }
 
@@ -58045,8 +57310,7 @@ func schema_openshift_api_operator_v1_ResourceAttributesAccessReview(ref common.
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/authorization/v1.ResourceAttributes",
-		},
+			"k8s.io/api/authorization/v1.ResourceAttributes"},
 	}
 }
 
@@ -58173,8 +57437,7 @@ func schema_openshift_api_operator_v1_Server(ref common.ReferenceCallback) commo
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/operator/v1.ForwardPlugin",
-		},
+			"github.com/openshift/api/operator/v1.ForwardPlugin"},
 	}
 }
 
@@ -58203,8 +57466,7 @@ func schema_openshift_api_operator_v1_ServiceAccountIssuerStatus(ref common.Refe
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/apimachinery/pkg/apis/meta/v1.Time",
-		},
+			"k8s.io/apimachinery/pkg/apis/meta/v1.Time"},
 	}
 }
 
@@ -58255,8 +57517,7 @@ func schema_openshift_api_operator_v1_ServiceCA(ref common.ReferenceCallback) co
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/operator/v1.ServiceCASpec", "github.com/openshift/api/operator/v1.ServiceCAStatus", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta",
-		},
+			"github.com/openshift/api/operator/v1.ServiceCASpec", "github.com/openshift/api/operator/v1.ServiceCAStatus", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"},
 	}
 }
 
@@ -58307,8 +57568,7 @@ func schema_openshift_api_operator_v1_ServiceCAList(ref common.ReferenceCallback
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/operator/v1.ServiceCA", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta",
-		},
+			"github.com/openshift/api/operator/v1.ServiceCA", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"},
 	}
 }
 
@@ -58357,8 +57617,7 @@ func schema_openshift_api_operator_v1_ServiceCASpec(ref common.ReferenceCallback
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/apimachinery/pkg/runtime.RawExtension",
-		},
+			"k8s.io/apimachinery/pkg/runtime.RawExtension"},
 	}
 }
 
@@ -58448,8 +57707,7 @@ func schema_openshift_api_operator_v1_ServiceCAStatus(ref common.ReferenceCallba
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/operator/v1.GenerationStatus", "github.com/openshift/api/operator/v1.OperatorCondition",
-		},
+			"github.com/openshift/api/operator/v1.GenerationStatus", "github.com/openshift/api/operator/v1.OperatorCondition"},
 	}
 }
 
@@ -58498,8 +57756,7 @@ func schema_openshift_api_operator_v1_ServiceCatalogAPIServer(ref common.Referen
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/operator/v1.ServiceCatalogAPIServerSpec", "github.com/openshift/api/operator/v1.ServiceCatalogAPIServerStatus", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta",
-		},
+			"github.com/openshift/api/operator/v1.ServiceCatalogAPIServerSpec", "github.com/openshift/api/operator/v1.ServiceCatalogAPIServerStatus", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"},
 	}
 }
 
@@ -58550,8 +57807,7 @@ func schema_openshift_api_operator_v1_ServiceCatalogAPIServerList(ref common.Ref
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/operator/v1.ServiceCatalogAPIServer", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta",
-		},
+			"github.com/openshift/api/operator/v1.ServiceCatalogAPIServer", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"},
 	}
 }
 
@@ -58600,8 +57856,7 @@ func schema_openshift_api_operator_v1_ServiceCatalogAPIServerSpec(ref common.Ref
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/apimachinery/pkg/runtime.RawExtension",
-		},
+			"k8s.io/apimachinery/pkg/runtime.RawExtension"},
 	}
 }
 
@@ -58691,8 +57946,7 @@ func schema_openshift_api_operator_v1_ServiceCatalogAPIServerStatus(ref common.R
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/operator/v1.GenerationStatus", "github.com/openshift/api/operator/v1.OperatorCondition",
-		},
+			"github.com/openshift/api/operator/v1.GenerationStatus", "github.com/openshift/api/operator/v1.OperatorCondition"},
 	}
 }
 
@@ -58741,8 +57995,7 @@ func schema_openshift_api_operator_v1_ServiceCatalogControllerManager(ref common
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/operator/v1.ServiceCatalogControllerManagerSpec", "github.com/openshift/api/operator/v1.ServiceCatalogControllerManagerStatus", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta",
-		},
+			"github.com/openshift/api/operator/v1.ServiceCatalogControllerManagerSpec", "github.com/openshift/api/operator/v1.ServiceCatalogControllerManagerStatus", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"},
 	}
 }
 
@@ -58793,8 +58046,7 @@ func schema_openshift_api_operator_v1_ServiceCatalogControllerManagerList(ref co
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/operator/v1.ServiceCatalogControllerManager", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta",
-		},
+			"github.com/openshift/api/operator/v1.ServiceCatalogControllerManager", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"},
 	}
 }
 
@@ -58843,8 +58095,7 @@ func schema_openshift_api_operator_v1_ServiceCatalogControllerManagerSpec(ref co
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/apimachinery/pkg/runtime.RawExtension",
-		},
+			"k8s.io/apimachinery/pkg/runtime.RawExtension"},
 	}
 }
 
@@ -58934,8 +58185,7 @@ func schema_openshift_api_operator_v1_ServiceCatalogControllerManagerStatus(ref 
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/operator/v1.GenerationStatus", "github.com/openshift/api/operator/v1.OperatorCondition",
-		},
+			"github.com/openshift/api/operator/v1.GenerationStatus", "github.com/openshift/api/operator/v1.OperatorCondition"},
 	}
 }
 
@@ -58977,8 +58227,7 @@ func schema_openshift_api_operator_v1_SimpleMacvlanConfig(ref common.ReferenceCa
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/operator/v1.IPAMConfig",
-		},
+			"github.com/openshift/api/operator/v1.IPAMConfig"},
 	}
 }
 
@@ -59065,8 +58314,7 @@ func schema_openshift_api_operator_v1_StaticIPAMConfig(ref common.ReferenceCallb
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/operator/v1.StaticIPAMAddresses", "github.com/openshift/api/operator/v1.StaticIPAMDNS", "github.com/openshift/api/operator/v1.StaticIPAMRoutes",
-		},
+			"github.com/openshift/api/operator/v1.StaticIPAMAddresses", "github.com/openshift/api/operator/v1.StaticIPAMDNS", "github.com/openshift/api/operator/v1.StaticIPAMRoutes"},
 	}
 }
 
@@ -59227,8 +58475,7 @@ func schema_openshift_api_operator_v1_StaticPodOperatorSpec(ref common.Reference
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/apimachinery/pkg/runtime.RawExtension",
-		},
+			"k8s.io/apimachinery/pkg/runtime.RawExtension"},
 	}
 }
 
@@ -59348,8 +58595,7 @@ func schema_openshift_api_operator_v1_StaticPodOperatorStatus(ref common.Referen
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/operator/v1.GenerationStatus", "github.com/openshift/api/operator/v1.NodeStatus", "github.com/openshift/api/operator/v1.OperatorCondition",
-		},
+			"github.com/openshift/api/operator/v1.GenerationStatus", "github.com/openshift/api/operator/v1.NodeStatus", "github.com/openshift/api/operator/v1.OperatorCondition"},
 	}
 }
 
@@ -59422,8 +58668,7 @@ func schema_openshift_api_operator_v1_Storage(ref common.ReferenceCallback) comm
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/operator/v1.StorageSpec", "github.com/openshift/api/operator/v1.StorageStatus", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta",
-		},
+			"github.com/openshift/api/operator/v1.StorageSpec", "github.com/openshift/api/operator/v1.StorageStatus", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"},
 	}
 }
 
@@ -59473,8 +58718,7 @@ func schema_openshift_api_operator_v1_StorageList(ref common.ReferenceCallback) 
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/operator/v1.Storage", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta",
-		},
+			"github.com/openshift/api/operator/v1.Storage", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"},
 	}
 }
 
@@ -59532,8 +58776,7 @@ func schema_openshift_api_operator_v1_StorageSpec(ref common.ReferenceCallback) 
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/apimachinery/pkg/runtime.RawExtension",
-		},
+			"k8s.io/apimachinery/pkg/runtime.RawExtension"},
 	}
 }
 
@@ -59624,8 +58867,7 @@ func schema_openshift_api_operator_v1_StorageStatus(ref common.ReferenceCallback
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/operator/v1.GenerationStatus", "github.com/openshift/api/operator/v1.OperatorCondition",
-		},
+			"github.com/openshift/api/operator/v1.GenerationStatus", "github.com/openshift/api/operator/v1.OperatorCondition"},
 	}
 }
 
@@ -59701,8 +58943,7 @@ func schema_openshift_api_operator_v1_Theme(ref common.ReferenceCallback) common
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/operator/v1.FileReferenceSource",
-		},
+			"github.com/openshift/api/operator/v1.FileReferenceSource"},
 	}
 }
 
@@ -59789,8 +59030,7 @@ func schema_openshift_api_operator_v1_UpstreamResolvers(ref common.ReferenceCall
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/operator/v1.DNSTransportConfig", "github.com/openshift/api/operator/v1.Upstream",
-		},
+			"github.com/openshift/api/operator/v1.DNSTransportConfig", "github.com/openshift/api/operator/v1.Upstream"},
 	}
 }
 
@@ -59932,8 +59172,7 @@ func schema_openshift_api_operator_v1alpha1_ClusterVersionOperator(ref common.Re
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/operator/v1alpha1.ClusterVersionOperatorSpec", "github.com/openshift/api/operator/v1alpha1.ClusterVersionOperatorStatus", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta",
-		},
+			"github.com/openshift/api/operator/v1alpha1.ClusterVersionOperatorSpec", "github.com/openshift/api/operator/v1alpha1.ClusterVersionOperatorStatus", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"},
 	}
 }
 
@@ -59984,8 +59223,7 @@ func schema_openshift_api_operator_v1alpha1_ClusterVersionOperatorList(ref commo
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/operator/v1alpha1.ClusterVersionOperator", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta",
-		},
+			"github.com/openshift/api/operator/v1alpha1.ClusterVersionOperator", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"},
 	}
 }
 
@@ -60115,8 +59353,7 @@ func schema_openshift_api_operator_v1alpha1_EtcdBackup(ref common.ReferenceCallb
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/operator/v1alpha1.EtcdBackupSpec", "github.com/openshift/api/operator/v1alpha1.EtcdBackupStatus", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta",
-		},
+			"github.com/openshift/api/operator/v1alpha1.EtcdBackupSpec", "github.com/openshift/api/operator/v1alpha1.EtcdBackupStatus", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"},
 	}
 }
 
@@ -60165,8 +59402,7 @@ func schema_openshift_api_operator_v1alpha1_EtcdBackupList(ref common.ReferenceC
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/operator/v1alpha1.EtcdBackup", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta",
-		},
+			"github.com/openshift/api/operator/v1alpha1.EtcdBackup", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"},
 	}
 }
 
@@ -60228,8 +59464,7 @@ func schema_openshift_api_operator_v1alpha1_EtcdBackupStatus(ref common.Referenc
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/operator/v1alpha1.BackupJobReference", "k8s.io/apimachinery/pkg/apis/meta/v1.Condition",
-		},
+			"github.com/openshift/api/operator/v1alpha1.BackupJobReference", "k8s.io/apimachinery/pkg/apis/meta/v1.Condition"},
 	}
 }
 
@@ -60340,8 +59575,7 @@ func schema_openshift_api_operator_v1alpha1_GenericOperatorConfig(ref common.Ref
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/config/v1.HTTPServingInfo", "github.com/openshift/api/config/v1.LeaderElection", "github.com/openshift/api/operator/v1alpha1.DelegatedAuthentication", "github.com/openshift/api/operator/v1alpha1.DelegatedAuthorization",
-		},
+			"github.com/openshift/api/config/v1.HTTPServingInfo", "github.com/openshift/api/config/v1.LeaderElection", "github.com/openshift/api/operator/v1alpha1.DelegatedAuthentication", "github.com/openshift/api/operator/v1alpha1.DelegatedAuthorization"},
 	}
 }
 
@@ -60385,8 +59619,7 @@ func schema_openshift_api_operator_v1alpha1_ImageContentSourcePolicy(ref common.
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/operator/v1alpha1.ImageContentSourcePolicySpec", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta",
-		},
+			"github.com/openshift/api/operator/v1alpha1.ImageContentSourcePolicySpec", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"},
 	}
 }
 
@@ -60436,8 +59669,7 @@ func schema_openshift_api_operator_v1alpha1_ImageContentSourcePolicyList(ref com
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/operator/v1alpha1.ImageContentSourcePolicy", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta",
-		},
+			"github.com/openshift/api/operator/v1alpha1.ImageContentSourcePolicy", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"},
 	}
 }
 
@@ -60466,8 +59698,7 @@ func schema_openshift_api_operator_v1alpha1_ImageContentSourcePolicySpec(ref com
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/operator/v1alpha1.RepositoryDigestMirrors",
-		},
+			"github.com/openshift/api/operator/v1alpha1.RepositoryDigestMirrors"},
 	}
 }
 
@@ -60609,8 +59840,7 @@ func schema_openshift_api_operator_v1alpha1_OLM(ref common.ReferenceCallback) co
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/operator/v1alpha1.OLMSpec", "github.com/openshift/api/operator/v1alpha1.OLMStatus", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta",
-		},
+			"github.com/openshift/api/operator/v1alpha1.OLMSpec", "github.com/openshift/api/operator/v1alpha1.OLMStatus", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"},
 	}
 }
 
@@ -60661,8 +59891,7 @@ func schema_openshift_api_operator_v1alpha1_OLMList(ref common.ReferenceCallback
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/operator/v1alpha1.OLM", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta",
-		},
+			"github.com/openshift/api/operator/v1alpha1.OLM", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"},
 	}
 }
 
@@ -60711,8 +59940,7 @@ func schema_openshift_api_operator_v1alpha1_OLMSpec(ref common.ReferenceCallback
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/apimachinery/pkg/runtime.RawExtension",
-		},
+			"k8s.io/apimachinery/pkg/runtime.RawExtension"},
 	}
 }
 
@@ -60802,8 +60030,7 @@ func schema_openshift_api_operator_v1alpha1_OLMStatus(ref common.ReferenceCallba
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/operator/v1.GenerationStatus", "github.com/openshift/api/operator/v1.OperatorCondition",
-		},
+			"github.com/openshift/api/operator/v1.GenerationStatus", "github.com/openshift/api/operator/v1.OperatorCondition"},
 	}
 }
 
@@ -60850,8 +60077,7 @@ func schema_openshift_api_operator_v1alpha1_OperatorCondition(ref common.Referen
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/apimachinery/pkg/apis/meta/v1.Time",
-		},
+			"k8s.io/apimachinery/pkg/apis/meta/v1.Time"},
 	}
 }
 
@@ -60906,8 +60132,7 @@ func schema_openshift_api_operator_v1alpha1_OperatorSpec(ref common.ReferenceCal
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/operator/v1alpha1.LoggingConfig",
-		},
+			"github.com/openshift/api/operator/v1alpha1.LoggingConfig"},
 	}
 }
 
@@ -60969,8 +60194,7 @@ func schema_openshift_api_operator_v1alpha1_OperatorStatus(ref common.ReferenceC
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/operator/v1alpha1.OperatorCondition", "github.com/openshift/api/operator/v1alpha1.VersionAvailability",
-		},
+			"github.com/openshift/api/operator/v1alpha1.OperatorCondition", "github.com/openshift/api/operator/v1alpha1.VersionAvailability"},
 	}
 }
 
@@ -61092,8 +60316,7 @@ func schema_openshift_api_operator_v1alpha1_StaticPodOperatorStatus(ref common.R
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/operator/v1alpha1.NodeStatus", "github.com/openshift/api/operator/v1alpha1.OperatorCondition", "github.com/openshift/api/operator/v1alpha1.VersionAvailability",
-		},
+			"github.com/openshift/api/operator/v1alpha1.NodeStatus", "github.com/openshift/api/operator/v1alpha1.OperatorCondition", "github.com/openshift/api/operator/v1alpha1.VersionAvailability"},
 	}
 }
 
@@ -61162,8 +60385,7 @@ func schema_openshift_api_operator_v1alpha1_VersionAvailability(ref common.Refer
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/operator/v1alpha1.GenerationHistory",
-		},
+			"github.com/openshift/api/operator/v1alpha1.GenerationHistory"},
 	}
 }
 
@@ -61213,8 +60435,7 @@ func schema_openshift_api_operatorcontrolplane_v1alpha1_LogEntry(ref common.Refe
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/apimachinery/pkg/apis/meta/v1.Duration", "k8s.io/apimachinery/pkg/apis/meta/v1.Time",
-		},
+			"k8s.io/apimachinery/pkg/apis/meta/v1.Duration", "k8s.io/apimachinery/pkg/apis/meta/v1.Time"},
 	}
 }
 
@@ -61277,8 +60498,7 @@ func schema_openshift_api_operatorcontrolplane_v1alpha1_OutageEntry(ref common.R
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/operatorcontrolplane/v1alpha1.LogEntry", "k8s.io/apimachinery/pkg/apis/meta/v1.Time",
-		},
+			"github.com/openshift/api/operatorcontrolplane/v1alpha1.LogEntry", "k8s.io/apimachinery/pkg/apis/meta/v1.Time"},
 	}
 }
 
@@ -61329,8 +60549,7 @@ func schema_openshift_api_operatorcontrolplane_v1alpha1_PodNetworkConnectivityCh
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/operatorcontrolplane/v1alpha1.PodNetworkConnectivityCheckSpec", "github.com/openshift/api/operatorcontrolplane/v1alpha1.PodNetworkConnectivityCheckStatus", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta",
-		},
+			"github.com/openshift/api/operatorcontrolplane/v1alpha1.PodNetworkConnectivityCheckSpec", "github.com/openshift/api/operatorcontrolplane/v1alpha1.PodNetworkConnectivityCheckStatus", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"},
 	}
 }
 
@@ -61382,8 +60601,7 @@ func schema_openshift_api_operatorcontrolplane_v1alpha1_PodNetworkConnectivityCh
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/apimachinery/pkg/apis/meta/v1.Time",
-		},
+			"k8s.io/apimachinery/pkg/apis/meta/v1.Time"},
 	}
 }
 
@@ -61434,8 +60652,7 @@ func schema_openshift_api_operatorcontrolplane_v1alpha1_PodNetworkConnectivityCh
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/operatorcontrolplane/v1alpha1.PodNetworkConnectivityCheck", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta",
-		},
+			"github.com/openshift/api/operatorcontrolplane/v1alpha1.PodNetworkConnectivityCheck", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"},
 	}
 }
 
@@ -61473,8 +60690,7 @@ func schema_openshift_api_operatorcontrolplane_v1alpha1_PodNetworkConnectivityCh
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/config/v1.SecretNameReference",
-		},
+			"github.com/openshift/api/config/v1.SecretNameReference"},
 	}
 }
 
@@ -61550,8 +60766,7 @@ func schema_openshift_api_operatorcontrolplane_v1alpha1_PodNetworkConnectivityCh
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/operatorcontrolplane/v1alpha1.LogEntry", "github.com/openshift/api/operatorcontrolplane/v1alpha1.OutageEntry", "github.com/openshift/api/operatorcontrolplane/v1alpha1.PodNetworkConnectivityCheckCondition",
-		},
+			"github.com/openshift/api/operatorcontrolplane/v1alpha1.LogEntry", "github.com/openshift/api/operatorcontrolplane/v1alpha1.OutageEntry", "github.com/openshift/api/operatorcontrolplane/v1alpha1.PodNetworkConnectivityCheckCondition"},
 	}
 }
 
@@ -61602,8 +60817,7 @@ func schema_openshift_api_operatoringress_v1_DNSRecord(ref common.ReferenceCallb
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/operatoringress/v1.DNSRecordSpec", "github.com/openshift/api/operatoringress/v1.DNSRecordStatus", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta",
-		},
+			"github.com/openshift/api/operatoringress/v1.DNSRecordSpec", "github.com/openshift/api/operatoringress/v1.DNSRecordStatus", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"},
 	}
 }
 
@@ -61653,8 +60867,7 @@ func schema_openshift_api_operatoringress_v1_DNSRecordList(ref common.ReferenceC
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/operatoringress/v1.DNSRecord", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta",
-		},
+			"github.com/openshift/api/operatoringress/v1.DNSRecord", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"},
 	}
 }
 
@@ -61751,8 +60964,7 @@ func schema_openshift_api_operatoringress_v1_DNSRecordStatus(ref common.Referenc
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/operatoringress/v1.DNSZoneStatus",
-		},
+			"github.com/openshift/api/operatoringress/v1.DNSZoneStatus"},
 	}
 }
 
@@ -61799,8 +61011,7 @@ func schema_openshift_api_operatoringress_v1_DNSZoneCondition(ref common.Referen
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/apimachinery/pkg/apis/meta/v1.Time",
-		},
+			"k8s.io/apimachinery/pkg/apis/meta/v1.Time"},
 	}
 }
 
@@ -61837,8 +61048,7 @@ func schema_openshift_api_operatoringress_v1_DNSZoneStatus(ref common.ReferenceC
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/config/v1.DNSZone", "github.com/openshift/api/operatoringress/v1.DNSZoneCondition",
-		},
+			"github.com/openshift/api/config/v1.DNSZone", "github.com/openshift/api/operatoringress/v1.DNSZoneCondition"},
 	}
 }
 
@@ -62042,8 +61252,7 @@ func schema_openshift_api_osin_v1_GitHubIdentityProvider(ref common.ReferenceCal
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/config/v1.StringSource",
-		},
+			"github.com/openshift/api/config/v1.StringSource"},
 	}
 }
 
@@ -62110,8 +61319,7 @@ func schema_openshift_api_osin_v1_GitLabIdentityProvider(ref common.ReferenceCal
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/config/v1.StringSource",
-		},
+			"github.com/openshift/api/config/v1.StringSource"},
 	}
 }
 
@@ -62163,8 +61371,7 @@ func schema_openshift_api_osin_v1_GoogleIdentityProvider(ref common.ReferenceCal
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/config/v1.StringSource",
-		},
+			"github.com/openshift/api/config/v1.StringSource"},
 	}
 }
 
@@ -62284,8 +61491,7 @@ func schema_openshift_api_osin_v1_IdentityProvider(ref common.ReferenceCallback)
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/apimachinery/pkg/runtime.RawExtension",
-		},
+			"k8s.io/apimachinery/pkg/runtime.RawExtension"},
 	}
 }
 
@@ -62510,8 +61716,7 @@ func schema_openshift_api_osin_v1_LDAPPasswordIdentityProvider(ref common.Refere
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/config/v1.StringSource", "github.com/openshift/api/osin/v1.LDAPAttributeMapping",
-		},
+			"github.com/openshift/api/config/v1.StringSource", "github.com/openshift/api/osin/v1.LDAPAttributeMapping"},
 	}
 }
 
@@ -62614,8 +61819,7 @@ func schema_openshift_api_osin_v1_OAuthConfig(ref common.ReferenceCallback) comm
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/osin/v1.GrantConfig", "github.com/openshift/api/osin/v1.IdentityProvider", "github.com/openshift/api/osin/v1.OAuthTemplates", "github.com/openshift/api/osin/v1.SessionConfig", "github.com/openshift/api/osin/v1.TokenConfig",
-		},
+			"github.com/openshift/api/osin/v1.GrantConfig", "github.com/openshift/api/osin/v1.IdentityProvider", "github.com/openshift/api/osin/v1.OAuthTemplates", "github.com/openshift/api/osin/v1.SessionConfig", "github.com/openshift/api/osin/v1.TokenConfig"},
 	}
 }
 
@@ -62839,8 +62043,7 @@ func schema_openshift_api_osin_v1_OpenIDIdentityProvider(ref common.ReferenceCal
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/config/v1.StringSource", "github.com/openshift/api/osin/v1.OpenIDClaims", "github.com/openshift/api/osin/v1.OpenIDURLs",
-		},
+			"github.com/openshift/api/config/v1.StringSource", "github.com/openshift/api/osin/v1.OpenIDClaims", "github.com/openshift/api/osin/v1.OpenIDURLs"},
 	}
 }
 
@@ -62964,8 +62167,7 @@ func schema_openshift_api_osin_v1_OsinServerConfig(ref common.ReferenceCallback)
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/config/v1.AdmissionConfig", "github.com/openshift/api/config/v1.AuditConfig", "github.com/openshift/api/config/v1.EtcdStorageConfig", "github.com/openshift/api/config/v1.HTTPServingInfo", "github.com/openshift/api/config/v1.KubeClientConfig", "github.com/openshift/api/osin/v1.OAuthConfig",
-		},
+			"github.com/openshift/api/config/v1.AdmissionConfig", "github.com/openshift/api/config/v1.AuditConfig", "github.com/openshift/api/config/v1.EtcdStorageConfig", "github.com/openshift/api/config/v1.HTTPServingInfo", "github.com/openshift/api/config/v1.KubeClientConfig", "github.com/openshift/api/osin/v1.OAuthConfig"},
 	}
 }
 
@@ -63204,8 +62406,7 @@ func schema_openshift_api_osin_v1_SessionSecrets(ref common.ReferenceCallback) c
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/osin/v1.SessionSecret",
-		},
+			"github.com/openshift/api/osin/v1.SessionSecret"},
 	}
 }
 
@@ -63247,8 +62448,7 @@ func schema_openshift_api_osin_v1_TokenConfig(ref common.ReferenceCallback) comm
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/apimachinery/pkg/apis/meta/v1.Duration",
-		},
+			"k8s.io/apimachinery/pkg/apis/meta/v1.Duration"},
 	}
 }
 
@@ -63298,8 +62498,7 @@ func schema_openshift_api_project_v1_Project(ref common.ReferenceCallback) commo
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/project/v1.ProjectSpec", "github.com/openshift/api/project/v1.ProjectStatus", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta",
-		},
+			"github.com/openshift/api/project/v1.ProjectSpec", "github.com/openshift/api/project/v1.ProjectStatus", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"},
 	}
 }
 
@@ -63350,8 +62549,7 @@ func schema_openshift_api_project_v1_ProjectList(ref common.ReferenceCallback) c
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/project/v1.Project", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta",
-		},
+			"github.com/openshift/api/project/v1.Project", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"},
 	}
 }
 
@@ -63401,8 +62599,7 @@ func schema_openshift_api_project_v1_ProjectRequest(ref common.ReferenceCallback
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta",
-		},
+			"k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"},
 	}
 }
 
@@ -63473,8 +62670,7 @@ func schema_openshift_api_project_v1_ProjectStatus(ref common.ReferenceCallback)
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.NamespaceCondition",
-		},
+			"k8s.io/api/core/v1.NamespaceCondition"},
 	}
 }
 
@@ -63525,8 +62721,7 @@ func schema_openshift_api_quota_v1_AppliedClusterResourceQuota(ref common.Refere
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/quota/v1.ClusterResourceQuotaSpec", "github.com/openshift/api/quota/v1.ClusterResourceQuotaStatus", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta",
-		},
+			"github.com/openshift/api/quota/v1.ClusterResourceQuotaSpec", "github.com/openshift/api/quota/v1.ClusterResourceQuotaStatus", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"},
 	}
 }
 
@@ -63577,8 +62772,7 @@ func schema_openshift_api_quota_v1_AppliedClusterResourceQuotaList(ref common.Re
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/quota/v1.AppliedClusterResourceQuota", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta",
-		},
+			"github.com/openshift/api/quota/v1.AppliedClusterResourceQuota", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"},
 	}
 }
 
@@ -63629,8 +62823,7 @@ func schema_openshift_api_quota_v1_ClusterResourceQuota(ref common.ReferenceCall
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/quota/v1.ClusterResourceQuotaSpec", "github.com/openshift/api/quota/v1.ClusterResourceQuotaStatus", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta",
-		},
+			"github.com/openshift/api/quota/v1.ClusterResourceQuotaSpec", "github.com/openshift/api/quota/v1.ClusterResourceQuotaStatus", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"},
 	}
 }
 
@@ -63681,8 +62874,7 @@ func schema_openshift_api_quota_v1_ClusterResourceQuotaList(ref common.Reference
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/quota/v1.ClusterResourceQuota", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta",
-		},
+			"github.com/openshift/api/quota/v1.ClusterResourceQuota", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"},
 	}
 }
 
@@ -63719,8 +62911,7 @@ func schema_openshift_api_quota_v1_ClusterResourceQuotaSelector(ref common.Refer
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/apimachinery/pkg/apis/meta/v1.LabelSelector",
-		},
+			"k8s.io/apimachinery/pkg/apis/meta/v1.LabelSelector"},
 	}
 }
 
@@ -63750,8 +62941,7 @@ func schema_openshift_api_quota_v1_ClusterResourceQuotaSpec(ref common.Reference
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/quota/v1.ClusterResourceQuotaSelector", "k8s.io/api/core/v1.ResourceQuotaSpec",
-		},
+			"github.com/openshift/api/quota/v1.ClusterResourceQuotaSelector", "k8s.io/api/core/v1.ResourceQuotaSpec"},
 	}
 }
 
@@ -63788,8 +62978,7 @@ func schema_openshift_api_quota_v1_ClusterResourceQuotaStatus(ref common.Referen
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/quota/v1.ResourceQuotaStatusByNamespace", "k8s.io/api/core/v1.ResourceQuotaStatus",
-		},
+			"github.com/openshift/api/quota/v1.ResourceQuotaStatusByNamespace", "k8s.io/api/core/v1.ResourceQuotaStatus"},
 	}
 }
 
@@ -63820,8 +63009,7 @@ func schema_openshift_api_quota_v1_ResourceQuotaStatusByNamespace(ref common.Ref
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.ResourceQuotaStatus",
-		},
+			"k8s.io/api/core/v1.ResourceQuotaStatus"},
 	}
 }
 
@@ -63897,8 +63085,7 @@ func schema_openshift_api_route_v1_Route(ref common.ReferenceCallback) common.Op
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/route/v1.RouteSpec", "github.com/openshift/api/route/v1.RouteStatus", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta",
-		},
+			"github.com/openshift/api/route/v1.RouteSpec", "github.com/openshift/api/route/v1.RouteStatus", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"},
 	}
 }
 
@@ -63929,8 +63116,7 @@ func schema_openshift_api_route_v1_RouteHTTPHeader(ref common.ReferenceCallback)
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/route/v1.RouteHTTPHeaderActionUnion",
-		},
+			"github.com/openshift/api/route/v1.RouteHTTPHeaderActionUnion"},
 	}
 }
 
@@ -63972,8 +63158,7 @@ func schema_openshift_api_route_v1_RouteHTTPHeaderActionUnion(ref common.Referen
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/route/v1.RouteSetHTTPHeader",
-		},
+			"github.com/openshift/api/route/v1.RouteSetHTTPHeader"},
 	}
 }
 
@@ -64032,8 +63217,7 @@ func schema_openshift_api_route_v1_RouteHTTPHeaderActions(ref common.ReferenceCa
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/route/v1.RouteHTTPHeader",
-		},
+			"github.com/openshift/api/route/v1.RouteHTTPHeader"},
 	}
 }
 
@@ -64055,8 +63239,7 @@ func schema_openshift_api_route_v1_RouteHTTPHeaders(ref common.ReferenceCallback
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/route/v1.RouteHTTPHeaderActions",
-		},
+			"github.com/openshift/api/route/v1.RouteHTTPHeaderActions"},
 	}
 }
 
@@ -64121,8 +63304,7 @@ func schema_openshift_api_route_v1_RouteIngress(ref common.ReferenceCallback) co
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/route/v1.RouteIngressCondition",
-		},
+			"github.com/openshift/api/route/v1.RouteIngressCondition"},
 	}
 }
 
@@ -64174,8 +63356,7 @@ func schema_openshift_api_route_v1_RouteIngressCondition(ref common.ReferenceCal
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/apimachinery/pkg/apis/meta/v1.Time",
-		},
+			"k8s.io/apimachinery/pkg/apis/meta/v1.Time"},
 	}
 }
 
@@ -64226,8 +63407,7 @@ func schema_openshift_api_route_v1_RouteList(ref common.ReferenceCallback) commo
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/route/v1.Route", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta",
-		},
+			"github.com/openshift/api/route/v1.Route", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"},
 	}
 }
 
@@ -64249,8 +63429,7 @@ func schema_openshift_api_route_v1_RoutePort(ref common.ReferenceCallback) commo
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/apimachinery/pkg/util/intstr.IntOrString",
-		},
+			"k8s.io/apimachinery/pkg/util/intstr.IntOrString"},
 	}
 }
 
@@ -64364,8 +63543,7 @@ func schema_openshift_api_route_v1_RouteSpec(ref common.ReferenceCallback) commo
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/route/v1.RouteHTTPHeaders", "github.com/openshift/api/route/v1.RoutePort", "github.com/openshift/api/route/v1.RouteTargetReference", "github.com/openshift/api/route/v1.TLSConfig",
-		},
+			"github.com/openshift/api/route/v1.RouteHTTPHeaders", "github.com/openshift/api/route/v1.RoutePort", "github.com/openshift/api/route/v1.RouteTargetReference", "github.com/openshift/api/route/v1.TLSConfig"},
 	}
 }
 
@@ -64399,8 +63577,7 @@ func schema_openshift_api_route_v1_RouteStatus(ref common.ReferenceCallback) com
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/route/v1.RouteIngress",
-		},
+			"github.com/openshift/api/route/v1.RouteIngress"},
 	}
 }
 
@@ -64532,8 +63709,7 @@ func schema_openshift_api_route_v1_TLSConfig(ref common.ReferenceCallback) commo
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/route/v1.LocalObjectReference",
-		},
+			"github.com/openshift/api/route/v1.LocalObjectReference"},
 	}
 }
 
@@ -64582,8 +63758,7 @@ func schema_openshift_api_samples_v1_Config(ref common.ReferenceCallback) common
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/samples/v1.ConfigSpec", "github.com/openshift/api/samples/v1.ConfigStatus", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta",
-		},
+			"github.com/openshift/api/samples/v1.ConfigSpec", "github.com/openshift/api/samples/v1.ConfigStatus", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"},
 	}
 }
 
@@ -64641,8 +63816,7 @@ func schema_openshift_api_samples_v1_ConfigCondition(ref common.ReferenceCallbac
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/apimachinery/pkg/apis/meta/v1.Time",
-		},
+			"k8s.io/apimachinery/pkg/apis/meta/v1.Time"},
 	}
 }
 
@@ -64692,8 +63866,7 @@ func schema_openshift_api_samples_v1_ConfigList(ref common.ReferenceCallback) co
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/samples/v1.Config", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta",
-		},
+			"github.com/openshift/api/samples/v1.Config", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"},
 	}
 }
 
@@ -64922,8 +64095,7 @@ func schema_openshift_api_samples_v1_ConfigStatus(ref common.ReferenceCallback) 
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/samples/v1.ConfigCondition",
-		},
+			"github.com/openshift/api/samples/v1.ConfigCondition"},
 	}
 }
 
@@ -64986,8 +64158,7 @@ func schema_openshift_api_security_v1_FSGroupStrategyOptions(ref common.Referenc
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/security/v1.IDRange",
-		},
+			"github.com/openshift/api/security/v1.IDRange"},
 	}
 }
 
@@ -65065,8 +64236,7 @@ func schema_openshift_api_security_v1_PodSecurityPolicyReview(ref common.Referen
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/security/v1.PodSecurityPolicyReviewSpec", "github.com/openshift/api/security/v1.PodSecurityPolicyReviewStatus", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta",
-		},
+			"github.com/openshift/api/security/v1.PodSecurityPolicyReviewSpec", "github.com/openshift/api/security/v1.PodSecurityPolicyReviewStatus", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"},
 	}
 }
 
@@ -65104,8 +64274,7 @@ func schema_openshift_api_security_v1_PodSecurityPolicyReviewSpec(ref common.Ref
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.PodTemplateSpec",
-		},
+			"k8s.io/api/core/v1.PodTemplateSpec"},
 	}
 }
 
@@ -65134,8 +64303,7 @@ func schema_openshift_api_security_v1_PodSecurityPolicyReviewStatus(ref common.R
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/security/v1.ServiceAccountPodSecurityPolicyReviewStatus",
-		},
+			"github.com/openshift/api/security/v1.ServiceAccountPodSecurityPolicyReviewStatus"},
 	}
 }
 
@@ -65186,8 +64354,7 @@ func schema_openshift_api_security_v1_PodSecurityPolicySelfSubjectReview(ref com
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/security/v1.PodSecurityPolicySelfSubjectReviewSpec", "github.com/openshift/api/security/v1.PodSecurityPolicySubjectReviewStatus", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta",
-		},
+			"github.com/openshift/api/security/v1.PodSecurityPolicySelfSubjectReviewSpec", "github.com/openshift/api/security/v1.PodSecurityPolicySubjectReviewStatus", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"},
 	}
 }
 
@@ -65210,8 +64377,7 @@ func schema_openshift_api_security_v1_PodSecurityPolicySelfSubjectReviewSpec(ref
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.PodTemplateSpec",
-		},
+			"k8s.io/api/core/v1.PodTemplateSpec"},
 	}
 }
 
@@ -65262,8 +64428,7 @@ func schema_openshift_api_security_v1_PodSecurityPolicySubjectReview(ref common.
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/security/v1.PodSecurityPolicySubjectReviewSpec", "github.com/openshift/api/security/v1.PodSecurityPolicySubjectReviewStatus", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta",
-		},
+			"github.com/openshift/api/security/v1.PodSecurityPolicySubjectReviewSpec", "github.com/openshift/api/security/v1.PodSecurityPolicySubjectReviewStatus", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"},
 	}
 }
 
@@ -65308,8 +64473,7 @@ func schema_openshift_api_security_v1_PodSecurityPolicySubjectReviewSpec(ref com
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.PodTemplateSpec",
-		},
+			"k8s.io/api/core/v1.PodTemplateSpec"},
 	}
 }
 
@@ -65344,8 +64508,7 @@ func schema_openshift_api_security_v1_PodSecurityPolicySubjectReviewStatus(ref c
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.ObjectReference", "k8s.io/api/core/v1.PodTemplateSpec",
-		},
+			"k8s.io/api/core/v1.ObjectReference", "k8s.io/api/core/v1.PodTemplateSpec"},
 	}
 }
 
@@ -65397,8 +64560,7 @@ func schema_openshift_api_security_v1_RangeAllocation(ref common.ReferenceCallba
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta",
-		},
+			"k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"},
 	}
 }
 
@@ -65449,8 +64611,7 @@ func schema_openshift_api_security_v1_RangeAllocationList(ref common.ReferenceCa
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/security/v1.RangeAllocation", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta",
-		},
+			"github.com/openshift/api/security/v1.RangeAllocation", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"},
 	}
 }
 
@@ -65519,8 +64680,7 @@ func schema_openshift_api_security_v1_SELinuxContextStrategyOptions(ref common.R
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.SELinuxOptions",
-		},
+			"k8s.io/api/core/v1.SELinuxOptions"},
 	}
 }
 
@@ -65869,8 +65029,7 @@ func schema_openshift_api_security_v1_SecurityContextConstraints(ref common.Refe
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/security/v1.AllowedFlexVolume", "github.com/openshift/api/security/v1.FSGroupStrategyOptions", "github.com/openshift/api/security/v1.RunAsUserStrategyOptions", "github.com/openshift/api/security/v1.SELinuxContextStrategyOptions", "github.com/openshift/api/security/v1.SupplementalGroupsStrategyOptions", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta",
-		},
+			"github.com/openshift/api/security/v1.AllowedFlexVolume", "github.com/openshift/api/security/v1.FSGroupStrategyOptions", "github.com/openshift/api/security/v1.RunAsUserStrategyOptions", "github.com/openshift/api/security/v1.SELinuxContextStrategyOptions", "github.com/openshift/api/security/v1.SupplementalGroupsStrategyOptions", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"},
 	}
 }
 
@@ -65921,8 +65080,7 @@ func schema_openshift_api_security_v1_SecurityContextConstraintsList(ref common.
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/security/v1.SecurityContextConstraints", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta",
-		},
+			"github.com/openshift/api/security/v1.SecurityContextConstraints", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"},
 	}
 }
 
@@ -65966,8 +65124,7 @@ func schema_openshift_api_security_v1_ServiceAccountPodSecurityPolicyReviewStatu
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.ObjectReference", "k8s.io/api/core/v1.PodTemplateSpec",
-		},
+			"k8s.io/api/core/v1.ObjectReference", "k8s.io/api/core/v1.PodTemplateSpec"},
 	}
 }
 
@@ -66008,8 +65165,7 @@ func schema_openshift_api_security_v1_SupplementalGroupsStrategyOptions(ref comm
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/security/v1.IDRange",
-		},
+			"github.com/openshift/api/security/v1.IDRange"},
 	}
 }
 
@@ -66061,8 +65217,7 @@ func schema_openshift_api_securityinternal_v1_RangeAllocation(ref common.Referen
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta",
-		},
+			"k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"},
 	}
 }
 
@@ -66113,8 +65268,7 @@ func schema_openshift_api_securityinternal_v1_RangeAllocationList(ref common.Ref
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/securityinternal/v1.RangeAllocation", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta",
-		},
+			"github.com/openshift/api/securityinternal/v1.RangeAllocation", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"},
 	}
 }
 
@@ -66163,8 +65317,7 @@ func schema_openshift_api_servicecertsigner_v1alpha1_ServiceCertSignerOperatorCo
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/servicecertsigner/v1alpha1.ServiceCertSignerOperatorConfigSpec", "github.com/openshift/api/servicecertsigner/v1alpha1.ServiceCertSignerOperatorConfigStatus", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta",
-		},
+			"github.com/openshift/api/servicecertsigner/v1alpha1.ServiceCertSignerOperatorConfigSpec", "github.com/openshift/api/servicecertsigner/v1alpha1.ServiceCertSignerOperatorConfigStatus", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"},
 	}
 }
 
@@ -66215,8 +65368,7 @@ func schema_openshift_api_servicecertsigner_v1alpha1_ServiceCertSignerOperatorCo
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/servicecertsigner/v1alpha1.ServiceCertSignerOperatorConfig", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta",
-		},
+			"github.com/openshift/api/servicecertsigner/v1alpha1.ServiceCertSignerOperatorConfig", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"},
 	}
 }
 
@@ -66265,8 +65417,7 @@ func schema_openshift_api_servicecertsigner_v1alpha1_ServiceCertSignerOperatorCo
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/apimachinery/pkg/runtime.RawExtension",
-		},
+			"k8s.io/apimachinery/pkg/runtime.RawExtension"},
 	}
 }
 
@@ -66356,8 +65507,7 @@ func schema_openshift_api_servicecertsigner_v1alpha1_ServiceCertSignerOperatorCo
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/operator/v1.GenerationStatus", "github.com/openshift/api/operator/v1.OperatorCondition",
-		},
+			"github.com/openshift/api/operator/v1.GenerationStatus", "github.com/openshift/api/operator/v1.OperatorCondition"},
 	}
 }
 
@@ -66408,8 +65558,7 @@ func schema_openshift_api_sharedresource_v1alpha1_SharedConfigMap(ref common.Ref
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/sharedresource/v1alpha1.SharedConfigMapSpec", "github.com/openshift/api/sharedresource/v1alpha1.SharedConfigMapStatus", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta",
-		},
+			"github.com/openshift/api/sharedresource/v1alpha1.SharedConfigMapSpec", "github.com/openshift/api/sharedresource/v1alpha1.SharedConfigMapStatus", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"},
 	}
 }
 
@@ -66459,8 +65608,7 @@ func schema_openshift_api_sharedresource_v1alpha1_SharedConfigMapList(ref common
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/sharedresource/v1alpha1.SharedConfigMap", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta",
-		},
+			"github.com/openshift/api/sharedresource/v1alpha1.SharedConfigMap", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"},
 	}
 }
 
@@ -66520,8 +65668,7 @@ func schema_openshift_api_sharedresource_v1alpha1_SharedConfigMapSpec(ref common
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/sharedresource/v1alpha1.SharedConfigMapReference",
-		},
+			"github.com/openshift/api/sharedresource/v1alpha1.SharedConfigMapReference"},
 	}
 }
 
@@ -66558,8 +65705,7 @@ func schema_openshift_api_sharedresource_v1alpha1_SharedConfigMapStatus(ref comm
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/apimachinery/pkg/apis/meta/v1.Condition",
-		},
+			"k8s.io/apimachinery/pkg/apis/meta/v1.Condition"},
 	}
 }
 
@@ -66610,8 +65756,7 @@ func schema_openshift_api_sharedresource_v1alpha1_SharedSecret(ref common.Refere
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/sharedresource/v1alpha1.SharedSecretSpec", "github.com/openshift/api/sharedresource/v1alpha1.SharedSecretStatus", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta",
-		},
+			"github.com/openshift/api/sharedresource/v1alpha1.SharedSecretSpec", "github.com/openshift/api/sharedresource/v1alpha1.SharedSecretStatus", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"},
 	}
 }
 
@@ -66661,8 +65806,7 @@ func schema_openshift_api_sharedresource_v1alpha1_SharedSecretList(ref common.Re
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/sharedresource/v1alpha1.SharedSecret", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta",
-		},
+			"github.com/openshift/api/sharedresource/v1alpha1.SharedSecret", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"},
 	}
 }
 
@@ -66722,8 +65866,7 @@ func schema_openshift_api_sharedresource_v1alpha1_SharedSecretSpec(ref common.Re
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/sharedresource/v1alpha1.SharedSecretReference",
-		},
+			"github.com/openshift/api/sharedresource/v1alpha1.SharedSecretReference"},
 	}
 }
 
@@ -66760,8 +65903,7 @@ func schema_openshift_api_sharedresource_v1alpha1_SharedSecretStatus(ref common.
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/apimachinery/pkg/apis/meta/v1.Condition",
-		},
+			"k8s.io/apimachinery/pkg/apis/meta/v1.Condition"},
 	}
 }
 
@@ -66805,8 +65947,7 @@ func schema_openshift_api_template_v1_BrokerTemplateInstance(ref common.Referenc
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/template/v1.BrokerTemplateInstanceSpec", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta",
-		},
+			"github.com/openshift/api/template/v1.BrokerTemplateInstanceSpec", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"},
 	}
 }
 
@@ -66857,8 +65998,7 @@ func schema_openshift_api_template_v1_BrokerTemplateInstanceList(ref common.Refe
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/template/v1.BrokerTemplateInstance", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta",
-		},
+			"github.com/openshift/api/template/v1.BrokerTemplateInstance", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"},
 	}
 }
 
@@ -66903,8 +66043,7 @@ func schema_openshift_api_template_v1_BrokerTemplateInstanceSpec(ref common.Refe
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.ObjectReference",
-		},
+			"k8s.io/api/core/v1.ObjectReference"},
 	}
 }
 
@@ -67055,8 +66194,7 @@ func schema_openshift_api_template_v1_Template(ref common.ReferenceCallback) com
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/template/v1.Parameter", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta", "k8s.io/apimachinery/pkg/runtime.RawExtension",
-		},
+			"github.com/openshift/api/template/v1.Parameter", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta", "k8s.io/apimachinery/pkg/runtime.RawExtension"},
 	}
 }
 
@@ -67107,8 +66245,7 @@ func schema_openshift_api_template_v1_TemplateInstance(ref common.ReferenceCallb
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/template/v1.TemplateInstanceSpec", "github.com/openshift/api/template/v1.TemplateInstanceStatus", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta",
-		},
+			"github.com/openshift/api/template/v1.TemplateInstanceSpec", "github.com/openshift/api/template/v1.TemplateInstanceStatus", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"},
 	}
 }
 
@@ -67162,8 +66299,7 @@ func schema_openshift_api_template_v1_TemplateInstanceCondition(ref common.Refer
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/apimachinery/pkg/apis/meta/v1.Time",
-		},
+			"k8s.io/apimachinery/pkg/apis/meta/v1.Time"},
 	}
 }
 
@@ -67214,8 +66350,7 @@ func schema_openshift_api_template_v1_TemplateInstanceList(ref common.ReferenceC
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/template/v1.TemplateInstance", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta",
-		},
+			"github.com/openshift/api/template/v1.TemplateInstance", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"},
 	}
 }
 
@@ -67237,8 +66372,7 @@ func schema_openshift_api_template_v1_TemplateInstanceObject(ref common.Referenc
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.ObjectReference",
-		},
+			"k8s.io/api/core/v1.ObjectReference"},
 	}
 }
 
@@ -67338,8 +66472,7 @@ func schema_openshift_api_template_v1_TemplateInstanceSpec(ref common.ReferenceC
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/template/v1.Template", "github.com/openshift/api/template/v1.TemplateInstanceRequester", "k8s.io/api/core/v1.LocalObjectReference",
-		},
+			"github.com/openshift/api/template/v1.Template", "github.com/openshift/api/template/v1.TemplateInstanceRequester", "k8s.io/api/core/v1.LocalObjectReference"},
 	}
 }
 
@@ -67382,8 +66515,7 @@ func schema_openshift_api_template_v1_TemplateInstanceStatus(ref common.Referenc
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/template/v1.TemplateInstanceCondition", "github.com/openshift/api/template/v1.TemplateInstanceObject",
-		},
+			"github.com/openshift/api/template/v1.TemplateInstanceCondition", "github.com/openshift/api/template/v1.TemplateInstanceObject"},
 	}
 }
 
@@ -67434,8 +66566,7 @@ func schema_openshift_api_template_v1_TemplateList(ref common.ReferenceCallback)
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/template/v1.Template", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta",
-		},
+			"github.com/openshift/api/template/v1.Template", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"},
 	}
 }
 
@@ -67487,8 +66618,7 @@ func schema_openshift_api_user_v1_Group(ref common.ReferenceCallback) common.Ope
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta",
-		},
+			"k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"},
 	}
 }
 
@@ -67539,8 +66669,7 @@ func schema_openshift_api_user_v1_GroupList(ref common.ReferenceCallback) common
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/user/v1.Group", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta",
-		},
+			"github.com/openshift/api/user/v1.Group", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"},
 	}
 }
 
@@ -67616,8 +66745,7 @@ func schema_openshift_api_user_v1_Identity(ref common.ReferenceCallback) common.
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.ObjectReference", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta",
-		},
+			"k8s.io/api/core/v1.ObjectReference", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"},
 	}
 }
 
@@ -67668,8 +66796,7 @@ func schema_openshift_api_user_v1_IdentityList(ref common.ReferenceCallback) com
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/user/v1.Identity", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta",
-		},
+			"github.com/openshift/api/user/v1.Identity", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"},
 	}
 }
 
@@ -67743,8 +66870,7 @@ func schema_openshift_api_user_v1_User(ref common.ReferenceCallback) common.Open
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta",
-		},
+			"k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"},
 	}
 }
 
@@ -67794,8 +66920,7 @@ func schema_openshift_api_user_v1_UserIdentityMapping(ref common.ReferenceCallba
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.ObjectReference", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta",
-		},
+			"k8s.io/api/core/v1.ObjectReference", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"},
 	}
 }
 
@@ -67846,8 +66971,7 @@ func schema_openshift_api_user_v1_UserList(ref common.ReferenceCallback) common.
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/user/v1.User", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta",
-		},
+			"github.com/openshift/api/user/v1.User", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"},
 	}
 }
 
@@ -67888,8 +67012,7 @@ func schema_k8sio_api_authorization_v1_FieldSelectorAttributes(ref common.Refere
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/apimachinery/pkg/apis/meta/v1.FieldSelectorRequirement",
-		},
+			"k8s.io/apimachinery/pkg/apis/meta/v1.FieldSelectorRequirement"},
 	}
 }
 
@@ -67930,8 +67053,7 @@ func schema_k8sio_api_authorization_v1_LabelSelectorAttributes(ref common.Refere
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/apimachinery/pkg/apis/meta/v1.LabelSelectorRequirement",
-		},
+			"k8s.io/apimachinery/pkg/apis/meta/v1.LabelSelectorRequirement"},
 	}
 }
 
@@ -67982,8 +67104,7 @@ func schema_k8sio_api_authorization_v1_LocalSubjectAccessReview(ref common.Refer
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/authorization/v1.SubjectAccessReviewSpec", "k8s.io/api/authorization/v1.SubjectAccessReviewStatus", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta",
-		},
+			"k8s.io/api/authorization/v1.SubjectAccessReviewSpec", "k8s.io/api/authorization/v1.SubjectAccessReviewStatus", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"},
 	}
 }
 
@@ -68140,8 +67261,7 @@ func schema_k8sio_api_authorization_v1_ResourceAttributes(ref common.ReferenceCa
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/authorization/v1.FieldSelectorAttributes", "k8s.io/api/authorization/v1.LabelSelectorAttributes",
-		},
+			"k8s.io/api/authorization/v1.FieldSelectorAttributes", "k8s.io/api/authorization/v1.LabelSelectorAttributes"},
 	}
 }
 
@@ -68286,8 +67406,7 @@ func schema_k8sio_api_authorization_v1_SelfSubjectAccessReview(ref common.Refere
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/authorization/v1.SelfSubjectAccessReviewSpec", "k8s.io/api/authorization/v1.SubjectAccessReviewStatus", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta",
-		},
+			"k8s.io/api/authorization/v1.SelfSubjectAccessReviewSpec", "k8s.io/api/authorization/v1.SubjectAccessReviewStatus", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"},
 	}
 }
 
@@ -68314,8 +67433,7 @@ func schema_k8sio_api_authorization_v1_SelfSubjectAccessReviewSpec(ref common.Re
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/authorization/v1.NonResourceAttributes", "k8s.io/api/authorization/v1.ResourceAttributes",
-		},
+			"k8s.io/api/authorization/v1.NonResourceAttributes", "k8s.io/api/authorization/v1.ResourceAttributes"},
 	}
 }
 
@@ -68366,8 +67484,7 @@ func schema_k8sio_api_authorization_v1_SelfSubjectRulesReview(ref common.Referen
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/authorization/v1.SelfSubjectRulesReviewSpec", "k8s.io/api/authorization/v1.SubjectRulesReviewStatus", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta",
-		},
+			"k8s.io/api/authorization/v1.SelfSubjectRulesReviewSpec", "k8s.io/api/authorization/v1.SubjectRulesReviewStatus", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"},
 	}
 }
 
@@ -68438,8 +67555,7 @@ func schema_k8sio_api_authorization_v1_SubjectAccessReview(ref common.ReferenceC
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/authorization/v1.SubjectAccessReviewSpec", "k8s.io/api/authorization/v1.SubjectAccessReviewStatus", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta",
-		},
+			"k8s.io/api/authorization/v1.SubjectAccessReviewSpec", "k8s.io/api/authorization/v1.SubjectAccessReviewStatus", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"},
 	}
 }
 
@@ -68523,8 +67639,7 @@ func schema_k8sio_api_authorization_v1_SubjectAccessReviewSpec(ref common.Refere
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/authorization/v1.NonResourceAttributes", "k8s.io/api/authorization/v1.ResourceAttributes",
-		},
+			"k8s.io/api/authorization/v1.NonResourceAttributes", "k8s.io/api/authorization/v1.ResourceAttributes"},
 	}
 }
 
@@ -68636,8 +67751,7 @@ func schema_k8sio_api_authorization_v1_SubjectRulesReviewStatus(ref common.Refer
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/authorization/v1.NonResourceRule", "k8s.io/api/authorization/v1.ResourceRule",
-		},
+			"k8s.io/api/authorization/v1.NonResourceRule", "k8s.io/api/authorization/v1.ResourceRule"},
 	}
 }
 
@@ -68713,8 +67827,7 @@ func schema_k8sio_api_core_v1_Affinity(ref common.ReferenceCallback) common.Open
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.NodeAffinity", "k8s.io/api/core/v1.PodAffinity", "k8s.io/api/core/v1.PodAntiAffinity",
-		},
+			"k8s.io/api/core/v1.NodeAffinity", "k8s.io/api/core/v1.PodAffinity", "k8s.io/api/core/v1.PodAntiAffinity"},
 	}
 }
 
@@ -68820,8 +67933,7 @@ func schema_k8sio_api_core_v1_AvoidPods(ref common.ReferenceCallback) common.Ope
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.PreferAvoidPodsEntry",
-		},
+			"k8s.io/api/core/v1.PreferAvoidPodsEntry"},
 	}
 }
 
@@ -69010,8 +68122,7 @@ func schema_k8sio_api_core_v1_Binding(ref common.ReferenceCallback) common.OpenA
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.ObjectReference", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta",
-		},
+			"k8s.io/api/core/v1.ObjectReference", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"},
 	}
 }
 
@@ -69103,8 +68214,7 @@ func schema_k8sio_api_core_v1_CSIPersistentVolumeSource(ref common.ReferenceCall
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.SecretReference",
-		},
+			"k8s.io/api/core/v1.SecretReference"},
 	}
 }
 
@@ -69164,8 +68274,7 @@ func schema_k8sio_api_core_v1_CSIVolumeSource(ref common.ReferenceCallback) comm
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.LocalObjectReference",
-		},
+			"k8s.io/api/core/v1.LocalObjectReference"},
 	}
 }
 
@@ -69288,8 +68397,7 @@ func schema_k8sio_api_core_v1_CephFSPersistentVolumeSource(ref common.ReferenceC
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.SecretReference",
-		},
+			"k8s.io/api/core/v1.SecretReference"},
 	}
 }
 
@@ -69359,8 +68467,7 @@ func schema_k8sio_api_core_v1_CephFSVolumeSource(ref common.ReferenceCallback) c
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.LocalObjectReference",
-		},
+			"k8s.io/api/core/v1.LocalObjectReference"},
 	}
 }
 
@@ -69404,8 +68511,7 @@ func schema_k8sio_api_core_v1_CinderPersistentVolumeSource(ref common.ReferenceC
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.SecretReference",
-		},
+			"k8s.io/api/core/v1.SecretReference"},
 	}
 }
 
@@ -69449,8 +68555,7 @@ func schema_k8sio_api_core_v1_CinderVolumeSource(ref common.ReferenceCallback) c
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.LocalObjectReference",
-		},
+			"k8s.io/api/core/v1.LocalObjectReference"},
 	}
 }
 
@@ -69521,8 +68626,7 @@ func schema_k8sio_api_core_v1_ClusterTrustBundleProjection(ref common.ReferenceC
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/apimachinery/pkg/apis/meta/v1.LabelSelector",
-		},
+			"k8s.io/apimachinery/pkg/apis/meta/v1.LabelSelector"},
 	}
 }
 
@@ -69626,8 +68730,7 @@ func schema_k8sio_api_core_v1_ComponentStatus(ref common.ReferenceCallback) comm
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.ComponentCondition", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta",
-		},
+			"k8s.io/api/core/v1.ComponentCondition", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"},
 	}
 }
 
@@ -69678,8 +68781,7 @@ func schema_k8sio_api_core_v1_ComponentStatusList(ref common.ReferenceCallback) 
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.ComponentStatus", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta",
-		},
+			"k8s.io/api/core/v1.ComponentStatus", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"},
 	}
 }
 
@@ -69753,8 +68855,7 @@ func schema_k8sio_api_core_v1_ConfigMap(ref common.ReferenceCallback) common.Ope
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta",
-		},
+			"k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"},
 	}
 }
 
@@ -69875,8 +68976,7 @@ func schema_k8sio_api_core_v1_ConfigMapList(ref common.ReferenceCallback) common
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.ConfigMap", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta",
-		},
+			"k8s.io/api/core/v1.ConfigMap", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"},
 	}
 }
 
@@ -69977,8 +69077,7 @@ func schema_k8sio_api_core_v1_ConfigMapProjection(ref common.ReferenceCallback) 
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.KeyToPath",
-		},
+			"k8s.io/api/core/v1.KeyToPath"},
 	}
 }
 
@@ -70034,8 +69133,7 @@ func schema_k8sio_api_core_v1_ConfigMapVolumeSource(ref common.ReferenceCallback
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.KeyToPath",
-		},
+			"k8s.io/api/core/v1.KeyToPath"},
 	}
 }
 
@@ -70355,8 +69453,7 @@ func schema_k8sio_api_core_v1_Container(ref common.ReferenceCallback) common.Ope
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.ContainerPort", "k8s.io/api/core/v1.ContainerResizePolicy", "k8s.io/api/core/v1.ContainerRestartRule", "k8s.io/api/core/v1.EnvFromSource", "k8s.io/api/core/v1.EnvVar", "k8s.io/api/core/v1.Lifecycle", "k8s.io/api/core/v1.Probe", "k8s.io/api/core/v1.ResourceRequirements", "k8s.io/api/core/v1.SecurityContext", "k8s.io/api/core/v1.VolumeDevice", "k8s.io/api/core/v1.VolumeMount",
-		},
+			"k8s.io/api/core/v1.ContainerPort", "k8s.io/api/core/v1.ContainerResizePolicy", "k8s.io/api/core/v1.ContainerRestartRule", "k8s.io/api/core/v1.EnvFromSource", "k8s.io/api/core/v1.EnvVar", "k8s.io/api/core/v1.Lifecycle", "k8s.io/api/core/v1.Probe", "k8s.io/api/core/v1.ResourceRequirements", "k8s.io/api/core/v1.SecurityContext", "k8s.io/api/core/v1.VolumeDevice", "k8s.io/api/core/v1.VolumeMount"},
 	}
 }
 
@@ -70545,8 +69642,7 @@ func schema_k8sio_api_core_v1_ContainerRestartRule(ref common.ReferenceCallback)
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.ContainerRestartRuleOnExitCodes",
-		},
+			"k8s.io/api/core/v1.ContainerRestartRuleOnExitCodes"},
 	}
 }
 
@@ -70620,8 +69716,7 @@ func schema_k8sio_api_core_v1_ContainerState(ref common.ReferenceCallback) commo
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.ContainerStateRunning", "k8s.io/api/core/v1.ContainerStateTerminated", "k8s.io/api/core/v1.ContainerStateWaiting",
-		},
+			"k8s.io/api/core/v1.ContainerStateRunning", "k8s.io/api/core/v1.ContainerStateTerminated", "k8s.io/api/core/v1.ContainerStateWaiting"},
 	}
 }
 
@@ -70642,8 +69737,7 @@ func schema_k8sio_api_core_v1_ContainerStateRunning(ref common.ReferenceCallback
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/apimachinery/pkg/apis/meta/v1.Time",
-		},
+			"k8s.io/apimachinery/pkg/apis/meta/v1.Time"},
 	}
 }
 
@@ -70707,8 +69801,7 @@ func schema_k8sio_api_core_v1_ContainerStateTerminated(ref common.ReferenceCallb
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/apimachinery/pkg/apis/meta/v1.Time",
-		},
+			"k8s.io/apimachinery/pkg/apis/meta/v1.Time"},
 	}
 }
 
@@ -70901,8 +69994,7 @@ func schema_k8sio_api_core_v1_ContainerStatus(ref common.ReferenceCallback) comm
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.ContainerState", "k8s.io/api/core/v1.ContainerUser", "k8s.io/api/core/v1.ResourceRequirements", "k8s.io/api/core/v1.ResourceStatus", "k8s.io/api/core/v1.VolumeMountStatus", "k8s.io/apimachinery/pkg/api/resource.Quantity",
-		},
+			"k8s.io/api/core/v1.ContainerState", "k8s.io/api/core/v1.ContainerUser", "k8s.io/api/core/v1.ResourceRequirements", "k8s.io/api/core/v1.ResourceStatus", "k8s.io/api/core/v1.VolumeMountStatus", "k8s.io/apimachinery/pkg/api/resource.Quantity"},
 	}
 }
 
@@ -70923,8 +70015,7 @@ func schema_k8sio_api_core_v1_ContainerUser(ref common.ReferenceCallback) common
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.LinuxContainerUser",
-		},
+			"k8s.io/api/core/v1.LinuxContainerUser"},
 	}
 }
 
@@ -70980,8 +70071,7 @@ func schema_k8sio_api_core_v1_DownwardAPIProjection(ref common.ReferenceCallback
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.DownwardAPIVolumeFile",
-		},
+			"k8s.io/api/core/v1.DownwardAPIVolumeFile"},
 	}
 }
 
@@ -71024,8 +70114,7 @@ func schema_k8sio_api_core_v1_DownwardAPIVolumeFile(ref common.ReferenceCallback
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.ObjectFieldSelector", "k8s.io/api/core/v1.ResourceFieldSelector",
-		},
+			"k8s.io/api/core/v1.ObjectFieldSelector", "k8s.io/api/core/v1.ResourceFieldSelector"},
 	}
 }
 
@@ -71066,8 +70155,7 @@ func schema_k8sio_api_core_v1_DownwardAPIVolumeSource(ref common.ReferenceCallba
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.DownwardAPIVolumeFile",
-		},
+			"k8s.io/api/core/v1.DownwardAPIVolumeFile"},
 	}
 }
 
@@ -71095,8 +70183,7 @@ func schema_k8sio_api_core_v1_EmptyDirVolumeSource(ref common.ReferenceCallback)
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/apimachinery/pkg/api/resource.Quantity",
-		},
+			"k8s.io/apimachinery/pkg/api/resource.Quantity"},
 	}
 }
 
@@ -71145,8 +70232,7 @@ func schema_k8sio_api_core_v1_EndpointAddress(ref common.ReferenceCallback) comm
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.ObjectReference",
-		},
+			"k8s.io/api/core/v1.ObjectReference"},
 	}
 }
 
@@ -71267,8 +70353,7 @@ func schema_k8sio_api_core_v1_EndpointSubset(ref common.ReferenceCallback) commo
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.EndpointAddress", "k8s.io/api/core/v1.EndpointPort",
-		},
+			"k8s.io/api/core/v1.EndpointAddress", "k8s.io/api/core/v1.EndpointPort"},
 	}
 }
 
@@ -71323,8 +70408,7 @@ func schema_k8sio_api_core_v1_Endpoints(ref common.ReferenceCallback) common.Ope
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.EndpointSubset", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta",
-		},
+			"k8s.io/api/core/v1.EndpointSubset", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"},
 	}
 }
 
@@ -71375,8 +70459,7 @@ func schema_k8sio_api_core_v1_EndpointsList(ref common.ReferenceCallback) common
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.Endpoints", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta",
-		},
+			"k8s.io/api/core/v1.Endpoints", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"},
 	}
 }
 
@@ -71410,8 +70493,7 @@ func schema_k8sio_api_core_v1_EnvFromSource(ref common.ReferenceCallback) common
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.ConfigMapEnvSource", "k8s.io/api/core/v1.SecretEnvSource",
-		},
+			"k8s.io/api/core/v1.ConfigMapEnvSource", "k8s.io/api/core/v1.SecretEnvSource"},
 	}
 }
 
@@ -71448,8 +70530,7 @@ func schema_k8sio_api_core_v1_EnvVar(ref common.ReferenceCallback) common.OpenAP
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.EnvVarSource",
-		},
+			"k8s.io/api/core/v1.EnvVarSource"},
 	}
 }
 
@@ -71494,8 +70575,7 @@ func schema_k8sio_api_core_v1_EnvVarSource(ref common.ReferenceCallback) common.
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.ConfigMapKeySelector", "k8s.io/api/core/v1.FileKeySelector", "k8s.io/api/core/v1.ObjectFieldSelector", "k8s.io/api/core/v1.ResourceFieldSelector", "k8s.io/api/core/v1.SecretKeySelector",
-		},
+			"k8s.io/api/core/v1.ConfigMapKeySelector", "k8s.io/api/core/v1.FileKeySelector", "k8s.io/api/core/v1.ObjectFieldSelector", "k8s.io/api/core/v1.ResourceFieldSelector", "k8s.io/api/core/v1.SecretKeySelector"},
 	}
 }
 
@@ -71822,8 +70902,7 @@ func schema_k8sio_api_core_v1_EphemeralContainer(ref common.ReferenceCallback) c
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.ContainerPort", "k8s.io/api/core/v1.ContainerResizePolicy", "k8s.io/api/core/v1.ContainerRestartRule", "k8s.io/api/core/v1.EnvFromSource", "k8s.io/api/core/v1.EnvVar", "k8s.io/api/core/v1.Lifecycle", "k8s.io/api/core/v1.Probe", "k8s.io/api/core/v1.ResourceRequirements", "k8s.io/api/core/v1.SecurityContext", "k8s.io/api/core/v1.VolumeDevice", "k8s.io/api/core/v1.VolumeMount",
-		},
+			"k8s.io/api/core/v1.ContainerPort", "k8s.io/api/core/v1.ContainerResizePolicy", "k8s.io/api/core/v1.ContainerRestartRule", "k8s.io/api/core/v1.EnvFromSource", "k8s.io/api/core/v1.EnvVar", "k8s.io/api/core/v1.Lifecycle", "k8s.io/api/core/v1.Probe", "k8s.io/api/core/v1.ResourceRequirements", "k8s.io/api/core/v1.SecurityContext", "k8s.io/api/core/v1.VolumeDevice", "k8s.io/api/core/v1.VolumeMount"},
 	}
 }
 
@@ -72143,8 +71222,7 @@ func schema_k8sio_api_core_v1_EphemeralContainerCommon(ref common.ReferenceCallb
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.ContainerPort", "k8s.io/api/core/v1.ContainerResizePolicy", "k8s.io/api/core/v1.ContainerRestartRule", "k8s.io/api/core/v1.EnvFromSource", "k8s.io/api/core/v1.EnvVar", "k8s.io/api/core/v1.Lifecycle", "k8s.io/api/core/v1.Probe", "k8s.io/api/core/v1.ResourceRequirements", "k8s.io/api/core/v1.SecurityContext", "k8s.io/api/core/v1.VolumeDevice", "k8s.io/api/core/v1.VolumeMount",
-		},
+			"k8s.io/api/core/v1.ContainerPort", "k8s.io/api/core/v1.ContainerResizePolicy", "k8s.io/api/core/v1.ContainerRestartRule", "k8s.io/api/core/v1.EnvFromSource", "k8s.io/api/core/v1.EnvVar", "k8s.io/api/core/v1.Lifecycle", "k8s.io/api/core/v1.Probe", "k8s.io/api/core/v1.ResourceRequirements", "k8s.io/api/core/v1.SecurityContext", "k8s.io/api/core/v1.VolumeDevice", "k8s.io/api/core/v1.VolumeMount"},
 	}
 }
 
@@ -72165,8 +71243,7 @@ func schema_k8sio_api_core_v1_EphemeralVolumeSource(ref common.ReferenceCallback
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.PersistentVolumeClaimTemplate",
-		},
+			"k8s.io/api/core/v1.PersistentVolumeClaimTemplate"},
 	}
 }
 
@@ -72298,8 +71375,7 @@ func schema_k8sio_api_core_v1_Event(ref common.ReferenceCallback) common.OpenAPI
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.EventSeries", "k8s.io/api/core/v1.EventSource", "k8s.io/api/core/v1.ObjectReference", "k8s.io/apimachinery/pkg/apis/meta/v1.MicroTime", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta", "k8s.io/apimachinery/pkg/apis/meta/v1.Time",
-		},
+			"k8s.io/api/core/v1.EventSeries", "k8s.io/api/core/v1.EventSource", "k8s.io/api/core/v1.ObjectReference", "k8s.io/apimachinery/pkg/apis/meta/v1.MicroTime", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta", "k8s.io/apimachinery/pkg/apis/meta/v1.Time"},
 	}
 }
 
@@ -72350,8 +71426,7 @@ func schema_k8sio_api_core_v1_EventList(ref common.ReferenceCallback) common.Ope
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.Event", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta",
-		},
+			"k8s.io/api/core/v1.Event", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"},
 	}
 }
 
@@ -72379,8 +71454,7 @@ func schema_k8sio_api_core_v1_EventSeries(ref common.ReferenceCallback) common.O
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/apimachinery/pkg/apis/meta/v1.MicroTime",
-		},
+			"k8s.io/apimachinery/pkg/apis/meta/v1.MicroTime"},
 	}
 }
 
@@ -72625,8 +71699,7 @@ func schema_k8sio_api_core_v1_FlexPersistentVolumeSource(ref common.ReferenceCal
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.SecretReference",
-		},
+			"k8s.io/api/core/v1.SecretReference"},
 	}
 }
 
@@ -72686,8 +71759,7 @@ func schema_k8sio_api_core_v1_FlexVolumeSource(ref common.ReferenceCallback) com
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.LocalObjectReference",
-		},
+			"k8s.io/api/core/v1.LocalObjectReference"},
 	}
 }
 
@@ -72967,8 +72039,7 @@ func schema_k8sio_api_core_v1_HTTPGetAction(ref common.ReferenceCallback) common
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.HTTPHeader", "k8s.io/apimachinery/pkg/util/intstr.IntOrString",
-		},
+			"k8s.io/api/core/v1.HTTPHeader", "k8s.io/apimachinery/pkg/util/intstr.IntOrString"},
 	}
 }
 
@@ -73201,8 +72272,7 @@ func schema_k8sio_api_core_v1_ISCSIPersistentVolumeSource(ref common.ReferenceCa
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.SecretReference",
-		},
+			"k8s.io/api/core/v1.SecretReference"},
 	}
 }
 
@@ -73311,8 +72381,7 @@ func schema_k8sio_api_core_v1_ISCSIVolumeSource(ref common.ReferenceCallback) co
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.LocalObjectReference",
-		},
+			"k8s.io/api/core/v1.LocalObjectReference"},
 	}
 }
 
@@ -73412,8 +72481,7 @@ func schema_k8sio_api_core_v1_Lifecycle(ref common.ReferenceCallback) common.Ope
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.LifecycleHandler",
-		},
+			"k8s.io/api/core/v1.LifecycleHandler"},
 	}
 }
 
@@ -73452,8 +72520,7 @@ func schema_k8sio_api_core_v1_LifecycleHandler(ref common.ReferenceCallback) com
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.ExecAction", "k8s.io/api/core/v1.HTTPGetAction", "k8s.io/api/core/v1.SleepAction", "k8s.io/api/core/v1.TCPSocketAction",
-		},
+			"k8s.io/api/core/v1.ExecAction", "k8s.io/api/core/v1.HTTPGetAction", "k8s.io/api/core/v1.SleepAction", "k8s.io/api/core/v1.TCPSocketAction"},
 	}
 }
 
@@ -73496,8 +72563,7 @@ func schema_k8sio_api_core_v1_LimitRange(ref common.ReferenceCallback) common.Op
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.LimitRangeSpec", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta",
-		},
+			"k8s.io/api/core/v1.LimitRangeSpec", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"},
 	}
 }
 
@@ -73591,8 +72657,7 @@ func schema_k8sio_api_core_v1_LimitRangeItem(ref common.ReferenceCallback) commo
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/apimachinery/pkg/api/resource.Quantity",
-		},
+			"k8s.io/apimachinery/pkg/api/resource.Quantity"},
 	}
 }
 
@@ -73643,8 +72708,7 @@ func schema_k8sio_api_core_v1_LimitRangeList(ref common.ReferenceCallback) commo
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.LimitRange", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta",
-		},
+			"k8s.io/api/core/v1.LimitRange", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"},
 	}
 }
 
@@ -73679,8 +72743,7 @@ func schema_k8sio_api_core_v1_LimitRangeSpec(ref common.ReferenceCallback) commo
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.LimitRangeItem",
-		},
+			"k8s.io/api/core/v1.LimitRangeItem"},
 	}
 }
 
@@ -73780,8 +72843,7 @@ func schema_k8sio_api_core_v1_List(ref common.ReferenceCallback) common.OpenAPID
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta", "k8s.io/apimachinery/pkg/runtime.RawExtension",
-		},
+			"k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta", "k8s.io/apimachinery/pkg/runtime.RawExtension"},
 	}
 }
 
@@ -73836,8 +72898,7 @@ func schema_k8sio_api_core_v1_LoadBalancerIngress(ref common.ReferenceCallback) 
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.PortStatus",
-		},
+			"k8s.io/api/core/v1.PortStatus"},
 	}
 }
 
@@ -73871,8 +72932,7 @@ func schema_k8sio_api_core_v1_LoadBalancerStatus(ref common.ReferenceCallback) c
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.LoadBalancerIngress",
-		},
+			"k8s.io/api/core/v1.LoadBalancerIngress"},
 	}
 }
 
@@ -74044,8 +73104,7 @@ func schema_k8sio_api_core_v1_Namespace(ref common.ReferenceCallback) common.Ope
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.NamespaceSpec", "k8s.io/api/core/v1.NamespaceStatus", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta",
-		},
+			"k8s.io/api/core/v1.NamespaceSpec", "k8s.io/api/core/v1.NamespaceStatus", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"},
 	}
 }
 
@@ -74097,8 +73156,7 @@ func schema_k8sio_api_core_v1_NamespaceCondition(ref common.ReferenceCallback) c
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/apimachinery/pkg/apis/meta/v1.Time",
-		},
+			"k8s.io/apimachinery/pkg/apis/meta/v1.Time"},
 	}
 }
 
@@ -74149,8 +73207,7 @@ func schema_k8sio_api_core_v1_NamespaceList(ref common.ReferenceCallback) common
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.Namespace", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta",
-		},
+			"k8s.io/api/core/v1.Namespace", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"},
 	}
 }
 
@@ -74230,8 +73287,7 @@ func schema_k8sio_api_core_v1_NamespaceStatus(ref common.ReferenceCallback) comm
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.NamespaceCondition",
-		},
+			"k8s.io/api/core/v1.NamespaceCondition"},
 	}
 }
 
@@ -74281,8 +73337,7 @@ func schema_k8sio_api_core_v1_Node(ref common.ReferenceCallback) common.OpenAPID
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.NodeSpec", "k8s.io/api/core/v1.NodeStatus", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta",
-		},
+			"k8s.io/api/core/v1.NodeSpec", "k8s.io/api/core/v1.NodeStatus", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"},
 	}
 }
 
@@ -74352,8 +73407,7 @@ func schema_k8sio_api_core_v1_NodeAffinity(ref common.ReferenceCallback) common.
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.NodeSelector", "k8s.io/api/core/v1.PreferredSchedulingTerm",
-		},
+			"k8s.io/api/core/v1.NodeSelector", "k8s.io/api/core/v1.PreferredSchedulingTerm"},
 	}
 }
 
@@ -74411,8 +73465,7 @@ func schema_k8sio_api_core_v1_NodeCondition(ref common.ReferenceCallback) common
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/apimachinery/pkg/apis/meta/v1.Time",
-		},
+			"k8s.io/apimachinery/pkg/apis/meta/v1.Time"},
 	}
 }
 
@@ -74433,8 +73486,7 @@ func schema_k8sio_api_core_v1_NodeConfigSource(ref common.ReferenceCallback) com
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.ConfigMapNodeConfigSource",
-		},
+			"k8s.io/api/core/v1.ConfigMapNodeConfigSource"},
 	}
 }
 
@@ -74474,8 +73526,7 @@ func schema_k8sio_api_core_v1_NodeConfigStatus(ref common.ReferenceCallback) com
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.NodeConfigSource",
-		},
+			"k8s.io/api/core/v1.NodeConfigSource"},
 	}
 }
 
@@ -74497,8 +73548,7 @@ func schema_k8sio_api_core_v1_NodeDaemonEndpoints(ref common.ReferenceCallback) 
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.DaemonEndpoint",
-		},
+			"k8s.io/api/core/v1.DaemonEndpoint"},
 	}
 }
 
@@ -74569,8 +73619,7 @@ func schema_k8sio_api_core_v1_NodeList(ref common.ReferenceCallback) common.Open
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.Node", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta",
-		},
+			"k8s.io/api/core/v1.Node", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"},
 	}
 }
 
@@ -74633,8 +73682,7 @@ func schema_k8sio_api_core_v1_NodeRuntimeHandler(ref common.ReferenceCallback) c
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.NodeRuntimeHandlerFeatures",
-		},
+			"k8s.io/api/core/v1.NodeRuntimeHandlerFeatures"},
 	}
 }
 
@@ -74701,8 +73749,7 @@ func schema_k8sio_api_core_v1_NodeSelector(ref common.ReferenceCallback) common.
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.NodeSelectorTerm",
-		},
+			"k8s.io/api/core/v1.NodeSelectorTerm"},
 	}
 }
 
@@ -74811,8 +73858,7 @@ func schema_k8sio_api_core_v1_NodeSelectorTerm(ref common.ReferenceCallback) com
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.NodeSelectorRequirement",
-		},
+			"k8s.io/api/core/v1.NodeSelectorRequirement"},
 	}
 }
 
@@ -74901,8 +73947,7 @@ func schema_k8sio_api_core_v1_NodeSpec(ref common.ReferenceCallback) common.Open
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.NodeConfigSource", "k8s.io/api/core/v1.Taint",
-		},
+			"k8s.io/api/core/v1.NodeConfigSource", "k8s.io/api/core/v1.Taint"},
 	}
 }
 
@@ -75104,8 +74149,7 @@ func schema_k8sio_api_core_v1_NodeStatus(ref common.ReferenceCallback) common.Op
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.AttachedVolume", "k8s.io/api/core/v1.ContainerImage", "k8s.io/api/core/v1.NodeAddress", "k8s.io/api/core/v1.NodeCondition", "k8s.io/api/core/v1.NodeConfigStatus", "k8s.io/api/core/v1.NodeDaemonEndpoints", "k8s.io/api/core/v1.NodeFeatures", "k8s.io/api/core/v1.NodeRuntimeHandler", "k8s.io/api/core/v1.NodeSystemInfo", "k8s.io/apimachinery/pkg/api/resource.Quantity",
-		},
+			"k8s.io/api/core/v1.AttachedVolume", "k8s.io/api/core/v1.ContainerImage", "k8s.io/api/core/v1.NodeAddress", "k8s.io/api/core/v1.NodeCondition", "k8s.io/api/core/v1.NodeConfigStatus", "k8s.io/api/core/v1.NodeDaemonEndpoints", "k8s.io/api/core/v1.NodeFeatures", "k8s.io/api/core/v1.NodeRuntimeHandler", "k8s.io/api/core/v1.NodeSystemInfo", "k8s.io/apimachinery/pkg/api/resource.Quantity"},
 	}
 }
 
@@ -75227,8 +74271,7 @@ func schema_k8sio_api_core_v1_NodeSystemInfo(ref common.ReferenceCallback) commo
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.NodeSwapStatus",
-		},
+			"k8s.io/api/core/v1.NodeSwapStatus"},
 	}
 }
 
@@ -75379,8 +74422,7 @@ func schema_k8sio_api_core_v1_PersistentVolume(ref common.ReferenceCallback) com
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.PersistentVolumeSpec", "k8s.io/api/core/v1.PersistentVolumeStatus", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta",
-		},
+			"k8s.io/api/core/v1.PersistentVolumeSpec", "k8s.io/api/core/v1.PersistentVolumeStatus", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"},
 	}
 }
 
@@ -75430,8 +74472,7 @@ func schema_k8sio_api_core_v1_PersistentVolumeClaim(ref common.ReferenceCallback
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.PersistentVolumeClaimSpec", "k8s.io/api/core/v1.PersistentVolumeClaimStatus", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta",
-		},
+			"k8s.io/api/core/v1.PersistentVolumeClaimSpec", "k8s.io/api/core/v1.PersistentVolumeClaimStatus", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"},
 	}
 }
 
@@ -75489,8 +74530,7 @@ func schema_k8sio_api_core_v1_PersistentVolumeClaimCondition(ref common.Referenc
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/apimachinery/pkg/apis/meta/v1.Time",
-		},
+			"k8s.io/apimachinery/pkg/apis/meta/v1.Time"},
 	}
 }
 
@@ -75541,8 +74581,7 @@ func schema_k8sio_api_core_v1_PersistentVolumeClaimList(ref common.ReferenceCall
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.PersistentVolumeClaim", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta",
-		},
+			"k8s.io/api/core/v1.PersistentVolumeClaim", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"},
 	}
 }
 
@@ -75632,8 +74671,7 @@ func schema_k8sio_api_core_v1_PersistentVolumeClaimSpec(ref common.ReferenceCall
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.TypedLocalObjectReference", "k8s.io/api/core/v1.TypedObjectReference", "k8s.io/api/core/v1.VolumeResourceRequirements", "k8s.io/apimachinery/pkg/apis/meta/v1.LabelSelector",
-		},
+			"k8s.io/api/core/v1.TypedLocalObjectReference", "k8s.io/api/core/v1.TypedObjectReference", "k8s.io/api/core/v1.VolumeResourceRequirements", "k8s.io/apimachinery/pkg/apis/meta/v1.LabelSelector"},
 	}
 }
 
@@ -75764,8 +74802,7 @@ func schema_k8sio_api_core_v1_PersistentVolumeClaimStatus(ref common.ReferenceCa
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.ModifyVolumeStatus", "k8s.io/api/core/v1.PersistentVolumeClaimCondition", "k8s.io/apimachinery/pkg/api/resource.Quantity",
-		},
+			"k8s.io/api/core/v1.ModifyVolumeStatus", "k8s.io/api/core/v1.PersistentVolumeClaimCondition", "k8s.io/apimachinery/pkg/api/resource.Quantity"},
 	}
 }
 
@@ -75795,8 +74832,7 @@ func schema_k8sio_api_core_v1_PersistentVolumeClaimTemplate(ref common.Reference
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.PersistentVolumeClaimSpec", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta",
-		},
+			"k8s.io/api/core/v1.PersistentVolumeClaimSpec", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"},
 	}
 }
 
@@ -75876,8 +74912,7 @@ func schema_k8sio_api_core_v1_PersistentVolumeList(ref common.ReferenceCallback)
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.PersistentVolume", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta",
-		},
+			"k8s.io/api/core/v1.PersistentVolume", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"},
 	}
 }
 
@@ -76024,8 +75059,7 @@ func schema_k8sio_api_core_v1_PersistentVolumeSource(ref common.ReferenceCallbac
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.AWSElasticBlockStoreVolumeSource", "k8s.io/api/core/v1.AzureDiskVolumeSource", "k8s.io/api/core/v1.AzureFilePersistentVolumeSource", "k8s.io/api/core/v1.CSIPersistentVolumeSource", "k8s.io/api/core/v1.CephFSPersistentVolumeSource", "k8s.io/api/core/v1.CinderPersistentVolumeSource", "k8s.io/api/core/v1.FCVolumeSource", "k8s.io/api/core/v1.FlexPersistentVolumeSource", "k8s.io/api/core/v1.FlockerVolumeSource", "k8s.io/api/core/v1.GCEPersistentDiskVolumeSource", "k8s.io/api/core/v1.GlusterfsPersistentVolumeSource", "k8s.io/api/core/v1.HostPathVolumeSource", "k8s.io/api/core/v1.ISCSIPersistentVolumeSource", "k8s.io/api/core/v1.LocalVolumeSource", "k8s.io/api/core/v1.NFSVolumeSource", "k8s.io/api/core/v1.PhotonPersistentDiskVolumeSource", "k8s.io/api/core/v1.PortworxVolumeSource", "k8s.io/api/core/v1.QuobyteVolumeSource", "k8s.io/api/core/v1.RBDPersistentVolumeSource", "k8s.io/api/core/v1.ScaleIOPersistentVolumeSource", "k8s.io/api/core/v1.StorageOSPersistentVolumeSource", "k8s.io/api/core/v1.VsphereVirtualDiskVolumeSource",
-		},
+			"k8s.io/api/core/v1.AWSElasticBlockStoreVolumeSource", "k8s.io/api/core/v1.AzureDiskVolumeSource", "k8s.io/api/core/v1.AzureFilePersistentVolumeSource", "k8s.io/api/core/v1.CSIPersistentVolumeSource", "k8s.io/api/core/v1.CephFSPersistentVolumeSource", "k8s.io/api/core/v1.CinderPersistentVolumeSource", "k8s.io/api/core/v1.FCVolumeSource", "k8s.io/api/core/v1.FlexPersistentVolumeSource", "k8s.io/api/core/v1.FlockerVolumeSource", "k8s.io/api/core/v1.GCEPersistentDiskVolumeSource", "k8s.io/api/core/v1.GlusterfsPersistentVolumeSource", "k8s.io/api/core/v1.HostPathVolumeSource", "k8s.io/api/core/v1.ISCSIPersistentVolumeSource", "k8s.io/api/core/v1.LocalVolumeSource", "k8s.io/api/core/v1.NFSVolumeSource", "k8s.io/api/core/v1.PhotonPersistentDiskVolumeSource", "k8s.io/api/core/v1.PortworxVolumeSource", "k8s.io/api/core/v1.QuobyteVolumeSource", "k8s.io/api/core/v1.RBDPersistentVolumeSource", "k8s.io/api/core/v1.ScaleIOPersistentVolumeSource", "k8s.io/api/core/v1.StorageOSPersistentVolumeSource", "k8s.io/api/core/v1.VsphereVirtualDiskVolumeSource"},
 	}
 }
 
@@ -76274,8 +75308,7 @@ func schema_k8sio_api_core_v1_PersistentVolumeSpec(ref common.ReferenceCallback)
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.AWSElasticBlockStoreVolumeSource", "k8s.io/api/core/v1.AzureDiskVolumeSource", "k8s.io/api/core/v1.AzureFilePersistentVolumeSource", "k8s.io/api/core/v1.CSIPersistentVolumeSource", "k8s.io/api/core/v1.CephFSPersistentVolumeSource", "k8s.io/api/core/v1.CinderPersistentVolumeSource", "k8s.io/api/core/v1.FCVolumeSource", "k8s.io/api/core/v1.FlexPersistentVolumeSource", "k8s.io/api/core/v1.FlockerVolumeSource", "k8s.io/api/core/v1.GCEPersistentDiskVolumeSource", "k8s.io/api/core/v1.GlusterfsPersistentVolumeSource", "k8s.io/api/core/v1.HostPathVolumeSource", "k8s.io/api/core/v1.ISCSIPersistentVolumeSource", "k8s.io/api/core/v1.LocalVolumeSource", "k8s.io/api/core/v1.NFSVolumeSource", "k8s.io/api/core/v1.ObjectReference", "k8s.io/api/core/v1.PhotonPersistentDiskVolumeSource", "k8s.io/api/core/v1.PortworxVolumeSource", "k8s.io/api/core/v1.QuobyteVolumeSource", "k8s.io/api/core/v1.RBDPersistentVolumeSource", "k8s.io/api/core/v1.ScaleIOPersistentVolumeSource", "k8s.io/api/core/v1.StorageOSPersistentVolumeSource", "k8s.io/api/core/v1.VolumeNodeAffinity", "k8s.io/api/core/v1.VsphereVirtualDiskVolumeSource", "k8s.io/apimachinery/pkg/api/resource.Quantity",
-		},
+			"k8s.io/api/core/v1.AWSElasticBlockStoreVolumeSource", "k8s.io/api/core/v1.AzureDiskVolumeSource", "k8s.io/api/core/v1.AzureFilePersistentVolumeSource", "k8s.io/api/core/v1.CSIPersistentVolumeSource", "k8s.io/api/core/v1.CephFSPersistentVolumeSource", "k8s.io/api/core/v1.CinderPersistentVolumeSource", "k8s.io/api/core/v1.FCVolumeSource", "k8s.io/api/core/v1.FlexPersistentVolumeSource", "k8s.io/api/core/v1.FlockerVolumeSource", "k8s.io/api/core/v1.GCEPersistentDiskVolumeSource", "k8s.io/api/core/v1.GlusterfsPersistentVolumeSource", "k8s.io/api/core/v1.HostPathVolumeSource", "k8s.io/api/core/v1.ISCSIPersistentVolumeSource", "k8s.io/api/core/v1.LocalVolumeSource", "k8s.io/api/core/v1.NFSVolumeSource", "k8s.io/api/core/v1.ObjectReference", "k8s.io/api/core/v1.PhotonPersistentDiskVolumeSource", "k8s.io/api/core/v1.PortworxVolumeSource", "k8s.io/api/core/v1.QuobyteVolumeSource", "k8s.io/api/core/v1.RBDPersistentVolumeSource", "k8s.io/api/core/v1.ScaleIOPersistentVolumeSource", "k8s.io/api/core/v1.StorageOSPersistentVolumeSource", "k8s.io/api/core/v1.VolumeNodeAffinity", "k8s.io/api/core/v1.VsphereVirtualDiskVolumeSource", "k8s.io/apimachinery/pkg/api/resource.Quantity"},
 	}
 }
 
@@ -76318,8 +75351,7 @@ func schema_k8sio_api_core_v1_PersistentVolumeStatus(ref common.ReferenceCallbac
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/apimachinery/pkg/apis/meta/v1.Time",
-		},
+			"k8s.io/apimachinery/pkg/apis/meta/v1.Time"},
 	}
 }
 
@@ -76398,8 +75430,7 @@ func schema_k8sio_api_core_v1_Pod(ref common.ReferenceCallback) common.OpenAPIDe
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.PodSpec", "k8s.io/api/core/v1.PodStatus", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta",
-		},
+			"k8s.io/api/core/v1.PodSpec", "k8s.io/api/core/v1.PodStatus", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"},
 	}
 }
 
@@ -76452,8 +75483,7 @@ func schema_k8sio_api_core_v1_PodAffinity(ref common.ReferenceCallback) common.O
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.PodAffinityTerm", "k8s.io/api/core/v1.WeightedPodAffinityTerm",
-		},
+			"k8s.io/api/core/v1.PodAffinityTerm", "k8s.io/api/core/v1.WeightedPodAffinityTerm"},
 	}
 }
 
@@ -76549,8 +75579,7 @@ func schema_k8sio_api_core_v1_PodAffinityTerm(ref common.ReferenceCallback) comm
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/apimachinery/pkg/apis/meta/v1.LabelSelector",
-		},
+			"k8s.io/apimachinery/pkg/apis/meta/v1.LabelSelector"},
 	}
 }
 
@@ -76603,8 +75632,7 @@ func schema_k8sio_api_core_v1_PodAntiAffinity(ref common.ReferenceCallback) comm
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.PodAffinityTerm", "k8s.io/api/core/v1.WeightedPodAffinityTerm",
-		},
+			"k8s.io/api/core/v1.PodAffinityTerm", "k8s.io/api/core/v1.WeightedPodAffinityTerm"},
 	}
 }
 
@@ -76787,8 +75815,7 @@ func schema_k8sio_api_core_v1_PodCondition(ref common.ReferenceCallback) common.
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/apimachinery/pkg/apis/meta/v1.Time",
-		},
+			"k8s.io/apimachinery/pkg/apis/meta/v1.Time"},
 	}
 }
 
@@ -76862,8 +75889,7 @@ func schema_k8sio_api_core_v1_PodDNSConfig(ref common.ReferenceCallback) common.
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.PodDNSConfigOption",
-		},
+			"k8s.io/api/core/v1.PodDNSConfigOption"},
 	}
 }
 
@@ -77016,8 +76042,7 @@ func schema_k8sio_api_core_v1_PodExtendedResourceClaimStatus(ref common.Referenc
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.ContainerExtendedResourceRequest",
-		},
+			"k8s.io/api/core/v1.ContainerExtendedResourceRequest"},
 	}
 }
 
@@ -77090,8 +76115,7 @@ func schema_k8sio_api_core_v1_PodList(ref common.ReferenceCallback) common.OpenA
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.Pod", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta",
-		},
+			"k8s.io/api/core/v1.Pod", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"},
 	}
 }
 
@@ -77189,8 +76213,7 @@ func schema_k8sio_api_core_v1_PodLogOptions(ref common.ReferenceCallback) common
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/apimachinery/pkg/apis/meta/v1.Time",
-		},
+			"k8s.io/apimachinery/pkg/apis/meta/v1.Time"},
 	}
 }
 
@@ -77531,8 +76554,7 @@ func schema_k8sio_api_core_v1_PodSecurityContext(ref common.ReferenceCallback) c
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.AppArmorProfile", "k8s.io/api/core/v1.SELinuxOptions", "k8s.io/api/core/v1.SeccompProfile", "k8s.io/api/core/v1.Sysctl", "k8s.io/api/core/v1.WindowsSecurityContextOptions",
-		},
+			"k8s.io/api/core/v1.AppArmorProfile", "k8s.io/api/core/v1.SELinuxOptions", "k8s.io/api/core/v1.SeccompProfile", "k8s.io/api/core/v1.Sysctl", "k8s.io/api/core/v1.WindowsSecurityContextOptions"},
 	}
 }
 
@@ -77553,8 +76575,7 @@ func schema_k8sio_api_core_v1_PodSignature(ref common.ReferenceCallback) common.
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/apimachinery/pkg/apis/meta/v1.OwnerReference",
-		},
+			"k8s.io/apimachinery/pkg/apis/meta/v1.OwnerReference"},
 	}
 }
 
@@ -78054,8 +77075,7 @@ func schema_k8sio_api_core_v1_PodSpec(ref common.ReferenceCallback) common.OpenA
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.Affinity", "k8s.io/api/core/v1.Container", "k8s.io/api/core/v1.EphemeralContainer", "k8s.io/api/core/v1.HostAlias", "k8s.io/api/core/v1.LocalObjectReference", "k8s.io/api/core/v1.PodDNSConfig", "k8s.io/api/core/v1.PodOS", "k8s.io/api/core/v1.PodReadinessGate", "k8s.io/api/core/v1.PodResourceClaim", "k8s.io/api/core/v1.PodSchedulingGate", "k8s.io/api/core/v1.PodSecurityContext", "k8s.io/api/core/v1.ResourceRequirements", "k8s.io/api/core/v1.Toleration", "k8s.io/api/core/v1.TopologySpreadConstraint", "k8s.io/api/core/v1.Volume", "k8s.io/apimachinery/pkg/api/resource.Quantity",
-		},
+			"k8s.io/api/core/v1.Affinity", "k8s.io/api/core/v1.Container", "k8s.io/api/core/v1.EphemeralContainer", "k8s.io/api/core/v1.HostAlias", "k8s.io/api/core/v1.LocalObjectReference", "k8s.io/api/core/v1.PodDNSConfig", "k8s.io/api/core/v1.PodOS", "k8s.io/api/core/v1.PodReadinessGate", "k8s.io/api/core/v1.PodResourceClaim", "k8s.io/api/core/v1.PodSchedulingGate", "k8s.io/api/core/v1.PodSecurityContext", "k8s.io/api/core/v1.ResourceRequirements", "k8s.io/api/core/v1.Toleration", "k8s.io/api/core/v1.TopologySpreadConstraint", "k8s.io/api/core/v1.Volume", "k8s.io/apimachinery/pkg/api/resource.Quantity"},
 	}
 }
 
@@ -78297,8 +77317,7 @@ func schema_k8sio_api_core_v1_PodStatus(ref common.ReferenceCallback) common.Ope
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.ContainerStatus", "k8s.io/api/core/v1.HostIP", "k8s.io/api/core/v1.PodCondition", "k8s.io/api/core/v1.PodExtendedResourceClaimStatus", "k8s.io/api/core/v1.PodIP", "k8s.io/api/core/v1.PodResourceClaimStatus", "k8s.io/apimachinery/pkg/apis/meta/v1.Time",
-		},
+			"k8s.io/api/core/v1.ContainerStatus", "k8s.io/api/core/v1.HostIP", "k8s.io/api/core/v1.PodCondition", "k8s.io/api/core/v1.PodExtendedResourceClaimStatus", "k8s.io/api/core/v1.PodIP", "k8s.io/api/core/v1.PodResourceClaimStatus", "k8s.io/apimachinery/pkg/apis/meta/v1.Time"},
 	}
 }
 
@@ -78341,8 +77360,7 @@ func schema_k8sio_api_core_v1_PodStatusResult(ref common.ReferenceCallback) comm
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.PodStatus", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta",
-		},
+			"k8s.io/api/core/v1.PodStatus", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"},
 	}
 }
 
@@ -78385,8 +77403,7 @@ func schema_k8sio_api_core_v1_PodTemplate(ref common.ReferenceCallback) common.O
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.PodTemplateSpec", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta",
-		},
+			"k8s.io/api/core/v1.PodTemplateSpec", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"},
 	}
 }
 
@@ -78437,8 +77454,7 @@ func schema_k8sio_api_core_v1_PodTemplateList(ref common.ReferenceCallback) comm
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.PodTemplate", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta",
-		},
+			"k8s.io/api/core/v1.PodTemplate", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"},
 	}
 }
 
@@ -78467,8 +77483,7 @@ func schema_k8sio_api_core_v1_PodTemplateSpec(ref common.ReferenceCallback) comm
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.PodSpec", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta",
-		},
+			"k8s.io/api/core/v1.PodSpec", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"},
 	}
 }
 
@@ -78585,8 +77600,7 @@ func schema_k8sio_api_core_v1_PreferAvoidPodsEntry(ref common.ReferenceCallback)
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.PodSignature", "k8s.io/apimachinery/pkg/apis/meta/v1.Time",
-		},
+			"k8s.io/api/core/v1.PodSignature", "k8s.io/apimachinery/pkg/apis/meta/v1.Time"},
 	}
 }
 
@@ -78617,8 +77631,7 @@ func schema_k8sio_api_core_v1_PreferredSchedulingTerm(ref common.ReferenceCallba
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.NodeSelectorTerm",
-		},
+			"k8s.io/api/core/v1.NodeSelectorTerm"},
 	}
 }
 
@@ -78699,8 +77712,7 @@ func schema_k8sio_api_core_v1_Probe(ref common.ReferenceCallback) common.OpenAPI
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.ExecAction", "k8s.io/api/core/v1.GRPCAction", "k8s.io/api/core/v1.HTTPGetAction", "k8s.io/api/core/v1.TCPSocketAction",
-		},
+			"k8s.io/api/core/v1.ExecAction", "k8s.io/api/core/v1.GRPCAction", "k8s.io/api/core/v1.HTTPGetAction", "k8s.io/api/core/v1.TCPSocketAction"},
 	}
 }
 
@@ -78739,8 +77751,7 @@ func schema_k8sio_api_core_v1_ProbeHandler(ref common.ReferenceCallback) common.
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.ExecAction", "k8s.io/api/core/v1.GRPCAction", "k8s.io/api/core/v1.HTTPGetAction", "k8s.io/api/core/v1.TCPSocketAction",
-		},
+			"k8s.io/api/core/v1.ExecAction", "k8s.io/api/core/v1.GRPCAction", "k8s.io/api/core/v1.HTTPGetAction", "k8s.io/api/core/v1.TCPSocketAction"},
 	}
 }
 
@@ -78781,8 +77792,7 @@ func schema_k8sio_api_core_v1_ProjectedVolumeSource(ref common.ReferenceCallback
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.VolumeProjection",
-		},
+			"k8s.io/api/core/v1.VolumeProjection"},
 	}
 }
 
@@ -78928,8 +77938,7 @@ func schema_k8sio_api_core_v1_RBDPersistentVolumeSource(ref common.ReferenceCall
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.SecretReference",
-		},
+			"k8s.io/api/core/v1.SecretReference"},
 	}
 }
 
@@ -79017,8 +78026,7 @@ func schema_k8sio_api_core_v1_RBDVolumeSource(ref common.ReferenceCallback) comm
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.LocalObjectReference",
-		},
+			"k8s.io/api/core/v1.LocalObjectReference"},
 	}
 }
 
@@ -79070,8 +78078,7 @@ func schema_k8sio_api_core_v1_RangeAllocation(ref common.ReferenceCallback) comm
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta",
-		},
+			"k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"},
 	}
 }
 
@@ -79121,8 +78128,7 @@ func schema_k8sio_api_core_v1_ReplicationController(ref common.ReferenceCallback
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.ReplicationControllerSpec", "k8s.io/api/core/v1.ReplicationControllerStatus", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta",
-		},
+			"k8s.io/api/core/v1.ReplicationControllerSpec", "k8s.io/api/core/v1.ReplicationControllerStatus", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"},
 	}
 }
 
@@ -79174,8 +78180,7 @@ func schema_k8sio_api_core_v1_ReplicationControllerCondition(ref common.Referenc
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/apimachinery/pkg/apis/meta/v1.Time",
-		},
+			"k8s.io/apimachinery/pkg/apis/meta/v1.Time"},
 	}
 }
 
@@ -79226,8 +78231,7 @@ func schema_k8sio_api_core_v1_ReplicationControllerList(ref common.ReferenceCall
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.ReplicationController", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta",
-		},
+			"k8s.io/api/core/v1.ReplicationController", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"},
 	}
 }
 
@@ -79285,8 +78289,7 @@ func schema_k8sio_api_core_v1_ReplicationControllerSpec(ref common.ReferenceCall
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.PodTemplateSpec",
-		},
+			"k8s.io/api/core/v1.PodTemplateSpec"},
 	}
 }
 
@@ -79362,8 +78365,7 @@ func schema_k8sio_api_core_v1_ReplicationControllerStatus(ref common.ReferenceCa
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.ReplicationControllerCondition",
-		},
+			"k8s.io/api/core/v1.ReplicationControllerCondition"},
 	}
 }
 
@@ -79434,8 +78436,7 @@ func schema_k8sio_api_core_v1_ResourceFieldSelector(ref common.ReferenceCallback
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/apimachinery/pkg/api/resource.Quantity",
-		},
+			"k8s.io/apimachinery/pkg/api/resource.Quantity"},
 	}
 }
 
@@ -79514,8 +78515,7 @@ func schema_k8sio_api_core_v1_ResourceQuota(ref common.ReferenceCallback) common
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.ResourceQuotaSpec", "k8s.io/api/core/v1.ResourceQuotaStatus", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta",
-		},
+			"k8s.io/api/core/v1.ResourceQuotaSpec", "k8s.io/api/core/v1.ResourceQuotaStatus", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"},
 	}
 }
 
@@ -79566,8 +78566,7 @@ func schema_k8sio_api_core_v1_ResourceQuotaList(ref common.ReferenceCallback) co
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.ResourceQuota", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta",
-		},
+			"k8s.io/api/core/v1.ResourceQuota", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"},
 	}
 }
 
@@ -79623,8 +78622,7 @@ func schema_k8sio_api_core_v1_ResourceQuotaSpec(ref common.ReferenceCallback) co
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.ScopeSelector", "k8s.io/apimachinery/pkg/api/resource.Quantity",
-		},
+			"k8s.io/api/core/v1.ScopeSelector", "k8s.io/apimachinery/pkg/api/resource.Quantity"},
 	}
 }
 
@@ -79667,8 +78665,7 @@ func schema_k8sio_api_core_v1_ResourceQuotaStatus(ref common.ReferenceCallback) 
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/apimachinery/pkg/api/resource.Quantity",
-		},
+			"k8s.io/apimachinery/pkg/api/resource.Quantity"},
 	}
 }
 
@@ -79733,8 +78730,7 @@ func schema_k8sio_api_core_v1_ResourceRequirements(ref common.ReferenceCallback)
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.ResourceClaim", "k8s.io/apimachinery/pkg/api/resource.Quantity",
-		},
+			"k8s.io/api/core/v1.ResourceClaim", "k8s.io/apimachinery/pkg/api/resource.Quantity"},
 	}
 }
 
@@ -79780,8 +78776,7 @@ func schema_k8sio_api_core_v1_ResourceStatus(ref common.ReferenceCallback) commo
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.ResourceHealth",
-		},
+			"k8s.io/api/core/v1.ResourceHealth"},
 	}
 }
 
@@ -79911,8 +78906,7 @@ func schema_k8sio_api_core_v1_ScaleIOPersistentVolumeSource(ref common.Reference
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.SecretReference",
-		},
+			"k8s.io/api/core/v1.SecretReference"},
 	}
 }
 
@@ -80001,8 +78995,7 @@ func schema_k8sio_api_core_v1_ScaleIOVolumeSource(ref common.ReferenceCallback) 
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.LocalObjectReference",
-		},
+			"k8s.io/api/core/v1.LocalObjectReference"},
 	}
 }
 
@@ -80041,8 +79034,7 @@ func schema_k8sio_api_core_v1_ScopeSelector(ref common.ReferenceCallback) common
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.ScopedResourceSelectorRequirement",
-		},
+			"k8s.io/api/core/v1.ScopedResourceSelectorRequirement"},
 	}
 }
 
@@ -80217,8 +79209,7 @@ func schema_k8sio_api_core_v1_Secret(ref common.ReferenceCallback) common.OpenAP
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta",
-		},
+			"k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"},
 	}
 }
 
@@ -80339,8 +79330,7 @@ func schema_k8sio_api_core_v1_SecretList(ref common.ReferenceCallback) common.Op
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.Secret", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta",
-		},
+			"k8s.io/api/core/v1.Secret", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"},
 	}
 }
 
@@ -80389,8 +79379,7 @@ func schema_k8sio_api_core_v1_SecretProjection(ref common.ReferenceCallback) com
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.KeyToPath",
-		},
+			"k8s.io/api/core/v1.KeyToPath"},
 	}
 }
 
@@ -80477,8 +79466,7 @@ func schema_k8sio_api_core_v1_SecretVolumeSource(ref common.ReferenceCallback) c
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.KeyToPath",
-		},
+			"k8s.io/api/core/v1.KeyToPath"},
 	}
 }
 
@@ -80573,8 +79561,7 @@ func schema_k8sio_api_core_v1_SecurityContext(ref common.ReferenceCallback) comm
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.AppArmorProfile", "k8s.io/api/core/v1.Capabilities", "k8s.io/api/core/v1.SELinuxOptions", "k8s.io/api/core/v1.SeccompProfile", "k8s.io/api/core/v1.WindowsSecurityContextOptions",
-		},
+			"k8s.io/api/core/v1.AppArmorProfile", "k8s.io/api/core/v1.Capabilities", "k8s.io/api/core/v1.SELinuxOptions", "k8s.io/api/core/v1.SeccompProfile", "k8s.io/api/core/v1.WindowsSecurityContextOptions"},
 	}
 }
 
@@ -80610,8 +79597,7 @@ func schema_k8sio_api_core_v1_SerializedReference(ref common.ReferenceCallback) 
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.ObjectReference",
-		},
+			"k8s.io/api/core/v1.ObjectReference"},
 	}
 }
 
@@ -80661,8 +79647,7 @@ func schema_k8sio_api_core_v1_Service(ref common.ReferenceCallback) common.OpenA
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.ServiceSpec", "k8s.io/api/core/v1.ServiceStatus", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta",
-		},
+			"k8s.io/api/core/v1.ServiceSpec", "k8s.io/api/core/v1.ServiceStatus", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"},
 	}
 }
 
@@ -80748,8 +79733,7 @@ func schema_k8sio_api_core_v1_ServiceAccount(ref common.ReferenceCallback) commo
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.LocalObjectReference", "k8s.io/api/core/v1.ObjectReference", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta",
-		},
+			"k8s.io/api/core/v1.LocalObjectReference", "k8s.io/api/core/v1.ObjectReference", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"},
 	}
 }
 
@@ -80800,8 +79784,7 @@ func schema_k8sio_api_core_v1_ServiceAccountList(ref common.ReferenceCallback) c
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.ServiceAccount", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta",
-		},
+			"k8s.io/api/core/v1.ServiceAccount", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"},
 	}
 }
 
@@ -80888,8 +79871,7 @@ func schema_k8sio_api_core_v1_ServiceList(ref common.ReferenceCallback) common.O
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.Service", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta",
-		},
+			"k8s.io/api/core/v1.Service", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"},
 	}
 }
 
@@ -80949,8 +79931,7 @@ func schema_k8sio_api_core_v1_ServicePort(ref common.ReferenceCallback) common.O
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/apimachinery/pkg/util/intstr.IntOrString",
-		},
+			"k8s.io/apimachinery/pkg/util/intstr.IntOrString"},
 	}
 }
 
@@ -81228,8 +80209,7 @@ func schema_k8sio_api_core_v1_ServiceSpec(ref common.ReferenceCallback) common.O
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.ServicePort", "k8s.io/api/core/v1.SessionAffinityConfig",
-		},
+			"k8s.io/api/core/v1.ServicePort", "k8s.io/api/core/v1.SessionAffinityConfig"},
 	}
 }
 
@@ -81275,8 +80255,7 @@ func schema_k8sio_api_core_v1_ServiceStatus(ref common.ReferenceCallback) common
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.LoadBalancerStatus", "k8s.io/apimachinery/pkg/apis/meta/v1.Condition",
-		},
+			"k8s.io/api/core/v1.LoadBalancerStatus", "k8s.io/apimachinery/pkg/apis/meta/v1.Condition"},
 	}
 }
 
@@ -81297,8 +80276,7 @@ func schema_k8sio_api_core_v1_SessionAffinityConfig(ref common.ReferenceCallback
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.ClientIPConfig",
-		},
+			"k8s.io/api/core/v1.ClientIPConfig"},
 	}
 }
 
@@ -81369,8 +80347,7 @@ func schema_k8sio_api_core_v1_StorageOSPersistentVolumeSource(ref common.Referen
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.ObjectReference",
-		},
+			"k8s.io/api/core/v1.ObjectReference"},
 	}
 }
 
@@ -81419,8 +80396,7 @@ func schema_k8sio_api_core_v1_StorageOSVolumeSource(ref common.ReferenceCallback
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.LocalObjectReference",
-		},
+			"k8s.io/api/core/v1.LocalObjectReference"},
 	}
 }
 
@@ -81479,8 +80455,7 @@ func schema_k8sio_api_core_v1_TCPSocketAction(ref common.ReferenceCallback) comm
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/apimachinery/pkg/util/intstr.IntOrString",
-		},
+			"k8s.io/apimachinery/pkg/util/intstr.IntOrString"},
 	}
 }
 
@@ -81526,8 +80501,7 @@ func schema_k8sio_api_core_v1_Taint(ref common.ReferenceCallback) common.OpenAPI
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/apimachinery/pkg/apis/meta/v1.Time",
-		},
+			"k8s.io/apimachinery/pkg/apis/meta/v1.Time"},
 	}
 }
 
@@ -81658,8 +80632,7 @@ func schema_k8sio_api_core_v1_TopologySelectorTerm(ref common.ReferenceCallback)
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.TopologySelectorLabelRequirement",
-		},
+			"k8s.io/api/core/v1.TopologySelectorLabelRequirement"},
 	}
 }
 
@@ -81749,8 +80722,7 @@ func schema_k8sio_api_core_v1_TopologySpreadConstraint(ref common.ReferenceCallb
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/apimachinery/pkg/apis/meta/v1.LabelSelector",
-		},
+			"k8s.io/apimachinery/pkg/apis/meta/v1.LabelSelector"},
 	}
 }
 
@@ -82040,8 +81012,7 @@ func schema_k8sio_api_core_v1_Volume(ref common.ReferenceCallback) common.OpenAP
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.AWSElasticBlockStoreVolumeSource", "k8s.io/api/core/v1.AzureDiskVolumeSource", "k8s.io/api/core/v1.AzureFileVolumeSource", "k8s.io/api/core/v1.CSIVolumeSource", "k8s.io/api/core/v1.CephFSVolumeSource", "k8s.io/api/core/v1.CinderVolumeSource", "k8s.io/api/core/v1.ConfigMapVolumeSource", "k8s.io/api/core/v1.DownwardAPIVolumeSource", "k8s.io/api/core/v1.EmptyDirVolumeSource", "k8s.io/api/core/v1.EphemeralVolumeSource", "k8s.io/api/core/v1.FCVolumeSource", "k8s.io/api/core/v1.FlexVolumeSource", "k8s.io/api/core/v1.FlockerVolumeSource", "k8s.io/api/core/v1.GCEPersistentDiskVolumeSource", "k8s.io/api/core/v1.GitRepoVolumeSource", "k8s.io/api/core/v1.GlusterfsVolumeSource", "k8s.io/api/core/v1.HostPathVolumeSource", "k8s.io/api/core/v1.ISCSIVolumeSource", "k8s.io/api/core/v1.ImageVolumeSource", "k8s.io/api/core/v1.NFSVolumeSource", "k8s.io/api/core/v1.PersistentVolumeClaimVolumeSource", "k8s.io/api/core/v1.PhotonPersistentDiskVolumeSource", "k8s.io/api/core/v1.PortworxVolumeSource", "k8s.io/api/core/v1.ProjectedVolumeSource", "k8s.io/api/core/v1.QuobyteVolumeSource", "k8s.io/api/core/v1.RBDVolumeSource", "k8s.io/api/core/v1.ScaleIOVolumeSource", "k8s.io/api/core/v1.SecretVolumeSource", "k8s.io/api/core/v1.StorageOSVolumeSource", "k8s.io/api/core/v1.VsphereVirtualDiskVolumeSource",
-		},
+			"k8s.io/api/core/v1.AWSElasticBlockStoreVolumeSource", "k8s.io/api/core/v1.AzureDiskVolumeSource", "k8s.io/api/core/v1.AzureFileVolumeSource", "k8s.io/api/core/v1.CSIVolumeSource", "k8s.io/api/core/v1.CephFSVolumeSource", "k8s.io/api/core/v1.CinderVolumeSource", "k8s.io/api/core/v1.ConfigMapVolumeSource", "k8s.io/api/core/v1.DownwardAPIVolumeSource", "k8s.io/api/core/v1.EmptyDirVolumeSource", "k8s.io/api/core/v1.EphemeralVolumeSource", "k8s.io/api/core/v1.FCVolumeSource", "k8s.io/api/core/v1.FlexVolumeSource", "k8s.io/api/core/v1.FlockerVolumeSource", "k8s.io/api/core/v1.GCEPersistentDiskVolumeSource", "k8s.io/api/core/v1.GitRepoVolumeSource", "k8s.io/api/core/v1.GlusterfsVolumeSource", "k8s.io/api/core/v1.HostPathVolumeSource", "k8s.io/api/core/v1.ISCSIVolumeSource", "k8s.io/api/core/v1.ImageVolumeSource", "k8s.io/api/core/v1.NFSVolumeSource", "k8s.io/api/core/v1.PersistentVolumeClaimVolumeSource", "k8s.io/api/core/v1.PhotonPersistentDiskVolumeSource", "k8s.io/api/core/v1.PortworxVolumeSource", "k8s.io/api/core/v1.ProjectedVolumeSource", "k8s.io/api/core/v1.QuobyteVolumeSource", "k8s.io/api/core/v1.RBDVolumeSource", "k8s.io/api/core/v1.ScaleIOVolumeSource", "k8s.io/api/core/v1.SecretVolumeSource", "k8s.io/api/core/v1.StorageOSVolumeSource", "k8s.io/api/core/v1.VsphereVirtualDiskVolumeSource"},
 	}
 }
 
@@ -82202,8 +81173,7 @@ func schema_k8sio_api_core_v1_VolumeNodeAffinity(ref common.ReferenceCallback) c
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.NodeSelector",
-		},
+			"k8s.io/api/core/v1.NodeSelector"},
 	}
 }
 
@@ -82254,8 +81224,7 @@ func schema_k8sio_api_core_v1_VolumeProjection(ref common.ReferenceCallback) com
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.ClusterTrustBundleProjection", "k8s.io/api/core/v1.ConfigMapProjection", "k8s.io/api/core/v1.DownwardAPIProjection", "k8s.io/api/core/v1.PodCertificateProjection", "k8s.io/api/core/v1.SecretProjection", "k8s.io/api/core/v1.ServiceAccountTokenProjection",
-		},
+			"k8s.io/api/core/v1.ClusterTrustBundleProjection", "k8s.io/api/core/v1.ConfigMapProjection", "k8s.io/api/core/v1.DownwardAPIProjection", "k8s.io/api/core/v1.PodCertificateProjection", "k8s.io/api/core/v1.SecretProjection", "k8s.io/api/core/v1.ServiceAccountTokenProjection"},
 	}
 }
 
@@ -82298,8 +81267,7 @@ func schema_k8sio_api_core_v1_VolumeResourceRequirements(ref common.ReferenceCal
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/apimachinery/pkg/api/resource.Quantity",
-		},
+			"k8s.io/apimachinery/pkg/api/resource.Quantity"},
 	}
 }
 
@@ -82494,8 +81462,7 @@ func schema_k8sio_api_core_v1_VolumeSource(ref common.ReferenceCallback) common.
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.AWSElasticBlockStoreVolumeSource", "k8s.io/api/core/v1.AzureDiskVolumeSource", "k8s.io/api/core/v1.AzureFileVolumeSource", "k8s.io/api/core/v1.CSIVolumeSource", "k8s.io/api/core/v1.CephFSVolumeSource", "k8s.io/api/core/v1.CinderVolumeSource", "k8s.io/api/core/v1.ConfigMapVolumeSource", "k8s.io/api/core/v1.DownwardAPIVolumeSource", "k8s.io/api/core/v1.EmptyDirVolumeSource", "k8s.io/api/core/v1.EphemeralVolumeSource", "k8s.io/api/core/v1.FCVolumeSource", "k8s.io/api/core/v1.FlexVolumeSource", "k8s.io/api/core/v1.FlockerVolumeSource", "k8s.io/api/core/v1.GCEPersistentDiskVolumeSource", "k8s.io/api/core/v1.GitRepoVolumeSource", "k8s.io/api/core/v1.GlusterfsVolumeSource", "k8s.io/api/core/v1.HostPathVolumeSource", "k8s.io/api/core/v1.ISCSIVolumeSource", "k8s.io/api/core/v1.ImageVolumeSource", "k8s.io/api/core/v1.NFSVolumeSource", "k8s.io/api/core/v1.PersistentVolumeClaimVolumeSource", "k8s.io/api/core/v1.PhotonPersistentDiskVolumeSource", "k8s.io/api/core/v1.PortworxVolumeSource", "k8s.io/api/core/v1.ProjectedVolumeSource", "k8s.io/api/core/v1.QuobyteVolumeSource", "k8s.io/api/core/v1.RBDVolumeSource", "k8s.io/api/core/v1.ScaleIOVolumeSource", "k8s.io/api/core/v1.SecretVolumeSource", "k8s.io/api/core/v1.StorageOSVolumeSource", "k8s.io/api/core/v1.VsphereVirtualDiskVolumeSource",
-		},
+			"k8s.io/api/core/v1.AWSElasticBlockStoreVolumeSource", "k8s.io/api/core/v1.AzureDiskVolumeSource", "k8s.io/api/core/v1.AzureFileVolumeSource", "k8s.io/api/core/v1.CSIVolumeSource", "k8s.io/api/core/v1.CephFSVolumeSource", "k8s.io/api/core/v1.CinderVolumeSource", "k8s.io/api/core/v1.ConfigMapVolumeSource", "k8s.io/api/core/v1.DownwardAPIVolumeSource", "k8s.io/api/core/v1.EmptyDirVolumeSource", "k8s.io/api/core/v1.EphemeralVolumeSource", "k8s.io/api/core/v1.FCVolumeSource", "k8s.io/api/core/v1.FlexVolumeSource", "k8s.io/api/core/v1.FlockerVolumeSource", "k8s.io/api/core/v1.GCEPersistentDiskVolumeSource", "k8s.io/api/core/v1.GitRepoVolumeSource", "k8s.io/api/core/v1.GlusterfsVolumeSource", "k8s.io/api/core/v1.HostPathVolumeSource", "k8s.io/api/core/v1.ISCSIVolumeSource", "k8s.io/api/core/v1.ImageVolumeSource", "k8s.io/api/core/v1.NFSVolumeSource", "k8s.io/api/core/v1.PersistentVolumeClaimVolumeSource", "k8s.io/api/core/v1.PhotonPersistentDiskVolumeSource", "k8s.io/api/core/v1.PortworxVolumeSource", "k8s.io/api/core/v1.ProjectedVolumeSource", "k8s.io/api/core/v1.QuobyteVolumeSource", "k8s.io/api/core/v1.RBDVolumeSource", "k8s.io/api/core/v1.ScaleIOVolumeSource", "k8s.io/api/core/v1.SecretVolumeSource", "k8s.io/api/core/v1.StorageOSVolumeSource", "k8s.io/api/core/v1.VsphereVirtualDiskVolumeSource"},
 	}
 }
 
@@ -82569,8 +81536,7 @@ func schema_k8sio_api_core_v1_WeightedPodAffinityTerm(ref common.ReferenceCallba
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.PodAffinityTerm",
-		},
+			"k8s.io/api/core/v1.PodAffinityTerm"},
 	}
 }
 
@@ -82645,8 +81611,7 @@ func schema_k8sio_api_rbac_v1_AggregationRule(ref common.ReferenceCallback) comm
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/apimachinery/pkg/apis/meta/v1.LabelSelector",
-		},
+			"k8s.io/apimachinery/pkg/apis/meta/v1.LabelSelector"},
 	}
 }
 
@@ -82707,8 +81672,7 @@ func schema_k8sio_api_rbac_v1_ClusterRole(ref common.ReferenceCallback) common.O
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/rbac/v1.AggregationRule", "k8s.io/api/rbac/v1.PolicyRule", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta",
-		},
+			"k8s.io/api/rbac/v1.AggregationRule", "k8s.io/api/rbac/v1.PolicyRule", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"},
 	}
 }
 
@@ -82771,8 +81735,7 @@ func schema_k8sio_api_rbac_v1_ClusterRoleBinding(ref common.ReferenceCallback) c
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/rbac/v1.RoleRef", "k8s.io/api/rbac/v1.Subject", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta",
-		},
+			"k8s.io/api/rbac/v1.RoleRef", "k8s.io/api/rbac/v1.Subject", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"},
 	}
 }
 
@@ -82823,8 +81786,7 @@ func schema_k8sio_api_rbac_v1_ClusterRoleBindingList(ref common.ReferenceCallbac
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/rbac/v1.ClusterRoleBinding", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta",
-		},
+			"k8s.io/api/rbac/v1.ClusterRoleBinding", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"},
 	}
 }
 
@@ -82875,8 +81837,7 @@ func schema_k8sio_api_rbac_v1_ClusterRoleList(ref common.ReferenceCallback) comm
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/rbac/v1.ClusterRole", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta",
-		},
+			"k8s.io/api/rbac/v1.ClusterRole", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"},
 	}
 }
 
@@ -83045,8 +82006,7 @@ func schema_k8sio_api_rbac_v1_Role(ref common.ReferenceCallback) common.OpenAPID
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/rbac/v1.PolicyRule", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta",
-		},
+			"k8s.io/api/rbac/v1.PolicyRule", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"},
 	}
 }
 
@@ -83109,8 +82069,7 @@ func schema_k8sio_api_rbac_v1_RoleBinding(ref common.ReferenceCallback) common.O
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/rbac/v1.RoleRef", "k8s.io/api/rbac/v1.Subject", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta",
-		},
+			"k8s.io/api/rbac/v1.RoleRef", "k8s.io/api/rbac/v1.Subject", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"},
 	}
 }
 
@@ -83161,8 +82120,7 @@ func schema_k8sio_api_rbac_v1_RoleBindingList(ref common.ReferenceCallback) comm
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/rbac/v1.RoleBinding", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta",
-		},
+			"k8s.io/api/rbac/v1.RoleBinding", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"},
 	}
 }
 
@@ -83213,8 +82171,7 @@ func schema_k8sio_api_rbac_v1_RoleList(ref common.ReferenceCallback) common.Open
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/rbac/v1.Role", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta",
-		},
+			"k8s.io/api/rbac/v1.Role", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"},
 	}
 }
 
@@ -83437,8 +82394,7 @@ func schema_pkg_apis_meta_v1_APIGroup(ref common.ReferenceCallback) common.OpenA
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/apimachinery/pkg/apis/meta/v1.GroupVersionForDiscovery", "k8s.io/apimachinery/pkg/apis/meta/v1.ServerAddressByClientCIDR",
-		},
+			"k8s.io/apimachinery/pkg/apis/meta/v1.GroupVersionForDiscovery", "k8s.io/apimachinery/pkg/apis/meta/v1.ServerAddressByClientCIDR"},
 	}
 }
 
@@ -83487,8 +82443,7 @@ func schema_pkg_apis_meta_v1_APIGroupList(ref common.ReferenceCallback) common.O
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/apimachinery/pkg/apis/meta/v1.APIGroup",
-		},
+			"k8s.io/apimachinery/pkg/apis/meta/v1.APIGroup"},
 	}
 }
 
@@ -83667,8 +82622,7 @@ func schema_pkg_apis_meta_v1_APIResourceList(ref common.ReferenceCallback) commo
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/apimachinery/pkg/apis/meta/v1.APIResource",
-		},
+			"k8s.io/apimachinery/pkg/apis/meta/v1.APIResource"},
 	}
 }
 
@@ -83737,8 +82691,7 @@ func schema_pkg_apis_meta_v1_APIVersions(ref common.ReferenceCallback) common.Op
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/apimachinery/pkg/apis/meta/v1.ServerAddressByClientCIDR",
-		},
+			"k8s.io/apimachinery/pkg/apis/meta/v1.ServerAddressByClientCIDR"},
 	}
 }
 
@@ -83863,8 +82816,7 @@ func schema_pkg_apis_meta_v1_Condition(ref common.ReferenceCallback) common.Open
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/apimachinery/pkg/apis/meta/v1.Time",
-		},
+			"k8s.io/apimachinery/pkg/apis/meta/v1.Time"},
 	}
 }
 
@@ -84008,8 +82960,7 @@ func schema_pkg_apis_meta_v1_DeleteOptions(ref common.ReferenceCallback) common.
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/apimachinery/pkg/apis/meta/v1.Preconditions",
-		},
+			"k8s.io/apimachinery/pkg/apis/meta/v1.Preconditions"},
 	}
 }
 
@@ -84329,8 +83280,7 @@ func schema_pkg_apis_meta_v1_InternalEvent(ref common.ReferenceCallback) common.
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/apimachinery/pkg/runtime.Object",
-		},
+			"k8s.io/apimachinery/pkg/runtime.Object"},
 	}
 }
 
@@ -84385,8 +83335,7 @@ func schema_pkg_apis_meta_v1_LabelSelector(ref common.ReferenceCallback) common.
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/apimachinery/pkg/apis/meta/v1.LabelSelectorRequirement",
-		},
+			"k8s.io/apimachinery/pkg/apis/meta/v1.LabelSelectorRequirement"},
 	}
 }
 
@@ -84486,8 +83435,7 @@ func schema_pkg_apis_meta_v1_List(ref common.ReferenceCallback) common.OpenAPIDe
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta", "k8s.io/apimachinery/pkg/runtime.RawExtension",
-		},
+			"k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta", "k8s.io/apimachinery/pkg/runtime.RawExtension"},
 	}
 }
 
@@ -84687,8 +83635,7 @@ func schema_pkg_apis_meta_v1_ManagedFieldsEntry(ref common.ReferenceCallback) co
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/apimachinery/pkg/apis/meta/v1.FieldsV1", "k8s.io/apimachinery/pkg/apis/meta/v1.Time",
-		},
+			"k8s.io/apimachinery/pkg/apis/meta/v1.FieldsV1", "k8s.io/apimachinery/pkg/apis/meta/v1.Time"},
 	}
 }
 
@@ -84879,8 +83826,7 @@ func schema_pkg_apis_meta_v1_ObjectMeta(ref common.ReferenceCallback) common.Ope
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/apimachinery/pkg/apis/meta/v1.ManagedFieldsEntry", "k8s.io/apimachinery/pkg/apis/meta/v1.OwnerReference", "k8s.io/apimachinery/pkg/apis/meta/v1.Time",
-		},
+			"k8s.io/apimachinery/pkg/apis/meta/v1.ManagedFieldsEntry", "k8s.io/apimachinery/pkg/apis/meta/v1.OwnerReference", "k8s.io/apimachinery/pkg/apis/meta/v1.Time"},
 	}
 }
 
@@ -84981,8 +83927,7 @@ func schema_pkg_apis_meta_v1_PartialObjectMetadata(ref common.ReferenceCallback)
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta",
-		},
+			"k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"},
 	}
 }
 
@@ -85033,8 +83978,7 @@ func schema_pkg_apis_meta_v1_PartialObjectMetadataList(ref common.ReferenceCallb
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta", "k8s.io/apimachinery/pkg/apis/meta/v1.PartialObjectMetadata",
-		},
+			"k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta", "k8s.io/apimachinery/pkg/apis/meta/v1.PartialObjectMetadata"},
 	}
 }
 
@@ -85279,8 +84223,7 @@ func schema_pkg_apis_meta_v1_Status(ref common.ReferenceCallback) common.OpenAPI
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta", "k8s.io/apimachinery/pkg/apis/meta/v1.StatusDetails",
-		},
+			"k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta", "k8s.io/apimachinery/pkg/apis/meta/v1.StatusDetails"},
 	}
 }
 
@@ -85383,8 +84326,7 @@ func schema_pkg_apis_meta_v1_StatusDetails(ref common.ReferenceCallback) common.
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/apimachinery/pkg/apis/meta/v1.StatusCause",
-		},
+			"k8s.io/apimachinery/pkg/apis/meta/v1.StatusCause"},
 	}
 }
 
@@ -85459,8 +84401,7 @@ func schema_pkg_apis_meta_v1_Table(ref common.ReferenceCallback) common.OpenAPID
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta", "k8s.io/apimachinery/pkg/apis/meta/v1.TableColumnDefinition", "k8s.io/apimachinery/pkg/apis/meta/v1.TableRow",
-		},
+			"k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta", "k8s.io/apimachinery/pkg/apis/meta/v1.TableColumnDefinition", "k8s.io/apimachinery/pkg/apis/meta/v1.TableRow"},
 	}
 }
 
@@ -85608,8 +84549,7 @@ func schema_pkg_apis_meta_v1_TableRow(ref common.ReferenceCallback) common.OpenA
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/apimachinery/pkg/apis/meta/v1.TableRowCondition", "k8s.io/apimachinery/pkg/runtime.RawExtension",
-		},
+			"k8s.io/apimachinery/pkg/apis/meta/v1.TableRowCondition", "k8s.io/apimachinery/pkg/runtime.RawExtension"},
 	}
 }
 
@@ -85812,8 +84752,7 @@ func schema_pkg_apis_meta_v1_WatchEvent(ref common.ReferenceCallback) common.Ope
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/apimachinery/pkg/runtime.RawExtension",
-		},
+			"k8s.io/apimachinery/pkg/runtime.RawExtension"},
 	}
 }
 

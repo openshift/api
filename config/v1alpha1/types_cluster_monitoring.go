@@ -296,19 +296,19 @@ const (
 	AlertManagerDeployModeCustomConfig AlertManagerDeployMode = "CustomConfig"
 )
 
-// logLevel defines the verbosity of logs emitted by Alertmanager.
+// LogLevel defines the verbosity of logs emitted by Alertmanager.
 // Valid values are Error, Warn, Info and Debug.
 // +kubebuilder:validation:Enum=Error;Warn;Info;Debug
 type LogLevel string
 
 const (
-	// Error only errors will be logged.
+	// LogLevelError only errors will be logged.
 	LogLevelError LogLevel = "Error"
-	// Warn, both warnings and errors will be logged.
+	// LogLevelWarn, both warnings and errors will be logged.
 	LogLevelWarn LogLevel = "Warn"
-	// Info, general information, warnings, and errors will all be logged.
+	// LogLevelInfo, general information, warnings, and errors will all be logged.
 	LogLevelInfo LogLevel = "Info"
-	// Debug, detailed debugging information will be logged.
+	// LogLevelDebug, detailed debugging information will be logged.
 	LogLevelDebug LogLevel = "Debug"
 )
 
@@ -446,31 +446,38 @@ type MetricsServerConfig struct {
 // +kubebuilder:validation:MinProperties=1
 type PrometheusK8sConfig struct {
 	// additionalAlertmanagerConfigs configures additional Alertmanager instances that receive alerts from
-	// the Prometheus component. By default, no additional Alertmanager instances are configured.
+	// the Prometheus component. This is useful for organizations that need to:
+	//   - Send alerts to external monitoring systems (like PagerDuty, Slack, or custom webhooks)
+	//   - Route different types of alerts to different teams or systems
+	//   - Integrate with existing enterprise alerting infrastructure
+	//   - Maintain separate alert routing for compliance or organizational requirements
+	// By default, no additional Alertmanager instances are configured.
+	// Maximum of 10 additional Alertmanager configurations can be specified.
+	// When omitted, no additional Alertmanager instances are configured (default behavior).
+	// When set to an empty array [], the behavior is the same as omitting the field.
 	// +optional
 	// +kubebuilder:validation:MaxItems=10
-	// +listType=map
-	// +listMapKey=apiVersion
+	// +listType=atomic
 	AdditionalAlertmanagerConfigs []AdditionalAlertmanagerConfig `json:"additionalAlertmanagerConfigs,omitempty"`
 	// enforcedBodySizeLimit enforces a body size limit for Prometheus scraped metrics. If a scraped
 	// target's body response is larger than the limit, the scrape will fail.
 	// The following values are valid:
-	// an empty value to specify no limit,
 	// a numeric value in Prometheus size format (such as "4MB", "1000", "1GB", "512KB", "100B")
 	// or the string `automatic`, which indicates that the limit will be
 	// automatically calculated based on cluster capacity.
 	// To specify no limit, omit this field.
 	// The value must match the following pattern: ^(automatic|[0-9]+(B|KB|MB|GB|TB)?)$
-	// Minimum length for this list is 1
-	// Maximum length for this list is 50.
+	// Minimum length is 1 character.
+	// Maximum length is 50 characters.
 	// +kubebuilder:validation:MinLength=1
 	// +kubebuilder:validation:MaxLength=50
-	// +kubebuilder:validation:Pattern=`^(automatic|[0-9]+(B|KB|MB|GB|TB)?)$`
 	// +optional
 	EnforcedBodySizeLimit string `json:"enforcedBodySizeLimit,omitempty"`
 	// externalLabels defines labels to be added to any time series or alerts when
 	// communicating with external systems such as federation, remote storage,
 	// and Alertmanager. By default, no labels are added.
+	// When omitted, no external labels are applied (default behavior).
+	// When specified, at least one label must be provided in the labels field.
 	// +optional
 	ExternalLabels ExternalLabels `json:"externalLabels,omitempty,omitzero"`
 	// logLevel defines the verbosity of logs emitted by Alertmanager.
@@ -508,7 +515,6 @@ type PrometheusK8sConfig struct {
 	// +optional
 	// +kubebuilder:validation:MinLength=1
 	// +kubebuilder:validation:MaxLength=255
-	// +kubebuilder:validation:Pattern=`^[a-zA-Z0-9_\-\./]+$`
 	QueryLogFile string `json:"queryLogFile,omitempty"`
 	// remoteWrite defines the remote write configuration, including URL, authentication, and relabeling settings.
 	// The remote-write protocol is intended to allow Prometheus instances to actively send the metrics they collect/receive to other instances.
@@ -550,7 +556,6 @@ type PrometheusK8sConfig struct {
 	// The default value is `15d`.
 	// +kubebuilder:validation:MinLength=1
 	// +kubebuilder:validation:MaxLength=20
-	// +kubebuilder:validation:Pattern=`^[0-9]+(ms|s|m|h|d|w|y)$`
 	// +optional
 	Retention string `json:"retention,omitempty"`
 	// retentionSize specifies the maximum volume of persistent storage that Prometheus uses for data blocks and the write-ahead log (WAL).
@@ -558,7 +563,6 @@ type PrometheusK8sConfig struct {
 	// When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time.
 	// The default is no storage size limit is enforced and Prometheus will use the available storage capacity of the PersistentVolume.
 	// +kubebuilder:validation:MaxLength=20
-	// +kubebuilder:validation:Pattern=`^[0-9]+(Ei|Pi|Ti|Gi|Mi|Ki|E|P|T|G|M|K)?$`
 	// +optional
 	RetentionSize *string `json:"retentionSize,omitempty"`
 	// tolerations defines tolerations for the pods.
@@ -594,13 +598,13 @@ type PrometheusK8sConfig struct {
 	// +optional
 	TopologySpreadConstraints []v1.TopologySpreadConstraint `json:"topologySpreadConstraints,omitempty"`
 	// collectionProfile defines the metrics collection profile that Prometheus uses to collect
-	// metrics from the platform components. Supported values are `full` or
-	// `minimal`. In the `full` profile (default), Prometheus collects all
-	// metrics that are exposed by the platform components. In the `minimal`
+	// metrics from the platform components. Supported values are `Full` or
+	// `Minimal`. In the `Full` profile (default), Prometheus collects all
+	// metrics that are exposed by the platform components. In the `Minimal`
 	// profile, Prometheus only collects metrics necessary for the default
 	// platform alerts, recording rules, telemetry and console dashboards.
 	// When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time.
-	// The default value is `full`.
+	// The default value is `Full`.
 	// +optional
 	CollectionProfile CollectionProfile `json:"collectionProfile,omitempty"`
 	// volumeClaimTemplate Defines persistent storage for Prometheus. Use this setting to
@@ -619,22 +623,6 @@ const (
 	AlertmanagerAPIVersionV2 AlertmanagerAPIVersion = "v2"
 )
 
-// SecretKeyReference represents a reference to a secret key.
-type SecretKeyReference struct {
-	// name of the secret in the pod's namespace to select from.
-	// +required
-	// +kubebuilder:validation:MaxLength=253
-	Name *string `json:"name,omitempty"`
-	// key of the secret to select from. Must be a valid secret key.
-	// +required
-	// +kubebuilder:validation:MaxLength=253
-	Key *string `json:"key,omitempty"`
-	// optional specifies whether the Secret or its key must be defined
-	// +optional
-	// +kubebuilder:validation:Enum=true;false
-	Optional string `json:"optional,omitempty"`
-}
-
 type AlertmanagerScheme string
 
 const (
@@ -646,8 +634,8 @@ const (
 // The `AdditionalAlertmanagerConfig` resource defines settings for how a
 // component communicates with additional Alertmanager instances.
 type AdditionalAlertmanagerConfig struct {
-	// apiVersion defines the API version of Alertmanager.
-	// Allowed values: "v2". "v1" is no longer supported, "v2" is set as the default value.
+	// apiVersion defines the Alertmanager API version to target.
+	// Allowed values: "v2". "v1" is no longer supported.
 	// +kubebuilder:validation:Enum=v2
 	// +required
 	APIVersion AlertmanagerAPIVersion `json:"apiVersion,omitempty"`
@@ -655,8 +643,11 @@ type AdditionalAlertmanagerConfig struct {
 	// to use when authenticating to Alertmanager.
 	// This is a custom type to allow for admission time validations.
 	// +optional
-	BearerToken SecretKeyReference `json:"bearerToken,omitempty,omitzero"`
-	// pathPrefix defines the path prefix to add in front of the push endpoint path.
+	BearerToken SecretKeySelector `json:"bearerToken,omitempty,omitzero"`
+	// pathPrefix defines an optional URL path prefix to prepend to the Alertmanager API endpoints.
+	// For example, if your Alertmanager is behind a reverse proxy at "/alertmanager/",
+	// set this to "/alertmanager" so requests go to "/alertmanager/api/v1/alerts" instead of "/api/v1/alerts".
+	// This is commonly needed when Alertmanager is deployed behind ingress controllers or load balancers.
 	// +kubebuilder:validation:MaxLength=255
 	// +kubebuilder:validation:MinLength=1
 	// +optional
@@ -669,15 +660,14 @@ type AdditionalAlertmanagerConfig struct {
 	Scheme AlertmanagerScheme `json:"scheme,omitempty"`
 	// staticConfigs is a list of statically configured Alertmanager endpoints in the form
 	// of `<host>:<port>`. Each entry must be a valid hostname or IP address followed by a colon and a valid port number (1-65535).
+	// Maximum of 10 endpoints can be specified.
 	// +kubebuilder:validation:MaxItems=10
 	// +kubebuilder:validation:items:MaxLength=255
-	// +kubebuilder:validation:items:Pattern=`^([a-zA-Z0-9.-]+|\[[a-fA-F0-9:]+\]):([1-9][0-9]{0,4})$`
 	// +listType=set
 	// +required
 	StaticConfigs []string `json:"staticConfigs,omitempty"`
 	// timeout defines the timeout value used when sending alerts.
 	// The value must be a valid Go time.Duration string (e.g. 30s, 5m, 1h).
-	// +kubebuilder:validation:Pattern=`^([0-9]+(\.[0-9]+)?(ns|us|µs|ms|s|m|h))+$`
 	// +kubebuilder:validation:MinLength=2
 	// +kubebuilder:validation:MaxLength=20
 	// +optional
@@ -691,6 +681,8 @@ type AdditionalAlertmanagerConfig struct {
 // Label represents a key/value pair for external labels.
 type Label struct {
 	// key is the name of the label.
+	// The key must be a valid Prometheus label name, starting with a letter or underscore,
+	// followed by letters, digits, or underscores.
 	// +required
 	// +kubebuilder:validation:MaxLength=63
 	// +kubebuilder:validation:MinLength=1
@@ -705,6 +697,8 @@ type Label struct {
 // ExternalLabels represents labels to be added to time series and alerts.
 type ExternalLabels struct {
 	// labels is a list of label key/value pairs.
+	// At least 1 label must be specified, with a maximum of 50 labels allowed.
+	// This field is required when ExternalLabels is specified - an empty array [] is not allowed.
 	// +required
 	// +kubebuilder:validation:MinItems=1
 	// +kubebuilder:validation:MaxItems=50
@@ -719,21 +713,19 @@ type RemoteWriteSpec struct {
 	// +required
 	// +kubebuilder:validation:MaxLength=2048
 	// +kubebuilder:validation:MinLength=1
-	// +kubebuilder:validation:Pattern=`^https?://[^\s]+$`
 	URL string `json:"url,omitempty"`
 	// name is the name of the remote write configuration.
 	// +optional
 	// +kubebuilder:validation:MaxLength=63
-	// +kubebuilder:validation:Pattern=`^[a-zA-Z0-9]([-a-zA-Z0-9_.]*[a-zA-Z0-9])?$`
 	Name *string `json:"name,omitempty"`
 	// remoteTimeout is the timeout for requests to the remote write endpoint.
 	// When omitted, the default is 30s.
 	// +optional
 	// +kubebuilder:validation:MaxLength=20
-	// +kubebuilder:validation:Pattern=`^([0-9]+(\.[0-9]+)?(ns|us|µs|ms|s|m|h))+$`
 	// +kubebuilder:validation:MinLength=2
 	RemoteTimeout string `json:"remoteTimeout,omitempty"`
 	// writeRelabelConfigs is a list of relabeling rules to apply before sending data to the remote endpoint.
+	// Maximum of 10 relabeling rules can be specified.
 	// +optional
 	// +kubebuilder:validation:MaxItems=10
 	// +listType=atomic
@@ -770,9 +762,9 @@ type RelabelConfig struct {
 	// +kubebuilder:validation:MaxLength=255
 	Replacement *string `json:"replacement,omitempty"`
 	// action is the action to perform.
-	// +optional
-	// +kubebuilder:validation:MaxLength=20
-	Action *string `json:"action,omitempty"`
+	// Valid actions are: replace, keep, drop, hashmod, labelmap, labeldrop, labelkeep.
+	// +required
+	Action RelabelAction `json:"action,omitempty"`
 }
 
 // TLSConfig represents TLS configuration for Alertmanager connections.
@@ -791,60 +783,76 @@ type TLSConfig struct {
 	// +optional
 	// +kubebuilder:validation:MinLength=1
 	// +kubebuilder:validation:MaxLength=253
-	// +kubebuilder:validation:Pattern=`^([a-zA-Z0-9][-a-zA-Z0-9]*\.)*[a-zA-Z0-9][-a-zA-Z0-9]*$`
 	ServerName string `json:"serverName,omitempty"`
-	// insecureSkipVerify determines the policy for TLS certificate verification.
-	// Allowed values are "Verify" (default, secure) and "InsecureSkipVerify" (skip certificate verification, insecure).
-	// By default, certificate verification is performed ("Verify").
+	// certificateVerification determines the policy for TLS certificate verification.
+	// Allowed values are "Verify" (performs certificate verification, secure) and "SkipVerify" (skips verification, insecure).
+	// When omitted, defaults to "Verify" (secure certificate verification is performed).
 	// +optional
-	// +kubebuilder:validation:Enum=Verify;InsecureSkipVerify
+	// +kubebuilder:validation:Enum=Verify;SkipVerify
 	// +kubebuilder:default=Verify
-	InsecureSkipVerify string `json:"insecureSkipVerify,omitempty"`
-}
-
-// LocalObjectReference contains enough information to let you locate the
-// referenced object inside the same namespace.
-// ---
-// New uses of this type are discouraged because of difficulty describing its usage when embedded in APIs.
-//  1. Invalid usage help.  It is impossible to add specific help for individual usage.  In most embedded usages, there are particular
-//     restrictions like, "must refer only to types A and B" or "UID not honored" or "name must be restricted".
-//     Those cannot be well described when embedded.
-//  2. Inconsistent validation.  Because the usages are different, the validation rules are different by usage, which makes it hard for users to predict what will happen.
-//  3. We cannot easily change it.  Because this type is embedded in many locations, updates to this type
-//     will affect numerous schemas.  Don't make new APIs embed an underspecified API type they do not control.
-//
-// Instead of using this type, create a locally provided and used type that is well-focused on your reference.
-// For example, ServiceReferences for admission registration: https://github.com/kubernetes/api/blob/release-1.17/admissionregistration/v1/types.go#L533 .
-// +structType=atomic
-type LocalObjectReference struct {
-	// name of the referent.
-	// This field is effectively required, but due to backwards compatibility is
-	// allowed to be empty. Instances of this type with an empty value here are
-	// almost certainly wrong.
-	// More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names
-	// +optional
-	// +default=""
-	// +kubebuilder:default=""
-	// +kubebuilder:validation:MaxLength=253
-	// TODO: Drop `kubebuilder:default` when controller-gen doesn't need it https://github.com/kubernetes-sigs/kubebuilder/issues/3896.
-	Name *string `json:"name,omitempty" protobuf:"bytes,1,opt,name=name"`
+	CertificateVerification string `json:"certificateVerification,omitempty"`
 }
 
 // SecretKeySelector selects a key of a Secret.
 // +structType=atomic
 type SecretKeySelector struct {
-	// The name of the secret in the pod's namespace to select from.
-	LocalObjectReference `json:",inline" protobuf:"bytes,1,opt,name=localObjectReference"`
-	// key of the secret to select from.  Must be a valid secret key.
+	// name is the name of the secret in the same namespace to select from.
 	// +required
 	// +kubebuilder:validation:MinLength=1
 	// +kubebuilder:validation:MaxLength=253
-	Key string `json:"key,omitempty" protobuf:"bytes,2,opt,name=key"`
-	// optional specifies whether the Secret or its key must be defined
+	Name string `json:"name,omitempty"`
+	// key is the key of the secret to select from. Must be a valid secret key.
+	// +required
+	// +kubebuilder:validation:MinLength=1
+	// +kubebuilder:validation:MaxLength=253
+	Key string `json:"key,omitempty"`
+	// optional specifies whether the Secret or its key must be defined.
+	// When set to "Required", the Secret and key must exist; if missing, the operator will report
+	// an error condition and block reconciliation until the secret is created.
+	// When set to "Optional", the CRD validation will pass even if the Secret or key is missing.
+	// The operator will continue reconciliation with reduced functionality:
+	//   - Authentication or TLS credentials dependent on this secret will be skipped.
+	//   - Prometheus will attempt to communicate without the missing credentials, which may result
+	//     in failed connections or unauthenticated access depending on the remote endpoint's requirements.
+	//   - The operator may emit warning events indicating the missing secret.
+	//   - No automatic fallback values are applied; the secret reference is simply ignored.
+	// When omitted, defaults to "Required".
 	// +optional
-	// +kubebuilder:validation:Enum=true;false
-	Optional string `json:"optional,omitempty" protobuf:"varint,3,opt,name=optional"`
+	// +kubebuilder:default=Required
+	Optional SecretRequirement `json:"optional,omitempty"`
 }
+
+// SecretRequirement defines whether a secret reference is required or optional.
+// +kubebuilder:validation:Enum=Required;Optional
+type SecretRequirement string
+
+const (
+	// SecretRequirementRequired means the Secret and its key must exist.
+	SecretRequirementRequired SecretRequirement = "Required"
+	// SecretRequirementOptional means missing Secret or key will not cause an error.
+	SecretRequirementOptional SecretRequirement = "Optional"
+)
+
+// RelabelAction defines the action to perform in a relabeling rule.
+// +kubebuilder:validation:Enum=replace;keep;drop;hashmod;labelmap;labeldrop;labelkeep
+type RelabelAction string
+
+const (
+	// RelabelActionReplace replaces the target label with the replacement value.
+	RelabelActionReplace RelabelAction = "replace"
+	// RelabelActionKeep keeps metrics that match the regex.
+	RelabelActionKeep RelabelAction = "keep"
+	// RelabelActionDrop drops metrics that match the regex.
+	RelabelActionDrop RelabelAction = "drop"
+	// RelabelActionHashMod sets the target label to the modulus of a hash of the source labels.
+	RelabelActionHashMod RelabelAction = "hashmod"
+	// RelabelActionLabelMap maps label names based on regex matching.
+	RelabelActionLabelMap RelabelAction = "labelmap"
+	// RelabelActionLabelDrop removes labels that match the regex.
+	RelabelActionLabelDrop RelabelAction = "labeldrop"
+	// RelabelActionLabelKeep removes labels that do not match the regex.
+	RelabelActionLabelKeep RelabelAction = "labelkeep"
+)
 
 // CollectionProfile defines the metrics collection profile for Prometheus.
 // +kubebuilder:validation:Enum=Full;Minimal

@@ -451,7 +451,6 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"github.com/openshift/api/config/v1alpha1.InsightsDataGatherSpec":                                    schema_openshift_api_config_v1alpha1_InsightsDataGatherSpec(ref),
 		"github.com/openshift/api/config/v1alpha1.InsightsDataGatherStatus":                                  schema_openshift_api_config_v1alpha1_InsightsDataGatherStatus(ref),
 		"github.com/openshift/api/config/v1alpha1.Label":                                                     schema_openshift_api_config_v1alpha1_Label(ref),
-		"github.com/openshift/api/config/v1alpha1.LocalObjectReference":                                      schema_openshift_api_config_v1alpha1_LocalObjectReference(ref),
 		"github.com/openshift/api/config/v1alpha1.MetricsServerConfig":                                       schema_openshift_api_config_v1alpha1_MetricsServerConfig(ref),
 		"github.com/openshift/api/config/v1alpha1.PKI":                                                       schema_openshift_api_config_v1alpha1_PKI(ref),
 		"github.com/openshift/api/config/v1alpha1.PKICertificateSubject":                                     schema_openshift_api_config_v1alpha1_PKICertificateSubject(ref),
@@ -470,7 +469,6 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"github.com/openshift/api/config/v1alpha1.RetentionNumberConfig":                                     schema_openshift_api_config_v1alpha1_RetentionNumberConfig(ref),
 		"github.com/openshift/api/config/v1alpha1.RetentionPolicy":                                           schema_openshift_api_config_v1alpha1_RetentionPolicy(ref),
 		"github.com/openshift/api/config/v1alpha1.RetentionSizeConfig":                                       schema_openshift_api_config_v1alpha1_RetentionSizeConfig(ref),
-		"github.com/openshift/api/config/v1alpha1.SecretKeyReference":                                        schema_openshift_api_config_v1alpha1_SecretKeyReference(ref),
 		"github.com/openshift/api/config/v1alpha1.SecretKeySelector":                                         schema_openshift_api_config_v1alpha1_SecretKeySelector(ref),
 		"github.com/openshift/api/config/v1alpha1.Storage":                                                   schema_openshift_api_config_v1alpha1_Storage(ref),
 		"github.com/openshift/api/config/v1alpha1.TLSConfig":                                                 schema_openshift_api_config_v1alpha1_TLSConfig(ref),
@@ -21235,7 +21233,7 @@ func schema_openshift_api_config_v1alpha1_AdditionalAlertmanagerConfig(ref commo
 				Properties: map[string]spec.Schema{
 					"apiVersion": {
 						SchemaProps: spec.SchemaProps{
-							Description: "apiVersion defines the API version of Alertmanager. Allowed values: \"v2\". \"v1\" is no longer supported, \"v2\" is set as the default value.",
+							Description: "apiVersion defines the Alertmanager API version to target. Allowed values: \"v2\". \"v1\" is no longer supported.",
 							Type:        []string{"string"},
 							Format:      "",
 						},
@@ -21244,12 +21242,12 @@ func schema_openshift_api_config_v1alpha1_AdditionalAlertmanagerConfig(ref commo
 						SchemaProps: spec.SchemaProps{
 							Description: "bearerToken defines the secret reference containing the bearer token to use when authenticating to Alertmanager. This is a custom type to allow for admission time validations.",
 							Default:     map[string]interface{}{},
-							Ref:         ref("github.com/openshift/api/config/v1alpha1.SecretKeyReference"),
+							Ref:         ref("github.com/openshift/api/config/v1alpha1.SecretKeySelector"),
 						},
 					},
 					"pathPrefix": {
 						SchemaProps: spec.SchemaProps{
-							Description: "pathPrefix defines the path prefix to add in front of the push endpoint path.",
+							Description: "pathPrefix defines an optional URL path prefix to prepend to the Alertmanager API endpoints. For example, if your Alertmanager is behind a reverse proxy at \"/alertmanager/\", set this to \"/alertmanager\" so requests go to \"/alertmanager/api/v1/alerts\" instead of \"/api/v1/alerts\". This is commonly needed when Alertmanager is deployed behind ingress controllers or load balancers.",
 							Type:        []string{"string"},
 							Format:      "",
 						},
@@ -21268,7 +21266,7 @@ func schema_openshift_api_config_v1alpha1_AdditionalAlertmanagerConfig(ref commo
 							},
 						},
 						SchemaProps: spec.SchemaProps{
-							Description: "staticConfigs is a list of statically configured Alertmanager endpoints in the form of `<host>:<port>`. Each entry must be a valid hostname or IP address followed by a colon and a valid port number (1-65535).",
+							Description: "staticConfigs is a list of statically configured Alertmanager endpoints in the form of `<host>:<port>`. Each entry must be a valid hostname or IP address followed by a colon and a valid port number (1-65535). Maximum of 10 endpoints can be specified.",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -21299,7 +21297,7 @@ func schema_openshift_api_config_v1alpha1_AdditionalAlertmanagerConfig(ref commo
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/config/v1alpha1.SecretKeyReference", "github.com/openshift/api/config/v1alpha1.TLSConfig"},
+			"github.com/openshift/api/config/v1alpha1.SecretKeySelector", "github.com/openshift/api/config/v1alpha1.TLSConfig"},
 	}
 }
 
@@ -22048,7 +22046,7 @@ func schema_openshift_api_config_v1alpha1_ExternalLabels(ref common.ReferenceCal
 							},
 						},
 						SchemaProps: spec.SchemaProps{
-							Description: "labels is a list of label key/value pairs.",
+							Description: "labels is a list of label key/value pairs. At least 1 label must be specified, with a maximum of 50 labels allowed. This field is required when ExternalLabels is specified - an empty array [] is not allowed.",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -22470,7 +22468,7 @@ func schema_openshift_api_config_v1alpha1_Label(ref common.ReferenceCallback) co
 				Properties: map[string]spec.Schema{
 					"key": {
 						SchemaProps: spec.SchemaProps{
-							Description: "key is the name of the label.",
+							Description: "key is the name of the label. The key must be a valid Prometheus label name, starting with a letter or underscore, followed by letters, digits, or underscores.",
 							Type:        []string{"string"},
 							Format:      "",
 						},
@@ -22484,32 +22482,6 @@ func schema_openshift_api_config_v1alpha1_Label(ref common.ReferenceCallback) co
 					},
 				},
 				Required: []string{"key", "value"},
-			},
-		},
-	}
-}
-
-func schema_openshift_api_config_v1alpha1_LocalObjectReference(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Description: "LocalObjectReference contains enough information to let you locate the referenced object inside the same namespace.",
-				Type:        []string{"object"},
-				Properties: map[string]spec.Schema{
-					"name": {
-						SchemaProps: spec.SchemaProps{
-							Description: "name of the referent. This field is effectively required, but due to backwards compatibility is allowed to be empty. Instances of this type with an empty value here are almost certainly wrong. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names",
-							Default:     "",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-				},
-			},
-			VendorExtensible: spec.VendorExtensible{
-				Extensions: spec.Extensions{
-					"x-kubernetes-map-type": "atomic",
-				},
 			},
 		},
 	}
@@ -22965,14 +22937,11 @@ func schema_openshift_api_config_v1alpha1_PrometheusK8sConfig(ref common.Referen
 					"additionalAlertmanagerConfigs": {
 						VendorExtensible: spec.VendorExtensible{
 							Extensions: spec.Extensions{
-								"x-kubernetes-list-map-keys": []interface{}{
-									"apiVersion",
-								},
-								"x-kubernetes-list-type": "map",
+								"x-kubernetes-list-type": "atomic",
 							},
 						},
 						SchemaProps: spec.SchemaProps{
-							Description: "additionalAlertmanagerConfigs configures additional Alertmanager instances that receive alerts from the Prometheus component. By default, no additional Alertmanager instances are configured.",
+							Description: "additionalAlertmanagerConfigs configures additional Alertmanager instances that receive alerts from the Prometheus component. This is useful for organizations that need to:\n  - Send alerts to external monitoring systems (like PagerDuty, Slack, or custom webhooks)\n  - Route different types of alerts to different teams or systems\n  - Integrate with existing enterprise alerting infrastructure\n  - Maintain separate alert routing for compliance or organizational requirements\nBy default, no additional Alertmanager instances are configured. Maximum of 10 additional Alertmanager configurations can be specified. When omitted, no additional Alertmanager instances are configured (default behavior). When set to an empty array [], the behavior is the same as omitting the field.",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -22986,14 +22955,14 @@ func schema_openshift_api_config_v1alpha1_PrometheusK8sConfig(ref common.Referen
 					},
 					"enforcedBodySizeLimit": {
 						SchemaProps: spec.SchemaProps{
-							Description: "enforcedBodySizeLimit enforces a body size limit for Prometheus scraped metrics. If a scraped target's body response is larger than the limit, the scrape will fail. The following values are valid: an empty value to specify no limit, a numeric value in Prometheus size format (such as \"4MB\", \"1000\", \"1GB\", \"512KB\", \"100B\") or the string `automatic`, which indicates that the limit will be automatically calculated based on cluster capacity. To specify no limit, omit this field. The value must match the following pattern: ^(automatic|[0-9]+(B|KB|MB|GB|TB)?)$ Minimum length for this list is 1 Maximum length for this list is 50.",
+							Description: "enforcedBodySizeLimit enforces a body size limit for Prometheus scraped metrics. If a scraped target's body response is larger than the limit, the scrape will fail. The following values are valid: a numeric value in Prometheus size format (such as \"4MB\", \"1000\", \"1GB\", \"512KB\", \"100B\") or the string `automatic`, which indicates that the limit will be automatically calculated based on cluster capacity. To specify no limit, omit this field. The value must match the following pattern: ^(automatic|[0-9]+(B|KB|MB|GB|TB)?)$ Minimum length is 1 character. Maximum length is 50 characters.",
 							Type:        []string{"string"},
 							Format:      "",
 						},
 					},
 					"externalLabels": {
 						SchemaProps: spec.SchemaProps{
-							Description: "externalLabels defines labels to be added to any time series or alerts when communicating with external systems such as federation, remote storage, and Alertmanager. By default, no labels are added.",
+							Description: "externalLabels defines labels to be added to any time series or alerts when communicating with external systems such as federation, remote storage, and Alertmanager. By default, no labels are added. When omitted, no external labels are applied (default behavior). When specified, at least one label must be provided in the labels field.",
 							Default:     map[string]interface{}{},
 							Ref:         ref("github.com/openshift/api/config/v1alpha1.ExternalLabels"),
 						},
@@ -23130,7 +23099,7 @@ func schema_openshift_api_config_v1alpha1_PrometheusK8sConfig(ref common.Referen
 					},
 					"collectionProfile": {
 						SchemaProps: spec.SchemaProps{
-							Description: "collectionProfile defines the metrics collection profile that Prometheus uses to collect metrics from the platform components. Supported values are `full` or `minimal`. In the `full` profile (default), Prometheus collects all metrics that are exposed by the platform components. In the `minimal` profile, Prometheus only collects metrics necessary for the default platform alerts, recording rules, telemetry and console dashboards. When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time. The default value is `full`.",
+							Description: "collectionProfile defines the metrics collection profile that Prometheus uses to collect metrics from the platform components. Supported values are `Full` or `Minimal`. In the `Full` profile (default), Prometheus collects all metrics that are exposed by the platform components. In the `Minimal` profile, Prometheus only collects metrics necessary for the default platform alerts, recording rules, telemetry and console dashboards. When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time. The default value is `Full`.",
 							Type:        []string{"string"},
 							Format:      "",
 						},
@@ -23234,12 +23203,13 @@ func schema_openshift_api_config_v1alpha1_RelabelConfig(ref common.ReferenceCall
 					},
 					"action": {
 						SchemaProps: spec.SchemaProps{
-							Description: "action is the action to perform.",
+							Description: "action is the action to perform. Valid actions are: replace, keep, drop, hashmod, labelmap, labeldrop, labelkeep.",
 							Type:        []string{"string"},
 							Format:      "",
 						},
 					},
 				},
+				Required: []string{"action"},
 			},
 		},
 	}
@@ -23280,7 +23250,7 @@ func schema_openshift_api_config_v1alpha1_RemoteWriteSpec(ref common.ReferenceCa
 							},
 						},
 						SchemaProps: spec.SchemaProps{
-							Description: "writeRelabelConfigs is a list of relabeling rules to apply before sending data to the remote endpoint.",
+							Description: "writeRelabelConfigs is a list of relabeling rules to apply before sending data to the remote endpoint. Maximum of 10 relabeling rules can be specified.",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -23395,41 +23365,6 @@ func schema_openshift_api_config_v1alpha1_RetentionSizeConfig(ref common.Referen
 	}
 }
 
-func schema_openshift_api_config_v1alpha1_SecretKeyReference(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Description: "SecretKeyReference represents a reference to a secret key.",
-				Type:        []string{"object"},
-				Properties: map[string]spec.Schema{
-					"name": {
-						SchemaProps: spec.SchemaProps{
-							Description: "name of the secret in the pod's namespace to select from.",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"key": {
-						SchemaProps: spec.SchemaProps{
-							Description: "key of the secret to select from. Must be a valid secret key.",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"optional": {
-						SchemaProps: spec.SchemaProps{
-							Description: "optional specifies whether the Secret or its key must be defined",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-				},
-				Required: []string{"name", "key"},
-			},
-		},
-	}
-}
-
 func schema_openshift_api_config_v1alpha1_SecretKeySelector(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -23439,28 +23374,27 @@ func schema_openshift_api_config_v1alpha1_SecretKeySelector(ref common.Reference
 				Properties: map[string]spec.Schema{
 					"name": {
 						SchemaProps: spec.SchemaProps{
-							Description: "name of the referent. This field is effectively required, but due to backwards compatibility is allowed to be empty. Instances of this type with an empty value here are almost certainly wrong. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names",
-							Default:     "",
+							Description: "name is the name of the secret in the same namespace to select from.",
 							Type:        []string{"string"},
 							Format:      "",
 						},
 					},
 					"key": {
 						SchemaProps: spec.SchemaProps{
-							Description: "key of the secret to select from.  Must be a valid secret key.",
+							Description: "key is the key of the secret to select from. Must be a valid secret key.",
 							Type:        []string{"string"},
 							Format:      "",
 						},
 					},
 					"optional": {
 						SchemaProps: spec.SchemaProps{
-							Description: "optional specifies whether the Secret or its key must be defined",
+							Description: "optional specifies whether the Secret or its key must be defined. When set to \"Required\", the Secret and key must exist; if missing, the operator will report an error condition and block reconciliation until the secret is created. When set to \"Optional\", the CRD validation will pass even if the Secret or key is missing. The operator will continue reconciliation with reduced functionality:\n  - Authentication or TLS credentials dependent on this secret will be skipped.\n  - Prometheus will attempt to communicate without the missing credentials, which may result\n    in failed connections or unauthenticated access depending on the remote endpoint's requirements.\n  - The operator may emit warning events indicating the missing secret.\n  - No automatic fallback values are applied; the secret reference is simply ignored.\nWhen omitted, defaults to \"Required\".",
 							Type:        []string{"string"},
 							Format:      "",
 						},
 					},
 				},
-				Required: []string{"key"},
+				Required: []string{"name", "key"},
 			},
 			VendorExtensible: spec.VendorExtensible{
 				Extensions: spec.Extensions{
@@ -23536,9 +23470,9 @@ func schema_openshift_api_config_v1alpha1_TLSConfig(ref common.ReferenceCallback
 							Format:      "",
 						},
 					},
-					"insecureSkipVerify": {
+					"certificateVerification": {
 						SchemaProps: spec.SchemaProps{
-							Description: "insecureSkipVerify determines the policy for TLS certificate verification. Allowed values are \"Verify\" (default, secure) and \"InsecureSkipVerify\" (skip certificate verification, insecure). By default, certificate verification is performed (\"Verify\").",
+							Description: "certificateVerification determines the policy for TLS certificate verification. Allowed values are \"Verify\" (performs certificate verification, secure) and \"SkipVerify\" (skips verification, insecure). When omitted, defaults to \"Verify\" (secure certificate verification is performed).",
 							Type:        []string{"string"},
 							Format:      "",
 						},

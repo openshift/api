@@ -211,9 +211,6 @@
                         "name": "SigstoreImageVerificationPKI"
                     },
                     {
-                        "name": "TranslateStreamCloseWebsocketRequests"
-                    },
-                    {
                         "name": "VSphereConfigurableMaxAllowedBlockVolumesPerNode"
                     },
                     {

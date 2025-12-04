@@ -323,9 +323,6 @@
                         "name": "StoragePerformantSecurityPolicy"
                     },
                     {
-                        "name": "TranslateStreamCloseWebsocketRequests"
-                    },
-                    {
                         "name": "UpgradeStatus"
                     },
                     {

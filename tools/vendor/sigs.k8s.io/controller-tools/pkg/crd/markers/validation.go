@@ -34,6 +34,7 @@ const (
 
 	ValidationExactlyOneOfPrefix = validationPrefix + "ExactlyOneOf"
 	ValidationAtMostOneOfPrefix  = validationPrefix + "AtMostOneOf"
+	ValidationAtLeastOneOfPrefix = validationPrefix + "AtLeastOneOf"
 )
 
 // ValidationMarkers lists all available markers that affect CRD schema generation,
@@ -52,6 +53,9 @@ var ValidationMarkers = mustMakeAllWithPrefix(validationPrefix, markers.Describe
 	ExclusiveMaximum(false),
 	ExclusiveMinimum(false),
 	MultipleOf(0),
+
+	// object markers
+
 	MinProperties(0),
 	MaxProperties(0),
 
@@ -61,7 +65,7 @@ var ValidationMarkers = mustMakeAllWithPrefix(validationPrefix, markers.Describe
 	MinLength(0),
 	Pattern(""),
 
-	// slice markers
+	// array markers
 
 	MaxItems(0),
 	MinItems(0),
@@ -84,6 +88,8 @@ var TypeOnlyMarkers = []*definitionWithHelp{
 		WithHelp(markers.SimpleHelp("CRD validation", "specifies a list of field names that must conform to the AtMostOneOf constraint.")),
 	must(markers.MakeDefinition(ValidationExactlyOneOfPrefix, markers.DescribesType, ExactlyOneOf(nil))).
 		WithHelp(markers.SimpleHelp("CRD validation", "specifies a list of field names that must conform to the ExactlyOneOf constraint.")),
+	must(markers.MakeDefinition(ValidationAtLeastOneOfPrefix, markers.DescribesType, AtLeastOneOf(nil))).
+		WithHelp(markers.SimpleHelp("CRD validation", "specifies a list of field names that must conform to the AtLeastOneOf constraint.")),
 }
 
 // FieldOnlyMarkers list field-specific validation markers (i.e. those markers that don't make
@@ -97,7 +103,10 @@ var FieldOnlyMarkers = []*definitionWithHelp{
 		WithHelp(markers.SimpleHelp("CRD validation", "specifies that this field is required.")),
 	must(markers.MakeDefinition("optional", markers.DescribesField, struct{}{})).
 		WithHelp(markers.SimpleHelp("CRD validation", "specifies that this field is optional.")),
-
+	must(markers.MakeDefinition("k8s:required", markers.DescribesField, struct{}{})).
+		WithHelp(markers.SimpleHelp("CRD validation", "specifies that this field is required.")),
+	must(markers.MakeDefinition("k8s:optional", markers.DescribesField, struct{}{})).
+		WithHelp(markers.SimpleHelp("CRD validation", "specifies that this field is optional.")),
 	must(markers.MakeDefinition("nullable", markers.DescribesField, Nullable{})).
 		WithHelp(Nullable{}.Help()),
 
@@ -114,9 +123,6 @@ var FieldOnlyMarkers = []*definitionWithHelp{
 
 	must(markers.MakeDefinition(SchemalessName, markers.DescribesField, Schemaless{})).
 		WithHelp(Schemaless{}.Help()),
-
-	must(markers.MakeAnyTypeDefinition("kubebuilder:title", markers.DescribesField, Title{})).
-		WithHelp(Title{}.Help()),
 }
 
 // ValidationIshMarkers are field-and-type markers that don't fall under the
@@ -127,6 +133,11 @@ var ValidationIshMarkers = []*definitionWithHelp{
 		WithHelp(XPreserveUnknownFields{}.Help()),
 	must(markers.MakeDefinition("kubebuilder:pruning:PreserveUnknownFields", markers.DescribesType, XPreserveUnknownFields{})).
 		WithHelp(XPreserveUnknownFields{}.Help()),
+
+	must(markers.MakeAnyTypeDefinition("kubebuilder:title", markers.DescribesField, Title{})).
+		WithHelp(Title{}.Help()),
+	must(markers.MakeAnyTypeDefinition("kubebuilder:title", markers.DescribesType, Title{})).
+		WithHelp(Title{}.Help()),
 }
 
 func init() {
@@ -156,95 +167,94 @@ func init() {
 	AllDefinitions = append(AllDefinitions, ValidationIshMarkers...)
 }
 
-// +controllertools:marker:generateHelp:category="CRD validation"
 // Maximum specifies the maximum numeric value that this field can have.
+// +controllertools:marker:generateHelp:category="CRD validation"
 type Maximum float64
 
 func (m Maximum) Value() float64 {
 	return float64(m)
 }
 
-// +controllertools:marker:generateHelp:category="CRD validation"
 // Minimum specifies the minimum numeric value that this field can have. Negative numbers are supported.
+// +controllertools:marker:generateHelp:category="CRD validation"
 type Minimum float64
 
 func (m Minimum) Value() float64 {
 	return float64(m)
 }
 
-// +controllertools:marker:generateHelp:category="CRD validation"
 // ExclusiveMinimum indicates that the minimum is "up to" but not including that value.
+// +controllertools:marker:generateHelp:category="CRD validation"
 type ExclusiveMinimum bool
 
-// +controllertools:marker:generateHelp:category="CRD validation"
 // ExclusiveMaximum indicates that the maximum is "up to" but not including that value.
+// +controllertools:marker:generateHelp:category="CRD validation"
 type ExclusiveMaximum bool
 
-// +controllertools:marker:generateHelp:category="CRD validation"
 // MultipleOf specifies that this field must have a numeric value that's a multiple of this one.
+// +controllertools:marker:generateHelp:category="CRD validation"
 type MultipleOf float64
 
 func (m MultipleOf) Value() float64 {
 	return float64(m)
 }
 
-// +controllertools:marker:generateHelp:category="CRD validation"
 // MaxLength specifies the maximum length for this string.
+// +controllertools:marker:generateHelp:category="CRD validation"
 type MaxLength int
 
-// +controllertools:marker:generateHelp:category="CRD validation"
 // MinLength specifies the minimum length for this string.
+// +controllertools:marker:generateHelp:category="CRD validation"
 type MinLength int
 
-// +controllertools:marker:generateHelp:category="CRD validation"
 // Pattern specifies that this string must match the given regular expression.
+// +controllertools:marker:generateHelp:category="CRD validation"
 type Pattern string
 
-// +controllertools:marker:generateHelp:category="CRD validation"
 // MaxItems specifies the maximum length for this list.
+// +controllertools:marker:generateHelp:category="CRD validation"
 type MaxItems int
 
-// +controllertools:marker:generateHelp:category="CRD validation"
 // MinItems specifies the minimum length for this list.
+// +controllertools:marker:generateHelp:category="CRD validation"
 type MinItems int
 
-// +controllertools:marker:generateHelp:category="CRD validation"
 // UniqueItems specifies that all items in this list must be unique.
+// +controllertools:marker:generateHelp:category="CRD validation"
 type UniqueItems bool
 
-// +controllertools:marker:generateHelp:category="CRD validation"
 // MaxProperties restricts the number of keys in an object
+// +controllertools:marker:generateHelp:category="CRD validation"
 type MaxProperties int
 
-// +controllertools:marker:generateHelp:category="CRD validation"
 // MinProperties restricts the number of keys in an object
+// +controllertools:marker:generateHelp:category="CRD validation"
 type MinProperties int
 
-// +controllertools:marker:generateHelp:category="CRD validation"
 // Enum specifies that this (scalar) field is restricted to the *exact* values specified here.
+// +controllertools:marker:generateHelp:category="CRD validation"
 type Enum []interface{}
 
-// +controllertools:marker:generateHelp:category="CRD validation"
 // Format specifies additional "complex" formatting for this field.
 //
 // For example, a date-time field would be marked as "type: string" and
 // "format: date-time".
+// +controllertools:marker:generateHelp:category="CRD validation"
 type Format string
 
-// +controllertools:marker:generateHelp:category="CRD validation"
 // Type overrides the type for this field (which defaults to the equivalent of the Go type).
 //
 // This generally must be paired with custom serialization.  For example, the
 // metav1.Time field would be marked as "type: string" and "format: date-time".
+// +controllertools:marker:generateHelp:category="CRD validation"
 type Type string
 
-// +controllertools:marker:generateHelp:category="CRD validation"
 // Nullable marks this field as allowing the "null" value.
 //
 // This is often not necessary, but may be helpful with custom serialization.
+// +controllertools:marker:generateHelp:category="CRD validation"
 type Nullable struct{}
 
-// +controllertools:marker:generateHelp:category="CRD validation"
 // Default sets the default value for this field.
 //
 // A default value will be accepted as any value valid for the
@@ -253,23 +263,23 @@ type Nullable struct{}
 // "delete"}`). Defaults should be defined in pruned form, and only best-effort
 // validation will be performed. Full validation of a default requires
 // submission of the containing CRD to an apiserver.
+// +controllertools:marker:generateHelp:category="CRD validation"
 type Default struct {
 	Value interface{}
 }
 
-// +controllertools:marker:generateHelp:category="CRD validation"
 // Title sets the title for this field.
 //
 // The title is metadata that makes the OpenAPI documentation more user-friendly,
 // making the schema more understandable when viewed in documentation tools.
 // It's a metadata field that doesn't affect validation but provides
 // important context about what the schema represents.
+// +controllertools:marker:generateHelp:category="CRD validation"
 type Title struct {
 	Value interface{}
 }
 
-// +controllertools:marker:generateHelp:category="CRD validation"
-// Default sets the default value for this field.
+// KubernetesDefault sets the default value for this field.
 //
 // A default value will be accepted as any value valid for the field.
 // Only JSON-formatted values are accepted. `ref(...)` values are ignored.
@@ -278,11 +288,11 @@ type Title struct {
 // "delete"}`). Defaults should be defined in pruned form, and only best-effort
 // validation will be performed. Full validation of a default requires
 // submission of the containing CRD to an apiserver.
+// +controllertools:marker:generateHelp:category="CRD validation"
 type KubernetesDefault struct {
 	Value interface{}
 }
 
-// +controllertools:marker:generateHelp:category="CRD validation"
 // Example sets the example value for this field.
 //
 // An example value will be accepted as any value valid for the
@@ -291,12 +301,12 @@ type KubernetesDefault struct {
 // "delete"}`). Examples should be defined in pruned form, and only best-effort
 // validation will be performed. Full validation of an example requires
 // submission of the containing CRD to an apiserver.
+// +controllertools:marker:generateHelp:category="CRD validation"
 type Example struct {
 	Value interface{}
 }
 
-// +controllertools:marker:generateHelp:category="CRD processing"
-// PreserveUnknownFields stops the apiserver from pruning fields which are not specified.
+// XPreserveUnknownFields stops the apiserver from pruning fields which are not specified.
 //
 // By default the apiserver drops unknown fields from the request payload
 // during the decoding step. This marker stops the API server from doing so.
@@ -308,26 +318,26 @@ type Example struct {
 // NB: The kubebuilder:validation:XPreserveUnknownFields variant is deprecated
 // in favor of the kubebuilder:pruning:PreserveUnknownFields variant.  They function
 // identically.
+// +controllertools:marker:generateHelp:category="CRD processing"
 type XPreserveUnknownFields struct{}
 
-// +controllertools:marker:generateHelp:category="CRD validation"
-// EmbeddedResource marks a fields as an embedded resource with apiVersion, kind and metadata fields.
+// XEmbeddedResource marks a fields as an embedded resource with apiVersion, kind and metadata fields.
 //
 // An embedded resource is a value that has apiVersion, kind and metadata fields.
 // They are validated implicitly according to the semantics of the currently
 // running apiserver. It is not necessary to add any additional schema for these
 // field, yet it is possible. This can be combined with PreserveUnknownFields.
+// +controllertools:marker:generateHelp:category="CRD validation"
 type XEmbeddedResource struct{}
 
-// +controllertools:marker:generateHelp:category="CRD validation"
-// IntOrString marks a fields as an IntOrString.
+// XIntOrString marks a fields as an IntOrString.
 //
 // This is required when applying patterns or other validations to an IntOrString
 // field. Known information about the type is applied during the collapse phase
 // and as such is not normally available during marker application.
+// +controllertools:marker:generateHelp:category="CRD validation"
 type XIntOrString struct{}
 
-// +controllertools:marker:generateHelp:category="CRD validation"
 // Schemaless marks a field as being a schemaless object.
 //
 // Schemaless objects are not introspected, so you must provide
@@ -335,6 +345,7 @@ type XIntOrString struct{}
 // tag is for embedding fields that hold JSONSchema typed objects.
 // Because this field disables all type checking, it is recommended
 // to be used only as a last resort.
+// +controllertools:marker:generateHelp:category="CRD validation"
 type Schemaless struct{}
 
 func hasNumericType(schema *apiext.JSONSchemaProps) bool {
@@ -349,12 +360,12 @@ func isIntegral(value float64) bool {
 	return value == math.Trunc(value) && !math.IsNaN(value) && !math.IsInf(value, 0)
 }
 
-// +controllertools:marker:generateHelp:category="CRD validation"
 // XValidation marks a field as requiring a value for which a given
 // expression evaluates to true.
 //
 // This marker may be repeated to specify multiple expressions, all of
 // which must evaluate to true.
+// +controllertools:marker:generateHelp:category="CRD validation"
 type XValidation struct {
 	Rule              string
 	Message           string `marker:",optional"`
@@ -364,17 +375,23 @@ type XValidation struct {
 	OptionalOldSelf   *bool  `marker:"optionalOldSelf,optional"`
 }
 
-// +controllertools:marker:generateHelp:category="CRD validation"
 // AtMostOneOf adds a validation constraint that allows at most one of the specified fields.
 //
 // This marker may be repeated to specify multiple AtMostOneOf constraints that are mutually exclusive.
+// +controllertools:marker:generateHelp:category="CRD validation"
 type AtMostOneOf []string
 
-// +controllertools:marker:generateHelp:category="CRD validation"
 // ExactlyOneOf adds a validation constraint that allows at exactly one of the specified fields.
 //
 // This marker may be repeated to specify multiple ExactlyOneOf constraints that are mutually exclusive.
+// +controllertools:marker:generateHelp:category="CRD validation"
 type ExactlyOneOf []string
+
+// AtLeastOneOf adds a validation constraint that allows at least one of the specified fields.
+//
+// This marker may be repeated to specify multiple AtLeastOneOf constraints that are mutually exclusive.
+// +controllertools:marker:generateHelp:category="CRD validation"
+type AtLeastOneOf []string
 
 func (m Maximum) ApplyToSchema(schema *apiext.JSONSchemaProps) error {
 	if !hasNumericType(schema) {
@@ -547,7 +564,7 @@ func (m Nullable) ApplyToSchema(schema *apiext.JSONSchemaProps) error {
 	return nil
 }
 
-// Defaults are only valid CRDs created with the v1 API
+// ApplyToSchema defaults are only valid CRDs created with the v1 API
 func (m Default) ApplyToSchema(schema *apiext.JSONSchemaProps) error {
 	marshalledDefault, err := json.Marshal(m.Value)
 	if err != nil {
@@ -587,7 +604,7 @@ func (m *KubernetesDefault) ParseMarker(_ string, _ string, restFields string) e
 	return json.Unmarshal([]byte(restFields), &m.Value)
 }
 
-// Defaults are only valid CRDs created with the v1 API
+// ApplyToSchema defaults are only valid CRDs created with the v1 API
 func (m KubernetesDefault) ApplyToSchema(schema *apiext.JSONSchemaProps) error {
 	if m.Value == nil {
 		// only apply to the schema if we have a non-nil default value
@@ -694,8 +711,25 @@ func (fields ExactlyOneOf) ApplyToSchema(schema *apiext.JSONSchemaProps) error {
 }
 
 func (ExactlyOneOf) ApplyPriority() ApplyPriority {
-	// explicitly go after XValidation markers so that the ordering is deterministic
-	return XValidation{}.ApplyPriority() + 1
+	// explicitly go after AtMostOneOf markers so that the ordering is deterministic
+	return AtMostOneOf{}.ApplyPriority() + 1
+}
+
+func (fields AtLeastOneOf) ApplyToSchema(schema *apiext.JSONSchemaProps) error {
+	if len(fields) == 0 {
+		return nil
+	}
+	rule := fieldsToOneOfCelRuleStr(fields)
+	xvalidation := XValidation{
+		Rule:    fmt.Sprintf("%s >= 1", rule),
+		Message: fmt.Sprintf("at least one of the fields in %v must be set", fields),
+	}
+	return xvalidation.ApplyToSchema(schema)
+}
+
+func (AtLeastOneOf) ApplyPriority() ApplyPriority {
+	// explicitly go after ExactlyOneOf markers so that the ordering is deterministic
+	return ExactlyOneOf{}.ApplyPriority() + 1
 }
 
 // fieldsToOneOfCelRuleStr converts a slice of field names to a string representation

@@ -42493,6 +42493,28 @@ func schema_openshift_api_machineconfiguration_v1alpha1_InternalReleaseImageStat
 				Description: "InternalReleaseImageStatus describes the current state of a InternalReleaseImage.",
 				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
+					"conditions": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-map-keys": []interface{}{
+									"type",
+								},
+								"x-kubernetes-list-type": "map",
+							},
+						},
+						SchemaProps: spec.SchemaProps{
+							Description: "conditions represent the observations of the InternalReleaseImage controller current state. Valid types are: Degraded. If Degraded is true, that means something has gone wrong in the controller.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("k8s.io/apimachinery/pkg/apis/meta/v1.Condition"),
+									},
+								},
+							},
+						},
+					},
 					"releases": {
 						VendorExtensible: spec.VendorExtensible{
 							Extensions: spec.Extensions{
@@ -42520,7 +42542,7 @@ func schema_openshift_api_machineconfiguration_v1alpha1_InternalReleaseImageStat
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/machineconfiguration/v1alpha1.InternalReleaseImageBundleStatus"},
+			"github.com/openshift/api/machineconfiguration/v1alpha1.InternalReleaseImageBundleStatus", "k8s.io/apimachinery/pkg/apis/meta/v1.Condition"},
 	}
 }
 

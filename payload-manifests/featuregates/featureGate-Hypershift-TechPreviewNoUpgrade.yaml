@@ -67,6 +67,9 @@
                     },
                     {
                         "name": "ShortCertRotation"
+                    },
+                    {
+                        "name": "TLSCurvesConfiguration"
                     }
                 ],
                 "enabled": [

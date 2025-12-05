@@ -439,7 +439,7 @@ type HostPlacement struct {
 	// When Affinity is set to AnyAvailable and the `dedicatedHost` field is defined, it runs on specified Dedicated Host, but may move if stopped.
 	// +required
 	// +unionDiscriminator
-	Affinity *HostAffinity `json:"affinity,omitempty"`
+	Affinity HostAffinity `json:"affinity,omitempty"`
 
 	// dedicatedHost specifies the exact host that an instance should be restarted on if stopped.
 	// dedicatedHost is required when 'affinity' is set to DedicatedHost, and optional otherwise.

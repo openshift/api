@@ -86,7 +86,7 @@ type InternalReleaseImageStatus struct {
 	// +listMapKey=name
 	// +kubebuilder:validation:MinItems=1
 	// +kubebuilder:validation:MaxItems=32
-	// +required
+	// +optional
 	Releases []InternalReleaseImageBundleStatus `json:"releases,omitempty"`
 }
 

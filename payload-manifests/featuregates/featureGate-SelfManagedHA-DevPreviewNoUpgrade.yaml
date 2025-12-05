@@ -101,6 +101,9 @@
                         "name": "CRDCompatibilityRequirementOperator"
                     },
                     {
+                        "name": "CRIOCredentialProviderConfig"
+                    },
+                    {
                         "name": "ClientsPreferCBOR"
                     },
                     {

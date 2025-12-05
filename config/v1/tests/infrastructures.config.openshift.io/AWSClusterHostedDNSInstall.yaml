@@ -3,6 +3,7 @@ name: "Infrastructure"
 crdName: infrastructures.config.openshift.io
 featureGates:
 - AWSClusterHostedDNSInstall
+- AWSDualStackInstall
 tests:
   onCreate:
     - name: Should be able to create a minimal Infrastructure
@@ -28,7 +29,10 @@ tests:
           infrastructureTopology: HighlyAvailable
           platform: AWS
           platformStatus:
-            aws: {}
+            aws:
+              cloudLoadBalancerConfig:
+                dnsType: PlatformDefault
+              ipFamily: IPv4
             type: AWS
       updated: |
         apiVersion: config.openshift.io/v1
@@ -42,7 +46,10 @@ tests:
           infrastructureTopology: HighlyAvailable
           platform: AWS
           platformStatus:
-            aws: {}
+            aws:
+              cloudLoadBalancerConfig:
+                dnsType: PlatformDefault
+              ipFamily: IPv4
             type: AWS
       expected: |
         apiVersion: config.openshift.io/v1

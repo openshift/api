@@ -7,7 +7,7 @@ import (
 )
 
 var (
-	GroupName     = "config.openshift.io"
+	GroupName     = "insights.openshift.io"
 	GroupVersion  = schema.GroupVersion{Group: GroupName, Version: "v1"}
 	schemeBuilder = runtime.NewSchemeBuilder(addKnownTypes)
 	// Install is a function which adds this version to a scheme
@@ -30,54 +30,8 @@ func Resource(resource string) schema.GroupResource {
 // Adds the list of known types to api.Scheme.
 func addKnownTypes(scheme *runtime.Scheme) error {
 	scheme.AddKnownTypes(GroupVersion,
-		&APIServer{},
-		&APIServerList{},
-		&Authentication{},
-		&AuthenticationList{},
-		&Build{},
-		&BuildList{},
-		&ClusterOperator{},
-		&ClusterOperatorList{},
-		&ClusterVersion{},
-		&ClusterVersionList{},
-		&Console{},
-		&ConsoleList{},
-		&DNS{},
-		&DNSList{},
-		&FeatureGate{},
-		&FeatureGateList{},
-		&Image{},
-		&ImageList{},
-		&Infrastructure{},
-		&InfrastructureList{},
-		&Ingress{},
-		&IngressList{},
-		&Node{},
-		&NodeList{},
-		&Network{},
-		&NetworkList{},
-		&OAuth{},
-		&OAuthList{},
-		&OperatorHub{},
-		&OperatorHubList{},
-		&Project{},
-		&ProjectList{},
-		&Proxy{},
-		&ProxyList{},
-		&Scheduler{},
-		&SchedulerList{},
-		&ImageContentPolicy{},
-		&ImageContentPolicyList{},
-		&ImageDigestMirrorSet{},
-		&ImageDigestMirrorSetList{},
-		&ImageTagMirrorSet{},
-		&ImageTagMirrorSetList{},
-		&ImagePolicy{},
-		&ImagePolicyList{},
-		&ClusterImagePolicy{},
-		&ClusterImagePolicyList{},
-		&InsightsDataGather{},
-		&InsightsDataGatherList{},
+		&DataGather{},
+		&DataGatherList{},
 	)
 	metav1.AddToGroupVersion(scheme, GroupVersion)
 	return nil

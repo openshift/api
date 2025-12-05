@@ -330,6 +330,7 @@ spec:
                         rule: isCIDR(self)
                     maxItems: 25
                     type: array
+                    x-kubernetes-list-type: atomic
                   subnets:
                     description: |-
                       subnets is a list of subnets.

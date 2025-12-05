@@ -29,7 +29,7 @@ tests:
         kind: FeatureGate
         spec:
           featureSet: bar
-      expectedError: "spec.featureSet: Unsupported value: \"bar\": supported values: \"CustomNoUpgrade\", \"DevPreviewNoUpgrade\", \"TechPreviewNoUpgrade\", \"\""
+      expectedError: "spec.featureSet: Unsupported value: \"bar\": supported values: \"CustomNoUpgrade\", \"DevPreviewNoUpgrade\", \"TechPreviewNoUpgrade\", \"OKD\", \"\""
   onUpdate:
     - name: Default to TechPreview
       initial: |
@@ -121,4 +121,4 @@ tests:
         kind: FeatureGate
         spec:
           featureSet: "bar"
-      expectedError: "spec.featureSet: Unsupported value: \"bar\": supported values: \"CustomNoUpgrade\", \"DevPreviewNoUpgrade\", \"TechPreviewNoUpgrade\", \"\""
+      expectedError: "spec.featureSet: Unsupported value: \"bar\": supported values: \"CustomNoUpgrade\", \"DevPreviewNoUpgrade\", \"TechPreviewNoUpgrade\", \"OKD\", \"\""

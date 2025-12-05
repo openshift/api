@@ -520,6 +520,11 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"github.com/openshift/api/console/v1.ConsoleYAMLSampleSpec":                                          schema_openshift_api_console_v1_ConsoleYAMLSampleSpec(ref),
 		"github.com/openshift/api/console/v1.Link":                                                           schema_openshift_api_console_v1_Link(ref),
 		"github.com/openshift/api/console/v1.NamespaceDashboardSpec":                                         schema_openshift_api_console_v1_NamespaceDashboardSpec(ref),
+		"github.com/openshift/api/etcd/v1alpha1.PacemakerCluster":                                            schema_openshift_api_etcd_v1alpha1_PacemakerCluster(ref),
+		"github.com/openshift/api/etcd/v1alpha1.PacemakerClusterList":                                        schema_openshift_api_etcd_v1alpha1_PacemakerClusterList(ref),
+		"github.com/openshift/api/etcd/v1alpha1.PacemakerClusterNodeStatus":                                  schema_openshift_api_etcd_v1alpha1_PacemakerClusterNodeStatus(ref),
+		"github.com/openshift/api/etcd/v1alpha1.PacemakerClusterResourceStatus":                              schema_openshift_api_etcd_v1alpha1_PacemakerClusterResourceStatus(ref),
+		"github.com/openshift/api/etcd/v1alpha1.PacemakerClusterStatus":                                      schema_openshift_api_etcd_v1alpha1_PacemakerClusterStatus(ref),
 		"github.com/openshift/api/example/v1.CELUnion":                                                       schema_openshift_api_example_v1_CELUnion(ref),
 		"github.com/openshift/api/example/v1.EvolvingUnion":                                                  schema_openshift_api_example_v1_EvolvingUnion(ref),
 		"github.com/openshift/api/example/v1.FormatMarkerExamples":                                           schema_openshift_api_example_v1_FormatMarkerExamples(ref),
@@ -25287,6 +25292,272 @@ func schema_openshift_api_console_v1_NamespaceDashboardSpec(ref common.Reference
 		},
 		Dependencies: []string{
 			"k8s.io/apimachinery/pkg/apis/meta/v1.LabelSelector"},
+	}
+}
+
+func schema_openshift_api_etcd_v1alpha1_PacemakerCluster(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "PacemakerCluster represents the current state of the pacemaker cluster as reported by the pcs status command. PacemakerCluster is a cluster-scoped singleton resource. The name of this instance is \"cluster\". This resource provides a view into the health and status of a pacemaker-managed cluster in TNF deployments.\n\nCompatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"kind": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"apiVersion": {
+						SchemaProps: spec.SchemaProps{
+							Description: "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"metadata": {
+						SchemaProps: spec.SchemaProps{
+							Description: "metadata is the standard object's metadata. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata",
+							Default:     map[string]interface{}{},
+							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"),
+						},
+					},
+					"status": {
+						SchemaProps: spec.SchemaProps{
+							Description: "status contains the actual pacemaker cluster status information collected from the cluster. The goal of this status is to be able to quickly identify if pacemaker is in a healthy state. In TNF, a healthy pacemaker cluster has 2 nodes, both of which have healthy kubelet, etcd, and fencing resources.",
+							Ref:         ref("github.com/openshift/api/etcd/v1alpha1.PacemakerClusterStatus"),
+						},
+					},
+				},
+				Required: []string{"metadata"},
+			},
+		},
+		Dependencies: []string{
+			"github.com/openshift/api/etcd/v1alpha1.PacemakerClusterStatus", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"},
+	}
+}
+
+func schema_openshift_api_etcd_v1alpha1_PacemakerClusterList(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "PacemakerClusterList contains a list of PacemakerCluster objects. PacemakerCluster is a cluster-scoped singleton resource; only one instance named \"cluster\" may exist. This list type exists only to satisfy Kubernetes API conventions.\n\nCompatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"kind": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"apiVersion": {
+						SchemaProps: spec.SchemaProps{
+							Description: "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"metadata": {
+						SchemaProps: spec.SchemaProps{
+							Description: "metadata is the standard list's metadata. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata",
+							Default:     map[string]interface{}{},
+							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"),
+						},
+					},
+					"items": {
+						SchemaProps: spec.SchemaProps{
+							Description: "items is a list of PacemakerCluster objects.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("github.com/openshift/api/etcd/v1alpha1.PacemakerCluster"),
+									},
+								},
+							},
+						},
+					},
+				},
+				Required: []string{"items"},
+			},
+		},
+		Dependencies: []string{
+			"github.com/openshift/api/etcd/v1alpha1.PacemakerCluster", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"},
+	}
+}
+
+func schema_openshift_api_etcd_v1alpha1_PacemakerClusterNodeStatus(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "PacemakerClusterNodeStatus represents the status of a single node in the pacemaker cluster including the node's conditions and the health of critical resources running on that node.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"conditions": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-map-keys": []interface{}{
+									"type",
+								},
+								"x-kubernetes-list-type": "map",
+							},
+						},
+						SchemaProps: spec.SchemaProps{
+							Description: "conditions represent the observations of the node's current state. Known condition types are: \"PacemakerClusterNodeHealthy\", \"PacemakerClusterNodeOnline\", \"PacemakerClusterNodeNotInMaintenance\", \"PacemakerClusterNodeActive\", \"PacemakerClusterNodeReady\", \"PacemakerClusterNodeClean\", \"PacemakerClusterNodeMember\". The \"PacemakerClusterNodeHealthy\" condition is an aggregate that tracks the overall health of the node. The \"PacemakerClusterNodeOnline\" condition tracks whether the node is online. The \"PacemakerClusterNodeNotInMaintenance\" condition tracks whether the node is not in maintenance mode. The \"PacemakerClusterNodeActive\" condition tracks whether the node is active (not in standby mode). The \"PacemakerClusterNodeReady\" condition tracks whether the node is ready (not in a pending state). The \"PacemakerClusterNodeClean\" condition tracks whether the node is in a clean (status known) state. The \"PacemakerClusterNodeMember\" condition tracks whether the node is a member of the cluster. Each of these conditions is required.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("k8s.io/apimachinery/pkg/apis/meta/v1.Condition"),
+									},
+								},
+							},
+						},
+					},
+					"name": {
+						SchemaProps: spec.SchemaProps{
+							Description: "name is the name of the node. This is expected to match the Kubernetes node's name, which must be a lowercase RFC 1123 subdomain consisting of lowercase alphanumeric characters, '-' or '.', starting and ending with an alphanumeric character, and be at most 253 characters in length.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"ipAddress": {
+						SchemaProps: spec.SchemaProps{
+							Description: "ipAddress is the canonical IPv4 or IPv6 address of the node. It must be a valid canonical global unicast IPv4 or IPv6 address (including private/RFC1918 addresses). This excludes special addresses like unspecified, loopback, link-local, and multicast.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"kubelet": {
+						SchemaProps: spec.SchemaProps{
+							Description: "kubelet contains the status of the kubelet pacemaker resource on this node. The kubelet resource is a prerequisite for etcd in TNF deployments. It is expected to be running on all nodes.",
+							Ref:         ref("github.com/openshift/api/etcd/v1alpha1.PacemakerClusterResourceStatus"),
+						},
+					},
+					"etcd": {
+						SchemaProps: spec.SchemaProps{
+							Description: "etcd contains the status of the etcd pacemaker resource on this node. The etcd resource may temporarily transition to stopped during pacemaker quorum-recovery operations.",
+							Ref:         ref("github.com/openshift/api/etcd/v1alpha1.PacemakerClusterResourceStatus"),
+						},
+					},
+					"fencingAgent": {
+						SchemaProps: spec.SchemaProps{
+							Description: "fencingAgent contains the status of the fencing agent pacemaker resource on this node. The fencing agent is used to fence the other node during a quorum loss event.",
+							Ref:         ref("github.com/openshift/api/etcd/v1alpha1.PacemakerClusterResourceStatus"),
+						},
+					},
+				},
+				Required: []string{"name", "ipAddress"},
+			},
+		},
+		Dependencies: []string{
+			"github.com/openshift/api/etcd/v1alpha1.PacemakerClusterResourceStatus", "k8s.io/apimachinery/pkg/apis/meta/v1.Condition"},
+	}
+}
+
+func schema_openshift_api_etcd_v1alpha1_PacemakerClusterResourceStatus(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "PacemakerClusterResourceStatus represents the status of a pacemaker resource on a node. A pacemaker resource is a unit of work managed by pacemaker. In pacemaker terminology, resources are services or applications that pacemaker monitors, starts, stops, and moves between nodes to maintain high availability. For TNF, we manage three resources:\n - kubelet (the Kubernetes node agent and a prerequisite for etcd),\n - etcd (the distributed key-value store)\n - fencing agent (used to isolate failed nodes during a quorum loss event)",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"conditions": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-map-keys": []interface{}{
+									"type",
+								},
+								"x-kubernetes-list-type": "map",
+							},
+						},
+						SchemaProps: spec.SchemaProps{
+							Description: "conditions represent the observations of the resource's current state. Known condition types are: \"PacemakerClusterResourceHealthy\", \"PacemakerClusterResourceNotInMaintenance\", \"PacemakerClusterResourceManaged\", \"PacemakerClusterResourceEnabled\", \"PacemakerClusterResourceOperational\", \"PacemakerClusterResourceActive\", \"PacemakerClusterResourceStarted\", \"PacemakerClusterResourceUnblocked\". The \"PacemakerClusterResourceHealthy\" condition is an aggregate that tracks the overall health of the resource. The \"PacemakerClusterResourceNotInMaintenance\" condition tracks whether the resource is not in maintenance mode. The \"PacemakerClusterResourceManaged\" condition tracks whether the resource is managed by pacemaker. The \"PacemakerClusterResourceEnabled\" condition tracks whether the resource is enabled. The \"PacemakerClusterResourceOperational\" condition tracks whether the resource is operational (not failed). The \"PacemakerClusterResourceActive\" condition tracks whether the resource is active (available to be used). The \"PacemakerClusterResourceStarted\" condition tracks whether the resource is started. The \"PacemakerClusterResourceUnblocked\" condition tracks whether the resource is unblocked. Each of these conditions is required.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("k8s.io/apimachinery/pkg/apis/meta/v1.Condition"),
+									},
+								},
+							},
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/apimachinery/pkg/apis/meta/v1.Condition"},
+	}
+}
+
+func schema_openshift_api_etcd_v1alpha1_PacemakerClusterStatus(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "PacemakerClusterStatus contains the actual pacemaker cluster status information. As part of validating the status object, we need to ensure that the lastUpdated timestamp is always newer than the current value. We allow the lastUpdated timestamp to be empty on initial creation, but it is required once it has been set.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"conditions": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-map-keys": []interface{}{
+									"type",
+								},
+								"x-kubernetes-list-type": "map",
+							},
+						},
+						SchemaProps: spec.SchemaProps{
+							Description: "conditions represent the observations of the pacemaker cluster's current state. Known condition types are: \"PacemakerClusterHealthy\", \"PacemakerClusterNotInMaintenanceMode\", \"PacemakerClusterExpectedNodeCount\". The \"PacemakerClusterHealthy\" condition is an aggregate that tracks the overall health of the cluster. The \"PacemakerClusterNotInMaintenanceMode\" condition tracks whether the cluster is not in maintenance mode. The \"PacemakerClusterExpectedNodeCount\" condition tracks whether the expected number of nodes are present. Each of these conditions is required.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("k8s.io/apimachinery/pkg/apis/meta/v1.Condition"),
+									},
+								},
+							},
+						},
+					},
+					"lastUpdated": {
+						SchemaProps: spec.SchemaProps{
+							Description: "lastUpdated is the timestamp when this status was last updated. This is useful for identifying stale status reports. When present, it must be a valid timestamp in RFC3339 format and cannot be set to an earlier timestamp than the current value. It is optional upon initial creation, but required once it has been set.",
+							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.Time"),
+						},
+					},
+					"nodes": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-map-keys": []interface{}{
+									"name",
+								},
+								"x-kubernetes-list-type": "map",
+							},
+						},
+						SchemaProps: spec.SchemaProps{
+							Description: "nodes provides detailed information about each node in the cluster including per-node resource health. Each node entry includes the node's name, IP address, conditions, and resource status. The list can contain between 1 and 32 nodes. The upper limit is imposed by pacemaker. For TNF, exactly 2 nodes are expected in a healthy cluster.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("github.com/openshift/api/etcd/v1alpha1.PacemakerClusterNodeStatus"),
+									},
+								},
+							},
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"github.com/openshift/api/etcd/v1alpha1.PacemakerClusterNodeStatus", "k8s.io/apimachinery/pkg/apis/meta/v1.Condition", "k8s.io/apimachinery/pkg/apis/meta/v1.Time"},
 	}
 }
 

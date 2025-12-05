@@ -1,0 +1,505 @@
+apiVersion: apiextensions.k8s.io/v1 # Hack because controller-gen complains if we don't have this
+name: "PacemakerCluster"
+crdName: pacemakerclusters.etcd.openshift.io
+featureGate: DualReplica
+tests:
+  onCreate:
+    - name: Should be able to create a minimal PacemakerCluster
+      initial: |
+        apiVersion: etcd.openshift.io/v1alpha1
+        kind: PacemakerCluster
+        metadata:
+          name: cluster
+      expected: |
+        apiVersion: etcd.openshift.io/v1alpha1
+        kind: PacemakerCluster
+        metadata:
+          name: cluster
+    - name: Should reject PacemakerCluster with wrong name
+      initial: |
+        apiVersion: etcd.openshift.io/v1alpha1
+        kind: PacemakerCluster
+        metadata:
+          name: wrong-name
+      expectedError: "PacemakerCluster must be named 'cluster'"
+  onUpdate:
+    # Full healthy cluster status test
+    - name: Should accept full healthy cluster status with all required conditions
+      initial: |
+        apiVersion: etcd.openshift.io/v1alpha1
+        kind: PacemakerCluster
+        metadata:
+          name: cluster
+        status: {}
+      updated: |
+        apiVersion: etcd.openshift.io/v1alpha1
+        kind: PacemakerCluster
+        metadata:
+          name: cluster
+        status:
+          conditions:
+            - type: PacemakerClusterHealthy
+              status: "True"
+              lastTransitionTime: "2024-01-01T00:00:00Z"
+              reason: ClusterHealthy
+              message: "Cluster is healthy"
+            - type: PacemakerClusterNotInMaintenanceMode
+              status: "True"
+              lastTransitionTime: "2024-01-01T00:00:00Z"
+              reason: NotInMaintenance
+              message: "Not in maintenance"
+            - type: PacemakerClusterExpectedNodeCount
+              status: "True"
+              lastTransitionTime: "2024-01-01T00:00:00Z"
+              reason: ExpectedNodeCount
+              message: "Expected nodes present"
+          lastUpdated: "2024-01-01T00:00:00Z"
+          nodes:
+            - name: node1.example.com
+              ipAddress: "192.168.1.1"
+              conditions:
+                - type: PacemakerClusterNodeHealthy
+                  status: "True"
+                  lastTransitionTime: "2024-01-01T00:00:00Z"
+                  reason: NodeHealthy
+                  message: "Node healthy"
+                - type: PacemakerClusterNodeOnline
+                  status: "True"
+                  lastTransitionTime: "2024-01-01T00:00:00Z"
+                  reason: Online
+                  message: "Online"
+                - type: PacemakerClusterNodeNotInMaintenance
+                  status: "True"
+                  lastTransitionTime: "2024-01-01T00:00:00Z"
+                  reason: NotInMaintenance
+                  message: "Not in maintenance"
+                - type: PacemakerClusterNodeActive
+                  status: "True"
+                  lastTransitionTime: "2024-01-01T00:00:00Z"
+                  reason: NodeActive
+                  message: "Active"
+                - type: PacemakerClusterNodeReady
+                  status: "True"
+                  lastTransitionTime: "2024-01-01T00:00:00Z"
+                  reason: NodeReady
+                  message: "Ready"
+                - type: PacemakerClusterNodeClean
+                  status: "True"
+                  lastTransitionTime: "2024-01-01T00:00:00Z"
+                  reason: NodeClean
+                  message: "Clean"
+                - type: PacemakerClusterNodeMember
+                  status: "True"
+                  lastTransitionTime: "2024-01-01T00:00:00Z"
+                  reason: Member
+                  message: "Member"
+              kubelet:
+                conditions:
+                  - type: PacemakerClusterResourceHealthy
+                    status: "True"
+                    lastTransitionTime: "2024-01-01T00:00:00Z"
+                    reason: ResourceHealthy
+                    message: "Healthy"
+                  - type: PacemakerClusterResourceNotInMaintenance
+                    status: "True"
+                    lastTransitionTime: "2024-01-01T00:00:00Z"
+                    reason: NotInMaintenance
+                    message: "Not in maintenance"
+                  - type: PacemakerClusterResourceManaged
+                    status: "True"
+                    lastTransitionTime: "2024-01-01T00:00:00Z"
+                    reason: Managed
+                    message: "Managed"
+                  - type: PacemakerClusterResourceEnabled
+                    status: "True"
+                    lastTransitionTime: "2024-01-01T00:00:00Z"
+                    reason: Enabled
+                    message: "Enabled"
+                  - type: PacemakerClusterResourceOperational
+                    status: "True"
+                    lastTransitionTime: "2024-01-01T00:00:00Z"
+                    reason: Operational
+                    message: "Operational"
+                  - type: PacemakerClusterResourceStarted
+                    status: "True"
+                    lastTransitionTime: "2024-01-01T00:00:00Z"
+                    reason: Started
+                    message: "Started"
+                  - type: PacemakerClusterResourceActive
+                    status: "True"
+                    lastTransitionTime: "2024-01-01T00:00:00Z"
+                    reason: Active
+                    message: "Active"
+                  - type: PacemakerClusterResourceUnblocked
+                    status: "True"
+                    lastTransitionTime: "2024-01-01T00:00:00Z"
+                    reason: Unblocked
+                    message: "Unblocked"
+            - name: node2.example.com
+              ipAddress: "192.168.1.2"
+              conditions:
+                - type: PacemakerClusterNodeHealthy
+                  status: "True"
+                  lastTransitionTime: "2024-01-01T00:00:00Z"
+                  reason: NodeHealthy
+                  message: "Node healthy"
+                - type: PacemakerClusterNodeOnline
+                  status: "True"
+                  lastTransitionTime: "2024-01-01T00:00:00Z"
+                  reason: Online
+                  message: "Online"
+                - type: PacemakerClusterNodeNotInMaintenance
+                  status: "True"
+                  lastTransitionTime: "2024-01-01T00:00:00Z"
+                  reason: NotInMaintenance
+                  message: "Not in maintenance"
+                - type: PacemakerClusterNodeActive
+                  status: "True"
+                  lastTransitionTime: "2024-01-01T00:00:00Z"
+                  reason: NodeActive
+                  message: "Active"
+                - type: PacemakerClusterNodeReady
+                  status: "True"
+                  lastTransitionTime: "2024-01-01T00:00:00Z"
+                  reason: NodeReady
+                  message: "Ready"
+                - type: PacemakerClusterNodeClean
+                  status: "True"
+                  lastTransitionTime: "2024-01-01T00:00:00Z"
+                  reason: NodeClean
+                  message: "Clean"
+                - type: PacemakerClusterNodeMember
+                  status: "True"
+                  lastTransitionTime: "2024-01-01T00:00:00Z"
+                  reason: Member
+                  message: "Member"
+      expected: |
+        apiVersion: etcd.openshift.io/v1alpha1
+        kind: PacemakerCluster
+        metadata:
+          name: cluster
+        status:
+          conditions:
+            - type: PacemakerClusterHealthy
+              status: "True"
+              lastTransitionTime: "2024-01-01T00:00:00Z"
+              reason: ClusterHealthy
+              message: "Cluster is healthy"
+            - type: PacemakerClusterNotInMaintenanceMode
+              status: "True"
+              lastTransitionTime: "2024-01-01T00:00:00Z"
+              reason: NotInMaintenance
+              message: "Not in maintenance"
+            - type: PacemakerClusterExpectedNodeCount
+              status: "True"
+              lastTransitionTime: "2024-01-01T00:00:00Z"
+              reason: ExpectedNodeCount
+              message: "Expected nodes present"
+          lastUpdated: "2024-01-01T00:00:00Z"
+          nodes:
+            - name: node1.example.com
+              ipAddress: "192.168.1.1"
+              conditions:
+                - type: PacemakerClusterNodeHealthy
+                  status: "True"
+                  lastTransitionTime: "2024-01-01T00:00:00Z"
+                  reason: NodeHealthy
+                  message: "Node healthy"
+                - type: PacemakerClusterNodeOnline
+                  status: "True"
+                  lastTransitionTime: "2024-01-01T00:00:00Z"
+                  reason: Online
+                  message: "Online"
+                - type: PacemakerClusterNodeNotInMaintenance
+                  status: "True"
+                  lastTransitionTime: "2024-01-01T00:00:00Z"
+                  reason: NotInMaintenance
+                  message: "Not in maintenance"
+                - type: PacemakerClusterNodeActive
+                  status: "True"
+                  lastTransitionTime: "2024-01-01T00:00:00Z"
+                  reason: NodeActive
+                  message: "Active"
+                - type: PacemakerClusterNodeReady
+                  status: "True"
+                  lastTransitionTime: "2024-01-01T00:00:00Z"
+                  reason: NodeReady
+                  message: "Ready"
+                - type: PacemakerClusterNodeClean
+                  status: "True"
+                  lastTransitionTime: "2024-01-01T00:00:00Z"
+                  reason: NodeClean
+                  message: "Clean"
+                - type: PacemakerClusterNodeMember
+                  status: "True"
+                  lastTransitionTime: "2024-01-01T00:00:00Z"
+                  reason: Member
+                  message: "Member"
+              kubelet:
+                conditions:
+                  - type: PacemakerClusterResourceHealthy
+                    status: "True"
+                    lastTransitionTime: "2024-01-01T00:00:00Z"
+                    reason: ResourceHealthy
+                    message: "Healthy"
+                  - type: PacemakerClusterResourceNotInMaintenance
+                    status: "True"
+                    lastTransitionTime: "2024-01-01T00:00:00Z"
+                    reason: NotInMaintenance
+                    message: "Not in maintenance"
+                  - type: PacemakerClusterResourceManaged
+                    status: "True"
+                    lastTransitionTime: "2024-01-01T00:00:00Z"
+                    reason: Managed
+                    message: "Managed"
+                  - type: PacemakerClusterResourceEnabled
+                    status: "True"
+                    lastTransitionTime: "2024-01-01T00:00:00Z"
+                    reason: Enabled
+                    message: "Enabled"
+                  - type: PacemakerClusterResourceOperational
+                    status: "True"
+                    lastTransitionTime: "2024-01-01T00:00:00Z"
+                    reason: Operational
+                    message: "Operational"
+                  - type: PacemakerClusterResourceStarted
+                    status: "True"
+                    lastTransitionTime: "2024-01-01T00:00:00Z"
+                    reason: Started
+                    message: "Started"
+                  - type: PacemakerClusterResourceActive
+                    status: "True"
+                    lastTransitionTime: "2024-01-01T00:00:00Z"
+                    reason: Active
+                    message: "Active"
+                  - type: PacemakerClusterResourceUnblocked
+                    status: "True"
+                    lastTransitionTime: "2024-01-01T00:00:00Z"
+                    reason: Unblocked
+                    message: "Unblocked"
+            - name: node2.example.com
+              ipAddress: "192.168.1.2"
+              conditions:
+                - type: PacemakerClusterNodeHealthy
+                  status: "True"
+                  lastTransitionTime: "2024-01-01T00:00:00Z"
+                  reason: NodeHealthy
+                  message: "Node healthy"
+                - type: PacemakerClusterNodeOnline
+                  status: "True"
+                  lastTransitionTime: "2024-01-01T00:00:00Z"
+                  reason: Online
+                  message: "Online"
+                - type: PacemakerClusterNodeNotInMaintenance
+                  status: "True"
+                  lastTransitionTime: "2024-01-01T00:00:00Z"
+                  reason: NotInMaintenance
+                  message: "Not in maintenance"
+                - type: PacemakerClusterNodeActive
+                  status: "True"
+                  lastTransitionTime: "2024-01-01T00:00:00Z"
+                  reason: NodeActive
+                  message: "Active"
+                - type: PacemakerClusterNodeReady
+                  status: "True"
+                  lastTransitionTime: "2024-01-01T00:00:00Z"
+                  reason: NodeReady
+                  message: "Ready"
+                - type: PacemakerClusterNodeClean
+                  status: "True"
+                  lastTransitionTime: "2024-01-01T00:00:00Z"
+                  reason: NodeClean
+                  message: "Clean"
+                - type: PacemakerClusterNodeMember
+                  status: "True"
+                  lastTransitionTime: "2024-01-01T00:00:00Z"
+                  reason: Member
+                  message: "Member"
+    # IP address validation tests
+    - name: Should accept valid IPv6 address
+      initial: |
+        apiVersion: etcd.openshift.io/v1alpha1
+        kind: PacemakerCluster
+        metadata:
+          name: cluster
+        status: {}
+      updated: |
+        apiVersion: etcd.openshift.io/v1alpha1
+        kind: PacemakerCluster
+        metadata:
+          name: cluster
+        status:
+          nodes:
+            - name: node1.example.com
+              ipAddress: "2001:db8::1"
+      expected: |
+        apiVersion: etcd.openshift.io/v1alpha1
+        kind: PacemakerCluster
+        metadata:
+          name: cluster
+        status:
+          nodes:
+            - name: node1.example.com
+              ipAddress: "2001:db8::1"
+    - name: Should reject invalid IP address
+      initial: |
+        apiVersion: etcd.openshift.io/v1alpha1
+        kind: PacemakerCluster
+        metadata:
+          name: cluster
+        status: {}
+      updated: |
+        apiVersion: etcd.openshift.io/v1alpha1
+        kind: PacemakerCluster
+        metadata:
+          name: cluster
+        status:
+          nodes:
+            - name: node1.example.com
+              ipAddress: "invalid-ip"
+      expectedStatusError: "ipAddress must be a valid canonical global unicast IPv4 or IPv6 address"
+    - name: Should reject loopback IP address
+      initial: |
+        apiVersion: etcd.openshift.io/v1alpha1
+        kind: PacemakerCluster
+        metadata:
+          name: cluster
+        status: {}
+      updated: |
+        apiVersion: etcd.openshift.io/v1alpha1
+        kind: PacemakerCluster
+        metadata:
+          name: cluster
+        status:
+          nodes:
+            - name: node1.example.com
+              ipAddress: "127.0.0.1"
+      expectedStatusError: "ipAddress must be a valid canonical global unicast IPv4 or IPv6 address"
+    # Node name validation
+    - name: Should reject empty node name
+      initial: |
+        apiVersion: etcd.openshift.io/v1alpha1
+        kind: PacemakerCluster
+        metadata:
+          name: cluster
+        status: {}
+      updated: |
+        apiVersion: etcd.openshift.io/v1alpha1
+        kind: PacemakerCluster
+        metadata:
+          name: cluster
+        status:
+          nodes:
+            - name: ""
+              ipAddress: "192.168.1.1"
+      expectedStatusError: "status.nodes[0].name"
+    - name: Should reject node name with uppercase
+      initial: |
+        apiVersion: etcd.openshift.io/v1alpha1
+        kind: PacemakerCluster
+        metadata:
+          name: cluster
+        status: {}
+      updated: |
+        apiVersion: etcd.openshift.io/v1alpha1
+        kind: PacemakerCluster
+        metadata:
+          name: cluster
+        status:
+          nodes:
+            - name: "Node1"
+              ipAddress: "192.168.1.1"
+      expectedStatusError: "name must be a lowercase RFC 1123 subdomain"
+    - name: Should reject node name starting with hyphen
+      initial: |
+        apiVersion: etcd.openshift.io/v1alpha1
+        kind: PacemakerCluster
+        metadata:
+          name: cluster
+        status: {}
+      updated: |
+        apiVersion: etcd.openshift.io/v1alpha1
+        kind: PacemakerCluster
+        metadata:
+          name: cluster
+        status:
+          nodes:
+            - name: "-node1"
+              ipAddress: "192.168.1.1"
+      expectedStatusError: "name must be a lowercase RFC 1123 subdomain"
+    # Missing required conditions tests
+    - name: Should reject cluster status missing PacemakerClusterHealthy condition
+      initial: |
+        apiVersion: etcd.openshift.io/v1alpha1
+        kind: PacemakerCluster
+        metadata:
+          name: cluster
+        status: {}
+      updated: |
+        apiVersion: etcd.openshift.io/v1alpha1
+        kind: PacemakerCluster
+        metadata:
+          name: cluster
+        status:
+          conditions:
+            - type: PacemakerClusterNotInMaintenanceMode
+              status: "True"
+              lastTransitionTime: "2024-01-01T00:00:00Z"
+              reason: NotInMaintenance
+              message: "Not in maintenance"
+            - type: PacemakerClusterExpectedNodeCount
+              status: "True"
+              lastTransitionTime: "2024-01-01T00:00:00Z"
+              reason: ExpectedNodeCount
+              message: "Expected"
+          nodes:
+            - name: node1.example.com
+              ipAddress: "192.168.1.1"
+      expectedStatusError: "conditions must contain a condition of type PacemakerClusterHealthy"
+    - name: Should reject node status missing PacemakerClusterNodeOnline condition
+      initial: |
+        apiVersion: etcd.openshift.io/v1alpha1
+        kind: PacemakerCluster
+        metadata:
+          name: cluster
+        status: {}
+      updated: |
+        apiVersion: etcd.openshift.io/v1alpha1
+        kind: PacemakerCluster
+        metadata:
+          name: cluster
+        status:
+          nodes:
+            - name: node1.example.com
+              ipAddress: "192.168.1.1"
+              conditions:
+                - type: PacemakerClusterNodeHealthy
+                  status: "True"
+                  lastTransitionTime: "2024-01-01T00:00:00Z"
+                  reason: NodeHealthy
+                  message: "Healthy"
+      expectedStatusError: "conditions must contain a condition of type PacemakerClusterNodeOnline"
+    - name: Should reject resource status missing PacemakerClusterResourceHealthy condition
+      initial: |
+        apiVersion: etcd.openshift.io/v1alpha1
+        kind: PacemakerCluster
+        metadata:
+          name: cluster
+        status: {}
+      updated: |
+        apiVersion: etcd.openshift.io/v1alpha1
+        kind: PacemakerCluster
+        metadata:
+          name: cluster
+        status:
+          nodes:
+            - name: node1.example.com
+              ipAddress: "192.168.1.1"
+              kubelet:
+                conditions:
+                  - type: PacemakerClusterResourceActive
+                    status: "True"
+                    lastTransitionTime: "2024-01-01T00:00:00Z"
+                    reason: Active
+                    message: "Active"
+      expectedStatusError: "conditions must contain a condition of type PacemakerClusterResourceHealthy"

@@ -22141,10 +22141,6 @@
           "format": "int64",
           "default": 0
         },
-        "hostPlacement": {
-          "description": "hostPlacement configures placement on AWS Dedicated Hosts. This allows admins to assign instances to specific host for a variety of needs including for regulatory compliance, to leverage existing per-socket or per-core software licenses (BYOL), and to gain visibility and control over instance placement on a physical server. When omitted, the instance is not constrained to a dedicated host.",
-          "$ref": "#/definitions/com.github.openshift.api.machine.v1beta1.HostPlacement"
-        },
         "iamInstanceProfile": {
           "description": "iamInstanceProfile is a reference to an IAM role to assign to the instance",
           "$ref": "#/definitions/com.github.openshift.api.machine.v1beta1.AWSResourceReference"
@@ -23232,11 +23228,11 @@
       ],
       "properties": {
         "affinity": {
-          "description": "affinity specifies the affinity setting for the instance. Allowed values are AnyAvailable and DedicatedHost. When Affinity is set to DedicatedHost, an instance started onto a specific host always restarts on the same host if stopped. In this scenario, the `dedicatedHost` field must be set. When Affinity is set to AnyAvailable, and you stop and restart the instance, it can be restarted on any available host.",
+          "description": "affinity specifies the affinity setting for the instance. Allowed values are AnyAvailable and DedicatedHost. When Affinity is set to DedicatedHost, an instance started onto a specific host always restarts on the same host if stopped. In this scenario, the `dedicatedHost` field must be set. When Affinity is set to AnyAvailable, and you stop and restart the instance, it can be restarted on any available host. When Affinity is set to AnyAvailable and the `dedicatedHost` field is defined, it runs on specified Dedicated Host, but may move if stopped.",
           "type": "string"
         },
         "dedicatedHost": {
-          "description": "dedicatedHost specifies the exact host that an instance should be restarted on if stopped. dedicatedHost is required when 'affinity' is set to DedicatedHost, and forbidden otherwise.",
+          "description": "dedicatedHost specifies the exact host that an instance should be restarted on if stopped. dedicatedHost is required when 'affinity' is set to DedicatedHost, and optional otherwise.",
           "$ref": "#/definitions/com.github.openshift.api.machine.v1beta1.DedicatedHost"
         }
       },
@@ -24016,12 +24012,16 @@
           "description": "availabilityZone is the availability zone of the instance",
           "type": "string"
         },
+        "host": {
+          "description": "host configures placement on AWS Dedicated Hosts. This allows admins to assign instances to specific host for a variety of needs including for regulatory compliance, to leverage existing per-socket or per-core software licenses (BYOL), and to gain visibility and control over instance placement on a physical server. When omitted, the instance is not constrained to a dedicated host.",
+          "$ref": "#/definitions/com.github.openshift.api.machine.v1beta1.HostPlacement"
+        },
         "region": {
           "description": "region is the region to use to create the instance",
           "type": "string"
         },
         "tenancy": {
-          "description": "tenancy indicates if instance should run on shared or single-tenant hardware. There are supported 3 options: default, dedicated and host.",
+          "description": "tenancy indicates if instance should run on shared or single-tenant hardware. There are supported 3 options: default, dedicated and host. When set to default Runs on shared multi-tenant hardware. When dedicated Runs on single-tenant hardware (any dedicated instance hardware). When host and the host object is not provided: Runs on Dedicated Host; best-effort restart on same host. When `host` and `host` object is provided with affinity `dedicatedHost` defined: Runs on specified Dedicated Host.",
           "type": "string"
         }
       }

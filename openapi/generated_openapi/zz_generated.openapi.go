@@ -38573,18 +38573,12 @@ func schema_openshift_api_machine_v1beta1_AWSMachineProviderConfig(ref common.Re
 							Format:      "",
 						},
 					},
-					"hostPlacement": {
-						SchemaProps: spec.SchemaProps{
-							Description: "hostPlacement configures placement on AWS Dedicated Hosts. This allows admins to assign instances to specific host for a variety of needs including for regulatory compliance, to leverage existing per-socket or per-core software licenses (BYOL), and to gain visibility and control over instance placement on a physical server. When omitted, the instance is not constrained to a dedicated host.",
-							Ref:         ref("github.com/openshift/api/machine/v1beta1.HostPlacement"),
-						},
-					},
 				},
 				Required: []string{"ami", "instanceType", "deviceIndex", "subnet", "placement"},
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/machine/v1beta1.AWSResourceReference", "github.com/openshift/api/machine/v1beta1.BlockDeviceMappingSpec", "github.com/openshift/api/machine/v1beta1.CPUOptions", "github.com/openshift/api/machine/v1beta1.HostPlacement", "github.com/openshift/api/machine/v1beta1.LoadBalancerReference", "github.com/openshift/api/machine/v1beta1.MetadataServiceOptions", "github.com/openshift/api/machine/v1beta1.Placement", "github.com/openshift/api/machine/v1beta1.SpotMarketOptions", "github.com/openshift/api/machine/v1beta1.TagSpecification", "k8s.io/api/core/v1.LocalObjectReference", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"},
+			"github.com/openshift/api/machine/v1beta1.AWSResourceReference", "github.com/openshift/api/machine/v1beta1.BlockDeviceMappingSpec", "github.com/openshift/api/machine/v1beta1.CPUOptions", "github.com/openshift/api/machine/v1beta1.LoadBalancerReference", "github.com/openshift/api/machine/v1beta1.MetadataServiceOptions", "github.com/openshift/api/machine/v1beta1.Placement", "github.com/openshift/api/machine/v1beta1.SpotMarketOptions", "github.com/openshift/api/machine/v1beta1.TagSpecification", "k8s.io/api/core/v1.LocalObjectReference", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"},
 	}
 }
 
@@ -40266,14 +40260,14 @@ func schema_openshift_api_machine_v1beta1_HostPlacement(ref common.ReferenceCall
 				Properties: map[string]spec.Schema{
 					"affinity": {
 						SchemaProps: spec.SchemaProps{
-							Description: "affinity specifies the affinity setting for the instance. Allowed values are AnyAvailable and DedicatedHost. When Affinity is set to DedicatedHost, an instance started onto a specific host always restarts on the same host if stopped. In this scenario, the `dedicatedHost` field must be set. When Affinity is set to AnyAvailable, and you stop and restart the instance, it can be restarted on any available host.",
+							Description: "affinity specifies the affinity setting for the instance. Allowed values are AnyAvailable and DedicatedHost. When Affinity is set to DedicatedHost, an instance started onto a specific host always restarts on the same host if stopped. In this scenario, the `dedicatedHost` field must be set. When Affinity is set to AnyAvailable, and you stop and restart the instance, it can be restarted on any available host. When Affinity is set to AnyAvailable and the `dedicatedHost` field is defined, it runs on specified Dedicated Host, but may move if stopped.",
 							Type:        []string{"string"},
 							Format:      "",
 						},
 					},
 					"dedicatedHost": {
 						SchemaProps: spec.SchemaProps{
-							Description: "dedicatedHost specifies the exact host that an instance should be restarted on if stopped. dedicatedHost is required when 'affinity' is set to DedicatedHost, and forbidden otherwise.",
+							Description: "dedicatedHost specifies the exact host that an instance should be restarted on if stopped. dedicatedHost is required when 'affinity' is set to DedicatedHost, and optional otherwise.",
 							Ref:         ref("github.com/openshift/api/machine/v1beta1.DedicatedHost"),
 						},
 					},
@@ -41628,14 +41622,22 @@ func schema_openshift_api_machine_v1beta1_Placement(ref common.ReferenceCallback
 					},
 					"tenancy": {
 						SchemaProps: spec.SchemaProps{
-							Description: "tenancy indicates if instance should run on shared or single-tenant hardware. There are supported 3 options: default, dedicated and host.",
+							Description: "tenancy indicates if instance should run on shared or single-tenant hardware. There are supported 3 options: default, dedicated and host. When set to default Runs on shared multi-tenant hardware. When dedicated Runs on single-tenant hardware (any dedicated instance hardware). When host and the host object is not provided: Runs on Dedicated Host; best-effort restart on same host. When `host` and `host` object is provided with affinity `dedicatedHost` defined: Runs on specified Dedicated Host.",
 							Type:        []string{"string"},
 							Format:      "",
+						},
+					},
+					"host": {
+						SchemaProps: spec.SchemaProps{
+							Description: "host configures placement on AWS Dedicated Hosts. This allows admins to assign instances to specific host for a variety of needs including for regulatory compliance, to leverage existing per-socket or per-core software licenses (BYOL), and to gain visibility and control over instance placement on a physical server. When omitted, the instance is not constrained to a dedicated host.",
+							Ref:         ref("github.com/openshift/api/machine/v1beta1.HostPlacement"),
 						},
 					},
 				},
 			},
 		},
+		Dependencies: []string{
+			"github.com/openshift/api/machine/v1beta1.HostPlacement"},
 	}
 }
 

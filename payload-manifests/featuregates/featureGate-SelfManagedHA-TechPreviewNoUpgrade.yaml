@@ -272,6 +272,9 @@
                         "name": "NewOLMWebhookProviderOpenshiftServiceCA"
                     },
                     {
+                        "name": "NoOverlayMode"
+                    },
+                    {
                         "name": "NoRegistryClusterInstall"
                     },
                     {

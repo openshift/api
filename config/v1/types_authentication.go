@@ -758,7 +758,6 @@ type PrefixedClaimMapping struct {
 // +enum
 // +openshift:validation:FeatureGateAwareEnum:featureGate="",enum="RequiredClaim";
 // +openshift:validation:FeatureGateAwareEnum:featureGate=ExternalOIDCWithUpstreamParity,enum="RequiredClaim";"Expression"
-// +required
 type TokenValidationRuleType string
 
 const (
@@ -772,7 +771,7 @@ const (
 
 // TokenClaimValidationRule represents a validation rule based on token claims.
 // If type is RequiredClaim, requiredClaim must be set.
-// If type is Expression, expression must be set.
+// If Type is Expression, CEL must be set and RequiredClaim must be omitted.
 //
 // +kubebuilder:validation:XValidation:rule="has(self.type) && self.type == 'RequiredClaim' ? has(self.requiredClaim) : !has(self.requiredClaim)",message="requiredClaim must be set when type is 'RequiredClaim', and forbidden otherwise"
 // +openshift:validation:FeatureGateAwareXValidation:featureGate=ExternalOIDCWithUpstreamParity,rule="has(self.type) && self.type == 'Expression' ? has(self.expression) : !has(self.expression)",message="expression must be set when type is 'Expression', and forbidden otherwise"
@@ -787,6 +786,7 @@ type TokenClaimValidationRule struct {
 	//
 	// When set to 'Expression', the Kubernetes API server will be configured
 	// to validate the incoming JWT against the configured CEL expression.
+	// +required
 	Type TokenValidationRuleType `json:"type"`
 
 	// requiredClaim allows configuring a required claim name and its expected value.
@@ -797,16 +797,12 @@ type TokenClaimValidationRule struct {
 	// +optional
 	RequiredClaim *TokenRequiredClaim `json:"requiredClaim,omitempty"`
 
-	// expression configures a CEL expression that will be used
-	// by the Kubernetes API server to validate if an incoming JWT
-	// is valid for this identity provider. The CEL expression must
-	// return a boolean value where 'true' signals a valid state.
-	// Expression must be set when 'type' is 'Expression', and
-	// is forbidden otherwise.
-	//
+	// CEL holds the CEL expression and message for validation.
+	// Must be set when Type is "Expression", and forbidden otherwise.
+	// cel holds the CEL rule configuration. Must be set when type=Expression.
 	// +optional
 	// +openshift:enable:FeatureGate=ExternalOIDCWithUpstreamParity
-	Expression TokenExpressionRule `json:"expression,omitzero,omitempty"`
+	CEL *TokenClaimValidationCELRule `json:"cel,omitempty"`
 }
 
 type TokenRequiredClaim struct {
@@ -831,7 +827,7 @@ type TokenRequiredClaim struct {
 	RequiredValue string `json:"requiredValue"`
 }
 
-type TokenExpressionRule struct {
+type TokenClaimValidationCELRule struct {
 	// expression is a CEL expression evaluated against token claims.
 	// The expression must be a non-empty string and no longer than 1024 characters.
 	// The expression must return a boolean value where 'true' signals a valid token and 'false' an invalid one.
@@ -844,7 +840,7 @@ type TokenExpressionRule struct {
 
 	// message allows configuring a human-readable message that is logged by the Kubernetes API server
 	// when a token fails validation based on the CEL expression defined in 'Expression'.
-	// This field is optional. If provided, the message must be at least 1 character long
+	// This field is required. If provided, the message must be at least 1 character long
 	// and cannot exceed 256 characters. This message is logged and not returned to the caller.
 	// +required
 	// +kubebuilder:validation:MinLength=1
@@ -855,6 +851,21 @@ type TokenExpressionRule struct {
 // TokenUserValidationRule provides a CEL-based rule used to validate a token subject.
 // Each rule contains a CEL expression that is evaluated against the token’s claims.
 type TokenUserValidationRule struct {
+	// type identifies the rule type. Only "CEL" is supported currently.
+	//
+	// +required
+	// +kubebuilder:validation:Enum=CEL
+	Type string `json:"type"`
+
+	// cel holds the CEL rule configuration. Must be set when type=CEL.
+	//
+	// +optional
+	CEL *TokenUserValidationCELRule `json:"cel,omitempty"`
+}
+
+// TokenUserValidationCELRule provides a CEL-based rule used to validate a token subject.
+// Each rule contains a CEL expression that is evaluated against the token’s claims.
+type TokenUserValidationCELRule struct {
 	// expression is a CEL expression that must evaluate
 	// to true for the token to be accepted. The expression is evaluated against the token's
 	// user information (e.g., username, groups).
@@ -866,7 +877,7 @@ type TokenUserValidationRule struct {
 	Expression string `json:"expression,omitempty"`
 	// message allows configuring a human-readable message that is logged by the Kubernetes API server
 	// when a token fails validation based on the CEL expression defined in 'Expression'.
-	// This field is optional. If provided, the message must be at least 1 character long
+	// This field is required. If provided, the message must be at least 1 character long
 	// and cannot exceed 256 characters. This message is logged and not returned to the caller.
 	// +required
 	// +kubebuilder:validation:MinLength=1

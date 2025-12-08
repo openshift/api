@@ -495,23 +495,23 @@ func (TokenClaimOrExpressionMapping) SwaggerDoc() map[string]string {
 	return map_TokenClaimOrExpressionMapping
 }
 
+var map_TokenClaimValidationCELRule = map[string]string{
+	"expression": "expression is a CEL expression evaluated against token claims. The expression must be a non-empty string and no longer than 1024 characters. The expression must return a boolean value where 'true' signals a valid token and 'false' an invalid one. This field is required.",
+	"message":    "message allows configuring a human-readable message that is logged by the Kubernetes API server when a token fails validation based on the CEL expression defined in 'Expression'. This field is required. If provided, the message must be at least 1 character long and cannot exceed 256 characters. This message is logged and not returned to the caller.",
+}
+
+func (TokenClaimValidationCELRule) SwaggerDoc() map[string]string {
+	return map_TokenClaimValidationCELRule
+}
+
 var map_TokenClaimValidationRule = map[string]string{
-	"":           "TokenClaimValidationRule represents a validation rule based on token claims. If type is RequiredClaim, requiredClaim must be set. If type is Expression, expression must be set.",
-	"type":       "type is an optional field that configures the type of the validation rule.\n\nAllowed values are \"RequiredClaim\" and \"Expression\".\n\nWhen set to 'RequiredClaim', the Kubernetes API server will be configured to validate that the incoming JWT contains the required claim and that its value matches the required value.\n\nWhen set to 'Expression', the Kubernetes API server will be configured to validate the incoming JWT against the configured CEL expression.",
-	"expression": "expression configures a CEL expression that will be used by the Kubernetes API server to validate if an incoming JWT is valid for this identity provider. The CEL expression must return a boolean value where 'true' signals a valid state. Expression must be set when 'type' is 'Expression', and is forbidden otherwise.",
+	"":     "TokenClaimValidationRule represents a validation rule based on token claims. If type is RequiredClaim, requiredClaim must be set. If Type is Expression, CEL must be set and RequiredClaim must be omitted.",
+	"type": "type is an optional field that configures the type of the validation rule.\n\nAllowed values are \"RequiredClaim\" and \"Expression\".\n\nWhen set to 'RequiredClaim', the Kubernetes API server will be configured to validate that the incoming JWT contains the required claim and that its value matches the required value.\n\nWhen set to 'Expression', the Kubernetes API server will be configured to validate the incoming JWT against the configured CEL expression.",
+	"cel":  "CEL holds the CEL expression and message for validation. Must be set when Type is \"Expression\", and forbidden otherwise. cel holds the CEL rule configuration. Must be set when type=Expression.",
 }
 
 func (TokenClaimValidationRule) SwaggerDoc() map[string]string {
 	return map_TokenClaimValidationRule
-}
-
-var map_TokenExpressionRule = map[string]string{
-	"expression": "expression is a CEL expression evaluated against token claims. The expression must be a non-empty string and no longer than 1024 characters. The expression must return a boolean value where 'true' signals a valid token and 'false' an invalid one. This field is required.",
-	"message":    "message allows configuring a human-readable message that is logged by the Kubernetes API server when a token fails validation based on the CEL expression defined in 'Expression'. This field is optional. If provided, the message must be at least 1 character long and cannot exceed 256 characters. This message is logged and not returned to the caller.",
-}
-
-func (TokenExpressionRule) SwaggerDoc() map[string]string {
-	return map_TokenExpressionRule
 }
 
 var map_TokenIssuer = map[string]string{
@@ -534,10 +534,20 @@ func (TokenRequiredClaim) SwaggerDoc() map[string]string {
 	return map_TokenRequiredClaim
 }
 
-var map_TokenUserValidationRule = map[string]string{
-	"":           "TokenUserValidationRule provides a CEL-based rule used to validate a token subject. Each rule contains a CEL expression that is evaluated against the token’s claims.",
+var map_TokenUserValidationCELRule = map[string]string{
+	"":           "TokenUserValidationCELRule provides a CEL-based rule used to validate a token subject. Each rule contains a CEL expression that is evaluated against the token’s claims.",
 	"expression": "expression is a CEL expression that must evaluate to true for the token to be accepted. The expression is evaluated against the token's user information (e.g., username, groups). This field must be non-empty and may not exceed 1024 characters.",
-	"message":    "message allows configuring a human-readable message that is logged by the Kubernetes API server when a token fails validation based on the CEL expression defined in 'Expression'. This field is optional. If provided, the message must be at least 1 character long and cannot exceed 256 characters. This message is logged and not returned to the caller.",
+	"message":    "message allows configuring a human-readable message that is logged by the Kubernetes API server when a token fails validation based on the CEL expression defined in 'Expression'. This field is required. If provided, the message must be at least 1 character long and cannot exceed 256 characters. This message is logged and not returned to the caller.",
+}
+
+func (TokenUserValidationCELRule) SwaggerDoc() map[string]string {
+	return map_TokenUserValidationCELRule
+}
+
+var map_TokenUserValidationRule = map[string]string{
+	"":     "TokenUserValidationRule provides a CEL-based rule used to validate a token subject. Each rule contains a CEL expression that is evaluated against the token’s claims.",
+	"type": "type identifies the rule type. Only \"CEL\" is supported currently.",
+	"cel":  "cel holds the CEL rule configuration. Must be set when type=CEL.",
 }
 
 func (TokenUserValidationRule) SwaggerDoc() map[string]string {

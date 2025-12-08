@@ -401,11 +401,12 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"github.com/openshift/api/config/v1.TokenClaimMapping":                                               schema_openshift_api_config_v1_TokenClaimMapping(ref),
 		"github.com/openshift/api/config/v1.TokenClaimMappings":                                              schema_openshift_api_config_v1_TokenClaimMappings(ref),
 		"github.com/openshift/api/config/v1.TokenClaimOrExpressionMapping":                                   schema_openshift_api_config_v1_TokenClaimOrExpressionMapping(ref),
+		"github.com/openshift/api/config/v1.TokenClaimValidationCELRule":                                     schema_openshift_api_config_v1_TokenClaimValidationCELRule(ref),
 		"github.com/openshift/api/config/v1.TokenClaimValidationRule":                                        schema_openshift_api_config_v1_TokenClaimValidationRule(ref),
 		"github.com/openshift/api/config/v1.TokenConfig":                                                     schema_openshift_api_config_v1_TokenConfig(ref),
-		"github.com/openshift/api/config/v1.TokenExpressionRule":                                             schema_openshift_api_config_v1_TokenExpressionRule(ref),
 		"github.com/openshift/api/config/v1.TokenIssuer":                                                     schema_openshift_api_config_v1_TokenIssuer(ref),
 		"github.com/openshift/api/config/v1.TokenRequiredClaim":                                              schema_openshift_api_config_v1_TokenRequiredClaim(ref),
+		"github.com/openshift/api/config/v1.TokenUserValidationCELRule":                                      schema_openshift_api_config_v1_TokenUserValidationCELRule(ref),
 		"github.com/openshift/api/config/v1.TokenUserValidationRule":                                         schema_openshift_api_config_v1_TokenUserValidationRule(ref),
 		"github.com/openshift/api/config/v1.Update":                                                          schema_openshift_api_config_v1_Update(ref),
 		"github.com/openshift/api/config/v1.UpdateHistory":                                                   schema_openshift_api_config_v1_UpdateHistory(ref),
@@ -20224,11 +20225,38 @@ func schema_openshift_api_config_v1_TokenClaimOrExpressionMapping(ref common.Ref
 	}
 }
 
+func schema_openshift_api_config_v1_TokenClaimValidationCELRule(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"expression": {
+						SchemaProps: spec.SchemaProps{
+							Description: "expression is a CEL expression evaluated against token claims. The expression must be a non-empty string and no longer than 1024 characters. The expression must return a boolean value where 'true' signals a valid token and 'false' an invalid one. This field is required.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"message": {
+						SchemaProps: spec.SchemaProps{
+							Description: "message allows configuring a human-readable message that is logged by the Kubernetes API server when a token fails validation based on the CEL expression defined in 'Expression'. This field is required. If provided, the message must be at least 1 character long and cannot exceed 256 characters. This message is logged and not returned to the caller.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+				},
+				Required: []string{"expression", "message"},
+			},
+		},
+	}
+}
+
 func schema_openshift_api_config_v1_TokenClaimValidationRule(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
-				Description: "TokenClaimValidationRule represents a validation rule based on token claims. If type is RequiredClaim, requiredClaim must be set. If type is Expression, expression must be set.",
+				Description: "TokenClaimValidationRule represents a validation rule based on token claims. If type is RequiredClaim, requiredClaim must be set. If Type is Expression, CEL must be set and RequiredClaim must be omitted.",
 				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
 					"type": {
@@ -20245,11 +20273,10 @@ func schema_openshift_api_config_v1_TokenClaimValidationRule(ref common.Referenc
 							Ref: ref("github.com/openshift/api/config/v1.TokenRequiredClaim"),
 						},
 					},
-					"expression": {
+					"cel": {
 						SchemaProps: spec.SchemaProps{
-							Description: "expression configures a CEL expression that will be used by the Kubernetes API server to validate if an incoming JWT is valid for this identity provider. The CEL expression must return a boolean value where 'true' signals a valid state. Expression must be set when 'type' is 'Expression', and is forbidden otherwise.",
-							Default:     map[string]interface{}{},
-							Ref:         ref("github.com/openshift/api/config/v1.TokenExpressionRule"),
+							Description: "CEL holds the CEL expression and message for validation. Must be set when Type is \"Expression\", and forbidden otherwise. cel holds the CEL rule configuration. Must be set when type=Expression.",
+							Ref:         ref("github.com/openshift/api/config/v1.TokenClaimValidationCELRule"),
 						},
 					},
 				},
@@ -20257,7 +20284,7 @@ func schema_openshift_api_config_v1_TokenClaimValidationRule(ref common.Referenc
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/config/v1.TokenExpressionRule", "github.com/openshift/api/config/v1.TokenRequiredClaim"},
+			"github.com/openshift/api/config/v1.TokenClaimValidationCELRule", "github.com/openshift/api/config/v1.TokenRequiredClaim"},
 	}
 }
 
@@ -20293,33 +20320,6 @@ func schema_openshift_api_config_v1_TokenConfig(ref common.ReferenceCallback) co
 		},
 		Dependencies: []string{
 			"k8s.io/apimachinery/pkg/apis/meta/v1.Duration"},
-	}
-}
-
-func schema_openshift_api_config_v1_TokenExpressionRule(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Type: []string{"object"},
-				Properties: map[string]spec.Schema{
-					"expression": {
-						SchemaProps: spec.SchemaProps{
-							Description: "expression is a CEL expression evaluated against token claims. The expression must be a non-empty string and no longer than 1024 characters. The expression must return a boolean value where 'true' signals a valid token and 'false' an invalid one. This field is required.",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"message": {
-						SchemaProps: spec.SchemaProps{
-							Description: "message allows configuring a human-readable message that is logged by the Kubernetes API server when a token fails validation based on the CEL expression defined in 'Expression'. This field is optional. If provided, the message must be at least 1 character long and cannot exceed 256 characters. This message is logged and not returned to the caller.",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-				},
-				Required: []string{"expression", "message"},
-			},
-		},
 	}
 }
 
@@ -20409,11 +20409,11 @@ func schema_openshift_api_config_v1_TokenRequiredClaim(ref common.ReferenceCallb
 	}
 }
 
-func schema_openshift_api_config_v1_TokenUserValidationRule(ref common.ReferenceCallback) common.OpenAPIDefinition {
+func schema_openshift_api_config_v1_TokenUserValidationCELRule(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
-				Description: "TokenUserValidationRule provides a CEL-based rule used to validate a token subject. Each rule contains a CEL expression that is evaluated against the token’s claims.",
+				Description: "TokenUserValidationCELRule provides a CEL-based rule used to validate a token subject. Each rule contains a CEL expression that is evaluated against the token’s claims.",
 				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
 					"expression": {
@@ -20425,7 +20425,7 @@ func schema_openshift_api_config_v1_TokenUserValidationRule(ref common.Reference
 					},
 					"message": {
 						SchemaProps: spec.SchemaProps{
-							Description: "message allows configuring a human-readable message that is logged by the Kubernetes API server when a token fails validation based on the CEL expression defined in 'Expression'. This field is optional. If provided, the message must be at least 1 character long and cannot exceed 256 characters. This message is logged and not returned to the caller.",
+							Description: "message allows configuring a human-readable message that is logged by the Kubernetes API server when a token fails validation based on the CEL expression defined in 'Expression'. This field is required. If provided, the message must be at least 1 character long and cannot exceed 256 characters. This message is logged and not returned to the caller.",
 							Type:        []string{"string"},
 							Format:      "",
 						},
@@ -20434,6 +20434,36 @@ func schema_openshift_api_config_v1_TokenUserValidationRule(ref common.Reference
 				Required: []string{"expression", "message"},
 			},
 		},
+	}
+}
+
+func schema_openshift_api_config_v1_TokenUserValidationRule(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "TokenUserValidationRule provides a CEL-based rule used to validate a token subject. Each rule contains a CEL expression that is evaluated against the token’s claims.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"type": {
+						SchemaProps: spec.SchemaProps{
+							Description: "type identifies the rule type. Only \"CEL\" is supported currently.",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"cel": {
+						SchemaProps: spec.SchemaProps{
+							Description: "cel holds the CEL rule configuration. Must be set when type=CEL.",
+							Ref:         ref("github.com/openshift/api/config/v1.TokenUserValidationCELRule"),
+						},
+					},
+				},
+				Required: []string{"type"},
+			},
+		},
+		Dependencies: []string{
+			"github.com/openshift/api/config/v1.TokenUserValidationCELRule"},
 	}
 }
 

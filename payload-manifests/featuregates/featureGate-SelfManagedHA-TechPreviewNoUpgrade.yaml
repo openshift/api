@@ -42,9 +42,6 @@
                         "name": "HyperShiftOnlyDynamicResourceAllocation"
                     },
                     {
-                        "name": "IngressControllerDynamicConfigurationManager"
-                    },
-                    {
                         "name": "KMSEncryptionProvider"
                     },
                     {
@@ -204,6 +201,9 @@
                     },
                     {
                         "name": "ImageVolume"
+                    },
+                    {
+                        "name": "IngressControllerDynamicConfigurationManager"
                     },
                     {
                         "name": "InsightsConfig"

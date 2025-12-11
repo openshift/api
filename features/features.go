@@ -591,7 +591,7 @@ var (
 								reportProblemsToJiraComponent("Networking/router").
 								contactPerson("miciah").
 								productScope(ocpSpecific).
-								enhancementPR(legacyFeatureGateWithoutEnhancement).
+								enhancementPR("https://github.com/openshift/enhancements/pull/1687").
 								enableIn(configv1.DevPreviewNoUpgrade, configv1.TechPreviewNoUpgrade).
 								mustRegister()
 

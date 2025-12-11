@@ -51,6 +51,8 @@ type DNSSpec struct {
 	//
 	// If this field is nil, no servers are created.
 	//
+	// +listType=map
+	// +listMapKey=name
 	// +optional
 	Servers []Server `json:"servers,omitempty"`
 

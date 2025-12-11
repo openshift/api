@@ -353,6 +353,9 @@ spec:
                       type: array
                   type: object
                 type: array
+                x-kubernetes-list-map-keys:
+                - name
+                x-kubernetes-list-type: map
               upstreamResolvers:
                 description: |-
                   upstreamResolvers defines a schema for configuring CoreDNS

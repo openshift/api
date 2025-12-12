@@ -5,7 +5,7 @@ featureGates:
 - KMSEncryptionProvider
 tests:
   onCreate:
-    - name: Should be able to create encrypt with KMS for AWS with valid values
+    - name: Should be able to create encrypt with KMS for External with valid endpoint
       initial: |
         apiVersion: config.openshift.io/v1
         kind: APIServer
@@ -13,10 +13,8 @@ tests:
           encryption:
             type: KMS
             kms:
-              type: AWS
-              aws:
-                keyARN: arn:aws:kms:us-east-1:101010101010:key/9a512e29-0d9c-4cf5-8174-fc1a5b22cd6a
-                region: us-east-1
+              managementModel: External
+              endpoint: unix:///var/run/kmsplugin/socket.sock
       expected: |
         apiVersion: config.openshift.io/v1
         kind: APIServer
@@ -26,11 +24,9 @@ tests:
           encryption:
             type: KMS
             kms:
-              type: AWS
-              aws:
-                keyARN: arn:aws:kms:us-east-1:101010101010:key/9a512e29-0d9c-4cf5-8174-fc1a5b22cd6a
-                region: us-east-1
-    - name: Should fail to create encrypt with KMS for AWS without region
+              managementModel: External
+              endpoint: unix:///var/run/kmsplugin/socket.sock
+    - name: Should fail to create KMS with endpoint not starting with unix:///
       initial: |
         apiVersion: config.openshift.io/v1
         kind: APIServer
@@ -38,10 +34,9 @@ tests:
           encryption:
             type: KMS
             kms:
-              type: AWS
-              aws:
-                keyARN: arn:aws:kms:us-east-1:101010101010:key/9a512e29-0d9c-4cf5-8174-fc1a5b22cd6a
-      expectedError: "spec.encryption.kms.aws.region: Required value"
+              managementModel: External
+              endpoint: /var/run/kmsplugin/socket.sock
+      expectedError: "endpoint must follow the format 'unix:///path' or 'unix:///@abstractname'"
     - name: Should not allow kms config with encrypt aescbc
       initial: |
         apiVersion: config.openshift.io/v1
@@ -50,10 +45,8 @@ tests:
           encryption:
             type: aescbc
             kms:
-              type: AWS
-              aws:
-                keyARN: arn:aws:kms:us-east-1:101010101010:key/9a512e29-0d9c-4cf5-8174-fc1a5b22cd6a
-                region: us-east-1
+              managementModel: External
+              endpoint: unix:///var/run/kmsplugin/socket.sock
       expectedError: "kms config is required when encryption type is KMS, and forbidden otherwise"
     - name: Should fail to create with an empty KMS config
       initial: |
@@ -63,8 +56,8 @@ tests:
           encryption:
             type: KMS
             kms: {}
-      expectedError: "spec.encryption.kms.type: Required value"
-    - name: Should fail to create with kms type AWS but without aws config 
+      expectedError: "spec.encryption.kms.endpoint: Required value"
+    - name: Should be able to create with default type when endpoint is provided
       initial: |
         apiVersion: config.openshift.io/v1
         kind: APIServer
@@ -72,9 +65,19 @@ tests:
           encryption:
             type: KMS
             kms:
-              type: AWS
-      expectedError: "aws config is required when kms provider type is AWS, and forbidden otherwise"
-    - name: Should fail to create AWS KMS without a keyARN
+              endpoint: unix:///var/run/kmsplugin/socket.sock
+      expected: |
+        apiVersion: config.openshift.io/v1
+        kind: APIServer
+        spec:
+          audit:
+            profile: Default
+          encryption:
+            type: KMS
+            kms:
+              managementModel: External
+              endpoint: unix:///var/run/kmsplugin/socket.sock
+    - name: Should fail to create KMS without endpoint
       initial: |
         apiVersion: config.openshift.io/v1
         kind: APIServer
@@ -82,11 +85,9 @@ tests:
           encryption:
             type: KMS
             kms:
-              type: AWS
-              aws:
-                region: us-east-1
-      expectedError: "spec.encryption.kms.aws.keyARN: Required value"
-    - name: Should fail to create AWS KMS with invalid keyARN format
+              managementModel: External
+      expectedError: "spec.encryption.kms.endpoint: Required value"
+    - name: Should be able to create KMS with abstract socket endpoint
       initial: |
         apiVersion: config.openshift.io/v1
         kind: APIServer
@@ -94,12 +95,20 @@ tests:
           encryption:
             type: KMS
             kms:
-              type: AWS
-              aws:
-                keyARN: not-a-kms-arn
-                region: us-east-1
-      expectedError: "keyARN must follow the format `arn:aws:kms:<region>:<account_id>:key/<key_id>`. The account ID must be a 12 digit number and the region and key ID should consist only of lowercase hexadecimal characters and hyphens (-)."
-    - name: Should fail to create AWS KMS with empty region
+              managementModel: External
+              endpoint: unix:///@abstractsocket
+      expected: |
+        apiVersion: config.openshift.io/v1
+        kind: APIServer
+        spec:
+          audit:
+            profile: Default
+          encryption:
+            type: KMS
+            kms:
+              managementModel: External
+              endpoint: unix:///@abstractsocket
+    - name: Should fail to create KMS with empty endpoint
       initial: |
         apiVersion: config.openshift.io/v1
         kind: APIServer
@@ -107,12 +116,10 @@ tests:
           encryption:
             type: KMS
             kms:
-              type: AWS
-              aws:
-                keyARN: arn:aws:kms:us-east-1:101010101010:key/9a512e29-0d9c-4cf5-8174-fc1a5b22cd6a
-                region: ""
-      expectedError: "spec.encryption.kms.aws.region in body should be at least 1 chars long"
-    - name: Should fail to create AWS KMS with invalid region format
+              managementModel: External
+              endpoint: ""
+      expectedError: "spec.encryption.kms.endpoint in body should be at least 9 chars long"
+    - name: Should fail to create KMS with endpoint containing spaces
       initial: |
         apiVersion: config.openshift.io/v1
         kind: APIServer
@@ -120,8 +127,17 @@ tests:
           encryption:
             type: KMS
             kms:
-              type: AWS
-              aws:
-                keyARN: arn:aws:kms:us-east-1:101010101010:key/9a512e29-0d9c-4cf5-8174-fc1a5b22cd6a
-                region: "INVALID-REGION"
-      expectedError: "region must be a valid AWS region, consisting of lowercase characters, digits and hyphens (-) only."
+              managementModel: External
+              endpoint: unix:///var/run/kms plugin/socket.sock
+      expectedError: "endpoint must follow the format 'unix:///path' or 'unix:///@abstractname'"
+    - name: Should fail to create KMS with abstract socket containing slash
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: APIServer
+        spec:
+          encryption:
+            type: KMS
+            kms:
+              managementModel: External
+              endpoint: unix:///@abstract/socket
+      expectedError: "endpoint must follow the format 'unix:///path' or 'unix:///@abstractname'"

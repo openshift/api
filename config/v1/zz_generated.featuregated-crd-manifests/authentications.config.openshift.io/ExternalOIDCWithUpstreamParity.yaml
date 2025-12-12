@@ -6,7 +6,7 @@ metadata:
     api.openshift.io/filename-cvo-runlevel: "0000_10"
     api.openshift.io/filename-operator: config-operator
     api.openshift.io/filename-ordering: "01"
-    feature-gate.release.openshift.io/ExternalOIDCWithUIDAndExtraClaimMappings: "true"
+    feature-gate.release.openshift.io/ExternalOIDCWithUpstreamParity: "true"
     release.openshift.io/bootstrap-required: "true"
   name: authentications.config.openshift.io
 spec:
@@ -84,107 +84,6 @@ spec:
                         the Kubernetes API server for translating claims in a JWT token, issued
                         by the identity provider, to a cluster identity.
                       properties:
-                        extra:
-                          description: |-
-                            extra is an optional field for configuring the mappings
-                            used to construct the extra attribute for the cluster identity.
-                            When omitted, no extra attributes will be present on the cluster identity.
-                            key values for extra mappings must be unique.
-                            A maximum of 32 extra attribute mappings may be provided.
-                          items:
-                            description: |-
-                              ExtraMapping allows specifying a key and CEL expression
-                              to evaluate the keys' value. It is used to create additional
-                              mappings and attributes added to a cluster identity from
-                              a provided authentication token.
-                            properties:
-                              key:
-                                description: |-
-                                  key is a required field that specifies the string
-                                  to use as the extra attribute key.
-
-                                  key must be a domain-prefix path (e.g 'example.org/foo').
-                                  key must not exceed 510 characters in length.
-                                  key must contain the '/' character, separating the domain and path characters.
-                                  key must not be empty.
-
-                                  The domain portion of the key (string of characters prior to the '/') must be a valid RFC1123 subdomain.
-                                  It must not exceed 253 characters in length.
-                                  It must start and end with an alphanumeric character.
-                                  It must only contain lower case alphanumeric characters and '-' or '.'.
-                                  It must not use the reserved domains, or be subdomains of, "kubernetes.io", "k8s.io", and "openshift.io".
-
-                                  The path portion of the key (string of characters after the '/') must not be empty and must consist of at least one
-                                  alphanumeric character, percent-encoded octets, '-', '.', '_', '~', '!', '$', '&', ''', '(', ')', '*', '+', ',', ';', '=', and ':'.
-                                  It must not exceed 256 characters in length.
-                                maxLength: 510
-                                minLength: 1
-                                type: string
-                                x-kubernetes-validations:
-                                - message: key must contain the '/' character
-                                  rule: self.contains('/')
-                                - message: the domain of the key must consist of only
-                                    lower case alphanumeric characters, '-' or '.',
-                                    and must start and end with an alphanumeric character
-                                  rule: self.split('/', 2)[0].matches("^[a-z0-9]([-a-z0-9]*[a-z0-9])?(\\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*$")
-                                - message: the domain of the key must not exceed 253
-                                    characters in length
-                                  rule: self.split('/', 2)[0].size() <= 253
-                                - message: the domain 'kubernetes.io' is reserved
-                                    for Kubernetes use
-                                  rule: self.split('/', 2)[0] != 'kubernetes.io'
-                                - message: the subdomains '*.kubernetes.io' are reserved
-                                    for Kubernetes use
-                                  rule: '!self.split(''/'', 2)[0].endsWith(''.kubernetes.io'')'
-                                - message: the domain 'k8s.io' is reserved for Kubernetes
-                                    use
-                                  rule: self.split('/', 2)[0] != 'k8s.io'
-                                - message: the subdomains '*.k8s.io' are reserved
-                                    for Kubernetes use
-                                  rule: '!self.split(''/'', 2)[0].endsWith(''.k8s.io'')'
-                                - message: the domain 'openshift.io' is reserved for
-                                    OpenShift use
-                                  rule: self.split('/', 2)[0] != 'openshift.io'
-                                - message: the subdomains '*.openshift.io' are reserved
-                                    for OpenShift use
-                                  rule: '!self.split(''/'', 2)[0].endsWith(''.openshift.io'')'
-                                - message: the path of the key must not be empty and
-                                    must consist of at least one alphanumeric character,
-                                    percent-encoded octets, apostrophe, '-', '.',
-                                    '_', '~', '!', '$', '&', '(', ')', '*', '+', ',',
-                                    ';', '=', and ':'
-                                  rule: self.split('/', 2)[1].matches('[A-Za-z0-9/\\-._~%!$&\'()*+;=:]+')
-                                - message: the path of the key must not exceed 256
-                                    characters in length
-                                  rule: self.split('/', 2)[1].size() <= 256
-                              valueExpression:
-                                description: |-
-                                  valueExpression is a required field to specify the CEL expression to extract
-                                  the extra attribute value from a JWT token's claims.
-                                  valueExpression must produce a string or string array value.
-                                  "", [], and null are treated as the extra mapping not being present.
-                                  Empty string values within an array are filtered out.
-
-                                  CEL expressions have access to the token claims
-                                  through a CEL variable, 'claims'.
-                                  'claims' is a map of claim names to claim values.
-                                  For example, the 'sub' claim value can be accessed as 'claims.sub'.
-                                  Nested claims can be accessed using dot notation ('claims.foo.bar').
-
-                                  valueExpression must not exceed 1024 characters in length.
-                                  valueExpression must not be empty.
-                                maxLength: 1024
-                                minLength: 1
-                                type: string
-                            required:
-                            - key
-                            - valueExpression
-                            type: object
-                          maxItems: 32
-                          type: array
-                          x-kubernetes-list-map-keys:
-                          - key
-                          x-kubernetes-list-type: map
                         groups:
                           description: |-
                             groups is an optional field that configures how the groups of a cluster identity
@@ -215,56 +114,6 @@ spec:
                           required:
                           - claim
                           type: object
-                        uid:
-                          description: |-
-                            uid is an optional field for configuring the claim mapping
-                            used to construct the uid for the cluster identity.
-
-                            When using uid.claim to specify the claim it must be a single string value.
-                            When using uid.expression the expression must result in a single string value.
-
-                            When omitted, this means the user has no opinion and the platform
-                            is left to choose a default, which is subject to change over time.
-                            The current default is to use the 'sub' claim.
-                          properties:
-                            claim:
-                              description: |-
-                                claim is an optional field for specifying the
-                                JWT token claim that is used in the mapping.
-                                The value of this claim will be assigned to
-                                the field in which this mapping is associated.
-
-                                Precisely one of claim or expression must be set.
-                                claim must not be specified when expression is set.
-                                When specified, claim must be at least 1 character in length
-                                and must not exceed 256 characters in length.
-                              maxLength: 256
-                              minLength: 1
-                              type: string
-                            expression:
-                              description: |-
-                                expression is an optional field for specifying a
-                                CEL expression that produces a string value from
-                                JWT token claims.
-
-                                CEL expressions have access to the token claims
-                                through a CEL variable, 'claims'.
-                                'claims' is a map of claim names to claim values.
-                                For example, the 'sub' claim value can be accessed as 'claims.sub'.
-                                Nested claims can be accessed using dot notation ('claims.foo.bar').
-
-                                Precisely one of claim or expression must be set.
-                                expression must not be specified when claim is set.
-                                When specified, expression must be at least 1 character in length
-                                and must not exceed 1024 characters in length.
-                              maxLength: 1024
-                              minLength: 1
-                              type: string
-                          type: object
-                          x-kubernetes-validations:
-                          - message: precisely one of claim or expression must be
-                              set
-                            rule: 'has(self.claim) ? !has(self.expression) : has(self.expression)'
                         username:
                           description: |-
                             username is a required field that configures how the username of a cluster identity
@@ -353,6 +202,34 @@ spec:
                           If type is RequiredClaim, requiredClaim must be set.
                           If Type is Expression, CEL must be set and RequiredClaim must be omitted.
                         properties:
+                          cel:
+                            description: |-
+                              CEL holds the CEL expression and message for validation.
+                              Must be set when Type is "Expression", and forbidden otherwise.
+                              cel holds the CEL rule configuration. Must be set when type=Expression.
+                            properties:
+                              expression:
+                                description: |-
+                                  expression is a CEL expression evaluated against token claims.
+                                  The expression must be a non-empty string and no longer than 1024 characters.
+                                  The expression must return a boolean value where 'true' signals a valid token and 'false' an invalid one.
+                                  This field is required.
+                                maxLength: 1024
+                                minLength: 1
+                                type: string
+                              message:
+                                description: |-
+                                  message allows configuring a human-readable message that is logged by the Kubernetes API server
+                                  when a token fails validation based on the CEL expression defined in 'Expression'.
+                                  This field is required. If provided, the message must be at least 1 character long
+                                  and cannot exceed 256 characters. This message is logged and not returned to the caller.
+                                maxLength: 256
+                                minLength: 1
+                                type: string
+                            required:
+                            - expression
+                            - message
+                            type: object
                           requiredClaim:
                             properties:
                               claim:
@@ -389,11 +266,18 @@ spec:
 
                               When set to 'Expression', the Kubernetes API server will be configured
                               to validate the incoming JWT against the configured CEL expression.
+                            enum:
+                            - RequiredClaim
+                            - Expression
                             type: string
                         required:
                         - type
                         type: object
                         x-kubernetes-validations:
+                        - message: expression must be set when type is 'Expression',
+                            and forbidden otherwise
+                          rule: 'has(self.type) && self.type == ''Expression'' ? has(self.expression)
+                            : !has(self.expression)'
                         - message: requiredClaim must be set when type is 'RequiredClaim',
                             and forbidden otherwise
                           rule: 'has(self.type) && self.type == ''RequiredClaim''
@@ -420,6 +304,29 @@ spec:
                           minItems: 1
                           type: array
                           x-kubernetes-list-type: set
+                        discoveryURL:
+                          description: |-
+                            discoveryURL is an optional field that, if specified, overrides the default discovery endpoint
+                            used to retrieve OIDC configuration metadata. By default, the discovery URL is derived from `issuerURL`
+                            as "{issuerURL}/.well-known/openid-configuration".
+
+                            The discoveryURL must be a valid absolute HTTPS URL. It must not contain query
+                            parameters, user information, or fragments. Additionally, it must differ from
+                            the value of `url` (ignoring trailing slashes).
+                          maxLength: 2048
+                          minLength: 1
+                          type: string
+                          x-kubernetes-validations:
+                          - message: discoveryURL must be a valid URL
+                            rule: isURL(self)
+                          - message: discoveryURL must be a valid https URL
+                            rule: url(self).getScheme() == 'https'
+                          - message: discoveryURL must not contain query parameters
+                            rule: url(self).getQuery().size() == 0
+                          - message: discoveryURL must not contain fragments
+                            rule: self.matches('^[^#]*$')
+                          - message: discoveryURL must not contain user info
+                            rule: '!self.matches(''^https://.+:.+@.+/.*$'')'
                         issuerCertificateAuthority:
                           description: |-
                             issuerCertificateAuthority is an optional field that configures the
@@ -466,6 +373,11 @@ spec:
                       - audiences
                       - issuerURL
                       type: object
+                      x-kubernetes-validations:
+                      - message: discoveryURL must be different from issuerURL
+                        rule: 'self.?discoveryURL.orValue("").size() > 0 ? (self.issuerURL.size()
+                          == 0 || self.discoveryURL.find(''^.+[^/]'') != self.issuerURL.find(''^.+[^/]''))
+                          : true'
                     name:
                       description: |-
                         name is a required field that configures the unique human-readable identifier
@@ -565,6 +477,63 @@ spec:
                       - componentNamespace
                       - componentName
                       x-kubernetes-list-type: map
+                    userValidationRules:
+                      description: |-
+                        userValidationRules defines the set of rules used to validate claims in a user's token.
+                        Each rule is evaluated independently to determine whether the token subject is considered valid.
+                        Rules can either require specific claims and values to be present,
+                        or define CEL expressions that must evaluate to true for the token to be accepted.
+                        All rules must evaluate to true for the token to be accepted.
+                        If any rule evaluates to false, the token is rejected.
+                        A maximum of 64 rules can be specified. This field is optional.
+
+                        See https://kubernetes.io/docs/reference/using-api/cel/ for CEL syntax.
+                      items:
+                        description: |-
+                          TokenUserValidationRule provides a CEL-based rule used to validate a token subject.
+                          Each rule contains a CEL expression that is evaluated against the token’s claims.
+                        properties:
+                          cel:
+                            description: cel holds the CEL rule configuration. Must
+                              be set when type=CEL.
+                            properties:
+                              expression:
+                                description: |-
+                                  expression is a CEL expression that must evaluate
+                                  to true for the token to be accepted. The expression is evaluated against the token's
+                                  user information (e.g., username, groups).
+                                  This field must be non-empty and may not exceed 1024 characters.
+                                maxLength: 1024
+                                minLength: 1
+                                type: string
+                              message:
+                                description: |-
+                                  message allows configuring a human-readable message that is logged by the Kubernetes API server
+                                  when a token fails validation based on the CEL expression defined in 'Expression'.
+                                  This field is required. If provided, the message must be at least 1 character long
+                                  and cannot exceed 256 characters. This message is logged and not returned to the caller.
+                                maxLength: 256
+                                minLength: 1
+                                type: string
+                            required:
+                            - expression
+                            - message
+                            type: object
+                          type:
+                            description: type identifies the rule type. Only "CEL"
+                              is supported currently.
+                            enum:
+                            - CEL
+                            type: string
+                        required:
+                        - type
+                        type: object
+                      maxItems: 64
+                      minItems: 1
+                      type: array
+                      x-kubernetes-list-map-keys:
+                      - expression
+                      x-kubernetes-list-type: map
                   required:
                   - claimMappings
                   - issuer
@@ -591,11 +560,6 @@ spec:
                   type identifies the cluster managed, user facing authentication mode in use.
                   Specifically, it manages the component that responds to login attempts.
                   The default is IntegratedOAuth.
-                enum:
-                - ""
-                - None
-                - IntegratedOAuth
-                - OIDC
                 type: string
               webhookTokenAuthenticator:
                 description: |-
@@ -685,175 +649,6 @@ spec:
                 required:
                 - name
                 type: object
-              oidcClients:
-                description: |-
-                  oidcClients is where participating operators place the current OIDC client status
-                  for OIDC clients that can be customized by the cluster-admin.
-                items:
-                  description: |-
-                    OIDCClientStatus represents the current state
-                    of platform components and how they interact with
-                    the configured identity providers.
-                  properties:
-                    componentName:
-                      description: |-
-                        componentName is a required field that specifies the name of the platform
-                        component using the identity provider as an authentication mode.
-                        It is used in combination with componentNamespace as a unique identifier.
-
-                        componentName must not be an empty string ("") and must not exceed 256 characters in length.
-                      maxLength: 256
-                      minLength: 1
-                      type: string
-                    componentNamespace:
-                      description: |-
-                        componentNamespace is a required field that specifies the namespace in which the
-                        platform component using the identity provider as an authentication
-                        mode is running.
-                        It is used in combination with componentName as a unique identifier.
-
-                        componentNamespace must not be an empty string ("") and must not exceed 63 characters in length.
-                      maxLength: 63
-                      minLength: 1
-                      type: string
-                    conditions:
-                      description: |-
-                        conditions are used to communicate the state of the `oidcClients` entry.
-
-                        Supported conditions include Available, Degraded and Progressing.
-
-                        If Available is true, the component is successfully using the configured client.
-                        If Degraded is true, that means something has gone wrong trying to handle the client configuration.
-                        If Progressing is true, that means the component is taking some action related to the `oidcClients` entry.
-                      items:
-                        description: Condition contains details for one aspect of
-                          the current state of this API Resource.
-                        properties:
-                          lastTransitionTime:
-                            description: |-
-                              lastTransitionTime is the last time the condition transitioned from one status to another.
-                              This should be when the underlying condition changed.  If that is not known, then using the time when the API field changed is acceptable.
-                            format: date-time
-                            type: string
-                          message:
-                            description: |-
-                              message is a human readable message indicating details about the transition.
-                              This may be an empty string.
-                            maxLength: 32768
-                            type: string
-                          observedGeneration:
-                            description: |-
-                              observedGeneration represents the .metadata.generation that the condition was set based upon.
-                              For instance, if .metadata.generation is currently 12, but the .status.conditions[x].observedGeneration is 9, the condition is out of date
-                              with respect to the current state of the instance.
-                            format: int64
-                            minimum: 0
-                            type: integer
-                          reason:
-                            description: |-
-                              reason contains a programmatic identifier indicating the reason for the condition's last transition.
-                              Producers of specific condition types may define expected values and meanings for this field,
-                              and whether the values are considered a guaranteed API.
-                              The value should be a CamelCase string.
-                              This field may not be empty.
-                            maxLength: 1024
-                            minLength: 1
-                            pattern: ^[A-Za-z]([A-Za-z0-9_,:]*[A-Za-z0-9_])?$
-                            type: string
-                          status:
-                            description: status of the condition, one of True, False,
-                              Unknown.
-                            enum:
-                            - "True"
-                            - "False"
-                            - Unknown
-                            type: string
-                          type:
-                            description: type of condition in CamelCase or in foo.example.com/CamelCase.
-                            maxLength: 316
-                            pattern: ^([a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*/)?(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])$
-                            type: string
-                        required:
-                        - lastTransitionTime
-                        - message
-                        - reason
-                        - status
-                        - type
-                        type: object
-                      type: array
-                      x-kubernetes-list-map-keys:
-                      - type
-                      x-kubernetes-list-type: map
-                    consumingUsers:
-                      description: |-
-                        consumingUsers is an optional list of ServiceAccounts requiring
-                        read permissions on the `clientSecret` secret.
-
-                        consumingUsers must not exceed 5 entries.
-                      items:
-                        description: ConsumingUser is an alias for string which we
-                          add validation to. Currently only service accounts are supported.
-                        maxLength: 512
-                        minLength: 1
-                        pattern: ^system:serviceaccount:[a-z0-9]([-a-z0-9]*[a-z0-9])?:[a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*$
-                        type: string
-                      maxItems: 5
-                      type: array
-                      x-kubernetes-list-type: set
-                    currentOIDCClients:
-                      description: |-
-                        currentOIDCClients is an optional list of clients that the component is currently using.
-                        Entries must have unique issuerURL/clientID pairs.
-                      items:
-                        description: |-
-                          OIDCClientReference is a reference to a platform component
-                          client configuration.
-                        properties:
-                          clientID:
-                            description: |-
-                              clientID is a required field that specifies the client identifier, from
-                              the identity provider, that the platform component is using for authentication
-                              requests made to the identity provider.
-
-                              clientID must not be empty.
-                            minLength: 1
-                            type: string
-                          issuerURL:
-                            description: |-
-                              issuerURL is a required field that specifies the URL of the identity
-                              provider that this client is configured to make requests against.
-
-                              issuerURL must use the 'https' scheme.
-                            pattern: ^https:\/\/[^\s]
-                            type: string
-                          oidcProviderName:
-                            description: |-
-                              oidcProviderName is a required reference to the 'name' of the identity provider
-                              configured in 'oidcProviders' that this client is associated with.
-
-                              oidcProviderName must not be an empty string ("").
-                            minLength: 1
-                            type: string
-                        required:
-                        - clientID
-                        - issuerURL
-                        - oidcProviderName
-                        type: object
-                      type: array
-                      x-kubernetes-list-map-keys:
-                      - issuerURL
-                      - clientID
-                      x-kubernetes-list-type: map
-                  required:
-                  - componentName
-                  - componentNamespace
-                  type: object
-                maxItems: 20
-                type: array
-                x-kubernetes-list-map-keys:
-                - componentNamespace
-                - componentName
-                x-kubernetes-list-type: map
             type: object
         required:
         - spec

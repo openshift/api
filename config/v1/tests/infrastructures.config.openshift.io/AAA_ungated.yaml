@@ -1837,3 +1837,196 @@ tests:
                 value: value*
             type: AWS
       expectedStatusError: "invalid AWS resource tag value. The string can contain only the set of alphanumeric characters, space (' '), '_', '.', '/', '=', '+', '-', ':', '@'"
+    - name: Should not be able to create an aws resourcetag with aws prefix in key
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        spec:
+          platformSpec:
+            aws: {}
+            type: AWS
+      updated: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        spec:
+          platformSpec:
+            aws: {}
+            type: AWS
+        status:
+          controlPlaneTopology: HighlyAvailable
+          cpuPartitioning: None
+          infrastructureTopology: HighlyAvailable
+          platform: AWS
+          platformStatus:
+            aws:
+              region: us-east-1
+              resourceTags:
+              - key: aws:key
+                value: value with space
+            type: AWS
+      expectedStatusError: "the prefix 'aws:' is reserved for AWS system usage and cannot be used at the beginning of a key"
+    - name: Should not be able to modify an existing AWS ResourceTags Tag
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        spec: {}
+        status:
+          controlPlaneTopology: "HighlyAvailable"
+          infrastructureTopology: "HighlyAvailable"
+          platform: AWS
+          platformStatus:
+            type: AWS
+            aws:
+              resourceTags:
+                - {key: "key", value: "value"}
+      updated: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        spec: {}
+        status:
+          platform: AWS
+          platformStatus:
+            type: AWS
+            aws:
+              resourceTags:
+                - {key: "key", value: "changed"}
+      expectedStatusError: "status.platformStatus.aws.resourceTags: Invalid value: \"array\": resourceTags are immutable and may only be configured during installation"
+    - name: Should not be able to add a Tag to an existing AWS ResourceTags
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        spec: {}
+        status:
+          controlPlaneTopology: "HighlyAvailable"
+          infrastructureTopology: "HighlyAvailable"
+          platform: AWS
+          platformStatus:
+            type: AWS
+            aws:
+              resourceTags:
+                - {key: "key", value: "value"}
+      updated: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        spec: {}
+        status:
+          platform: AWS
+          platformStatus:
+            type: AWS
+            aws:
+              resourceTags:
+                - {key: "key", value: "value"}
+                - {key: "new", value: "entry"}
+      expectedStatusError: "status.platformStatus.aws.resourceTags: Invalid value: \"array\": resourceTags are immutable and may only be configured during installation"
+    - name: Should not be able to remove a Tag from an existing AWS ResourceTags
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        spec: {}
+        status:
+          platform: AWS
+          platformStatus:
+            type: AWS
+            aws:
+              resourceTags:
+                - {key: "key", value: "value"}
+                - {key: "new", value: "entry"}
+      updated: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        spec: {}
+        status:
+          platform: AWS
+          platformStatus:
+            type: AWS
+            aws:
+              resourceTags:
+                - {key: "key", value: "value"}
+      expectedStatusError: "status.platformStatus.aws.resourceTags: Invalid value: \"array\": resourceTags are immutable and may only be configured during installation"
+    - name: Should not be able to add AWS ResourceTags to an empty platformStatus.aws
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        spec: {}
+        status:
+          platform: AWS
+          platformStatus:
+            type: AWS
+            aws: {}
+      updated: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        spec: {}
+        status:
+          platform: AWS
+          platformStatus:
+            aws:
+              resourceTags:
+                - {key: "key", value: "value"}
+      expectedStatusError: "status.platformStatus.aws: Invalid value: \"object\": resourceTags may only be configured during installation"
+    - name: Should not be able to remove AWS ResourceTags from platformStatus.aws
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        spec: {}
+        status:
+          platform: AWS
+          platformStatus:
+            type: AWS
+            aws:
+              resourceTags:
+                - {key: "key", value: "value"}
+      updated: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        spec: {}
+        status:
+          platform: AWS
+          platformStatus:
+            type: AWS
+            aws: {}
+      expectedStatusError: "status.platformStatus.aws: Invalid value: \"object\": resourceTags may only be configured during installation"
+    - name: Ratcheting validation for AWS prefix ResourceTags should not break updates
+      initialCRDPatches:
+      - op: remove
+        path: /spec/versions/0/schema/openAPIV3Schema/properties/status/properties/platformStatus/properties/aws/properties/resourceTags/items/properties/key/x-kubernetes-validations
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        spec: {}
+        status:
+          platform: AWS
+          platformStatus:
+            type: AWS
+            aws:
+              resourceTags:
+                - {key: "aws:invalidKey", value: "value"}
+      updated: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        spec: {}
+        status:
+          platform: AWS
+          platformStatus:
+            type: AWS
+            aws:
+              resourceTags:
+                - {key: "aws:invalidKey", value: "value"}
+              serviceEndpoints:
+                - {name: "newendpoint", url: "https://www.awsendpoint.com"}
+      expected: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        spec: {}
+        status:
+          platform: AWS
+          controlPlaneTopology: HighlyAvailable
+          cpuPartitioning: None
+          infrastructureTopology: HighlyAvailable
+          platformStatus:
+            type: AWS
+            aws:
+              resourceTags:
+                - {key: "aws:invalidKey", value: "value"}
+              serviceEndpoints:
+                - {name: "newendpoint", url: "https://www.awsendpoint.com"}

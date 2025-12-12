@@ -5,7 +5,52 @@ featureGates:
 - KMSEncryptionProvider
 tests:
   onCreate:
-    - name: Should be able to create encrypt with KMS for AWS with valid values
+    - name: Should be able to create encrypt with KMS for Manual provider with valid name
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: APIServer
+        spec:
+          encryption:
+            type: KMS
+            kms:
+              type: Manual
+              manual:
+                name: my-kms-plugin
+      expected: |
+        apiVersion: config.openshift.io/v1
+        kind: APIServer
+        spec:
+          audit:
+            profile: Default
+          encryption:
+            type: KMS
+            kms:
+              type: Manual
+              manual:
+                name: my-kms-plugin
+    - name: Should fail to create KMS Manual provider without manual config
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: APIServer
+        spec:
+          encryption:
+            type: KMS
+            kms:
+              type: Manual
+      expectedError: "manual config with non-empty name is required when kms provider type is Manual"
+    - name: Should fail to create KMS Manual provider with empty name
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: APIServer
+        spec:
+          encryption:
+            type: KMS
+            kms:
+              type: Manual
+              manual:
+                name: ""
+      expectedError: "spec.encryption.kms.manual.name: Invalid value"
+    - name: Should be able to create KMS with AWS provider and valid aws config
       initial: |
         apiVersion: config.openshift.io/v1
         kind: APIServer
@@ -15,7 +60,7 @@ tests:
             kms:
               type: AWS
               aws:
-                keyARN: arn:aws:kms:us-east-1:101010101010:key/9a512e29-0d9c-4cf5-8174-fc1a5b22cd6a
+                keyARN: arn:aws:kms:us-east-1:123456789012:key/abcd1234-ab12-cd34-ef56-abcdef123456
                 region: us-east-1
       expected: |
         apiVersion: config.openshift.io/v1
@@ -28,9 +73,9 @@ tests:
             kms:
               type: AWS
               aws:
-                keyARN: arn:aws:kms:us-east-1:101010101010:key/9a512e29-0d9c-4cf5-8174-fc1a5b22cd6a
+                keyARN: arn:aws:kms:us-east-1:123456789012:key/abcd1234-ab12-cd34-ef56-abcdef123456
                 region: us-east-1
-    - name: Should fail to create encrypt with KMS for AWS without region
+    - name: Should fail to create KMS AWS provider without aws config
       initial: |
         apiVersion: config.openshift.io/v1
         kind: APIServer
@@ -39,9 +84,67 @@ tests:
             type: KMS
             kms:
               type: AWS
-              aws:
-                keyARN: arn:aws:kms:us-east-1:101010101010:key/9a512e29-0d9c-4cf5-8174-fc1a5b22cd6a
-      expectedError: "spec.encryption.kms.aws.region: Required value"
+      expectedError: "aws config is required when kms provider type is AWS"
+    - name: Should fail to create KMS with invalid provider type
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: APIServer
+        spec:
+          encryption:
+            type: KMS
+            kms:
+              type: InvalidType
+              manual:
+                name: my-plugin
+      expectedError: "supported values: \"AWS\", \"Manual\""
+    - name: Should fail to create KMS Manual provider with name longer than 80 characters
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: APIServer
+        spec:
+          encryption:
+            type: KMS
+            kms:
+              type: Manual
+              manual:
+                name: this-is-a-very-long-name-that-exceeds-the-maximum-allowed-length-of-eighty-characters-for-kms-plugin
+      expectedError: "Too long: may not be more than 80 bytes"
+    - name: Should fail to create KMS Manual provider with name containing forward slash
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: APIServer
+        spec:
+          encryption:
+            type: KMS
+            kms:
+              type: Manual
+              manual:
+                name: invalid/path
+      expectedError: "name must be a safe socket filename (must not contain '/' or '..')"
+    - name: Should fail to create KMS Manual provider with name containing double dots
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: APIServer
+        spec:
+          encryption:
+            type: KMS
+            kms:
+              type: Manual
+              manual:
+                name: ../escape
+      expectedError: "name must be a safe socket filename (must not contain '/' or '..')"
+    - name: Should fail to create KMS Manual provider with name containing double dots in middle
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: APIServer
+        spec:
+          encryption:
+            type: KMS
+            kms:
+              type: Manual
+              manual:
+                name: some..name
+      expectedError: "name must be a safe socket filename (must not contain '/' or '..')"
     - name: Should not allow kms config with encrypt aescbc
       initial: |
         apiVersion: config.openshift.io/v1
@@ -50,10 +153,9 @@ tests:
           encryption:
             type: aescbc
             kms:
-              type: AWS
-              aws:
-                keyARN: arn:aws:kms:us-east-1:101010101010:key/9a512e29-0d9c-4cf5-8174-fc1a5b22cd6a
-                region: us-east-1
+              type: Manual
+              manual:
+                name: my-plugin
       expectedError: "kms config is required when encryption type is KMS, and forbidden otherwise"
     - name: Should fail to create with an empty KMS config
       initial: |
@@ -64,17 +166,7 @@ tests:
             type: KMS
             kms: {}
       expectedError: "spec.encryption.kms.type: Required value"
-    - name: Should fail to create with kms type AWS but without aws config 
-      initial: |
-        apiVersion: config.openshift.io/v1
-        kind: APIServer
-        spec:
-          encryption:
-            type: KMS
-            kms:
-              type: AWS
-      expectedError: "aws config is required when kms provider type is AWS, and forbidden otherwise"
-    - name: Should fail to create AWS KMS without a keyARN
+    - name: Should fail to create KMS AWS with invalid keyARN format
       initial: |
         apiVersion: config.openshift.io/v1
         kind: APIServer
@@ -84,9 +176,10 @@ tests:
             kms:
               type: AWS
               aws:
+                keyARN: invalid-arn-format
                 region: us-east-1
-      expectedError: "spec.encryption.kms.aws.keyARN: Required value"
-    - name: Should fail to create AWS KMS with invalid keyARN format
+      expectedError: "keyARN must follow the format"
+    - name: Should fail to create KMS AWS with invalid region format
       initial: |
         apiVersion: config.openshift.io/v1
         kind: APIServer
@@ -96,32 +189,6 @@ tests:
             kms:
               type: AWS
               aws:
-                keyARN: not-a-kms-arn
-                region: us-east-1
-      expectedError: "keyARN must follow the format `arn:aws:kms:<region>:<account_id>:key/<key_id>`. The account ID must be a 12 digit number and the region and key ID should consist only of lowercase hexadecimal characters and hyphens (-)."
-    - name: Should fail to create AWS KMS with empty region
-      initial: |
-        apiVersion: config.openshift.io/v1
-        kind: APIServer
-        spec:
-          encryption:
-            type: KMS
-            kms:
-              type: AWS
-              aws:
-                keyARN: arn:aws:kms:us-east-1:101010101010:key/9a512e29-0d9c-4cf5-8174-fc1a5b22cd6a
-                region: ""
-      expectedError: "spec.encryption.kms.aws.region in body should be at least 1 chars long"
-    - name: Should fail to create AWS KMS with invalid region format
-      initial: |
-        apiVersion: config.openshift.io/v1
-        kind: APIServer
-        spec:
-          encryption:
-            type: KMS
-            kms:
-              type: AWS
-              aws:
-                keyARN: arn:aws:kms:us-east-1:101010101010:key/9a512e29-0d9c-4cf5-8174-fc1a5b22cd6a
-                region: "INVALID-REGION"
-      expectedError: "region must be a valid AWS region, consisting of lowercase characters, digits and hyphens (-) only."
+                keyARN: arn:aws:kms:us-east-1:123456789012:key/abcd1234-ab12-cd34-ef56-abcdef123456
+                region: INVALID_REGION
+      expectedError: "region must be a valid AWS region"

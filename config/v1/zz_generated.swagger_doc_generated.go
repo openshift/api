@@ -2326,7 +2326,7 @@ func (Storage) SwaggerDoc() map[string]string {
 }
 
 var map_AWSKMSConfig = map[string]string{
-	"":       "AWSKMSConfig defines the KMS config specific to AWS KMS provider",
+	"":       "AWSKMSConfig defines the KMS config specific to AWS KMS provider Deprecated: There is no logic listening to this resource type, we plan to remove it in next release.",
 	"keyARN": "keyARN specifies the Amazon Resource Name (ARN) of the AWS KMS key used for encryption. The value must adhere to the format `arn:aws:kms:<region>:<account_id>:key/<key_id>`, where: - `<region>` is the AWS region consisting of lowercase letters and hyphens followed by a number. - `<account_id>` is a 12-digit numeric identifier for the AWS account. - `<key_id>` is a unique identifier for the KMS key, consisting of lowercase hexadecimal characters and hyphens.",
 	"region": "region specifies the AWS region where the KMS instance exists, and follows the format `<region-prefix>-<region-name>-<number>`, e.g.: `us-east-1`. Only lowercase letters and hyphens followed by numbers are allowed.",
 }
@@ -2336,13 +2336,23 @@ func (AWSKMSConfig) SwaggerDoc() map[string]string {
 }
 
 var map_KMSConfig = map[string]string{
-	"":     "KMSConfig defines the configuration for the KMS instance that will be used with KMSEncryptionProvider encryption",
-	"type": "type defines the kind of platform for the KMS provider. Available provider types are AWS only.",
-	"aws":  "aws defines the key config for using an AWS KMS instance for the encryption. The AWS KMS instance is managed by the user outside the purview of the control plane.",
+	"":       "KMSConfig defines the configuration for the KMS instance that will be used with KMSEncryptionProvider encryption",
+	"type":   "type defines the kind of platform for the KMS provider. Available provider types are AWS, Manual.",
+	"manual": "manual defines the configuration for manually managed KMS plugins. The KMS plugin must be deployed as a static pod by the cluster admin.",
+	"aws":    "aws defines the key config for using an AWS KMS instance for the encryption. The AWS KMS instance is managed by the user outside the purview of the control plane. Deprecated: There is no logic listening to this resource type, we plan to remove it in next release.",
 }
 
 func (KMSConfig) SwaggerDoc() map[string]string {
 	return map_KMSConfig
+}
+
+var map_ManualKMSConfig = map[string]string{
+	"":     "ManualKMSConfig defines the configuration for manually managed KMS plugins",
+	"name": "name specifies the KMS plugin name. This name is templated into the UNIX domain socket path: unix:///var/run/kmsplugin/<name>.sock and is between 1 and 80 characters in length. The KMS plugin must listen at this socket path. The name must be a safe socket filename and must not contain '/' or '..'.",
+}
+
+func (ManualKMSConfig) SwaggerDoc() map[string]string {
+	return map_ManualKMSConfig
 }
 
 var map_ClusterNetworkEntry = map[string]string{

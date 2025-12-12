@@ -208,9 +208,6 @@
                         "name": "SignatureStores"
                     },
                     {
-                        "name": "TranslateStreamCloseWebsocketRequests"
-                    },
-                    {
                         "name": "VSphereConfigurableMaxAllowedBlockVolumesPerNode"
                     },
                     {

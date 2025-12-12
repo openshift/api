@@ -401,14 +401,6 @@ var (
 					enableIn(configv1.DevPreviewNoUpgrade, configv1.TechPreviewNoUpgrade, configv1.Default).
 					mustRegister()
 
-	FeatureGateTranslateStreamCloseWebsocketRequests = newFeatureGate("TranslateStreamCloseWebsocketRequests").
-								reportProblemsToJiraComponent("kube-apiserver").
-								contactPerson("akashem").
-								productScope(kubernetes).
-								enhancementPR("https://github.com/kubernetes/enhancements/issues/4006").
-								enableIn(configv1.DevPreviewNoUpgrade, configv1.TechPreviewNoUpgrade).
-								mustRegister()
-
 	FeatureGateVolumeAttributesClass = newFeatureGate("VolumeAttributesClass").
 						reportProblemsToJiraComponent("Storage / Kubernetes External Components").
 						contactPerson("dfajmon").

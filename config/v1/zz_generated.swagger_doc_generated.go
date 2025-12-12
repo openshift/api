@@ -2191,20 +2191,10 @@ func (LoadBalancer) SwaggerDoc() map[string]string {
 	return map_LoadBalancer
 }
 
-var map_AWSKMSConfig = map[string]string{
-	"":       "AWSKMSConfig defines the KMS config specific to AWS KMS provider",
-	"keyARN": "keyARN specifies the Amazon Resource Name (ARN) of the AWS KMS key used for encryption. The value must adhere to the format `arn:aws:kms:<region>:<account_id>:key/<key_id>`, where: - `<region>` is the AWS region consisting of lowercase letters and hyphens followed by a number. - `<account_id>` is a 12-digit numeric identifier for the AWS account. - `<key_id>` is a unique identifier for the KMS key, consisting of lowercase hexadecimal characters and hyphens.",
-	"region": "region specifies the AWS region where the KMS instance exists, and follows the format `<region-prefix>-<region-name>-<number>`, e.g.: `us-east-1`. Only lowercase letters and hyphens followed by numbers are allowed.",
-}
-
-func (AWSKMSConfig) SwaggerDoc() map[string]string {
-	return map_AWSKMSConfig
-}
-
 var map_KMSConfig = map[string]string{
-	"":     "KMSConfig defines the configuration for the KMS instance that will be used with KMSEncryptionProvider encryption",
-	"type": "type defines the kind of platform for the KMS provider. Available provider types are AWS only.",
-	"aws":  "aws defines the key config for using an AWS KMS instance for the encryption. The AWS KMS instance is managed by the user outside the purview of the control plane.",
+	"":                "KMSConfig defines the configuration for the KMS instance that will be used with KMSEncryptionProvider encryption",
+	"managementModel": "managementModel defines how KMS plugins are managed. Valid values are \"External\". When set to External, encryption keys are managed by a user-deployed KMS plugin that communicates via UNIX domain socket using KMS V2 API.",
+	"endpoint":        "endpoint specifies the UNIX domain socket endpoint for communicating with the external KMS plugin. The endpoint must follow the format \"unix:///path\". Abstract Linux sockets (i.e. \"unix:///@abstractname\") are not supported.",
 }
 
 func (KMSConfig) SwaggerDoc() map[string]string {

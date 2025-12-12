@@ -150,7 +150,6 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"github.com/openshift/api/config/v1.APIServerStatus":                                                 schema_openshift_api_config_v1_APIServerStatus(ref),
 		"github.com/openshift/api/config/v1.AWSDNSSpec":                                                      schema_openshift_api_config_v1_AWSDNSSpec(ref),
 		"github.com/openshift/api/config/v1.AWSIngressSpec":                                                  schema_openshift_api_config_v1_AWSIngressSpec(ref),
-		"github.com/openshift/api/config/v1.AWSKMSConfig":                                                    schema_openshift_api_config_v1_AWSKMSConfig(ref),
 		"github.com/openshift/api/config/v1.AWSPlatformSpec":                                                 schema_openshift_api_config_v1_AWSPlatformSpec(ref),
 		"github.com/openshift/api/config/v1.AWSPlatformStatus":                                               schema_openshift_api_config_v1_AWSPlatformStatus(ref),
 		"github.com/openshift/api/config/v1.AWSResourceTag":                                                  schema_openshift_api_config_v1_AWSResourceTag(ref),
@@ -8647,36 +8646,6 @@ func schema_openshift_api_config_v1_AWSIngressSpec(ref common.ReferenceCallback)
 	}
 }
 
-func schema_openshift_api_config_v1_AWSKMSConfig(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Description: "AWSKMSConfig defines the KMS config specific to AWS KMS provider",
-				Type:        []string{"object"},
-				Properties: map[string]spec.Schema{
-					"keyARN": {
-						SchemaProps: spec.SchemaProps{
-							Description: "keyARN specifies the Amazon Resource Name (ARN) of the AWS KMS key used for encryption. The value must adhere to the format `arn:aws:kms:<region>:<account_id>:key/<key_id>`, where: - `<region>` is the AWS region consisting of lowercase letters and hyphens followed by a number. - `<account_id>` is a 12-digit numeric identifier for the AWS account. - `<key_id>` is a unique identifier for the KMS key, consisting of lowercase hexadecimal characters and hyphens.",
-							Default:     "",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"region": {
-						SchemaProps: spec.SchemaProps{
-							Description: "region specifies the AWS region where the KMS instance exists, and follows the format `<region-prefix>-<region-name>-<number>`, e.g.: `us-east-1`. Only lowercase letters and hyphens followed by numbers are allowed.",
-							Default:     "",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-				},
-				Required: []string{"keyARN", "region"},
-			},
-		},
-	}
-}
-
 func schema_openshift_api_config_v1_AWSPlatformSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -15168,38 +15137,24 @@ func schema_openshift_api_config_v1_KMSConfig(ref common.ReferenceCallback) comm
 				Description: "KMSConfig defines the configuration for the KMS instance that will be used with KMSEncryptionProvider encryption",
 				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
-					"type": {
+					"managementModel": {
 						SchemaProps: spec.SchemaProps{
-							Description: "type defines the kind of platform for the KMS provider. Available provider types are AWS only.",
-							Default:     "",
+							Description: "managementModel defines how KMS plugins are managed. Valid values are \"External\". When set to External, encryption keys are managed by a user-deployed KMS plugin that communicates via UNIX domain socket using KMS V2 API.",
 							Type:        []string{"string"},
 							Format:      "",
 						},
 					},
-					"aws": {
+					"endpoint": {
 						SchemaProps: spec.SchemaProps{
-							Description: "aws defines the key config for using an AWS KMS instance for the encryption. The AWS KMS instance is managed by the user outside the purview of the control plane.",
-							Ref:         ref("github.com/openshift/api/config/v1.AWSKMSConfig"),
+							Description: "endpoint specifies the UNIX domain socket endpoint for communicating with the external KMS plugin. The endpoint must follow the format \"unix:///path\". Abstract Linux sockets (i.e. \"unix:///@abstractname\") are not supported.",
+							Type:        []string{"string"},
+							Format:      "",
 						},
 					},
 				},
-				Required: []string{"type"},
-			},
-			VendorExtensible: spec.VendorExtensible{
-				Extensions: spec.Extensions{
-					"x-kubernetes-unions": []interface{}{
-						map[string]interface{}{
-							"discriminator": "type",
-							"fields-to-discriminateBy": map[string]interface{}{
-								"aws": "AWS",
-							},
-						},
-					},
-				},
+				Required: []string{"endpoint"},
 			},
 		},
-		Dependencies: []string{
-			"github.com/openshift/api/config/v1.AWSKMSConfig"},
 	}
 }
 

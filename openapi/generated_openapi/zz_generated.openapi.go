@@ -241,7 +241,6 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"github.com/openshift/api/config/v1.FeatureGateSpec":                                                 schema_openshift_api_config_v1_FeatureGateSpec(ref),
 		"github.com/openshift/api/config/v1.FeatureGateStatus":                                               schema_openshift_api_config_v1_FeatureGateStatus(ref),
 		"github.com/openshift/api/config/v1.FeatureGateTests":                                                schema_openshift_api_config_v1_FeatureGateTests(ref),
-		"github.com/openshift/api/config/v1.FulcioCAWithRekor":                                               schema_openshift_api_config_v1_FulcioCAWithRekor(ref),
 		"github.com/openshift/api/config/v1.GCPPlatformSpec":                                                 schema_openshift_api_config_v1_GCPPlatformSpec(ref),
 		"github.com/openshift/api/config/v1.GCPPlatformStatus":                                               schema_openshift_api_config_v1_GCPPlatformStatus(ref),
 		"github.com/openshift/api/config/v1.GCPResourceLabel":                                                schema_openshift_api_config_v1_GCPResourceLabel(ref),
@@ -272,9 +271,13 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"github.com/openshift/api/config/v1.ImageLabel":                                                      schema_openshift_api_config_v1_ImageLabel(ref),
 		"github.com/openshift/api/config/v1.ImageList":                                                       schema_openshift_api_config_v1_ImageList(ref),
 		"github.com/openshift/api/config/v1.ImagePolicy":                                                     schema_openshift_api_config_v1_ImagePolicy(ref),
+		"github.com/openshift/api/config/v1.ImagePolicyFulcioCAWithRekorRootOfTrust":                         schema_openshift_api_config_v1_ImagePolicyFulcioCAWithRekorRootOfTrust(ref),
 		"github.com/openshift/api/config/v1.ImagePolicyList":                                                 schema_openshift_api_config_v1_ImagePolicyList(ref),
+		"github.com/openshift/api/config/v1.ImagePolicyPKIRootOfTrust":                                       schema_openshift_api_config_v1_ImagePolicyPKIRootOfTrust(ref),
+		"github.com/openshift/api/config/v1.ImagePolicyPublicKeyRootOfTrust":                                 schema_openshift_api_config_v1_ImagePolicyPublicKeyRootOfTrust(ref),
 		"github.com/openshift/api/config/v1.ImagePolicySpec":                                                 schema_openshift_api_config_v1_ImagePolicySpec(ref),
 		"github.com/openshift/api/config/v1.ImagePolicyStatus":                                               schema_openshift_api_config_v1_ImagePolicyStatus(ref),
+		"github.com/openshift/api/config/v1.ImageSigstoreVerificationPolicy":                                 schema_openshift_api_config_v1_ImageSigstoreVerificationPolicy(ref),
 		"github.com/openshift/api/config/v1.ImageSpec":                                                       schema_openshift_api_config_v1_ImageSpec(ref),
 		"github.com/openshift/api/config/v1.ImageStatus":                                                     schema_openshift_api_config_v1_ImageStatus(ref),
 		"github.com/openshift/api/config/v1.ImageTagMirrorSet":                                               schema_openshift_api_config_v1_ImageTagMirrorSet(ref),
@@ -350,11 +353,9 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"github.com/openshift/api/config/v1.OvirtPlatformLoadBalancer":                                       schema_openshift_api_config_v1_OvirtPlatformLoadBalancer(ref),
 		"github.com/openshift/api/config/v1.OvirtPlatformSpec":                                               schema_openshift_api_config_v1_OvirtPlatformSpec(ref),
 		"github.com/openshift/api/config/v1.OvirtPlatformStatus":                                             schema_openshift_api_config_v1_OvirtPlatformStatus(ref),
-		"github.com/openshift/api/config/v1.PKI":                                                             schema_openshift_api_config_v1_PKI(ref),
 		"github.com/openshift/api/config/v1.PKICertificateSubject":                                           schema_openshift_api_config_v1_PKICertificateSubject(ref),
 		"github.com/openshift/api/config/v1.PlatformSpec":                                                    schema_openshift_api_config_v1_PlatformSpec(ref),
 		"github.com/openshift/api/config/v1.PlatformStatus":                                                  schema_openshift_api_config_v1_PlatformStatus(ref),
-		"github.com/openshift/api/config/v1.Policy":                                                          schema_openshift_api_config_v1_Policy(ref),
 		"github.com/openshift/api/config/v1.PolicyFulcioSubject":                                             schema_openshift_api_config_v1_PolicyFulcioSubject(ref),
 		"github.com/openshift/api/config/v1.PolicyIdentity":                                                  schema_openshift_api_config_v1_PolicyIdentity(ref),
 		"github.com/openshift/api/config/v1.PolicyMatchExactRepository":                                      schema_openshift_api_config_v1_PolicyMatchExactRepository(ref),
@@ -374,7 +375,6 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"github.com/openshift/api/config/v1.ProxyList":                                                       schema_openshift_api_config_v1_ProxyList(ref),
 		"github.com/openshift/api/config/v1.ProxySpec":                                                       schema_openshift_api_config_v1_ProxySpec(ref),
 		"github.com/openshift/api/config/v1.ProxyStatus":                                                     schema_openshift_api_config_v1_ProxyStatus(ref),
-		"github.com/openshift/api/config/v1.PublicKey":                                                       schema_openshift_api_config_v1_PublicKey(ref),
 		"github.com/openshift/api/config/v1.RegistryLocation":                                                schema_openshift_api_config_v1_RegistryLocation(ref),
 		"github.com/openshift/api/config/v1.RegistrySources":                                                 schema_openshift_api_config_v1_RegistrySources(ref),
 		"github.com/openshift/api/config/v1.Release":                                                         schema_openshift_api_config_v1_Release(ref),
@@ -438,28 +438,28 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"github.com/openshift/api/config/v1alpha1.ClusterMonitoringStatus":                                   schema_openshift_api_config_v1alpha1_ClusterMonitoringStatus(ref),
 		"github.com/openshift/api/config/v1alpha1.ContainerResource":                                         schema_openshift_api_config_v1alpha1_ContainerResource(ref),
 		"github.com/openshift/api/config/v1alpha1.EtcdBackupSpec":                                            schema_openshift_api_config_v1alpha1_EtcdBackupSpec(ref),
-		"github.com/openshift/api/config/v1alpha1.FulcioCAWithRekor":                                         schema_openshift_api_config_v1alpha1_FulcioCAWithRekor(ref),
 		"github.com/openshift/api/config/v1alpha1.GatherConfig":                                              schema_openshift_api_config_v1alpha1_GatherConfig(ref),
 		"github.com/openshift/api/config/v1alpha1.ImagePolicy":                                               schema_openshift_api_config_v1alpha1_ImagePolicy(ref),
+		"github.com/openshift/api/config/v1alpha1.ImagePolicyFulcioCAWithRekorRootOfTrust":                   schema_openshift_api_config_v1alpha1_ImagePolicyFulcioCAWithRekorRootOfTrust(ref),
 		"github.com/openshift/api/config/v1alpha1.ImagePolicyList":                                           schema_openshift_api_config_v1alpha1_ImagePolicyList(ref),
+		"github.com/openshift/api/config/v1alpha1.ImagePolicyPKIRootOfTrust":                                 schema_openshift_api_config_v1alpha1_ImagePolicyPKIRootOfTrust(ref),
+		"github.com/openshift/api/config/v1alpha1.ImagePolicyPublicKeyRootOfTrust":                           schema_openshift_api_config_v1alpha1_ImagePolicyPublicKeyRootOfTrust(ref),
 		"github.com/openshift/api/config/v1alpha1.ImagePolicySpec":                                           schema_openshift_api_config_v1alpha1_ImagePolicySpec(ref),
 		"github.com/openshift/api/config/v1alpha1.ImagePolicyStatus":                                         schema_openshift_api_config_v1alpha1_ImagePolicyStatus(ref),
+		"github.com/openshift/api/config/v1alpha1.ImageSigstoreVerificationPolicy":                           schema_openshift_api_config_v1alpha1_ImageSigstoreVerificationPolicy(ref),
 		"github.com/openshift/api/config/v1alpha1.InsightsDataGather":                                        schema_openshift_api_config_v1alpha1_InsightsDataGather(ref),
 		"github.com/openshift/api/config/v1alpha1.InsightsDataGatherList":                                    schema_openshift_api_config_v1alpha1_InsightsDataGatherList(ref),
 		"github.com/openshift/api/config/v1alpha1.InsightsDataGatherSpec":                                    schema_openshift_api_config_v1alpha1_InsightsDataGatherSpec(ref),
 		"github.com/openshift/api/config/v1alpha1.InsightsDataGatherStatus":                                  schema_openshift_api_config_v1alpha1_InsightsDataGatherStatus(ref),
 		"github.com/openshift/api/config/v1alpha1.MetricsServerConfig":                                       schema_openshift_api_config_v1alpha1_MetricsServerConfig(ref),
-		"github.com/openshift/api/config/v1alpha1.PKI":                                                       schema_openshift_api_config_v1alpha1_PKI(ref),
 		"github.com/openshift/api/config/v1alpha1.PKICertificateSubject":                                     schema_openshift_api_config_v1alpha1_PKICertificateSubject(ref),
 		"github.com/openshift/api/config/v1alpha1.PersistentVolumeClaimReference":                            schema_openshift_api_config_v1alpha1_PersistentVolumeClaimReference(ref),
 		"github.com/openshift/api/config/v1alpha1.PersistentVolumeConfig":                                    schema_openshift_api_config_v1alpha1_PersistentVolumeConfig(ref),
-		"github.com/openshift/api/config/v1alpha1.Policy":                                                    schema_openshift_api_config_v1alpha1_Policy(ref),
 		"github.com/openshift/api/config/v1alpha1.PolicyFulcioSubject":                                       schema_openshift_api_config_v1alpha1_PolicyFulcioSubject(ref),
 		"github.com/openshift/api/config/v1alpha1.PolicyIdentity":                                            schema_openshift_api_config_v1alpha1_PolicyIdentity(ref),
 		"github.com/openshift/api/config/v1alpha1.PolicyMatchExactRepository":                                schema_openshift_api_config_v1alpha1_PolicyMatchExactRepository(ref),
 		"github.com/openshift/api/config/v1alpha1.PolicyMatchRemapIdentity":                                  schema_openshift_api_config_v1alpha1_PolicyMatchRemapIdentity(ref),
 		"github.com/openshift/api/config/v1alpha1.PolicyRootOfTrust":                                         schema_openshift_api_config_v1alpha1_PolicyRootOfTrust(ref),
-		"github.com/openshift/api/config/v1alpha1.PublicKey":                                                 schema_openshift_api_config_v1alpha1_PublicKey(ref),
 		"github.com/openshift/api/config/v1alpha1.RetentionNumberConfig":                                     schema_openshift_api_config_v1alpha1_RetentionNumberConfig(ref),
 		"github.com/openshift/api/config/v1alpha1.RetentionPolicy":                                           schema_openshift_api_config_v1alpha1_RetentionPolicy(ref),
 		"github.com/openshift/api/config/v1alpha1.RetentionSizeConfig":                                       schema_openshift_api_config_v1alpha1_RetentionSizeConfig(ref),
@@ -10435,7 +10435,7 @@ func schema_openshift_api_config_v1_ClusterImagePolicySpec(ref common.ReferenceC
 						SchemaProps: spec.SchemaProps{
 							Description: "policy is a required field that contains configuration to allow scopes to be verified, and defines how images not matching the verification policy will be treated.",
 							Default:     map[string]interface{}{},
-							Ref:         ref("github.com/openshift/api/config/v1.Policy"),
+							Ref:         ref("github.com/openshift/api/config/v1.ImageSigstoreVerificationPolicy"),
 						},
 					},
 				},
@@ -10443,7 +10443,7 @@ func schema_openshift_api_config_v1_ClusterImagePolicySpec(ref common.ReferenceC
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/config/v1.Policy"},
+			"github.com/openshift/api/config/v1.ImageSigstoreVerificationPolicy"},
 	}
 }
 
@@ -12757,43 +12757,6 @@ func schema_openshift_api_config_v1_FeatureGateTests(ref common.ReferenceCallbac
 	}
 }
 
-func schema_openshift_api_config_v1_FulcioCAWithRekor(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Description: "FulcioCAWithRekor defines the root of trust based on the Fulcio certificate and the Rekor public key.",
-				Type:        []string{"object"},
-				Properties: map[string]spec.Schema{
-					"fulcioCAData": {
-						SchemaProps: spec.SchemaProps{
-							Description: "fulcioCAData is a required field contains inline base64-encoded data for the PEM format fulcio CA. fulcioCAData must be at most 8192 characters.",
-							Type:        []string{"string"},
-							Format:      "byte",
-						},
-					},
-					"rekorKeyData": {
-						SchemaProps: spec.SchemaProps{
-							Description: "rekorKeyData is a required field contains inline base64-encoded data for the PEM format from the Rekor public key. rekorKeyData must be at most 8192 characters.",
-							Type:        []string{"string"},
-							Format:      "byte",
-						},
-					},
-					"fulcioSubject": {
-						SchemaProps: spec.SchemaProps{
-							Description: "fulcioSubject is a required field specifies OIDC issuer and the email of the Fulcio authentication configuration.",
-							Default:     map[string]interface{}{},
-							Ref:         ref("github.com/openshift/api/config/v1.PolicyFulcioSubject"),
-						},
-					},
-				},
-				Required: []string{"fulcioCAData", "rekorKeyData", "fulcioSubject"},
-			},
-		},
-		Dependencies: []string{
-			"github.com/openshift/api/config/v1.PolicyFulcioSubject"},
-	}
-}
-
 func schema_openshift_api_config_v1_GCPPlatformSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -14228,6 +14191,43 @@ func schema_openshift_api_config_v1_ImagePolicy(ref common.ReferenceCallback) co
 	}
 }
 
+func schema_openshift_api_config_v1_ImagePolicyFulcioCAWithRekorRootOfTrust(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "ImagePolicyFulcioCAWithRekorRootOfTrust defines the root of trust based on the Fulcio certificate and the Rekor public key.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"fulcioCAData": {
+						SchemaProps: spec.SchemaProps{
+							Description: "fulcioCAData is a required field contains inline base64-encoded data for the PEM format fulcio CA. fulcioCAData must be at most 8192 characters.",
+							Type:        []string{"string"},
+							Format:      "byte",
+						},
+					},
+					"rekorKeyData": {
+						SchemaProps: spec.SchemaProps{
+							Description: "rekorKeyData is a required field contains inline base64-encoded data for the PEM format from the Rekor public key. rekorKeyData must be at most 8192 characters.",
+							Type:        []string{"string"},
+							Format:      "byte",
+						},
+					},
+					"fulcioSubject": {
+						SchemaProps: spec.SchemaProps{
+							Description: "fulcioSubject is a required field specifies OIDC issuer and the email of the Fulcio authentication configuration.",
+							Default:     map[string]interface{}{},
+							Ref:         ref("github.com/openshift/api/config/v1.PolicyFulcioSubject"),
+						},
+					},
+				},
+				Required: []string{"fulcioCAData", "rekorKeyData", "fulcioSubject"},
+			},
+		},
+		Dependencies: []string{
+			"github.com/openshift/api/config/v1.PolicyFulcioSubject"},
+	}
+}
+
 func schema_openshift_api_config_v1_ImagePolicyList(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -14279,6 +14279,71 @@ func schema_openshift_api_config_v1_ImagePolicyList(ref common.ReferenceCallback
 	}
 }
 
+func schema_openshift_api_config_v1_ImagePolicyPKIRootOfTrust(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "ImagePolicyPKIRootOfTrust defines the root of trust based on Root CA(s) and corresponding intermediate certificates.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"caRootsData": {
+						SchemaProps: spec.SchemaProps{
+							Description: "caRootsData contains base64-encoded data of a certificate bundle PEM file, which contains one or more CA roots in the PEM format. The total length of the data must not exceed 8192 characters.",
+							Type:        []string{"string"},
+							Format:      "byte",
+						},
+					},
+					"caIntermediatesData": {
+						SchemaProps: spec.SchemaProps{
+							Description: "caIntermediatesData contains base64-encoded data of a certificate bundle PEM file, which contains one or more intermediate certificates in the PEM format. The total length of the data must not exceed 8192 characters. caIntermediatesData requires caRootsData to be set.",
+							Type:        []string{"string"},
+							Format:      "byte",
+						},
+					},
+					"pkiCertificateSubject": {
+						SchemaProps: spec.SchemaProps{
+							Description: "pkiCertificateSubject defines the requirements imposed on the subject to which the certificate was issued.",
+							Default:     map[string]interface{}{},
+							Ref:         ref("github.com/openshift/api/config/v1.PKICertificateSubject"),
+						},
+					},
+				},
+				Required: []string{"caRootsData", "pkiCertificateSubject"},
+			},
+		},
+		Dependencies: []string{
+			"github.com/openshift/api/config/v1.PKICertificateSubject"},
+	}
+}
+
+func schema_openshift_api_config_v1_ImagePolicyPublicKeyRootOfTrust(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "ImagePolicyPublicKeyRootOfTrust defines the root of trust based on a sigstore public key.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"keyData": {
+						SchemaProps: spec.SchemaProps{
+							Description: "keyData is a required field contains inline base64-encoded data for the PEM format public key. keyData must be at most 8192 characters.",
+							Type:        []string{"string"},
+							Format:      "byte",
+						},
+					},
+					"rekorKeyData": {
+						SchemaProps: spec.SchemaProps{
+							Description: "rekorKeyData is an optional field contains inline base64-encoded data for the PEM format from the Rekor public key. rekorKeyData must be at most 8192 characters.",
+							Type:        []string{"string"},
+							Format:      "byte",
+						},
+					},
+				},
+				Required: []string{"keyData"},
+			},
+		},
+	}
+}
+
 func schema_openshift_api_config_v1_ImagePolicySpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -14310,7 +14375,7 @@ func schema_openshift_api_config_v1_ImagePolicySpec(ref common.ReferenceCallback
 						SchemaProps: spec.SchemaProps{
 							Description: "policy is a required field that contains configuration to allow scopes to be verified, and defines how images not matching the verification policy will be treated.",
 							Default:     map[string]interface{}{},
-							Ref:         ref("github.com/openshift/api/config/v1.Policy"),
+							Ref:         ref("github.com/openshift/api/config/v1.ImageSigstoreVerificationPolicy"),
 						},
 					},
 				},
@@ -14318,7 +14383,7 @@ func schema_openshift_api_config_v1_ImagePolicySpec(ref common.ReferenceCallback
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/config/v1.Policy"},
+			"github.com/openshift/api/config/v1.ImageSigstoreVerificationPolicy"},
 	}
 }
 
@@ -14355,6 +14420,35 @@ func schema_openshift_api_config_v1_ImagePolicyStatus(ref common.ReferenceCallba
 		},
 		Dependencies: []string{
 			"k8s.io/apimachinery/pkg/apis/meta/v1.Condition"},
+	}
+}
+
+func schema_openshift_api_config_v1_ImageSigstoreVerificationPolicy(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "ImageSigstoreVerificationPolicy defines the verification policy for the items in the scopes list.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"rootOfTrust": {
+						SchemaProps: spec.SchemaProps{
+							Description: "rootOfTrust is a required field that defines the root of trust for verifying image signatures during retrieval. This allows image consumers to specify policyType and corresponding configuration of the policy, matching how the policy was generated.",
+							Default:     map[string]interface{}{},
+							Ref:         ref("github.com/openshift/api/config/v1.PolicyRootOfTrust"),
+						},
+					},
+					"signedIdentity": {
+						SchemaProps: spec.SchemaProps{
+							Description: "signedIdentity is an optional field specifies what image identity the signature claims about the image. This is useful when the image identity in the signature differs from the original image spec, such as when mirror registry is configured for the image scope, the signature from the mirror registry contains the image identity of the mirror instead of the original scope. The required matchPolicy field specifies the approach used in the verification process to verify the identity in the signature and the actual image identity, the default matchPolicy is \"MatchRepoDigestOrExact\".",
+							Ref:         ref("github.com/openshift/api/config/v1.PolicyIdentity"),
+						},
+					},
+				},
+				Required: []string{"rootOfTrust"},
+			},
+		},
+		Dependencies: []string{
+			"github.com/openshift/api/config/v1.PolicyIdentity", "github.com/openshift/api/config/v1.PolicyRootOfTrust"},
 	}
 }
 
@@ -17937,43 +18031,6 @@ func schema_openshift_api_config_v1_OvirtPlatformStatus(ref common.ReferenceCall
 	}
 }
 
-func schema_openshift_api_config_v1_PKI(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Description: "PKI defines the root of trust based on Root CA(s) and corresponding intermediate certificates.",
-				Type:        []string{"object"},
-				Properties: map[string]spec.Schema{
-					"caRootsData": {
-						SchemaProps: spec.SchemaProps{
-							Description: "caRootsData contains base64-encoded data of a certificate bundle PEM file, which contains one or more CA roots in the PEM format. The total length of the data must not exceed 8192 characters.",
-							Type:        []string{"string"},
-							Format:      "byte",
-						},
-					},
-					"caIntermediatesData": {
-						SchemaProps: spec.SchemaProps{
-							Description: "caIntermediatesData contains base64-encoded data of a certificate bundle PEM file, which contains one or more intermediate certificates in the PEM format. The total length of the data must not exceed 8192 characters. caIntermediatesData requires caRootsData to be set.",
-							Type:        []string{"string"},
-							Format:      "byte",
-						},
-					},
-					"pkiCertificateSubject": {
-						SchemaProps: spec.SchemaProps{
-							Description: "pkiCertificateSubject defines the requirements imposed on the subject to which the certificate was issued.",
-							Default:     map[string]interface{}{},
-							Ref:         ref("github.com/openshift/api/config/v1.PKICertificateSubject"),
-						},
-					},
-				},
-				Required: []string{"caRootsData", "pkiCertificateSubject"},
-			},
-		},
-		Dependencies: []string{
-			"github.com/openshift/api/config/v1.PKICertificateSubject"},
-	}
-}
-
 func schema_openshift_api_config_v1_PKICertificateSubject(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -18217,35 +18274,6 @@ func schema_openshift_api_config_v1_PlatformStatus(ref common.ReferenceCallback)
 	}
 }
 
-func schema_openshift_api_config_v1_Policy(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Description: "Policy defines the verification policy for the items in the scopes list.",
-				Type:        []string{"object"},
-				Properties: map[string]spec.Schema{
-					"rootOfTrust": {
-						SchemaProps: spec.SchemaProps{
-							Description: "rootOfTrust is a required field that defines the root of trust for verifying image signatures during retrieval. This allows image consumers to specify policyType and corresponding configuration of the policy, matching how the policy was generated.",
-							Default:     map[string]interface{}{},
-							Ref:         ref("github.com/openshift/api/config/v1.PolicyRootOfTrust"),
-						},
-					},
-					"signedIdentity": {
-						SchemaProps: spec.SchemaProps{
-							Description: "signedIdentity is an optional field specifies what image identity the signature claims about the image. This is useful when the image identity in the signature differs from the original image spec, such as when mirror registry is configured for the image scope, the signature from the mirror registry contains the image identity of the mirror instead of the original scope. The required matchPolicy field specifies the approach used in the verification process to verify the identity in the signature and the actual image identity, the default matchPolicy is \"MatchRepoDigestOrExact\".",
-							Ref:         ref("github.com/openshift/api/config/v1.PolicyIdentity"),
-						},
-					},
-				},
-				Required: []string{"rootOfTrust"},
-			},
-		},
-		Dependencies: []string{
-			"github.com/openshift/api/config/v1.PolicyIdentity", "github.com/openshift/api/config/v1.PolicyRootOfTrust"},
-	}
-}
-
 func schema_openshift_api_config_v1_PolicyFulcioSubject(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -18393,19 +18421,19 @@ func schema_openshift_api_config_v1_PolicyRootOfTrust(ref common.ReferenceCallba
 					"publicKey": {
 						SchemaProps: spec.SchemaProps{
 							Description: "publicKey defines the root of trust configuration based on a sigstore public key. Optionally include a Rekor public key for Rekor verification. publicKey is required when policyType is PublicKey, and forbidden otherwise.",
-							Ref:         ref("github.com/openshift/api/config/v1.PublicKey"),
+							Ref:         ref("github.com/openshift/api/config/v1.ImagePolicyPublicKeyRootOfTrust"),
 						},
 					},
 					"fulcioCAWithRekor": {
 						SchemaProps: spec.SchemaProps{
 							Description: "fulcioCAWithRekor defines the root of trust configuration based on the Fulcio certificate and the Rekor public key. fulcioCAWithRekor is required when policyType is FulcioCAWithRekor, and forbidden otherwise For more information about Fulcio and Rekor, please refer to the document at: https://github.com/sigstore/fulcio and https://github.com/sigstore/rekor",
-							Ref:         ref("github.com/openshift/api/config/v1.FulcioCAWithRekor"),
+							Ref:         ref("github.com/openshift/api/config/v1.ImagePolicyFulcioCAWithRekorRootOfTrust"),
 						},
 					},
 					"pki": {
 						SchemaProps: spec.SchemaProps{
 							Description: "pki defines the root of trust configuration based on Bring Your Own Public Key Infrastructure (BYOPKI) Root CA(s) and corresponding intermediate certificates. pki is required when policyType is PKI, and forbidden otherwise.",
-							Ref:         ref("github.com/openshift/api/config/v1.PKI"),
+							Ref:         ref("github.com/openshift/api/config/v1.ImagePolicyPKIRootOfTrust"),
 						},
 					},
 				},
@@ -18427,7 +18455,7 @@ func schema_openshift_api_config_v1_PolicyRootOfTrust(ref common.ReferenceCallba
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/config/v1.FulcioCAWithRekor", "github.com/openshift/api/config/v1.PKI", "github.com/openshift/api/config/v1.PublicKey"},
+			"github.com/openshift/api/config/v1.ImagePolicyFulcioCAWithRekorRootOfTrust", "github.com/openshift/api/config/v1.ImagePolicyPKIRootOfTrust", "github.com/openshift/api/config/v1.ImagePolicyPublicKeyRootOfTrust"},
 	}
 }
 
@@ -18976,34 +19004,6 @@ func schema_openshift_api_config_v1_ProxyStatus(ref common.ReferenceCallback) co
 						},
 					},
 				},
-			},
-		},
-	}
-}
-
-func schema_openshift_api_config_v1_PublicKey(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Description: "PublicKey defines the root of trust based on a sigstore public key.",
-				Type:        []string{"object"},
-				Properties: map[string]spec.Schema{
-					"keyData": {
-						SchemaProps: spec.SchemaProps{
-							Description: "keyData is a required field contains inline base64-encoded data for the PEM format public key. keyData must be at most 8192 characters.",
-							Type:        []string{"string"},
-							Format:      "byte",
-						},
-					},
-					"rekorKeyData": {
-						SchemaProps: spec.SchemaProps{
-							Description: "rekorKeyData is an optional field contains inline base64-encoded data for the PEM format from the Rekor public key. rekorKeyData must be at most 8192 characters.",
-							Type:        []string{"string"},
-							Format:      "byte",
-						},
-					},
-				},
-				Required: []string{"keyData"},
 			},
 		},
 	}
@@ -21660,7 +21660,7 @@ func schema_openshift_api_config_v1alpha1_ClusterImagePolicySpec(ref common.Refe
 						SchemaProps: spec.SchemaProps{
 							Description: "policy contains configuration to allow scopes to be verified, and defines how images not matching the verification policy will be treated.",
 							Default:     map[string]interface{}{},
-							Ref:         ref("github.com/openshift/api/config/v1alpha1.Policy"),
+							Ref:         ref("github.com/openshift/api/config/v1alpha1.ImageSigstoreVerificationPolicy"),
 						},
 					},
 				},
@@ -21668,7 +21668,7 @@ func schema_openshift_api_config_v1alpha1_ClusterImagePolicySpec(ref common.Refe
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/config/v1alpha1.Policy"},
+			"github.com/openshift/api/config/v1alpha1.ImageSigstoreVerificationPolicy"},
 	}
 }
 
@@ -21937,43 +21937,6 @@ func schema_openshift_api_config_v1alpha1_EtcdBackupSpec(ref common.ReferenceCal
 	}
 }
 
-func schema_openshift_api_config_v1alpha1_FulcioCAWithRekor(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Description: "FulcioCAWithRekor defines the root of trust based on the Fulcio certificate and the Rekor public key.",
-				Type:        []string{"object"},
-				Properties: map[string]spec.Schema{
-					"fulcioCAData": {
-						SchemaProps: spec.SchemaProps{
-							Description: "fulcioCAData contains inline base64-encoded data for the PEM format fulcio CA. fulcioCAData must be at most 8192 characters.",
-							Type:        []string{"string"},
-							Format:      "byte",
-						},
-					},
-					"rekorKeyData": {
-						SchemaProps: spec.SchemaProps{
-							Description: "rekorKeyData contains inline base64-encoded data for the PEM format from the Rekor public key. rekorKeyData must be at most 8192 characters.",
-							Type:        []string{"string"},
-							Format:      "byte",
-						},
-					},
-					"fulcioSubject": {
-						SchemaProps: spec.SchemaProps{
-							Description: "fulcioSubject specifies OIDC issuer and the email of the Fulcio authentication configuration.",
-							Default:     map[string]interface{}{},
-							Ref:         ref("github.com/openshift/api/config/v1alpha1.PolicyFulcioSubject"),
-						},
-					},
-				},
-				Required: []string{"fulcioCAData", "rekorKeyData", "fulcioSubject"},
-			},
-		},
-		Dependencies: []string{
-			"github.com/openshift/api/config/v1alpha1.PolicyFulcioSubject"},
-	}
-}
-
 func schema_openshift_api_config_v1alpha1_GatherConfig(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -22068,6 +22031,43 @@ func schema_openshift_api_config_v1alpha1_ImagePolicy(ref common.ReferenceCallba
 	}
 }
 
+func schema_openshift_api_config_v1alpha1_ImagePolicyFulcioCAWithRekorRootOfTrust(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "ImagePolicyFulcioCAWithRekorRootOfTrust defines the root of trust based on the Fulcio certificate and the Rekor public key.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"fulcioCAData": {
+						SchemaProps: spec.SchemaProps{
+							Description: "fulcioCAData contains inline base64-encoded data for the PEM format fulcio CA. fulcioCAData must be at most 8192 characters.",
+							Type:        []string{"string"},
+							Format:      "byte",
+						},
+					},
+					"rekorKeyData": {
+						SchemaProps: spec.SchemaProps{
+							Description: "rekorKeyData contains inline base64-encoded data for the PEM format from the Rekor public key. rekorKeyData must be at most 8192 characters.",
+							Type:        []string{"string"},
+							Format:      "byte",
+						},
+					},
+					"fulcioSubject": {
+						SchemaProps: spec.SchemaProps{
+							Description: "fulcioSubject specifies OIDC issuer and the email of the Fulcio authentication configuration.",
+							Default:     map[string]interface{}{},
+							Ref:         ref("github.com/openshift/api/config/v1alpha1.PolicyFulcioSubject"),
+						},
+					},
+				},
+				Required: []string{"fulcioCAData", "rekorKeyData", "fulcioSubject"},
+			},
+		},
+		Dependencies: []string{
+			"github.com/openshift/api/config/v1alpha1.PolicyFulcioSubject"},
+	}
+}
+
 func schema_openshift_api_config_v1alpha1_ImagePolicyList(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -22118,6 +22118,71 @@ func schema_openshift_api_config_v1alpha1_ImagePolicyList(ref common.ReferenceCa
 	}
 }
 
+func schema_openshift_api_config_v1alpha1_ImagePolicyPKIRootOfTrust(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "ImagePolicyPKIRootOfTrust defines the root of trust based on Root CA(s) and corresponding intermediate certificates.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"caRootsData": {
+						SchemaProps: spec.SchemaProps{
+							Description: "caRootsData contains base64-encoded data of a certificate bundle PEM file, which contains one or more CA roots in the PEM format. The total length of the data must not exceed 8192 characters.",
+							Type:        []string{"string"},
+							Format:      "byte",
+						},
+					},
+					"caIntermediatesData": {
+						SchemaProps: spec.SchemaProps{
+							Description: "caIntermediatesData contains base64-encoded data of a certificate bundle PEM file, which contains one or more intermediate certificates in the PEM format. The total length of the data must not exceed 8192 characters. caIntermediatesData requires caRootsData to be set.",
+							Type:        []string{"string"},
+							Format:      "byte",
+						},
+					},
+					"pkiCertificateSubject": {
+						SchemaProps: spec.SchemaProps{
+							Description: "pkiCertificateSubject defines the requirements imposed on the subject to which the certificate was issued.",
+							Default:     map[string]interface{}{},
+							Ref:         ref("github.com/openshift/api/config/v1alpha1.PKICertificateSubject"),
+						},
+					},
+				},
+				Required: []string{"caRootsData", "pkiCertificateSubject"},
+			},
+		},
+		Dependencies: []string{
+			"github.com/openshift/api/config/v1alpha1.PKICertificateSubject"},
+	}
+}
+
+func schema_openshift_api_config_v1alpha1_ImagePolicyPublicKeyRootOfTrust(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "ImagePolicyPublicKeyRootOfTrust defines the root of trust based on a sigstore public key.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"keyData": {
+						SchemaProps: spec.SchemaProps{
+							Description: "keyData contains inline base64-encoded data for the PEM format public key. KeyData must be at most 8192 characters.",
+							Type:        []string{"string"},
+							Format:      "byte",
+						},
+					},
+					"rekorKeyData": {
+						SchemaProps: spec.SchemaProps{
+							Description: "rekorKeyData contains inline base64-encoded data for the PEM format from the Rekor public key. rekorKeyData must be at most 8192 characters.",
+							Type:        []string{"string"},
+							Format:      "byte",
+						},
+					},
+				},
+				Required: []string{"keyData"},
+			},
+		},
+	}
+}
+
 func schema_openshift_api_config_v1alpha1_ImagePolicySpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -22149,7 +22214,7 @@ func schema_openshift_api_config_v1alpha1_ImagePolicySpec(ref common.ReferenceCa
 						SchemaProps: spec.SchemaProps{
 							Description: "policy contains configuration to allow scopes to be verified, and defines how images not matching the verification policy will be treated.",
 							Default:     map[string]interface{}{},
-							Ref:         ref("github.com/openshift/api/config/v1alpha1.Policy"),
+							Ref:         ref("github.com/openshift/api/config/v1alpha1.ImageSigstoreVerificationPolicy"),
 						},
 					},
 				},
@@ -22157,7 +22222,7 @@ func schema_openshift_api_config_v1alpha1_ImagePolicySpec(ref common.ReferenceCa
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/config/v1alpha1.Policy"},
+			"github.com/openshift/api/config/v1alpha1.ImageSigstoreVerificationPolicy"},
 	}
 }
 
@@ -22194,6 +22259,36 @@ func schema_openshift_api_config_v1alpha1_ImagePolicyStatus(ref common.Reference
 		},
 		Dependencies: []string{
 			"k8s.io/apimachinery/pkg/apis/meta/v1.Condition"},
+	}
+}
+
+func schema_openshift_api_config_v1alpha1_ImageSigstoreVerificationPolicy(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "ImageSigstoreVerificationPolicy defines the verification policy for the items in the scopes list.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"rootOfTrust": {
+						SchemaProps: spec.SchemaProps{
+							Description: "rootOfTrust specifies the root of trust for the policy.",
+							Default:     map[string]interface{}{},
+							Ref:         ref("github.com/openshift/api/config/v1alpha1.PolicyRootOfTrust"),
+						},
+					},
+					"signedIdentity": {
+						SchemaProps: spec.SchemaProps{
+							Description: "signedIdentity specifies what image identity the signature claims about the image. The required matchPolicy field specifies the approach used in the verification process to verify the identity in the signature and the actual image identity, the default matchPolicy is \"MatchRepoDigestOrExact\".",
+							Default:     map[string]interface{}{},
+							Ref:         ref("github.com/openshift/api/config/v1alpha1.PolicyIdentity"),
+						},
+					},
+				},
+				Required: []string{"rootOfTrust"},
+			},
+		},
+		Dependencies: []string{
+			"github.com/openshift/api/config/v1alpha1.PolicyIdentity", "github.com/openshift/api/config/v1alpha1.PolicyRootOfTrust"},
 	}
 }
 
@@ -22438,43 +22533,6 @@ func schema_openshift_api_config_v1alpha1_MetricsServerConfig(ref common.Referen
 	}
 }
 
-func schema_openshift_api_config_v1alpha1_PKI(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Description: "PKI defines the root of trust based on Root CA(s) and corresponding intermediate certificates.",
-				Type:        []string{"object"},
-				Properties: map[string]spec.Schema{
-					"caRootsData": {
-						SchemaProps: spec.SchemaProps{
-							Description: "caRootsData contains base64-encoded data of a certificate bundle PEM file, which contains one or more CA roots in the PEM format. The total length of the data must not exceed 8192 characters.",
-							Type:        []string{"string"},
-							Format:      "byte",
-						},
-					},
-					"caIntermediatesData": {
-						SchemaProps: spec.SchemaProps{
-							Description: "caIntermediatesData contains base64-encoded data of a certificate bundle PEM file, which contains one or more intermediate certificates in the PEM format. The total length of the data must not exceed 8192 characters. caIntermediatesData requires caRootsData to be set.",
-							Type:        []string{"string"},
-							Format:      "byte",
-						},
-					},
-					"pkiCertificateSubject": {
-						SchemaProps: spec.SchemaProps{
-							Description: "pkiCertificateSubject defines the requirements imposed on the subject to which the certificate was issued.",
-							Default:     map[string]interface{}{},
-							Ref:         ref("github.com/openshift/api/config/v1alpha1.PKICertificateSubject"),
-						},
-					},
-				},
-				Required: []string{"caRootsData", "pkiCertificateSubject"},
-			},
-		},
-		Dependencies: []string{
-			"github.com/openshift/api/config/v1alpha1.PKICertificateSubject"},
-	}
-}
-
 func schema_openshift_api_config_v1alpha1_PKICertificateSubject(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -22551,36 +22609,6 @@ func schema_openshift_api_config_v1alpha1_PersistentVolumeConfig(ref common.Refe
 		},
 		Dependencies: []string{
 			"github.com/openshift/api/config/v1alpha1.PersistentVolumeClaimReference"},
-	}
-}
-
-func schema_openshift_api_config_v1alpha1_Policy(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Description: "Policy defines the verification policy for the items in the scopes list.",
-				Type:        []string{"object"},
-				Properties: map[string]spec.Schema{
-					"rootOfTrust": {
-						SchemaProps: spec.SchemaProps{
-							Description: "rootOfTrust specifies the root of trust for the policy.",
-							Default:     map[string]interface{}{},
-							Ref:         ref("github.com/openshift/api/config/v1alpha1.PolicyRootOfTrust"),
-						},
-					},
-					"signedIdentity": {
-						SchemaProps: spec.SchemaProps{
-							Description: "signedIdentity specifies what image identity the signature claims about the image. The required matchPolicy field specifies the approach used in the verification process to verify the identity in the signature and the actual image identity, the default matchPolicy is \"MatchRepoDigestOrExact\".",
-							Default:     map[string]interface{}{},
-							Ref:         ref("github.com/openshift/api/config/v1alpha1.PolicyIdentity"),
-						},
-					},
-				},
-				Required: []string{"rootOfTrust"},
-			},
-		},
-		Dependencies: []string{
-			"github.com/openshift/api/config/v1alpha1.PolicyIdentity", "github.com/openshift/api/config/v1alpha1.PolicyRootOfTrust"},
 	}
 }
 
@@ -22731,19 +22759,19 @@ func schema_openshift_api_config_v1alpha1_PolicyRootOfTrust(ref common.Reference
 					"publicKey": {
 						SchemaProps: spec.SchemaProps{
 							Description: "publicKey defines the root of trust based on a sigstore public key.",
-							Ref:         ref("github.com/openshift/api/config/v1alpha1.PublicKey"),
+							Ref:         ref("github.com/openshift/api/config/v1alpha1.ImagePolicyPublicKeyRootOfTrust"),
 						},
 					},
 					"fulcioCAWithRekor": {
 						SchemaProps: spec.SchemaProps{
 							Description: "fulcioCAWithRekor defines the root of trust based on the Fulcio certificate and the Rekor public key. For more information about Fulcio and Rekor, please refer to the document at: https://github.com/sigstore/fulcio and https://github.com/sigstore/rekor",
-							Ref:         ref("github.com/openshift/api/config/v1alpha1.FulcioCAWithRekor"),
+							Ref:         ref("github.com/openshift/api/config/v1alpha1.ImagePolicyFulcioCAWithRekorRootOfTrust"),
 						},
 					},
 					"pki": {
 						SchemaProps: spec.SchemaProps{
 							Description: "pki defines the root of trust based on Bring Your Own Public Key Infrastructure (BYOPKI) Root CA(s) and corresponding intermediate certificates.",
-							Ref:         ref("github.com/openshift/api/config/v1alpha1.PKI"),
+							Ref:         ref("github.com/openshift/api/config/v1alpha1.ImagePolicyPKIRootOfTrust"),
 						},
 					},
 				},
@@ -22765,35 +22793,7 @@ func schema_openshift_api_config_v1alpha1_PolicyRootOfTrust(ref common.Reference
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/config/v1alpha1.FulcioCAWithRekor", "github.com/openshift/api/config/v1alpha1.PKI", "github.com/openshift/api/config/v1alpha1.PublicKey"},
-	}
-}
-
-func schema_openshift_api_config_v1alpha1_PublicKey(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Description: "PublicKey defines the root of trust based on a sigstore public key.",
-				Type:        []string{"object"},
-				Properties: map[string]spec.Schema{
-					"keyData": {
-						SchemaProps: spec.SchemaProps{
-							Description: "keyData contains inline base64-encoded data for the PEM format public key. KeyData must be at most 8192 characters.",
-							Type:        []string{"string"},
-							Format:      "byte",
-						},
-					},
-					"rekorKeyData": {
-						SchemaProps: spec.SchemaProps{
-							Description: "rekorKeyData contains inline base64-encoded data for the PEM format from the Rekor public key. rekorKeyData must be at most 8192 characters.",
-							Type:        []string{"string"},
-							Format:      "byte",
-						},
-					},
-				},
-				Required: []string{"keyData"},
-			},
-		},
+			"github.com/openshift/api/config/v1alpha1.ImagePolicyFulcioCAWithRekorRootOfTrust", "github.com/openshift/api/config/v1alpha1.ImagePolicyPKIRootOfTrust", "github.com/openshift/api/config/v1alpha1.ImagePolicyPublicKeyRootOfTrust"},
 	}
 }
 

@@ -1176,6 +1176,7 @@ spec:
                                 key sets the key of the AWS resource tag key-value pair. Key is required when defining an AWS resource tag.
                                 Key should consist of between 1 and 128 characters, and may
                                 contain only the set of alphanumeric characters, space (' '), '_', '.', '/', '=', '+', '-', ':', and '@'.
+                                Key must not start with 'aws:'.
                               maxLength: 128
                               minLength: 1
                               type: string
@@ -1185,6 +1186,9 @@ spec:
                                   space (' '), '_', '.', '/', '=', '+', '-', ':',
                                   '@'
                                 rule: self.matches('^[0-9A-Za-z_.:/=+-@ ]+$')
+                              - message: the prefix 'aws:' is reserved for AWS system
+                                  usage and cannot be used at the beginning of a key
+                                rule: '!self.startsWith(''aws:'')'
                             value:
                               description: |-
                                 value sets the value of the AWS resource tag key-value pair. Value is required when defining an AWS resource tag.
@@ -1208,6 +1212,10 @@ spec:
                         maxItems: 25
                         type: array
                         x-kubernetes-list-type: atomic
+                        x-kubernetes-validations:
+                        - message: resourceTags are immutable and may only be configured
+                            during installation
+                          rule: self.all(x, x in oldSelf) && oldSelf.all(x, x in self)
                       serviceEndpoints:
                         description: |-
                           serviceEndpoints list contains custom endpoints which will override default
@@ -1236,6 +1244,9 @@ spec:
                         type: array
                         x-kubernetes-list-type: atomic
                     type: object
+                    x-kubernetes-validations:
+                    - message: resourceTags may only be configured during installation
+                      rule: has(oldSelf.resourceTags) == has(self.resourceTags)
                   azure:
                     description: azure contains settings specific to the Azure infrastructure
                       provider.

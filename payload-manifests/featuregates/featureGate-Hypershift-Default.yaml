@@ -199,6 +199,9 @@
                         "name": "OnPremDNSRecords"
                     },
                     {
+                        "name": "OpenShiftPodSecurityAdmission"
+                    },
+                    {
                         "name": "ProvisioningRequestAvailable"
                     },
                     {
@@ -304,9 +307,6 @@
                     },
                     {
                         "name": "NetworkSegmentation"
-                    },
-                    {
-                        "name": "OpenShiftPodSecurityAdmission"
                     },
                     {
                         "name": "PinnedImages"

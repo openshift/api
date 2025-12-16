@@ -82,8 +82,8 @@ const (
 // GCPReservationAffinity describes the reservation affinity of the instance on GCP.
 type GCPReservationAffinity struct {
 	// consumeReservationType indicates whether the instance should consume from any reservation or a specific reservation.
-	// Valid values are "ANY_RESERVATION" and "SPECIFIC_RESERVATION".
-	// +kubebuilder:validation:Enum=ANY_RESERVATION;SPECIFIC_RESERVATION
+	// Valid values are "NO_RESERVATION", "ANY_RESERVATION" and "SPECIFIC_RESERVATION".
+	// +kubebuilder:validation:Enum=NO_RESERVATION;ANY_RESERVATION;SPECIFIC_RESERVATION
 	ConsumeReservationType string `json:"consumeReservationType"`
 	// key is the reservation key of the specific reservation to consume from.
 	// Required if consumeReservationType is set to "SPECIFIC_RESERVATION".

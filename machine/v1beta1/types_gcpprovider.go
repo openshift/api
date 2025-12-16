@@ -83,15 +83,24 @@ const (
 type GCPReservationAffinity struct {
 	// consumeReservationType indicates whether the instance should consume from any reservation or a specific reservation.
 	// Valid values are "NO_RESERVATION", "ANY_RESERVATION" and "SPECIFIC_RESERVATION".
+	// +required
 	// +kubebuilder:validation:Enum=NO_RESERVATION;ANY_RESERVATION;SPECIFIC_RESERVATION
-	ConsumeReservationType string `json:"consumeReservationType"`
+	ConsumeReservationType string `json:"consumeReservationType,omitempty"`
 	// key is the reservation key of the specific reservation to consume from.
+	// The maximum length is 63 characters, and the name must conform to RFC1035.
 	// Required if consumeReservationType is set to "SPECIFIC_RESERVATION".
+	// When consumeReservationType is not "SPECIFIC_RESERVATION", this field must be empty.
 	// +optional
-	Key string `json:"key,omitempty"`
+	// +kubebuilder:validation:MaxLength=63
+	Key *string `json:"key,omitempty"`
 	// values is the list of reservation values of the specific reservation to consume from.
+	// Each value can have a maximum length of 63 characters, and the name must conform to RFC1035.
 	// Required if consumeReservationType is set to "SPECIFIC_RESERVATION".
+	// When consumeReservationType is not "SPECIFIC_RESERVATION", this field must be empty.
 	// +optional
+	// +listType=set
+	// +kubebuilder:validation:items:MaxLength=63
+	// +kubebuilder:validation:MaxItems=50
 	Values []string `json:"values,omitempty"`
 }
 

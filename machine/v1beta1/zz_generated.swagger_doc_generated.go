@@ -479,6 +479,7 @@ var map_GCPMachineProviderSpec = map[string]string{
 	"shieldedInstanceConfig": "shieldedInstanceConfig is the Shielded VM configuration for the VM",
 	"confidentialCompute":    "confidentialCompute is an optional field defining whether the instance should have confidential compute enabled or not, and the confidential computing technology of choice. Allowed values are omitted, Disabled, Enabled, AMDEncryptedVirtualization, AMDEncryptedVirtualizationNestedPaging, and IntelTrustedDomainExtensions When set to Disabled, the machine will not be configured to be a confidential computing instance. When set to Enabled, the machine will be configured as a confidential computing instance with no preference on the confidential compute policy used. In this mode, the platform chooses a default that is subject to change over time. Currently, the default is to use AMD Secure Encrypted Virtualization. When set to AMDEncryptedVirtualization, the machine will be configured as a confidential computing instance with AMD Secure Encrypted Virtualization (AMD SEV) as the confidential computing technology. When set to AMDEncryptedVirtualizationNestedPaging, the machine will be configured as a confidential computing instance with AMD Secure Encrypted Virtualization Secure Nested Paging (AMD SEV-SNP) as the confidential computing technology. When set to IntelTrustedDomainExtensions, the machine will be configured as a confidential computing instance with Intel Trusted Domain Extensions (Intel TDX) as the confidential computing technology. If any value other than Disabled is set the selected machine type must support that specific confidential computing technology. The machine series supporting confidential computing technologies can be checked at https://cloud.google.com/confidential-computing/confidential-vm/docs/supported-configurations#all-confidential-vm-instances Currently, AMDEncryptedVirtualization is supported in c2d, n2d, and c3d machines. AMDEncryptedVirtualizationNestedPaging is supported in n2d machines. IntelTrustedDomainExtensions is supported in c3 machines. If any value other than Disabled is set, the selected region must support that specific confidential computing technology. The list of regions supporting confidential computing technologies can be checked at https://cloud.google.com/confidential-computing/confidential-vm/docs/supported-configurations#supported-zones If any value other than Disabled is set onHostMaintenance is required to be set to \"Terminate\". If omitted, the platform chooses a default, which is subject to change over time, currently that default is Disabled.",
 	"resourceManagerTags":    "resourceManagerTags is an optional list of tags to apply to the GCP resources created for the cluster. See https://cloud.google.com/resource-manager/docs/tags/tags-overview for information on tagging GCP resources. GCP supports a maximum of 50 tags per resource.",
+	"reservationAffinity":    "reservationAffinity indicates the reservation for the VM.",
 }
 
 func (GCPMachineProviderSpec) SwaggerDoc() map[string]string {
@@ -516,6 +517,17 @@ var map_GCPNetworkInterface = map[string]string{
 
 func (GCPNetworkInterface) SwaggerDoc() map[string]string {
 	return map_GCPNetworkInterface
+}
+
+var map_GCPReservationAffinity = map[string]string{
+	"":                       "GCPReservationAffinity describes the reservation affinity of the instance on GCP.",
+	"consumeReservationType": "consumeReservationType indicates whether the instance should consume from any reservation or a specific reservation. Valid values are \"NO_RESERVATION\", \"ANY_RESERVATION\" and \"SPECIFIC_RESERVATION\".",
+	"key":                    "key is the reservation key of the specific reservation to consume from. The maximum length is 63 characters, and the name must conform to RFC1035. Required if consumeReservationType is set to \"SPECIFIC_RESERVATION\". When consumeReservationType is not \"SPECIFIC_RESERVATION\", this field must be empty.",
+	"values":                 "values is the list of reservation values of the specific reservation to consume from. Each value can have a maximum length of 63 characters, and the name must conform to RFC1035. Required if consumeReservationType is set to \"SPECIFIC_RESERVATION\". When consumeReservationType is not \"SPECIFIC_RESERVATION\", this field must be empty.",
+}
+
+func (GCPReservationAffinity) SwaggerDoc() map[string]string {
+	return map_GCPReservationAffinity
 }
 
 var map_GCPServiceAccount = map[string]string{

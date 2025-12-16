@@ -783,6 +783,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"github.com/openshift/api/machine/v1beta1.GCPMachineProviderStatus":                                  schema_openshift_api_machine_v1beta1_GCPMachineProviderStatus(ref),
 		"github.com/openshift/api/machine/v1beta1.GCPMetadata":                                               schema_openshift_api_machine_v1beta1_GCPMetadata(ref),
 		"github.com/openshift/api/machine/v1beta1.GCPNetworkInterface":                                       schema_openshift_api_machine_v1beta1_GCPNetworkInterface(ref),
+		"github.com/openshift/api/machine/v1beta1.GCPReservationAffinity":                                    schema_openshift_api_machine_v1beta1_GCPReservationAffinity(ref),
 		"github.com/openshift/api/machine/v1beta1.GCPServiceAccount":                                         schema_openshift_api_machine_v1beta1_GCPServiceAccount(ref),
 		"github.com/openshift/api/machine/v1beta1.GCPShieldedInstanceConfig":                                 schema_openshift_api_machine_v1beta1_GCPShieldedInstanceConfig(ref),
 		"github.com/openshift/api/machine/v1beta1.HostPlacement":                                             schema_openshift_api_machine_v1beta1_HostPlacement(ref),
@@ -40035,12 +40036,18 @@ func schema_openshift_api_machine_v1beta1_GCPMachineProviderSpec(ref common.Refe
 							},
 						},
 					},
+					"reservationAffinity": {
+						SchemaProps: spec.SchemaProps{
+							Description: "reservationAffinity indicates the reservation for the VM.",
+							Ref:         ref("github.com/openshift/api/machine/v1beta1.GCPReservationAffinity"),
+						},
+					},
 				},
 				Required: []string{"canIPForward", "deletionProtection", "serviceAccounts", "machineType", "region", "zone"},
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/machine/v1beta1.GCPDisk", "github.com/openshift/api/machine/v1beta1.GCPGPUConfig", "github.com/openshift/api/machine/v1beta1.GCPMetadata", "github.com/openshift/api/machine/v1beta1.GCPNetworkInterface", "github.com/openshift/api/machine/v1beta1.GCPServiceAccount", "github.com/openshift/api/machine/v1beta1.GCPShieldedInstanceConfig", "github.com/openshift/api/machine/v1beta1.ResourceManagerTag", "k8s.io/api/core/v1.LocalObjectReference", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"},
+			"github.com/openshift/api/machine/v1beta1.GCPDisk", "github.com/openshift/api/machine/v1beta1.GCPGPUConfig", "github.com/openshift/api/machine/v1beta1.GCPMetadata", "github.com/openshift/api/machine/v1beta1.GCPNetworkInterface", "github.com/openshift/api/machine/v1beta1.GCPReservationAffinity", "github.com/openshift/api/machine/v1beta1.GCPServiceAccount", "github.com/openshift/api/machine/v1beta1.GCPShieldedInstanceConfig", "github.com/openshift/api/machine/v1beta1.ResourceManagerTag", "k8s.io/api/core/v1.LocalObjectReference", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"},
 	}
 }
 
@@ -40180,6 +40187,54 @@ func schema_openshift_api_machine_v1beta1_GCPNetworkInterface(ref common.Referen
 						},
 					},
 				},
+			},
+		},
+	}
+}
+
+func schema_openshift_api_machine_v1beta1_GCPReservationAffinity(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "GCPReservationAffinity describes the reservation affinity of the instance on GCP.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"consumeReservationType": {
+						SchemaProps: spec.SchemaProps{
+							Description: "consumeReservationType indicates whether the instance should consume from any reservation or a specific reservation. Valid values are \"NO_RESERVATION\", \"ANY_RESERVATION\" and \"SPECIFIC_RESERVATION\".",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"key": {
+						SchemaProps: spec.SchemaProps{
+							Description: "key is the reservation key of the specific reservation to consume from. The maximum length is 63 characters, and the name must conform to RFC1035. Required if consumeReservationType is set to \"SPECIFIC_RESERVATION\". When consumeReservationType is not \"SPECIFIC_RESERVATION\", this field must be empty.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"values": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-type": "set",
+							},
+						},
+						SchemaProps: spec.SchemaProps{
+							Description: "values is the list of reservation values of the specific reservation to consume from. Each value can have a maximum length of 63 characters, and the name must conform to RFC1035. Required if consumeReservationType is set to \"SPECIFIC_RESERVATION\". When consumeReservationType is not \"SPECIFIC_RESERVATION\", this field must be empty.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: "",
+										Type:    []string{"string"},
+										Format:  "",
+									},
+								},
+							},
+						},
+					},
+				},
+				Required: []string{"consumeReservationType"},
 			},
 		},
 	}

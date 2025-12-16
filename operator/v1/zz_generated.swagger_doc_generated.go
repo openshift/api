@@ -685,6 +685,16 @@ func (DNSNodePlacement) SwaggerDoc() map[string]string {
 	return map_DNSNodePlacement
 }
 
+var map_DNSNodeService = map[string]string{
+	"":          "DNSNodeService represents a Kubernetes service by name and namespace for node services.",
+	"name":      "name is the name of the service. The name should consist of at most 63 characters, and of only lowercase alphanumeric characters and hyphens, and should start with an alphabetic character and end with an alphanumeric character.",
+	"namespace": "namespace is the namespace of the service. The namespace should consist of at most 63 characters, and of only lowercase alphanumeric characters and hyphens, and should start and end with an alphanumeric character.",
+}
+
+func (DNSNodeService) SwaggerDoc() map[string]string {
+	return map_DNSNodeService
+}
+
 var map_DNSOverTLSConfig = map[string]string{
 	"":           "DNSOverTLSConfig describes optional DNSTransportConfig fields that should be captured.",
 	"serverName": "serverName is the upstream server to connect to when forwarding DNS queries. This is required when Transport is set to \"TLS\". ServerName will be validated against the DNS naming conventions in RFC 1123 and should match the TLS certificate installed in the upstream resolver(s).",
@@ -702,6 +712,7 @@ var map_DNSSpec = map[string]string{
 	"nodePlacement":     "nodePlacement provides explicit control over the scheduling of DNS pods.\n\nGenerally, it is useful to run a DNS pod on every node so that DNS queries are always handled by a local DNS pod instead of going over the network to a DNS pod on another node.  However, security policies may require restricting the placement of DNS pods to specific nodes. For example, if a security policy prohibits pods on arbitrary nodes from communicating with the API, a node selector can be specified to restrict DNS pods to nodes that are permitted to communicate with the API.  Conversely, if running DNS pods on nodes with a particular taint is desired, a toleration can be specified for that taint.\n\nIf unset, defaults are used. See nodePlacement for more details.",
 	"managementState":   "managementState indicates whether the DNS operator should manage cluster DNS",
 	"operatorLogLevel":  "operatorLogLevel controls the logging level of the DNS Operator. Valid values are: \"Normal\", \"Debug\", \"Trace\". Defaults to \"Normal\". setting operatorLogLevel: Trace will produce extremely verbose logs.",
+	"nodeServices":      "nodeServices specifies a list of service objects for which host level resolvable entries should be added. Services in this list will be added to /etc/hosts on each node in the cluster by the node resolver. When not specified, only the default image registry service is resolvable. Services in this list will be added in addition to the default \"image-registry.openshift-image-registry.svc\" service. The default image registry service cannot be removed. For each service reference, entries will be created using the format \"<name>.<namespace>.svc\" and an alias with the CLUSTER_DOMAIN suffix of cluster.local will also be added.",
 	"logLevel":          "logLevel describes the desired logging verbosity for CoreDNS. Any one of the following values may be specified: * Normal logs errors from upstream resolvers. * Debug logs errors, NXDOMAIN responses, and NODATA responses. * Trace logs errors and all responses.\n Setting logLevel: Trace will produce extremely verbose logs.\nValid values are: \"Normal\", \"Debug\", \"Trace\". Defaults to \"Normal\".",
 	"cache":             "cache describes the caching configuration that applies to all server blocks listed in the Corefile. This field allows a cluster admin to optionally configure: * positiveTTL which is a duration for which positive responses should be cached. * negativeTTL which is a duration for which negative responses should be cached. If this is not configured, OpenShift will configure positive and negative caching with a default value that is subject to change. At the time of writing, the default positiveTTL is 900 seconds and the default negativeTTL is 30 seconds or as noted in the respective Corefile for your version of OpenShift.",
 }

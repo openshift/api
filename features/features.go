@@ -187,6 +187,14 @@ var (
 					enableIn(configv1.Default, configv1.DevPreviewNoUpgrade, configv1.TechPreviewNoUpgrade).
 					mustRegister()
 
+	FeatureGateNetworkConnect = newFeatureGate("NetworkConnect").
+					reportProblemsToJiraComponent("Networking/ovn-kubernetes").
+					contactPerson("tssurya").
+					productScope(ocpSpecific).
+					enhancementPR("https://github.com/ovn-kubernetes/ovn-kubernetes/pull/5246").
+					enableIn(configv1.DevPreviewNoUpgrade).
+					mustRegister()
+
 	FeatureGateAdditionalRoutingCapabilities = newFeatureGate("AdditionalRoutingCapabilities").
 							reportProblemsToJiraComponent("Networking/cluster-network-operator").
 							contactPerson("jcaamano").

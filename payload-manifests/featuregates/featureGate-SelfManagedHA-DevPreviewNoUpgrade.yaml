@@ -245,6 +245,9 @@
                         "name": "MutatingAdmissionPolicy"
                     },
                     {
+                        "name": "NetworkConnect"
+                    },
+                    {
                         "name": "NetworkDiagnosticsConfig"
                     },
                     {

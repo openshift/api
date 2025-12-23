@@ -171,6 +171,9 @@
                         "name": "MutatingAdmissionPolicy"
                     },
                     {
+                        "name": "NetworkConnect"
+                    },
+                    {
                         "name": "NewOLMBoxCutterRuntime"
                     },
                     {

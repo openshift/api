@@ -45,6 +45,9 @@
                         "name": "MultiArchInstallAzure"
                     },
                     {
+                        "name": "NetworkConnect"
+                    },
+                    {
                         "name": "NewOLMBoxCutterRuntime"
                     },
                     {

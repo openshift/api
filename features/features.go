@@ -187,6 +187,14 @@ var (
 					enableIn(configv1.Default, configv1.OKD, configv1.DevPreviewNoUpgrade, configv1.TechPreviewNoUpgrade).
 					mustRegister()
 
+	FeatureGateNetworkConnect = newFeatureGate("NetworkConnect").
+					reportProblemsToJiraComponent("Networking/ovn-kubernetes").
+					contactPerson("tssurya").
+					productScope(ocpSpecific).
+					enhancementPR("https://github.com/ovn-kubernetes/ovn-kubernetes/pull/5246").
+					enableIn(configv1.DevPreviewNoUpgrade).
+					mustRegister()
+
 	FeatureGateAdditionalRoutingCapabilities = newFeatureGate("AdditionalRoutingCapabilities").
 							reportProblemsToJiraComponent("Networking/cluster-network-operator").
 							contactPerson("jcaamano").
@@ -783,7 +791,7 @@ var (
 							mustRegister()
 
 	FeatureGateImageVolume = newFeatureGate("ImageVolume").
-			reportProblemsToJiraComponent("Node").
+				reportProblemsToJiraComponent("Node").
 				contactPerson("haircommander").
 				productScope(kubernetes).
 				enhancementPR("https://github.com/openshift/enhancements/pull/1792").

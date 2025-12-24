@@ -3,12 +3,14 @@
     "kind": "FeatureGate",
     "metadata": {
         "annotations": {
-            "include.release.openshift.io/ibm-cloud-managed": "false-except-for-the-config-operator"
+            "include.release.openshift.io/self-managed-high-availability": "false-except-for-the-config-operator",
+            "release.openshift.io/feature-set": "DevPreviewNoUpgrade",
+            "release.openshift.io/major-version": "4,5,6,7,8,9,10"
         },
         "name": "cluster"
     },
     "spec": {
-        "featureSet": "TechPreviewNoUpgrade"
+        "featureSet": "DevPreviewNoUpgrade"
     },
     "status": {
         "featureGates": [
@@ -18,61 +20,19 @@
                         "name": "ClientsAllowCBOR"
                     },
                     {
-                        "name": "ClusterAPIComputeInstall"
-                    },
-                    {
-                        "name": "ClusterAPIControlPlaneInstall"
-                    },
-                    {
                         "name": "ClusterAPIInstall"
-                    },
-                    {
-                        "name": "ClusterAPIMachineManagementVSphere"
                     },
                     {
                         "name": "EventedPLEG"
                     },
                     {
-                        "name": "Example2"
-                    },
-                    {
-                        "name": "ExternalSnapshotMetadata"
-                    },
-                    {
-                        "name": "KMSEncryptionProvider"
+                        "name": "HyperShiftOnlyDynamicResourceAllocation"
                     },
                     {
                         "name": "MachineAPIOperatorDisableMachineHealthCheckController"
                     },
                     {
                         "name": "MultiArchInstallAzure"
-                    },
-                    {
-                        "name": "NetworkConnect"
-                    },
-                    {
-                        "name": "NewOLM"
-                    },
-                    {
-                        "name": "NewOLMBoxCutterRuntime"
-                    },
-                    {
-                        "name": "NewOLMCatalogdAPIV1Metas"
-                    },
-                    {
-                        "name": "NewOLMOwnSingleNamespace"
-                    },
-                    {
-                        "name": "NewOLMPreflightPermissionChecks"
-                    },
-                    {
-                        "name": "NewOLMWebhookProviderOpenshiftServiceCA"
-                    },
-                    {
-                        "name": "NoRegistryClusterInstall"
-                    },
-                    {
-                        "name": "ProvisioningRequestAvailable"
                     },
                     {
                         "name": "ShortCertRotation"
@@ -134,10 +94,19 @@
                         "name": "ClientsPreferCBOR"
                     },
                     {
+                        "name": "ClusterAPIComputeInstall"
+                    },
+                    {
+                        "name": "ClusterAPIControlPlaneInstall"
+                    },
+                    {
                         "name": "ClusterAPIInstallIBMCloud"
                     },
                     {
                         "name": "ClusterAPIMachineManagement"
+                    },
+                    {
+                        "name": "ClusterAPIMachineManagementVSphere"
                     },
                     {
                         "name": "ClusterMonitoringConfig"
@@ -179,6 +148,9 @@
                         "name": "Example"
                     },
                     {
+                        "name": "Example2"
+                    },
+                    {
                         "name": "ExternalOIDC"
                     },
                     {
@@ -186,6 +158,9 @@
                     },
                     {
                         "name": "ExternalOIDCWithUpstreamParity"
+                    },
+                    {
+                        "name": "ExternalSnapshotMetadata"
                     },
                     {
                         "name": "GCPClusterHostedDNS"
@@ -215,9 +190,6 @@
                         "name": "HighlyAvailableArbiter"
                     },
                     {
-                        "name": "HyperShiftOnlyDynamicResourceAllocation"
-                    },
-                    {
                         "name": "ImageModeStatusReporting"
                     },
                     {
@@ -240,6 +212,9 @@
                     },
                     {
                         "name": "KMSEncryption"
+                    },
+                    {
+                        "name": "KMSEncryptionProvider"
                     },
                     {
                         "name": "KMSv1"
@@ -287,6 +262,30 @@
                         "name": "MutatingAdmissionPolicy"
                     },
                     {
+                        "name": "NetworkConnect"
+                    },
+                    {
+                        "name": "NewOLM"
+                    },
+                    {
+                        "name": "NewOLMBoxCutterRuntime"
+                    },
+                    {
+                        "name": "NewOLMCatalogdAPIV1Metas"
+                    },
+                    {
+                        "name": "NewOLMOwnSingleNamespace"
+                    },
+                    {
+                        "name": "NewOLMPreflightPermissionChecks"
+                    },
+                    {
+                        "name": "NewOLMWebhookProviderOpenshiftServiceCA"
+                    },
+                    {
+                        "name": "NoRegistryClusterInstall"
+                    },
+                    {
                         "name": "NutanixMultiSubnets"
                     },
                     {
@@ -303,6 +302,9 @@
                     },
                     {
                         "name": "PinnedImages"
+                    },
+                    {
+                        "name": "ProvisioningRequestAvailable"
                     },
                     {
                         "name": "RouteExternalCertificate"

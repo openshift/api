@@ -3,11 +3,15 @@
     "kind": "FeatureGate",
     "metadata": {
         "annotations": {
-            "include.release.openshift.io/self-managed-high-availability": "false-except-for-the-config-operator"
+            "include.release.openshift.io/ibm-cloud-managed": "false-except-for-the-config-operator",
+            "release.openshift.io/feature-set": "OKD",
+            "release.openshift.io/major-version": "4,5,6,7,8,9,10"
         },
         "name": "cluster"
     },
-    "spec": {},
+    "spec": {
+        "featureSet": "OKD"
+    },
     "status": {
         "featureGates": [
             {
@@ -145,9 +149,6 @@
                         "name": "GatewayAPIWithoutOLM"
                     },
                     {
-                        "name": "HyperShiftOnlyDynamicResourceAllocation"
-                    },
-                    {
                         "name": "ImageModeStatusReporting"
                     },
                     {
@@ -196,13 +197,22 @@
                         "name": "NetworkConnect"
                     },
                     {
+                        "name": "NewOLM"
+                    },
+                    {
                         "name": "NewOLMBoxCutterRuntime"
                     },
                     {
                         "name": "NewOLMCatalogdAPIV1Metas"
                     },
                     {
+                        "name": "NewOLMOwnSingleNamespace"
+                    },
+                    {
                         "name": "NewOLMPreflightPermissionChecks"
+                    },
+                    {
+                        "name": "NewOLMWebhookProviderOpenshiftServiceCA"
                     },
                     {
                         "name": "NoRegistryClusterInstall"
@@ -273,6 +283,9 @@
                         "name": "HighlyAvailableArbiter"
                     },
                     {
+                        "name": "HyperShiftOnlyDynamicResourceAllocation"
+                    },
+                    {
                         "name": "ImageStreamImportMode"
                     },
                     {
@@ -304,15 +317,6 @@
                     },
                     {
                         "name": "MutableCSINodeAllocatableCount"
-                    },
-                    {
-                        "name": "NewOLM"
-                    },
-                    {
-                        "name": "NewOLMOwnSingleNamespace"
-                    },
-                    {
-                        "name": "NewOLMWebhookProviderOpenshiftServiceCA"
                     },
                     {
                         "name": "OpenShiftPodSecurityAdmission"

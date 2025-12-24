@@ -2,9 +2,10 @@ package tests
 
 import (
 	"fmt"
+	"io/fs"
 	"os"
-	"path"
 	"path/filepath"
+	"strconv"
 	"strings"
 
 	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
@@ -66,11 +67,12 @@ func perTestRuntimeInfo(suitePath, crdName string, featureGates []string) (*PerT
 			crdFilesToCheck = append(crdFilesToCheck, filename)
 			continue
 		}
+		versionsForCRD := versionsFrom(currCRD.Annotations)
 
 		// if the manifest has more than one clusterProfile, then the crd schema must have been the same no matter which
 		// featuregates were used.  Simply select the first one to check.
 		clusterProfileToCheck := clusterProfilesForCRD.List()[0]
-		featureGateStatus, err := featureGatesForClusterProfileFeatureSet("../payload-manifests/featuregates", clusterProfileToCheck, featureSet)
+		featureGateStatus, err := featureGatesForClusterProfileFeatureSetVersion("../payload-manifests/featuregates", clusterProfileToCheck, featureSet, versionsForCRD)
 		if err != nil {
 			return nil, fmt.Errorf("unable to find featureGates to check for %v: %w", filename, err)
 		}
@@ -138,6 +140,27 @@ func clusterProfilesFrom(annotations map[string]string) sets.String {
 	return ret
 }
 
+func versionsFrom(annotations map[string]string) sets.Set[uint64] {
+	var versionString string
+	for k, v := range annotations {
+		if strings.HasPrefix(k, "release.openshift.io/major-version") {
+			versionString = v
+			break
+		}
+	}
+
+	versions := sets.New[uint64]()
+	for _, version := range strings.Split(versionString, ",") {
+		versionInt, err := strconv.ParseUint(version, 10, 64)
+		if err != nil {
+			continue
+		}
+		versions.Insert(versionInt)
+	}
+
+	return versions
+}
+
 func clusterProfilesShortNamesFrom(annotations map[string]string) sets.String {
 	ret := sets.NewString()
 	for k, v := range annotations {
@@ -148,25 +171,51 @@ func clusterProfilesShortNamesFrom(annotations map[string]string) sets.String {
 	return ret
 }
 
-func featureGatesForClusterProfileFeatureSet(payloadFeatureGatePath, clusterProfile, featureSetName string) (map[string]bool, error) {
+func featureGatesForClusterProfileFeatureSetVersion(payloadFeatureGatePath, clusterProfile, featureSetName string, crdVersions sets.Set[uint64]) (map[string]bool, error) {
 	if len(featureSetName) == 0 {
 		// if the featureSetName is ungated, then all CRD schemas for every featureset on this clusterProfile must be the same.
 		// Choose Default so that we get a valid manifest to check.
 		featureSetName = "Default"
 	}
 
-	featureGateFilename := path.Join(
-		payloadFeatureGatePath,
-		fmt.Sprintf("featureGate-%s-%s.yaml", clusterProfileToShortName[clusterProfile], featureSetName),
-	)
-	featureGateBytes, err := os.ReadFile(featureGateFilename)
-	if err != nil {
+	var uncastFeatureGate map[string]interface{}
+
+	if err := filepath.WalkDir(payloadFeatureGatePath, func(path string, d fs.DirEntry, err error) error {
+		if err != nil {
+			return fmt.Errorf("unable to walk directory %q: %w", payloadFeatureGatePath, err)
+		}
+
+		if d.IsDir() {
+			return nil
+		}
+
+		rawFile, err := os.ReadFile(path)
+		if err != nil {
+			return err
+		}
+		featureGate := map[string]interface{}{}
+		if err := kyaml.Unmarshal(rawFile, &featureGate); err != nil {
+			return err
+		}
+
+		annotations, _, err := unstructured.NestedStringMap(featureGate, "metadata", "annotations")
+		if err != nil {
+			return err
+		}
+
+		if matchesClusterProfile(annotations, clusterProfile) && matchesFeatureSet(annotations, featureSetName) && matchesVersions(annotations, crdVersions) {
+			uncastFeatureGate = featureGate
+			// We've found a matching feature gate yaml, so stop walking.
+			return filepath.SkipAll
+		}
+
+		return nil
+	}); err != nil {
 		return nil, err
 	}
-	// use unstructured to pull this information to avoid vendoring openshift/api
-	uncastFeatureGate := map[string]interface{}{}
-	if err := kyaml.Unmarshal(featureGateBytes, &uncastFeatureGate); err != nil {
-		return nil, fmt.Errorf("unable to parse featuregate %q: %w", featureGateFilename, err)
+
+	if uncastFeatureGate == nil {
+		return nil, fmt.Errorf("no feature gate found for cluster profile %q, feature set %q, and versions %v", clusterProfile, featureSetName, crdVersions)
 	}
 
 	uncastFeatureGateSlice, _, err := unstructured.NestedSlice(uncastFeatureGate, "status", "featureGates")
@@ -199,4 +248,25 @@ func featureGatesForClusterProfileFeatureSet(payloadFeatureGatePath, clusterProf
 	}
 
 	return featureGateMapping, nil
+}
+
+func matchesClusterProfile(annotations map[string]string, clusterProfile string) bool {
+	_, ok := annotations[clusterProfile]
+	return ok
+}
+
+func matchesFeatureSet(annotations map[string]string, featureSetName string) bool {
+	featureSet := annotations["release.openshift.io/feature-set"]
+
+	if featureSetName == "Default" {
+		return featureSet == "" || featureSet == "Default"
+	}
+
+	return featureSet == featureSetName
+}
+
+func matchesVersions(annotations map[string]string, crdVersions sets.Set[uint64]) bool {
+	// When the CRD specified no versions, the we assume there is no variance across versions.
+	// So we match all versions.
+	return len(crdVersions) == 0 || versionsFrom(annotations).Intersection(crdVersions).Len() > 0
 }

@@ -1669,6 +1669,16 @@ func (AdditionalRoutingCapabilities) SwaggerDoc() map[string]string {
 	return map_AdditionalRoutingCapabilities
 }
 
+var map_BGPManagedConfig = map[string]string{
+	"":            "BGPManagedConfig contains configuration options for BGP when routing is \"Managed\".",
+	"asNumber":    "asNumber is the 2-byte or 4-byte Autonomous System Number (ASN) to be used in the generated FRR configuration. Valid values are 1 to 4294967295. When omitted, this defaults to 64512.",
+	"bgpTopology": "bgpTopology defines the BGP topology to be used. Allowed values are \"FullMesh\". When set to \"FullMesh\", every node deploys a BGP router, forming a BGP full mesh. This field is required when BGPManagedConfig is specified.",
+}
+
+func (BGPManagedConfig) SwaggerDoc() map[string]string {
+	return map_BGPManagedConfig
+}
+
 var map_ClusterNetworkEntry = map[string]string{
 	"": "ClusterNetworkEntry is a subnet from which to allocate PodIPs. A network of size HostPrefix (in CIDR notation) will be allocated when nodes join the cluster. If the HostPrefix field is not used by the plugin, it can be left unset. Not all network providers support multiple ClusterNetworks",
 }
@@ -1896,20 +1906,33 @@ func (NetworkStatus) SwaggerDoc() map[string]string {
 	return map_NetworkStatus
 }
 
+var map_NoOverlayOptions = map[string]string{
+	"":             "NoOverlayOptions contains configuration options for networks operating in no-overlay mode.",
+	"outboundSNAT": "outboundSNAT defines the SNAT behavior for outbound traffic from pods. Allowed values are \"Enabled\" and \"Disabled\". When set to \"Enabled\", SNAT is performed on outbound traffic from pods. When set to \"Disabled\", SNAT is not performed and pod IPs are preserved in outbound traffic. This field is required when the network operates in no-overlay mode.",
+	"routing":      "routing specifies whether the pod network routing is managed by OVN-Kubernetes or users. Allowed values are \"Managed\" and \"Unmanaged\". When set to \"Managed\", OVN-Kubernetes manages the pod network routing configuration through BGP. When set to \"Unmanaged\", users are responsible for configuring the pod network routing. This field is required when the network operates in no-overlay mode.",
+}
+
+func (NoOverlayOptions) SwaggerDoc() map[string]string {
+	return map_NoOverlayOptions
+}
+
 var map_OVNKubernetesConfig = map[string]string{
-	"":                    "ovnKubernetesConfig contains the configuration parameters for networks using the ovn-kubernetes network project",
-	"mtu":                 "mtu is the MTU to use for the tunnel interface. This must be 100 bytes smaller than the uplink mtu. Default is 1400",
-	"genevePort":          "geneve port is the UDP port to be used by geneve encapulation. Default is 6081",
-	"hybridOverlayConfig": "hybridOverlayConfig configures an additional overlay network for peers that are not using OVN.",
-	"ipsecConfig":         "ipsecConfig enables and configures IPsec for pods on the pod network within the cluster.",
-	"policyAuditConfig":   "policyAuditConfig is the configuration for network policy audit events. If unset, reported defaults are used.",
-	"gatewayConfig":       "gatewayConfig holds the configuration for node gateway options.",
-	"v4InternalSubnet":    "v4InternalSubnet is a v4 subnet used internally by ovn-kubernetes in case the default one is being already used by something else. It must not overlap with any other subnet being used by OpenShift or by the node network. The size of the subnet must be larger than the number of nodes. Default is 100.64.0.0/16",
-	"v6InternalSubnet":    "v6InternalSubnet is a v6 subnet used internally by ovn-kubernetes in case the default one is being already used by something else. It must not overlap with any other subnet being used by OpenShift or by the node network. The size of the subnet must be larger than the number of nodes. Default is fd98::/64",
-	"egressIPConfig":      "egressIPConfig holds the configuration for EgressIP options.",
-	"ipv4":                "ipv4 allows users to configure IP settings for IPv4 connections. When ommitted, this means no opinions and the default configuration is used. Check individual fields within ipv4 for details of default values.",
-	"ipv6":                "ipv6 allows users to configure IP settings for IPv6 connections. When ommitted, this means no opinions and the default configuration is used. Check individual fields within ipv4 for details of default values.",
-	"routeAdvertisements": "routeAdvertisements determines if the functionality to advertise cluster network routes through a dynamic routing protocol, such as BGP, is enabled or not. This functionality is configured through the ovn-kubernetes RouteAdvertisements CRD. Requires the 'FRR' routing capability provider to be enabled as an additional routing capability. Allowed values are \"Enabled\", \"Disabled\" and ommited. When omitted, this means the user has no opinion and the platform is left to choose reasonable defaults. These defaults are subject to change over time. The current default is \"Disabled\".",
+	"":                               "ovnKubernetesConfig contains the configuration parameters for networks using the ovn-kubernetes network project",
+	"mtu":                            "mtu is the MTU to use for the tunnel interface. This must be 100 bytes smaller than the uplink mtu. Default is 1400",
+	"genevePort":                     "geneve port is the UDP port to be used by geneve encapulation. Default is 6081",
+	"hybridOverlayConfig":            "hybridOverlayConfig configures an additional overlay network for peers that are not using OVN.",
+	"ipsecConfig":                    "ipsecConfig enables and configures IPsec for pods on the pod network within the cluster.",
+	"policyAuditConfig":              "policyAuditConfig is the configuration for network policy audit events. If unset, reported defaults are used.",
+	"gatewayConfig":                  "gatewayConfig holds the configuration for node gateway options.",
+	"v4InternalSubnet":               "v4InternalSubnet is a v4 subnet used internally by ovn-kubernetes in case the default one is being already used by something else. It must not overlap with any other subnet being used by OpenShift or by the node network. The size of the subnet must be larger than the number of nodes. Default is 100.64.0.0/16",
+	"v6InternalSubnet":               "v6InternalSubnet is a v6 subnet used internally by ovn-kubernetes in case the default one is being already used by something else. It must not overlap with any other subnet being used by OpenShift or by the node network. The size of the subnet must be larger than the number of nodes. Default is fd98::/64",
+	"egressIPConfig":                 "egressIPConfig holds the configuration for EgressIP options.",
+	"ipv4":                           "ipv4 allows users to configure IP settings for IPv4 connections. When ommitted, this means no opinions and the default configuration is used. Check individual fields within ipv4 for details of default values.",
+	"ipv6":                           "ipv6 allows users to configure IP settings for IPv6 connections. When ommitted, this means no opinions and the default configuration is used. Check individual fields within ipv4 for details of default values.",
+	"routeAdvertisements":            "routeAdvertisements determines if the functionality to advertise cluster network routes through a dynamic routing protocol, such as BGP, is enabled or not. This functionality is configured through the ovn-kubernetes RouteAdvertisements CRD. Requires the 'FRR' routing capability provider to be enabled as an additional routing capability. Allowed values are \"Enabled\", \"Disabled\" and ommited. When omitted, this means the user has no opinion and the platform is left to choose reasonable defaults. These defaults are subject to change over time. The current default is \"Disabled\".",
+	"defaultNetworkTransport":        "defaultNetworkTransport describes the transport protocol for east-west traffic for the default network. Allowed values are \"NoOverlay\" and \"Geneve\". When set to \"NoOverlay\", the default network operates in no-overlay mode. When set to \"Geneve\", the default network uses Geneve overlay. When omitted, this means the user has no opinion and the platform chooses a reasonable default which is subject to change over time. The current default is \"Geneve\".",
+	"defaultNetworkNoOverlayOptions": "defaultNetworkNoOverlayOptions contains configuration for no-overlay mode for the default network. It is required when DefaultNetworkTransport is \"NoOverlay\". When omitted, this means the user does not configure no-overlay mode options.",
+	"bgpManagedConfig":               "bgpManagedConfig configures the BGP properties for networks (default network or CUDNs) in no-overlay mode that specify routing=\"Managed\" in their NoOverlayOptions. It is required when DefaultNetworkNoOverlayOptions.Routing is set to \"Managed\". When omitted, this means the user does not configure BGP for managed routing.",
 }
 
 func (OVNKubernetesConfig) SwaggerDoc() map[string]string {

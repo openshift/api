@@ -15,6 +15,7 @@
 | NewOLMCatalogdAPIV1Metas| | | | <span style="background-color: #519450">Enabled</span> | | | | <span style="background-color: #519450">Enabled</span>  |
 | NewOLMOwnSingleNamespace| | | | <span style="background-color: #519450">Enabled</span> | | | | <span style="background-color: #519450">Enabled</span>  |
 | NewOLMPreflightPermissionChecks| | | | <span style="background-color: #519450">Enabled</span> | | | | <span style="background-color: #519450">Enabled</span>  |
+| NoOverlayMode| | | | | | | <span style="background-color: #519450">Enabled</span> | <span style="background-color: #519450">Enabled</span>  |
 | NoRegistryClusterInstall| | | | <span style="background-color: #519450">Enabled</span> | | | | <span style="background-color: #519450">Enabled</span>  |
 | ProvisioningRequestAvailable| | | <span style="background-color: #519450">Enabled</span> | <span style="background-color: #519450">Enabled</span> | | | |  |
 | AWSClusterHostedDNS| | | <span style="background-color: #519450">Enabled</span> | <span style="background-color: #519450">Enabled</span> | | | <span style="background-color: #519450">Enabled</span> | <span style="background-color: #519450">Enabled</span>  |

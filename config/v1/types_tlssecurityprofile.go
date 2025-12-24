@@ -202,6 +202,31 @@ const (
 	TLSProfileCustomType TLSProfileType = "Custom"
 )
 
+// TLSCurve is a named curve identifier that can be used in TLSProfile.Curves.
+// There is a one-to-one mapping between these names and the curve IDs defined
+// in crypto/tls package based on IANA's "TLS Supported Groups" registry:
+// https://www.iana.org/assignments/tls-parameters/tls-parameters.xhtml#tls-parameters-8
+//
+// +kubebuilder:validation:Enum=X25519;P-256;P-384;P-521;X25519MLKEM768
+type TLSCurve string
+
+const (
+	// TLSCurveX25519 represents X25519.
+	TLSCurveX25519 TLSCurve = "X25519"
+	// TLSCurveP256 represents P-256 (secp256r1).
+	TLSCurveP256 TLSCurve = "P-256"
+	// TLSCurveP384 represents P-384 (secp384r1).
+	TLSCurveP384 TLSCurve = "P-384"
+	// TLSCurveP521 represents P-521 (secp521r1).
+	TLSCurveP521 TLSCurve = "P-521"
+	// TLSCurveX25519MLKEM768 represents X25519MLKEM768.
+	TLSCurveX25519MLKEM768 TLSCurve = "X25519MLKEM768"
+	// TLSCurveP256r1MLKEM1024 represents P256r1MLKEM1024 (secp256r1MLKEM1024).
+	TLSCurveP256r1MLKEM768 TLSCurve = "P256r1MLKEM768"
+	// TLSCurveP384r1MLKEM1024 represents P384r1MLKEM1024 (secp384r1MLKEM1024).
+	TLSCurveP384r1MLKEM1024 TLSCurve = "P384r1MLKEM1024"
+)
+
 // TLSProfileSpec is the desired behavior of a TLSSecurityProfile.
 type TLSProfileSpec struct {
 	// ciphers is used to specify the cipher algorithms that are negotiated
@@ -213,6 +238,38 @@ type TLSProfileSpec struct {
 	//
 	// +listType=atomic
 	Ciphers []string `json:"ciphers"`
+	// curves is used to specify the elliptic curves that are used during
+	// the TLS handshake.  Operators may remove entries their operands do
+	// not support.
+	//
+	// TLSProfiles Old, Intermediate, Modern are including by default the following
+	// curves: X25519, P-256, P-384, P-521, X25519MLKEM768, SecP256r1MLKEM1024, SecP384r1MLKEM1024.
+	// TLSProfiles Custom do not include any curves by default.
+	// NOTE: since this field is optional, if no curves are specified, the default curves
+	// used by the underlying TLS library will be used.
+	//
+	// For example, to use X25519 and P-256 (yaml):
+	//
+	// # Example: Force PQC-only encryption
+	// apiVersion: config.openshift.io/v1
+	// kind: APIServer
+	// spec:
+	//   tlsSecurityProfile:
+	//     type: Custom
+	//     custom:
+	//       ciphers:
+	// 	       - TLS_AES_128_GCM_SHA256
+	//         - TLS_AES_256_GCM_SHA384
+	//         - TLS_CHACHA20_POLY1305_SHA256
+	//       curves:
+	//         - X25519MLKEM768  # PQC-only: only hybrid quantum-resistant curve
+	//       minTLSVersion: VersionTLS13
+	//
+	// +optional
+	// +listType=set
+	// +kubebuilder:validation:MaxItems=5
+	// +openshift:enable:FeatureGate=TLSCurvesConfiguration
+	Curves []TLSCurve `json:"curves,omitempty"`
 	// minTLSVersion is used to specify the minimal version of the TLS protocol
 	// that is negotiated during the TLS handshake. For example, to use TLS
 	// versions 1.1, 1.2 and 1.3 (yaml):
@@ -283,6 +340,12 @@ var TLSProfiles = map[TLSProfileType]*TLSProfileSpec{
 			"AES256-SHA",
 			"DES-CBC3-SHA",
 		},
+		Curves: []TLSCurve{
+			TLSCurveX25519,
+			TLSCurveP256,
+			TLSCurveP384,
+			TLSCurveX25519MLKEM768,
+		},
 		MinTLSVersion: VersionTLS10,
 	},
 	TLSProfileIntermediateType: {
@@ -299,6 +362,12 @@ var TLSProfiles = map[TLSProfileType]*TLSProfileSpec{
 			"DHE-RSA-AES128-GCM-SHA256",
 			"DHE-RSA-AES256-GCM-SHA384",
 		},
+		Curves: []TLSCurve{
+			TLSCurveX25519,
+			TLSCurveP256,
+			TLSCurveP384,
+			TLSCurveX25519MLKEM768,
+		},
 		MinTLSVersion: VersionTLS12,
 	},
 	TLSProfileModernType: {
@@ -306,6 +375,12 @@ var TLSProfiles = map[TLSProfileType]*TLSProfileSpec{
 			"TLS_AES_128_GCM_SHA256",
 			"TLS_AES_256_GCM_SHA384",
 			"TLS_CHACHA20_POLY1305_SHA256",
+		},
+		Curves: []TLSCurve{
+			TLSCurveX25519,
+			TLSCurveP256,
+			TLSCurveP384,
+			TLSCurveX25519MLKEM768,
 		},
 		MinTLSVersion: VersionTLS13,
 	},

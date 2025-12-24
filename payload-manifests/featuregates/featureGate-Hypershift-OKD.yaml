@@ -168,6 +168,9 @@
                         "name": "MutatingAdmissionPolicy"
                     },
                     {
+                        "name": "NetworkConnect"
+                    },
+                    {
                         "name": "NewOLM"
                     },
                     {

@@ -42,6 +42,9 @@
                         "name": "MultiArchInstallAzure"
                     },
                     {
+                        "name": "NetworkConnect"
+                    },
+                    {
                         "name": "NewOLM"
                     },
                     {

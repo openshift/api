@@ -449,6 +449,7 @@ var map_OIDCProvider = map[string]string{
 	"oidcClients":          "oidcClients is an optional field that configures how on-cluster, platform clients should request tokens from the identity provider. oidcClients must not exceed 20 entries and entries must have unique namespace/name pairs.",
 	"claimMappings":        "claimMappings is a required field that configures the rules to be used by the Kubernetes API server for translating claims in a JWT token, issued by the identity provider, to a cluster identity.",
 	"claimValidationRules": "claimValidationRules is an optional field that configures the rules to be used by the Kubernetes API server for validating the claims in a JWT token issued by the identity provider.\n\nValidation rules are joined via an AND operation.",
+	"userValidationRules":  "userValidationRules is an optional field that configures the set of rules used to validate the cluster user identity that was constructed via mapping token claims to user identity attributes. Rules are CEL expressions that must evaluate to 'true' for authentication to succeed. If any rule in the chain of rules evaluates to 'false', authentication will fail. When specified, at least one rule must be specified and no more than 64 rules may be specified.",
 }
 
 func (OIDCProvider) SwaggerDoc() map[string]string {
@@ -494,9 +495,20 @@ func (TokenClaimOrExpressionMapping) SwaggerDoc() map[string]string {
 	return map_TokenClaimOrExpressionMapping
 }
 
+var map_TokenClaimValidationCELRule = map[string]string{
+	"expression": "expression is a CEL expression evaluated against token claims. expression is required, must be at least 1 character in length and must not exceed 1024 characters. The expression must return a boolean value where 'true' signals a valid token and 'false' an invalid one.",
+	"message":    "message is a required human-readable message to be logged by the Kubernetes API server if the CEL expression defined in 'expression' fails. message must be at least 1 character in length and must not exceed 256 characters.",
+}
+
+func (TokenClaimValidationCELRule) SwaggerDoc() map[string]string {
+	return map_TokenClaimValidationCELRule
+}
+
 var map_TokenClaimValidationRule = map[string]string{
-	"type":          "type is an optional field that configures the type of the validation rule.\n\nAllowed values are 'RequiredClaim' and omitted (not provided or an empty string).\n\nWhen set to 'RequiredClaim', the Kubernetes API server will be configured to validate that the incoming JWT contains the required claim and that its value matches the required value.\n\nDefaults to 'RequiredClaim'.",
-	"requiredClaim": "requiredClaim is an optional field that configures the required claim and value that the Kubernetes API server will use to validate if an incoming JWT is valid for this identity provider.",
+	"":              "TokenClaimValidationRule represents a validation rule based on token claims. If type is RequiredClaim, requiredClaim must be set. If Type is CEL, CEL must be set and RequiredClaim must be omitted.",
+	"type":          "type is an optional field that configures the type of the validation rule.\n\nAllowed values are \"RequiredClaim\" and \"Expression\".\n\nWhen set to 'RequiredClaim', the Kubernetes API server will be configured to validate that the incoming JWT contains the required claim and that its value matches the required value.\n\nWhen set to 'CEL', the Kubernetes API server will be configured to validate the incoming JWT against the configured CEL expression.",
+	"requiredClaim": "requiredClaim allows configuring a required claim name and its expected value. This field is required when `type` is set to RequiredClaim, and must be omitted when `type` is set to any other value. The Kubernetes API server uses this field to validate if an incoming JWT is valid for this identity provider.",
+	"cel":           "cel holds the CEL expression and message for validation. Must be set when Type is \"CEL\", and forbidden otherwise.",
 }
 
 func (TokenClaimValidationRule) SwaggerDoc() map[string]string {
@@ -507,6 +519,7 @@ var map_TokenIssuer = map[string]string{
 	"issuerURL":                  "issuerURL is a required field that configures the URL used to issue tokens by the identity provider. The Kubernetes API server determines how authentication tokens should be handled by matching the 'iss' claim in the JWT to the issuerURL of configured identity providers.\n\nMust be at least 1 character and must not exceed 512 characters in length. Must be a valid URL that uses the 'https' scheme and does not contain a query, fragment or user.",
 	"audiences":                  "audiences is a required field that configures the acceptable audiences the JWT token, issued by the identity provider, must be issued to. At least one of the entries must match the 'aud' claim in the JWT token.\n\naudiences must contain at least one entry and must not exceed ten entries.",
 	"issuerCertificateAuthority": "issuerCertificateAuthority is an optional field that configures the certificate authority, used by the Kubernetes API server, to validate the connection to the identity provider when fetching discovery information.\n\nWhen not specified, the system trust is used.\n\nWhen specified, it must reference a ConfigMap in the openshift-config namespace containing the PEM-encoded CA certificates under the 'ca-bundle.crt' key in the data field of the ConfigMap.",
+	"discoveryURL":               "discoveryURL is an optional field that, if specified, overrides the default discovery endpoint used to retrieve OIDC configuration metadata. By default, the discovery URL is derived from `issuerURL` as \"{issuerURL}/.well-known/openid-configuration\".\n\nThe discoveryURL must be a valid absolute HTTPS URL. It must not contain query parameters, user information, or fragments. Additionally, it must differ from the value of `url` (ignoring trailing slashes). The discoveryURL value must be at least 1 character long and no longer than 2048 characters.",
 }
 
 func (TokenIssuer) SwaggerDoc() map[string]string {
@@ -520,6 +533,16 @@ var map_TokenRequiredClaim = map[string]string{
 
 func (TokenRequiredClaim) SwaggerDoc() map[string]string {
 	return map_TokenRequiredClaim
+}
+
+var map_TokenUserValidationRule = map[string]string{
+	"":           "TokenUserValidationRule provides a CEL-based rule used to validate a token subject. Each rule contains a CEL expression that is evaluated against the token’s claims.",
+	"expression": "expression is a required CEL expression that performs a validation on cluster user identity attributes like username, groups, etc. The expression must evaluate to a boolean value. When the expression evaluates to 'true', the cluster user identity is considered valid. When the expression evaluates to 'false', the cluster user identity is not considered valid. expression must be at least 1 character in length and must not exceed 1024 characters.",
+	"message":    "message is a required human-readable message to be logged by the Kubernetes API server if the CEL expression defined in 'expression' fails. message must be at least 1 character in length and must not exceed 256 characters.",
+}
+
+func (TokenUserValidationRule) SwaggerDoc() map[string]string {
+	return map_TokenUserValidationRule
 }
 
 var map_UsernameClaimMapping = map[string]string{

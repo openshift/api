@@ -28,6 +28,17 @@ You MUST use this EXACT format for ALL review feedback:
 
 I'll run a comprehensive API review for OpenShift API changes. This can review either a specific GitHub PR or local changes against upstream master.
 
+## API Conventions
+
+**CRITICAL**: All API changes MUST comply with both Kubernetes and OpenShift API conventions:
+
+1. **Kubernetes API Conventions**: https://github.com/kubernetes/community/blob/master/contributors/devel/sig-architecture/api-conventions.md
+2. **OpenShift API Conventions**: https://github.com/openshift/enhancements/blob/master/dev-guide/api-conventions.md
+
+**Naming Conventions**: All new fields MUST adhere to OpenShift and Kubernetes naming conventions to avoid conflicts now or in the future. Field names in golang must be PascalCase while their JSON representation has to be camelCase. They have to be descriptive, and align with established patterns in both Kubernetes and OpenShift APIs.
+
+Before starting the review, I will fetch and review the latest API conventions from both sources to ensure all validation checks are aligned with current requirements.
+
 ## Step 1: Pre-flight checks and determine review mode
 
 First, I'll check the arguments and determine whether to review a PR or local changes:
@@ -131,13 +142,17 @@ fi
 echo "✅ Linting checks passed."
 ```
 
-## Step 4: Documentation validation
+## Step 4: Documentation and API conventions validation
 
 For each changed API file, I'll validate:
 
-1. **Field Documentation**: All struct fields must have documentation comments
-2. **Optional Field Behavior**: Optional fields must explain what happens when they are omitted
-3. **Validation Documentation**: Validation rules must be documented and match markers
+1. **Kubernetes API Conventions**: All changes must comply with https://github.com/kubernetes/community/blob/master/contributors/devel/sig-architecture/api-conventions.md
+2. **OpenShift API Conventions**: All changes must comply with https://github.com/openshift/enhancements/blob/master/dev-guide/api-conventions.md
+3. **Field Naming Conventions**: All new fields must adhere to OpenShift and Kubernetes naming conventions to avoid conflicts now or in the future
+4. **Field Documentation**: All struct fields must have documentation comments
+5. **Optional Field Behavior**: Optional fields must explain what happens when they are omitted
+6. **Validation Documentation**: Validation rules must be documented and match markers
+7. **Cross-field Validation**: Documented field relationships must have corresponding XValidation rules
 
 Let me check each changed file for these requirements:
 

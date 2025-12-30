@@ -1,0 +1,274 @@
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.19.0
+    olm.operatorframework.io/generator: experimental
+  name: clusterextensionrevisions.olm.operatorframework.io
+spec:
+  group: olm.operatorframework.io
+  names:
+    kind: ClusterExtensionRevision
+    listKind: ClusterExtensionRevisionList
+    plural: clusterextensionrevisions
+    singular: clusterextensionrevision
+  scope: Cluster
+  versions:
+  - additionalPrinterColumns:
+    - jsonPath: .status.conditions[?(@.type=='Available')].status
+      name: Available
+      type: string
+    - jsonPath: .status.conditions[?(@.type=='Progressing')].status
+      name: Progressing
+      type: string
+    - jsonPath: .metadata.creationTimestamp
+      name: Age
+      type: date
+    name: v1
+    schema:
+      openAPIV3Schema:
+        description: |-
+          ClusterExtensionRevision represents an immutable snapshot of Kubernetes objects
+          for a specific version of a ClusterExtension. Each revision contains objects
+          organized into phases that roll out sequentially. The same object can only be managed by a single revision
+          at a time. Ownership of objects is transitioned from one revision to the next as the extension is upgraded
+          or reconfigured. Once the latest revision has rolled out successfully, previous active revisions are archived for
+          posterity.
+        properties:
+          apiVersion:
+            description: |-
+              APIVersion defines the versioned schema of this representation of an object.
+              Servers should convert recognized schemas to the latest internal value, and
+              may reject unrecognized values.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
+            type: string
+          kind:
+            description: |-
+              Kind is a string value representing the REST resource this object represents.
+              Servers may infer this from the endpoint the client submits requests to.
+              Cannot be updated.
+              In CamelCase.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: spec defines the desired state of the ClusterExtensionRevision.
+            properties:
+              lifecycleState:
+                default: Active
+                description: |-
+                  lifecycleState specifies the lifecycle state of the ClusterExtensionRevision.
+
+                  When set to "Active" (the default), the revision is actively managed and reconciled.
+                  When set to "Archived", the revision is inactive and any resources not managed by a subsequent revision are deleted.
+                  The revision is removed from the owner list of all objects previously under management.
+                  All objects that did not transition to a succeeding revision are deleted.
+
+                  Once a revision is set to "Archived", it cannot be un-archived.
+                enum:
+                - Active
+                - Archived
+                type: string
+                x-kubernetes-validations:
+                - message: cannot un-archive
+                  rule: oldSelf == 'Active' || oldSelf == 'Archived' && oldSelf ==
+                    self
+              phases:
+                description: |-
+                  phases is an optional, immutable list of phases that group objects to be applied together.
+
+                  Objects are organized into phases based on their Group-Kind. Common phases include:
+                    - namespaces: Namespace objects
+                    - policies: ResourceQuota, LimitRange, NetworkPolicy objects
+                    - rbac: ServiceAccount, Role, RoleBinding, ClusterRole, ClusterRoleBinding objects
+                    - crds: CustomResourceDefinition objects
+                    - storage: PersistentVolume, PersistentVolumeClaim, StorageClass objects
+                    - deploy: Deployment, StatefulSet, DaemonSet, Service, ConfigMap, Secret objects
+                    - publish: Ingress, APIService, Route, Webhook objects
+
+                  All objects in a phase are applied in no particular order.
+                  The revision progresses to the next phase only after all objects in the current phase pass their readiness probes.
+
+                  Once set, even if empty, the phases field is immutable.
+                items:
+                  description: |-
+                    ClusterExtensionRevisionPhase represents a group of objects that are applied together. The phase is considered
+                    complete only after all objects pass their status probes.
+                  properties:
+                    name:
+                      description: |-
+                        name is a required identifier for this phase.
+
+                        phase names must follow the DNS label standard as defined in [RFC 1123].
+                        They must contain only lowercase alphanumeric characters or hyphens (-),
+                        start and end with an alphanumeric character, and be no longer than 63 characters.
+
+                        Common phase names include: namespaces, policies, rbac, crds, storage, deploy, publish.
+
+                        [RFC 1123]: https://tools.ietf.org/html/rfc1123
+                      maxLength: 63
+                      pattern: ^[a-z]([-a-z0-9]*[a-z0-9])?$
+                      type: string
+                    objects:
+                      description: |-
+                        objects is a required list of all Kubernetes objects that belong to this phase.
+
+                        All objects in this list are applied to the cluster in no particular order.
+                      items:
+                        description: |-
+                          ClusterExtensionRevisionObject represents a Kubernetes object to be applied as part
+                          of a phase, along with its collision protection settings.
+                        properties:
+                          collisionProtection:
+                            default: Prevent
+                            description: |-
+                              collisionProtection controls whether the operator can adopt and modify objects
+                              that already exist on the cluster.
+
+                              When set to "Prevent" (the default), the operator only manages objects it created itself.
+                              This prevents ownership collisions.
+
+                              When set to "IfNoController", the operator can adopt and modify pre-existing objects
+                              that are not owned by another controller.
+                              This is useful for taking over management of manually-created resources.
+
+                              When set to "None", the operator can adopt and modify any pre-existing object, even if
+                              owned by another controller.
+                              Use this setting with extreme caution as it may cause multiple controllers to fight over
+                              the same resource, resulting in increased load on the API server and etcd.
+                            enum:
+                            - Prevent
+                            - IfNoController
+                            - None
+                            type: string
+                          object:
+                            description: |-
+                              object is a required embedded Kubernetes object to be applied.
+
+                              This object must be a valid Kubernetes resource with apiVersion, kind, and metadata fields.
+                            type: object
+                            x-kubernetes-embedded-resource: true
+                            x-kubernetes-preserve-unknown-fields: true
+                        required:
+                        - object
+                        type: object
+                      type: array
+                  required:
+                  - name
+                  - objects
+                  type: object
+                type: array
+                x-kubernetes-list-map-keys:
+                - name
+                x-kubernetes-list-type: map
+                x-kubernetes-validations:
+                - message: phases is immutable
+                  rule: self == oldSelf || oldSelf.size() == 0
+              revision:
+                description: |-
+                  revision is a required, immutable sequence number representing a specific revision
+                  of the parent ClusterExtension.
+
+                  The revision field must be a positive integer.
+                  Each ClusterExtensionRevision belonging to the same parent ClusterExtension must have a unique revision number.
+                  The revision number must always be the previous revision number plus one, or 1 for the first revision.
+                format: int64
+                minimum: 1
+                type: integer
+                x-kubernetes-validations:
+                - message: revision is immutable
+                  rule: self == oldSelf
+            required:
+            - revision
+            type: object
+          status:
+            description: status is optional and defines the observed state of the
+              ClusterExtensionRevision.
+            properties:
+              conditions:
+                description: |-
+                  conditions is an optional list of status conditions describing the state of the
+                  ClusterExtensionRevision.
+
+                  The Progressing condition represents whether the revision is actively rolling out:
+                    - When status is True and reason is RollingOut, the ClusterExtensionRevision rollout is actively making progress and is in transition.
+                    - When status is True and reason is Retrying, the ClusterExtensionRevision has encountered an error that could be resolved on subsequent reconciliation attempts.
+                    - When status is True and reason is Succeeded, the ClusterExtensionRevision has reached the desired state.
+                    - When status is False and reason is Blocked, the ClusterExtensionRevision has encountered an error that requires manual intervention for recovery.
+                    - When status is False and reason is Archived, the ClusterExtensionRevision is archived and not being actively reconciled.
+
+                  The Available condition represents whether the revision has been successfully rolled out and is available:
+                    - When status is True and reason is ProbesSucceeded, the ClusterExtensionRevision has been successfully rolled out and all objects pass their readiness probes.
+                    - When status is False and reason is ProbeFailure, one or more objects are failing their readiness probes during rollout.
+                    - When status is Unknown and reason is Reconciling, the ClusterExtensionRevision has encountered an error that prevented it from observing the probes.
+                    - When status is Unknown and reason is Archived, the ClusterExtensionRevision has been archived and its objects have been torn down.
+                    - When status is Unknown and reason is Migrated, the ClusterExtensionRevision was migrated from an existing release and object status probe results have not yet been observed.
+
+                  The Succeeded condition represents whether the revision has successfully completed its rollout:
+                    - When status is True and reason is Succeeded, the ClusterExtensionRevision has successfully completed its rollout. This condition is set once and persists even if the revision later becomes unavailable.
+                items:
+                  description: Condition contains details for one aspect of the current
+                    state of this API Resource.
+                  properties:
+                    lastTransitionTime:
+                      description: |-
+                        lastTransitionTime is the last time the condition transitioned from one status to another.
+                        This should be when the underlying condition changed.  If that is not known, then using the time when the API field changed is acceptable.
+                      format: date-time
+                      type: string
+                    message:
+                      description: |-
+                        message is a human readable message indicating details about the transition.
+                        This may be an empty string.
+                      maxLength: 32768
+                      type: string
+                    observedGeneration:
+                      description: |-
+                        observedGeneration represents the .metadata.generation that the condition was set based upon.
+                        For instance, if .metadata.generation is currently 12, but the .status.conditions[x].observedGeneration is 9, the condition is out of date
+                        with respect to the current state of the instance.
+                      format: int64
+                      minimum: 0
+                      type: integer
+                    reason:
+                      description: |-
+                        reason contains a programmatic identifier indicating the reason for the condition's last transition.
+                        Producers of specific condition types may define expected values and meanings for this field,
+                        and whether the values are considered a guaranteed API.
+                        The value should be a CamelCase string.
+                        This field may not be empty.
+                      maxLength: 1024
+                      minLength: 1
+                      pattern: ^[A-Za-z]([A-Za-z0-9_,:]*[A-Za-z0-9_])?$
+                      type: string
+                    status:
+                      description: status of the condition, one of True, False, Unknown.
+                      enum:
+                      - "True"
+                      - "False"
+                      - Unknown
+                      type: string
+                    type:
+                      description: type of condition in CamelCase or in foo.example.com/CamelCase.
+                      maxLength: 316
+                      pattern: ^([a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*/)?(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])$
+                      type: string
+                  required:
+                  - lastTransitionTime
+                  - message
+                  - reason
+                  - status
+                  - type
+                  type: object
+                type: array
+                x-kubernetes-list-map-keys:
+                - type
+                x-kubernetes-list-type: map
+            type: object
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}

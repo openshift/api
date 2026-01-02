@@ -2,6 +2,7 @@
 
 source "$(dirname "${BASH_SOURCE}")/lib/init.sh"
 
+rm -f ./payload-manifests/featuregates/*
 go run --mod=vendor -trimpath github.com/openshift/api/payload-command/cmd/write-available-featuresets --asset-output-dir=./payload-manifests/featuregates
 
 # Build codegen-crds when it's not present and not overridden for a specific file.

@@ -3,6 +3,7 @@ module github.com/openshift/api
 go 1.24.0
 
 require (
+	github.com/blang/semver/v4 v4.0.0
 	github.com/gogo/protobuf v1.3.2
 	golang.org/x/tools v0.26.0
 	k8s.io/api v0.34.1

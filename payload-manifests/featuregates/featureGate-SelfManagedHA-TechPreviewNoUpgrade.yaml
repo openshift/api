@@ -36,9 +36,6 @@
                         "name": "HyperShiftOnlyDynamicResourceAllocation"
                     },
                     {
-                        "name": "IngressControllerDynamicConfigurationManager"
-                    },
-                    {
                         "name": "MachineAPIOperatorDisableMachineHealthCheckController"
                     },
                     {
@@ -192,6 +189,9 @@
                     },
                     {
                         "name": "ImageVolume"
+                    },
+                    {
+                        "name": "IngressControllerDynamicConfigurationManager"
                     },
                     {
                         "name": "InsightsConfig"

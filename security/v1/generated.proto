@@ -179,6 +179,47 @@ message RangeAllocationList {
   repeated RangeAllocation items = 2;
 }
 
+// RunAsGroupIDRange provides a min/max of an allowed range of group IDs for RunAsGroup strategy.
+message RunAsGroupIDRange {
+  // min is the start of the range, inclusive.
+  // +required
+  optional int64 min = 1;
+
+  // max is the end of the range, inclusive.
+  // +required
+  optional int64 max = 2;
+}
+
+// RunAsGroupStrategyOptions defines the strategy type and options used to create the strategy.
+message RunAsGroupStrategyOptions {
+  // type is the strategy that will dictate what RunAsGroup is used in the SecurityContext.
+  // Valid values are "MustRunAs", "MustRunAsRange", and "RunAsAny".
+  // +required
+  // +kubebuilder:validation:Enum=MustRunAs;MustRunAsRange;RunAsAny
+  optional string type = 1;
+
+  // gid is the group id that containers must run as. Required for the MustRunAs strategy if not using
+  // namespace/service account allocated gids.
+  // +optional
+  optional int64 gid = 2;
+
+  // gidRangeMin defines the min value for a strategy that allocates by range.
+  // +optional
+  optional int64 gidRangeMin = 3;
+
+  // gidRangeMax defines the max value for a strategy that allocates by range.
+  // +optional
+  optional int64 gidRangeMax = 4;
+
+  // ranges are the allowed ranges of gids.  If you would like to force a single
+  // gid then supply a single range with the same start and end.
+  // When omitted, any gid is allowed (equivalent to RunAsAny strategy).
+  // +optional
+  // +listType=atomic
+  // +kubebuilder:validation:MaxItems=256
+  repeated RunAsGroupIDRange ranges = 5;
+}
+
 // RunAsUserStrategyOptions defines the strategy type and any options used to create the strategy.
 message RunAsUserStrategyOptions {
   // type is the strategy that will dictate what RunAsUser is used in the SecurityContext.
@@ -221,6 +262,7 @@ message SELinuxContextStrategyOptions {
 // +kubebuilder:printcolumn:name="SELinux",type=string,JSONPath=.seLinuxContext.type,description="Strategy that will dictate what labels will be set in the SecurityContext"
 // +kubebuilder:printcolumn:name="RunAsUser",type=string,JSONPath=.runAsUser.type,description="Strategy that will dictate what RunAsUser is used in the SecurityContext"
 // +kubebuilder:printcolumn:name="FSGroup",type=string,JSONPath=.fsGroup.type,description="Strategy that will dictate what fs group is used by the SecurityContext"
+// +kubebuilder:printcolumn:name="RunAsGroup",type=string,JSONPath=.runAsGroup.type,description="Strategy that will dictate what RunAsGroup is used by the SecurityContext"
 // +kubebuilder:printcolumn:name="SupGroup",type=string,JSONPath=.supplementalGroups.type,description="Strategy that will dictate what supplemental groups are used by the SecurityContext"
 // +kubebuilder:printcolumn:name="Priority",type=string,JSONPath=.priority,description="Sort order of SCCs"
 // +kubebuilder:printcolumn:name="ReadOnlyRootFS",type=string,JSONPath=.readOnlyRootFilesystem,description="Force containers to run with a read only root file system"
@@ -336,6 +378,11 @@ message SecurityContextConstraints {
   // fsGroup is the strategy that will dictate what fs group is used by the SecurityContext.
   // +nullable
   optional FSGroupStrategyOptions fsGroup = 16;
+
+  // runAsGroup is the strategy that will dictate what RunAsGroup is used in the SecurityContext.
+  // When omitted, the RunAsGroup strategy will not be enforced and containers may run with any group ID.
+  // +optional
+  optional RunAsGroupStrategyOptions runAsGroup = 27;
 
   // readOnlyRootFilesystem when set to true will force containers to run with a read only root file
   // system.  If the container specifically requests to run with a non-read only root file system

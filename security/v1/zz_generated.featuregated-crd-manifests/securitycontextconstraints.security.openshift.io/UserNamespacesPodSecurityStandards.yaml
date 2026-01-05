@@ -39,6 +39,10 @@ spec:
       jsonPath: .fsGroup.type
       name: FSGroup
       type: string
+    - description: Strategy that will dictate what RunAsGroup is used by the SecurityContext
+      jsonPath: .runAsGroup.type
+      name: RunAsGroup
+      type: string
     - description: Strategy that will dictate what supplemental groups are used by
         the SecurityContext
       jsonPath: .supplementalGroups.type
@@ -257,6 +261,63 @@ spec:
             nullable: true
             type: array
             x-kubernetes-list-type: atomic
+          runAsGroup:
+            description: |-
+              runAsGroup is the strategy that will dictate what RunAsGroup is used in the SecurityContext.
+              When omitted, the RunAsGroup strategy will not be enforced and containers may run with any group ID.
+            properties:
+              gid:
+                description: |-
+                  gid is the group id that containers must run as. Required for the MustRunAs strategy if not using
+                  namespace/service account allocated gids.
+                format: int64
+                type: integer
+              gidRangeMax:
+                description: gidRangeMax defines the max value for a strategy that
+                  allocates by range.
+                format: int64
+                type: integer
+              gidRangeMin:
+                description: gidRangeMin defines the min value for a strategy that
+                  allocates by range.
+                format: int64
+                type: integer
+              ranges:
+                description: |-
+                  ranges are the allowed ranges of gids.  If you would like to force a single
+                  gid then supply a single range with the same start and end.
+                  When omitted, any gid is allowed (equivalent to RunAsAny strategy).
+                items:
+                  description: RunAsGroupIDRange provides a min/max of an allowed
+                    range of group IDs for RunAsGroup strategy.
+                  properties:
+                    max:
+                      description: max is the end of the range, inclusive.
+                      format: int64
+                      type: integer
+                    min:
+                      description: min is the start of the range, inclusive.
+                      format: int64
+                      type: integer
+                  required:
+                  - max
+                  - min
+                  type: object
+                maxItems: 256
+                type: array
+                x-kubernetes-list-type: atomic
+              type:
+                description: |-
+                  type is the strategy that will dictate what RunAsGroup is used in the SecurityContext.
+                  Valid values are "MustRunAs", "MustRunAsRange", and "RunAsAny".
+                enum:
+                - MustRunAs
+                - MustRunAsRange
+                - RunAsAny
+                type: string
+            required:
+            - type
+            type: object
           runAsUser:
             description: runAsUser is the strategy that will dictate what RunAsUser
               is used in the SecurityContext.

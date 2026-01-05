@@ -196,6 +196,9 @@
                         "name": "OnPremDNSRecords"
                     },
                     {
+                        "name": "OpenShiftPodSecurityAdmission"
+                    },
+                    {
                         "name": "ProvisioningRequestAvailable"
                     },
                     {
@@ -304,9 +307,6 @@
                     },
                     {
                         "name": "NewOLMWebhookProviderOpenshiftServiceCA"
-                    },
-                    {
-                        "name": "OpenShiftPodSecurityAdmission"
                     },
                     {
                         "name": "PinnedImages"

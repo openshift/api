@@ -146,9 +146,6 @@
                         "name": "DyanmicServiceEndpointIBMCloud"
                     },
                     {
-                        "name": "DynamicResourceAllocation"
-                    },
-                    {
                         "name": "EtcdBackendQuota"
                     },
                     {
@@ -266,6 +263,9 @@
                         "name": "MutatingAdmissionPolicy"
                     },
                     {
+                        "name": "NetworkConnect"
+                    },
+                    {
                         "name": "NetworkDiagnosticsConfig"
                     },
                     {
@@ -327,9 +327,6 @@
                     },
                     {
                         "name": "TLSCurvesConfiguration"
-                    },
-                    {
-                        "name": "TranslateStreamCloseWebsocketRequests"
                     },
                     {
                         "name": "UpgradeStatus"

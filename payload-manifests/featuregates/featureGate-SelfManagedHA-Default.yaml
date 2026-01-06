@@ -61,6 +61,12 @@
                         "name": "ClientsPreferCBOR"
                     },
                     {
+                        "name": "ClusterAPIComputeInstall"
+                    },
+                    {
+                        "name": "ClusterAPIControlPlaneInstall"
+                    },
+                    {
                         "name": "ClusterAPIInstall"
                     },
                     {
@@ -76,7 +82,13 @@
                         "name": "ClusterMonitoringConfig"
                     },
                     {
+                        "name": "ClusterUpdateAcceptRisks"
+                    },
+                    {
                         "name": "ClusterVersionOperatorConfiguration"
+                    },
+                    {
+                        "name": "ConfigurablePKI"
                     },
                     {
                         "name": "DNSNameResolver"
@@ -88,7 +100,7 @@
                         "name": "DyanmicServiceEndpointIBMCloud"
                     },
                     {
-                        "name": "DynamicResourceAllocation"
+                        "name": "EVPN"
                     },
                     {
                         "name": "EtcdBackendQuota"
@@ -104,6 +116,9 @@
                     },
                     {
                         "name": "Example2"
+                    },
+                    {
+                        "name": "ExternalOIDCWithUpstreamParity"
                     },
                     {
                         "name": "ExternalSnapshotMetadata"
@@ -127,9 +142,6 @@
                         "name": "ImageModeStatusReporting"
                     },
                     {
-                        "name": "ImageStreamImportMode"
-                    },
-                    {
                         "name": "IngressControllerDynamicConfigurationManager"
                     },
                     {
@@ -142,6 +154,9 @@
                         "name": "IrreconcilableMachineConfig"
                     },
                     {
+                        "name": "KMSEncryption"
+                    },
+                    {
                         "name": "KMSEncryptionProvider"
                     },
                     {
@@ -149,9 +164,6 @@
                     },
                     {
                         "name": "MachineAPIOperatorDisableMachineHealthCheckController"
-                    },
-                    {
-                        "name": "ManagedBootImagesCPMS"
                     },
                     {
                         "name": "MaxUnavailableStatefulSet"
@@ -175,13 +187,13 @@
                         "name": "MutatingAdmissionPolicy"
                     },
                     {
+                        "name": "NetworkConnect"
+                    },
+                    {
                         "name": "NewOLMBoxCutterRuntime"
                     },
                     {
                         "name": "NewOLMCatalogdAPIV1Metas"
-                    },
-                    {
-                        "name": "NewOLMOwnSingleNamespace"
                     },
                     {
                         "name": "NewOLMPreflightPermissionChecks"
@@ -214,13 +226,7 @@
                         "name": "SignatureStores"
                     },
                     {
-                        "name": "SigstoreImageVerificationPKI"
-                    },
-                    {
                         "name": "TLSCurvesConfiguration"
-                    },
-                    {
-                        "name": "TranslateStreamCloseWebsocketRequests"
                     },
                     {
                         "name": "VSphereConfigurableMaxAllowedBlockVolumesPerNode"
@@ -241,9 +247,6 @@
                     },
                     {
                         "name": "AdminNetworkPolicy"
-                    },
-                    {
-                        "name": "AlibabaPlatform"
                     },
                     {
                         "name": "AzureWorkloadIdentity"
@@ -276,6 +279,9 @@
                         "name": "HighlyAvailableArbiter"
                     },
                     {
+                        "name": "ImageStreamImportMode"
+                    },
+                    {
                         "name": "ImageVolume"
                     },
                     {
@@ -292,6 +298,9 @@
                     },
                     {
                         "name": "ManagedBootImagesAzure"
+                    },
+                    {
+                        "name": "ManagedBootImagesCPMS"
                     },
                     {
                         "name": "ManagedBootImagesvSphere"
@@ -312,6 +321,9 @@
                         "name": "NewOLM"
                     },
                     {
+                        "name": "NewOLMOwnSingleNamespace"
+                    },
+                    {
                         "name": "NewOLMWebhookProviderOpenshiftServiceCA"
                     },
                     {
@@ -324,9 +336,6 @@
                         "name": "PreconfiguredUDNAddresses"
                     },
                     {
-                        "name": "ProcMountType"
-                    },
-                    {
                         "name": "RouteAdvertisements"
                     },
                     {
@@ -337,6 +346,9 @@
                     },
                     {
                         "name": "SigstoreImageVerification"
+                    },
+                    {
+                        "name": "SigstoreImageVerificationPKI"
                     },
                     {
                         "name": "StoragePerformantSecurityPolicy"

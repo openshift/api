@@ -33,9 +33,6 @@
                         "name": "MultiArchInstallAzure"
                     },
                     {
-                        "name": "NewOLMBoxCutterRuntime"
-                    },
-                    {
                         "name": "ShortCertRotation"
                     }
                 ],
@@ -60,9 +57,6 @@
                     },
                     {
                         "name": "AdminNetworkPolicy"
-                    },
-                    {
-                        "name": "AlibabaPlatform"
                     },
                     {
                         "name": "AutomatedEtcdBackup"
@@ -104,6 +98,12 @@
                         "name": "ClientsPreferCBOR"
                     },
                     {
+                        "name": "ClusterAPIComputeInstall"
+                    },
+                    {
+                        "name": "ClusterAPIControlPlaneInstall"
+                    },
+                    {
                         "name": "ClusterAPIInstallIBMCloud"
                     },
                     {
@@ -116,7 +116,13 @@
                         "name": "ClusterMonitoringConfig"
                     },
                     {
+                        "name": "ClusterUpdateAcceptRisks"
+                    },
+                    {
                         "name": "ClusterVersionOperatorConfiguration"
+                    },
+                    {
+                        "name": "ConfigurablePKI"
                     },
                     {
                         "name": "ConsolePluginContentSecurityPolicy"
@@ -131,7 +137,7 @@
                         "name": "DyanmicServiceEndpointIBMCloud"
                     },
                     {
-                        "name": "DynamicResourceAllocation"
+                        "name": "EVPN"
                     },
                     {
                         "name": "EtcdBackendQuota"
@@ -150,6 +156,9 @@
                     },
                     {
                         "name": "ExternalOIDCWithUIDAndExtraClaimMappings"
+                    },
+                    {
+                        "name": "ExternalOIDCWithUpstreamParity"
                     },
                     {
                         "name": "ExternalSnapshotMetadata"
@@ -200,6 +209,9 @@
                         "name": "IrreconcilableMachineConfig"
                     },
                     {
+                        "name": "KMSEncryption"
+                    },
+                    {
                         "name": "KMSEncryptionProvider"
                     },
                     {
@@ -248,6 +260,9 @@
                         "name": "MutatingAdmissionPolicy"
                     },
                     {
+                        "name": "NetworkConnect"
+                    },
+                    {
                         "name": "NetworkDiagnosticsConfig"
                     },
                     {
@@ -258,6 +273,9 @@
                     },
                     {
                         "name": "NewOLM"
+                    },
+                    {
+                        "name": "NewOLMBoxCutterRuntime"
                     },
                     {
                         "name": "NewOLMCatalogdAPIV1Metas"
@@ -296,9 +314,6 @@
                         "name": "PreconfiguredUDNAddresses"
                     },
                     {
-                        "name": "ProcMountType"
-                    },
-                    {
                         "name": "ProvisioningRequestAvailable"
                     },
                     {
@@ -327,9 +342,6 @@
                     },
                     {
                         "name": "TLSCurvesConfiguration"
-                    },
-                    {
-                        "name": "TranslateStreamCloseWebsocketRequests"
                     },
                     {
                         "name": "UpgradeStatus"

@@ -31,6 +31,7 @@ type Ingress struct {
 	// +required
 	Spec IngressSpec `json:"spec"`
 	// status holds observed values from the cluster. They may not be overridden.
+	// Dummy change, DNM.
 	// +optional
 	Status IngressStatus `json:"status"`
 }

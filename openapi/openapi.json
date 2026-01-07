@@ -5484,7 +5484,7 @@
         "policy": {
           "description": "policy is a required field that contains configuration to allow scopes to be verified, and defines how images not matching the verification policy will be treated.",
           "default": {},
-          "$ref": "#/definitions/com.github.openshift.api.config.v1.Policy"
+          "$ref": "#/definitions/com.github.openshift.api.config.v1.ImageSigstoreVerificationPolicy"
         },
         "scopes": {
           "description": "scopes is a required field that defines the list of image identities assigned to a policy. Each item refers to a scope in a registry implementing the \"Docker Registry HTTP API V2\". Scopes matching individual images are named Docker references in the fully expanded form, either using a tag or digest. For example, docker.io/library/busybox:latest (not busybox:latest). More general scopes are prefixes of individual-image scopes, and specify a repository (by omitting the tag or digest), a repository namespace, or a registry host (by only specifying the host name and possibly a port number) or a wildcard expression starting with `*.`, for matching all subdomains (not including a port number). Wildcards are only supported for subdomain matching, and may not be used in the middle of the host, i.e.  *.example.com is a valid case, but example*.*.com is not. This support no more than 256 scopes in one object. If multiple scopes match a given image, only the policy requirements for the most specific scope apply. The policy requirements for more general scopes are ignored. In addition to setting a policy appropriate for your own deployed applications, make sure that a policy on the OpenShift image repositories quay.io/openshift-release-dev/ocp-release, quay.io/openshift-release-dev/ocp-v4.0-art-dev (or on a more general scope) allows deployment of the OpenShift images required for cluster operation. If a scope is configured in both the ClusterImagePolicy and the ImagePolicy, or if the scope in ImagePolicy is nested under one of the scopes from the ClusterImagePolicy, only the policy from the ClusterImagePolicy will be applied. For additional details about the format, please refer to the document explaining the docker transport field, which can be found at: https://github.com/containers/image/blob/main/docs/containers-policy.json.5.md#docker",
@@ -6850,32 +6850,6 @@
         }
       }
     },
-    "com.github.openshift.api.config.v1.FulcioCAWithRekor": {
-      "description": "FulcioCAWithRekor defines the root of trust based on the Fulcio certificate and the Rekor public key.",
-      "type": "object",
-      "required": [
-        "fulcioCAData",
-        "rekorKeyData",
-        "fulcioSubject"
-      ],
-      "properties": {
-        "fulcioCAData": {
-          "description": "fulcioCAData is a required field contains inline base64-encoded data for the PEM format fulcio CA. fulcioCAData must be at most 8192 characters.",
-          "type": "string",
-          "format": "byte"
-        },
-        "fulcioSubject": {
-          "description": "fulcioSubject is a required field specifies OIDC issuer and the email of the Fulcio authentication configuration.",
-          "default": {},
-          "$ref": "#/definitions/com.github.openshift.api.config.v1.PolicyFulcioSubject"
-        },
-        "rekorKeyData": {
-          "description": "rekorKeyData is a required field contains inline base64-encoded data for the PEM format from the Rekor public key. rekorKeyData must be at most 8192 characters.",
-          "type": "string",
-          "format": "byte"
-        }
-      }
-    },
     "com.github.openshift.api.config.v1.GCPPlatformSpec": {
       "description": "GCPPlatformSpec holds the desired state of the Google Cloud Platform infrastructure provider. This only includes fields that can be modified in the cluster.",
       "type": "object"
@@ -7846,6 +7820,32 @@
         }
       }
     },
+    "com.github.openshift.api.config.v1.ImagePolicyFulcioCAWithRekorRootOfTrust": {
+      "description": "ImagePolicyFulcioCAWithRekorRootOfTrust defines the root of trust based on the Fulcio certificate and the Rekor public key.",
+      "type": "object",
+      "required": [
+        "fulcioCAData",
+        "rekorKeyData",
+        "fulcioSubject"
+      ],
+      "properties": {
+        "fulcioCAData": {
+          "description": "fulcioCAData is a required field contains inline base64-encoded data for the PEM format fulcio CA. fulcioCAData must be at most 8192 characters.",
+          "type": "string",
+          "format": "byte"
+        },
+        "fulcioSubject": {
+          "description": "fulcioSubject is a required field specifies OIDC issuer and the email of the Fulcio authentication configuration.",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.config.v1.PolicyFulcioSubject"
+        },
+        "rekorKeyData": {
+          "description": "rekorKeyData is a required field contains inline base64-encoded data for the PEM format from the Rekor public key. rekorKeyData must be at most 8192 characters.",
+          "type": "string",
+          "format": "byte"
+        }
+      }
+    },
     "com.github.openshift.api.config.v1.ImagePolicyList": {
       "description": "ImagePolicyList is a list of ImagePolicy resources\n\nCompatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).",
       "type": "object",
@@ -7877,6 +7877,50 @@
         }
       }
     },
+    "com.github.openshift.api.config.v1.ImagePolicyPKIRootOfTrust": {
+      "description": "ImagePolicyPKIRootOfTrust defines the root of trust based on Root CA(s) and corresponding intermediate certificates.",
+      "type": "object",
+      "required": [
+        "caRootsData",
+        "pkiCertificateSubject"
+      ],
+      "properties": {
+        "caIntermediatesData": {
+          "description": "caIntermediatesData contains base64-encoded data of a certificate bundle PEM file, which contains one or more intermediate certificates in the PEM format. The total length of the data must not exceed 8192 characters. caIntermediatesData requires caRootsData to be set.",
+          "type": "string",
+          "format": "byte"
+        },
+        "caRootsData": {
+          "description": "caRootsData contains base64-encoded data of a certificate bundle PEM file, which contains one or more CA roots in the PEM format. The total length of the data must not exceed 8192 characters.",
+          "type": "string",
+          "format": "byte"
+        },
+        "pkiCertificateSubject": {
+          "description": "pkiCertificateSubject defines the requirements imposed on the subject to which the certificate was issued.",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.config.v1.PKICertificateSubject"
+        }
+      }
+    },
+    "com.github.openshift.api.config.v1.ImagePolicyPublicKeyRootOfTrust": {
+      "description": "ImagePolicyPublicKeyRootOfTrust defines the root of trust based on a sigstore public key.",
+      "type": "object",
+      "required": [
+        "keyData"
+      ],
+      "properties": {
+        "keyData": {
+          "description": "keyData is a required field contains inline base64-encoded data for the PEM format public key. keyData must be at most 8192 characters.",
+          "type": "string",
+          "format": "byte"
+        },
+        "rekorKeyData": {
+          "description": "rekorKeyData is an optional field contains inline base64-encoded data for the PEM format from the Rekor public key. rekorKeyData must be at most 8192 characters.",
+          "type": "string",
+          "format": "byte"
+        }
+      }
+    },
     "com.github.openshift.api.config.v1.ImagePolicySpec": {
       "description": "ImagePolicySpec is the specification of the ImagePolicy CRD.",
       "type": "object",
@@ -7888,7 +7932,7 @@
         "policy": {
           "description": "policy is a required field that contains configuration to allow scopes to be verified, and defines how images not matching the verification policy will be treated.",
           "default": {},
-          "$ref": "#/definitions/com.github.openshift.api.config.v1.Policy"
+          "$ref": "#/definitions/com.github.openshift.api.config.v1.ImageSigstoreVerificationPolicy"
         },
         "scopes": {
           "description": "scopes is a required field that defines the list of image identities assigned to a policy. Each item refers to a scope in a registry implementing the \"Docker Registry HTTP API V2\". Scopes matching individual images are named Docker references in the fully expanded form, either using a tag or digest. For example, docker.io/library/busybox:latest (not busybox:latest). More general scopes are prefixes of individual-image scopes, and specify a repository (by omitting the tag or digest), a repository namespace, or a registry host (by only specifying the host name and possibly a port number) or a wildcard expression starting with `*.`, for matching all subdomains (not including a port number). Wildcards are only supported for subdomain matching, and may not be used in the middle of the host, i.e.  *.example.com is a valid case, but example*.*.com is not. This support no more than 256 scopes in one object. If multiple scopes match a given image, only the policy requirements for the most specific scope apply. The policy requirements for more general scopes are ignored. In addition to setting a policy appropriate for your own deployed applications, make sure that a policy on the OpenShift image repositories quay.io/openshift-release-dev/ocp-release, quay.io/openshift-release-dev/ocp-v4.0-art-dev (or on a more general scope) allows deployment of the OpenShift images required for cluster operation. If a scope is configured in both the ClusterImagePolicy and the ImagePolicy, or if the scope in ImagePolicy is nested under one of the scopes from the ClusterImagePolicy, only the policy from the ClusterImagePolicy will be applied. For additional details about the format, please refer to the document explaining the docker transport field, which can be found at: https://github.com/containers/image/blob/main/docs/containers-policy.json.5.md#docker",
@@ -7915,6 +7959,24 @@
             "type"
           ],
           "x-kubernetes-list-type": "map"
+        }
+      }
+    },
+    "com.github.openshift.api.config.v1.ImageSigstoreVerificationPolicy": {
+      "description": "ImageSigstoreVerificationPolicy defines the verification policy for the items in the scopes list.",
+      "type": "object",
+      "required": [
+        "rootOfTrust"
+      ],
+      "properties": {
+        "rootOfTrust": {
+          "description": "rootOfTrust is a required field that defines the root of trust for verifying image signatures during retrieval. This allows image consumers to specify policyType and corresponding configuration of the policy, matching how the policy was generated.",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.config.v1.PolicyRootOfTrust"
+        },
+        "signedIdentity": {
+          "description": "signedIdentity is an optional field specifies what image identity the signature claims about the image. This is useful when the image identity in the signature differs from the original image spec, such as when mirror registry is configured for the image scope, the signature from the mirror registry contains the image identity of the mirror instead of the original scope. The required matchPolicy field specifies the approach used in the verification process to verify the identity in the signature and the actual image identity, the default matchPolicy is \"MatchRepoDigestOrExact\".",
+          "$ref": "#/definitions/com.github.openshift.api.config.v1.PolicyIdentity"
         }
       }
     },
@@ -10047,31 +10109,6 @@
         }
       }
     },
-    "com.github.openshift.api.config.v1.PKI": {
-      "description": "PKI defines the root of trust based on Root CA(s) and corresponding intermediate certificates.",
-      "type": "object",
-      "required": [
-        "caRootsData",
-        "pkiCertificateSubject"
-      ],
-      "properties": {
-        "caIntermediatesData": {
-          "description": "caIntermediatesData contains base64-encoded data of a certificate bundle PEM file, which contains one or more intermediate certificates in the PEM format. The total length of the data must not exceed 8192 characters. caIntermediatesData requires caRootsData to be set.",
-          "type": "string",
-          "format": "byte"
-        },
-        "caRootsData": {
-          "description": "caRootsData contains base64-encoded data of a certificate bundle PEM file, which contains one or more CA roots in the PEM format. The total length of the data must not exceed 8192 characters.",
-          "type": "string",
-          "format": "byte"
-        },
-        "pkiCertificateSubject": {
-          "description": "pkiCertificateSubject defines the requirements imposed on the subject to which the certificate was issued.",
-          "default": {},
-          "$ref": "#/definitions/com.github.openshift.api.config.v1.PKICertificateSubject"
-        }
-      }
-    },
     "com.github.openshift.api.config.v1.PKICertificateSubject": {
       "description": "PKICertificateSubject defines the requirements imposed on the subject to which the certificate was issued.",
       "type": "object",
@@ -10257,24 +10294,6 @@
         }
       }
     },
-    "com.github.openshift.api.config.v1.Policy": {
-      "description": "Policy defines the verification policy for the items in the scopes list.",
-      "type": "object",
-      "required": [
-        "rootOfTrust"
-      ],
-      "properties": {
-        "rootOfTrust": {
-          "description": "rootOfTrust is a required field that defines the root of trust for verifying image signatures during retrieval. This allows image consumers to specify policyType and corresponding configuration of the policy, matching how the policy was generated.",
-          "default": {},
-          "$ref": "#/definitions/com.github.openshift.api.config.v1.PolicyRootOfTrust"
-        },
-        "signedIdentity": {
-          "description": "signedIdentity is an optional field specifies what image identity the signature claims about the image. This is useful when the image identity in the signature differs from the original image spec, such as when mirror registry is configured for the image scope, the signature from the mirror registry contains the image identity of the mirror instead of the original scope. The required matchPolicy field specifies the approach used in the verification process to verify the identity in the signature and the actual image identity, the default matchPolicy is \"MatchRepoDigestOrExact\".",
-          "$ref": "#/definitions/com.github.openshift.api.config.v1.PolicyIdentity"
-        }
-      }
-    },
     "com.github.openshift.api.config.v1.PolicyFulcioSubject": {
       "description": "PolicyFulcioSubject defines the OIDC issuer and the email of the Fulcio authentication configuration.",
       "type": "object",
@@ -10367,20 +10386,20 @@
       "properties": {
         "fulcioCAWithRekor": {
           "description": "fulcioCAWithRekor defines the root of trust configuration based on the Fulcio certificate and the Rekor public key. fulcioCAWithRekor is required when policyType is FulcioCAWithRekor, and forbidden otherwise For more information about Fulcio and Rekor, please refer to the document at: https://github.com/sigstore/fulcio and https://github.com/sigstore/rekor",
-          "$ref": "#/definitions/com.github.openshift.api.config.v1.FulcioCAWithRekor"
+          "$ref": "#/definitions/com.github.openshift.api.config.v1.ImagePolicyFulcioCAWithRekorRootOfTrust"
         },
         "pki": {
           "description": "pki defines the root of trust configuration based on Bring Your Own Public Key Infrastructure (BYOPKI) Root CA(s) and corresponding intermediate certificates. pki is required when policyType is PKI, and forbidden otherwise.",
-          "$ref": "#/definitions/com.github.openshift.api.config.v1.PKI"
+          "$ref": "#/definitions/com.github.openshift.api.config.v1.ImagePolicyPKIRootOfTrust"
         },
         "policyType": {
-          "description": "policyType is a required field specifies the type of the policy for verification. This field must correspond to how the policy was generated. Allowed values are \"PublicKey\", \"FulcioCAWithRekor\", and \"PKI\". When set to \"PublicKey\", the policy relies on a sigstore publicKey and may optionally use a Rekor verification. When set to \"FulcioCAWithRekor\", the policy is based on the Fulcio certification and incorporates a Rekor verification. When set to \"PKI\", the policy is based on the certificates from Bring Your Own Public Key Infrastructure (BYOPKI). This value is enabled by turning on the SigstoreImageVerificationPKI feature gate.",
+          "description": "policyType is a required field specifies the type of the policy for verification. This field must correspond to how the policy was generated. Allowed values are \"PublicKey\", \"FulcioCAWithRekor\", and \"PKI\". When set to \"PublicKey\", the policy relies on a sigstore publicKey and may optionally use a Rekor verification. When set to \"FulcioCAWithRekor\", the policy is based on the Fulcio certification and incorporates a Rekor verification. When set to \"PKI\", the policy is based on the certificates from Bring Your Own Public Key Infrastructure (BYOPKI).",
           "type": "string",
           "default": ""
         },
         "publicKey": {
           "description": "publicKey defines the root of trust configuration based on a sigstore public key. Optionally include a Rekor public key for Rekor verification. publicKey is required when policyType is PublicKey, and forbidden otherwise.",
-          "$ref": "#/definitions/com.github.openshift.api.config.v1.PublicKey"
+          "$ref": "#/definitions/com.github.openshift.api.config.v1.ImagePolicyPublicKeyRootOfTrust"
         }
       },
       "x-kubernetes-unions": [
@@ -10710,25 +10729,6 @@
         "noProxy": {
           "description": "noProxy is a comma-separated list of hostnames and/or CIDRs for which the proxy should not be used.",
           "type": "string"
-        }
-      }
-    },
-    "com.github.openshift.api.config.v1.PublicKey": {
-      "description": "PublicKey defines the root of trust based on a sigstore public key.",
-      "type": "object",
-      "required": [
-        "keyData"
-      ],
-      "properties": {
-        "keyData": {
-          "description": "keyData is a required field contains inline base64-encoded data for the PEM format public key. keyData must be at most 8192 characters.",
-          "type": "string",
-          "format": "byte"
-        },
-        "rekorKeyData": {
-          "description": "rekorKeyData is an optional field contains inline base64-encoded data for the PEM format from the Rekor public key. rekorKeyData must be at most 8192 characters.",
-          "type": "string",
-          "format": "byte"
         }
       }
     },
@@ -12313,7 +12313,7 @@
         "policy": {
           "description": "policy contains configuration to allow scopes to be verified, and defines how images not matching the verification policy will be treated.",
           "default": {},
-          "$ref": "#/definitions/com.github.openshift.api.config.v1alpha1.Policy"
+          "$ref": "#/definitions/com.github.openshift.api.config.v1alpha1.ImageSigstoreVerificationPolicy"
         },
         "scopes": {
           "description": "scopes defines the list of image identities assigned to a policy. Each item refers to a scope in a registry implementing the \"Docker Registry HTTP API V2\". Scopes matching individual images are named Docker references in the fully expanded form, either using a tag or digest. For example, docker.io/library/busybox:latest (not busybox:latest). More general scopes are prefixes of individual-image scopes, and specify a repository (by omitting the tag or digest), a repository namespace, or a registry host (by only specifying the host name and possibly a port number) or a wildcard expression starting with `*.`, for matching all subdomains (not including a port number). Wildcards are only supported for subdomain matching, and may not be used in the middle of the host, i.e.  *.example.com is a valid case, but example*.*.com is not. If multiple scopes match a given image, only the policy requirements for the most specific scope apply. The policy requirements for more general scopes are ignored. In addition to setting a policy appropriate for your own deployed applications, make sure that a policy on the OpenShift image repositories quay.io/openshift-release-dev/ocp-release, quay.io/openshift-release-dev/ocp-v4.0-art-dev (or on a more general scope) allows deployment of the OpenShift images required for cluster operation. If a scope is configured in both the ClusterImagePolicy and the ImagePolicy, or if the scope in ImagePolicy is nested under one of the scopes from the ClusterImagePolicy, only the policy from the ClusterImagePolicy will be applied. For additional details about the format, please refer to the document explaining the docker transport field, which can be found at: https://github.com/containers/image/blob/main/docs/containers-policy.json.5.md#docker",
@@ -12474,32 +12474,6 @@
         }
       }
     },
-    "com.github.openshift.api.config.v1alpha1.FulcioCAWithRekor": {
-      "description": "FulcioCAWithRekor defines the root of trust based on the Fulcio certificate and the Rekor public key.",
-      "type": "object",
-      "required": [
-        "fulcioCAData",
-        "rekorKeyData",
-        "fulcioSubject"
-      ],
-      "properties": {
-        "fulcioCAData": {
-          "description": "fulcioCAData contains inline base64-encoded data for the PEM format fulcio CA. fulcioCAData must be at most 8192 characters.",
-          "type": "string",
-          "format": "byte"
-        },
-        "fulcioSubject": {
-          "description": "fulcioSubject specifies OIDC issuer and the email of the Fulcio authentication configuration.",
-          "default": {},
-          "$ref": "#/definitions/com.github.openshift.api.config.v1alpha1.PolicyFulcioSubject"
-        },
-        "rekorKeyData": {
-          "description": "rekorKeyData contains inline base64-encoded data for the PEM format from the Rekor public key. rekorKeyData must be at most 8192 characters.",
-          "type": "string",
-          "format": "byte"
-        }
-      }
-    },
     "com.github.openshift.api.config.v1alpha1.GatherConfig": {
       "description": "gatherConfig provides data gathering configuration options.",
       "type": "object",
@@ -12554,6 +12528,32 @@
         }
       }
     },
+    "com.github.openshift.api.config.v1alpha1.ImagePolicyFulcioCAWithRekorRootOfTrust": {
+      "description": "ImagePolicyFulcioCAWithRekorRootOfTrust defines the root of trust based on the Fulcio certificate and the Rekor public key.",
+      "type": "object",
+      "required": [
+        "fulcioCAData",
+        "rekorKeyData",
+        "fulcioSubject"
+      ],
+      "properties": {
+        "fulcioCAData": {
+          "description": "fulcioCAData contains inline base64-encoded data for the PEM format fulcio CA. fulcioCAData must be at most 8192 characters.",
+          "type": "string",
+          "format": "byte"
+        },
+        "fulcioSubject": {
+          "description": "fulcioSubject specifies OIDC issuer and the email of the Fulcio authentication configuration.",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.config.v1alpha1.PolicyFulcioSubject"
+        },
+        "rekorKeyData": {
+          "description": "rekorKeyData contains inline base64-encoded data for the PEM format from the Rekor public key. rekorKeyData must be at most 8192 characters.",
+          "type": "string",
+          "format": "byte"
+        }
+      }
+    },
     "com.github.openshift.api.config.v1alpha1.ImagePolicyList": {
       "description": "ImagePolicyList is a list of ImagePolicy resources\n\nCompatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.",
       "type": "object",
@@ -12584,6 +12584,50 @@
         }
       }
     },
+    "com.github.openshift.api.config.v1alpha1.ImagePolicyPKIRootOfTrust": {
+      "description": "ImagePolicyPKIRootOfTrust defines the root of trust based on Root CA(s) and corresponding intermediate certificates.",
+      "type": "object",
+      "required": [
+        "caRootsData",
+        "pkiCertificateSubject"
+      ],
+      "properties": {
+        "caIntermediatesData": {
+          "description": "caIntermediatesData contains base64-encoded data of a certificate bundle PEM file, which contains one or more intermediate certificates in the PEM format. The total length of the data must not exceed 8192 characters. caIntermediatesData requires caRootsData to be set.",
+          "type": "string",
+          "format": "byte"
+        },
+        "caRootsData": {
+          "description": "caRootsData contains base64-encoded data of a certificate bundle PEM file, which contains one or more CA roots in the PEM format. The total length of the data must not exceed 8192 characters.",
+          "type": "string",
+          "format": "byte"
+        },
+        "pkiCertificateSubject": {
+          "description": "pkiCertificateSubject defines the requirements imposed on the subject to which the certificate was issued.",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.config.v1alpha1.PKICertificateSubject"
+        }
+      }
+    },
+    "com.github.openshift.api.config.v1alpha1.ImagePolicyPublicKeyRootOfTrust": {
+      "description": "ImagePolicyPublicKeyRootOfTrust defines the root of trust based on a sigstore public key.",
+      "type": "object",
+      "required": [
+        "keyData"
+      ],
+      "properties": {
+        "keyData": {
+          "description": "keyData contains inline base64-encoded data for the PEM format public key. KeyData must be at most 8192 characters.",
+          "type": "string",
+          "format": "byte"
+        },
+        "rekorKeyData": {
+          "description": "rekorKeyData contains inline base64-encoded data for the PEM format from the Rekor public key. rekorKeyData must be at most 8192 characters.",
+          "type": "string",
+          "format": "byte"
+        }
+      }
+    },
     "com.github.openshift.api.config.v1alpha1.ImagePolicySpec": {
       "description": "ImagePolicySpec is the specification of the ImagePolicy CRD.",
       "type": "object",
@@ -12595,7 +12639,7 @@
         "policy": {
           "description": "policy contains configuration to allow scopes to be verified, and defines how images not matching the verification policy will be treated.",
           "default": {},
-          "$ref": "#/definitions/com.github.openshift.api.config.v1alpha1.Policy"
+          "$ref": "#/definitions/com.github.openshift.api.config.v1alpha1.ImageSigstoreVerificationPolicy"
         },
         "scopes": {
           "description": "scopes defines the list of image identities assigned to a policy. Each item refers to a scope in a registry implementing the \"Docker Registry HTTP API V2\". Scopes matching individual images are named Docker references in the fully expanded form, either using a tag or digest. For example, docker.io/library/busybox:latest (not busybox:latest). More general scopes are prefixes of individual-image scopes, and specify a repository (by omitting the tag or digest), a repository namespace, or a registry host (by only specifying the host name and possibly a port number) or a wildcard expression starting with `*.`, for matching all subdomains (not including a port number). Wildcards are only supported for subdomain matching, and may not be used in the middle of the host, i.e.  *.example.com is a valid case, but example*.*.com is not. If multiple scopes match a given image, only the policy requirements for the most specific scope apply. The policy requirements for more general scopes are ignored. In addition to setting a policy appropriate for your own deployed applications, make sure that a policy on the OpenShift image repositories quay.io/openshift-release-dev/ocp-release, quay.io/openshift-release-dev/ocp-v4.0-art-dev (or on a more general scope) allows deployment of the OpenShift images required for cluster operation. If a scope is configured in both the ClusterImagePolicy and the ImagePolicy, or if the scope in ImagePolicy is nested under one of the scopes from the ClusterImagePolicy, only the policy from the ClusterImagePolicy will be applied. For additional details about the format, please refer to the document explaining the docker transport field, which can be found at: https://github.com/containers/image/blob/main/docs/containers-policy.json.5.md#docker",
@@ -12622,6 +12666,25 @@
             "type"
           ],
           "x-kubernetes-list-type": "map"
+        }
+      }
+    },
+    "com.github.openshift.api.config.v1alpha1.ImageSigstoreVerificationPolicy": {
+      "description": "ImageSigstoreVerificationPolicy defines the verification policy for the items in the scopes list.",
+      "type": "object",
+      "required": [
+        "rootOfTrust"
+      ],
+      "properties": {
+        "rootOfTrust": {
+          "description": "rootOfTrust specifies the root of trust for the policy.",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.config.v1alpha1.PolicyRootOfTrust"
+        },
+        "signedIdentity": {
+          "description": "signedIdentity specifies what image identity the signature claims about the image. The required matchPolicy field specifies the approach used in the verification process to verify the identity in the signature and the actual image identity, the default matchPolicy is \"MatchRepoDigestOrExact\".",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.config.v1alpha1.PolicyIdentity"
         }
       }
     },
@@ -12757,31 +12820,6 @@
         }
       }
     },
-    "com.github.openshift.api.config.v1alpha1.PKI": {
-      "description": "PKI defines the root of trust based on Root CA(s) and corresponding intermediate certificates.",
-      "type": "object",
-      "required": [
-        "caRootsData",
-        "pkiCertificateSubject"
-      ],
-      "properties": {
-        "caIntermediatesData": {
-          "description": "caIntermediatesData contains base64-encoded data of a certificate bundle PEM file, which contains one or more intermediate certificates in the PEM format. The total length of the data must not exceed 8192 characters. caIntermediatesData requires caRootsData to be set.",
-          "type": "string",
-          "format": "byte"
-        },
-        "caRootsData": {
-          "description": "caRootsData contains base64-encoded data of a certificate bundle PEM file, which contains one or more CA roots in the PEM format. The total length of the data must not exceed 8192 characters.",
-          "type": "string",
-          "format": "byte"
-        },
-        "pkiCertificateSubject": {
-          "description": "pkiCertificateSubject defines the requirements imposed on the subject to which the certificate was issued.",
-          "default": {},
-          "$ref": "#/definitions/com.github.openshift.api.config.v1alpha1.PKICertificateSubject"
-        }
-      }
-    },
     "com.github.openshift.api.config.v1alpha1.PKICertificateSubject": {
       "description": "PKICertificateSubject defines the requirements imposed on the subject to which the certificate was issued.",
       "type": "object",
@@ -12825,25 +12863,6 @@
         "mountPath": {
           "description": "mountPath is an optional field specifying the directory where the PVC will be mounted inside the Insights data gathering Pod. When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time. The current default mount path is /var/lib/insights-operator The path may not exceed 1024 characters and must not contain a colon.",
           "type": "string"
-        }
-      }
-    },
-    "com.github.openshift.api.config.v1alpha1.Policy": {
-      "description": "Policy defines the verification policy for the items in the scopes list.",
-      "type": "object",
-      "required": [
-        "rootOfTrust"
-      ],
-      "properties": {
-        "rootOfTrust": {
-          "description": "rootOfTrust specifies the root of trust for the policy.",
-          "default": {},
-          "$ref": "#/definitions/com.github.openshift.api.config.v1alpha1.PolicyRootOfTrust"
-        },
-        "signedIdentity": {
-          "description": "signedIdentity specifies what image identity the signature claims about the image. The required matchPolicy field specifies the approach used in the verification process to verify the identity in the signature and the actual image identity, the default matchPolicy is \"MatchRepoDigestOrExact\".",
-          "default": {},
-          "$ref": "#/definitions/com.github.openshift.api.config.v1alpha1.PolicyIdentity"
         }
       }
     },
@@ -12939,11 +12958,11 @@
       "properties": {
         "fulcioCAWithRekor": {
           "description": "fulcioCAWithRekor defines the root of trust based on the Fulcio certificate and the Rekor public key. For more information about Fulcio and Rekor, please refer to the document at: https://github.com/sigstore/fulcio and https://github.com/sigstore/rekor",
-          "$ref": "#/definitions/com.github.openshift.api.config.v1alpha1.FulcioCAWithRekor"
+          "$ref": "#/definitions/com.github.openshift.api.config.v1alpha1.ImagePolicyFulcioCAWithRekorRootOfTrust"
         },
         "pki": {
           "description": "pki defines the root of trust based on Bring Your Own Public Key Infrastructure (BYOPKI) Root CA(s) and corresponding intermediate certificates.",
-          "$ref": "#/definitions/com.github.openshift.api.config.v1alpha1.PKI"
+          "$ref": "#/definitions/com.github.openshift.api.config.v1alpha1.ImagePolicyPKIRootOfTrust"
         },
         "policyType": {
           "description": "policyType serves as the union's discriminator. Users are required to assign a value to this field, choosing one of the policy types that define the root of trust. \"PublicKey\" indicates that the policy relies on a sigstore publicKey and may optionally use a Rekor verification. \"FulcioCAWithRekor\" indicates that the policy is based on the Fulcio certification and incorporates a Rekor verification. \"PKI\" indicates that the policy is based on the certificates from Bring Your Own Public Key Infrastructure (BYOPKI). This value is enabled by turning on the SigstoreImageVerificationPKI feature gate.",
@@ -12952,7 +12971,7 @@
         },
         "publicKey": {
           "description": "publicKey defines the root of trust based on a sigstore public key.",
-          "$ref": "#/definitions/com.github.openshift.api.config.v1alpha1.PublicKey"
+          "$ref": "#/definitions/com.github.openshift.api.config.v1alpha1.ImagePolicyPublicKeyRootOfTrust"
         }
       },
       "x-kubernetes-unions": [
@@ -12965,25 +12984,6 @@
           }
         }
       ]
-    },
-    "com.github.openshift.api.config.v1alpha1.PublicKey": {
-      "description": "PublicKey defines the root of trust based on a sigstore public key.",
-      "type": "object",
-      "required": [
-        "keyData"
-      ],
-      "properties": {
-        "keyData": {
-          "description": "keyData contains inline base64-encoded data for the PEM format public key. KeyData must be at most 8192 characters.",
-          "type": "string",
-          "format": "byte"
-        },
-        "rekorKeyData": {
-          "description": "rekorKeyData contains inline base64-encoded data for the PEM format from the Rekor public key. rekorKeyData must be at most 8192 characters.",
-          "type": "string",
-          "format": "byte"
-        }
-      }
     },
     "com.github.openshift.api.config.v1alpha1.RetentionNumberConfig": {
       "description": "RetentionNumberConfig specifies the configuration of the retention policy on the number of backups",

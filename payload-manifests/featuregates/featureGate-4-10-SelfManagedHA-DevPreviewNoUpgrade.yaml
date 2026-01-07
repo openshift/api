@@ -3,7 +3,8 @@
     "kind": "FeatureGate",
     "metadata": {
         "annotations": {
-            "include.release.openshift.io/self-managed-high-availability": "false-except-for-the-config-operator"
+            "include.release.openshift.io/self-managed-high-availability": "false-except-for-the-config-operator",
+            "release.openshift.io/major-version": "4,5,6,7,8,9,10"
         },
         "name": "cluster"
     },

@@ -95,6 +95,22 @@ type DNSSpec struct {
 	// +kubebuilder:default=Normal
 	OperatorLogLevel DNSLogLevel `json:"operatorLogLevel,omitempty"`
 
+	// nodeServices specifies a list of service objects for which host level resolvable entries should be added.
+	// Services in this list will be added to /etc/hosts on each node in the cluster by the node resolver.
+	// When not specified, only the default image registry service is resolvable.
+	// Services in this list will be added in addition to the default "image-registry.openshift-image-registry.svc" service.
+	// The default image registry service cannot be removed.
+	// For each service reference, entries will be created using the format "<name>.<namespace>.svc"
+	// and an alias with the CLUSTER_DOMAIN suffix of cluster.local will also be added.
+	//
+	// +optional
+	// +kubebuilder:validation:MaxItems=20
+	// +kubebuilder:validation:MinItems=1
+	// +listType=map
+	// +listMapKey=name
+	// +listMapKey=namespace
+	NodeServices []DNSNodeService `json:"nodeServices,omitempty"`
+
 	// logLevel describes the desired logging verbosity for CoreDNS.
 	// Any one of the following values may be specified:
 	// * Normal logs errors from upstream resolvers.
@@ -162,6 +178,27 @@ var (
 	// Trace is used when something went really badly and even more verbose logs are needed.  Logging every function call as part of a common operation, to tracing execution of a query.  In kube, this is probably glog=6.
 	DNSLogLevelTrace DNSLogLevel = "Trace"
 )
+
+// DNSNodeService represents a Kubernetes service by name and namespace for node services.
+type DNSNodeService struct {
+	// name is the name of the service.
+	// The name should consist of at most 63 characters, and of only lowercase alphanumeric characters and hyphens,
+	// and should start with an alphabetic character and end with an alphanumeric character.
+	// +required
+	// +kubebuilder:validation:MinLength=1
+	// +kubebuilder:validation:MaxLength=63
+	// +kubebuilder:validation:XValidation:rule=`!format.dns1035Label().validate(self).hasValue()`,message="a DNS-1035 label must consist of lower case alphanumeric characters or '-', start with an alphabetic character, and end with an alphanumeric character"
+	Name string `json:"name,omitempty"`
+
+	// namespace is the namespace of the service.
+	// The namespace should consist of at most 63 characters, and of only lowercase alphanumeric characters and hyphens,
+	// and should start and end with an alphanumeric character.
+	// +required
+	// +kubebuilder:validation:MinLength=1
+	// +kubebuilder:validation:MaxLength=63
+	// +kubebuilder:validation:XValidation:rule=`!format.dns1123Label().validate(self).hasValue()`,message="the value must consist of only lowercase alphanumeric characters and hyphens"
+	Namespace string `json:"namespace,omitempty"`
+}
 
 // Server defines the schema for a server that runs per instance of CoreDNS.
 type Server struct {

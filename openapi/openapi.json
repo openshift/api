@@ -6951,26 +6951,6 @@
         }
       }
     },
-    "com.github.openshift.api.config.v1.GCPServiceEndpoint": {
-      "description": "GCPServiceEndpoint store the configuration of a custom url to override existing defaults of GCP Services.",
-      "type": "object",
-      "required": [
-        "name",
-        "url"
-      ],
-      "properties": {
-        "name": {
-          "description": "name is the name of the GCP service whose endpoint is being overridden. This must be provided and cannot be empty.\n\nAllowed values are Compute, Container, CloudResourceManager, DNS, File, IAM, ServiceUsage, Storage, and TagManager.\n\nAs an example, when setting the name to Compute all requests made by the caller to the GCP Compute Service will be directed to the endpoint specified in the url field.",
-          "type": "string",
-          "default": ""
-        },
-        "url": {
-          "description": "url is a fully qualified URI that overrides the default endpoint for a client using the GCP service specified in the name field. url is required, must use the scheme https, must not be more than 253 characters in length, and must be a valid URL according to Go's net/url package (https://pkg.go.dev/net/url#URL)\n\nAn example of a valid endpoint that overrides the Compute Service: \"https://compute-myendpoint1.p.googleapis.com\"",
-          "type": "string",
-          "default": ""
-        }
-      }
-    },
     "com.github.openshift.api.config.v1.GatherConfig": {
       "description": "GatherConfig provides data gathering configuration options.",
       "type": "object",
@@ -23640,7 +23620,7 @@
       ],
       "properties": {
         "id": {
-          "description": "id identifies the AWS Dedicated Host on which the instance must run. The value must start with \"h-\" followed by 17 lowercase hexadecimal characters (0-9 and a-f). Must be exactly 19 characters in length.",
+          "description": "id identifies the AWS Dedicated Host on which the instance must run. The value must start with \"h-\" followed by either 8 or 17 lowercase hexadecimal characters (0-9 and a-f). The use of 8 lowercase hexadecimal characters is for older legacy hosts that may not have been migrated to newer format. Must be either 10 or 19 characters in length.",
           "type": "string"
         }
       }

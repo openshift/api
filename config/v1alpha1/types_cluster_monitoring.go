@@ -223,8 +223,8 @@ type AlertmanagerCustomConfig struct {
 	// When omitted, this means the user has no opinion and the platform is left
 	// to choose reasonable defaults. These defaults are subject to change over time.
 	// Defaults are empty/unset.
-	// Maximum length for this list is 10
-	// Minimum length for this list is 1
+	// Maximum length for this list is 10.
+	// Minimum length for this list is 1.
 	// +kubebuilder:validation:MaxItems=10
 	// +kubebuilder:validation:MinItems=1
 	// +listType=atomic
@@ -240,7 +240,7 @@ type AlertmanagerCustomConfig struct {
 	// This field maps directly to the `topologySpreadConstraints` field in the Pod spec.
 	// Default is empty list.
 	// Maximum length for this list is 10.
-	// Minimum length for this list is 1
+	// Minimum length for this list is 1.
 	// Entries must have unique topologyKey and whenUnsatisfiable pairs.
 	// +kubebuilder:validation:MaxItems=10
 	// +kubebuilder:validation:MinItems=1
@@ -361,8 +361,8 @@ type MetricsServerConfig struct {
 	// When omitted, this means the user has no opinion and the platform is left
 	// to choose reasonable defaults. These defaults are subject to change over time.
 	// Defaults are empty/unset.
-	// Maximum length for this list is 10
-	// Minimum length for this list is 1
+	// Maximum length for this list is 10.
+	// Minimum length for this list is 1.
 	// +kubebuilder:validation:MaxItems=10
 	// +kubebuilder:validation:MinItems=1
 	// +listType=atomic
@@ -410,7 +410,7 @@ type MetricsServerConfig struct {
 	// This field maps directly to the `topologySpreadConstraints` field in the Pod spec.
 	// Default is empty list.
 	// Maximum length for this list is 10.
-	// Minimum length for this list is 1
+	// Minimum length for this list is 1.
 	// Entries must have unique topologyKey and whenUnsatisfiable pairs.
 	// +kubebuilder:validation:MaxItems=10
 	// +kubebuilder:validation:MinItems=1
@@ -476,8 +476,8 @@ type PrometheusOperatorConfig struct {
 	// When omitted, this means the user has no opinion and the platform is left
 	// to choose reasonable defaults. These defaults are subject to change over time.
 	// Defaults are empty/unset.
-	// Maximum length for this list is 10
-	// Minimum length for this list is 1
+	// Maximum length for this list is 10.
+	// Minimum length for this list is 1.
 	// +kubebuilder:validation:MaxItems=10
 	// +kubebuilder:validation:MinItems=1
 	// +listType=atomic
@@ -493,7 +493,7 @@ type PrometheusOperatorConfig struct {
 	// This field maps directly to the `topologySpreadConstraints` field in the Pod spec.
 	// Default is empty list.
 	// Maximum length for this list is 10.
-	// Minimum length for this list is 1
+	// Minimum length for this list is 1.
 	// Entries must have unique topologyKey and whenUnsatisfiable pairs.
 	// +kubebuilder:validation:MaxItems=10
 	// +kubebuilder:validation:MinItems=1

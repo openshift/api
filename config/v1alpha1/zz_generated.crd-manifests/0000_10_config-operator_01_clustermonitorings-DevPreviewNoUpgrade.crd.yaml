@@ -216,8 +216,8 @@ spec:
                           When omitted, this means the user has no opinion and the platform is left
                           to choose reasonable defaults. These defaults are subject to change over time.
                           Defaults are empty/unset.
-                          Maximum length for this list is 10
-                          Minimum length for this list is 1
+                          Maximum length for this list is 10.
+                          Minimum length for this list is 1.
                         items:
                           description: |-
                             The pod this Toleration is attached to tolerates any taint that matches
@@ -270,7 +270,7 @@ spec:
                           This field maps directly to the `topologySpreadConstraints` field in the Pod spec.
                           Default is empty list.
                           Maximum length for this list is 10.
-                          Minimum length for this list is 1
+                          Minimum length for this list is 1.
                           Entries must have unique topologyKey and whenUnsatisfiable pairs.
                         items:
                           description: TopologySpreadConstraint specifies how to spread
@@ -1033,8 +1033,8 @@ spec:
                       When omitted, this means the user has no opinion and the platform is left
                       to choose reasonable defaults. These defaults are subject to change over time.
                       Defaults are empty/unset.
-                      Maximum length for this list is 10
-                      Minimum length for this list is 1
+                      Maximum length for this list is 10.
+                      Minimum length for this list is 1.
                     items:
                       description: |-
                         The pod this Toleration is attached to tolerates any taint that matches
@@ -1087,7 +1087,7 @@ spec:
                       This field maps directly to the `topologySpreadConstraints` field in the Pod spec.
                       Default is empty list.
                       Maximum length for this list is 10.
-                      Minimum length for this list is 1
+                      Minimum length for this list is 1.
                       Entries must have unique topologyKey and whenUnsatisfiable pairs.
                     items:
                       description: TopologySpreadConstraint specifies how to spread
@@ -1412,8 +1412,8 @@ spec:
                       When omitted, this means the user has no opinion and the platform is left
                       to choose reasonable defaults. These defaults are subject to change over time.
                       Defaults are empty/unset.
-                      Maximum length for this list is 10
-                      Minimum length for this list is 1
+                      Maximum length for this list is 10.
+                      Minimum length for this list is 1.
                     items:
                       description: |-
                         The pod this Toleration is attached to tolerates any taint that matches
@@ -1466,7 +1466,7 @@ spec:
                       This field maps directly to the `topologySpreadConstraints` field in the Pod spec.
                       Default is empty list.
                       Maximum length for this list is 10.
-                      Minimum length for this list is 1
+                      Minimum length for this list is 1.
                       Entries must have unique topologyKey and whenUnsatisfiable pairs.
                     items:
                       description: TopologySpreadConstraint specifies how to spread

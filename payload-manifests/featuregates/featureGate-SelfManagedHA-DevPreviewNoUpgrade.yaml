@@ -122,6 +122,9 @@
                         "name": "ClusterVersionOperatorConfiguration"
                     },
                     {
+                        "name": "ConfigurablePKI"
+                    },
+                    {
                         "name": "ConsolePluginContentSecurityPolicy"
                     },
                     {

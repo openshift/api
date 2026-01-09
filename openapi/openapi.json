@@ -13210,7 +13210,7 @@
           "x-kubernetes-list-type": "set"
         },
         "targetLabel": {
-          "description": "targetLabel is the target label name where the result is written. Required for Replace and HashMod actions (enforced by validation). When omitted for other actions (Keep, Drop, LabelMap, LabelDrop, LabelKeep), no target label is set. Must be between 1 and 128 characters in length when specified.",
+          "description": "targetLabel is the target label name where the result is written. Required for Replace and HashMod actions. When omitted for other actions (Keep, Drop, LabelMap, LabelDrop, LabelKeep), no target label is set. Must be between 1 and 128 characters in length when specified.",
           "type": "string"
         }
       }

@@ -596,7 +596,8 @@ type PrometheusConfig struct {
 	VolumeClaimTemplate VolumeClaimConfig `json:"volumeClaimTemplate,omitempty,omitzero"`
 }
 
-
+// AlertmanagerScheme defines the URL scheme to use when communicating with Alertmanager instances.
+// +kubebuilder:validation:Enum=HTTP;HTTPS
 type AlertmanagerScheme string
 
 const (
@@ -616,7 +617,7 @@ type AdditionalAlertmanagerConfig struct {
 	// Maximum length is 253 characters.
 	// +kubebuilder:validation:MaxLength=253
 	// +kubebuilder:validation:MinLength=1
-	// +kubebuilder:validation:XValidation:rule="self.matches('^[a-z0-9]([-a-z0-9]*[a-z0-9])?(\\\\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*$')",message="must be a valid DNS subdomain: lowercase alphanumeric, hyphens, or periods"
+	// +kubebuilder:validation:XValidation:rule="!format.dns1123Subdomain().validate(self).hasValue()",message="a lowercase RFC 1123 subdomain must consist of lower case alphanumeric characters, '-' or '.', and must start and end with an alphanumeric character."
 	// +required
 	Name string `json:"name,omitempty"`
 	// authorization configures the authentication method for Alertmanager connections.
@@ -640,7 +641,6 @@ type AdditionalAlertmanagerConfig struct {
 	// instances.
 	// Possible values are `HTTP` or `HTTPS`.
 	// When omitted, defaults to `HTTP`.
-	// +kubebuilder:validation:Enum=HTTP;HTTPS
 	// +kubebuilder:default=HTTP
 	// +optional
 	Scheme AlertmanagerScheme `json:"scheme,omitempty"`
@@ -687,7 +687,6 @@ type Label struct {
 	Value string `json:"value,omitempty"`
 }
 
-
 // RemoteWriteSpec represents configuration for remote write endpoints.
 type RemoteWriteSpec struct {
 	// url is the URL of the remote write endpoint.
@@ -727,7 +726,7 @@ type RemoteWriteSpec struct {
 }
 
 // RelabelConfig represents a relabeling rule.
-// +kubebuilder:validation:XValidation:rule="self.action in ['Replace', 'HashMod'] ? has(self.targetLabel) && self.targetLabel != '' : true",message="targetLabel is required when action is Replace or HashMod"
+// +kubebuilder:validation:XValidation:rule="self.action in ['Replace', 'HashMod'] ? has(self.targetLabel) && self.targetLabel != ” : true",message="targetLabel is required when action is Replace or HashMod"
 type RelabelConfig struct {
 	// name is a unique identifier for this relabel configuration.
 	// Must contain only alphanumeric characters, hyphens, and underscores.
@@ -768,7 +767,7 @@ type RelabelConfig struct {
 	// +kubebuilder:validation:MaxLength=1000
 	Regex string `json:"regex,omitempty"`
 	// targetLabel is the target label name where the result is written.
-	// Required for Replace and HashMod actions (enforced by validation).
+	// Required for Replace and HashMod actions.
 	// When omitted for other actions (Keep, Drop, LabelMap, LabelDrop, LabelKeep), no target label is set.
 	// Must be between 1 and 128 characters in length when specified.
 	// +optional
@@ -893,7 +892,6 @@ type SecretKeySelector struct {
 }
 
 // VolumeClaimConfig defines the configuration for a PersistentVolumeClaim used for storage.
-// +kubebuilder:validation:MinProperties=1
 type VolumeClaimConfig struct {
 	// storageClassName is the name of the StorageClass to use for the PersistentVolumeClaim.
 	// When omitted, the default StorageClass is used.

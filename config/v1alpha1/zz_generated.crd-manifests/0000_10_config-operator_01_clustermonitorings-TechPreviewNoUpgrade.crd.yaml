@@ -1482,8 +1482,8 @@ spec:
                             x-kubernetes-validations:
                             - message: targetLabel is required when action is Replace
                                 or HashMod
-                              rule: 'self.action in [''Replace'', ''HashMod''] ? has(self.targetLabel)
-                                && self.targetLabel != ” : true'
+                              rule: 'self.action in [''Replace'', ''HashMod''] ? (has(self.targetLabel)
+                                && self.targetLabel != ”) : true'
                           maxItems: 10
                           type: array
                           x-kubernetes-list-map-keys:

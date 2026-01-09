@@ -726,7 +726,7 @@ type RemoteWriteSpec struct {
 }
 
 // RelabelConfig represents a relabeling rule.
-// +kubebuilder:validation:XValidation:rule="self.action in ['Replace', 'HashMod'] ? has(self.targetLabel) && self.targetLabel != ” : true",message="targetLabel is required when action is Replace or HashMod"
+// +kubebuilder:validation:XValidation:rule="self.action in ['Replace', 'HashMod'] ? (has(self.targetLabel) && self.targetLabel != ”) : true",message="targetLabel is required when action is Replace or HashMod"
 type RelabelConfig struct {
 	// name is a unique identifier for this relabel configuration.
 	// Must contain only alphanumeric characters, hyphens, and underscores.

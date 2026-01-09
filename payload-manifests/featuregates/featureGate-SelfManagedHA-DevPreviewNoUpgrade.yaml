@@ -36,6 +36,9 @@
                         "name": "NewOLMBoxCutterRuntime"
                     },
                     {
+                        "name": "NoOverlayMode"
+                    },
+                    {
                         "name": "ShortCertRotation"
                     }
                 ],

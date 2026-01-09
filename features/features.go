@@ -682,6 +682,14 @@ var (
 					enableIn(configv1.DevPreviewNoUpgrade, configv1.TechPreviewNoUpgrade).
 					mustRegister()
 
+	FeatureGateClusterUpdateAcceptRisks = newFeatureGate("ClusterUpdateAcceptRisks").
+						reportProblemsToJiraComponent("Cluster Version Operator").
+						contactPerson("hongkliu").
+						productScope(ocpSpecific).
+						enhancementPR("https://github.com/openshift/enhancements/pull/1807").
+						enableIn(configv1.DevPreviewNoUpgrade, configv1.TechPreviewNoUpgrade).
+						mustRegister()
+
 	FeatureGateGCPCustomAPIEndpoints = newFeatureGate("GCPCustomAPIEndpoints").
 						reportProblemsToJiraComponent("Installer").
 						contactPerson("barbacbd").

@@ -586,6 +586,7 @@ spec:
                         - name
                         - url
                         type: object
+                      maxItems: 200
                       minItems: 1
                       type: array
                       x-kubernetes-list-map-keys:
@@ -595,6 +596,7 @@ spec:
                   - release
                   - risks
                   type: object
+                maxItems: 500
                 type: array
                 x-kubernetes-list-type: atomic
               conditions:
@@ -704,7 +706,7 @@ spec:
                     acceptedRisks:
                       description: |-
                         acceptedRisks records risks which were accepted to initiate the update.
-                        For example, it may menition an Upgradeable=False or missing signature
+                        For example, it may mention an Upgradeable=False or missing signature
                         that was overridden via desiredUpdate.force, or an update that was
                         initiated despite not being in the availableUpdates set of recommended
                         update targets.

@@ -747,6 +747,15 @@ func (OperandVersion) SwaggerDoc() map[string]string {
 	return map_OperandVersion
 }
 
+var map_AcceptRisk = map[string]string{
+	"":     "AcceptRisk represents a risk that is considered acceptable.",
+	"name": "name is the name of the acceptable risk. It must be a non-empty string and must not exceed 256 characters.",
+}
+
+func (AcceptRisk) SwaggerDoc() map[string]string {
+	return map_AcceptRisk
+}
+
 var map_ClusterCondition = map[string]string{
 	"":       "ClusterCondition is a union of typed cluster conditions.  The 'type' property determines which of the type-specific properties are relevant. When evaluated on a cluster, the condition may match, not match, or fail to evaluate.",
 	"type":   "type represents the cluster-condition type. This defines the members and semantics of any additional properties.",
@@ -813,15 +822,16 @@ func (ClusterVersionSpec) SwaggerDoc() map[string]string {
 }
 
 var map_ClusterVersionStatus = map[string]string{
-	"":                   "ClusterVersionStatus reports the status of the cluster versioning, including any upgrades that are in progress. The current field will be set to whichever version the cluster is reconciling to, and the conditions array will report whether the update succeeded, is in progress, or is failing.",
-	"desired":            "desired is the version that the cluster is reconciling towards. If the cluster is not yet fully initialized desired will be set with the information available, which may be an image or a tag.",
-	"history":            "history contains a list of the most recent versions applied to the cluster. This value may be empty during cluster startup, and then will be updated when a new update is being applied. The newest update is first in the list and it is ordered by recency. Updates in the history have state Completed if the rollout completed - if an update was failing or halfway applied the state will be Partial. Only a limited amount of update history is preserved.",
-	"observedGeneration": "observedGeneration reports which version of the spec is being synced. If this value is not equal to metadata.generation, then the desired and conditions fields may represent a previous version.",
-	"versionHash":        "versionHash is a fingerprint of the content that the cluster will be updated with. It is used by the operator to avoid unnecessary work and is for internal use only.",
-	"capabilities":       "capabilities describes the state of optional, core cluster components.",
-	"conditions":         "conditions provides information about the cluster version. The condition \"Available\" is set to true if the desiredUpdate has been reached. The condition \"Progressing\" is set to true if an update is being applied. The condition \"Degraded\" is set to true if an update is currently blocked by a temporary or permanent error. Conditions are only valid for the current desiredUpdate when metadata.generation is equal to status.generation.",
-	"availableUpdates":   "availableUpdates contains updates recommended for this cluster. Updates which appear in conditionalUpdates but not in availableUpdates may expose this cluster to known issues. This list may be empty if no updates are recommended, if the update service is unavailable, or if an invalid channel has been specified.",
-	"conditionalUpdates": "conditionalUpdates contains the list of updates that may be recommended for this cluster if it meets specific required conditions. Consumers interested in the set of updates that are actually recommended for this cluster should use availableUpdates. This list may be empty if no updates are recommended, if the update service is unavailable, or if an empty or invalid channel has been specified.",
+	"":                       "ClusterVersionStatus reports the status of the cluster versioning, including any upgrades that are in progress. The current field will be set to whichever version the cluster is reconciling to, and the conditions array will report whether the update succeeded, is in progress, or is failing.",
+	"desired":                "desired is the version that the cluster is reconciling towards. If the cluster is not yet fully initialized desired will be set with the information available, which may be an image or a tag.",
+	"history":                "history contains a list of the most recent versions applied to the cluster. This value may be empty during cluster startup, and then will be updated when a new update is being applied. The newest update is first in the list and it is ordered by recency. Updates in the history have state Completed if the rollout completed - if an update was failing or halfway applied the state will be Partial. Only a limited amount of update history is preserved.",
+	"observedGeneration":     "observedGeneration reports which version of the spec is being synced. If this value is not equal to metadata.generation, then the desired and conditions fields may represent a previous version.",
+	"versionHash":            "versionHash is a fingerprint of the content that the cluster will be updated with. It is used by the operator to avoid unnecessary work and is for internal use only.",
+	"capabilities":           "capabilities describes the state of optional, core cluster components.",
+	"conditions":             "conditions provides information about the cluster version. The condition \"Available\" is set to true if the desiredUpdate has been reached. The condition \"Progressing\" is set to true if an update is being applied. The condition \"Degraded\" is set to true if an update is currently blocked by a temporary or permanent error. Conditions are only valid for the current desiredUpdate when metadata.generation is equal to status.generation.",
+	"availableUpdates":       "availableUpdates contains updates recommended for this cluster. Updates which appear in conditionalUpdates but not in availableUpdates may expose this cluster to known issues. This list may be empty if no updates are recommended, if the update service is unavailable, or if an invalid channel has been specified.",
+	"conditionalUpdates":     "conditionalUpdates contains the list of updates that may be recommended for this cluster if it meets specific required conditions. Consumers interested in the set of updates that are actually recommended for this cluster should use availableUpdates. This list may be empty if no updates are recommended, if the update service is unavailable, or if an empty or invalid channel has been specified.",
+	"conditionalUpdateRisks": "conditionalUpdateRisks contains the list of risks associated with conditionalUpdates. When performing a conditional update, all its associated risks will be compared with the set of accepted risks in the spec.desiredUpdate.acceptRisks field. If all risks for a conditional update are included in the spec.desiredUpdate.acceptRisks set, the conditional update can proceed, otherwise it is blocked. The risk names in the list must be unique. conditionalUpdateRisks must not contain more than 500 entries.",
 }
 
 func (ClusterVersionStatus) SwaggerDoc() map[string]string {
@@ -844,6 +854,7 @@ func (ComponentOverride) SwaggerDoc() map[string]string {
 var map_ConditionalUpdate = map[string]string{
 	"":           "ConditionalUpdate represents an update which is recommended to some clusters on the version the current cluster is reconciling, but which may not be recommended for the current cluster.",
 	"release":    "release is the target of the update.",
+	"riskNames":  "riskNames represents the set of the names of conditionalUpdateRisks that are relevant to this update for some clusters. The Applies condition of each conditionalUpdateRisks entry declares if that risk applies to this cluster. A conditional update is accepted only if each of its risks either does not apply to the cluster or is considered acceptable by the cluster administrator. The latter means that the risk names are included in value of the spec.desiredUpdate.acceptRisks field. Entries must be unique and must not exceed 256 characters. riskNames must not contain more than 500 entries.",
 	"risks":      "risks represents the range of issues associated with updating to the target release. The cluster-version operator will evaluate all entries, and only recommend the update if there is at least one entry and all entries recommend the update.",
 	"conditions": "conditions represents the observations of the conditional update's current status. Known types are: * Recommended, for whether the update is recommended for the current cluster.",
 }
@@ -854,6 +865,7 @@ func (ConditionalUpdate) SwaggerDoc() map[string]string {
 
 var map_ConditionalUpdateRisk = map[string]string{
 	"":              "ConditionalUpdateRisk represents a reason and cluster-state for not recommending a conditional update.",
+	"conditions":    "conditions represents the observations of the conditional update risk's current status. Known types are: * Applies, for whether the risk applies to the current cluster. The condition's types in the list must be unique. conditions must not contain more than one entry.",
 	"url":           "url contains information about this risk.",
 	"name":          "name is the CamelCase reason for not recommending a conditional update, in the event that matchingRules match the cluster state.",
 	"message":       "message provides additional information about the risk of updating, in the event that matchingRules match the cluster state. This is only to be consumed by humans. It may contain Line Feed characters (U+000A), which should be rendered as new lines.",
@@ -902,6 +914,7 @@ var map_Update = map[string]string{
 	"version":      "version is a semantic version identifying the update version. version is required if architecture is specified. If both version and image are set, the version extracted from the referenced image must match the specified version.",
 	"image":        "image is a container image location that contains the update. image should be used when the desired version does not exist in availableUpdates or history. When image is set, architecture cannot be specified. If both version and image are set, the version extracted from the referenced image must match the specified version.",
 	"force":        "force allows an administrator to update to an image that has failed verification or upgradeable checks that are designed to keep your cluster safe. Only use this if: * you are testing unsigned release images in short-lived test clusters or * you are working around a known bug in the cluster-version\n  operator and you have verified the authenticity of the provided\n  image yourself.\nThe provided image will run with full administrative access to the cluster. Do not use this flag with images that come from unknown or potentially malicious sources.",
+	"acceptRisks":  "acceptRisks is an optional set of names of conditional update risks that are considered acceptable. A conditional update is performed only if all of its risks are acceptable. This list may contain entries that apply to current, previous or future updates. The entries therefore may not map directly to a risk in .status.conditionalUpdateRisks. acceptRisks must not contain more than 1000 entries. Entries in this list must be unique.",
 }
 
 func (Update) SwaggerDoc() map[string]string {
@@ -916,7 +929,7 @@ var map_UpdateHistory = map[string]string{
 	"version":        "version is a semantic version identifying the update version. If the requested image does not define a version, or if a failure occurs retrieving the image, this value may be empty.",
 	"image":          "image is a container image location that contains the update. This value is always populated.",
 	"verified":       "verified indicates whether the provided update was properly verified before it was installed. If this is false the cluster may not be trusted. Verified does not cover upgradeable checks that depend on the cluster state at the time when the update target was accepted.",
-	"acceptedRisks":  "acceptedRisks records risks which were accepted to initiate the update. For example, it may menition an Upgradeable=False or missing signature that was overridden via desiredUpdate.force, or an update that was initiated despite not being in the availableUpdates set of recommended update targets.",
+	"acceptedRisks":  "acceptedRisks records risks which were accepted to initiate the update. For example, it may mention an Upgradeable=False or missing signature that was overridden via desiredUpdate.force, or an update that was initiated despite not being in the availableUpdates set of recommended update targets.",
 }
 
 func (UpdateHistory) SwaggerDoc() map[string]string {

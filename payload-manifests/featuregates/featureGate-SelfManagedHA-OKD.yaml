@@ -192,6 +192,9 @@
                         "name": "NewOLMPreflightPermissionChecks"
                     },
                     {
+                        "name": "NoOverlayMode"
+                    },
+                    {
                         "name": "NoRegistryClusterInstall"
                     },
                     {

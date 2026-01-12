@@ -1,0 +1,357 @@
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    api-approved.openshift.io: https://github.com/openshift/api/pull/2645
+    api.openshift.io/merged-by-featuregates: "true"
+    include.release.openshift.io/ibm-cloud-managed: "true"
+    include.release.openshift.io/self-managed-high-availability: "true"
+    release.openshift.io/feature-set: DevPreviewNoUpgrade
+  name: pkis.config.openshift.io
+spec:
+  group: config.openshift.io
+  names:
+    kind: PKI
+    listKind: PKIList
+    plural: pkis
+    singular: pki
+  scope: Cluster
+  versions:
+  - name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        description: |-
+          PKI configures cryptographic parameters for certificates generated
+          internally by OpenShift components.
+
+          Compatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.
+        properties:
+          apiVersion:
+            description: |-
+              APIVersion defines the versioned schema of this representation of an object.
+              Servers should convert recognized schemas to the latest internal value, and
+              may reject unrecognized values.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
+            type: string
+          kind:
+            description: |-
+              Kind is a string value representing the REST resource this object represents.
+              Servers may infer this from the endpoint the client submits requests to.
+              Cannot be updated.
+              In CamelCase.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: spec holds user settable values for configuration
+            properties:
+              certificateManagement:
+                description: |-
+                  certificateManagement specifies how PKI configuration is managed for internally-generated certificates.
+                  This controls the certificate generation approach for all OpenShift components that create
+                  certificates internally, including certificate authorities, serving certificates, and client certificates.
+                properties:
+                  custom:
+                    description: |-
+                      custom contains administrator-specified cryptographic configuration.
+                      Use the defaults, categories, and overrides fields to specify certificate generation parameters.
+                      Required when mode is Custom, and forbidden otherwise.
+                    minProperties: 1
+                    properties:
+                      categories:
+                        description: |-
+                          categories allows configuration of certificate parameters
+                          for categories of certificates (SignerCertificate, ServingCertificate, ClientCertificate).
+                          Category configuration takes precedence over defaults.
+                        items:
+                          properties:
+                            category:
+                              description: |-
+                                category identifies the certificate category.
+                                Valid values are "SignerCertificate", "ServingCertificate", and "ClientCertificate".
+                              enum:
+                              - SignerCertificate
+                              - ServingCertificate
+                              - ClientCertificate
+                              type: string
+                            certificate:
+                              description: certificate specifies the configuration
+                                for this category
+                              minProperties: 1
+                              properties:
+                                key:
+                                  description: key specifies the cryptographic parameters
+                                    for the certificate's key pair.
+                                  properties:
+                                    algorithm:
+                                      description: |-
+                                        algorithm specifies the key generation algorithm.
+                                        Valid values are "RSA" and "ECDSA".
+                                      enum:
+                                      - RSA
+                                      - ECDSA
+                                      type: string
+                                    ecdsa:
+                                      description: |-
+                                        ecdsa specifies ECDSA key parameters.
+                                        Required when algorithm is ECDSA, and forbidden otherwise.
+                                      properties:
+                                        curve:
+                                          description: |-
+                                            curve specifies the elliptic curve for ECDSA keys.
+                                            Valid values are "P256", "P384", and "P521".
+                                          enum:
+                                          - P256
+                                          - P384
+                                          - P521
+                                          type: string
+                                      required:
+                                      - curve
+                                      type: object
+                                    rsa:
+                                      description: |-
+                                        rsa specifies RSA key parameters.
+                                        Required when algorithm is RSA, and forbidden otherwise.
+                                      properties:
+                                        keySize:
+                                          description: |-
+                                            keySize specifies the size of RSA keys in bits.
+                                            Valid values are 2048, 3072, and 4096.
+                                          enum:
+                                          - 2048
+                                          - 3072
+                                          - 4096
+                                          format: int32
+                                          minimum: 2048
+                                          type: integer
+                                      required:
+                                      - keySize
+                                      type: object
+                                  required:
+                                  - algorithm
+                                  type: object
+                                  x-kubernetes-validations:
+                                  - message: rsa is required when algorithm is RSA,
+                                      and forbidden otherwise
+                                    rule: 'has(self.algorithm) && self.algorithm ==
+                                      ''RSA'' ?  has(self.rsa) : !has(self.rsa)'
+                                  - message: ecdsa is required when algorithm is ECDSA,
+                                      and forbidden otherwise
+                                    rule: 'has(self.algorithm) && self.algorithm ==
+                                      ''ECDSA'' ?  has(self.ecdsa) : !has(self.ecdsa)'
+                              type: object
+                          required:
+                          - category
+                          - certificate
+                          type: object
+                        maxItems: 3
+                        type: array
+                        x-kubernetes-list-map-keys:
+                        - category
+                        x-kubernetes-list-type: map
+                      defaults:
+                        description: |-
+                          defaults specifies the default certificate configuration
+                          for all certificates unless overridden by category or specific
+                          certificate configuration.
+                          If not specified, uses platform defaults (typically RSA 2048).
+                        minProperties: 1
+                        properties:
+                          key:
+                            description: key specifies the cryptographic parameters
+                              for the certificate's key pair.
+                            properties:
+                              algorithm:
+                                description: |-
+                                  algorithm specifies the key generation algorithm.
+                                  Valid values are "RSA" and "ECDSA".
+                                enum:
+                                - RSA
+                                - ECDSA
+                                type: string
+                              ecdsa:
+                                description: |-
+                                  ecdsa specifies ECDSA key parameters.
+                                  Required when algorithm is ECDSA, and forbidden otherwise.
+                                properties:
+                                  curve:
+                                    description: |-
+                                      curve specifies the elliptic curve for ECDSA keys.
+                                      Valid values are "P256", "P384", and "P521".
+                                    enum:
+                                    - P256
+                                    - P384
+                                    - P521
+                                    type: string
+                                required:
+                                - curve
+                                type: object
+                              rsa:
+                                description: |-
+                                  rsa specifies RSA key parameters.
+                                  Required when algorithm is RSA, and forbidden otherwise.
+                                properties:
+                                  keySize:
+                                    description: |-
+                                      keySize specifies the size of RSA keys in bits.
+                                      Valid values are 2048, 3072, and 4096.
+                                    enum:
+                                    - 2048
+                                    - 3072
+                                    - 4096
+                                    format: int32
+                                    minimum: 2048
+                                    type: integer
+                                required:
+                                - keySize
+                                type: object
+                            required:
+                            - algorithm
+                            type: object
+                            x-kubernetes-validations:
+                            - message: rsa is required when algorithm is RSA, and
+                                forbidden otherwise
+                              rule: 'has(self.algorithm) && self.algorithm == ''RSA''
+                                ?  has(self.rsa) : !has(self.rsa)'
+                            - message: ecdsa is required when algorithm is ECDSA,
+                                and forbidden otherwise
+                              rule: 'has(self.algorithm) && self.algorithm == ''ECDSA''
+                                ?  has(self.ecdsa) : !has(self.ecdsa)'
+                        type: object
+                      overrides:
+                        description: |-
+                          overrides allows configuration of certificate parameters
+                          for specific named certificates.
+                          Override configuration takes precedence over both category
+                          and default configuration.
+                        items:
+                          description: CertificateOverride allows configuration of
+                            certificate parameters for specific named certificates.
+                          properties:
+                            certificate:
+                              description: certificate specifies the configuration
+                                for this certificate
+                              minProperties: 1
+                              properties:
+                                key:
+                                  description: key specifies the cryptographic parameters
+                                    for the certificate's key pair.
+                                  properties:
+                                    algorithm:
+                                      description: |-
+                                        algorithm specifies the key generation algorithm.
+                                        Valid values are "RSA" and "ECDSA".
+                                      enum:
+                                      - RSA
+                                      - ECDSA
+                                      type: string
+                                    ecdsa:
+                                      description: |-
+                                        ecdsa specifies ECDSA key parameters.
+                                        Required when algorithm is ECDSA, and forbidden otherwise.
+                                      properties:
+                                        curve:
+                                          description: |-
+                                            curve specifies the elliptic curve for ECDSA keys.
+                                            Valid values are "P256", "P384", and "P521".
+                                          enum:
+                                          - P256
+                                          - P384
+                                          - P521
+                                          type: string
+                                      required:
+                                      - curve
+                                      type: object
+                                    rsa:
+                                      description: |-
+                                        rsa specifies RSA key parameters.
+                                        Required when algorithm is RSA, and forbidden otherwise.
+                                      properties:
+                                        keySize:
+                                          description: |-
+                                            keySize specifies the size of RSA keys in bits.
+                                            Valid values are 2048, 3072, and 4096.
+                                          enum:
+                                          - 2048
+                                          - 3072
+                                          - 4096
+                                          format: int32
+                                          minimum: 2048
+                                          type: integer
+                                      required:
+                                      - keySize
+                                      type: object
+                                  required:
+                                  - algorithm
+                                  type: object
+                                  x-kubernetes-validations:
+                                  - message: rsa is required when algorithm is RSA,
+                                      and forbidden otherwise
+                                    rule: 'has(self.algorithm) && self.algorithm ==
+                                      ''RSA'' ?  has(self.rsa) : !has(self.rsa)'
+                                  - message: ecdsa is required when algorithm is ECDSA,
+                                      and forbidden otherwise
+                                    rule: 'has(self.algorithm) && self.algorithm ==
+                                      ''ECDSA'' ?  has(self.ecdsa) : !has(self.ecdsa)'
+                              type: object
+                            certificateName:
+                              description: |-
+                                certificateName identifies a specific certificate to configure.
+                                The name must match a well-known certificate name in the cluster.
+                                Examples: "kube-apiserver-to-kubelet-signer", "kube-apiserver-localhost-server",
+                                "admin-kubeconfig-client", "etcd-signer", "service-ca"
+                              maxLength: 253
+                              minLength: 1
+                              type: string
+                          required:
+                          - certificate
+                          - certificateName
+                          type: object
+                          x-kubernetes-validations:
+                          - message: certificateName must be a well-known certificate
+                              name
+                            rule: self.certificateName in ['admin-kubeconfig-signer','kubelet-bootstrap-kubeconfig-signer','kube-apiserver-localhost-signer','kube-apiserver-service-network-signer','kube-apiserver-lb-signer','root-ca','kube-apiserver-to-kubelet-signer','kube-control-plane-signer','aggregator-signer','kubelet-signer','aggregator-ca','etcd-signer','etcd-metrics-signer','service-ca','csr-signer-ca','kube-apiserver-localhost-server','kube-apiserver-service-network-server','kube-apiserver-lb-server','kube-apiserver-internal-lb-server','machine-config-server','ironic-server','etcd-peer-server','etcd-server','etcd-metrics-server','admin-kubeconfig-client','kubelet-client','kube-apiserver-to-kubelet-client','kube-control-plane-kube-controller-manager-client','kube-control-plane-kube-scheduler-client','aggregator-client','apiserver-proxy-client','journal-gatewayd-client']
+                        maxItems: 256
+                        type: array
+                        x-kubernetes-list-map-keys:
+                        - certificateName
+                        x-kubernetes-list-type: map
+                    type: object
+                  mode:
+                    description: |-
+                      mode determines how PKI configuration is managed.
+                      Valid values are "Unmanaged", "Default", and "Custom".
+
+                      - Unmanaged: Components use their existing hardcoded certificate generation behavior, exactly as if this feature did not exist.
+                        Each component generates certificates using whatever parameters it was using before this feature.
+                        While most components use RSA 2048, some may use different parameters.
+                        Use of this mode might prevent upgrading to the next major OpenShift release.
+
+                      - Default: Use OpenShift-recommended best practices for certificate generation.
+                        The specific parameters may evolve across OpenShift releases to adopt improved cryptographic standards.
+                        In the initial release, this matches Unmanaged behavior for each component.
+                        In future releases, this may adopt ECDSA or larger RSA keys based on industry best practices.
+                        Recommended for most customers who want to benefit from security improvements automatically.
+
+                      - Custom: Administrator explicitly configures cryptographic parameters.
+                        Use the custom field to specify certificate generation parameters.
+                    enum:
+                    - Unmanaged
+                    - Default
+                    - Custom
+                    type: string
+                required:
+                - mode
+                type: object
+                x-kubernetes-validations:
+                - message: custom is required when mode is Custom, and forbidden otherwise
+                  rule: 'self.mode == ''Custom'' ? has(self.custom) : !has(self.custom)'
+            required:
+            - certificateManagement
+            type: object
+        required:
+        - spec
+        type: object
+    served: true
+    storage: true

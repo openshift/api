@@ -352,16 +352,14 @@ var (
 						reportProblemsToJiraComponent("kube-apiserver").
 						contactPerson("rofeldma").
 						productScope(kubernetes).
-						enableIn(configv1.DevPreviewNoUpgrade, configv1.TechPreviewNoUpgrade).
-						enableForClusterProfile(Hypershift, configv1.Default).
+						enableIn(configv1.Default, configv1.DevPreviewNoUpgrade, configv1.TechPreviewNoUpgrade).
 						mustRegister()
 
 	FeatureStreamingCollectionEncodingToProtobuf = newFeatureGate("StreamingCollectionEncodingToProtobuf").
 						reportProblemsToJiraComponent("kube-apiserver").
 						contactPerson("rofeldma").
 						productScope(kubernetes).
-						enableIn(configv1.DevPreviewNoUpgrade, configv1.TechPreviewNoUpgrade).
-						enableForClusterProfile(Hypershift, configv1.Default).
+						enableIn(configv1.Default, configv1.DevPreviewNoUpgrade, configv1.TechPreviewNoUpgrade).
 						mustRegister()
 
 	FeatureGateSignatureStores = newFeatureGate("SignatureStores").

@@ -2,7 +2,7 @@ apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
 metadata:
   annotations:
-    api-approved.openshift.io: https://github.com/openshift/api/pull/2248
+    api-approved.openshift.io: https://github.com/openshift/api/pull/2448
     api.openshift.io/merged-by-featuregates: "true"
     include.release.openshift.io/ibm-cloud-managed: "true"
     include.release.openshift.io/self-managed-high-availability: "true"
@@ -26,13 +26,17 @@ spec:
       jsonPath: .status.finishTime
       name: FinishTime
       type: date
-    name: v1alpha2
+    - description: DataGather age
+      jsonPath: .metadata.creationTimestamp
+      name: Age
+      type: date
+    name: v1
     schema:
       openAPIV3Schema:
         description: |-
           DataGather provides data gather configuration options and status for the particular Insights data gathering.
 
-          Compatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.
+          Compatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).
         properties:
           apiVersion:
             description: |-
@@ -63,21 +67,21 @@ spec:
                   When set to WorkloadNames, the gathered data about cluster resources will not contain the workload names for your deployments. Resources UIDs will be used instead.
                   When omitted no obfuscation is applied.
                 items:
-                  description: dataPolicyOption declares valid data policy types
+                  description: DataPolicyOption declares valid data policy types
                   enum:
                   - ObfuscateNetworking
                   - WorkloadNames
                   type: string
                 maxItems: 2
+                minItems: 1
                 type: array
                 x-kubernetes-list-type: atomic
                 x-kubernetes-validations:
                 - message: dataPolicy items must be unique
                   rule: self.all(x, self.exists_one(y, x == y))
               gatherers:
-                description: |-
-                  gatherers is an optional field that specifies the configuration of the gatherers.
-                  If omitted, all gatherers will be run.
+                description: gatherers is a required field that specifies the configuration
+                  of the gatherers.
                 properties:
                   custom:
                     description: |-
@@ -95,12 +99,12 @@ spec:
                           Run the following command to get the names of last active gatherers:
                           "oc get insightsoperators.operator.openshift.io cluster -o json | jq '.status.gatherStatus.gatherers[].name'"
                         items:
-                          description: gathererConfig allows to configure specific
+                          description: GathererConfig allows to configure specific
                             gatherers
                           properties:
                             name:
                               description: |-
-                                name is the required name of a specific gatherer
+                                name is the required name of a specific gatherer.
                                 It may not exceed 256 characters.
                                 The format for a gatherer name is: {gatherer}/{function} where the function is optional.
                                 Gatherer consists of a lowercase letters only that may include underscores (_).
@@ -109,6 +113,7 @@ spec:
                                 Run the following command to get the names of last active gatherers:
                                 "oc get insightsoperators.operator.openshift.io cluster -o json | jq '.status.gatherStatus.gatherers[].name'"
                               maxLength: 256
+                              minLength: 1
                               type: string
                               x-kubernetes-validations:
                               - message: gatherer name must be in the format of {gatherer}/{function}
@@ -130,6 +135,7 @@ spec:
                           - state
                           type: object
                         maxItems: 100
+                        minItems: 1
                         type: array
                         x-kubernetes-list-map-keys:
                         - name
@@ -140,7 +146,7 @@ spec:
                   mode:
                     description: |-
                       mode is a required field that specifies the mode for gatherers. Allowed values are All and Custom.
-                      When set to All, all gatherers wil run and gather data.
+                      When set to All, all gatherers will run and gather data.
                       When set to Custom, the custom configuration from the custom field will be applied.
                     enum:
                     - All
@@ -170,9 +176,11 @@ spec:
                         properties:
                           name:
                             description: |-
-                              name is a string that follows the DNS1123 subdomain format.
+                              name is the name of the PersistentVolumeClaim that will be used to store the Insights data archive.
+                              It is a string that follows the DNS1123 subdomain format.
                               It must be at most 253 characters in length, and must consist only of lower case alphanumeric characters, '-' and '.', and must start and end with an alphanumeric character.
                             maxLength: 253
+                            minLength: 1
                             type: string
                             x-kubernetes-validations:
                             - message: a lowercase RFC 1123 subdomain must consist
@@ -189,6 +197,7 @@ spec:
                           The current default mount path is /var/lib/insights-operator
                           The path may not exceed 1024 characters and must not contain a colon.
                         maxLength: 1024
+                        minLength: 1
                         type: string
                         x-kubernetes-validations:
                         - message: mountPath must not contain a colon
@@ -215,10 +224,13 @@ spec:
                     and forbidden otherwise
                   rule: 'has(self.type) && self.type == ''PersistentVolume'' ?  has(self.persistentVolume)
                     : !has(self.persistentVolume)'
+            required:
+            - gatherers
             type: object
           status:
             description: status holds observed values from the cluster. They may not
               be overridden.
+            minProperties: 1
             properties:
               conditions:
                 description: |-
@@ -256,7 +268,7 @@ spec:
                   The Progressing condition is used to represent the phase of gathering
                   When it has a status of False and the reason is DataGatherPending, the gathering has not started yet.
                   When it has a status of True and reason is Gathering, the gathering is running.
-                  When it has a status of False and reason is GatheringSucceeded, the gathering succesfully finished.
+                  When it has a status of False and reason is GatheringSucceeded, the gathering successfully finished.
                   When it has a status of False and reason is GatheringFailed, the gathering failed.
                 items:
                   description: Condition contains details for one aspect of the current
@@ -313,6 +325,7 @@ spec:
                   - type
                   type: object
                 maxItems: 100
+                minItems: 1
                 type: array
                 x-kubernetes-list-map-keys:
                 - type
@@ -329,7 +342,7 @@ spec:
                   in the last gathering.
                 items:
                   description: |-
-                    gathererStatus represents information about a particular
+                    GathererStatus represents information about a particular
                     data gatherer.
                   properties:
                     conditions:
@@ -423,6 +436,7 @@ spec:
                   - name
                   type: object
                 maxItems: 100
+                minItems: 1
                 type: array
                 x-kubernetes-list-map-keys:
                 - name
@@ -434,18 +448,17 @@ spec:
                   corresponding Insights analysis (identified by "insightsRequestID") is not available.
                 properties:
                   downloadedTime:
-                    description: |-
-                      downloadedTime is an optional time when the last Insights report was downloaded.
-                      An empty value means that there has not been any Insights report downloaded yet and
-                      it usually appears in disconnected clusters (or clusters when the Insights data gathering is disabled).
+                    description: downloadedTime is a required field that specifies
+                      when the Insights report was last downloaded.
                     format: date-time
                     type: string
                   healthChecks:
                     description: |-
-                      healthChecks provides basic information about active Insights health checks
-                      in a cluster.
+                      healthChecks is an optional field that provides basic information about active Insights
+                      recommendations, which serve as proactive notifications for potential issues in the cluster.
+                      When omitted, it means that there are no active recommendations in the cluster.
                     items:
-                      description: healthCheck represents an Insights health check
+                      description: HealthCheck represents an Insights health check
                         attributes.
                       properties:
                         advisorURI:
@@ -453,13 +466,14 @@ spec:
                             advisorURI is required field that provides the URL link to the Insights Advisor.
                             The link must be a valid HTTPS URL and the maximum length is 2048 characters.
                           maxLength: 2048
+                          minLength: 1
                           type: string
                           x-kubernetes-validations:
                           - message: advisorURI must be a valid HTTPS URL (e.g., https://example.com)
                             rule: isURL(self) && url(self).getScheme() == "https"
                         description:
                           description: |-
-                            description is required field that provides basic description of the healtcheck.
+                            description is required field that provides basic description of the healthcheck.
                             It must contain at least 10 characters and may not exceed 2048 characters.
                           maxLength: 2048
                           minLength: 10
@@ -468,7 +482,7 @@ spec:
                           description: |-
                             totalRisk is the required field of the healthcheck.
                             It is indicator of the total risk posed by the detected issue; combination of impact and likelihood.
-                            Allowed values are Low, Medium, Important and Critical.
+                            Allowed values are Low, Moderate, Important and Critical.
                             The value represents the severity of the issue.
                           enum:
                           - Low
@@ -482,6 +496,7 @@ spec:
                       - totalRisk
                       type: object
                     maxItems: 100
+                    minItems: 1
                     type: array
                     x-kubernetes-list-map-keys:
                     - advisorURI
@@ -490,19 +505,24 @@ spec:
                     x-kubernetes-list-type: map
                   uri:
                     description: |-
-                      uri is optional field that provides the URL link from which the report was downloaded.
+                      uri is a required field that provides the URL link from which the report was downloaded.
                       The link must be a valid HTTPS URL and the maximum length is 2048 characters.
                     maxLength: 2048
+                    minLength: 1
                     type: string
                     x-kubernetes-validations:
                     - message: URI must be a valid HTTPS URL (e.g., https://example.com)
                       rule: isURL(self) && url(self).getScheme() == "https"
+                required:
+                - downloadedTime
+                - uri
                 type: object
               insightsRequestID:
                 description: |-
                   insightsRequestID is an optional Insights request ID to track the status of the Insights analysis (in console.redhat.com processing pipeline) for the corresponding Insights data archive.
                   It may not exceed 256 characters and is immutable once set.
                 maxLength: 256
+                minLength: 1
                 type: string
                 x-kubernetes-validations:
                 - message: insightsRequestID is immutable once set
@@ -523,6 +543,7 @@ spec:
                         It must be at most 253 characters in length, and must consist only of lower case alphanumeric characters, '-' and '.', and must start with an alphabetic character and end with an alphanumeric character.
                         Example: "", "apps", "build.openshift.io", etc.
                       maxLength: 253
+                      minLength: 0
                       type: string
                       x-kubernetes-validations:
                       - message: a lowercase RFC 1123 subdomain must consist of lower
@@ -535,6 +556,7 @@ spec:
                         name is required field that specifies the referent that follows the DNS1123 subdomain format.
                         It must be at most 253 characters in length, and must consist only of lower case alphanumeric characters, '-' and '.', and must start with an alphabetic character and end with an alphanumeric character..
                       maxLength: 253
+                      minLength: 1
                       type: string
                       x-kubernetes-validations:
                       - message: a lowercase RFC 1123 subdomain must consist of lower
@@ -547,6 +569,7 @@ spec:
                         namespace if required field of the referent that follows the DNS1123 labels format.
                         It must be at most 63 characters in length, and must must consist of only lowercase alphanumeric characters and hyphens, and must start with an alphabetic character and end with an alphanumeric character.
                       maxLength: 63
+                      minLength: 1
                       type: string
                       x-kubernetes-validations:
                       - message: the value must consist of only lowercase alphanumeric
@@ -560,6 +583,7 @@ spec:
                         It must be at most 63 characters in length, and must must consist of only lowercase alphanumeric characters and hyphens, and must start with an alphabetic character and end with an alphanumeric character.
                         Example: "deployments", "deploymentconfigs", "pods", etc.
                       maxLength: 63
+                      minLength: 1
                       type: string
                       x-kubernetes-validations:
                       - message: the value must consist of only lowercase alphanumeric
@@ -573,6 +597,7 @@ spec:
                   - resource
                   type: object
                 maxItems: 100
+                minItems: 1
                 type: array
                 x-kubernetes-list-map-keys:
                 - name

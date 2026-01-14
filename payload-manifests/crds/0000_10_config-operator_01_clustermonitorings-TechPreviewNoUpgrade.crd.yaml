@@ -1036,6 +1036,7 @@ spec:
                             (in brackets) followed by a colon and a valid port number (1-65535).
                             Examples: "alertmanager.example.com:9093", "192.168.1.100:9093", "[::1]:9093"
                             At least one endpoint must be specified (minimum 1, maximum 10 endpoints).
+                            Each entry must be unique.
                           items:
                             maxLength: 255
                             type: string
@@ -1138,11 +1139,11 @@ spec:
                               type: object
                               x-kubernetes-map-type: atomic
                             certificateVerification:
-                              default: Verify
                               description: |-
                                 certificateVerification determines the policy for TLS certificate verification.
                                 Allowed values are "Verify" (performs certificate verification, secure) and "SkipVerify" (skips verification, insecure).
-                                When omitted, defaults to "Verify" (secure certificate verification is performed).
+                                When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time.
+                                The default value is "Verify".
                               enum:
                               - Verify
                               - SkipVerify
@@ -1234,11 +1235,11 @@ spec:
                       The value is specified in bytes (e.g., 4194304 for 4MB, 1073741824 for 1GB).
                       When omitted, the Cluster Monitoring Operator automatically calculates an appropriate
                       limit based on cluster capacity. Set an explicit value to override the automatic calculation.
-                      Minimum value is 1 byte.
-                      Maximum value is 1099511627776 (1TB).
+                      Minimum value is 10240 (10kB).
+                      Maximum value is 1073741824 (1GB).
                     format: int64
-                    maximum: 1099511627776
-                    minimum: 1
+                    maximum: 1073741824
+                    minimum: 10240
                     type: integer
                   externalLabels:
                     description: |-
@@ -1323,11 +1324,16 @@ spec:
                       also not supported.
                       By default, PromQL queries are not logged.
                       Must be an absolute path starting with `/` or a simple filename without path separators.
+                      Must not contain consecutive slashes, end with a slash, or include '..' path traversal.
+                      Must contain only alphanumeric characters, '.', '_', '-', or '/'.
                       Must be between 1 and 255 characters in length.
                     maxLength: 255
                     minLength: 1
                     type: string
                     x-kubernetes-validations:
+                    - message: must contain only alphanumeric characters, '.', '_',
+                        '-', or '/'
+                      rule: self.matches('^[a-zA-Z0-9._/-]+$')
                     - message: must be an absolute path starting with '/' or a simple
                         filename without '/'
                       rule: self.startsWith('/') || !self.contains('/')
@@ -1335,6 +1341,8 @@ spec:
                         as /dev/ paths
                       rule: '!self.startsWith(''/dev/'') || self in [''/dev/stdout'',
                         ''/dev/stderr'', ''/dev/null'']'
+                    - message: must not contain '//', end with '/', or contain '..'
+                      rule: '!self.contains(''//'') && !self.endsWith(''/'') && !self.contains(''..'')'
                   remoteWrite:
                     description: |-
                       remoteWrite defines the remote write configuration, including URL, authentication, and relabeling settings.
@@ -1385,7 +1393,7 @@ spec:
                           description: |-
                             writeRelabelConfigs is a list of relabeling rules to apply before sending data to the remote endpoint.
                             When omitted, no relabeling is performed and all metrics are sent as-is.
-                            Maximum of 10 relabeling rules can be specified.
+                            Minimum of 1 and maximum of 10 relabeling rules can be specified.
                             Each rule must have a unique name.
                           items:
                             description: RelabelConfig represents a relabeling rule.
@@ -1426,16 +1434,18 @@ spec:
                                 description: |-
                                   regex is the regular expression to match against the concatenated source label values.
                                   Must be a valid RE2 regular expression (https://github.com/google/re2/wiki/Syntax).
-                                  When omitted, defaults to "(.*)" (matches everything).
+                                  When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time.
+                                  The default value is "(.*)" to match everything.
                                   Must be between 1 and 1000 characters in length when specified.
                                 maxLength: 1000
                                 minLength: 1
                                 type: string
                               replacement:
                                 description: |-
-                                  replacement is the value against which a regex replace is performed if the
+                                  replacement value against which a Replace action is performed if the
                                   regular expression matches. Regex capture groups are available (e.g., $1, $2).
-                                  When omitted, defaults to "$1" (the first capture group).
+                                  When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time.
+                                  The default value is "$1" (the first capture group).
                                   Setting to an empty string ("") explicitly clears the target label value.
                                   Must be at most 255 characters in length.
                                 maxLength: 255
@@ -1443,8 +1453,9 @@ spec:
                               separator:
                                 description: |-
                                   separator is the character sequence used to join source label values.
-                                  Common examples: ";" (default), ",", "::", "|||".
-                                  When omitted, defaults to ";" (semicolon).
+                                  Common examples: ";", ",", "::", "|||".
+                                  When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time.
+                                  The default value is ";".
                                   Must be between 1 and 5 characters in length when specified.
                                 maxLength: 5
                                 minLength: 1
@@ -1458,19 +1469,20 @@ spec:
                                   the replace, keep, or drop actions.
                                   If a referenced label does not exist on a series, Prometheus substitutes an empty string.
                                   When omitted, the rule operates without extracting source labels (useful for actions like labelmap).
-                                  Maximum of 10 source labels can be specified, each between 1 and 128 characters.
+                                  Minimum of 1 and maximum of 10 source labels can be specified, each between 1 and 128 characters.
+                                  Each entry must be unique.
                                 items:
                                   maxLength: 128
                                   minLength: 1
                                   type: string
                                 maxItems: 10
+                                minItems: 1
                                 type: array
                                 x-kubernetes-list-type: set
                               targetLabel:
                                 description: |-
                                   targetLabel is the target label name where the result is written.
-                                  Required for Replace and HashMod actions.
-                                  When omitted for other actions (Keep, Drop, LabelMap, LabelDrop, LabelKeep), no target label is set.
+                                  Required for `Replace`, `HashMod`, `Lowercase`, `Uppercase`,`KeepEqual` and `DropEqual` actions.
                                   Must be between 1 and 128 characters in length when specified.
                                 maxLength: 128
                                 minLength: 1
@@ -1480,11 +1492,17 @@ spec:
                             - name
                             type: object
                             x-kubernetes-validations:
-                            - message: targetLabel is required when action is Replace
-                                or HashMod
-                              rule: 'self.action in [''Replace'', ''HashMod''] ? (has(self.targetLabel)
-                                && self.targetLabel != ”) : true'
+                            - message: targetLabel is required when action is Replace,
+                                HashMod, Lowercase, Uppercase, KeepEqual or DropEqual,
+                                and forbidden otherwise
+                              rule: 'self.action in [''Replace'', ''HashMod'', ''Lowercase'',
+                                ''Uppercase'', ''KeepEqual'', ''DropEqual''] ? (has(self.targetLabel)
+                                && self.targetLabel != ”) : !has(self.targetLabel)'
+                            - message: replacement is only valid when action is Replace
+                                or LabelMap
+                              rule: self.action in ['Replace', 'LabelMap'] || !has(self.replacement)
                           maxItems: 10
+                          minItems: 1
                           type: array
                           x-kubernetes-list-map-keys:
                           - name
@@ -1584,7 +1602,8 @@ spec:
                         description: |-
                           durationInDays specifies how many days Prometheus will retain metrics data.
                           Prometheus automatically deletes data older than this duration.
-                          When omitted, the default is 15 days.
+                          When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time.
+                          The default value is 15.
                           Minimum value is 1 day.
                           Maximum value is 365 days (1 year).
                         format: int32
@@ -1853,30 +1872,408 @@ spec:
                       If omitted, the Pod uses ephemeral storage and Prometheus data will not persist
                       across restarts.
                     properties:
-                      sizeInGiB:
+                      apiVersion:
                         description: |-
-                          sizeInGiB specifies the storage capacity in gibibytes (GiB) for the volume.
-                          This determines how much data can be stored.
-                          Minimum value is 1 GiB.
-                          Maximum value is 16384 GiB (16 TiB).
-                        format: int32
-                        maximum: 16384
-                        minimum: 1
-                        type: integer
-                      storageClassName:
-                        description: |-
-                          storageClassName is the name of the StorageClass to use for the PersistentVolumeClaim.
-                          When omitted, the default StorageClass is used.
-                          Must be a valid DNS subdomain name (RFC 1123) when specified.
-                          Maximum length is 253 characters.
-                        maxLength: 253
+                          APIVersion defines the versioned schema of this representation of an object.
+                          Servers should convert recognized schemas to the latest internal value, and
+                          may reject unrecognized values.
+                          More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
                         type: string
-                        x-kubernetes-validations:
-                        - message: storageClassName must be a valid DNS subdomain
-                            name
-                          rule: '!format.dns1123Subdomain().validate(self).hasValue()'
-                    required:
-                    - sizeInGiB
+                      kind:
+                        description: |-
+                          Kind is a string value representing the REST resource this object represents.
+                          Servers may infer this from the endpoint the client submits requests to.
+                          Cannot be updated.
+                          In CamelCase.
+                          More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+                        type: string
+                      metadata:
+                        description: |-
+                          Standard object's metadata.
+                          More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata
+                        type: object
+                      spec:
+                        description: |-
+                          spec defines the desired characteristics of a volume requested by a pod author.
+                          More info: https://kubernetes.io/docs/concepts/storage/persistent-volumes#persistentvolumeclaims
+                        properties:
+                          accessModes:
+                            description: |-
+                              accessModes contains the desired access modes the volume should have.
+                              More info: https://kubernetes.io/docs/concepts/storage/persistent-volumes#access-modes-1
+                            items:
+                              type: string
+                            type: array
+                            x-kubernetes-list-type: atomic
+                          dataSource:
+                            description: |-
+                              dataSource field can be used to specify either:
+                              * An existing VolumeSnapshot object (snapshot.storage.k8s.io/VolumeSnapshot)
+                              * An existing PVC (PersistentVolumeClaim)
+                              If the provisioner or an external controller can support the specified data source,
+                              it will create a new volume based on the contents of the specified data source.
+                              When the AnyVolumeDataSource feature gate is enabled, dataSource contents will be copied to dataSourceRef,
+                              and dataSourceRef contents will be copied to dataSource when dataSourceRef.namespace is not specified.
+                              If the namespace is specified, then dataSourceRef will not be copied to dataSource.
+                            properties:
+                              apiGroup:
+                                description: |-
+                                  APIGroup is the group for the resource being referenced.
+                                  If APIGroup is not specified, the specified Kind must be in the core API group.
+                                  For any other third-party types, APIGroup is required.
+                                type: string
+                              kind:
+                                description: Kind is the type of resource being referenced
+                                type: string
+                              name:
+                                description: Name is the name of resource being referenced
+                                type: string
+                            required:
+                            - kind
+                            - name
+                            type: object
+                            x-kubernetes-map-type: atomic
+                          dataSourceRef:
+                            description: |-
+                              dataSourceRef specifies the object from which to populate the volume with data, if a non-empty
+                              volume is desired. This may be any object from a non-empty API group (non
+                              core object) or a PersistentVolumeClaim object.
+                              When this field is specified, volume binding will only succeed if the type of
+                              the specified object matches some installed volume populator or dynamic
+                              provisioner.
+                              This field will replace the functionality of the dataSource field and as such
+                              if both fields are non-empty, they must have the same value. For backwards
+                              compatibility, when namespace isn't specified in dataSourceRef,
+                              both fields (dataSource and dataSourceRef) will be set to the same
+                              value automatically if one of them is empty and the other is non-empty.
+                              When namespace is specified in dataSourceRef,
+                              dataSource isn't set to the same value and must be empty.
+                              There are three important differences between dataSource and dataSourceRef:
+                              * While dataSource only allows two specific types of objects, dataSourceRef
+                                allows any non-core object, as well as PersistentVolumeClaim objects.
+                              * While dataSource ignores disallowed values (dropping them), dataSourceRef
+                                preserves all values, and generates an error if a disallowed value is
+                                specified.
+                              * While dataSource only allows local objects, dataSourceRef allows objects
+                                in any namespaces.
+                              (Beta) Using this field requires the AnyVolumeDataSource feature gate to be enabled.
+                              (Alpha) Using the namespace field of dataSourceRef requires the CrossNamespaceVolumeDataSource feature gate to be enabled.
+                            properties:
+                              apiGroup:
+                                description: |-
+                                  APIGroup is the group for the resource being referenced.
+                                  If APIGroup is not specified, the specified Kind must be in the core API group.
+                                  For any other third-party types, APIGroup is required.
+                                type: string
+                              kind:
+                                description: Kind is the type of resource being referenced
+                                type: string
+                              name:
+                                description: Name is the name of resource being referenced
+                                type: string
+                              namespace:
+                                description: |-
+                                  Namespace is the namespace of resource being referenced
+                                  Note that when a namespace is specified, a gateway.networking.k8s.io/ReferenceGrant object is required in the referent namespace to allow that namespace's owner to accept the reference. See the ReferenceGrant documentation for details.
+                                  (Alpha) This field requires the CrossNamespaceVolumeDataSource feature gate to be enabled.
+                                type: string
+                            required:
+                            - kind
+                            - name
+                            type: object
+                          resources:
+                            description: |-
+                              resources represents the minimum resources the volume should have.
+                              If RecoverVolumeExpansionFailure feature is enabled users are allowed to specify resource requirements
+                              that are lower than previous value but must still be higher than capacity recorded in the
+                              status field of the claim.
+                              More info: https://kubernetes.io/docs/concepts/storage/persistent-volumes#resources
+                            properties:
+                              limits:
+                                additionalProperties:
+                                  anyOf:
+                                  - type: integer
+                                  - type: string
+                                  pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
+                                  x-kubernetes-int-or-string: true
+                                description: |-
+                                  Limits describes the maximum amount of compute resources allowed.
+                                  More info: https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/
+                                type: object
+                              requests:
+                                additionalProperties:
+                                  anyOf:
+                                  - type: integer
+                                  - type: string
+                                  pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
+                                  x-kubernetes-int-or-string: true
+                                description: |-
+                                  Requests describes the minimum amount of compute resources required.
+                                  If Requests is omitted for a container, it defaults to Limits if that is explicitly specified,
+                                  otherwise to an implementation-defined value. Requests cannot exceed Limits.
+                                  More info: https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/
+                                type: object
+                            type: object
+                          selector:
+                            description: selector is a label query over volumes to
+                              consider for binding.
+                            properties:
+                              matchExpressions:
+                                description: matchExpressions is a list of label selector
+                                  requirements. The requirements are ANDed.
+                                items:
+                                  description: |-
+                                    A label selector requirement is a selector that contains values, a key, and an operator that
+                                    relates the key and values.
+                                  properties:
+                                    key:
+                                      description: key is the label key that the selector
+                                        applies to.
+                                      type: string
+                                    operator:
+                                      description: |-
+                                        operator represents a key's relationship to a set of values.
+                                        Valid operators are In, NotIn, Exists and DoesNotExist.
+                                      type: string
+                                    values:
+                                      description: |-
+                                        values is an array of string values. If the operator is In or NotIn,
+                                        the values array must be non-empty. If the operator is Exists or DoesNotExist,
+                                        the values array must be empty. This array is replaced during a strategic
+                                        merge patch.
+                                      items:
+                                        type: string
+                                      type: array
+                                      x-kubernetes-list-type: atomic
+                                  required:
+                                  - key
+                                  - operator
+                                  type: object
+                                type: array
+                                x-kubernetes-list-type: atomic
+                              matchLabels:
+                                additionalProperties:
+                                  type: string
+                                description: |-
+                                  matchLabels is a map of {key,value} pairs. A single {key,value} in the matchLabels
+                                  map is equivalent to an element of matchExpressions, whose key field is "key", the
+                                  operator is "In", and the values array contains only "value". The requirements are ANDed.
+                                type: object
+                            type: object
+                            x-kubernetes-map-type: atomic
+                          storageClassName:
+                            description: |-
+                              storageClassName is the name of the StorageClass required by the claim.
+                              More info: https://kubernetes.io/docs/concepts/storage/persistent-volumes#class-1
+                            type: string
+                          volumeAttributesClassName:
+                            description: |-
+                              volumeAttributesClassName may be used to set the VolumeAttributesClass used by this claim.
+                              If specified, the CSI driver will create or update the volume with the attributes defined
+                              in the corresponding VolumeAttributesClass. This has a different purpose than storageClassName,
+                              it can be changed after the claim is created. An empty string or nil value indicates that no
+                              VolumeAttributesClass will be applied to the claim. If the claim enters an Infeasible error state,
+                              this field can be reset to its previous value (including nil) to cancel the modification.
+                              If the resource referred to by volumeAttributesClass does not exist, this PersistentVolumeClaim will be
+                              set to a Pending state, as reflected by the modifyVolumeStatus field, until such as a resource
+                              exists.
+                              More info: https://kubernetes.io/docs/concepts/storage/volume-attributes-classes/
+                            type: string
+                          volumeMode:
+                            description: |-
+                              volumeMode defines what type of volume is required by the claim.
+                              Value of Filesystem is implied when not included in claim spec.
+                            type: string
+                          volumeName:
+                            description: volumeName is the binding reference to the
+                              PersistentVolume backing this claim.
+                            type: string
+                        type: object
+                      status:
+                        description: |-
+                          status represents the current information/status of a persistent volume claim.
+                          Read-only.
+                          More info: https://kubernetes.io/docs/concepts/storage/persistent-volumes#persistentvolumeclaims
+                        properties:
+                          accessModes:
+                            description: |-
+                              accessModes contains the actual access modes the volume backing the PVC has.
+                              More info: https://kubernetes.io/docs/concepts/storage/persistent-volumes#access-modes-1
+                            items:
+                              type: string
+                            type: array
+                            x-kubernetes-list-type: atomic
+                          allocatedResourceStatuses:
+                            additionalProperties:
+                              description: |-
+                                When a controller receives persistentvolume claim update with ClaimResourceStatus for a resource
+                                that it does not recognizes, then it should ignore that update and let other controllers
+                                handle it.
+                              type: string
+                            description: "allocatedResourceStatuses stores status
+                              of resource being resized for the given PVC.\nKey names
+                              follow standard Kubernetes label syntax. Valid values
+                              are either:\n\t* Un-prefixed keys:\n\t\t- storage -
+                              the capacity of the volume.\n\t* Custom resources must
+                              use implementation-defined prefixed names such as \"example.com/my-custom-resource\"\nApart
+                              from above values - keys that are unprefixed or have
+                              kubernetes.io prefix are considered\nreserved and hence
+                              may not be used.\n\nClaimResourceStatus can be in any
+                              of following states:\n\t- ControllerResizeInProgress:\n\t\tState
+                              set when resize controller starts resizing the volume
+                              in control-plane.\n\t- ControllerResizeFailed:\n\t\tState
+                              set when resize has failed in resize controller with
+                              a terminal error.\n\t- NodeResizePending:\n\t\tState
+                              set when resize controller has finished resizing the
+                              volume but further resizing of\n\t\tvolume is needed
+                              on the node.\n\t- NodeResizeInProgress:\n\t\tState set
+                              when kubelet starts resizing the volume.\n\t- NodeResizeFailed:\n\t\tState
+                              set when resizing has failed in kubelet with a terminal
+                              error. Transient errors don't set\n\t\tNodeResizeFailed.\nFor
+                              example: if expanding a PVC for more capacity - this
+                              field can be one of the following states:\n\t- pvc.status.allocatedResourceStatus['storage']
+                              = \"ControllerResizeInProgress\"\n     - pvc.status.allocatedResourceStatus['storage']
+                              = \"ControllerResizeFailed\"\n     - pvc.status.allocatedResourceStatus['storage']
+                              = \"NodeResizePending\"\n     - pvc.status.allocatedResourceStatus['storage']
+                              = \"NodeResizeInProgress\"\n     - pvc.status.allocatedResourceStatus['storage']
+                              = \"NodeResizeFailed\"\nWhen this field is not set,
+                              it means that no resize operation is in progress for
+                              the given PVC.\n\nA controller that receives PVC update
+                              with previously unknown resourceName or ClaimResourceStatus\nshould
+                              ignore the update for the purpose it was designed. For
+                              example - a controller that\nonly is responsible for
+                              resizing capacity of the volume, should ignore PVC updates
+                              that change other valid\nresources associated with PVC.\n\nThis
+                              is an alpha field and requires enabling RecoverVolumeExpansionFailure
+                              feature."
+                            type: object
+                            x-kubernetes-map-type: granular
+                          allocatedResources:
+                            additionalProperties:
+                              anyOf:
+                              - type: integer
+                              - type: string
+                              pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
+                              x-kubernetes-int-or-string: true
+                            description: "allocatedResources tracks the resources
+                              allocated to a PVC including its capacity.\nKey names
+                              follow standard Kubernetes label syntax. Valid values
+                              are either:\n\t* Un-prefixed keys:\n\t\t- storage -
+                              the capacity of the volume.\n\t* Custom resources must
+                              use implementation-defined prefixed names such as \"example.com/my-custom-resource\"\nApart
+                              from above values - keys that are unprefixed or have
+                              kubernetes.io prefix are considered\nreserved and hence
+                              may not be used.\n\nCapacity reported here may be larger
+                              than the actual capacity when a volume expansion operation\nis
+                              requested.\nFor storage quota, the larger value from
+                              allocatedResources and PVC.spec.resources is used.\nIf
+                              allocatedResources is not set, PVC.spec.resources alone
+                              is used for quota calculation.\nIf a volume expansion
+                              capacity request is lowered, allocatedResources is only\nlowered
+                              if there are no expansion operations in progress and
+                              if the actual volume capacity\nis equal or lower than
+                              the requested capacity.\n\nA controller that receives
+                              PVC update with previously unknown resourceName\nshould
+                              ignore the update for the purpose it was designed. For
+                              example - a controller that\nonly is responsible for
+                              resizing capacity of the volume, should ignore PVC updates
+                              that change other valid\nresources associated with PVC.\n\nThis
+                              is an alpha field and requires enabling RecoverVolumeExpansionFailure
+                              feature."
+                            type: object
+                          capacity:
+                            additionalProperties:
+                              anyOf:
+                              - type: integer
+                              - type: string
+                              pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
+                              x-kubernetes-int-or-string: true
+                            description: capacity represents the actual resources
+                              of the underlying volume.
+                            type: object
+                          conditions:
+                            description: |-
+                              conditions is the current Condition of persistent volume claim. If underlying persistent volume is being
+                              resized then the Condition will be set to 'Resizing'.
+                            items:
+                              description: PersistentVolumeClaimCondition contains
+                                details about state of pvc
+                              properties:
+                                lastProbeTime:
+                                  description: lastProbeTime is the time we probed
+                                    the condition.
+                                  format: date-time
+                                  type: string
+                                lastTransitionTime:
+                                  description: lastTransitionTime is the time the
+                                    condition transitioned from one status to another.
+                                  format: date-time
+                                  type: string
+                                message:
+                                  description: message is the human-readable message
+                                    indicating details about last transition.
+                                  type: string
+                                reason:
+                                  description: |-
+                                    reason is a unique, this should be a short, machine understandable string that gives the reason
+                                    for condition's last transition. If it reports "Resizing" that means the underlying
+                                    persistent volume is being resized.
+                                  type: string
+                                status:
+                                  description: |-
+                                    Status is the status of the condition.
+                                    Can be True, False, Unknown.
+                                    More info: https://kubernetes.io/docs/reference/kubernetes-api/config-and-storage-resources/persistent-volume-claim-v1/#:~:text=state%20of%20pvc-,conditions.status,-(string)%2C%20required
+                                  type: string
+                                type:
+                                  description: |-
+                                    Type is the type of the condition.
+                                    More info: https://kubernetes.io/docs/reference/kubernetes-api/config-and-storage-resources/persistent-volume-claim-v1/#:~:text=set%20to%20%27ResizeStarted%27.-,PersistentVolumeClaimCondition,-contains%20details%20about
+                                  type: string
+                              required:
+                              - status
+                              - type
+                              type: object
+                            type: array
+                            x-kubernetes-list-map-keys:
+                            - type
+                            x-kubernetes-list-type: map
+                          currentVolumeAttributesClassName:
+                            description: |-
+                              currentVolumeAttributesClassName is the current name of the VolumeAttributesClass the PVC is using.
+                              When unset, there is no VolumeAttributeClass applied to this PersistentVolumeClaim
+                            type: string
+                          modifyVolumeStatus:
+                            description: |-
+                              ModifyVolumeStatus represents the status object of ControllerModifyVolume operation.
+                              When this is unset, there is no ModifyVolume operation being attempted.
+                            properties:
+                              status:
+                                description: "status is the status of the ControllerModifyVolume
+                                  operation. It can be in any of following states:\n
+                                  - Pending\n   Pending indicates that the PersistentVolumeClaim
+                                  cannot be modified due to unmet requirements, such
+                                  as\n   the specified VolumeAttributesClass not existing.\n
+                                  - InProgress\n   InProgress indicates that the volume
+                                  is being modified.\n - Infeasible\n  Infeasible
+                                  indicates that the request has been rejected as
+                                  invalid by the CSI driver. To\n\t  resolve the error,
+                                  a valid VolumeAttributesClass needs to be specified.\nNote:
+                                  New statuses can be added in the future. Consumers
+                                  should check for unknown statuses and fail appropriately."
+                                type: string
+                              targetVolumeAttributesClassName:
+                                description: targetVolumeAttributesClassName is the
+                                  name of the VolumeAttributesClass the PVC currently
+                                  being reconciled
+                                type: string
+                            required:
+                            - status
+                            type: object
+                          phase:
+                            description: phase represents the current phase of PersistentVolumeClaim.
+                            type: string
+                        type: object
                     type: object
                 type: object
               userDefined:

@@ -774,3 +774,158 @@ tests:
                 topologyKey: "zone11"
                 whenUnsatisfiable: DoNotSchedule
       expectedError: 'spec.prometheusConfig.topologySpreadConstraints: Too many: 11: must have at most 10 items'
+    - name: Should accept PrometheusConfig with valid simple filename for queryLogFile
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: "Disabled"
+          prometheusConfig:
+            queryLogFile: "queries.log"
+      expected: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: "Disabled"
+          prometheusConfig:
+            queryLogFile: "queries.log"
+    - name: Should accept PrometheusConfig with valid absolute path for queryLogFile
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: "Disabled"
+          prometheusConfig:
+            queryLogFile: "/var/log/prometheus/queries.log"
+      expected: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: "Disabled"
+          prometheusConfig:
+            queryLogFile: "/var/log/prometheus/queries.log"
+    - name: Should accept PrometheusConfig with /dev/stdout for queryLogFile
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: "Disabled"
+          prometheusConfig:
+            queryLogFile: "/dev/stdout"
+      expected: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: "Disabled"
+          prometheusConfig:
+            queryLogFile: "/dev/stdout"
+    - name: Should accept PrometheusConfig with /dev/stderr for queryLogFile
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: "Disabled"
+          prometheusConfig:
+            queryLogFile: "/dev/stderr"
+      expected: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: "Disabled"
+          prometheusConfig:
+            queryLogFile: "/dev/stderr"
+    - name: Should accept PrometheusConfig with /dev/null for queryLogFile
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: "Disabled"
+          prometheusConfig:
+            queryLogFile: "/dev/null"
+      expected: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: "Disabled"
+          prometheusConfig:
+            queryLogFile: "/dev/null"
+    - name: Should reject PrometheusConfig queryLogFile with invalid characters
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: "Disabled"
+          prometheusConfig:
+            queryLogFile: "my log file.log"
+      expectedError: "spec.prometheusConfig.queryLogFile: Invalid value: \"string\": must contain only alphanumeric characters, '.', '_', '-', or '/'"
+    - name: Should reject PrometheusConfig queryLogFile with relative path
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: "Disabled"
+          prometheusConfig:
+            queryLogFile: "path/to/file.log"
+      expectedError: "spec.prometheusConfig.queryLogFile: Invalid value: \"string\": must be an absolute path starting with '/' or a simple filename without '/'"
+    - name: Should reject PrometheusConfig queryLogFile with disallowed /dev/ path
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: "Disabled"
+          prometheusConfig:
+            queryLogFile: "/dev/random"
+      expectedError: "spec.prometheusConfig.queryLogFile: Invalid value: \"string\": only /dev/stdout, /dev/stderr, and /dev/null are allowed as /dev/ paths"
+    - name: Should reject PrometheusConfig queryLogFile with consecutive slashes
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: "Disabled"
+          prometheusConfig:
+            queryLogFile: "/var//log/file.log"
+      expectedError: "spec.prometheusConfig.queryLogFile: Invalid value: \"string\": must not contain '//', end with '/', or contain '..'"
+    - name: Should reject PrometheusConfig queryLogFile ending with slash
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: "Disabled"
+          prometheusConfig:
+            queryLogFile: "/var/log/"
+      expectedError: "spec.prometheusConfig.queryLogFile: Invalid value: \"string\": must not contain '//', end with '/', or contain '..'"
+    - name: Should reject PrometheusConfig queryLogFile with path traversal
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: "Disabled"
+          prometheusConfig:
+            queryLogFile: "/var/../etc/passwd"
+      expectedError: "spec.prometheusConfig.queryLogFile: Invalid value: \"string\": must not contain '//', end with '/', or contain '..'"
+    - name: Should reject PrometheusConfig queryLogFile with only slashes
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: "Disabled"
+          prometheusConfig:
+            queryLogFile: "////////////"
+      expectedError: "spec.prometheusConfig.queryLogFile: Invalid value: \"string\": must not contain '//', end with '/', or contain '..'"

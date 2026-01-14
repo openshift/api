@@ -454,10 +454,10 @@ type PrometheusConfig struct {
 	// The value is specified in bytes (e.g., 4194304 for 4MB, 1073741824 for 1GB).
 	// When omitted, the Cluster Monitoring Operator automatically calculates an appropriate
 	// limit based on cluster capacity. Set an explicit value to override the automatic calculation.
-	// Minimum value is 1 byte.
-	// Maximum value is 1099511627776 (1TB).
-	// +kubebuilder:validation:Minimum=1
-	// +kubebuilder:validation:Maximum=1099511627776
+	// Minimum value is 10240 (10kB).
+	// Maximum value is 1073741824 (1GB).
+	// +kubebuilder:validation:Minimum=10240
+	// +kubebuilder:validation:Maximum=1073741824
 	// +optional
 	EnforcedBodySizeLimitBytes int64 `json:"enforcedBodySizeLimitBytes,omitempty"`
 	// externalLabels defines labels to be attached to time series and alerts
@@ -507,12 +507,16 @@ type PrometheusConfig struct {
 	// also not supported.
 	// By default, PromQL queries are not logged.
 	// Must be an absolute path starting with `/` or a simple filename without path separators.
+	// Must not contain consecutive slashes, end with a slash, or include '..' path traversal.
+	// Must contain only alphanumeric characters, '.', '_', '-', or '/'.
 	// Must be between 1 and 255 characters in length.
 	// +optional
 	// +kubebuilder:validation:MinLength=1
 	// +kubebuilder:validation:MaxLength=255
+	// +kubebuilder:validation:XValidation:rule="self.matches('^[a-zA-Z0-9._/-]+$')",message="must contain only alphanumeric characters, '.', '_', '-', or '/'"
 	// +kubebuilder:validation:XValidation:rule="self.startsWith('/') || !self.contains('/')",message="must be an absolute path starting with '/' or a simple filename without '/'"
 	// +kubebuilder:validation:XValidation:rule="!self.startsWith('/dev/') || self in ['/dev/stdout', '/dev/stderr', '/dev/null']",message="only /dev/stdout, /dev/stderr, and /dev/null are allowed as /dev/ paths"
+	// +kubebuilder:validation:XValidation:rule="!self.contains('//') && !self.endsWith('/') && !self.contains('..')",message="must not contain '//', end with '/', or contain '..'"
 	QueryLogFile string `json:"queryLogFile,omitempty"`
 	// remoteWrite defines the remote write configuration, including URL, authentication, and relabeling settings.
 	// Remote write allows Prometheus to send metrics it collects to external long-term storage systems.
@@ -593,7 +597,7 @@ type PrometheusConfig struct {
 	// If omitted, the Pod uses ephemeral storage and Prometheus data will not persist
 	// across restarts.
 	// +optional
-	VolumeClaimTemplate VolumeClaimConfig `json:"volumeClaimTemplate,omitempty,omitzero"`
+	VolumeClaimTemplate *v1.PersistentVolumeClaim `json:"volumeClaimTemplate,omitempty,omitzero"`
 }
 
 // AlertmanagerScheme defines the URL scheme to use when communicating with Alertmanager instances.
@@ -649,6 +653,7 @@ type AdditionalAlertmanagerConfig struct {
 	// (in brackets) followed by a colon and a valid port number (1-65535).
 	// Examples: "alertmanager.example.com:9093", "192.168.1.100:9093", "[::1]:9093"
 	// At least one endpoint must be specified (minimum 1, maximum 10 endpoints).
+	// Each entry must be unique.
 	// +kubebuilder:validation:MinItems=1
 	// +kubebuilder:validation:MaxItems=10
 	// +kubebuilder:validation:items:MaxLength=255
@@ -716,9 +721,10 @@ type RemoteWriteSpec struct {
 	RemoteTimeoutSeconds int32 `json:"remoteTimeoutSeconds,omitempty"`
 	// writeRelabelConfigs is a list of relabeling rules to apply before sending data to the remote endpoint.
 	// When omitted, no relabeling is performed and all metrics are sent as-is.
-	// Maximum of 10 relabeling rules can be specified.
+	// Minimum of 1 and maximum of 10 relabeling rules can be specified.
 	// Each rule must have a unique name.
 	// +optional
+	// +kubebuilder:validation:MinItems=1
 	// +kubebuilder:validation:MaxItems=10
 	// +listType=map
 	// +listMapKey=name
@@ -726,7 +732,8 @@ type RemoteWriteSpec struct {
 }
 
 // RelabelConfig represents a relabeling rule.
-// +kubebuilder:validation:XValidation:rule="self.action in ['Replace', 'HashMod'] ? (has(self.targetLabel) && self.targetLabel != ”) : true",message="targetLabel is required when action is Replace or HashMod"
+// +kubebuilder:validation:XValidation:rule="self.action in ['Replace', 'HashMod', 'Lowercase', 'Uppercase', 'KeepEqual', 'DropEqual'] ? (has(self.targetLabel) && self.targetLabel != ”) : !has(self.targetLabel)",message="targetLabel is required when action is Replace, HashMod, Lowercase, Uppercase, KeepEqual or DropEqual, and forbidden otherwise"
+// +kubebuilder:validation:XValidation:rule="self.action in ['Replace', 'LabelMap'] || !has(self.replacement)",message="replacement is only valid when action is Replace or LabelMap"
 type RelabelConfig struct {
 	// name is a unique identifier for this relabel configuration.
 	// Must contain only alphanumeric characters, hyphens, and underscores.
@@ -743,16 +750,19 @@ type RelabelConfig struct {
 	// the replace, keep, or drop actions.
 	// If a referenced label does not exist on a series, Prometheus substitutes an empty string.
 	// When omitted, the rule operates without extracting source labels (useful for actions like labelmap).
-	// Maximum of 10 source labels can be specified, each between 1 and 128 characters.
+	// Minimum of 1 and maximum of 10 source labels can be specified, each between 1 and 128 characters.
+	// Each entry must be unique.
 	// +optional
+	// +kubebuilder:validation:MinItems=1
 	// +kubebuilder:validation:MaxItems=10
 	// +kubebuilder:validation:items:MinLength=1
 	// +kubebuilder:validation:items:MaxLength=128
 	// +listType=set
 	SourceLabels []string `json:"sourceLabels,omitempty"`
 	// separator is the character sequence used to join source label values.
-	// Common examples: ";" (default), ",", "::", "|||".
-	// When omitted, defaults to ";" (semicolon).
+	// Common examples: ";", ",", "::", "|||".
+	// When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time.
+	// The default value is ";".
 	// Must be between 1 and 5 characters in length when specified.
 	// +optional
 	// +kubebuilder:validation:MinLength=1
@@ -760,23 +770,24 @@ type RelabelConfig struct {
 	Separator string `json:"separator,omitempty"`
 	// regex is the regular expression to match against the concatenated source label values.
 	// Must be a valid RE2 regular expression (https://github.com/google/re2/wiki/Syntax).
-	// When omitted, defaults to "(.*)" (matches everything).
+	// When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time.
+	// The default value is "(.*)" to match everything.
 	// Must be between 1 and 1000 characters in length when specified.
 	// +optional
 	// +kubebuilder:validation:MinLength=1
 	// +kubebuilder:validation:MaxLength=1000
 	Regex string `json:"regex,omitempty"`
 	// targetLabel is the target label name where the result is written.
-	// Required for Replace and HashMod actions.
-	// When omitted for other actions (Keep, Drop, LabelMap, LabelDrop, LabelKeep), no target label is set.
+	// Required for `Replace`, `HashMod`, `Lowercase`, `Uppercase`,`KeepEqual` and `DropEqual` actions.
 	// Must be between 1 and 128 characters in length when specified.
 	// +optional
 	// +kubebuilder:validation:MinLength=1
 	// +kubebuilder:validation:MaxLength=128
 	TargetLabel string `json:"targetLabel,omitempty"`
-	// replacement is the value against which a regex replace is performed if the
+	// replacement value against which a Replace action is performed if the
 	// regular expression matches. Regex capture groups are available (e.g., $1, $2).
-	// When omitted, defaults to "$1" (the first capture group).
+	// When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time.
+	// The default value is "$1" (the first capture group).
 	// Setting to an empty string ("") explicitly clears the target label value.
 	// Must be at most 255 characters in length.
 	// +optional
@@ -824,9 +835,9 @@ type TLSConfig struct {
 	ServerName string `json:"serverName,omitempty"`
 	// certificateVerification determines the policy for TLS certificate verification.
 	// Allowed values are "Verify" (performs certificate verification, secure) and "SkipVerify" (skips verification, insecure).
-	// When omitted, defaults to "Verify" (secure certificate verification is performed).
+	// When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time.
+	// The default value is "Verify".
 	// +optional
-	// +kubebuilder:default=Verify
 	CertificateVerification CertificateVerificationType `json:"certificateVerification,omitempty"`
 }
 
@@ -916,7 +927,8 @@ type VolumeClaimConfig struct {
 type Retention struct {
 	// durationInDays specifies how many days Prometheus will retain metrics data.
 	// Prometheus automatically deletes data older than this duration.
-	// When omitted, the default is 15 days.
+	// When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time.
+	// The default value is 15.
 	// Minimum value is 1 day.
 	// Maximum value is 365 days (1 year).
 	// +kubebuilder:validation:Minimum=1

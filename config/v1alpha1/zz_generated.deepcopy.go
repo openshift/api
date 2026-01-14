@@ -1056,7 +1056,11 @@ func (in *PrometheusConfig) DeepCopyInto(out *PrometheusConfig) {
 			(*in)[i].DeepCopyInto(&(*out)[i])
 		}
 	}
-	in.VolumeClaimTemplate.DeepCopyInto(&out.VolumeClaimTemplate)
+	if in.VolumeClaimTemplate != nil {
+		in, out := &in.VolumeClaimTemplate, &out.VolumeClaimTemplate
+		*out = new(v1.PersistentVolumeClaim)
+		(*in).DeepCopyInto(*out)
+	}
 	return
 }
 

@@ -52,6 +52,8 @@ type DataGatherSpec struct {
 	// Run the following command to get the names of last active gatherers:
 	// "oc get insightsoperators.operator.openshift.io cluster -o json | jq '.status.gatherStatus.gatherers[].name'"
 	// +kubebuilder:validation:MaxItems=100
+	// +listType=map
+	// +listMapKey=name
 	// +optional
 	Gatherers []GathererConfig `json:"gatherers,omitempty"`
 	// storage is an optional field that allows user to define persistent storage for gathering jobs to store the Insights data archive.
@@ -201,6 +203,9 @@ type DataGatherStatus struct {
 	FinishTime metav1.Time `json:"finishTime,omitempty"`
 	// relatedObjects is a list of resources which are useful when debugging or inspecting the data
 	// gathering Pod
+	// +listType=map
+	// +listMapKey=name
+	// +listMapKey=namespace
 	// +kubebuilder:validation:MaxItems=100
 	// +optional
 	RelatedObjects []ObjectReference `json:"relatedObjects,omitempty"`
@@ -328,8 +333,8 @@ type ObjectReference struct {
 	// It must be at most 253 characters in length.
 	// +kubebuilder:validation:XValidation:rule="!format.dns1123Subdomain().validate(self).hasValue()",message="a lowercase RFC 1123 subdomain must consist of lower case alphanumeric characters, '-' or '.', and must start and end with an alphanumeric character."
 	// +kubebuilder:validation:MaxLength=253
-	// +optional
-	Namespace string `json:"namespace,omitempty"`
+	// +required
+	Namespace string `json:"namespace"`
 }
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object

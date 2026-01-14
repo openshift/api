@@ -1,0 +1,19 @@
+diff --git a/config/v1/types_console.go b/config/v1/types_console.go
+--- a/config/v1/types_console.go
++++ b/config/v1/types_console.go
+@@ -33,7 +33,15 @@ type ConsoleSpec struct {
+ // ConsoleSpec is the specification of the desired behavior of the Console.
+ type ConsoleSpec struct {
+ 	// +optional
+ 	Authentication ConsoleAuthentication `json:"authentication"`
++
++	// bannerText is an optional field that specifies a custom banner message
++	// to display at the top of the console. Valid values are "Info", "Warning",
++	// and "Error" which control the banner styling. When omitted, no banner
++	// is displayed.
++	// +optional
++	// +kubebuilder:validation:Enum=Info;Warning;Error
++	BannerText string `json:"bannerText,omitempty"`
+ }
+ 
+ // ConsoleStatus defines the observed status of the Console.

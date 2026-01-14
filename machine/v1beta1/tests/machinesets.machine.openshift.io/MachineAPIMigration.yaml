@@ -256,6 +256,23 @@ tests:
       status:
         authoritativeAPI: MachineAPI
         synchronizedGeneration: 0
+  - name: Should not allow removing the status authoritativeAPI once set
+    initial: |
+      apiVersion: machine.openshift.io/v1beta1
+      kind: MachineSet
+      spec:
+        authoritativeAPI: MachineAPI
+      status:
+        authoritativeAPI: MachineAPI
+        synchronizedGeneration: 0
+    updated: |
+      apiVersion: machine.openshift.io/v1beta1
+      kind: MachineSet
+      spec:
+        authoritativeAPI: MachineAPI
+      status:
+        synchronizedGeneration: 0
+    expectedStatusError: "status: Invalid value: \"object\": authoritativeAPI may not be removed once set"
   - name: Should increasing the synchronizedGeneration while the Authoritative API is MachineAPI
     initial: |
       apiVersion: machine.openshift.io/v1beta1

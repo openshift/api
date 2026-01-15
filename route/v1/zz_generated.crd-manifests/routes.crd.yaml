@@ -268,18 +268,18 @@ spec:
                               pattern: ^[-!#$%&'*+.0-9A-Z^_`a-z|~]+$
                               type: string
                               x-kubernetes-validations:
-                              - message: strict-transport-security header may not
-                                  be modified via header actions
-                                rule: self.lowerAscii() != 'strict-transport-security'
-                              - message: proxy header may not be modified via header
-                                  actions
-                                rule: self.lowerAscii() != 'proxy'
                               - message: cookie header may not be modified via header
                                   actions
                                 rule: self.lowerAscii() != 'cookie'
+                              - message: proxy header may not be modified via header
+                                  actions
+                                rule: self.lowerAscii() != 'proxy'
                               - message: set-cookie header may not be modified via
                                   header actions
                                 rule: self.lowerAscii() != 'set-cookie'
+                              - message: strict-transport-security header may not
+                                  be modified via header actions
+                                rule: self.lowerAscii() != 'strict-transport-security'
                           required:
                           - action
                           - name
@@ -376,18 +376,18 @@ spec:
                               pattern: ^[-!#$%&'*+.0-9A-Z^_`a-z|~]+$
                               type: string
                               x-kubernetes-validations:
-                              - message: strict-transport-security header may not
-                                  be modified via header actions
-                                rule: self.lowerAscii() != 'strict-transport-security'
-                              - message: proxy header may not be modified via header
-                                  actions
-                                rule: self.lowerAscii() != 'proxy'
                               - message: cookie header may not be modified via header
                                   actions
                                 rule: self.lowerAscii() != 'cookie'
+                              - message: proxy header may not be modified via header
+                                  actions
+                                rule: self.lowerAscii() != 'proxy'
                               - message: set-cookie header may not be modified via
                                   header actions
                                 rule: self.lowerAscii() != 'set-cookie'
+                              - message: strict-transport-security header may not
+                                  be modified via header actions
+                                rule: self.lowerAscii() != 'strict-transport-security'
                           required:
                           - action
                           - name

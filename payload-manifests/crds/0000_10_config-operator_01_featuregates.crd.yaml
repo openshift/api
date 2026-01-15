@@ -86,14 +86,14 @@ spec:
                 - message: CustomNoUpgrade may not be changed
                   rule: 'oldSelf == ''CustomNoUpgrade'' ? self == ''CustomNoUpgrade''
                     : true'
-                - message: TechPreviewNoUpgrade may not be changed
-                  rule: 'oldSelf == ''TechPreviewNoUpgrade'' ? self == ''TechPreviewNoUpgrade''
-                    : true'
                 - message: DevPreviewNoUpgrade may not be changed
                   rule: 'oldSelf == ''DevPreviewNoUpgrade'' ? self == ''DevPreviewNoUpgrade''
                     : true'
                 - message: OKD cannot transition to Default
                   rule: 'oldSelf == ''OKD'' ? self != '''' : true'
+                - message: TechPreviewNoUpgrade may not be changed
+                  rule: 'oldSelf == ''TechPreviewNoUpgrade'' ? self == ''TechPreviewNoUpgrade''
+                    : true'
             type: object
             x-kubernetes-validations:
             - message: .spec.featureSet cannot be removed

@@ -123,7 +123,7 @@ tests:
                 prefixPolicy: NoPrefix
     - name: Cannot set OIDC providers with no claim mappings
       initial: |
-        apiVersion: config.openshift.io/v1 
+        apiVersion: config.openshift.io/v1
         kind: Authentication
         spec:
           type: OIDC
@@ -699,7 +699,7 @@ tests:
     - name: Should allow updating other fields if issuerURL has a query
       initialCRDPatches:
         - op: remove
-          path: /spec/versions/0/schema/openAPIV3Schema/properties/spec/properties/oidcProviders/items/properties/issuer/properties/issuerURL/x-kubernetes-validations/2
+          path: /spec/versions/0/schema/openAPIV3Schema/properties/spec/properties/oidcProviders/items/properties/issuer/properties/issuerURL/x-kubernetes-validations/1
       initial: |
         apiVersion: config.openshift.io/v1
         kind: Authentication
@@ -742,7 +742,7 @@ tests:
     - name: Should allow updating issuerURL from a previously invalid value to a valid value (query)
       initialCRDPatches:
         - op: remove
-          path: /spec/versions/0/schema/openAPIV3Schema/properties/spec/properties/oidcProviders/items/properties/issuer/properties/issuerURL/x-kubernetes-validations/2
+          path: /spec/versions/0/schema/openAPIV3Schema/properties/spec/properties/oidcProviders/items/properties/issuer/properties/issuerURL/x-kubernetes-validations/1
       initial: |
         apiVersion: config.openshift.io/v1
         kind: Authentication
@@ -785,7 +785,7 @@ tests:
     - name: Should not allow updating issuerURL from a previously invalid value to a still invalid value (query)
       initialCRDPatches:
         - op: remove
-          path: /spec/versions/0/schema/openAPIV3Schema/properties/spec/properties/oidcProviders/items/properties/issuer/properties/issuerURL/x-kubernetes-validations/2
+          path: /spec/versions/0/schema/openAPIV3Schema/properties/spec/properties/oidcProviders/items/properties/issuer/properties/issuerURL/x-kubernetes-validations/1
       initial: |
         apiVersion: config.openshift.io/v1
         kind: Authentication

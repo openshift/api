@@ -35,8 +35,6 @@ require (
 	sigs.k8s.io/yaml v1.6.0
 )
 
-replace sigs.k8s.io/controller-tools => github.com/openshift/controller-tools v0.12.1-0.20250801155905-948121310243
-
 require (
 	4d63.com/gocheckcompilerdirectives v1.3.0 // indirect
 	4d63.com/gochecknoglobals v0.2.2 // indirect
@@ -340,3 +338,5 @@ require (
 	sigs.k8s.io/randfill v1.0.0 // indirect
 	sigs.k8s.io/structured-merge-diff/v6 v6.3.0 // indirect
 )
+
+replace sigs.k8s.io/controller-tools => github.com/jaypoulz/controller-tools v0.0.0-20260116180353-88e61f2c62d0

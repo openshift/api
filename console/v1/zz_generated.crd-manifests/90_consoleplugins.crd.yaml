@@ -197,12 +197,12 @@ spec:
                         x-kubernetes-validations:
                         - message: CSP directive value cannot contain a quote
                           rule: '!self.contains("''")'
-                        - message: CSP directive value cannot contain a whitespace
-                          rule: '!self.matches(''\\s'')'
                         - message: CSP directive value cannot contain a comma
                           rule: '!self.contains('','')'
                         - message: CSP directive value cannot contain a semi-colon
                           rule: '!self.contains('';'')'
+                        - message: CSP directive value cannot contain a whitespace
+                          rule: '!self.matches(''\\s'')'
                         - message: CSP directive value cannot be a wildcard
                           rule: self != '*'
                       maxItems: 16

@@ -293,10 +293,6 @@ spec:
                                   - type
                                   type: object
                                   x-kubernetes-validations:
-                                  - message: id is required when type is ID, and forbidden
-                                      otherwise
-                                    rule: 'has(self.type) && self.type == ''ID'' ?  has(self.id)
-                                      : !has(self.id)'
                                   - message: arn is required when type is ARN, and
                                       forbidden otherwise
                                     rule: 'has(self.type) && self.type == ''ARN''
@@ -305,6 +301,10 @@ spec:
                                       and forbidden otherwise
                                     rule: 'has(self.type) && self.type == ''Filters''
                                       ?  has(self.filters) : !has(self.filters)'
+                                  - message: id is required when type is ID, and forbidden
+                                      otherwise
+                                    rule: 'has(self.type) && self.type == ''ID'' ?  has(self.id)
+                                      : !has(self.id)'
                               type: object
                             type: array
                             x-kubernetes-list-type: atomic
@@ -488,6 +488,10 @@ spec:
                             GCP, and forbidden otherwise
                           rule: 'has(self.platform) && self.platform == ''GCP'' ?  has(self.gcp)
                             : !has(self.gcp)'
+                        - message: nutanix configuration is required when platform
+                            is Nutanix, and forbidden otherwise
+                          rule: 'has(self.platform) && self.platform == ''Nutanix''
+                            ?  has(self.nutanix) : !has(self.nutanix)'
                         - message: openstack configuration is required when platform
                             is OpenStack, and forbidden otherwise
                           rule: 'has(self.platform) && self.platform == ''OpenStack''
@@ -496,10 +500,6 @@ spec:
                             is VSphere, and forbidden otherwise
                           rule: 'has(self.platform) && self.platform == ''VSphere''
                             ?  has(self.vsphere) : !has(self.vsphere)'
-                        - message: nutanix configuration is required when platform
-                            is Nutanix, and forbidden otherwise
-                          rule: 'has(self.platform) && self.platform == ''Nutanix''
-                            ?  has(self.nutanix) : !has(self.nutanix)'
                       metadata:
                         description: |-
                           ObjectMeta is the standard object metadata
@@ -527,6 +527,10 @@ spec:
                               It must also contain a label with the key 'machine.openshift.io/cluster-api-cluster'.
                             type: object
                             x-kubernetes-validations:
+                            - message: label 'machine.openshift.io/cluster-api-cluster'
+                                is required
+                              rule: '''machine.openshift.io/cluster-api-cluster''
+                                in self'
                             - message: label 'machine.openshift.io/cluster-api-machine-role'
                                 is required, and must have value 'master'
                               rule: '''machine.openshift.io/cluster-api-machine-role''
@@ -537,10 +541,6 @@ spec:
                               rule: '''machine.openshift.io/cluster-api-machine-type''
                                 in self && self[''machine.openshift.io/cluster-api-machine-type'']
                                 == ''master'''
-                            - message: label 'machine.openshift.io/cluster-api-cluster'
-                                is required
-                              rule: '''machine.openshift.io/cluster-api-cluster''
-                                in self'
                         required:
                         - labels
                         type: object

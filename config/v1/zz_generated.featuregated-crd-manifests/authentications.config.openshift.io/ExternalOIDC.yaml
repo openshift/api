@@ -310,10 +310,10 @@ spec:
                           x-kubernetes-validations:
                           - message: must be a valid URL
                             rule: isURL(self)
-                          - message: must use the 'https' scheme
-                            rule: isURL(self) && url(self).getScheme() == 'https'
                           - message: must not have a query
                             rule: isURL(self) && url(self).getQuery() == {}
+                          - message: must use the 'https' scheme
+                            rule: isURL(self) && url(self).getScheme() == 'https'
                           - message: must not have a fragment
                             rule: self.find('#(.+)$') == ''
                           - message: must not have user info

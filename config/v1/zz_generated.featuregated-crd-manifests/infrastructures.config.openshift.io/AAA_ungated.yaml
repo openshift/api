@@ -266,14 +266,14 @@ spec:
                               - type
                               type: object
                               x-kubernetes-validations:
-                              - message: uuid configuration is required when type
-                                  is UUID, and forbidden otherwise
-                                rule: 'has(self.type) && self.type == ''UUID'' ?  has(self.uuid)
-                                  : !has(self.uuid)'
                               - message: name configuration is required when type
                                   is Name, and forbidden otherwise
                                 rule: 'has(self.type) && self.type == ''Name'' ?  has(self.name)
                                   : !has(self.name)'
+                              - message: uuid configuration is required when type
+                                  is UUID, and forbidden otherwise
+                                rule: 'has(self.type) && self.type == ''UUID'' ?  has(self.uuid)
+                                  : !has(self.uuid)'
                             name:
                               description: |-
                                 name defines the unique name of a failure domain.
@@ -316,14 +316,14 @@ spec:
                                 - type
                                 type: object
                                 x-kubernetes-validations:
-                                - message: uuid configuration is required when type
-                                    is UUID, and forbidden otherwise
-                                  rule: 'has(self.type) && self.type == ''UUID'' ?  has(self.uuid)
-                                    : !has(self.uuid)'
                                 - message: name configuration is required when type
                                     is Name, and forbidden otherwise
                                   rule: 'has(self.type) && self.type == ''Name'' ?  has(self.name)
                                     : !has(self.name)'
+                                - message: uuid configuration is required when type
+                                    is UUID, and forbidden otherwise
+                                  rule: 'has(self.type) && self.type == ''UUID'' ?  has(self.uuid)
+                                    : !has(self.uuid)'
                               maxItems: 1
                               minItems: 1
                               type: array

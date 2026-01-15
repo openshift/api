@@ -451,11 +451,11 @@ spec:
                             type: string
                         type: object
                         x-kubernetes-validations:
-                        - message: ipsecConfig.mode is required
-                          rule: self == oldSelf || has(self.mode)
                         - message: full is forbidden when mode is not Full
                           rule: 'has(self.mode) && self.mode == ''Full'' ?  true :
                             !has(self.full)'
+                        - message: ipsecConfig.mode is required
+                          rule: self == oldSelf || has(self.mode)
                       ipv4:
                         description: |-
                           ipv4 allows users to configure IP settings for IPv4 connections. When ommitted,

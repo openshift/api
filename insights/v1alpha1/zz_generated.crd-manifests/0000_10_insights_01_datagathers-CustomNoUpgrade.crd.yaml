@@ -251,16 +251,16 @@ spec:
                 - Pending
                 type: string
                 x-kubernetes-validations:
-                - message: dataGatherState cannot transition from Running to Pending
-                  rule: '!(oldSelf == ''Running'' && self == ''Pending'')'
                 - message: dataGatherState cannot transition from Completed to Pending
                   rule: '!(oldSelf == ''Completed'' && self == ''Pending'')'
-                - message: dataGatherState cannot transition from Failed to Pending
-                  rule: '!(oldSelf == ''Failed'' && self == ''Pending'')'
                 - message: dataGatherState cannot transition from Completed to Running
                   rule: '!(oldSelf == ''Completed'' && self == ''Running'')'
+                - message: dataGatherState cannot transition from Failed to Pending
+                  rule: '!(oldSelf == ''Failed'' && self == ''Pending'')'
                 - message: dataGatherState cannot transition from Failed to Running
                   rule: '!(oldSelf == ''Failed'' && self == ''Running'')'
+                - message: dataGatherState cannot transition from Running to Pending
+                  rule: '!(oldSelf == ''Running'' && self == ''Pending'')'
               finishTime:
                 description: finishTime is the time when Insights data gathering finished.
                 format: date-time
@@ -512,14 +512,14 @@ spec:
                   rule: self == oldSelf
             type: object
             x-kubernetes-validations:
+            - message: cannot remove dataGatherState attribute from status
+              rule: (!has(oldSelf.dataGatherState) || has(self.dataGatherState))
+            - message: cannot remove finishTime attribute from status
+              rule: (!has(oldSelf.finishTime) || has(self.finishTime))
             - message: cannot remove insightsRequestID attribute from status
               rule: (!has(oldSelf.insightsRequestID) || has(self.insightsRequestID))
             - message: cannot remove startTime attribute from status
               rule: (!has(oldSelf.startTime) || has(self.startTime))
-            - message: cannot remove finishTime attribute from status
-              rule: (!has(oldSelf.finishTime) || has(self.finishTime))
-            - message: cannot remove dataGatherState attribute from status
-              rule: (!has(oldSelf.dataGatherState) || has(self.dataGatherState))
         required:
         - spec
         type: object

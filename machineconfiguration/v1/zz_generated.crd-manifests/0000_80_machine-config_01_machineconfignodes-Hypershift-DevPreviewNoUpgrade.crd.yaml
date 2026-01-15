@@ -383,11 +383,11 @@ spec:
                       minLength: 1
                       type: string
                       x-kubernetes-validations:
-                      - message: The fieldPath must start with `spec.`
-                        rule: self.startsWith('spec.')
                       - message: The fieldPath must consist only of alphanumeric characters,
                           brackets [] and dots ('.').
                         rule: self.matches('^[\\da-zA-Z\\.\\[\\]]+$')
+                      - message: The fieldPath must start with `spec.`
+                        rule: self.startsWith('spec.')
                   required:
                   - diff
                   - fieldPath

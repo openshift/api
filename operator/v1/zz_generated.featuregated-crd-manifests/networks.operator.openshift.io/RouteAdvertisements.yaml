@@ -418,11 +418,11 @@ spec:
                             type: string
                         type: object
                         x-kubernetes-validations:
-                        - message: ipsecConfig.mode is required
-                          rule: self == oldSelf || has(self.mode)
                         - message: full is forbidden when mode is not Full
                           rule: 'has(self.mode) && self.mode == ''Full'' ?  true :
                             !has(self.full)'
+                        - message: ipsecConfig.mode is required
+                          rule: self == oldSelf || has(self.mode)
                       ipv4:
                         description: |-
                           ipv4 allows users to configure IP settings for IPv4 connections. When ommitted,
@@ -877,13 +877,6 @@ spec:
                 type: boolean
             type: object
             x-kubernetes-validations:
-            - message: Route advertisements cannot be Enabled if 'FRR' routing capability
-                provider is not available
-              rule: (has(self.additionalRoutingCapabilities) && ('FRR' in self.additionalRoutingCapabilities.providers))
-                || !has(self.defaultNetwork) || !has(self.defaultNetwork.ovnKubernetesConfig)
-                || !has(self.defaultNetwork.ovnKubernetesConfig.routeAdvertisements)
-                || self.defaultNetwork.ovnKubernetesConfig.routeAdvertisements !=
-                'Enabled'
             - message: invalid value for IPForwarding, valid values are 'Restricted'
                 or 'Global'
               rule: '!has(self.defaultNetwork) || !has(self.defaultNetwork.ovnKubernetesConfig)
@@ -894,6 +887,13 @@ spec:
                 || self.defaultNetwork.ovnKubernetesConfig.gatewayConfig.ipForwarding
                 == ''Restricted'' || self.defaultNetwork.ovnKubernetesConfig.gatewayConfig.ipForwarding
                 == ''Global'''
+            - message: Route advertisements cannot be Enabled if 'FRR' routing capability
+                provider is not available
+              rule: (has(self.additionalRoutingCapabilities) && ('FRR' in self.additionalRoutingCapabilities.providers))
+                || !has(self.defaultNetwork) || !has(self.defaultNetwork.ovnKubernetesConfig)
+                || !has(self.defaultNetwork.ovnKubernetesConfig.routeAdvertisements)
+                || self.defaultNetwork.ovnKubernetesConfig.routeAdvertisements !=
+                'Enabled'
           status:
             description: |-
               NetworkStatus is detailed operator status, which is distilled

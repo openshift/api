@@ -69,13 +69,13 @@ spec:
                 - type
                 type: object
                 x-kubernetes-validations:
+                - message: optionalMember is forbidden when type is not OptionalMember
+                  rule: 'has(self.type) && self.type == ''OptionalMember'' ?  true
+                    : !has(self.optionalMember)'
                 - message: requiredMember is required when type is RequiredMember,
                     and forbidden otherwise
                   rule: 'has(self.type) && self.type == ''RequiredMember'' ?  has(self.requiredMember)
                     : !has(self.requiredMember)'
-                - message: optionalMember is forbidden when type is not OptionalMember
-                  rule: 'has(self.type) && self.type == ''OptionalMember'' ?  true
-                    : !has(self.optionalMember)'
               coolNewField:
                 description: coolNewField is a field that is for tech preview only.  On
                   normal clusters this shouldn't be present

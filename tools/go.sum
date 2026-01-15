@@ -374,6 +374,8 @@ github.com/hexops/gotextdiff v1.0.3 h1:gitA9+qJrrTCsiCl7+kh75nPqQt1cx4ZkudSTLoUq
 github.com/hexops/gotextdiff v1.0.3/go.mod h1:pSWU5MAI3yDq+fZBTazCSJysOMbxWL1BSow5/V2vxeg=
 github.com/inconshreveable/mousetrap v1.1.0 h1:wN+x4NVGpMsO7ErUn/mUI3vEoE6Jt13X2s0bqwp9tc8=
 github.com/inconshreveable/mousetrap v1.1.0/go.mod h1:vpF70FUmC8bwa3OWnCshd2FqLfsEA9PFc4w1p2J65bw=
+github.com/jaypoulz/controller-tools v0.0.0-20260116180353-88e61f2c62d0 h1:JhWZ2nymVGkToi2gFPDMJyyqxHLbZiAEOYOkepso8ig=
+github.com/jaypoulz/controller-tools v0.0.0-20260116180353-88e61f2c62d0/go.mod h1:JhdEECpLnYzT+n3xWZZnbFyLk4/XUgg6avg2lLUqRCk=
 github.com/jbenet/go-context v0.0.0-20150711004518-d14ea06fba99 h1:BQSFePA1RWJOlocH6Fxy8MmwDt+yVQYULKfN0RoTN8A=
 github.com/jbenet/go-context v0.0.0-20150711004518-d14ea06fba99/go.mod h1:1lJo3i6rXxKeerYnT8Nvf0QmHCRC1n8sfWVwXF2Frvo=
 github.com/jessevdk/go-flags v1.6.1 h1:Cvu5U8UGrLay1rZfv/zP7iLpSHGUZ/Ou68T0iX1bBK4=
@@ -498,8 +500,6 @@ github.com/onsi/ginkgo/v2 v2.23.4 h1:ktYTpKJAVZnDT4VjxSbiBenUjmlL/5QkBEocaWXiQus
 github.com/onsi/ginkgo/v2 v2.23.4/go.mod h1:Bt66ApGPBFzHyR+JO10Zbt0Gsp4uWxu5mIOTusL46e8=
 github.com/onsi/gomega v1.38.0 h1:c/WX+w8SLAinvuKKQFh77WEucCnPk4j2OTUr7lt7BeY=
 github.com/onsi/gomega v1.38.0/go.mod h1:OcXcwId0b9QsE7Y49u+BTrL4IdKOBOKnD6VQNTJEB6o=
-github.com/openshift/controller-tools v0.12.1-0.20250801155905-948121310243 h1:h1plii/XWykoQ4g1pthErC4pUeCTwtIjxicKL1GYuf0=
-github.com/openshift/controller-tools v0.12.1-0.20250801155905-948121310243/go.mod h1:JhdEECpLnYzT+n3xWZZnbFyLk4/XUgg6avg2lLUqRCk=
 github.com/openshift/crd-schema-checker v0.0.0-20250905140724-c313b6407231 h1:8lSGufji9rfiyDxtUl7A4uOyeeP4x0UOOXcsDBFfkGI=
 github.com/openshift/crd-schema-checker v0.0.0-20250905140724-c313b6407231/go.mod h1:sTxJ4ZFW9r9fEdbW2v0yMRi6NcyTbx0fII4p83IQ+L8=
 github.com/otiai10/copy v1.2.0/go.mod h1:rrF5dJ5F0t/EWSYODDu4j9/vEeYHMkc8jt0zJChqQWw=

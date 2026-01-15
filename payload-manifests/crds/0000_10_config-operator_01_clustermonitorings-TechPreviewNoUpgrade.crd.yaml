@@ -164,11 +164,11 @@ spec:
                           - name
                           type: object
                           x-kubernetes-validations:
-                          - message: at least one of request or limit must be set
-                            rule: has(self.request) || has(self.limit)
                           - message: limit must be greater than or equal to request
                             rule: '!(has(self.request) && has(self.limit)) || quantity(self.limit).compareTo(quantity(self.request))
                               >= 0'
+                          - message: at least one of request or limit must be set
+                            rule: has(self.request) || has(self.limit)
                         maxItems: 10
                         minItems: 1
                         type: array
@@ -1014,11 +1014,11 @@ spec:
                       - name
                       type: object
                       x-kubernetes-validations:
-                      - message: at least one of request or limit must be set
-                        rule: has(self.request) || has(self.limit)
                       - message: limit must be greater than or equal to request
                         rule: '!(has(self.request) && has(self.limit)) || quantity(self.limit).compareTo(quantity(self.request))
                           >= 0'
+                      - message: at least one of request or limit must be set
+                        rule: has(self.request) || has(self.limit)
                     maxItems: 10
                     minItems: 1
                     type: array

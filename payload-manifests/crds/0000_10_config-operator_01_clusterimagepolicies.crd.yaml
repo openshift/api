@@ -69,13 +69,13 @@ spec:
                             maxLength: 8192
                             type: string
                             x-kubernetes-validations:
-                            - message: the fulcioCAData must start with base64 encoding
-                                of '-----BEGIN CERTIFICATE-----'.
-                              rule: string(self).startsWith('-----BEGIN CERTIFICATE-----')
                             - message: the fulcioCAData must end with base64 encoding
                                 of '-----END CERTIFICATE-----'.
                               rule: string(self).endsWith('-----END CERTIFICATE-----\n')
                                 || string(self).endsWith('-----END CERTIFICATE-----')
+                            - message: the fulcioCAData must start with base64 encoding
+                                of '-----BEGIN CERTIFICATE-----'.
+                              rule: string(self).startsWith('-----BEGIN CERTIFICATE-----')
                           fulcioSubject:
                             description: fulcioSubject is a required field specifies
                               OIDC issuer and the email of the Fulcio authentication
@@ -114,13 +114,13 @@ spec:
                             maxLength: 8192
                             type: string
                             x-kubernetes-validations:
-                            - message: the rekorKeyData must start with base64 encoding
-                                of '-----BEGIN PUBLIC KEY-----'.
-                              rule: string(self).startsWith('-----BEGIN PUBLIC KEY-----')
                             - message: the rekorKeyData must end with base64 encoding
                                 of '-----END PUBLIC KEY-----'.
                               rule: string(self).endsWith('-----END PUBLIC KEY-----\n')
                                 || string(self).endsWith('-----END PUBLIC KEY-----')
+                            - message: the rekorKeyData must start with base64 encoding
+                                of '-----BEGIN PUBLIC KEY-----'.
+                              rule: string(self).startsWith('-----BEGIN PUBLIC KEY-----')
                         required:
                         - fulcioCAData
                         - fulcioSubject
@@ -140,9 +140,6 @@ spec:
                             minLength: 72
                             type: string
                             x-kubernetes-validations:
-                            - message: the caIntermediatesData must start with base64
-                                encoding of '-----BEGIN CERTIFICATE-----'.
-                              rule: string(self).startsWith('-----BEGIN CERTIFICATE-----')
                             - message: the caIntermediatesData must end with base64
                                 encoding of '-----END CERTIFICATE-----'.
                               rule: string(self).endsWith('-----END CERTIFICATE-----\n')
@@ -153,6 +150,9 @@ spec:
                                 markers.
                               rule: string(self).findAll('-----BEGIN CERTIFICATE-----').size()
                                 == string(self).findAll('-----END CERTIFICATE-----').size()
+                            - message: the caIntermediatesData must start with base64
+                                encoding of '-----BEGIN CERTIFICATE-----'.
+                              rule: string(self).startsWith('-----BEGIN CERTIFICATE-----')
                           caRootsData:
                             description: caRootsData contains base64-encoded data
                               of a certificate bundle PEM file, which contains one
@@ -163,9 +163,6 @@ spec:
                             minLength: 72
                             type: string
                             x-kubernetes-validations:
-                            - message: the caRootsData must start with base64 encoding
-                                of '-----BEGIN CERTIFICATE-----'.
-                              rule: string(self).startsWith('-----BEGIN CERTIFICATE-----')
                             - message: the caRootsData must end with base64 encoding
                                 of '-----END CERTIFICATE-----'.
                               rule: string(self).endsWith('-----END CERTIFICATE-----\n')
@@ -176,6 +173,9 @@ spec:
                                 markers.
                               rule: string(self).findAll('-----BEGIN CERTIFICATE-----').size()
                                 == string(self).findAll('-----END CERTIFICATE-----').size()
+                            - message: the caRootsData must start with base64 encoding
+                                of '-----BEGIN CERTIFICATE-----'.
+                              rule: string(self).startsWith('-----BEGIN CERTIFICATE-----')
                           pkiCertificateSubject:
                             description: pkiCertificateSubject defines the requirements
                               imposed on the subject to which the certificate was
@@ -239,13 +239,13 @@ spec:
                             minLength: 68
                             type: string
                             x-kubernetes-validations:
-                            - message: the keyData must start with base64 encoding
-                                of '-----BEGIN PUBLIC KEY-----'.
-                              rule: string(self).startsWith('-----BEGIN PUBLIC KEY-----')
                             - message: the keyData must end with base64 encoding of
                                 '-----END PUBLIC KEY-----'.
                               rule: string(self).endsWith('-----END PUBLIC KEY-----\n')
                                 || string(self).endsWith('-----END PUBLIC KEY-----')
+                            - message: the keyData must start with base64 encoding
+                                of '-----BEGIN PUBLIC KEY-----'.
+                              rule: string(self).startsWith('-----BEGIN PUBLIC KEY-----')
                           rekorKeyData:
                             description: |-
                               rekorKeyData is an optional field contains inline base64-encoded data for the PEM format from the Rekor public key.
@@ -254,13 +254,13 @@ spec:
                             maxLength: 8192
                             type: string
                             x-kubernetes-validations:
-                            - message: the rekorKeyData must start with base64 encoding
-                                of '-----BEGIN PUBLIC KEY-----'.
-                              rule: string(self).startsWith('-----BEGIN PUBLIC KEY-----')
                             - message: the rekorKeyData must end with base64 encoding
                                 of '-----END PUBLIC KEY-----'.
                               rule: string(self).endsWith('-----END PUBLIC KEY-----\n')
                                 || string(self).endsWith('-----END PUBLIC KEY-----')
+                            - message: the rekorKeyData must start with base64 encoding
+                                of '-----BEGIN PUBLIC KEY-----'.
+                              rule: string(self).startsWith('-----BEGIN PUBLIC KEY-----')
                         required:
                         - keyData
                         type: object
@@ -268,6 +268,10 @@ spec:
                     - policyType
                     type: object
                     x-kubernetes-validations:
+                    - message: fulcioCAWithRekor is required when policyType is FulcioCAWithRekor,
+                        and forbidden otherwise
+                      rule: 'has(self.policyType) && self.policyType == ''FulcioCAWithRekor''
+                        ? has(self.fulcioCAWithRekor) : !has(self.fulcioCAWithRekor)'
                     - message: pki is required when policyType is PKI, and forbidden
                         otherwise
                       rule: 'has(self.policyType) && self.policyType == ''PKI'' ?
@@ -276,10 +280,6 @@ spec:
                         and forbidden otherwise
                       rule: 'has(self.policyType) && self.policyType == ''PublicKey''
                         ? has(self.publicKey) : !has(self.publicKey)'
-                    - message: fulcioCAWithRekor is required when policyType is FulcioCAWithRekor,
-                        and forbidden otherwise
-                      rule: 'has(self.policyType) && self.policyType == ''FulcioCAWithRekor''
-                        ? has(self.fulcioCAWithRekor) : !has(self.fulcioCAWithRekor)'
                   signedIdentity:
                     description: |-
                       signedIdentity is an optional field specifies what image identity the signature claims about the image. This is useful when the image identity in the signature differs from the original image spec, such as when mirror registry is configured for the image scope, the signature from the mirror registry contains the image identity of the mirror instead of the original scope.
@@ -413,19 +413,19 @@ spec:
                   maxLength: 512
                   type: string
                   x-kubernetes-validations:
-                  - message: invalid image scope format, scope must contain a fully
-                      qualified domain name or 'localhost'
-                    rule: 'size(self.split(''/'')[0].split(''.'')) == 1 ? self.split(''/'')[0].split(''.'')[0].split('':'')[0]
-                      == ''localhost'' : true'
+                  - message: invalid repository namespace or image specification in
+                      the image scope
+                    rule: '!self.contains(''*'') ? self.matches(''^((((?:[a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9-]*[a-zA-Z0-9])(?:\\.(?:[a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9-]*[a-zA-Z0-9]))+(?::[0-9]+)?)|(localhost(?::[0-9]+)?))(?:(?:/[a-z0-9]+(?:(?:(?:[._]|__|[-]*)[a-z0-9]+)+)?)+)?)(?::([\\w][\\w.-]{0,127}))?(?:@([A-Za-z][A-Za-z0-9]*(?:[-_+.][A-Za-z][A-Za-z0-9]*)*[:][[:xdigit:]]{32,}))?$'')
+                      : true'
                   - message: invalid image scope with wildcard, a wildcard can only
                       be at the start of the domain and is only supported for subdomain
                       matching, not path matching
                     rule: 'self.contains(''*'') ? self.matches(''^\\*(?:\\.(?:[a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9-]*[a-zA-Z0-9]))+$'')
                       : true'
-                  - message: invalid repository namespace or image specification in
-                      the image scope
-                    rule: '!self.contains(''*'') ? self.matches(''^((((?:[a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9-]*[a-zA-Z0-9])(?:\\.(?:[a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9-]*[a-zA-Z0-9]))+(?::[0-9]+)?)|(localhost(?::[0-9]+)?))(?:(?:/[a-z0-9]+(?:(?:(?:[._]|__|[-]*)[a-z0-9]+)+)?)+)?)(?::([\\w][\\w.-]{0,127}))?(?:@([A-Za-z][A-Za-z0-9]*(?:[-_+.][A-Za-z][A-Za-z0-9]*)*[:][[:xdigit:]]{32,}))?$'')
-                      : true'
+                  - message: invalid image scope format, scope must contain a fully
+                      qualified domain name or 'localhost'
+                    rule: 'size(self.split(''/'')[0].split(''.'')) == 1 ? self.split(''/'')[0].split(''.'')[0].split('':'')[0]
+                      == ''localhost'' : true'
                 maxItems: 256
                 type: array
                 x-kubernetes-list-type: set

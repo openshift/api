@@ -35,7 +35,7 @@ require (
 	sigs.k8s.io/yaml v1.6.0
 )
 
-replace sigs.k8s.io/controller-tools => github.com/openshift/controller-tools v0.12.1-0.20250801155905-948121310243
+replace sigs.k8s.io/controller-tools => github.com/openshift/controller-tools v0.12.1-0.20260120141914-b0865777b142
 
 require (
 	4d63.com/gocheckcompilerdirectives v1.3.0 // indirect

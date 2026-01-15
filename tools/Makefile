@@ -115,7 +115,7 @@ $(OUTPUT_DIR)/kube-api-linter.so: $(OUTPUT_DIR)/vendor-version
 	ln -fs $(OUTPUT_DIR)/kube-api-linter.so $(TOOLS_DIR)/_output/bin/kube-api-linter.so
 
 $(OUTPUT_DIR)/openapi-gen: $(OUTPUT_DIR)/vendor-version
-	go build -mod=vendor -o $(OUTPUT_DIR)/openapi-gen ./vendor/k8s.io/code-generator/cmd/openapi-gen
+	go build -mod=vendor -o $(OUTPUT_DIR)/openapi-gen ./vendor/k8s.io/kube-openapi/cmd/openapi-gen
 
 $(OUTPUT_DIR)/protoc-gen-gogo: $(OUTPUT_DIR)/vendor-version
 	go build -mod=vendor -o $(OUTPUT_DIR)/protoc-gen-gogo ./vendor/k8s.io/code-generator/cmd/go-to-protobuf/protoc-gen-gogo

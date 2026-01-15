@@ -12171,8 +12171,7 @@
         },
         "volumeClaimTemplate": {
           "description": "volumeClaimTemplate defines persistent storage for Alertmanager. Use this setting to configure the persistent volume claim, including storage class and volume size. If omitted, the Pod uses ephemeral storage and alert data will not persist across restarts.",
-          "default": {},
-          "$ref": "#/definitions/com.github.openshift.api.config.v1alpha1.VolumeClaimConfig"
+          "$ref": "#/definitions/io.k8s.api.core.v1.PersistentVolumeClaim"
         }
       }
     },
@@ -13410,24 +13409,6 @@
             "Disabled",
             "NamespaceIsolated"
           ]
-        }
-      }
-    },
-    "com.github.openshift.api.config.v1alpha1.VolumeClaimConfig": {
-      "description": "VolumeClaimConfig defines the configuration for a PersistentVolumeClaim used for storage.",
-      "type": "object",
-      "required": [
-        "sizeInGiB"
-      ],
-      "properties": {
-        "sizeInGiB": {
-          "description": "sizeInGiB specifies the storage capacity in gibibytes (GiB) for the volume. This determines how much data can be stored. Minimum value is 1 GiB. Maximum value is 16384 GiB (16 TiB).",
-          "type": "integer",
-          "format": "int32"
-        },
-        "storageClassName": {
-          "description": "storageClassName is the name of the StorageClass to use for the PersistentVolumeClaim. When omitted, the default StorageClass is used. Must be a valid DNS subdomain name (RFC 1123) when specified. Maximum length is 253 characters.",
-          "type": "string"
         }
       }
     },

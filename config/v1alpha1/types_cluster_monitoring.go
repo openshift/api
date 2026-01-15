@@ -262,7 +262,7 @@ type AlertmanagerCustomConfig struct {
 	// If omitted, the Pod uses ephemeral storage and alert data will not persist
 	// across restarts.
 	// +optional
-	VolumeClaimTemplate VolumeClaimConfig `json:"volumeClaimTemplate,omitempty,omitzero"`
+	VolumeClaimTemplate *v1.PersistentVolumeClaim `json:"volumeClaimTemplate,omitempty,omitzero"`
 }
 
 // AlertManagerDeployMode defines the deployment state of the platform Alertmanager instance.
@@ -900,26 +900,6 @@ type SecretKeySelector struct {
 	// +kubebuilder:validation:MaxLength=253
 	// +kubebuilder:validation:XValidation:rule="self.matches('^[a-zA-Z0-9._-]+$')",message="must contain only alphanumeric characters, '-', '_', or '.'"
 	Key string `json:"key,omitempty"`
-}
-
-// VolumeClaimConfig defines the configuration for a PersistentVolumeClaim used for storage.
-type VolumeClaimConfig struct {
-	// storageClassName is the name of the StorageClass to use for the PersistentVolumeClaim.
-	// When omitted, the default StorageClass is used.
-	// Must be a valid DNS subdomain name (RFC 1123) when specified.
-	// Maximum length is 253 characters.
-	// +kubebuilder:validation:MaxLength=253
-	// +kubebuilder:validation:XValidation:rule="!format.dns1123Subdomain().validate(self).hasValue()",message="storageClassName must be a valid DNS subdomain name"
-	// +optional
-	StorageClassName *string `json:"storageClassName,omitempty"`
-	// sizeInGiB specifies the storage capacity in gibibytes (GiB) for the volume.
-	// This determines how much data can be stored.
-	// Minimum value is 1 GiB.
-	// Maximum value is 16384 GiB (16 TiB).
-	// +kubebuilder:validation:Minimum=1
-	// +kubebuilder:validation:Maximum=16384
-	// +required
-	SizeInGiB int32 `json:"sizeInGiB,omitempty"`
 }
 
 // Retention configures how long Prometheus retains metrics data and how much storage it can use.

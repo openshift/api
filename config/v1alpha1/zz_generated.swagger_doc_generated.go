@@ -343,16 +343,6 @@ func (UserDefinedMonitoring) SwaggerDoc() map[string]string {
 	return map_UserDefinedMonitoring
 }
 
-var map_VolumeClaimConfig = map[string]string{
-	"":                 "VolumeClaimConfig defines the configuration for a PersistentVolumeClaim used for storage.",
-	"storageClassName": "storageClassName is the name of the StorageClass to use for the PersistentVolumeClaim. When omitted, the default StorageClass is used. Must be a valid DNS subdomain name (RFC 1123) when specified. Maximum length is 253 characters.",
-	"sizeInGiB":        "sizeInGiB specifies the storage capacity in gibibytes (GiB) for the volume. This determines how much data can be stored. Minimum value is 1 GiB. Maximum value is 16384 GiB (16 TiB).",
-}
-
-func (VolumeClaimConfig) SwaggerDoc() map[string]string {
-	return map_VolumeClaimConfig
-}
-
 var map_ImagePolicy = map[string]string{
 	"":         "ImagePolicy holds namespace-wide configuration for image signature verification\n\nCompatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.",
 	"metadata": "metadata is the standard object's metadata. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata",

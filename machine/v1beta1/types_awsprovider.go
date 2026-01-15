@@ -430,11 +430,13 @@ const (
 
 // HostPlacement is the type that will be used to configure the placement of AWS instances.
 // +kubebuilder:validation:XValidation:rule="has(self.affinity) && self.affinity == 'DedicatedHost' ? has(self.dedicatedHost) : true",message="dedicatedHost is required when affinity is DedicatedHost, and optional otherwise"
+// +kubebuilder:validation:XValidation:rule="has(self.affinity) && has(self.dynamicHost) ? self.affinity == 'DynamicHost' : true",message="dynamicHost is only allowed when affinity is DynamicHost, and forbidden otherwise"
 // +union
 type HostPlacement struct {
 	// affinity specifies the affinity setting for the instance.
 	// Allowed values are AnyAvailable and DedicatedHost.
 	// When Affinity is set to DedicatedHost, an instance started onto a specific host always restarts on the same host if stopped. In this scenario, the `dedicatedHost` field must be set.
+	// When Affinity is set to DynamicHost, a dedicated host will be allocated and assigned to the instance and the instance will always restart on this host if stopped. In this scenario, the `dynamicHost` field may be set to provide additional settings.
 	// When Affinity is set to AnyAvailable, and you stop and restart the instance, it can be restarted on any available host.
 	// When Affinity is set to AnyAvailable and the `dedicatedHost` field is defined, it runs on specified Dedicated Host, but may move if stopped.
 	// +required
@@ -446,10 +448,16 @@ type HostPlacement struct {
 	// +optional
 	// +unionMember
 	DedicatedHost *DedicatedHost `json:"dedicatedHost,omitempty"`
+
+	// dynamicHost enables automatic allocation of a single dedicated host.
+	// This field is mutually exclusive with dedicatedHost and always allocates exactly one host.
+	// +optional
+	// +unionMember
+	DynamicHostAllocation *DynamicHostAllocationSpec `json:"dynamicHost,omitempty"`
 }
 
 // HostAffinity selects how an instance should be placed on AWS Dedicated Hosts.
-// +kubebuilder:validation:Enum:=DedicatedHost;AnyAvailable
+// +kubebuilder:validation:Enum:=DedicatedHost;AnyAvailable;DynamicHost
 type HostAffinity string
 
 const (
@@ -458,6 +466,9 @@ const (
 
 	// HostAffinityDedicatedHost requires specifying a particular host via dedicatedHost.host.hostID.
 	HostAffinityDedicatedHost HostAffinity = "DedicatedHost"
+
+	// HostAffinityDynamicHost requires specifying a host config in dynamicHost.
+	HostAffinityDynamicHost HostAffinity = "DynamicHost"
 )
 
 // DedicatedHost represents the configuration for the usage of dedicated host.
@@ -471,4 +482,12 @@ type DedicatedHost struct {
 	// +kubebuilder:validation:MaxLength=19
 	// +required
 	ID string `json:"id,omitempty"`
+}
+
+// DynamicHostAllocationSpec defines the configuration for dynamic dedicated host allocation.
+// This specification always allocates exactly one dedicated host per machine.
+type DynamicHostAllocationSpec struct {
+	// tags to apply to the allocated dedicated host.
+	// +optional
+	Tags map[string]string `json:"tags,omitempty"`
 }

@@ -101,6 +101,15 @@ func (DedicatedHost) SwaggerDoc() map[string]string {
 	return map_DedicatedHost
 }
 
+var map_DynamicHostAllocationSpec = map[string]string{
+	"":     "DynamicHostAllocationSpec defines the configuration for dynamic dedicated host allocation. This specification always allocates exactly one dedicated host per machine.",
+	"tags": "tags to apply to the allocated dedicated host.",
+}
+
+func (DynamicHostAllocationSpec) SwaggerDoc() map[string]string {
+	return map_DynamicHostAllocationSpec
+}
+
 var map_EBSBlockDeviceSpec = map[string]string{
 	"":                    "EBSBlockDeviceSpec describes a block device for an EBS volume. https://docs.aws.amazon.com/goto/WebAPI/ec2-2016-11-15/EbsBlockDevice",
 	"deleteOnTermination": "Indicates whether the EBS volume is deleted on machine termination.\n\nDeprecated: setting this field has no effect.",
@@ -128,8 +137,9 @@ func (Filter) SwaggerDoc() map[string]string {
 
 var map_HostPlacement = map[string]string{
 	"":              "HostPlacement is the type that will be used to configure the placement of AWS instances.",
-	"affinity":      "affinity specifies the affinity setting for the instance. Allowed values are AnyAvailable and DedicatedHost. When Affinity is set to DedicatedHost, an instance started onto a specific host always restarts on the same host if stopped. In this scenario, the `dedicatedHost` field must be set. When Affinity is set to AnyAvailable, and you stop and restart the instance, it can be restarted on any available host. When Affinity is set to AnyAvailable and the `dedicatedHost` field is defined, it runs on specified Dedicated Host, but may move if stopped.",
+	"affinity":      "affinity specifies the affinity setting for the instance. Allowed values are AnyAvailable and DedicatedHost. When Affinity is set to DedicatedHost, an instance started onto a specific host always restarts on the same host if stopped. In this scenario, the `dedicatedHost` field must be set. When Affinity is set to DynamicHost, a dedicated host will be allocated and assigned to the instance and the instance will always restart on this host if stopped. In this scenario, the `dynamicHost` field may be set to provide additional settings. When Affinity is set to AnyAvailable, and you stop and restart the instance, it can be restarted on any available host. When Affinity is set to AnyAvailable and the `dedicatedHost` field is defined, it runs on specified Dedicated Host, but may move if stopped.",
 	"dedicatedHost": "dedicatedHost specifies the exact host that an instance should be restarted on if stopped. dedicatedHost is required when 'affinity' is set to DedicatedHost, and optional otherwise.",
+	"dynamicHost":   "dynamicHost enables automatic allocation of a single dedicated host. This field is mutually exclusive with dedicatedHost and always allocates exactly one host.",
 }
 
 func (HostPlacement) SwaggerDoc() map[string]string {

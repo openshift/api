@@ -657,7 +657,7 @@ type AdditionalAlertmanagerConfig struct {
 	// +kubebuilder:validation:MinItems=1
 	// +kubebuilder:validation:MaxItems=10
 	// +kubebuilder:validation:items:MaxLength=255
-	// +kubebuilder:validation:items:XValidation:rule="isURL('http://' + self) && url('http://' + self).getHostname() != '' && url('http://' + self).getPort() != '' && int(url('http://' + self).getPort()) >= 1 && int(url('http://' + self).getPort()) <= 65535",message="must be a valid 'host:port' where host is a DNS name, IPv4, or IPv6 address (in brackets), and port is 1-65535"
+	// +kubebuilder:validation:items:XValidation:rule="isURL('http://' + self) && size(url('http://' + self).getHostname()) > 0 && size(url('http://' + self).getPort()) > 0 && int(url('http://' + self).getPort()) >= 1 && int(url('http://' + self).getPort()) <= 65535",message="must be a valid 'host:port' where host is a DNS name, IPv4, or IPv6 address (in brackets), and port is 1-65535"
 	// +listType=set
 	// +required
 	StaticConfigs []string `json:"staticConfigs,omitempty"`
@@ -732,7 +732,7 @@ type RemoteWriteSpec struct {
 }
 
 // RelabelConfig represents a relabeling rule.
-// +kubebuilder:validation:XValidation:rule="self.action in ['Replace', 'HashMod', 'Lowercase', 'Uppercase', 'KeepEqual', 'DropEqual'] ? (has(self.targetLabel) && self.targetLabel != ”) : !has(self.targetLabel)",message="targetLabel is required when action is Replace, HashMod, Lowercase, Uppercase, KeepEqual or DropEqual, and forbidden otherwise"
+// +kubebuilder:validation:XValidation:rule="self.action in ['Replace', 'HashMod', 'Lowercase', 'Uppercase', 'KeepEqual', 'DropEqual'] ? (has(self.targetLabel) && size(self.targetLabel) > 0) : !has(self.targetLabel)",message="targetLabel is required when action is Replace, HashMod, Lowercase, Uppercase, KeepEqual or DropEqual, and forbidden otherwise"
 // +kubebuilder:validation:XValidation:rule="self.action in ['Replace', 'LabelMap'] || !has(self.replacement)",message="replacement is only valid when action is Replace or LabelMap"
 type RelabelConfig struct {
 	// name is a unique identifier for this relabel configuration.

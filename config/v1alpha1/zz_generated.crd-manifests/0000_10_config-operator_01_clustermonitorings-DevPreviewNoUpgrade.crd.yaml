@@ -1044,10 +1044,10 @@ spec:
                             - message: must be a valid 'host:port' where host is a
                                 DNS name, IPv4, or IPv6 address (in brackets), and
                                 port is 1-65535
-                              rule: isURL('http://' + self) && url('http://' + self).getHostname()
-                                != '' && url('http://' + self).getPort() != '' &&
-                                int(url('http://' + self).getPort()) >= 1 && int(url('http://'
-                                + self).getPort()) <= 65535
+                              rule: isURL('http://' + self) && size(url('http://'
+                                + self).getHostname()) > 0 && size(url('http://' +
+                                self).getPort()) > 0 && int(url('http://' + self).getPort())
+                                >= 1 && int(url('http://' + self).getPort()) <= 65535
                           maxItems: 10
                           minItems: 1
                           type: array
@@ -1497,7 +1497,7 @@ spec:
                                 and forbidden otherwise
                               rule: 'self.action in [''Replace'', ''HashMod'', ''Lowercase'',
                                 ''Uppercase'', ''KeepEqual'', ''DropEqual''] ? (has(self.targetLabel)
-                                && self.targetLabel != ”) : !has(self.targetLabel)'
+                                && size(self.targetLabel) > 0) : !has(self.targetLabel)'
                             - message: replacement is only valid when action is Replace
                                 or LabelMap
                               rule: self.action in ['Replace', 'LabelMap'] || !has(self.replacement)

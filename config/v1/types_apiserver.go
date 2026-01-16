@@ -175,7 +175,6 @@ type APIServerNamedServingCert struct {
 }
 
 // APIServerEncryption is used to encrypt sensitive resources on the cluster.
-// +openshift:validation:FeatureGateAwareXValidation:featureGate=KMSEncryptionProvider,rule="has(self.type) && self.type == 'KMS' ?  has(self.kms) : !has(self.kms)",message="kms config is required when encryption type is KMS, and forbidden otherwise"
 // +union
 type APIServerEncryption struct {
 	// type defines what encryption type should be used to encrypt resources at the datastore layer.
@@ -196,6 +195,7 @@ type APIServerEncryption struct {
 	// +optional
 	Type EncryptionType `json:"type,omitempty"`
 
+	// Tombstone: Functionality was not implemented for this struct. There will be newer struct for new design.
 	// kms defines the configuration for the external KMS instance that manages the encryption keys,
 	// when KMS encryption is enabled sensitive resources will be encrypted using keys managed by an
 	// externally configured KMS instance.
@@ -207,7 +207,7 @@ type APIServerEncryption struct {
 	// +openshift:enable:FeatureGate=KMSEncryptionProvider
 	// +unionMember
 	// +optional
-	KMS *KMSConfig `json:"kms,omitempty"`
+	//KMS *KMSConfig `json:"kms,omitempty"`
 }
 
 // +openshift:validation:FeatureGateAwareEnum:featureGate="",enum="";identity;aescbc;aesgcm

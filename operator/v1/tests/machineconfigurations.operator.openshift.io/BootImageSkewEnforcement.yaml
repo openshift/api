@@ -336,7 +336,7 @@ tests:
             automatic:
               ocpVersion: "4.18.2"
               rhcosVersion: "416.94.202411201433-0"
-      expectedError: "when skew enforcement is in Automatic mode, managedBootImages must contain a MachineManager opting in all MachineAPI MachineSets"
+      expectedError: "when skew enforcement is in Automatic mode, any MachineAPI MachineSet MachineManager must use selection mode 'All'"
     - name: Should not be able to set boot image configuration to an empty list if bootImageSkewEnforcementStatus.mode is set to Automatic
       initial: |
         apiVersion: operator.openshift.io/v1
@@ -373,7 +373,7 @@ tests:
             automatic:
               ocpVersion: "4.18.2"
               rhcosVersion: "416.94.202411201433-0"
-      expectedError: "when skew enforcement is in Automatic mode, managedBootImages must contain a MachineManager opting in all MachineAPI MachineSets"
+      expectedError: "when skew enforcement is in Automatic mode, managedBootImages.machineManagers must not be an empty list"
     - name: Should require boot image configuration status to be set to All when bootImageSkewEnforcementStatus.mode is Automatic
       initial: |
         apiVersion: operator.openshift.io/v1

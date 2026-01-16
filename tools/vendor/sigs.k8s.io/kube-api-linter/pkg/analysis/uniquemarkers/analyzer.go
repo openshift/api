@@ -65,8 +65,8 @@ func (a *analyzer) run(pass *analysis.Pass) (any, error) {
 		return nil, kalerrors.ErrCouldNotGetInspector
 	}
 
-	inspect.InspectFields(func(field *ast.Field, stack []ast.Node, _ extractjsontags.FieldTagInfo, markersAccess markers.Markers) {
-		checkField(pass, field, markersAccess, a.uniqueMarkers)
+	inspect.InspectFields(func(field *ast.Field, _ extractjsontags.FieldTagInfo, markersAccess markers.Markers, qualifiedFieldName string) {
+		checkField(pass, field, markersAccess, a.uniqueMarkers, qualifiedFieldName)
 	})
 
 	inspect.InspectTypeSpec(func(typeSpec *ast.TypeSpec, markersAccess markers.Markers) {
@@ -76,13 +76,13 @@ func (a *analyzer) run(pass *analysis.Pass) (any, error) {
 	return nil, nil //nolint:nilnil
 }
 
-func checkField(pass *analysis.Pass, field *ast.Field, markersAccess markers.Markers, uniqueMarkers []UniqueMarker) {
+func checkField(pass *analysis.Pass, field *ast.Field, markersAccess markers.Markers, uniqueMarkers []UniqueMarker, qualifiedFieldName string) {
 	if field == nil || len(field.Names) == 0 {
 		return
 	}
 
 	markers := utils.TypeAwareMarkerCollectionForField(pass, markersAccess, field)
-	check(markers, uniqueMarkers, reportField(pass, field))
+	check(markers, uniqueMarkers, reportField(pass, field, qualifiedFieldName))
 }
 
 func checkType(pass *analysis.Pass, typeSpec *ast.TypeSpec, markersAccess markers.Markers, uniqueMarkers []UniqueMarker) {
@@ -121,24 +121,49 @@ func constructIdentifier(marker markers.Marker, attributes ...string) string {
 		return marker.Identifier
 	}
 
-	// If a marker doesn't specify the attribute, we should assume it is equivalent
-	// to the empty string ("") so that we can still key on uniqueness of other attributes
-	// effectively.
-	id := fmt.Sprintf("%s:", marker.Identifier)
-	for _, attr := range attributes {
-		id += fmt.Sprintf("%s=%s,", attr, marker.Expressions[attr])
+	switch marker.Type {
+	case markers.MarkerTypeDeclarativeValidation:
+		// If a marker doesn't specify the attribute, we should assume it is equivalent
+		// to the empty string ("") so that we can still key on uniqueness of other attributes
+		// effectively.
+		id := fmt.Sprintf("%s(", marker.Identifier)
+
+		for _, attr := range attributes {
+			if attr == "" {
+				id += marker.Arguments[attr]
+				continue
+			}
+
+			id += fmt.Sprintf("%s: %s,", attr, marker.Arguments[attr])
+		}
+
+		id = strings.TrimSuffix(id, ",")
+		id += ")"
+
+		return id
+	case markers.MarkerTypeKubebuilder:
+		// If a marker doesn't specify the attribute, we should assume it is equivalent
+		// to the empty string ("") so that we can still key on uniqueness of other attributes
+		// effectively.
+		id := fmt.Sprintf("%s:", marker.Identifier)
+		for _, attr := range attributes {
+			id += fmt.Sprintf("%s=%s,", attr, marker.Arguments[attr])
+		}
+
+		id = strings.TrimSuffix(id, ",")
+
+		return id
+	default:
+		// programmer error
+		panic(fmt.Sprintf("unknown marker format %s", marker.Type))
 	}
-
-	id = strings.TrimSuffix(id, ",")
-
-	return id
 }
 
-func reportField(pass *analysis.Pass, field *ast.Field) func(id string) {
+func reportField(pass *analysis.Pass, field *ast.Field, qualifiedFieldName string) func(id string) {
 	return func(id string) {
 		pass.Report(analysis.Diagnostic{
 			Pos:     field.Pos(),
-			Message: fmt.Sprintf("field %s has multiple definitions of marker %s when only a single definition should exist", field.Names[0].Name, id),
+			Message: fmt.Sprintf("field %s has multiple definitions of marker %s when only a single definition should exist", qualifiedFieldName, id),
 		})
 	}
 }

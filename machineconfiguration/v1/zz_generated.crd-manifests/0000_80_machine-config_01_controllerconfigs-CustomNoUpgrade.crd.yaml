@@ -549,13 +549,13 @@ spec:
                                       maxLength: 300
                                       type: string
                                       x-kubernetes-validations:
-                                      - message: url must use https scheme
-                                        rule: url(self).getScheme() == "https"
+                                      - message: url must be a valid absolute URL
+                                        rule: isURL(self)
                                       - message: url path must match /v[0,9]+ or /api/v[0,9]+
                                         rule: matches((url(self).getEscapedPath()),
                                           '^/(api/)?v[0-9]+/{0,1}$')
-                                      - message: url must be a valid absolute URL
-                                        rule: isURL(self)
+                                      - message: url must use https scheme
+                                        rule: url(self).getScheme() == "https"
                                   required:
                                   - name
                                   - url
@@ -610,14 +610,14 @@ spec:
                                       - type
                                       type: object
                                       x-kubernetes-validations:
-                                      - message: uuid configuration is required when
-                                          type is UUID, and forbidden otherwise
-                                        rule: 'has(self.type) && self.type == ''UUID''
-                                          ?  has(self.uuid) : !has(self.uuid)'
                                       - message: name configuration is required when
                                           type is Name, and forbidden otherwise
                                         rule: 'has(self.type) && self.type == ''Name''
                                           ?  has(self.name) : !has(self.name)'
+                                      - message: uuid configuration is required when
+                                          type is UUID, and forbidden otherwise
+                                        rule: 'has(self.type) && self.type == ''UUID''
+                                          ?  has(self.uuid) : !has(self.uuid)'
                                     name:
                                       description: |-
                                         name defines the unique name of a failure domain.
@@ -661,14 +661,14 @@ spec:
                                         - type
                                         type: object
                                         x-kubernetes-validations:
-                                        - message: uuid configuration is required
-                                            when type is UUID, and forbidden otherwise
-                                          rule: 'has(self.type) && self.type == ''UUID''
-                                            ?  has(self.uuid) : !has(self.uuid)'
                                         - message: name configuration is required
                                             when type is Name, and forbidden otherwise
                                           rule: 'has(self.type) && self.type == ''Name''
                                             ?  has(self.name) : !has(self.name)'
+                                        - message: uuid configuration is required
+                                            when type is UUID, and forbidden otherwise
+                                          rule: 'has(self.type) && self.type == ''UUID''
+                                            ?  has(self.uuid) : !has(self.uuid)'
                                       maxItems: 32
                                       minItems: 1
                                       type: array
@@ -1179,17 +1179,17 @@ spec:
                                   - zone
                                   type: object
                                   x-kubernetes-validations:
-                                  - message: when zoneAffinity type is HostGroup,
-                                      regionAffinity type must be ComputeCluster
-                                    rule: 'has(self.zoneAffinity) && self.zoneAffinity.type
-                                      == ''HostGroup'' ?  has(self.regionAffinity)
-                                      && self.regionAffinity.type == ''ComputeCluster''
-                                      : true'
                                   - message: when zoneAffinity type is ComputeCluster,
                                       regionAffinity type must be Datacenter
                                     rule: 'has(self.zoneAffinity) && self.zoneAffinity.type
                                       == ''ComputeCluster'' ?  has(self.regionAffinity)
                                       && self.regionAffinity.type == ''Datacenter''
+                                      : true'
+                                  - message: when zoneAffinity type is HostGroup,
+                                      regionAffinity type must be ComputeCluster
+                                    rule: 'has(self.zoneAffinity) && self.zoneAffinity.type
+                                      == ''HostGroup'' ?  has(self.regionAffinity)
+                                      && self.regionAffinity.type == ''ComputeCluster''
                                       : true'
                                 type: array
                                 x-kubernetes-list-map-keys:

@@ -324,14 +324,14 @@ spec:
                           type: array
                           x-kubernetes-list-type: atomic
                           x-kubernetes-validations:
-                          - message: Reboot action can only be specified standalone,
-                              as it will override any other actions
-                            rule: 'self.exists(x, x.type==''Reboot'') ? size(self)
-                              == 1 : true'
                           - message: None action can only be specified standalone,
                               as it will override any other actions
                             rule: 'self.exists(x, x.type==''None'') ? size(self) ==
                               1 : true'
+                          - message: Reboot action can only be specified standalone,
+                              as it will override any other actions
+                            rule: 'self.exists(x, x.type==''Reboot'') ? size(self)
+                              == 1 : true'
                         path:
                           description: |-
                             path is the location of a file being managed through a MachineConfig.
@@ -450,13 +450,13 @@ spec:
                         type: array
                         x-kubernetes-list-type: atomic
                         x-kubernetes-validations:
-                        - message: Reboot action can only be specified standalone,
-                            as it will override any other actions
-                          rule: 'self.exists(x, x.type==''Reboot'') ? size(self) ==
-                            1 : true'
                         - message: None action can only be specified standalone, as
                             it will override any other actions
                           rule: 'self.exists(x, x.type==''None'') ? size(self) ==
+                            1 : true'
+                        - message: Reboot action can only be specified standalone,
+                            as it will override any other actions
+                          rule: 'self.exists(x, x.type==''Reboot'') ? size(self) ==
                             1 : true'
                     required:
                     - actions
@@ -569,14 +569,14 @@ spec:
                           type: array
                           x-kubernetes-list-type: atomic
                           x-kubernetes-validations:
-                          - message: Reboot action can only be specified standalone,
-                              as it will override any other actions
-                            rule: 'self.exists(x, x.type==''Reboot'') ? size(self)
-                              == 1 : true'
                           - message: None action can only be specified standalone,
                               as it will override any other actions
                             rule: 'self.exists(x, x.type==''None'') ? size(self) ==
                               1 : true'
+                          - message: Reboot action can only be specified standalone,
+                              as it will override any other actions
+                            rule: 'self.exists(x, x.type==''Reboot'') ? size(self)
+                              == 1 : true'
                         name:
                           description: |-
                             name represents the service name of a systemd service managed through a MachineConfig
@@ -954,13 +954,13 @@ spec:
                               type: array
                               x-kubernetes-list-type: atomic
                               x-kubernetes-validations:
-                              - message: Reboot action can only be specified standalone,
-                                  as it will override any other actions
-                                rule: 'self.exists(x, x.type==''Reboot'') ? size(self)
-                                  == 1 : true'
                               - message: None action can only be specified standalone,
                                   as it will override any other actions
                                 rule: 'self.exists(x, x.type==''None'') ? size(self)
+                                  == 1 : true'
+                              - message: Reboot action can only be specified standalone,
+                                  as it will override any other actions
+                                rule: 'self.exists(x, x.type==''Reboot'') ? size(self)
                                   == 1 : true'
                             path:
                               description: |-
@@ -1079,13 +1079,13 @@ spec:
                             type: array
                             x-kubernetes-list-type: atomic
                             x-kubernetes-validations:
-                            - message: Reboot action can only be specified standalone,
-                                as it will override any other actions
-                              rule: 'self.exists(x, x.type==''Reboot'') ? size(self)
-                                == 1 : true'
                             - message: None action can only be specified standalone,
                                 as it will override any other actions
                               rule: 'self.exists(x, x.type==''None'') ? size(self)
+                                == 1 : true'
+                            - message: Reboot action can only be specified standalone,
+                                as it will override any other actions
+                              rule: 'self.exists(x, x.type==''Reboot'') ? size(self)
                                 == 1 : true'
                         required:
                         - actions
@@ -1198,13 +1198,13 @@ spec:
                               type: array
                               x-kubernetes-list-type: atomic
                               x-kubernetes-validations:
-                              - message: Reboot action can only be specified standalone,
-                                  as it will override any other actions
-                                rule: 'self.exists(x, x.type==''Reboot'') ? size(self)
-                                  == 1 : true'
                               - message: None action can only be specified standalone,
                                   as it will override any other actions
                                 rule: 'self.exists(x, x.type==''None'') ? size(self)
+                                  == 1 : true'
+                              - message: Reboot action can only be specified standalone,
+                                  as it will override any other actions
+                                rule: 'self.exists(x, x.type==''Reboot'') ? size(self)
                                   == 1 : true'
                             name:
                               description: |-

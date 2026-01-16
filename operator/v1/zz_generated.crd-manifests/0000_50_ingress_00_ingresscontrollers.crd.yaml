@@ -498,13 +498,13 @@ spec:
                                       minLength: 26
                                       type: string
                                       x-kubernetes-validations:
-                                      - message: eipAllocations should start with
-                                          'eipalloc-'
-                                        rule: self.startsWith('eipalloc-')
                                       - message: eipAllocations must be 'eipalloc-'
                                           followed by exactly 17 hexadecimal characters
                                           (0-9, a-f, A-F)
                                         rule: self.split("-", 2)[1].matches('[0-9a-fA-F]{17}$')
+                                      - message: eipAllocations should start with
+                                          'eipalloc-'
+                                        rule: self.startsWith('eipalloc-')
                                     maxItems: 10
                                     type: array
                                     x-kubernetes-list-type: atomic
@@ -590,15 +590,15 @@ spec:
                                 - message: number of subnets must be equal to number
                                     of eipAllocations
                                   rule: 'has(self.subnets) && has(self.subnets.ids)
-                                    && has(self.subnets.names) && has(self.eipAllocations)
-                                    ? size(self.subnets.ids + self.subnets.names)
-                                    == size(self.eipAllocations) : true'
-                                - message: number of subnets must be equal to number
-                                    of eipAllocations
-                                  rule: 'has(self.subnets) && has(self.subnets.ids)
                                     && !has(self.subnets.names) && has(self.eipAllocations)
                                     ? size(self.subnets.ids) == size(self.eipAllocations)
                                     : true'
+                                - message: number of subnets must be equal to number
+                                    of eipAllocations
+                                  rule: 'has(self.subnets) && has(self.subnets.ids)
+                                    && has(self.subnets.names) && has(self.eipAllocations)
+                                    ? size(self.subnets.ids + self.subnets.names)
+                                    == size(self.eipAllocations) : true'
                                 - message: number of subnets must be equal to number
                                     of eipAllocations
                                   rule: 'has(self.subnets) && has(self.subnets.names)
@@ -1082,21 +1082,21 @@ spec:
                               pattern: ^[-!#$%&'*+.0-9A-Z^_`a-z|~]+$
                               type: string
                               x-kubernetes-validations:
-                              - message: strict-transport-security header may not
-                                  be modified via header actions
-                                rule: self.lowerAscii() != 'strict-transport-security'
-                              - message: proxy header may not be modified via header
-                                  actions
-                                rule: self.lowerAscii() != 'proxy'
-                              - message: host header may not be modified via header
-                                  actions
-                                rule: self.lowerAscii() != 'host'
                               - message: cookie header may not be modified via header
                                   actions
                                 rule: self.lowerAscii() != 'cookie'
+                              - message: host header may not be modified via header
+                                  actions
+                                rule: self.lowerAscii() != 'host'
+                              - message: proxy header may not be modified via header
+                                  actions
+                                rule: self.lowerAscii() != 'proxy'
                               - message: set-cookie header may not be modified via
                                   header actions
                                 rule: self.lowerAscii() != 'set-cookie'
+                              - message: strict-transport-security header may not
+                                  be modified via header actions
+                                rule: self.lowerAscii() != 'strict-transport-security'
                           required:
                           - action
                           - name
@@ -1190,21 +1190,21 @@ spec:
                               pattern: ^[-!#$%&'*+.0-9A-Z^_`a-z|~]+$
                               type: string
                               x-kubernetes-validations:
-                              - message: strict-transport-security header may not
-                                  be modified via header actions
-                                rule: self.lowerAscii() != 'strict-transport-security'
-                              - message: proxy header may not be modified via header
-                                  actions
-                                rule: self.lowerAscii() != 'proxy'
-                              - message: host header may not be modified via header
-                                  actions
-                                rule: self.lowerAscii() != 'host'
                               - message: cookie header may not be modified via header
                                   actions
                                 rule: self.lowerAscii() != 'cookie'
+                              - message: host header may not be modified via header
+                                  actions
+                                rule: self.lowerAscii() != 'host'
+                              - message: proxy header may not be modified via header
+                                  actions
+                                rule: self.lowerAscii() != 'proxy'
                               - message: set-cookie header may not be modified via
                                   header actions
                                 rule: self.lowerAscii() != 'set-cookie'
+                              - message: strict-transport-security header may not
+                                  be modified via header actions
+                                rule: self.lowerAscii() != 'strict-transport-security'
                           required:
                           - action
                           - name
@@ -2264,10 +2264,6 @@ spec:
                     minLength: 1
                     type: string
                     x-kubernetes-validations:
-                    - message: httpKeepAliveTimeout must be a valid duration string
-                        composed of an unsigned integer value, optionally followed
-                        by a decimal fraction and a unit suffix (ms, s, m)
-                      rule: self.matches('^([0-9]+(\\.[0-9]+)?(ms|s|m))+$')
                     - message: httpKeepAliveTimeout must be less than or equal to
                         15 minutes
                       rule: '!self.matches(''^([0-9]+(\\.[0-9]+)?(ms|s|m))+$'') ||
@@ -2276,6 +2272,10 @@ spec:
                         to 1 millisecond
                       rule: '!self.matches(''^([0-9]+(\\.[0-9]+)?(ms|s|m))+$'') ||
                         duration(self) >= duration(''1ms'')'
+                    - message: httpKeepAliveTimeout must be a valid duration string
+                        composed of an unsigned integer value, optionally followed
+                        by a decimal fraction and a unit suffix (ms, s, m)
+                      rule: self.matches('^([0-9]+(\\.[0-9]+)?(ms|s|m))+$')
                   maxConnections:
                     description: |-
                       maxConnections defines the maximum number of simultaneous
@@ -2750,13 +2750,13 @@ spec:
                                       minLength: 26
                                       type: string
                                       x-kubernetes-validations:
-                                      - message: eipAllocations should start with
-                                          'eipalloc-'
-                                        rule: self.startsWith('eipalloc-')
                                       - message: eipAllocations must be 'eipalloc-'
                                           followed by exactly 17 hexadecimal characters
                                           (0-9, a-f, A-F)
                                         rule: self.split("-", 2)[1].matches('[0-9a-fA-F]{17}$')
+                                      - message: eipAllocations should start with
+                                          'eipalloc-'
+                                        rule: self.startsWith('eipalloc-')
                                     maxItems: 10
                                     type: array
                                     x-kubernetes-list-type: atomic
@@ -2842,15 +2842,15 @@ spec:
                                 - message: number of subnets must be equal to number
                                     of eipAllocations
                                   rule: 'has(self.subnets) && has(self.subnets.ids)
-                                    && has(self.subnets.names) && has(self.eipAllocations)
-                                    ? size(self.subnets.ids + self.subnets.names)
-                                    == size(self.eipAllocations) : true'
-                                - message: number of subnets must be equal to number
-                                    of eipAllocations
-                                  rule: 'has(self.subnets) && has(self.subnets.ids)
                                     && !has(self.subnets.names) && has(self.eipAllocations)
                                     ? size(self.subnets.ids) == size(self.eipAllocations)
                                     : true'
+                                - message: number of subnets must be equal to number
+                                    of eipAllocations
+                                  rule: 'has(self.subnets) && has(self.subnets.ids)
+                                    && has(self.subnets.names) && has(self.eipAllocations)
+                                    ? size(self.subnets.ids + self.subnets.names)
+                                    == size(self.eipAllocations) : true'
                                 - message: number of subnets must be equal to number
                                     of eipAllocations
                                   rule: 'has(self.subnets) && has(self.subnets.names)

@@ -25,17 +25,15 @@ require (
 	k8s.io/apiextensions-apiserver v0.34.1
 	k8s.io/apimachinery v0.34.1
 	k8s.io/code-generator v0.34.1
-	k8s.io/gengo/v2 v2.0.0-20250604051438-85fd79dbfd9f
+	k8s.io/gengo/v2 v2.0.0-20250922181213-ec3ebc5fd46b
 	k8s.io/klog/v2 v2.130.1
 	k8s.io/kube-openapi v0.0.0-20250710124328-f3f2b991d03b
 	k8s.io/utils v0.0.0-20250604170112-4c0f3b243397
 	sigs.k8s.io/controller-tools v0.18.0
 	sigs.k8s.io/crdify v0.5.0
-	sigs.k8s.io/kube-api-linter v0.0.0-20251028144537-077f0d3af196
+	sigs.k8s.io/kube-api-linter v0.0.0-20260114104534-18147eee9c49
 	sigs.k8s.io/yaml v1.6.0
 )
-
-replace sigs.k8s.io/controller-tools => github.com/openshift/controller-tools v0.12.1-0.20250801155905-948121310243
 
 require (
 	4d63.com/gocheckcompilerdirectives v1.3.0 // indirect
@@ -340,3 +338,5 @@ require (
 	sigs.k8s.io/randfill v1.0.0 // indirect
 	sigs.k8s.io/structured-merge-diff/v6 v6.3.0 // indirect
 )
+
+replace sigs.k8s.io/controller-tools => github.com/jaypoulz/controller-tools v0.0.0-20260116180353-88e61f2c62d0

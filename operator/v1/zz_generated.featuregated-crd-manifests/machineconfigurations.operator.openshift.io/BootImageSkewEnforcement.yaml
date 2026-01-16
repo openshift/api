@@ -285,14 +285,14 @@ spec:
                           type: array
                           x-kubernetes-list-type: atomic
                           x-kubernetes-validations:
-                          - message: Reboot action can only be specified standalone,
-                              as it will override any other actions
-                            rule: 'self.exists(x, x.type==''Reboot'') ? size(self)
-                              == 1 : true'
                           - message: None action can only be specified standalone,
                               as it will override any other actions
                             rule: 'self.exists(x, x.type==''None'') ? size(self) ==
                               1 : true'
+                          - message: Reboot action can only be specified standalone,
+                              as it will override any other actions
+                            rule: 'self.exists(x, x.type==''Reboot'') ? size(self)
+                              == 1 : true'
                         path:
                           description: |-
                             path is the location of a file being managed through a MachineConfig.
@@ -411,13 +411,13 @@ spec:
                         type: array
                         x-kubernetes-list-type: atomic
                         x-kubernetes-validations:
-                        - message: Reboot action can only be specified standalone,
-                            as it will override any other actions
-                          rule: 'self.exists(x, x.type==''Reboot'') ? size(self) ==
-                            1 : true'
                         - message: None action can only be specified standalone, as
                             it will override any other actions
                           rule: 'self.exists(x, x.type==''None'') ? size(self) ==
+                            1 : true'
+                        - message: Reboot action can only be specified standalone,
+                            as it will override any other actions
+                          rule: 'self.exists(x, x.type==''Reboot'') ? size(self) ==
                             1 : true'
                     required:
                     - actions
@@ -530,14 +530,14 @@ spec:
                           type: array
                           x-kubernetes-list-type: atomic
                           x-kubernetes-validations:
-                          - message: Reboot action can only be specified standalone,
-                              as it will override any other actions
-                            rule: 'self.exists(x, x.type==''Reboot'') ? size(self)
-                              == 1 : true'
                           - message: None action can only be specified standalone,
                               as it will override any other actions
                             rule: 'self.exists(x, x.type==''None'') ? size(self) ==
                               1 : true'
+                          - message: Reboot action can only be specified standalone,
+                              as it will override any other actions
+                            rule: 'self.exists(x, x.type==''Reboot'') ? size(self)
+                              == 1 : true'
                         name:
                           description: |-
                             name represents the service name of a systemd service managed through a MachineConfig
@@ -923,13 +923,13 @@ spec:
                               type: array
                               x-kubernetes-list-type: atomic
                               x-kubernetes-validations:
-                              - message: Reboot action can only be specified standalone,
-                                  as it will override any other actions
-                                rule: 'self.exists(x, x.type==''Reboot'') ? size(self)
-                                  == 1 : true'
                               - message: None action can only be specified standalone,
                                   as it will override any other actions
                                 rule: 'self.exists(x, x.type==''None'') ? size(self)
+                                  == 1 : true'
+                              - message: Reboot action can only be specified standalone,
+                                  as it will override any other actions
+                                rule: 'self.exists(x, x.type==''Reboot'') ? size(self)
                                   == 1 : true'
                             path:
                               description: |-
@@ -1048,13 +1048,13 @@ spec:
                             type: array
                             x-kubernetes-list-type: atomic
                             x-kubernetes-validations:
-                            - message: Reboot action can only be specified standalone,
-                                as it will override any other actions
-                              rule: 'self.exists(x, x.type==''Reboot'') ? size(self)
-                                == 1 : true'
                             - message: None action can only be specified standalone,
                                 as it will override any other actions
                               rule: 'self.exists(x, x.type==''None'') ? size(self)
+                                == 1 : true'
+                            - message: Reboot action can only be specified standalone,
+                                as it will override any other actions
+                              rule: 'self.exists(x, x.type==''Reboot'') ? size(self)
                                 == 1 : true'
                         required:
                         - actions
@@ -1167,13 +1167,13 @@ spec:
                               type: array
                               x-kubernetes-list-type: atomic
                               x-kubernetes-validations:
-                              - message: Reboot action can only be specified standalone,
-                                  as it will override any other actions
-                                rule: 'self.exists(x, x.type==''Reboot'') ? size(self)
-                                  == 1 : true'
                               - message: None action can only be specified standalone,
                                   as it will override any other actions
                                 rule: 'self.exists(x, x.type==''None'') ? size(self)
+                                  == 1 : true'
+                              - message: Reboot action can only be specified standalone,
+                                  as it will override any other actions
+                                rule: 'self.exists(x, x.type==''Reboot'') ? size(self)
                                   == 1 : true'
                             name:
                               description: |-
@@ -1217,16 +1217,6 @@ spec:
         - spec
         type: object
         x-kubernetes-validations:
-        - message: when skew enforcement is in Automatic mode, a boot image configuration
-            is required
-          rule: 'self.?status.bootImageSkewEnforcementStatus.mode.orValue("") == ''Automatic''
-            ? self.?spec.managedBootImages.hasValue() || self.?status.managedBootImagesStatus.hasValue()
-            : true'
-        - message: when skew enforcement is in Automatic mode, managedBootImages.machineManagers
-            must not be an empty list
-          rule: 'self.?status.bootImageSkewEnforcementStatus.mode.orValue("") == ''Automatic''
-            ? !(self.?spec.managedBootImages.machineManagers.hasValue()) || size(self.spec.managedBootImages.machineManagers)
-            > 0 : true'
         - message: when skew enforcement is in Automatic mode, any MachineAPI MachineSet
             MachineManager must use selection mode 'All'
           rule: 'self.?status.bootImageSkewEnforcementStatus.mode.orValue("") == ''Automatic''
@@ -1235,6 +1225,11 @@ spec:
             || self.spec.managedBootImages.machineManagers.exists(m, m.resource ==
             ''machinesets'' && m.apiGroup == ''machine.openshift.io'' && m.selection.mode
             == ''All'') : true'
+        - message: when skew enforcement is in Automatic mode, managedBootImages.machineManagers
+            must not be an empty list
+          rule: 'self.?status.bootImageSkewEnforcementStatus.mode.orValue("") == ''Automatic''
+            ? !(self.?spec.managedBootImages.machineManagers.hasValue()) || size(self.spec.managedBootImages.machineManagers)
+            > 0 : true'
         - message: when skew enforcement is in Automatic mode, managedBootImagesStatus
             must contain a MachineManager opting in all MachineAPI MachineSets
           rule: 'self.?status.bootImageSkewEnforcementStatus.mode.orValue("") == ''Automatic''
@@ -1242,6 +1237,11 @@ spec:
             self.status.managedBootImagesStatus.machineManagers.exists(m, m.selection.mode
             == ''All'' && m.resource == ''machinesets'' && m.apiGroup == ''machine.openshift.io''):
             true'
+        - message: when skew enforcement is in Automatic mode, a boot image configuration
+            is required
+          rule: 'self.?status.bootImageSkewEnforcementStatus.mode.orValue("") == ''Automatic''
+            ? self.?spec.managedBootImages.hasValue() || self.?status.managedBootImagesStatus.hasValue()
+            : true'
     served: true
     storage: true
     subresources:

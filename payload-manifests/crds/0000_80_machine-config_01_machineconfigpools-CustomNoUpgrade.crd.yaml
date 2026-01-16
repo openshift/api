@@ -628,17 +628,17 @@ spec:
                   - updatedMachineCount
                   type: object
                   x-kubernetes-validations:
-                  - message: machineCount must be greater than or equal to updatedMachineCount
-                    rule: self.machineCount >= self.updatedMachineCount
-                  - message: machineCount must be greater than or equal to availableMachineCount
-                    rule: self.machineCount >= self.availableMachineCount
-                  - message: machineCount must be greater than or equal to unavailableMachineCount
-                    rule: self.machineCount >= self.unavailableMachineCount
-                  - message: machineCount must be greater than or equal to readyMachineCount
-                    rule: self.machineCount >= self.readyMachineCount
                   - message: availableMachineCount must be greater than or equal to
                       readyMachineCount
                     rule: self.availableMachineCount >= self.readyMachineCount
+                  - message: machineCount must be greater than or equal to availableMachineCount
+                    rule: self.machineCount >= self.availableMachineCount
+                  - message: machineCount must be greater than or equal to readyMachineCount
+                    rule: self.machineCount >= self.readyMachineCount
+                  - message: machineCount must be greater than or equal to unavailableMachineCount
+                    rule: self.machineCount >= self.unavailableMachineCount
+                  - message: machineCount must be greater than or equal to updatedMachineCount
+                    rule: self.machineCount >= self.updatedMachineCount
                 type: array
                 x-kubernetes-list-map-keys:
                 - poolSynchronizerType

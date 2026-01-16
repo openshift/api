@@ -612,12 +612,12 @@ spec:
                   rule: self == oldSelf
             type: object
             x-kubernetes-validations:
+            - message: cannot remove finishTime attribute from status
+              rule: (!has(oldSelf.finishTime) || has(self.finishTime))
             - message: cannot remove insightsRequestID attribute from status
               rule: (!has(oldSelf.insightsRequestID) || has(self.insightsRequestID))
             - message: cannot remove startTime attribute from status
               rule: (!has(oldSelf.startTime) || has(self.startTime))
-            - message: cannot remove finishTime attribute from status
-              rule: (!has(oldSelf.finishTime) || has(self.finishTime))
         required:
         - spec
         type: object

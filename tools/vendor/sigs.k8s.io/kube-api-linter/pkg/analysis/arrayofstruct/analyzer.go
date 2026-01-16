@@ -20,6 +20,7 @@ import (
 	"go/ast"
 
 	"golang.org/x/tools/go/analysis"
+
 	kalerrors "sigs.k8s.io/kube-api-linter/pkg/analysis/errors"
 	"sigs.k8s.io/kube-api-linter/pkg/analysis/helpers/extractjsontags"
 	"sigs.k8s.io/kube-api-linter/pkg/analysis/helpers/inspector"
@@ -39,20 +40,24 @@ var Analyzer = &analysis.Analyzer{
 	Requires: []*analysis.Analyzer{inspector.Analyzer},
 }
 
+func init() {
+	markershelper.DefaultRegistry().Register(markers.KubebuilderExactlyOneOf)
+}
+
 func run(pass *analysis.Pass) (any, error) {
 	inspect, ok := pass.ResultOf[inspector.Analyzer].(inspector.Inspector)
 	if !ok {
 		return nil, kalerrors.ErrCouldNotGetInspector
 	}
 
-	inspect.InspectFields(func(field *ast.Field, stack []ast.Node, jsonTagInfo extractjsontags.FieldTagInfo, markersAccess markershelper.Markers) {
-		checkField(pass, field, markersAccess)
+	inspect.InspectFields(func(field *ast.Field, jsonTagInfo extractjsontags.FieldTagInfo, markersAccess markershelper.Markers, qualifiedFieldName string) {
+		checkField(pass, field, markersAccess, qualifiedFieldName)
 	})
 
 	return nil, nil //nolint:nilnil
 }
 
-func checkField(pass *analysis.Pass, field *ast.Field, markersAccess markershelper.Markers) {
+func checkField(pass *analysis.Pass, field *ast.Field, markersAccess markershelper.Markers, qualifiedFieldName string) {
 	// Get the element type of the array
 	elementType := getArrayElementType(pass, field)
 	if elementType == nil {
@@ -75,12 +80,19 @@ func checkField(pass *analysis.Pass, field *ast.Field, markersAccess markershelp
 		return
 	}
 
+	// Check if the struct has union markers that satisfy the required constraint
+	if hasExactlyOneOfMarker(structType, markersAccess) {
+		// ExactlyOneOf marker enforces that exactly one field is set,
+		// so we don't need to report an error
+		return
+	}
+
 	// Check if at least one field in the struct has a required marker
 	if hasRequiredField(structType, markersAccess) {
 		return
 	}
 
-	reportArrayOfStructIssue(pass, field)
+	reportArrayOfStructIssue(pass, field, qualifiedFieldName)
 }
 
 // getArrayElementType extracts the element type from an array field.
@@ -108,19 +120,8 @@ func getArrayElementType(pass *analysis.Pass, field *ast.Field) ast.Expr {
 }
 
 // reportArrayOfStructIssue reports a diagnostic for an array of structs without required fields.
-func reportArrayOfStructIssue(pass *analysis.Pass, field *ast.Field) {
-	fieldName := utils.FieldName(field)
-	structName := utils.GetStructNameForField(pass, field)
-
-	var prefix string
-	if structName != "" {
-		prefix = fmt.Sprintf("%s.%s", structName, fieldName)
-	} else {
-		prefix = fieldName
-	}
-
-	message := fmt.Sprintf("%s is an array of structs, but the struct has no required fields. At least one field should be marked as %s to prevent ambiguous YAML configurations", prefix, markers.RequiredMarker)
-
+func reportArrayOfStructIssue(pass *analysis.Pass, field *ast.Field, qualifiedFieldName string) {
+	message := fmt.Sprintf("%s is an array of structs, but the struct has no required fields. At least one field should be marked as required to prevent ambiguous YAML configurations", qualifiedFieldName)
 	pass.Report(analysis.Diagnostic{
 		Pos:     field.Pos(),
 		Message: message,
@@ -166,6 +167,11 @@ func getStructType(pass *analysis.Pass, expr ast.Expr) *ast.StructType {
 		// Inline struct definition
 		return et
 	case *ast.Ident:
+		// Check if it's a basic type - exit condition for recursion
+		if utils.IsBasicType(pass, et) {
+			return nil
+		}
+
 		// Named struct type or type alias
 		typeSpec, ok := utils.LookupTypeSpec(pass, et)
 		if !ok {
@@ -197,15 +203,23 @@ func hasRequiredField(structType *ast.StructType, markersAccess markershelper.Ma
 	}
 
 	for _, field := range structType.Fields.List {
-		fieldMarkers := markersAccess.FieldMarkers(field)
-
-		// Check for any of the required markers
-		if fieldMarkers.Has(markers.RequiredMarker) ||
-			fieldMarkers.Has(markers.KubebuilderRequiredMarker) ||
-			fieldMarkers.Has(markers.K8sRequiredMarker) {
+		if utils.IsFieldRequired(field, markersAccess) {
 			return true
 		}
 	}
 
 	return false
+}
+
+// hasExactlyOneOfMarker checks if the struct has an ExactlyOneOf marker,
+// which satisfies the required field constraint by ensuring exactly one field is set.
+func hasExactlyOneOfMarker(structType *ast.StructType, markersAccess markershelper.Markers) bool {
+	if structType == nil {
+		return false
+	}
+
+	// Use StructMarkers to get the set of markers on the struct
+	markerSet := markersAccess.StructMarkers(structType)
+
+	return markerSet.Has(markers.KubebuilderExactlyOneOf)
 }

@@ -124,11 +124,21 @@ spec:
                       type: string
                   type: object
                   x-kubernetes-validations:
-                  - message: relabel action hashmod requires non-zero modulus
-                    rule: self.action != 'HashMod' || self.modulus != 0
-                  - message: targetLabel is required when action is Replace or HashMod
-                    rule: (self.action != 'Replace' && self.action != 'HashMod') ||
-                      has(self.targetLabel)
+                  - message: modulus requires sourceLabels to be present
+                    rule: '!has(self.modulus) || (has(self.modulus) && size(self.sourceLabels)
+                      > 0)'
+                  - message: LabelKeep and LabelDrop actions require only 'regex',
+                      and no other fields (found modulus)
+                    rule: (self.action != 'LabelDrop' && self.action != 'LabelKeep')
+                      || !has(self.modulus)
+                  - message: LabelKeep and LabelDrop actions require only 'regex',
+                      and no other fields (found replacement)
+                    rule: (self.action != 'LabelDrop' && self.action != 'LabelKeep')
+                      || !has(self.replacement)
+                  - message: LabelKeep and LabelDrop actions require only 'regex',
+                      and no other fields (found separator)
+                    rule: (self.action != 'LabelDrop' && self.action != 'LabelKeep')
+                      || !has(self.separator)
                   - message: LabelKeep and LabelDrop actions require only 'regex',
                       and no other fields (found sourceLabels)
                     rule: (self.action != 'LabelDrop' && self.action != 'LabelKeep')
@@ -137,28 +147,18 @@ spec:
                       and no other fields (found targetLabel)
                     rule: (self.action != 'LabelDrop' && self.action != 'LabelKeep')
                       || !has(self.targetLabel)
-                  - message: LabelKeep and LabelDrop actions require only 'regex',
-                      and no other fields (found modulus)
-                    rule: (self.action != 'LabelDrop' && self.action != 'LabelKeep')
-                      || !has(self.modulus)
-                  - message: LabelKeep and LabelDrop actions require only 'regex',
-                      and no other fields (found separator)
-                    rule: (self.action != 'LabelDrop' && self.action != 'LabelKeep')
-                      || !has(self.separator)
-                  - message: LabelKeep and LabelDrop actions require only 'regex',
-                      and no other fields (found replacement)
-                    rule: (self.action != 'LabelDrop' && self.action != 'LabelKeep')
-                      || !has(self.replacement)
-                  - message: modulus requires sourceLabels to be present
-                    rule: '!has(self.modulus) || (has(self.modulus) && size(self.sourceLabels)
-                      > 0)'
+                  - message: targetLabel is required when action is Replace or HashMod
+                    rule: (self.action != 'Replace' && self.action != 'HashMod') ||
+                      has(self.targetLabel)
+                  - message: replacement is required for actions Replace and LabelMap
+                    rule: (self.action != 'Replace' && self.action != 'LabelMap')
+                      || has(self.replacement)
                   - message: sourceLabels is required for actions Replace, Keep, Drop,
                       HashMod and LabelMap
                     rule: (self.action == 'LabelDrop' || self.action == 'LabelKeep')
                       || has(self.sourceLabels)
-                  - message: replacement is required for actions Replace and LabelMap
-                    rule: (self.action != 'Replace' && self.action != 'LabelMap')
-                      || has(self.replacement)
+                  - message: relabel action hashmod requires non-zero modulus
+                    rule: self.action != 'HashMod' || self.modulus != 0
                 minItems: 1
                 type: array
             required:

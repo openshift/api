@@ -262,10 +262,10 @@ spec:
                         - state
                         type: object
                         x-kubernetes-validations:
-                        - message: enabled is forbidden when state is not Enabled
-                          rule: 'self.state == ''Enabled'' ? true : !has(self.enabled)'
                         - message: disabled is forbidden when state is not Disabled
                           rule: 'self.state == ''Disabled'' ? true : !has(self.disabled)'
+                        - message: enabled is forbidden when state is not Enabled
+                          rule: 'self.state == ''Enabled'' ? true : !has(self.enabled)'
                     type: object
                   documentationBaseURL:
                     description: |-
@@ -335,13 +335,13 @@ spec:
                                         maxLength: 253
                                         type: string
                                         x-kubernetes-validations:
+                                        - message: The ConfigMap key must end with
+                                            a valid file extension (2 to 5 letters).
+                                          rule: self.matches('.*\\.[a-zA-Z]{2,5}$')
                                         - message: The ConfigMap key must consist
                                             only of alphanumeric characters, dashes
                                             (-), underscores (_), and periods (.).
                                           rule: self.matches('^[a-zA-Z0-9._-]+$')
-                                        - message: The ConfigMap key must end with
-                                            a valid file extension (2 to 5 letters).
-                                          rule: self.matches('.*\\.[a-zA-Z]{2,5}$')
                                       name:
                                         description: |-
                                           name is the name of the ConfigMap.

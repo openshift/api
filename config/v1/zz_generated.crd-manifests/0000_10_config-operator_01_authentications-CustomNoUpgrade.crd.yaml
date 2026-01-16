@@ -121,8 +121,26 @@ spec:
                                 minLength: 1
                                 type: string
                                 x-kubernetes-validations:
+                                - message: the subdomains '*.k8s.io' are reserved
+                                    for Kubernetes use
+                                  rule: '!self.split(''/'', 2)[0].endsWith(''.k8s.io'')'
+                                - message: the subdomains '*.kubernetes.io' are reserved
+                                    for Kubernetes use
+                                  rule: '!self.split(''/'', 2)[0].endsWith(''.kubernetes.io'')'
+                                - message: the subdomains '*.openshift.io' are reserved
+                                    for OpenShift use
+                                  rule: '!self.split(''/'', 2)[0].endsWith(''.openshift.io'')'
                                 - message: key must contain the '/' character
                                   rule: self.contains('/')
+                                - message: the domain 'k8s.io' is reserved for Kubernetes
+                                    use
+                                  rule: self.split('/', 2)[0] != 'k8s.io'
+                                - message: the domain 'kubernetes.io' is reserved
+                                    for Kubernetes use
+                                  rule: self.split('/', 2)[0] != 'kubernetes.io'
+                                - message: the domain 'openshift.io' is reserved for
+                                    OpenShift use
+                                  rule: self.split('/', 2)[0] != 'openshift.io'
                                 - message: the domain of the key must consist of only
                                     lower case alphanumeric characters, '-' or '.',
                                     and must start and end with an alphanumeric character
@@ -130,24 +148,6 @@ spec:
                                 - message: the domain of the key must not exceed 253
                                     characters in length
                                   rule: self.split('/', 2)[0].size() <= 253
-                                - message: the domain 'kubernetes.io' is reserved
-                                    for Kubernetes use
-                                  rule: self.split('/', 2)[0] != 'kubernetes.io'
-                                - message: the subdomains '*.kubernetes.io' are reserved
-                                    for Kubernetes use
-                                  rule: '!self.split(''/'', 2)[0].endsWith(''.kubernetes.io'')'
-                                - message: the domain 'k8s.io' is reserved for Kubernetes
-                                    use
-                                  rule: self.split('/', 2)[0] != 'k8s.io'
-                                - message: the subdomains '*.k8s.io' are reserved
-                                    for Kubernetes use
-                                  rule: '!self.split(''/'', 2)[0].endsWith(''.k8s.io'')'
-                                - message: the domain 'openshift.io' is reserved for
-                                    OpenShift use
-                                  rule: self.split('/', 2)[0] != 'openshift.io'
-                                - message: the subdomains '*.openshift.io' are reserved
-                                    for OpenShift use
-                                  rule: '!self.split(''/'', 2)[0].endsWith(''.openshift.io'')'
                                 - message: the path of the key must not be empty and
                                     must consist of at least one alphanumeric character,
                                     percent-encoded octets, apostrophe, '-', '.',
@@ -470,16 +470,16 @@ spec:
                           minLength: 1
                           type: string
                           x-kubernetes-validations:
-                          - message: discoveryURL must be a valid URL
-                            rule: isURL(self)
-                          - message: discoveryURL must be a valid https URL
-                            rule: url(self).getScheme() == 'https'
-                          - message: discoveryURL must not contain query parameters
-                            rule: url(self).getQuery().size() == 0
-                          - message: discoveryURL must not contain fragments
-                            rule: self.matches('^[^#]*$')
                           - message: discoveryURL must not contain user info
                             rule: '!self.matches(''^https://.+:.+@.+/.*$'')'
+                          - message: discoveryURL must be a valid URL
+                            rule: isURL(self)
+                          - message: discoveryURL must not contain fragments
+                            rule: self.matches('^[^#]*$')
+                          - message: discoveryURL must not contain query parameters
+                            rule: url(self).getQuery().size() == 0
+                          - message: discoveryURL must be a valid https URL
+                            rule: url(self).getScheme() == 'https'
                         issuerCertificateAuthority:
                           description: |-
                             issuerCertificateAuthority is an optional field that configures the
@@ -514,10 +514,10 @@ spec:
                           x-kubernetes-validations:
                           - message: must be a valid URL
                             rule: isURL(self)
-                          - message: must use the 'https' scheme
-                            rule: isURL(self) && url(self).getScheme() == 'https'
                           - message: must not have a query
                             rule: isURL(self) && url(self).getQuery() == {}
+                          - message: must use the 'https' scheme
+                            rule: isURL(self) && url(self).getScheme() == 'https'
                           - message: must not have a fragment
                             rule: self.find('#(.+)$') == ''
                           - message: must not have user info

@@ -211,6 +211,14 @@ var (
 					enableIn(configv1.Default, configv1.OKD, configv1.DevPreviewNoUpgrade, configv1.TechPreviewNoUpgrade).
 					mustRegister()
 
+	FeatureGateEVPN = newFeatureGate("EVPN").
+				reportProblemsToJiraComponent("Networking/ovn-kubernetes").
+				contactPerson("jcaamano").
+				productScope(ocpSpecific).
+				enhancementPR("https://github.com/openshift/enhancements/pull/1862").
+				enableIn(configv1.DevPreviewNoUpgrade, configv1.TechPreviewNoUpgrade).
+				mustRegister()
+
 	FeatureGateNetworkLiveMigration = newFeatureGate("NetworkLiveMigration").
 					reportProblemsToJiraComponent("Networking/ovn-kubernetes").
 					contactPerson("pliu").

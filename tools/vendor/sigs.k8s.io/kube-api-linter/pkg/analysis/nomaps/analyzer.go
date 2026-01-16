@@ -19,7 +19,6 @@ import (
 	"fmt"
 	"go/ast"
 	"go/token"
-	"go/types"
 
 	"golang.org/x/tools/go/analysis"
 	kalerrors "sigs.k8s.io/kube-api-linter/pkg/analysis/errors"
@@ -63,52 +62,51 @@ func (a *analyzer) run(pass *analysis.Pass) (any, error) {
 		return nil, kalerrors.ErrCouldNotGetInspector
 	}
 
-	inspect.InspectFields(func(field *ast.Field, stack []ast.Node, jsonTagInfo extractjsontags.FieldTagInfo, markersAccess markers.Markers) {
-		a.checkField(pass, field)
+	typeChecker := utils.NewTypeChecker(isMap, a.checkMap)
+
+	inspect.InspectFields(func(field *ast.Field, _ extractjsontags.FieldTagInfo, _ markers.Markers, _ string) {
+		typeChecker.CheckNode(pass, field)
+	})
+
+	inspect.InspectTypeSpec(func(typeSpec *ast.TypeSpec, _ markers.Markers) {
+		typeChecker.CheckNode(pass, typeSpec)
 	})
 
 	return nil, nil //nolint:nilnil
 }
 
-func (a *analyzer) checkField(pass *analysis.Pass, field *ast.Field) {
-	underlyingType := pass.TypesInfo.TypeOf(field.Type).Underlying()
+func isMap(pass *analysis.Pass, expr ast.Expr) bool {
+	_, ok := expr.(*ast.MapType)
 
-	if ptr, ok := underlyingType.(*types.Pointer); ok {
-		underlyingType = ptr.Elem().Underlying()
-	}
+	return ok
+}
 
-	m, ok := underlyingType.(*types.Map)
+func (a *analyzer) checkMap(pass *analysis.Pass, expr ast.Expr, node ast.Node, prefix string) {
+	mapType, ok := expr.(*ast.MapType)
 	if !ok {
 		return
 	}
 
-	if a.policy == NoMapsEnforce {
-		report(pass, field.Pos(), utils.FieldName(field))
-		return
-	}
-
-	if a.policy == NoMapsAllowStringToStringMaps {
-		if types.AssignableTo(m.Elem().Underlying(), types.Typ[types.String]) &&
-			types.AssignableTo(m.Key().Underlying(), types.Typ[types.String]) {
-			return
+	switch a.policy {
+	case NoMapsEnforce:
+		report(pass, node.Pos(), prefix)
+	case NoMapsAllowStringToStringMaps:
+		if !isStringToStringMap(pass, mapType) {
+			report(pass, node.Pos(), prefix)
 		}
-
-		report(pass, field.Pos(), utils.FieldName(field))
-	}
-
-	if a.policy == NoMapsIgnore {
-		key := m.Key().Underlying()
-		_, ok := key.(*types.Basic)
-
-		elm := m.Elem().Underlying()
-		_, ok2 := elm.(*types.Basic)
-
-		if ok && ok2 {
-			return
+	case NoMapsIgnore:
+		if !isBasicMap(pass, mapType) {
+			report(pass, node.Pos(), prefix)
 		}
-
-		report(pass, field.Pos(), utils.FieldName(field))
 	}
+}
+
+func isStringToStringMap(pass *analysis.Pass, mapType *ast.MapType) bool {
+	return utils.IsStringType(pass, mapType.Key) && utils.IsStringType(pass, mapType.Value)
+}
+
+func isBasicMap(pass *analysis.Pass, mapType *ast.MapType) bool {
+	return utils.IsBasicType(pass, mapType.Key) && utils.IsBasicType(pass, mapType.Value)
 }
 
 func report(pass *analysis.Pass, pos token.Pos, fieldName string) {

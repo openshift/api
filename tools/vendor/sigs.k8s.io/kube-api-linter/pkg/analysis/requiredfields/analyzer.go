@@ -23,6 +23,7 @@ import (
 	"sigs.k8s.io/kube-api-linter/pkg/analysis/helpers/extractjsontags"
 	"sigs.k8s.io/kube-api-linter/pkg/analysis/helpers/inspector"
 	markershelper "sigs.k8s.io/kube-api-linter/pkg/analysis/helpers/markers"
+	"sigs.k8s.io/kube-api-linter/pkg/analysis/utils"
 	"sigs.k8s.io/kube-api-linter/pkg/analysis/utils/serialization"
 	"sigs.k8s.io/kube-api-linter/pkg/markers"
 )
@@ -92,20 +93,19 @@ func (a *analyzer) run(pass *analysis.Pass) (any, error) {
 		return nil, kalerrors.ErrCouldNotGetInspector
 	}
 
-	inspect.InspectFields(func(field *ast.Field, stack []ast.Node, jsonTagInfo extractjsontags.FieldTagInfo, markersAccess markershelper.Markers) {
-		a.checkField(pass, field, markersAccess, jsonTagInfo)
+	inspect.InspectFields(func(field *ast.Field, jsonTagInfo extractjsontags.FieldTagInfo, markersAccess markershelper.Markers, qualifiedFieldName string) {
+		a.checkField(pass, field, markersAccess, jsonTagInfo, qualifiedFieldName)
 	})
 
 	return nil, nil //nolint:nilnil
 }
 
-func (a *analyzer) checkField(pass *analysis.Pass, field *ast.Field, markersAccess markershelper.Markers, jsonTags extractjsontags.FieldTagInfo) {
+func (a *analyzer) checkField(pass *analysis.Pass, field *ast.Field, markersAccess markershelper.Markers, jsonTags extractjsontags.FieldTagInfo, qualifiedFieldName string) {
 	if field == nil || len(field.Names) == 0 {
 		return
 	}
 
-	fieldMarkers := markersAccess.FieldMarkers(field)
-	if !isFieldRequired(fieldMarkers) {
+	if !utils.IsFieldRequired(field, markersAccess) {
 		// The field is not marked required, so we don't need to check it.
 		return
 	}
@@ -115,7 +115,7 @@ func (a *analyzer) checkField(pass *analysis.Pass, field *ast.Field, markersAcce
 		return
 	}
 
-	a.serializationCheck.Check(pass, field, markersAccess, jsonTags)
+	a.serializationCheck.Check(pass, field, markersAccess, jsonTags, qualifiedFieldName)
 }
 
 func defaultConfig(cfg *RequiredFieldsConfig) {
@@ -130,9 +130,4 @@ func defaultConfig(cfg *RequiredFieldsConfig) {
 	if cfg.OmitZero.Policy == "" {
 		cfg.OmitZero.Policy = RequiredFieldsOmitZeroPolicySuggestFix
 	}
-}
-
-// isFieldRequired checks if a field has an required marker.
-func isFieldRequired(fieldMarkers markershelper.MarkerSet) bool {
-	return fieldMarkers.Has(markers.RequiredMarker) || fieldMarkers.Has(markers.KubebuilderRequiredMarker)
 }

@@ -1,0 +1,75 @@
+apiVersion: apiextensions.k8s.io/v1 # Hack because controller-gen complains if we don't have this
+name: "KubeletConfig"
+crdName: kubeletconfigs.machineconfiguration.openshift.io
+tests:
+  onCreate:
+    # LogLevel Boundary Tests
+    - name: Should be able to set logLevel to 0 (minimum)
+      initial: |
+        apiVersion: machineconfiguration.openshift.io/v1
+        kind: KubeletConfig
+        spec:
+          logLevel: 0
+      expected: |
+        apiVersion: machineconfiguration.openshift.io/v1
+        kind: KubeletConfig
+        spec:
+          logLevel: 0
+    - name: Should be able to set logLevel to 10 (maximum)
+      initial: |
+        apiVersion: machineconfiguration.openshift.io/v1
+        kind: KubeletConfig
+        spec:
+          logLevel: 10
+      expected: |
+        apiVersion: machineconfiguration.openshift.io/v1
+        kind: KubeletConfig
+        spec:
+          logLevel: 10
+    - name: Should reject logLevel less than 0
+      initial: |
+        apiVersion: machineconfiguration.openshift.io/v1
+        kind: KubeletConfig
+        spec:
+          logLevel: -1
+      expectedError: "Invalid value"
+    - name: Should reject logLevel greater than 10
+      initial: |
+        apiVersion: machineconfiguration.openshift.io/v1
+        kind: KubeletConfig
+        spec:
+          logLevel: 11
+      expectedError: "Invalid value"
+
+    # TLSSecurityProfile CEL Validation tests
+    - name: Should reject tlsSecurityProfile with Modern type
+      initial: |
+        apiVersion: machineconfiguration.openshift.io/v1
+        kind: KubeletConfig
+        spec:
+          tlsSecurityProfile:
+            type: Modern
+      expectedError: "only Old and Intermediate TLS profiles are supported for kubelet"
+    - name: Should reject tlsSecurityProfile with Custom type
+      initial: |
+        apiVersion: machineconfiguration.openshift.io/v1
+        kind: KubeletConfig
+        spec:
+          tlsSecurityProfile:
+            type: Custom
+            custom:
+              ciphers:
+                - ECDHE-ECDSA-AES128-GCM-SHA256
+              minTLSVersion: VersionTLS12
+      expectedError: "only Old and Intermediate TLS profiles are supported for kubelet"
+    - name: Should reject tlsSecurityProfile without type field
+      initial: |
+        apiVersion: machineconfiguration.openshift.io/v1
+        kind: KubeletConfig
+        spec:
+          tlsSecurityProfile:
+            custom:
+              ciphers:
+                - ECDHE-ECDSA-AES128-GCM-SHA256
+              minTLSVersion: VersionTLS12
+      expectedError: "only Old and Intermediate TLS profiles are supported for kubelet"

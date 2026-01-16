@@ -51153,6 +51153,14 @@ func schema_openshift_api_operator_v1_AWSNetworkLoadBalancerParameters(ref commo
 							},
 						},
 					},
+					"protocol": {
+						SchemaProps: spec.SchemaProps{
+							Description: "protocol specifies whether the Network Load Balancer uses PROXY protocol to forward connections to the IngressController.\n\nWhen set to \"TCP\", the NLB uses AWS's native client IP preservation. This may cause hairpin connection failures for internal load balancers when connections are made from pods to router pods on the same node.\n\nWhen set to \"PROXY\", the NLB disables native client IP preservation and uses PROXY protocol v2. The IngressController enables PROXY protocol on HAProxy so that it can parse PROXY protocol headers to obtain the original client IP. This avoids hairpin connection failures.\n\nThe following values are valid for this field:\n\n* \"TCP\". * \"PROXY\".\n\nWhen omitted, this means the user has no opinion and the value is left to the platform to choose a reasonable default, which is subject to change over time. The current default is \"PROXY\".\n\nNote that changing this field may cause brief connection failures during the transition as the NLB attribute change and router rollout occur independently.\n\n\nPossible enum values:\n - `\"PROXY\"` instructs the NLB to forward connections using PROXY protocol v2.\n - `\"TCP\"` instructs the NLB to forward connections using TCP without PROXY protocol.",
+							Type:        []string{"string"},
+							Format:      "",
+							Enum:        []interface{}{"PROXY", "TCP"},
+						},
+					},
 				},
 			},
 		},

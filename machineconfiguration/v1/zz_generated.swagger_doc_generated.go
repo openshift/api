@@ -214,10 +214,12 @@ func (KubeletConfigList) SwaggerDoc() map[string]string {
 }
 
 var map_KubeletConfigSpec = map[string]string{
-	"":                          "KubeletConfigSpec defines the desired state of KubeletConfig",
-	"machineConfigPoolSelector": "machineConfigPoolSelector selects which pools the KubeletConfig shoud apply to. A nil selector will result in no pools being selected.",
-	"kubeletConfig":             "kubeletConfig fields are defined in kubernetes upstream. Please refer to the types defined in the version/commit used by OpenShift of the upstream kubernetes. It's important to note that, since the fields of the kubelet configuration are directly fetched from upstream the validation of those values is handled directly by the kubelet. Please refer to the upstream version of the relevant kubernetes for the valid values of these fields. Invalid values of the kubelet configuration fields may render cluster nodes unusable.",
-	"tlsSecurityProfile":        "If unset, the default is based on the apiservers.config.openshift.io/cluster resource. Note that only Old and Intermediate profiles are currently supported, and the maximum available minTLSVersion is VersionTLS12.",
+	"":                          "KubeletConfigSpec configures the kubelet running on cluster nodes.",
+	"autoSizingReserved":        "autoSizingReserved controls whether system-reserved CPU and memory are automatically calculated based on each node's installed capacity. When enabled, prevents node failure from resource starvation of system components (kubelet, CRI-O) without manual configuration. When unset or true, automatic sizing is enabled. Set to false to disable and use manual settings.",
+	"logLevel":                  "logLevel sets the kubelet log verbosity. Higher values increase log detail. Defaults to 2 if unset.",
+	"machineConfigPoolSelector": "machineConfigPoolSelector selects which pools the KubeletConfig should apply to. A nil selector results in no pools being selected.",
+	"kubeletConfig":             "kubeletConfig contains upstream Kubernetes kubelet configuration fields. Values are validated by the kubelet itself. Invalid values may render nodes unusable. Refer to OpenShift documentation for the Kubernetes version corresponding to your OpenShift release to find valid kubelet configuration options.",
+	"tlsSecurityProfile":        "tlsSecurityProfile configures TLS settings for the kubelet. If unset, defaults to the apiservers.config.openshift.io/cluster resource. Only Old and Intermediate profiles are supported; maximum minTLSVersion is VersionTLS12.",
 }
 
 func (KubeletConfigSpec) SwaggerDoc() map[string]string {

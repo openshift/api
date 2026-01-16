@@ -1,0 +1,276 @@
+apiVersion: apiextensions.k8s.io/v1 # Hack because controller-gen complains if we don't have this
+name: "KubeletConfig"
+crdName: kubeletconfigs.machineconfiguration.openshift.io
+tests:
+  onCreate:
+    # AutoSizingReserved tests
+    - name: Should be able to set autoSizingReserved to true
+      initial: |
+        apiVersion: machineconfiguration.openshift.io/v1
+        kind: KubeletConfig
+        spec:
+          autoSizingReserved: true
+      expected: |
+        apiVersion: machineconfiguration.openshift.io/v1
+        kind: KubeletConfig
+        spec:
+          autoSizingReserved: true
+    - name: Should be able to set autoSizingReserved to false
+      initial: |
+        apiVersion: machineconfiguration.openshift.io/v1
+        kind: KubeletConfig
+        spec:
+          autoSizingReserved: false
+      expected: |
+        apiVersion: machineconfiguration.openshift.io/v1
+        kind: KubeletConfig
+        spec:
+          autoSizingReserved: false
+    - name: Should be able to omit autoSizingReserved
+      initial: |
+        apiVersion: machineconfiguration.openshift.io/v1
+        kind: KubeletConfig
+        spec: {}
+      expected: |
+        apiVersion: machineconfiguration.openshift.io/v1
+        kind: KubeletConfig
+        spec: {}
+
+    # LogLevel tests
+    - name: Should be able to set logLevel to 2
+      initial: |
+        apiVersion: machineconfiguration.openshift.io/v1
+        kind: KubeletConfig
+        spec:
+          logLevel: 2
+      expected: |
+        apiVersion: machineconfiguration.openshift.io/v1
+        kind: KubeletConfig
+        spec:
+          logLevel: 2
+    - name: Should be able to set logLevel to 4
+      initial: |
+        apiVersion: machineconfiguration.openshift.io/v1
+        kind: KubeletConfig
+        spec:
+          logLevel: 4
+      expected: |
+        apiVersion: machineconfiguration.openshift.io/v1
+        kind: KubeletConfig
+        spec:
+          logLevel: 4
+    - name: Should be able to omit logLevel
+      initial: |
+        apiVersion: machineconfiguration.openshift.io/v1
+        kind: KubeletConfig
+        spec: {}
+      expected: |
+        apiVersion: machineconfiguration.openshift.io/v1
+        kind: KubeletConfig
+        spec: {}
+
+    # MachineConfigPoolSelector tests
+    - name: Should be able to set machineConfigPoolSelector for worker pool
+      initial: |
+        apiVersion: machineconfiguration.openshift.io/v1
+        kind: KubeletConfig
+        spec:
+          machineConfigPoolSelector:
+            matchLabels:
+              pools.operator.machineconfiguration.openshift.io/worker: ""
+      expected: |
+        apiVersion: machineconfiguration.openshift.io/v1
+        kind: KubeletConfig
+        spec:
+          machineConfigPoolSelector:
+            matchLabels:
+              pools.operator.machineconfiguration.openshift.io/worker: ""
+    - name: Should be able to set machineConfigPoolSelector for master pool
+      initial: |
+        apiVersion: machineconfiguration.openshift.io/v1
+        kind: KubeletConfig
+        spec:
+          machineConfigPoolSelector:
+            matchLabels:
+              pools.operator.machineconfiguration.openshift.io/master: ""
+      expected: |
+        apiVersion: machineconfiguration.openshift.io/v1
+        kind: KubeletConfig
+        spec:
+          machineConfigPoolSelector:
+            matchLabels:
+              pools.operator.machineconfiguration.openshift.io/master: ""
+    - name: Should be able to omit machineConfigPoolSelector
+      initial: |
+        apiVersion: machineconfiguration.openshift.io/v1
+        kind: KubeletConfig
+        spec: {}
+      expected: |
+        apiVersion: machineconfiguration.openshift.io/v1
+        kind: KubeletConfig
+        spec: {}
+
+    # KubeletConfig tests
+    - name: Should be able to set kubeletConfig with maxPods
+      initial: |
+        apiVersion: machineconfiguration.openshift.io/v1
+        kind: KubeletConfig
+        spec:
+          kubeletConfig:
+            maxPods: 250
+      expected: |
+        apiVersion: machineconfiguration.openshift.io/v1
+        kind: KubeletConfig
+        spec:
+          kubeletConfig:
+            maxPods: 250
+    - name: Should be able to omit kubeletConfig
+      initial: |
+        apiVersion: machineconfiguration.openshift.io/v1
+        kind: KubeletConfig
+        spec: {}
+      expected: |
+        apiVersion: machineconfiguration.openshift.io/v1
+        kind: KubeletConfig
+        spec: {}
+
+    # Combined fields tests
+    - name: Should be able to set multiple fields together
+      initial: |
+        apiVersion: machineconfiguration.openshift.io/v1
+        kind: KubeletConfig
+        spec:
+          autoSizingReserved: true
+          logLevel: 2
+          machineConfigPoolSelector:
+            matchLabels:
+              pools.operator.machineconfiguration.openshift.io/worker: ""
+          kubeletConfig:
+            maxPods: 250
+      expected: |
+        apiVersion: machineconfiguration.openshift.io/v1
+        kind: KubeletConfig
+        spec:
+          autoSizingReserved: true
+          logLevel: 2
+          machineConfigPoolSelector:
+            matchLabels:
+              pools.operator.machineconfiguration.openshift.io/worker: ""
+          kubeletConfig:
+            maxPods: 250
+
+  onUpdate:
+    # AutoSizingReserved update tests
+    - name: Should be able to update autoSizingReserved from true to false
+      initial: |
+        apiVersion: machineconfiguration.openshift.io/v1
+        kind: KubeletConfig
+        spec:
+          autoSizingReserved: true
+      updated: |
+        apiVersion: machineconfiguration.openshift.io/v1
+        kind: KubeletConfig
+        spec:
+          autoSizingReserved: false
+      expected: |
+        apiVersion: machineconfiguration.openshift.io/v1
+        kind: KubeletConfig
+        spec:
+          autoSizingReserved: false
+    - name: Should be able to update autoSizingReserved from false to true
+      initial: |
+        apiVersion: machineconfiguration.openshift.io/v1
+        kind: KubeletConfig
+        spec:
+          autoSizingReserved: false
+      updated: |
+        apiVersion: machineconfiguration.openshift.io/v1
+        kind: KubeletConfig
+        spec:
+          autoSizingReserved: true
+      expected: |
+        apiVersion: machineconfiguration.openshift.io/v1
+        kind: KubeletConfig
+        spec:
+          autoSizingReserved: true
+
+    # LogLevel update tests
+    - name: Should be able to update logLevel from 2 to 4
+      initial: |
+        apiVersion: machineconfiguration.openshift.io/v1
+        kind: KubeletConfig
+        spec:
+          logLevel: 2
+      updated: |
+        apiVersion: machineconfiguration.openshift.io/v1
+        kind: KubeletConfig
+        spec:
+          logLevel: 4
+      expected: |
+        apiVersion: machineconfiguration.openshift.io/v1
+        kind: KubeletConfig
+        spec:
+          logLevel: 4
+    - name: Should be able to remove logLevel
+      initial: |
+        apiVersion: machineconfiguration.openshift.io/v1
+        kind: KubeletConfig
+        spec:
+          logLevel: 2
+      updated: |
+        apiVersion: machineconfiguration.openshift.io/v1
+        kind: KubeletConfig
+        spec: {}
+      expected: |
+        apiVersion: machineconfiguration.openshift.io/v1
+        kind: KubeletConfig
+        spec: {}
+
+    # MachineConfigPoolSelector update tests
+    - name: Should be able to update machineConfigPoolSelector from worker to master
+      initial: |
+        apiVersion: machineconfiguration.openshift.io/v1
+        kind: KubeletConfig
+        spec:
+          machineConfigPoolSelector:
+            matchLabels:
+              pools.operator.machineconfiguration.openshift.io/worker: ""
+      updated: |
+        apiVersion: machineconfiguration.openshift.io/v1
+        kind: KubeletConfig
+        spec:
+          machineConfigPoolSelector:
+            matchLabels:
+              pools.operator.machineconfiguration.openshift.io/master: ""
+      expected: |
+        apiVersion: machineconfiguration.openshift.io/v1
+        kind: KubeletConfig
+        spec:
+          machineConfigPoolSelector:
+            matchLabels:
+              pools.operator.machineconfiguration.openshift.io/master: ""
+
+    # Combined update tests
+    - name: Should be able to update multiple fields together
+      initial: |
+        apiVersion: machineconfiguration.openshift.io/v1
+        kind: KubeletConfig
+        spec:
+          autoSizingReserved: false
+          logLevel: 2
+      updated: |
+        apiVersion: machineconfiguration.openshift.io/v1
+        kind: KubeletConfig
+        spec:
+          autoSizingReserved: true
+          logLevel: 4
+          kubeletConfig:
+            maxPods: 250
+      expected: |
+        apiVersion: machineconfiguration.openshift.io/v1
+        kind: KubeletConfig
+        spec:
+          autoSizingReserved: true
+          logLevel: 4
+          kubeletConfig:
+            maxPods: 250

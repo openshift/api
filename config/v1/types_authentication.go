@@ -290,9 +290,11 @@ type TokenIssuer struct {
 	//
 	// +optional
 	CertificateAuthority ConfigMapNameReference `json:"issuerCertificateAuthority"`
-	// discoveryURL is an optional field that, if specified, overrides the default discovery endpoint used to retrieve OIDC configuration metadata. By default, the discovery URL is derived from `issuerURL` as "{issuerURL}/.well-known/openid-configuration".
+	// discoveryURL is an optional field that, if specified, overrides the default discovery endpoint used to retrieve OIDC configuration metadata.
+	// By default, the discovery URL is derived from `issuerURL` as "{issuerURL}/.well-known/openid-configuration".
 	//
-	// The discoveryURL must be a valid absolute HTTPS URL. It must not contain query parameters, user information, or fragments. Additionally, it must differ from the value of `issuerURL` (ignoring trailing slashes).
+	// The discoveryURL must be a valid absolute HTTPS URL. It must not contain query parameters, user information, or fragments.
+	// Additionally, it must differ from the value of `issuerURL` (ignoring trailing slashes).
 	// The discoveryURL value must be at least 1 character long and no longer than 2048 characters.
 	//
 	// +optional
@@ -740,7 +742,8 @@ type TokenClaimValidationRule struct {
 	Type TokenValidationRuleType `json:"type"`
 
 	// requiredClaim allows configuring a required claim name and its expected value.
-	// This field is required when `type` is set to RequiredClaim, and must be omitted when `type` is set to any other value. The Kubernetes API server uses this field to validate if an incoming JWT is valid for this identity provider.
+	// This field is required when `type` is set to RequiredClaim, and must be omitted when `type` is set to any other value.
+	// The Kubernetes API server uses this field to validate if an incoming JWT is valid for this identity provider.
 	//
 	// +optional
 	RequiredClaim *TokenRequiredClaim `json:"requiredClaim,omitempty"`

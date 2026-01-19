@@ -4572,6 +4572,19 @@
         }
       }
     },
+    "com.github.openshift.api.config.v1.AcceptRisk": {
+      "description": "AcceptRisk represents a risk that is considered acceptable.",
+      "type": "object",
+      "required": [
+        "name"
+      ],
+      "properties": {
+        "name": {
+          "description": "name is the name of the acceptable risk. It must be a non-empty string and must not exceed 256 characters.",
+          "type": "string"
+        }
+      }
+    },
     "com.github.openshift.api.config.v1.AdmissionConfig": {
       "type": "object",
       "properties": {
@@ -5859,6 +5872,18 @@
           "default": {},
           "$ref": "#/definitions/com.github.openshift.api.config.v1.ClusterVersionCapabilitiesStatus"
         },
+        "conditionalUpdateRisks": {
+          "description": "conditionalUpdateRisks contains the list of risks associated with conditionalUpdates. When performing a conditional update, all its associated risks will be compared with the set of accepted risks in the spec.desiredUpdate.acceptRisks field. If all risks for a conditional update are included in the spec.desiredUpdate.acceptRisks set, the conditional update can proceed, otherwise it is blocked. The risk names in the list must be unique. conditionalUpdateRisks must not contain more than 500 entries.",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/com.github.openshift.api.config.v1.ConditionalUpdateRisk"
+          },
+          "x-kubernetes-list-map-keys": [
+            "name"
+          ],
+          "x-kubernetes-list-type": "map"
+        },
         "conditionalUpdates": {
           "description": "conditionalUpdates contains the list of updates that may be recommended for this cluster if it meets specific required conditions. Consumers interested in the set of updates that are actually recommended for this cluster should use availableUpdates. This list may be empty if no updates are recommended, if the update service is unavailable, or if an empty or invalid channel has been specified.",
           "type": "array",
@@ -6066,6 +6091,15 @@
           "default": {},
           "$ref": "#/definitions/com.github.openshift.api.config.v1.Release"
         },
+        "riskNames": {
+          "description": "riskNames represents the set of the names of conditionalUpdateRisks that are relevant to this update for some clusters. The Applies condition of each conditionalUpdateRisks entry declares if that risk applies to this cluster. A conditional update is accepted only if each of its risks either does not apply to the cluster or is considered acceptable by the cluster administrator. The latter means that the risk names are included in value of the spec.desiredUpdate.acceptRisks field. Entries must be unique and must not exceed 256 characters. riskNames must not contain more than 500 entries.",
+          "type": "array",
+          "items": {
+            "type": "string",
+            "default": ""
+          },
+          "x-kubernetes-list-type": "set"
+        },
         "risks": {
           "description": "risks represents the range of issues associated with updating to the target release. The cluster-version operator will evaluate all entries, and only recommend the update if there is at least one entry and all entries recommend the update.",
           "type": "array",
@@ -6092,6 +6126,18 @@
         "matchingRules"
       ],
       "properties": {
+        "conditions": {
+          "description": "conditions represents the observations of the conditional update risk's current status. Known types are: * Applies, for whether the risk applies to the current cluster. The condition's types in the list must be unique. conditions must not contain more than one entry.",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Condition"
+          },
+          "x-kubernetes-list-map-keys": [
+            "type"
+          ],
+          "x-kubernetes-list-type": "map"
+        },
         "matchingRules": {
           "description": "matchingRules is a slice of conditions for deciding which clusters match the risk and which do not. The slice is ordered by decreasing precedence. The cluster-version operator will walk the slice in order, and stop after the first it can successfully evaluate. If no condition can be successfully evaluated, the update will not be recommended.",
           "type": "array",
@@ -6302,7 +6348,7 @@
           "x-kubernetes-list-type": "atomic"
         },
         "minTLSVersion": {
-          "description": "minTLSVersion is used to specify the minimal version of the TLS protocol that is negotiated during the TLS handshake. For example, to use TLS versions 1.1, 1.2 and 1.3 (yaml):\n\n  minTLSVersion: VersionTLS11\n\nNOTE: currently the highest minTLSVersion allowed is VersionTLS12",
+          "description": "minTLSVersion is used to specify the minimal version of the TLS protocol that is negotiated during the TLS handshake. For example, to use TLS versions 1.1, 1.2 and 1.3 (yaml):\n\n  minTLSVersion: VersionTLS11",
           "type": "string",
           "default": ""
         }
@@ -8488,7 +8534,7 @@
       }
     },
     "com.github.openshift.api.config.v1.IntermediateTLSProfile": {
-      "description": "IntermediateTLSProfile is a TLS security profile based on: https://wiki.mozilla.org/Security/Server_Side_TLS#Intermediate_compatibility_.28default.29",
+      "description": "IntermediateTLSProfile is a TLS security profile based on the \"intermediate\" configuration of the Mozilla Server Side TLS configuration guidelines.",
       "type": "object"
     },
     "com.github.openshift.api.config.v1.KMSConfig": {
@@ -8766,7 +8812,7 @@
       }
     },
     "com.github.openshift.api.config.v1.ModernTLSProfile": {
-      "description": "ModernTLSProfile is a TLS security profile based on: https://wiki.mozilla.org/Security/Server_Side_TLS#Modern_compatibility",
+      "description": "ModernTLSProfile is a TLS security profile based on the \"modern\" configuration of the Mozilla Server Side TLS configuration guidelines.",
       "type": "object"
     },
     "com.github.openshift.api.config.v1.NamedCertificate": {
@@ -9501,17 +9547,17 @@
           "default": ""
         },
         "clientSecret": {
-          "description": "clientSecret is an optional field that configures the client secret used by the platform component when making authentication requests to the identity provider.\n\nWhen not specified, no client secret will be used when making authentication requests to the identity provider.\n\nWhen specified, clientSecret references a Secret in the 'openshift-config' namespace that contains the client secret in the 'clientSecret' key of the '.data' field. The client secret will be used when making authentication requests to the identity provider.\n\nPublic clients do not require a client secret but private clients do require a client secret to work with the identity provider.",
+          "description": "clientSecret is an optional field that configures the client secret used by the platform component when making authentication requests to the identity provider.\n\nWhen not specified, no client secret will be used when making authentication requests to the identity provider.\n\nWhen specified, clientSecret references a Secret in the 'openshift-config' namespace that contains the client secret in the 'clientSecret' key of the '.data' field.\n\nThe client secret will be used when making authentication requests to the identity provider.\n\nPublic clients do not require a client secret but private clients do require a client secret to work with the identity provider.",
           "default": {},
           "$ref": "#/definitions/com.github.openshift.api.config.v1.SecretNameReference"
         },
         "componentName": {
-          "description": "componentName is a required field that specifies the name of the platform component being configured to use the identity provider as an authentication mode. It is used in combination with componentNamespace as a unique identifier.\n\ncomponentName must not be an empty string (\"\") and must not exceed 256 characters in length.",
+          "description": "componentName is a required field that specifies the name of the platform component being configured to use the identity provider as an authentication mode.\n\nIt is used in combination with componentNamespace as a unique identifier.\n\ncomponentName must not be an empty string (\"\") and must not exceed 256 characters in length.",
           "type": "string",
           "default": ""
         },
         "componentNamespace": {
-          "description": "componentNamespace is a required field that specifies the namespace in which the platform component being configured to use the identity provider as an authentication mode is running. It is used in combination with componentName as a unique identifier.\n\ncomponentNamespace must not be an empty string (\"\") and must not exceed 63 characters in length.",
+          "description": "componentNamespace is a required field that specifies the namespace in which the platform component being configured to use the identity provider as an authentication mode is running.\n\nIt is used in combination with componentName as a unique identifier.\n\ncomponentNamespace must not be an empty string (\"\") and must not exceed 63 characters in length.",
           "type": "string",
           "default": ""
         },
@@ -9566,7 +9612,7 @@
           "default": ""
         },
         "componentNamespace": {
-          "description": "componentNamespace is a required field that specifies the namespace in which the platform component using the identity provider as an authentication mode is running. It is used in combination with componentName as a unique identifier.\n\ncomponentNamespace must not be an empty string (\"\") and must not exceed 63 characters in length.",
+          "description": "componentNamespace is a required field that specifies the namespace in which the platform component using the identity provider as an authentication mode is running.\n\nIt is used in combination with componentName as a unique identifier.\n\ncomponentNamespace must not be an empty string (\"\") and must not exceed 63 characters in length.",
           "type": "string",
           "default": ""
         },
@@ -9592,7 +9638,7 @@
           "x-kubernetes-list-type": "set"
         },
         "currentOIDCClients": {
-          "description": "currentOIDCClients is an optional list of clients that the component is currently using. Entries must have unique issuerURL/clientID pairs.",
+          "description": "currentOIDCClients is an optional list of clients that the component is currently using.\n\nEntries must have unique issuerURL/clientID pairs.",
           "type": "array",
           "items": {
             "default": {},
@@ -9696,7 +9742,7 @@
       }
     },
     "com.github.openshift.api.config.v1.OldTLSProfile": {
-      "description": "OldTLSProfile is a TLS security profile based on: https://wiki.mozilla.org/Security/Server_Side_TLS#Old_backward_compatibility",
+      "description": "OldTLSProfile is a TLS security profile based on the \"old\" configuration of the Mozilla Server Side TLS configuration guidelines.",
       "type": "object"
     },
     "com.github.openshift.api.config.v1.OpenIDClaims": {
@@ -11274,7 +11320,7 @@
           "x-kubernetes-list-type": "atomic"
         },
         "minTLSVersion": {
-          "description": "minTLSVersion is used to specify the minimal version of the TLS protocol that is negotiated during the TLS handshake. For example, to use TLS versions 1.1, 1.2 and 1.3 (yaml):\n\n  minTLSVersion: VersionTLS11\n\nNOTE: currently the highest minTLSVersion allowed is VersionTLS12",
+          "description": "minTLSVersion is used to specify the minimal version of the TLS protocol that is negotiated during the TLS handshake. For example, to use TLS versions 1.1, 1.2 and 1.3 (yaml):\n\n  minTLSVersion: VersionTLS11",
           "type": "string",
           "default": ""
         }
@@ -11285,23 +11331,23 @@
       "type": "object",
       "properties": {
         "custom": {
-          "description": "custom is a user-defined TLS security profile. Be extremely careful using a custom profile as invalid configurations can be catastrophic. An example custom profile looks like this:\n\n  ciphers:\n\n    - ECDHE-ECDSA-CHACHA20-POLY1305\n\n    - ECDHE-RSA-CHACHA20-POLY1305\n\n    - ECDHE-RSA-AES128-GCM-SHA256\n\n    - ECDHE-ECDSA-AES128-GCM-SHA256\n\n  minTLSVersion: VersionTLS11",
+          "description": "custom is a user-defined TLS security profile. Be extremely careful using a custom profile as invalid configurations can be catastrophic. An example custom profile looks like this:\n\n  minTLSVersion: VersionTLS11\n  ciphers:\n    - ECDHE-ECDSA-CHACHA20-POLY1305\n    - ECDHE-RSA-CHACHA20-POLY1305\n    - ECDHE-RSA-AES128-GCM-SHA256\n    - ECDHE-ECDSA-AES128-GCM-SHA256",
           "$ref": "#/definitions/com.github.openshift.api.config.v1.CustomTLSProfile"
         },
         "intermediate": {
-          "description": "intermediate is a TLS security profile based on:\n\nhttps://wiki.mozilla.org/Security/Server_Side_TLS#Intermediate_compatibility_.28recommended.29\n\nand looks like this (yaml):\n\n  ciphers:\n\n    - TLS_AES_128_GCM_SHA256\n\n    - TLS_AES_256_GCM_SHA384\n\n    - TLS_CHACHA20_POLY1305_SHA256\n\n    - ECDHE-ECDSA-AES128-GCM-SHA256\n\n    - ECDHE-RSA-AES128-GCM-SHA256\n\n    - ECDHE-ECDSA-AES256-GCM-SHA384\n\n    - ECDHE-RSA-AES256-GCM-SHA384\n\n    - ECDHE-ECDSA-CHACHA20-POLY1305\n\n    - ECDHE-RSA-CHACHA20-POLY1305\n\n    - DHE-RSA-AES128-GCM-SHA256\n\n    - DHE-RSA-AES256-GCM-SHA384\n\n  minTLSVersion: VersionTLS12",
+          "description": "intermediate is a TLS profile for use when you do not need compatibility with legacy clients and want to remain highly secure while being compatible with most clients currently in use.\n\nThe cipher list includes TLS 1.3 ciphers for forward compatibility, followed by the \"intermediate\" profile ciphers.\n\nThis profile is equivalent to a Custom profile specified as:\n  minTLSVersion: VersionTLS12\n  ciphers:\n    - TLS_AES_128_GCM_SHA256\n    - TLS_AES_256_GCM_SHA384\n    - TLS_CHACHA20_POLY1305_SHA256\n    - ECDHE-ECDSA-AES128-GCM-SHA256\n    - ECDHE-RSA-AES128-GCM-SHA256\n    - ECDHE-ECDSA-AES256-GCM-SHA384\n    - ECDHE-RSA-AES256-GCM-SHA384\n    - ECDHE-ECDSA-CHACHA20-POLY1305\n    - ECDHE-RSA-CHACHA20-POLY1305\n    - DHE-RSA-AES128-GCM-SHA256\n    - DHE-RSA-AES256-GCM-SHA384",
           "$ref": "#/definitions/com.github.openshift.api.config.v1.IntermediateTLSProfile"
         },
         "modern": {
-          "description": "modern is a TLS security profile based on:\n\nhttps://wiki.mozilla.org/Security/Server_Side_TLS#Modern_compatibility\n\nand looks like this (yaml):\n\n  ciphers:\n\n    - TLS_AES_128_GCM_SHA256\n\n    - TLS_AES_256_GCM_SHA384\n\n    - TLS_CHACHA20_POLY1305_SHA256\n\n  minTLSVersion: VersionTLS13",
+          "description": "modern is a TLS security profile for use with clients that support TLS 1.3 and do not need backward compatibility for older clients.\n\nThis profile is equivalent to a Custom profile specified as:\n  minTLSVersion: VersionTLS13\n  ciphers:\n    - TLS_AES_128_GCM_SHA256\n    - TLS_AES_256_GCM_SHA384\n    - TLS_CHACHA20_POLY1305_SHA256",
           "$ref": "#/definitions/com.github.openshift.api.config.v1.ModernTLSProfile"
         },
         "old": {
-          "description": "old is a TLS security profile based on:\n\nhttps://wiki.mozilla.org/Security/Server_Side_TLS#Old_backward_compatibility\n\nand looks like this (yaml):\n\n  ciphers:\n\n    - TLS_AES_128_GCM_SHA256\n\n    - TLS_AES_256_GCM_SHA384\n\n    - TLS_CHACHA20_POLY1305_SHA256\n\n    - ECDHE-ECDSA-AES128-GCM-SHA256\n\n    - ECDHE-RSA-AES128-GCM-SHA256\n\n    - ECDHE-ECDSA-AES256-GCM-SHA384\n\n    - ECDHE-RSA-AES256-GCM-SHA384\n\n    - ECDHE-ECDSA-CHACHA20-POLY1305\n\n    - ECDHE-RSA-CHACHA20-POLY1305\n\n    - DHE-RSA-AES128-GCM-SHA256\n\n    - DHE-RSA-AES256-GCM-SHA384\n\n    - DHE-RSA-CHACHA20-POLY1305\n\n    - ECDHE-ECDSA-AES128-SHA256\n\n    - ECDHE-RSA-AES128-SHA256\n\n    - ECDHE-ECDSA-AES128-SHA\n\n    - ECDHE-RSA-AES128-SHA\n\n    - ECDHE-ECDSA-AES256-SHA384\n\n    - ECDHE-RSA-AES256-SHA384\n\n    - ECDHE-ECDSA-AES256-SHA\n\n    - ECDHE-RSA-AES256-SHA\n\n    - DHE-RSA-AES128-SHA256\n\n    - DHE-RSA-AES256-SHA256\n\n    - AES128-GCM-SHA256\n\n    - AES256-GCM-SHA384\n\n    - AES128-SHA256\n\n    - AES256-SHA256\n\n    - AES128-SHA\n\n    - AES256-SHA\n\n    - DES-CBC3-SHA\n\n  minTLSVersion: VersionTLS10",
+          "description": "old is a TLS profile for use when services need to be accessed by very old clients or libraries and should be used only as a last resort.\n\nThe cipher list includes TLS 1.3 ciphers for forward compatibility, followed by the \"old\" profile ciphers.\n\nThis profile is equivalent to a Custom profile specified as:\n  minTLSVersion: VersionTLS10\n  ciphers:\n    - TLS_AES_128_GCM_SHA256\n    - TLS_AES_256_GCM_SHA384\n    - TLS_CHACHA20_POLY1305_SHA256\n    - ECDHE-ECDSA-AES128-GCM-SHA256\n    - ECDHE-RSA-AES128-GCM-SHA256\n    - ECDHE-ECDSA-AES256-GCM-SHA384\n    - ECDHE-RSA-AES256-GCM-SHA384\n    - ECDHE-ECDSA-CHACHA20-POLY1305\n    - ECDHE-RSA-CHACHA20-POLY1305\n    - DHE-RSA-AES128-GCM-SHA256\n    - DHE-RSA-AES256-GCM-SHA384\n    - DHE-RSA-CHACHA20-POLY1305\n    - ECDHE-ECDSA-AES128-SHA256\n    - ECDHE-RSA-AES128-SHA256\n    - ECDHE-ECDSA-AES128-SHA\n    - ECDHE-RSA-AES128-SHA\n    - ECDHE-ECDSA-AES256-SHA384\n    - ECDHE-RSA-AES256-SHA384\n    - ECDHE-ECDSA-AES256-SHA\n    - ECDHE-RSA-AES256-SHA\n    - DHE-RSA-AES128-SHA256\n    - DHE-RSA-AES256-SHA256\n    - AES128-GCM-SHA256\n    - AES256-GCM-SHA384\n    - AES128-SHA256\n    - AES256-SHA256\n    - AES128-SHA\n    - AES256-SHA\n    - DES-CBC3-SHA",
           "$ref": "#/definitions/com.github.openshift.api.config.v1.OldTLSProfile"
         },
         "type": {
-          "description": "type is one of Old, Intermediate, Modern or Custom. Custom provides the ability to specify individual TLS security profile parameters. Old, Intermediate and Modern are TLS security profiles based on:\n\nhttps://wiki.mozilla.org/Security/Server_Side_TLS#Recommended_configurations\n\nThe profiles are intent based, so they may change over time as new ciphers are developed and existing ciphers are found to be insecure.  Depending on precisely which ciphers are available to a process, the list may be reduced.\n\nNote that the Modern profile is currently not supported because it is not yet well adopted by common software libraries.",
+          "description": "type is one of Old, Intermediate, Modern or Custom. Custom provides the ability to specify individual TLS security profile parameters.\n\nThe profiles are currently based on version 5.0 of the Mozilla Server Side TLS configuration guidelines (released 2019-06-28) with TLS 1.3 ciphers added for forward compatibility. See: https://ssl-config.mozilla.org/guidelines/5.0.json\n\nThe profiles are intent based, so they may change over time as new ciphers are developed and existing ciphers are found to be insecure. Depending on precisely which ciphers are available to a process, the list may be reduced.",
           "type": "string",
           "default": ""
         }
@@ -11416,7 +11462,7 @@
       ],
       "properties": {
         "extra": {
-          "description": "extra is an optional field for configuring the mappings used to construct the extra attribute for the cluster identity. When omitted, no extra attributes will be present on the cluster identity. key values for extra mappings must be unique. A maximum of 32 extra attribute mappings may be provided.",
+          "description": "extra is an optional field for configuring the mappings used to construct the extra attribute for the cluster identity. When omitted, no extra attributes will be present on the cluster identity.\n\nkey values for extra mappings must be unique. A maximum of 32 extra attribute mappings may be provided.",
           "type": "array",
           "items": {
             "default": {},
@@ -11428,12 +11474,12 @@
           "x-kubernetes-list-type": "map"
         },
         "groups": {
-          "description": "groups is an optional field that configures how the groups of a cluster identity should be constructed from the claims in a JWT token issued by the identity provider. When referencing a claim, if the claim is present in the JWT token, its value must be a list of groups separated by a comma (','). For example - '\"example\"' and '\"exampleOne\", \"exampleTwo\", \"exampleThree\"' are valid claim values.",
+          "description": "groups is an optional field that configures how the groups of a cluster identity should be constructed from the claims in a JWT token issued by the identity provider.\n\nWhen referencing a claim, if the claim is present in the JWT token, its value must be a list of groups separated by a comma (',').\n\nFor example - '\"example\"' and '\"exampleOne\", \"exampleTwo\", \"exampleThree\"' are valid claim values.",
           "default": {},
           "$ref": "#/definitions/com.github.openshift.api.config.v1.PrefixedClaimMapping"
         },
         "uid": {
-          "description": "uid is an optional field for configuring the claim mapping used to construct the uid for the cluster identity.\n\nWhen using uid.claim to specify the claim it must be a single string value. When using uid.expression the expression must result in a single string value.\n\nWhen omitted, this means the user has no opinion and the platform is left to choose a default, which is subject to change over time. The current default is to use the 'sub' claim.",
+          "description": "uid is an optional field for configuring the claim mapping used to construct the uid for the cluster identity.\n\nWhen using uid.claim to specify the claim it must be a single string value. When using uid.expression the expression must result in a single string value.\n\nWhen omitted, this means the user has no opinion and the platform is left to choose a default, which is subject to change over time.\n\nThe current default is to use the 'sub' claim.",
           "$ref": "#/definitions/com.github.openshift.api.config.v1.TokenClaimOrExpressionMapping"
         },
         "username": {
@@ -11534,7 +11580,7 @@
           "x-kubernetes-list-type": "set"
         },
         "discoveryURL": {
-          "description": "discoveryURL is an optional field that, if specified, overrides the default discovery endpoint used to retrieve OIDC configuration metadata. By default, the discovery URL is derived from `issuerURL` as \"{issuerURL}/.well-known/openid-configuration\".\n\nThe discoveryURL must be a valid absolute HTTPS URL. It must not contain query parameters, user information, or fragments. Additionally, it must differ from the value of `url` (ignoring trailing slashes). The discoveryURL value must be at least 1 character long and no longer than 2048 characters.",
+          "description": "discoveryURL is an optional field that, if specified, overrides the default discovery endpoint used to retrieve OIDC configuration metadata. By default, the discovery URL is derived from `issuerURL` as \"{issuerURL}/.well-known/openid-configuration\".\n\nThe discoveryURL must be a valid absolute HTTPS URL. It must not contain query parameters, user information, or fragments. Additionally, it must differ from the value of `issuerURL` (ignoring trailing slashes). The discoveryURL value must be at least 1 character long and no longer than 2048 characters.",
           "type": "string"
         },
         "issuerCertificateAuthority": {
@@ -11577,7 +11623,7 @@
       ],
       "properties": {
         "expression": {
-          "description": "expression is a required CEL expression that performs a validation on cluster user identity attributes like username, groups, etc. The expression must evaluate to a boolean value. When the expression evaluates to 'true', the cluster user identity is considered valid. When the expression evaluates to 'false', the cluster user identity is not considered valid. expression must be at least 1 character in length and must not exceed 1024 characters.",
+          "description": "expression is a required CEL expression that performs a validation on cluster user identity attributes like username, groups, etc.\n\nThe expression must evaluate to a boolean value. When the expression evaluates to 'true', the cluster user identity is considered valid. When the expression evaluates to 'false', the cluster user identity is not considered valid. expression must be at least 1 character in length and must not exceed 1024 characters.",
           "type": "string"
         },
         "message": {
@@ -11590,6 +11636,18 @@
       "description": "Update represents an administrator update request.",
       "type": "object",
       "properties": {
+        "acceptRisks": {
+          "description": "acceptRisks is an optional set of names of conditional update risks that are considered acceptable. A conditional update is performed only if all of its risks are acceptable. This list may contain entries that apply to current, previous or future updates. The entries therefore may not map directly to a risk in .status.conditionalUpdateRisks. acceptRisks must not contain more than 1000 entries. Entries in this list must be unique.",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/com.github.openshift.api.config.v1.AcceptRisk"
+          },
+          "x-kubernetes-list-map-keys": [
+            "name"
+          ],
+          "x-kubernetes-list-type": "map"
+        },
         "architecture": {
           "description": "architecture is an optional field that indicates the desired value of the cluster architecture. In this context cluster architecture means either a single architecture or a multi architecture. architecture can only be set to Multi thereby only allowing updates from single to multi architecture. If architecture is set, image cannot be set and version must be set. Valid values are 'Multi' and empty.",
           "type": "string",
@@ -11624,7 +11682,7 @@
       ],
       "properties": {
         "acceptedRisks": {
-          "description": "acceptedRisks records risks which were accepted to initiate the update. For example, it may menition an Upgradeable=False or missing signature that was overridden via desiredUpdate.force, or an update that was initiated despite not being in the availableUpdates set of recommended update targets.",
+          "description": "acceptedRisks records risks which were accepted to initiate the update. For example, it may mention an Upgradeable=False or missing signature that was overridden via desiredUpdate.force, or an update that was initiated despite not being in the availableUpdates set of recommended update targets.",
           "type": "string"
         },
         "completionTime": {
@@ -11673,7 +11731,7 @@
           "$ref": "#/definitions/com.github.openshift.api.config.v1.UsernamePrefix"
         },
         "prefixPolicy": {
-          "description": "prefixPolicy is an optional field that configures how a prefix should be applied to the value of the JWT claim specified in the 'claim' field.\n\nAllowed values are 'Prefix', 'NoPrefix', and omitted (not provided or an empty string).\n\nWhen set to 'Prefix', the value specified in the prefix field will be prepended to the value of the JWT claim. The prefix field must be set when prefixPolicy is 'Prefix'.\n\nWhen set to 'NoPrefix', no prefix will be prepended to the value of the JWT claim.\n\nWhen omitted, this means no opinion and the platform is left to choose any prefixes that are applied which is subject to change over time. Currently, the platform prepends `{issuerURL}#` to the value of the JWT claim when the claim is not 'email'. As an example, consider the following scenario:\n   `prefix` is unset, `issuerURL` is set to `https://myoidc.tld`,\n   the JWT claims include \"username\":\"userA\" and \"email\":\"userA@myoidc.tld\",\n   and `claim` is set to:\n   - \"username\": the mapped value will be \"https://myoidc.tld#userA\"\n   - \"email\": the mapped value will be \"userA@myoidc.tld\"",
+          "description": "prefixPolicy is an optional field that configures how a prefix should be applied to the value of the JWT claim specified in the 'claim' field.\n\nAllowed values are 'Prefix', 'NoPrefix', and omitted (not provided or an empty string).\n\nWhen set to 'Prefix', the value specified in the prefix field will be prepended to the value of the JWT claim.\n\nThe prefix field must be set when prefixPolicy is 'Prefix'.\n\nWhen set to 'NoPrefix', no prefix will be prepended to the value of the JWT claim.\n\nWhen omitted, this means no opinion and the platform is left to choose any prefixes that are applied which is subject to change over time. Currently, the platform prepends `{issuerURL}#` to the value of the JWT claim when the claim is not 'email'.\n\nAs an example, consider the following scenario:\n\n   `prefix` is unset, `issuerURL` is set to `https://myoidc.tld`,\n   the JWT claims include \"username\":\"userA\" and \"email\":\"userA@myoidc.tld\",\n   and `claim` is set to:\n   - \"username\": the mapped value will be \"https://myoidc.tld#userA\"\n   - \"email\": the mapped value will be \"userA@myoidc.tld\"",
           "type": "string",
           "default": ""
         }
@@ -28898,7 +28956,7 @@
       ],
       "properties": {
         "name": {
-          "description": "name is the unique name of a capability. Available capabilities are LightspeedButton and GettingStartedBanner.",
+          "description": "name is the unique name of a capability. Available capabilities are LightspeedButton, GettingStartedBanner, and GuidedTour.",
           "type": "string",
           "default": ""
         },
@@ -29547,7 +29605,7 @@
           "type": "string"
         },
         "capabilities": {
-          "description": "capabilities defines an array of capabilities that can be interacted with in the console UI. Each capability defines a visual state that can be interacted with the console to render in the UI. Available capabilities are LightspeedButton and GettingStartedBanner. Each of the available capabilities may appear only once in the list.",
+          "description": "capabilities defines an array of capabilities that can be interacted with in the console UI. Each capability defines a visual state that can be interacted with the console to render in the UI. Available capabilities are LightspeedButton, GettingStartedBanner, and GuidedTour. Each of the available capabilities may appear only once in the list.",
           "type": "array",
           "items": {
             "default": {},

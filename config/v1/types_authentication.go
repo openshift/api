@@ -672,7 +672,7 @@ type PrefixedClaimMapping struct {
 	//
 	// When omitted (""), no prefix is applied to the cluster identity attribute.
 	//
-	// Example: if `prefix` is set to "myoidc:" and the `claim` in JWT contains an array of strings "a", "b" and  "c", the mapping will result in an array of string "myoidc:a", "myoidc:b" and "myoidc:c".
+	// Example: if `prefix` is set to "myoidc:" and the `claim` in JWT contains an array of strings "a", "b" and "c", the mapping will result in an array of string "myoidc:a", "myoidc:b" and "myoidc:c".
 	//
 	// +optional
 	Prefix string `json:"prefix"`

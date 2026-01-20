@@ -71,8 +71,7 @@ spec:
                 type: object
               oidcProviders:
                 description: |-
-                  oidcProviders are OIDC identity providers that can issue tokens
-                  for this cluster
+                  oidcProviders are OIDC identity providers that can issue tokens for this cluster
                   Can only be set if "Type" is set to "OIDC".
 
                   At most one provider can be configured.
@@ -93,22 +92,17 @@ spec:
                             For example - '"example"' and '"exampleOne", "exampleTwo", "exampleThree"' are valid claim values.
                           properties:
                             claim:
-                              description: |-
-                                claim is a required field that configures the JWT token
-                                claim whose value is assigned to the cluster identity
-                                field associated with this mapping.
+                              description: claim is a required field that configures
+                                the JWT token claim whose value is assigned to the
+                                cluster identity field associated with this mapping.
                               type: string
                             prefix:
                               description: |-
-                                prefix is an optional field that configures the prefix that will be
-                                applied to the cluster identity attribute during the process of mapping
-                                JWT claims to cluster identity attributes.
+                                prefix is an optional field that configures the prefix that will be applied to the cluster identity attribute during the process of mapping JWT claims to cluster identity attributes.
 
                                 When omitted (""), no prefix is applied to the cluster identity attribute.
 
-                                Example: if `prefix` is set to "myoidc:" and the `claim` in JWT contains
-                                an array of strings "a", "b" and  "c", the mapping will result in an
-                                array of string "myoidc:a", "myoidc:b" and "myoidc:c".
+                                Example: if `prefix` is set to "myoidc:" and the `claim` in JWT contains an array of strings "a", "b" and  "c", the mapping will result in an array of string "myoidc:a", "myoidc:b" and "myoidc:c".
                               type: string
                           required:
                           - claim
@@ -135,9 +129,7 @@ spec:
                               properties:
                                 prefixString:
                                   description: |-
-                                    prefixString is a required field that configures the prefix that will
-                                    be applied to cluster identity username attribute
-                                    during the process of mapping JWT claims to cluster identity attributes.
+                                    prefixString is a required field that configures the prefix that will be applied to cluster identity username attribute during the process of mapping JWT claims to cluster identity attributes.
 
                                     prefixString must not be an empty string ("").
                                   minLength: 1
@@ -211,10 +203,8 @@ spec:
                                 type: string
                               requiredValue:
                                 description: |-
-                                  requiredValue is a required field that configures the value that 'claim' must
-                                  have when taken from the incoming JWT claims.
-                                  If the value in the JWT claims does not match, the token
-                                  will be rejected for authentication.
+                                  requiredValue is a required field that configures the value that 'claim' must have when taken from the incoming JWT claims.
+                                  If the value in the JWT claims does not match, the token will be rejected for authentication.
 
                                   requiredValue must not be an empty string ("").
                                 minLength: 1
@@ -511,9 +501,9 @@ spec:
                 - name
                 type: object
               oidcClients:
-                description: |-
-                  oidcClients is where participating operators place the current OIDC client status
-                  for OIDC clients that can be customized by the cluster-admin.
+                description: oidcClients is where participating operators place the
+                  current OIDC client status for OIDC clients that can be customized
+                  by the cluster-admin.
                 items:
                   description: |-
                     OIDCClientStatus represents the current state

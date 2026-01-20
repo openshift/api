@@ -80,8 +80,7 @@ type AuthenticationSpec struct {
 	// +optional
 	ServiceAccountIssuer string `json:"serviceAccountIssuer"`
 
-	// oidcProviders are OIDC identity providers that can issue tokens
-	// for this cluster
+	// oidcProviders are OIDC identity providers that can issue tokens for this cluster
 	// Can only be set if "Type" is set to "OIDC".
 	//
 	// At most one provider can be configured.
@@ -113,8 +112,7 @@ type AuthenticationStatus struct {
 	// +optional
 	IntegratedOAuthMetadata ConfigMapNameReference `json:"integratedOAuthMetadata"`
 
-	// oidcClients is where participating operators place the current OIDC client status
-	// for OIDC clients that can be customized by the cluster-admin.
+	// oidcClients is where participating operators place the current OIDC client status for OIDC clients that can be customized by the cluster-admin.
 	//
 	// +listType=map
 	// +listMapKey=componentNamespace
@@ -146,8 +144,7 @@ type AuthenticationType string
 
 const (
 	// None means that no cluster managed authentication system is in place.
-	// Note that user login will only work if a manually configured system is in place and
-	// referenced in authentication spec via oauthMetadata and
+	// Note that user login will only work if a manually configured system is in place and referenced in authentication spec via oauthMetadata and
 	// webhookTokenAuthenticator/oidcProviders
 	AuthenticationTypeNone AuthenticationType = "None"
 
@@ -351,52 +348,39 @@ type TokenClaimMappings struct {
 	Extra []ExtraMapping `json:"extra,omitempty"`
 }
 
-// TokenClaimMapping allows specifying a JWT token
-// claim to be used when mapping claims from an
-// authentication token to cluster identities.
+// TokenClaimMapping allows specifying a JWT token claim to be used when mapping claims from an authentication token to cluster identities.
 type TokenClaimMapping struct {
-	// claim is a required field that configures the JWT token
-	// claim whose value is assigned to the cluster identity
-	// field associated with this mapping.
+	// claim is a required field that configures the JWT token claim whose value is assigned to the cluster identity field associated with this mapping.
 	//
 	// +required
 	Claim string `json:"claim"`
 }
 
-// TokenClaimOrExpressionMapping allows specifying either a JWT
-// token claim or CEL expression to be used when mapping claims
-// from an authentication token to cluster identities.
+// TokenClaimOrExpressionMapping allows specifying either a JWT token claim or CEL expression to be used when mapping claims from an authentication token to cluster identities.
 // +kubebuilder:validation:XValidation:rule="has(self.claim) ? !has(self.expression) : has(self.expression)",message="precisely one of claim or expression must be set"
 type TokenClaimOrExpressionMapping struct {
-	// claim is an optional field for specifying the
-	// JWT token claim that is used in the mapping.
-	// The value of this claim will be assigned to
-	// the field in which this mapping is associated.
+	// claim is an optional field for specifying the JWT token claim that is used in the mapping.
+	// The value of this claim will be assigned to the field in which this mapping is associated.
 	//
 	// Precisely one of claim or expression must be set.
 	// claim must not be specified when expression is set.
-	// When specified, claim must be at least 1 character in length
-	// and must not exceed 256 characters in length.
+	// When specified, claim must be at least 1 character in length and must not exceed 256 characters in length.
 	//
 	// +optional
 	// +kubebuilder:validation:MaxLength=256
 	// +kubebuilder:validation:MinLength=1
 	Claim string `json:"claim,omitempty"`
 
-	// expression is an optional field for specifying a
-	// CEL expression that produces a string value from
-	// JWT token claims.
+	// expression is an optional field for specifying a CEL expression that produces a string value from JWT token claims.
 	//
-	// CEL expressions have access to the token claims
-	// through a CEL variable, 'claims'.
+	// CEL expressions have access to the token claims through a CEL variable, 'claims'.
 	// 'claims' is a map of claim names to claim values.
 	// For example, the 'sub' claim value can be accessed as 'claims.sub'.
 	// Nested claims can be accessed using dot notation ('claims.foo.bar').
 	//
 	// Precisely one of claim or expression must be set.
 	// expression must not be specified when claim is set.
-	// When specified, expression must be at least 1 character in length
-	// and must not exceed 1024 characters in length.
+	// When specified, expression must be at least 1 character in length and must not exceed 1024 characters in length.
 	//
 	// +optional
 	// +kubebuilder:validation:MaxLength=1024
@@ -404,13 +388,9 @@ type TokenClaimOrExpressionMapping struct {
 	Expression string `json:"expression,omitempty"`
 }
 
-// ExtraMapping allows specifying a key and CEL expression
-// to evaluate the keys' value. It is used to create additional
-// mappings and attributes added to a cluster identity from
-// a provided authentication token.
+// ExtraMapping allows specifying a key and CEL expression to evaluate the keys' value. It is used to create additional mappings and attributes added to a cluster identity from a provided authentication token.
 type ExtraMapping struct {
-	// key is a required field that specifies the string
-	// to use as the extra attribute key.
+	// key is a required field that specifies the string to use as the extra attribute key.
 	//
 	// key must be a domain-prefix path (e.g 'example.org/foo').
 	// key must not exceed 510 characters in length.
@@ -423,8 +403,7 @@ type ExtraMapping struct {
 	// It must only contain lower case alphanumeric characters and '-' or '.'.
 	// It must not use the reserved domains, or be subdomains of, "kubernetes.io", "k8s.io", and "openshift.io".
 	//
-	// The path portion of the key (string of characters after the '/') must not be empty and must consist of at least one
-	// alphanumeric character, percent-encoded octets, '-', '.', '_', '~', '!', '$', '&', ''', '(', ')', '*', '+', ',', ';', '=', and ':'.
+	// The path portion of the key (string of characters after the '/') must not be empty and must consist of at least one alphanumeric character, percent-encoded octets, '-', '.', '_', '~', '!', '$', '&', ''', '(', ')', '*', '+', ',', ';', '=', and ':'.
 	// It must not exceed 256 characters in length.
 	//
 	// +required
@@ -446,14 +425,12 @@ type ExtraMapping struct {
 	// +kubebuilder:validation:XValidation:rule="self.split('/', 2)[1].size() <= 256",message="the path of the key must not exceed 256 characters in length"
 	Key string `json:"key"`
 
-	// valueExpression is a required field to specify the CEL expression to extract
-	// the extra attribute value from a JWT token's claims.
+	// valueExpression is a required field to specify the CEL expression to extract the extra attribute value from a JWT token's claims.
 	// valueExpression must produce a string or string array value.
 	// "", [], and null are treated as the extra mapping not being present.
 	// Empty string values within an array are filtered out.
 	//
-	// CEL expressions have access to the token claims
-	// through a CEL variable, 'claims'.
+	// CEL expressions have access to the token claims through a CEL variable, 'claims'.
 	// 'claims' is a map of claim names to claim values.
 	// For example, the 'sub' claim value can be accessed as 'claims.sub'.
 	// Nested claims can be accessed using dot notation ('claims.foo.bar').
@@ -677,9 +654,7 @@ var (
 // UsernamePrefix configures the string that should
 // be used as a prefix for username claim mappings.
 type UsernamePrefix struct {
-	// prefixString is a required field that configures the prefix that will
-	// be applied to cluster identity username attribute
-	// during the process of mapping JWT claims to cluster identity attributes.
+	// prefixString is a required field that configures the prefix that will be applied to cluster identity username attribute during the process of mapping JWT claims to cluster identity attributes.
 	//
 	// prefixString must not be an empty string ("").
 	//
@@ -693,15 +668,11 @@ type UsernamePrefix struct {
 type PrefixedClaimMapping struct {
 	TokenClaimMapping `json:",inline"`
 
-	// prefix is an optional field that configures the prefix that will be
-	// applied to the cluster identity attribute during the process of mapping
-	// JWT claims to cluster identity attributes.
+	// prefix is an optional field that configures the prefix that will be applied to the cluster identity attribute during the process of mapping JWT claims to cluster identity attributes.
 	//
 	// When omitted (""), no prefix is applied to the cluster identity attribute.
 	//
-	// Example: if `prefix` is set to "myoidc:" and the `claim` in JWT contains
-	// an array of strings "a", "b" and  "c", the mapping will result in an
-	// array of string "myoidc:a", "myoidc:b" and "myoidc:c".
+	// Example: if `prefix` is set to "myoidc:" and the `claim` in JWT contains an array of strings "a", "b" and  "c", the mapping will result in an array of string "myoidc:a", "myoidc:b" and "myoidc:c".
 	//
 	// +optional
 	Prefix string `json:"prefix"`
@@ -765,10 +736,8 @@ type TokenRequiredClaim struct {
 	// +required
 	Claim string `json:"claim"`
 
-	// requiredValue is a required field that configures the value that 'claim' must
-	// have when taken from the incoming JWT claims.
-	// If the value in the JWT claims does not match, the token
-	// will be rejected for authentication.
+	// requiredValue is a required field that configures the value that 'claim' must have when taken from the incoming JWT claims.
+	// If the value in the JWT claims does not match, the token will be rejected for authentication.
 	//
 	// requiredValue must not be an empty string ("").
 	//
@@ -787,8 +756,7 @@ type TokenClaimValidationCELRule struct {
 	// +required
 	Expression string `json:"expression,omitempty"`
 
-	// message is a required human-readable message to be logged by the Kubernetes API server
-	// if the CEL expression defined in 'expression' fails.
+	// message is a required human-readable message to be logged by the Kubernetes API server if the CEL expression defined in 'expression' fails.
 	// message must be at least 1 character in length and must not exceed 256 characters.
 	// +required
 	// +kubebuilder:validation:MinLength=1

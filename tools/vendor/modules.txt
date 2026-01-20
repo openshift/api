@@ -2376,8 +2376,8 @@ k8s.io/component-base/tracing
 k8s.io/component-base/tracing/api/v1
 k8s.io/component-base/version
 k8s.io/component-base/zpages/features
-# k8s.io/gengo/v2 v2.0.0-20250604051438-85fd79dbfd9f
-## explicit; go 1.20
+# k8s.io/gengo/v2 v2.0.0-20250922181213-ec3ebc5fd46b
+## explicit; go 1.23
 k8s.io/gengo/v2
 k8s.io/gengo/v2/codetags
 k8s.io/gengo/v2/generator
@@ -2480,12 +2480,15 @@ sigs.k8s.io/crdify/pkg/validators/version/served
 ## explicit; go 1.23
 sigs.k8s.io/json
 sigs.k8s.io/json/internal/golang/encoding/json
-# sigs.k8s.io/kube-api-linter v0.0.0-20251028144537-077f0d3af196
+# sigs.k8s.io/kube-api-linter v0.0.0-20260114104534-18147eee9c49
 ## explicit; go 1.24.0
 sigs.k8s.io/kube-api-linter/pkg/analysis/arrayofstruct
 sigs.k8s.io/kube-api-linter/pkg/analysis/commentstart
 sigs.k8s.io/kube-api-linter/pkg/analysis/conditions
 sigs.k8s.io/kube-api-linter/pkg/analysis/conflictingmarkers
+sigs.k8s.io/kube-api-linter/pkg/analysis/defaultorrequired
+sigs.k8s.io/kube-api-linter/pkg/analysis/defaults
+sigs.k8s.io/kube-api-linter/pkg/analysis/dependenttags
 sigs.k8s.io/kube-api-linter/pkg/analysis/duplicatemarkers
 sigs.k8s.io/kube-api-linter/pkg/analysis/errors
 sigs.k8s.io/kube-api-linter/pkg/analysis/forbiddenmarkers
@@ -2496,16 +2499,20 @@ sigs.k8s.io/kube-api-linter/pkg/analysis/initializer
 sigs.k8s.io/kube-api-linter/pkg/analysis/integers
 sigs.k8s.io/kube-api-linter/pkg/analysis/jsontags
 sigs.k8s.io/kube-api-linter/pkg/analysis/maxlength
+sigs.k8s.io/kube-api-linter/pkg/analysis/minlength
 sigs.k8s.io/kube-api-linter/pkg/analysis/namingconventions
 sigs.k8s.io/kube-api-linter/pkg/analysis/nobools
 sigs.k8s.io/kube-api-linter/pkg/analysis/nodurations
 sigs.k8s.io/kube-api-linter/pkg/analysis/nofloats
 sigs.k8s.io/kube-api-linter/pkg/analysis/nomaps
+sigs.k8s.io/kube-api-linter/pkg/analysis/nonpointerstructs
 sigs.k8s.io/kube-api-linter/pkg/analysis/nonullable
 sigs.k8s.io/kube-api-linter/pkg/analysis/nophase
+sigs.k8s.io/kube-api-linter/pkg/analysis/noreferences
 sigs.k8s.io/kube-api-linter/pkg/analysis/notimestamp
 sigs.k8s.io/kube-api-linter/pkg/analysis/optionalfields
 sigs.k8s.io/kube-api-linter/pkg/analysis/optionalorrequired
+sigs.k8s.io/kube-api-linter/pkg/analysis/preferredmarkers
 sigs.k8s.io/kube-api-linter/pkg/analysis/registry
 sigs.k8s.io/kube-api-linter/pkg/analysis/requiredfields
 sigs.k8s.io/kube-api-linter/pkg/analysis/ssatags

@@ -16,20 +16,50 @@ limitations under the License.
 package utils
 
 import (
+	"errors"
+	"fmt"
 	"go/ast"
 	"go/token"
 	"go/types"
 	"slices"
+	"strings"
 
 	"golang.org/x/tools/go/analysis"
-	"sigs.k8s.io/kube-api-linter/pkg/analysis/helpers/markers"
+	markershelper "sigs.k8s.io/kube-api-linter/pkg/analysis/helpers/markers"
+	"sigs.k8s.io/kube-api-linter/pkg/markers"
 )
+
+const stringTypeName = "string"
 
 // IsBasicType checks if the type of the given identifier is a basic type.
 // Basic types are types like int, string, bool, etc.
-func IsBasicType(pass *analysis.Pass, ident *ast.Ident) bool {
-	_, ok := pass.TypesInfo.TypeOf(ident).(*types.Basic)
+func IsBasicType(pass *analysis.Pass, expr ast.Expr) bool {
+	_, ok := pass.TypesInfo.TypeOf(expr).(*types.Basic)
 	return ok
+}
+
+// IsStringType checks if the type of the given expression is a string type..
+func IsStringType(pass *analysis.Pass, expr ast.Expr) bool {
+	// In case the expr is a pointer.
+	underlying := getUnderlyingType(expr)
+
+	ident, ok := underlying.(*ast.Ident)
+	if !ok {
+		return false
+	}
+
+	if ident.Name == stringTypeName {
+		return true
+	}
+
+	// Is either an alias or another basic type, try to look up the alias.
+	tSpec, ok := LookupTypeSpec(pass, ident)
+	if !ok {
+		// Basic type and not a string.
+		return false
+	}
+
+	return IsStringType(pass, tSpec.Type)
 }
 
 // IsStructType checks if the given expression is a struct type.
@@ -61,6 +91,12 @@ func IsStarExpr(expr ast.Expr) (bool, ast.Expr) {
 	}
 
 	return false, expr
+}
+
+// IsPointer checks if the expression is a pointer.
+func IsPointer(expr ast.Expr) bool {
+	_, ok := expr.(*ast.StarExpr)
+	return ok
 }
 
 // IsPointerType checks if the expression is a pointer type.
@@ -150,6 +186,78 @@ func FieldName(field *ast.Field) string {
 	return ""
 }
 
+// GetStructName returns the name of the struct that the field is in.
+func GetStructName(pass *analysis.Pass, field *ast.Field) string {
+	_, astFile := getFilesForField(pass, field)
+	if astFile == nil {
+		return ""
+	}
+
+	return GetStructNameFromFile(astFile, field)
+}
+
+// GetStructNameFromFile returns the name of the struct that the field is in.
+func GetStructNameFromFile(file *ast.File, field *ast.Field) string {
+	var (
+		structName string
+		found      bool
+	)
+
+	ast.Inspect(file, func(n ast.Node) bool {
+		if found {
+			return false
+		}
+
+		typeSpec, ok := n.(*ast.TypeSpec)
+		if !ok {
+			return true
+		}
+
+		structType, ok := typeSpec.Type.(*ast.StructType)
+		if !ok {
+			return true
+		}
+
+		structName = typeSpec.Name.Name
+
+		if structType.Fields == nil {
+			return true
+		}
+
+		if slices.Contains(structType.Fields.List, field) {
+			found = true
+			return false
+		}
+
+		return true
+	})
+
+	if found {
+		return structName
+	}
+
+	return ""
+}
+
+// GetQualifiedFieldName returns the qualified field name.
+func GetQualifiedFieldName(pass *analysis.Pass, field *ast.Field) string {
+	fieldName := FieldName(field)
+	structName := GetStructName(pass, field)
+
+	return fmt.Sprintf("%s.%s", structName, fieldName)
+}
+
+func getFilesForField(pass *analysis.Pass, field *ast.Field) (*token.File, *ast.File) {
+	tokenFile := pass.Fset.File(field.Pos())
+	for _, astFile := range pass.Files {
+		if astFile.FileStart == token.Pos(tokenFile.Base()) {
+			return tokenFile, astFile
+		}
+	}
+
+	return tokenFile, nil
+}
+
 func getFilesForType(pass *analysis.Pass, ident *ast.Ident) (*token.File, *ast.File) {
 	namedType, ok := pass.TypesInfo.TypeOf(ident).(*types.Named)
 	if !ok {
@@ -176,7 +284,7 @@ func isInPassPackage(pass *analysis.Pass, namedType *types.Named) bool {
 // the type and include them in the markers.MarkerSet that is returned.
 // It will look through *ast.StarExpr to the underlying type.
 // Markers on the type will always come before markers on the field in the list of markers for an identifier.
-func TypeAwareMarkerCollectionForField(pass *analysis.Pass, markersAccess markers.Markers, field *ast.Field) markers.MarkerSet {
+func TypeAwareMarkerCollectionForField(pass *analysis.Pass, markersAccess markershelper.Markers, field *ast.Field) markershelper.MarkerSet {
 	markers := markersAccess.FieldMarkers(field)
 
 	var underlyingType ast.Expr
@@ -350,47 +458,93 @@ func isTypeBasic(t types.Type) bool {
 	return false
 }
 
-// GetStructNameForField inspects the AST of the package and returns the name of the struct
-// that contains the field being inspected.
-func GetStructNameForField(pass *analysis.Pass, field *ast.Field) string {
-	for _, file := range pass.Files {
-		var (
-			structName string
-			found      bool
-		)
+// GetMinProperties returns the value of the minimum properties marker.
+// It returns a nil value when the marker is not present, and an error
+// when the marker is present, but malformed.
+func GetMinProperties(markerSet markershelper.MarkerSet) (*int, error) {
+	minProperties, err := getMarkerNumericValueByName[int](markerSet, markers.KubebuilderMinPropertiesMarker)
+	if err != nil && !errors.Is(err, errMarkerMissingValue) {
+		return nil, fmt.Errorf("invalid format for minimum properties marker: %w", err)
+	}
 
-		ast.Inspect(file, func(n ast.Node) bool {
-			if found {
-				return false
-			}
+	return minProperties, nil
+}
 
-			typeSpec, ok := n.(*ast.TypeSpec)
-			if !ok {
-				return true
-			}
+// IsKubernetesListType checks if a struct is a Kubernetes List type.
+// A Kubernetes List type has:
+// - Name ending with "List" (only checked if name is provided)
+// - Exactly 3 fields: TypeMeta, ListMeta, and Items (slice type)
+//
+// The name parameter is optional and can be an empty string. When empty, only
+// the structural pattern (3 fields: TypeMeta, ListMeta, Items) is checked without
+// validating the type name suffix. This is useful for generic field inspection
+// where the type name may not be readily available.
+//
+// Example:
+//
+//	type FooList struct {
+//	    metav1.TypeMeta `json:",inline"`
+//	    metav1.ListMeta `json:"metadata,omitempty"`
+//	    Items           []Foo `json:"items"`
+//	}
+func IsKubernetesListType(sTyp *ast.StructType, name string) bool {
+	if sTyp == nil || sTyp.Fields == nil || sTyp.Fields.List == nil {
+		return false
+	}
 
-			structType, ok := typeSpec.Type.(*ast.StructType)
-			if !ok {
-				return true
-			}
+	// Check name suffix if name is provided
+	if name != "" && !strings.HasSuffix(name, "List") {
+		return false
+	}
 
-			structName = typeSpec.Name.Name
+	// Must have exactly 3 fields
+	if len(sTyp.Fields.List) != 3 {
+		return false
+	}
 
-			if structType.Fields == nil {
-				return true
-			}
+	return hasListFields(sTyp.Fields.List)
+}
 
-			if slices.Contains(structType.Fields.List, field) {
-				found = true
-				return false
-			}
+// hasListFields checks if the field list contains TypeMeta, ListMeta, and Items.
+func hasListFields(fields []*ast.Field) bool {
+	hasTypeMeta := false
+	hasListMeta := false
+	hasItems := false
 
-			return true
-		})
+	for _, field := range fields {
+		typeName := getFieldTypeName(field)
 
-		if found {
-			return structName
+		// Check for TypeMeta (embedded or named)
+		if typeName == "TypeMeta" {
+			hasTypeMeta = true
+			continue
 		}
+
+		// Check for ListMeta (embedded or named)
+		if typeName == "ListMeta" {
+			hasListMeta = true
+			continue
+		}
+
+		// Check for Items field (must be named "Items" and be a slice type)
+		if len(field.Names) > 0 && field.Names[0].Name == "Items" {
+			if _, ok := field.Type.(*ast.ArrayType); ok {
+				hasItems = true
+			}
+		}
+	}
+
+	return hasTypeMeta && hasListMeta && hasItems
+}
+
+// getFieldTypeName returns the type name of a field, handling both embedded fields
+// and named fields with simple or qualified identifiers (e.g., TypeMeta or metav1.TypeMeta).
+func getFieldTypeName(field *ast.Field) string {
+	switch t := field.Type.(type) {
+	case *ast.Ident:
+		return t.Name
+	case *ast.SelectorExpr:
+		return t.Sel.Name
 	}
 
 	return ""

@@ -19,6 +19,7 @@ import (
 	"fmt"
 	"go/ast"
 	"go/token"
+	"go/types"
 
 	astinspector "golang.org/x/tools/go/ast/inspector"
 	"sigs.k8s.io/kube-api-linter/pkg/analysis/helpers/extractjsontags"
@@ -30,7 +31,10 @@ import (
 // Inspector is an interface that allows for the inspection of fields in structs.
 type Inspector interface {
 	// InspectFields is a function that iterates over fields in structs.
-	InspectFields(func(field *ast.Field, stack []ast.Node, jsonTagInfo extractjsontags.FieldTagInfo, markersAccess markers.Markers))
+	InspectFields(func(field *ast.Field, jsonTagInfo extractjsontags.FieldTagInfo, markersAccess markers.Markers, qualifiedFieldName string))
+
+	// InspectFieldsIncludingListTypes is a function that iterates over fields in structs, including list types.
+	InspectFieldsIncludingListTypes(func(field *ast.Field, jsonTagInfo extractjsontags.FieldTagInfo, markersAccess markers.Markers, qualifiedFieldName string))
 
 	// InspectTypeSpec is a function that inspects the type spec and calls the provided inspectTypeSpec function.
 	InspectTypeSpec(func(typeSpec *ast.TypeSpec, markersAccess markers.Markers))
@@ -55,7 +59,19 @@ func newInspector(astinspector *astinspector.Inspector, jsonTags extractjsontags
 // InspectFields iterates over fields in structs, ignoring any struct that is not a type declaration, and any field that is ignored and
 // therefore would not be included in the CRD spec.
 // For the remaining fields, it calls the provided inspectField function to apply analysis logic.
-func (i *inspector) InspectFields(inspectField func(field *ast.Field, stack []ast.Node, jsonTagInfo extractjsontags.FieldTagInfo, markersAccess markers.Markers)) {
+func (i *inspector) InspectFields(inspectField func(field *ast.Field, jsonTagInfo extractjsontags.FieldTagInfo, markersAccess markers.Markers, qualifiedFieldName string)) {
+	i.inspectFields(inspectField, true)
+}
+
+// InspectFieldsIncludingListTypes iterates over fields in structs, including list types.
+// Unlike InspectFields, this method does not skip fields in list type structs.
+func (i *inspector) InspectFieldsIncludingListTypes(inspectField func(field *ast.Field, jsonTagInfo extractjsontags.FieldTagInfo, markersAccess markers.Markers, qualifiedFieldName string)) {
+	i.inspectFields(inspectField, false)
+}
+
+// inspectFields is a shared implementation for field iteration.
+// The skipListTypes parameter controls whether list type structs should be skipped.
+func (i *inspector) inspectFields(inspectField func(field *ast.Field, jsonTagInfo extractjsontags.FieldTagInfo, markersAccess markers.Markers, qualifiedFieldName string), skipListTypes bool) {
 	// Filter to fields so that we can iterate over fields in a struct.
 	nodeFilter := []ast.Node{
 		(*ast.Field)(nil),
@@ -67,7 +83,7 @@ func (i *inspector) InspectFields(inspectField func(field *ast.Field, stack []as
 		}
 
 		field, ok := n.(*ast.Field)
-		if !ok || !i.shouldProcessField(stack) {
+		if !ok || !i.shouldProcessField(stack, skipListTypes) {
 			return ok
 		}
 
@@ -75,14 +91,32 @@ func (i *inspector) InspectFields(inspectField func(field *ast.Field, stack []as
 			return false
 		}
 
-		i.processFieldWithRecovery(field, stack, inspectField)
+		var structName string
+
+		qualifiedFieldName := utils.FieldName(field)
+		if qualifiedFieldName == "" {
+			qualifiedFieldName = types.ExprString(field.Type)
+		}
+
+		// The 0th node in the stack is the *ast.File.
+		file, ok := stack[0].(*ast.File)
+		if ok {
+			structName = utils.GetStructNameFromFile(file, field)
+		}
+
+		if structName != "" {
+			qualifiedFieldName = fmt.Sprintf("%s.%s", structName, qualifiedFieldName)
+		}
+
+		i.processFieldWithRecovery(field, qualifiedFieldName, inspectField)
 
 		return true
 	})
 }
 
 // shouldProcessField checks if the field should be processed.
-func (i *inspector) shouldProcessField(stack []ast.Node) bool {
+// The skipListTypes parameter controls whether list type structs should be skipped.
+func (i *inspector) shouldProcessField(stack []ast.Node, skipListTypes bool) bool {
 	if len(stack) < 3 {
 		return false
 	}
@@ -96,8 +130,13 @@ func (i *inspector) shouldProcessField(stack []ast.Node) bool {
 	}
 
 	structType, ok := stack[len(stack)-3].(*ast.StructType)
-	if !ok || isItemsType(structType) {
-		// Not in a struct or belongs to an items type.
+	if !ok {
+		// Not in a struct.
+		return false
+	}
+
+	if skipListTypes && utils.IsKubernetesListType(structType, "") {
+		// Skip list types if requested.
 		return false
 	}
 
@@ -117,7 +156,7 @@ func (i *inspector) shouldSkipField(field *ast.Field) bool {
 }
 
 // processFieldWithRecovery processes a field with panic recovery.
-func (i *inspector) processFieldWithRecovery(field *ast.Field, stack []ast.Node, inspectField func(field *ast.Field, stack []ast.Node, jsonTagInfo extractjsontags.FieldTagInfo, markersAccess markers.Markers)) {
+func (i *inspector) processFieldWithRecovery(field *ast.Field, qualifiedFieldName string, inspectField func(field *ast.Field, jsonTagInfo extractjsontags.FieldTagInfo, markersAccess markers.Markers, qualifiedFieldName string)) {
 	tagInfo := i.jsonTags.FieldTags(field)
 
 	defer func() {
@@ -128,7 +167,7 @@ func (i *inspector) processFieldWithRecovery(field *ast.Field, stack []ast.Node,
 		}
 	}()
 
-	inspectField(field, stack, tagInfo, i.markers)
+	inspectField(field, tagInfo, i.markers, qualifiedFieldName)
 }
 
 // InspectTypeSpec inspects the type spec and calls the provided inspectTypeSpec function.
@@ -145,34 +184,6 @@ func (i *inspector) InspectTypeSpec(inspectTypeSpec func(typeSpec *ast.TypeSpec,
 
 		inspectTypeSpec(typeSpec, i.markers)
 	})
-}
-
-func isItemsType(structType *ast.StructType) bool {
-	// An items type is a struct with TypeMeta, ListMeta and Items fields.
-	if len(structType.Fields.List) != 3 {
-		return false
-	}
-
-	// Check if the first field is TypeMeta.
-	// This should be a selector (e.g. metav1.TypeMeta)
-	// Check the TypeMeta part as the package name may vary.
-	if typeMeta, ok := structType.Fields.List[0].Type.(*ast.SelectorExpr); !ok || typeMeta.Sel.Name != "TypeMeta" {
-		return false
-	}
-
-	// Check if the second field is ListMeta.
-	if listMeta, ok := structType.Fields.List[1].Type.(*ast.SelectorExpr); !ok || listMeta.Sel.Name != "ListMeta" {
-		return false
-	}
-
-	// Check if the third field is Items.
-	// It should be an array, and be called Items.
-	itemsField := structType.Fields.List[2]
-	if _, ok := itemsField.Type.(*ast.ArrayType); !ok || len(itemsField.Names) == 0 || itemsField.Names[0].Name != "Items" {
-		return false
-	}
-
-	return true
 }
 
 func isSchemalessType(markerSet markers.MarkerSet) bool {

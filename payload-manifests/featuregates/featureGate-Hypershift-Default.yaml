@@ -163,9 +163,6 @@
                         "name": "MachineAPIOperatorDisableMachineHealthCheckController"
                     },
                     {
-                        "name": "ManagedBootImagesCPMS"
-                    },
-                    {
                         "name": "MaxUnavailableStatefulSet"
                     },
                     {
@@ -307,6 +304,9 @@
                     },
                     {
                         "name": "ManagedBootImagesAzure"
+                    },
+                    {
+                        "name": "ManagedBootImagesCPMS"
                     },
                     {
                         "name": "ManagedBootImagesvSphere"

@@ -290,7 +290,8 @@ type TokenIssuer struct {
 	// discoveryURL is an optional field that, if specified, overrides the default discovery endpoint used to retrieve OIDC configuration metadata.
 	// By default, the discovery URL is derived from `issuerURL` as "{issuerURL}/.well-known/openid-configuration".
 	//
-	// The discoveryURL must be a valid absolute HTTPS URL. It must not contain query parameters, user information, or fragments.
+	// The discoveryURL must be a valid absolute HTTPS URL.
+	// It must not contain query parameters, user information, or fragments.
 	// Additionally, it must differ from the value of `issuerURL` (ignoring trailing slashes).
 	// The discoveryURL value must be at least 1 character long and no longer than 2048 characters.
 	//
@@ -388,7 +389,8 @@ type TokenClaimOrExpressionMapping struct {
 	Expression string `json:"expression,omitempty"`
 }
 
-// ExtraMapping allows specifying a key and CEL expression to evaluate the keys' value. It is used to create additional mappings and attributes added to a cluster identity from a provided authentication token.
+// ExtraMapping allows specifying a key and CEL expression to evaluate the keys' value.
+// It is used to create additional mappings and attributes added to a cluster identity from a provided authentication token.
 type ExtraMapping struct {
 	// key is a required field that specifies the string to use as the extra attribute key.
 	//
@@ -444,9 +446,7 @@ type ExtraMapping struct {
 	ValueExpression string `json:"valueExpression"`
 }
 
-// OIDCClientConfig configures how platform clients
-// interact with identity providers as an authentication
-// method
+// OIDCClientConfig configures how platform clients interact with identity providers as an authentication method.
 type OIDCClientConfig struct {
 	// componentName is a required field that specifies the name of the platform component being configured to use the identity provider as an authentication mode.
 	//

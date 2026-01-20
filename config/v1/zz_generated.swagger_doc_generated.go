@@ -407,7 +407,7 @@ func (ExtraMapping) SwaggerDoc() map[string]string {
 }
 
 var map_OIDCClientConfig = map[string]string{
-	"":                   "OIDCClientConfig configures how platform clients interact with identity providers as an authentication method",
+	"":                   "OIDCClientConfig configures how platform clients interact with identity providers as an authentication method.",
 	"componentName":      "componentName is a required field that specifies the name of the platform component being configured to use the identity provider as an authentication mode.\n\nIt is used in combination with componentNamespace as a unique identifier.\n\ncomponentName must not be an empty string (\"\") and must not exceed 256 characters in length.",
 	"componentNamespace": "componentNamespace is a required field that specifies the namespace in which the platform component being configured to use the identity provider as an authentication mode is running.\n\nIt is used in combination with componentName as a unique identifier.\n\ncomponentNamespace must not be an empty string (\"\") and must not exceed 63 characters in length.",
 	"clientID":           "clientID is a required field that configures the client identifier, from the identity provider, that the platform component uses for authentication requests made to the identity provider. The identity provider must accept this identifier for platform components to be able to use the identity provider as an authentication mode.\n\nclientID must not be an empty string (\"\").",

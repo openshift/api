@@ -91,10 +91,9 @@ spec:
                             key values for extra mappings must be unique.
                             A maximum of 32 extra attribute mappings may be provided.
                           items:
-                            description: ExtraMapping allows specifying a key and
-                              CEL expression to evaluate the keys' value. It is used
-                              to create additional mappings and attributes added to
-                              a cluster identity from a provided authentication token.
+                            description: |-
+                              ExtraMapping allows specifying a key and CEL expression to evaluate the keys' value.
+                              It is used to create additional mappings and attributes added to a cluster identity from a provided authentication token.
                             properties:
                               key:
                                 description: |-
@@ -445,10 +444,8 @@ spec:
                         oidcClients is an optional field that configures how on-cluster, platform clients should request tokens from the identity provider.
                         oidcClients must not exceed 20 entries and entries must have unique namespace/name pairs.
                       items:
-                        description: |-
-                          OIDCClientConfig configures how platform clients
-                          interact with identity providers as an authentication
-                          method
+                        description: OIDCClientConfig configures how platform clients
+                          interact with identity providers as an authentication method.
                         properties:
                           clientID:
                             description: |-

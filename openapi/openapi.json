@@ -14421,9 +14421,13 @@
           "$ref": "#/definitions/com.github.openshift.api.console.v1.ConsoleSampleGitImportSource"
         },
         "type": {
-          "description": "type of the sample, currently supported: \"GitImport\";\"ContainerImport\"",
+          "description": "type of the sample, currently supported: \"GitImport\";\"ContainerImport\"\n\nPossible enum values:\n - `\"ContainerImport\"` A sample that let the user import a container image.\n - `\"GitImport\"` A sample that let the user import code from a git repository.",
           "type": "string",
-          "default": ""
+          "default": "",
+          "enum": [
+            "ContainerImport",
+            "GitImport"
+          ]
         }
       },
       "x-kubernetes-unions": [
@@ -24706,6 +24710,10 @@
           "format": "int32",
           "default": 0
         },
+        "synchronizedAPI": {
+          "description": "synchronizedAPI holds the last stable value of authoritativeAPI. It is used to detect migration cancellation requests and to restore the resource to its previous state. Valid values are \"MachineAPI\" and \"ClusterAPI\". When omitted, the resource has not yet been reconciled by the migration controller.",
+          "type": "string"
+        },
         "synchronizedGeneration": {
           "description": "synchronizedGeneration is the generation of the authoritative resource that the non-authoritative resource is synchronised with. This field is set when the authoritative resource is updated and the sync controller has updated the non-authoritative resource to match.",
           "type": "integer",
@@ -24808,6 +24816,10 @@
         "providerStatus": {
           "description": "providerStatus details a Provider-specific status. It is recommended that providers maintain their own versioned API types that should be serialized/deserialized from this field.",
           "$ref": "#/definitions/io.k8s.apimachinery.pkg.runtime.RawExtension"
+        },
+        "synchronizedAPI": {
+          "description": "synchronizedAPI holds the last stable value of authoritativeAPI. It is used to detect migration cancellation requests and to restore the resource to its previous state. Valid values are \"MachineAPI\" and \"ClusterAPI\". When omitted, the resource has not yet been reconciled by the migration controller.",
+          "type": "string"
         },
         "synchronizedGeneration": {
           "description": "synchronizedGeneration is the generation of the authoritative resource that the non-authoritative resource is synchronised with. This field is set when the authoritative resource is updated and the sync controller has updated the non-authoritative resource to match.",

@@ -498,8 +498,8 @@ github.com/onsi/ginkgo/v2 v2.23.4 h1:ktYTpKJAVZnDT4VjxSbiBenUjmlL/5QkBEocaWXiQus
 github.com/onsi/ginkgo/v2 v2.23.4/go.mod h1:Bt66ApGPBFzHyR+JO10Zbt0Gsp4uWxu5mIOTusL46e8=
 github.com/onsi/gomega v1.38.0 h1:c/WX+w8SLAinvuKKQFh77WEucCnPk4j2OTUr7lt7BeY=
 github.com/onsi/gomega v1.38.0/go.mod h1:OcXcwId0b9QsE7Y49u+BTrL4IdKOBOKnD6VQNTJEB6o=
-github.com/openshift/controller-tools v0.12.1-0.20250801155905-948121310243 h1:h1plii/XWykoQ4g1pthErC4pUeCTwtIjxicKL1GYuf0=
-github.com/openshift/controller-tools v0.12.1-0.20250801155905-948121310243/go.mod h1:JhdEECpLnYzT+n3xWZZnbFyLk4/XUgg6avg2lLUqRCk=
+github.com/openshift/controller-tools v0.12.1-0.20260120141914-b0865777b142 h1:6q2ASWp6uJ7v8L8zPi8X1fgfZLQ/ggCmWdJWg5eMWpM=
+github.com/openshift/controller-tools v0.12.1-0.20260120141914-b0865777b142/go.mod h1:JhdEECpLnYzT+n3xWZZnbFyLk4/XUgg6avg2lLUqRCk=
 github.com/openshift/crd-schema-checker v0.0.0-20250905140724-c313b6407231 h1:8lSGufji9rfiyDxtUl7A4uOyeeP4x0UOOXcsDBFfkGI=
 github.com/openshift/crd-schema-checker v0.0.0-20250905140724-c313b6407231/go.mod h1:sTxJ4ZFW9r9fEdbW2v0yMRi6NcyTbx0fII4p83IQ+L8=
 github.com/otiai10/copy v1.2.0/go.mod h1:rrF5dJ5F0t/EWSYODDu4j9/vEeYHMkc8jt0zJChqQWw=

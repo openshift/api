@@ -397,7 +397,9 @@ ingresses.config.openshift.io:
   CRDName: ingresses.config.openshift.io
   Capability: ""
   Category: ""
-  FeatureGates: []
+  FeatureGates:
+  - AWSDualStackInstall
+  - AzureDualStackInstall
   FilenameOperatorName: config-operator
   FilenameOperatorOrdering: "01"
   FilenameRunLevel: "0000_10"

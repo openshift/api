@@ -33,9 +33,6 @@
                         "name": "MultiArchInstallAzure"
                     },
                     {
-                        "name": "NewOLMBoxCutterRuntime"
-                    },
-                    {
                         "name": "ShortCertRotation"
                     }
                 ],
@@ -270,6 +267,9 @@
                     },
                     {
                         "name": "NewOLM"
+                    },
+                    {
+                        "name": "NewOLMBoxCutterRuntime"
                     },
                     {
                         "name": "NewOLMCatalogdAPIV1Metas"

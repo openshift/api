@@ -376,6 +376,23 @@ tests:
               - name: "memory"
                 request: "50Mi"
                 limit: "200Mi"
+    - name: Should be able to create a minimal PrometheusConfig
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: "Disabled"
+          prometheusConfig:
+            logLevel: Info
+      expected: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: "Disabled"
+          prometheusConfig:
+            logLevel: Info
     - name: Should be able to create PrometheusOperatorAdmissionWebhookConfig with valid topologySpreadConstraints
       initial: |
         apiVersion: config.openshift.io/v1alpha1
@@ -577,3 +594,1432 @@ tests:
           prometheusOperatorAdmissionWebhookConfig:
             resources: []
       expectedError: 'spec.prometheusOperatorAdmissionWebhookConfig.resources: Invalid value: 0: spec.prometheusOperatorAdmissionWebhookConfig.resources in body should have at least 1 items'
+    - name: Should accept PrometheusConfig with all fields
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: "Disabled"
+          prometheusConfig:
+            enforcedBodySizeLimitBytes: 4194304
+            logLevel: Debug
+            collectionProfile: Full
+            nodeSelector:
+              kubernetes.io/os: linux
+              node-role.kubernetes.io/worker: ""
+            queryLogFile: /var/log/prometheus/queries.log
+            externalLabels:
+              - key: cluster
+                value: production
+              - key: region
+                value: us-east-1
+            resources:
+              - name: cpu
+                request: "500m"
+                limit: "2"
+              - name: memory
+                request: "1Gi"
+                limit: "4Gi"
+            retention:
+              durationInDays: 30
+              sizeInGiB: 100
+            tolerations:
+              - key: "key1"
+                operator: "Equal"
+                value: "value1"
+                effect: "NoSchedule"
+            topologySpreadConstraints:
+              - maxSkew: 1
+                topologyKey: zone
+                whenUnsatisfiable: DoNotSchedule
+                labelSelector:
+                  matchLabels:
+                    app: prometheus
+            remoteWrite:
+              - url: https://remote-write.example.com/api/v1/write
+                name: remote-write-1
+                remoteTimeoutSeconds: 30
+            additionalAlertmanagerConfigs:
+              - name: external-alertmanager
+                staticConfigs:
+                  - alertmanager.example.com:9093
+                scheme: HTTPS
+                timeoutSeconds: 10
+                authorization:
+                  type: BearerToken
+                  bearerToken:
+                    name: alertmanager-token
+                    key: token
+      expected: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: "Disabled"
+          prometheusConfig:
+            enforcedBodySizeLimitBytes: 4194304
+            logLevel: Debug
+            collectionProfile: Full
+            nodeSelector:
+              kubernetes.io/os: linux
+              node-role.kubernetes.io/worker: ""
+            queryLogFile: /var/log/prometheus/queries.log
+            externalLabels:
+              - key: cluster
+                value: production
+              - key: region
+                value: us-east-1
+            resources:
+              - name: cpu
+                request: "500m"
+                limit: "2"
+              - name: memory
+                request: "1Gi"
+                limit: "4Gi"
+            retention:
+              durationInDays: 30
+              sizeInGiB: 100
+            tolerations:
+              - key: "key1"
+                operator: "Equal"
+                value: "value1"
+                effect: "NoSchedule"
+            topologySpreadConstraints:
+              - maxSkew: 1
+                topologyKey: zone
+                whenUnsatisfiable: DoNotSchedule
+                labelSelector:
+                  matchLabels:
+                    app: prometheus
+            remoteWrite:
+              - url: https://remote-write.example.com/api/v1/write
+                name: remote-write-1
+                remoteTimeoutSeconds: 30
+            additionalAlertmanagerConfigs:
+              - name: external-alertmanager
+                staticConfigs:
+                  - alertmanager.example.com:9093
+                scheme: HTTPS
+                timeoutSeconds: 10
+                authorization:
+                  type: BearerToken
+                  bearerToken:
+                    name: alertmanager-token
+                    key: token
+    - name: Should reject PrometheusConfig with enforcedBodySizeLimitBytes below minimum
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: "Disabled"
+          prometheusConfig:
+            enforcedBodySizeLimitBytes: 10239
+      expectedError: 'spec.prometheusConfig.enforcedBodySizeLimitBytes: Invalid value: 10239: spec.prometheusConfig.enforcedBodySizeLimitBytes in body should be greater than or equal to 10240'
+    - name: Should reject PrometheusConfig with enforcedBodySizeLimitBytes above maximum
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: "Disabled"
+          prometheusConfig:
+            enforcedBodySizeLimitBytes: 1073741825
+      expectedError: 'spec.prometheusConfig.enforcedBodySizeLimitBytes: Invalid value: 1073741825: spec.prometheusConfig.enforcedBodySizeLimitBytes in body should be less than or equal to 1073741824'
+    - name: Should reject PrometheusConfig with invalid logLevel
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: "Disabled"
+          prometheusConfig:
+            logLevel: Invalid
+      expectedError: 'spec.prometheusConfig.logLevel: Invalid value: "Invalid": spec.prometheusConfig.logLevel in body should be one of [Error Warn Info Debug]'
+    - name: Should reject PrometheusConfig with invalid collectionProfile
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: "Disabled"
+          prometheusConfig:
+            collectionProfile: Invalid
+      expectedError: 'spec.prometheusConfig.collectionProfile: Invalid value: "Invalid": spec.prometheusConfig.collectionProfile in body should be one of [Full Minimal]'
+    - name: Should reject PrometheusConfig with nodeSelector exceeding max properties
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: "Disabled"
+          prometheusConfig:
+            nodeSelector:
+              key1: value1
+              key2: value2
+              key3: value3
+              key4: value4
+              key5: value5
+              key6: value6
+              key7: value7
+              key8: value8
+              key9: value9
+              key10: value10
+              key11: value11
+      expectedError: 'spec.prometheusConfig.nodeSelector: Too many properties: 11: must not have more than 10 properties'
+    - name: Should reject PrometheusConfig with queryLogFile not starting with / or containing /
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: "Disabled"
+          prometheusConfig:
+            queryLogFile: relative/path.log
+      expectedError: 'spec.prometheusConfig.queryLogFile: Invalid value: "relative/path.log": must be an absolute path starting with "/" or a simple filename without "/"'
+    - name: Should reject PrometheusConfig with queryLogFile ending with /
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: "Disabled"
+          prometheusConfig:
+            queryLogFile: /var/log/queries/
+      expectedError: 'spec.prometheusConfig.queryLogFile: Invalid value: "/var/log/queries/": must not contain "//", end with "/", or contain ".."'
+    - name: Should reject PrometheusConfig with queryLogFile containing //
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: "Disabled"
+          prometheusConfig:
+            queryLogFile: /var//log/queries.log
+      expectedError: 'spec.prometheusConfig.queryLogFile: Invalid value: "/var//log/queries.log": must not contain "//", end with "/", or contain ".."'
+    - name: Should reject PrometheusConfig with queryLogFile containing ..
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: "Disabled"
+          prometheusConfig:
+            queryLogFile: /var/log/../queries.log
+      expectedError: 'spec.prometheusConfig.queryLogFile: Invalid value: "/var/log/../queries.log": must not contain "//", end with "/", or contain ".."'
+    - name: Should reject PrometheusConfig with queryLogFile containing invalid /dev/ path
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: "Disabled"
+          prometheusConfig:
+            queryLogFile: /dev/random
+      expectedError: 'spec.prometheusConfig.queryLogFile: Invalid value: "/dev/random": only /dev/stdout, /dev/stderr, and /dev/null are allowed as /dev/ paths'
+    - name: Should accept PrometheusConfig with queryLogFile as /dev/stdout
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: "Disabled"
+          prometheusConfig:
+            queryLogFile: /dev/stdout
+      expected: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: "Disabled"
+          prometheusConfig:
+            queryLogFile: /dev/stdout
+    - name: Should reject PrometheusConfig with externalLabels exceeding max items
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: "Disabled"
+          prometheusConfig:
+            externalLabels:
+              - key: label1
+                value: value1
+              - key: label2
+                value: value2
+              - key: label3
+                value: value3
+              - key: label4
+                value: value4
+              - key: label5
+                value: value5
+              - key: label6
+                value: value6
+              - key: label7
+                value: value7
+              - key: label8
+                value: value8
+              - key: label9
+                value: value9
+              - key: label10
+                value: value10
+              - key: label11
+                value: value11
+              - key: label12
+                value: value12
+              - key: label13
+                value: value13
+              - key: label14
+                value: value14
+              - key: label15
+                value: value15
+              - key: label16
+                value: value16
+              - key: label17
+                value: value17
+              - key: label18
+                value: value18
+              - key: label19
+                value: value19
+              - key: label20
+                value: value20
+              - key: label21
+                value: value21
+              - key: label22
+                value: value22
+              - key: label23
+                value: value23
+              - key: label24
+                value: value24
+              - key: label25
+                value: value25
+              - key: label26
+                value: value26
+              - key: label27
+                value: value27
+              - key: label28
+                value: value28
+              - key: label29
+                value: value29
+              - key: label30
+                value: value30
+              - key: label31
+                value: value31
+              - key: label32
+                value: value32
+              - key: label33
+                value: value33
+              - key: label34
+                value: value34
+              - key: label35
+                value: value35
+              - key: label36
+                value: value36
+              - key: label37
+                value: value37
+              - key: label38
+                value: value38
+              - key: label39
+                value: value39
+              - key: label40
+                value: value40
+              - key: label41
+                value: value41
+              - key: label42
+                value: value42
+              - key: label43
+                value: value43
+              - key: label44
+                value: value44
+              - key: label45
+                value: value45
+              - key: label46
+                value: value46
+              - key: label47
+                value: value47
+              - key: label48
+                value: value48
+              - key: label49
+                value: value49
+              - key: label50
+                value: value50
+              - key: label51
+                value: value51
+      expectedError: 'spec.prometheusConfig.externalLabels: Too many: 51: must have at most 50 items'
+    - name: Should reject PrometheusConfig with externalLabels duplicate keys
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: "Disabled"
+          prometheusConfig:
+            externalLabels:
+              - key: cluster
+                value: production
+              - key: cluster
+                value: staging
+      expectedError: 'spec.prometheusConfig.externalLabels[1]: Duplicate value: map[string]interface {}{"key":"cluster"}'
+    - name: Should reject PrometheusConfig with externalLabels missing key
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: "Disabled"
+          prometheusConfig:
+            externalLabels:
+              - value: production
+      expectedError: 'spec.prometheusConfig.externalLabels[0].key: Required value'
+    - name: Should reject PrometheusConfig with externalLabels missing value
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: "Disabled"
+          prometheusConfig:
+            externalLabels:
+              - key: cluster
+      expectedError: 'spec.prometheusConfig.externalLabels[0].value: Required value'
+    - name: Should reject PrometheusConfig with remoteWrite exceeding max items
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: "Disabled"
+          prometheusConfig:
+            remoteWrite:
+              - url: https://remote1.example.com/write
+              - url: https://remote2.example.com/write
+              - url: https://remote3.example.com/write
+              - url: https://remote4.example.com/write
+              - url: https://remote5.example.com/write
+              - url: https://remote6.example.com/write
+              - url: https://remote7.example.com/write
+              - url: https://remote8.example.com/write
+              - url: https://remote9.example.com/write
+              - url: https://remote10.example.com/write
+              - url: https://remote11.example.com/write
+      expectedError: 'spec.prometheusConfig.remoteWrite: Too many: 11: must have at most 10 items'
+    - name: Should reject PrometheusConfig with remoteWrite duplicate URLs
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: "Disabled"
+          prometheusConfig:
+            remoteWrite:
+              - url: https://remote.example.com/write
+              - url: https://remote.example.com/write
+      expectedError: 'spec.prometheusConfig.remoteWrite[1]: Duplicate value: map[string]interface {}{"url":"https://remote.example.com/write"}'
+    - name: Should reject PrometheusConfig with remoteWrite invalid URL
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: "Disabled"
+          prometheusConfig:
+            remoteWrite:
+              - url: invalid-url
+      expectedError: 'spec.prometheusConfig.remoteWrite[0].url: Invalid value: "invalid-url": must be a valid URL with http or https scheme'
+    - name: Should reject PrometheusConfig with remoteWrite URL not http/https
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: "Disabled"
+          prometheusConfig:
+            remoteWrite:
+              - url: ftp://remote.example.com/write
+      expectedError: 'spec.prometheusConfig.remoteWrite[0].url: Invalid value: "ftp://remote.example.com/write": must be a valid URL with http or https scheme'
+    - name: Should reject PrometheusConfig with remoteWrite name invalid characters
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: "Disabled"
+          prometheusConfig:
+            remoteWrite:
+              - url: https://remote.example.com/write
+                name: invalid@name
+      expectedError: 'spec.prometheusConfig.remoteWrite[0].name: Invalid value: "invalid@name": must contain only alphanumeric characters, hyphens, and underscores'
+    - name: Should reject PrometheusConfig with remoteWrite remoteTimeoutSeconds below minimum
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: "Disabled"
+          prometheusConfig:
+            remoteWrite:
+              - url: https://remote.example.com/write
+                remoteTimeoutSeconds: 0
+      expectedError: 'spec.prometheusConfig.remoteWrite[0].remoteTimeoutSeconds: Invalid value: 0: spec.prometheusConfig.remoteWrite[0].remoteTimeoutSeconds in body should be greater than or equal to 1'
+    - name: Should reject PrometheusConfig with remoteWrite remoteTimeoutSeconds above maximum
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: "Disabled"
+          prometheusConfig:
+            remoteWrite:
+              - url: https://remote.example.com/write
+                remoteTimeoutSeconds: 601
+      expectedError: 'spec.prometheusConfig.remoteWrite[0].remoteTimeoutSeconds: Invalid value: 601: spec.prometheusConfig.remoteWrite[0].remoteTimeoutSeconds in body should be less than or equal to 600'
+    - name: Should reject PrometheusConfig with additionalAlertmanagerConfigs exceeding max items
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: "Disabled"
+          prometheusConfig:
+            additionalAlertmanagerConfigs:
+              - name: alertmanager1
+                staticConfigs:
+                  - alertmanager1.example.com:9093
+              - name: alertmanager2
+                staticConfigs:
+                  - alertmanager2.example.com:9093
+              - name: alertmanager3
+                staticConfigs:
+                  - alertmanager3.example.com:9093
+              - name: alertmanager4
+                staticConfigs:
+                  - alertmanager4.example.com:9093
+              - name: alertmanager5
+                staticConfigs:
+                  - alertmanager5.example.com:9093
+              - name: alertmanager6
+                staticConfigs:
+                  - alertmanager6.example.com:9093
+              - name: alertmanager7
+                staticConfigs:
+                  - alertmanager7.example.com:9093
+              - name: alertmanager8
+                staticConfigs:
+                  - alertmanager8.example.com:9093
+              - name: alertmanager9
+                staticConfigs:
+                  - alertmanager9.example.com:9093
+              - name: alertmanager10
+                staticConfigs:
+                  - alertmanager10.example.com:9093
+              - name: alertmanager11
+                staticConfigs:
+                  - alertmanager11.example.com:9093
+      expectedError: 'spec.prometheusConfig.additionalAlertmanagerConfigs: Too many: 11: must have at most 10 items'
+    - name: Should reject PrometheusConfig with additionalAlertmanagerConfigs duplicate names
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: "Disabled"
+          prometheusConfig:
+            additionalAlertmanagerConfigs:
+              - name: alertmanager
+                staticConfigs:
+                  - alertmanager.example.com:9093
+              - name: alertmanager
+                staticConfigs:
+                  - alertmanager2.example.com:9093
+      expectedError: 'spec.prometheusConfig.additionalAlertmanagerConfigs[1]: Duplicate value: map[string]interface {}{"name":"alertmanager"}'
+    - name: Should reject PrometheusConfig with retention durationInDays below minimum
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: "Disabled"
+          prometheusConfig:
+            retention:
+              durationInDays: 0
+      expectedError: 'spec.prometheusConfig.retention.durationInDays: Invalid value: 0: spec.prometheusConfig.retention.durationInDays in body should be greater than or equal to 1'
+    - name: Should reject PrometheusConfig with retention durationInDays above maximum
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: "Disabled"
+          prometheusConfig:
+            retention:
+              durationInDays: 366
+      expectedError: 'spec.prometheusConfig.retention.durationInDays: Invalid value: 366: spec.prometheusConfig.retention.durationInDays in body should be less than or equal to 365'
+    - name: Should reject PrometheusConfig with retention sizeInGiB below minimum
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: "Disabled"
+          prometheusConfig:
+            retention:
+              sizeInGiB: 0
+      expectedError: 'spec.prometheusConfig.retention.sizeInGiB: Invalid value: 0: spec.prometheusConfig.retention.sizeInGiB in body should be greater than or equal to 1'
+    - name: Should reject PrometheusConfig with retention sizeInGiB above maximum
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: "Disabled"
+          prometheusConfig:
+            retention:
+              sizeInGiB: 16385
+      expectedError: 'spec.prometheusConfig.retention.sizeInGiB: Invalid value: 16385: spec.prometheusConfig.retention.sizeInGiB in body should be less than or equal to 16384'
+    - name: Should reject PrometheusConfig with tolerations exceeding max items
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: "Disabled"
+          prometheusConfig:
+            tolerations:
+              - key: "key1"
+                operator: "Equal"
+                value: "value1"
+                effect: "NoSchedule"
+              - key: "key2"
+                operator: "Equal"
+                value: "value2"
+                effect: "NoSchedule"
+              - key: "key3"
+                operator: "Equal"
+                value: "value3"
+                effect: "NoSchedule"
+              - key: "key4"
+                operator: "Equal"
+                value: "value4"
+                effect: "NoSchedule"
+              - key: "key5"
+                operator: "Equal"
+                value: "value5"
+                effect: "NoSchedule"
+              - key: "key6"
+                operator: "Equal"
+                value: "value6"
+                effect: "NoSchedule"
+              - key: "key7"
+                operator: "Equal"
+                value: "value7"
+                effect: "NoSchedule"
+              - key: "key8"
+                operator: "Equal"
+                value: "value8"
+                effect: "NoSchedule"
+              - key: "key9"
+                operator: "Equal"
+                value: "value9"
+                effect: "NoSchedule"
+              - key: "key10"
+                operator: "Equal"
+                value: "value10"
+                effect: "NoSchedule"
+              - key: "key11"
+                operator: "Equal"
+                value: "value11"
+                effect: "NoSchedule"
+      expectedError: 'spec.prometheusConfig.tolerations: Too many: 11: must have at most 10 items'
+    - name: Should reject PrometheusConfig with topologySpreadConstraints exceeding max items
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: "Disabled"
+          prometheusConfig:
+            topologySpreadConstraints:
+              - maxSkew: 1
+                topologyKey: zone1
+                whenUnsatisfiable: DoNotSchedule
+              - maxSkew: 1
+                topologyKey: zone2
+                whenUnsatisfiable: DoNotSchedule
+              - maxSkew: 1
+                topologyKey: zone3
+                whenUnsatisfiable: DoNotSchedule
+              - maxSkew: 1
+                topologyKey: zone4
+                whenUnsatisfiable: DoNotSchedule
+              - maxSkew: 1
+                topologyKey: zone5
+                whenUnsatisfiable: DoNotSchedule
+              - maxSkew: 1
+                topologyKey: zone6
+                whenUnsatisfiable: DoNotSchedule
+              - maxSkew: 1
+                topologyKey: zone7
+                whenUnsatisfiable: DoNotSchedule
+              - maxSkew: 1
+                topologyKey: zone8
+                whenUnsatisfiable: DoNotSchedule
+              - maxSkew: 1
+                topologyKey: zone9
+                whenUnsatisfiable: DoNotSchedule
+              - maxSkew: 1
+                topologyKey: zone10
+                whenUnsatisfiable: DoNotSchedule
+              - maxSkew: 1
+                topologyKey: zone11
+                whenUnsatisfiable: DoNotSchedule
+      expectedError: 'spec.prometheusConfig.topologySpreadConstraints: Too many: 11: must have at most 10 items'
+    - name: Should reject PrometheusConfig with resources exceeding max items
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: "Disabled"
+          prometheusConfig:
+            resources:
+              - name: cpu
+                request: "100m"
+              - name: memory
+                request: "64Mi"
+              - name: hugepages-2Mi
+                request: "32Mi"
+              - name: hugepages-1Gi
+                request: "1Gi"
+              - name: ephemeral-storage
+                request: "1Gi"
+              - name: nvidia.com/gpu
+                request: "1"
+              - name: example.com/foo
+                request: "1"
+              - name: example.com/bar
+                request: "1"
+              - name: example.com/baz
+                request: "1"
+              - name: example.com/qux
+                request: "1"
+              - name: example.com/quux
+                request: "1"
+      expectedError: 'spec.prometheusConfig.resources: Too many: 11: must have at most 10 items'
+    - name: Should reject PrometheusConfig with resources duplicate names
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: "Disabled"
+          prometheusConfig:
+            resources:
+              - name: cpu
+                request: "100m"
+              - name: cpu
+                request: "200m"
+      expectedError: 'spec.prometheusConfig.resources[1]: Duplicate value: map[string]interface {}{"name":"cpu"}'
+    - name: Should accept PrometheusConfig with RelabelConfig Replace action
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: "Disabled"
+          prometheusConfig:
+            remoteWrite:
+              - url: https://remote.example.com/write
+                writeRelabelConfigs:
+                  - name: replace-action
+                    action: Replace
+                    sourceLabels:
+                      - instance
+                    targetLabel: instance
+                    replace:
+                      targetLabel: instance
+                      replacement: "$1"
+      expected: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: "Disabled"
+          prometheusConfig:
+            remoteWrite:
+              - url: https://remote.example.com/write
+                writeRelabelConfigs:
+                  - name: replace-action
+                    action: Replace
+                    sourceLabels:
+                      - instance
+                    targetLabel: instance
+                    replace:
+                      targetLabel: instance
+                      replacement: "$1"
+    - name: Should accept PrometheusConfig with RelabelConfig Keep action
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: "Disabled"
+          prometheusConfig:
+            remoteWrite:
+              - url: https://remote.example.com/write
+                writeRelabelConfigs:
+                  - name: keep-action
+                    action: Keep
+                    sourceLabels:
+                      - job
+                    regex: ".*"
+      expected: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: "Disabled"
+          prometheusConfig:
+            remoteWrite:
+              - url: https://remote.example.com/write
+                writeRelabelConfigs:
+                  - name: keep-action
+                    action: Keep
+                    sourceLabels:
+                      - job
+                    regex: ".*"
+    - name: Should accept PrometheusConfig with RelabelConfig Drop action
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: "Disabled"
+          prometheusConfig:
+            remoteWrite:
+              - url: https://remote.example.com/write
+                writeRelabelConfigs:
+                  - name: drop-action
+                    action: Drop
+                    sourceLabels:
+                      - job
+                    regex: ".*"
+      expected: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: "Disabled"
+          prometheusConfig:
+            remoteWrite:
+              - url: https://remote.example.com/write
+                writeRelabelConfigs:
+                  - name: drop-action
+                    action: Drop
+                    sourceLabels:
+                      - job
+                    regex: ".*"
+    - name: Should accept PrometheusConfig with RelabelConfig HashMod action
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: "Disabled"
+          prometheusConfig:
+            remoteWrite:
+              - url: https://remote.example.com/write
+                writeRelabelConfigs:
+                  - name: hashmod-action
+                    action: HashMod
+                    sourceLabels:
+                      - instance
+                    hashMod:
+                      targetLabel: shard
+      expected: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: "Disabled"
+          prometheusConfig:
+            remoteWrite:
+              - url: https://remote.example.com/write
+                writeRelabelConfigs:
+                  - name: hashmod-action
+                    action: HashMod
+                    sourceLabels:
+                      - instance
+                    hashMod:
+                      targetLabel: shard
+    - name: Should accept PrometheusConfig with RelabelConfig LabelMap action
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: "Disabled"
+          prometheusConfig:
+            remoteWrite:
+              - url: https://remote.example.com/write
+                writeRelabelConfigs:
+                  - name: labelmap-action
+                    action: LabelMap
+                    regex: "k8s_(.*)"
+                    labelMap:
+                      replacement: "$1"
+      expected: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: "Disabled"
+          prometheusConfig:
+            remoteWrite:
+              - url: https://remote.example.com/write
+                writeRelabelConfigs:
+                  - name: labelmap-action
+                    action: LabelMap
+                    regex: "k8s_(.*)"
+                    labelMap:
+                      replacement: "$1"
+    - name: Should accept PrometheusConfig with RelabelConfig LabelDrop action
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: "Disabled"
+          prometheusConfig:
+            remoteWrite:
+              - url: https://remote.example.com/write
+                writeRelabelConfigs:
+                  - name: labeldrop-action
+                    action: LabelDrop
+                    regex: ".*"
+      expected: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: "Disabled"
+          prometheusConfig:
+            remoteWrite:
+              - url: https://remote.example.com/write
+                writeRelabelConfigs:
+                  - name: labeldrop-action
+                    action: LabelDrop
+                    regex: ".*"
+    - name: Should accept PrometheusConfig with RelabelConfig LabelKeep action
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: "Disabled"
+          prometheusConfig:
+            remoteWrite:
+              - url: https://remote.example.com/write
+                writeRelabelConfigs:
+                  - name: labelkeep-action
+                    action: LabelKeep
+                    regex: ".*"
+      expected: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: "Disabled"
+          prometheusConfig:
+            remoteWrite:
+              - url: https://remote.example.com/write
+                writeRelabelConfigs:
+                  - name: labelkeep-action
+                    action: LabelKeep
+                    regex: ".*"
+    - name: Should accept PrometheusConfig with RelabelConfig Lowercase action
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: "Disabled"
+          prometheusConfig:
+            remoteWrite:
+              - url: https://remote.example.com/write
+                writeRelabelConfigs:
+                  - name: lowercase-action
+                    action: Lowercase
+                    sourceLabels:
+                      - instance
+                    lowercase:
+                      targetLabel: instance_lower
+      expected: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: "Disabled"
+          prometheusConfig:
+            remoteWrite:
+              - url: https://remote.example.com/write
+                writeRelabelConfigs:
+                  - name: lowercase-action
+                    action: Lowercase
+                    sourceLabels:
+                      - instance
+                    lowercase:
+                      targetLabel: instance_lower
+    - name: Should accept PrometheusConfig with RelabelConfig Uppercase action
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: "Disabled"
+          prometheusConfig:
+            remoteWrite:
+              - url: https://remote.example.com/write
+                writeRelabelConfigs:
+                  - name: uppercase-action
+                    action: Uppercase
+                    sourceLabels:
+                      - instance
+                    uppercase:
+                      targetLabel: instance_upper
+      expected: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: "Disabled"
+          prometheusConfig:
+            remoteWrite:
+              - url: https://remote.example.com/write
+                writeRelabelConfigs:
+                  - name: uppercase-action
+                    action: Uppercase
+                    sourceLabels:
+                      - instance
+                    uppercase:
+                      targetLabel: instance_upper
+    - name: Should accept PrometheusConfig with RelabelConfig KeepEqual action
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: "Disabled"
+          prometheusConfig:
+            remoteWrite:
+              - url: https://remote.example.com/write
+                writeRelabelConfigs:
+                  - name: keepequal-action
+                    action: KeepEqual
+                    sourceLabels:
+                      - instance
+                    keepEqual:
+                      targetLabel: instance
+      expected: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: "Disabled"
+          prometheusConfig:
+            remoteWrite:
+              - url: https://remote.example.com/write
+                writeRelabelConfigs:
+                  - name: keepequal-action
+                    action: KeepEqual
+                    sourceLabels:
+                      - instance
+                    keepEqual:
+                      targetLabel: instance
+    - name: Should accept PrometheusConfig with RelabelConfig DropEqual action
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: "Disabled"
+          prometheusConfig:
+            remoteWrite:
+              - url: https://remote.example.com/write
+                writeRelabelConfigs:
+                  - name: dropequal-action
+                    action: DropEqual
+                    sourceLabels:
+                      - instance
+                    dropEqual:
+                      targetLabel: instance
+      expected: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: "Disabled"
+          prometheusConfig:
+            remoteWrite:
+              - url: https://remote.example.com/write
+                writeRelabelConfigs:
+                  - name: dropequal-action
+                    action: DropEqual
+                    sourceLabels:
+                      - instance
+                    dropEqual:
+                      targetLabel: instance
+    - name: Should reject PrometheusConfig with invalid RelabelAction
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: "Disabled"
+          prometheusConfig:
+            remoteWrite:
+              - url: https://remote.example.com/write
+                writeRelabelConfigs:
+                  - name: invalid-action
+                    action: InvalidAction
+      expectedError: 'spec.prometheusConfig.remoteWrite[0].writeRelabelConfigs[0].action: Invalid value: "InvalidAction": spec.prometheusConfig.remoteWrite[0].writeRelabelConfigs[0].action in body should be one of [Replace Keep Drop HashMod LabelMap LabelDrop LabelKeep Lowercase Uppercase KeepEqual DropEqual]'
+    - name: Should reject PrometheusConfig with Replace action missing replace config
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: "Disabled"
+          prometheusConfig:
+            remoteWrite:
+              - url: https://remote.example.com/write
+                writeRelabelConfigs:
+                  - name: replace-action
+                    action: Replace
+      expectedError: 'spec.prometheusConfig.remoteWrite[0].writeRelabelConfigs[0]: Invalid value: "object": exactly one action-specific configuration must be specified and must match the action type'
+    - name: Should reject PrometheusConfig with Replace action having wrong config type
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: "Disabled"
+          prometheusConfig:
+            remoteWrite:
+              - url: https://remote.example.com/write
+                writeRelabelConfigs:
+                  - name: replace-action
+                    action: Replace
+                    hashMod:
+                      targetLabel: shard
+      expectedError: 'spec.prometheusConfig.remoteWrite[0].writeRelabelConfigs[0]: Invalid value: "object": exactly one action-specific configuration must be specified and must match the action type'
+    - name: Should reject PrometheusConfig with HashMod action missing hashMod config
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: "Disabled"
+          prometheusConfig:
+            remoteWrite:
+              - url: https://remote.example.com/write
+                writeRelabelConfigs:
+                  - name: hashmod-action
+                    action: HashMod
+      expectedError: 'spec.prometheusConfig.remoteWrite[0].writeRelabelConfigs[0]: Invalid value: "object": exactly one action-specific configuration must be specified and must match the action type'
+    - name: Should reject PrometheusConfig with Lowercase action missing lowercase config
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: "Disabled"
+          prometheusConfig:
+            remoteWrite:
+              - url: https://remote.example.com/write
+                writeRelabelConfigs:
+                  - name: lowercase-action
+                    action: Lowercase
+      expectedError: 'spec.prometheusConfig.remoteWrite[0].writeRelabelConfigs[0]: Invalid value: "object": exactly one action-specific configuration must be specified and must match the action type'
+    - name: Should reject PrometheusConfig with Uppercase action missing uppercase config
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: "Disabled"
+          prometheusConfig:
+            remoteWrite:
+              - url: https://remote.example.com/write
+                writeRelabelConfigs:
+                  - name: uppercase-action
+                    action: Uppercase
+      expectedError: 'spec.prometheusConfig.remoteWrite[0].writeRelabelConfigs[0]: Invalid value: "object": exactly one action-specific configuration must be specified and must match the action type'
+    - name: Should reject PrometheusConfig with KeepEqual action missing keepEqual config
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: "Disabled"
+          prometheusConfig:
+            remoteWrite:
+              - url: https://remote.example.com/write
+                writeRelabelConfigs:
+                  - name: keepequal-action
+                    action: KeepEqual
+      expectedError: 'spec.prometheusConfig.remoteWrite[0].writeRelabelConfigs[0]: Invalid value: "object": exactly one action-specific configuration must be specified and must match the action type'
+    - name: Should reject PrometheusConfig with DropEqual action missing dropEqual config
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: "Disabled"
+          prometheusConfig:
+            remoteWrite:
+              - url: https://remote.example.com/write
+                writeRelabelConfigs:
+                  - name: dropequal-action
+                    action: DropEqual
+      expectedError: 'spec.prometheusConfig.remoteWrite[0].writeRelabelConfigs[0]: Invalid value: "object": exactly one action-specific configuration must be specified and must match the action type'
+    - name: Should reject PrometheusConfig with LabelMap action missing labelMap config
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: "Disabled"
+          prometheusConfig:
+            remoteWrite:
+              - url: https://remote.example.com/write
+                writeRelabelConfigs:
+                  - name: labelmap-action
+                    action: LabelMap
+      expectedError: 'spec.prometheusConfig.remoteWrite[0].writeRelabelConfigs[0]: Invalid value: "object": exactly one action-specific configuration must be specified and must match the action type'
+    - name: Should reject PrometheusConfig with RelabelConfig name missing
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: "Disabled"
+          prometheusConfig:
+            remoteWrite:
+              - url: https://remote.example.com/write
+                writeRelabelConfigs:
+                  - action: Keep
+      expectedError: 'spec.prometheusConfig.remoteWrite[0].writeRelabelConfigs[0].name: Required value'
+    - name: Should reject PrometheusConfig with RelabelConfig name too long
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: "Disabled"
+          prometheusConfig:
+            remoteWrite:
+              - url: https://remote.example.com/write
+                writeRelabelConfigs:
+                  - name: "this-is-a-very-long-relabel-config-name-that-exceeds-the-maximum-length-of-63-characters-and-should-be-rejected"
+                    action: Keep
+      expectedError: 'spec.prometheusConfig.remoteWrite[0].writeRelabelConfigs[0].name: Too long: may not be more than 63 bytes'
+    - name: Should reject PrometheusConfig with RelabelConfig name invalid characters
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: "Disabled"
+          prometheusConfig:
+            remoteWrite:
+              - url: https://remote.example.com/write
+                writeRelabelConfigs:
+                  - name: "invalid@name"
+                    action: Keep
+      expectedError: 'spec.prometheusConfig.remoteWrite[0].writeRelabelConfigs[0].name: Invalid value: "invalid@name": must contain only alphanumeric characters, hyphens, and underscores'
+    - name: Should reject PrometheusConfig with RelabelConfig sourceLabels exceeding max items
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: "Disabled"
+          prometheusConfig:
+            remoteWrite:
+              - url: https://remote.example.com/write
+                writeRelabelConfigs:
+                  - name: relabel-config
+                    action: Keep
+                    sourceLabels:
+                      - label1
+                      - label2
+                      - label3
+                      - label4
+                      - label5
+                      - label6
+                      - label7
+                      - label8
+                      - label9
+                      - label10
+                      - label11
+      expectedError: 'spec.prometheusConfig.remoteWrite[0].writeRelabelConfigs[0].sourceLabels: Too many: 11: must have at most 10 items'
+    - name: Should reject PrometheusConfig with RelabelConfig sourceLabels starting with __
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: "Disabled"
+          prometheusConfig:
+            remoteWrite:
+              - url: https://remote.example.com/write
+                writeRelabelConfigs:
+                  - name: relabel-config
+                    action: Keep
+                    sourceLabels:
+                      - __meta_kubernetes_pod_name
+      expectedError: 'spec.prometheusConfig.remoteWrite[0].writeRelabelConfigs[0].sourceLabels[0]: Invalid value: "__meta_kubernetes_pod_name": label names beginning with "__" (two underscores) are reserved for internal Prometheus use and are not allowed'
+    - name: Should reject PrometheusConfig with RelabelConfig separator too long
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: "Disabled"
+          prometheusConfig:
+            remoteWrite:
+              - url: https://remote.example.com/write
+                writeRelabelConfigs:
+                  - name: relabel-config
+                    action: Keep
+                    separator: ";;;;;"
+      expectedError: 'spec.prometheusConfig.remoteWrite[0].writeRelabelConfigs[0].separator: Too long: may not be more than 5 bytes'
+    - name: Should reject PrometheusConfig with RelabelConfig regex exceeding max length
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: "Disabled"
+          prometheusConfig:
+            remoteWrite:
+              - url: https://remote.example.com/write
+                writeRelabelConfigs:
+                  - name: relabel-config
+                    action: Keep
+                    regex: "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+      expectedError: 'spec.prometheusConfig.remoteWrite[0].writeRelabelConfigs[0].regex: Too long: may not be more than 1000 bytes'
+    - name: Should reject PrometheusConfig with Replace action missing targetLabel
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: "Disabled"
+          prometheusConfig:
+            remoteWrite:
+              - url: https://remote.example.com/write
+                writeRelabelConfigs:
+                  - name: replace-action
+                    action: Replace
+                    replace: {}
+      expectedError: 'spec.prometheusConfig.remoteWrite[0].writeRelabelConfigs[0].replace.targetLabel: Required value'
+    - name: Should reject PrometheusConfig with Replace action targetLabel too long
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: "Disabled"
+          prometheusConfig:
+            remoteWrite:
+              - url: https://remote.example.com/write
+                writeRelabelConfigs:
+                  - name: replace-action
+                    action: Replace
+                    replace:
+                      targetLabel: "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+      expectedError: 'spec.prometheusConfig.remoteWrite[0].writeRelabelConfigs[0].replace.targetLabel: Too long: may not be more than 128 bytes'
+    - name: Should reject PrometheusConfig with Replace action replacement too long
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: "Disabled"
+          prometheusConfig:
+            remoteWrite:
+              - url: https://remote.example.com/write
+                writeRelabelConfigs:
+                  - name: replace-action
+                    action: Replace
+                    replace:
+                      targetLabel: instance
+                      replacement: "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+      expectedError: 'spec.prometheusConfig.remoteWrite[0].writeRelabelConfigs[0].replace.replacement: Too long: may not be more than 255 bytes'
+    - name: Should reject PrometheusConfig with HashMod action missing targetLabel
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: "Disabled"
+          prometheusConfig:
+            remoteWrite:
+              - url: https://remote.example.com/write
+                writeRelabelConfigs:
+                  - name: hashmod-action
+                    action: HashMod
+                    hashMod: {}
+      expectedError: 'spec.prometheusConfig.remoteWrite[0].writeRelabelConfigs[0].hashMod.targetLabel: Required value'
+    - name: Should reject PrometheusConfig with writeRelabelConfigs duplicate names
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: "Disabled"
+          prometheusConfig:
+            remoteWrite:
+              - url: https://remote.example.com/write
+                writeRelabelConfigs:
+                  - name: relabel-config
+                    action: Keep
+                  - name: relabel-config
+                    action: Drop
+      expectedError: 'spec.prometheusConfig.remoteWrite[0].writeRelabelConfigs[1]: Duplicate value: map[string]interface {}{"name":"relabel-config"}'
+    - name: Should reject PrometheusConfig with writeRelabelConfigs exceeding max items
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: "Disabled"
+          prometheusConfig:
+            remoteWrite:
+              - url: https://remote.example.com/write
+                writeRelabelConfigs:
+                  - name: config1
+                    action: Keep
+                  - name: config2
+                    action: Keep
+                  - name: config3
+                    action: Keep
+                  - name: config4
+                    action: Keep
+                  - name: config5
+                    action: Keep
+                  - name: config6
+                    action: Keep
+                  - name: config7
+                    action: Keep
+                  - name: config8
+                    action: Keep
+                  - name: config9
+                    action: Keep
+                  - name: config10
+                    action: Keep
+                  - name: config11
+                    action: Keep
+      expectedError: 'spec.prometheusConfig.remoteWrite[0].writeRelabelConfigs: Too many: 11: must have at most 10 items'

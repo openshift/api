@@ -588,10 +588,9 @@ type PrometheusConfig struct {
 	//   - Route different types of alerts to different teams or systems
 	//   - Integrate with existing enterprise alerting infrastructure
 	//   - Maintain separate alert routing for compliance or organizational requirements
-	// By default, no additional Alertmanager instances are configured.
 	// When omitted, no additional Alertmanager instances are configured (default behavior).
 	// When provided, at least one configuration must be specified (minimum 1, maximum 10 items).
-	// Each entry must have a unique name field, which serves as the map key for server-side apply.
+	// Each entry must have a unique name field.
 	// +optional
 	// +kubebuilder:validation:MinItems=1
 	// +kubebuilder:validation:MaxItems=10
@@ -812,7 +811,8 @@ type AdditionalAlertmanagerConfig struct {
 	// +required
 	StaticConfigs []string `json:"staticConfigs,omitempty"`
 	// timeoutSeconds defines the timeout in seconds for requests to Alertmanager.
-	// When omitted, the default is 10 seconds.
+	// When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time.
+	// Currently the default is 10 seconds.
 	// Minimum value is 1 second.
 	// Maximum value is 600 seconds (10 minutes).
 	// +kubebuilder:validation:Minimum=1
@@ -862,7 +862,8 @@ type RemoteWriteSpec struct {
 	// +kubebuilder:validation:XValidation:rule="self.matches('^[a-zA-Z0-9_-]+$')",message="must contain only alphanumeric characters, hyphens, and underscores"
 	Name string `json:"name,omitempty"`
 	// remoteTimeoutSeconds is the timeout in seconds for requests to the remote write endpoint.
-	// When omitted, the default is 30 seconds.
+	// When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time.
+	// Currently the default is 30 seconds.
 	// Minimum value is 1 second.
 	// Maximum value is 600 seconds (10 minutes).
 	// +kubebuilder:validation:Minimum=1
@@ -882,8 +883,9 @@ type RemoteWriteSpec struct {
 }
 
 // RelabelConfig represents a relabeling rule.
-// +kubebuilder:validation:XValidation:rule="self.action in ['Replace', 'HashMod', 'Lowercase', 'Uppercase', 'KeepEqual', 'DropEqual'] ? (has(self.targetLabel) && size(self.targetLabel) > 0) : !has(self.targetLabel)",message="targetLabel is required when action is Replace, HashMod, Lowercase, Uppercase, KeepEqual or DropEqual, and forbidden otherwise"
-// +kubebuilder:validation:XValidation:rule="self.action in ['Replace', 'LabelMap'] || !has(self.replacement)",message="replacement is only valid when action is Replace or LabelMap"
+// Exactly one action-specific configuration must be specified based on the action type.
+// +kubebuilder:validation:XValidation:rule="(self.action == 'Replace' ? has(self.replace) : !has(self.replace)) && (self.action == 'HashMod' ? has(self.hashMod) : !has(self.hashMod)) && (self.action == 'Lowercase' ? has(self.lowercase) : !has(self.lowercase)) && (self.action == 'Uppercase' ? has(self.uppercase) : !has(self.uppercase)) && (self.action == 'KeepEqual' ? has(self.keepEqual) : !has(self.keepEqual)) && (self.action == 'DropEqual' ? has(self.dropEqual) : !has(self.dropEqual)) && (self.action == 'LabelMap' ? has(self.labelMap) : !has(self.labelMap))",message="exactly one action-specific configuration must be specified and must match the action type"
+// +union
 type RelabelConfig struct {
 	// name is a unique identifier for this relabel configuration.
 	// Must contain only alphanumeric characters, hyphens, and underscores.
@@ -893,22 +895,27 @@ type RelabelConfig struct {
 	// +kubebuilder:validation:MaxLength=63
 	// +kubebuilder:validation:XValidation:rule="self.matches('^[a-zA-Z0-9_-]+$')",message="must contain only alphanumeric characters, hyphens, and underscores"
 	Name string `json:"name,omitempty"`
+
 	// sourceLabels specifies which label names to extract from each series for this relabeling rule.
-	// Each entry must be a valid label name (non-empty).
 	// The values of these labels are joined together using the configured separator,
-	// and the resulting string is then matched against the regular expression for
-	// the replace, keep, or drop actions.
+	// and the resulting string is then matched against the regular expression.
 	// If a referenced label does not exist on a series, Prometheus substitutes an empty string.
 	// When omitted, the rule operates without extracting source labels (useful for actions like labelmap).
 	// Minimum of 1 and maximum of 10 source labels can be specified, each between 1 and 128 characters.
 	// Each entry must be unique.
+	// Label names beginning with "__" (two underscores) are reserved for internal Prometheus use and are not allowed.
+	// Label names SHOULD match the regex [a-zA-Z_][a-zA-Z0-9_]* for best compatibility.
+	// While Prometheus supports UTF-8 characters in label names (since v3.0.0), using the recommended character set
+	// ensures better compatibility with the wider ecosystem (tooling, third-party instrumentation, etc.).
 	// +optional
 	// +kubebuilder:validation:MinItems=1
 	// +kubebuilder:validation:MaxItems=10
 	// +kubebuilder:validation:items:MinLength=1
 	// +kubebuilder:validation:items:MaxLength=128
+	// +kubebuilder:validation:items:XValidation:rule="!self.startsWith('__')",message="label names beginning with '__' (two underscores) are reserved for internal Prometheus use and are not allowed"
 	// +listType=set
 	SourceLabels []string `json:"sourceLabels,omitempty"`
+
 	// separator is the character sequence used to join source label values.
 	// Common examples: ";", ",", "::", "|||".
 	// When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time.
@@ -918,6 +925,7 @@ type RelabelConfig struct {
 	// +kubebuilder:validation:MinLength=1
 	// +kubebuilder:validation:MaxLength=5
 	Separator string `json:"separator,omitempty"`
+
 	// regex is the regular expression to match against the concatenated source label values.
 	// Must be a valid RE2 regular expression (https://github.com/google/re2/wiki/Syntax).
 	// When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time.
@@ -927,22 +935,7 @@ type RelabelConfig struct {
 	// +kubebuilder:validation:MinLength=1
 	// +kubebuilder:validation:MaxLength=1000
 	Regex string `json:"regex,omitempty"`
-	// targetLabel is the target label name where the result is written.
-	// Required for `Replace`, `HashMod`, `Lowercase`, `Uppercase`,`KeepEqual` and `DropEqual` actions.
-	// Must be between 1 and 128 characters in length when specified.
-	// +optional
-	// +kubebuilder:validation:MinLength=1
-	// +kubebuilder:validation:MaxLength=128
-	TargetLabel string `json:"targetLabel,omitempty"`
-	// replacement value against which a Replace action is performed if the
-	// regular expression matches. Regex capture groups are available (e.g., $1, $2).
-	// When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time.
-	// The default value is "$1" (the first capture group).
-	// Setting to an empty string ("") explicitly clears the target label value.
-	// Must be at most 255 characters in length.
-	// +optional
-	// +kubebuilder:validation:MaxLength=255
-	Replacement *string `json:"replacement,omitempty"`
+
 	// action is the action to perform on the matched labels.
 	// Valid actions are:
 	//   - Replace: Replaces the value of targetLabel with replacement, using regex capture groups.
@@ -952,8 +945,146 @@ type RelabelConfig struct {
 	//   - LabelMap: Copies labels matching regex to new label names derived from replacement.
 	//   - LabelDrop: Drops labels matching regex.
 	//   - LabelKeep: Keeps only labels matching regex.
+	//   - Lowercase: Converts the target label value to lowercase. Requires Prometheus >= v2.36.0.
+	//   - Uppercase: Converts the target label value to uppercase. Requires Prometheus >= v2.36.0.
+	//   - KeepEqual: Keeps only metrics where the source label value equals the target label value. Requires Prometheus >= v2.41.0.
+	//   - DropEqual: Drops metrics where the source label value equals the target label value. Requires Prometheus >= v2.41.0.
 	// +required
+	// +unionDiscriminator
+	// +kubebuilder:validation:Enum=Replace;Keep;Drop;HashMod;LabelMap;LabelDrop;LabelKeep;Lowercase;Uppercase;KeepEqual;DropEqual
 	Action RelabelAction `json:"action,omitempty"`
+
+	// replace configures the Replace action.
+	// Required when action is Replace.
+	// +unionMember
+	// +optional
+	Replace *ReplaceActionConfig `json:"replace,omitempty,omitzero"`
+
+	// hashMod configures the HashMod action.
+	// Required when action is HashMod.
+	// +unionMember
+	// +optional
+	HashMod *HashModActionConfig `json:"hashMod,omitempty,omitzero"`
+
+	// lowercase configures the Lowercase action.
+	// Required when action is Lowercase.
+	// Requires Prometheus >= v2.36.0.
+	// +unionMember
+	// +optional
+	Lowercase *LowercaseActionConfig `json:"lowercase,omitempty,omitzero"`
+
+	// uppercase configures the Uppercase action.
+	// Required when action is Uppercase.
+	// Requires Prometheus >= v2.36.0.
+	// +unionMember
+	// +optional
+	Uppercase *UppercaseActionConfig `json:"uppercase,omitempty,omitzero"`
+
+	// keepEqual configures the KeepEqual action.
+	// Required when action is KeepEqual.
+	// Requires Prometheus >= v2.41.0.
+	// +unionMember
+	// +optional
+	KeepEqual *KeepEqualActionConfig `json:"keepEqual,omitempty,omitzero"`
+
+	// dropEqual configures the DropEqual action.
+	// Required when action is DropEqual.
+	// Requires Prometheus >= v2.41.0.
+	// +unionMember
+	// +optional
+	DropEqual *DropEqualActionConfig `json:"dropEqual,omitempty,omitzero"`
+
+	// labelMap configures the LabelMap action.
+	// Required when action is LabelMap.
+	// +unionMember
+	// +optional
+	LabelMap *LabelMapActionConfig `json:"labelMap,omitempty,omitzero"`
+}
+
+// ReplaceActionConfig configures the Replace action.
+type ReplaceActionConfig struct {
+	// targetLabel is the target label name where the result is written.
+	// Must be between 1 and 128 characters in length.
+	// +required
+	// +kubebuilder:validation:MinLength=1
+	// +kubebuilder:validation:MaxLength=128
+	TargetLabel string `json:"targetLabel,omitempty"`
+
+	// replacement value against which a Replace action is performed if the
+	// regular expression matches. Regex capture groups are available (e.g., $1, $2).
+	// When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time.
+	// The default value is "$1" (the first capture group).
+	// Setting to an empty string ("") explicitly clears the target label value.
+	// Must be at most 255 characters in length.
+	// +optional
+	// +kubebuilder:validation:MaxLength=255
+	Replacement *string `json:"replacement,omitempty"`
+}
+
+// HashModActionConfig configures the HashMod action.
+type HashModActionConfig struct {
+	// targetLabel is the target label name where the result is written.
+	// Must be between 1 and 128 characters in length.
+	// +required
+	// +kubebuilder:validation:MinLength=1
+	// +kubebuilder:validation:MaxLength=128
+	TargetLabel string `json:"targetLabel,omitempty"`
+}
+
+// LowercaseActionConfig configures the Lowercase action.
+// Requires Prometheus >= v2.36.0.
+type LowercaseActionConfig struct {
+	// targetLabel is the target label name where the result is written.
+	// Must be between 1 and 128 characters in length.
+	// +required
+	// +kubebuilder:validation:MinLength=1
+	// +kubebuilder:validation:MaxLength=128
+	TargetLabel string `json:"targetLabel,omitempty"`
+}
+
+// UppercaseActionConfig configures the Uppercase action.
+// Requires Prometheus >= v2.36.0.
+type UppercaseActionConfig struct {
+	// targetLabel is the target label name where the result is written.
+	// Must be between 1 and 128 characters in length.
+	// +required
+	// +kubebuilder:validation:MinLength=1
+	// +kubebuilder:validation:MaxLength=128
+	TargetLabel string `json:"targetLabel,omitempty"`
+}
+
+// KeepEqualActionConfig configures the KeepEqual action.
+// Requires Prometheus >= v2.41.0.
+type KeepEqualActionConfig struct {
+	// targetLabel is the target label name where the result is written.
+	// Must be between 1 and 128 characters in length.
+	// +required
+	// +kubebuilder:validation:MinLength=1
+	// +kubebuilder:validation:MaxLength=128
+	TargetLabel string `json:"targetLabel,omitempty"`
+}
+
+// DropEqualActionConfig configures the DropEqual action.
+// Requires Prometheus >= v2.41.0.
+type DropEqualActionConfig struct {
+	// targetLabel is the target label name where the result is written.
+	// Must be between 1 and 128 characters in length.
+	// +required
+	// +kubebuilder:validation:MinLength=1
+	// +kubebuilder:validation:MaxLength=128
+	TargetLabel string `json:"targetLabel,omitempty"`
+}
+
+// LabelMapActionConfig configures the LabelMap action.
+type LabelMapActionConfig struct {
+	// replacement value used to derive new label names from labels matching the regex.
+	// Regex capture groups are available (e.g., $1, $2).
+	// When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time.
+	// The default value is "$1" (the first capture group).
+	// Must be at most 255 characters in length.
+	// +optional
+	// +kubebuilder:validation:MaxLength=255
+	Replacement *string `json:"replacement,omitempty"`
 }
 
 // TLSConfig represents TLS configuration for Alertmanager connections.
@@ -1003,29 +1134,26 @@ const (
 )
 
 // AuthorizationType defines the type of authentication to use.
-// +kubebuilder:validation:Enum=None;BearerToken
+// +kubebuilder:validation:Enum=BearerToken
 type AuthorizationType string
 
 const (
-	// AuthorizationTypeNone indicates no authentication.
-	AuthorizationTypeNone AuthorizationType = "None"
 	// AuthorizationTypeBearerToken indicates bearer token authentication.
 	AuthorizationTypeBearerToken AuthorizationType = "BearerToken"
 )
 
 // AuthorizationConfig defines the authentication method for Alertmanager connections.
-// +kubebuilder:validation:XValidation:rule="has(self.type) && self.type == 'BearerToken' ? has(self.bearerToken) : !has(self.bearerToken)",message="bearerToken is required when type is BearerToken, and forbidden otherwise"
+// +kubebuilder:validation:XValidation:rule="has(self.type) && self.type == 'BearerToken' ? has(self.bearerToken) : !has(self.bearerToken)",message="bearerToken is required when type is BearerToken"
 // +union
 type AuthorizationConfig struct {
 	// type specifies the authentication type to use.
-	// Valid values are "None" (no authentication) and "BearerToken" (bearer token authentication).
-	// When set to None, no authentication credentials are sent.
+	// Valid value is "BearerToken" (bearer token authentication).
 	// When set to BearerToken, the bearerToken field must be specified.
 	// +unionDiscriminator
 	// +required
 	Type AuthorizationType `json:"type,omitempty"`
 	// bearerToken defines the secret reference containing the bearer token.
-	// Required when type is "BearerToken", forbidden otherwise.
+	// Required when type is "BearerToken".
 	// The secret must exist in the openshift-monitoring namespace.
 	// +optional
 	BearerToken SecretKeySelector `json:"bearerToken,omitempty,omitzero"`
@@ -1078,7 +1206,7 @@ type Retention struct {
 }
 
 // RelabelAction defines the action to perform in a relabeling rule.
-// +kubebuilder:validation:Enum=Replace;Keep;Drop;HashMod;LabelMap;LabelDrop;LabelKeep
+// +kubebuilder:validation:Enum=Replace;Keep;Drop;HashMod;LabelMap;LabelDrop;LabelKeep;Lowercase;Uppercase;KeepEqual;DropEqual
 type RelabelAction string
 
 const (
@@ -1096,6 +1224,14 @@ const (
 	RelabelActionLabelDrop RelabelAction = "LabelDrop"
 	// RelabelActionLabelKeep removes labels that do not match the regex.
 	RelabelActionLabelKeep RelabelAction = "LabelKeep"
+	// RelabelActionLowercase converts the target label value to lowercase.
+	RelabelActionLowercase RelabelAction = "Lowercase"
+	// RelabelActionUppercase converts the target label value to uppercase.
+	RelabelActionUppercase RelabelAction = "Uppercase"
+	// RelabelActionKeepEqual keeps metrics where the source label value equals the target label value.
+	RelabelActionKeepEqual RelabelAction = "KeepEqual"
+	// RelabelActionDropEqual drops metrics where the source label value equals the target label value.
+	RelabelActionDropEqual RelabelAction = "DropEqual"
 )
 
 // CollectionProfile defines the metrics collection profile for Prometheus.

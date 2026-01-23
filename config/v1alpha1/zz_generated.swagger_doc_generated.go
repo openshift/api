@@ -125,7 +125,7 @@ var map_AdditionalAlertmanagerConfig = map[string]string{
 	"pathPrefix":     "pathPrefix defines an optional URL path prefix to prepend to the Alertmanager API endpoints. For example, if your Alertmanager is behind a reverse proxy at \"/alertmanager/\", set this to \"/alertmanager\" so requests go to \"/alertmanager/api/v1/alerts\" instead of \"/api/v1/alerts\". This is commonly needed when Alertmanager is deployed behind ingress controllers or load balancers. Must start with \"/\" and not end with \"/\" (unless it is the root path \"/\"). Must not contain query strings (\"?\") or fragments (\"#\").",
 	"scheme":         "scheme defines the URL scheme to use when communicating with Alertmanager instances. Possible values are `HTTP` or `HTTPS`. When omitted, defaults to `HTTP`.",
 	"staticConfigs":  "staticConfigs is a list of statically configured Alertmanager endpoints in the form of `<host>:<port>`. Each entry must be a valid hostname, IPv4 address, or IPv6 address (in brackets) followed by a colon and a valid port number (1-65535). Examples: \"alertmanager.example.com:9093\", \"192.168.1.100:9093\", \"[::1]:9093\" At least one endpoint must be specified (minimum 1, maximum 10 endpoints). Each entry must be unique.",
-	"timeoutSeconds": "timeoutSeconds defines the timeout in seconds for requests to Alertmanager. When omitted, the default is 10 seconds. Minimum value is 1 second. Maximum value is 600 seconds (10 minutes).",
+	"timeoutSeconds": "timeoutSeconds defines the timeout in seconds for requests to Alertmanager. When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time. Currently the default is 10 seconds. Minimum value is 1 second. Maximum value is 600 seconds (10 minutes).",
 	"tlsConfig":      "tlsConfig defines the TLS settings to use for Alertmanager connections. When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time.",
 }
 
@@ -169,8 +169,8 @@ func (Audit) SwaggerDoc() map[string]string {
 
 var map_AuthorizationConfig = map[string]string{
 	"":            "AuthorizationConfig defines the authentication method for Alertmanager connections.",
-	"type":        "type specifies the authentication type to use. Valid values are \"None\" (no authentication) and \"BearerToken\" (bearer token authentication). When set to None, no authentication credentials are sent. When set to BearerToken, the bearerToken field must be specified.",
-	"bearerToken": "bearerToken defines the secret reference containing the bearer token. Required when type is \"BearerToken\", forbidden otherwise. The secret must exist in the openshift-monitoring namespace.",
+	"type":        "type specifies the authentication type to use. Valid value is \"BearerToken\" (bearer token authentication). When set to BearerToken, the bearerToken field must be specified.",
+	"bearerToken": "bearerToken defines the secret reference containing the bearer token. Required when type is \"BearerToken\". The secret must exist in the openshift-monitoring namespace.",
 }
 
 func (AuthorizationConfig) SwaggerDoc() map[string]string {
@@ -231,6 +231,33 @@ func (ContainerResource) SwaggerDoc() map[string]string {
 	return map_ContainerResource
 }
 
+var map_DropEqualActionConfig = map[string]string{
+	"":            "DropEqualActionConfig configures the DropEqual action. Requires Prometheus >= v2.41.0.",
+	"targetLabel": "targetLabel is the target label name where the result is written. Must be between 1 and 128 characters in length.",
+}
+
+func (DropEqualActionConfig) SwaggerDoc() map[string]string {
+	return map_DropEqualActionConfig
+}
+
+var map_HashModActionConfig = map[string]string{
+	"":            "HashModActionConfig configures the HashMod action.",
+	"targetLabel": "targetLabel is the target label name where the result is written. Must be between 1 and 128 characters in length.",
+}
+
+func (HashModActionConfig) SwaggerDoc() map[string]string {
+	return map_HashModActionConfig
+}
+
+var map_KeepEqualActionConfig = map[string]string{
+	"":            "KeepEqualActionConfig configures the KeepEqual action. Requires Prometheus >= v2.41.0.",
+	"targetLabel": "targetLabel is the target label name where the result is written. Must be between 1 and 128 characters in length.",
+}
+
+func (KeepEqualActionConfig) SwaggerDoc() map[string]string {
+	return map_KeepEqualActionConfig
+}
+
 var map_Label = map[string]string{
 	"":      "Label represents a key/value pair for external labels.",
 	"key":   "key is the name of the label. Prometheus supports UTF-8 label names, so any valid UTF-8 string is allowed. Must be between 1 and 128 characters in length.",
@@ -239,6 +266,24 @@ var map_Label = map[string]string{
 
 func (Label) SwaggerDoc() map[string]string {
 	return map_Label
+}
+
+var map_LabelMapActionConfig = map[string]string{
+	"":            "LabelMapActionConfig configures the LabelMap action.",
+	"replacement": "replacement value used to derive new label names from labels matching the regex. Regex capture groups are available (e.g., $1, $2). When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time. The default value is \"$1\" (the first capture group). Must be at most 255 characters in length.",
+}
+
+func (LabelMapActionConfig) SwaggerDoc() map[string]string {
+	return map_LabelMapActionConfig
+}
+
+var map_LowercaseActionConfig = map[string]string{
+	"":            "LowercaseActionConfig configures the Lowercase action. Requires Prometheus >= v2.36.0.",
+	"targetLabel": "targetLabel is the target label name where the result is written. Must be between 1 and 128 characters in length.",
+}
+
+func (LowercaseActionConfig) SwaggerDoc() map[string]string {
+	return map_LowercaseActionConfig
 }
 
 var map_MetricsServerConfig = map[string]string{
@@ -257,7 +302,7 @@ func (MetricsServerConfig) SwaggerDoc() map[string]string {
 
 var map_PrometheusConfig = map[string]string{
 	"":                              "PrometheusConfig provides configuration options for the Prometheus instance. Use this configuration to control Prometheus deployment, pod scheduling, resource allocation, retention policies, and external integrations.",
-	"additionalAlertmanagerConfigs": "additionalAlertmanagerConfigs configures additional Alertmanager instances that receive alerts from the Prometheus component. This is useful for organizations that need to:\n  - Send alerts to external monitoring systems (like PagerDuty, Slack, or custom webhooks)\n  - Route different types of alerts to different teams or systems\n  - Integrate with existing enterprise alerting infrastructure\n  - Maintain separate alert routing for compliance or organizational requirements\nBy default, no additional Alertmanager instances are configured. When omitted, no additional Alertmanager instances are configured (default behavior). When provided, at least one configuration must be specified (minimum 1, maximum 10 items). Each entry must have a unique name field, which serves as the map key for server-side apply.",
+	"additionalAlertmanagerConfigs": "additionalAlertmanagerConfigs configures additional Alertmanager instances that receive alerts from the Prometheus component. This is useful for organizations that need to:\n  - Send alerts to external monitoring systems (like PagerDuty, Slack, or custom webhooks)\n  - Route different types of alerts to different teams or systems\n  - Integrate with existing enterprise alerting infrastructure\n  - Maintain separate alert routing for compliance or organizational requirements\nWhen omitted, no additional Alertmanager instances are configured (default behavior). When provided, at least one configuration must be specified (minimum 1, maximum 10 items). Each entry must have a unique name field.",
 	"enforcedBodySizeLimitBytes":    "enforcedBodySizeLimitBytes enforces a body size limit (in bytes) for Prometheus scraped metrics. If a scraped target's body response is larger than the limit, the scrape will fail. This helps protect Prometheus from targets that return excessively large responses. The value is specified in bytes (e.g., 4194304 for 4MB, 1073741824 for 1GB). When omitted, the Cluster Monitoring Operator automatically calculates an appropriate limit based on cluster capacity. Set an explicit value to override the automatic calculation. Minimum value is 10240 (10kB). Maximum value is 1073741824 (1GB).",
 	"externalLabels":                "externalLabels defines labels to be attached to time series and alerts when communicating with external systems such as federation, remote storage, and Alertmanager. These labels are not stored with metrics on disk; they are only added when data leaves Prometheus (e.g., during federation queries, remote write, or alert notifications). At least 1 label must be specified when set, with a maximum of 50 labels allowed. Each label key must be unique within this list. When omitted, no external labels are applied.",
 	"logLevel":                      "logLevel defines the verbosity of logs emitted by Prometheus. This field allows users to control the amount and severity of logs generated, which can be useful for debugging issues or reducing noise in production environments. Allowed values are Error, Warn, Info, and Debug. When set to Error, only errors will be logged. When set to Warn, both warnings and errors will be logged. When set to Info, general information, warnings, and errors will all be logged. When set to Debug, detailed debugging information will be logged. When omitted, this means no opinion and the platform is left to choose a reasonable default, that is subject to change over time. The current default value is `Info`.",
@@ -300,14 +345,19 @@ func (PrometheusOperatorConfig) SwaggerDoc() map[string]string {
 }
 
 var map_RelabelConfig = map[string]string{
-	"":             "RelabelConfig represents a relabeling rule.",
+	"":             "RelabelConfig represents a relabeling rule. Exactly one action-specific configuration must be specified based on the action type.",
 	"name":         "name is a unique identifier for this relabel configuration. Must contain only alphanumeric characters, hyphens, and underscores. Must be between 1 and 63 characters in length.",
-	"sourceLabels": "sourceLabels specifies which label names to extract from each series for this relabeling rule. Each entry must be a valid label name (non-empty). The values of these labels are joined together using the configured separator, and the resulting string is then matched against the regular expression for the replace, keep, or drop actions. If a referenced label does not exist on a series, Prometheus substitutes an empty string. When omitted, the rule operates without extracting source labels (useful for actions like labelmap). Minimum of 1 and maximum of 10 source labels can be specified, each between 1 and 128 characters. Each entry must be unique.",
+	"sourceLabels": "sourceLabels specifies which label names to extract from each series for this relabeling rule. The values of these labels are joined together using the configured separator, and the resulting string is then matched against the regular expression. If a referenced label does not exist on a series, Prometheus substitutes an empty string. When omitted, the rule operates without extracting source labels (useful for actions like labelmap). Minimum of 1 and maximum of 10 source labels can be specified, each between 1 and 128 characters. Each entry must be unique. Label names beginning with \"__\" (two underscores) are reserved for internal Prometheus use and are not allowed. Label names SHOULD match the regex [a-zA-Z_][a-zA-Z0-9_]* for best compatibility. While Prometheus supports UTF-8 characters in label names (since v3.0.0), using the recommended character set ensures better compatibility with the wider ecosystem (tooling, third-party instrumentation, etc.).",
 	"separator":    "separator is the character sequence used to join source label values. Common examples: \";\", \",\", \"::\", \"|||\". When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time. The default value is \";\". Must be between 1 and 5 characters in length when specified.",
 	"regex":        "regex is the regular expression to match against the concatenated source label values. Must be a valid RE2 regular expression (https://github.com/google/re2/wiki/Syntax). When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time. The default value is \"(.*)\" to match everything. Must be between 1 and 1000 characters in length when specified.",
-	"targetLabel":  "targetLabel is the target label name where the result is written. Required for `Replace`, `HashMod`, `Lowercase`, `Uppercase`,`KeepEqual` and `DropEqual` actions. Must be between 1 and 128 characters in length when specified.",
-	"replacement":  "replacement value against which a Replace action is performed if the regular expression matches. Regex capture groups are available (e.g., $1, $2). When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time. The default value is \"$1\" (the first capture group). Setting to an empty string (\"\") explicitly clears the target label value. Must be at most 255 characters in length.",
-	"action":       "action is the action to perform on the matched labels. Valid actions are:\n  - Replace: Replaces the value of targetLabel with replacement, using regex capture groups.\n  - Keep: Keeps only metrics where regex matches the source labels.\n  - Drop: Drops metrics where regex matches the source labels.\n  - HashMod: Sets targetLabel to the hash modulus of the source labels.\n  - LabelMap: Copies labels matching regex to new label names derived from replacement.\n  - LabelDrop: Drops labels matching regex.\n  - LabelKeep: Keeps only labels matching regex.",
+	"action":       "action is the action to perform on the matched labels. Valid actions are:\n  - Replace: Replaces the value of targetLabel with replacement, using regex capture groups.\n  - Keep: Keeps only metrics where regex matches the source labels.\n  - Drop: Drops metrics where regex matches the source labels.\n  - HashMod: Sets targetLabel to the hash modulus of the source labels.\n  - LabelMap: Copies labels matching regex to new label names derived from replacement.\n  - LabelDrop: Drops labels matching regex.\n  - LabelKeep: Keeps only labels matching regex.\n  - Lowercase: Converts the target label value to lowercase. Requires Prometheus >= v2.36.0.\n  - Uppercase: Converts the target label value to uppercase. Requires Prometheus >= v2.36.0.\n  - KeepEqual: Keeps only metrics where the source label value equals the target label value. Requires Prometheus >= v2.41.0.\n  - DropEqual: Drops metrics where the source label value equals the target label value. Requires Prometheus >= v2.41.0.",
+	"replace":      "replace configures the Replace action. Required when action is Replace.",
+	"hashMod":      "hashMod configures the HashMod action. Required when action is HashMod.",
+	"lowercase":    "lowercase configures the Lowercase action. Required when action is Lowercase. Requires Prometheus >= v2.36.0.",
+	"uppercase":    "uppercase configures the Uppercase action. Required when action is Uppercase. Requires Prometheus >= v2.36.0.",
+	"keepEqual":    "keepEqual configures the KeepEqual action. Required when action is KeepEqual. Requires Prometheus >= v2.41.0.",
+	"dropEqual":    "dropEqual configures the DropEqual action. Required when action is DropEqual. Requires Prometheus >= v2.41.0.",
+	"labelMap":     "labelMap configures the LabelMap action. Required when action is LabelMap.",
 }
 
 func (RelabelConfig) SwaggerDoc() map[string]string {
@@ -318,12 +368,22 @@ var map_RemoteWriteSpec = map[string]string{
 	"":                     "RemoteWriteSpec represents configuration for remote write endpoints.",
 	"url":                  "url is the URL of the remote write endpoint. Must be a valid URL with http or https scheme. Must be between 1 and 2048 characters in length.",
 	"name":                 "name is an optional identifier for this remote write configuration. When omitted, Prometheus generates a unique name automatically. Must contain only alphanumeric characters, hyphens, and underscores. Must be between 1 and 63 characters in length when specified.",
-	"remoteTimeoutSeconds": "remoteTimeoutSeconds is the timeout in seconds for requests to the remote write endpoint. When omitted, the default is 30 seconds. Minimum value is 1 second. Maximum value is 600 seconds (10 minutes).",
+	"remoteTimeoutSeconds": "remoteTimeoutSeconds is the timeout in seconds for requests to the remote write endpoint. When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time. Currently the default is 30 seconds. Minimum value is 1 second. Maximum value is 600 seconds (10 minutes).",
 	"writeRelabelConfigs":  "writeRelabelConfigs is a list of relabeling rules to apply before sending data to the remote endpoint. When omitted, no relabeling is performed and all metrics are sent as-is. Minimum of 1 and maximum of 10 relabeling rules can be specified. Each rule must have a unique name.",
 }
 
 func (RemoteWriteSpec) SwaggerDoc() map[string]string {
 	return map_RemoteWriteSpec
+}
+
+var map_ReplaceActionConfig = map[string]string{
+	"":            "ReplaceActionConfig configures the Replace action.",
+	"targetLabel": "targetLabel is the target label name where the result is written. Must be between 1 and 128 characters in length.",
+	"replacement": "replacement value against which a Replace action is performed if the regular expression matches. Regex capture groups are available (e.g., $1, $2). When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time. The default value is \"$1\" (the first capture group). Setting to an empty string (\"\") explicitly clears the target label value. Must be at most 255 characters in length.",
+}
+
+func (ReplaceActionConfig) SwaggerDoc() map[string]string {
+	return map_ReplaceActionConfig
 }
 
 var map_Retention = map[string]string{
@@ -357,6 +417,15 @@ var map_TLSConfig = map[string]string{
 
 func (TLSConfig) SwaggerDoc() map[string]string {
 	return map_TLSConfig
+}
+
+var map_UppercaseActionConfig = map[string]string{
+	"":            "UppercaseActionConfig configures the Uppercase action. Requires Prometheus >= v2.36.0.",
+	"targetLabel": "targetLabel is the target label name where the result is written. Must be between 1 and 128 characters in length.",
+}
+
+func (UppercaseActionConfig) SwaggerDoc() map[string]string {
+	return map_UppercaseActionConfig
 }
 
 var map_UserDefinedMonitoring = map[string]string{

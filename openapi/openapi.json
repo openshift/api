@@ -12196,7 +12196,7 @@
           "x-kubernetes-list-type": "set"
         },
         "timeoutSeconds": {
-          "description": "timeoutSeconds defines the timeout in seconds for requests to Alertmanager. When omitted, the default is 10 seconds. Minimum value is 1 second. Maximum value is 600 seconds (10 minutes).",
+          "description": "timeoutSeconds defines the timeout in seconds for requests to Alertmanager. When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time. Currently the default is 10 seconds. Minimum value is 1 second. Maximum value is 600 seconds (10 minutes).",
           "type": "integer",
           "format": "int32"
         },
@@ -12311,12 +12311,12 @@
       ],
       "properties": {
         "bearerToken": {
-          "description": "bearerToken defines the secret reference containing the bearer token. Required when type is \"BearerToken\", forbidden otherwise. The secret must exist in the openshift-monitoring namespace.",
+          "description": "bearerToken defines the secret reference containing the bearer token. Required when type is \"BearerToken\". The secret must exist in the openshift-monitoring namespace.",
           "default": {},
           "$ref": "#/definitions/com.github.openshift.api.config.v1alpha1.SecretKeySelector"
         },
         "type": {
-          "description": "type specifies the authentication type to use. Valid values are \"None\" (no authentication) and \"BearerToken\" (bearer token authentication). When set to None, no authentication credentials are sent. When set to BearerToken, the bearerToken field must be specified.",
+          "description": "type specifies the authentication type to use. Valid value is \"BearerToken\" (bearer token authentication). When set to BearerToken, the bearerToken field must be specified.",
           "type": "string"
         }
       },
@@ -12620,6 +12620,19 @@
         }
       }
     },
+    "com.github.openshift.api.config.v1alpha1.DropEqualActionConfig": {
+      "description": "DropEqualActionConfig configures the DropEqual action. Requires Prometheus >= v2.41.0.",
+      "type": "object",
+      "required": [
+        "targetLabel"
+      ],
+      "properties": {
+        "targetLabel": {
+          "description": "targetLabel is the target label name where the result is written. Must be between 1 and 128 characters in length.",
+          "type": "string"
+        }
+      }
+    },
     "com.github.openshift.api.config.v1alpha1.EtcdBackupSpec": {
       "description": "EtcdBackupSpec provides configuration for automated etcd backups to the cluster-etcd-operator",
       "type": "object",
@@ -12665,6 +12678,19 @@
         "storage": {
           "description": "storage is an optional field that allows user to define persistent storage for gathering jobs to store the Insights data archive. If omitted, the gathering job will use ephemeral storage.",
           "$ref": "#/definitions/com.github.openshift.api.config.v1alpha1.Storage"
+        }
+      }
+    },
+    "com.github.openshift.api.config.v1alpha1.HashModActionConfig": {
+      "description": "HashModActionConfig configures the HashMod action.",
+      "type": "object",
+      "required": [
+        "targetLabel"
+      ],
+      "properties": {
+        "targetLabel": {
+          "description": "targetLabel is the target label name where the result is written. Must be between 1 and 128 characters in length.",
+          "type": "string"
         }
       }
     },
@@ -12935,6 +12961,19 @@
     "com.github.openshift.api.config.v1alpha1.InsightsDataGatherStatus": {
       "type": "object"
     },
+    "com.github.openshift.api.config.v1alpha1.KeepEqualActionConfig": {
+      "description": "KeepEqualActionConfig configures the KeepEqual action. Requires Prometheus >= v2.41.0.",
+      "type": "object",
+      "required": [
+        "targetLabel"
+      ],
+      "properties": {
+        "targetLabel": {
+          "description": "targetLabel is the target label name where the result is written. Must be between 1 and 128 characters in length.",
+          "type": "string"
+        }
+      }
+    },
     "com.github.openshift.api.config.v1alpha1.Label": {
       "description": "Label represents a key/value pair for external labels.",
       "type": "object",
@@ -12949,6 +12988,29 @@
         },
         "value": {
           "description": "value is the value of the label. Must be between 1 and 128 characters in length.",
+          "type": "string"
+        }
+      }
+    },
+    "com.github.openshift.api.config.v1alpha1.LabelMapActionConfig": {
+      "description": "LabelMapActionConfig configures the LabelMap action.",
+      "type": "object",
+      "properties": {
+        "replacement": {
+          "description": "replacement value used to derive new label names from labels matching the regex. Regex capture groups are available (e.g., $1, $2). When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time. The default value is \"$1\" (the first capture group). Must be at most 255 characters in length.",
+          "type": "string"
+        }
+      }
+    },
+    "com.github.openshift.api.config.v1alpha1.LowercaseActionConfig": {
+      "description": "LowercaseActionConfig configures the Lowercase action. Requires Prometheus >= v2.36.0.",
+      "type": "object",
+      "required": [
+        "targetLabel"
+      ],
+      "properties": {
+        "targetLabel": {
+          "description": "targetLabel is the target label name where the result is written. Must be between 1 and 128 characters in length.",
           "type": "string"
         }
       }
@@ -13180,7 +13242,7 @@
       "type": "object",
       "properties": {
         "additionalAlertmanagerConfigs": {
-          "description": "additionalAlertmanagerConfigs configures additional Alertmanager instances that receive alerts from the Prometheus component. This is useful for organizations that need to:\n  - Send alerts to external monitoring systems (like PagerDuty, Slack, or custom webhooks)\n  - Route different types of alerts to different teams or systems\n  - Integrate with existing enterprise alerting infrastructure\n  - Maintain separate alert routing for compliance or organizational requirements\nBy default, no additional Alertmanager instances are configured. When omitted, no additional Alertmanager instances are configured (default behavior). When provided, at least one configuration must be specified (minimum 1, maximum 10 items). Each entry must have a unique name field, which serves as the map key for server-side apply.",
+          "description": "additionalAlertmanagerConfigs configures additional Alertmanager instances that receive alerts from the Prometheus component. This is useful for organizations that need to:\n  - Send alerts to external monitoring systems (like PagerDuty, Slack, or custom webhooks)\n  - Route different types of alerts to different teams or systems\n  - Integrate with existing enterprise alerting infrastructure\n  - Maintain separate alert routing for compliance or organizational requirements\nWhen omitted, no additional Alertmanager instances are configured (default behavior). When provided, at least one configuration must be specified (minimum 1, maximum 10 items). Each entry must have a unique name field.",
           "type": "array",
           "items": {
             "default": {},
@@ -13286,7 +13348,7 @@
       }
     },
     "com.github.openshift.api.config.v1alpha1.RelabelConfig": {
-      "description": "RelabelConfig represents a relabeling rule.",
+      "description": "RelabelConfig represents a relabeling rule. Exactly one action-specific configuration must be specified based on the action type.",
       "type": "object",
       "required": [
         "name",
@@ -13294,8 +13356,28 @@
       ],
       "properties": {
         "action": {
-          "description": "action is the action to perform on the matched labels. Valid actions are:\n  - Replace: Replaces the value of targetLabel with replacement, using regex capture groups.\n  - Keep: Keeps only metrics where regex matches the source labels.\n  - Drop: Drops metrics where regex matches the source labels.\n  - HashMod: Sets targetLabel to the hash modulus of the source labels.\n  - LabelMap: Copies labels matching regex to new label names derived from replacement.\n  - LabelDrop: Drops labels matching regex.\n  - LabelKeep: Keeps only labels matching regex.",
+          "description": "action is the action to perform on the matched labels. Valid actions are:\n  - Replace: Replaces the value of targetLabel with replacement, using regex capture groups.\n  - Keep: Keeps only metrics where regex matches the source labels.\n  - Drop: Drops metrics where regex matches the source labels.\n  - HashMod: Sets targetLabel to the hash modulus of the source labels.\n  - LabelMap: Copies labels matching regex to new label names derived from replacement.\n  - LabelDrop: Drops labels matching regex.\n  - LabelKeep: Keeps only labels matching regex.\n  - Lowercase: Converts the target label value to lowercase. Requires Prometheus >= v2.36.0.\n  - Uppercase: Converts the target label value to uppercase. Requires Prometheus >= v2.36.0.\n  - KeepEqual: Keeps only metrics where the source label value equals the target label value. Requires Prometheus >= v2.41.0.\n  - DropEqual: Drops metrics where the source label value equals the target label value. Requires Prometheus >= v2.41.0.",
           "type": "string"
+        },
+        "dropEqual": {
+          "description": "dropEqual configures the DropEqual action. Required when action is DropEqual. Requires Prometheus >= v2.41.0.",
+          "$ref": "#/definitions/com.github.openshift.api.config.v1alpha1.DropEqualActionConfig"
+        },
+        "hashMod": {
+          "description": "hashMod configures the HashMod action. Required when action is HashMod.",
+          "$ref": "#/definitions/com.github.openshift.api.config.v1alpha1.HashModActionConfig"
+        },
+        "keepEqual": {
+          "description": "keepEqual configures the KeepEqual action. Required when action is KeepEqual. Requires Prometheus >= v2.41.0.",
+          "$ref": "#/definitions/com.github.openshift.api.config.v1alpha1.KeepEqualActionConfig"
+        },
+        "labelMap": {
+          "description": "labelMap configures the LabelMap action. Required when action is LabelMap.",
+          "$ref": "#/definitions/com.github.openshift.api.config.v1alpha1.LabelMapActionConfig"
+        },
+        "lowercase": {
+          "description": "lowercase configures the Lowercase action. Required when action is Lowercase. Requires Prometheus >= v2.36.0.",
+          "$ref": "#/definitions/com.github.openshift.api.config.v1alpha1.LowercaseActionConfig"
         },
         "name": {
           "description": "name is a unique identifier for this relabel configuration. Must contain only alphanumeric characters, hyphens, and underscores. Must be between 1 and 63 characters in length.",
@@ -13305,16 +13387,16 @@
           "description": "regex is the regular expression to match against the concatenated source label values. Must be a valid RE2 regular expression (https://github.com/google/re2/wiki/Syntax). When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time. The default value is \"(.*)\" to match everything. Must be between 1 and 1000 characters in length when specified.",
           "type": "string"
         },
-        "replacement": {
-          "description": "replacement value against which a Replace action is performed if the regular expression matches. Regex capture groups are available (e.g., $1, $2). When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time. The default value is \"$1\" (the first capture group). Setting to an empty string (\"\") explicitly clears the target label value. Must be at most 255 characters in length.",
-          "type": "string"
+        "replace": {
+          "description": "replace configures the Replace action. Required when action is Replace.",
+          "$ref": "#/definitions/com.github.openshift.api.config.v1alpha1.ReplaceActionConfig"
         },
         "separator": {
           "description": "separator is the character sequence used to join source label values. Common examples: \";\", \",\", \"::\", \"|||\". When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time. The default value is \";\". Must be between 1 and 5 characters in length when specified.",
           "type": "string"
         },
         "sourceLabels": {
-          "description": "sourceLabels specifies which label names to extract from each series for this relabeling rule. Each entry must be a valid label name (non-empty). The values of these labels are joined together using the configured separator, and the resulting string is then matched against the regular expression for the replace, keep, or drop actions. If a referenced label does not exist on a series, Prometheus substitutes an empty string. When omitted, the rule operates without extracting source labels (useful for actions like labelmap). Minimum of 1 and maximum of 10 source labels can be specified, each between 1 and 128 characters. Each entry must be unique.",
+          "description": "sourceLabels specifies which label names to extract from each series for this relabeling rule. The values of these labels are joined together using the configured separator, and the resulting string is then matched against the regular expression. If a referenced label does not exist on a series, Prometheus substitutes an empty string. When omitted, the rule operates without extracting source labels (useful for actions like labelmap). Minimum of 1 and maximum of 10 source labels can be specified, each between 1 and 128 characters. Each entry must be unique. Label names beginning with \"__\" (two underscores) are reserved for internal Prometheus use and are not allowed. Label names SHOULD match the regex [a-zA-Z_][a-zA-Z0-9_]* for best compatibility. While Prometheus supports UTF-8 characters in label names (since v3.0.0), using the recommended character set ensures better compatibility with the wider ecosystem (tooling, third-party instrumentation, etc.).",
           "type": "array",
           "items": {
             "type": "string",
@@ -13322,11 +13404,29 @@
           },
           "x-kubernetes-list-type": "set"
         },
-        "targetLabel": {
-          "description": "targetLabel is the target label name where the result is written. Required for `Replace`, `HashMod`, `Lowercase`, `Uppercase`,`KeepEqual` and `DropEqual` actions. Must be between 1 and 128 characters in length when specified.",
-          "type": "string"
+        "uppercase": {
+          "description": "uppercase configures the Uppercase action. Required when action is Uppercase. Requires Prometheus >= v2.36.0.",
+          "$ref": "#/definitions/com.github.openshift.api.config.v1alpha1.UppercaseActionConfig"
         }
-      }
+      },
+      "x-kubernetes-unions": [
+        {
+          "discriminator": "action",
+          "fields-to-discriminateBy": {
+            "dropEqual": "DropEqual",
+            "hashMod": "HashMod",
+            "keepEqual": "KeepEqual",
+            "labelMap": "LabelMap",
+            "lowercase": "Lowercase",
+            "name": "Name",
+            "regex": "Regex",
+            "replace": "Replace",
+            "separator": "Separator",
+            "sourceLabels": "SourceLabels",
+            "uppercase": "Uppercase"
+          }
+        }
+      ]
     },
     "com.github.openshift.api.config.v1alpha1.RemoteWriteSpec": {
       "description": "RemoteWriteSpec represents configuration for remote write endpoints.",
@@ -13340,7 +13440,7 @@
           "type": "string"
         },
         "remoteTimeoutSeconds": {
-          "description": "remoteTimeoutSeconds is the timeout in seconds for requests to the remote write endpoint. When omitted, the default is 30 seconds. Minimum value is 1 second. Maximum value is 600 seconds (10 minutes).",
+          "description": "remoteTimeoutSeconds is the timeout in seconds for requests to the remote write endpoint. When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time. Currently the default is 30 seconds. Minimum value is 1 second. Maximum value is 600 seconds (10 minutes).",
           "type": "integer",
           "format": "int32"
         },
@@ -13359,6 +13459,23 @@
             "name"
           ],
           "x-kubernetes-list-type": "map"
+        }
+      }
+    },
+    "com.github.openshift.api.config.v1alpha1.ReplaceActionConfig": {
+      "description": "ReplaceActionConfig configures the Replace action.",
+      "type": "object",
+      "required": [
+        "targetLabel"
+      ],
+      "properties": {
+        "replacement": {
+          "description": "replacement value against which a Replace action is performed if the regular expression matches. Regex capture groups are available (e.g., $1, $2). When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time. The default value is \"$1\" (the first capture group). Setting to an empty string (\"\") explicitly clears the target label value. Must be at most 255 characters in length.",
+          "type": "string"
+        },
+        "targetLabel": {
+          "description": "targetLabel is the target label name where the result is written. Must be between 1 and 128 characters in length.",
+          "type": "string"
         }
       }
     },
@@ -13505,6 +13622,19 @@
         },
         "serverName": {
           "description": "serverName is an optional server name to use for TLS connections. When specified, must be a valid DNS subdomain as per RFC 1123. When omitted, the server name is derived from the URL. Must be between 1 and 253 characters in length.",
+          "type": "string"
+        }
+      }
+    },
+    "com.github.openshift.api.config.v1alpha1.UppercaseActionConfig": {
+      "description": "UppercaseActionConfig configures the Uppercase action. Requires Prometheus >= v2.36.0.",
+      "type": "object",
+      "required": [
+        "targetLabel"
+      ],
+      "properties": {
+        "targetLabel": {
+          "description": "targetLabel is the target label name where the result is written. Must be between 1 and 128 characters in length.",
           "type": "string"
         }
       }

@@ -1307,10 +1307,9 @@ spec:
                         - Route different types of alerts to different teams or systems
                         - Integrate with existing enterprise alerting infrastructure
                         - Maintain separate alert routing for compliance or organizational requirements
-                      By default, no additional Alertmanager instances are configured.
                       When omitted, no additional Alertmanager instances are configured (default behavior).
                       When provided, at least one configuration must be specified (minimum 1, maximum 10 items).
-                      Each entry must have a unique name field, which serves as the map key for server-side apply.
+                      Each entry must have a unique name field.
                     items:
                       description: |-
                         AdditionalAlertmanagerConfig represents configuration for additional Alertmanager instances.
@@ -1325,7 +1324,7 @@ spec:
                             bearerToken:
                               description: |-
                                 bearerToken defines the secret reference containing the bearer token.
-                                Required when type is "BearerToken", forbidden otherwise.
+                                Required when type is "BearerToken".
                                 The secret must exist in the openshift-monitoring namespace.
                               properties:
                                 key:
@@ -1361,19 +1360,16 @@ spec:
                             type:
                               description: |-
                                 type specifies the authentication type to use.
-                                Valid values are "None" (no authentication) and "BearerToken" (bearer token authentication).
-                                When set to None, no authentication credentials are sent.
+                                Valid value is "BearerToken" (bearer token authentication).
                                 When set to BearerToken, the bearerToken field must be specified.
                               enum:
-                              - None
                               - BearerToken
                               type: string
                           required:
                           - type
                           type: object
                           x-kubernetes-validations:
-                          - message: bearerToken is required when type is BearerToken,
-                              and forbidden otherwise
+                          - message: bearerToken is required when type is BearerToken
                             rule: 'has(self.type) && self.type == ''BearerToken''
                               ? has(self.bearerToken) : !has(self.bearerToken)'
                         name:
@@ -1448,7 +1444,8 @@ spec:
                         timeoutSeconds:
                           description: |-
                             timeoutSeconds defines the timeout in seconds for requests to Alertmanager.
-                            When omitted, the default is 10 seconds.
+                            When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time.
+                            Currently the default is 10 seconds.
                             Minimum value is 1 second.
                             Maximum value is 600 seconds (10 minutes).
                           format: int32
@@ -1763,7 +1760,8 @@ spec:
                         remoteTimeoutSeconds:
                           description: |-
                             remoteTimeoutSeconds is the timeout in seconds for requests to the remote write endpoint.
-                            When omitted, the default is 30 seconds.
+                            When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time.
+                            Currently the default is 30 seconds.
                             Minimum value is 1 second.
                             Maximum value is 600 seconds (10 minutes).
                           format: int32
@@ -1789,9 +1787,36 @@ spec:
                             Minimum of 1 and maximum of 10 relabeling rules can be specified.
                             Each rule must have a unique name.
                           items:
-                            description: RelabelConfig represents a relabeling rule.
+                            description: |-
+                              RelabelConfig represents a relabeling rule.
+                              Exactly one action-specific configuration must be specified based on the action type.
                             properties:
                               action:
+                                allOf:
+                                - enum:
+                                  - Replace
+                                  - Keep
+                                  - Drop
+                                  - HashMod
+                                  - LabelMap
+                                  - LabelDrop
+                                  - LabelKeep
+                                  - Lowercase
+                                  - Uppercase
+                                  - KeepEqual
+                                  - DropEqual
+                                - enum:
+                                  - Replace
+                                  - Keep
+                                  - Drop
+                                  - HashMod
+                                  - LabelMap
+                                  - LabelDrop
+                                  - LabelKeep
+                                  - Lowercase
+                                  - Uppercase
+                                  - KeepEqual
+                                  - DropEqual
                                 description: |-
                                   action is the action to perform on the matched labels.
                                   Valid actions are:
@@ -1802,15 +1827,89 @@ spec:
                                     - LabelMap: Copies labels matching regex to new label names derived from replacement.
                                     - LabelDrop: Drops labels matching regex.
                                     - LabelKeep: Keeps only labels matching regex.
-                                enum:
-                                - Replace
-                                - Keep
-                                - Drop
-                                - HashMod
-                                - LabelMap
-                                - LabelDrop
-                                - LabelKeep
+                                    - Lowercase: Converts the target label value to lowercase. Requires Prometheus >= v2.36.0.
+                                    - Uppercase: Converts the target label value to uppercase. Requires Prometheus >= v2.36.0.
+                                    - KeepEqual: Keeps only metrics where the source label value equals the target label value. Requires Prometheus >= v2.41.0.
+                                    - DropEqual: Drops metrics where the source label value equals the target label value. Requires Prometheus >= v2.41.0.
                                 type: string
+                              dropEqual:
+                                description: |-
+                                  dropEqual configures the DropEqual action.
+                                  Required when action is DropEqual.
+                                  Requires Prometheus >= v2.41.0.
+                                properties:
+                                  targetLabel:
+                                    description: |-
+                                      targetLabel is the target label name where the result is written.
+                                      Must be between 1 and 128 characters in length.
+                                    maxLength: 128
+                                    minLength: 1
+                                    type: string
+                                required:
+                                - targetLabel
+                                type: object
+                              hashMod:
+                                description: |-
+                                  hashMod configures the HashMod action.
+                                  Required when action is HashMod.
+                                properties:
+                                  targetLabel:
+                                    description: |-
+                                      targetLabel is the target label name where the result is written.
+                                      Must be between 1 and 128 characters in length.
+                                    maxLength: 128
+                                    minLength: 1
+                                    type: string
+                                required:
+                                - targetLabel
+                                type: object
+                              keepEqual:
+                                description: |-
+                                  keepEqual configures the KeepEqual action.
+                                  Required when action is KeepEqual.
+                                  Requires Prometheus >= v2.41.0.
+                                properties:
+                                  targetLabel:
+                                    description: |-
+                                      targetLabel is the target label name where the result is written.
+                                      Must be between 1 and 128 characters in length.
+                                    maxLength: 128
+                                    minLength: 1
+                                    type: string
+                                required:
+                                - targetLabel
+                                type: object
+                              labelMap:
+                                description: |-
+                                  labelMap configures the LabelMap action.
+                                  Required when action is LabelMap.
+                                properties:
+                                  replacement:
+                                    description: |-
+                                      replacement value used to derive new label names from labels matching the regex.
+                                      Regex capture groups are available (e.g., $1, $2).
+                                      When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time.
+                                      The default value is "$1" (the first capture group).
+                                      Must be at most 255 characters in length.
+                                    maxLength: 255
+                                    type: string
+                                type: object
+                              lowercase:
+                                description: |-
+                                  lowercase configures the Lowercase action.
+                                  Required when action is Lowercase.
+                                  Requires Prometheus >= v2.36.0.
+                                properties:
+                                  targetLabel:
+                                    description: |-
+                                      targetLabel is the target label name where the result is written.
+                                      Must be between 1 and 128 characters in length.
+                                    maxLength: 128
+                                    minLength: 1
+                                    type: string
+                                required:
+                                - targetLabel
+                                type: object
                               name:
                                 description: |-
                                   name is a unique identifier for this relabel configuration.
@@ -1833,16 +1932,31 @@ spec:
                                 maxLength: 1000
                                 minLength: 1
                                 type: string
-                              replacement:
+                              replace:
                                 description: |-
-                                  replacement value against which a Replace action is performed if the
-                                  regular expression matches. Regex capture groups are available (e.g., $1, $2).
-                                  When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time.
-                                  The default value is "$1" (the first capture group).
-                                  Setting to an empty string ("") explicitly clears the target label value.
-                                  Must be at most 255 characters in length.
-                                maxLength: 255
-                                type: string
+                                  replace configures the Replace action.
+                                  Required when action is Replace.
+                                properties:
+                                  replacement:
+                                    description: |-
+                                      replacement value against which a Replace action is performed if the
+                                      regular expression matches. Regex capture groups are available (e.g., $1, $2).
+                                      When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time.
+                                      The default value is "$1" (the first capture group).
+                                      Setting to an empty string ("") explicitly clears the target label value.
+                                      Must be at most 255 characters in length.
+                                    maxLength: 255
+                                    type: string
+                                  targetLabel:
+                                    description: |-
+                                      targetLabel is the target label name where the result is written.
+                                      Must be between 1 and 128 characters in length.
+                                    maxLength: 128
+                                    minLength: 1
+                                    type: string
+                                required:
+                                - targetLabel
+                                type: object
                               separator:
                                 description: |-
                                   separator is the character sequence used to join source label values.
@@ -1856,44 +1970,62 @@ spec:
                               sourceLabels:
                                 description: |-
                                   sourceLabels specifies which label names to extract from each series for this relabeling rule.
-                                  Each entry must be a valid label name (non-empty).
                                   The values of these labels are joined together using the configured separator,
-                                  and the resulting string is then matched against the regular expression for
-                                  the replace, keep, or drop actions.
+                                  and the resulting string is then matched against the regular expression.
                                   If a referenced label does not exist on a series, Prometheus substitutes an empty string.
                                   When omitted, the rule operates without extracting source labels (useful for actions like labelmap).
                                   Minimum of 1 and maximum of 10 source labels can be specified, each between 1 and 128 characters.
                                   Each entry must be unique.
+                                  Label names beginning with "__" (two underscores) are reserved for internal Prometheus use and are not allowed.
+                                  Label names SHOULD match the regex [a-zA-Z_][a-zA-Z0-9_]* for best compatibility.
+                                  While Prometheus supports UTF-8 characters in label names (since v3.0.0), using the recommended character set
+                                  ensures better compatibility with the wider ecosystem (tooling, third-party instrumentation, etc.).
                                 items:
                                   maxLength: 128
                                   minLength: 1
                                   type: string
+                                  x-kubernetes-validations:
+                                  - message: label names beginning with '__' (two
+                                      underscores) are reserved for internal Prometheus
+                                      use and are not allowed
+                                    rule: '!self.startsWith(''__'')'
                                 maxItems: 10
                                 minItems: 1
                                 type: array
                                 x-kubernetes-list-type: set
-                              targetLabel:
+                              uppercase:
                                 description: |-
-                                  targetLabel is the target label name where the result is written.
-                                  Required for `Replace`, `HashMod`, `Lowercase`, `Uppercase`,`KeepEqual` and `DropEqual` actions.
-                                  Must be between 1 and 128 characters in length when specified.
-                                maxLength: 128
-                                minLength: 1
-                                type: string
+                                  uppercase configures the Uppercase action.
+                                  Required when action is Uppercase.
+                                  Requires Prometheus >= v2.36.0.
+                                properties:
+                                  targetLabel:
+                                    description: |-
+                                      targetLabel is the target label name where the result is written.
+                                      Must be between 1 and 128 characters in length.
+                                    maxLength: 128
+                                    minLength: 1
+                                    type: string
+                                required:
+                                - targetLabel
+                                type: object
                             required:
                             - action
                             - name
                             type: object
                             x-kubernetes-validations:
-                            - message: targetLabel is required when action is Replace,
-                                HashMod, Lowercase, Uppercase, KeepEqual or DropEqual,
-                                and forbidden otherwise
-                              rule: 'self.action in [''Replace'', ''HashMod'', ''Lowercase'',
-                                ''Uppercase'', ''KeepEqual'', ''DropEqual''] ? (has(self.targetLabel)
-                                && size(self.targetLabel) > 0) : !has(self.targetLabel)'
-                            - message: replacement is only valid when action is Replace
-                                or LabelMap
-                              rule: self.action in ['Replace', 'LabelMap'] || !has(self.replacement)
+                            - message: exactly one action-specific configuration must
+                                be specified and must match the action type
+                              rule: '(self.action == ''Replace'' ? has(self.replace)
+                                : !has(self.replace)) && (self.action == ''HashMod''
+                                ? has(self.hashMod) : !has(self.hashMod)) && (self.action
+                                == ''Lowercase'' ? has(self.lowercase) : !has(self.lowercase))
+                                && (self.action == ''Uppercase'' ? has(self.uppercase)
+                                : !has(self.uppercase)) && (self.action == ''KeepEqual''
+                                ? has(self.keepEqual) : !has(self.keepEqual)) && (self.action
+                                == ''DropEqual'' ? has(self.dropEqual) : !has(self.dropEqual))
+                                && (self.action == ''LabelMap'' ? has(self.labelMap)
+                                : !has(self.labelMap))'
                           maxItems: 10
                           minItems: 1
                           type: array

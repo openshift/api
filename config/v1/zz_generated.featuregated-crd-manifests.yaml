@@ -197,6 +197,28 @@ consoles.config.openshift.io:
   TopLevelFeatureGates: []
   Version: v1
 
+controllermanagers.config.openshift.io:
+  Annotations:
+    release.openshift.io/bootstrap-required: "true"
+  ApprovedPRNumber: https://github.com/openshift/api/pull/2668
+  CRDName: controllermanagers.config.openshift.io
+  Capability: ""
+  Category: ""
+  FeatureGates: []
+  FilenameOperatorName: config-operator
+  FilenameOperatorOrdering: "01"
+  FilenameRunLevel: "0000_10"
+  GroupName: config.openshift.io
+  HasStatus: true
+  KindName: ControllerManager
+  Labels: {}
+  PluralName: controllermanagers
+  PrinterColumns: []
+  Scope: Cluster
+  ShortNames: null
+  TopLevelFeatureGates: []
+  Version: v1
+
 dnses.config.openshift.io:
   Annotations:
     release.openshift.io/bootstrap-required: "true"

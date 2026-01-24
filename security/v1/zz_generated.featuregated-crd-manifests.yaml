@@ -36,6 +36,10 @@ securitycontextconstraints.security.openshift.io:
     jsonPath: .fsGroup.type
     name: FSGroup
     type: string
+  - description: Strategy that will dictate what RunAsGroup is used by the SecurityContext
+    jsonPath: .runAsGroup.type
+    name: RunAsGroup
+    type: string
   - description: Strategy that will dictate what supplemental groups are used by the
       SecurityContext
     jsonPath: .supplementalGroups.type

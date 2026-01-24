@@ -144,6 +144,29 @@ func (RangeAllocationList) SwaggerDoc() map[string]string {
 	return map_RangeAllocationList
 }
 
+var map_RunAsGroupIDRange = map[string]string{
+	"":    "RunAsGroupIDRange provides a min/max of an allowed range of group IDs for RunAsGroup strategy.",
+	"min": "min is the start of the range, inclusive.",
+	"max": "max is the end of the range, inclusive.",
+}
+
+func (RunAsGroupIDRange) SwaggerDoc() map[string]string {
+	return map_RunAsGroupIDRange
+}
+
+var map_RunAsGroupStrategyOptions = map[string]string{
+	"":            "RunAsGroupStrategyOptions defines the strategy type and options used to create the strategy.",
+	"type":        "type is the strategy that will dictate what RunAsGroup is used in the SecurityContext. Valid values are \"MustRunAs\", \"MustRunAsRange\", and \"RunAsAny\".",
+	"gid":         "gid is the group id that containers must run as. Required for the MustRunAs strategy if not using namespace/service account allocated gids.",
+	"gidRangeMin": "gidRangeMin defines the min value for a strategy that allocates by range.",
+	"gidRangeMax": "gidRangeMax defines the max value for a strategy that allocates by range.",
+	"ranges":      "ranges are the allowed ranges of gids.  If you would like to force a single gid then supply a single range with the same start and end. When omitted, any gid is allowed (equivalent to RunAsAny strategy).",
+}
+
+func (RunAsGroupStrategyOptions) SwaggerDoc() map[string]string {
+	return map_RunAsGroupStrategyOptions
+}
+
 var map_RunAsUserStrategyOptions = map[string]string{
 	"":            "RunAsUserStrategyOptions defines the strategy type and any options used to create the strategy.",
 	"type":        "type is the strategy that will dictate what RunAsUser is used in the SecurityContext.",
@@ -188,6 +211,7 @@ var map_SecurityContextConstraints = map[string]string{
 	"runAsUser":                       "runAsUser is the strategy that will dictate what RunAsUser is used in the SecurityContext.",
 	"supplementalGroups":              "supplementalGroups is the strategy that will dictate what supplemental groups are used by the SecurityContext.",
 	"fsGroup":                         "fsGroup is the strategy that will dictate what fs group is used by the SecurityContext.",
+	"runAsGroup":                      "runAsGroup is the strategy that will dictate what RunAsGroup is used in the SecurityContext. When omitted, the RunAsGroup strategy will not be enforced and containers may run with any group ID.",
 	"readOnlyRootFilesystem":          "readOnlyRootFilesystem when set to true will force containers to run with a read only root file system.  If the container specifically requests to run with a non-read only root file system the SCC should deny the pod. If set to false the container may run with a read only root file system if it wishes but it will not be forced to.",
 	"users":                           "The users who have permissions to use this security context constraints",
 	"groups":                          "The groups that have permission to use this security context constraints",

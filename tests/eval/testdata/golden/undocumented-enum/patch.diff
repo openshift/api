@@ -1,0 +1,17 @@
+diff --git a/config/v1/types_console.go b/config/v1/types_console.go
+--- a/config/v1/types_console.go
++++ b/config/v1/types_console.go
+@@ -33,7 +33,13 @@ type ConsoleSpec struct {
+ // ConsoleSpec is the specification of the desired behavior of the Console.
+ type ConsoleSpec struct {
+ 	// +optional
+ 	Authentication ConsoleAuthentication `json:"authentication"`
++
++	// theme specifies the console color theme.
++	// +optional
++	// +kubebuilder:validation:Enum=Light;Dark
++ // When omitted the default theme is used.
++	Theme string `json:"theme,omitempty"`
+ }
+ 
+ // ConsoleStatus defines the observed status of the Console.

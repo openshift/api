@@ -1,0 +1,4 @@
+optional field customLogoURL does not explain behavior when omitted
+missing URL validation pattern for customLogoURL
+missing FeatureGate for new field on stable API
+missing length validation for customLogoURL

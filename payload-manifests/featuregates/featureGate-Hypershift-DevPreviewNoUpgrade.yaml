@@ -119,6 +119,12 @@
                         "name": "ClientsPreferCBOR"
                     },
                     {
+                        "name": "ClusterAPIComputeInstall"
+                    },
+                    {
+                        "name": "ClusterAPIControlPlaneInstall"
+                    },
+                    {
                         "name": "ClusterAPIInstallIBMCloud"
                     },
                     {

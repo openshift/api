@@ -18,6 +18,12 @@
                         "name": "ClientsAllowCBOR"
                     },
                     {
+                        "name": "ClusterAPIComputeInstall"
+                    },
+                    {
+                        "name": "ClusterAPIControlPlaneInstall"
+                    },
+                    {
                         "name": "ClusterAPIInstall"
                     },
                     {

@@ -2,7 +2,7 @@ apiVersion: apiextensions.k8s.io/v1 # Hack because controller-gen complains if w
 name: "APIServer"
 crdName: apiservers.config.openshift.io
 featureGates:
-- KMSEncryptionProvider
+  - KMSEncryptionProvider
 tests:
   onCreate:
     - name: Should be able to create encrypt with KMS for AWS with valid values
@@ -64,7 +64,7 @@ tests:
             type: KMS
             kms: {}
       expectedError: "spec.encryption.kms.type: Required value"
-    - name: Should fail to create with kms type AWS but without aws config 
+    - name: Should fail to create with kms type AWS but without aws config
       initial: |
         apiVersion: config.openshift.io/v1
         kind: APIServer

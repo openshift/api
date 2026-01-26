@@ -1,0 +1,80 @@
+---
+# ValidatingAdmissionPolicy that dynamically validates PKI certificate override names
+# against registered PKICertificateDefinition resources
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicy
+metadata:
+  name: validate-pki-certificate-overrides.config.openshift.io
+spec:
+  # Only validate PKI resources during CREATE/UPDATE
+  matchConstraints:
+    resourceRules:
+    - apiGroups: ["config.openshift.io"]
+      apiVersions: ["v1alpha1"]
+      operations: ["CREATE", "UPDATE"]
+      resources: ["pkis"]
+
+  # Use PKICertificateDefinition resources as the parameter source
+  paramKind:
+    apiVersion: config.openshift.io/v1alpha1
+    kind: PKICertificateDefinition
+
+  # Validate each certificate override references a registered certificate name
+  validations:
+  # Skip validation if no overrides are present
+  - expression: "!has(object.spec.certificateManagement.custom.overrides) || size(object.spec.certificateManagement.custom.overrides) == 0"
+    reason: Skip
+
+  # Build list of all valid certificate names from all PKICertificateDefinition resources
+  - expression: |
+      has(params) && has(params.spec) && has(params.spec.certificates) ?
+        params.spec.certificates.map(cert, cert.name) : []
+    messageExpression: "'No PKICertificateDefinition found for component ' + (has(params.spec) ? params.spec.component : 'unknown')"
+    reason: Invalid
+
+  # Validate each override.certificateName exists in a PKICertificateDefinition
+  - expression: |
+      !has(object.spec.certificateManagement.custom.overrides) ||
+      object.spec.certificateManagement.custom.overrides.all(override,
+        params.exists(p,
+          has(p.spec) && has(p.spec.certificates) &&
+          p.spec.certificates.exists(cert, cert.name == override.certificateName)
+        )
+      )
+    message: "certificateName in overrides must reference a certificate registered in a PKICertificateDefinition resource"
+    reason: Invalid
+
+  # Validate that certificate names follow DNS subdomain rules
+  - expression: |
+      !has(object.spec.certificateManagement.custom.overrides) ||
+      object.spec.certificateManagement.custom.overrides.all(override,
+        override.certificateName.matches('^[a-z0-9]([-a-z0-9]*[a-z0-9])?$')
+      )
+    message: "certificateName must be a valid DNS subdomain (lowercase alphanumeric with hyphens)"
+    reason: Invalid
+
+---
+# ValidatingAdmissionPolicyBinding that applies the validation policy
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicyBinding
+metadata:
+  name: validate-pki-certificate-overrides.config.openshift.io
+spec:
+  policyName: validate-pki-certificate-overrides.config.openshift.io
+  validationActions: ["Deny"]
+
+  # Bind to all PKICertificateDefinition resources in openshift-config namespace
+  paramRef:
+    name: ""  # Empty means all resources of the paramKind
+    namespace: openshift-config
+    # If no PKICertificateDefinition resources exist, allow the PKI resource
+    # This prevents blocking PKI resource creation before any components have registered
+    parameterNotFoundAction: Allow
+
+  # Match all PKI resources
+  matchResources:
+    namespaceSelector:
+      matchExpressions:
+      - key: kubernetes.io/metadata.name
+        operator: In
+        values: [""]  # Empty string matches cluster-scoped resources

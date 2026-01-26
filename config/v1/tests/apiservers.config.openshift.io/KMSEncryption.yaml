@@ -3,6 +3,7 @@ name: "APIServer"
 crdName: apiservers.config.openshift.io
 featureGates:
 - KMSEncryption
+- -KMSEncryptionProvider
 tests:
   onCreate:
     - name: Should be able to create with KMS type without kms config

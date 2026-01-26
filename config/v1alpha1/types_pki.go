@@ -50,29 +50,23 @@ type PKICertificateManagement struct {
 	// mode determines how PKI configuration is managed.
 	// Valid values are "Unmanaged", "Default", and "Custom".
 	//
-	// - Unmanaged: Components use their existing hardcoded certificate generation behavior, exactly as if this feature did not exist.
-	//   Each component generates certificates using whatever parameters it was using before this feature.
-	//   While most components use RSA 2048, some may use different parameters.
-	//   Use of this mode might prevent upgrading to the next major OpenShift release.
-	// + Default when upgrading from a version without this feature to ensure zero behavior change.
+	// When set to Unmanaged, components use their existing hardcoded certificate
+	// generation behavior, exactly as if this feature did not exist. Each component
+	// generates certificates using whatever parameters it was using before this
+	// feature. While most components use RSA 2048, some may use different
+	// parameters. Use of this mode might prevent upgrading to the next major
+	// OpenShift release.
 	//
-	// - Default: Use OpenShift-recommended best practices for certificate generation.
-	//   The specific parameters may evolve across OpenShift releases to adopt improved cryptographic standards.
-	//   In the initial release, this matches Unmanaged behavior for each component.
-	//   In future releases, this may adopt ECDSA or larger RSA keys based on industry best practices.
-	//   Recommended for most customers who want to benefit from security improvements automatically.
-	// + Default when installing a fresh cluster.
+	// When set to Default, OpenShift-recommended best practices for certificate
+	// generation are applied. The specific parameters may evolve across OpenShift
+	// releases to adopt improved cryptographic standards. In the initial release,
+	// this matches Unmanaged behavior for each component. In future releases, this
+	// may adopt ECDSA or larger RSA keys based on industry best practices.
+	// Recommended for most customers who want to benefit from security improvements
+	// automatically.
 	//
-	// - Custom: Administrator explicitly configures cryptographic parameters.
-	//   Use the custom field to specify certificate generation parameters.
-	// + Recommended for customers with specific compliance requirements or organizational PKI policies.
-	//
-	// + When upgrading from a version without this feature:
-	// + - The PKI resource is created with mode: Unmanaged to ensure zero behavior change.
-	//
-	// + When installing a fresh cluster:
-	// + - If no PKI configuration is provided in install-config.yaml, mode: Default is used.
-	// + - If PKI configuration is provided in install-config.yaml, mode: Custom is used with the specified configuration.
+	// When set to Custom, the certificate management parameters can be set
+	// explicitly. Use the custom field to specify certificate generation parameters.
 	//
 	// +required
 	// +unionDiscriminator
@@ -204,6 +198,16 @@ type ECDSAKeyConfig struct {
 type CategoryCertificateConfig struct {
 	// category identifies the certificate category.
 	// Valid values are "SignerCertificate", "ServingCertificate", and "ClientCertificate".
+	//
+	// When set to SignerCertificate, the configuration applies to certificate authority (CA) certificates
+	// that sign other certificates.
+	//
+	// When set to ServingCertificate, the configuration applies to TLS server certificates
+	// used to serve HTTPS endpoints.
+	//
+	// When set to ClientCertificate, the configuration applies to client authentication certificates
+	// used to authenticate to servers.
+	//
 	// +required
 	Category CertificateCategory `json:"category,omitempty"`
 

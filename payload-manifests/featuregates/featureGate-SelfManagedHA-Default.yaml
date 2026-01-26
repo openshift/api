@@ -154,6 +154,9 @@
                         "name": "IrreconcilableMachineConfig"
                     },
                     {
+                        "name": "KMSEncryption"
+                    },
+                    {
                         "name": "KMSEncryptionProvider"
                     },
                     {

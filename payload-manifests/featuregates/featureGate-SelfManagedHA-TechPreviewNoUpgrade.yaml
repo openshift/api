@@ -45,6 +45,9 @@
                         "name": "IngressControllerDynamicConfigurationManager"
                     },
                     {
+                        "name": "KMSEncryptionProvider"
+                    },
+                    {
                         "name": "MachineAPIOperatorDisableMachineHealthCheckController"
                     },
                     {
@@ -221,7 +224,7 @@
                         "name": "IrreconcilableMachineConfig"
                     },
                     {
-                        "name": "KMSEncryptionProvider"
+                        "name": "KMSEncryption"
                     },
                     {
                         "name": "KMSv1"

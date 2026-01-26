@@ -9533,7 +9533,7 @@
       }
     },
     "com.github.openshift.api.config.v1.OIDCClientConfig": {
-      "description": "OIDCClientConfig configures how platform clients interact with identity providers as an authentication method",
+      "description": "OIDCClientConfig configures how platform clients interact with identity providers as an authentication method.",
       "type": "object",
       "required": [
         "componentName",
@@ -10252,7 +10252,7 @@
           "$ref": "#/definitions/com.github.openshift.api.config.v1.PowerVSPlatformSpec"
         },
         "type": {
-          "description": "type is the underlying infrastructure provider for the cluster. This value controls whether infrastructure automation such as service load balancers, dynamic volume provisioning, machine creation and deletion, and other integrations are enabled. If None, no infrastructure automation is enabled. Allowed values are \"AWS\", \"Azure\", \"BareMetal\", \"GCP\", \"Libvirt\", \"OpenStack\", \"VSphere\", \"oVirt\", \"KubeVirt\", \"EquinixMetal\", \"PowerVS\", \"AlibabaCloud\", \"Nutanix\" and \"None\". Individual components may not support all platforms, and must handle unrecognized platforms as None if they do not support that platform.",
+          "description": "type is the underlying infrastructure provider for the cluster. This value controls whether infrastructure automation such as service load balancers, dynamic volume provisioning, machine creation and deletion, and other integrations are enabled. If None, no infrastructure automation is enabled. Allowed values are \"AWS\", \"Azure\", \"BareMetal\", \"GCP\", \"Libvirt\", \"OpenStack\", \"VSphere\", \"oVirt\", \"IBMCloud\", \"KubeVirt\", \"EquinixMetal\", \"PowerVS\", \"AlibabaCloud\", \"Nutanix\", \"External\", and \"None\". Individual components may not support all platforms, and must handle unrecognized platforms as None if they do not support that platform.",
           "type": "string",
           "default": ""
         },
@@ -10547,7 +10547,7 @@
           "default": ""
         },
         "prefix": {
-          "description": "prefix is an optional field that configures the prefix that will be applied to the cluster identity attribute during the process of mapping JWT claims to cluster identity attributes.\n\nWhen omitted (\"\"), no prefix is applied to the cluster identity attribute.\n\nExample: if `prefix` is set to \"myoidc:\" and the `claim` in JWT contains an array of strings \"a\", \"b\" and  \"c\", the mapping will result in an array of string \"myoidc:a\", \"myoidc:b\" and \"myoidc:c\".",
+          "description": "prefix is an optional field that configures the prefix that will be applied to the cluster identity attribute during the process of mapping JWT claims to cluster identity attributes.\n\nWhen omitted (\"\"), no prefix is applied to the cluster identity attribute.\n\nExample: if `prefix` is set to \"myoidc:\" and the `claim` in JWT contains an array of strings \"a\", \"b\" and \"c\", the mapping will result in an array of string \"myoidc:a\", \"myoidc:b\" and \"myoidc:c\".",
           "type": "string",
           "default": ""
         }
@@ -14677,11 +14677,15 @@
           "x-kubernetes-list-type": "map"
         },
         "method": {
-          "description": "method is the fencing method used by this agent (e.g., \"redfish\", \"ipmi\", \"fence_aws\"). This is extracted from the pacemaker resource agent type.",
-          "type": "string"
+          "description": "method is the fencing method used by this agent. Valid values are \"Redfish\" and \"IPMI\". Redfish is a standard RESTful API for server management. IPMI (Intelligent Platform Management Interface) is a hardware management interface.\n\nPossible enum values:\n - `\"IPMI\"` uses IPMI (Intelligent Platform Management Interface), a hardware management interface.\n - `\"Redfish\"` uses Redfish, a standard RESTful API for server management.",
+          "type": "string",
+          "enum": [
+            "IPMI",
+            "Redfish"
+          ]
         },
         "name": {
-          "description": "name is the pacemaker resource name of the fencing agent (e.g., \"master-0_redfish\"). The name consists of the target node name followed by an underscore and the fencing method. Currently only \"redfish\" is supported as a fencing method. The node name portion must be a valid RFC 1123 subdomain (max 253 chars). Maximum total length is 261 characters (253 + 1 + 7 for \"_redfish\").",
+          "description": "name is the unique identifier for this fencing agent (e.g., \"master-0_redfish\"). The name must be unique within the fencingAgents array for this node. It may contain alphanumeric characters, dots, hyphens, and underscores. Maximum length is 300 characters, providing headroom beyond the typical format of <node_name>_<type> (253 for RFC 1123 node name + 1 underscore + type).",
           "type": "string"
         }
       }
@@ -14721,14 +14725,14 @@
       "type": "object",
       "required": [
         "conditions",
-        "name",
+        "nodeName",
         "addresses",
         "resources",
         "fencingAgents"
       ],
       "properties": {
         "addresses": {
-          "description": "addresses is a list of IP addresses reachable to the node. Pacemaker allows multiple IP addresses for Corosync communication between nodes. The first address in this list is used for IP-based peer URLs for etcd membership. Each address must be a valid global unicast IPv4 or IPv6 address in canonical form (e.g., \"192.168.1.1\" not \"192.168.001.001\", or \"2001:db8::1\" not \"2001:0db8::1\"). This excludes loopback, link-local, and multicast addresses.",
+          "description": "addresses is a list of IP addresses for the node. Pacemaker allows multiple IP addresses for Corosync communication between nodes. The first address in this list is used for IP-based peer URLs for etcd membership. Each address must be a valid global unicast IPv4 or IPv6 address in canonical form (e.g., \"192.168.1.1\" not \"192.168.001.001\", or \"2001:db8::1\" not \"2001:0db8::1\"). This excludes loopback, link-local, and multicast addresses.",
           "type": "array",
           "items": {
             "default": {},
@@ -14749,7 +14753,7 @@
           "x-kubernetes-list-type": "map"
         },
         "fencingAgents": {
-          "description": "fencingAgents contains the status of fencing agents that can fence this node. Unlike resources (which are scheduled to run on this node), fencing agents are mapped to the node they can fence (their target), not the node where monitoring operations run. Each fencing agent entry includes the agent name, fencing method, and health conditions. A node is considered fence-capable if at least one fencing agent is healthy. Expected to have 1 fencing agent per node, but up to 8 are supported for redundancy.",
+          "description": "fencingAgents contains the status of fencing agents that can fence this node. Unlike resources (which are scheduled to run on this node), fencing agents are mapped to the node they can fence (their target), not the node where monitoring operations run. Each fencing agent entry includes a unique name, fencing type, target node, and health conditions. A node is considered fence-capable if at least one fencing agent is healthy. Expected to have 1 fencing agent per node, but up to 8 are supported for redundancy. Names must be unique within this array.",
           "type": "array",
           "items": {
             "default": {},
@@ -14760,8 +14764,8 @@
           ],
           "x-kubernetes-list-type": "map"
         },
-        "name": {
-          "description": "name is the name of the node. This is expected to match the Kubernetes node's name, which must be a lowercase RFC 1123 subdomain consisting of lowercase alphanumeric characters, '-' or '.', starting and ending with an alphanumeric character, and be at most 253 characters in length.",
+        "nodeName": {
+          "description": "nodeName is the name of the node. This is expected to match the Kubernetes node's name, which must be a lowercase RFC 1123 subdomain consisting of lowercase alphanumeric characters, '-' or '.', starting and ending with an alphanumeric character, and be at most 253 characters in length.",
           "type": "string"
         },
         "resources": {
@@ -14837,10 +14841,11 @@
           "description": "nodes provides detailed status for each control-plane node in the Pacemaker cluster. While Pacemaker supports up to 32 nodes, the limit is set to 5 (max OpenShift control-plane nodes). For Two Node OpenShift with Fencing, exactly 2 nodes are expected in a healthy cluster. An empty list indicates a catastrophic failure where Pacemaker reports no nodes.",
           "type": "array",
           "items": {
+            "default": {},
             "$ref": "#/definitions/com.github.openshift.api.etcd.v1alpha1.PacemakerClusterNodeStatus"
           },
           "x-kubernetes-list-map-keys": [
-            "name"
+            "nodeName"
           ],
           "x-kubernetes-list-type": "map"
         }

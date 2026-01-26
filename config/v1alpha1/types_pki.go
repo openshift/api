@@ -180,10 +180,12 @@ type KeyConfig struct {
 // RSAKeyConfig specifies parameters for RSA key generation.
 type RSAKeyConfig struct {
 	// keySize specifies the size of RSA keys in bits.
-	// Valid values are 2048, 3072, and 4096.
+	// Valid values are multiples of 1024 from 2048 to 8192.
 	// +required
-	// +kubebuilder:validation:Enum=2048;3072;4096
 	// +kubebuilder:validation:Minimum=2048
+	// +kubebuilder:validation:Maximum=8192
+	// +kubebuilder:validation:MultipleOf=1024
+	// +kubebuilder:default=2048
 	KeySize int32 `json:"keySize,omitempty"`
 }
 

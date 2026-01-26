@@ -75,7 +75,6 @@ type PKICertificateManagement struct {
 	// + - If PKI configuration is provided in install-config.yaml, mode: Custom is used with the specified configuration.
 	//
 	// +required
-	// +kubebuilder:validation:Enum=Unmanaged;Default;Custom
 	// +unionDiscriminator
 	Mode PKICertificateManagementMode `json:"mode,omitempty"`
 
@@ -95,6 +94,7 @@ type CustomPKIPolicy struct {
 	PKIProfile `json:",inline"`
 }
 
+// +kubebuilder:validation:Enum=Unmanaged;Default;Custom
 type PKICertificateManagementMode string
 
 const (
@@ -167,7 +167,6 @@ type KeyConfig struct {
 	// algorithm specifies the key generation algorithm.
 	// Valid values are "RSA" and "ECDSA".
 	// +required
-	// +kubebuilder:validation:Enum=RSA;ECDSA
 	// +unionDiscriminator
 	Algorithm KeyAlgorithm `json:"algorithm,omitempty"`
 
@@ -199,7 +198,6 @@ type ECDSAKeyConfig struct {
 	// curve specifies the elliptic curve for ECDSA keys.
 	// Valid values are "P256", "P384", and "P521".
 	// +required
-	// +kubebuilder:validation:Enum=P256;P384;P521
 	Curve ECDSACurve `json:"curve,omitempty"`
 }
 
@@ -207,7 +205,6 @@ type CategoryCertificateConfig struct {
 	// category identifies the certificate category.
 	// Valid values are "SignerCertificate", "ServingCertificate", and "ClientCertificate".
 	// +required
-	// +kubebuilder:validation:Enum=SignerCertificate;ServingCertificate;ClientCertificate
 	Category CertificateCategory `json:"category,omitempty"`
 
 	// certificate specifies the configuration for this category
@@ -233,6 +230,7 @@ type CertificateOverride struct {
 	Certificate CertificateConfig `json:"certificate,omitzero"`
 }
 
+// +kubebuilder:validation:Enum=RSA;ECDSA
 type KeyAlgorithm string
 
 const (
@@ -240,6 +238,7 @@ const (
 	KeyAlgorithmECDSA KeyAlgorithm = "ECDSA"
 )
 
+// +kubebuilder:validation:Enum=P256;P384;P521
 type ECDSACurve string
 
 const (
@@ -248,6 +247,7 @@ const (
 	ECDSACurveP521 ECDSACurve = "P521"
 )
 
+// +kubebuilder:validation:Enum=SignerCertificate;ServingCertificate;ClientCertificate
 type CertificateCategory string
 
 const (

@@ -248,7 +248,7 @@ tests:
               bgpTopology: FullMesh
             ipsecConfig:
               mode: Disabled
-  - name: Should not allow changing bgpManagedConfig once set
+  - name: Should allow changing bgpManagedConfig after initial configuration
     initial: |
       apiVersion: operator.openshift.io/v1
       kind: Network
@@ -274,8 +274,25 @@ tests:
             bgpManagedConfig:
               asNumber: 65000
               bgpTopology: FullMesh
-    expectedError: "bgpManagedConfig can only be set once and is immutable thereafter"
-  - name: Should not allow removing bgpManagedConfig once configured
+    expected: |
+      apiVersion: operator.openshift.io/v1
+      kind: Network
+      spec:
+        disableNetworkDiagnostics: false
+        logLevel: Normal
+        operatorLogLevel: Normal
+        defaultNetwork:
+          ovnKubernetesConfig:
+            defaultNetworkTransport: NoOverlay
+            defaultNetworkNoOverlayOptions:
+              outboundSNAT: Enabled
+              routing: Managed
+            bgpManagedConfig:
+              asNumber: 65000
+              bgpTopology: FullMesh
+            ipsecConfig:
+              mode: Disabled
+  - name: Should allow removing bgpManagedConfig when routing is Unmanaged
     initial: |
       apiVersion: operator.openshift.io/v1
       kind: Network
@@ -298,4 +315,18 @@ tests:
             defaultNetworkNoOverlayOptions:
               outboundSNAT: Enabled
               routing: Unmanaged
-    expectedError: "bgpManagedConfig cannot be removed once configured"
+    expected: |
+      apiVersion: operator.openshift.io/v1
+      kind: Network
+      spec:
+        disableNetworkDiagnostics: false
+        logLevel: Normal
+        operatorLogLevel: Normal
+        defaultNetwork:
+          ovnKubernetesConfig:
+            defaultNetworkTransport: NoOverlay
+            defaultNetworkNoOverlayOptions:
+              outboundSNAT: Enabled
+              routing: Unmanaged
+            ipsecConfig:
+              mode: Disabled

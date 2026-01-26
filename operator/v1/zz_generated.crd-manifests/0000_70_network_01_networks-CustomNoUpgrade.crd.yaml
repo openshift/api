@@ -279,7 +279,7 @@ spec:
                           in no-overlay mode that specify routing="Managed" in their NoOverlayOptions.
                           It is required when DefaultNetworkNoOverlayOptions.Routing is set to "Managed".
                           When omitted, this means the user does not configure BGP for managed routing.
-                          This field can be set once, either at installation time or on day 2, and is immutable thereafter.
+                          This field can be set at installation time or on day 2, and can be modified at any time.
                         properties:
                           asNumber:
                             default: 64512
@@ -304,12 +304,6 @@ spec:
                         required:
                         - bgpTopology
                         type: object
-                        x-kubernetes-validations:
-                        - message: bgpManagedConfig can only be set once and is immutable
-                            thereafter
-                          optionalOldSelf: true
-                          rule: '!oldSelf.hasValue() || oldSelf.value().bgpTopology
-                            == '''' || self == oldSelf.value()'
                       defaultNetworkNoOverlayOptions:
                         description: |-
                           defaultNetworkNoOverlayOptions contains configuration for no-overlay mode for the default network.
@@ -747,9 +741,6 @@ spec:
                     - message: defaultNetworkNoOverlayOptions cannot be removed once
                         set
                       rule: '!has(oldSelf.defaultNetworkNoOverlayOptions) || has(self.defaultNetworkNoOverlayOptions)'
-                    - message: bgpManagedConfig cannot be removed once configured
-                      rule: '!has(oldSelf.bgpManagedConfig) || oldSelf.bgpManagedConfig.bgpTopology
-                        == '''' || has(self.bgpManagedConfig)'
                   type:
                     description: |-
                       type is the type of network

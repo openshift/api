@@ -409,7 +409,6 @@ type OpenShiftSDNConfig struct {
 // +openshift:validation:FeatureGateAwareXValidation:featureGate=NoOverlayMode,rule="!has(self.defaultNetworkNoOverlayOptions) || self.defaultNetworkNoOverlayOptions.routing != 'Managed' || has(self.bgpManagedConfig)",message="bgpManagedConfig is required when defaultNetworkNoOverlayOptions.routing is Managed"
 // +openshift:validation:FeatureGateAwareXValidation:featureGate=NoOverlayMode,rule="!has(oldSelf.defaultNetworkTransport) || oldSelf.defaultNetworkTransport == '' || has(self.defaultNetworkTransport)",message="defaultNetworkTransport cannot be removed once set to a non-empty value"
 // +openshift:validation:FeatureGateAwareXValidation:featureGate=NoOverlayMode,rule="!has(oldSelf.defaultNetworkNoOverlayOptions) || has(self.defaultNetworkNoOverlayOptions)",message="defaultNetworkNoOverlayOptions cannot be removed once set"
-// +openshift:validation:FeatureGateAwareXValidation:featureGate=NoOverlayMode,rule="!has(oldSelf.bgpManagedConfig) || oldSelf.bgpManagedConfig.bgpTopology == '' || has(self.bgpManagedConfig)",message="bgpManagedConfig cannot be removed once configured"
 type OVNKubernetesConfig struct {
 	// mtu is the MTU to use for the tunnel interface. This must be 100
 	// bytes smaller than the uplink mtu.
@@ -504,9 +503,8 @@ type OVNKubernetesConfig struct {
 	// in no-overlay mode that specify routing="Managed" in their NoOverlayOptions.
 	// It is required when DefaultNetworkNoOverlayOptions.Routing is set to "Managed".
 	// When omitted, this means the user does not configure BGP for managed routing.
-	// This field can be set once, either at installation time or on day 2, and is immutable thereafter.
+	// This field can be set at installation time or on day 2, and can be modified at any time.
 	// +openshift:enable:FeatureGate=NoOverlayMode
-	// +kubebuilder:validation:XValidation:rule="!oldSelf.hasValue() || oldSelf.value().bgpTopology == '' || self == oldSelf.value()",message="bgpManagedConfig can only be set once and is immutable thereafter",optionalOldSelf=true
 	// +optional
 	BGPManagedConfig BGPManagedConfig `json:"bgpManagedConfig,omitzero,omitempty"`
 }

@@ -33880,7 +33880,7 @@
       "type": "object",
       "properties": {
         "bgpManagedConfig": {
-          "description": "bgpManagedConfig configures the BGP properties for networks (default network or CUDNs) in no-overlay mode that specify routing=\"Managed\" in their NoOverlayOptions. It is required when DefaultNetworkNoOverlayOptions.Routing is set to \"Managed\". When omitted, this means the user does not configure BGP for managed routing. This field can be set once, either at installation time or on day 2, and is immutable thereafter.",
+          "description": "bgpManagedConfig configures the BGP properties for networks (default network or CUDNs) in no-overlay mode that specify routing=\"Managed\" in their NoOverlayOptions. It is required when DefaultNetworkNoOverlayOptions.Routing is set to \"Managed\". When omitted, this means the user does not configure BGP for managed routing. This field can be set at installation time or on day 2, and can be modified at any time.",
           "default": {},
           "$ref": "#/definitions/com.github.openshift.api.operator.v1.BGPManagedConfig"
         },

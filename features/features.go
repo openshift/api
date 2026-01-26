@@ -674,6 +674,14 @@ var (
 						enableIn(configv1.DevPreviewNoUpgrade, configv1.TechPreviewNoUpgrade).
 						mustRegister()
 
+	FeatureGateKMSEncryption = newFeatureGate("KMSEncryption").
+		reportProblemsToJiraComponent("kube-apiserver").
+		contactPerson("ardaguclu").
+		productScope(ocpSpecific).
+		enhancementPR("https://github.com/openshift/enhancements/pull/1900").
+		enableIn(configv1.DevPreviewNoUpgrade, configv1.TechPreviewNoUpgrade).
+		mustRegister()
+
 	FeatureGateHighlyAvailableArbiter = newFeatureGate("HighlyAvailableArbiter").
 						reportProblemsToJiraComponent("Two Node with Arbiter").
 						contactPerson("eggfoobar").

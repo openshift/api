@@ -22,7 +22,7 @@ import (
 	"go/ast"
 	"go/token"
 	"go/types"
-	"slices"
+	"sort"
 	"strings"
 
 	apiext "k8s.io/apiextensions-apiserver/pkg/apis/apiextensions/v1"
@@ -173,10 +173,10 @@ func applyMarkers(ctx *schemaContext, markerSet markers.MarkerValues, props *api
 		}
 	}
 
-	cmpPriority := func(i, j schemaMarkerWithName) int {
+	cmpPriority := func(markers []schemaMarkerWithName, i, j int) bool {
 		var iPriority, jPriority crdmarkers.ApplyPriority
 
-		switch m := i.SchemaMarker.(type) {
+		switch m := markers[i].SchemaMarker.(type) {
 		case crdmarkers.ApplyPriorityMarker:
 			iPriority = m.ApplyPriority()
 		case applyFirstMarker:
@@ -185,7 +185,7 @@ func applyMarkers(ctx *schemaContext, markerSet markers.MarkerValues, props *api
 			iPriority = crdmarkers.ApplyPriorityDefault
 		}
 
-		switch m := j.SchemaMarker.(type) {
+		switch m := markers[j].SchemaMarker.(type) {
 		case crdmarkers.ApplyPriorityMarker:
 			jPriority = m.ApplyPriority()
 		case applyFirstMarker:
@@ -194,10 +194,10 @@ func applyMarkers(ctx *schemaContext, markerSet markers.MarkerValues, props *api
 			jPriority = crdmarkers.ApplyPriorityDefault
 		}
 
-		return int(iPriority - jPriority)
+		return iPriority < jPriority
 	}
-	slices.SortStableFunc(markers, func(i, j schemaMarkerWithName) int { return cmpPriority(i, j) })
-	slices.SortStableFunc(itemsMarkers, func(i, j schemaMarkerWithName) int { return cmpPriority(i, j) })
+	sort.Slice(markers, func(i, j int) bool { return cmpPriority(markers, i, j) })
+	sort.Slice(itemsMarkers, func(i, j int) bool { return cmpPriority(itemsMarkers, i, j) })
 
 	for _, schemaMarker := range markers {
 		if err := schemaMarker.SchemaMarker.ApplyToSchema(props); err != nil {
@@ -419,6 +419,11 @@ func structToSchema(ctx *schemaContext, structType *ast.StructType) *apiext.JSON
 		ctx.pkg.AddError(loader.ErrFromNode(err, structType))
 		return props
 	}
+	atLeastOneOf, err := oneOfValuesToSet(ctx.info.Markers[crdmarkers.ValidationAtLeastOneOfPrefix])
+	if err != nil {
+		ctx.pkg.AddError(loader.ErrFromNode(err, structType))
+		return props
+	}
 
 	for _, field := range ctx.info.Fields {
 		// Skip if the field is not an inline field, ignoreUnexportedFields is true, and the field is not exported
@@ -465,16 +470,16 @@ func structToSchema(ctx *schemaContext, structType *ast.StructType) *apiext.JSON
 		case field.Markers.Get("kubebuilder:validation:Optional") != nil:
 			// explicitly optional - kubebuilder
 		case field.Markers.Get("kubebuilder:validation:Required") != nil:
-			if exactlyOneOf.Has(fieldName) || atMostOneOf.Has(fieldName) {
+			if exactlyOneOf.Has(fieldName) || atMostOneOf.Has(fieldName) || atLeastOneOf.Has(fieldName) {
 				ctx.pkg.AddError(loader.ErrFromNode(fmt.Errorf("field %s is part of OneOf constraint and cannot be marked as required", fieldName), structType))
 				return props
 			}
 			// explicitly required - kubebuilder
 			props.Required = append(props.Required, fieldName)
-		case field.Markers.Get("optional") != nil:
+		case field.Markers.Get("optional") != nil, field.Markers.Get("k8s:optional") != nil:
 			// explicitly optional - kubernetes
-		case field.Markers.Get("required") != nil:
-			if exactlyOneOf.Has(fieldName) || atMostOneOf.Has(fieldName) {
+		case field.Markers.Get("required") != nil, field.Markers.Get("k8s:required") != nil:
+			if exactlyOneOf.Has(fieldName) || atMostOneOf.Has(fieldName) || atLeastOneOf.Has(fieldName) {
 				ctx.pkg.AddError(loader.ErrFromNode(fmt.Errorf("field %s is part of OneOf constraint and cannot be marked as required", fieldName), structType))
 				return props
 			}
@@ -485,7 +490,7 @@ func structToSchema(ctx *schemaContext, structType *ast.StructType) *apiext.JSON
 		case defaultMode == "required":
 			// ...everything that's not inline / omitempty is required
 			if !inline && !omitEmpty {
-				if exactlyOneOf.Has(fieldName) || atMostOneOf.Has(fieldName) {
+				if exactlyOneOf.Has(fieldName) || atMostOneOf.Has(fieldName) || atLeastOneOf.Has(fieldName) {
 					ctx.pkg.AddError(loader.ErrFromNode(fmt.Errorf("field %s is part of OneOf constraint and must have omitempty tag", fieldName), structType))
 					return props
 				}
@@ -518,7 +523,7 @@ func structToSchema(ctx *schemaContext, structType *ast.StructType) *apiext.JSON
 	}
 
 	// Ensure the required fields are always listed alphabetically.
-	slices.Sort(props.Required)
+	sort.Strings(props.Required)
 
 	return props
 }
@@ -535,6 +540,11 @@ func oneOfValuesToSet(oneOfGroups []any) (sets.Set[string], error) {
 		case crdmarkers.AtMostOneOf:
 			if err := validateOneOfValues(vals...); err != nil {
 				return nil, fmt.Errorf("%s: %w", crdmarkers.ValidationAtMostOneOfPrefix, err)
+			}
+			set.Insert(vals...)
+		case crdmarkers.AtLeastOneOf:
+			if err := validateOneOfValues(vals...); err != nil {
+				return nil, fmt.Errorf("%s: %w", crdmarkers.ValidationAtLeastOneOfPrefix, err)
 			}
 			set.Insert(vals...)
 		default:

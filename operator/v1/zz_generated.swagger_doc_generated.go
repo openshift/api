@@ -1908,7 +1908,7 @@ func (NetworkStatus) SwaggerDoc() map[string]string {
 
 var map_NoOverlayOptions = map[string]string{
 	"":             "NoOverlayOptions contains configuration options for networks operating in no-overlay mode.",
-	"outboundSNAT": "outboundSNAT defines the SNAT behavior for outbound traffic from pods. Allowed values are \"Enabled\" and \"Disabled\". When set to \"Enabled\", SNAT is performed on outbound traffic from pods. When set to \"Disabled\", SNAT is not performed and pod IPs are preserved in outbound traffic. This field is required when the network operates in no-overlay mode. This field must be set to \"Enabled\" at installation time and can be changed afterwards.",
+	"outboundSNAT": "outboundSNAT defines the SNAT behavior for outbound traffic from pods. Allowed values are \"Enabled\" and \"Disabled\". When set to \"Enabled\", SNAT is performed on outbound traffic from pods. When set to \"Disabled\", SNAT is not performed and pod IPs are preserved in outbound traffic. This field is required when the network operates in no-overlay mode. This field can be set to any value at installation time and can be changed afterwards.",
 	"routing":      "routing specifies whether the pod network routing is managed by OVN-Kubernetes or users. Allowed values are \"Managed\" and \"Unmanaged\". When set to \"Managed\", OVN-Kubernetes manages the pod network routing configuration through BGP. When set to \"Unmanaged\", users are responsible for configuring the pod network routing. This field is required when the network operates in no-overlay mode. This field is immutable once set.",
 }
 

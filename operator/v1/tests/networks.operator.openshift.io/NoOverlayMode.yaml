@@ -72,7 +72,7 @@ tests:
               routing: Unmanaged
             ipsecConfig:
               mode: Disabled
-  - name: Should fail to create Network with outboundSNAT Disabled at installation time
+  - name: Should be able to create Network with outboundSNAT Disabled at installation time
     initial: |
       apiVersion: operator.openshift.io/v1
       kind: Network
@@ -83,7 +83,21 @@ tests:
             defaultNetworkNoOverlayOptions:
               outboundSNAT: Disabled
               routing: Unmanaged
-    expectedError: "outboundSNAT must be Enabled at installation time and can be changed on day 2"
+    expected: |
+      apiVersion: operator.openshift.io/v1
+      kind: Network
+      spec:
+        disableNetworkDiagnostics: false
+        logLevel: Normal
+        operatorLogLevel: Normal
+        defaultNetwork:
+          ovnKubernetesConfig:
+            defaultNetworkTransport: NoOverlay
+            defaultNetworkNoOverlayOptions:
+              outboundSNAT: Disabled
+              routing: Unmanaged
+            ipsecConfig:
+              mode: Disabled
   - name: Should fail if routing is Managed without BGPManagedConfig
     initial: |
       apiVersion: operator.openshift.io/v1

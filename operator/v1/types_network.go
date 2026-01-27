@@ -977,9 +977,8 @@ type NoOverlayOptions struct {
 	// When set to "Enabled", SNAT is performed on outbound traffic from pods.
 	// When set to "Disabled", SNAT is not performed and pod IPs are preserved in outbound traffic.
 	// This field is required when the network operates in no-overlay mode.
-	// This field must be set to "Enabled" at installation time and can be changed afterwards.
+	// This field can be set to any value at installation time and can be changed afterwards.
 	// +kubebuilder:validation:Enum=Enabled;Disabled
-	// +kubebuilder:validation:XValidation:rule="!oldSelf.hasValue() ? self == 'Enabled' : true",message="outboundSNAT must be Enabled at installation time and can be changed on day 2",optionalOldSelf=true
 	// +required
 	OutboundSNAT SNATOption `json:"outboundSNAT,omitempty"`
 

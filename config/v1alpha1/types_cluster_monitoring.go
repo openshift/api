@@ -860,15 +860,6 @@ type RemoteWriteSpec struct {
 	// +kubebuilder:validation:MaxLength=63
 	// +kubebuilder:validation:XValidation:rule="self.matches('^[a-zA-Z0-9_-]+$')",message="must contain only alphanumeric characters, hyphens, and underscores"
 	Name string `json:"name,omitempty"`
-	// remoteTimeoutSeconds is the timeout in seconds for requests to the remote write endpoint.
-	// When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time.
-	// Currently the default is 30 seconds.
-	// Minimum value is 1 second.
-	// Maximum value is 600 seconds (10 minutes).
-	// +kubebuilder:validation:Minimum=1
-	// +kubebuilder:validation:Maximum=600
-	// +optional
-	RemoteTimeoutSeconds int32 `json:"remoteTimeoutSeconds,omitempty"`
 	// writeRelabelConfigs is a list of relabeling rules to apply before sending data to the remote endpoint.
 	// When omitted, no relabeling is performed and all metrics are sent as-is.
 	// Minimum of 1 and maximum of 10 relabeling rules can be specified.
@@ -879,6 +870,264 @@ type RemoteWriteSpec struct {
 	// +listType=map
 	// +listMapKey=name
 	WriteRelabelConfigs []RelabelConfig `json:"writeRelabelConfigs,omitempty"`
+	// authorization defines the authorization settings for remote write storage.
+	// When omitted, no authorization is performed.
+	// +optional
+	Authorization *SafeAuthorization `json:"authorization,omitempty,omitzero"`
+	// basicAuth defines basic authentication settings for the remote write endpoint URL.
+	// When omitted, no basic authentication is performed.
+	// +optional
+	BasicAuth *BasicAuth `json:"basicAuth,omitempty,omitzero"`
+	// bearerTokenFile defines the file that contains the bearer token for the remote write endpoint.
+	// However, because you cannot mount secrets in a pod, in practice you can only reference the token of the service account.
+	// When omitted, no bearer token file is used.
+	// Must be a valid file path.
+	// +optional
+	// +kubebuilder:validation:MinLength=1
+	// +kubebuilder:validation:MaxLength=1024
+	BearerTokenFile string `json:"bearerTokenFile,omitempty"`
+	// headers specifies the custom HTTP headers to be sent along with each remote write request.
+	// Headers set by Prometheus cannot be overwritten.
+	// When omitted, no custom headers are sent.
+	// Maximum of 50 headers can be specified.
+	// Each header name must be between 1 and 256 characters, and each header value must be between 0 and 4096 characters.
+	// +optional
+	// +kubebuilder:validation:MaxProperties=50
+	Headers map[string]string `json:"headers,omitempty"`
+	// metadataConfig defines settings for sending series metadata to remote write storage.
+	// When omitted, no metadata is sent.
+	// +optional
+	MetadataConfig *MetadataConfig `json:"metadataConfig,omitempty,omitzero"`
+	// oauth2 defines OAuth2 authentication settings for the remote write endpoint.
+	// When omitted, no OAuth2 authentication is performed.
+	// +optional
+	OAuth2 *OAuth2 `json:"oauth2,omitempty,omitzero"`
+	// proxyUrl defines an optional proxy URL.
+	// If the cluster-wide proxy is enabled, it replaces the proxyUrl setting.
+	// The cluster-wide proxy supports both HTTP and HTTPS proxies, with HTTPS taking precedence.
+	// When omitted, no proxy is used.
+	// Must be a valid URL with http or https scheme.
+	// Must be between 1 and 2048 characters in length.
+	// +optional
+	// +kubebuilder:validation:MaxLength=2048
+	// +kubebuilder:validation:MinLength=1
+	// +kubebuilder:validation:XValidation:rule="isURL(self) && (url(self).getScheme() == 'http' || url(self).getScheme() == 'https')",message="must be a valid URL with http or https scheme"
+	ProxyURL string `json:"proxyUrl,omitempty"`
+	// queueConfig allows tuning configuration for remote write queue parameters.
+	// When omitted, default queue configuration is used.
+	// +optional
+	QueueConfig *QueueConfig `json:"queueConfig,omitempty,omitzero"`
+	// remoteTimeout defines the timeout value for requests to the remote write endpoint.
+	// When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time.
+	// Must be a valid duration string (e.g., "30s", "1m", "5m").
+	// Minimum value is 1 second.
+	// Maximum value is 10 minutes.
+	// +optional
+	// +kubebuilder:validation:Pattern=^([0-9]+(\\.[0-9]+)?(ns|us|µs|ms|s|m|h))+$
+	RemoteTimeout string `json:"remoteTimeout,omitempty"`
+	// sendExemplars enables sending exemplars via remote write.
+	// When enabled, Prometheus is configured to store a maximum of 100,000 exemplars in memory.
+	// Note that this setting only applies to user-defined monitoring. It is not applicable to default in-cluster monitoring.
+	// When omitted, exemplars are not sent.
+	// +optional
+	SendExemplars *bool `json:"sendExemplars,omitempty"`
+	// sigv4 defines AWS Signature Version 4 authentication settings.
+	// When omitted, no AWS SigV4 authentication is performed.
+	// +optional
+	Sigv4 *Sigv4 `json:"sigv4,omitempty,omitzero"`
+	// tlsConfig defines TLS authentication settings for the remote write endpoint.
+	// When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time.
+	// +optional
+	TLSConfig *TLSConfig `json:"tlsConfig,omitempty,omitzero"`
+}
+
+// SafeAuthorization defines the authorization settings for remote write storage.
+// +kubebuilder:validation:XValidation:rule="has(self.type) && self.type == 'BearerToken' ? has(self.credentials) : !has(self.credentials)",message="credentials is required when type is BearerToken"
+// +union
+type SafeAuthorization struct {
+	// type specifies the authorization type to use.
+	// Valid value is "BearerToken" (bearer token authentication).
+	// When set to BearerToken, the credentials field must be specified.
+	// +unionDiscriminator
+	// +required
+	Type AuthorizationType `json:"type,omitempty"`
+	// credentials defines the secret reference containing the authorization credentials.
+	// Required when type is "BearerToken".
+	// The secret must exist in the openshift-monitoring namespace.
+	// +unionMember
+	// +optional
+	Credentials SecretKeySelector `json:"credentials,omitempty,omitzero"`
+}
+
+// BasicAuth defines basic authentication settings for the remote write endpoint URL.
+type BasicAuth struct {
+	// username defines the secret reference containing the username for basic authentication.
+	// The secret must exist in the openshift-monitoring namespace.
+	// +required
+	Username SecretKeySelector `json:"username,omitempty"`
+	// password defines the secret reference containing the password for basic authentication.
+	// The secret must exist in the openshift-monitoring namespace.
+	// +required
+	Password SecretKeySelector `json:"password,omitempty"`
+}
+
+// MetadataConfig defines settings for sending series metadata to remote write storage.
+type MetadataConfig struct {
+	// send enables sending series metadata.
+	// When set to true, Prometheus sends metadata about time series to the remote write endpoint.
+	// When omitted or set to false, no metadata is sent.
+	// +optional
+	Send *bool `json:"send,omitempty"`
+	// sendInterval defines the interval at which metadata is sent.
+	// When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time.
+	// Must be a valid duration string (e.g., "30s", "1m", "5m").
+	// Minimum value is 1 second.
+	// Maximum value is 24 hours.
+	// +optional
+	// +kubebuilder:validation:Pattern=^([0-9]+(\\.[0-9]+)?(ns|us|µs|ms|s|m|h))+$
+	SendInterval string `json:"sendInterval,omitempty"`
+}
+
+// OAuth2 defines OAuth2 authentication settings for the remote write endpoint.
+type OAuth2 struct {
+	// clientId defines the secret reference containing the OAuth2 client ID.
+	// The secret must exist in the openshift-monitoring namespace.
+	// +required
+	ClientID SecretKeySelector `json:"clientId,omitempty"`
+	// clientSecret defines the secret reference containing the OAuth2 client secret.
+	// The secret must exist in the openshift-monitoring namespace.
+	// +required
+	ClientSecret SecretKeySelector `json:"clientSecret,omitempty"`
+	// tokenUrl is the URL to fetch the token from.
+	// Must be a valid URL with http or https scheme.
+	// Must be between 1 and 2048 characters in length.
+	// +required
+	// +kubebuilder:validation:MaxLength=2048
+	// +kubebuilder:validation:MinLength=1
+	// +kubebuilder:validation:XValidation:rule="isURL(self) && (url(self).getScheme() == 'http' || url(self).getScheme() == 'https')",message="must be a valid URL with http or https scheme"
+	TokenURL string `json:"tokenUrl,omitempty"`
+	// scopes is a list of OAuth2 scopes to request.
+	// When omitted, no scopes are requested.
+	// Maximum of 20 scopes can be specified.
+	// Each scope must be between 1 and 256 characters.
+	// +optional
+	// +kubebuilder:validation:MaxItems=20
+	// +kubebuilder:validation:items:MinLength=1
+	// +kubebuilder:validation:items:MaxLength=256
+	Scopes []string `json:"scopes,omitempty"`
+	// endpointParams defines additional parameters to append to the token URL.
+	// When omitted, no additional parameters are sent.
+	// Maximum of 20 parameters can be specified.
+	// Each parameter name must be between 1 and 256 characters, and each parameter value must be between 0 and 4096 characters.
+	// +optional
+	// +kubebuilder:validation:MaxProperties=20
+	EndpointParams map[string]string `json:"endpointParams,omitempty"`
+}
+
+// QueueConfig allows tuning configuration for remote write queue parameters.
+type QueueConfig struct {
+	// capacity is the number of samples to buffer per shard before we start dropping them.
+	// When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time.
+	// The default value is 10000.
+	// Minimum value is 1.
+	// Maximum value is 1000000.
+	// +optional
+	// +kubebuilder:validation:Minimum=1
+	// +kubebuilder:validation:Maximum=1000000
+	Capacity int32 `json:"capacity,omitempty"`
+	// maxShards is the maximum number of shards, i.e. amount of concurrency.
+	// When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time.
+	// The default value is 200.
+	// Minimum value is 1.
+	// Maximum value is 10000.
+	// +optional
+	// +kubebuilder:validation:Minimum=1
+	// +kubebuilder:validation:Maximum=10000
+	MaxShards int32 `json:"maxShards,omitempty"`
+	// minShards is the minimum number of shards, i.e. amount of concurrency.
+	// When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time.
+	// The default value is 1.
+	// Minimum value is 1.
+	// Maximum value is 10000.
+	// +optional
+	// +kubebuilder:validation:Minimum=1
+	// +kubebuilder:validation:Maximum=10000
+	MinShards int32 `json:"minShards,omitempty"`
+	// maxSamplesPerSend is the maximum number of samples per send.
+	// When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time.
+	// The default value is 1000.
+	// Minimum value is 1.
+	// Maximum value is 100000.
+	// +optional
+	// +kubebuilder:validation:Minimum=1
+	// +kubebuilder:validation:Maximum=100000
+	MaxSamplesPerSend int32 `json:"maxSamplesPerSend,omitempty"`
+	// batchSendDeadline is the maximum time a sample will wait in buffer before being sent.
+	// When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time.
+	// Must be a valid duration string (e.g., "5s", "1m").
+	// Minimum value is 1 second.
+	// Maximum value is 1 hour.
+	// +optional
+	// +kubebuilder:validation:Pattern=^([0-9]+(\\.[0-9]+)?(ns|us|µs|ms|s|m|h))+$
+	BatchSendDeadline string `json:"batchSendDeadline,omitempty"`
+	// minBackoff is the minimum retry delay.
+	// When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time.
+	// Must be a valid duration string (e.g., "30ms", "1s").
+	// Minimum value is 1 millisecond.
+	// Maximum value is 1 hour.
+	// +optional
+	// +kubebuilder:validation:Pattern=^([0-9]+(\\.[0-9]+)?(ns|us|µs|ms|s|m|h))+$
+	MinBackoff string `json:"minBackoff,omitempty"`
+	// maxBackoff is the maximum retry delay.
+	// When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time.
+	// Must be a valid duration string (e.g., "5s", "1m").
+	// Minimum value is 1 millisecond.
+	// Maximum value is 1 hour.
+	// +optional
+	// +kubebuilder:validation:Pattern=^([0-9]+(\\.[0-9]+)?(ns|us|µs|ms|s|m|h))+$
+	MaxBackoff string `json:"maxBackoff,omitempty"`
+	// retryOnRateLimit enables retries on HTTP 429 responses.
+	// When set to true, Prometheus will retry requests that receive HTTP 429 (Too Many Requests) responses.
+	// When omitted or set to false, no retries are performed on rate limit responses.
+	// +optional
+	RetryOnRateLimit *bool `json:"retryOnRateLimit,omitempty"`
+}
+
+// Sigv4 defines AWS Signature Version 4 authentication settings.
+type Sigv4 struct {
+	// region is the AWS region.
+	// When omitted, the region is derived from the environment or instance metadata.
+	// Must be between 1 and 128 characters.
+	// +optional
+	// +kubebuilder:validation:MinLength=1
+	// +kubebuilder:validation:MaxLength=128
+	Region string `json:"region,omitempty"`
+	// accessKey defines the secret reference containing the AWS access key ID.
+	// The secret must exist in the openshift-monitoring namespace.
+	// When omitted, the access key is derived from the environment or instance metadata.
+	// +optional
+	AccessKey SecretKeySelector `json:"accessKey,omitempty,omitzero"`
+	// secretKey defines the secret reference containing the AWS secret access key.
+	// The secret must exist in the openshift-monitoring namespace.
+	// When omitted, the secret key is derived from the environment or instance metadata.
+	// +optional
+	SecretKey SecretKeySelector `json:"secretKey,omitempty,omitzero"`
+	// profile is the named AWS profile used to authenticate.
+	// When omitted, the default profile is used.
+	// Must be between 1 and 128 characters.
+	// +optional
+	// +kubebuilder:validation:MinLength=1
+	// +kubebuilder:validation:MaxLength=128
+	Profile string `json:"profile,omitempty"`
+	// roleArn is the AWS Role ARN, an alternative to using AWS API keys.
+	// When omitted, API keys are used for authentication.
+	// Must be a valid AWS ARN format (e.g., "arn:aws:iam::123456789012:role/MyRole").
+	// Must be between 1 and 512 characters.
+	// +optional
+	// +kubebuilder:validation:MinLength=1
+	// +kubebuilder:validation:MaxLength=512
+	// +kubebuilder:validation:XValidation:rule=`self.startsWith('arn:aws') && self.matches('^arn:aws(-[a-z]+)?:iam::[0-9]{12}:role/.+$')`,message="must be a valid AWS IAM role ARN (e.g., arn:aws:iam::123456789012:role/MyRole)"
+	RoleArn string `json:"roleArn,omitempty"`
 }
 
 // RelabelConfig represents a relabeling rule.

@@ -177,6 +177,16 @@ func (AuthorizationConfig) SwaggerDoc() map[string]string {
 	return map_AuthorizationConfig
 }
 
+var map_BasicAuth = map[string]string{
+	"":         "BasicAuth defines basic authentication settings for the remote write endpoint URL.",
+	"username": "username defines the secret reference containing the username for basic authentication. The secret must exist in the openshift-monitoring namespace.",
+	"password": "password defines the secret reference containing the password for basic authentication. The secret must exist in the openshift-monitoring namespace.",
+}
+
+func (BasicAuth) SwaggerDoc() map[string]string {
+	return map_BasicAuth
+}
+
 var map_ClusterMonitoring = map[string]string{
 	"":         "ClusterMonitoring is the Custom Resource object which holds the current status of Cluster Monitoring Operator. CMO is a central component of the monitoring stack.\n\nCompatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support. ClusterMonitoring is the Schema for the Cluster Monitoring Operators API",
 	"metadata": "metadata is the standard object metadata.",
@@ -286,6 +296,16 @@ func (LowercaseActionConfig) SwaggerDoc() map[string]string {
 	return map_LowercaseActionConfig
 }
 
+var map_MetadataConfig = map[string]string{
+	"":             "MetadataConfig defines settings for sending series metadata to remote write storage.",
+	"send":         "send enables sending series metadata. When set to true, Prometheus sends metadata about time series to the remote write endpoint. When omitted or set to false, no metadata is sent.",
+	"sendInterval": "sendInterval defines the interval at which metadata is sent. When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time. Must be a valid duration string (e.g., \"30s\", \"1m\", \"5m\"). Minimum value is 1 second. Maximum value is 24 hours.",
+}
+
+func (MetadataConfig) SwaggerDoc() map[string]string {
+	return map_MetadataConfig
+}
+
 var map_MetricsServerConfig = map[string]string{
 	"":                          "MetricsServerConfig provides configuration options for the Metrics Server instance that runs in the `openshift-monitoring` namespace. Use this configuration to control how the Metrics Server instance is deployed, how it logs, and how its pods are scheduled.",
 	"audit":                     "audit defines the audit configuration used by the Metrics Server instance. audit is optional. When omitted, this means no opinion and the platform is left to choose a reasonable default, that is subject to change over time. The current default sets audit.profile to Metadata",
@@ -298,6 +318,19 @@ var map_MetricsServerConfig = map[string]string{
 
 func (MetricsServerConfig) SwaggerDoc() map[string]string {
 	return map_MetricsServerConfig
+}
+
+var map_OAuth2 = map[string]string{
+	"":               "OAuth2 defines OAuth2 authentication settings for the remote write endpoint.",
+	"clientId":       "clientId defines the secret reference containing the OAuth2 client ID. The secret must exist in the openshift-monitoring namespace.",
+	"clientSecret":   "clientSecret defines the secret reference containing the OAuth2 client secret. The secret must exist in the openshift-monitoring namespace.",
+	"tokenUrl":       "tokenUrl is the URL to fetch the token from. Must be a valid URL with http or https scheme. Must be between 1 and 2048 characters in length.",
+	"scopes":         "scopes is a list of OAuth2 scopes to request. When omitted, no scopes are requested. Maximum of 20 scopes can be specified. Each scope must be between 1 and 256 characters.",
+	"endpointParams": "endpointParams defines additional parameters to append to the token URL. When omitted, no additional parameters are sent. Maximum of 20 parameters can be specified. Each parameter name must be between 1 and 256 characters, and each parameter value must be between 0 and 4096 characters.",
+}
+
+func (OAuth2) SwaggerDoc() map[string]string {
+	return map_OAuth2
 }
 
 var map_PrometheusConfig = map[string]string{
@@ -344,6 +377,22 @@ func (PrometheusOperatorConfig) SwaggerDoc() map[string]string {
 	return map_PrometheusOperatorConfig
 }
 
+var map_QueueConfig = map[string]string{
+	"":                  "QueueConfig allows tuning configuration for remote write queue parameters.",
+	"capacity":          "capacity is the number of samples to buffer per shard before we start dropping them. When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time. The default value is 10000. Minimum value is 1. Maximum value is 1000000.",
+	"maxShards":         "maxShards is the maximum number of shards, i.e. amount of concurrency. When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time. The default value is 200. Minimum value is 1. Maximum value is 10000.",
+	"minShards":         "minShards is the minimum number of shards, i.e. amount of concurrency. When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time. The default value is 1. Minimum value is 1. Maximum value is 10000.",
+	"maxSamplesPerSend": "maxSamplesPerSend is the maximum number of samples per send. When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time. The default value is 1000. Minimum value is 1. Maximum value is 100000.",
+	"batchSendDeadline": "batchSendDeadline is the maximum time a sample will wait in buffer before being sent. When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time. Must be a valid duration string (e.g., \"5s\", \"1m\"). Minimum value is 1 second. Maximum value is 1 hour.",
+	"minBackoff":        "minBackoff is the minimum retry delay. When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time. Must be a valid duration string (e.g., \"30ms\", \"1s\"). Minimum value is 1 millisecond. Maximum value is 1 hour.",
+	"maxBackoff":        "maxBackoff is the maximum retry delay. When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time. Must be a valid duration string (e.g., \"5s\", \"1m\"). Minimum value is 1 millisecond. Maximum value is 1 hour.",
+	"retryOnRateLimit":  "retryOnRateLimit enables retries on HTTP 429 responses. When set to true, Prometheus will retry requests that receive HTTP 429 (Too Many Requests) responses. When omitted or set to false, no retries are performed on rate limit responses.",
+}
+
+func (QueueConfig) SwaggerDoc() map[string]string {
+	return map_QueueConfig
+}
+
 var map_RelabelConfig = map[string]string{
 	"":             "RelabelConfig represents a relabeling rule. Exactly one action-specific configuration must be specified based on the action type.",
 	"name":         "name is a unique identifier for this relabel configuration. Must contain only alphanumeric characters, hyphens, and underscores. Must be between 1 and 63 characters in length.",
@@ -365,11 +414,22 @@ func (RelabelConfig) SwaggerDoc() map[string]string {
 }
 
 var map_RemoteWriteSpec = map[string]string{
-	"":                     "RemoteWriteSpec represents configuration for remote write endpoints.",
-	"url":                  "url is the URL of the remote write endpoint. Must be a valid URL with http or https scheme. Must be between 1 and 2048 characters in length.",
-	"name":                 "name is an optional identifier for this remote write configuration. When omitted, Prometheus generates a unique name automatically. Must contain only alphanumeric characters, hyphens, and underscores. Must be between 1 and 63 characters in length when specified.",
-	"remoteTimeoutSeconds": "remoteTimeoutSeconds is the timeout in seconds for requests to the remote write endpoint. When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time. Currently the default is 30 seconds. Minimum value is 1 second. Maximum value is 600 seconds (10 minutes).",
-	"writeRelabelConfigs":  "writeRelabelConfigs is a list of relabeling rules to apply before sending data to the remote endpoint. When omitted, no relabeling is performed and all metrics are sent as-is. Minimum of 1 and maximum of 10 relabeling rules can be specified. Each rule must have a unique name.",
+	"":                    "RemoteWriteSpec represents configuration for remote write endpoints.",
+	"url":                 "url is the URL of the remote write endpoint. Must be a valid URL with http or https scheme. Must be between 1 and 2048 characters in length.",
+	"name":                "name is an optional identifier for this remote write configuration. When omitted, Prometheus generates a unique name automatically. Must contain only alphanumeric characters, hyphens, and underscores. Must be between 1 and 63 characters in length when specified.",
+	"writeRelabelConfigs": "writeRelabelConfigs is a list of relabeling rules to apply before sending data to the remote endpoint. When omitted, no relabeling is performed and all metrics are sent as-is. Minimum of 1 and maximum of 10 relabeling rules can be specified. Each rule must have a unique name.",
+	"authorization":       "authorization defines the authorization settings for remote write storage. When omitted, no authorization is performed.",
+	"basicAuth":           "basicAuth defines basic authentication settings for the remote write endpoint URL. When omitted, no basic authentication is performed.",
+	"bearerTokenFile":     "bearerTokenFile defines the file that contains the bearer token for the remote write endpoint. However, because you cannot mount secrets in a pod, in practice you can only reference the token of the service account. When omitted, no bearer token file is used. Must be a valid file path.",
+	"headers":             "headers specifies the custom HTTP headers to be sent along with each remote write request. Headers set by Prometheus cannot be overwritten. When omitted, no custom headers are sent. Maximum of 50 headers can be specified. Each header name must be between 1 and 256 characters, and each header value must be between 0 and 4096 characters.",
+	"metadataConfig":      "metadataConfig defines settings for sending series metadata to remote write storage. When omitted, no metadata is sent.",
+	"oauth2":              "oauth2 defines OAuth2 authentication settings for the remote write endpoint. When omitted, no OAuth2 authentication is performed.",
+	"proxyUrl":            "proxyUrl defines an optional proxy URL. If the cluster-wide proxy is enabled, it replaces the proxyUrl setting. The cluster-wide proxy supports both HTTP and HTTPS proxies, with HTTPS taking precedence. When omitted, no proxy is used. Must be a valid URL with http or https scheme. Must be between 1 and 2048 characters in length.",
+	"queueConfig":         "queueConfig allows tuning configuration for remote write queue parameters. When omitted, default queue configuration is used.",
+	"remoteTimeout":       "remoteTimeout defines the timeout value for requests to the remote write endpoint. When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time. Must be a valid duration string (e.g., \"30s\", \"1m\", \"5m\"). Minimum value is 1 second. Maximum value is 10 minutes.",
+	"sendExemplars":       "sendExemplars enables sending exemplars via remote write. When enabled, Prometheus is configured to store a maximum of 100,000 exemplars in memory. Note that this setting only applies to user-defined monitoring. It is not applicable to default in-cluster monitoring. When omitted, exemplars are not sent.",
+	"sigv4":               "sigv4 defines AWS Signature Version 4 authentication settings. When omitted, no AWS SigV4 authentication is performed.",
+	"tlsConfig":           "tlsConfig defines TLS authentication settings for the remote write endpoint. When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time.",
 }
 
 func (RemoteWriteSpec) SwaggerDoc() map[string]string {
@@ -396,6 +456,16 @@ func (Retention) SwaggerDoc() map[string]string {
 	return map_Retention
 }
 
+var map_SafeAuthorization = map[string]string{
+	"":            "SafeAuthorization defines the authorization settings for remote write storage.",
+	"type":        "type specifies the authorization type to use. Valid value is \"BearerToken\" (bearer token authentication). When set to BearerToken, the credentials field must be specified.",
+	"credentials": "credentials defines the secret reference containing the authorization credentials. Required when type is \"BearerToken\". The secret must exist in the openshift-monitoring namespace.",
+}
+
+func (SafeAuthorization) SwaggerDoc() map[string]string {
+	return map_SafeAuthorization
+}
+
 var map_SecretKeySelector = map[string]string{
 	"":     "SecretKeySelector selects a key of a Secret in the `openshift-monitoring` namespace.",
 	"name": "name is the name of the secret in the `openshift-monitoring` namespace to select from. Must be a valid Kubernetes secret name (lowercase alphanumeric, '-' or '.', start/end with alphanumeric). Must be between 1 and 253 characters in length.",
@@ -404,6 +474,19 @@ var map_SecretKeySelector = map[string]string{
 
 func (SecretKeySelector) SwaggerDoc() map[string]string {
 	return map_SecretKeySelector
+}
+
+var map_Sigv4 = map[string]string{
+	"":          "Sigv4 defines AWS Signature Version 4 authentication settings.",
+	"region":    "region is the AWS region. When omitted, the region is derived from the environment or instance metadata. Must be between 1 and 128 characters.",
+	"accessKey": "accessKey defines the secret reference containing the AWS access key ID. The secret must exist in the openshift-monitoring namespace. When omitted, the access key is derived from the environment or instance metadata.",
+	"secretKey": "secretKey defines the secret reference containing the AWS secret access key. The secret must exist in the openshift-monitoring namespace. When omitted, the secret key is derived from the environment or instance metadata.",
+	"profile":   "profile is the named AWS profile used to authenticate. When omitted, the default profile is used. Must be between 1 and 128 characters.",
+	"roleArn":   "roleArn is the AWS Role ARN, an alternative to using AWS API keys. When omitted, API keys are used for authentication. Must be a valid AWS ARN format (e.g., \"arn:aws:iam::123456789012:role/MyRole\"). Must be between 1 and 512 characters.",
+}
+
+func (Sigv4) SwaggerDoc() map[string]string {
+	return map_Sigv4
 }
 
 var map_TLSConfig = map[string]string{

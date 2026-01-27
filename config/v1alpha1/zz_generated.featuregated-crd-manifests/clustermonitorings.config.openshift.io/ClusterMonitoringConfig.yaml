@@ -1922,7 +1922,9 @@ spec:
                         name:
                           description: |-
                             name is an optional identifier for this remote write configuration.
+                            This name is used in metrics and logging to differentiate remote write queues.
                             When omitted, Prometheus generates a unique name automatically.
+                            If specified, this name must be unique.
                             Must contain only alphanumeric characters, hyphens, and underscores.
                             Must be between 1 and 63 characters in length when specified.
                           maxLength: 63
@@ -2426,116 +2428,192 @@ spec:
                             Minimum of 1 and maximum of 10 relabeling rules can be specified.
                             Each rule must have a unique name.
                           items:
-                            description: |-
-                              RelabelConfig represents a relabeling rule.
-                              Exactly one action-specific configuration must be specified based on the action type.
+                            description: RelabelConfig represents a relabeling rule.
                             properties:
                               action:
                                 description: |-
-                                  action is the action to perform on the matched labels.
-                                  Valid actions are:
-                                    - Replace: Replaces the value of targetLabel with replacement, using regex capture groups.
-                                    - Keep: Keeps only metrics where regex matches the source labels.
-                                    - Drop: Drops metrics where regex matches the source labels.
-                                    - HashMod: Sets targetLabel to the hash modulus of the source labels.
-                                    - LabelMap: Copies labels matching regex to new label names derived from replacement.
-                                    - LabelDrop: Drops labels matching regex.
-                                    - LabelKeep: Keeps only labels matching regex.
-                                    - Lowercase: Converts the target label value to lowercase. Requires Prometheus >= v2.36.0.
-                                    - Uppercase: Converts the target label value to uppercase. Requires Prometheus >= v2.36.0.
-                                    - KeepEqual: Keeps only metrics where the source label value equals the target label value. Requires Prometheus >= v2.41.0.
-                                    - DropEqual: Drops metrics where the source label value equals the target label value. Requires Prometheus >= v2.41.0.
-                                enum:
-                                - Replace
-                                - Keep
-                                - Drop
-                                - HashMod
-                                - LabelMap
-                                - LabelDrop
-                                - LabelKeep
-                                - Lowercase
-                                - Uppercase
-                                - KeepEqual
-                                - DropEqual
-                                type: string
-                              dropEqual:
-                                description: |-
-                                  dropEqual configures the DropEqual action.
-                                  Required when action is DropEqual.
-                                  Requires Prometheus >= v2.41.0.
+                                  action defines the action to perform on the matched labels and its configuration.
+                                  Exactly one action-specific configuration must be specified based on the action type.
                                 properties:
-                                  targetLabel:
+                                  dropEqual:
                                     description: |-
-                                      targetLabel is the target label name where the result is written.
-                                      Must be between 1 and 128 characters in length.
-                                    maxLength: 128
-                                    minLength: 1
+                                      dropEqual configures the DropEqual action.
+                                      Required when type is DropEqual.
+                                      Requires Prometheus >= v2.41.0.
+                                    properties:
+                                      targetLabel:
+                                        description: |-
+                                          targetLabel is the target label name where the result is written.
+                                          Must be between 1 and 128 characters in length.
+                                        maxLength: 128
+                                        minLength: 1
+                                        type: string
+                                    required:
+                                    - targetLabel
+                                    type: object
+                                  hashMod:
+                                    description: |-
+                                      hashMod configures the HashMod action.
+                                      Required when type is HashMod.
+                                    properties:
+                                      targetLabel:
+                                        description: |-
+                                          targetLabel is the target label name where the result is written.
+                                          Must be between 1 and 128 characters in length.
+                                        maxLength: 128
+                                        minLength: 1
+                                        type: string
+                                    required:
+                                    - targetLabel
+                                    type: object
+                                  keepEqual:
+                                    description: |-
+                                      keepEqual configures the KeepEqual action.
+                                      Required when type is KeepEqual.
+                                      Requires Prometheus >= v2.41.0.
+                                    properties:
+                                      targetLabel:
+                                        description: |-
+                                          targetLabel is the target label name where the result is written.
+                                          Must be between 1 and 128 characters in length.
+                                        maxLength: 128
+                                        minLength: 1
+                                        type: string
+                                    required:
+                                    - targetLabel
+                                    type: object
+                                  labelMap:
+                                    description: |-
+                                      labelMap configures the LabelMap action.
+                                      Required when type is LabelMap.
+                                    properties:
+                                      replacement:
+                                        description: |-
+                                          replacement value used to derive new label names from labels matching the regex.
+                                          Regex capture groups are available (e.g., $1, $2).
+                                          When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time.
+                                          The default value is "$1" (the first capture group).
+                                          Must be at most 255 characters in length.
+                                        maxLength: 255
+                                        type: string
+                                    type: object
+                                  lowercase:
+                                    description: |-
+                                      lowercase configures the Lowercase action.
+                                      Required when type is Lowercase.
+                                      Requires Prometheus >= v2.36.0.
+                                    properties:
+                                      targetLabel:
+                                        description: |-
+                                          targetLabel is the target label name where the result is written.
+                                          Must be between 1 and 128 characters in length.
+                                        maxLength: 128
+                                        minLength: 1
+                                        type: string
+                                    required:
+                                    - targetLabel
+                                    type: object
+                                  replace:
+                                    description: |-
+                                      replace configures the Replace action.
+                                      Required when type is Replace.
+                                    properties:
+                                      replacement:
+                                        description: |-
+                                          replacement value against which a Replace action is performed if the
+                                          regular expression matches. Regex capture groups are available (e.g., $1, $2).
+                                          When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time.
+                                          The default value is "$1" (the first capture group).
+                                          Setting to an empty string ("") explicitly clears the target label value.
+                                          Must be at most 255 characters in length.
+                                        maxLength: 255
+                                        type: string
+                                      targetLabel:
+                                        description: |-
+                                          targetLabel is the target label name where the result is written.
+                                          Must be between 1 and 128 characters in length.
+                                        maxLength: 128
+                                        minLength: 1
+                                        type: string
+                                    required:
+                                    - targetLabel
+                                    type: object
+                                  type:
+                                    description: |-
+                                      type specifies the action to perform on the matched labels.
+                                      Valid actions are:
+                                        - Replace: Replaces the value of targetLabel with replacement, using regex capture groups.
+                                        - Keep: Keeps only metrics where regex matches the source labels.
+                                        - Drop: Drops metrics where regex matches the source labels.
+                                        - HashMod: Sets targetLabel to the hash modulus of the source labels.
+                                        - LabelMap: Copies labels matching regex to new label names derived from replacement.
+                                        - LabelDrop: Drops labels matching regex.
+                                        - LabelKeep: Keeps only labels matching regex.
+                                        - Lowercase: Converts the target label value to lowercase. Requires Prometheus >= v2.36.0.
+                                        - Uppercase: Converts the target label value to uppercase. Requires Prometheus >= v2.36.0.
+                                        - KeepEqual: Keeps only metrics where the source label value equals the target label value. Requires Prometheus >= v2.41.0.
+                                        - DropEqual: Drops metrics where the source label value equals the target label value. Requires Prometheus >= v2.41.0.
+                                    enum:
+                                    - Replace
+                                    - Keep
+                                    - Drop
+                                    - HashMod
+                                    - LabelMap
+                                    - LabelDrop
+                                    - LabelKeep
+                                    - Lowercase
+                                    - Uppercase
+                                    - KeepEqual
+                                    - DropEqual
                                     type: string
+                                  uppercase:
+                                    description: |-
+                                      uppercase configures the Uppercase action.
+                                      Required when type is Uppercase.
+                                      Requires Prometheus >= v2.36.0.
+                                    properties:
+                                      targetLabel:
+                                        description: |-
+                                          targetLabel is the target label name where the result is written.
+                                          Must be between 1 and 128 characters in length.
+                                        maxLength: 128
+                                        minLength: 1
+                                        type: string
+                                    required:
+                                    - targetLabel
+                                    type: object
                                 required:
-                                - targetLabel
+                                - type
                                 type: object
-                              hashMod:
-                                description: |-
-                                  hashMod configures the HashMod action.
-                                  Required when action is HashMod.
-                                properties:
-                                  targetLabel:
-                                    description: |-
-                                      targetLabel is the target label name where the result is written.
-                                      Must be between 1 and 128 characters in length.
-                                    maxLength: 128
-                                    minLength: 1
-                                    type: string
-                                required:
-                                - targetLabel
-                                type: object
-                              keepEqual:
-                                description: |-
-                                  keepEqual configures the KeepEqual action.
-                                  Required when action is KeepEqual.
-                                  Requires Prometheus >= v2.41.0.
-                                properties:
-                                  targetLabel:
-                                    description: |-
-                                      targetLabel is the target label name where the result is written.
-                                      Must be between 1 and 128 characters in length.
-                                    maxLength: 128
-                                    minLength: 1
-                                    type: string
-                                required:
-                                - targetLabel
-                                type: object
-                              labelMap:
-                                description: |-
-                                  labelMap configures the LabelMap action.
-                                  Required when action is LabelMap.
-                                properties:
-                                  replacement:
-                                    description: |-
-                                      replacement value used to derive new label names from labels matching the regex.
-                                      Regex capture groups are available (e.g., $1, $2).
-                                      When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time.
-                                      The default value is "$1" (the first capture group).
-                                      Must be at most 255 characters in length.
-                                    maxLength: 255
-                                    type: string
-                                type: object
-                              lowercase:
-                                description: |-
-                                  lowercase configures the Lowercase action.
-                                  Required when action is Lowercase.
-                                  Requires Prometheus >= v2.36.0.
-                                properties:
-                                  targetLabel:
-                                    description: |-
-                                      targetLabel is the target label name where the result is written.
-                                      Must be between 1 and 128 characters in length.
-                                    maxLength: 128
-                                    minLength: 1
-                                    type: string
-                                required:
-                                - targetLabel
-                                type: object
+                                x-kubernetes-validations:
+                                - message: replace is required when type is Replace,
+                                    and forbidden otherwise
+                                  rule: 'has(self.type) && self.type == ''Replace''
+                                    ? has(self.replace) : !has(self.replace)'
+                                - message: hashMod is required when type is HashMod,
+                                    and forbidden otherwise
+                                  rule: 'has(self.type) && self.type == ''HashMod''
+                                    ? has(self.hashMod) : !has(self.hashMod)'
+                                - message: lowercase is required when type is Lowercase,
+                                    and forbidden otherwise
+                                  rule: 'has(self.type) && self.type == ''Lowercase''
+                                    ? has(self.lowercase) : !has(self.lowercase)'
+                                - message: uppercase is required when type is Uppercase,
+                                    and forbidden otherwise
+                                  rule: 'has(self.type) && self.type == ''Uppercase''
+                                    ? has(self.uppercase) : !has(self.uppercase)'
+                                - message: keepEqual is required when type is KeepEqual,
+                                    and forbidden otherwise
+                                  rule: 'has(self.type) && self.type == ''KeepEqual''
+                                    ? has(self.keepEqual) : !has(self.keepEqual)'
+                                - message: dropEqual is required when type is DropEqual,
+                                    and forbidden otherwise
+                                  rule: 'has(self.type) && self.type == ''DropEqual''
+                                    ? has(self.dropEqual) : !has(self.dropEqual)'
+                                - message: labelMap is required when type is LabelMap,
+                                    and forbidden otherwise
+                                  rule: 'has(self.type) && self.type == ''LabelMap''
+                                    ? has(self.labelMap) : !has(self.labelMap)'
                               name:
                                 description: |-
                                   name is a unique identifier for this relabel configuration.
@@ -2558,31 +2636,6 @@ spec:
                                 maxLength: 1000
                                 minLength: 1
                                 type: string
-                              replace:
-                                description: |-
-                                  replace configures the Replace action.
-                                  Required when action is Replace.
-                                properties:
-                                  replacement:
-                                    description: |-
-                                      replacement value against which a Replace action is performed if the
-                                      regular expression matches. Regex capture groups are available (e.g., $1, $2).
-                                      When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time.
-                                      The default value is "$1" (the first capture group).
-                                      Setting to an empty string ("") explicitly clears the target label value.
-                                      Must be at most 255 characters in length.
-                                    maxLength: 255
-                                    type: string
-                                  targetLabel:
-                                    description: |-
-                                      targetLabel is the target label name where the result is written.
-                                      Must be between 1 and 128 characters in length.
-                                    maxLength: 128
-                                    minLength: 1
-                                    type: string
-                                required:
-                                - targetLabel
-                                type: object
                               separator:
                                 description: |-
                                   separator is the character sequence used to join source label values.
@@ -2603,7 +2656,7 @@ spec:
                                   Minimum of 1 and maximum of 10 source labels can be specified, each between 1 and 128 characters.
                                   Each entry must be unique.
                                   Label names beginning with "__" (two underscores) are reserved for internal Prometheus use and are not allowed.
-                                  Label names SHOULD match the regex [a-zA-Z_][a-zA-Z0-9_]* for best compatibility.
+                                  Label names SHOULD start with a letter (a-z, A-Z) or underscore (_), followed by zero or more letters, digits (0-9), or underscores for best compatibility.
                                   While Prometheus supports UTF-8 characters in label names (since v3.0.0), using the recommended character set
                                   ensures better compatibility with the wider ecosystem (tooling, third-party instrumentation, etc.).
                                 items:
@@ -2619,39 +2672,10 @@ spec:
                                 minItems: 1
                                 type: array
                                 x-kubernetes-list-type: set
-                              uppercase:
-                                description: |-
-                                  uppercase configures the Uppercase action.
-                                  Required when action is Uppercase.
-                                  Requires Prometheus >= v2.36.0.
-                                properties:
-                                  targetLabel:
-                                    description: |-
-                                      targetLabel is the target label name where the result is written.
-                                      Must be between 1 and 128 characters in length.
-                                    maxLength: 128
-                                    minLength: 1
-                                    type: string
-                                required:
-                                - targetLabel
-                                type: object
                             required:
                             - action
                             - name
                             type: object
-                            x-kubernetes-validations:
-                            - message: exactly one action-specific configuration must
-                                be specified and must match the action type
-                              rule: '(self.action == ''Replace'' ? has(self.replace)
-                                : !has(self.replace)) && (self.action == ''HashMod''
-                                ? has(self.hashMod) : !has(self.hashMod)) && (self.action
-                                == ''Lowercase'' ? has(self.lowercase) : !has(self.lowercase))
-                                && (self.action == ''Uppercase'' ? has(self.uppercase)
-                                : !has(self.uppercase)) && (self.action == ''KeepEqual''
-                                ? has(self.keepEqual) : !has(self.keepEqual)) && (self.action
-                                == ''DropEqual'' ? has(self.dropEqual) : !has(self.dropEqual))
-                                && (self.action == ''LabelMap'' ? has(self.labelMap)
-                                : !has(self.labelMap))'
                           maxItems: 10
                           minItems: 1
                           type: array

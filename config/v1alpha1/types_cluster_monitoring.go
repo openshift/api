@@ -852,7 +852,9 @@ type RemoteWriteSpec struct {
 	// +kubebuilder:validation:XValidation:rule="isURL(self) && (url(self).getScheme() == 'http' || url(self).getScheme() == 'https')",message="must be a valid URL with http or https scheme"
 	URL string `json:"url,omitempty"`
 	// name is an optional identifier for this remote write configuration.
+	// This name is used in metrics and logging to differentiate remote write queues.
 	// When omitted, Prometheus generates a unique name automatically.
+	// If specified, this name must be unique.
 	// Must contain only alphanumeric characters, hyphens, and underscores.
 	// Must be between 1 and 63 characters in length when specified.
 	// +optional
@@ -1131,9 +1133,6 @@ type Sigv4 struct {
 }
 
 // RelabelConfig represents a relabeling rule.
-// Exactly one action-specific configuration must be specified based on the action type.
-// +kubebuilder:validation:XValidation:rule="(self.action == 'Replace' ? has(self.replace) : !has(self.replace)) && (self.action == 'HashMod' ? has(self.hashMod) : !has(self.hashMod)) && (self.action == 'Lowercase' ? has(self.lowercase) : !has(self.lowercase)) && (self.action == 'Uppercase' ? has(self.uppercase) : !has(self.uppercase)) && (self.action == 'KeepEqual' ? has(self.keepEqual) : !has(self.keepEqual)) && (self.action == 'DropEqual' ? has(self.dropEqual) : !has(self.dropEqual)) && (self.action == 'LabelMap' ? has(self.labelMap) : !has(self.labelMap))",message="exactly one action-specific configuration must be specified and must match the action type"
-// +union
 type RelabelConfig struct {
 	// name is a unique identifier for this relabel configuration.
 	// Must contain only alphanumeric characters, hyphens, and underscores.
@@ -1152,7 +1151,7 @@ type RelabelConfig struct {
 	// Minimum of 1 and maximum of 10 source labels can be specified, each between 1 and 128 characters.
 	// Each entry must be unique.
 	// Label names beginning with "__" (two underscores) are reserved for internal Prometheus use and are not allowed.
-	// Label names SHOULD match the regex [a-zA-Z_][a-zA-Z0-9_]* for best compatibility.
+	// Label names SHOULD start with a letter (a-z, A-Z) or underscore (_), followed by zero or more letters, digits (0-9), or underscores for best compatibility.
 	// While Prometheus supports UTF-8 characters in label names (since v3.0.0), using the recommended character set
 	// ensures better compatibility with the wider ecosystem (tooling, third-party instrumentation, etc.).
 	// +optional
@@ -1184,7 +1183,24 @@ type RelabelConfig struct {
 	// +kubebuilder:validation:MaxLength=1000
 	Regex string `json:"regex,omitempty"`
 
-	// action is the action to perform on the matched labels.
+	// action defines the action to perform on the matched labels and its configuration.
+	// Exactly one action-specific configuration must be specified based on the action type.
+	// +required
+	Action RelabelActionConfig `json:"action"`
+}
+
+// RelabelActionConfig represents the action to perform and its configuration.
+// Exactly one action-specific configuration must be specified based on the action type.
+// +kubebuilder:validation:XValidation:rule="has(self.type) && self.type == 'Replace' ? has(self.replace) : !has(self.replace)",message="replace is required when type is Replace, and forbidden otherwise"
+// +kubebuilder:validation:XValidation:rule="has(self.type) && self.type == 'HashMod' ? has(self.hashMod) : !has(self.hashMod)",message="hashMod is required when type is HashMod, and forbidden otherwise"
+// +kubebuilder:validation:XValidation:rule="has(self.type) && self.type == 'Lowercase' ? has(self.lowercase) : !has(self.lowercase)",message="lowercase is required when type is Lowercase, and forbidden otherwise"
+// +kubebuilder:validation:XValidation:rule="has(self.type) && self.type == 'Uppercase' ? has(self.uppercase) : !has(self.uppercase)",message="uppercase is required when type is Uppercase, and forbidden otherwise"
+// +kubebuilder:validation:XValidation:rule="has(self.type) && self.type == 'KeepEqual' ? has(self.keepEqual) : !has(self.keepEqual)",message="keepEqual is required when type is KeepEqual, and forbidden otherwise"
+// +kubebuilder:validation:XValidation:rule="has(self.type) && self.type == 'DropEqual' ? has(self.dropEqual) : !has(self.dropEqual)",message="dropEqual is required when type is DropEqual, and forbidden otherwise"
+// +kubebuilder:validation:XValidation:rule="has(self.type) && self.type == 'LabelMap' ? has(self.labelMap) : !has(self.labelMap)",message="labelMap is required when type is LabelMap, and forbidden otherwise"
+// +union
+type RelabelActionConfig struct {
+	// type specifies the action to perform on the matched labels.
 	// Valid actions are:
 	//   - Replace: Replaces the value of targetLabel with replacement, using regex capture groups.
 	//   - Keep: Keeps only metrics where regex matches the source labels.
@@ -1199,50 +1215,50 @@ type RelabelConfig struct {
 	//   - DropEqual: Drops metrics where the source label value equals the target label value. Requires Prometheus >= v2.41.0.
 	// +required
 	// +unionDiscriminator
-	Action RelabelAction `json:"action,omitempty"`
+	Type RelabelAction `json:"type,omitempty"`
 
 	// replace configures the Replace action.
-	// Required when action is Replace.
+	// Required when type is Replace.
 	// +unionMember
 	// +optional
 	Replace ReplaceActionConfig `json:"replace,omitempty,omitzero"`
 
 	// hashMod configures the HashMod action.
-	// Required when action is HashMod.
+	// Required when type is HashMod.
 	// +unionMember
 	// +optional
 	HashMod HashModActionConfig `json:"hashMod,omitempty,omitzero"`
 
 	// lowercase configures the Lowercase action.
-	// Required when action is Lowercase.
+	// Required when type is Lowercase.
 	// Requires Prometheus >= v2.36.0.
 	// +unionMember
 	// +optional
 	Lowercase LowercaseActionConfig `json:"lowercase,omitempty,omitzero"`
 
 	// uppercase configures the Uppercase action.
-	// Required when action is Uppercase.
+	// Required when type is Uppercase.
 	// Requires Prometheus >= v2.36.0.
 	// +unionMember
 	// +optional
 	Uppercase UppercaseActionConfig `json:"uppercase,omitempty,omitzero"`
 
 	// keepEqual configures the KeepEqual action.
-	// Required when action is KeepEqual.
+	// Required when type is KeepEqual.
 	// Requires Prometheus >= v2.41.0.
 	// +unionMember
 	// +optional
 	KeepEqual KeepEqualActionConfig `json:"keepEqual,omitempty,omitzero"`
 
 	// dropEqual configures the DropEqual action.
-	// Required when action is DropEqual.
+	// Required when type is DropEqual.
 	// Requires Prometheus >= v2.41.0.
 	// +unionMember
 	// +optional
 	DropEqual DropEqualActionConfig `json:"dropEqual,omitempty,omitzero"`
 
 	// labelMap configures the LabelMap action.
-	// Required when action is LabelMap.
+	// Required when type is LabelMap.
 	// +unionMember
 	// +optional
 	LabelMap *LabelMapActionConfig `json:"labelMap,omitempty,omitzero"`

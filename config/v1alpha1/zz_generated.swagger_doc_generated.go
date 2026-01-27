@@ -393,20 +393,29 @@ func (QueueConfig) SwaggerDoc() map[string]string {
 	return map_QueueConfig
 }
 
+var map_RelabelActionConfig = map[string]string{
+	"":          "RelabelActionConfig represents the action to perform and its configuration. Exactly one action-specific configuration must be specified based on the action type.",
+	"type":      "type specifies the action to perform on the matched labels. Valid actions are:\n  - Replace: Replaces the value of targetLabel with replacement, using regex capture groups.\n  - Keep: Keeps only metrics where regex matches the source labels.\n  - Drop: Drops metrics where regex matches the source labels.\n  - HashMod: Sets targetLabel to the hash modulus of the source labels.\n  - LabelMap: Copies labels matching regex to new label names derived from replacement.\n  - LabelDrop: Drops labels matching regex.\n  - LabelKeep: Keeps only labels matching regex.\n  - Lowercase: Converts the target label value to lowercase. Requires Prometheus >= v2.36.0.\n  - Uppercase: Converts the target label value to uppercase. Requires Prometheus >= v2.36.0.\n  - KeepEqual: Keeps only metrics where the source label value equals the target label value. Requires Prometheus >= v2.41.0.\n  - DropEqual: Drops metrics where the source label value equals the target label value. Requires Prometheus >= v2.41.0.",
+	"replace":   "replace configures the Replace action. Required when type is Replace.",
+	"hashMod":   "hashMod configures the HashMod action. Required when type is HashMod.",
+	"lowercase": "lowercase configures the Lowercase action. Required when type is Lowercase. Requires Prometheus >= v2.36.0.",
+	"uppercase": "uppercase configures the Uppercase action. Required when type is Uppercase. Requires Prometheus >= v2.36.0.",
+	"keepEqual": "keepEqual configures the KeepEqual action. Required when type is KeepEqual. Requires Prometheus >= v2.41.0.",
+	"dropEqual": "dropEqual configures the DropEqual action. Required when type is DropEqual. Requires Prometheus >= v2.41.0.",
+	"labelMap":  "labelMap configures the LabelMap action. Required when type is LabelMap.",
+}
+
+func (RelabelActionConfig) SwaggerDoc() map[string]string {
+	return map_RelabelActionConfig
+}
+
 var map_RelabelConfig = map[string]string{
-	"":             "RelabelConfig represents a relabeling rule. Exactly one action-specific configuration must be specified based on the action type.",
+	"":             "RelabelConfig represents a relabeling rule.",
 	"name":         "name is a unique identifier for this relabel configuration. Must contain only alphanumeric characters, hyphens, and underscores. Must be between 1 and 63 characters in length.",
-	"sourceLabels": "sourceLabels specifies which label names to extract from each series for this relabeling rule. The values of these labels are joined together using the configured separator, and the resulting string is then matched against the regular expression. If a referenced label does not exist on a series, Prometheus substitutes an empty string. When omitted, the rule operates without extracting source labels (useful for actions like labelmap). Minimum of 1 and maximum of 10 source labels can be specified, each between 1 and 128 characters. Each entry must be unique. Label names beginning with \"__\" (two underscores) are reserved for internal Prometheus use and are not allowed. Label names SHOULD match the regex [a-zA-Z_][a-zA-Z0-9_]* for best compatibility. While Prometheus supports UTF-8 characters in label names (since v3.0.0), using the recommended character set ensures better compatibility with the wider ecosystem (tooling, third-party instrumentation, etc.).",
+	"sourceLabels": "sourceLabels specifies which label names to extract from each series for this relabeling rule. The values of these labels are joined together using the configured separator, and the resulting string is then matched against the regular expression. If a referenced label does not exist on a series, Prometheus substitutes an empty string. When omitted, the rule operates without extracting source labels (useful for actions like labelmap). Minimum of 1 and maximum of 10 source labels can be specified, each between 1 and 128 characters. Each entry must be unique. Label names beginning with \"__\" (two underscores) are reserved for internal Prometheus use and are not allowed. Label names SHOULD start with a letter (a-z, A-Z) or underscore (_), followed by zero or more letters, digits (0-9), or underscores for best compatibility. While Prometheus supports UTF-8 characters in label names (since v3.0.0), using the recommended character set ensures better compatibility with the wider ecosystem (tooling, third-party instrumentation, etc.).",
 	"separator":    "separator is the character sequence used to join source label values. Common examples: \";\", \",\", \"::\", \"|||\". When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time. The default value is \";\". Must be between 1 and 5 characters in length when specified.",
 	"regex":        "regex is the regular expression to match against the concatenated source label values. Must be a valid RE2 regular expression (https://github.com/google/re2/wiki/Syntax). When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time. The default value is \"(.*)\" to match everything. Must be between 1 and 1000 characters in length when specified.",
-	"action":       "action is the action to perform on the matched labels. Valid actions are:\n  - Replace: Replaces the value of targetLabel with replacement, using regex capture groups.\n  - Keep: Keeps only metrics where regex matches the source labels.\n  - Drop: Drops metrics where regex matches the source labels.\n  - HashMod: Sets targetLabel to the hash modulus of the source labels.\n  - LabelMap: Copies labels matching regex to new label names derived from replacement.\n  - LabelDrop: Drops labels matching regex.\n  - LabelKeep: Keeps only labels matching regex.\n  - Lowercase: Converts the target label value to lowercase. Requires Prometheus >= v2.36.0.\n  - Uppercase: Converts the target label value to uppercase. Requires Prometheus >= v2.36.0.\n  - KeepEqual: Keeps only metrics where the source label value equals the target label value. Requires Prometheus >= v2.41.0.\n  - DropEqual: Drops metrics where the source label value equals the target label value. Requires Prometheus >= v2.41.0.",
-	"replace":      "replace configures the Replace action. Required when action is Replace.",
-	"hashMod":      "hashMod configures the HashMod action. Required when action is HashMod.",
-	"lowercase":    "lowercase configures the Lowercase action. Required when action is Lowercase. Requires Prometheus >= v2.36.0.",
-	"uppercase":    "uppercase configures the Uppercase action. Required when action is Uppercase. Requires Prometheus >= v2.36.0.",
-	"keepEqual":    "keepEqual configures the KeepEqual action. Required when action is KeepEqual. Requires Prometheus >= v2.41.0.",
-	"dropEqual":    "dropEqual configures the DropEqual action. Required when action is DropEqual. Requires Prometheus >= v2.41.0.",
-	"labelMap":     "labelMap configures the LabelMap action. Required when action is LabelMap.",
+	"action":       "action defines the action to perform on the matched labels and its configuration. Exactly one action-specific configuration must be specified based on the action type.",
 }
 
 func (RelabelConfig) SwaggerDoc() map[string]string {
@@ -416,7 +425,7 @@ func (RelabelConfig) SwaggerDoc() map[string]string {
 var map_RemoteWriteSpec = map[string]string{
 	"":                    "RemoteWriteSpec represents configuration for remote write endpoints.",
 	"url":                 "url is the URL of the remote write endpoint. Must be a valid URL with http or https scheme. Must be between 1 and 2048 characters in length.",
-	"name":                "name is an optional identifier for this remote write configuration. When omitted, Prometheus generates a unique name automatically. Must contain only alphanumeric characters, hyphens, and underscores. Must be between 1 and 63 characters in length when specified.",
+	"name":                "name is an optional identifier for this remote write configuration. This name is used in metrics and logging to differentiate remote write queues. When omitted, Prometheus generates a unique name automatically. If specified, this name must be unique. Must contain only alphanumeric characters, hyphens, and underscores. Must be between 1 and 63 characters in length when specified.",
 	"writeRelabelConfigs": "writeRelabelConfigs is a list of relabeling rules to apply before sending data to the remote endpoint. When omitted, no relabeling is performed and all metrics are sent as-is. Minimum of 1 and maximum of 10 relabeling rules can be specified. Each rule must have a unique name.",
 	"authorization":       "authorization defines the authorization settings for remote write storage. When omitted, no authorization is performed.",
 	"basicAuth":           "basicAuth defines basic authentication settings for the remote write endpoint URL. When omitted, no basic authentication is performed.",

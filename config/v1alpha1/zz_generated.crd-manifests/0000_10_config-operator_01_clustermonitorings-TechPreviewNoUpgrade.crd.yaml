@@ -1408,12 +1408,11 @@ spec:
                           - message: pathPrefix must not contain '?' or '#'
                             rule: '!self.contains(''?'') && !self.contains(''#'')'
                         scheme:
-                          default: HTTP
                           description: |-
                             scheme defines the URL scheme to use when communicating with Alertmanager
                             instances.
                             Possible values are `HTTP` or `HTTPS`.
-                            When omitted, defaults to `HTTP`.
+                            When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time.
                           enum:
                           - HTTP
                           - HTTPS
@@ -1792,31 +1791,6 @@ spec:
                               Exactly one action-specific configuration must be specified based on the action type.
                             properties:
                               action:
-                                allOf:
-                                - enum:
-                                  - Replace
-                                  - Keep
-                                  - Drop
-                                  - HashMod
-                                  - LabelMap
-                                  - LabelDrop
-                                  - LabelKeep
-                                  - Lowercase
-                                  - Uppercase
-                                  - KeepEqual
-                                  - DropEqual
-                                - enum:
-                                  - Replace
-                                  - Keep
-                                  - Drop
-                                  - HashMod
-                                  - LabelMap
-                                  - LabelDrop
-                                  - LabelKeep
-                                  - Lowercase
-                                  - Uppercase
-                                  - KeepEqual
-                                  - DropEqual
                                 description: |-
                                   action is the action to perform on the matched labels.
                                   Valid actions are:
@@ -1831,6 +1805,18 @@ spec:
                                     - Uppercase: Converts the target label value to uppercase. Requires Prometheus >= v2.36.0.
                                     - KeepEqual: Keeps only metrics where the source label value equals the target label value. Requires Prometheus >= v2.41.0.
                                     - DropEqual: Drops metrics where the source label value equals the target label value. Requires Prometheus >= v2.41.0.
+                                enum:
+                                - Replace
+                                - Keep
+                                - Drop
+                                - HashMod
+                                - LabelMap
+                                - LabelDrop
+                                - LabelKeep
+                                - Lowercase
+                                - Uppercase
+                                - KeepEqual
+                                - DropEqual
                                 type: string
                               dropEqual:
                                 description: |-

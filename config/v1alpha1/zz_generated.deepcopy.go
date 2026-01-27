@@ -1356,36 +1356,12 @@ func (in *RelabelConfig) DeepCopyInto(out *RelabelConfig) {
 		*out = make([]string, len(*in))
 		copy(*out, *in)
 	}
-	if in.Replace != nil {
-		in, out := &in.Replace, &out.Replace
-		*out = new(ReplaceActionConfig)
-		(*in).DeepCopyInto(*out)
-	}
-	if in.HashMod != nil {
-		in, out := &in.HashMod, &out.HashMod
-		*out = new(HashModActionConfig)
-		**out = **in
-	}
-	if in.Lowercase != nil {
-		in, out := &in.Lowercase, &out.Lowercase
-		*out = new(LowercaseActionConfig)
-		**out = **in
-	}
-	if in.Uppercase != nil {
-		in, out := &in.Uppercase, &out.Uppercase
-		*out = new(UppercaseActionConfig)
-		**out = **in
-	}
-	if in.KeepEqual != nil {
-		in, out := &in.KeepEqual, &out.KeepEqual
-		*out = new(KeepEqualActionConfig)
-		**out = **in
-	}
-	if in.DropEqual != nil {
-		in, out := &in.DropEqual, &out.DropEqual
-		*out = new(DropEqualActionConfig)
-		**out = **in
-	}
+	in.Replace.DeepCopyInto(&out.Replace)
+	out.HashMod = in.HashMod
+	out.Lowercase = in.Lowercase
+	out.Uppercase = in.Uppercase
+	out.KeepEqual = in.KeepEqual
+	out.DropEqual = in.DropEqual
 	if in.LabelMap != nil {
 		in, out := &in.LabelMap, &out.LabelMap
 		*out = new(LabelMapActionConfig)

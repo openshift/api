@@ -12183,7 +12183,7 @@
           "type": "string"
         },
         "scheme": {
-          "description": "scheme defines the URL scheme to use when communicating with Alertmanager instances. Possible values are `HTTP` or `HTTPS`. When omitted, defaults to `HTTP`.",
+          "description": "scheme defines the URL scheme to use when communicating with Alertmanager instances. Possible values are `HTTP` or `HTTPS`. When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time.",
           "type": "string"
         },
         "staticConfigs": {
@@ -13361,14 +13361,17 @@
         },
         "dropEqual": {
           "description": "dropEqual configures the DropEqual action. Required when action is DropEqual. Requires Prometheus >= v2.41.0.",
+          "default": {},
           "$ref": "#/definitions/com.github.openshift.api.config.v1alpha1.DropEqualActionConfig"
         },
         "hashMod": {
           "description": "hashMod configures the HashMod action. Required when action is HashMod.",
+          "default": {},
           "$ref": "#/definitions/com.github.openshift.api.config.v1alpha1.HashModActionConfig"
         },
         "keepEqual": {
           "description": "keepEqual configures the KeepEqual action. Required when action is KeepEqual. Requires Prometheus >= v2.41.0.",
+          "default": {},
           "$ref": "#/definitions/com.github.openshift.api.config.v1alpha1.KeepEqualActionConfig"
         },
         "labelMap": {
@@ -13377,6 +13380,7 @@
         },
         "lowercase": {
           "description": "lowercase configures the Lowercase action. Required when action is Lowercase. Requires Prometheus >= v2.36.0.",
+          "default": {},
           "$ref": "#/definitions/com.github.openshift.api.config.v1alpha1.LowercaseActionConfig"
         },
         "name": {
@@ -13389,6 +13393,7 @@
         },
         "replace": {
           "description": "replace configures the Replace action. Required when action is Replace.",
+          "default": {},
           "$ref": "#/definitions/com.github.openshift.api.config.v1alpha1.ReplaceActionConfig"
         },
         "separator": {
@@ -13406,6 +13411,7 @@
         },
         "uppercase": {
           "description": "uppercase configures the Uppercase action. Required when action is Uppercase. Requires Prometheus >= v2.36.0.",
+          "default": {},
           "$ref": "#/definitions/com.github.openshift.api.config.v1alpha1.UppercaseActionConfig"
         }
       },

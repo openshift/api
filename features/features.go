@@ -676,12 +676,12 @@ var (
 						mustRegister()
 
 	FeatureGateKMSEncryption = newFeatureGate("KMSEncryption").
-		reportProblemsToJiraComponent("kube-apiserver").
-		contactPerson("ardaguclu").
-		productScope(ocpSpecific).
-		enhancementPR("https://github.com/openshift/enhancements/pull/1900").
-		enableIn(configv1.DevPreviewNoUpgrade, configv1.TechPreviewNoUpgrade).
-		mustRegister()
+					reportProblemsToJiraComponent("kube-apiserver").
+					contactPerson("ardaguclu").
+					productScope(ocpSpecific).
+					enhancementPR("https://github.com/openshift/enhancements/pull/1900").
+					enableIn(configv1.DevPreviewNoUpgrade, configv1.TechPreviewNoUpgrade).
+					mustRegister()
 
 	FeatureGateHighlyAvailableArbiter = newFeatureGate("HighlyAvailableArbiter").
 						reportProblemsToJiraComponent("Two Node with Arbiter").
@@ -774,14 +774,6 @@ var (
 					enhancementPR("https://github.com/openshift/enhancements/pull/1779").
 					enableIn(configv1.DevPreviewNoUpgrade, configv1.TechPreviewNoUpgrade).
 					mustRegister()
-
-	FeatureGateStoragePerformantSecurityPolicy = newFeatureGate("StoragePerformantSecurityPolicy").
-							reportProblemsToJiraComponent("Storage / Kubernetes External Components").
-							contactPerson("hekumar").
-							productScope(ocpSpecific).
-							enhancementPR("https://github.com/openshift/enhancements/pull/1804").
-							enableIn(configv1.DevPreviewNoUpgrade, configv1.TechPreviewNoUpgrade, configv1.Default, configv1.OKD).
-							mustRegister()
 
 	FeatureGateMultiDiskSetup = newFeatureGate("MultiDiskSetup").
 					reportProblemsToJiraComponent("splat").

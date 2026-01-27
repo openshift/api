@@ -898,7 +898,44 @@ type AWSNetworkLoadBalancerParameters struct {
 	// +kubebuilder:validation:XValidation:rule=`self.all(x, self.exists_one(y, x == y))`,message="eipAllocations cannot contain duplicates"
 	// +kubebuilder:validation:MaxItems=10
 	EIPAllocations []EIPAllocation `json:"eipAllocations"`
+
+	// clientIPPreservationMode specifies how client IP addresses are
+	// preserved by the load balancer.
+	//
+	// Valid values are "Preserved" and "ProxyProtocol".
+	//
+	// When set to "Preserved", the NLB uses AWS's native client IP preservation,
+	// which may cause hairpin connection failures for internal load balancers when
+	// connections are made from pods to router pods on the same node.
+	//
+	// When set to "ProxyProtocol", the NLB uses PROXY protocol v2 to preserve
+	// client IP addresses. This avoids hairpin connection failures.
+	//
+	// When omitted, the default behavior is "Preserved".
+	//
+	// Note that changing this field may cause brief connection failures during
+	// the transition as the NLB attribute change and router rollout occur
+	// independently.
+	//
+	// +optional
+	ClientIPPreservationMode ClientIPPreservationMode `json:"clientIPPreservationMode,omitempty"`
 }
+
+// ClientIPPreservationMode specifies how client IP addresses should be
+// preserved by the Network Load Balancer.
+// +kubebuilder:validation:Enum=Preserved;ProxyProtocol
+type ClientIPPreservationMode string
+
+const (
+	// ClientIPPreservationPreserved uses AWS's native client IP preservation,
+	// which may cause hairpin connection failures for internal load balancers when
+	// connections are made from pods to router pods on the same node.
+	ClientIPPreservationPreserved ClientIPPreservationMode = "Preserved"
+
+	// ClientIPPreservationProxyProtocol uses PROXY protocol v2 to preserve
+	// client IP addresses. This avoids hairpin connection failures.
+	ClientIPPreservationProxyProtocol ClientIPPreservationMode = "ProxyProtocol"
+)
 
 // EIPAllocation is an ID for an Elastic IP (EIP) address that can be allocated to an ELB in the AWS environment.
 // Values must begin with `eipalloc-` followed by exactly 17 hexadecimal (`[0-9a-fA-F]`) characters.

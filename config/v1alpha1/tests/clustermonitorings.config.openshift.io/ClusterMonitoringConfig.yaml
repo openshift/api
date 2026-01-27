@@ -639,7 +639,6 @@ tests:
             remoteWrite:
               - url: https://remote-write.example.com/api/v1/write
                 name: remote-write-1
-                remoteTimeoutSeconds: 30
             additionalAlertmanagerConfigs:
               - name: external-alertmanager
                 staticConfigs:
@@ -695,7 +694,6 @@ tests:
             remoteWrite:
               - url: https://remote-write.example.com/api/v1/write
                 name: remote-write-1
-                remoteTimeoutSeconds: 30
             additionalAlertmanagerConfigs:
               - name: external-alertmanager
                 staticConfigs:
@@ -1050,30 +1048,6 @@ tests:
               - url: https://remote.example.com/write
                 name: invalid@name
       expectedError: "spec.prometheusConfig.remoteWrite[0].name: Invalid value: \"string\": must contain only alphanumeric characters, hyphens, and underscores"
-    - name: Should reject PrometheusConfig with remoteWrite remoteTimeoutSeconds below minimum
-      initial: |
-        apiVersion: config.openshift.io/v1alpha1
-        kind: ClusterMonitoring
-        spec:
-          userDefined:
-            mode: "Disabled"
-          prometheusConfig:
-            remoteWrite:
-              - url: https://remote.example.com/write
-                remoteTimeoutSeconds: 0
-      expectedError: 'spec.prometheusConfig.remoteWrite[0].remoteTimeoutSeconds: Invalid value: 0: spec.prometheusConfig.remoteWrite[0].remoteTimeoutSeconds in body should be greater than or equal to 1'
-    - name: Should reject PrometheusConfig with remoteWrite remoteTimeoutSeconds above maximum
-      initial: |
-        apiVersion: config.openshift.io/v1alpha1
-        kind: ClusterMonitoring
-        spec:
-          userDefined:
-            mode: "Disabled"
-          prometheusConfig:
-            remoteWrite:
-              - url: https://remote.example.com/write
-                remoteTimeoutSeconds: 601
-      expectedError: 'spec.prometheusConfig.remoteWrite[0].remoteTimeoutSeconds: Invalid value: 601: spec.prometheusConfig.remoteWrite[0].remoteTimeoutSeconds in body should be less than or equal to 600'
     - name: Should reject PrometheusConfig with additionalAlertmanagerConfigs exceeding max items
       initial: |
         apiVersion: config.openshift.io/v1alpha1
@@ -1332,12 +1306,13 @@ tests:
               - url: https://remote.example.com/write
                 writeRelabelConfigs:
                   - name: replace-action
-                    action: Replace
                     sourceLabels:
                       - instance
-                    replace:
-                      targetLabel: instance
-                      replacement: "$1"
+                    action:
+                      type: Replace
+                      replace:
+                        targetLabel: instance
+                        replacement: "$1"
       expected: |
         apiVersion: config.openshift.io/v1alpha1
         kind: ClusterMonitoring
@@ -1349,12 +1324,13 @@ tests:
               - url: https://remote.example.com/write
                 writeRelabelConfigs:
                   - name: replace-action
-                    action: Replace
                     sourceLabels:
                       - instance
-                    replace:
-                      targetLabel: instance
-                      replacement: "$1"
+                    action:
+                      type: Replace
+                      replace:
+                        targetLabel: instance
+                        replacement: "$1"
     - name: Should accept PrometheusConfig with RelabelConfig Keep action
       initial: |
         apiVersion: config.openshift.io/v1alpha1
@@ -1367,10 +1343,11 @@ tests:
               - url: https://remote.example.com/write
                 writeRelabelConfigs:
                   - name: keep-action
-                    action: Keep
                     sourceLabels:
                       - job
                     regex: ".*"
+                    action:
+                      type: Keep
       expected: |
         apiVersion: config.openshift.io/v1alpha1
         kind: ClusterMonitoring
@@ -1382,10 +1359,11 @@ tests:
               - url: https://remote.example.com/write
                 writeRelabelConfigs:
                   - name: keep-action
-                    action: Keep
                     sourceLabels:
                       - job
                     regex: ".*"
+                    action:
+                      type: Keep
     - name: Should accept PrometheusConfig with RelabelConfig Drop action
       initial: |
         apiVersion: config.openshift.io/v1alpha1
@@ -1398,10 +1376,11 @@ tests:
               - url: https://remote.example.com/write
                 writeRelabelConfigs:
                   - name: drop-action
-                    action: Drop
                     sourceLabels:
                       - job
                     regex: ".*"
+                    action:
+                      type: Drop
       expected: |
         apiVersion: config.openshift.io/v1alpha1
         kind: ClusterMonitoring
@@ -1413,10 +1392,11 @@ tests:
               - url: https://remote.example.com/write
                 writeRelabelConfigs:
                   - name: drop-action
-                    action: Drop
                     sourceLabels:
                       - job
                     regex: ".*"
+                    action:
+                      type: Drop
     - name: Should accept PrometheusConfig with RelabelConfig HashMod action
       initial: |
         apiVersion: config.openshift.io/v1alpha1
@@ -1429,11 +1409,12 @@ tests:
               - url: https://remote.example.com/write
                 writeRelabelConfigs:
                   - name: hashmod-action
-                    action: HashMod
                     sourceLabels:
                       - instance
-                    hashMod:
-                      targetLabel: shard
+                    action:
+                      type: HashMod
+                      hashMod:
+                        targetLabel: shard
       expected: |
         apiVersion: config.openshift.io/v1alpha1
         kind: ClusterMonitoring
@@ -1445,11 +1426,12 @@ tests:
               - url: https://remote.example.com/write
                 writeRelabelConfigs:
                   - name: hashmod-action
-                    action: HashMod
                     sourceLabels:
                       - instance
-                    hashMod:
-                      targetLabel: shard
+                    action:
+                      type: HashMod
+                      hashMod:
+                        targetLabel: shard
     - name: Should accept PrometheusConfig with RelabelConfig LabelMap action
       initial: |
         apiVersion: config.openshift.io/v1alpha1
@@ -1462,10 +1444,11 @@ tests:
               - url: https://remote.example.com/write
                 writeRelabelConfigs:
                   - name: labelmap-action
-                    action: LabelMap
                     regex: "k8s_(.*)"
-                    labelMap:
-                      replacement: "$1"
+                    action:
+                      type: LabelMap
+                      labelMap:
+                        replacement: "$1"
       expected: |
         apiVersion: config.openshift.io/v1alpha1
         kind: ClusterMonitoring
@@ -1477,10 +1460,11 @@ tests:
               - url: https://remote.example.com/write
                 writeRelabelConfigs:
                   - name: labelmap-action
-                    action: LabelMap
                     regex: "k8s_(.*)"
-                    labelMap:
-                      replacement: "$1"
+                    action:
+                      type: LabelMap
+                      labelMap:
+                        replacement: "$1"
     - name: Should accept PrometheusConfig with RelabelConfig LabelDrop action
       initial: |
         apiVersion: config.openshift.io/v1alpha1
@@ -1493,8 +1477,9 @@ tests:
               - url: https://remote.example.com/write
                 writeRelabelConfigs:
                   - name: labeldrop-action
-                    action: LabelDrop
                     regex: ".*"
+                    action:
+                      type: LabelDrop
       expected: |
         apiVersion: config.openshift.io/v1alpha1
         kind: ClusterMonitoring
@@ -1506,8 +1491,9 @@ tests:
               - url: https://remote.example.com/write
                 writeRelabelConfigs:
                   - name: labeldrop-action
-                    action: LabelDrop
                     regex: ".*"
+                    action:
+                      type: LabelDrop
     - name: Should accept PrometheusConfig with RelabelConfig LabelKeep action
       initial: |
         apiVersion: config.openshift.io/v1alpha1
@@ -1520,8 +1506,9 @@ tests:
               - url: https://remote.example.com/write
                 writeRelabelConfigs:
                   - name: labelkeep-action
-                    action: LabelKeep
                     regex: ".*"
+                    action:
+                      type: LabelKeep
       expected: |
         apiVersion: config.openshift.io/v1alpha1
         kind: ClusterMonitoring
@@ -1533,8 +1520,9 @@ tests:
               - url: https://remote.example.com/write
                 writeRelabelConfigs:
                   - name: labelkeep-action
-                    action: LabelKeep
                     regex: ".*"
+                    action:
+                      type: LabelKeep
     - name: Should accept PrometheusConfig with RelabelConfig Lowercase action
       initial: |
         apiVersion: config.openshift.io/v1alpha1
@@ -1547,11 +1535,12 @@ tests:
               - url: https://remote.example.com/write
                 writeRelabelConfigs:
                   - name: lowercase-action
-                    action: Lowercase
                     sourceLabels:
                       - instance
-                    lowercase:
-                      targetLabel: instance_lower
+                    action:
+                      type: Lowercase
+                      lowercase:
+                        targetLabel: instance_lower
       expected: |
         apiVersion: config.openshift.io/v1alpha1
         kind: ClusterMonitoring
@@ -1563,11 +1552,12 @@ tests:
               - url: https://remote.example.com/write
                 writeRelabelConfigs:
                   - name: lowercase-action
-                    action: Lowercase
                     sourceLabels:
                       - instance
-                    lowercase:
-                      targetLabel: instance_lower
+                    action:
+                      type: Lowercase
+                      lowercase:
+                        targetLabel: instance_lower
     - name: Should accept PrometheusConfig with RelabelConfig Uppercase action
       initial: |
         apiVersion: config.openshift.io/v1alpha1
@@ -1580,11 +1570,12 @@ tests:
               - url: https://remote.example.com/write
                 writeRelabelConfigs:
                   - name: uppercase-action
-                    action: Uppercase
                     sourceLabels:
                       - instance
-                    uppercase:
-                      targetLabel: instance_upper
+                    action:
+                      type: Uppercase
+                      uppercase:
+                        targetLabel: instance_upper
       expected: |
         apiVersion: config.openshift.io/v1alpha1
         kind: ClusterMonitoring
@@ -1596,11 +1587,12 @@ tests:
               - url: https://remote.example.com/write
                 writeRelabelConfigs:
                   - name: uppercase-action
-                    action: Uppercase
                     sourceLabels:
                       - instance
-                    uppercase:
-                      targetLabel: instance_upper
+                    action:
+                      type: Uppercase
+                      uppercase:
+                        targetLabel: instance_upper
     - name: Should accept PrometheusConfig with RelabelConfig KeepEqual action
       initial: |
         apiVersion: config.openshift.io/v1alpha1
@@ -1613,11 +1605,12 @@ tests:
               - url: https://remote.example.com/write
                 writeRelabelConfigs:
                   - name: keepequal-action
-                    action: KeepEqual
                     sourceLabels:
                       - instance
-                    keepEqual:
-                      targetLabel: instance
+                    action:
+                      type: KeepEqual
+                      keepEqual:
+                        targetLabel: instance
       expected: |
         apiVersion: config.openshift.io/v1alpha1
         kind: ClusterMonitoring
@@ -1629,11 +1622,12 @@ tests:
               - url: https://remote.example.com/write
                 writeRelabelConfigs:
                   - name: keepequal-action
-                    action: KeepEqual
                     sourceLabels:
                       - instance
-                    keepEqual:
-                      targetLabel: instance
+                    action:
+                      type: KeepEqual
+                      keepEqual:
+                        targetLabel: instance
     - name: Should accept PrometheusConfig with RelabelConfig DropEqual action
       initial: |
         apiVersion: config.openshift.io/v1alpha1
@@ -1646,11 +1640,12 @@ tests:
               - url: https://remote.example.com/write
                 writeRelabelConfigs:
                   - name: dropequal-action
-                    action: DropEqual
                     sourceLabels:
                       - instance
-                    dropEqual:
-                      targetLabel: instance
+                    action:
+                      type: DropEqual
+                      dropEqual:
+                        targetLabel: instance
       expected: |
         apiVersion: config.openshift.io/v1alpha1
         kind: ClusterMonitoring
@@ -1662,11 +1657,12 @@ tests:
               - url: https://remote.example.com/write
                 writeRelabelConfigs:
                   - name: dropequal-action
-                    action: DropEqual
                     sourceLabels:
                       - instance
-                    dropEqual:
-                      targetLabel: instance
+                    action:
+                      type: DropEqual
+                      dropEqual:
+                        targetLabel: instance
     - name: Should reject PrometheusConfig with invalid RelabelAction
       initial: |
         apiVersion: config.openshift.io/v1alpha1
@@ -1679,8 +1675,9 @@ tests:
               - url: https://remote.example.com/write
                 writeRelabelConfigs:
                   - name: invalid-action
-                    action: InvalidAction
-      expectedError: 'spec.prometheusConfig.remoteWrite[0].writeRelabelConfigs[0].action: Unsupported value: "InvalidAction": supported values: "Replace", "Keep", "Drop", "HashMod", "LabelMap", "LabelDrop", "LabelKeep", "Lowercase", "Uppercase", "KeepEqual", "DropEqual"'
+                    action:
+                      type: InvalidAction
+      expectedError: 'spec.prometheusConfig.remoteWrite[0].writeRelabelConfigs[0].action.type: Unsupported value: "InvalidAction": supported values: "Replace", "Keep", "Drop", "HashMod", "LabelMap", "LabelDrop", "LabelKeep", "Lowercase", "Uppercase", "KeepEqual", "DropEqual"'
     - name: Should reject PrometheusConfig with Replace action missing replace config
       initial: |
         apiVersion: config.openshift.io/v1alpha1
@@ -1693,8 +1690,9 @@ tests:
               - url: https://remote.example.com/write
                 writeRelabelConfigs:
                   - name: replace-action
-                    action: Replace
-      expectedError: 'spec.prometheusConfig.remoteWrite[0].writeRelabelConfigs[0]: Invalid value: "object": exactly one action-specific configuration must be specified and must match the action type'
+                    action:
+                      type: Replace
+      expectedError: 'spec.prometheusConfig.remoteWrite[0].writeRelabelConfigs[0].action: Invalid value: "object": replace is required when type is Replace, and forbidden otherwise'
     - name: Should reject PrometheusConfig with Replace action having wrong config type
       initial: |
         apiVersion: config.openshift.io/v1alpha1
@@ -1707,10 +1705,11 @@ tests:
               - url: https://remote.example.com/write
                 writeRelabelConfigs:
                   - name: replace-action
-                    action: Replace
-                    hashMod:
-                      targetLabel: shard
-      expectedError: 'spec.prometheusConfig.remoteWrite[0].writeRelabelConfigs[0]: Invalid value: "object": exactly one action-specific configuration must be specified and must match the action type'
+                    action:
+                      type: Replace
+                      hashMod:
+                        targetLabel: shard
+      expectedError: 'spec.prometheusConfig.remoteWrite[0].writeRelabelConfigs[0].action: Invalid value: "object": hashMod is required when type is HashMod, and forbidden otherwise'
     - name: Should reject PrometheusConfig with HashMod action missing hashMod config
       initial: |
         apiVersion: config.openshift.io/v1alpha1
@@ -1723,8 +1722,9 @@ tests:
               - url: https://remote.example.com/write
                 writeRelabelConfigs:
                   - name: hashmod-action
-                    action: HashMod
-      expectedError: 'spec.prometheusConfig.remoteWrite[0].writeRelabelConfigs[0]: Invalid value: "object": exactly one action-specific configuration must be specified and must match the action type'
+                    action:
+                      type: HashMod
+      expectedError: 'spec.prometheusConfig.remoteWrite[0].writeRelabelConfigs[0].action: Invalid value: "object": hashMod is required when type is HashMod, and forbidden otherwise'
     - name: Should reject PrometheusConfig with Lowercase action missing lowercase config
       initial: |
         apiVersion: config.openshift.io/v1alpha1
@@ -1737,8 +1737,9 @@ tests:
               - url: https://remote.example.com/write
                 writeRelabelConfigs:
                   - name: lowercase-action
-                    action: Lowercase
-      expectedError: 'spec.prometheusConfig.remoteWrite[0].writeRelabelConfigs[0]: Invalid value: "object": exactly one action-specific configuration must be specified and must match the action type'
+                    action:
+                      type: Lowercase
+      expectedError: 'spec.prometheusConfig.remoteWrite[0].writeRelabelConfigs[0].action: Invalid value: "object": lowercase is required when type is Lowercase, and forbidden otherwise'
     - name: Should reject PrometheusConfig with Uppercase action missing uppercase config
       initial: |
         apiVersion: config.openshift.io/v1alpha1
@@ -1751,8 +1752,9 @@ tests:
               - url: https://remote.example.com/write
                 writeRelabelConfigs:
                   - name: uppercase-action
-                    action: Uppercase
-      expectedError: 'spec.prometheusConfig.remoteWrite[0].writeRelabelConfigs[0]: Invalid value: "object": exactly one action-specific configuration must be specified and must match the action type'
+                    action:
+                      type: Uppercase
+      expectedError: 'spec.prometheusConfig.remoteWrite[0].writeRelabelConfigs[0].action: Invalid value: "object": uppercase is required when type is Uppercase, and forbidden otherwise'
     - name: Should reject PrometheusConfig with KeepEqual action missing keepEqual config
       initial: |
         apiVersion: config.openshift.io/v1alpha1
@@ -1765,8 +1767,9 @@ tests:
               - url: https://remote.example.com/write
                 writeRelabelConfigs:
                   - name: keepequal-action
-                    action: KeepEqual
-      expectedError: 'spec.prometheusConfig.remoteWrite[0].writeRelabelConfigs[0]: Invalid value: "object": exactly one action-specific configuration must be specified and must match the action type'
+                    action:
+                      type: KeepEqual
+      expectedError: 'spec.prometheusConfig.remoteWrite[0].writeRelabelConfigs[0].action: Invalid value: "object": keepEqual is required when type is KeepEqual, and forbidden otherwise'
     - name: Should reject PrometheusConfig with DropEqual action missing dropEqual config
       initial: |
         apiVersion: config.openshift.io/v1alpha1
@@ -1779,8 +1782,9 @@ tests:
               - url: https://remote.example.com/write
                 writeRelabelConfigs:
                   - name: dropequal-action
-                    action: DropEqual
-      expectedError: 'spec.prometheusConfig.remoteWrite[0].writeRelabelConfigs[0]: Invalid value: "object": exactly one action-specific configuration must be specified and must match the action type'
+                    action:
+                      type: DropEqual
+      expectedError: 'spec.prometheusConfig.remoteWrite[0].writeRelabelConfigs[0].action: Invalid value: "object": dropEqual is required when type is DropEqual, and forbidden otherwise'
     - name: Should reject PrometheusConfig with LabelMap action missing labelMap config
       initial: |
         apiVersion: config.openshift.io/v1alpha1
@@ -1793,8 +1797,9 @@ tests:
               - url: https://remote.example.com/write
                 writeRelabelConfigs:
                   - name: labelmap-action
-                    action: LabelMap
-      expectedError: 'spec.prometheusConfig.remoteWrite[0].writeRelabelConfigs[0]: Invalid value: "object": exactly one action-specific configuration must be specified and must match the action type'
+                    action:
+                      type: LabelMap
+      expectedError: 'spec.prometheusConfig.remoteWrite[0].writeRelabelConfigs[0].action: Invalid value: "object": labelMap is required when type is LabelMap, and forbidden otherwise'
     - name: Should reject PrometheusConfig with RelabelConfig name missing
       initial: |
         apiVersion: config.openshift.io/v1alpha1
@@ -1806,7 +1811,8 @@ tests:
             remoteWrite:
               - url: https://remote.example.com/write
                 writeRelabelConfigs:
-                  - action: Keep
+                  - action:
+                      type: Keep
       expectedError: 'spec.prometheusConfig.remoteWrite[0].writeRelabelConfigs[0].name: Required value'
     - name: Should reject PrometheusConfig with RelabelConfig name too long
       initial: |
@@ -1820,7 +1826,8 @@ tests:
               - url: https://remote.example.com/write
                 writeRelabelConfigs:
                   - name: "this-is-a-very-long-relabel-config-name-that-exceeds-the-maximum-length-of-63-characters-and-should-be-rejected"
-                    action: Keep
+                    action:
+                      type: Keep
       expectedError: 'spec.prometheusConfig.remoteWrite[0].writeRelabelConfigs[0].name: Too long: may not be more than 63 bytes'
     - name: Should reject PrometheusConfig with RelabelConfig name invalid characters
       initial: |
@@ -1834,7 +1841,8 @@ tests:
               - url: https://remote.example.com/write
                 writeRelabelConfigs:
                   - name: "invalid@name"
-                    action: Keep
+                    action:
+                      type: Keep
       expectedError: 'spec.prometheusConfig.remoteWrite[0].writeRelabelConfigs[0].name: Invalid value: "string": must contain only alphanumeric characters, hyphens, and underscores'
     - name: Should reject PrometheusConfig with RelabelConfig sourceLabels exceeding max items
       initial: |
@@ -1848,7 +1856,6 @@ tests:
               - url: https://remote.example.com/write
                 writeRelabelConfigs:
                   - name: relabel-config
-                    action: Keep
                     sourceLabels:
                       - label1
                       - label2
@@ -1861,6 +1868,8 @@ tests:
                       - label9
                       - label10
                       - label11
+                    action:
+                      type: Keep
       expectedError: 'spec.prometheusConfig.remoteWrite[0].writeRelabelConfigs[0].sourceLabels: Too many: 11: must have at most 10 items'
     - name: Should reject PrometheusConfig with RelabelConfig sourceLabels starting with __
       initial: |
@@ -1874,9 +1883,10 @@ tests:
               - url: https://remote.example.com/write
                 writeRelabelConfigs:
                   - name: relabel-config
-                    action: Keep
                     sourceLabels:
                       - __meta_kubernetes_pod_name
+                    action:
+                      type: Keep
       expectedError: "spec.prometheusConfig.remoteWrite[0].writeRelabelConfigs[0].sourceLabels[0]: Invalid value: \"string\": label names beginning with '__' (two underscores) are reserved for internal Prometheus use and are not allowed"
     - name: Should reject PrometheusConfig with RelabelConfig separator too long
       initial: |
@@ -1890,8 +1900,9 @@ tests:
               - url: https://remote.example.com/write
                 writeRelabelConfigs:
                   - name: relabel-config
-                    action: Keep
                     separator: ";;;;;;"
+                    action:
+                      type: Keep
       expectedError: 'spec.prometheusConfig.remoteWrite[0].writeRelabelConfigs[0].separator: Too long: may not be more than 5 bytes'
     - name: Should reject PrometheusConfig with RelabelConfig regex exceeding max length
       initial: |
@@ -1905,8 +1916,9 @@ tests:
               - url: https://remote.example.com/write
                 writeRelabelConfigs:
                   - name: relabel-config
-                    action: Keep
                     regex: "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+                    action:
+                      type: Keep
       expectedError: 'spec.prometheusConfig.remoteWrite[0].writeRelabelConfigs[0].regex: Too long: may not be more than 1000 bytes'
     - name: Should reject PrometheusConfig with Replace action missing targetLabel
       initial: |
@@ -1920,9 +1932,10 @@ tests:
               - url: https://remote.example.com/write
                 writeRelabelConfigs:
                   - name: replace-action
-                    action: Replace
-                    replace: {}
-      expectedError: 'spec.prometheusConfig.remoteWrite[0].writeRelabelConfigs[0].replace.targetLabel: Required value'
+                    action:
+                      type: Replace
+                      replace: {}
+      expectedError: 'spec.prometheusConfig.remoteWrite[0].writeRelabelConfigs[0].action.replace.targetLabel: Required value'
     - name: Should reject PrometheusConfig with Replace action targetLabel too long
       initial: |
         apiVersion: config.openshift.io/v1alpha1
@@ -1935,10 +1948,11 @@ tests:
               - url: https://remote.example.com/write
                 writeRelabelConfigs:
                   - name: replace-action
-                    action: Replace
-                    replace:
-                      targetLabel: "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
-      expectedError: 'spec.prometheusConfig.remoteWrite[0].writeRelabelConfigs[0].replace.targetLabel: Too long: may not be more than 128 bytes'
+                    action:
+                      type: Replace
+                      replace:
+                        targetLabel: "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+      expectedError: 'spec.prometheusConfig.remoteWrite[0].writeRelabelConfigs[0].action.replace.targetLabel: Too long: may not be more than 128 bytes'
     - name: Should reject PrometheusConfig with Replace action replacement too long
       initial: |
         apiVersion: config.openshift.io/v1alpha1
@@ -1951,11 +1965,12 @@ tests:
               - url: https://remote.example.com/write
                 writeRelabelConfigs:
                   - name: replace-action
-                    action: Replace
-                    replace:
-                      targetLabel: instance
-                      replacement: "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
-      expectedError: 'spec.prometheusConfig.remoteWrite[0].writeRelabelConfigs[0].replace.replacement: Too long: may not be more than 255 bytes'
+                    action:
+                      type: Replace
+                      replace:
+                        targetLabel: instance
+                        replacement: "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+      expectedError: 'spec.prometheusConfig.remoteWrite[0].writeRelabelConfigs[0].action.replace.replacement: Too long: may not be more than 255 bytes'
     - name: Should reject PrometheusConfig with HashMod action missing targetLabel
       initial: |
         apiVersion: config.openshift.io/v1alpha1
@@ -1968,9 +1983,10 @@ tests:
               - url: https://remote.example.com/write
                 writeRelabelConfigs:
                   - name: hashmod-action
-                    action: HashMod
-                    hashMod: {}
-      expectedError: 'spec.prometheusConfig.remoteWrite[0].writeRelabelConfigs[0].hashMod.targetLabel: Required value'
+                    action:
+                      type: HashMod
+                      hashMod: {}
+      expectedError: 'spec.prometheusConfig.remoteWrite[0].writeRelabelConfigs[0].action.hashMod.targetLabel: Required value'
     - name: Should reject PrometheusConfig with writeRelabelConfigs duplicate names
       initial: |
         apiVersion: config.openshift.io/v1alpha1
@@ -1983,9 +1999,11 @@ tests:
               - url: https://remote.example.com/write
                 writeRelabelConfigs:
                   - name: relabel-config
-                    action: Keep
+                    action:
+                      type: Keep
                   - name: relabel-config
-                    action: Drop
+                    action:
+                      type: Drop
       expectedError: 'spec.prometheusConfig.remoteWrite[0].writeRelabelConfigs[1]: Duplicate value: map[string]interface {}{"name":"relabel-config"}'
     - name: Should reject PrometheusConfig with writeRelabelConfigs exceeding max items
       initial: |
@@ -1999,25 +2017,36 @@ tests:
               - url: https://remote.example.com/write
                 writeRelabelConfigs:
                   - name: config1
-                    action: Keep
+                    action:
+                      type: Keep
                   - name: config2
-                    action: Keep
+                    action:
+                      type: Keep
                   - name: config3
-                    action: Keep
+                    action:
+                      type: Keep
                   - name: config4
-                    action: Keep
+                    action:
+                      type: Keep
                   - name: config5
-                    action: Keep
+                    action:
+                      type: Keep
                   - name: config6
-                    action: Keep
+                    action:
+                      type: Keep
                   - name: config7
-                    action: Keep
+                    action:
+                      type: Keep
                   - name: config8
-                    action: Keep
+                    action:
+                      type: Keep
                   - name: config9
-                    action: Keep
+                    action:
+                      type: Keep
                   - name: config10
-                    action: Keep
+                    action:
+                      type: Keep
                   - name: config11
-                    action: Keep
+                    action:
+                      type: Keep
       expectedError: 'spec.prometheusConfig.remoteWrite[0].writeRelabelConfigs: Too many: 11: must have at most 10 items'

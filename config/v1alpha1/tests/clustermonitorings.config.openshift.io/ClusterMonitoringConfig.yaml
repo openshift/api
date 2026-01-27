@@ -736,7 +736,7 @@ tests:
             mode: "Disabled"
           prometheusConfig:
             logLevel: Invalid
-      expectedError: 'spec.prometheusConfig.logLevel: Invalid value: "Invalid": spec.prometheusConfig.logLevel in body should be one of [Error Warn Info Debug]'
+      expectedError: 'spec.prometheusConfig.logLevel: Unsupported value: "Invalid": supported values: "Error", "Warn", "Info", "Debug"'
     - name: Should reject PrometheusConfig with invalid collectionProfile
       initial: |
         apiVersion: config.openshift.io/v1alpha1
@@ -746,7 +746,7 @@ tests:
             mode: "Disabled"
           prometheusConfig:
             collectionProfile: Invalid
-      expectedError: 'spec.prometheusConfig.collectionProfile: Invalid value: "Invalid": spec.prometheusConfig.collectionProfile in body should be one of [Full Minimal]'
+      expectedError: 'spec.prometheusConfig.collectionProfile: Unsupported value: "Invalid": supported values: "Full", "Minimal"'
     - name: Should reject PrometheusConfig with nodeSelector exceeding max properties
       initial: |
         apiVersion: config.openshift.io/v1alpha1
@@ -767,7 +767,7 @@ tests:
               key9: value9
               key10: value10
               key11: value11
-      expectedError: 'spec.prometheusConfig.nodeSelector: Too many properties: 11: must not have more than 10 properties'
+      expectedError: 'spec.prometheusConfig.nodeSelector: Too many: 11: must have at most 10 items'
     - name: Should reject PrometheusConfig with queryLogFile not starting with / or containing /
       initial: |
         apiVersion: config.openshift.io/v1alpha1
@@ -777,7 +777,7 @@ tests:
             mode: "Disabled"
           prometheusConfig:
             queryLogFile: relative/path.log
-      expectedError: 'spec.prometheusConfig.queryLogFile: Invalid value: "relative/path.log": must be an absolute path starting with "/" or a simple filename without "/"'
+      expectedError: "spec.prometheusConfig.queryLogFile: Invalid value: \"string\": must be an absolute path starting with '/' or a simple filename without '/'"
     - name: Should reject PrometheusConfig with queryLogFile ending with /
       initial: |
         apiVersion: config.openshift.io/v1alpha1
@@ -787,7 +787,7 @@ tests:
             mode: "Disabled"
           prometheusConfig:
             queryLogFile: /var/log/queries/
-      expectedError: 'spec.prometheusConfig.queryLogFile: Invalid value: "/var/log/queries/": must not contain "//", end with "/", or contain ".."'
+      expectedError: "spec.prometheusConfig.queryLogFile: Invalid value: \"string\": must not contain '//', end with '/', or contain '..'"
     - name: Should reject PrometheusConfig with queryLogFile containing //
       initial: |
         apiVersion: config.openshift.io/v1alpha1
@@ -797,7 +797,7 @@ tests:
             mode: "Disabled"
           prometheusConfig:
             queryLogFile: /var//log/queries.log
-      expectedError: 'spec.prometheusConfig.queryLogFile: Invalid value: "/var//log/queries.log": must not contain "//", end with "/", or contain ".."'
+      expectedError: "spec.prometheusConfig.queryLogFile: Invalid value: \"string\": must not contain '//', end with '/', or contain '..'"
     - name: Should reject PrometheusConfig with queryLogFile containing ..
       initial: |
         apiVersion: config.openshift.io/v1alpha1
@@ -807,7 +807,7 @@ tests:
             mode: "Disabled"
           prometheusConfig:
             queryLogFile: /var/log/../queries.log
-      expectedError: 'spec.prometheusConfig.queryLogFile: Invalid value: "/var/log/../queries.log": must not contain "//", end with "/", or contain ".."'
+      expectedError: "spec.prometheusConfig.queryLogFile: Invalid value: \"string\": must not contain '//', end with '/', or contain '..'"
     - name: Should reject PrometheusConfig with queryLogFile containing invalid /dev/ path
       initial: |
         apiVersion: config.openshift.io/v1alpha1
@@ -817,7 +817,7 @@ tests:
             mode: "Disabled"
           prometheusConfig:
             queryLogFile: /dev/random
-      expectedError: 'spec.prometheusConfig.queryLogFile: Invalid value: "/dev/random": only /dev/stdout, /dev/stderr, and /dev/null are allowed as /dev/ paths'
+      expectedError: "spec.prometheusConfig.queryLogFile: Invalid value: \"string\": only /dev/stdout, /dev/stderr, and /dev/null are allowed as /dev/ paths"
     - name: Should accept PrometheusConfig with queryLogFile as /dev/stdout
       initial: |
         apiVersion: config.openshift.io/v1alpha1
@@ -1026,7 +1026,7 @@ tests:
           prometheusConfig:
             remoteWrite:
               - url: invalid-url
-      expectedError: 'spec.prometheusConfig.remoteWrite[0].url: Invalid value: "invalid-url": must be a valid URL with http or https scheme'
+      expectedError: "spec.prometheusConfig.remoteWrite[0].url: Invalid value: \"string\": must be a valid URL with http or https scheme"
     - name: Should reject PrometheusConfig with remoteWrite URL not http/https
       initial: |
         apiVersion: config.openshift.io/v1alpha1
@@ -1037,7 +1037,7 @@ tests:
           prometheusConfig:
             remoteWrite:
               - url: ftp://remote.example.com/write
-      expectedError: 'spec.prometheusConfig.remoteWrite[0].url: Invalid value: "ftp://remote.example.com/write": must be a valid URL with http or https scheme'
+      expectedError: "spec.prometheusConfig.remoteWrite[0].url: Invalid value: \"string\": must be a valid URL with http or https scheme"
     - name: Should reject PrometheusConfig with remoteWrite name invalid characters
       initial: |
         apiVersion: config.openshift.io/v1alpha1
@@ -1049,7 +1049,7 @@ tests:
             remoteWrite:
               - url: https://remote.example.com/write
                 name: invalid@name
-      expectedError: 'spec.prometheusConfig.remoteWrite[0].name: Invalid value: "invalid@name": must contain only alphanumeric characters, hyphens, and underscores'
+      expectedError: "spec.prometheusConfig.remoteWrite[0].name: Invalid value: \"string\": must contain only alphanumeric characters, hyphens, and underscores"
     - name: Should reject PrometheusConfig with remoteWrite remoteTimeoutSeconds below minimum
       initial: |
         apiVersion: config.openshift.io/v1alpha1
@@ -1335,7 +1335,6 @@ tests:
                     action: Replace
                     sourceLabels:
                       - instance
-                    targetLabel: instance
                     replace:
                       targetLabel: instance
                       replacement: "$1"
@@ -1353,7 +1352,6 @@ tests:
                     action: Replace
                     sourceLabels:
                       - instance
-                    targetLabel: instance
                     replace:
                       targetLabel: instance
                       replacement: "$1"
@@ -1682,7 +1680,7 @@ tests:
                 writeRelabelConfigs:
                   - name: invalid-action
                     action: InvalidAction
-      expectedError: 'spec.prometheusConfig.remoteWrite[0].writeRelabelConfigs[0].action: Invalid value: "InvalidAction": spec.prometheusConfig.remoteWrite[0].writeRelabelConfigs[0].action in body should be one of [Replace Keep Drop HashMod LabelMap LabelDrop LabelKeep Lowercase Uppercase KeepEqual DropEqual]'
+      expectedError: 'spec.prometheusConfig.remoteWrite[0].writeRelabelConfigs[0].action: Unsupported value: "InvalidAction": supported values: "Replace", "Keep", "Drop", "HashMod", "LabelMap", "LabelDrop", "LabelKeep", "Lowercase", "Uppercase", "KeepEqual", "DropEqual"'
     - name: Should reject PrometheusConfig with Replace action missing replace config
       initial: |
         apiVersion: config.openshift.io/v1alpha1
@@ -1837,7 +1835,7 @@ tests:
                 writeRelabelConfigs:
                   - name: "invalid@name"
                     action: Keep
-      expectedError: 'spec.prometheusConfig.remoteWrite[0].writeRelabelConfigs[0].name: Invalid value: "invalid@name": must contain only alphanumeric characters, hyphens, and underscores'
+      expectedError: 'spec.prometheusConfig.remoteWrite[0].writeRelabelConfigs[0].name: Invalid value: "string": must contain only alphanumeric characters, hyphens, and underscores'
     - name: Should reject PrometheusConfig with RelabelConfig sourceLabels exceeding max items
       initial: |
         apiVersion: config.openshift.io/v1alpha1
@@ -1879,7 +1877,7 @@ tests:
                     action: Keep
                     sourceLabels:
                       - __meta_kubernetes_pod_name
-      expectedError: 'spec.prometheusConfig.remoteWrite[0].writeRelabelConfigs[0].sourceLabels[0]: Invalid value: "__meta_kubernetes_pod_name": label names beginning with "__" (two underscores) are reserved for internal Prometheus use and are not allowed'
+      expectedError: "spec.prometheusConfig.remoteWrite[0].writeRelabelConfigs[0].sourceLabels[0]: Invalid value: \"string\": label names beginning with '__' (two underscores) are reserved for internal Prometheus use and are not allowed"
     - name: Should reject PrometheusConfig with RelabelConfig separator too long
       initial: |
         apiVersion: config.openshift.io/v1alpha1
@@ -1893,7 +1891,7 @@ tests:
                 writeRelabelConfigs:
                   - name: relabel-config
                     action: Keep
-                    separator: ";;;;;"
+                    separator: ";;;;;;"
       expectedError: 'spec.prometheusConfig.remoteWrite[0].writeRelabelConfigs[0].separator: Too long: may not be more than 5 bytes'
     - name: Should reject PrometheusConfig with RelabelConfig regex exceeding max length
       initial: |

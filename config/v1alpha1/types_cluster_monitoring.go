@@ -793,8 +793,7 @@ type AdditionalAlertmanagerConfig struct {
 	// scheme defines the URL scheme to use when communicating with Alertmanager
 	// instances.
 	// Possible values are `HTTP` or `HTTPS`.
-	// When omitted, defaults to `HTTP`.
-	// +kubebuilder:default=HTTP
+	// When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time.
 	// +optional
 	Scheme AlertmanagerScheme `json:"scheme,omitempty"`
 	// staticConfigs is a list of statically configured Alertmanager endpoints in the form
@@ -951,48 +950,47 @@ type RelabelConfig struct {
 	//   - DropEqual: Drops metrics where the source label value equals the target label value. Requires Prometheus >= v2.41.0.
 	// +required
 	// +unionDiscriminator
-	// +kubebuilder:validation:Enum=Replace;Keep;Drop;HashMod;LabelMap;LabelDrop;LabelKeep;Lowercase;Uppercase;KeepEqual;DropEqual
 	Action RelabelAction `json:"action,omitempty"`
 
 	// replace configures the Replace action.
 	// Required when action is Replace.
 	// +unionMember
 	// +optional
-	Replace *ReplaceActionConfig `json:"replace,omitempty,omitzero"`
+	Replace ReplaceActionConfig `json:"replace,omitempty,omitzero"`
 
 	// hashMod configures the HashMod action.
 	// Required when action is HashMod.
 	// +unionMember
 	// +optional
-	HashMod *HashModActionConfig `json:"hashMod,omitempty,omitzero"`
+	HashMod HashModActionConfig `json:"hashMod,omitempty,omitzero"`
 
 	// lowercase configures the Lowercase action.
 	// Required when action is Lowercase.
 	// Requires Prometheus >= v2.36.0.
 	// +unionMember
 	// +optional
-	Lowercase *LowercaseActionConfig `json:"lowercase,omitempty,omitzero"`
+	Lowercase LowercaseActionConfig `json:"lowercase,omitempty,omitzero"`
 
 	// uppercase configures the Uppercase action.
 	// Required when action is Uppercase.
 	// Requires Prometheus >= v2.36.0.
 	// +unionMember
 	// +optional
-	Uppercase *UppercaseActionConfig `json:"uppercase,omitempty,omitzero"`
+	Uppercase UppercaseActionConfig `json:"uppercase,omitempty,omitzero"`
 
 	// keepEqual configures the KeepEqual action.
 	// Required when action is KeepEqual.
 	// Requires Prometheus >= v2.41.0.
 	// +unionMember
 	// +optional
-	KeepEqual *KeepEqualActionConfig `json:"keepEqual,omitempty,omitzero"`
+	KeepEqual KeepEqualActionConfig `json:"keepEqual,omitempty,omitzero"`
 
 	// dropEqual configures the DropEqual action.
 	// Required when action is DropEqual.
 	// Requires Prometheus >= v2.41.0.
 	// +unionMember
 	// +optional
-	DropEqual *DropEqualActionConfig `json:"dropEqual,omitempty,omitzero"`
+	DropEqual DropEqualActionConfig `json:"dropEqual,omitempty,omitzero"`
 
 	// labelMap configures the LabelMap action.
 	// Required when action is LabelMap.

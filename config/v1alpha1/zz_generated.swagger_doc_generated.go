@@ -298,7 +298,7 @@ func (LowercaseActionConfig) SwaggerDoc() map[string]string {
 
 var map_MetadataConfig = map[string]string{
 	"":             "MetadataConfig defines settings for sending series metadata to remote write storage.",
-	"send":         "send enables sending series metadata. When set to true, Prometheus sends metadata about time series to the remote write endpoint. When omitted or set to false, no metadata is sent.",
+	"send":         "send defines whether series metadata is sent to the remote write endpoint. When set to \"Enabled\", Prometheus sends metadata about time series to the remote write endpoint. When omitted or set to \"Disabled\", no metadata is sent. Valid values are \"Enabled\" and \"Disabled\".",
 	"sendInterval": "sendInterval defines the interval at which metadata is sent. When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time. Must be a valid duration string (e.g., \"30s\", \"1m\", \"5m\"). Minimum value is 1 second. Maximum value is 24 hours.",
 }
 
@@ -386,7 +386,7 @@ var map_QueueConfig = map[string]string{
 	"batchSendDeadline": "batchSendDeadline is the maximum time a sample will wait in buffer before being sent. When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time. Must be a valid duration string (e.g., \"5s\", \"1m\"). Minimum value is 1 second. Maximum value is 1 hour.",
 	"minBackoff":        "minBackoff is the minimum retry delay. When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time. Must be a valid duration string (e.g., \"30ms\", \"1s\"). Minimum value is 1 millisecond. Maximum value is 1 hour.",
 	"maxBackoff":        "maxBackoff is the maximum retry delay. When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time. Must be a valid duration string (e.g., \"5s\", \"1m\"). Minimum value is 1 millisecond. Maximum value is 1 hour.",
-	"retryOnRateLimit":  "retryOnRateLimit enables retries on HTTP 429 responses. When set to true, Prometheus will retry requests that receive HTTP 429 (Too Many Requests) responses. When omitted or set to false, no retries are performed on rate limit responses.",
+	"retryOnRateLimit":  "retryOnRateLimit defines whether to retry requests on HTTP 429 responses. When set to \"Enabled\", Prometheus will retry requests that receive HTTP 429 (Too Many Requests) responses. When omitted or set to \"Disabled\", no retries are performed on rate limit responses. Valid values are \"Enabled\" and \"Disabled\".",
 }
 
 func (QueueConfig) SwaggerDoc() map[string]string {
@@ -436,7 +436,7 @@ var map_RemoteWriteSpec = map[string]string{
 	"proxyUrl":            "proxyUrl defines an optional proxy URL. If the cluster-wide proxy is enabled, it replaces the proxyUrl setting. The cluster-wide proxy supports both HTTP and HTTPS proxies, with HTTPS taking precedence. When omitted, no proxy is used. Must be a valid URL with http or https scheme. Must be between 1 and 2048 characters in length.",
 	"queueConfig":         "queueConfig allows tuning configuration for remote write queue parameters. When omitted, default queue configuration is used.",
 	"remoteTimeout":       "remoteTimeout defines the timeout value for requests to the remote write endpoint. When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time. Must be a valid duration string (e.g., \"30s\", \"1m\", \"5m\"). Minimum value is 1 second. Maximum value is 10 minutes.",
-	"sendExemplars":       "sendExemplars enables sending exemplars via remote write. When enabled, Prometheus is configured to store a maximum of 100,000 exemplars in memory. Note that this setting only applies to user-defined monitoring. It is not applicable to default in-cluster monitoring. When omitted, exemplars are not sent.",
+	"sendExemplars":       "sendExemplars defines whether exemplars are sent via remote write. When set to \"Enabled\", Prometheus is configured to store a maximum of 100,000 exemplars in memory. Note that this setting only applies to user-defined monitoring. It is not applicable to default in-cluster monitoring. When omitted or set to \"Disabled\", exemplars are not sent. Valid values are \"Enabled\" and \"Disabled\".",
 	"sigv4":               "sigv4 defines AWS Signature Version 4 authentication settings. When omitted, no AWS SigV4 authentication is performed.",
 	"tlsConfig":           "tlsConfig defines TLS authentication settings for the remote write endpoint. When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time.",
 }

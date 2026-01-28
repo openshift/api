@@ -1905,10 +1905,14 @@ spec:
                           properties:
                             send:
                               description: |-
-                                send enables sending series metadata.
-                                When set to true, Prometheus sends metadata about time series to the remote write endpoint.
-                                When omitted or set to false, no metadata is sent.
-                              type: boolean
+                                send defines whether series metadata is sent to the remote write endpoint.
+                                When set to "Enabled", Prometheus sends metadata about time series to the remote write endpoint.
+                                When omitted or set to "Disabled", no metadata is sent.
+                                Valid values are "Enabled" and "Disabled".
+                              enum:
+                              - Enabled
+                              - Disabled
+                              type: string
                             sendInterval:
                               description: |-
                                 sendInterval defines the interval at which metadata is sent.
@@ -1916,7 +1920,7 @@ spec:
                                 Must be a valid duration string (e.g., "30s", "1m", "5m").
                                 Minimum value is 1 second.
                                 Maximum value is 24 hours.
-                              pattern: ^([0-9]+(\\.[0-9]+)?(ns|us|µs|ms|s|m|h))+$
+                              maxLength: 20
                               type: string
                           type: object
                         name:
@@ -2031,6 +2035,7 @@ spec:
                                 type: string
                               maxItems: 20
                               type: array
+                              x-kubernetes-list-type: atomic
                             tokenUrl:
                               description: |-
                                 tokenUrl is the URL to fetch the token from.
@@ -2075,7 +2080,7 @@ spec:
                                 Must be a valid duration string (e.g., "5s", "1m").
                                 Minimum value is 1 second.
                                 Maximum value is 1 hour.
-                              pattern: ^([0-9]+(\\.[0-9]+)?(ns|us|µs|ms|s|m|h))+$
+                              maxLength: 20
                               type: string
                             capacity:
                               description: |-
@@ -2095,7 +2100,7 @@ spec:
                                 Must be a valid duration string (e.g., "5s", "1m").
                                 Minimum value is 1 millisecond.
                                 Maximum value is 1 hour.
-                              pattern: ^([0-9]+(\\.[0-9]+)?(ns|us|µs|ms|s|m|h))+$
+                              maxLength: 20
                               type: string
                             maxSamplesPerSend:
                               description: |-
@@ -2126,7 +2131,7 @@ spec:
                                 Must be a valid duration string (e.g., "30ms", "1s").
                                 Minimum value is 1 millisecond.
                                 Maximum value is 1 hour.
-                              pattern: ^([0-9]+(\\.[0-9]+)?(ns|us|µs|ms|s|m|h))+$
+                              maxLength: 20
                               type: string
                             minShards:
                               description: |-
@@ -2141,10 +2146,14 @@ spec:
                               type: integer
                             retryOnRateLimit:
                               description: |-
-                                retryOnRateLimit enables retries on HTTP 429 responses.
-                                When set to true, Prometheus will retry requests that receive HTTP 429 (Too Many Requests) responses.
-                                When omitted or set to false, no retries are performed on rate limit responses.
-                              type: boolean
+                                retryOnRateLimit defines whether to retry requests on HTTP 429 responses.
+                                When set to "Enabled", Prometheus will retry requests that receive HTTP 429 (Too Many Requests) responses.
+                                When omitted or set to "Disabled", no retries are performed on rate limit responses.
+                                Valid values are "Enabled" and "Disabled".
+                              enum:
+                              - Enabled
+                              - Disabled
+                              type: string
                           type: object
                         remoteTimeout:
                           description: |-
@@ -2153,15 +2162,19 @@ spec:
                             Must be a valid duration string (e.g., "30s", "1m", "5m").
                             Minimum value is 1 second.
                             Maximum value is 10 minutes.
-                          pattern: ^([0-9]+(\\.[0-9]+)?(ns|us|µs|ms|s|m|h))+$
+                          maxLength: 20
                           type: string
                         sendExemplars:
                           description: |-
-                            sendExemplars enables sending exemplars via remote write.
-                            When enabled, Prometheus is configured to store a maximum of 100,000 exemplars in memory.
+                            sendExemplars defines whether exemplars are sent via remote write.
+                            When set to "Enabled", Prometheus is configured to store a maximum of 100,000 exemplars in memory.
                             Note that this setting only applies to user-defined monitoring. It is not applicable to default in-cluster monitoring.
-                            When omitted, exemplars are not sent.
-                          type: boolean
+                            When omitted or set to "Disabled", exemplars are not sent.
+                            Valid values are "Enabled" and "Disabled".
+                          enum:
+                          - Enabled
+                          - Disabled
+                          type: string
                         sigv4:
                           description: |-
                             sigv4 defines AWS Signature Version 4 authentication settings.

@@ -13040,8 +13040,8 @@
       "type": "object",
       "properties": {
         "send": {
-          "description": "send enables sending series metadata. When set to true, Prometheus sends metadata about time series to the remote write endpoint. When omitted or set to false, no metadata is sent.",
-          "type": "boolean"
+          "description": "send defines whether series metadata is sent to the remote write endpoint. When set to \"Enabled\", Prometheus sends metadata about time series to the remote write endpoint. When omitted or set to \"Disabled\", no metadata is sent. Valid values are \"Enabled\" and \"Disabled\".",
+          "type": "string"
         },
         "sendInterval": {
           "description": "sendInterval defines the interval at which metadata is sent. When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time. Must be a valid duration string (e.g., \"30s\", \"1m\", \"5m\"). Minimum value is 1 second. Maximum value is 24 hours.",
@@ -13139,7 +13139,8 @@
           "items": {
             "type": "string",
             "default": ""
-          }
+          },
+          "x-kubernetes-list-type": "atomic"
         },
         "tokenUrl": {
           "description": "tokenUrl is the URL to fetch the token from. Must be a valid URL with http or https scheme. Must be between 1 and 2048 characters in length.",
@@ -13459,8 +13460,8 @@
           "format": "int32"
         },
         "retryOnRateLimit": {
-          "description": "retryOnRateLimit enables retries on HTTP 429 responses. When set to true, Prometheus will retry requests that receive HTTP 429 (Too Many Requests) responses. When omitted or set to false, no retries are performed on rate limit responses.",
-          "type": "boolean"
+          "description": "retryOnRateLimit defines whether to retry requests on HTTP 429 responses. When set to \"Enabled\", Prometheus will retry requests that receive HTTP 429 (Too Many Requests) responses. When omitted or set to \"Disabled\", no retries are performed on rate limit responses. Valid values are \"Enabled\" and \"Disabled\".",
+          "type": "string"
         }
       }
     },
@@ -13570,10 +13571,12 @@
       "properties": {
         "authorization": {
           "description": "authorization defines the authorization settings for remote write storage. When omitted, no authorization is performed.",
+          "default": {},
           "$ref": "#/definitions/com.github.openshift.api.config.v1alpha1.SafeAuthorization"
         },
         "basicAuth": {
           "description": "basicAuth defines basic authentication settings for the remote write endpoint URL. When omitted, no basic authentication is performed.",
+          "default": {},
           "$ref": "#/definitions/com.github.openshift.api.config.v1alpha1.BasicAuth"
         },
         "bearerTokenFile": {
@@ -13598,6 +13601,7 @@
         },
         "oauth2": {
           "description": "oauth2 defines OAuth2 authentication settings for the remote write endpoint. When omitted, no OAuth2 authentication is performed.",
+          "default": {},
           "$ref": "#/definitions/com.github.openshift.api.config.v1alpha1.OAuth2"
         },
         "proxyUrl": {
@@ -13613,8 +13617,8 @@
           "type": "string"
         },
         "sendExemplars": {
-          "description": "sendExemplars enables sending exemplars via remote write. When enabled, Prometheus is configured to store a maximum of 100,000 exemplars in memory. Note that this setting only applies to user-defined monitoring. It is not applicable to default in-cluster monitoring. When omitted, exemplars are not sent.",
-          "type": "boolean"
+          "description": "sendExemplars defines whether exemplars are sent via remote write. When set to \"Enabled\", Prometheus is configured to store a maximum of 100,000 exemplars in memory. Note that this setting only applies to user-defined monitoring. It is not applicable to default in-cluster monitoring. When omitted or set to \"Disabled\", exemplars are not sent. Valid values are \"Enabled\" and \"Disabled\".",
+          "type": "string"
         },
         "sigv4": {
           "description": "sigv4 defines AWS Signature Version 4 authentication settings. When omitted, no AWS SigV4 authentication is performed.",
@@ -13622,6 +13626,7 @@
         },
         "tlsConfig": {
           "description": "tlsConfig defines TLS authentication settings for the remote write endpoint. When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time.",
+          "default": {},
           "$ref": "#/definitions/com.github.openshift.api.config.v1alpha1.TLSConfig"
         },
         "url": {

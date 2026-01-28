@@ -737,27 +737,41 @@ type KubeletConfig struct {
 	Status KubeletConfigStatus `json:"status"`
 }
 
-// KubeletConfigSpec defines the desired state of KubeletConfig
+// KubeletConfigSpec configures the kubelet running on cluster nodes.
 type KubeletConfigSpec struct {
+	// autoSizingReserved controls whether system-reserved CPU and memory are automatically
+	// calculated based on each node's installed capacity. When enabled, prevents node failure
+	// from resource starvation of system components (kubelet, CRI-O) without manual configuration.
+	// When unset, defaults to true for worker nodes and false for control plane nodes.
+	// Set to false to disable and use manual settings.
 	// +optional
 	AutoSizingReserved *bool `json:"autoSizingReserved,omitempty"`
+	// logLevel sets the kubelet log verbosity, controlling the amount of detail in kubelet logs.
+	// Valid values range from 0 (minimal logging) to 10 (maximum verbosity with trace-level detail).
+	// Higher log levels may impact node performance. When omitted, the platform chooses a reasonable default,
+	// which is subject to change over time. The current default is 2 (standard informational logging).
+	// +kubebuilder:validation:Minimum=0
+	// +kubebuilder:validation:Maximum=10
 	// +optional
 	LogLevel *int32 `json:"logLevel,omitempty"`
 
-	// machineConfigPoolSelector selects which pools the KubeletConfig shoud apply to.
-	// A nil selector will result in no pools being selected.
+	// machineConfigPoolSelector selects which pools the KubeletConfig should apply to.
+	// A nil selector results in no pools being selected, meaning this kubelet configuration
+	// will not be applied to any nodes in the cluster.
 	// +optional
 	MachineConfigPoolSelector *metav1.LabelSelector `json:"machineConfigPoolSelector,omitempty"`
-	// kubeletConfig fields are defined in kubernetes upstream. Please refer to the types defined in the version/commit used by
-	// OpenShift of the upstream kubernetes. It's important to note that, since the fields of the kubelet configuration are directly fetched from
-	// upstream the validation of those values is handled directly by the kubelet. Please refer to the upstream version of the relevant kubernetes
-	// for the valid values of these fields. Invalid values of the kubelet configuration fields may render cluster nodes unusable.
+	// kubeletConfig contains upstream Kubernetes kubelet configuration fields.
+	// Values are validated by the kubelet itself. Invalid values may render nodes unusable.
+	// Refer to OpenShift documentation for the Kubernetes version corresponding to your
+	// OpenShift release to find valid kubelet configuration options.
 	// +optional
 	KubeletConfig *runtime.RawExtension `json:"kubeletConfig,omitempty"`
 
-	// If unset, the default is based on the apiservers.config.openshift.io/cluster resource.
-	// Note that only Old and Intermediate profiles are currently supported, and
-	// the maximum available minTLSVersion is VersionTLS12.
+	// tlsSecurityProfile configures TLS settings for the kubelet.
+	// When omitted, the TLS configuration defaults to the value from apiservers.config.openshift.io/cluster.
+	// When specified, the type field is required and must be set to either "Old" or "Intermediate".
+	// Modern and Custom TLS profiles are not supported for kubelet; maximum minTLSVersion is VersionTLS12.
+	// +kubebuilder:validation:XValidation:rule="has(self.type) && (self.type == 'Old' || self.type == 'Intermediate')",message="only Old and Intermediate TLS profiles are supported for kubelet"
 	// +optional
 	TLSSecurityProfile *configv1.TLSSecurityProfile `json:"tlsSecurityProfile,omitempty"`
 }

@@ -369,9 +369,6 @@
                     },
                     {
                         "name": "VSphereMultiNetworks"
-                    },
-                    {
-                        "name": "VolumeAttributesClass"
                     }
                 ],
                 "version": ""

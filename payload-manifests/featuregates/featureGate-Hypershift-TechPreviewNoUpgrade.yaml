@@ -341,9 +341,6 @@
                         "name": "SigstoreImageVerificationPKI"
                     },
                     {
-                        "name": "StoragePerformantSecurityPolicy"
-                    },
-                    {
                         "name": "UpgradeStatus"
                     },
                     {

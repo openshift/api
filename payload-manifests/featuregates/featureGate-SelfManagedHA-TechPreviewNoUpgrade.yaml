@@ -317,9 +317,6 @@
                         "name": "PreconfiguredUDNAddresses"
                     },
                     {
-                        "name": "ProcMountType"
-                    },
-                    {
                         "name": "RouteAdvertisements"
                     },
                     {

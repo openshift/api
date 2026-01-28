@@ -178,6 +178,39 @@ spec:
                 x-kubernetes-list-map-keys:
                 - name
                 x-kubernetes-list-type: map
+              additionalRoutingCapabilities:
+                description: |-
+                  additionalRoutingCapabilities describes components and relevant
+                  configuration providing additional routing capabilities. When set, it
+                  enables such components and the usage of the routing capabilities they
+                  provide for the machine network. Upstream operators, like MetalLB
+                  operator, requiring these capabilities may rely on, or automatically set
+                  this attribute. Network plugins may leverage advanced routing
+                  capabilities acquired through the enablement of these components but may
+                  require specific configuration on their side to do so; refer to their
+                  respective documentation and configuration options.
+                properties:
+                  providers:
+                    description: |-
+                      providers is a set of enabled components that provide additional routing
+                      capabilities. Entries on this list must be unique. The  only valid value
+                      is currrently "FRR" which provides FRR routing capabilities through the
+                      deployment of FRR.
+                    items:
+                      description: RoutingCapabilitiesProvider is a component providing
+                        routing capabilities.
+                      enum:
+                      - FRR
+                      type: string
+                    maxItems: 1
+                    minItems: 1
+                    type: array
+                    x-kubernetes-list-type: atomic
+                    x-kubernetes-validations:
+                    - rule: self.all(x, self.exists_one(y, x == y))
+                required:
+                - providers
+                type: object
               clusterNetwork:
                 description: |-
                   clusterNetwork is the IP address pool to use for pod IPs.
@@ -569,6 +602,22 @@ spec:
                               messages, e.g. "kern". Default is "local0"
                             type: string
                         type: object
+                      routeAdvertisements:
+                        description: |-
+                          routeAdvertisements determines if the functionality to advertise cluster
+                          network routes through a dynamic routing protocol, such as BGP, is
+                          enabled or not. This functionality is configured through the
+                          ovn-kubernetes RouteAdvertisements CRD. Requires the 'FRR' routing
+                          capability provider to be enabled as an additional routing capability.
+                          Allowed values are "Enabled", "Disabled" and ommited. When omitted, this
+                          means the user has no opinion and the platform is left to choose
+                          reasonable defaults. These defaults are subject to change over time. The
+                          current default is "Disabled".
+                        enum:
+                        - ""
+                        - Enabled
+                        - Disabled
+                        type: string
                       v4InternalSubnet:
                         description: |-
                           v4InternalSubnet is a v4 subnet used internally by ovn-kubernetes in case the
@@ -807,6 +856,11 @@ spec:
                       the configuration.
                     type: string
                 type: object
+                x-kubernetes-validations:
+                - message: networkType migration in mode other than 'Live' may not
+                    be configured at the same time as mtu migration
+                  rule: '!has(self.mtu) || !has(self.networkType) || self.networkType
+                    == "" || has(self.mode) && self.mode == ''Live'''
               observedConfig:
                 description: |-
                   observedConfig holds a sparse config that controller has observed from the cluster state.  It exists in spec because
@@ -871,6 +925,13 @@ spec:
                 || self.defaultNetwork.ovnKubernetesConfig.gatewayConfig.ipForwarding
                 == ''Restricted'' || self.defaultNetwork.ovnKubernetesConfig.gatewayConfig.ipForwarding
                 == ''Global'''
+            - message: Route advertisements cannot be Enabled if 'FRR' routing capability
+                provider is not available
+              rule: (has(self.additionalRoutingCapabilities) && ('FRR' in self.additionalRoutingCapabilities.providers))
+                || !has(self.defaultNetwork) || !has(self.defaultNetwork.ovnKubernetesConfig)
+                || !has(self.defaultNetwork.ovnKubernetesConfig.routeAdvertisements)
+                || self.defaultNetwork.ovnKubernetesConfig.routeAdvertisements !=
+                'Enabled'
           status:
             description: |-
               NetworkStatus is detailed operator status, which is distilled

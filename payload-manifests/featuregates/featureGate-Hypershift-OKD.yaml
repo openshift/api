@@ -251,12 +251,6 @@
                 ],
                 "enabled": [
                     {
-                        "name": "AdditionalRoutingCapabilities"
-                    },
-                    {
-                        "name": "AdminNetworkPolicy"
-                    },
-                    {
                         "name": "AzureWorkloadIdentity"
                     },
                     {
@@ -317,28 +311,13 @@
                         "name": "MetricsCollectionProfiles"
                     },
                     {
-                        "name": "NetworkDiagnosticsConfig"
-                    },
-                    {
-                        "name": "NetworkLiveMigration"
-                    },
-                    {
-                        "name": "NetworkSegmentation"
-                    },
-                    {
                         "name": "OpenShiftPodSecurityAdmission"
                     },
                     {
                         "name": "PinnedImages"
                     },
                     {
-                        "name": "PreconfiguredUDNAddresses"
-                    },
-                    {
                         "name": "ProcMountType"
-                    },
-                    {
-                        "name": "RouteAdvertisements"
                     },
                     {
                         "name": "RouteExternalCertificate"

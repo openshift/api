@@ -98,6 +98,23 @@ type IngressSpec struct {
 	// provider of the current cluster and are required for Ingress Controller to work on OpenShift.
 	// +optional
 	LoadBalancer LoadBalancer `json:"loadBalancer,omitempty"`
+
+	// ipFamily specifies the IP protocol family that should be used for the
+	// ingress load balancer. This field determines whether the load balancer uses
+	// IPv4-only, or dual-stack networking with IPv4 or IPv6 as the primary
+	// protocol family.
+	// Valid values are "IPv4", "DualStackIPv6Primary", and "DualStackIPv4Primary".
+	// When set to IPv4, the load balancer will use IPv4 addressing only.
+	// When set to DualStackIPv6Primary, the load balancer will use dual-stack networking with IPv6 as primary.
+	// When set to DualStackIPv4Primary, the load balancer will use dual-stack networking with IPv4 as primary.
+	// When omitted, the default value is IPv4.
+	//
+	// +default="IPv4"
+	// +kubebuilder:validation:XValidation:rule="oldSelf == '' || self == oldSelf",message="ipFamily is immutable once set"
+	// +openshift:enable:FeatureGate=AWSDualStackInstall
+	// +openshift:enable:FeatureGate=AzureDualStackInstall
+	// +optional
+	IPFamily IPFamilyType `json:"ipFamily,omitempty"`
 }
 
 // IngressPlatformSpec holds the desired state of Ingress specific to the underlying infrastructure provider

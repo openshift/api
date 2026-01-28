@@ -875,11 +875,11 @@ type RemoteWriteSpec struct {
 	// authorization defines the authorization settings for remote write storage.
 	// When omitted, no authorization is performed.
 	// +optional
-	Authorization *SafeAuthorization `json:"authorization,omitempty,omitzero"`
+	Authorization SafeAuthorization `json:"authorization,omitempty,omitzero"`
 	// basicAuth defines basic authentication settings for the remote write endpoint URL.
 	// When omitted, no basic authentication is performed.
 	// +optional
-	BasicAuth *BasicAuth `json:"basicAuth,omitempty,omitzero"`
+	BasicAuth BasicAuth `json:"basicAuth,omitempty,omitzero"`
 	// bearerTokenFile defines the file that contains the bearer token for the remote write endpoint.
 	// However, because you cannot mount secrets in a pod, in practice you can only reference the token of the service account.
 	// When omitted, no bearer token file is used.
@@ -903,7 +903,7 @@ type RemoteWriteSpec struct {
 	// oauth2 defines OAuth2 authentication settings for the remote write endpoint.
 	// When omitted, no OAuth2 authentication is performed.
 	// +optional
-	OAuth2 *OAuth2 `json:"oauth2,omitempty,omitzero"`
+	OAuth2 OAuth2 `json:"oauth2,omitempty,omitzero"`
 	// proxyUrl defines an optional proxy URL.
 	// If the cluster-wide proxy is enabled, it replaces the proxyUrl setting.
 	// The cluster-wide proxy supports both HTTP and HTTPS proxies, with HTTPS taking precedence.
@@ -925,14 +925,15 @@ type RemoteWriteSpec struct {
 	// Minimum value is 1 second.
 	// Maximum value is 10 minutes.
 	// +optional
-	// +kubebuilder:validation:Pattern=^([0-9]+(\\.[0-9]+)?(ns|us|µs|ms|s|m|h))+$
-	RemoteTimeout string `json:"remoteTimeout,omitempty"`
-	// sendExemplars enables sending exemplars via remote write.
-	// When enabled, Prometheus is configured to store a maximum of 100,000 exemplars in memory.
+	// +kubebuilder:validation:MaxLength=20
+	RemoteTimeout *string `json:"remoteTimeout,omitempty"`
+	// sendExemplars defines whether exemplars are sent via remote write.
+	// When set to "Enabled", Prometheus is configured to store a maximum of 100,000 exemplars in memory.
 	// Note that this setting only applies to user-defined monitoring. It is not applicable to default in-cluster monitoring.
-	// When omitted, exemplars are not sent.
+	// When omitted or set to "Disabled", exemplars are not sent.
+	// Valid values are "Enabled" and "Disabled".
 	// +optional
-	SendExemplars *bool `json:"sendExemplars,omitempty"`
+	SendExemplars ExemplarSendMode `json:"sendExemplars,omitempty"`
 	// sigv4 defines AWS Signature Version 4 authentication settings.
 	// When omitted, no AWS SigV4 authentication is performed.
 	// +optional
@@ -940,7 +941,7 @@ type RemoteWriteSpec struct {
 	// tlsConfig defines TLS authentication settings for the remote write endpoint.
 	// When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time.
 	// +optional
-	TLSConfig *TLSConfig `json:"tlsConfig,omitempty,omitzero"`
+	TLSConfig TLSConfig `json:"tlsConfig,omitempty,omitzero"`
 }
 
 // SafeAuthorization defines the authorization settings for remote write storage.
@@ -966,28 +967,29 @@ type BasicAuth struct {
 	// username defines the secret reference containing the username for basic authentication.
 	// The secret must exist in the openshift-monitoring namespace.
 	// +required
-	Username SecretKeySelector `json:"username,omitempty"`
+	Username SecretKeySelector `json:"username,omitzero,omitempty"`
 	// password defines the secret reference containing the password for basic authentication.
 	// The secret must exist in the openshift-monitoring namespace.
 	// +required
-	Password SecretKeySelector `json:"password,omitempty"`
+	Password SecretKeySelector `json:"password,omitzero,omitempty"`
 }
 
 // MetadataConfig defines settings for sending series metadata to remote write storage.
 type MetadataConfig struct {
-	// send enables sending series metadata.
-	// When set to true, Prometheus sends metadata about time series to the remote write endpoint.
-	// When omitted or set to false, no metadata is sent.
+	// send defines whether series metadata is sent to the remote write endpoint.
+	// When set to "Enabled", Prometheus sends metadata about time series to the remote write endpoint.
+	// When omitted or set to "Disabled", no metadata is sent.
+	// Valid values are "Enabled" and "Disabled".
 	// +optional
-	Send *bool `json:"send,omitempty"`
+	Send MetadataSendMode `json:"send,omitempty"`
 	// sendInterval defines the interval at which metadata is sent.
 	// When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time.
 	// Must be a valid duration string (e.g., "30s", "1m", "5m").
 	// Minimum value is 1 second.
 	// Maximum value is 24 hours.
 	// +optional
-	// +kubebuilder:validation:Pattern=^([0-9]+(\\.[0-9]+)?(ns|us|µs|ms|s|m|h))+$
-	SendInterval string `json:"sendInterval,omitempty"`
+	// +kubebuilder:validation:MaxLength=20
+	SendInterval *string `json:"sendInterval,omitempty"`
 }
 
 // OAuth2 defines OAuth2 authentication settings for the remote write endpoint.
@@ -995,11 +997,11 @@ type OAuth2 struct {
 	// clientId defines the secret reference containing the OAuth2 client ID.
 	// The secret must exist in the openshift-monitoring namespace.
 	// +required
-	ClientID SecretKeySelector `json:"clientId,omitempty"`
+	ClientID SecretKeySelector `json:"clientId,omitzero,omitempty"`
 	// clientSecret defines the secret reference containing the OAuth2 client secret.
 	// The secret must exist in the openshift-monitoring namespace.
 	// +required
-	ClientSecret SecretKeySelector `json:"clientSecret,omitempty"`
+	ClientSecret SecretKeySelector `json:"clientSecret,omitzero,omitempty"`
 	// tokenUrl is the URL to fetch the token from.
 	// Must be a valid URL with http or https scheme.
 	// Must be between 1 and 2048 characters in length.
@@ -1016,6 +1018,7 @@ type OAuth2 struct {
 	// +kubebuilder:validation:MaxItems=20
 	// +kubebuilder:validation:items:MinLength=1
 	// +kubebuilder:validation:items:MaxLength=256
+	// +listType=atomic
 	Scopes []string `json:"scopes,omitempty"`
 	// endpointParams defines additional parameters to append to the token URL.
 	// When omitted, no additional parameters are sent.
@@ -1070,29 +1073,30 @@ type QueueConfig struct {
 	// Minimum value is 1 second.
 	// Maximum value is 1 hour.
 	// +optional
-	// +kubebuilder:validation:Pattern=^([0-9]+(\\.[0-9]+)?(ns|us|µs|ms|s|m|h))+$
-	BatchSendDeadline string `json:"batchSendDeadline,omitempty"`
+	// +kubebuilder:validation:MaxLength=20
+	BatchSendDeadline *string `json:"batchSendDeadline,omitempty"`
 	// minBackoff is the minimum retry delay.
 	// When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time.
 	// Must be a valid duration string (e.g., "30ms", "1s").
 	// Minimum value is 1 millisecond.
 	// Maximum value is 1 hour.
 	// +optional
-	// +kubebuilder:validation:Pattern=^([0-9]+(\\.[0-9]+)?(ns|us|µs|ms|s|m|h))+$
-	MinBackoff string `json:"minBackoff,omitempty"`
+	// +kubebuilder:validation:MaxLength=20
+	MinBackoff *string `json:"minBackoff,omitempty"`
 	// maxBackoff is the maximum retry delay.
 	// When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time.
 	// Must be a valid duration string (e.g., "5s", "1m").
 	// Minimum value is 1 millisecond.
 	// Maximum value is 1 hour.
 	// +optional
-	// +kubebuilder:validation:Pattern=^([0-9]+(\\.[0-9]+)?(ns|us|µs|ms|s|m|h))+$
-	MaxBackoff string `json:"maxBackoff,omitempty"`
-	// retryOnRateLimit enables retries on HTTP 429 responses.
-	// When set to true, Prometheus will retry requests that receive HTTP 429 (Too Many Requests) responses.
-	// When omitted or set to false, no retries are performed on rate limit responses.
+	// +kubebuilder:validation:MaxLength=20
+	MaxBackoff *string `json:"maxBackoff,omitempty"`
+	// retryOnRateLimit defines whether to retry requests on HTTP 429 responses.
+	// When set to "Enabled", Prometheus will retry requests that receive HTTP 429 (Too Many Requests) responses.
+	// When omitted or set to "Disabled", no retries are performed on rate limit responses.
+	// Valid values are "Enabled" and "Disabled".
 	// +optional
-	RetryOnRateLimit *bool `json:"retryOnRateLimit,omitempty"`
+	RetryOnRateLimit RetryOnRateLimitMode `json:"retryOnRateLimit,omitempty"`
 }
 
 // Sigv4 defines AWS Signature Version 4 authentication settings.
@@ -1186,7 +1190,7 @@ type RelabelConfig struct {
 	// action defines the action to perform on the matched labels and its configuration.
 	// Exactly one action-specific configuration must be specified based on the action type.
 	// +required
-	Action RelabelActionConfig `json:"action"`
+	Action RelabelActionConfig `json:"action,omitzero"`
 }
 
 // RelabelActionConfig represents the action to perform and its configuration.
@@ -1537,6 +1541,39 @@ const (
 	VerbosityLevelTrace VerbosityLevel = "Trace"
 	// VerbosityLevelTraceAll means detailed information about metric scraping operations is logged.
 	VerbosityLevelTraceAll VerbosityLevel = "TraceAll"
+)
+
+// ExemplarSendMode defines whether exemplars are sent via remote write.
+// +kubebuilder:validation:Enum=Enabled;Disabled
+type ExemplarSendMode string
+
+const (
+	// ExemplarSendModeEnabled means exemplars are sent via remote write.
+	ExemplarSendModeEnabled ExemplarSendMode = "Enabled"
+	// ExemplarSendModeDisabled means exemplars are not sent via remote write.
+	ExemplarSendModeDisabled ExemplarSendMode = "Disabled"
+)
+
+// MetadataSendMode defines whether series metadata is sent to remote write storage.
+// +kubebuilder:validation:Enum=Enabled;Disabled
+type MetadataSendMode string
+
+const (
+	// MetadataSendModeEnabled means metadata is sent to the remote write endpoint.
+	MetadataSendModeEnabled MetadataSendMode = "Enabled"
+	// MetadataSendModeDisabled means no metadata is sent to the remote write endpoint.
+	MetadataSendModeDisabled MetadataSendMode = "Disabled"
+)
+
+// RetryOnRateLimitMode defines whether to retry requests on HTTP 429 responses.
+// +kubebuilder:validation:Enum=Enabled;Disabled
+type RetryOnRateLimitMode string
+
+const (
+	// RetryOnRateLimitModeEnabled means requests will be retried on HTTP 429 responses.
+	RetryOnRateLimitModeEnabled RetryOnRateLimitMode = "Enabled"
+	// RetryOnRateLimitModeDisabled means no retries are performed on HTTP 429 responses.
+	RetryOnRateLimitModeDisabled RetryOnRateLimitMode = "Disabled"
 )
 
 // Audit profile configurations

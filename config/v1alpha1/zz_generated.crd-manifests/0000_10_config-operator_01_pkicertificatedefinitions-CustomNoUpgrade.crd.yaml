@@ -1,0 +1,192 @@
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    api-approved.openshift.io: https://github.com/openshift/api/pull/2645
+    api.openshift.io/merged-by-featuregates: "true"
+    include.release.openshift.io/ibm-cloud-managed: "true"
+    include.release.openshift.io/self-managed-high-availability: "true"
+    release.openshift.io/feature-set: CustomNoUpgrade
+  name: pkicertificatedefinitions.config.openshift.io
+spec:
+  group: config.openshift.io
+  names:
+    kind: PKICertificateDefinition
+    listKind: PKICertificateDefinitionList
+    plural: pkicertificatedefinitions
+    singular: pkicertificatedefinition
+  scope: Namespaced
+  versions:
+  - name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        description: |-
+          PKICertificateDefinition registers certificates managed by a component,
+          enabling dynamic validation of certificate names in PKI overrides.
+          Components create PKICertificateDefinition resources to declare which
+          certificates they manage, allowing administrators to configure those
+          certificates via the PKI resource.
+
+          Compatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.
+        properties:
+          apiVersion:
+            description: |-
+              APIVersion defines the versioned schema of this representation of an object.
+              Servers should convert recognized schemas to the latest internal value, and
+              may reject unrecognized values.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
+            type: string
+          kind:
+            description: |-
+              Kind is a string value representing the REST resource this object represents.
+              Servers may infer this from the endpoint the client submits requests to.
+              Cannot be updated.
+              In CamelCase.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: spec holds the certificate registration specification
+            properties:
+              certificates:
+                description: |-
+                  certificates is a list of certificate definitions managed by this component.
+                  Each certificate must have a unique name within the cluster.
+                items:
+                  description: CertificateDefinition describes a single certificate
+                    managed by a component.
+                  properties:
+                    category:
+                      description: |-
+                        category specifies the certificate category.
+                        This helps administrators understand the certificate's role and select appropriate
+                        cryptographic parameters.
+                      enum:
+                      - SignerCertificate
+                      - ServingCertificate
+                      - ClientCertificate
+                      type: string
+                    description:
+                      description: |-
+                        description provides a human-readable explanation of this certificate's purpose.
+                        Examples: "CA for etcd peer and server certificates", "Server certificate for API server localhost endpoint"
+                      maxLength: 256
+                      minLength: 1
+                      type: string
+                    name:
+                      description: |-
+                        name is the unique identifier for this certificate.
+                        This name is used in PKI.spec.overrides[].certificateName to configure this certificate.
+                        Must be a valid DNS subdomain (lowercase letters, numbers, and hyphens).
+                      maxLength: 253
+                      minLength: 1
+                      pattern: ^[a-z0-9]([-a-z0-9]*[a-z0-9])?$
+                      type: string
+                  required:
+                  - category
+                  - description
+                  - name
+                  type: object
+                  x-kubernetes-validations:
+                  - message: name must be a valid DNS subdomain (lowercase alphanumeric
+                      with hyphens)
+                    rule: self.name.matches('^[a-z0-9]([-a-z0-9]*[a-z0-9])?$')
+                maxItems: 256
+                minItems: 1
+                type: array
+                x-kubernetes-list-map-keys:
+                - name
+                x-kubernetes-list-type: map
+              component:
+                description: |-
+                  component identifies the operator or component managing these certificates.
+                  This should typically be the name of the operator (e.g., "etcd-operator", "kube-apiserver-operator").
+                maxLength: 253
+                minLength: 1
+                type: string
+            required:
+            - certificates
+            - component
+            type: object
+          status:
+            description: status holds observed state
+            properties:
+              conditions:
+                description: conditions represent the latest available observations
+                  of the PKICertificateDefinition's state.
+                items:
+                  description: Condition contains details for one aspect of the current
+                    state of this API Resource.
+                  properties:
+                    lastTransitionTime:
+                      description: |-
+                        lastTransitionTime is the last time the condition transitioned from one status to another.
+                        This should be when the underlying condition changed.  If that is not known, then using the time when the API field changed is acceptable.
+                      format: date-time
+                      type: string
+                    message:
+                      description: |-
+                        message is a human readable message indicating details about the transition.
+                        This may be an empty string.
+                      maxLength: 32768
+                      type: string
+                    observedGeneration:
+                      description: |-
+                        observedGeneration represents the .metadata.generation that the condition was set based upon.
+                        For instance, if .metadata.generation is currently 12, but the .status.conditions[x].observedGeneration is 9, the condition is out of date
+                        with respect to the current state of the instance.
+                      format: int64
+                      minimum: 0
+                      type: integer
+                    reason:
+                      description: |-
+                        reason contains a programmatic identifier indicating the reason for the condition's last transition.
+                        Producers of specific condition types may define expected values and meanings for this field,
+                        and whether the values are considered a guaranteed API.
+                        The value should be a CamelCase string.
+                        This field may not be empty.
+                      maxLength: 1024
+                      minLength: 1
+                      pattern: ^[A-Za-z]([A-Za-z0-9_,:]*[A-Za-z0-9_])?$
+                      type: string
+                    status:
+                      description: status of the condition, one of True, False, Unknown.
+                      enum:
+                      - "True"
+                      - "False"
+                      - Unknown
+                      type: string
+                    type:
+                      description: type of condition in CamelCase or in foo.example.com/CamelCase.
+                      maxLength: 316
+                      pattern: ^([a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*/)?(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])$
+                      type: string
+                  required:
+                  - lastTransitionTime
+                  - message
+                  - reason
+                  - status
+                  - type
+                  type: object
+                type: array
+                x-kubernetes-list-map-keys:
+                - type
+                x-kubernetes-list-type: map
+              registeredAt:
+                description: registeredAt is the timestamp when this definition was
+                  first successfully validated.
+                format: date-time
+                type: string
+            type: object
+        required:
+        - spec
+        type: object
+        x-kubernetes-validations:
+        - message: pkicertificatedefinitions must be created in the openshift-config
+            namespace
+          rule: self.metadata.namespace == 'openshift-config'
+    served: true
+    storage: true
+    subresources:
+      status: {}

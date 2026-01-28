@@ -300,6 +300,7 @@ type ContainerResource struct {
 	// name of the resource (e.g. "cpu", "memory", "hugepages-2Mi").
 	// This field is required.
 	// name must consist only of alphanumeric characters, `-`, `_` and `.` and must start and end with an alphanumeric character.
+	// name must be unique within the resources list.
 	// +required
 	// +kubebuilder:validation:MinLength=1
 	// +kubebuilder:validation:MaxLength=253

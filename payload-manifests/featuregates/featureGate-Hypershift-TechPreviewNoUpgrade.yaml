@@ -104,9 +104,6 @@
                         "name": "AdminNetworkPolicy"
                     },
                     {
-                        "name": "AlibabaPlatform"
-                    },
-                    {
                         "name": "AutomatedEtcdBackup"
                     },
                     {

@@ -131,14 +131,6 @@ var (
 						enableIn(configv1.DevPreviewNoUpgrade, configv1.TechPreviewNoUpgrade, configv1.Default, configv1.OKD).
 						mustRegister()
 
-	FeatureGateAlibabaPlatform = newFeatureGate("AlibabaPlatform").
-					reportProblemsToJiraComponent("cloud-provider").
-					contactPerson("jspeed").
-					productScope(ocpSpecific).
-					enhancementPR(legacyFeatureGateWithoutEnhancement).
-					enableIn(configv1.Default, configv1.OKD, configv1.DevPreviewNoUpgrade, configv1.TechPreviewNoUpgrade).
-					mustRegister()
-
 	FeatureGateVSphereHostVMGroupZonal = newFeatureGate("VSphereHostVMGroupZonal").
 						reportProblemsToJiraComponent("splat").
 						contactPerson("jcpowermac").
@@ -676,12 +668,12 @@ var (
 						mustRegister()
 
 	FeatureGateKMSEncryption = newFeatureGate("KMSEncryption").
-		reportProblemsToJiraComponent("kube-apiserver").
-		contactPerson("ardaguclu").
-		productScope(ocpSpecific).
-		enhancementPR("https://github.com/openshift/enhancements/pull/1900").
-		enableIn(configv1.DevPreviewNoUpgrade, configv1.TechPreviewNoUpgrade).
-		mustRegister()
+					reportProblemsToJiraComponent("kube-apiserver").
+					contactPerson("ardaguclu").
+					productScope(ocpSpecific).
+					enhancementPR("https://github.com/openshift/enhancements/pull/1900").
+					enableIn(configv1.DevPreviewNoUpgrade, configv1.TechPreviewNoUpgrade).
+					mustRegister()
 
 	FeatureGateHighlyAvailableArbiter = newFeatureGate("HighlyAvailableArbiter").
 						reportProblemsToJiraComponent("Two Node with Arbiter").

@@ -17,7 +17,7 @@ limitations under the License.
 package help
 
 import (
-	"slices"
+	"sort"
 	"strings"
 
 	"sigs.k8s.io/controller-tools/pkg/markers"
@@ -166,7 +166,7 @@ func ForDefinition(defn *markers.Definition, maybeHelp *markers.DefinitionHelp) 
 		res.Fields = append(res.Fields, fieldHelp)
 	}
 
-	slices.SortStableFunc(res.Fields, func(a, b FieldHelp) int { return strings.Compare(a.Name, b.Name) })
+	sort.Slice(res.Fields, func(i, j int) bool { return res.Fields[i].Name < res.Fields[j].Name })
 
 	return res
 }
@@ -191,17 +191,17 @@ func ByCategory(reg *markers.Registry, sorter SortGroup) []CategoryDoc {
 		allGroups = append(allGroups, groupName)
 	}
 
-	slices.Sort(allGroups)
+	sort.Strings(allGroups)
 
 	res := make([]CategoryDoc, len(allGroups))
 	for i, groupName := range allGroups {
-		mks := groupedMarkers[groupName]
-		slices.SortStableFunc(mks, func(a, b *markers.Definition) int {
-			return sorter.Compare(a, b)
+		markers := groupedMarkers[groupName]
+		sort.Slice(markers, func(i, j int) bool {
+			return sorter.Less(markers[i], markers[j])
 		})
 
-		markerDocs := make([]MarkerDoc, len(mks))
-		for i, marker := range mks {
+		markerDocs := make([]MarkerDoc, len(markers))
+		for i, marker := range markers {
 			markerDocs[i] = ForDefinition(marker, reg.HelpFor(marker))
 		}
 

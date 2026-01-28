@@ -24,7 +24,7 @@ package rbac
 
 import (
 	"fmt"
-	"slices"
+	"sort"
 	"strings"
 
 	rbacv1 "k8s.io/api/rbac/v1"
@@ -73,6 +73,13 @@ type ruleKey struct {
 func (key ruleKey) String() string {
 	return fmt.Sprintf("%s + %s + %s + %s", key.Groups, key.Resources, key.ResourceNames, key.URLs)
 }
+
+// ruleKeys implements sort.Interface
+type ruleKeys []ruleKey
+
+func (keys ruleKeys) Len() int           { return len(keys) }
+func (keys ruleKeys) Swap(i, j int)      { keys[i], keys[j] = keys[j], keys[i] }
+func (keys ruleKeys) Less(i, j int) bool { return keys[i].String() < keys[j].String() }
 
 // key normalizes the Rule and returns a ruleKey object.
 func (r *Rule) key() ruleKey {
@@ -132,7 +139,7 @@ func removeDupAndSort(strs []string) []string {
 	for str := range set {
 		result = append(result, str)
 	}
-	slices.Sort(result)
+	sort.Strings(result)
 	return result
 }
 
@@ -297,9 +304,7 @@ func GenerateRoles(ctx *genall.GenerationContext, roleName string) ([]interface{
 		for key := range ruleMap {
 			keys = append(keys, key)
 		}
-		slices.SortStableFunc(keys, func(a, b ruleKey) int {
-			return strings.Compare(a.String(), b.String())
-		})
+		sort.Sort(ruleKeys(keys))
 
 		// Normalize rule verbs to "*" if any verb in the rule is an asterisk
 		for _, rule := range ruleMap {
@@ -322,7 +327,7 @@ func GenerateRoles(ctx *genall.GenerationContext, roleName string) ([]interface{
 	for ns := range rulesByNSResource {
 		namespaces = append(namespaces, ns)
 	}
-	slices.Sort(namespaces)
+	sort.Strings(namespaces)
 
 	// process the items in rulesByNS by the order specified in `namespaces` to make sure that the Role order is stable
 	var objs []interface{}

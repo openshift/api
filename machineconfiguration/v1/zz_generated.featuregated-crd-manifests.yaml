@@ -169,8 +169,12 @@ machineconfignodes.machineconfiguration.openshift.io:
     name: Resumed
     priority: 1
     type: string
-  - jsonPath: .status.conditions[?(@.type=="AppliedFilesAndOS")].status
-    name: UpdatedFilesAndOS
+  - jsonPath: .status.conditions[?(@.type=="AppliedOSImage")].status
+    name: AppliedOSImage
+    priority: 1
+    type: string
+  - jsonPath: .status.conditions[?(@.type=="AppliedFiles")].status
+    name: AppliedFiles
     priority: 1
     type: string
   - jsonPath: .status.conditions[?(@.type=="Cordoned")].status

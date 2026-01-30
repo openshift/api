@@ -4,7 +4,7 @@ crdName: consoleplugins.console.openshift.io
 version: v1
 tests:
   onCreate:
-    - name: Should be able to create a minimal ConsolePlugin
+    - name: Should be able to cr  eate a minimal ConsolePlugin
       initial: |
         apiVersion: console.openshift.io/v1
         kind: ConsolePlugin

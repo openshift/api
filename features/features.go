@@ -9,7 +9,7 @@ import (
 func FeatureSets(clusterProfile ClusterProfileName, featureSet configv1.FeatureSet) (*FeatureGateEnabledDisabled, error) {
 	byFeatureSet, ok := allFeatureGates[clusterProfile]
 	if !ok {
-		return nil, fmt.Errorf("no information found for ClusterProfile=%q", clusterProfile)
+		return nil, fmt.Errorf("no information found  for ClusterProfile=%q", clusterProfile)
 	}
 	featureGates, ok := byFeatureSet[featureSet]
 	if !ok {

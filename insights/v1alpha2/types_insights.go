@@ -15,6 +15,7 @@ import (
 // +openshift:enable:FeatureGate=InsightsOnDemandDataGather
 // +kubebuilder:printcolumn:name=StartTime,type=date,JSONPath=.status.startTime,description=DataGather start time
 // +kubebuilder:printcolumn:name=FinishTime,type=date,JSONPath=.status.finishTime,description=DataGather finish time
+// +openshift:capability=Insights
 //
 // DataGather provides data gather configuration options and status for the particular Insights data gathering.
 //

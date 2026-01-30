@@ -264,9 +264,6 @@
                         "name": "CPMSMachineNamePrefix"
                     },
                     {
-                        "name": "ConsolePluginContentSecurityPolicy"
-                    },
-                    {
                         "name": "ExternalOIDC"
                     },
                     {

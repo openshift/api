@@ -190,6 +190,7 @@ type AlertmanagerCustomConfig struct {
 	//      limit: null
 	// Maximum length for this list is 10.
 	// Minimum length for this list is 1.
+	// Each resource name must be unique within this list.
 	// +optional
 	// +listType=map
 	// +listMapKey=name
@@ -300,7 +301,6 @@ type ContainerResource struct {
 	// name of the resource (e.g. "cpu", "memory", "hugepages-2Mi").
 	// This field is required.
 	// name must consist only of alphanumeric characters, `-`, `_` and `.` and must start and end with an alphanumeric character.
-	// name must be unique within the resources list.
 	// +required
 	// +kubebuilder:validation:MinLength=1
 	// +kubebuilder:validation:MaxLength=253
@@ -395,6 +395,7 @@ type MetricsServerConfig struct {
 	//      limit: null
 	// Maximum length for this list is 10.
 	// Minimum length for this list is 1.
+	// Each resource name must be unique within this list.
 	// +optional
 	// +listType=map
 	// +listMapKey=name
@@ -465,6 +466,7 @@ type PrometheusOperatorConfig struct {
 	//      limit: null
 	// Maximum length for this list is 10.
 	// Minimum length for this list is 1.
+	// Each resource name must be unique within this list.
 	// +optional
 	// +listType=map
 	// +listMapKey=name

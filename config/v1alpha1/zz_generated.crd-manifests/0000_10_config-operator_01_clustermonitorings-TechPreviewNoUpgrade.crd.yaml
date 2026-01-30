@@ -112,6 +112,7 @@ spec:
                                limit: null
                           Maximum length for this list is 10.
                           Minimum length for this list is 1.
+                          Each resource name must be unique within this list.
                         items:
                           description: ContainerResource defines a single resource
                             requirement for a container.
@@ -137,7 +138,6 @@ spec:
                                 name of the resource (e.g. "cpu", "memory", "hugepages-2Mi").
                                 This field is required.
                                 name must consist only of alphanumeric characters, `-`, `_` and `.` and must start and end with an alphanumeric character.
-                                name must be unique within the resources list.
                               maxLength: 253
                               minLength: 1
                               type: string
@@ -963,6 +963,7 @@ spec:
                            limit: null
                       Maximum length for this list is 10.
                       Minimum length for this list is 1.
+                      Each resource name must be unique within this list.
                     items:
                       description: ContainerResource defines a single resource requirement
                         for a container.
@@ -988,7 +989,6 @@ spec:
                             name of the resource (e.g. "cpu", "memory", "hugepages-2Mi").
                             This field is required.
                             name must consist only of alphanumeric characters, `-`, `_` and `.` and must start and end with an alphanumeric character.
-                            name must be unique within the resources list.
                           maxLength: 253
                           minLength: 1
                           type: string
@@ -1343,6 +1343,7 @@ spec:
                            limit: null
                       Maximum length for this list is 10.
                       Minimum length for this list is 1.
+                      Each resource name must be unique within this list.
                     items:
                       description: ContainerResource defines a single resource requirement
                         for a container.
@@ -1368,7 +1369,6 @@ spec:
                             name of the resource (e.g. "cpu", "memory", "hugepages-2Mi").
                             This field is required.
                             name must consist only of alphanumeric characters, `-`, `_` and `.` and must start and end with an alphanumeric character.
-                            name must be unique within the resources list.
                           maxLength: 253
                           minLength: 1
                           type: string

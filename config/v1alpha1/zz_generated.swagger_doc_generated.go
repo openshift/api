@@ -811,6 +811,43 @@ func (UserDefinedMonitoring) SwaggerDoc() map[string]string {
 	return map_UserDefinedMonitoring
 }
 
+var map_ControllerManager = map[string]string{
+	"":         "ControllerManager holds cluster-wide configuration for the Kubernetes controller manager. The canonical name for this config is `cluster`.\n\nCompatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.",
+	"metadata": "metadata is the standard object's metadata. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata",
+	"spec":     "spec holds user settable values for configuration",
+	"status":   "status holds observed values from the cluster. They may not be overridden.",
+}
+
+func (ControllerManager) SwaggerDoc() map[string]string {
+	return map_ControllerManager
+}
+
+var map_ControllerManagerList = map[string]string{
+	"":         "Compatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.",
+	"metadata": "metadata is the standard list's metadata. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata",
+}
+
+func (ControllerManagerList) SwaggerDoc() map[string]string {
+	return map_ControllerManagerList
+}
+
+var map_ControllerManagerSpec = map[string]string{
+	"":                     "ControllerManagerSpec defines the desired state of the Kubernetes controller manager",
+	"forceDetachOnTimeout": "forceDetachOnTimeout expresses whether to allow kube-controller-manager to force detach volumes when the maximum unmount time is exceeded or when a node is not healthy. Valid values are \"Enabled\" and \"Disabled\". When omitted, this means the user has no opinion and the platform is left to choose a reasonable default, which is subject to change over time. The current default is \"Enabled\".",
+}
+
+func (ControllerManagerSpec) SwaggerDoc() map[string]string {
+	return map_ControllerManagerSpec
+}
+
+var map_ControllerManagerStatus = map[string]string{
+	"": "ControllerManagerStatus defines the observed state of the Kubernetes controller manager",
+}
+
+func (ControllerManagerStatus) SwaggerDoc() map[string]string {
+	return map_ControllerManagerStatus
+}
+
 var map_CRIOCredentialProviderConfig = map[string]string{
 	"":         "CRIOCredentialProviderConfig holds cluster-wide singleton resource configurations for CRI-O credential provider, the name of this instance is \"cluster\". CRI-O credential provider is a binary shipped with CRI-O that provides a way to obtain container image pull credentials from external sources. For example, it can be used to fetch mirror registry credentials from secrets resources in the cluster within the same namespace the pod will be running in. CRIOCredentialProviderConfig configuration specifies the pod image sources registries that should trigger the CRI-O credential provider execution, which will resolve the CRI-O mirror configurations and obtain the necessary credentials for pod creation. Note: Configuration changes will only take effect after the kubelet restarts, which is automatically managed by the cluster during rollout.\n\nThe resource is a singleton named \"cluster\".\n\nCompatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.",
 	"metadata": "metadata is the standard object's metadata. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata",

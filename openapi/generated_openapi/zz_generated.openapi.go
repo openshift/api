@@ -534,6 +534,10 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		configv1alpha1.ClusterMonitoringSpec{}.OpenAPIModelName():                              schema_openshift_api_config_v1alpha1_ClusterMonitoringSpec(ref),
 		configv1alpha1.ClusterMonitoringStatus{}.OpenAPIModelName():                            schema_openshift_api_config_v1alpha1_ClusterMonitoringStatus(ref),
 		configv1alpha1.ContainerResource{}.OpenAPIModelName():                                  schema_openshift_api_config_v1alpha1_ContainerResource(ref),
+		configv1alpha1.ControllerManager{}.OpenAPIModelName():                                  schema_openshift_api_config_v1alpha1_ControllerManager(ref),
+		configv1alpha1.ControllerManagerList{}.OpenAPIModelName():                              schema_openshift_api_config_v1alpha1_ControllerManagerList(ref),
+		configv1alpha1.ControllerManagerSpec{}.OpenAPIModelName():                              schema_openshift_api_config_v1alpha1_ControllerManagerSpec(ref),
+		configv1alpha1.ControllerManagerStatus{}.OpenAPIModelName():                            schema_openshift_api_config_v1alpha1_ControllerManagerStatus(ref),
 		configv1alpha1.CustomPKIPolicy{}.OpenAPIModelName():                                    schema_openshift_api_config_v1alpha1_CustomPKIPolicy(ref),
 		configv1alpha1.DefaultCertificateConfig{}.OpenAPIModelName():                           schema_openshift_api_config_v1alpha1_DefaultCertificateConfig(ref),
 		configv1alpha1.DropEqualActionConfig{}.OpenAPIModelName():                              schema_openshift_api_config_v1alpha1_DropEqualActionConfig(ref),
@@ -24234,6 +24238,138 @@ func schema_openshift_api_config_v1alpha1_ContainerResource(ref common.Reference
 		},
 		Dependencies: []string{
 			resource.Quantity{}.OpenAPIModelName()},
+	}
+}
+
+func schema_openshift_api_config_v1alpha1_ControllerManager(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "ControllerManager holds cluster-wide configuration for the Kubernetes controller manager. The canonical name for this config is `cluster`.\n\nCompatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"kind": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"apiVersion": {
+						SchemaProps: spec.SchemaProps{
+							Description: "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"metadata": {
+						SchemaProps: spec.SchemaProps{
+							Description: "metadata is the standard object's metadata. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata",
+							Default:     map[string]interface{}{},
+							Ref:         ref(metav1.ObjectMeta{}.OpenAPIModelName()),
+						},
+					},
+					"spec": {
+						SchemaProps: spec.SchemaProps{
+							Description: "spec holds user settable values for configuration",
+							Default:     map[string]interface{}{},
+							Ref:         ref(configv1alpha1.ControllerManagerSpec{}.OpenAPIModelName()),
+						},
+					},
+					"status": {
+						SchemaProps: spec.SchemaProps{
+							Description: "status holds observed values from the cluster. They may not be overridden.",
+							Default:     map[string]interface{}{},
+							Ref:         ref(configv1alpha1.ControllerManagerStatus{}.OpenAPIModelName()),
+						},
+					},
+				},
+				Required: []string{"spec"},
+			},
+		},
+		Dependencies: []string{
+			configv1alpha1.ControllerManagerSpec{}.OpenAPIModelName(), configv1alpha1.ControllerManagerStatus{}.OpenAPIModelName(), metav1.ObjectMeta{}.OpenAPIModelName()},
+	}
+}
+
+func schema_openshift_api_config_v1alpha1_ControllerManagerList(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "Compatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"kind": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"apiVersion": {
+						SchemaProps: spec.SchemaProps{
+							Description: "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"metadata": {
+						SchemaProps: spec.SchemaProps{
+							Description: "metadata is the standard list's metadata. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata",
+							Default:     map[string]interface{}{},
+							Ref:         ref(metav1.ListMeta{}.OpenAPIModelName()),
+						},
+					},
+					"items": {
+						SchemaProps: spec.SchemaProps{
+							Type: []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref(configv1alpha1.ControllerManager{}.OpenAPIModelName()),
+									},
+								},
+							},
+						},
+					},
+				},
+				Required: []string{"metadata", "items"},
+			},
+		},
+		Dependencies: []string{
+			configv1alpha1.ControllerManager{}.OpenAPIModelName(), metav1.ListMeta{}.OpenAPIModelName()},
+	}
+}
+
+func schema_openshift_api_config_v1alpha1_ControllerManagerSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "ControllerManagerSpec defines the desired state of the Kubernetes controller manager",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"forceDetachOnTimeout": {
+						SchemaProps: spec.SchemaProps{
+							Description: "forceDetachOnTimeout expresses whether to allow kube-controller-manager to force detach volumes when the maximum unmount time is exceeded or when a node is not healthy. Valid values are \"Enabled\" and \"Disabled\". When omitted, this means the user has no opinion and the platform is left to choose a reasonable default, which is subject to change over time. The current default is \"Enabled\".",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+				},
+			},
+		},
+	}
+}
+
+func schema_openshift_api_config_v1alpha1_ControllerManagerStatus(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "ControllerManagerStatus defines the observed state of the Kubernetes controller manager",
+				Type:        []string{"object"},
+			},
+		},
 	}
 }
 

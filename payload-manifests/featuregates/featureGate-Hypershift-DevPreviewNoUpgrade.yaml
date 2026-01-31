@@ -149,6 +149,9 @@
                         "name": "DNSNameResolver"
                     },
                     {
+                        "name": "DisableForceDetachOnTimeout"
+                    },
+                    {
                         "name": "DualReplica"
                     },
                     {

@@ -254,6 +254,9 @@
                         "name": "SignatureStores"
                     },
                     {
+                        "name": "TLSCurvePreferences"
+                    },
+                    {
                         "name": "VSphereConfigurableMaxAllowedBlockVolumesPerNode"
                     },
                     {

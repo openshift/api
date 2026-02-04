@@ -641,7 +641,8 @@ type PrometheusConfig struct {
 	// When omitted, this means the user has no opinion and the platform is left
 	// to choose reasonable defaults. These defaults are subject to change over time.
 	// The current default value is `kubernetes.io/os: linux`.
-	// Maximum of 10 node selector key-value pairs can be specified.
+	// When specified, nodeSelector must contain at least one key-value pair (minimum of 1)
+	// and must not contain more than 10 entries.
 	// +optional
 	// +kubebuilder:validation:MinProperties=1
 	// +kubebuilder:validation:MaxProperties=10
@@ -767,6 +768,7 @@ type AdditionalAlertmanagerConfig struct {
 	// controllers (e.g., ACM, cluster admins) to independently manage their own entries.
 	// The name must be a valid DNS subdomain (RFC 1123): lowercase alphanumeric characters,
 	// hyphens, or periods, and must start and end with an alphanumeric character.
+	// Minimum length is 1 character (empty string is invalid).
 	// Maximum length is 253 characters.
 	// +kubebuilder:validation:MaxLength=253
 	// +kubebuilder:validation:MinLength=1
@@ -794,6 +796,7 @@ type AdditionalAlertmanagerConfig struct {
 	// instances.
 	// Possible values are `HTTP` or `HTTPS`.
 	// When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time.
+	// The current default value is `HTTP`.
 	// +optional
 	Scheme AlertmanagerScheme `json:"scheme,omitempty"`
 	// staticConfigs is a list of statically configured Alertmanager endpoints in the form
@@ -801,9 +804,10 @@ type AdditionalAlertmanagerConfig struct {
 	// (in brackets) followed by a colon and a valid port number (1-65535).
 	// Examples: "alertmanager.example.com:9093", "192.168.1.100:9093", "[::1]:9093"
 	// At least one endpoint must be specified (minimum 1, maximum 10 endpoints).
-	// Each entry must be unique.
+	// Each entry must be unique and non-empty (empty string is invalid).
 	// +kubebuilder:validation:MinItems=1
 	// +kubebuilder:validation:MaxItems=10
+	// +kubebuilder:validation:items:MinLength=1
 	// +kubebuilder:validation:items:MaxLength=255
 	// +kubebuilder:validation:items:XValidation:rule="isURL('http://' + self) && size(url('http://' + self).getHostname()) > 0 && size(url('http://' + self).getPort()) > 0 && int(url('http://' + self).getPort()) >= 1 && int(url('http://' + self).getPort()) <= 65535",message="must be a valid 'host:port' where host is a DNS name, IPv4, or IPv6 address (in brackets), and port is 1-65535"
 	// +listType=set
@@ -844,12 +848,12 @@ type Label struct {
 // RemoteWriteSpec represents configuration for remote write endpoints.
 type RemoteWriteSpec struct {
 	// url is the URL of the remote write endpoint.
-	// Must be a valid URL with http or https scheme.
-	// Must be between 1 and 2048 characters in length.
+	// Must be a valid URL with http or https scheme and a non-empty hostname.
+	// Empty string is invalid. Must be between 1 and 2048 characters in length.
 	// +required
 	// +kubebuilder:validation:MaxLength=2048
 	// +kubebuilder:validation:MinLength=1
-	// +kubebuilder:validation:XValidation:rule="isURL(self) && (url(self).getScheme() == 'http' || url(self).getScheme() == 'https')",message="must be a valid URL with http or https scheme"
+	// +kubebuilder:validation:XValidation:rule="isURL(self) && (url(self).getScheme() == 'http' || url(self).getScheme() == 'https') && size(url(self).getHostname()) > 0",message="must be a valid URL with http or https scheme and a non-empty hostname"
 	URL string `json:"url,omitempty"`
 	// name is an optional identifier for this remote write configuration.
 	// This name is used in metrics and logging to differentiate remote write queues.
@@ -896,8 +900,11 @@ type RemoteWriteSpec struct {
 	// +optional
 	// +kubebuilder:validation:MaxProperties=50
 	Headers map[string]string `json:"headers,omitempty"`
-	// metadataConfig defines settings for sending series metadata to remote write storage.
+	// metadataConfig configures the sending of series metadata to remote storage
+	// if the prometheus.WriteRequest message was chosen. When
+	// io.prometheus.write.v2.Request is used, metadata is always sent.
 	// When omitted, no metadata is sent.
+	// Metadata configuration is subject to change at any point or be removed in future releases.
 	// +optional
 	MetadataConfig *MetadataConfig `json:"metadataConfig,omitempty,omitzero"`
 	// oauth2 defines OAuth2 authentication settings for the remote write endpoint.
@@ -918,22 +925,22 @@ type RemoteWriteSpec struct {
 	// queueConfig allows tuning configuration for remote write queue parameters.
 	// When omitted, default queue configuration is used.
 	// +optional
-	QueueConfig *QueueConfig `json:"queueConfig,omitempty,omitzero"`
-	// remoteTimeout defines the timeout value for requests to the remote write endpoint.
+	QueueConfig QueueConfig `json:"queueConfig,omitempty,omitzero"`
+	// remoteTimeoutSeconds defines the timeout in seconds for requests to the remote write endpoint.
 	// When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time.
-	// Must be a valid duration string (e.g., "30s", "1m", "5m").
 	// Minimum value is 1 second.
-	// Maximum value is 10 minutes.
+	// Maximum value is 600 seconds (10 minutes).
 	// +optional
-	// +kubebuilder:validation:MaxLength=20
-	RemoteTimeout *string `json:"remoteTimeout,omitempty"`
-	// sendExemplars defines whether exemplars are sent via remote write.
-	// When set to "Enabled", Prometheus is configured to store a maximum of 100,000 exemplars in memory.
+	// +kubebuilder:validation:Minimum=1
+	// +kubebuilder:validation:Maximum=600
+	RemoteTimeoutSeconds int32 `json:"remoteTimeoutSeconds,omitempty"`
+	// exemplarsMode controls whether exemplars are sent via remote write.
+	// When set to "Send", Prometheus is configured to store a maximum of 100,000 exemplars in memory and send them with remote write.
 	// Note that this setting only applies to user-defined monitoring. It is not applicable to default in-cluster monitoring.
-	// When omitted or set to "Disabled", exemplars are not sent.
-	// Valid values are "Enabled" and "Disabled".
+	// When omitted or set to "DoNotSend", exemplars are not sent.
+	// Valid values are "Send" and "DoNotSend".
 	// +optional
-	SendExemplars ExemplarSendMode `json:"sendExemplars,omitempty"`
+	ExemplarsMode ExemplarsMode `json:"exemplarsMode,omitempty"`
 	// sigv4 defines AWS Signature Version 4 authentication settings.
 	// When omitted, no AWS SigV4 authentication is performed.
 	// +optional
@@ -976,12 +983,12 @@ type BasicAuth struct {
 
 // MetadataConfig defines settings for sending series metadata to remote write storage.
 type MetadataConfig struct {
-	// send defines whether series metadata is sent to the remote write endpoint.
-	// When set to "Enabled", Prometheus sends metadata about time series to the remote write endpoint.
-	// When omitted or set to "Disabled", no metadata is sent.
-	// Valid values are "Enabled" and "Disabled".
+	// mode controls whether series metadata is sent to the remote write endpoint.
+	// When set to "Send", Prometheus sends metadata about time series to the remote write endpoint.
+	// When omitted or set to "DoNotSend", no metadata is sent.
+	// Valid values are "Send" and "DoNotSend".
 	// +optional
-	Send MetadataSendMode `json:"send,omitempty"`
+	Mode MetadataMode `json:"mode,omitempty"`
 	// sendInterval defines the interval at which metadata is sent.
 	// When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time.
 	// Must be a valid duration string (e.g., "30s", "1m", "5m").
@@ -1030,6 +1037,7 @@ type OAuth2 struct {
 }
 
 // QueueConfig allows tuning configuration for remote write queue parameters.
+// +kubebuilder:validation:MinProperties=1
 type QueueConfig struct {
 	// capacity is the number of samples to buffer per shard before we start dropping them.
 	// When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time.
@@ -1067,36 +1075,36 @@ type QueueConfig struct {
 	// +kubebuilder:validation:Minimum=1
 	// +kubebuilder:validation:Maximum=100000
 	MaxSamplesPerSend int32 `json:"maxSamplesPerSend,omitempty"`
-	// batchSendDeadline is the maximum time a sample will wait in buffer before being sent.
+	// batchSendDeadlineSeconds is the maximum time in seconds a sample will wait in buffer before being sent.
 	// When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time.
-	// Must be a valid duration string (e.g., "5s", "1m").
 	// Minimum value is 1 second.
-	// Maximum value is 1 hour.
+	// Maximum value is 3600 seconds (1 hour).
 	// +optional
-	// +kubebuilder:validation:MaxLength=20
-	BatchSendDeadline *string `json:"batchSendDeadline,omitempty"`
-	// minBackoff is the minimum retry delay.
+	// +kubebuilder:validation:Minimum=1
+	// +kubebuilder:validation:Maximum=3600
+	BatchSendDeadlineSeconds int32 `json:"batchSendDeadlineSeconds,omitempty"`
+	// minBackoffMilliseconds is the minimum retry delay in milliseconds.
 	// When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time.
-	// Must be a valid duration string (e.g., "30ms", "1s").
 	// Minimum value is 1 millisecond.
-	// Maximum value is 1 hour.
+	// Maximum value is 3600000 milliseconds (1 hour).
 	// +optional
-	// +kubebuilder:validation:MaxLength=20
-	MinBackoff *string `json:"minBackoff,omitempty"`
-	// maxBackoff is the maximum retry delay.
+	// +kubebuilder:validation:Minimum=1
+	// +kubebuilder:validation:Maximum=3600000
+	MinBackoffMilliseconds int32 `json:"minBackoffMilliseconds,omitempty"`
+	// maxBackoffMilliseconds is the maximum retry delay in milliseconds.
 	// When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time.
-	// Must be a valid duration string (e.g., "5s", "1m").
 	// Minimum value is 1 millisecond.
-	// Maximum value is 1 hour.
+	// Maximum value is 3600000 milliseconds (1 hour).
 	// +optional
-	// +kubebuilder:validation:MaxLength=20
-	MaxBackoff *string `json:"maxBackoff,omitempty"`
-	// retryOnRateLimit defines whether to retry requests on HTTP 429 responses.
-	// When set to "Enabled", Prometheus will retry requests that receive HTTP 429 (Too Many Requests) responses.
-	// When omitted or set to "Disabled", no retries are performed on rate limit responses.
-	// Valid values are "Enabled" and "Disabled".
+	// +kubebuilder:validation:Minimum=1
+	// +kubebuilder:validation:Maximum=3600000
+	MaxBackoffMilliseconds int32 `json:"maxBackoffMilliseconds,omitempty"`
+	// rateLimitedAction controls what to do when the remote write endpoint returns HTTP 429 (Too Many Requests).
+	// When set to "Retry", Prometheus will retry such requests using the backoff settings above.
+	// When omitted or set to "DoNotRetry", no retries are performed on rate limit responses.
+	// Valid values are "Retry" and "DoNotRetry".
 	// +optional
-	RetryOnRateLimit RetryOnRateLimitMode `json:"retryOnRateLimit,omitempty"`
+	RateLimitedAction RateLimitedAction `json:"rateLimitedAction,omitempty"`
 }
 
 // Sigv4 defines AWS Signature Version 4 authentication settings.
@@ -1233,6 +1241,12 @@ type RelabelActionConfig struct {
 	// +optional
 	HashMod HashModActionConfig `json:"hashMod,omitempty,omitzero"`
 
+	// labelMap configures the LabelMap action.
+	// Required when type is LabelMap.
+	// +unionMember
+	// +optional
+	LabelMap *LabelMapActionConfig `json:"labelMap,omitempty,omitzero"`
+
 	// lowercase configures the Lowercase action.
 	// Required when type is Lowercase.
 	// Requires Prometheus >= v2.36.0.
@@ -1260,12 +1274,6 @@ type RelabelActionConfig struct {
 	// +unionMember
 	// +optional
 	DropEqual DropEqualActionConfig `json:"dropEqual,omitempty,omitzero"`
-
-	// labelMap configures the LabelMap action.
-	// Required when type is LabelMap.
-	// +unionMember
-	// +optional
-	LabelMap *LabelMapActionConfig `json:"labelMap,omitempty,omitzero"`
 }
 
 // ReplaceActionConfig configures the Replace action.
@@ -1296,6 +1304,14 @@ type HashModActionConfig struct {
 	// +kubebuilder:validation:MinLength=1
 	// +kubebuilder:validation:MaxLength=128
 	TargetLabel string `json:"targetLabel,omitempty"`
+
+	// modulus is the divisor applied to the hash of the source label values (target = hash % modulus).
+	// Only applicable when the action is HashMod.
+	// When omitted, the platform chooses a reasonable default, which may change over time.
+	// Must be at least 1.
+	// +optional
+	// +kubebuilder:validation:Minimum=1
+	Modulus int64 `json:"modulus,omitempty"`
 }
 
 // LowercaseActionConfig configures the Lowercase action.
@@ -1543,37 +1559,37 @@ const (
 	VerbosityLevelTraceAll VerbosityLevel = "TraceAll"
 )
 
-// ExemplarSendMode defines whether exemplars are sent via remote write.
-// +kubebuilder:validation:Enum=Enabled;Disabled
-type ExemplarSendMode string
+// ExemplarsMode defines whether exemplars are sent via remote write.
+// +kubebuilder:validation:Enum=Send;DoNotSend
+type ExemplarsMode string
 
 const (
-	// ExemplarSendModeEnabled means exemplars are sent via remote write.
-	ExemplarSendModeEnabled ExemplarSendMode = "Enabled"
-	// ExemplarSendModeDisabled means exemplars are not sent via remote write.
-	ExemplarSendModeDisabled ExemplarSendMode = "Disabled"
+	// ExemplarsModeSend means exemplars are sent via remote write.
+	ExemplarsModeSend ExemplarsMode = "Send"
+	// ExemplarsModeDoNotSend means exemplars are not sent via remote write.
+	ExemplarsModeDoNotSend ExemplarsMode = "DoNotSend"
 )
 
-// MetadataSendMode defines whether series metadata is sent to remote write storage.
-// +kubebuilder:validation:Enum=Enabled;Disabled
-type MetadataSendMode string
+// MetadataMode defines whether series metadata is sent to remote write storage.
+// +kubebuilder:validation:Enum=Send;DoNotSend
+type MetadataMode string
 
 const (
-	// MetadataSendModeEnabled means metadata is sent to the remote write endpoint.
-	MetadataSendModeEnabled MetadataSendMode = "Enabled"
-	// MetadataSendModeDisabled means no metadata is sent to the remote write endpoint.
-	MetadataSendModeDisabled MetadataSendMode = "Disabled"
+	// MetadataModeSend means metadata is sent to the remote write endpoint.
+	MetadataModeSend MetadataMode = "Send"
+	// MetadataModeDoNotSend means no metadata is sent to the remote write endpoint.
+	MetadataModeDoNotSend MetadataMode = "DoNotSend"
 )
 
-// RetryOnRateLimitMode defines whether to retry requests on HTTP 429 responses.
-// +kubebuilder:validation:Enum=Enabled;Disabled
-type RetryOnRateLimitMode string
+// RateLimitedAction defines what to do when the remote write endpoint returns HTTP 429 (Too Many Requests).
+// +kubebuilder:validation:Enum=Retry;DoNotRetry
+type RateLimitedAction string
 
 const (
-	// RetryOnRateLimitModeEnabled means requests will be retried on HTTP 429 responses.
-	RetryOnRateLimitModeEnabled RetryOnRateLimitMode = "Enabled"
-	// RetryOnRateLimitModeDisabled means no retries are performed on HTTP 429 responses.
-	RetryOnRateLimitModeDisabled RetryOnRateLimitMode = "Disabled"
+	// RateLimitedActionRetry means requests will be retried on HTTP 429 responses.
+	RateLimitedActionRetry RateLimitedAction = "Retry"
+	// RateLimitedActionDoNotRetry means no retries are performed on HTTP 429 responses.
+	RateLimitedActionDoNotRetry RateLimitedAction = "DoNotRetry"
 )
 
 // Audit profile configurations

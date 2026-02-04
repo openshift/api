@@ -136,6 +136,9 @@
                         "name": "GCPDualStackInstall"
                     },
                     {
+                        "name": "GatewayAPIWithoutOLM"
+                    },
+                    {
                         "name": "ImageModeStatusReporting"
                     },
                     {

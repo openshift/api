@@ -197,6 +197,9 @@
                         "name": "GatewayAPIController"
                     },
                     {
+                        "name": "GatewayAPIWithoutOLM"
+                    },
+                    {
                         "name": "HighlyAvailableArbiter"
                     },
                     {

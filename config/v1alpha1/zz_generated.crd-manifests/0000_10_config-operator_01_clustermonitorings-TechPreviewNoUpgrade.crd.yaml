@@ -1379,6 +1379,7 @@ spec:
                             controllers (e.g., ACM, cluster admins) to independently manage their own entries.
                             The name must be a valid DNS subdomain (RFC 1123): lowercase alphanumeric characters,
                             hyphens, or periods, and must start and end with an alphanumeric character.
+                            Minimum length is 1 character (empty string is invalid).
                             Maximum length is 253 characters.
                           maxLength: 253
                           minLength: 1
@@ -1413,6 +1414,7 @@ spec:
                             instances.
                             Possible values are `HTTP` or `HTTPS`.
                             When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time.
+                            The current default value is `HTTP`.
                           enum:
                           - HTTP
                           - HTTPS
@@ -1424,9 +1426,10 @@ spec:
                             (in brackets) followed by a colon and a valid port number (1-65535).
                             Examples: "alertmanager.example.com:9093", "192.168.1.100:9093", "[::1]:9093"
                             At least one endpoint must be specified (minimum 1, maximum 10 endpoints).
-                            Each entry must be unique.
+                            Each entry must be unique and non-empty (empty string is invalid).
                           items:
                             maxLength: 255
+                            minLength: 1
                             type: string
                             x-kubernetes-validations:
                             - message: must be a valid 'host:port' where host is a
@@ -1697,7 +1700,8 @@ spec:
                       When omitted, this means the user has no opinion and the platform is left
                       to choose reasonable defaults. These defaults are subject to change over time.
                       The current default value is `kubernetes.io/os: linux`.
-                      Maximum of 10 node selector key-value pairs can be specified.
+                      When specified, nodeSelector must contain at least one key-value pair (minimum of 1)
+                      and must not contain more than 10 entries.
                     maxProperties: 10
                     minProperties: 1
                     type: object
@@ -1887,6 +1891,17 @@ spec:
                           maxLength: 1024
                           minLength: 1
                           type: string
+                        exemplarsMode:
+                          description: |-
+                            exemplarsMode controls whether exemplars are sent via remote write.
+                            When set to "Send", Prometheus is configured to store a maximum of 100,000 exemplars in memory and send them with remote write.
+                            Note that this setting only applies to user-defined monitoring. It is not applicable to default in-cluster monitoring.
+                            When omitted or set to "DoNotSend", exemplars are not sent.
+                            Valid values are "Send" and "DoNotSend".
+                          enum:
+                          - Send
+                          - DoNotSend
+                          type: string
                         headers:
                           additionalProperties:
                             type: string
@@ -1900,18 +1915,21 @@ spec:
                           type: object
                         metadataConfig:
                           description: |-
-                            metadataConfig defines settings for sending series metadata to remote write storage.
+                            metadataConfig configures the sending of series metadata to remote storage
+                            if the prometheus.WriteRequest message was chosen. When
+                            io.prometheus.write.v2.Request is used, metadata is always sent.
                             When omitted, no metadata is sent.
+                            Metadata configuration is subject to change at any point or be removed in future releases.
                           properties:
-                            send:
+                            mode:
                               description: |-
-                                send defines whether series metadata is sent to the remote write endpoint.
-                                When set to "Enabled", Prometheus sends metadata about time series to the remote write endpoint.
-                                When omitted or set to "Disabled", no metadata is sent.
-                                Valid values are "Enabled" and "Disabled".
+                                mode controls whether series metadata is sent to the remote write endpoint.
+                                When set to "Send", Prometheus sends metadata about time series to the remote write endpoint.
+                                When omitted or set to "DoNotSend", no metadata is sent.
+                                Valid values are "Send" and "DoNotSend".
                               enum:
-                              - Enabled
-                              - Disabled
+                              - Send
+                              - DoNotSend
                               type: string
                             sendInterval:
                               description: |-
@@ -2072,16 +2090,18 @@ spec:
                           description: |-
                             queueConfig allows tuning configuration for remote write queue parameters.
                             When omitted, default queue configuration is used.
+                          minProperties: 1
                           properties:
-                            batchSendDeadline:
+                            batchSendDeadlineSeconds:
                               description: |-
-                                batchSendDeadline is the maximum time a sample will wait in buffer before being sent.
+                                batchSendDeadlineSeconds is the maximum time in seconds a sample will wait in buffer before being sent.
                                 When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time.
-                                Must be a valid duration string (e.g., "5s", "1m").
                                 Minimum value is 1 second.
-                                Maximum value is 1 hour.
-                              maxLength: 20
-                              type: string
+                                Maximum value is 3600 seconds (1 hour).
+                              format: int32
+                              maximum: 3600
+                              minimum: 1
+                              type: integer
                             capacity:
                               description: |-
                                 capacity is the number of samples to buffer per shard before we start dropping them.
@@ -2093,15 +2113,16 @@ spec:
                               maximum: 1000000
                               minimum: 1
                               type: integer
-                            maxBackoff:
+                            maxBackoffMilliseconds:
                               description: |-
-                                maxBackoff is the maximum retry delay.
+                                maxBackoffMilliseconds is the maximum retry delay in milliseconds.
                                 When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time.
-                                Must be a valid duration string (e.g., "5s", "1m").
                                 Minimum value is 1 millisecond.
-                                Maximum value is 1 hour.
-                              maxLength: 20
-                              type: string
+                                Maximum value is 3600000 milliseconds (1 hour).
+                              format: int32
+                              maximum: 3600000
+                              minimum: 1
+                              type: integer
                             maxSamplesPerSend:
                               description: |-
                                 maxSamplesPerSend is the maximum number of samples per send.
@@ -2124,15 +2145,16 @@ spec:
                               maximum: 10000
                               minimum: 1
                               type: integer
-                            minBackoff:
+                            minBackoffMilliseconds:
                               description: |-
-                                minBackoff is the minimum retry delay.
+                                minBackoffMilliseconds is the minimum retry delay in milliseconds.
                                 When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time.
-                                Must be a valid duration string (e.g., "30ms", "1s").
                                 Minimum value is 1 millisecond.
-                                Maximum value is 1 hour.
-                              maxLength: 20
-                              type: string
+                                Maximum value is 3600000 milliseconds (1 hour).
+                              format: int32
+                              maximum: 3600000
+                              minimum: 1
+                              type: integer
                             minShards:
                               description: |-
                                 minShards is the minimum number of shards, i.e. amount of concurrency.
@@ -2144,37 +2166,27 @@ spec:
                               maximum: 10000
                               minimum: 1
                               type: integer
-                            retryOnRateLimit:
+                            rateLimitedAction:
                               description: |-
-                                retryOnRateLimit defines whether to retry requests on HTTP 429 responses.
-                                When set to "Enabled", Prometheus will retry requests that receive HTTP 429 (Too Many Requests) responses.
-                                When omitted or set to "Disabled", no retries are performed on rate limit responses.
-                                Valid values are "Enabled" and "Disabled".
+                                rateLimitedAction controls what to do when the remote write endpoint returns HTTP 429 (Too Many Requests).
+                                When set to "Retry", Prometheus will retry such requests using the backoff settings above.
+                                When omitted or set to "DoNotRetry", no retries are performed on rate limit responses.
+                                Valid values are "Retry" and "DoNotRetry".
                               enum:
-                              - Enabled
-                              - Disabled
+                              - Retry
+                              - DoNotRetry
                               type: string
                           type: object
-                        remoteTimeout:
+                        remoteTimeoutSeconds:
                           description: |-
-                            remoteTimeout defines the timeout value for requests to the remote write endpoint.
+                            remoteTimeoutSeconds defines the timeout in seconds for requests to the remote write endpoint.
                             When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time.
-                            Must be a valid duration string (e.g., "30s", "1m", "5m").
                             Minimum value is 1 second.
-                            Maximum value is 10 minutes.
-                          maxLength: 20
-                          type: string
-                        sendExemplars:
-                          description: |-
-                            sendExemplars defines whether exemplars are sent via remote write.
-                            When set to "Enabled", Prometheus is configured to store a maximum of 100,000 exemplars in memory.
-                            Note that this setting only applies to user-defined monitoring. It is not applicable to default in-cluster monitoring.
-                            When omitted or set to "Disabled", exemplars are not sent.
-                            Valid values are "Enabled" and "Disabled".
-                          enum:
-                          - Enabled
-                          - Disabled
-                          type: string
+                            Maximum value is 600 seconds (10 minutes).
+                          format: int32
+                          maximum: 600
+                          minimum: 1
+                          type: integer
                         sigv4:
                           description: |-
                             sigv4 defines AWS Signature Version 4 authentication settings.
@@ -2425,15 +2437,17 @@ spec:
                         url:
                           description: |-
                             url is the URL of the remote write endpoint.
-                            Must be a valid URL with http or https scheme.
-                            Must be between 1 and 2048 characters in length.
+                            Must be a valid URL with http or https scheme and a non-empty hostname.
+                            Empty string is invalid. Must be between 1 and 2048 characters in length.
                           maxLength: 2048
                           minLength: 1
                           type: string
                           x-kubernetes-validations:
                           - message: must be a valid URL with http or https scheme
+                              and a non-empty hostname
                             rule: isURL(self) && (url(self).getScheme() == 'http'
-                              || url(self).getScheme() == 'https')
+                              || url(self).getScheme() == 'https') && size(url(self).getHostname())
+                              > 0
                         writeRelabelConfigs:
                           description: |-
                             writeRelabelConfigs is a list of relabeling rules to apply before sending data to the remote endpoint.
@@ -2469,6 +2483,15 @@ spec:
                                       hashMod configures the HashMod action.
                                       Required when type is HashMod.
                                     properties:
+                                      modulus:
+                                        description: |-
+                                          modulus is the divisor applied to the hash of the source label values (target = hash % modulus).
+                                          Only applicable when the action is HashMod.
+                                          When omitted, the platform chooses a reasonable default, which may change over time.
+                                          Must be at least 1.
+                                        format: int64
+                                        minimum: 1
+                                        type: integer
                                       targetLabel:
                                         description: |-
                                           targetLabel is the target label name where the result is written.

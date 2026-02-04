@@ -3,10 +3,10 @@ kind: CustomResourceDefinition
 metadata:
   annotations:
     api-approved.openshift.io: https://github.com/openshift/api/pull/1453
-    api.openshift.io/filename-cvo-runlevel: "0000_80"
-    api.openshift.io/filename-operator: machine-config
-    api.openshift.io/filename-ordering: "01"
-    feature-gate.release.openshift.io/: "true"
+    api.openshift.io/merged-by-featuregates: "true"
+    include.release.openshift.io/ibm-cloud-managed: "true"
+    include.release.openshift.io/self-managed-high-availability: "true"
+    release.openshift.io/feature-set: TechPreviewNoUpgrade
   labels:
     openshift.io/operator-managed: ""
   name: kubeletconfigs.machineconfiguration.openshift.io
@@ -48,37 +48,22 @@ spec:
             description: spec contains the desired kubelet configuration.
             properties:
               autoSizingReserved:
-                description: |-
-                  autoSizingReserved controls whether system-reserved CPU and memory are automatically
-                  calculated based on each node's installed capacity. When set to true, this prevents node failure
-                  from resource starvation of system components (kubelet, CRI-O) without manual configuration.
-                  When omitted, this means the user has no opinion and the platform is left to choose a reasonable default,
-                  which is subject to change over time. The current default is true for worker nodes and false for control plane nodes.
-                  When set to false, automatic resource reservation is disabled and manual settings must be configured.
                 type: boolean
               kubeletConfig:
                 description: |-
-                  kubeletConfig contains upstream Kubernetes kubelet configuration fields.
-                  Values are validated by the kubelet itself. Invalid values may render nodes unusable.
-                  Refer to OpenShift documentation for the Kubernetes version corresponding to your
-                  OpenShift release to find valid kubelet configuration options.
+                  kubeletConfig fields are defined in kubernetes upstream. Please refer to the types defined in the version/commit used by
+                  OpenShift of the upstream kubernetes. It's important to note that, since the fields of the kubelet configuration are directly fetched from
+                  upstream the validation of those values is handled directly by the kubelet. Please refer to the upstream version of the relevant kubernetes
+                  for the valid values of these fields. Invalid values of the kubelet configuration fields may render cluster nodes unusable.
                 type: object
                 x-kubernetes-preserve-unknown-fields: true
               logLevel:
-                description: |-
-                  logLevel sets the kubelet log verbosity, controlling the amount of detail in kubelet logs.
-                  Valid values range from 0 (minimal logging) to 10 (maximum verbosity with trace-level detail).
-                  Higher log levels may impact node performance. When omitted, the platform chooses a reasonable default,
-                  which is subject to change over time. The current default is 2 (standard informational logging).
                 format: int32
-                maximum: 10
-                minimum: 0
                 type: integer
               machineConfigPoolSelector:
                 description: |-
-                  machineConfigPoolSelector selects which pools the KubeletConfig should apply to.
-                  When omitted or set to an empty selector {}, no pools are selected, which is equivalent
-                  to not matching any MachineConfigPool.
+                  machineConfigPoolSelector selects which pools the KubeletConfig shoud apply to.
+                  A nil selector will result in no pools being selected.
                 properties:
                   matchExpressions:
                     description: matchExpressions is a list of label selector requirements.
@@ -125,9 +110,9 @@ spec:
                 x-kubernetes-map-type: atomic
               tlsSecurityProfile:
                 description: |-
-                  tlsSecurityProfile configures TLS settings for the kubelet.
-                  When omitted, the TLS configuration defaults to the value from apiservers.config.openshift.io/cluster.
-                  When specified, the type field can be set to either "Old", "Intermediate", "Modern", "Custom" or omitted for backward compatibility.
+                  If unset, the default is based on the apiservers.config.openshift.io/cluster resource.
+                  Note that only Old and Intermediate profiles are currently supported, and
+                  the maximum available minTLSVersion is VersionTLS12.
                 properties:
                   custom:
                     description: |-
@@ -158,6 +143,38 @@ spec:
                           type: string
                         type: array
                         x-kubernetes-list-type: atomic
+                      curves:
+                        description: |-
+                          curves is an optional field used to specify the elliptic curves that are used during
+                          the TLS handshake.  Operators may remove entries their operands do
+                          not support.
+
+                          When omitted, this means no opinion and the platform is left to choose reasonable defaults which are
+                          subject to change over time and may be different per platform component depending on the underlying TLS
+                          libraries they use. If specified, the list must contain at least one curve.
+
+                          For example, to use X25519 and SecP256r1 (yaml):
+
+                            curves:
+                              - X25519
+                              - SecP256r1
+                        items:
+                          description: |-
+                            TLSCurve is a named curve identifier that can be used in TLSProfile.Curves.
+                            There is a one-to-one mapping between these names and the curve IDs defined
+                            in crypto/tls package based on IANA's "TLS Supported Groups" registry:
+                            https://www.iana.org/assignments/tls-parameters/tls-parameters.xhtml#tls-parameters-8
+                          enum:
+                          - X25519
+                          - SecP256r1
+                          - SecP384r1
+                          - SecP521r1
+                          - X25519MLKEM768
+                          type: string
+                        maxItems: 5
+                        minItems: 1
+                        type: array
+                        x-kubernetes-list-type: set
                       minTLSVersion:
                         description: |-
                           minTLSVersion is used to specify the minimal version of the TLS protocol
@@ -312,7 +329,6 @@ spec:
                       type: string
                   type: object
                 type: array
-                x-kubernetes-list-type: atomic
               observedGeneration:
                 description: observedGeneration represents the generation observed
                   by the controller.

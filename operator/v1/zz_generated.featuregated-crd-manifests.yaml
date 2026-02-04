@@ -69,7 +69,6 @@ clustercsidrivers.operator.openshift.io:
   Capability: ""
   Category: ""
   FeatureGates:
-  - AWSEuropeanSovereignCloudInstall
   - VSphereConfigurableMaxAllowedBlockVolumesPerNode
   FilenameOperatorName: csi-driver
   FilenameOperatorOrdering: "01"
@@ -177,7 +176,7 @@ ingresscontrollers.operator.openshift.io:
   Capability: Ingress
   Category: ""
   FeatureGates:
-  - IngressControllerDynamicConfigurationManager
+  - TLSCurvePreferences
   FilenameOperatorName: ingress
   FilenameOperatorOrdering: "00"
   FilenameRunLevel: "0000_50"
@@ -307,7 +306,8 @@ machineconfigurations.operator.openshift.io:
   FeatureGates:
   - BootImageSkewEnforcement
   - IrreconcilableMachineConfig
-  - ManagedBootImagesCPMS
+  - ManagedBootImages
+  - ManagedBootImages+ManagedBootImagesCPMS
   FilenameOperatorName: machine-config
   FilenameOperatorOrdering: "01"
   FilenameRunLevel: "0000_80"
@@ -328,8 +328,7 @@ networks.operator.openshift.io:
   CRDName: networks.operator.openshift.io
   Capability: ""
   Category: ""
-  FeatureGates:
-  - NoOverlayMode
+  FeatureGates: []
   FilenameOperatorName: network
   FilenameOperatorOrdering: "01"
   FilenameRunLevel: "0000_70"

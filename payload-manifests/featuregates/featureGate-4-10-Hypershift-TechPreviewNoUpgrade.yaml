@@ -29,25 +29,16 @@
                         "name": "ClusterAPIInstall"
                     },
                     {
-                        "name": "ClusterUpdatePreflight"
-                    },
-                    {
-                        "name": "ConfidentialCluster"
-                    },
-                    {
                         "name": "EventedPLEG"
                     },
                     {
                         "name": "Example2"
                     },
                     {
-                        "name": "ExternalOIDCExternalClaimsSourcing"
-                    },
-                    {
                         "name": "ExternalSnapshotMetadata"
                     },
                     {
-                        "name": "MachineAPIMigrationVSphere"
+                        "name": "KMSEncryptionProvider"
                     },
                     {
                         "name": "MachineAPIOperatorDisableMachineHealthCheckController"
@@ -66,9 +57,6 @@
                     },
                     {
                         "name": "NewOLMCatalogdAPIV1Metas"
-                    },
-                    {
-                        "name": "NewOLMConfigAPI"
                     },
                     {
                         "name": "NewOLMOwnSingleNamespace"
@@ -90,9 +78,6 @@
                     },
                     {
                         "name": "ShortCertRotation"
-                    },
-                    {
-                        "name": "VSphereMultiVCenterDay2"
                     }
                 ],
                 "enabled": [
@@ -109,13 +94,7 @@
                         "name": "AWSDualStackInstall"
                     },
                     {
-                        "name": "AWSEuropeanSovereignCloudInstall"
-                    },
-                    {
                         "name": "AWSServiceLBNetworkSecurityGroup"
-                    },
-                    {
-                        "name": "AdditionalStorageConfig"
                     },
                     {
                         "name": "AutomatedEtcdBackup"
@@ -196,6 +175,9 @@
                         "name": "ConfigurablePKI"
                     },
                     {
+                        "name": "ConsolePluginContentSecurityPolicy"
+                    },
+                    {
                         "name": "DNSNameResolver"
                     },
                     {
@@ -226,6 +208,12 @@
                         "name": "ExternalOIDCWithUpstreamParity"
                     },
                     {
+                        "name": "GCPClusterHostedDNS"
+                    },
+                    {
+                        "name": "GCPClusterHostedDNSInstall"
+                    },
+                    {
                         "name": "GCPCustomAPIEndpoints"
                     },
                     {
@@ -235,7 +223,16 @@
                         "name": "GCPDualStackInstall"
                     },
                     {
+                        "name": "GatewayAPI"
+                    },
+                    {
+                        "name": "GatewayAPIController"
+                    },
+                    {
                         "name": "GatewayAPIWithoutOLM"
+                    },
+                    {
+                        "name": "HighlyAvailableArbiter"
                     },
                     {
                         "name": "HyperShiftOnlyDynamicResourceAllocation"
@@ -245,6 +242,9 @@
                     },
                     {
                         "name": "ImageStreamImportMode"
+                    },
+                    {
+                        "name": "ImageVolume"
                     },
                     {
                         "name": "IngressControllerDynamicConfigurationManager"
@@ -274,7 +274,22 @@
                         "name": "MachineAPIMigrationOpenStack"
                     },
                     {
+                        "name": "MachineConfigNodes"
+                    },
+                    {
+                        "name": "ManagedBootImages"
+                    },
+                    {
+                        "name": "ManagedBootImagesAWS"
+                    },
+                    {
+                        "name": "ManagedBootImagesAzure"
+                    },
+                    {
                         "name": "ManagedBootImagesCPMS"
+                    },
+                    {
+                        "name": "ManagedBootImagesvSphere"
                     },
                     {
                         "name": "MaxUnavailableStatefulSet"
@@ -298,12 +313,6 @@
                         "name": "MutatingAdmissionPolicy"
                     },
                     {
-                        "name": "NetworkObservabilityInstall"
-                    },
-                    {
-                        "name": "NoOverlayMode"
-                    },
-                    {
                         "name": "NutanixMultiSubnets"
                     },
                     {
@@ -317,6 +326,12 @@
                     },
                     {
                         "name": "OpenShiftPodSecurityAdmission"
+                    },
+                    {
+                        "name": "PinnedImages"
+                    },
+                    {
+                        "name": "RouteExternalCertificate"
                     },
                     {
                         "name": "SELinuxMount"
@@ -337,10 +352,16 @@
                         "name": "StoragePerformantSecurityPolicy"
                     },
                     {
-                        "name": "TLSAdherence"
+                        "name": "TLSCurvePreferences"
                     },
                     {
                         "name": "UpgradeStatus"
+                    },
+                    {
+                        "name": "UserNamespacesPodSecurityStandards"
+                    },
+                    {
+                        "name": "UserNamespacesSupport"
                     },
                     {
                         "name": "VSphereConfigurableMaxAllowedBlockVolumesPerNode"

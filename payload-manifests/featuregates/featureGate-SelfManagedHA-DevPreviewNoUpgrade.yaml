@@ -329,6 +329,9 @@
                         "name": "StoragePerformantSecurityPolicy"
                     },
                     {
+                        "name": "TLSCurvePreferences"
+                    },
+                    {
                         "name": "UpgradeStatus"
                     },
                     {

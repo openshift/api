@@ -6,6 +6,7 @@ metadata:
     api.openshift.io/filename-cvo-runlevel: "0000_10"
     api.openshift.io/filename-operator: insights
     api.openshift.io/filename-ordering: "01"
+    capability.openshift.io/name: Insights
     feature-gate.release.openshift.io/InsightsOnDemandDataGather: "true"
   name: datagathers.insights.openshift.io
 spec:

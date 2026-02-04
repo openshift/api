@@ -978,4 +978,12 @@ var (
 						enhancementPR("https://github.com/openshift/enhancements/pull/1465").
 						enableIn(configv1.DevPreviewNoUpgrade).
 						mustRegister()
+
+	FeatureGateDisableForceDetachOnTimeout = newFeatureGate("DisableForceDetachOnTimeout").
+						reportProblemsToJiraComponent("Storage").
+						contactPerson("jdobson").
+						productScope(ocpSpecific).
+						enhancementPR("https://github.com/openshift/enhancements/pull/1935").
+						enableIn(configv1.DevPreviewNoUpgrade, configv1.TechPreviewNoUpgrade).
+						mustRegister()
 )

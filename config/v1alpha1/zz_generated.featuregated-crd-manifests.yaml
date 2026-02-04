@@ -69,6 +69,30 @@ clustermonitorings.config.openshift.io:
   - ClusterMonitoringConfig
   Version: v1alpha1
 
+controllermanagers.config.openshift.io:
+  Annotations:
+    release.openshift.io/bootstrap-required: "true"
+  ApprovedPRNumber: https://github.com/openshift/api/pull/2668
+  CRDName: controllermanagers.config.openshift.io
+  Capability: ""
+  Category: ""
+  FeatureGates:
+  - DisableForceDetachOnTimeout
+  FilenameOperatorName: config-operator
+  FilenameOperatorOrdering: "01"
+  FilenameRunLevel: "0000_10"
+  GroupName: config.openshift.io
+  HasStatus: true
+  KindName: ControllerManager
+  Labels: {}
+  PluralName: controllermanagers
+  PrinterColumns: []
+  Scope: Cluster
+  ShortNames: null
+  TopLevelFeatureGates:
+  - DisableForceDetachOnTimeout
+  Version: v1alpha1
+
 imagepolicies.config.openshift.io:
   Annotations: {}
   ApprovedPRNumber: https://github.com/openshift/api/pull/1457

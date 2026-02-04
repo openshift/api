@@ -80,12 +80,6 @@
                         "name": "AWSServiceLBNetworkSecurityGroup"
                     },
                     {
-                        "name": "AdditionalRoutingCapabilities"
-                    },
-                    {
-                        "name": "AdminNetworkPolicy"
-                    },
-                    {
                         "name": "AutomatedEtcdBackup"
                     },
                     {
@@ -269,15 +263,6 @@
                         "name": "MutatingAdmissionPolicy"
                     },
                     {
-                        "name": "NetworkDiagnosticsConfig"
-                    },
-                    {
-                        "name": "NetworkLiveMigration"
-                    },
-                    {
-                        "name": "NetworkSegmentation"
-                    },
-                    {
                         "name": "NewOLM"
                     },
                     {
@@ -315,12 +300,6 @@
                     },
                     {
                         "name": "PinnedImages"
-                    },
-                    {
-                        "name": "PreconfiguredUDNAddresses"
-                    },
-                    {
-                        "name": "RouteAdvertisements"
                     },
                     {
                         "name": "RouteExternalCertificate"

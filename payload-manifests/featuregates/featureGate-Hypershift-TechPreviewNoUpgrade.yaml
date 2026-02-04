@@ -98,12 +98,6 @@
                         "name": "AWSServiceLBNetworkSecurityGroup"
                     },
                     {
-                        "name": "AdditionalRoutingCapabilities"
-                    },
-                    {
-                        "name": "AdminNetworkPolicy"
-                    },
-                    {
                         "name": "AutomatedEtcdBackup"
                     },
                     {
@@ -290,15 +284,6 @@
                         "name": "MutatingAdmissionPolicy"
                     },
                     {
-                        "name": "NetworkDiagnosticsConfig"
-                    },
-                    {
-                        "name": "NetworkLiveMigration"
-                    },
-                    {
-                        "name": "NetworkSegmentation"
-                    },
-                    {
                         "name": "NutanixMultiSubnets"
                     },
                     {
@@ -315,12 +300,6 @@
                     },
                     {
                         "name": "PinnedImages"
-                    },
-                    {
-                        "name": "PreconfiguredUDNAddresses"
-                    },
-                    {
-                        "name": "RouteAdvertisements"
                     },
                     {
                         "name": "RouteExternalCertificate"

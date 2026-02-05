@@ -5,6 +5,10 @@ import (
 	"k8s.io/apimachinery/pkg/util/sets"
 )
 
+// Generating this many versions future proofs us until at least 2040.
+const minOpenshiftVersion uint64 = 4
+const maxOpenshiftVersion uint64 = 10
+
 func FeatureSets(version uint64, clusterProfile ClusterProfileName, featureSet configv1.FeatureSet) *FeatureGateEnabledDisabled {
 	enabledDisabled := &FeatureGateEnabledDisabled{}
 
@@ -37,8 +41,11 @@ func FeatureSets(version uint64, clusterProfile ClusterProfileName, featureSet c
 }
 
 func AllFeatureSets() map[uint64]map[ClusterProfileName]map[configv1.FeatureSet]*FeatureGateEnabledDisabled {
-	// Generating this many versions future proofs us until at least 2040.
-	versions := sets.New[uint64](4, 5, 6, 7, 8, 9, 10)
+	versions := sets.New[uint64]()
+	for version := minOpenshiftVersion; version <= maxOpenshiftVersion; version++ {
+		versions.Insert(version)
+	}
+
 	clusterProfiles := sets.New[ClusterProfileName](AllClusterProfiles...)
 	featureSets := sets.New[configv1.FeatureSet](configv1.AllFixedFeatureSets...)
 

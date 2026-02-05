@@ -48,9 +48,40 @@ var (
 
 type featureGateEnableOption func(s *featureGateStatus)
 
-func inVersion(version uint64) featureGateEnableOption {
+type versionOperator string
+
+var (
+	equal              = versionOperator("=")
+	greaterThan        = versionOperator(">")
+	greaterThanOrEqual = versionOperator(">=")
+	lessThan           = versionOperator("<")
+	lessThanOrEqual    = versionOperator("<=")
+)
+
+func inVersion(version uint64, op versionOperator) featureGateEnableOption {
 	return func(s *featureGateStatus) {
-		s.version.Insert(version)
+		switch op {
+		case equal:
+			s.version.Insert(version)
+		case greaterThan:
+			for v := version + 1; v <= maxOpenshiftVersion; v++ {
+				s.version.Insert(v)
+			}
+		case greaterThanOrEqual:
+			for v := version; v <= maxOpenshiftVersion; v++ {
+				s.version.Insert(v)
+			}
+		case lessThan:
+			for v := minOpenshiftVersion; v < version; v++ {
+				s.version.Insert(v)
+			}
+		case lessThanOrEqual:
+			for v := minOpenshiftVersion; v <= version; v++ {
+				s.version.Insert(v)
+			}
+		default:
+			panic(fmt.Sprintf("invalid version operator: %s", op))
+		}
 	}
 }
 

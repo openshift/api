@@ -12,3 +12,45 @@ tests:
         apiVersion: config.openshift.io/v1
         kind: Ingress
         spec: {}
+    - name: Should be able to create an Ingress with domain set
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: Ingress
+        spec:
+          domain: apps.example.com
+      expected: |
+        apiVersion: config.openshift.io/v1
+        kind: Ingress
+        spec:
+          domain: apps.example.com
+  onUpdate:
+    - name: Should not be able to change domain once set
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: Ingress
+        spec:
+          domain: apps.example.com
+      updated: |
+        apiVersion: config.openshift.io/v1
+        kind: Ingress
+        spec:
+          domain: test.example.com
+      expectedError: "domain is immutable once set"
+    - name: Should be able to update other fields without changing domain
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: Ingress
+        spec:
+          domain: apps.example.com
+      updated: |
+        apiVersion: config.openshift.io/v1
+        kind: Ingress
+        spec:
+          domain: apps.example.com
+          appsDomain: custom.example.com
+      expected: |
+        apiVersion: config.openshift.io/v1
+        kind: Ingress
+        spec:
+          domain: apps.example.com
+          appsDomain: custom.example.com

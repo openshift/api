@@ -334,9 +334,6 @@
                         "name": "OpenShiftPodSecurityAdmission"
                     },
                     {
-                        "name": "RouteExternalCertificate"
-                    },
-                    {
                         "name": "ServiceAccountTokenNodeBinding"
                     },
                     {

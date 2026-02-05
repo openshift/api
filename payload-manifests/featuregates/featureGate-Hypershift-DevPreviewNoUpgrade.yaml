@@ -299,6 +299,9 @@
                         "name": "PinnedImages"
                     },
                     {
+                        "name": "PodAndContainerStatsFromCRI"
+                    },
+                    {
                         "name": "ProvisioningRequestAvailable"
                     },
                     {

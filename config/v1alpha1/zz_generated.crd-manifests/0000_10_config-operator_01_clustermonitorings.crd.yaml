@@ -1912,6 +1912,7 @@ spec:
                             Maximum of 50 headers can be specified.
                             Each header name must be between 1 and 256 characters, and each header value must be between 0 and 4096 characters.
                           maxProperties: 50
+                          minProperties: 0
                           type: object
                         metadataConfig:
                           description: |-
@@ -1920,6 +1921,7 @@ spec:
                             io.prometheus.write.v2.Request is used, metadata is always sent.
                             When omitted, no metadata is sent.
                             Metadata configuration is subject to change at any point or be removed in future releases.
+                          minProperties: 0
                           properties:
                             mode:
                               description: |-
@@ -1939,6 +1941,7 @@ spec:
                                 Minimum value is 1 second.
                                 Maximum value is 24 hours.
                               maxLength: 20
+                              minLength: 1
                               type: string
                           type: object
                         name:
@@ -2040,6 +2043,7 @@ spec:
                                 Maximum of 20 parameters can be specified.
                                 Each parameter name must be between 1 and 256 characters, and each parameter value must be between 0 and 4096 characters.
                               maxProperties: 20
+                              minProperties: 0
                               type: object
                             scopes:
                               description: |-
@@ -2052,6 +2056,7 @@ spec:
                                 minLength: 1
                                 type: string
                               maxItems: 20
+                              minItems: 0
                               type: array
                               x-kubernetes-list-type: atomic
                             tokenUrl:
@@ -2191,6 +2196,7 @@ spec:
                           description: |-
                             sigv4 defines AWS Signature Version 4 authentication settings.
                             When omitted, no AWS SigV4 authentication is performed.
+                          minProperties: 0
                           properties:
                             accessKey:
                               description: |-
@@ -2521,6 +2527,7 @@ spec:
                                     description: |-
                                       labelMap configures the LabelMap action.
                                       Required when type is LabelMap.
+                                    minProperties: 0
                                     properties:
                                       replacement:
                                         description: |-
@@ -2529,6 +2536,7 @@ spec:
                                           The default value is "$1" (the first capture group).
                                           Must be at most 255 characters in length.
                                         maxLength: 255
+                                        minLength: 0
                                         type: string
                                     type: object
                                   lowercase:
@@ -2560,6 +2568,7 @@ spec:
                                           Setting to an empty string ("") explicitly clears the target label value.
                                           Must be at most 255 characters in length.
                                         maxLength: 255
+                                        minLength: 0
                                         type: string
                                       targetLabel:
                                         description: |-

@@ -320,9 +320,6 @@
                         "name": "PinnedImages"
                     },
                     {
-                        "name": "RouteExternalCertificate"
-                    },
-                    {
                         "name": "ServiceAccountTokenNodeBinding"
                     },
                     {

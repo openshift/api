@@ -302,9 +302,6 @@
                         "name": "PinnedImages"
                     },
                     {
-                        "name": "RouteExternalCertificate"
-                    },
-                    {
                         "name": "SELinuxMount"
                     },
                     {

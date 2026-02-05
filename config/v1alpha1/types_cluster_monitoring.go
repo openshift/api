@@ -898,6 +898,7 @@ type RemoteWriteSpec struct {
 	// Maximum of 50 headers can be specified.
 	// Each header name must be between 1 and 256 characters, and each header value must be between 0 and 4096 characters.
 	// +optional
+	// +kubebuilder:validation:MinProperties=0
 	// +kubebuilder:validation:MaxProperties=50
 	Headers map[string]string `json:"headers,omitempty"`
 	// metadataConfig configures the sending of series metadata to remote storage
@@ -982,6 +983,7 @@ type BasicAuth struct {
 }
 
 // MetadataConfig defines settings for sending series metadata to remote write storage.
+// +kubebuilder:validation:MinProperties=0
 type MetadataConfig struct {
 	// mode controls whether series metadata is sent to the remote write endpoint.
 	// When set to "Send", Prometheus sends metadata about time series to the remote write endpoint.
@@ -995,8 +997,9 @@ type MetadataConfig struct {
 	// Minimum value is 1 second.
 	// Maximum value is 24 hours.
 	// +optional
+	// +kubebuilder:validation:MinLength=1
 	// +kubebuilder:validation:MaxLength=20
-	SendInterval *string `json:"sendInterval,omitempty"`
+	SendInterval string `json:"sendInterval,omitempty"`
 }
 
 // OAuth2 defines OAuth2 authentication settings for the remote write endpoint.
@@ -1022,6 +1025,7 @@ type OAuth2 struct {
 	// Maximum of 20 scopes can be specified.
 	// Each scope must be between 1 and 256 characters.
 	// +optional
+	// +kubebuilder:validation:MinItems=0
 	// +kubebuilder:validation:MaxItems=20
 	// +kubebuilder:validation:items:MinLength=1
 	// +kubebuilder:validation:items:MaxLength=256
@@ -1032,6 +1036,7 @@ type OAuth2 struct {
 	// Maximum of 20 parameters can be specified.
 	// Each parameter name must be between 1 and 256 characters, and each parameter value must be between 0 and 4096 characters.
 	// +optional
+	// +kubebuilder:validation:MinProperties=0
 	// +kubebuilder:validation:MaxProperties=20
 	EndpointParams map[string]string `json:"endpointParams,omitempty"`
 }
@@ -1108,6 +1113,7 @@ type QueueConfig struct {
 }
 
 // Sigv4 defines AWS Signature Version 4 authentication settings.
+// +kubebuilder:validation:MinProperties=0
 type Sigv4 struct {
 	// region is the AWS region.
 	// When omitted, the region is derived from the environment or instance metadata.
@@ -1292,6 +1298,7 @@ type ReplaceActionConfig struct {
 	// Setting to an empty string ("") explicitly clears the target label value.
 	// Must be at most 255 characters in length.
 	// +optional
+	// +kubebuilder:validation:MinLength=0
 	// +kubebuilder:validation:MaxLength=255
 	Replacement *string `json:"replacement,omitempty"`
 }
@@ -1364,12 +1371,14 @@ type DropEqualActionConfig struct {
 
 // LabelMapActionConfig configures the LabelMap action.
 // Regex is matched against all source label names (not just source_labels). Matching label values are copied to new label names given by replacement, with match group references (${1}, ${2}, ...) substituted.
+// +kubebuilder:validation:MinProperties=0
 type LabelMapActionConfig struct {
 	// replacement is the template for new label names; match group references (${1}, ${2}, ...) are substituted from the matched label name.
 	// When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time.
 	// The default value is "$1" (the first capture group).
 	// Must be at most 255 characters in length.
 	// +optional
+	// +kubebuilder:validation:MinLength=0
 	// +kubebuilder:validation:MaxLength=255
 	Replacement *string `json:"replacement,omitempty"`
 }

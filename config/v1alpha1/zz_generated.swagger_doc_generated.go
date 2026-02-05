@@ -242,8 +242,8 @@ func (ContainerResource) SwaggerDoc() map[string]string {
 }
 
 var map_DropEqualActionConfig = map[string]string{
-	"":            "DropEqualActionConfig configures the DropEqual action. Requires Prometheus >= v2.41.0.",
-	"targetLabel": "targetLabel is the target label name where the result is written. Must be between 1 and 128 characters in length.",
+	"":            "DropEqualActionConfig configures the DropEqual action. Drops targets for which the concatenated source_labels do match the value of target_label. Requires Prometheus >= v2.41.0.",
+	"targetLabel": "targetLabel is the label name whose value is compared to the concatenated source_labels; targets that match are dropped. Must be between 1 and 128 characters in length.",
 }
 
 func (DropEqualActionConfig) SwaggerDoc() map[string]string {
@@ -251,9 +251,9 @@ func (DropEqualActionConfig) SwaggerDoc() map[string]string {
 }
 
 var map_HashModActionConfig = map[string]string{
-	"":            "HashModActionConfig configures the HashMod action.",
-	"targetLabel": "targetLabel is the target label name where the result is written. Must be between 1 and 128 characters in length.",
-	"modulus":     "modulus is the divisor applied to the hash of the source label values (target = hash % modulus). Only applicable when the action is HashMod. When omitted, the platform chooses a reasonable default, which may change over time. Must be at least 1.",
+	"":            "HashModActionConfig configures the HashMod action. target_label is set to the modulus of a hash of the concatenated source_labels (target = hash % modulus).",
+	"targetLabel": "targetLabel is the label name where the hash modulus result is written. Must be between 1 and 128 characters in length.",
+	"modulus":     "modulus is the divisor applied to the hash of the concatenated source label values (target = hash % modulus). When omitted, the platform chooses a reasonable default, which may change over time. Must be at least 1.",
 }
 
 func (HashModActionConfig) SwaggerDoc() map[string]string {
@@ -261,8 +261,8 @@ func (HashModActionConfig) SwaggerDoc() map[string]string {
 }
 
 var map_KeepEqualActionConfig = map[string]string{
-	"":            "KeepEqualActionConfig configures the KeepEqual action. Requires Prometheus >= v2.41.0.",
-	"targetLabel": "targetLabel is the target label name where the result is written. Must be between 1 and 128 characters in length.",
+	"":            "KeepEqualActionConfig configures the KeepEqual action. Drops targets for which the concatenated source_labels do not match the value of target_label. Requires Prometheus >= v2.41.0.",
+	"targetLabel": "targetLabel is the label name whose value is compared to the concatenated source_labels; targets that do not match are dropped. Must be between 1 and 128 characters in length.",
 }
 
 func (KeepEqualActionConfig) SwaggerDoc() map[string]string {
@@ -280,8 +280,8 @@ func (Label) SwaggerDoc() map[string]string {
 }
 
 var map_LabelMapActionConfig = map[string]string{
-	"":            "LabelMapActionConfig configures the LabelMap action.",
-	"replacement": "replacement value used to derive new label names from labels matching the regex. Regex capture groups are available (e.g., $1, $2). When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time. The default value is \"$1\" (the first capture group). Must be at most 255 characters in length.",
+	"":            "LabelMapActionConfig configures the LabelMap action. Regex is matched against all source label names (not just source_labels). Matching label values are copied to new label names given by replacement, with match group references (${1}, ${2}, ...) substituted.",
+	"replacement": "replacement is the template for new label names; match group references (${1}, ${2}, ...) are substituted from the matched label name. When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time. The default value is \"$1\" (the first capture group). Must be at most 255 characters in length.",
 }
 
 func (LabelMapActionConfig) SwaggerDoc() map[string]string {
@@ -289,8 +289,8 @@ func (LabelMapActionConfig) SwaggerDoc() map[string]string {
 }
 
 var map_LowercaseActionConfig = map[string]string{
-	"":            "LowercaseActionConfig configures the Lowercase action. Requires Prometheus >= v2.36.0.",
-	"targetLabel": "targetLabel is the target label name where the result is written. Must be between 1 and 128 characters in length.",
+	"":            "LowercaseActionConfig configures the Lowercase action. Maps the concatenated source_labels to their lower case and writes to target_label. Requires Prometheus >= v2.36.0.",
+	"targetLabel": "targetLabel is the label name where the lower-cased value is written. Must be between 1 and 128 characters in length.",
 }
 
 func (LowercaseActionConfig) SwaggerDoc() map[string]string {
@@ -396,7 +396,7 @@ func (QueueConfig) SwaggerDoc() map[string]string {
 
 var map_RelabelActionConfig = map[string]string{
 	"":          "RelabelActionConfig represents the action to perform and its configuration. Exactly one action-specific configuration must be specified based on the action type.",
-	"type":      "type specifies the action to perform on the matched labels. Valid actions are:\n  - Replace: Replaces the value of targetLabel with replacement, using regex capture groups.\n  - Keep: Keeps only metrics where regex matches the source labels.\n  - Drop: Drops metrics where regex matches the source labels.\n  - HashMod: Sets targetLabel to the hash modulus of the source labels.\n  - LabelMap: Copies labels matching regex to new label names derived from replacement.\n  - LabelDrop: Drops labels matching regex.\n  - LabelKeep: Keeps only labels matching regex.\n  - Lowercase: Converts the target label value to lowercase. Requires Prometheus >= v2.36.0.\n  - Uppercase: Converts the target label value to uppercase. Requires Prometheus >= v2.36.0.\n  - KeepEqual: Keeps only metrics where the source label value equals the target label value. Requires Prometheus >= v2.41.0.\n  - DropEqual: Drops metrics where the source label value equals the target label value. Requires Prometheus >= v2.41.0.",
+	"type":      "type specifies the action to perform on the matched labels. Valid actions are:\n  - Replace: Match regex against the concatenated source_labels; set target_label to replacement, with match group references (${1}, ${2}, ...) substituted. If regex does not match, no replacement takes place.\n  - Lowercase: Map the concatenated source_labels to their lower case. Requires Prometheus >= v2.36.0.\n  - Uppercase: Map the concatenated source_labels to their upper case. Requires Prometheus >= v2.36.0.\n  - Keep: Drop targets for which regex does not match the concatenated source_labels.\n  - Drop: Drop targets for which regex matches the concatenated source_labels.\n  - KeepEqual: Drop targets for which the concatenated source_labels do not match target_label. Requires Prometheus >= v2.41.0.\n  - DropEqual: Drop targets for which the concatenated source_labels do match target_label. Requires Prometheus >= v2.41.0.\n  - HashMod: Set target_label to the modulus of a hash of the concatenated source_labels.\n  - LabelMap: Match regex against all source label names (not just source_labels); copy matching label values to new names given by replacement with ${1}, ${2}, ... substituted.\n  - LabelDrop: Match regex against all label names; any label that matches is removed.\n  - LabelKeep: Match regex against all label names; any label that does not match is removed.",
 	"replace":   "replace configures the Replace action. Required when type is Replace.",
 	"hashMod":   "hashMod configures the HashMod action. Required when type is HashMod.",
 	"labelMap":  "labelMap configures the LabelMap action. Required when type is LabelMap.",
@@ -447,9 +447,9 @@ func (RemoteWriteSpec) SwaggerDoc() map[string]string {
 }
 
 var map_ReplaceActionConfig = map[string]string{
-	"":            "ReplaceActionConfig configures the Replace action.",
-	"targetLabel": "targetLabel is the target label name where the result is written. Must be between 1 and 128 characters in length.",
-	"replacement": "replacement value against which a Replace action is performed if the regular expression matches. Regex capture groups are available (e.g., $1, $2). When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time. The default value is \"$1\" (the first capture group). Setting to an empty string (\"\") explicitly clears the target label value. Must be at most 255 characters in length.",
+	"":            "ReplaceActionConfig configures the Replace action. Regex is matched against the concatenated source_labels; target_label is set to replacement with match group references (${1}, ${2}, ...) substituted. No replacement if regex does not match.",
+	"targetLabel": "targetLabel is the label name where the replacement result is written. Must be between 1 and 128 characters in length.",
+	"replacement": "replacement is the value written to target_label when regex matches; match group references (${1}, ${2}, ...) are substituted. When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time. The default value is \"$1\" (the first capture group). Setting to an empty string (\"\") explicitly clears the target label value. Must be at most 255 characters in length.",
 }
 
 func (ReplaceActionConfig) SwaggerDoc() map[string]string {
@@ -513,8 +513,8 @@ func (TLSConfig) SwaggerDoc() map[string]string {
 }
 
 var map_UppercaseActionConfig = map[string]string{
-	"":            "UppercaseActionConfig configures the Uppercase action. Requires Prometheus >= v2.36.0.",
-	"targetLabel": "targetLabel is the target label name where the result is written. Must be between 1 and 128 characters in length.",
+	"":            "UppercaseActionConfig configures the Uppercase action. Maps the concatenated source_labels to their upper case and writes to target_label. Requires Prometheus >= v2.36.0.",
+	"targetLabel": "targetLabel is the label name where the upper-cased value is written. Must be between 1 and 128 characters in length.",
 }
 
 func (UppercaseActionConfig) SwaggerDoc() map[string]string {

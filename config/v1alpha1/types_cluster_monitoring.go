@@ -1214,17 +1214,17 @@ type RelabelConfig struct {
 type RelabelActionConfig struct {
 	// type specifies the action to perform on the matched labels.
 	// Valid actions are:
-	//   - Replace: Replaces the value of targetLabel with replacement, using regex capture groups.
-	//   - Keep: Keeps only metrics where regex matches the source labels.
-	//   - Drop: Drops metrics where regex matches the source labels.
-	//   - HashMod: Sets targetLabel to the hash modulus of the source labels.
-	//   - LabelMap: Copies labels matching regex to new label names derived from replacement.
-	//   - LabelDrop: Drops labels matching regex.
-	//   - LabelKeep: Keeps only labels matching regex.
-	//   - Lowercase: Converts the target label value to lowercase. Requires Prometheus >= v2.36.0.
-	//   - Uppercase: Converts the target label value to uppercase. Requires Prometheus >= v2.36.0.
-	//   - KeepEqual: Keeps only metrics where the source label value equals the target label value. Requires Prometheus >= v2.41.0.
-	//   - DropEqual: Drops metrics where the source label value equals the target label value. Requires Prometheus >= v2.41.0.
+	//   - Replace: Match regex against the concatenated source_labels; set target_label to replacement, with match group references (${1}, ${2}, ...) substituted. If regex does not match, no replacement takes place.
+	//   - Lowercase: Map the concatenated source_labels to their lower case. Requires Prometheus >= v2.36.0.
+	//   - Uppercase: Map the concatenated source_labels to their upper case. Requires Prometheus >= v2.36.0.
+	//   - Keep: Drop targets for which regex does not match the concatenated source_labels.
+	//   - Drop: Drop targets for which regex matches the concatenated source_labels.
+	//   - KeepEqual: Drop targets for which the concatenated source_labels do not match target_label. Requires Prometheus >= v2.41.0.
+	//   - DropEqual: Drop targets for which the concatenated source_labels do match target_label. Requires Prometheus >= v2.41.0.
+	//   - HashMod: Set target_label to the modulus of a hash of the concatenated source_labels.
+	//   - LabelMap: Match regex against all source label names (not just source_labels); copy matching label values to new names given by replacement with ${1}, ${2}, ... substituted.
+	//   - LabelDrop: Match regex against all label names; any label that matches is removed.
+	//   - LabelKeep: Match regex against all label names; any label that does not match is removed.
 	// +required
 	// +unionDiscriminator
 	Type RelabelAction `json:"type,omitempty"`
@@ -1277,16 +1277,16 @@ type RelabelActionConfig struct {
 }
 
 // ReplaceActionConfig configures the Replace action.
+// Regex is matched against the concatenated source_labels; target_label is set to replacement with match group references (${1}, ${2}, ...) substituted. No replacement if regex does not match.
 type ReplaceActionConfig struct {
-	// targetLabel is the target label name where the result is written.
+	// targetLabel is the label name where the replacement result is written.
 	// Must be between 1 and 128 characters in length.
 	// +required
 	// +kubebuilder:validation:MinLength=1
 	// +kubebuilder:validation:MaxLength=128
 	TargetLabel string `json:"targetLabel,omitempty"`
 
-	// replacement value against which a Replace action is performed if the
-	// regular expression matches. Regex capture groups are available (e.g., $1, $2).
+	// replacement is the value written to target_label when regex matches; match group references (${1}, ${2}, ...) are substituted.
 	// When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time.
 	// The default value is "$1" (the first capture group).
 	// Setting to an empty string ("") explicitly clears the target label value.
@@ -1297,16 +1297,16 @@ type ReplaceActionConfig struct {
 }
 
 // HashModActionConfig configures the HashMod action.
+// target_label is set to the modulus of a hash of the concatenated source_labels (target = hash % modulus).
 type HashModActionConfig struct {
-	// targetLabel is the target label name where the result is written.
+	// targetLabel is the label name where the hash modulus result is written.
 	// Must be between 1 and 128 characters in length.
 	// +required
 	// +kubebuilder:validation:MinLength=1
 	// +kubebuilder:validation:MaxLength=128
 	TargetLabel string `json:"targetLabel,omitempty"`
 
-	// modulus is the divisor applied to the hash of the source label values (target = hash % modulus).
-	// Only applicable when the action is HashMod.
+	// modulus is the divisor applied to the hash of the concatenated source label values (target = hash % modulus).
 	// When omitted, the platform chooses a reasonable default, which may change over time.
 	// Must be at least 1.
 	// +optional
@@ -1315,9 +1315,10 @@ type HashModActionConfig struct {
 }
 
 // LowercaseActionConfig configures the Lowercase action.
+// Maps the concatenated source_labels to their lower case and writes to target_label.
 // Requires Prometheus >= v2.36.0.
 type LowercaseActionConfig struct {
-	// targetLabel is the target label name where the result is written.
+	// targetLabel is the label name where the lower-cased value is written.
 	// Must be between 1 and 128 characters in length.
 	// +required
 	// +kubebuilder:validation:MinLength=1
@@ -1326,9 +1327,10 @@ type LowercaseActionConfig struct {
 }
 
 // UppercaseActionConfig configures the Uppercase action.
+// Maps the concatenated source_labels to their upper case and writes to target_label.
 // Requires Prometheus >= v2.36.0.
 type UppercaseActionConfig struct {
-	// targetLabel is the target label name where the result is written.
+	// targetLabel is the label name where the upper-cased value is written.
 	// Must be between 1 and 128 characters in length.
 	// +required
 	// +kubebuilder:validation:MinLength=1
@@ -1337,9 +1339,10 @@ type UppercaseActionConfig struct {
 }
 
 // KeepEqualActionConfig configures the KeepEqual action.
+// Drops targets for which the concatenated source_labels do not match the value of target_label.
 // Requires Prometheus >= v2.41.0.
 type KeepEqualActionConfig struct {
-	// targetLabel is the target label name where the result is written.
+	// targetLabel is the label name whose value is compared to the concatenated source_labels; targets that do not match are dropped.
 	// Must be between 1 and 128 characters in length.
 	// +required
 	// +kubebuilder:validation:MinLength=1
@@ -1348,9 +1351,10 @@ type KeepEqualActionConfig struct {
 }
 
 // DropEqualActionConfig configures the DropEqual action.
+// Drops targets for which the concatenated source_labels do match the value of target_label.
 // Requires Prometheus >= v2.41.0.
 type DropEqualActionConfig struct {
-	// targetLabel is the target label name where the result is written.
+	// targetLabel is the label name whose value is compared to the concatenated source_labels; targets that match are dropped.
 	// Must be between 1 and 128 characters in length.
 	// +required
 	// +kubebuilder:validation:MinLength=1
@@ -1359,9 +1363,9 @@ type DropEqualActionConfig struct {
 }
 
 // LabelMapActionConfig configures the LabelMap action.
+// Regex is matched against all source label names (not just source_labels). Matching label values are copied to new label names given by replacement, with match group references (${1}, ${2}, ...) substituted.
 type LabelMapActionConfig struct {
-	// replacement value used to derive new label names from labels matching the regex.
-	// Regex capture groups are available (e.g., $1, $2).
+	// replacement is the template for new label names; match group references (${1}, ${2}, ...) are substituted from the matched label name.
 	// When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time.
 	// The default value is "$1" (the first capture group).
 	// Must be at most 255 characters in length.
@@ -1493,28 +1497,28 @@ type Retention struct {
 type RelabelAction string
 
 const (
-	// RelabelActionReplace replaces the target label with the replacement value.
+	// RelabelActionReplace: match regex against concatenated source_labels; set target_label to replacement with ${1}, ${2}, ... substituted. No replacement if regex does not match.
 	RelabelActionReplace RelabelAction = "Replace"
-	// RelabelActionKeep keeps metrics that match the regex.
-	RelabelActionKeep RelabelAction = "Keep"
-	// RelabelActionDrop drops metrics that match the regex.
-	RelabelActionDrop RelabelAction = "Drop"
-	// RelabelActionHashMod sets the target label to the modulus of a hash of the source labels.
-	RelabelActionHashMod RelabelAction = "HashMod"
-	// RelabelActionLabelMap maps label names based on regex matching.
-	RelabelActionLabelMap RelabelAction = "LabelMap"
-	// RelabelActionLabelDrop removes labels that match the regex.
-	RelabelActionLabelDrop RelabelAction = "LabelDrop"
-	// RelabelActionLabelKeep removes labels that do not match the regex.
-	RelabelActionLabelKeep RelabelAction = "LabelKeep"
-	// RelabelActionLowercase converts the target label value to lowercase.
+	// RelabelActionLowercase: map the concatenated source_labels to their lower case.
 	RelabelActionLowercase RelabelAction = "Lowercase"
-	// RelabelActionUppercase converts the target label value to uppercase.
+	// RelabelActionUppercase: map the concatenated source_labels to their upper case.
 	RelabelActionUppercase RelabelAction = "Uppercase"
-	// RelabelActionKeepEqual keeps metrics where the source label value equals the target label value.
+	// RelabelActionKeep: drop targets for which regex does not match the concatenated source_labels.
+	RelabelActionKeep RelabelAction = "Keep"
+	// RelabelActionDrop: drop targets for which regex matches the concatenated source_labels.
+	RelabelActionDrop RelabelAction = "Drop"
+	// RelabelActionKeepEqual: drop targets for which the concatenated source_labels do not match target_label.
 	RelabelActionKeepEqual RelabelAction = "KeepEqual"
-	// RelabelActionDropEqual drops metrics where the source label value equals the target label value.
+	// RelabelActionDropEqual: drop targets for which the concatenated source_labels do match target_label.
 	RelabelActionDropEqual RelabelAction = "DropEqual"
+	// RelabelActionHashMod: set target_label to the modulus of a hash of the concatenated source_labels.
+	RelabelActionHashMod RelabelAction = "HashMod"
+	// RelabelActionLabelMap: match regex against all source label names; copy matching label values to new names given by replacement with ${1}, ${2}, ... substituted.
+	RelabelActionLabelMap RelabelAction = "LabelMap"
+	// RelabelActionLabelDrop: match regex against all label names; any label that matches is removed.
+	RelabelActionLabelDrop RelabelAction = "LabelDrop"
+	// RelabelActionLabelKeep: match regex against all label names; any label that does not match is removed.
+	RelabelActionLabelKeep RelabelAction = "LabelKeep"
 )
 
 // CollectionProfile defines the metrics collection profile for Prometheus.

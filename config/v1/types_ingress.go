@@ -131,6 +131,7 @@ type LoadBalancer struct {
 // AWSIngressSpec holds the desired state of the Ingress for Amazon Web Services infrastructure provider.
 // This only includes fields that can be modified in the cluster.
 // +union
+// +kubebuilder:validation:XValidation:rule="has(self.type) && self.type == 'Classic' ? (!has(self.ipFamily) || self.ipFamily == 'IPv4') : true",message="when type is Classic, ipFamily must be IPv4 or omitted (defaults to IPv4)"
 type AWSIngressSpec struct {
 	// type allows user to set a load balancer type.
 	// When this field is set the default ingresscontroller will get created using the specified LBType.
@@ -151,6 +152,23 @@ type AWSIngressSpec struct {
 	// +kubebuilder:validation:Enum:=NLB;Classic
 	// +required
 	Type AWSLBType `json:"type"`
+
+	// ipFamily allows users to specify the IP protocol Families that the Load Balancer service supports.
+	// The default ingress controller uses this information to configure its Load Balancer.
+	// Valid values are:
+	//
+	// * "IPv4": Only value supported with a "Classic" Load Balancer. When type is "Classic",
+	//   this field must be set to "IPv4" or omitted (which defaults to "IPv4").
+	//
+	// * "DualStackIPv4Primary": supported only with Network Load Balancer.
+	//
+	// * "DualStackIPv6Primary": supported only with Network Load Balancer.
+	//
+	// +default="IPv4"
+	// +kubebuilder:validation:Enum="IPv4";"DualStackIPv4Primary";"DualStackIPv6Primary"
+	// +optional
+	// +unionMember,optional
+	IPFamily IPFamilyType `json:"ipFamily,omitempty"`
 }
 
 type AWSLBType string

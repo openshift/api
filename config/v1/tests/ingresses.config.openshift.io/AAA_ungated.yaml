@@ -12,3 +12,120 @@ tests:
         apiVersion: config.openshift.io/v1
         kind: Ingress
         spec: {}
+    - name: Should be able to create an Ingress with Classic load balancer type and IPv4 ipFamily
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: Ingress
+        spec:
+          domain: apps.example.com
+          loadBalancer:
+            platform:
+              type: AWS
+              aws:
+                type: Classic
+                ipFamily: IPv4
+      expected: |
+        apiVersion: config.openshift.io/v1
+        kind: Ingress
+        spec:
+          domain: apps.example.com
+          loadBalancer:
+            platform:
+              type: AWS
+              aws:
+                type: Classic
+                ipFamily: IPv4
+    - name: Should be able to create an Ingress with Classic load balancer type and omitted ipFamily
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: Ingress
+        spec:
+          domain: apps.example.com
+          loadBalancer:
+            platform:
+              type: AWS
+              aws:
+                type: Classic
+      expected: |
+        apiVersion: config.openshift.io/v1
+        kind: Ingress
+        spec:
+          domain: apps.example.com
+          loadBalancer:
+            platform:
+              type: AWS
+              aws:
+                type: Classic
+                ipFamily: IPv4
+    - name: Should not be able to create an Ingress with Classic load balancer type and DualStackIPv4Primary ipFamily
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: Ingress
+        spec:
+          domain: apps.example.com
+          loadBalancer:
+            platform:
+              type: AWS
+              aws:
+                type: Classic
+                ipFamily: DualStackIPv4Primary
+      expectedError: "spec.loadBalancer.platform.aws: Invalid value: \"object\": when type is Classic, ipFamily must be IPv4 or omitted (defaults to IPv4)"
+    - name: Should not be able to create an Ingress with Classic load balancer type and DualStackIPv6Primary ipFamily
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: Ingress
+        spec:
+          domain: apps.example.com
+          loadBalancer:
+            platform:
+              type: AWS
+              aws:
+                type: Classic
+                ipFamily: DualStackIPv6Primary
+      expectedError: "spec.loadBalancer.platform.aws: Invalid value: \"object\": when type is Classic, ipFamily must be IPv4 or omitted (defaults to IPv4)"
+    - name: Should be able to create an Ingress with NLB load balancer type and DualStackIPv4Primary ipFamily
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: Ingress
+        spec:
+          domain: apps.example.com
+          loadBalancer:
+            platform:
+              type: AWS
+              aws:
+                type: NLB
+                ipFamily: DualStackIPv4Primary
+      expected: |
+        apiVersion: config.openshift.io/v1
+        kind: Ingress
+        spec:
+          domain: apps.example.com
+          loadBalancer:
+            platform:
+              type: AWS
+              aws:
+                type: NLB
+                ipFamily: DualStackIPv4Primary
+    - name: Should be able to create an Ingress with NLB load balancer type and DualStackIPv6Primary ipFamily
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: Ingress
+        spec:
+          domain: apps.example.com
+          loadBalancer:
+            platform:
+              type: AWS
+              aws:
+                type: NLB
+                ipFamily: DualStackIPv6Primary
+      expected: |
+        apiVersion: config.openshift.io/v1
+        kind: Ingress
+        spec:
+          domain: apps.example.com
+          loadBalancer:
+            platform:
+              type: AWS
+              aws:
+                type: NLB
+                ipFamily: DualStackIPv6Primary

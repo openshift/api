@@ -203,6 +203,14 @@ var (
 						enableIn(configv1.DevPreviewNoUpgrade, configv1.TechPreviewNoUpgrade).
 						mustRegister()
 
+	FeatureGateAdminNetworkPolicy = newFeatureGate("AdminNetworkPolicy").
+					reportProblemsToJiraComponent("Networking/ovn-kubernetes").
+					contactPerson("tssurya").
+					productScope(kubernetes).
+					enhancementPR("https://github.com/kubernetes/enhancements/issues/2091").
+					enableIn(configv1.DevPreviewNoUpgrade, configv1.TechPreviewNoUpgrade).
+					mustRegister()
+
 	FeatureGateBackendQuotaGiB = newFeatureGate("EtcdBackendQuota").
 					reportProblemsToJiraComponent("etcd").
 					contactPerson("hasbro17").

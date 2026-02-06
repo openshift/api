@@ -932,11 +932,18 @@ var (
 						mustRegister()
 
 	FeatureGateGatewayAPIWithoutOLM = newFeatureGate("GatewayAPIWithoutOLM").
-				reportProblemsToJiraComponent("Routing").
-				contactPerson("miciah").
+					reportProblemsToJiraComponent("Routing").
+					contactPerson("miciah").
+					productScope(ocpSpecific).
+					enhancementPR("https://github.com/openshift/enhancements/pull/1933").
+					enableIn(configv1.DevPreviewNoUpgrade, configv1.TechPreviewNoUpgrade).
+					mustRegister()
+
+	FeatureGateTLSAdherence = newFeatureGate("TLSAdherence").
+				reportProblemsToJiraComponent("kube-apiserver").
+				contactPerson("joelanford").
 				productScope(ocpSpecific).
-				enhancementPR("https://github.com/openshift/enhancements/pull/1933").
+				enhancementPR("https://github.com/openshift/enhancements/pull/1910").
 				enableIn(configv1.DevPreviewNoUpgrade, configv1.TechPreviewNoUpgrade).
 				mustRegister()
 )
-

@@ -347,9 +347,6 @@
                         "name": "VSphereMultiNetworks"
                     },
                     {
-                        "name": "VolumeAttributesClass"
-                    },
-                    {
                         "name": "VolumeGroupSnapshot"
                     }
                 ],

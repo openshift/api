@@ -97,6 +97,9 @@
                         "name": "DNSNameResolver"
                     },
                     {
+                        "name": "DRAPartitionableDevices"
+                    },
+                    {
                         "name": "DualReplica"
                     },
                     {

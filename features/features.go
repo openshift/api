@@ -195,6 +195,14 @@ var (
 					enableIn(configv1.DevPreviewNoUpgrade, configv1.TechPreviewNoUpgrade).
 					mustRegister()
 
+	FeatureGatePreconfiguredUDNAddresses = newFeatureGate("PreconfiguredUDNAddresses").
+						reportProblemsToJiraComponent("Networking/ovn-kubernetes").
+						contactPerson("tssurya").
+						productScope(ocpSpecific).
+						enhancementPR("https://github.com/ovn-kubernetes/ovn-kubernetes/pull/5246").
+						enableIn(configv1.DevPreviewNoUpgrade, configv1.TechPreviewNoUpgrade).
+						mustRegister()
+
 	FeatureGateBackendQuotaGiB = newFeatureGate("EtcdBackendQuota").
 					reportProblemsToJiraComponent("etcd").
 					contactPerson("hasbro17").

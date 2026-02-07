@@ -42,6 +42,20 @@ type BuildSpec struct {
 	// triggeredBy describes which triggers started the most recent update to the
 	// build configuration and contains information about those triggers.
 	TriggeredBy []BuildTriggerCause `json:"triggeredBy,omitempty" protobuf:"bytes,2,rep,name=triggeredBy"`
+
+	// successfulBuildTTLSeconds defines how long (in seconds) a successful build
+	// is retained after completion before being automatically deleted.
+	// If not set, the build will not be automatically deleted.
+	// This mirrors the semantics of Kubernetes Job's ttlSecondsAfterFinished.
+	// +optional
+	SuccessfulBuildTTLSeconds *int32 `json:"successfulBuildTTLSeconds,omitempty" protobuf:"varint,3,opt,name=successfulBuildTTLSeconds"`
+
+	// failedBuildTTLSeconds defines how long (in seconds) a failed or errored build
+	// is retained after completion before being automatically deleted.
+	// If not set, the build will not be automatically deleted.
+	// This mirrors the semantics of Kubernetes Job's ttlSecondsAfterFinished.
+	// +optional
+	FailedBuildTTLSeconds *int32 `json:"failedBuildTTLSeconds,omitempty" protobuf:"varint,4,opt,name=failedBuildTTLSeconds"`
 }
 
 // OptionalNodeSelector is a map that may also be left nil to distinguish between set and unset.
@@ -994,6 +1008,24 @@ type BuildConfigSpec struct {
 	// When a BuildConfig is created, the 5 most recent failed builds are retained unless this value is set.
 	// If removed after the BuildConfig has been created, all failed builds are retained.
 	FailedBuildsHistoryLimit *int32 `json:"failedBuildsHistoryLimit,omitempty" protobuf:"varint,5,opt,name=failedBuildsHistoryLimit"`
+
+	// defaultSuccessfulBuildTTLSeconds sets the default retention time (in seconds)
+	// for successful builds created from this BuildConfig.
+	// Builds created from this BuildConfig will inherit this value unless overridden
+	// in the Build's own successfulBuildTTLSeconds field.
+	// If not set, builds will not have an automatic TTL set.
+	// This mirrors the semantics of Kubernetes Job's ttlSecondsAfterFinished.
+	// +optional
+	DefaultSuccessfulBuildTTLSeconds *int32 `json:"defaultSuccessfulBuildTTLSeconds,omitempty" protobuf:"varint,6,opt,name=defaultSuccessfulBuildTTLSeconds"`
+
+	// defaultFailedBuildTTLSeconds sets the default retention time (in seconds)
+	// for failed or errored builds created from this BuildConfig.
+	// Builds created from this BuildConfig will inherit this value unless overridden
+	// in the Build's own failedBuildTTLSeconds field.
+	// If not set, builds will not have an automatic TTL set.
+	// This mirrors the semantics of Kubernetes Job's ttlSecondsAfterFinished.
+	// +optional
+	DefaultFailedBuildTTLSeconds *int32 `json:"defaultFailedBuildTTLSeconds,omitempty" protobuf:"varint,7,opt,name=defaultFailedBuildTTLSeconds"`
 }
 
 // BuildRunPolicy defines the behaviour of how the new builds are executed

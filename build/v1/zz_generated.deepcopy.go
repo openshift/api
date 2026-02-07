@@ -197,6 +197,16 @@ func (in *BuildConfigSpec) DeepCopyInto(out *BuildConfigSpec) {
 		*out = new(int32)
 		**out = **in
 	}
+	if in.DefaultSuccessfulBuildTTLSeconds != nil {
+		in, out := &in.DefaultSuccessfulBuildTTLSeconds, &out.DefaultSuccessfulBuildTTLSeconds
+		*out = new(int32)
+		**out = **in
+	}
+	if in.DefaultFailedBuildTTLSeconds != nil {
+		in, out := &in.DefaultFailedBuildTTLSeconds, &out.DefaultFailedBuildTTLSeconds
+		*out = new(int32)
+		**out = **in
+	}
 	return
 }
 
@@ -535,6 +545,16 @@ func (in *BuildSpec) DeepCopyInto(out *BuildSpec) {
 		for i := range *in {
 			(*in)[i].DeepCopyInto(&(*out)[i])
 		}
+	}
+	if in.SuccessfulBuildTTLSeconds != nil {
+		in, out := &in.SuccessfulBuildTTLSeconds, &out.SuccessfulBuildTTLSeconds
+		*out = new(int32)
+		**out = **in
+	}
+	if in.FailedBuildTTLSeconds != nil {
+		in, out := &in.FailedBuildTTLSeconds, &out.FailedBuildTTLSeconds
+		*out = new(int32)
+		**out = **in
 	}
 	return
 }

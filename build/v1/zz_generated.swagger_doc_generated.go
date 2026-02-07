@@ -91,11 +91,13 @@ func (BuildConfigList) SwaggerDoc() map[string]string {
 }
 
 var map_BuildConfigSpec = map[string]string{
-	"":                             "BuildConfigSpec describes when and how builds are created",
-	"triggers":                     "triggers determine how new Builds can be launched from a BuildConfig. If no triggers are defined, a new build can only occur as a result of an explicit client build creation.",
-	"runPolicy":                    "runPolicy describes how the new build created from this build configuration will be scheduled for execution. This is optional, if not specified we default to \"Serial\".",
-	"successfulBuildsHistoryLimit": "successfulBuildsHistoryLimit is the number of old successful builds to retain. When a BuildConfig is created, the 5 most recent successful builds are retained unless this value is set. If removed after the BuildConfig has been created, all successful builds are retained.",
-	"failedBuildsHistoryLimit":     "failedBuildsHistoryLimit is the number of old failed builds to retain. When a BuildConfig is created, the 5 most recent failed builds are retained unless this value is set. If removed after the BuildConfig has been created, all failed builds are retained.",
+	"":                                 "BuildConfigSpec describes when and how builds are created",
+	"triggers":                         "triggers determine how new Builds can be launched from a BuildConfig. If no triggers are defined, a new build can only occur as a result of an explicit client build creation.",
+	"runPolicy":                        "runPolicy describes how the new build created from this build configuration will be scheduled for execution. This is optional, if not specified we default to \"Serial\".",
+	"successfulBuildsHistoryLimit":     "successfulBuildsHistoryLimit is the number of old successful builds to retain. When a BuildConfig is created, the 5 most recent successful builds are retained unless this value is set. If removed after the BuildConfig has been created, all successful builds are retained.",
+	"failedBuildsHistoryLimit":         "failedBuildsHistoryLimit is the number of old failed builds to retain. When a BuildConfig is created, the 5 most recent failed builds are retained unless this value is set. If removed after the BuildConfig has been created, all failed builds are retained.",
+	"defaultSuccessfulBuildTTLSeconds": "defaultSuccessfulBuildTTLSeconds sets the default retention time (in seconds) for successful builds created from this BuildConfig. Builds created from this BuildConfig will inherit this value unless overridden in the Build's own successfulBuildTTLSeconds field. If not set, builds will not have an automatic TTL set. This mirrors the semantics of Kubernetes Job's ttlSecondsAfterFinished.",
+	"defaultFailedBuildTTLSeconds":     "defaultFailedBuildTTLSeconds sets the default retention time (in seconds) for failed or errored builds created from this BuildConfig. Builds created from this BuildConfig will inherit this value unless overridden in the Build's own failedBuildTTLSeconds field. If not set, builds will not have an automatic TTL set. This mirrors the semantics of Kubernetes Job's ttlSecondsAfterFinished.",
 }
 
 func (BuildConfigSpec) SwaggerDoc() map[string]string {
@@ -207,8 +209,10 @@ func (BuildSource) SwaggerDoc() map[string]string {
 }
 
 var map_BuildSpec = map[string]string{
-	"":            "BuildSpec has the information to represent a build and also additional information about a build",
-	"triggeredBy": "triggeredBy describes which triggers started the most recent update to the build configuration and contains information about those triggers.",
+	"":                          "BuildSpec has the information to represent a build and also additional information about a build",
+	"triggeredBy":               "triggeredBy describes which triggers started the most recent update to the build configuration and contains information about those triggers.",
+	"successfulBuildTTLSeconds": "successfulBuildTTLSeconds defines how long (in seconds) a successful build is retained after completion before being automatically deleted. If not set, the build will not be automatically deleted. This mirrors the semantics of Kubernetes Job's ttlSecondsAfterFinished.",
+	"failedBuildTTLSeconds":     "failedBuildTTLSeconds defines how long (in seconds) a failed or errored build is retained after completion before being automatically deleted. If not set, the build will not be automatically deleted. This mirrors the semantics of Kubernetes Job's ttlSecondsAfterFinished.",
 }
 
 func (BuildSpec) SwaggerDoc() map[string]string {

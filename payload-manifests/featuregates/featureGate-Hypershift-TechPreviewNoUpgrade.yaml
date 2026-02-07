@@ -39,9 +39,6 @@
                         "name": "ExternalSnapshotMetadata"
                     },
                     {
-                        "name": "IngressControllerDynamicConfigurationManager"
-                    },
-                    {
                         "name": "KMSEncryptionProvider"
                     },
                     {
@@ -228,6 +225,9 @@
                     },
                     {
                         "name": "ImageVolume"
+                    },
+                    {
+                        "name": "IngressControllerDynamicConfigurationManager"
                     },
                     {
                         "name": "InsightsConfig"

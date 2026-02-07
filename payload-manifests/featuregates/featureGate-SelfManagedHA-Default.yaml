@@ -279,9 +279,6 @@
                         "name": "ImageStreamImportMode"
                     },
                     {
-                        "name": "ImageVolume"
-                    },
-                    {
                         "name": "KMSv1"
                     },
                     {

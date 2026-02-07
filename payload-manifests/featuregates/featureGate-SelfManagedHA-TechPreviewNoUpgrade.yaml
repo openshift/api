@@ -206,9 +206,6 @@
                         "name": "ImageStreamImportMode"
                     },
                     {
-                        "name": "ImageVolume"
-                    },
-                    {
                         "name": "InsightsConfig"
                     },
                     {

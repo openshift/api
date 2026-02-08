@@ -187,9 +187,6 @@
                         "name": "MultiDiskSetup"
                     },
                     {
-                        "name": "MutableCSINodeAllocatableCount"
-                    },
-                    {
                         "name": "MutatingAdmissionPolicy"
                     },
                     {
@@ -304,6 +301,9 @@
                     },
                     {
                         "name": "MetricsCollectionProfiles"
+                    },
+                    {
+                        "name": "MutableCSINodeAllocatableCount"
                     },
                     {
                         "name": "NewOLM"

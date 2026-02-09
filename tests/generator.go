@@ -6,6 +6,7 @@ import (
 	"os"
 	"path/filepath"
 	"strings"
+	"time"
 
 	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
@@ -20,6 +21,10 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/client"
 	"sigs.k8s.io/controller-runtime/pkg/envtest"
 	"sigs.k8s.io/controller-runtime/pkg/envtest/komega"
+)
+
+var (
+	timeout = 5 * time.Second
 )
 
 // LoadTestSuiteSpecs recursively walks the given paths looking for any file with the suffix `.testsuite.yaml`.
@@ -137,7 +142,7 @@ func GenerateTestSuite(suiteSpec SuiteSpec) {
 				// Remove the CRD and wait for it to be removed from the API.
 				// If we don't wait then subsequent tests may fail.
 				Expect(envtest.UninstallCRDs(cfg, crdOptions)).ToNot(HaveOccurred())
-				Eventually(komega.Get(crd)).Should(Not(Succeed()))
+				Eventually(komega.Get(crd), timeout).Should(Not(Succeed()))
 			})
 
 			generateOnCreateTable(suiteSpec.Tests.OnCreate)
@@ -253,7 +258,7 @@ func generateOnUpdateTable(onUpdateTests []OnUpdateTestSpec, crdFileName string)
 		// Use an eventually here, so that we retry until the sential correctly applies.
 		Eventually(func() error {
 			return k8sClient.Create(ctx, initialObj)
-		}).Should(Succeed(), "initial object should create successfully")
+		}, timeout).Should(Succeed(), "initial object should create successfully")
 
 		if initialStatus != nil {
 			Expect(unstructured.SetNestedField(initialObj.Object, initialStatus, "status")).To(Succeed(), "should be able to restore initial status")
@@ -281,7 +286,7 @@ func generateOnUpdateTable(onUpdateTests []OnUpdateTestSpec, crdFileName string)
 				updatedObj.Object["sentinel"] = initialObj.GetUID() + "+restored"
 
 				return k8sClient.Update(ctx, updatedObj)
-			}).Should(Succeed(), "Sentinel should be persisted")
+			}, timeout).Should(Succeed(), "Sentinel should be persisted")
 
 			// Drop the sentinel field now we know the rest of the CRD schema is up to date.
 			originalCRD.Spec = originalCRDSpec

@@ -79,6 +79,31 @@ const (
 	ConfidentialComputePolicyTDX ConfidentialComputePolicy = "IntelTrustedDomainExtensions"
 )
 
+// GCPReservationAffinity describes the reservation affinity of the instance on GCP.
+type GCPReservationAffinity struct {
+	// consumeReservationType indicates whether the instance should consume from any reservation or a specific reservation.
+	// Valid values are "NO_RESERVATION", "ANY_RESERVATION" and "SPECIFIC_RESERVATION".
+	// +required
+	// +kubebuilder:validation:Enum=NO_RESERVATION;ANY_RESERVATION;SPECIFIC_RESERVATION
+	ConsumeReservationType string `json:"consumeReservationType,omitempty"`
+	// key is the reservation key of the specific reservation to consume from.
+	// The maximum length is 63 characters, and the name must conform to RFC1035.
+	// Required if consumeReservationType is set to "SPECIFIC_RESERVATION".
+	// When consumeReservationType is not "SPECIFIC_RESERVATION", this field must be empty.
+	// +optional
+	// +kubebuilder:validation:MaxLength=63
+	Key *string `json:"key,omitempty"`
+	// values is the list of reservation values of the specific reservation to consume from.
+	// Each value can have a maximum length of 63 characters, and the name must conform to RFC1035.
+	// Required if consumeReservationType is set to "SPECIFIC_RESERVATION".
+	// When consumeReservationType is not "SPECIFIC_RESERVATION", this field must be empty.
+	// +optional
+	// +listType=set
+	// +kubebuilder:validation:items:MaxLength=63
+	// +kubebuilder:validation:MaxItems=50
+	Values []string `json:"values,omitempty"`
+}
+
 // GCPMachineProviderSpec is the type that will be embedded in a Machine.Spec.ProviderSpec field
 // for an GCP virtual machine. It is used by the GCP machine actuator to create a single Machine.
 // Compatibility level 2: Stable within a major release for a minimum of 9 months or 3 minor releases (whichever is longer).
@@ -191,6 +216,10 @@ type GCPMachineProviderSpec struct {
 	// +listMapKey=key
 	// +optional
 	ResourceManagerTags []ResourceManagerTag `json:"resourceManagerTags,omitempty"`
+
+	// reservationAffinity indicates the reservation for the VM.
+	// +optional
+	ReservationAffinity *GCPReservationAffinity `json:"reservationAffinity,omitempty"`
 }
 
 // ResourceManagerTag is a tag to apply to GCP resources created for the cluster.

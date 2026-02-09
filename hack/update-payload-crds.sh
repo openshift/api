@@ -3,6 +3,7 @@
 source "$(dirname "${BASH_SOURCE}")/lib/init.sh"
 
 crd_globs="\
+    apiextensions/v1alpha1/zz_generated.crd-manifests/*_crd-compatibility-checker_*.crd*yaml\
     authorization/v1/zz_generated.crd-manifests/*_config-operator_*.crd*yaml\
     config/v1/zz_generated.crd-manifests/*_config-operator_*.crd*yaml\
     machine/v1/zz_generated.crd-manifests/*.crd*yaml\

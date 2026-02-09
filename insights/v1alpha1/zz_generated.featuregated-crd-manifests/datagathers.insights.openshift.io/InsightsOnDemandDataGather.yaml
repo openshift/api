@@ -113,6 +113,9 @@ spec:
                   type: object
                 maxItems: 100
                 type: array
+                x-kubernetes-list-map-keys:
+                - name
+                x-kubernetes-list-type: map
               storage:
                 description: |-
                   storage is an optional field that allows user to define persistent storage for gathering jobs to store the Insights data archive.
@@ -501,9 +504,14 @@ spec:
                   - group
                   - name
                   - resource
+                  - namespace
                   type: object
                 maxItems: 100
                 type: array
+                x-kubernetes-list-map-keys:
+                - name
+                - namespace
+                x-kubernetes-list-type: map
               startTime:
                 description: startTime is the time when Insights data gathering started.
                 format: date-time

@@ -186,6 +186,22 @@ var (
 			enhancementPR("https://github.com/openshift/enhancements/pull/1862").
 			enableIn(configv1.DevPreviewNoUpgrade, configv1.TechPreviewNoUpgrade).
 			mustRegister()
+			
+	FeatureGatePreconfiguredUDNAddresses = newFeatureGate("PreconfiguredUDNAddresses").
+						reportProblemsToJiraComponent("Networking/ovn-kubernetes").
+						contactPerson("tssurya").
+						productScope(ocpSpecific).
+						enhancementPR("https://github.com/ovn-kubernetes/ovn-kubernetes/pull/5246").
+						enableIn(configv1.DevPreviewNoUpgrade, configv1.TechPreviewNoUpgrade).
+						mustRegister()
+
+	FeatureGateAdminNetworkPolicy = newFeatureGate("AdminNetworkPolicy").
+					reportProblemsToJiraComponent("Networking/ovn-kubernetes").
+					contactPerson("tssurya").
+					productScope(kubernetes).
+					enhancementPR("https://github.com/kubernetes/enhancements/issues/2091").
+					enableIn(configv1.DevPreviewNoUpgrade, configv1.TechPreviewNoUpgrade).
+					mustRegister()
 
 	FeatureGateOVNObservability = newFeatureGate("OVNObservability").
 					reportProblemsToJiraComponent("Networking").

@@ -60,6 +60,7 @@ type GatherConfig struct {
 	// An example of disabling gatherers looks like this: `disabledGatherers: ["clusterconfig/machine_configs", "workloads/workload_info"]`
 	// +kubebuilder:validation:MaxItems=100
 	// +optional
+	// +listType=atomic
 	DisabledGatherers []DisabledGatherer `json:"disabledGatherers"`
 	// storage is an optional field that allows user to define persistent storage for gathering jobs to store the Insights data archive.
 	// If omitted, the gathering job will use ephemeral storage.

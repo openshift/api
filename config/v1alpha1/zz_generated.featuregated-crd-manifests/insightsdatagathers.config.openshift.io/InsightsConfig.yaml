@@ -87,6 +87,7 @@ spec:
                         rule: self.matches("^[a-z]+[_a-z]*[a-z]([/a-z][_a-z]*)?[a-z]$")
                     maxItems: 100
                     type: array
+                    x-kubernetes-list-type: atomic
                   storage:
                     description: |-
                       storage is an optional field that allows user to define persistent storage for gathering jobs to store the Insights data archive.

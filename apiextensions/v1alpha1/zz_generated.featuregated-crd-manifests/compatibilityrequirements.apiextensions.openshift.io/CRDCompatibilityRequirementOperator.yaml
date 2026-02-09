@@ -7,6 +7,7 @@ metadata:
     api.openshift.io/filename-operator: crd-compatibility-checker
     api.openshift.io/filename-ordering: "01"
     feature-gate.release.openshift.io/CRDCompatibilityRequirementOperator: "true"
+    release.openshift.io/feature-gate: CRDCompatibilityRequirementOperator
   name: compatibilityrequirements.apiextensions.openshift.io
 spec:
   group: apiextensions.openshift.io

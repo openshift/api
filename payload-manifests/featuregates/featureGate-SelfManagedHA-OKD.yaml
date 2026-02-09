@@ -153,9 +153,6 @@
                         "name": "IngressControllerDynamicConfigurationManager"
                     },
                     {
-                        "name": "InsightsConfig"
-                    },
-                    {
                         "name": "InsightsOnDemandDataGather"
                     },
                     {
@@ -279,6 +276,9 @@
                     },
                     {
                         "name": "ImageVolume"
+                    },
+                    {
+                        "name": "InsightsConfig"
                     },
                     {
                         "name": "KMSv1"

@@ -6,7 +6,6 @@ metadata:
     api.openshift.io/filename-cvo-runlevel: "0000_10"
     api.openshift.io/filename-operator: config-operator
     api.openshift.io/filename-ordering: "01"
-    capability.openshift.io/name: Insights
     feature-gate.release.openshift.io/InsightsConfig: "true"
   name: insightsdatagathers.config.openshift.io
 spec:
@@ -87,6 +86,7 @@ spec:
                         rule: self.matches("^[a-z]+[_a-z]*[a-z]([/a-z][_a-z]*)?[a-z]$")
                     maxItems: 100
                     type: array
+                    x-kubernetes-list-type: atomic
                   storage:
                     description: |-
                       storage is an optional field that allows user to define persistent storage for gathering jobs to store the Insights data archive.

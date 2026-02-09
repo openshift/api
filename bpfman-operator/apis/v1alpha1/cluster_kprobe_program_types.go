@@ -1,0 +1,87 @@
+/*
+Copyright 2023 The bpfman Authors.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+*/
+
+// All fields are required unless explicitly marked optional
+package v1alpha1
+
+// ClKprobeProgramInfo contains the information for the kprobe program
+type ClKprobeProgramInfo struct {
+	// links is an optional field and is the list of attachment points to which the
+	// KProbe program should be attached. The eBPF program is loaded in kernel
+	// memory when the BPF Application CRD is created and the selected Kubernetes
+	// nodes are active. The eBPF program will not be triggered until the program
+	// has also been attached to an attachment point described in this list. Items
+	// may be added or removed from the list at any point, causing the eBPF program
+	// to be attached or detached.
+	//
+	// The attachment point for a KProbe program is a Linux kernel function. By
+	// default, the eBPF program is triggered at the entry of the attachment point,
+	// but the attachment point can be adjusted using an optional offset.
+	// +optional
+	// +kubebuilder:validation:MaxItems=1
+	// +listType=atomic
+	Links []ClKprobeAttachInfo `json:"links,omitempty"`
+}
+
+type ClKprobeAttachInfo struct {
+	// function is a required field and specifies the name of the Linux kernel
+	// function to attach the KProbe program. function must not be an empty string,
+	// must be between 1 and 64 characters in length, must start with alpha
+	// characters and must only contain alphanumeric characters and underscores.
+	// The pattern ^[a-zA-Z][a-zA-Z0-9_]+. is enforced.
+	// +required
+	// +kubebuilder:validation:Pattern="^[a-zA-Z][a-zA-Z0-9_]+."
+	// +kubebuilder:validation:MinLength=1
+	// +kubebuilder:validation:MaxLength=64
+	Function string `json:"function,omitempty"`
+
+	// offset is an optional field and the value is added to the address of the
+	// attachment point function. If not provided, offset defaults to 0.
+	// +optional
+	// +kubebuilder:default:=0
+	Offset uint64 `json:"offset"`
+}
+
+type ClKprobeProgramInfoState struct {
+	// links is a list of attachment points for the KProbe program. Each entry in
+	// the list includes a linkStatus, which indicates if the attachment was
+	// successful or not on this node, a linkId, which is the kernel ID for the
+	// link if successfully attached, and other attachment specific data.
+	// +optional
+	// +kubebuilder:validation:MaxItems=1023
+	// +listType=atomic
+	Links []ClKprobeAttachInfoState `json:"links,omitempty"`
+}
+
+type ClKprobeAttachInfoState struct {
+	AttachInfoStateCommon `json:",inline"`
+
+	// function is a required field and specifies the name of the Linux kernel
+	// function to attach the Kprobe. function must not be an empty
+	// string, must not exceed 64 characters in length, must start with alpha
+	// characters and must only contain alphanumeric characters.
+	// +required
+	// +kubebuilder:validation:Pattern="^[a-zA-Z][a-zA-Z0-9_]+."
+	// +kubebuilder:validation:MinLength=1
+	// +kubebuilder:validation:MaxLength=64
+	Function string `json:"function,omitempty"`
+
+	// offset is the provisioned offset, whose value is added to the address of the
+	// attachment point function.
+	// +optional
+	// +kubebuilder:default:=0
+	Offset uint64 `json:"offset"`
+}

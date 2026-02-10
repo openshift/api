@@ -305,6 +305,9 @@
                         "name": "PinnedImages"
                     },
                     {
+                        "name": "PodAndContainerStatsFromCRI"
+                    },
+                    {
                         "name": "RouteExternalCertificate"
                     },
                     {

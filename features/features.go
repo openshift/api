@@ -930,4 +930,12 @@ var (
 						enhancementPR("https://github.com/openshift/enhancements/pull/1465").
 						enableIn(configv1.DevPreviewNoUpgrade).
 						mustRegister()
+
+	FeatureGatePodAndContainerStatsFromCRI = newFeatureGate("PodAndContainerStatsFromCRI").
+						reportProblemsToJiraComponent("node").
+						contactPerson("dgrisonnet").
+						productScope(kubernetes).
+						enhancementPR("https://github.com/kubernetes/enhancements/issues/2371").
+						enableIn(configv1.DevPreviewNoUpgrade, configv1.TechPreviewNoUpgrade).
+						mustRegister()
 )

@@ -148,6 +148,7 @@ func (ClusterAPI) SwaggerDoc() map[string]string {
 
 var map_ClusterAPIInstallerComponent = map[string]string{
 	"":      "ClusterAPIInstallerComponent defines a component which will be installed by this revision.",
+	"type":  "type is the source type of the component. The only valid value is Image. When set to Image, the image field must be set and will define an image source for the component.",
 	"image": "image defines an image source for a component. The image must contain a /capi-operator-installer directory containing the component manifests.",
 }
 
@@ -188,8 +189,8 @@ func (ClusterAPIList) SwaggerDoc() map[string]string {
 }
 
 var map_ClusterAPISpec = map[string]string{
-	"":                                   "ClusterAPISpec defines the desired configuration of the capi-operator.",
-	"unmanagedCustomResourceDefinitions": "unmanagedCustomResourceDefinitions is a list of ClusterResourceDefinition (CRD) names that should not be managed by the capi-operator installer controller. This allows external actors to own specific CRDs while capi-operator manages others.\n\nEach CRD name must be a valid DNS-1123 subdomain consisting of lowercase alphanumeric characters, '-' or '.', and must start and end with an alphanumeric character, with a maximum length of 253 characters. Example: \"clusters.cluster.x-k8s.io\"\n\nItems cannot be removed from this list once added.\n\nThe maximum number of unmanagedCustomResourceDefinitions is 128.",
+	"":                                   "ClusterAPISpec defines the desired configuration of the capi-operator. The spec is required but we deliberately allow it to be empty.",
+	"unmanagedCustomResourceDefinitions": "unmanagedCustomResourceDefinitions is a list of ClusterResourceDefinition (CRD) names that should not be managed by the capi-operator installer controller. This allows external actors to own specific CRDs while capi-operator manages others.\n\nEach CRD name must be a valid DNS-1123 subdomain consisting of lowercase alphanumeric characters, '-' or '.', and must start and end with an alphanumeric character, with a maximum length of 253 characters. CRD names must contain at least two '.' characters. Example: \"clusters.cluster.x-k8s.io\"\n\nItems cannot be removed from this list once added.\n\nThe maximum number of unmanagedCustomResourceDefinitions is 128.",
 }
 
 func (ClusterAPISpec) SwaggerDoc() map[string]string {

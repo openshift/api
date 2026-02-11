@@ -10,11 +10,13 @@ tests:
         kind: ClusterAPI
         metadata:
           name: cluster
+        spec: {}
       expected: |
         apiVersion: operator.openshift.io/v1alpha1
         kind: ClusterAPI
         metadata:
           name: cluster
+        spec: {}
 
     - name: Should be able to create ClusterAPI with unmanagedCustomResourceDefinitions
       initial: |
@@ -80,6 +82,17 @@ tests:
             - name-with-hyphens.domain-with-hyphens.io
             - valid-name.example.io
 
+    - name: Should require at least two dots in unmanagedCustomResourceDefinitions names
+      initial: |
+        apiVersion: operator.openshift.io/v1alpha1
+        kind: ClusterAPI
+        metadata:
+          name: cluster
+        spec:
+          unmanagedCustomResourceDefinitions:
+            - a.b
+      expectedError: "CRD names must contain at least two '.' characters."
+
   onUpdate:
     - name: Should not allow removing items from unmanagedCustomResourceDefinitions
       initial: |
@@ -116,6 +129,7 @@ tests:
         kind: ClusterAPI
         metadata:
           name: cluster
+        spec: {}
       expectedError: "unmanagedCustomResourceDefinitions cannot be unset once set"
 
     - name: Should allow adding items to unmanagedCustomResourceDefinitions
@@ -156,11 +170,13 @@ tests:
         kind: ClusterAPI
         metadata:
           name: cluster
+        spec: {}
       updated: |
         apiVersion: operator.openshift.io/v1alpha1
         kind: ClusterAPI
         metadata:
           name: cluster
+        spec: {}
         status:
           desiredRevision: rev-2
           revisions:
@@ -168,14 +184,16 @@ tests:
               revision: 1
               contentID: content-1
               components:
-                - image:
+                - type: Image
+                  image:
                     ref: quay.io/openshift/cluster-api@sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
                     profile: default
             - name: rev-1
               revision: 2
               contentID: content-2
               components:
-                - image:
+                - type: Image
+                  image:
                     ref: quay.io/openshift/cluster-api@sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb
                     profile: default
       expectedStatusError: "each revision must have a unique name"
@@ -186,11 +204,13 @@ tests:
         kind: ClusterAPI
         metadata:
           name: cluster
+        spec: {}
       updated: |
         apiVersion: operator.openshift.io/v1alpha1
         kind: ClusterAPI
         metadata:
           name: cluster
+        spec: {}
         status:
           desiredRevision: rev-2
           revisions:
@@ -198,14 +218,16 @@ tests:
               revision: 1
               contentID: content-1
               components:
-                - image:
+                - type: Image
+                  image:
                     ref: quay.io/openshift/cluster-api@sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
                     profile: default
             - name: rev-2
               revision: 1
               contentID: content-2
               components:
-                - image:
+                - type: Image
+                  image:
                     ref: quay.io/openshift/cluster-api@sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb
                     profile: default
       expectedStatusError: "each revision must have a unique revision number"
@@ -216,11 +238,13 @@ tests:
         kind: ClusterAPI
         metadata:
           name: cluster
+        spec: {}
       updated: |
         apiVersion: operator.openshift.io/v1alpha1
         kind: ClusterAPI
         metadata:
           name: cluster
+        spec: {}
         status:
           desiredRevision: rev-1
           revisions:
@@ -228,14 +252,16 @@ tests:
               revision: 1
               contentID: content-1
               components:
-                - image:
+                - type: Image
+                  image:
                     ref: quay.io/openshift/cluster-api@sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
                     profile: default
             - name: rev-2
               revision: 2
               contentID: content-2
               components:
-                - image:
+                - type: Image
+                  image:
                     ref: quay.io/openshift/cluster-api@sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb
                     profile: default
       expectedStatusError: "desiredRevision must be the name of the revision with the highest revision number"
@@ -246,11 +272,13 @@ tests:
         kind: ClusterAPI
         metadata:
           name: cluster
+        spec: {}
       updated: |
         apiVersion: operator.openshift.io/v1alpha1
         kind: ClusterAPI
         metadata:
           name: cluster
+        spec: {}
         status:
           desiredRevision: rev-2
           revisions:
@@ -258,14 +286,17 @@ tests:
               revision: 1
               contentID: content-1
               components:
-                - image:
+                - type: Image
+                  image:
                     ref: quay.io/openshift/cluster-api@sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
                     profile: default
             - name: rev-2
               revision: 2
               contentID: content-2
               components:
-                - image:
+                - 
+                  type: Image
+                  image:
                     ref: quay.io/openshift/cluster-api@sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb
                     profile: default
       expected: |
@@ -273,6 +304,7 @@ tests:
         kind: ClusterAPI
         metadata:
           name: cluster
+        spec: {}
         status:
           desiredRevision: rev-2
           revisions:
@@ -280,14 +312,16 @@ tests:
               revision: 1
               contentID: content-1
               components:
-                - image:
+                - type: Image
+                  image:
                     ref: quay.io/openshift/cluster-api@sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
                     profile: default
             - name: rev-2
               revision: 2
               contentID: content-2
               components:
-                - image:
+                - type: Image
+                  image:
                     ref: quay.io/openshift/cluster-api@sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb
                     profile: default
 
@@ -297,11 +331,13 @@ tests:
         kind: ClusterAPI
         metadata:
           name: cluster
+        spec: {}
       updated: |
         apiVersion: operator.openshift.io/v1alpha1
         kind: ClusterAPI
         metadata:
           name: cluster
+        spec: {}
         status:
           currentRevision: nonexistent-rev
           desiredRevision: rev-1
@@ -310,7 +346,8 @@ tests:
               revision: 1
               contentID: content-1
               components:
-                - image:
+                - type: Image
+                  image:
                     ref: quay.io/openshift/cluster-api@sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
                     profile: default
       expectedStatusError: "currentRevision must correspond to an entry in the revisions list"
@@ -321,11 +358,13 @@ tests:
         kind: ClusterAPI
         metadata:
           name: cluster
+        spec: {}
       updated: |
         apiVersion: operator.openshift.io/v1alpha1
         kind: ClusterAPI
         metadata:
           name: cluster
+        spec: {}
         status:
           currentRevision: rev-1
           desiredRevision: rev-1
@@ -334,7 +373,8 @@ tests:
               revision: 1
               contentID: content-1
               components:
-                - image:
+                - type: Image
+                  image:
                     ref: quay.io/openshift/cluster-api@sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
                     profile: default
       expected: |
@@ -342,6 +382,7 @@ tests:
         kind: ClusterAPI
         metadata:
           name: cluster
+        spec: {}
         status:
           currentRevision: rev-1
           desiredRevision: rev-1
@@ -350,7 +391,8 @@ tests:
               revision: 1
               contentID: content-1
               components:
-                - image:
+                - type: Image
+                  image:
                     ref: quay.io/openshift/cluster-api@sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
                     profile: default
 
@@ -360,11 +402,13 @@ tests:
         kind: ClusterAPI
         metadata:
           name: cluster
+        spec: {}
       updated: |
         apiVersion: operator.openshift.io/v1alpha1
         kind: ClusterAPI
         metadata:
           name: cluster
+        spec: {}
         status:
           desiredRevision: rev-1
           revisions:
@@ -372,7 +416,8 @@ tests:
               revision: 1
               contentID: content-1
               components:
-                - image:
+                - type: Image
+                  image:
                     ref: quay.io/openshift/cluster-api@sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
                     profile: default
       expected: |
@@ -380,6 +425,7 @@ tests:
         kind: ClusterAPI
         metadata:
           name: cluster
+        spec: {}
         status:
           desiredRevision: rev-1
           revisions:
@@ -387,7 +433,8 @@ tests:
               revision: 1
               contentID: content-1
               components:
-                - image:
+                - type: Image
+                  image:
                     ref: quay.io/openshift/cluster-api@sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
                     profile: default
 
@@ -397,6 +444,7 @@ tests:
         kind: ClusterAPI
         metadata:
           name: cluster
+        spec: {}
         status:
           desiredRevision: rev-1
           revisions:
@@ -404,7 +452,8 @@ tests:
               revision: 1
               contentID: content-1
               components:
-                - image:
+                - type: Image
+                  image:
                     ref: quay.io/openshift/cluster-api@sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
                     profile: default
       updated: |
@@ -412,6 +461,7 @@ tests:
         kind: ClusterAPI
         metadata:
           name: cluster
+        spec: {}
         status:
           desiredRevision: rev-1
           revisions:
@@ -419,7 +469,8 @@ tests:
               revision: 1
               contentID: modified-content
               components:
-                - image:
+                - type: Image
+                  image:
                     ref: quay.io/openshift/cluster-api@sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
                     profile: default
       expectedStatusError: "revisions are immutable"
@@ -430,6 +481,7 @@ tests:
         kind: ClusterAPI
         metadata:
           name: cluster
+        spec: {}
         status:
           desiredRevision: rev-2
           revisions:
@@ -437,14 +489,16 @@ tests:
               revision: 1
               contentID: content-1
               components:
-                - image:
+                - type: Image
+                  image:
                     ref: quay.io/openshift/cluster-api@sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
                     profile: default
             - name: rev-2
               revision: 2
               contentID: content-2
               components:
-                - image:
+                - type: Image
+                  image:
                     ref: quay.io/openshift/cluster-api@sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb
                     profile: default
       updated: |
@@ -452,6 +506,7 @@ tests:
         kind: ClusterAPI
         metadata:
           name: cluster
+        spec: {}
         status:
           desiredRevision: rev-2
           revisions:
@@ -459,7 +514,8 @@ tests:
               revision: 2
               contentID: content-2
               components:
-                - image:
+                - type: Image
+                  image:
                     ref: quay.io/openshift/cluster-api@sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb
                     profile: default
       expected: |
@@ -467,6 +523,7 @@ tests:
         kind: ClusterAPI
         metadata:
           name: cluster
+        spec: {}
         status:
           desiredRevision: rev-2
           revisions:
@@ -474,7 +531,8 @@ tests:
               revision: 2
               contentID: content-2
               components:
-                - image:
+                - type: Image
+                  image:
                     ref: quay.io/openshift/cluster-api@sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb
                     profile: default
 
@@ -484,6 +542,7 @@ tests:
         kind: ClusterAPI
         metadata:
           name: cluster
+        spec: {}
         status:
           desiredRevision: rev-1
           revisions:
@@ -491,7 +550,8 @@ tests:
               revision: 5
               contentID: content-1
               components:
-                - image:
+                - type: Image
+                  image:
                     ref: quay.io/openshift/cluster-api@sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
                     profile: default
       updated: |
@@ -499,6 +559,7 @@ tests:
         kind: ClusterAPI
         metadata:
           name: cluster
+        spec: {}
         status:
           desiredRevision: rev-2
           revisions:
@@ -506,14 +567,16 @@ tests:
               revision: 5
               contentID: content-1
               components:
-                - image:
+                - type: Image
+                  image:
                     ref: quay.io/openshift/cluster-api@sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
                     profile: default
             - name: rev-2
               revision: 3
               contentID: content-2
               components:
-                - image:
+                - type: Image
+                  image:
                     ref: quay.io/openshift/cluster-api@sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb
                     profile: default
       expectedStatusError: "new revisions must have a revision number greater than all existing revisions"
@@ -524,6 +587,7 @@ tests:
         kind: ClusterAPI
         metadata:
           name: cluster
+        spec: {}
         status:
           desiredRevision: rev-1
           revisions:
@@ -531,7 +595,8 @@ tests:
               revision: 1
               contentID: content-1
               components:
-                - image:
+                - type: Image
+                  image:
                     ref: quay.io/openshift/cluster-api@sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
                     profile: default
       updated: |
@@ -539,6 +604,7 @@ tests:
         kind: ClusterAPI
         metadata:
           name: cluster
+        spec: {}
         status:
           desiredRevision: rev-2
           revisions:
@@ -546,14 +612,16 @@ tests:
               revision: 1
               contentID: content-1
               components:
-                - image:
+                - type: Image
+                  image:
                     ref: quay.io/openshift/cluster-api@sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
                     profile: default
             - name: rev-2
               revision: 2
               contentID: content-2
               components:
-                - image:
+                - type: Image
+                  image:
                     ref: quay.io/openshift/cluster-api@sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb
                     profile: default
       expected: |
@@ -561,6 +629,7 @@ tests:
         kind: ClusterAPI
         metadata:
           name: cluster
+        spec: {}
         status:
           desiredRevision: rev-2
           revisions:
@@ -568,13 +637,15 @@ tests:
               revision: 1
               contentID: content-1
               components:
-                - image:
+                - type: Image
+                  image:
                     ref: quay.io/openshift/cluster-api@sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
                     profile: default
             - name: rev-2
               revision: 2
               contentID: content-2
               components:
-                - image:
+                - type: Image
+                  image:
                     ref: quay.io/openshift/cluster-api@sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb
                     profile: default

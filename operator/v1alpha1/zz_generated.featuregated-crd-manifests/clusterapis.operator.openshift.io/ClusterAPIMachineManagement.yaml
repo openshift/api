@@ -7,6 +7,7 @@ metadata:
     api.openshift.io/filename-operator: cluster-api
     api.openshift.io/filename-ordering: "01"
     feature-gate.release.openshift.io/ClusterAPIMachineManagement: "true"
+    release.openshift.io/feature-gate: ClusterAPIMachineManagement
   name: clusterapis.operator.openshift.io
 spec:
   group: operator.openshift.io
@@ -45,6 +46,7 @@ spec:
           spec:
             description: spec is the specification of the desired behavior of the
               capi-operator.
+            minProperties: 0
             properties:
               unmanagedCustomResourceDefinitions:
                 description: |-
@@ -56,6 +58,7 @@ spec:
                   Each CRD name must be a valid DNS-1123 subdomain consisting of lowercase
                   alphanumeric characters, '-' or '.', and must start and end with an
                   alphanumeric character, with a maximum length of 253 characters.
+                  CRD names must contain at least two '.' characters.
                   Example: "clusters.cluster.x-k8s.io"
 
                   Items cannot be removed from this list once added.
@@ -63,13 +66,17 @@ spec:
                   The maximum number of unmanagedCustomResourceDefinitions is 128.
                 items:
                   maxLength: 253
+                  minLength: 1
                   type: string
                   x-kubernetes-validations:
                   - message: a lowercase RFC 1123 subdomain must consist of lower
                       case alphanumeric characters, '-' or '.', and must start and
                       end with an alphanumeric character.
                     rule: '!format.dns1123Subdomain().validate(self).hasValue()'
+                  - message: CRD names must contain at least two '.' characters.
+                    rule: self.split('.').size() > 2
                 maxItems: 128
+                minItems: 1
                 type: array
                 x-kubernetes-list-type: set
                 x-kubernetes-validations:
@@ -77,9 +84,11 @@ spec:
                     list
                   rule: oldSelf.all(item, item in self)
             type: object
+            x-kubernetes-validations:
+            - message: unmanagedCustomResourceDefinitions cannot be unset once set
+              rule: '!has(oldSelf.unmanagedCustomResourceDefinitions) || has(self.unmanagedCustomResourceDefinitions)'
           status:
             description: status defines the observed status of the capi-operator.
-            minProperties: 1
             properties:
               currentRevision:
                 description: |-
@@ -120,7 +129,6 @@ spec:
                       items:
                         description: ClusterAPIInstallerComponent defines a component
                           which will be installed by this revision.
-                        maxProperties: 1
                         properties:
                           image:
                             description: |-
@@ -134,8 +142,11 @@ spec:
                                   A profile name may be up to 255 characters long. It must consist of alphanumeric characters, '-', or '_'.
                                 maxLength: 255
                                 minLength: 1
-                                pattern: ^[a-zA-Z0-9-_]+$
                                 type: string
+                                x-kubernetes-validations:
+                                - message: profile must consist of alphanumeric characters,
+                                    '-', or '_'
+                                  rule: self.matches('^[a-zA-Z0-9-_]+$')
                               ref:
                                 description: |-
                                   ref is an image reference to the image containing the component manifests. The reference
@@ -157,9 +168,21 @@ spec:
                             - profile
                             - ref
                             type: object
+                          type:
+                            description: |-
+                              type is the source type of the component.
+                              The only valid value is Image.
+                              When set to Image, the image field must be set and will define an image source for the component.
+                            enum:
+                            - Image
+                            type: string
                         required:
-                        - image
+                        - type
                         type: object
+                        x-kubernetes-validations:
+                        - message: image is required when type is Image, and forbidden
+                            otherwise
+                          rule: 'self.type == ''Image'' ? has(self.image) : !has(self.image)'
                       maxItems: 32
                       minItems: 1
                       type: array
@@ -190,6 +213,7 @@ spec:
                         CRDs in the revision will be managed by the CAPI operator.
                       items:
                         maxLength: 253
+                        minLength: 1
                         type: string
                         x-kubernetes-validations:
                         - message: a lowercase RFC 1123 subdomain must consist of
@@ -197,14 +221,16 @@ spec:
                             start and end with an alphanumeric character.
                           rule: '!format.dns1123Subdomain().validate(self).hasValue()'
                       maxItems: 128
+                      minItems: 1
                       type: array
-                      x-kubernetes-list-type: set
+                      x-kubernetes-list-type: atomic
                   required:
                   - components
                   - contentID
                   - name
                   - revision
                   type: object
+                  x-kubernetes-map-type: atomic
                 maxItems: 16
                 minItems: 1
                 type: array
@@ -218,7 +244,7 @@ spec:
                     all existing revisions
                   rule: self.all(new, oldSelf.exists(old, old.name == new.name) ||
                     oldSelf.all(old, new.revision > old.revision))
-                - message: revisions are immutable
+                - message: existing revisions are immutable, but may be removed
                   rule: oldSelf.all(old, !self.exists(new, new.name == old.name) ||
                     self.exists(new, new == old))
             required:
@@ -236,11 +262,9 @@ spec:
                 == self.currentRevision)'
         required:
         - metadata
+        - spec
         type: object
         x-kubernetes-validations:
-        - message: unmanagedCustomResourceDefinitions cannot be unset once set
-          rule: '!has(oldSelf.spec) || !has(oldSelf.spec.unmanagedCustomResourceDefinitions)
-            || has(self.spec.unmanagedCustomResourceDefinitions)'
         - message: clusterapi is a singleton, .metadata.name must be 'cluster'
           rule: self.metadata.name == 'cluster'
     served: true

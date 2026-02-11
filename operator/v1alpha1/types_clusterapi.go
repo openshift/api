@@ -2,8 +2,6 @@ package v1alpha1
 
 import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-
-	machineosconfigv1 "github.com/openshift/api/machineconfiguration/v1"
 )
 
 // +genclient
@@ -15,12 +13,12 @@ import (
 // +openshift:api-approved.openshift.io=https://github.com/openshift/api/pull/2564
 // +openshift:file-pattern=cvoRunLevel=0000_30,operatorName=cluster-api,operatorOrdering=01
 // +openshift:enable:FeatureGate=ClusterAPIMachineManagement
+// +kubebuilder:metadata:annotations="release.openshift.io/feature-gate=ClusterAPIMachineManagement"
 
 // ClusterAPI provides configuration for the capi-operator.
 //
 // Compatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.
 // +openshift:compatibility-gen:level=4
-// +kubebuilder:validation:XValidation:rule="!has(oldSelf.spec) || !has(oldSelf.spec.unmanagedCustomResourceDefinitions) || has(self.spec.unmanagedCustomResourceDefinitions)",message="unmanagedCustomResourceDefinitions cannot be unset once set"
 // +kubebuilder:validation:XValidation:rule="self.metadata.name == 'cluster'",message="clusterapi is a singleton, .metadata.name must be 'cluster'"
 type ClusterAPI struct {
 	metav1.TypeMeta `json:",inline"`
@@ -31,7 +29,7 @@ type ClusterAPI struct {
 	metav1.ObjectMeta `json:"metadata,omitempty"`
 
 	// spec is the specification of the desired behavior of the capi-operator.
-	// +optional
+	// +required
 	Spec *ClusterAPISpec `json:"spec,omitempty"`
 
 	// status defines the observed status of the capi-operator.
@@ -40,6 +38,9 @@ type ClusterAPI struct {
 }
 
 // ClusterAPISpec defines the desired configuration of the capi-operator.
+// The spec is required but we deliberately allow it to be empty.
+// +kubebuilder:validation:MinProperties=0
+// +kubebuilder:validation:XValidation:rule="!has(oldSelf.unmanagedCustomResourceDefinitions) || has(self.unmanagedCustomResourceDefinitions)",message="unmanagedCustomResourceDefinitions cannot be unset once set"
 type ClusterAPISpec struct {
 	// unmanagedCustomResourceDefinitions is a list of ClusterResourceDefinition (CRD)
 	// names that should not be managed by the capi-operator installer
@@ -49,6 +50,7 @@ type ClusterAPISpec struct {
 	// Each CRD name must be a valid DNS-1123 subdomain consisting of lowercase
 	// alphanumeric characters, '-' or '.', and must start and end with an
 	// alphanumeric character, with a maximum length of 253 characters.
+	// CRD names must contain at least two '.' characters.
 	// Example: "clusters.cluster.x-k8s.io"
 	//
 	// Items cannot be removed from this list once added.
@@ -57,9 +59,12 @@ type ClusterAPISpec struct {
 	//
 	// +optional
 	// +listType=set
+	// +kubebuilder:validation:MinItems=1
 	// +kubebuilder:validation:MaxItems=128
 	// +kubebuilder:validation:XValidation:rule="oldSelf.all(item, item in self)",message="items cannot be removed from unmanagedCustomResourceDefinitions list"
 	// +kubebuilder:validation:items:XValidation:rule="!format.dns1123Subdomain().validate(self).hasValue()",message="a lowercase RFC 1123 subdomain must consist of lower case alphanumeric characters, '-' or '.', and must start and end with an alphanumeric character."
+	// +kubebuilder:validation:items:XValidation:rule="self.split('.').size() > 2",message="CRD names must contain at least two '.' characters."
+	// +kubebuilder:validation:items:MinLength=1
 	// +kubebuilder:validation:items:MaxLength=253
 	UnmanagedCustomResourceDefinitions []string `json:"unmanagedCustomResourceDefinitions,omitempty"`
 }
@@ -71,7 +76,6 @@ type ClusterAPISpec struct {
 type RevisionName string
 
 // ClusterAPIStatus describes the current state of the capi-operator.
-// +kubebuilder:validation:MinProperties=1
 // +kubebuilder:validation:XValidation:rule="self.revisions.exists(r, r.name == self.desiredRevision && self.revisions.all(s, s.revision <= r.revision))",message="desiredRevision must be the name of the revision with the highest revision number"
 // +kubebuilder:validation:XValidation:rule="!has(self.currentRevision) || self.revisions.exists(r, r.name == self.currentRevision)",message="currentRevision must correspond to an entry in the revisions list"
 type ClusterAPIStatus struct {
@@ -105,10 +109,11 @@ type ClusterAPIStatus struct {
 	// +kubebuilder:validation:XValidation:rule="self.all(x, self.exists_one(y, x.name == y.name))",message="each revision must have a unique name"
 	// +kubebuilder:validation:XValidation:rule="self.all(x, self.exists_one(y, x.revision == y.revision))",message="each revision must have a unique revision number"
 	// +kubebuilder:validation:XValidation:rule="self.all(new, oldSelf.exists(old, old.name == new.name) || oldSelf.all(old, new.revision > old.revision))",message="new revisions must have a revision number greater than all existing revisions"
-	// +kubebuilder:validation:XValidation:rule="oldSelf.all(old, !self.exists(new, new.name == old.name) || self.exists(new, new == old))",message="revisions are immutable"
+	// +kubebuilder:validation:XValidation:rule="oldSelf.all(old, !self.exists(new, new.name == old.name) || self.exists(new, new == old))",message="existing revisions are immutable, but may be removed"
 	Revisions []ClusterAPIInstallerRevision `json:"revisions,omitempty"`
 }
 
+// +structType=atomic
 type ClusterAPIInstallerRevision struct {
 	// name is the name of a revision.
 	// +required
@@ -130,9 +135,11 @@ type ClusterAPIInstallerRevision struct {
 	// ClusterResourceDefinition (CRD) objects which are included in this
 	// revision, but which should not be installed or updated. If not set, all
 	// CRDs in the revision will be managed by the CAPI operator.
-	// +listType=set
+	// +listType=atomic
 	// +kubebuilder:validation:items:XValidation:rule="!format.dns1123Subdomain().validate(self).hasValue()",message="a lowercase RFC 1123 subdomain must consist of lower case alphanumeric characters, '-' or '.', and must start and end with an alphanumeric character."
+	// +kubebuilder:validation:items:MinLength=1
 	// +kubebuilder:validation:items:MaxLength=253
+	// +kubebuilder:validation:MinItems=1
 	// +kubebuilder:validation:MaxItems=128
 	// +optional
 	UnmanagedCustomResourceDefinitions []string `json:"unmanagedCustomResourceDefinitions,omitempty"`
@@ -149,14 +156,41 @@ type ClusterAPIInstallerRevision struct {
 	Components []ClusterAPIInstallerComponent `json:"components,omitempty"`
 }
 
+// InstallerComponentType is the type of component to install.
+// +kubebuilder:validation:Enum=Image
+// +enum
+type InstallerComponentType string
+
+const (
+	// InstallerComponentTypeImage is an image source for a component.
+	InstallerComponentTypeImage InstallerComponentType = "Image"
+)
+
 // ClusterAPIInstallerComponent defines a component which will be installed by this revision.
-// +kubebuilder:validation:MaxProperties=1
+// +union
+// +kubebuilder:validation:XValidation:rule="self.type == 'Image' ? has(self.image) : !has(self.image)",message="image is required when type is Image, and forbidden otherwise"
 type ClusterAPIInstallerComponent struct {
+	// type is the source type of the component.
+	// The only valid value is Image.
+	// When set to Image, the image field must be set and will define an image source for the component.
+	// +required
+	// +unionDiscriminator
+	Type InstallerComponentType `json:"type,omitempty"`
+
 	// image defines an image source for a component. The image must contain a
 	// /capi-operator-installer directory containing the component manifests.
-	// +required
+	// +optional
 	Image ClusterAPIInstallerComponentImage `json:"image,omitzero"`
 }
+
+// ImageDigestFormat is a type that conforms to the format host[:port][/namespace]/name@sha256:<digest>.
+// The digest must be 64 characters long, and consist only of lowercase hexadecimal characters, a-f and 0-9.
+// The length of the field must be between 1 to 447 characters.
+// +kubebuilder:validation:MinLength=1
+// +kubebuilder:validation:MaxLength=447
+// +kubebuilder:validation:XValidation:rule=`(self.split('@').size() == 2 && self.split('@')[1].matches('^sha256:[a-f0-9]{64}$'))`,message="the OCI Image reference must end with a valid '@sha256:<digest>' suffix, where '<digest>' is 64 characters long"
+// +kubebuilder:validation:XValidation:rule=`(self.split('@')[0].matches('^([a-zA-Z0-9-]+\\.)+[a-zA-Z0-9-]+(:[0-9]{2,5})?/([a-zA-Z0-9-_]{0,61}/)?[a-zA-Z0-9-_.]*?$'))`,message="the OCI Image name should follow the host[:port][/namespace]/name format, resembling a valid URL without the scheme"
+type ImageDigestFormat string
 
 // ClusterAPIInstallerComponentImage defines an image source for a component.
 type ClusterAPIInstallerComponentImage struct {
@@ -165,7 +199,7 @@ type ClusterAPIInstallerComponentImage struct {
 	// The digest must be 64 characters long, and consist only of lowercase hexadecimal characters, a-f and 0-9.
 	// The length of the field must be between 1 to 447 characters.
 	// +required
-	Ref machineosconfigv1.ImageDigestFormat `json:"ref,omitempty"`
+	Ref ImageDigestFormat `json:"ref,omitempty"`
 
 	// profile is the name of a profile to use from the image.
 	//

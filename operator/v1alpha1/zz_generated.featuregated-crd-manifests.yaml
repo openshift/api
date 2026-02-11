@@ -1,5 +1,6 @@
 clusterapis.operator.openshift.io:
-  Annotations: {}
+  Annotations:
+    release.openshift.io/feature-gate: ClusterAPIMachineManagement
   ApprovedPRNumber: https://github.com/openshift/api/pull/2564
   CRDName: clusterapis.operator.openshift.io
   Capability: ""

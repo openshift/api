@@ -84,6 +84,7 @@ tests:
             termination: passthrough
             insecureEdgeTerminationPolicy: None
           wildcardPolicy: None
+    # ExternalCertificate feature gate tests
     - name: 'cannot have both spec.tls.certificate and spec.tls.externalCertificate'
       initial: |
         apiVersion: route.openshift.io/v1
@@ -102,4 +103,208 @@ tests:
               -----END CERTIFICATE-----
             externalCertificate: 
               name: "my-local-secret"
+      expectedError: 'Invalid value: "object": cannot have both spec.tls.certificate and spec.tls.externalCertificate'
+    - name: Should be able to create a Route with externalCertificate only
+      initial: |
+        apiVersion: route.openshift.io/v1
+        kind: Route
+        spec:
+          host: secure.example.com
+          to:
+            kind: Service
+            name: foo
+          tls:
+            termination: edge
+            externalCertificate:
+              name: my-tls-secret
+      expected: |
+        apiVersion: route.openshift.io/v1
+        kind: Route
+        spec:
+          host: secure.example.com
+          to:
+            kind: Service
+            name: foo
+            weight: 100
+          tls:
+            termination: edge
+            externalCertificate:
+              name: my-tls-secret
+          wildcardPolicy: None
+    - name: Should be able to create a Route with externalCertificate and reencrypt termination
+      initial: |
+        apiVersion: route.openshift.io/v1
+        kind: Route
+        spec:
+          host: secure.example.com
+          to:
+            kind: Service
+            name: foo
+          tls:
+            termination: reencrypt
+            externalCertificate:
+              name: my-tls-secret
+      expected: |
+        apiVersion: route.openshift.io/v1
+        kind: Route
+        spec:
+          host: secure.example.com
+          to:
+            kind: Service
+            name: foo
+            weight: 100
+          tls:
+            termination: reencrypt
+            externalCertificate:
+              name: my-tls-secret
+          wildcardPolicy: None
+    - name: Should be able to create a Route with externalCertificate and destinationCACertificate
+      initial: |
+        apiVersion: route.openshift.io/v1
+        kind: Route
+        spec:
+          host: secure.example.com
+          to:
+            kind: Service
+            name: foo
+          tls:
+            termination: reencrypt
+            externalCertificate:
+              name: my-tls-secret
+            destinationCACertificate: |-
+              -----BEGIN CERTIFICATE-----
+              -----END CERTIFICATE-----
+      expected: |
+        apiVersion: route.openshift.io/v1
+        kind: Route
+        spec:
+          host: secure.example.com
+          to:
+            kind: Service
+            name: foo
+            weight: 100
+          tls:
+            termination: reencrypt
+            externalCertificate:
+              name: my-tls-secret
+            destinationCACertificate: |-
+              -----BEGIN CERTIFICATE-----
+              -----END CERTIFICATE-----
+          wildcardPolicy: None
+    - name: Should be able to create a Route with externalCertificate and caCertificate
+      initial: |
+        apiVersion: route.openshift.io/v1
+        kind: Route
+        spec:
+          host: secure.example.com
+          to:
+            kind: Service
+            name: foo
+          tls:
+            termination: edge
+            externalCertificate:
+              name: my-tls-secret
+            caCertificate: |-
+              -----BEGIN CERTIFICATE-----
+              -----END CERTIFICATE-----
+      expected: |
+        apiVersion: route.openshift.io/v1
+        kind: Route
+        spec:
+          host: secure.example.com
+          to:
+            kind: Service
+            name: foo
+            weight: 100
+          tls:
+            termination: edge
+            externalCertificate:
+              name: my-tls-secret
+            caCertificate: |-
+              -----BEGIN CERTIFICATE-----
+              -----END CERTIFICATE-----
+          wildcardPolicy: None
+    - name: Should be able to create a Route with certificate and key only (no externalCertificate)
+      initial: |
+        apiVersion: route.openshift.io/v1
+        kind: Route
+        spec:
+          host: secure.example.com
+          to:
+            kind: Service
+            name: foo
+          tls:
+            termination: edge
+            key: |-
+              -----BEGIN RSA PRIVATE KEY-----
+              -----END RSA PRIVATE KEY-----
+            certificate: |-
+              -----BEGIN CERTIFICATE-----
+              -----END CERTIFICATE-----
+      expected: |
+        apiVersion: route.openshift.io/v1
+        kind: Route
+        spec:
+          host: secure.example.com
+          to:
+            kind: Service
+            name: foo
+            weight: 100
+          tls:
+            termination: edge
+            key: |-
+              -----BEGIN RSA PRIVATE KEY-----
+              -----END RSA PRIVATE KEY-----
+            certificate: |-
+              -----BEGIN CERTIFICATE-----
+              -----END CERTIFICATE-----
+          wildcardPolicy: None
+    - name: Should be able to create a Route with externalCertificate and insecureEdgeTerminationPolicy Redirect
+      initial: |
+        apiVersion: route.openshift.io/v1
+        kind: Route
+        spec:
+          host: secure.example.com
+          to:
+            kind: Service
+            name: foo
+          tls:
+            termination: edge
+            insecureEdgeTerminationPolicy: Redirect
+            externalCertificate:
+              name: my-tls-secret
+      expected: |
+        apiVersion: route.openshift.io/v1
+        kind: Route
+        spec:
+          host: secure.example.com
+          to:
+            kind: Service
+            name: foo
+            weight: 100
+          tls:
+            termination: edge
+            insecureEdgeTerminationPolicy: Redirect
+            externalCertificate:
+              name: my-tls-secret
+          wildcardPolicy: None
+    - name: 'cannot have certificate with key and also externalCertificate'
+      initial: |
+        apiVersion: route.openshift.io/v1
+        kind: Route
+        spec:
+          host: secure.example.com
+          to:
+            kind: Service
+            name: foo
+          tls:
+            termination: edge
+            key: |-
+              -----BEGIN RSA PRIVATE KEY-----
+              -----END RSA PRIVATE KEY-----
+            certificate: |-
+              -----BEGIN CERTIFICATE-----
+              -----END CERTIFICATE-----
+            externalCertificate:
+              name: my-tls-secret
       expectedError: 'Invalid value: "object": cannot have both spec.tls.certificate and spec.tls.externalCertificate'

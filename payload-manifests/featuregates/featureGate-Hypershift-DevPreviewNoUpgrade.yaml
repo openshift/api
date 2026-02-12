@@ -140,9 +140,6 @@
                         "name": "ConfigurablePKI"
                     },
                     {
-                        "name": "ConsolePluginContentSecurityPolicy"
-                    },
-                    {
                         "name": "DNSNameResolver"
                     },
                     {

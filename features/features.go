@@ -711,14 +711,6 @@ var (
 					enableIn(configv1.DevPreviewNoUpgrade, configv1.TechPreviewNoUpgrade).
 					mustRegister()
 
-	FeatureGateStoragePerformantSecurityPolicy = newFeatureGate("StoragePerformantSecurityPolicy").
-							reportProblemsToJiraComponent("Storage / Kubernetes External Components").
-							contactPerson("hekumar").
-							productScope(ocpSpecific).
-							enhancementPR("https://github.com/openshift/enhancements/pull/1804").
-							enableIn(configv1.DevPreviewNoUpgrade, configv1.TechPreviewNoUpgrade, configv1.Default, configv1.OKD).
-							mustRegister()
-
 	FeatureGateMultiDiskSetup = newFeatureGate("MultiDiskSetup").
 					reportProblemsToJiraComponent("splat").
 					contactPerson("jcpowermac").

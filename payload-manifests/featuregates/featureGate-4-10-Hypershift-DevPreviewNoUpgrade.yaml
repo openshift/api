@@ -41,6 +41,9 @@
                         "name": "NewOLMCatalogdAPIV1Metas"
                     },
                     {
+                        "name": "NewOLMConfigAPI"
+                    },
+                    {
                         "name": "NewOLMOwnSingleNamespace"
                     },
                     {
@@ -73,7 +76,13 @@
                         "name": "AWSDualStackInstall"
                     },
                     {
+                        "name": "AWSEuropeanSovereignCloudInstall"
+                    },
+                    {
                         "name": "AWSServiceLBNetworkSecurityGroup"
+                    },
+                    {
+                        "name": "AdditionalStorageConfig"
                     },
                     {
                         "name": "AutomatedEtcdBackup"
@@ -154,6 +163,9 @@
                         "name": "ClusterUpdateAcceptRisks"
                     },
                     {
+                        "name": "ClusterUpdatePreflight"
+                    },
+                    {
                         "name": "ClusterVersionOperatorConfiguration"
                     },
                     {
@@ -190,6 +202,9 @@
                         "name": "ExternalOIDC"
                     },
                     {
+                        "name": "ExternalOIDCExternalClaimsSourcing"
+                    },
+                    {
                         "name": "ExternalOIDCWithUIDAndExtraClaimMappings"
                     },
                     {
@@ -208,16 +223,7 @@
                         "name": "GCPDualStackInstall"
                     },
                     {
-                        "name": "GatewayAPI"
-                    },
-                    {
-                        "name": "GatewayAPIController"
-                    },
-                    {
                         "name": "GatewayAPIWithoutOLM"
-                    },
-                    {
-                        "name": "HighlyAvailableArbiter"
                     },
                     {
                         "name": "HyperShiftOnlyDynamicResourceAllocation"
@@ -227,9 +233,6 @@
                     },
                     {
                         "name": "ImageStreamImportMode"
-                    },
-                    {
-                        "name": "ImageVolume"
                     },
                     {
                         "name": "IngressControllerDynamicConfigurationManager"
@@ -259,22 +262,10 @@
                         "name": "MachineAPIMigrationOpenStack"
                     },
                     {
-                        "name": "MachineConfigNodes"
-                    },
-                    {
-                        "name": "ManagedBootImages"
-                    },
-                    {
-                        "name": "ManagedBootImagesAWS"
-                    },
-                    {
-                        "name": "ManagedBootImagesAzure"
+                        "name": "MachineAPIMigrationVSphere"
                     },
                     {
                         "name": "ManagedBootImagesCPMS"
-                    },
-                    {
-                        "name": "ManagedBootImagesvSphere"
                     },
                     {
                         "name": "MaxUnavailableStatefulSet"
@@ -301,6 +292,9 @@
                         "name": "NetworkConnect"
                     },
                     {
+                        "name": "NoOverlayMode"
+                    },
+                    {
                         "name": "NutanixMultiSubnets"
                     },
                     {
@@ -314,9 +308,6 @@
                     },
                     {
                         "name": "OpenShiftPodSecurityAdmission"
-                    },
-                    {
-                        "name": "PinnedImages"
                     },
                     {
                         "name": "ProvisioningRequestAvailable"
@@ -338,6 +329,9 @@
                     },
                     {
                         "name": "StoragePerformantSecurityPolicy"
+                    },
+                    {
+                        "name": "TLSAdherence"
                     },
                     {
                         "name": "TLSCurvePreferences"

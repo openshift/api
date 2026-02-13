@@ -24,7 +24,7 @@ type TLSSecurityProfile struct {
 	// clients or libraries and should be used only as a last resort.
 	//
 	// The curve list includes by default the following curves:
-	// X25519, SecP256r1, SecP384r1, X25519MLKEM768.
+	// X25519, secp256r1, secp384r1, X25519MLKEM768.
 	//
 	// This profile is equivalent to a Custom profile specified as:
 	//   minTLSVersion: VersionTLS10
@@ -60,7 +60,7 @@ type TLSSecurityProfile struct {
 	// most clients currently in use.
 	//
 	// The curve list includes by default the following curves:
-	// X25519, SecP256r1, SecP384r1, X25519MLKEM768.
+	// X25519, secp256r1, secp384r1, X25519MLKEM768.
 	//
 	// This profile is equivalent to a Custom profile specified as:
 	//   minTLSVersion: VersionTLS12
@@ -82,7 +82,7 @@ type TLSSecurityProfile struct {
 	// modern is a TLS security profile for use with clients that support TLS 1.3 and
 	// do not need backward compatibility for older clients.
 	// The curve list includes by default the following curves:
-	// X25519, SecP256r1, SecP384r1, X25519MLKEM768.
+	// X25519, secp256r1, secp384r1, X25519MLKEM768.
 	// This profile is equivalent to a Custom profile specified as:
 	//   minTLSVersion: VersionTLS13
 	//   ciphers:
@@ -157,18 +157,18 @@ const (
 // in crypto/tls package based on IANA's "TLS Supported Groups" registry:
 // https://www.iana.org/assignments/tls-parameters/tls-parameters.xhtml#tls-parameters-8
 //
-// +kubebuilder:validation:Enum=X25519;SecP256r1;SecP384r1;SecP521r1;X25519MLKEM768
+// +kubebuilder:validation:Enum=X25519;secp256r1;secp384r1;secp521r1;X25519MLKEM768
 type TLSCurve string
 
 const (
 	// TLSCurveX25519 represents X25519.
 	TLSCurveX25519 TLSCurve = "X25519"
 	// TLSCurveSecp256r1 represents P-256 (secp256r1).
-	TLSCurveSecP256r1 TLSCurve = "SecP256r1"
+	TLSCurveSecP256r1 TLSCurve = "secp256r1"
 	// TLSCurveSecP384r1 represents P-384 (secp384r1).
-	TLSCurveSecP384r1 TLSCurve = "SecP384r1"
+	TLSCurveSecP384r1 TLSCurve = "secp384r1"
 	// TLSCurveSecP521r1 represents P-521 (secp521r1).
-	TLSCurveSecP521r1 TLSCurve = "SecP521r1"
+	TLSCurveSecP521r1 TLSCurve = "secp521r1"
 	// TLSCurveX25519MLKEM768 represents X25519MLKEM768.
 	TLSCurveX25519MLKEM768 TLSCurve = "X25519MLKEM768"
 )
@@ -192,13 +192,13 @@ type TLSProfileSpec struct {
 	//
 	// When omitted, this means no opinion and the platform is left to choose reasonable defaults which are
 	// subject to change over time and may be different per platform component depending on the underlying TLS
-	// libraries they use. If specified, the list must contain at least one curve.
+	// libraries they use. If specified, the list must contain at least one curve and each curve must be unique.
 	//
-	// For example, to use X25519 and SecP256r1 (yaml):
+	// For example, to use X25519 and secp256r1 (yaml):
 	//
 	//   curves:
 	//     - X25519
-	//     - SecP256r1
+	//     - secp256r1
 	//
 	// +optional
 	// +listType=set
@@ -245,7 +245,7 @@ const (
 // Go-specific "ciphers" from the guidelines JSON.
 //
 // TLSProfiles Old, Intermediate, Modern include by default the following
-// curves: X25519, SecP256r1, SecP384r1, X25519MLKEM768
+// curves: X25519, secp256r1, secp384r1, X25519MLKEM768
 //
 // NOTE: The caller needs to make sure to check that these constants are valid
 // for their binary. Not all entries map to values for all binaries. In the case

@@ -281,6 +281,44 @@ tests:
               curves:
                 - SecP256r1
                 - SecP384r1
+    - name: Should be able to remove curves field from existing Custom TLS profile
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: APIServer
+        spec:
+          tlsSecurityProfile:
+            type: Custom
+            custom:
+              minTLSVersion: VersionTLS12
+              ciphers:
+                - TLS_AES_128_GCM_SHA256
+              curves:
+                - X25519
+                - SecP256r1
+      updated: |
+        apiVersion: config.openshift.io/v1
+        kind: APIServer
+        spec:
+          audit:
+            profile: Default
+          tlsSecurityProfile:
+            type: Custom
+            custom:
+              minTLSVersion: VersionTLS12
+              ciphers:
+                - TLS_AES_128_GCM_SHA256
+      expected: |
+        apiVersion: config.openshift.io/v1
+        kind: APIServer
+        spec:
+          audit:
+            profile: Default
+          tlsSecurityProfile:
+            type: Custom
+            custom:
+              minTLSVersion: VersionTLS12
+              ciphers:
+                - TLS_AES_128_GCM_SHA256
     - name: Should fail to remove all curves from existing Custom TLS profile
       initial: |
         apiVersion: config.openshift.io/v1

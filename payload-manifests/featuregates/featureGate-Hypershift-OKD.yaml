@@ -260,9 +260,6 @@
                         "name": "BuildCSIVolumes"
                     },
                     {
-                        "name": "CPMSMachineNamePrefix"
-                    },
-                    {
                         "name": "ConsolePluginContentSecurityPolicy"
                     },
                     {

@@ -29,16 +29,25 @@
                         "name": "ClusterAPIInstall"
                     },
                     {
+                        "name": "ClusterUpdatePreflight"
+                    },
+                    {
                         "name": "EventedPLEG"
                     },
                     {
                         "name": "Example2"
                     },
                     {
+                        "name": "ExternalOIDCExternalClaimsSourcing"
+                    },
+                    {
                         "name": "ExternalSnapshotMetadata"
                     },
                     {
                         "name": "KMSEncryptionProvider"
+                    },
+                    {
+                        "name": "MachineAPIMigrationVSphere"
                     },
                     {
                         "name": "MachineAPIOperatorDisableMachineHealthCheckController"
@@ -57,6 +66,9 @@
                     },
                     {
                         "name": "NewOLMCatalogdAPIV1Metas"
+                    },
+                    {
+                        "name": "NewOLMConfigAPI"
                     },
                     {
                         "name": "NewOLMOwnSingleNamespace"
@@ -91,7 +103,13 @@
                         "name": "AWSDualStackInstall"
                     },
                     {
+                        "name": "AWSEuropeanSovereignCloudInstall"
+                    },
+                    {
                         "name": "AWSServiceLBNetworkSecurityGroup"
+                    },
+                    {
+                        "name": "AdditionalStorageConfig"
                     },
                     {
                         "name": "AutomatedEtcdBackup"
@@ -223,16 +241,7 @@
                         "name": "GCPDualStackInstall"
                     },
                     {
-                        "name": "GatewayAPI"
-                    },
-                    {
-                        "name": "GatewayAPIController"
-                    },
-                    {
                         "name": "GatewayAPIWithoutOLM"
-                    },
-                    {
-                        "name": "HighlyAvailableArbiter"
                     },
                     {
                         "name": "HyperShiftOnlyDynamicResourceAllocation"
@@ -242,9 +251,6 @@
                     },
                     {
                         "name": "ImageStreamImportMode"
-                    },
-                    {
-                        "name": "ImageVolume"
                     },
                     {
                         "name": "IngressControllerDynamicConfigurationManager"
@@ -274,22 +280,7 @@
                         "name": "MachineAPIMigrationOpenStack"
                     },
                     {
-                        "name": "MachineConfigNodes"
-                    },
-                    {
-                        "name": "ManagedBootImages"
-                    },
-                    {
-                        "name": "ManagedBootImagesAWS"
-                    },
-                    {
-                        "name": "ManagedBootImagesAzure"
-                    },
-                    {
                         "name": "ManagedBootImagesCPMS"
-                    },
-                    {
-                        "name": "ManagedBootImagesvSphere"
                     },
                     {
                         "name": "MaxUnavailableStatefulSet"
@@ -313,6 +304,9 @@
                         "name": "MutatingAdmissionPolicy"
                     },
                     {
+                        "name": "NoOverlayMode"
+                    },
+                    {
                         "name": "NutanixMultiSubnets"
                     },
                     {
@@ -326,9 +320,6 @@
                     },
                     {
                         "name": "OpenShiftPodSecurityAdmission"
-                    },
-                    {
-                        "name": "PinnedImages"
                     },
                     {
                         "name": "RouteExternalCertificate"
@@ -350,6 +341,9 @@
                     },
                     {
                         "name": "StoragePerformantSecurityPolicy"
+                    },
+                    {
+                        "name": "TLSAdherence"
                     },
                     {
                         "name": "TLSCurvePreferences"

@@ -29,7 +29,13 @@
                         "name": "AWSDualStackInstall"
                     },
                     {
+                        "name": "AWSEuropeanSovereignCloudInstall"
+                    },
+                    {
                         "name": "AWSServiceLBNetworkSecurityGroup"
+                    },
+                    {
+                        "name": "AdditionalStorageConfig"
                     },
                     {
                         "name": "AutomatedEtcdBackup"
@@ -42,9 +48,6 @@
                     },
                     {
                         "name": "AzureMultiDisk"
-                    },
-                    {
-                        "name": "BootImageSkewEnforcement"
                     },
                     {
                         "name": "BootcNodeManagement"
@@ -107,6 +110,9 @@
                         "name": "ClusterUpdateAcceptRisks"
                     },
                     {
+                        "name": "ClusterUpdatePreflight"
+                    },
+                    {
                         "name": "ClusterVersionOperatorConfiguration"
                     },
                     {
@@ -144,6 +150,9 @@
                     },
                     {
                         "name": "Example2"
+                    },
+                    {
+                        "name": "ExternalOIDCExternalClaimsSourcing"
                     },
                     {
                         "name": "ExternalOIDCWithUpstreamParity"
@@ -191,6 +200,9 @@
                         "name": "MachineAPIMigrationOpenStack"
                     },
                     {
+                        "name": "MachineAPIMigrationVSphere"
+                    },
+                    {
                         "name": "MachineAPIOperatorDisableMachineHealthCheckController"
                     },
                     {
@@ -224,6 +236,9 @@
                         "name": "NewOLMCatalogdAPIV1Metas"
                     },
                     {
+                        "name": "NewOLMConfigAPI"
+                    },
+                    {
                         "name": "NewOLMOwnSingleNamespace"
                     },
                     {
@@ -231,6 +246,9 @@
                     },
                     {
                         "name": "NewOLMWebhookProviderOpenshiftServiceCA"
+                    },
+                    {
+                        "name": "NoOverlayMode"
                     },
                     {
                         "name": "NoRegistryClusterInstall"
@@ -260,13 +278,13 @@
                         "name": "SignatureStores"
                     },
                     {
+                        "name": "TLSAdherence"
+                    },
+                    {
                         "name": "TLSCurvePreferences"
                     },
                     {
                         "name": "VSphereConfigurableMaxAllowedBlockVolumesPerNode"
-                    },
-                    {
-                        "name": "VSphereHostVMGroupZonal"
                     },
                     {
                         "name": "VSphereMixedNodeEnv"
@@ -286,6 +304,9 @@
                         "name": "AzureWorkloadIdentity"
                     },
                     {
+                        "name": "BootImageSkewEnforcement"
+                    },
+                    {
                         "name": "BuildCSIVolumes"
                     },
                     {
@@ -301,22 +322,10 @@
                         "name": "GCPClusterHostedDNSInstall"
                     },
                     {
-                        "name": "GatewayAPI"
-                    },
-                    {
-                        "name": "GatewayAPIController"
-                    },
-                    {
-                        "name": "HighlyAvailableArbiter"
-                    },
-                    {
                         "name": "HyperShiftOnlyDynamicResourceAllocation"
                     },
                     {
                         "name": "ImageStreamImportMode"
-                    },
-                    {
-                        "name": "ImageVolume"
                     },
                     {
                         "name": "InsightsConfig"
@@ -328,22 +337,7 @@
                         "name": "KMSv1"
                     },
                     {
-                        "name": "MachineConfigNodes"
-                    },
-                    {
-                        "name": "ManagedBootImages"
-                    },
-                    {
-                        "name": "ManagedBootImagesAWS"
-                    },
-                    {
-                        "name": "ManagedBootImagesAzure"
-                    },
-                    {
                         "name": "ManagedBootImagesCPMS"
-                    },
-                    {
-                        "name": "ManagedBootImagesvSphere"
                     },
                     {
                         "name": "MetricsCollectionProfiles"
@@ -353,9 +347,6 @@
                     },
                     {
                         "name": "OpenShiftPodSecurityAdmission"
-                    },
-                    {
-                        "name": "PinnedImages"
                     },
                     {
                         "name": "RouteExternalCertificate"
@@ -380,6 +371,9 @@
                     },
                     {
                         "name": "UserNamespacesSupport"
+                    },
+                    {
+                        "name": "VSphereHostVMGroupZonal"
                     },
                     {
                         "name": "VSphereMultiDisk"

@@ -135,7 +135,7 @@ spec:
                         x-kubernetes-validations:
                         - message: 'kmsKeyARN must be a valid AWS KMS key ARN in the
                             format: arn:<partition>:kms:<region>:<account-id>:(key|alias)/<key-id-or-alias>'
-                          rule: matches(self, '^arn:(aws|aws-cn|aws-us-gov|aws-iso|aws-iso-b|aws-iso-e|aws-iso-f|aws-eusc):kms:[a-z0-9-]+:[0-9]{12}:(key|alias)/.*$')
+                          rule: matches(self, '^arn:(aws|aws-cn|aws-us-gov|aws-iso|aws-iso-b|aws-iso-e|aws-iso-f):kms:[a-z0-9-]+:[0-9]{12}:(key|alias)/.*$')
                     type: object
                   azure:
                     description: azure is used to configure the Azure CSI driver.

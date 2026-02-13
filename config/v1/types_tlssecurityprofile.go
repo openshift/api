@@ -192,7 +192,7 @@ type TLSProfileSpec struct {
 	//
 	// When omitted, this means no opinion and the platform is left to choose reasonable defaults which are
 	// subject to change over time and may be different per platform component depending on the underlying TLS
-	// libraries they use. If specified, the list must contain at least one curve.
+	// libraries they use. If specified, the list must contain at least one curve and each curve must be unique.
 	//
 	// For example, to use X25519 and SecP256r1 (yaml):
 	//

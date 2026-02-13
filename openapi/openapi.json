@@ -35874,6 +35874,109 @@
         }
       }
     },
+    "com.github.openshift.api.operator.v1alpha1.ClusterAPI": {
+      "description": "ClusterAPI provides configuration for the capi-operator.\n\nCompatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.",
+      "type": "object",
+      "required": [
+        "metadata",
+        "spec"
+      ],
+      "properties": {
+        "apiVersion": {
+          "description": "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+          "type": "string"
+        },
+        "kind": {
+          "description": "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+          "type": "string"
+        },
+        "metadata": {
+          "description": "metadata is the standard object's metadata. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata",
+          "default": {},
+          "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.ObjectMeta"
+        },
+        "spec": {
+          "description": "spec is the specification of the desired behavior of the capi-operator.",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.operator.v1alpha1.ClusterAPISpec"
+        },
+        "status": {
+          "description": "status defines the observed status of the capi-operator.",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.operator.v1alpha1.ClusterAPIStatus"
+        }
+      }
+    },
+    "com.github.openshift.api.operator.v1alpha1.ClusterAPIList": {
+      "description": "ClusterAPIList contains a list of ClusterAPI configurations\n\nCompatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.",
+      "type": "object",
+      "required": [
+        "metadata",
+        "items"
+      ],
+      "properties": {
+        "apiVersion": {
+          "description": "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+          "type": "string"
+        },
+        "items": {
+          "description": "items contains the items",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/com.github.openshift.api.operator.v1alpha1.ClusterAPI"
+          }
+        },
+        "kind": {
+          "description": "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+          "type": "string"
+        },
+        "metadata": {
+          "description": "metadata is the standard list's metadata. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata",
+          "default": {},
+          "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.ListMeta"
+        }
+      }
+    },
+    "com.github.openshift.api.operator.v1alpha1.ClusterAPISpec": {
+      "description": "ClusterAPISpec defines the desired configuration of the capi-operator.",
+      "type": "object",
+      "properties": {
+        "unmanagedCustomResourceDefinitions": {
+          "description": "unmanagedCustomResourceDefinitions is a list of ClusterResourceDefinition (CRD) names that should not be managed by the capi-operator installer controller. This allows external actors to own specific CRDs while capi-operator manages others.\n\nEach CRD name must be a valid DNS-1123 subdomain consisting of lowercase alphanumeric characters, '-' or '.', and must start and end with an alphanumeric character, with a maximum length of 253 characters. Example: \"clusters.cluster.x-k8s.io\"\n\nItems cannot be removed from this list once added.\n\nThe maximum number of unmanagedCustomResourceDefinitions is 128.",
+          "type": "array",
+          "items": {
+            "type": "string",
+            "default": ""
+          },
+          "x-kubernetes-list-type": "set"
+        }
+      }
+    },
+    "com.github.openshift.api.operator.v1alpha1.ClusterAPIStatus": {
+      "description": "ClusterAPIStatus describes the current state of the capi-operator.",
+      "type": "object",
+      "properties": {
+        "activeConfigMaps": {
+          "description": "activeConfigMaps is a list of ConfigMap names that the installer controller has successfully reconciled. This represents the currently deployed CAPI provider components.\n\nEach ConfigMap name must be a valid DNS-1123 label consisting of lowercase alphanumeric characters or hyphens, starting and ending with an alphanumeric character, with a maximum length of 63 characters.\n\nThis field is owned by the installer controller and is updated atomically after a successful reconciliation.\n\nThe maximum number of activeConfigMaps is 128.",
+          "type": "array",
+          "items": {
+            "type": "string",
+            "default": ""
+          },
+          "x-kubernetes-list-type": "atomic"
+        },
+        "targetConfigMaps": {
+          "description": "targetConfigMaps is a list of ConfigMap names that the staging controller has validated and approved for reconciliation. The installer controller will reconcile these ConfigMaps.\n\nEach ConfigMap name must be a valid DNS-1123 label consisting of lowercase alphanumeric characters or hyphens, starting and ending with an alphanumeric character, with a maximum length of 63 characters.\n\nThis field is owned by the staging controller and is updated atomically to a consistent set of transport ConfigMaps that have passed validation checks.\n\nThe maximum number of targetConfigMaps is 128.",
+          "type": "array",
+          "items": {
+            "type": "string",
+            "default": ""
+          },
+          "x-kubernetes-list-type": "atomic"
+        }
+      }
+    },
     "com.github.openshift.api.operator.v1alpha1.ClusterVersionOperator": {
       "description": "ClusterVersionOperator holds cluster-wide information about the Cluster Version Operator.\n\nCompatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.",
       "type": "object",
@@ -52071,6 +52174,77 @@
       "description": "IntOrString is a type that can hold an int32 or a string.  When used in JSON or YAML marshalling and unmarshalling, it produces or consumes the inner type.  This allows you to have, for example, a JSON field that can accept a name or number.",
       "type": "string",
       "format": "int-or-string"
+    },
+    "io.k8s.apimachinery.pkg.version.Info": {
+      "description": "Info contains versioning information. how we'll want to distribute that information.",
+      "type": "object",
+      "required": [
+        "major",
+        "minor",
+        "gitVersion",
+        "gitCommit",
+        "gitTreeState",
+        "buildDate",
+        "goVersion",
+        "compiler",
+        "platform"
+      ],
+      "properties": {
+        "buildDate": {
+          "type": "string",
+          "default": ""
+        },
+        "compiler": {
+          "type": "string",
+          "default": ""
+        },
+        "emulationMajor": {
+          "description": "EmulationMajor is the major version of the emulation version",
+          "type": "string"
+        },
+        "emulationMinor": {
+          "description": "EmulationMinor is the minor version of the emulation version",
+          "type": "string"
+        },
+        "gitCommit": {
+          "type": "string",
+          "default": ""
+        },
+        "gitTreeState": {
+          "type": "string",
+          "default": ""
+        },
+        "gitVersion": {
+          "type": "string",
+          "default": ""
+        },
+        "goVersion": {
+          "type": "string",
+          "default": ""
+        },
+        "major": {
+          "description": "Major is the major version of the binary version",
+          "type": "string",
+          "default": ""
+        },
+        "minCompatibilityMajor": {
+          "description": "MinCompatibilityMajor is the major version of the minimum compatibility version",
+          "type": "string"
+        },
+        "minCompatibilityMinor": {
+          "description": "MinCompatibilityMinor is the minor version of the minimum compatibility version",
+          "type": "string"
+        },
+        "minor": {
+          "description": "Minor is the minor version of the binary version",
+          "type": "string",
+          "default": ""
+        },
+        "platform": {
+          "type": "string",
+          "default": ""
+        }
+      }
     }
   }
 }

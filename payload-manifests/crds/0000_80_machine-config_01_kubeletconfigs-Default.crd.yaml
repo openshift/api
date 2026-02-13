@@ -163,9 +163,6 @@ spec:
                       legacy clients and want to remain highly secure while being compatible with
                       most clients currently in use.
 
-                      The cipher list includes TLS 1.3 ciphers for forward compatibility, followed
-                      by the "intermediate" profile ciphers.
-
                       The curve list includes by default the following curves:
                       X25519, SecP256r1, SecP384r1, X25519MLKEM768.
 
@@ -203,9 +200,6 @@ spec:
                     description: |-
                       old is a TLS profile for use when services need to be accessed by very old
                       clients or libraries and should be used only as a last resort.
-
-                      The cipher list includes TLS 1.3 ciphers for forward compatibility, followed
-                      by the "old" profile ciphers.
 
                       The curve list includes by default the following curves:
                       X25519, SecP256r1, SecP384r1, X25519MLKEM768.

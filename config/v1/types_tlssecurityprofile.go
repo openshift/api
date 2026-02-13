@@ -278,8 +278,8 @@ var TLSProfiles = map[TLSProfileType]*TLSProfileSpec{
 		},
 		Curves: []TLSCurve{
 			TLSCurveX25519,
-			TLSCurveSecp256r1,
-			TLSCurveSecp384r1,
+			TLSCurveSecP256r1,
+			TLSCurveSecP384r1,
 			TLSCurveX25519MLKEM768,
 		},
 		MinTLSVersion: VersionTLS10,
@@ -298,8 +298,8 @@ var TLSProfiles = map[TLSProfileType]*TLSProfileSpec{
 		},
 		Curves: []TLSCurve{
 			TLSCurveX25519,
-			TLSCurveSecp256r1,
-			TLSCurveSecp384r1,
+			TLSCurveSecP256r1,
+			TLSCurveSecP384r1,
 			TLSCurveX25519MLKEM768,
 		},
 		MinTLSVersion: VersionTLS12,
@@ -312,8 +312,8 @@ var TLSProfiles = map[TLSProfileType]*TLSProfileSpec{
 		},
 		Curves: []TLSCurve{
 			TLSCurveX25519,
-			TLSCurveSecp256r1,
-			TLSCurveSecp384r1,
+			TLSCurveSecP256r1,
+			TLSCurveSecP384r1,
 			TLSCurveX25519MLKEM768,
 		},
 		MinTLSVersion: VersionTLS13,

@@ -1035,7 +1035,7 @@ var (
 					mustRegister()
 
 	FeatureGateTLSCurvePreferences = newFeatureGate("TLSCurvePreferences").
-						reportProblemsToJiraComponent("Networking").
+						reportProblemsToJiraComponent("Networking / router").
 						contactPerson("davidesalerno").
 						productScope(ocpSpecific).
 						enhancementPR("https://github.com/openshift/enhancements/pull/1894").

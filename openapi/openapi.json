@@ -37064,7 +37064,7 @@
           "default": 0
         },
         "recordType": {
-          "description": "recordType is the DNS record type. For example, \"A\" or \"CNAME\".",
+          "description": "recordType is the DNS record type. For example, \"A\", \"AAAA\", or \"CNAME\".",
           "type": "string",
           "default": ""
         },

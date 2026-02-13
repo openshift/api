@@ -164,11 +164,11 @@ const (
 	// TLSCurveX25519 represents X25519.
 	TLSCurveX25519 TLSCurve = "X25519"
 	// TLSCurveSecp256r1 represents P-256 (secp256r1).
-	TLSCurveSecp256r1 TLSCurve = "SecP256r1"
-	// TLSCurveSecp384r1 represents P-384 (secp384r1).
-	TLSCurveSecp384r1 TLSCurve = "SecP384r1"
-	// TLSCurveSecp521r1 represents P-521 (secp521r1).
-	TLSCurveSecp521r1 TLSCurve = "SecP521r1"
+	TLSCurveSecP256r1 TLSCurve = "SecP256r1"
+	// TLSCurveSecP384r1 represents P-384 (secp384r1).
+	TLSCurveSecP384r1 TLSCurve = "SecP384r1"
+	// TLSCurveSecP521r1 represents P-521 (secp521r1).
+	TLSCurveSecP521r1 TLSCurve = "SecP521r1"
 	// TLSCurveX25519MLKEM768 represents X25519MLKEM768.
 	TLSCurveX25519MLKEM768 TLSCurve = "X25519MLKEM768"
 )

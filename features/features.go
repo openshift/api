@@ -163,14 +163,6 @@ var (
 						enableIn(configv1.Default, configv1.OKD, configv1.DevPreviewNoUpgrade, configv1.TechPreviewNoUpgrade).
 						mustRegister()
 
-	FeatureGateCPMSMachineNamePrefix = newFeatureGate("CPMSMachineNamePrefix").
-						reportProblemsToJiraComponent("Cloud Compute / ControlPlaneMachineSet").
-						contactPerson("chiragkyal").
-						productScope(ocpSpecific).
-						enhancementPR("https://github.com/openshift/enhancements/pull/1714").
-						enableIn(configv1.Default, configv1.OKD, configv1.DevPreviewNoUpgrade, configv1.TechPreviewNoUpgrade).
-						mustRegister()
-
 	FeatureGateNetworkConnect = newFeatureGate("NetworkConnect").
 					reportProblemsToJiraComponent("Networking/ovn-kubernetes").
 					contactPerson("tssurya").

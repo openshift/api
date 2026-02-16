@@ -125,9 +125,6 @@
                         "name": "CBORServingAndStorage"
                     },
                     {
-                        "name": "CPMSMachineNamePrefix"
-                    },
-                    {
                         "name": "CRDCompatibilityRequirementOperator"
                     },
                     {

@@ -227,9 +227,6 @@
                         "name": "MachineAPIMigration"
                     },
                     {
-                        "name": "MachineConfigNodes"
-                    },
-                    {
                         "name": "ManagedBootImages"
                     },
                     {
@@ -300,9 +297,6 @@
                     },
                     {
                         "name": "OpenShiftPodSecurityAdmission"
-                    },
-                    {
-                        "name": "PinnedImages"
                     },
                     {
                         "name": "RouteExternalCertificate"

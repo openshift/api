@@ -396,9 +396,10 @@ func (g *generator) genGroupVersion(group string, version generation.APIVersionC
 	return kerrors.NewAggregate(errs)
 }
 
-func getCRDsToRender(resultingCRDs []crdForFeatureSet, crdFilenamePattern, outputPath string, allKnownFeatureSets sets.Set[string], targetVersions []uint64) ([]crdForFeatureSet, error) {
+func getCRDsToRender(resultingCRDs []crdForFeatureSet, crdFilenamePattern, outputPath string, allPossibleFeatureSets sets.Set[string], targetVersions []uint64) ([]crdForFeatureSet, error) {
 	allCRDsWithData := filterCRDs(resultingCRDs, &HasData{})
 	allKnownClusterProfies := clusterProfilesFromCRDs(allCRDsWithData)
+	allKnownFeatureSets := featureSetsFromCRDs(allCRDsWithData)
 
 	// Merge CRDs by version.
 	// If the data, featureset and clusterprofile are the same, merge the versions to eliminate that dimension
@@ -511,14 +512,36 @@ func getCRDsToRender(resultingCRDs []crdForFeatureSet, crdFilenamePattern, outpu
 		allFeatureSetsSame := crd.featureSet.Equal(allKnownFeatureSets)
 		allClusterProfilesSame := crd.clusterProfile.Equal(allKnownClusterProfies)
 
+		ann := crd.crd.GetAnnotations()
+		_, hasFeatureGateAnnotation := ann["release.openshift.io/feature-gate"]
+		if hasFeatureGateAnnotation && allFeatureSetsSame {
+			// If all feature sets represent the same data, and there is a feature gate annotation,
+			// use this as the preferred way for the CVO to selectively apply the manifest.
+			// Clear the feature set here so that manifests are not annotated with the feature set
+			// as the two annotations are mutually exclusive..
+			crd.featureSet = sets.New[string]()
+		} else {
+			// If the feature sets are different, then we must output multiple manifests based on the feature set differences.
+			// The feature gate annotation (if present) would conflict with this so we must remove it.
+			if ann != nil {
+				delete(ann, "release.openshift.io/feature-gate")
+			}
+		}
+		crd.crd.SetAnnotations(ann)
+
+		if crd.featureSet.Equal(allPossibleFeatureSets) {
+			// If the CRD covers all possible feature sets, then clear the feature set so we don't apply an annotation that is redundant.
+			crd.featureSet = sets.New[string]()
+		}
+
 		switch {
 		case allFeatureSetsSame && allClusterProfilesSame:
 			crdFilename := getCRDFilename(crdFilenamePattern, nameComponents)
 			crdFullPath := filepath.Join(outputPath, crdFilename)
 
 			crdsToWrite = append(crdsToWrite, crdForFeatureSet{
-				crd: crd.crd.DeepCopy(),
-				// featureSet: Don't write the featureset as it's the same for all CRDs.
+				crd:            crd.crd.DeepCopy(),
+				featureSet:     crd.featureSet,
 				clusterProfile: crd.clusterProfile, // Write the clusterprofiles as these must be written to the annotations.
 				version:        crd.version,
 				outputFile:     crdFullPath,
@@ -534,8 +557,8 @@ func getCRDsToRender(resultingCRDs []crdForFeatureSet, crdFilenamePattern, outpu
 				crdFullPath := filepath.Join(outputPath, crdFilename)
 
 				crdsToWrite = append(crdsToWrite, crdForFeatureSet{
-					crd: crd.crd.DeepCopy(),
-					// featureSet: Don't write the featureset as it's the same for all CRDs.
+					crd:            crd.crd.DeepCopy(),
+					featureSet:     crd.featureSet,
 					clusterProfile: sets.New[string](clusterProfile),
 					version:        crd.version,
 					outputFile:     crdFullPath,
@@ -604,6 +627,8 @@ func getCRDsToRender(resultingCRDs []crdForFeatureSet, crdFilenamePattern, outpu
 			for _, featureSet := range crdsToWrite[i].featureSet.UnsortedList() {
 				featureSetStrings = append(featureSetStrings, featureSet)
 			}
+			slices.Sort(featureSetStrings)
+
 			annotations["release.openshift.io/feature-set"] = strings.Join(featureSetStrings, ",")
 		}
 
@@ -641,6 +666,16 @@ func clusterProfilesFromCRDs(resultingCRDs []crdForFeatureSet) sets.Set[string] 
 		}
 	}
 
+	return ret
+}
+
+func featureSetsFromCRDs(resultingCRDs []crdForFeatureSet) sets.Set[string] {
+	ret := sets.Set[string]{}
+	for _, currCRD := range resultingCRDs {
+		for _, featureSet := range currCRD.featureSet.UnsortedList() {
+			ret.Insert(featureSet)
+		}
+	}
 	return ret
 }
 

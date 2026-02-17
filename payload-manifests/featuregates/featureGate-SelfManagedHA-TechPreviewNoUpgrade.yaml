@@ -137,6 +137,9 @@
                         "name": "ClusterUpdateAcceptRisks"
                     },
                     {
+                        "name": "ClusterUpdatePreflight"
+                    },
+                    {
                         "name": "ClusterVersionOperatorConfiguration"
                     },
                     {

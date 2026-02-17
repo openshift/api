@@ -400,6 +400,7 @@ func getCRDsToRender(resultingCRDs []crdForFeatureSet, crdFilenamePattern, outpu
 	allCRDsWithData := filterCRDs(resultingCRDs, &HasData{})
 	allKnownClusterProfies := clusterProfilesFromCRDs(allCRDsWithData)
 	allKnownFeatureSets := featureSetsFromCRDs(allCRDsWithData)
+	allKnownFeatureSetsByClusterProfile := featureSetsFromCRDsByClusterProfile(allCRDsWithData, allKnownClusterProfies)
 
 	// Merge CRDs by version.
 	// If the data, featureset and clusterprofile are the same, merge the versions to eliminate that dimension
@@ -511,6 +512,17 @@ func getCRDsToRender(resultingCRDs []crdForFeatureSet, crdFilenamePattern, outpu
 
 		allFeatureSetsSame := crd.featureSet.Equal(allKnownFeatureSets)
 		allClusterProfilesSame := crd.clusterProfile.Equal(allKnownClusterProfies)
+
+		if !allClusterProfilesSame {
+			// In some cases, the feature sets are different across cluster profiles.
+			// We might be able to optimise output for a particular cluster profile if the feature sets are the same
+			// within the cluster profile.
+			allFeatureSetsSame = true
+			for _, clusterProfile := range crd.clusterProfile.UnsortedList() {
+				allFeatureSetsSame = allFeatureSetsSame && crd.featureSet.Equal(allKnownFeatureSetsByClusterProfile[clusterProfile])
+			}
+
+		}
 
 		ann := crd.crd.GetAnnotations()
 		_, hasFeatureGateAnnotation := ann["release.openshift.io/feature-gate"]
@@ -676,6 +688,16 @@ func featureSetsFromCRDs(resultingCRDs []crdForFeatureSet) sets.Set[string] {
 			ret.Insert(featureSet)
 		}
 	}
+	return ret
+}
+
+func featureSetsFromCRDsByClusterProfile(resultingCRDs []crdForFeatureSet, allKnownClusterProfiles sets.Set[string]) map[string]sets.Set[string] {
+	ret := map[string]sets.Set[string]{}
+
+	for _, clusterProfile := range allKnownClusterProfiles.UnsortedList() {
+		ret[clusterProfile] = featureSetsFromCRDs(filterCRDs(resultingCRDs, &ClusterProfileFilter{clusterProfile: sets.New[string](clusterProfile)}))
+	}
+
 	return ret
 }
 

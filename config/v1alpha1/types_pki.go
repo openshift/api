@@ -174,7 +174,6 @@ type RSAKeyConfig struct {
 	// +kubebuilder:validation:Minimum=2048
 	// +kubebuilder:validation:Maximum=8192
 	// +kubebuilder:validation:MultipleOf=1024
-	// +kubebuilder:default=2048
 	KeySize int32 `json:"keySize,omitempty"`
 }
 

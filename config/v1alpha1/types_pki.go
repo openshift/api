@@ -73,7 +73,7 @@ type PKICertificateManagement struct {
 	Mode PKICertificateManagementMode `json:"mode,omitempty"`
 
 	// custom contains administrator-specified cryptographic configuration.
-	// Use the defaults and categories fields to specify certificate generation parameters.
+	// Use the defaults and categoryOverrides fields to specify certificate generation parameters.
 	// Required when mode is Custom, and forbidden otherwise.
 	//
 	// +optional
@@ -82,8 +82,8 @@ type PKICertificateManagement struct {
 }
 
 // CustomPKIPolicy contains administrator-specified cryptographic configuration.
-// Administrators can specify defaults for all certificates or configure specific categories
-// (SignerCertificate, ServingCertificate, ClientCertificate).
+// Administrators must specify defaults for all certificates and may optionally override
+// specific categories (SignerCertificate, ServingCertificate, ClientCertificate).
 type CustomPKIPolicy struct {
 	PKIProfile `json:",inline"`
 }
@@ -106,28 +106,25 @@ const (
 
 // PKIProfile defines the certificate generation parameters that OpenShift components use
 // to create certificates. Configuration can be specified at two hierarchical levels:
-// defaults apply to all certificates and categories apply to certificate types (SignerCertificate,
-// ServingCertificate, ClientCertificate).
-// Category configuration takes precedence over defaults.
-// +kubebuilder:validation:MinProperties=1
+// defaults apply to all certificates and categoryOverrides apply to specific certificate
+// types (SignerCertificate, ServingCertificate, ClientCertificate).
+// Category overrides take precedence over defaults.
 type PKIProfile struct {
-	// defaults specifies the default certificate configuration
-	// for all certificates unless overridden by category or specific
-	// certificate configuration.
-	// If not specified, uses platform defaults (typically RSA 2048).
+	// defaults specifies the default certificate configuration that applies
+	// to all certificates unless overridden by a categoryOverrides entry.
 	//
-	// +optional
+	// +required
 	Defaults CertificateConfig `json:"defaults,omitzero"`
 
-	// categories allows configuration of certificate parameters
-	// for categories of certificates (SignerCertificate, ServingCertificate, ClientCertificate).
-	// Category configuration takes precedence over defaults.
+	// categoryOverrides allows overriding certificate parameters for specific
+	// categories of certificates (SignerCertificate, ServingCertificate, ClientCertificate).
+	// Category overrides take precedence over defaults.
 	//
 	// +optional
 	// +listType=map
 	// +listMapKey=category
 	// +kubebuilder:validation:MaxItems=3
-	Categories []CategoryCertificateConfig `json:"categories,omitempty"`
+	CategoryOverrides []CategoryCertificateConfig `json:"categoryOverrides,omitempty"`
 }
 
 // CertificateConfig specifies configuration parameters for certificates.

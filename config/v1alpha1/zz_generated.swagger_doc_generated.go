@@ -497,7 +497,7 @@ func (CategoryCertificateConfig) SwaggerDoc() map[string]string {
 
 var map_CertificateConfig = map[string]string{
 	"":    "CertificateConfig specifies configuration parameters for certificates.",
-	"key": "key specifies the cryptographic parameters for the certificate's key pair.",
+	"key": "key specifies the cryptographic parameters for the certificate's key pair. Currently this is the only configurable parameter. When omitted in a categoryOverrides entry, the key configuration from defaults is used.",
 }
 
 func (CertificateConfig) SwaggerDoc() map[string]string {
@@ -505,7 +505,7 @@ func (CertificateConfig) SwaggerDoc() map[string]string {
 }
 
 var map_CustomPKIPolicy = map[string]string{
-	"": "CustomPKIPolicy contains administrator-specified cryptographic configuration. Administrators can specify defaults for all certificates or configure specific categories (SignerCertificate, ServingCertificate, ClientCertificate).",
+	"": "CustomPKIPolicy contains administrator-specified cryptographic configuration. Administrators must specify defaults for all certificates and may optionally override specific categories of certificates.",
 }
 
 func (CustomPKIPolicy) SwaggerDoc() map[string]string {
@@ -545,7 +545,7 @@ func (PKI) SwaggerDoc() map[string]string {
 var map_PKICertificateManagement = map[string]string{
 	"":       "PKICertificateManagement determines whether components use hardcoded defaults (Unmanaged), follow OpenShift best practices (Default), or use administrator-specified cryptographic parameters (Custom). This provides flexibility for organizations with specific compliance requirements or security policies while maintaining backwards compatibility for existing clusters.",
 	"mode":   "mode determines how PKI configuration is managed. Valid values are \"Unmanaged\", \"Default\", and \"Custom\".\n\nWhen set to Unmanaged, components use their existing hardcoded certificate generation behavior, exactly as if this feature did not exist. Each component generates certificates using whatever parameters it was using before this feature. While most components use RSA 2048, some may use different parameters. Use of this mode might prevent upgrading to the next major OpenShift release.\n\nWhen set to Default, OpenShift-recommended best practices for certificate generation are applied. The specific parameters may evolve across OpenShift releases to adopt improved cryptographic standards. In the initial release, this matches Unmanaged behavior for each component. In future releases, this may adopt ECDSA or larger RSA keys based on industry best practices. Recommended for most customers who want to benefit from security improvements automatically.\n\nWhen set to Custom, the certificate management parameters can be set explicitly. Use the custom field to specify certificate generation parameters.",
-	"custom": "custom contains administrator-specified cryptographic configuration. Use the defaults and categories fields to specify certificate generation parameters. Required when mode is Custom, and forbidden otherwise.",
+	"custom": "custom contains administrator-specified cryptographic configuration. Use the defaults and categoryOverrides fields to specify certificate generation parameters. Required when mode is Custom, and forbidden otherwise.",
 }
 
 func (PKICertificateManagement) SwaggerDoc() map[string]string {
@@ -562,9 +562,9 @@ func (PKIList) SwaggerDoc() map[string]string {
 }
 
 var map_PKIProfile = map[string]string{
-	"":           "PKIProfile defines the certificate generation parameters that OpenShift components use to create certificates. Configuration can be specified at two hierarchical levels: defaults apply to all certificates and categories apply to certificate types (SignerCertificate, ServingCertificate, ClientCertificate). Category configuration takes precedence over defaults.",
-	"defaults":   "defaults specifies the default certificate configuration for all certificates unless overridden by category or specific certificate configuration. If not specified, uses platform defaults (typically RSA 2048).",
-	"categories": "categories allows configuration of certificate parameters for categories of certificates (SignerCertificate, ServingCertificate, ClientCertificate). Category configuration takes precedence over defaults.",
+	"":                  "PKIProfile defines the certificate generation parameters that OpenShift components use to create certificates. Category overrides take precedence over defaults.",
+	"defaults":          "defaults specifies the default certificate configuration that applies to all certificates unless overridden by a categoryOverrides entry.",
+	"categoryOverrides": "categoryOverrides allows overriding certificate parameters for specific categories of certificates (SignerCertificate, ServingCertificate, ClientCertificate). Category overrides take precedence over defaults.",
 }
 
 func (PKIProfile) SwaggerDoc() map[string]string {

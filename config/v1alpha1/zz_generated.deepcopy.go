@@ -1090,8 +1090,8 @@ func (in *PKIList) DeepCopyObject() runtime.Object {
 func (in *PKIProfile) DeepCopyInto(out *PKIProfile) {
 	*out = *in
 	out.Defaults = in.Defaults
-	if in.Categories != nil {
-		in, out := &in.Categories, &out.Categories
+	if in.CategoryOverrides != nil {
+		in, out := &in.CategoryOverrides, &out.CategoryOverrides
 		*out = make([]CategoryCertificateConfig, len(*in))
 		copy(*out, *in)
 	}

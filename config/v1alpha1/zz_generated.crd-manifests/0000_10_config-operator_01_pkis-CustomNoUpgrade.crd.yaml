@@ -55,15 +55,14 @@ spec:
                   custom:
                     description: |-
                       custom contains administrator-specified cryptographic configuration.
-                      Use the defaults and categories fields to specify certificate generation parameters.
+                      Use the defaults and categoryOverrides fields to specify certificate generation parameters.
                       Required when mode is Custom, and forbidden otherwise.
-                    minProperties: 1
                     properties:
-                      categories:
+                      categoryOverrides:
                         description: |-
-                          categories allows configuration of certificate parameters
-                          for categories of certificates (SignerCertificate, ServingCertificate, ClientCertificate).
-                          Category configuration takes precedence over defaults.
+                          categoryOverrides allows overriding certificate parameters for specific
+                          categories of certificates (SignerCertificate, ServingCertificate, ClientCertificate).
+                          Category overrides take precedence over defaults.
                         items:
                           properties:
                             category:
@@ -90,8 +89,10 @@ spec:
                               minProperties: 1
                               properties:
                                 key:
-                                  description: key specifies the cryptographic parameters
-                                    for the certificate's key pair.
+                                  description: |-
+                                    key specifies the cryptographic parameters for the certificate's key pair.
+                                    Currently this is the only configurable parameter. When omitted in a
+                                    categoryOverrides entry, the key configuration from defaults is used.
                                   properties:
                                     algorithm:
                                       description: |-
@@ -124,7 +125,6 @@ spec:
                                         Required when algorithm is RSA, and forbidden otherwise.
                                       properties:
                                         keySize:
-                                          default: 2048
                                           description: |-
                                             keySize specifies the size of RSA keys in bits.
                                             Valid values are multiples of 1024 from 2048 to 8192.
@@ -160,15 +160,15 @@ spec:
                         x-kubernetes-list-type: map
                       defaults:
                         description: |-
-                          defaults specifies the default certificate configuration
-                          for all certificates unless overridden by category or specific
-                          certificate configuration.
-                          If not specified, uses platform defaults (typically RSA 2048).
+                          defaults specifies the default certificate configuration that applies
+                          to all certificates unless overridden by a categoryOverrides entry.
                         minProperties: 1
                         properties:
                           key:
-                            description: key specifies the cryptographic parameters
-                              for the certificate's key pair.
+                            description: |-
+                              key specifies the cryptographic parameters for the certificate's key pair.
+                              Currently this is the only configurable parameter. When omitted in a
+                              categoryOverrides entry, the key configuration from defaults is used.
                             properties:
                               algorithm:
                                 description: |-
@@ -201,7 +201,6 @@ spec:
                                   Required when algorithm is RSA, and forbidden otherwise.
                                 properties:
                                   keySize:
-                                    default: 2048
                                     description: |-
                                       keySize specifies the size of RSA keys in bits.
                                       Valid values are multiples of 1024 from 2048 to 8192.
@@ -226,7 +225,13 @@ spec:
                               rule: 'has(self.algorithm) && self.algorithm == ''ECDSA''
                                 ?  has(self.ecdsa) : !has(self.ecdsa)'
                         type: object
+                    required:
+                    - defaults
                     type: object
+                    x-kubernetes-validations:
+                    - fieldPath: defaults.key
+                      message: the default key algorithm configuration is required
+                      rule: has(self.defaults.key)
                   mode:
                     description: |-
                       mode determines how PKI configuration is managed.

@@ -1375,8 +1375,6 @@ spec:
                         name:
                           description: |-
                             name is a unique identifier for this Alertmanager configuration entry.
-                            This field is used as the map key for server-side apply, allowing multiple
-                            controllers (e.g., ACM, cluster admins) to independently manage their own entries.
                             The name must be a valid DNS subdomain (RFC 1123): lowercase alphanumeric characters,
                             hyphens, or periods, and must start and end with an alphanumeric character.
                             Minimum length is 1 character (empty string is invalid).
@@ -1395,17 +1393,20 @@ spec:
                             For example, if your Alertmanager is behind a reverse proxy at "/alertmanager/",
                             set this to "/alertmanager" so requests go to "/alertmanager/api/v1/alerts" instead of "/api/v1/alerts".
                             This is commonly needed when Alertmanager is deployed behind ingress controllers or load balancers.
-                            Must start with "/" and not end with "/" (unless it is the root path "/").
+                            When no prefix is needed, omit this field; do not set it to "/" as that would produce paths with double slashes (e.g. "//api/v1/alerts").
+                            Must start with "/", must not end with "/", and must not be exactly "/".
                             Must not contain query strings ("?") or fragments ("#").
                           maxLength: 255
-                          minLength: 1
+                          minLength: 2
                           type: string
                           x-kubernetes-validations:
                           - message: pathPrefix must start with '/'
                             rule: self.startsWith('/')
-                          - message: pathPrefix must not end with '/' (except for
-                              root '/')
-                            rule: '!self.endsWith(''/'') || self == ''/'''
+                          - message: pathPrefix must not end with '/'
+                            rule: '!self.endsWith(''/'')'
+                          - message: pathPrefix must not be '/' (would produce double
+                              slashes in request path); omit for no prefix
+                            rule: self != '/'
                           - message: pathPrefix must not contain '?' or '#'
                             rule: '!self.contains(''?'') && !self.contains(''#'')'
                         scheme:
@@ -1749,14 +1750,96 @@ spec:
                       properties:
                         authorization:
                           description: |-
-                            authorization defines the authorization settings for remote write storage.
+                            authorization defines the authorization method for the remote write endpoint.
                             When omitted, no authorization is performed.
+                            When set, type must be one of BearerToken, BearerTokenFile, BasicAuth, OAuth2, or SigV4, and the corresponding nested config must be set.
                           properties:
-                            credentials:
+                            basicAuth:
                               description: |-
-                                credentials defines the secret reference containing the authorization credentials.
+                                basicAuth defines HTTP basic authentication credentials.
+                                Required when type is "BasicAuth".
+                              properties:
+                                password:
+                                  description: |-
+                                    password defines the secret reference containing the password for basic authentication.
+                                    The secret must exist in the openshift-monitoring namespace.
+                                  properties:
+                                    key:
+                                      description: |-
+                                        key is the key of the secret to select from.
+                                        Must consist of alphanumeric characters, '-', '_', or '.'.
+                                        Must be between 1 and 253 characters in length.
+                                      maxLength: 253
+                                      minLength: 1
+                                      type: string
+                                      x-kubernetes-validations:
+                                      - message: must contain only alphanumeric characters,
+                                          '-', '_', or '.'
+                                        rule: self.matches('^[a-zA-Z0-9._-]+$')
+                                    name:
+                                      description: |-
+                                        name is the name of the secret in the `openshift-monitoring` namespace to select from.
+                                        Must be a valid Kubernetes secret name (lowercase alphanumeric, '-' or '.', start/end with alphanumeric).
+                                        Must be between 1 and 253 characters in length.
+                                      maxLength: 253
+                                      minLength: 1
+                                      type: string
+                                      x-kubernetes-validations:
+                                      - message: must be a valid secret name (lowercase
+                                          alphanumeric characters, '-' or '.', start
+                                          and end with alphanumeric)
+                                        rule: '!format.dns1123Subdomain().validate(self).hasValue()'
+                                  required:
+                                  - key
+                                  - name
+                                  type: object
+                                  x-kubernetes-map-type: atomic
+                                username:
+                                  description: |-
+                                    username defines the secret reference containing the username for basic authentication.
+                                    The secret must exist in the openshift-monitoring namespace.
+                                  properties:
+                                    key:
+                                      description: |-
+                                        key is the key of the secret to select from.
+                                        Must consist of alphanumeric characters, '-', '_', or '.'.
+                                        Must be between 1 and 253 characters in length.
+                                      maxLength: 253
+                                      minLength: 1
+                                      type: string
+                                      x-kubernetes-validations:
+                                      - message: must contain only alphanumeric characters,
+                                          '-', '_', or '.'
+                                        rule: self.matches('^[a-zA-Z0-9._-]+$')
+                                    name:
+                                      description: |-
+                                        name is the name of the secret in the `openshift-monitoring` namespace to select from.
+                                        Must be a valid Kubernetes secret name (lowercase alphanumeric, '-' or '.', start/end with alphanumeric).
+                                        Must be between 1 and 253 characters in length.
+                                      maxLength: 253
+                                      minLength: 1
+                                      type: string
+                                      x-kubernetes-validations:
+                                      - message: must be a valid secret name (lowercase
+                                          alphanumeric characters, '-' or '.', start
+                                          and end with alphanumeric)
+                                        rule: '!format.dns1123Subdomain().validate(self).hasValue()'
+                                  required:
+                                  - key
+                                  - name
+                                  type: object
+                                  x-kubernetes-map-type: atomic
+                              required:
+                              - password
+                              - username
+                              type: object
+                            bearerToken:
+                              description: |-
+                                bearerToken defines the secret reference containing the bearer token.
+                                bearerToken is deprecated: this will be removed in a future release.
+                                *Warning: this field shouldn't be used because the token value appears
+                                in clear-text. Prefer using `authorization`.*
                                 Required when type is "BearerToken".
-                                The secret must exist in the openshift-monitoring namespace.
                               properties:
                                 key:
                                   description: |-
@@ -1788,109 +1871,293 @@ spec:
                               - name
                               type: object
                               x-kubernetes-map-type: atomic
-                            type:
+                            bearerTokenFile:
                               description: |-
-                                type specifies the authorization type to use.
-                                Valid value is "BearerToken" (bearer token authentication).
-                                When set to BearerToken, the credentials field must be specified.
+                                bearerTokenFile is the path to a file containing the bearer token (e.g. service account token).
+                                Required when type is "BearerTokenFile". In practice only the service account token path can be used.
+                                Must be between 1 and 1024 characters.
+                              maxLength: 1024
+                              minLength: 1
+                              type: string
+                            credentials:
+                              description: credentials defines a key of a Secret in
+                                the namespace that contains the credentials for authentication.
+                              properties:
+                                key:
+                                  description: The key of the secret to select from.  Must
+                                    be a valid secret key.
+                                  type: string
+                                name:
+                                  default: ""
+                                  description: |-
+                                    Name of the referent.
+                                    This field is effectively required, but due to backwards compatibility is
+                                    allowed to be empty. Instances of this type with an empty value here are
+                                    almost certainly wrong.
+                                    More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names
+                                  type: string
+                                optional:
+                                  description: Specify whether the Secret or its key
+                                    must be defined
+                                  type: boolean
+                              required:
+                              - key
+                              type: object
+                              x-kubernetes-map-type: atomic
+                            oauth2:
+                              description: |-
+                                oauth2 defines OAuth2 client credentials authentication.
+                                Required when type is "OAuth2".
+                              properties:
+                                clientId:
+                                  description: |-
+                                    clientId defines the secret reference containing the OAuth2 client ID.
+                                    The secret must exist in the openshift-monitoring namespace.
+                                  properties:
+                                    key:
+                                      description: |-
+                                        key is the key of the secret to select from.
+                                        Must consist of alphanumeric characters, '-', '_', or '.'.
+                                        Must be between 1 and 253 characters in length.
+                                      maxLength: 253
+                                      minLength: 1
+                                      type: string
+                                      x-kubernetes-validations:
+                                      - message: must contain only alphanumeric characters,
+                                          '-', '_', or '.'
+                                        rule: self.matches('^[a-zA-Z0-9._-]+$')
+                                    name:
+                                      description: |-
+                                        name is the name of the secret in the `openshift-monitoring` namespace to select from.
+                                        Must be a valid Kubernetes secret name (lowercase alphanumeric, '-' or '.', start/end with alphanumeric).
+                                        Must be between 1 and 253 characters in length.
+                                      maxLength: 253
+                                      minLength: 1
+                                      type: string
+                                      x-kubernetes-validations:
+                                      - message: must be a valid secret name (lowercase
+                                          alphanumeric characters, '-' or '.', start
+                                          and end with alphanumeric)
+                                        rule: '!format.dns1123Subdomain().validate(self).hasValue()'
+                                  required:
+                                  - key
+                                  - name
+                                  type: object
+                                  x-kubernetes-map-type: atomic
+                                clientSecret:
+                                  description: |-
+                                    clientSecret defines the secret reference containing the OAuth2 client secret.
+                                    The secret must exist in the openshift-monitoring namespace.
+                                  properties:
+                                    key:
+                                      description: |-
+                                        key is the key of the secret to select from.
+                                        Must consist of alphanumeric characters, '-', '_', or '.'.
+                                        Must be between 1 and 253 characters in length.
+                                      maxLength: 253
+                                      minLength: 1
+                                      type: string
+                                      x-kubernetes-validations:
+                                      - message: must contain only alphanumeric characters,
+                                          '-', '_', or '.'
+                                        rule: self.matches('^[a-zA-Z0-9._-]+$')
+                                    name:
+                                      description: |-
+                                        name is the name of the secret in the `openshift-monitoring` namespace to select from.
+                                        Must be a valid Kubernetes secret name (lowercase alphanumeric, '-' or '.', start/end with alphanumeric).
+                                        Must be between 1 and 253 characters in length.
+                                      maxLength: 253
+                                      minLength: 1
+                                      type: string
+                                      x-kubernetes-validations:
+                                      - message: must be a valid secret name (lowercase
+                                          alphanumeric characters, '-' or '.', start
+                                          and end with alphanumeric)
+                                        rule: '!format.dns1123Subdomain().validate(self).hasValue()'
+                                  required:
+                                  - key
+                                  - name
+                                  type: object
+                                  x-kubernetes-map-type: atomic
+                                endpointParams:
+                                  additionalProperties:
+                                    type: string
+                                  description: |-
+                                    endpointParams defines additional parameters to append to the token URL.
+                                    When omitted, no additional parameters are sent.
+                                    Maximum of 20 parameters can be specified.
+                                    Each parameter name must be between 1 and 256 characters, and each parameter value must be between 0 and 4096 characters.
+                                  maxProperties: 20
+                                  minProperties: 0
+                                  type: object
+                                scopes:
+                                  description: |-
+                                    scopes is a list of OAuth2 scopes to request.
+                                    When omitted, no scopes are requested.
+                                    Maximum of 20 scopes can be specified.
+                                    Each scope must be between 1 and 256 characters.
+                                  items:
+                                    maxLength: 256
+                                    minLength: 1
+                                    type: string
+                                  maxItems: 20
+                                  minItems: 0
+                                  type: array
+                                  x-kubernetes-list-type: atomic
+                                tokenUrl:
+                                  description: |-
+                                    tokenUrl is the URL to fetch the token from.
+                                    Must be a valid URL with http or https scheme.
+                                    Must be between 1 and 2048 characters in length.
+                                  maxLength: 2048
+                                  minLength: 1
+                                  type: string
+                                  x-kubernetes-validations:
+                                  - message: must be a valid URL with http or https
+                                      scheme
+                                    rule: isURL(self) && (url(self).getScheme() ==
+                                      'http' || url(self).getScheme() == 'https')
+                              required:
+                              - clientId
+                              - clientSecret
+                              - tokenUrl
+                              type: object
+                            sigv4:
+                              description: |-
+                                sigv4 defines AWS Signature Version 4 authentication.
+                                Required when type is "SigV4".
+                              minProperties: 0
+                              properties:
+                                accessKey:
+                                  description: |-
+                                    accessKey defines the secret reference containing the AWS access key ID.
+                                    The secret must exist in the openshift-monitoring namespace.
+                                    When omitted, the access key is derived from the environment or instance metadata.
+                                  properties:
+                                    key:
+                                      description: |-
+                                        key is the key of the secret to select from.
+                                        Must consist of alphanumeric characters, '-', '_', or '.'.
+                                        Must be between 1 and 253 characters in length.
+                                      maxLength: 253
+                                      minLength: 1
+                                      type: string
+                                      x-kubernetes-validations:
+                                      - message: must contain only alphanumeric characters,
+                                          '-', '_', or '.'
+                                        rule: self.matches('^[a-zA-Z0-9._-]+$')
+                                    name:
+                                      description: |-
+                                        name is the name of the secret in the `openshift-monitoring` namespace to select from.
+                                        Must be a valid Kubernetes secret name (lowercase alphanumeric, '-' or '.', start/end with alphanumeric).
+                                        Must be between 1 and 253 characters in length.
+                                      maxLength: 253
+                                      minLength: 1
+                                      type: string
+                                      x-kubernetes-validations:
+                                      - message: must be a valid secret name (lowercase
+                                          alphanumeric characters, '-' or '.', start
+                                          and end with alphanumeric)
+                                        rule: '!format.dns1123Subdomain().validate(self).hasValue()'
+                                  required:
+                                  - key
+                                  - name
+                                  type: object
+                                  x-kubernetes-map-type: atomic
+                                profile:
+                                  description: |-
+                                    profile is the named AWS profile used to authenticate.
+                                    When omitted, the default profile is used.
+                                    Must be between 1 and 128 characters.
+                                  maxLength: 128
+                                  minLength: 1
+                                  type: string
+                                region:
+                                  description: |-
+                                    region is the AWS region.
+                                    When omitted, the region is derived from the environment or instance metadata.
+                                    Must be between 1 and 128 characters.
+                                  maxLength: 128
+                                  minLength: 1
+                                  type: string
+                                roleArn:
+                                  description: |-
+                                    roleArn is the AWS Role ARN, an alternative to using AWS API keys.
+                                    When omitted, API keys are used for authentication.
+                                    Must be a valid AWS ARN format (e.g., "arn:aws:iam::123456789012:role/MyRole").
+                                    Must be between 1 and 512 characters.
+                                  maxLength: 512
+                                  minLength: 1
+                                  type: string
+                                  x-kubernetes-validations:
+                                  - message: must be a valid AWS IAM role ARN (e.g.,
+                                      arn:aws:iam::123456789012:role/MyRole)
+                                    rule: self.startsWith('arn:aws') && self.matches('^arn:aws(-[a-z]+)?:iam::[0-9]{12}:role/.+$')
+                                secretKey:
+                                  description: |-
+                                    secretKey defines the secret reference containing the AWS secret access key.
+                                    The secret must exist in the openshift-monitoring namespace.
+                                    When omitted, the secret key is derived from the environment or instance metadata.
+                                  properties:
+                                    key:
+                                      description: |-
+                                        key is the key of the secret to select from.
+                                        Must consist of alphanumeric characters, '-', '_', or '.'.
+                                        Must be between 1 and 253 characters in length.
+                                      maxLength: 253
+                                      minLength: 1
+                                      type: string
+                                      x-kubernetes-validations:
+                                      - message: must contain only alphanumeric characters,
+                                          '-', '_', or '.'
+                                        rule: self.matches('^[a-zA-Z0-9._-]+$')
+                                    name:
+                                      description: |-
+                                        name is the name of the secret in the `openshift-monitoring` namespace to select from.
+                                        Must be a valid Kubernetes secret name (lowercase alphanumeric, '-' or '.', start/end with alphanumeric).
+                                        Must be between 1 and 253 characters in length.
+                                      maxLength: 253
+                                      minLength: 1
+                                      type: string
+                                      x-kubernetes-validations:
+                                      - message: must be a valid secret name (lowercase
+                                          alphanumeric characters, '-' or '.', start
+                                          and end with alphanumeric)
+                                        rule: '!format.dns1123Subdomain().validate(self).hasValue()'
+                                  required:
+                                  - key
+                                  - name
+                                  type: object
+                                  x-kubernetes-map-type: atomic
+                              type: object
+                            type:
+                              description: type specifies the authorization method
+                                to use.
                               enum:
                               - BearerToken
+                              - BearerTokenFile
+                              - BasicAuth
+                              - OAuth2
+                              - SigV4
                               type: string
                           required:
                           - type
                           type: object
                           x-kubernetes-validations:
-                          - message: credentials is required when type is BearerToken
-                            rule: 'has(self.type) && self.type == ''BearerToken''
-                              ? has(self.credentials) : !has(self.credentials)'
-                        basicAuth:
-                          description: |-
-                            basicAuth defines basic authentication settings for the remote write endpoint URL.
-                            When omitted, no basic authentication is performed.
-                          properties:
-                            password:
-                              description: |-
-                                password defines the secret reference containing the password for basic authentication.
-                                The secret must exist in the openshift-monitoring namespace.
-                              properties:
-                                key:
-                                  description: |-
-                                    key is the key of the secret to select from.
-                                    Must consist of alphanumeric characters, '-', '_', or '.'.
-                                    Must be between 1 and 253 characters in length.
-                                  maxLength: 253
-                                  minLength: 1
-                                  type: string
-                                  x-kubernetes-validations:
-                                  - message: must contain only alphanumeric characters,
-                                      '-', '_', or '.'
-                                    rule: self.matches('^[a-zA-Z0-9._-]+$')
-                                name:
-                                  description: |-
-                                    name is the name of the secret in the `openshift-monitoring` namespace to select from.
-                                    Must be a valid Kubernetes secret name (lowercase alphanumeric, '-' or '.', start/end with alphanumeric).
-                                    Must be between 1 and 253 characters in length.
-                                  maxLength: 253
-                                  minLength: 1
-                                  type: string
-                                  x-kubernetes-validations:
-                                  - message: must be a valid secret name (lowercase
-                                      alphanumeric characters, '-' or '.', start and
-                                      end with alphanumeric)
-                                    rule: '!format.dns1123Subdomain().validate(self).hasValue()'
-                              required:
-                              - key
-                              - name
-                              type: object
-                              x-kubernetes-map-type: atomic
-                            username:
-                              description: |-
-                                username defines the secret reference containing the username for basic authentication.
-                                The secret must exist in the openshift-monitoring namespace.
-                              properties:
-                                key:
-                                  description: |-
-                                    key is the key of the secret to select from.
-                                    Must consist of alphanumeric characters, '-', '_', or '.'.
-                                    Must be between 1 and 253 characters in length.
-                                  maxLength: 253
-                                  minLength: 1
-                                  type: string
-                                  x-kubernetes-validations:
-                                  - message: must contain only alphanumeric characters,
-                                      '-', '_', or '.'
-                                    rule: self.matches('^[a-zA-Z0-9._-]+$')
-                                name:
-                                  description: |-
-                                    name is the name of the secret in the `openshift-monitoring` namespace to select from.
-                                    Must be a valid Kubernetes secret name (lowercase alphanumeric, '-' or '.', start/end with alphanumeric).
-                                    Must be between 1 and 253 characters in length.
-                                  maxLength: 253
-                                  minLength: 1
-                                  type: string
-                                  x-kubernetes-validations:
-                                  - message: must be a valid secret name (lowercase
-                                      alphanumeric characters, '-' or '.', start and
-                                      end with alphanumeric)
-                                    rule: '!format.dns1123Subdomain().validate(self).hasValue()'
-                              required:
-                              - key
-                              - name
-                              type: object
-                              x-kubernetes-map-type: atomic
-                          required:
-                          - password
-                          - username
-                          type: object
-                        bearerTokenFile:
-                          description: |-
-                            bearerTokenFile defines the file that contains the bearer token for the remote write endpoint.
-                            However, because you cannot mount secrets in a pod, in practice you can only reference the token of the service account.
-                            When omitted, no bearer token file is used.
-                            Must be a valid file path.
-                          maxLength: 1024
-                          minLength: 1
-                          type: string
+                          - message: bearerToken is required when type is BearerToken
+                            rule: self.type != 'BearerToken' || has(self.bearerToken)
+                          - message: bearerTokenFile is required and must be non-empty
+                              when type is BearerTokenFile
+                            rule: self.type != 'BearerTokenFile' || (has(self.bearerTokenFile)
+                              && size(self.bearerTokenFile) > 0)
+                          - message: basicAuth is required when type is BasicAuth
+                            rule: self.type != 'BasicAuth' || has(self.basicAuth)
+                          - message: oauth2 is required when type is OAuth2
+                            rule: self.type != 'OAuth2' || has(self.oauth2)
+                          - message: sigv4 is required when type is SigV4
+                            rule: self.type != 'SigV4' || has(self.sigv4)
+                          - message: authorization is required when type is Authorization
+                            rule: self.type != 'Authorization' || has(self.authorization)
                         exemplarsMode:
                           description: |-
                             exemplarsMode controls whether exemplars are sent via remote write.
@@ -1907,7 +2174,11 @@ spec:
                             type: string
                           description: |-
                             headers specifies the custom HTTP headers to be sent along with each remote write request.
-                            Headers set by Prometheus cannot be overwritten.
+                            Sending custom headers makes the configuration of a proxy in between optional and helps the
+                            receiver recognize the given source better.
+                            Clients MAY allow users to send custom HTTP headers; they MUST NOT allow users to configure
+                            them in such a way as to send reserved headers. Headers set by Prometheus cannot be overwritten.
+                            For more info see https://github.com/prometheus/prometheus/pull/8416.
                             When omitted, no custom headers are sent.
                             Maximum of 50 headers can be specified.
                             Each header name must be between 1 and 256 characters, and each header value must be between 0 and 4096 characters.
@@ -1917,10 +2188,7 @@ spec:
                         metadataConfig:
                           description: |-
                             metadataConfig configures the sending of series metadata to remote storage
-                            if the prometheus.WriteRequest message was chosen. When
-                            io.prometheus.write.v2.Request is used, metadata is always sent.
                             When omitted, no metadata is sent.
-                            Metadata configuration is subject to change at any point or be removed in future releases.
                           minProperties: 0
                           properties:
                             mode:
@@ -1959,123 +2227,6 @@ spec:
                           - message: must contain only alphanumeric characters, hyphens,
                               and underscores
                             rule: self.matches('^[a-zA-Z0-9_-]+$')
-                        oauth2:
-                          description: |-
-                            oauth2 defines OAuth2 authentication settings for the remote write endpoint.
-                            When omitted, no OAuth2 authentication is performed.
-                          properties:
-                            clientId:
-                              description: |-
-                                clientId defines the secret reference containing the OAuth2 client ID.
-                                The secret must exist in the openshift-monitoring namespace.
-                              properties:
-                                key:
-                                  description: |-
-                                    key is the key of the secret to select from.
-                                    Must consist of alphanumeric characters, '-', '_', or '.'.
-                                    Must be between 1 and 253 characters in length.
-                                  maxLength: 253
-                                  minLength: 1
-                                  type: string
-                                  x-kubernetes-validations:
-                                  - message: must contain only alphanumeric characters,
-                                      '-', '_', or '.'
-                                    rule: self.matches('^[a-zA-Z0-9._-]+$')
-                                name:
-                                  description: |-
-                                    name is the name of the secret in the `openshift-monitoring` namespace to select from.
-                                    Must be a valid Kubernetes secret name (lowercase alphanumeric, '-' or '.', start/end with alphanumeric).
-                                    Must be between 1 and 253 characters in length.
-                                  maxLength: 253
-                                  minLength: 1
-                                  type: string
-                                  x-kubernetes-validations:
-                                  - message: must be a valid secret name (lowercase
-                                      alphanumeric characters, '-' or '.', start and
-                                      end with alphanumeric)
-                                    rule: '!format.dns1123Subdomain().validate(self).hasValue()'
-                              required:
-                              - key
-                              - name
-                              type: object
-                              x-kubernetes-map-type: atomic
-                            clientSecret:
-                              description: |-
-                                clientSecret defines the secret reference containing the OAuth2 client secret.
-                                The secret must exist in the openshift-monitoring namespace.
-                              properties:
-                                key:
-                                  description: |-
-                                    key is the key of the secret to select from.
-                                    Must consist of alphanumeric characters, '-', '_', or '.'.
-                                    Must be between 1 and 253 characters in length.
-                                  maxLength: 253
-                                  minLength: 1
-                                  type: string
-                                  x-kubernetes-validations:
-                                  - message: must contain only alphanumeric characters,
-                                      '-', '_', or '.'
-                                    rule: self.matches('^[a-zA-Z0-9._-]+$')
-                                name:
-                                  description: |-
-                                    name is the name of the secret in the `openshift-monitoring` namespace to select from.
-                                    Must be a valid Kubernetes secret name (lowercase alphanumeric, '-' or '.', start/end with alphanumeric).
-                                    Must be between 1 and 253 characters in length.
-                                  maxLength: 253
-                                  minLength: 1
-                                  type: string
-                                  x-kubernetes-validations:
-                                  - message: must be a valid secret name (lowercase
-                                      alphanumeric characters, '-' or '.', start and
-                                      end with alphanumeric)
-                                    rule: '!format.dns1123Subdomain().validate(self).hasValue()'
-                              required:
-                              - key
-                              - name
-                              type: object
-                              x-kubernetes-map-type: atomic
-                            endpointParams:
-                              additionalProperties:
-                                type: string
-                              description: |-
-                                endpointParams defines additional parameters to append to the token URL.
-                                When omitted, no additional parameters are sent.
-                                Maximum of 20 parameters can be specified.
-                                Each parameter name must be between 1 and 256 characters, and each parameter value must be between 0 and 4096 characters.
-                              maxProperties: 20
-                              minProperties: 0
-                              type: object
-                            scopes:
-                              description: |-
-                                scopes is a list of OAuth2 scopes to request.
-                                When omitted, no scopes are requested.
-                                Maximum of 20 scopes can be specified.
-                                Each scope must be between 1 and 256 characters.
-                              items:
-                                maxLength: 256
-                                minLength: 1
-                                type: string
-                              maxItems: 20
-                              minItems: 0
-                              type: array
-                              x-kubernetes-list-type: atomic
-                            tokenUrl:
-                              description: |-
-                                tokenUrl is the URL to fetch the token from.
-                                Must be a valid URL with http or https scheme.
-                                Must be between 1 and 2048 characters in length.
-                              maxLength: 2048
-                              minLength: 1
-                              type: string
-                              x-kubernetes-validations:
-                              - message: must be a valid URL with http or https scheme
-                                rule: isURL(self) && (url(self).getScheme() == 'http'
-                                  || url(self).getScheme() == 'https')
-                          required:
-                          - clientId
-                          - clientSecret
-                          - tokenUrl
-                          type: object
                         proxyUrl:
                           description: |-
                             proxyUrl defines an optional proxy URL.
@@ -2192,113 +2343,6 @@ spec:
                           maximum: 600
                           minimum: 1
                           type: integer
-                        sigv4:
-                          description: |-
-                            sigv4 defines AWS Signature Version 4 authentication settings.
-                            When omitted, no AWS SigV4 authentication is performed.
-                          minProperties: 0
-                          properties:
-                            accessKey:
-                              description: |-
-                                accessKey defines the secret reference containing the AWS access key ID.
-                                The secret must exist in the openshift-monitoring namespace.
-                                When omitted, the access key is derived from the environment or instance metadata.
-                              properties:
-                                key:
-                                  description: |-
-                                    key is the key of the secret to select from.
-                                    Must consist of alphanumeric characters, '-', '_', or '.'.
-                                    Must be between 1 and 253 characters in length.
-                                  maxLength: 253
-                                  minLength: 1
-                                  type: string
-                                  x-kubernetes-validations:
-                                  - message: must contain only alphanumeric characters,
-                                      '-', '_', or '.'
-                                    rule: self.matches('^[a-zA-Z0-9._-]+$')
-                                name:
-                                  description: |-
-                                    name is the name of the secret in the `openshift-monitoring` namespace to select from.
-                                    Must be a valid Kubernetes secret name (lowercase alphanumeric, '-' or '.', start/end with alphanumeric).
-                                    Must be between 1 and 253 characters in length.
-                                  maxLength: 253
-                                  minLength: 1
-                                  type: string
-                                  x-kubernetes-validations:
-                                  - message: must be a valid secret name (lowercase
-                                      alphanumeric characters, '-' or '.', start and
-                                      end with alphanumeric)
-                                    rule: '!format.dns1123Subdomain().validate(self).hasValue()'
-                              required:
-                              - key
-                              - name
-                              type: object
-                              x-kubernetes-map-type: atomic
-                            profile:
-                              description: |-
-                                profile is the named AWS profile used to authenticate.
-                                When omitted, the default profile is used.
-                                Must be between 1 and 128 characters.
-                              maxLength: 128
-                              minLength: 1
-                              type: string
-                            region:
-                              description: |-
-                                region is the AWS region.
-                                When omitted, the region is derived from the environment or instance metadata.
-                                Must be between 1 and 128 characters.
-                              maxLength: 128
-                              minLength: 1
-                              type: string
-                            roleArn:
-                              description: |-
-                                roleArn is the AWS Role ARN, an alternative to using AWS API keys.
-                                When omitted, API keys are used for authentication.
-                                Must be a valid AWS ARN format (e.g., "arn:aws:iam::123456789012:role/MyRole").
-                                Must be between 1 and 512 characters.
-                              maxLength: 512
-                              minLength: 1
-                              type: string
-                              x-kubernetes-validations:
-                              - message: must be a valid AWS IAM role ARN (e.g., arn:aws:iam::123456789012:role/MyRole)
-                                rule: self.startsWith('arn:aws') && self.matches('^arn:aws(-[a-z]+)?:iam::[0-9]{12}:role/.+$')
-                            secretKey:
-                              description: |-
-                                secretKey defines the secret reference containing the AWS secret access key.
-                                The secret must exist in the openshift-monitoring namespace.
-                                When omitted, the secret key is derived from the environment or instance metadata.
-                              properties:
-                                key:
-                                  description: |-
-                                    key is the key of the secret to select from.
-                                    Must consist of alphanumeric characters, '-', '_', or '.'.
-                                    Must be between 1 and 253 characters in length.
-                                  maxLength: 253
-                                  minLength: 1
-                                  type: string
-                                  x-kubernetes-validations:
-                                  - message: must contain only alphanumeric characters,
-                                      '-', '_', or '.'
-                                    rule: self.matches('^[a-zA-Z0-9._-]+$')
-                                name:
-                                  description: |-
-                                    name is the name of the secret in the `openshift-monitoring` namespace to select from.
-                                    Must be a valid Kubernetes secret name (lowercase alphanumeric, '-' or '.', start/end with alphanumeric).
-                                    Must be between 1 and 253 characters in length.
-                                  maxLength: 253
-                                  minLength: 1
-                                  type: string
-                                  x-kubernetes-validations:
-                                  - message: must be a valid secret name (lowercase
-                                      alphanumeric characters, '-' or '.', start and
-                                      end with alphanumeric)
-                                    rule: '!format.dns1123Subdomain().validate(self).hasValue()'
-                              required:
-                              - key
-                              - name
-                              type: object
-                              x-kubernetes-map-type: atomic
-                          type: object
                         tlsConfig:
                           description: |-
                             tlsConfig defines TLS authentication settings for the remote write endpoint.
@@ -2444,16 +2488,19 @@ spec:
                           description: |-
                             url is the URL of the remote write endpoint.
                             Must be a valid URL with http or https scheme and a non-empty hostname.
+                            Query parameters, fragments, and user information (e.g. user:password@host) are not allowed.
                             Empty string is invalid. Must be between 1 and 2048 characters in length.
                           maxLength: 2048
                           minLength: 1
                           type: string
                           x-kubernetes-validations:
-                          - message: must be a valid URL with http or https scheme
-                              and a non-empty hostname
+                          - message: must be a valid URL with http or https scheme,
+                              non-empty hostname, and no query parameters, fragments,
+                              or user information
                             rule: isURL(self) && (url(self).getScheme() == 'http'
                               || url(self).getScheme() == 'https') && size(url(self).getHostname())
-                              > 0
+                              > 0 && url(self).getQuery().size() == 0 && !self.matches('.*#.*')
+                              && !self.matches('.*@.*')
                         writeRelabelConfigs:
                           description: |-
                             writeRelabelConfigs is a list of relabeling rules to apply before sending data to the remote endpoint.
@@ -2492,7 +2539,7 @@ spec:
                                       modulus:
                                         description: |-
                                           modulus is the divisor applied to the hash of the concatenated source label values (target = hash % modulus).
-                                          When omitted, the platform chooses a reasonable default, which may change over time.
+                                          Required when using the HashMod action so the intended behavior is explicit.
                                           Must be at least 1.
                                         format: int64
                                         minimum: 1
@@ -2505,6 +2552,7 @@ spec:
                                         minLength: 1
                                         type: string
                                     required:
+                                    - modulus
                                     - targetLabel
                                     type: object
                                   keepEqual:
@@ -2563,10 +2611,9 @@ spec:
                                       replacement:
                                         description: |-
                                           replacement is the value written to target_label when regex matches; match group references (${1}, ${2}, ...) are substituted.
-                                          When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time.
-                                          The default value is "$1" (the first capture group).
-                                          Setting to an empty string ("") explicitly clears the target label value.
-                                          Must be at most 255 characters in length.
+                                          Required when using the Replace action so the intended behavior is explicit and the platform does not need to apply defaults.
+                                          Use "$1" for the first capture group, "$2" for the second, etc. Use an empty string ("") to explicitly clear the target label value.
+                                          Must be between 0 and 255 characters in length.
                                         maxLength: 255
                                         minLength: 0
                                         type: string
@@ -2578,23 +2625,35 @@ spec:
                                         minLength: 1
                                         type: string
                                     required:
+                                    - replacement
                                     - targetLabel
                                     type: object
                                   type:
                                     description: |-
                                       type specifies the action to perform on the matched labels.
-                                      Valid actions are:
-                                        - Replace: Match regex against the concatenated source_labels; set target_label to replacement, with match group references (${1}, ${2}, ...) substituted. If regex does not match, no replacement takes place.
-                                        - Lowercase: Map the concatenated source_labels to their lower case. Requires Prometheus >= v2.36.0.
-                                        - Uppercase: Map the concatenated source_labels to their upper case. Requires Prometheus >= v2.36.0.
-                                        - Keep: Drop targets for which regex does not match the concatenated source_labels.
-                                        - Drop: Drop targets for which regex matches the concatenated source_labels.
-                                        - KeepEqual: Drop targets for which the concatenated source_labels do not match target_label. Requires Prometheus >= v2.41.0.
-                                        - DropEqual: Drop targets for which the concatenated source_labels do match target_label. Requires Prometheus >= v2.41.0.
-                                        - HashMod: Set target_label to the modulus of a hash of the concatenated source_labels.
-                                        - LabelMap: Match regex against all source label names (not just source_labels); copy matching label values to new names given by replacement with ${1}, ${2}, ... substituted.
-                                        - LabelDrop: Match regex against all label names; any label that matches is removed.
-                                        - LabelKeep: Match regex against all label names; any label that does not match is removed.
+                                      Allowed values are Replace, Lowercase, Uppercase, Keep, Drop, KeepEqual, DropEqual, HashMod, LabelMap, LabelDrop, LabelKeep.
+
+                                      When set to Replace, regex is matched against the concatenated source_labels; target_label is set to replacement with match group references (${1}, ${2}, ...) substituted. If regex does not match, no replacement takes place.
+
+                                      When set to Lowercase, the concatenated source_labels are mapped to their lower case. Requires Prometheus >= v2.36.0.
+
+                                      When set to Uppercase, the concatenated source_labels are mapped to their upper case. Requires Prometheus >= v2.36.0.
+
+                                      When set to Keep, targets for which regex does not match the concatenated source_labels are dropped.
+
+                                      When set to Drop, targets for which regex matches the concatenated source_labels are dropped.
+
+                                      When set to KeepEqual, targets for which the concatenated source_labels do not match target_label are dropped. Requires Prometheus >= v2.41.0.
+
+                                      When set to DropEqual, targets for which the concatenated source_labels do match target_label are dropped. Requires Prometheus >= v2.41.0.
+
+                                      When set to HashMod, target_label is set to the modulus of a hash of the concatenated source_labels.
+
+                                      When set to LabelMap, regex is matched against all source label names (not just source_labels); matching label values are copied to new names given by replacement with ${1}, ${2}, ... substituted.
+
+                                      When set to LabelDrop, regex is matched against all label names; any label that matches is removed.
+
+                                      When set to LabelKeep, regex is matched against all label names; any label that does not match is removed.
                                     enum:
                                     - Replace
                                     - Keep
@@ -2727,6 +2786,12 @@ spec:
                       required:
                       - url
                       type: object
+                      x-kubernetes-validations:
+                      - message: urlAuthorization cannot be set at the same time as
+                          basicAuth or oauth2 in authorization
+                        rule: '!has(self.urlAuthorization) || !has(self.authorization)
+                          || (self.authorization.type != ''BasicAuth'' && self.authorization.type
+                          != ''OAuth2'')'
                     maxItems: 10
                     minItems: 1
                     type: array

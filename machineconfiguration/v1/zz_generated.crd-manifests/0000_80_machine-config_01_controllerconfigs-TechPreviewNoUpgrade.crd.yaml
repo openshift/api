@@ -1548,6 +1548,29 @@ spec:
                                   ingress load balancer.
                                 nullable: true
                                 properties:
+                                  cloudDNSIPs:
+                                    description: |-
+                                      cloudDNSIPs holds the IP addresses of the cloud platform DNS servers.
+                                      These DNS server IP addresses are used when the cluster DNS type is ClusterHosted.
+                                      For AWS, the DNS IPs are typically the VPC's CIDR base address plus 2 (e.g., 10.0.0.2 for VPC 10.0.0.0/16).
+                                      This field is only valid when dnsType is set to ClusterHosted.
+                                      When dnsType is not ClusterHosted, this field must not be set.
+                                      Entries in cloudDNSIPs must be unique.
+                                      A maximum of 16 IP addresses are permitted.
+                                    format: ip
+                                    items:
+                                      description: IP is an IP address (for example,
+                                        "10.0.0.0" or "fd00::").
+                                      maxLength: 39
+                                      minLength: 1
+                                      type: string
+                                      x-kubernetes-validations:
+                                      - message: value must be a valid IP address
+                                        rule: isIP(self)
+                                    maxItems: 16
+                                    minItems: 0
+                                    type: array
+                                    x-kubernetes-list-type: set
                                   clusterHosted:
                                     description: |-
                                       clusterHosted holds the IP addresses of API, API-Int and Ingress Load
@@ -1640,6 +1663,10 @@ spec:
                                     is ClusterHosted
                                   rule: 'has(self.dnsType) && self.dnsType != ''ClusterHosted''
                                     ? !has(self.clusterHosted) : true'
+                                - message: cloudDNSIPs is permitted only when dnsType
+                                    is ClusterHosted
+                                  rule: 'has(self.dnsType) && self.dnsType != ''ClusterHosted''
+                                    ? !has(self.cloudDNSIPs) : true'
                               ipFamily:
                                 default: IPv4
                                 description: |-
@@ -1754,6 +1781,29 @@ spec:
                                   must be provided for the API and internal API load balancers as well as the
                                   ingress load balancer.
                                 properties:
+                                  cloudDNSIPs:
+                                    description: |-
+                                      cloudDNSIPs holds the IP addresses of the cloud platform DNS servers.
+                                      These DNS server IP addresses are used when the cluster DNS type is ClusterHosted.
+                                      For AWS, the DNS IPs are typically the VPC's CIDR base address plus 2 (e.g., 10.0.0.2 for VPC 10.0.0.0/16).
+                                      This field is only valid when dnsType is set to ClusterHosted.
+                                      When dnsType is not ClusterHosted, this field must not be set.
+                                      Entries in cloudDNSIPs must be unique.
+                                      A maximum of 16 IP addresses are permitted.
+                                    format: ip
+                                    items:
+                                      description: IP is an IP address (for example,
+                                        "10.0.0.0" or "fd00::").
+                                      maxLength: 39
+                                      minLength: 1
+                                      type: string
+                                      x-kubernetes-validations:
+                                      - message: value must be a valid IP address
+                                        rule: isIP(self)
+                                    maxItems: 16
+                                    minItems: 0
+                                    type: array
+                                    x-kubernetes-list-type: set
                                   clusterHosted:
                                     description: |-
                                       clusterHosted holds the IP addresses of API, API-Int and Ingress Load
@@ -1846,6 +1896,10 @@ spec:
                                     is ClusterHosted
                                   rule: 'has(self.dnsType) && self.dnsType != ''ClusterHosted''
                                     ? !has(self.clusterHosted) : true'
+                                - message: cloudDNSIPs is permitted only when dnsType
+                                    is ClusterHosted
+                                  rule: 'has(self.dnsType) && self.dnsType != ''ClusterHosted''
+                                    ? !has(self.cloudDNSIPs) : true'
                               cloudName:
                                 description: |-
                                   cloudName is the name of the Azure cloud environment which can be used to configure the Azure SDK
@@ -2135,6 +2189,29 @@ spec:
                                   ingress load balancer.
                                 nullable: true
                                 properties:
+                                  cloudDNSIPs:
+                                    description: |-
+                                      cloudDNSIPs holds the IP addresses of the cloud platform DNS servers.
+                                      These DNS server IP addresses are used when the cluster DNS type is ClusterHosted.
+                                      For AWS, the DNS IPs are typically the VPC's CIDR base address plus 2 (e.g., 10.0.0.2 for VPC 10.0.0.0/16).
+                                      This field is only valid when dnsType is set to ClusterHosted.
+                                      When dnsType is not ClusterHosted, this field must not be set.
+                                      Entries in cloudDNSIPs must be unique.
+                                      A maximum of 16 IP addresses are permitted.
+                                    format: ip
+                                    items:
+                                      description: IP is an IP address (for example,
+                                        "10.0.0.0" or "fd00::").
+                                      maxLength: 39
+                                      minLength: 1
+                                      type: string
+                                      x-kubernetes-validations:
+                                      - message: value must be a valid IP address
+                                        rule: isIP(self)
+                                    maxItems: 16
+                                    minItems: 0
+                                    type: array
+                                    x-kubernetes-list-type: set
                                   clusterHosted:
                                     description: |-
                                       clusterHosted holds the IP addresses of API, API-Int and Ingress Load
@@ -2227,6 +2304,10 @@ spec:
                                     is ClusterHosted
                                   rule: 'has(self.dnsType) && self.dnsType != ''ClusterHosted''
                                     ? !has(self.clusterHosted) : true'
+                                - message: cloudDNSIPs is permitted only when dnsType
+                                    is ClusterHosted
+                                  rule: 'has(self.dnsType) && self.dnsType != ''ClusterHosted''
+                                    ? !has(self.cloudDNSIPs) : true'
                               projectID:
                                 description: resourceGroupName is the Project ID for
                                   new GCP resources created for the cluster.

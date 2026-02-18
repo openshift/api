@@ -764,8 +764,6 @@ const (
 // component communicates with additional Alertmanager instances.
 type AdditionalAlertmanagerConfig struct {
 	// name is a unique identifier for this Alertmanager configuration entry.
-	// This field is used as the map key for server-side apply, allowing multiple
-	// controllers (e.g., ACM, cluster admins) to independently manage their own entries.
 	// The name must be a valid DNS subdomain (RFC 1123): lowercase alphanumeric characters,
 	// hyphens, or periods, and must start and end with an alphanumeric character.
 	// Minimum length is 1 character (empty string is invalid).
@@ -783,12 +781,14 @@ type AdditionalAlertmanagerConfig struct {
 	// For example, if your Alertmanager is behind a reverse proxy at "/alertmanager/",
 	// set this to "/alertmanager" so requests go to "/alertmanager/api/v1/alerts" instead of "/api/v1/alerts".
 	// This is commonly needed when Alertmanager is deployed behind ingress controllers or load balancers.
-	// Must start with "/" and not end with "/" (unless it is the root path "/").
+	// When no prefix is needed, omit this field; do not set it to "/" as that would produce paths with double slashes (e.g. "//api/v1/alerts").
+	// Must start with "/", must not end with "/", and must not be exactly "/".
 	// Must not contain query strings ("?") or fragments ("#").
 	// +kubebuilder:validation:MaxLength=255
-	// +kubebuilder:validation:MinLength=1
+	// +kubebuilder:validation:MinLength=2
 	// +kubebuilder:validation:XValidation:rule="self.startsWith('/')",message="pathPrefix must start with '/'"
-	// +kubebuilder:validation:XValidation:rule="!self.endsWith('/') || self == '/'",message="pathPrefix must not end with '/' (except for root '/')"
+	// +kubebuilder:validation:XValidation:rule="!self.endsWith('/')",message="pathPrefix must not end with '/'"
+	// +kubebuilder:validation:XValidation:rule="self != '/'",message="pathPrefix must not be '/' (would produce double slashes in request path); omit for no prefix"
 	// +kubebuilder:validation:XValidation:rule="!self.contains('?') && !self.contains('#')",message="pathPrefix must not contain '?' or '#'"
 	// +optional
 	PathPrefix string `json:"pathPrefix,omitempty"`
@@ -846,14 +846,16 @@ type Label struct {
 }
 
 // RemoteWriteSpec represents configuration for remote write endpoints.
+// +kubebuilder:validation:XValidation:rule="!has(self.urlAuthorization) || !has(self.authorization) || (self.authorization.type != 'BasicAuth' && self.authorization.type != 'OAuth2')",message="urlAuthorization cannot be set at the same time as basicAuth or oauth2 in authorization"
 type RemoteWriteSpec struct {
 	// url is the URL of the remote write endpoint.
 	// Must be a valid URL with http or https scheme and a non-empty hostname.
+	// Query parameters, fragments, and user information (e.g. user:password@host) are not allowed.
 	// Empty string is invalid. Must be between 1 and 2048 characters in length.
 	// +required
 	// +kubebuilder:validation:MaxLength=2048
 	// +kubebuilder:validation:MinLength=1
-	// +kubebuilder:validation:XValidation:rule="isURL(self) && (url(self).getScheme() == 'http' || url(self).getScheme() == 'https') && size(url(self).getHostname()) > 0",message="must be a valid URL with http or https scheme and a non-empty hostname"
+	// +kubebuilder:validation:XValidation:rule="isURL(self) && (url(self).getScheme() == 'http' || url(self).getScheme() == 'https') && size(url(self).getHostname()) > 0 && url(self).getQuery().size() == 0 && !self.matches('.*#.*') && !self.matches('.*@.*')",message="must be a valid URL with http or https scheme, non-empty hostname, and no query parameters, fragments, or user information"
 	URL string `json:"url,omitempty"`
 	// name is an optional identifier for this remote write configuration.
 	// This name is used in metrics and logging to differentiate remote write queues.
@@ -866,34 +868,17 @@ type RemoteWriteSpec struct {
 	// +kubebuilder:validation:MaxLength=63
 	// +kubebuilder:validation:XValidation:rule="self.matches('^[a-zA-Z0-9_-]+$')",message="must contain only alphanumeric characters, hyphens, and underscores"
 	Name string `json:"name,omitempty"`
-	// writeRelabelConfigs is a list of relabeling rules to apply before sending data to the remote endpoint.
-	// When omitted, no relabeling is performed and all metrics are sent as-is.
-	// Minimum of 1 and maximum of 10 relabeling rules can be specified.
-	// Each rule must have a unique name.
-	// +optional
-	// +kubebuilder:validation:MinItems=1
-	// +kubebuilder:validation:MaxItems=10
-	// +listType=map
-	// +listMapKey=name
-	WriteRelabelConfigs []RelabelConfig `json:"writeRelabelConfigs,omitempty"`
-	// authorization defines the authorization settings for remote write storage.
+	// authorization defines the authorization method for the remote write endpoint.
 	// When omitted, no authorization is performed.
+	// When set, type must be one of BearerToken, BearerTokenFile, BasicAuth, OAuth2, or SigV4, and the corresponding nested config must be set.
 	// +optional
-	Authorization SafeAuthorization `json:"authorization,omitempty,omitzero"`
-	// basicAuth defines basic authentication settings for the remote write endpoint URL.
-	// When omitted, no basic authentication is performed.
-	// +optional
-	BasicAuth BasicAuth `json:"basicAuth,omitempty,omitzero"`
-	// bearerTokenFile defines the file that contains the bearer token for the remote write endpoint.
-	// However, because you cannot mount secrets in a pod, in practice you can only reference the token of the service account.
-	// When omitted, no bearer token file is used.
-	// Must be a valid file path.
-	// +optional
-	// +kubebuilder:validation:MinLength=1
-	// +kubebuilder:validation:MaxLength=1024
-	BearerTokenFile string `json:"bearerTokenFile,omitempty"`
+	AuthorizationConfig RemoteWriteAuthorization `json:"authorization,omitempty,omitzero"`
 	// headers specifies the custom HTTP headers to be sent along with each remote write request.
-	// Headers set by Prometheus cannot be overwritten.
+	// Sending custom headers makes the configuration of a proxy in between optional and helps the
+	// receiver recognize the given source better.
+	// Clients MAY allow users to send custom HTTP headers; they MUST NOT allow users to configure
+	// them in such a way as to send reserved headers. Headers set by Prometheus cannot be overwritten.
+	// For more info see https://github.com/prometheus/prometheus/pull/8416.
 	// When omitted, no custom headers are sent.
 	// Maximum of 50 headers can be specified.
 	// Each header name must be between 1 and 256 characters, and each header value must be between 0 and 4096 characters.
@@ -902,16 +887,9 @@ type RemoteWriteSpec struct {
 	// +kubebuilder:validation:MaxProperties=50
 	Headers map[string]string `json:"headers,omitempty"`
 	// metadataConfig configures the sending of series metadata to remote storage
-	// if the prometheus.WriteRequest message was chosen. When
-	// io.prometheus.write.v2.Request is used, metadata is always sent.
 	// When omitted, no metadata is sent.
-	// Metadata configuration is subject to change at any point or be removed in future releases.
 	// +optional
 	MetadataConfig *MetadataConfig `json:"metadataConfig,omitempty,omitzero"`
-	// oauth2 defines OAuth2 authentication settings for the remote write endpoint.
-	// When omitted, no OAuth2 authentication is performed.
-	// +optional
-	OAuth2 OAuth2 `json:"oauth2,omitempty,omitzero"`
 	// proxyUrl defines an optional proxy URL.
 	// If the cluster-wide proxy is enabled, it replaces the proxyUrl setting.
 	// The cluster-wide proxy supports both HTTP and HTTPS proxies, with HTTPS taking precedence.
@@ -942,32 +920,20 @@ type RemoteWriteSpec struct {
 	// Valid values are "Send" and "DoNotSend".
 	// +optional
 	ExemplarsMode ExemplarsMode `json:"exemplarsMode,omitempty"`
-	// sigv4 defines AWS Signature Version 4 authentication settings.
-	// When omitted, no AWS SigV4 authentication is performed.
-	// +optional
-	Sigv4 *Sigv4 `json:"sigv4,omitempty,omitzero"`
 	// tlsConfig defines TLS authentication settings for the remote write endpoint.
 	// When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time.
 	// +optional
 	TLSConfig TLSConfig `json:"tlsConfig,omitempty,omitzero"`
-}
-
-// SafeAuthorization defines the authorization settings for remote write storage.
-// +kubebuilder:validation:XValidation:rule="has(self.type) && self.type == 'BearerToken' ? has(self.credentials) : !has(self.credentials)",message="credentials is required when type is BearerToken"
-// +union
-type SafeAuthorization struct {
-	// type specifies the authorization type to use.
-	// Valid value is "BearerToken" (bearer token authentication).
-	// When set to BearerToken, the credentials field must be specified.
-	// +unionDiscriminator
-	// +required
-	Type AuthorizationType `json:"type,omitempty"`
-	// credentials defines the secret reference containing the authorization credentials.
-	// Required when type is "BearerToken".
-	// The secret must exist in the openshift-monitoring namespace.
-	// +unionMember
+	// writeRelabelConfigs is a list of relabeling rules to apply before sending data to the remote endpoint.
+	// When omitted, no relabeling is performed and all metrics are sent as-is.
+	// Minimum of 1 and maximum of 10 relabeling rules can be specified.
+	// Each rule must have a unique name.
 	// +optional
-	Credentials SecretKeySelector `json:"credentials,omitempty,omitzero"`
+	// +kubebuilder:validation:MinItems=1
+	// +kubebuilder:validation:MaxItems=10
+	// +listType=map
+	// +listMapKey=name
+	WriteRelabelConfigs []RelabelConfig `json:"writeRelabelConfigs,omitempty"`
 }
 
 // BasicAuth defines basic authentication settings for the remote write endpoint URL.
@@ -980,6 +946,76 @@ type BasicAuth struct {
 	// The secret must exist in the openshift-monitoring namespace.
 	// +required
 	Password SecretKeySelector `json:"password,omitzero,omitempty"`
+}
+
+// RemoteWriteAuthorizationType defines the authorization method for remote write endpoints.
+// +kubebuilder:validation:Enum=BearerToken;BearerTokenFile;BasicAuth;OAuth2;SigV4
+type RemoteWriteAuthorizationType string
+
+const (
+	// RemoteWriteAuthorizationTypeBearerToken indicates bearer token from a secret.
+	RemoteWriteAuthorizationTypeBearerToken RemoteWriteAuthorizationType = "BearerToken"
+	// RemoteWriteAuthorizationTypeBearerTokenFile indicates bearer token from a file path (e.g. service account token).
+	RemoteWriteAuthorizationTypeBearerTokenFile RemoteWriteAuthorizationType = "BearerTokenFile"
+	// RemoteWriteAuthorizationTypeBasicAuth indicates HTTP basic authentication.
+	RemoteWriteAuthorizationTypeBasicAuth RemoteWriteAuthorizationType = "BasicAuth"
+	// RemoteWriteAuthorizationTypeOAuth2 indicates OAuth2 client credentials.
+	RemoteWriteAuthorizationTypeOAuth2 RemoteWriteAuthorizationType = "OAuth2"
+	// RemoteWriteAuthorizationTypeSigV4 indicates AWS Signature Version 4.
+	RemoteWriteAuthorizationTypeSigV4 RemoteWriteAuthorizationType = "SigV4"
+	// RemoteWriterAuthorizationTypeAuthorization indicates authorization from a secret.
+)
+
+// RemoteWriteAuthorization defines the authorization method for a remote write endpoint.
+// Exactly one of the nested configs must be set according to the type discriminator.
+// +kubebuilder:validation:XValidation:rule="self.type != 'BearerToken' || has(self.bearerToken)",message="bearerToken is required when type is BearerToken"
+// +kubebuilder:validation:XValidation:rule="self.type != 'BearerTokenFile' || (has(self.bearerTokenFile) && size(self.bearerTokenFile) > 0)",message="bearerTokenFile is required and must be non-empty when type is BearerTokenFile"
+// +kubebuilder:validation:XValidation:rule="self.type != 'BasicAuth' || has(self.basicAuth)",message="basicAuth is required when type is BasicAuth"
+// +kubebuilder:validation:XValidation:rule="self.type != 'OAuth2' || has(self.oauth2)",message="oauth2 is required when type is OAuth2"
+// +kubebuilder:validation:XValidation:rule="self.type != 'SigV4' || has(self.sigv4)",message="sigv4 is required when type is SigV4"
+// +kubebuilder:validation:XValidation:rule="self.type != 'Authorization' || has(self.authorization)",message="authorization is required when type is Authorization"
+
+// +union
+type RemoteWriteAuthorization struct {
+	// type specifies the authorization method to use.
+	// +unionDiscriminator
+	// +required
+	Type RemoteWriteAuthorizationType `json:"type,omitempty"`
+	// credentials defines a key of a Secret in the namespace that contains the credentials for authentication.
+	// +unionMember
+	// +optional
+	Credentials *v1.SecretKeySelector `json:"credentials,omitempty"`
+	// bearerToken defines the secret reference containing the bearer token.
+	// bearerToken is deprecated: this will be removed in a future release.
+	// *Warning: this field shouldn't be used because the token value appears
+	// in clear-text. Prefer using `authorization`.*
+	// Required when type is "BearerToken".
+	// +unionMember
+	// +optional
+	BearerToken SecretKeySelector `json:"bearerToken,omitempty,omitzero"`
+	// bearerTokenFile is the path to a file containing the bearer token (e.g. service account token).
+	// Required when type is "BearerTokenFile". In practice only the service account token path can be used.
+	// Must be between 1 and 1024 characters.
+	// +unionMember
+	// +optional
+	// +kubebuilder:validation:MinLength=1
+	// +kubebuilder:validation:MaxLength=1024
+	BearerTokenFile string `json:"bearerTokenFile,omitempty"`
+	// basicAuth defines HTTP basic authentication credentials.
+	// Required when type is "BasicAuth".
+	// +unionMember
+	// +optional
+	BasicAuth BasicAuth `json:"basicAuth,omitempty,omitzero"`
+	// oauth2 defines OAuth2 client credentials authentication.
+	// Required when type is "OAuth2".
+	// +unionMember
+	// +optional
+	OAuth2 OAuth2 `json:"oauth2,omitempty,omitzero"`
+	// sigv4 defines AWS Signature Version 4 authentication.
+	// Required when type is "SigV4".
+	// +unionMember
+	// +optional
+	Sigv4 *Sigv4 `json:"sigv4,omitempty,omitzero"`
 }
 
 // MetadataConfig defines settings for sending series metadata to remote write storage.
@@ -1219,18 +1255,29 @@ type RelabelConfig struct {
 // +union
 type RelabelActionConfig struct {
 	// type specifies the action to perform on the matched labels.
-	// Valid actions are:
-	//   - Replace: Match regex against the concatenated source_labels; set target_label to replacement, with match group references (${1}, ${2}, ...) substituted. If regex does not match, no replacement takes place.
-	//   - Lowercase: Map the concatenated source_labels to their lower case. Requires Prometheus >= v2.36.0.
-	//   - Uppercase: Map the concatenated source_labels to their upper case. Requires Prometheus >= v2.36.0.
-	//   - Keep: Drop targets for which regex does not match the concatenated source_labels.
-	//   - Drop: Drop targets for which regex matches the concatenated source_labels.
-	//   - KeepEqual: Drop targets for which the concatenated source_labels do not match target_label. Requires Prometheus >= v2.41.0.
-	//   - DropEqual: Drop targets for which the concatenated source_labels do match target_label. Requires Prometheus >= v2.41.0.
-	//   - HashMod: Set target_label to the modulus of a hash of the concatenated source_labels.
-	//   - LabelMap: Match regex against all source label names (not just source_labels); copy matching label values to new names given by replacement with ${1}, ${2}, ... substituted.
-	//   - LabelDrop: Match regex against all label names; any label that matches is removed.
-	//   - LabelKeep: Match regex against all label names; any label that does not match is removed.
+	// Allowed values are Replace, Lowercase, Uppercase, Keep, Drop, KeepEqual, DropEqual, HashMod, LabelMap, LabelDrop, LabelKeep.
+	//
+	// When set to Replace, regex is matched against the concatenated source_labels; target_label is set to replacement with match group references (${1}, ${2}, ...) substituted. If regex does not match, no replacement takes place.
+	//
+	// When set to Lowercase, the concatenated source_labels are mapped to their lower case. Requires Prometheus >= v2.36.0.
+	//
+	// When set to Uppercase, the concatenated source_labels are mapped to their upper case. Requires Prometheus >= v2.36.0.
+	//
+	// When set to Keep, targets for which regex does not match the concatenated source_labels are dropped.
+	//
+	// When set to Drop, targets for which regex matches the concatenated source_labels are dropped.
+	//
+	// When set to KeepEqual, targets for which the concatenated source_labels do not match target_label are dropped. Requires Prometheus >= v2.41.0.
+	//
+	// When set to DropEqual, targets for which the concatenated source_labels do match target_label are dropped. Requires Prometheus >= v2.41.0.
+	//
+	// When set to HashMod, target_label is set to the modulus of a hash of the concatenated source_labels.
+	//
+	// When set to LabelMap, regex is matched against all source label names (not just source_labels); matching label values are copied to new names given by replacement with ${1}, ${2}, ... substituted.
+	//
+	// When set to LabelDrop, regex is matched against all label names; any label that matches is removed.
+	//
+	// When set to LabelKeep, regex is matched against all label names; any label that does not match is removed.
 	// +required
 	// +unionDiscriminator
 	Type RelabelAction `json:"type,omitempty"`
@@ -1293,11 +1340,10 @@ type ReplaceActionConfig struct {
 	TargetLabel string `json:"targetLabel,omitempty"`
 
 	// replacement is the value written to target_label when regex matches; match group references (${1}, ${2}, ...) are substituted.
-	// When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time.
-	// The default value is "$1" (the first capture group).
-	// Setting to an empty string ("") explicitly clears the target label value.
-	// Must be at most 255 characters in length.
-	// +optional
+	// Required when using the Replace action so the intended behavior is explicit and the platform does not need to apply defaults.
+	// Use "$1" for the first capture group, "$2" for the second, etc. Use an empty string ("") to explicitly clear the target label value.
+	// Must be between 0 and 255 characters in length.
+	// +required
 	// +kubebuilder:validation:MinLength=0
 	// +kubebuilder:validation:MaxLength=255
 	Replacement *string `json:"replacement,omitempty"`
@@ -1314,9 +1360,9 @@ type HashModActionConfig struct {
 	TargetLabel string `json:"targetLabel,omitempty"`
 
 	// modulus is the divisor applied to the hash of the concatenated source label values (target = hash % modulus).
-	// When omitted, the platform chooses a reasonable default, which may change over time.
+	// Required when using the HashMod action so the intended behavior is explicit.
 	// Must be at least 1.
-	// +optional
+	// +required
 	// +kubebuilder:validation:Minimum=1
 	Modulus int64 `json:"modulus,omitempty"`
 }

@@ -120,9 +120,9 @@ func (ClusterImagePolicyStatus) SwaggerDoc() map[string]string {
 
 var map_AdditionalAlertmanagerConfig = map[string]string{
 	"":               "AdditionalAlertmanagerConfig represents configuration for additional Alertmanager instances. The `AdditionalAlertmanagerConfig` resource defines settings for how a component communicates with additional Alertmanager instances.",
-	"name":           "name is a unique identifier for this Alertmanager configuration entry. This field is used as the map key for server-side apply, allowing multiple controllers (e.g., ACM, cluster admins) to independently manage their own entries. The name must be a valid DNS subdomain (RFC 1123): lowercase alphanumeric characters, hyphens, or periods, and must start and end with an alphanumeric character. Minimum length is 1 character (empty string is invalid). Maximum length is 253 characters.",
+	"name":           "name is a unique identifier for this Alertmanager configuration entry. The name must be a valid DNS subdomain (RFC 1123): lowercase alphanumeric characters, hyphens, or periods, and must start and end with an alphanumeric character. Minimum length is 1 character (empty string is invalid). Maximum length is 253 characters.",
 	"authorization":  "authorization configures the authentication method for Alertmanager connections. Supports bearer token authentication. When omitted, no authentication is used.",
-	"pathPrefix":     "pathPrefix defines an optional URL path prefix to prepend to the Alertmanager API endpoints. For example, if your Alertmanager is behind a reverse proxy at \"/alertmanager/\", set this to \"/alertmanager\" so requests go to \"/alertmanager/api/v1/alerts\" instead of \"/api/v1/alerts\". This is commonly needed when Alertmanager is deployed behind ingress controllers or load balancers. Must start with \"/\" and not end with \"/\" (unless it is the root path \"/\"). Must not contain query strings (\"?\") or fragments (\"#\").",
+	"pathPrefix":     "pathPrefix defines an optional URL path prefix to prepend to the Alertmanager API endpoints. For example, if your Alertmanager is behind a reverse proxy at \"/alertmanager/\", set this to \"/alertmanager\" so requests go to \"/alertmanager/api/v1/alerts\" instead of \"/api/v1/alerts\". This is commonly needed when Alertmanager is deployed behind ingress controllers or load balancers. When no prefix is needed, omit this field; do not set it to \"/\" as that would produce paths with double slashes (e.g. \"//api/v1/alerts\"). Must start with \"/\", must not end with \"/\", and must not be exactly \"/\". Must not contain query strings (\"?\") or fragments (\"#\").",
 	"scheme":         "scheme defines the URL scheme to use when communicating with Alertmanager instances. Possible values are `HTTP` or `HTTPS`. When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time. The current default value is `HTTP`.",
 	"staticConfigs":  "staticConfigs is a list of statically configured Alertmanager endpoints in the form of `<host>:<port>`. Each entry must be a valid hostname, IPv4 address, or IPv6 address (in brackets) followed by a colon and a valid port number (1-65535). Examples: \"alertmanager.example.com:9093\", \"192.168.1.100:9093\", \"[::1]:9093\" At least one endpoint must be specified (minimum 1, maximum 10 endpoints). Each entry must be unique and non-empty (empty string is invalid).",
 	"timeoutSeconds": "timeoutSeconds defines the timeout in seconds for requests to Alertmanager. When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time. Currently the default is 10 seconds. Minimum value is 1 second. Maximum value is 600 seconds (10 minutes).",
@@ -253,7 +253,7 @@ func (DropEqualActionConfig) SwaggerDoc() map[string]string {
 var map_HashModActionConfig = map[string]string{
 	"":            "HashModActionConfig configures the HashMod action. target_label is set to the modulus of a hash of the concatenated source_labels (target = hash % modulus).",
 	"targetLabel": "targetLabel is the label name where the hash modulus result is written. Must be between 1 and 128 characters in length.",
-	"modulus":     "modulus is the divisor applied to the hash of the concatenated source label values (target = hash % modulus). When omitted, the platform chooses a reasonable default, which may change over time. Must be at least 1.",
+	"modulus":     "modulus is the divisor applied to the hash of the concatenated source label values (target = hash % modulus). Required when using the HashMod action so the intended behavior is explicit. Must be at least 1.",
 }
 
 func (HashModActionConfig) SwaggerDoc() map[string]string {
@@ -396,7 +396,7 @@ func (QueueConfig) SwaggerDoc() map[string]string {
 
 var map_RelabelActionConfig = map[string]string{
 	"":          "RelabelActionConfig represents the action to perform and its configuration. Exactly one action-specific configuration must be specified based on the action type.",
-	"type":      "type specifies the action to perform on the matched labels. Valid actions are:\n  - Replace: Match regex against the concatenated source_labels; set target_label to replacement, with match group references (${1}, ${2}, ...) substituted. If regex does not match, no replacement takes place.\n  - Lowercase: Map the concatenated source_labels to their lower case. Requires Prometheus >= v2.36.0.\n  - Uppercase: Map the concatenated source_labels to their upper case. Requires Prometheus >= v2.36.0.\n  - Keep: Drop targets for which regex does not match the concatenated source_labels.\n  - Drop: Drop targets for which regex matches the concatenated source_labels.\n  - KeepEqual: Drop targets for which the concatenated source_labels do not match target_label. Requires Prometheus >= v2.41.0.\n  - DropEqual: Drop targets for which the concatenated source_labels do match target_label. Requires Prometheus >= v2.41.0.\n  - HashMod: Set target_label to the modulus of a hash of the concatenated source_labels.\n  - LabelMap: Match regex against all source label names (not just source_labels); copy matching label values to new names given by replacement with ${1}, ${2}, ... substituted.\n  - LabelDrop: Match regex against all label names; any label that matches is removed.\n  - LabelKeep: Match regex against all label names; any label that does not match is removed.",
+	"type":      "type specifies the action to perform on the matched labels. Allowed values are Replace, Lowercase, Uppercase, Keep, Drop, KeepEqual, DropEqual, HashMod, LabelMap, LabelDrop, LabelKeep.\n\nWhen set to Replace, regex is matched against the concatenated source_labels; target_label is set to replacement with match group references (${1}, ${2}, ...) substituted. If regex does not match, no replacement takes place.\n\nWhen set to Lowercase, the concatenated source_labels are mapped to their lower case. Requires Prometheus >= v2.36.0.\n\nWhen set to Uppercase, the concatenated source_labels are mapped to their upper case. Requires Prometheus >= v2.36.0.\n\nWhen set to Keep, targets for which regex does not match the concatenated source_labels are dropped.\n\nWhen set to Drop, targets for which regex matches the concatenated source_labels are dropped.\n\nWhen set to KeepEqual, targets for which the concatenated source_labels do not match target_label are dropped. Requires Prometheus >= v2.41.0.\n\nWhen set to DropEqual, targets for which the concatenated source_labels do match target_label are dropped. Requires Prometheus >= v2.41.0.\n\nWhen set to HashMod, target_label is set to the modulus of a hash of the concatenated source_labels.\n\nWhen set to LabelMap, regex is matched against all source label names (not just source_labels); matching label values are copied to new names given by replacement with ${1}, ${2}, ... substituted.\n\nWhen set to LabelDrop, regex is matched against all label names; any label that matches is removed.\n\nWhen set to LabelKeep, regex is matched against all label names; any label that does not match is removed.",
 	"replace":   "replace configures the Replace action. Required when type is Replace.",
 	"hashMod":   "hashMod configures the HashMod action. Required when type is HashMod.",
 	"labelMap":  "labelMap configures the LabelMap action. Required when type is LabelMap.",
@@ -423,23 +423,33 @@ func (RelabelConfig) SwaggerDoc() map[string]string {
 	return map_RelabelConfig
 }
 
+var map_RemoteWriteAuthorization = map[string]string{
+	"type":            "type specifies the authorization method to use.",
+	"credentials":     "credentials defines a key of a Secret in the namespace that contains the credentials for authentication.",
+	"bearerToken":     "bearerToken defines the secret reference containing the bearer token. bearerToken is deprecated: this will be removed in a future release. *Warning: this field shouldn't be used because the token value appears in clear-text. Prefer using `authorization`.* Required when type is \"BearerToken\".",
+	"bearerTokenFile": "bearerTokenFile is the path to a file containing the bearer token (e.g. service account token). Required when type is \"BearerTokenFile\". In practice only the service account token path can be used. Must be between 1 and 1024 characters.",
+	"basicAuth":       "basicAuth defines HTTP basic authentication credentials. Required when type is \"BasicAuth\".",
+	"oauth2":          "oauth2 defines OAuth2 client credentials authentication. Required when type is \"OAuth2\".",
+	"sigv4":           "sigv4 defines AWS Signature Version 4 authentication. Required when type is \"SigV4\".",
+}
+
+func (RemoteWriteAuthorization) SwaggerDoc() map[string]string {
+	return map_RemoteWriteAuthorization
+}
+
 var map_RemoteWriteSpec = map[string]string{
 	"":                     "RemoteWriteSpec represents configuration for remote write endpoints.",
-	"url":                  "url is the URL of the remote write endpoint. Must be a valid URL with http or https scheme and a non-empty hostname. Empty string is invalid. Must be between 1 and 2048 characters in length.",
+	"url":                  "url is the URL of the remote write endpoint. Must be a valid URL with http or https scheme and a non-empty hostname. Query parameters, fragments, and user information (e.g. user:password@host) are not allowed. Empty string is invalid. Must be between 1 and 2048 characters in length.",
 	"name":                 "name is an optional identifier for this remote write configuration. This name is used in metrics and logging to differentiate remote write queues. When omitted, Prometheus generates a unique name automatically. If specified, this name must be unique. Must contain only alphanumeric characters, hyphens, and underscores. Must be between 1 and 63 characters in length when specified.",
-	"writeRelabelConfigs":  "writeRelabelConfigs is a list of relabeling rules to apply before sending data to the remote endpoint. When omitted, no relabeling is performed and all metrics are sent as-is. Minimum of 1 and maximum of 10 relabeling rules can be specified. Each rule must have a unique name.",
-	"authorization":        "authorization defines the authorization settings for remote write storage. When omitted, no authorization is performed.",
-	"basicAuth":            "basicAuth defines basic authentication settings for the remote write endpoint URL. When omitted, no basic authentication is performed.",
-	"bearerTokenFile":      "bearerTokenFile defines the file that contains the bearer token for the remote write endpoint. However, because you cannot mount secrets in a pod, in practice you can only reference the token of the service account. When omitted, no bearer token file is used. Must be a valid file path.",
-	"headers":              "headers specifies the custom HTTP headers to be sent along with each remote write request. Headers set by Prometheus cannot be overwritten. When omitted, no custom headers are sent. Maximum of 50 headers can be specified. Each header name must be between 1 and 256 characters, and each header value must be between 0 and 4096 characters.",
-	"metadataConfig":       "metadataConfig configures the sending of series metadata to remote storage if the prometheus.WriteRequest message was chosen. When io.prometheus.write.v2.Request is used, metadata is always sent. When omitted, no metadata is sent. Metadata configuration is subject to change at any point or be removed in future releases.",
-	"oauth2":               "oauth2 defines OAuth2 authentication settings for the remote write endpoint. When omitted, no OAuth2 authentication is performed.",
+	"authorization":        "authorization defines the authorization method for the remote write endpoint. When omitted, no authorization is performed. When set, type must be one of BearerToken, BearerTokenFile, BasicAuth, OAuth2, or SigV4, and the corresponding nested config must be set.",
+	"headers":              "headers specifies the custom HTTP headers to be sent along with each remote write request. Sending custom headers makes the configuration of a proxy in between optional and helps the receiver recognize the given source better. Clients MAY allow users to send custom HTTP headers; they MUST NOT allow users to configure them in such a way as to send reserved headers. Headers set by Prometheus cannot be overwritten. For more info see https://github.com/prometheus/prometheus/pull/8416. When omitted, no custom headers are sent. Maximum of 50 headers can be specified. Each header name must be between 1 and 256 characters, and each header value must be between 0 and 4096 characters.",
+	"metadataConfig":       "metadataConfig configures the sending of series metadata to remote storage When omitted, no metadata is sent.",
 	"proxyUrl":             "proxyUrl defines an optional proxy URL. If the cluster-wide proxy is enabled, it replaces the proxyUrl setting. The cluster-wide proxy supports both HTTP and HTTPS proxies, with HTTPS taking precedence. When omitted, no proxy is used. Must be a valid URL with http or https scheme. Must be between 1 and 2048 characters in length.",
 	"queueConfig":          "queueConfig allows tuning configuration for remote write queue parameters. When omitted, default queue configuration is used.",
 	"remoteTimeoutSeconds": "remoteTimeoutSeconds defines the timeout in seconds for requests to the remote write endpoint. When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time. Minimum value is 1 second. Maximum value is 600 seconds (10 minutes).",
 	"exemplarsMode":        "exemplarsMode controls whether exemplars are sent via remote write. When set to \"Send\", Prometheus is configured to store a maximum of 100,000 exemplars in memory and send them with remote write. Note that this setting only applies to user-defined monitoring. It is not applicable to default in-cluster monitoring. When omitted or set to \"DoNotSend\", exemplars are not sent. Valid values are \"Send\" and \"DoNotSend\".",
-	"sigv4":                "sigv4 defines AWS Signature Version 4 authentication settings. When omitted, no AWS SigV4 authentication is performed.",
 	"tlsConfig":            "tlsConfig defines TLS authentication settings for the remote write endpoint. When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time.",
+	"writeRelabelConfigs":  "writeRelabelConfigs is a list of relabeling rules to apply before sending data to the remote endpoint. When omitted, no relabeling is performed and all metrics are sent as-is. Minimum of 1 and maximum of 10 relabeling rules can be specified. Each rule must have a unique name.",
 }
 
 func (RemoteWriteSpec) SwaggerDoc() map[string]string {
@@ -449,7 +459,7 @@ func (RemoteWriteSpec) SwaggerDoc() map[string]string {
 var map_ReplaceActionConfig = map[string]string{
 	"":            "ReplaceActionConfig configures the Replace action. Regex is matched against the concatenated source_labels; target_label is set to replacement with match group references (${1}, ${2}, ...) substituted. No replacement if regex does not match.",
 	"targetLabel": "targetLabel is the label name where the replacement result is written. Must be between 1 and 128 characters in length.",
-	"replacement": "replacement is the value written to target_label when regex matches; match group references (${1}, ${2}, ...) are substituted. When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time. The default value is \"$1\" (the first capture group). Setting to an empty string (\"\") explicitly clears the target label value. Must be at most 255 characters in length.",
+	"replacement": "replacement is the value written to target_label when regex matches; match group references (${1}, ${2}, ...) are substituted. Required when using the Replace action so the intended behavior is explicit and the platform does not need to apply defaults. Use \"$1\" for the first capture group, \"$2\" for the second, etc. Use an empty string (\"\") to explicitly clear the target label value. Must be between 0 and 255 characters in length.",
 }
 
 func (ReplaceActionConfig) SwaggerDoc() map[string]string {
@@ -464,16 +474,6 @@ var map_Retention = map[string]string{
 
 func (Retention) SwaggerDoc() map[string]string {
 	return map_Retention
-}
-
-var map_SafeAuthorization = map[string]string{
-	"":            "SafeAuthorization defines the authorization settings for remote write storage.",
-	"type":        "type specifies the authorization type to use. Valid value is \"BearerToken\" (bearer token authentication). When set to BearerToken, the credentials field must be specified.",
-	"credentials": "credentials defines the secret reference containing the authorization credentials. Required when type is \"BearerToken\". The secret must exist in the openshift-monitoring namespace.",
-}
-
-func (SafeAuthorization) SwaggerDoc() map[string]string {
-	return map_SafeAuthorization
 }
 
 var map_SecretKeySelector = map[string]string{

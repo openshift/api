@@ -773,12 +773,12 @@ var (
 					mustRegister()
 
 	FeatureGateAWSServiceLBNetworkSecurityGroup = newFeatureGate("AWSServiceLBNetworkSecurityGroup").
-							reportProblemsToJiraComponent("Cloud Compute / Cloud Controller Manager").
-							contactPerson("mtulio").
-							productScope(ocpSpecific).
-							enhancementPR("https://github.com/openshift/enhancements/pull/1802").
-							enable(inTechPreviewNoUpgrade(), inDevPreviewNoUpgrade()).
-							mustRegister()
+					reportProblemsToJiraComponent("Cloud Compute / Cloud Controller Manager").
+					contactPerson("mtulio").
+					productScope(ocpSpecific).
+					enhancementPR("https://github.com/openshift/enhancements/pull/1802").
+					enable(inDefault(), inOKD(), inTechPreviewNoUpgrade(), inDevPreviewNoUpgrade()).
+					mustRegister()
 
 	FeatureGateImageVolume = newFeatureGate("ImageVolume").
 				reportProblemsToJiraComponent("Node").

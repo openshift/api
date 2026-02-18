@@ -29,9 +29,6 @@
                         "name": "AWSDualStackInstall"
                     },
                     {
-                        "name": "AWSServiceLBNetworkSecurityGroup"
-                    },
-                    {
                         "name": "AutomatedEtcdBackup"
                     },
                     {
@@ -249,6 +246,9 @@
                     }
                 ],
                 "enabled": [
+                    {
+                        "name": "AWSServiceLBNetworkSecurityGroup"
+                    },
                     {
                         "name": "AzureWorkloadIdentity"
                     },

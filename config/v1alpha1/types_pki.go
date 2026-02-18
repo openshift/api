@@ -83,7 +83,9 @@ type PKICertificateManagement struct {
 
 // CustomPKIPolicy contains administrator-specified cryptographic configuration.
 // Administrators must specify defaults for all certificates and may optionally override
-// specific categories (SignerCertificate, ServingCertificate, ClientCertificate).
+// specific categories of certificates.
+//
+// +kubebuilder:validation:XValidation:rule="has(self.defaults.key)",message="the default key algorithm configuration is required",fieldPath="defaults.key"
 type CustomPKIPolicy struct {
 	PKIProfile `json:",inline"`
 }
@@ -104,11 +106,9 @@ const (
 	PKICertificateManagementModeCustom PKICertificateManagementMode = "Custom"
 )
 
-// PKIProfile defines the certificate generation parameters that OpenShift components use
-// to create certificates. Configuration can be specified at two hierarchical levels:
-// defaults apply to all certificates and categoryOverrides apply to specific certificate
-// types (SignerCertificate, ServingCertificate, ClientCertificate).
-// Category overrides take precedence over defaults.
+// PKIProfile defines the certificate generation parameters that OpenShift
+// components use to create certificates. Category overrides take precedence over
+// defaults.
 type PKIProfile struct {
 	// defaults specifies the default certificate configuration that applies
 	// to all certificates unless overridden by a categoryOverrides entry.
@@ -131,6 +131,8 @@ type PKIProfile struct {
 // +kubebuilder:validation:MinProperties=1
 type CertificateConfig struct {
 	// key specifies the cryptographic parameters for the certificate's key pair.
+	// Currently this is the only configurable parameter. When omitted in a
+	// categoryOverrides entry, the key configuration from defaults is used.
 	// +optional
 	Key KeyConfig `json:"key,omitempty,omitzero"`
 

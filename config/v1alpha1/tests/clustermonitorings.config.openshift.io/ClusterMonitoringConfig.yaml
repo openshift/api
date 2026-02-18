@@ -10,14 +10,14 @@ tests:
         kind: ClusterMonitoring
         spec:
           userDefined:
-            mode: "Disabled" 
-                       
+            mode: "Disabled"
+
       expected: |
         apiVersion: config.openshift.io/v1alpha1
         kind: ClusterMonitoring
         spec:
           userDefined:
-            mode: "Disabled" 
+            mode: "Disabled"
     - name: Should reject ContainerResource with duplicate names
       initial: |
         apiVersion: config.openshift.io/v1alpha1
@@ -351,3 +351,229 @@ tests:
               - name: "example.com/quux"
                 request: "1"
       expectedError: 'spec.metricsServerConfig.resources: Too many: 11: must have at most 10 items'
+    - name: Should be able to create PrometheusOperatorAdmissionWebhookConfig with valid resources
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          prometheusOperatorAdmissionWebhookConfig:
+            resources:
+              - name: "cpu"
+                request: "50m"
+                limit: "200m"
+              - name: "memory"
+                request: "50Mi"
+                limit: "200Mi"
+      expected: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          prometheusOperatorAdmissionWebhookConfig:
+            resources:
+              - name: "cpu"
+                request: "50m"
+                limit: "200m"
+              - name: "memory"
+                request: "50Mi"
+                limit: "200Mi"
+    - name: Should be able to create PrometheusOperatorAdmissionWebhookConfig with valid topologySpreadConstraints
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          prometheusOperatorAdmissionWebhookConfig:
+            topologySpreadConstraints:
+              - maxSkew: 1
+                topologyKey: topology.kubernetes.io/zone
+                whenUnsatisfiable: DoNotSchedule
+                labelSelector:
+                  matchLabels:
+                    app: prometheus-operator-admission-webhook
+              - maxSkew: 2
+                topologyKey: kubernetes.io/hostname
+                whenUnsatisfiable: ScheduleAnyway
+                labelSelector:
+                  matchLabels:
+                    app: prometheus-operator-admission-webhook
+      expected: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          prometheusOperatorAdmissionWebhookConfig:
+            topologySpreadConstraints:
+              - maxSkew: 1
+                topologyKey: topology.kubernetes.io/zone
+                whenUnsatisfiable: DoNotSchedule
+                labelSelector:
+                  matchLabels:
+                    app: prometheus-operator-admission-webhook
+              - maxSkew: 2
+                topologyKey: kubernetes.io/hostname
+                whenUnsatisfiable: ScheduleAnyway
+                labelSelector:
+                  matchLabels:
+                    app: prometheus-operator-admission-webhook
+    - name: Should be able to create PrometheusOperatorAdmissionWebhookConfig with both fields
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          prometheusOperatorAdmissionWebhookConfig:
+            resources:
+              - name: "cpu"
+                request: "50m"
+                limit: "200m"
+            topologySpreadConstraints:
+              - maxSkew: 1
+                topologyKey: topology.kubernetes.io/zone
+                whenUnsatisfiable: DoNotSchedule
+                labelSelector:
+                  matchLabels:
+                    app: prometheus-operator-admission-webhook
+      expected: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          prometheusOperatorAdmissionWebhookConfig:
+            resources:
+              - name: "cpu"
+                request: "50m"
+                limit: "200m"
+            topologySpreadConstraints:
+              - maxSkew: 1
+                topologyKey: topology.kubernetes.io/zone
+                whenUnsatisfiable: DoNotSchedule
+                labelSelector:
+                  matchLabels:
+                    app: prometheus-operator-admission-webhook
+    - name: Should reject PrometheusOperatorAdmissionWebhookConfig with duplicate resource names
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          prometheusOperatorAdmissionWebhookConfig:
+            resources:
+              - name: "cpu"
+                request: "100m"
+              - name: "cpu"
+                request: "200m"
+      expectedError: "Duplicate value"
+    - name: Should reject PrometheusOperatorAdmissionWebhookConfig with duplicate topologySpreadConstraints
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          prometheusOperatorAdmissionWebhookConfig:
+            topologySpreadConstraints:
+              - maxSkew: 1
+                topologyKey: topology.kubernetes.io/zone
+                whenUnsatisfiable: DoNotSchedule
+              - maxSkew: 2
+                topologyKey: topology.kubernetes.io/zone
+                whenUnsatisfiable: DoNotSchedule
+      expectedError: "Duplicate value"
+    - name: Should reject PrometheusOperatorAdmissionWebhookConfig with empty object
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          prometheusOperatorAdmissionWebhookConfig: {}
+      expectedError: 'spec.prometheusOperatorAdmissionWebhookConfig: Invalid value: 0: spec.prometheusOperatorAdmissionWebhookConfig in body should have at least 1 properties'
+    - name: Should reject PrometheusOperatorAdmissionWebhookConfig with too many resources
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          prometheusOperatorAdmissionWebhookConfig:
+            resources:
+              - name: "cpu"
+                request: "100m"
+              - name: "memory"
+                request: "64Mi"
+              - name: "hugepages-2Mi"
+                request: "32Mi"
+              - name: "hugepages-1Gi"
+                request: "1Gi"
+              - name: "ephemeral-storage"
+                request: "1Gi"
+              - name: "nvidia.com/gpu"
+                request: "1"
+              - name: "example.com/foo"
+                request: "1"
+              - name: "example.com/bar"
+                request: "1"
+              - name: "example.com/baz"
+                request: "1"
+              - name: "example.com/qux"
+                request: "1"
+              - name: "example.com/quux"
+                request: "1"
+      expectedError: 'spec.prometheusOperatorAdmissionWebhookConfig.resources: Too many: 11: must have at most 10 items'
+    - name: Should reject PrometheusOperatorAdmissionWebhookConfig with limit less than request
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          prometheusOperatorAdmissionWebhookConfig:
+            resources:
+              - name: "cpu"
+                request: "500m"
+                limit: "200m"
+      expectedError: 'spec.prometheusOperatorAdmissionWebhookConfig.resources[0]: Invalid value: "object": limit must be greater than or equal to request'
+    - name: Should reject PrometheusOperatorAdmissionWebhookConfig with too many topologySpreadConstraints
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          prometheusOperatorAdmissionWebhookConfig:
+            topologySpreadConstraints:
+              - maxSkew: 1
+                topologyKey: "zone1"
+                whenUnsatisfiable: DoNotSchedule
+              - maxSkew: 1
+                topologyKey: "zone2"
+                whenUnsatisfiable: DoNotSchedule
+              - maxSkew: 1
+                topologyKey: "zone3"
+                whenUnsatisfiable: DoNotSchedule
+              - maxSkew: 1
+                topologyKey: "zone4"
+                whenUnsatisfiable: DoNotSchedule
+              - maxSkew: 1
+                topologyKey: "zone5"
+                whenUnsatisfiable: DoNotSchedule
+              - maxSkew: 1
+                topologyKey: "zone6"
+                whenUnsatisfiable: DoNotSchedule
+              - maxSkew: 1
+                topologyKey: "zone7"
+                whenUnsatisfiable: DoNotSchedule
+              - maxSkew: 1
+                topologyKey: "zone8"
+                whenUnsatisfiable: DoNotSchedule
+              - maxSkew: 1
+                topologyKey: "zone9"
+                whenUnsatisfiable: DoNotSchedule
+              - maxSkew: 1
+                topologyKey: "zone10"
+                whenUnsatisfiable: DoNotSchedule
+              - maxSkew: 1
+                topologyKey: "zone11"
+                whenUnsatisfiable: DoNotSchedule
+      expectedError: 'spec.prometheusOperatorAdmissionWebhookConfig.topologySpreadConstraints: Too many: 11: must have at most 10 items'
+    - name: Should reject PrometheusOperatorAdmissionWebhookConfig with empty topologySpreadConstraints array
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          prometheusOperatorAdmissionWebhookConfig:
+            topologySpreadConstraints: []
+      expectedError: 'spec.prometheusOperatorAdmissionWebhookConfig.topologySpreadConstraints: Invalid value: 0: spec.prometheusOperatorAdmissionWebhookConfig.topologySpreadConstraints in body should have at least 1 items'
+    - name: Should reject PrometheusOperatorAdmissionWebhookConfig with empty resources array
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          prometheusOperatorAdmissionWebhookConfig:
+            resources: []
+      expectedError: 'spec.prometheusOperatorAdmissionWebhookConfig.resources: Invalid value: 0: spec.prometheusOperatorAdmissionWebhookConfig.resources in body should have at least 1 items'

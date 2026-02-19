@@ -55,120 +55,20 @@ spec:
                   custom:
                     description: |-
                       custom contains administrator-specified cryptographic configuration.
-                      Use the defaults and categoryOverrides fields to specify certificate generation parameters.
+                      Use the defaults and overrides fields to specify certificate generation parameters.
                       Required when mode is Custom, and forbidden otherwise.
                     properties:
-                      categoryOverrides:
-                        description: |-
-                          categoryOverrides allows overriding certificate parameters for specific
-                          categories of certificates (SignerCertificate, ServingCertificate, ClientCertificate).
-                          Category overrides take precedence over defaults.
-                        items:
-                          properties:
-                            category:
-                              description: |-
-                                category identifies the certificate category.
-                                Valid values are "SignerCertificate", "ServingCertificate", and "ClientCertificate".
-
-                                When set to SignerCertificate, the configuration applies to certificate authority (CA) certificates
-                                that sign other certificates.
-
-                                When set to ServingCertificate, the configuration applies to TLS server certificates
-                                used to serve HTTPS endpoints.
-
-                                When set to ClientCertificate, the configuration applies to client authentication certificates
-                                used to authenticate to servers.
-                              enum:
-                              - SignerCertificate
-                              - ServingCertificate
-                              - ClientCertificate
-                              type: string
-                            certificate:
-                              description: certificate specifies the configuration
-                                for this category
-                              minProperties: 1
-                              properties:
-                                key:
-                                  description: |-
-                                    key specifies the cryptographic parameters for the certificate's key pair.
-                                    Currently this is the only configurable parameter. When omitted in a
-                                    categoryOverrides entry, the key configuration from defaults is used.
-                                  properties:
-                                    algorithm:
-                                      description: |-
-                                        algorithm specifies the key generation algorithm.
-                                        Valid values are "RSA" and "ECDSA".
-                                      enum:
-                                      - RSA
-                                      - ECDSA
-                                      type: string
-                                    ecdsa:
-                                      description: |-
-                                        ecdsa specifies ECDSA key parameters.
-                                        Required when algorithm is ECDSA, and forbidden otherwise.
-                                      properties:
-                                        curve:
-                                          description: |-
-                                            curve specifies the elliptic curve for ECDSA keys.
-                                            Valid values are "P256", "P384", and "P521".
-                                          enum:
-                                          - P256
-                                          - P384
-                                          - P521
-                                          type: string
-                                      required:
-                                      - curve
-                                      type: object
-                                    rsa:
-                                      description: |-
-                                        rsa specifies RSA key parameters.
-                                        Required when algorithm is RSA, and forbidden otherwise.
-                                      properties:
-                                        keySize:
-                                          description: |-
-                                            keySize specifies the size of RSA keys in bits.
-                                            Valid values are multiples of 1024 from 2048 to 8192.
-                                          format: int32
-                                          maximum: 8192
-                                          minimum: 2048
-                                          multipleOf: 1024
-                                          type: integer
-                                      required:
-                                      - keySize
-                                      type: object
-                                  required:
-                                  - algorithm
-                                  type: object
-                                  x-kubernetes-validations:
-                                  - message: rsa is required when algorithm is RSA,
-                                      and forbidden otherwise
-                                    rule: 'has(self.algorithm) && self.algorithm ==
-                                      ''RSA'' ?  has(self.rsa) : !has(self.rsa)'
-                                  - message: ecdsa is required when algorithm is ECDSA,
-                                      and forbidden otherwise
-                                    rule: 'has(self.algorithm) && self.algorithm ==
-                                      ''ECDSA'' ?  has(self.ecdsa) : !has(self.ecdsa)'
-                              type: object
-                          required:
-                          - category
-                          - certificate
-                          type: object
-                        maxItems: 3
-                        type: array
-                        x-kubernetes-list-map-keys:
-                        - category
-                        x-kubernetes-list-type: map
                       defaults:
                         description: |-
                           defaults specifies the default certificate configuration that applies
-                          to all certificates unless overridden by a categoryOverrides entry.
+                          to all certificates unless overridden by an overrides entry.
                         minProperties: 1
                         properties:
                           key:
                             description: |-
                               key specifies the cryptographic parameters for the certificate's key pair.
-                              Currently this is the only configurable parameter. When omitted in a
-                              categoryOverrides entry, the key configuration from defaults is used.
+                              Currently this is the only configurable parameter. When omitted in an
+                              overrides entry, the key configuration from defaults is used.
                             properties:
                               algorithm:
                                 description: |-
@@ -225,10 +125,139 @@ spec:
                               rule: 'has(self.algorithm) && self.algorithm == ''ECDSA''
                                 ?  has(self.ecdsa) : !has(self.ecdsa)'
                         type: object
+                      overrides:
+                        description: |-
+                          overrides allows overriding certificate parameters for specific
+                          categories of certificates or specific named certificates.
+                          Overrides take precedence over defaults.
+                        items:
+                          description: |-
+                            CertificateOverride specifies a certificate configuration override.
+                            The type field determines what kind of override this is.
+                          properties:
+                            category:
+                              description: |-
+                                category specifies an override for a category of certificates.
+                                Required when type is Category, and forbidden otherwise.
+                              properties:
+                                name:
+                                  description: |-
+                                    name identifies the certificate category.
+                                    Valid values are "Signer", "Serving", and "Client".
+
+                                    When set to Signer, the configuration applies to certificate authority (CA) certificates
+                                    that sign other certificates.
+
+                                    When set to Serving, the configuration applies to TLS server certificates
+                                    used to serve HTTPS endpoints.
+
+                                    When set to Client, the configuration applies to client authentication certificates
+                                    used to authenticate to servers.
+                                  enum:
+                                  - Signer
+                                  - Serving
+                                  - Client
+                                  type: string
+                              required:
+                              - name
+                              type: object
+                            certificate:
+                              description: certificate specifies the certificate configuration
+                                for this override.
+                              minProperties: 1
+                              properties:
+                                key:
+                                  description: |-
+                                    key specifies the cryptographic parameters for the certificate's key pair.
+                                    Currently this is the only configurable parameter. When omitted in an
+                                    overrides entry, the key configuration from defaults is used.
+                                  properties:
+                                    algorithm:
+                                      description: |-
+                                        algorithm specifies the key generation algorithm.
+                                        Valid values are "RSA" and "ECDSA".
+                                      enum:
+                                      - RSA
+                                      - ECDSA
+                                      type: string
+                                    ecdsa:
+                                      description: |-
+                                        ecdsa specifies ECDSA key parameters.
+                                        Required when algorithm is ECDSA, and forbidden otherwise.
+                                      properties:
+                                        curve:
+                                          description: |-
+                                            curve specifies the elliptic curve for ECDSA keys.
+                                            Valid values are "P256", "P384", and "P521".
+                                          enum:
+                                          - P256
+                                          - P384
+                                          - P521
+                                          type: string
+                                      required:
+                                      - curve
+                                      type: object
+                                    rsa:
+                                      description: |-
+                                        rsa specifies RSA key parameters.
+                                        Required when algorithm is RSA, and forbidden otherwise.
+                                      properties:
+                                        keySize:
+                                          description: |-
+                                            keySize specifies the size of RSA keys in bits.
+                                            Valid values are multiples of 1024 from 2048 to 8192.
+                                          format: int32
+                                          maximum: 8192
+                                          minimum: 2048
+                                          multipleOf: 1024
+                                          type: integer
+                                      required:
+                                      - keySize
+                                      type: object
+                                  required:
+                                  - algorithm
+                                  type: object
+                                  x-kubernetes-validations:
+                                  - message: rsa is required when algorithm is RSA,
+                                      and forbidden otherwise
+                                    rule: 'has(self.algorithm) && self.algorithm ==
+                                      ''RSA'' ?  has(self.rsa) : !has(self.rsa)'
+                                  - message: ecdsa is required when algorithm is ECDSA,
+                                      and forbidden otherwise
+                                    rule: 'has(self.algorithm) && self.algorithm ==
+                                      ''ECDSA'' ?  has(self.ecdsa) : !has(self.ecdsa)'
+                              type: object
+                            type:
+                              description: |-
+                                type determines what this override targets.
+                                Valid values are "Category".
+
+                                When set to Category, the override applies to all certificates of the
+                                specified category. The category field must be set.
+                              enum:
+                              - Category
+                              type: string
+                          required:
+                          - certificate
+                          - type
+                          type: object
+                          x-kubernetes-validations:
+                          - message: category is required when type is Category, and
+                              forbidden otherwise
+                            rule: 'self.type == ''Category'' ? has(self.category)
+                              : !has(self.category)'
+                        maxItems: 3
+                        type: array
+                        x-kubernetes-list-type: atomic
                     required:
                     - defaults
                     type: object
                     x-kubernetes-validations:
+                    - message: each override of type Category must have a unique name
+                      rule: 'has(self.overrides) ? self.overrides.filter(o, o.type
+                        == ''Category'').all(a, self.overrides.filter(o, o.type ==
+                        ''Category'').exists_one(b, a.category.name == b.category.name))
+                        : true'
                     - fieldPath: defaults.key
                       message: the default key algorithm configuration is required
                       rule: has(self.defaults.key)

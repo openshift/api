@@ -115,7 +115,10 @@ spec:
                           properties:
                             claim:
                               description: |-
-                                claim is a required field that configures the JWT token claim whose value is assigned to the cluster identity field associated with this mapping.
+                                claim is a optional field that configures the JWT token claim whose value is assigned to the cluster identity field associated with this mapping.
+
+                                Precisely one of claim or expression must be set if the
+                                ExternalOIDCWithUpstreamParity feature gate is enabled.
 
                                 claim must not be an empty string ("") and must not exceed 256 characters.
                               maxLength: 256
@@ -164,8 +167,6 @@ spec:
                               - NoPrefix
                               - Prefix
                               type: string
-                          required:
-                          - claim
                           type: object
                           x-kubernetes-validations:
                           - message: prefix must be set if prefixPolicy is 'Prefix',

@@ -84,6 +84,7 @@ spec:
                       excludedFields is a set of fields in the schema which will not be validated by
                       crdSchemaValidation or objectSchemaValidation.
                       The list may contain at most 64 fields.
+                      Each path in the list must be unique.
                       When not specified, all fields in the schema will be validated.
                     items:
                       description: |-
@@ -142,6 +143,9 @@ spec:
                     minItems: 1
                     type: array
                     x-kubernetes-list-type: atomic
+                    x-kubernetes-validations:
+                    - message: each path in the list must be unique.
+                      rule: self.all(x, self.exists_one(y, y.path == x.path))
                   requiredVersions:
                     description: |-
                       requiredVersions specifies a subset of the CRD's API versions which will be asserted for compatibility.

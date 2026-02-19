@@ -19,6 +19,22 @@ tests:
           name: cluster
         spec: {}
 
+    - name: Should be able to create an OSImageStream with spec.defaultStream
+      initial: |
+        apiVersion: machineconfiguration.openshift.io/v1alpha1
+        kind: OSImageStream
+        metadata:
+          name: cluster
+        spec:
+          defaultStream: rhel-coreos
+      expected: |
+        apiVersion: machineconfiguration.openshift.io/v1alpha1
+        kind: OSImageStream
+        metadata:
+          name: cluster
+        spec:
+          defaultStream: rhel-coreos
+
     - name: Should reject a resource not named cluster
       initial: |
         apiVersion: machineconfiguration.openshift.io/v1alpha1
@@ -28,6 +44,26 @@ tests:
         spec: {}
       expectedError: "Invalid value: \"object\": osimagestream is a singleton, .metadata.name must be 'cluster'"
 
+    - name: Should reject spec.defaultStream with invalid characters
+      initial: |
+        apiVersion: machineconfiguration.openshift.io/v1alpha1
+        kind: OSImageStream
+        metadata:
+          name: cluster
+        spec:
+          defaultStream: "invalid@stream!"
+      expectedError: "a RFC 1123 subdomain must consist of lower case alphanumeric characters, '-' or '.', and must start and end with an alphanumeric character."
+
+    - name: Should reject spec.defaultStream that is too long
+      initial: |
+        apiVersion: machineconfiguration.openshift.io/v1alpha1
+        kind: OSImageStream
+        metadata:
+          name: cluster
+        spec:
+          defaultStream: "this-is-a-very-long-stream-name-that-exceeds-the-maximum-allowed-length-of-253-characters-for-rfc1123-subdomain-validation-which-is-used-to-ensure-compatibility-with-dns-and-kubernetes-naming-standards-and-this-string-needs-to-be-even-longer-to-properly-test-the-limit"
+      expectedError: "spec.defaultStream: Too long: may not be more than 253 bytes"
+
   onUpdate:
     - name: Should be able to report a well formatted list of image streams
       initial: |
@@ -35,13 +71,15 @@ tests:
         kind: OSImageStream
         metadata:
           name: cluster
-        spec: {}
+        spec:
+          defaultStream: rhel-coreos
       updated: |
         apiVersion: machineconfiguration.openshift.io/v1alpha1
         kind: OSImageStream
         metadata:
           name: cluster
-        spec: {}
+        spec:
+          defaultStream: rhel-coreos
         status:
           defaultStream: "rhel-coreos"
           availableStreams:
@@ -56,7 +94,8 @@ tests:
         kind: OSImageStream
         metadata:
           name: cluster
-        spec: {}
+        spec:
+          defaultStream: rhel-coreos
         status:
           defaultStream: "rhel-coreos"
           availableStreams:
@@ -67,19 +106,61 @@ tests:
               osImage: quay.io/openshift-release-dev/ocp-v4.0-art-dev@sha256:1a2b3c4d5e6f7a8b9c0d1e2f3a4b5c6d7e8f9a0b1c2d3e4f5a6b7c8d9e0f1a2b
               osExtensionsImage: quay.io/openshift-release-dev/ocp-v4.0-art-dev@sha256:9f8e7d6c5b4a3f2e1d0c9b8a7f6e5d4c3b2a1f0e9d8c7b6a5f4e3d2c1b0a9f8e
 
+    - name: Should be able to update spec.defaultStream to a different valid value
+      initial: |
+        apiVersion: machineconfiguration.openshift.io/v1alpha1
+        kind: OSImageStream
+        metadata:
+          name: cluster
+        spec:
+          defaultStream: rhel-coreos
+      updated: |
+        apiVersion: machineconfiguration.openshift.io/v1alpha1
+        kind: OSImageStream
+        metadata:
+          name: cluster
+        spec:
+          defaultStream: rhel10-coreos
+      expected: |
+        apiVersion: machineconfiguration.openshift.io/v1alpha1
+        kind: OSImageStream
+        metadata:
+          name: cluster
+        spec:
+          defaultStream: rhel10-coreos
+
+    - name: Should reject updating spec.defaultStream to invalid characters
+      initial: |
+        apiVersion: machineconfiguration.openshift.io/v1alpha1
+        kind: OSImageStream
+        metadata:
+          name: cluster
+        spec:
+          defaultStream: rhel-coreos
+      updated: |
+        apiVersion: machineconfiguration.openshift.io/v1alpha1
+        kind: OSImageStream
+        metadata:
+          name: cluster
+        spec:
+          defaultStream: "invalid@stream!"
+      expectedError: "a RFC 1123 subdomain must consist of lower case alphanumeric characters, '-' or '.', and must start and end with an alphanumeric character."
+
     - name: Should reject image URL without digest
       initial: |
         apiVersion: machineconfiguration.openshift.io/v1alpha1
         kind: OSImageStream
         metadata:
           name: cluster
-        spec: {}
+        spec:
+          defaultStream: rhel-coreos
       updated: |
         apiVersion: machineconfiguration.openshift.io/v1alpha1
         kind: OSImageStream
         metadata:
           name: cluster
-        spec: {}
+        spec:
+          defaultStream: rhel-coreos
         status:
           defaultStream: "rhel-coreos"
           availableStreams:
@@ -94,13 +175,15 @@ tests:
         kind: OSImageStream
         metadata:
           name: cluster
-        spec: {}
+        spec:
+          defaultStream: rhel-coreos
       updated: |
         apiVersion: machineconfiguration.openshift.io/v1alpha1
         kind: OSImageStream
         metadata:
           name: cluster
-        spec: {}
+        spec:
+          defaultStream: rhel-coreos
         status:
           defaultStream: "rhel-coreos"
           availableStreams:
@@ -115,13 +198,15 @@ tests:
         kind: OSImageStream
         metadata:
           name: cluster
-        spec: {}
+        spec:
+          defaultStream: rhel-coreos
       updated: |
         apiVersion: machineconfiguration.openshift.io/v1alpha1
         kind: OSImageStream
         metadata:
           name: cluster
-        spec: {}
+        spec:
+          defaultStream: rhel-coreos
         status:
           defaultStream: "rhel@coreos!"
           availableStreams:
@@ -136,13 +221,15 @@ tests:
         kind: OSImageStream
         metadata:
           name: cluster
-        spec: {}
+        spec:
+          defaultStream: rhel-coreos
       updated: |
         apiVersion: machineconfiguration.openshift.io/v1alpha1
         kind: OSImageStream
         metadata:
           name: cluster
-        spec: {}
+        spec:
+          defaultStream: rhel-coreos
         status:
           defaultStream: "rhel-coreos"
           availableStreams:
@@ -160,13 +247,15 @@ tests:
         kind: OSImageStream
         metadata:
           name: cluster
-        spec: {}
+        spec:
+          defaultStream: rhel-coreos
       updated: |
         apiVersion: machineconfiguration.openshift.io/v1alpha1
         kind: OSImageStream
         metadata:
           name: cluster
-        spec: {}
+        spec:
+          defaultStream: rhel-coreos
         status:
           defaultStream: "rhel-coreos"
           availableStreams:
@@ -181,13 +270,15 @@ tests:
         kind: OSImageStream
         metadata:
           name: cluster
-        spec: {}
+        spec:
+          defaultStream: rhel-coreos
       updated: |
         apiVersion: machineconfiguration.openshift.io/v1alpha1
         kind: OSImageStream
         metadata:
           name: cluster
-        spec: {}
+        spec:
+          defaultStream: rhel-coreos
         status:
           defaultStream: rhel-coreos
           availableStreams:
@@ -202,7 +293,8 @@ tests:
         kind: OSImageStream
         metadata:
           name: cluster
-        spec: {}
+        spec:
+          defaultStream: rhel-coreos
         status:
           defaultStream: rhel-coreos
           availableStreams:
@@ -219,13 +311,15 @@ tests:
         kind: OSImageStream
         metadata:
           name: cluster
-        spec: {}
+        spec:
+          defaultStream: rhel-coreos
       updated: |
         apiVersion: machineconfiguration.openshift.io/v1alpha1
         kind: OSImageStream
         metadata:
           name: cluster
-        spec: {}
+        spec:
+          defaultStream: rhel-coreos
         status:
           availableStreams:
             - name: rhel-coreos
@@ -239,13 +333,15 @@ tests:
         kind: OSImageStream
         metadata:
           name: cluster
-        spec: {}
+        spec:
+          defaultStream: rhel-coreos
       updated: |
         apiVersion: machineconfiguration.openshift.io/v1alpha1
         kind: OSImageStream
         metadata:
           name: cluster
-        spec: {}
+        spec:
+          defaultStream: rhel-coreos
         status:
           defaultStream: rhel-coreos
       expectedStatusError: "status.availableStreams: Required value"
@@ -256,13 +352,15 @@ tests:
         kind: OSImageStream
         metadata:
           name: cluster
-        spec: {}
+        spec:
+          defaultStream: rhel-coreos
       updated: |
         apiVersion: machineconfiguration.openshift.io/v1alpha1
         kind: OSImageStream
         metadata:
           name: cluster
-        spec: {}
+        spec:
+          defaultStream: rhel-coreos
         status:
           defaultStream: rhel-coreos
           availableStreams: []
@@ -274,13 +372,15 @@ tests:
         kind: OSImageStream
         metadata:
           name: cluster
-        spec: {}
+        spec:
+          defaultStream: rhel-coreos
       updated: |
         apiVersion: machineconfiguration.openshift.io/v1alpha1
         kind: OSImageStream
         metadata:
           name: cluster
-        spec: {}
+        spec:
+          defaultStream: rhel-coreos
         status:
           defaultStream: non-existent-stream
           availableStreams:
@@ -295,13 +395,15 @@ tests:
         kind: OSImageStream
         metadata:
           name: cluster
-        spec: {}
+        spec:
+          defaultStream: rhel-coreos
       updated: |
         apiVersion: machineconfiguration.openshift.io/v1alpha1
         kind: OSImageStream
         metadata:
           name: cluster
-        spec: {}
+        spec:
+          defaultStream: rhel-coreos
         status:
           defaultStream: "invalid@stream!"
           availableStreams:
@@ -316,13 +418,15 @@ tests:
         kind: OSImageStream
         metadata:
           name: cluster
-        spec: {}
+        spec:
+          defaultStream: rhel-coreos
       updated: |
         apiVersion: machineconfiguration.openshift.io/v1alpha1
         kind: OSImageStream
         metadata:
           name: cluster
-        spec: {}
+        spec:
+          defaultStream: rhel-coreos
         status:
           defaultStream: "this-is-a-very-long-stream-name-that-exceeds-the-maximum-allowed-length-of-253-characters-for-rfc1123-subdomain-validation-which-is-used-to-ensure-compatibility-with-dns-and-kubernetes-naming-standards-and-this-string-needs-to-be-even-longer-to-properly-test-the-limit"
           availableStreams:

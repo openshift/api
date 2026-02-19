@@ -53,6 +53,9 @@
                         "name": "AWSServiceLBNetworkSecurityGroup"
                     },
                     {
+                        "name": "AdditionalStorageConfig"
+                    },
+                    {
                         "name": "AutomatedEtcdBackup"
                     },
                     {

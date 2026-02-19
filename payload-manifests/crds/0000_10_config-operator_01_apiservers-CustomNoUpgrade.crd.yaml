@@ -302,8 +302,11 @@ spec:
                   custom:
                     description: |-
                       custom is a user-defined TLS security profile. Be extremely careful using a custom
-                      profile as invalid configurations can be catastrophic. An example custom profile
-                      looks like this:
+                      profile as invalid configurations can be catastrophic.
+
+                      The curve list for this profile is empty by default.
+
+                      An example custom profile looks like this:
 
                         minTLSVersion: VersionTLS11
                         ciphers:
@@ -328,6 +331,38 @@ spec:
                           type: string
                         type: array
                         x-kubernetes-list-type: atomic
+                      curves:
+                        description: |-
+                          curves is an optional field used to specify the elliptic curves that are used during
+                          the TLS handshake.  Operators may remove entries their operands do
+                          not support.
+
+                          When omitted, this means no opinion and the platform is left to choose reasonable defaults which are
+                          subject to change over time and may be different per platform component depending on the underlying TLS
+                          libraries they use. If specified, the list must contain at least one curve and each curve must be unique.
+
+                          For example, to use X25519 and SecP256r1 (yaml):
+
+                            curves:
+                              - X25519
+                              - SecP256r1
+                        items:
+                          description: |-
+                            TLSCurve is a named curve identifier that can be used in TLSProfile.Curves.
+                            There is a one-to-one mapping between these names and the curve IDs defined
+                            in crypto/tls package based on IANA's "TLS Supported Groups" registry:
+                            https://www.iana.org/assignments/tls-parameters/tls-parameters.xhtml#tls-parameters-8
+                          enum:
+                          - X25519
+                          - SecP256r1
+                          - SecP384r1
+                          - SecP521r1
+                          - X25519MLKEM768
+                          type: string
+                        maxItems: 5
+                        minItems: 1
+                        type: array
+                        x-kubernetes-list-type: set
                       minTLSVersion:
                         description: |-
                           minTLSVersion is used to specify the minimal version of the TLS protocol
@@ -348,6 +383,9 @@ spec:
                       legacy clients and want to remain highly secure while being compatible with
                       most clients currently in use.
 
+                      The curve list includes by default the following curves:
+                      X25519, SecP256r1, SecP384r1, X25519MLKEM768.
+
                       This profile is equivalent to a Custom profile specified as:
                         minTLSVersion: VersionTLS12
                         ciphers:
@@ -366,7 +404,8 @@ spec:
                     description: |-
                       modern is a TLS security profile for use with clients that support TLS 1.3 and
                       do not need backward compatibility for older clients.
-
+                      The curve list includes by default the following curves:
+                      X25519, SecP256r1, SecP384r1, X25519MLKEM768.
                       This profile is equivalent to a Custom profile specified as:
                         minTLSVersion: VersionTLS13
                         ciphers:
@@ -379,6 +418,9 @@ spec:
                     description: |-
                       old is a TLS profile for use when services need to be accessed by very old
                       clients or libraries and should be used only as a last resort.
+
+                      The curve list includes by default the following curves:
+                      X25519, SecP256r1, SecP384r1, X25519MLKEM768.
 
                       This profile is equivalent to a Custom profile specified as:
                         minTLSVersion: VersionTLS10

@@ -73,7 +73,7 @@ type PKICertificateManagement struct {
 	Mode PKICertificateManagementMode `json:"mode,omitempty"`
 
 	// custom contains administrator-specified cryptographic configuration.
-	// Use the defaults and categoryOverrides fields to specify certificate generation parameters.
+	// Use the defaults and overrides fields to specify certificate generation parameters.
 	// Required when mode is Custom, and forbidden otherwise.
 	//
 	// +optional
@@ -82,8 +82,8 @@ type PKICertificateManagement struct {
 }
 
 // CustomPKIPolicy contains administrator-specified cryptographic configuration.
-// Administrators must specify defaults for all certificates and may optionally override
-// specific categories of certificates.
+// Administrators must specify defaults for all certificates and may optionally
+// override specific categories of certificates.
 //
 // +kubebuilder:validation:XValidation:rule="has(self.defaults.key)",message="the default key algorithm configuration is required",fieldPath="defaults.key"
 type CustomPKIPolicy struct {
@@ -107,32 +107,32 @@ const (
 )
 
 // PKIProfile defines the certificate generation parameters that OpenShift
-// components use to create certificates. Category overrides take precedence over
-// defaults.
+// components use to create certificates. Overrides take precedence over defaults.
+//
+// +kubebuilder:validation:XValidation:rule="has(self.overrides) ? self.overrides.filter(o, o.type == 'Category').all(a, self.overrides.filter(o, o.type == 'Category').exists_one(b, a.category.name == b.category.name)) : true",message="each override of type Category must have a unique name"
 type PKIProfile struct {
 	// defaults specifies the default certificate configuration that applies
-	// to all certificates unless overridden by a categoryOverrides entry.
+	// to all certificates unless overridden by an overrides entry.
 	//
 	// +required
 	Defaults CertificateConfig `json:"defaults,omitzero"`
 
-	// categoryOverrides allows overriding certificate parameters for specific
-	// categories of certificates (SignerCertificate, ServingCertificate, ClientCertificate).
-	// Category overrides take precedence over defaults.
+	// overrides allows overriding certificate parameters for specific
+	// categories of certificates or specific named certificates.
+	// Overrides take precedence over defaults.
 	//
 	// +optional
-	// +listType=map
-	// +listMapKey=category
+	// +listType=atomic
 	// +kubebuilder:validation:MaxItems=3
-	CategoryOverrides []CategoryCertificateConfig `json:"categoryOverrides,omitempty"`
+	Overrides []CertificateOverride `json:"overrides,omitempty"`
 }
 
 // CertificateConfig specifies configuration parameters for certificates.
 // +kubebuilder:validation:MinProperties=1
 type CertificateConfig struct {
 	// key specifies the cryptographic parameters for the certificate's key pair.
-	// Currently this is the only configurable parameter. When omitted in a
-	// categoryOverrides entry, the key configuration from defaults is used.
+	// Currently this is the only configurable parameter. When omitted in an
+	// overrides entry, the key configuration from defaults is used.
 	// +optional
 	Key KeyConfig `json:"key,omitempty,omitzero"`
 
@@ -184,25 +184,58 @@ type ECDSAKeyConfig struct {
 	Curve ECDSACurve `json:"curve,omitempty"`
 }
 
-type CategoryCertificateConfig struct {
-	// category identifies the certificate category.
-	// Valid values are "SignerCertificate", "ServingCertificate", and "ClientCertificate".
+// CertificateOverride specifies a certificate configuration override.
+// The type field determines what kind of override this is.
+//
+// +kubebuilder:validation:XValidation:rule="self.type == 'Category' ? has(self.category) : !has(self.category)",message="category is required when type is Category, and forbidden otherwise"
+// +union
+type CertificateOverride struct {
+	// type determines what this override targets.
+	// Valid values are "Category".
 	//
-	// When set to SignerCertificate, the configuration applies to certificate authority (CA) certificates
+	// When set to Category, the override applies to all certificates of the
+	// specified category. The category field must be set.
+	//
+	// +required
+	// +unionDiscriminator
+	Type CertificateOverrideType `json:"type,omitempty"`
+
+	// category specifies an override for a category of certificates.
+	// Required when type is Category, and forbidden otherwise.
+	//
+	// +optional
+	// +unionMember
+	Category *CategoryOverride `json:"category,omitzero"`
+
+	// certificate specifies the certificate configuration for this override.
+	// +required
+	Certificate CertificateConfig `json:"certificate,omitzero"`
+}
+
+// +kubebuilder:validation:Enum=Category
+type CertificateOverrideType string
+
+const (
+	// CertificateOverrideTypeCategory overrides configuration for a category of certificates.
+	CertificateOverrideTypeCategory CertificateOverrideType = "Category"
+)
+
+// CategoryOverride identifies the certificate category to override.
+type CategoryOverride struct {
+	// name identifies the certificate category.
+	// Valid values are "Signer", "Serving", and "Client".
+	//
+	// When set to Signer, the configuration applies to certificate authority (CA) certificates
 	// that sign other certificates.
 	//
-	// When set to ServingCertificate, the configuration applies to TLS server certificates
+	// When set to Serving, the configuration applies to TLS server certificates
 	// used to serve HTTPS endpoints.
 	//
-	// When set to ClientCertificate, the configuration applies to client authentication certificates
+	// When set to Client, the configuration applies to client authentication certificates
 	// used to authenticate to servers.
 	//
 	// +required
-	Category CertificateCategory `json:"category,omitempty"`
-
-	// certificate specifies the configuration for this category
-	// +required
-	Certificate CertificateConfig `json:"certificate,omitzero"`
+	Name CertificateCategory `json:"name,omitempty"`
 }
 
 // +kubebuilder:validation:Enum=RSA;ECDSA
@@ -222,13 +255,13 @@ const (
 	ECDSACurveP521 ECDSACurve = "P521"
 )
 
-// +kubebuilder:validation:Enum=SignerCertificate;ServingCertificate;ClientCertificate
+// +kubebuilder:validation:Enum=Signer;Serving;Client
 type CertificateCategory string
 
 const (
-	CertificateCategorySignerCertificate  CertificateCategory = "SignerCertificate"
-	CertificateCategoryServingCertificate CertificateCategory = "ServingCertificate"
-	CertificateCategoryClientCertificate  CertificateCategory = "ClientCertificate"
+	CertificateCategorySigner  CertificateCategory = "Signer"
+	CertificateCategoryServing CertificateCategory = "Serving"
+	CertificateCategoryClient  CertificateCategory = "Client"
 )
 
 // PKIList is a collection of PKI resources.

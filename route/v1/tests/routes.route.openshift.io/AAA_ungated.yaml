@@ -20,6 +20,605 @@ tests:
             name: foo
             weight: 100
           wildcardPolicy: None
+    # Host field validation tests
+    - name: Should be able to create a Route with a valid host
+      initial: |
+        apiVersion: route.openshift.io/v1
+        kind: Route
+        spec:
+          host: my-app.example.com
+          to:
+            kind: Service
+            name: foo
+      expected: |
+        apiVersion: route.openshift.io/v1
+        kind: Route
+        spec:
+          host: my-app.example.com
+          to:
+            kind: Service
+            name: foo
+            weight: 100
+          wildcardPolicy: None
+    - name: Should be able to create a Route with a single label host
+      initial: |
+        apiVersion: route.openshift.io/v1
+        kind: Route
+        spec:
+          host: myhost
+          to:
+            kind: Service
+            name: foo
+      expected: |
+        apiVersion: route.openshift.io/v1
+        kind: Route
+        spec:
+          host: myhost
+          to:
+            kind: Service
+            name: foo
+            weight: 100
+          wildcardPolicy: None
+    - name: Should not allow host starting with a hyphen
+      initial: |
+        apiVersion: route.openshift.io/v1
+        kind: Route
+        spec:
+          host: -invalid.example.com
+          to:
+            kind: Service
+            name: foo
+      expectedError: "spec.host in body should match"
+    - name: Should not allow host ending with a hyphen
+      initial: |
+        apiVersion: route.openshift.io/v1
+        kind: Route
+        spec:
+          host: invalid-.example.com
+          to:
+            kind: Service
+            name: foo
+      expectedError: "spec.host in body should match"
+    - name: Should not allow host with invalid characters
+      initial: |
+        apiVersion: route.openshift.io/v1
+        kind: Route
+        spec:
+          host: invalid_host.example.com
+          to:
+            kind: Service
+            name: foo
+      expectedError: "spec.host in body should match"
+    # Subdomain field validation tests
+    - name: Should be able to create a Route with a valid subdomain
+      initial: |
+        apiVersion: route.openshift.io/v1
+        kind: Route
+        spec:
+          subdomain: frontend
+          to:
+            kind: Service
+            name: foo
+      expected: |
+        apiVersion: route.openshift.io/v1
+        kind: Route
+        spec:
+          subdomain: frontend
+          to:
+            kind: Service
+            name: foo
+            weight: 100
+          wildcardPolicy: None
+    - name: Should be able to create a Route with a multi-part subdomain
+      initial: |
+        apiVersion: route.openshift.io/v1
+        kind: Route
+        spec:
+          subdomain: api.v1.frontend
+          to:
+            kind: Service
+            name: foo
+      expected: |
+        apiVersion: route.openshift.io/v1
+        kind: Route
+        spec:
+          subdomain: api.v1.frontend
+          to:
+            kind: Service
+            name: foo
+            weight: 100
+          wildcardPolicy: None
+    - name: Should not allow subdomain starting with a hyphen
+      initial: |
+        apiVersion: route.openshift.io/v1
+        kind: Route
+        spec:
+          subdomain: -invalid
+          to:
+            kind: Service
+            name: foo
+      expectedError: "spec.subdomain in body should match"
+    # Path field validation tests
+    - name: Should be able to create a Route with a valid path
+      initial: |
+        apiVersion: route.openshift.io/v1
+        kind: Route
+        spec:
+          host: example.com
+          path: /api/v1
+          to:
+            kind: Service
+            name: foo
+      expected: |
+        apiVersion: route.openshift.io/v1
+        kind: Route
+        spec:
+          host: example.com
+          path: /api/v1
+          to:
+            kind: Service
+            name: foo
+            weight: 100
+          wildcardPolicy: None
+    - name: Should be able to create a Route with a root path
+      initial: |
+        apiVersion: route.openshift.io/v1
+        kind: Route
+        spec:
+          host: example.com
+          path: /
+          to:
+            kind: Service
+            name: foo
+      expected: |
+        apiVersion: route.openshift.io/v1
+        kind: Route
+        spec:
+          host: example.com
+          path: /
+          to:
+            kind: Service
+            name: foo
+            weight: 100
+          wildcardPolicy: None
+    - name: Should not allow path not starting with slash
+      initial: |
+        apiVersion: route.openshift.io/v1
+        kind: Route
+        spec:
+          host: example.com
+          path: api/v1
+          to:
+            kind: Service
+            name: foo
+      expectedError: "spec.path in body should match"
+    # to.kind validation tests
+    - name: Should be able to create a Route with explicit Service kind
+      initial: |
+        apiVersion: route.openshift.io/v1
+        kind: Route
+        spec:
+          to:
+            kind: Service
+            name: my-service
+      expected: |
+        apiVersion: route.openshift.io/v1
+        kind: Route
+        spec:
+          to:
+            kind: Service
+            name: my-service
+            weight: 100
+          wildcardPolicy: None
+    - name: Should be able to create a Route with empty kind (defaults to Service)
+      initial: |
+        apiVersion: route.openshift.io/v1
+        kind: Route
+        spec:
+          to:
+            kind: ""
+            name: my-service
+      expected: |
+        apiVersion: route.openshift.io/v1
+        kind: Route
+        spec:
+          to:
+            kind: ""
+            name: my-service
+            weight: 100
+          wildcardPolicy: None
+    - name: Should not allow invalid kind
+      initial: |
+        apiVersion: route.openshift.io/v1
+        kind: Route
+        spec:
+          to:
+            kind: Deployment
+            name: my-deployment
+      expectedError: "spec.to.kind: Unsupported value"
+    # to.name validation tests
+    - name: Should not allow empty service name
+      initial: |
+        apiVersion: route.openshift.io/v1
+        kind: Route
+        spec:
+          to:
+            kind: Service
+            name: ""
+      expectedError: "spec.to.name in body should be at least 1 chars long"
+    # to.weight validation tests
+    - name: Should be able to create a Route with weight 0
+      initial: |
+        apiVersion: route.openshift.io/v1
+        kind: Route
+        spec:
+          to:
+            kind: Service
+            name: foo
+            weight: 0
+      expected: |
+        apiVersion: route.openshift.io/v1
+        kind: Route
+        spec:
+          to:
+            kind: Service
+            name: foo
+            weight: 0
+          wildcardPolicy: None
+    - name: Should be able to create a Route with weight 256
+      initial: |
+        apiVersion: route.openshift.io/v1
+        kind: Route
+        spec:
+          to:
+            kind: Service
+            name: foo
+            weight: 256
+      expected: |
+        apiVersion: route.openshift.io/v1
+        kind: Route
+        spec:
+          to:
+            kind: Service
+            name: foo
+            weight: 256
+          wildcardPolicy: None
+    - name: Should not allow weight greater than 256
+      initial: |
+        apiVersion: route.openshift.io/v1
+        kind: Route
+        spec:
+          to:
+            kind: Service
+            name: foo
+            weight: 257
+      expectedError: "spec.to.weight in body should be less than or equal to 256"
+    - name: Should not allow negative weight
+      initial: |
+        apiVersion: route.openshift.io/v1
+        kind: Route
+        spec:
+          to:
+            kind: Service
+            name: foo
+            weight: -1
+      expectedError: "spec.to.weight in body should be greater than or equal to 0"
+    # alternateBackends validation tests
+    - name: Should be able to create a Route with 3 alternate backends
+      initial: |
+        apiVersion: route.openshift.io/v1
+        kind: Route
+        spec:
+          to:
+            kind: Service
+            name: primary
+          alternateBackends:
+          - kind: Service
+            name: backend1
+          - kind: Service
+            name: backend2
+          - kind: Service
+            name: backend3
+      expected: |
+        apiVersion: route.openshift.io/v1
+        kind: Route
+        spec:
+          to:
+            kind: Service
+            name: primary
+            weight: 100
+          alternateBackends:
+          - kind: Service
+            name: backend1
+            weight: 100
+          - kind: Service
+            name: backend2
+            weight: 100
+          - kind: Service
+            name: backend3
+            weight: 100
+          wildcardPolicy: None
+    - name: Should not allow more than 3 alternate backends
+      initial: |
+        apiVersion: route.openshift.io/v1
+        kind: Route
+        spec:
+          to:
+            kind: Service
+            name: primary
+          alternateBackends:
+          - kind: Service
+            name: backend1
+          - kind: Service
+            name: backend2
+          - kind: Service
+            name: backend3
+          - kind: Service
+            name: backend4
+      expectedError: "spec.alternateBackends: Too many: 4: must have at most 3 items"
+    - name: Should be able to create alternate backend with weight 0
+      initial: |
+        apiVersion: route.openshift.io/v1
+        kind: Route
+        spec:
+          to:
+            kind: Service
+            name: primary
+          alternateBackends:
+          - kind: Service
+            name: backend1
+            weight: 0
+      expected: |
+        apiVersion: route.openshift.io/v1
+        kind: Route
+        spec:
+          to:
+            kind: Service
+            name: primary
+            weight: 100
+          alternateBackends:
+          - kind: Service
+            name: backend1
+            weight: 0
+          wildcardPolicy: None
+    - name: Should not allow alternate backend with weight greater than 256
+      initial: |
+        apiVersion: route.openshift.io/v1
+        kind: Route
+        spec:
+          to:
+            kind: Service
+            name: primary
+          alternateBackends:
+          - kind: Service
+            name: backend1
+            weight: 300
+      expectedError: "spec.alternateBackends[0].weight in body should be less than or equal to 256"
+    - name: Should not allow alternate backend with empty name
+      initial: |
+        apiVersion: route.openshift.io/v1
+        kind: Route
+        spec:
+          to:
+            kind: Service
+            name: primary
+          alternateBackends:
+          - kind: Service
+            name: ""
+      expectedError: "spec.alternateBackends[0].name in body should be at least 1 chars long"
+    # wildcardPolicy validation tests
+    - name: Should be able to create a Route with wildcardPolicy None
+      initial: |
+        apiVersion: route.openshift.io/v1
+        kind: Route
+        spec:
+          to:
+            kind: Service
+            name: foo
+          wildcardPolicy: None
+      expected: |
+        apiVersion: route.openshift.io/v1
+        kind: Route
+        spec:
+          to:
+            kind: Service
+            name: foo
+            weight: 100
+          wildcardPolicy: None
+    - name: Should be able to create a Route with wildcardPolicy Subdomain
+      initial: |
+        apiVersion: route.openshift.io/v1
+        kind: Route
+        spec:
+          host: www.example.com
+          to:
+            kind: Service
+            name: foo
+          wildcardPolicy: Subdomain
+      expected: |
+        apiVersion: route.openshift.io/v1
+        kind: Route
+        spec:
+          host: www.example.com
+          to:
+            kind: Service
+            name: foo
+            weight: 100
+          wildcardPolicy: Subdomain
+    - name: Should be able to create a Route with empty wildcardPolicy (defaults to None)
+      initial: |
+        apiVersion: route.openshift.io/v1
+        kind: Route
+        spec:
+          to:
+            kind: Service
+            name: foo
+          wildcardPolicy: ""
+      expected: |
+        apiVersion: route.openshift.io/v1
+        kind: Route
+        spec:
+          to:
+            kind: Service
+            name: foo
+            weight: 100
+          wildcardPolicy: ""
+    - name: Should not allow invalid wildcardPolicy
+      initial: |
+        apiVersion: route.openshift.io/v1
+        kind: Route
+        spec:
+          to:
+            kind: Service
+            name: foo
+          wildcardPolicy: Invalid
+      expectedError: "spec.wildcardPolicy: Unsupported value"
+    # TLS termination validation tests
+    - name: Should be able to create a Route with edge termination
+      initial: |
+        apiVersion: route.openshift.io/v1
+        kind: Route
+        spec:
+          host: secure.example.com
+          to:
+            kind: Service
+            name: foo
+          tls:
+            termination: edge
+      expected: |
+        apiVersion: route.openshift.io/v1
+        kind: Route
+        spec:
+          host: secure.example.com
+          to:
+            kind: Service
+            name: foo
+            weight: 100
+          tls:
+            termination: edge
+          wildcardPolicy: None
+    - name: Should be able to create a Route with reencrypt termination
+      initial: |
+        apiVersion: route.openshift.io/v1
+        kind: Route
+        spec:
+          host: secure.example.com
+          to:
+            kind: Service
+            name: foo
+          tls:
+            termination: reencrypt
+      expected: |
+        apiVersion: route.openshift.io/v1
+        kind: Route
+        spec:
+          host: secure.example.com
+          to:
+            kind: Service
+            name: foo
+            weight: 100
+          tls:
+            termination: reencrypt
+          wildcardPolicy: None
+    - name: Should be able to create a Route with passthrough termination
+      initial: |
+        apiVersion: route.openshift.io/v1
+        kind: Route
+        spec:
+          host: secure.example.com
+          to:
+            kind: Service
+            name: foo
+          tls:
+            termination: passthrough
+      expected: |
+        apiVersion: route.openshift.io/v1
+        kind: Route
+        spec:
+          host: secure.example.com
+          to:
+            kind: Service
+            name: foo
+            weight: 100
+          tls:
+            termination: passthrough
+          wildcardPolicy: None
+    - name: Should not allow invalid TLS termination type
+      initial: |
+        apiVersion: route.openshift.io/v1
+        kind: Route
+        spec:
+          host: secure.example.com
+          to:
+            kind: Service
+            name: foo
+          tls:
+            termination: invalid
+      expectedError: "spec.tls.termination: Unsupported value"
+    # insecureEdgeTerminationPolicy validation tests
+    - name: Should be able to create a Route with insecureEdgeTerminationPolicy Allow
+      initial: |
+        apiVersion: route.openshift.io/v1
+        kind: Route
+        spec:
+          host: secure.example.com
+          to:
+            kind: Service
+            name: foo
+          tls:
+            termination: edge
+            insecureEdgeTerminationPolicy: Allow
+      expected: |
+        apiVersion: route.openshift.io/v1
+        kind: Route
+        spec:
+          host: secure.example.com
+          to:
+            kind: Service
+            name: foo
+            weight: 100
+          tls:
+            termination: edge
+            insecureEdgeTerminationPolicy: Allow
+          wildcardPolicy: None
+    - name: Should be able to create a Route with insecureEdgeTerminationPolicy Redirect
+      initial: |
+        apiVersion: route.openshift.io/v1
+        kind: Route
+        spec:
+          host: secure.example.com
+          to:
+            kind: Service
+            name: foo
+          tls:
+            termination: edge
+            insecureEdgeTerminationPolicy: Redirect
+      expected: |
+        apiVersion: route.openshift.io/v1
+        kind: Route
+        spec:
+          host: secure.example.com
+          to:
+            kind: Service
+            name: foo
+            weight: 100
+          tls:
+            termination: edge
+            insecureEdgeTerminationPolicy: Redirect
+          wildcardPolicy: None
+    - name: Should not allow invalid insecureEdgeTerminationPolicy
+      initial: |
+        apiVersion: route.openshift.io/v1
+        kind: Route
+        spec:
+          host: secure.example.com
+          to:
+            kind: Service
+            name: foo
+          tls:
+            termination: edge
+            insecureEdgeTerminationPolicy: Invalid
+      expectedError: "spec.tls.insecureEdgeTerminationPolicy: Unsupported value"
     - name: "cannot have both spec.tls.termination: passthrough and spec.tls.insecureEdgeTerminationPolicy: Allow"
       initial: |
         apiVersion: route.openshift.io/v1
@@ -81,6 +680,49 @@ tests:
           tls:
             termination: passthrough
             insecureEdgeTerminationPolicy: None
+          wildcardPolicy: None
+    # Port validation tests
+    - name: Should be able to create a Route with integer targetPort
+      initial: |
+        apiVersion: route.openshift.io/v1
+        kind: Route
+        spec:
+          to:
+            kind: Service
+            name: foo
+          port:
+            targetPort: 8080
+      expected: |
+        apiVersion: route.openshift.io/v1
+        kind: Route
+        spec:
+          to:
+            kind: Service
+            name: foo
+            weight: 100
+          port:
+            targetPort: 8080
+          wildcardPolicy: None
+    - name: Should be able to create a Route with string targetPort
+      initial: |
+        apiVersion: route.openshift.io/v1
+        kind: Route
+        spec:
+          to:
+            kind: Service
+            name: foo
+          port:
+            targetPort: http
+      expected: |
+        apiVersion: route.openshift.io/v1
+        kind: Route
+        spec:
+          to:
+            kind: Service
+            name: foo
+            weight: 100
+          port:
+            targetPort: http
           wildcardPolicy: None
     - name: Should be able to create a Route with valid actions
       initial: |

@@ -97,7 +97,7 @@ tests:
                   algorithm: ECDSA
                   ecdsa:
                     curve: P384
-    - name: Should be able to create a PKI with mode Custom with defaults and categories
+    - name: Should be able to create a PKI with mode Custom with defaults and overrides
       initial: |
         apiVersion: config.openshift.io/v1alpha1
         kind: PKI
@@ -112,14 +112,18 @@ tests:
                   algorithm: RSA
                   rsa:
                     keySize: 2048
-              categories:
-              - category: SignerCertificate
+              overrides:
+              - type: Category
+                category:
+                  name: Signer
                 certificate:
                   key:
                     algorithm: RSA
                     rsa:
                       keySize: 4096
-              - category: ServingCertificate
+              - type: Category
+                category:
+                  name: Serving
                 certificate:
                   key:
                     algorithm: ECDSA
@@ -139,14 +143,18 @@ tests:
                   algorithm: RSA
                   rsa:
                     keySize: 2048
-              categories:
-              - category: SignerCertificate
+              overrides:
+              - type: Category
+                category:
+                  name: Signer
                 certificate:
                   key:
                     algorithm: RSA
                     rsa:
                       keySize: 4096
-              - category: ServingCertificate
+              - type: Category
+                category:
+                  name: Serving
                 certificate:
                   key:
                     algorithm: ECDSA

@@ -238,6 +238,9 @@
                         "name": "SignatureStores"
                     },
                     {
+                        "name": "TLSAdherence"
+                    },
+                    {
                         "name": "VSphereConfigurableMaxAllowedBlockVolumesPerNode"
                     },
                     {

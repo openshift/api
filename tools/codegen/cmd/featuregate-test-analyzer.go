@@ -6,6 +6,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"html/template"
 	"io"
 	"net/http"
 	"net/url"
@@ -16,7 +17,6 @@ import (
 	"strings"
 	"time"
 
-	"github.com/russross/blackfriday"
 	"github.com/spf13/cobra"
 	"github.com/spf13/pflag"
 	"k8s.io/apimachinery/pkg/util/sets"
@@ -170,6 +170,7 @@ func (o *FeatureGateTestAnalyzerOptions) Run(ctx context.Context) error {
 		fmt.Fprintf(o.Out, "No new Default FeatureGates found.\n")
 	}
 
+	featureGateHTMLData := []utils.HTMLFeatureGate{}
 	recentlyEnabledFeatureGates := sets.KeySet(recentlyEnabledFeatureGatesToClusterProfiles)
 	for _, enabledFeatureGate := range sets.List(recentlyEnabledFeatureGates) {
 		clusterProfiles := recentlyEnabledFeatureGatesToClusterProfiles[enabledFeatureGate]
@@ -197,6 +198,7 @@ func (o *FeatureGateTestAnalyzerOptions) Run(ctx context.Context) error {
 			fmt.Fprintf(o.Out, "INSUFFICIENT CI testing for %q.\n", enabledFeatureGate)
 		}
 		errs = append(errs, currErrs...)
+		featureGateHTMLData = append(featureGateHTMLData, buildHTMLFeatureGateData(enabledFeatureGate, testingResults, currErrs))
 
 	}
 
@@ -207,12 +209,8 @@ func (o *FeatureGateTestAnalyzerOptions) Run(ctx context.Context) error {
 			errs = append(errs, err)
 		}
 
-		htmlContent := blackfriday.Run(summaryMarkdown)
-		htmlBytes := []byte{}
-		htmlBytes = append(htmlBytes, []byte(htmlHeader)...)
-		htmlBytes = append(htmlBytes, htmlContent...)
 		htmlFilename := filepath.Join(o.OutputDir, "feature-promotion-summary.html")
-		if err := os.WriteFile(htmlFilename, htmlBytes, 0644); err != nil {
+		if err := writeHTMLFromTemplate(htmlFilename, featureGateHTMLData); err != nil {
 			errs = append(errs, err)
 		}
 	}
@@ -220,26 +218,90 @@ func (o *FeatureGateTestAnalyzerOptions) Run(ctx context.Context) error {
 	return errors.Join(errs...)
 }
 
-const htmlHeader = `<head>
-    <meta charset="UTF-8"><title>FeatureGate Promotion Summary</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/4.6.1/css/bootstrap.min.css" integrity="sha512-T584yQ/tdRR5QwOpfvDfVQUidzfgc2339Lc8uBDtcp/wYu80d7jwBgAxbyMh0a9YM9F8N3tdErpFI8iaGx6x5g==" crossorigin="anonymous">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.5.0/font/bootstrap-icons.min.css">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <style>
-        @media (max-width: 992px) {
-            .container {
-                width: 100%;
-                max-width: none;
-            }
-        }
-        table, th, td {
-            border: 1px solid;
-            padding: 10px;
-        }
-    </style>
-</head>
+func buildHTMLFeatureGateData(name string, testingResults map[JobVariant]*TestingResults, errs []error) utils.HTMLFeatureGate {
+	jobVariantsSet := sets.KeySet(testingResults)
+	jobVariants := jobVariantsSet.UnsortedList()
+	sort.Sort(OrderedJobVariants(jobVariants))
 
-`
+	variants := make([]utils.HTMLVariantColumn, 0, len(jobVariants))
+	for i, jv := range jobVariants {
+		variants = append(variants, utils.HTMLVariantColumn{
+			Topology:     jv.Topology,
+			Cloud:        jv.Cloud,
+			Architecture: jv.Architecture,
+			NetworkStack: jv.NetworkStack,
+			ColIndex:     i + 1,
+		})
+	}
+
+	allTests := sets.Set[string]{}
+	for _, variantTestingResults := range testingResults {
+		for _, currTestingResult := range variantTestingResults.TestResults {
+			allTests.Insert(currTestingResult.TestName)
+		}
+	}
+
+	tests := make([]utils.HTMLTestRow, 0, len(allTests))
+	for _, testName := range sets.List(allTests) {
+		row := utils.HTMLTestRow{
+			TestName: testName,
+			Cells:    make([]utils.HTMLTestCell, len(jobVariants)),
+		}
+		for i, jobVariant := range jobVariants {
+			allTesting := testingResults[jobVariant]
+			testResults := testResultByName(allTesting.TestResults, testName)
+			cell := utils.HTMLTestCell{}
+			if testResults == nil {
+				cell.Failed = true
+			} else {
+				var passPercent float32
+				if testResults.TotalRuns > 0 {
+					passPercent = float32(testResults.SuccessfulRuns) / float32(testResults.TotalRuns)
+				}
+				cell.PassPercent = int(passPercent * 100)
+				cell.SuccessfulRuns = testResults.SuccessfulRuns
+				cell.TotalRuns = testResults.TotalRuns
+				cell.FailedRuns = testResults.FailedRuns
+				if testResults.TotalRuns < requiredNumberOfTestRunsPerVariant || passPercent < requiredPassRateOfTestsPerVariant {
+					cell.Failed = true
+				}
+			}
+			row.Cells[i] = cell
+		}
+		tests = append(tests, row)
+	}
+
+	return utils.HTMLFeatureGate{
+		Name:       name,
+		Sufficient: len(errs) == 0,
+		Variants:   variants,
+		Tests:      tests,
+	}
+}
+
+func writeHTMLFromTemplate(filename string, featureGateHTMLData []utils.HTMLFeatureGate) error {
+
+	data := utils.HTMLTemplateData{
+		FeatureGates: featureGateHTMLData,
+	}
+
+	tmpl, err := template.New("report").Parse(utils.HTMLTemplateSrc)
+	if err != nil {
+		return fmt.Errorf("error parsing HTML template: %w", err)
+	}
+
+	f, err := os.Create(filename)
+	if err != nil {
+		return fmt.Errorf("error creating HTML file: %w", err)
+	}
+	defer f.Close()
+
+	if err := tmpl.Execute(f, data); err != nil {
+		return fmt.Errorf("error executing HTML template: %w", err)
+	}
+
+	return nil
+}
 
 func checkIfTestingIsSufficient(featureGate string, testingResults map[JobVariant]*TestingResults) []error {
 	errs := []error{}

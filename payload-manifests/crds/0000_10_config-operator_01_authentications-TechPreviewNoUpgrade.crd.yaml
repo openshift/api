@@ -191,6 +191,19 @@ spec:
                                 the JWT token claim whose value is assigned to the
                                 cluster identity field associated with this mapping.
                               type: string
+                            expression:
+                              description: |-
+                                expression is an optional CEL expression used to derive
+                                group values from JWT claims.
+
+                                When specified, claim must not be set.
+                              maxLength: 1024
+                              minLength: 1
+                              type: string
+                              x-kubernetes-validations:
+                              - message: claim must not be set when expression is
+                                  provided
+                                rule: 'has(self.expression) ? !has(self.claim) : true'
                             prefix:
                               description: |-
                                 prefix is an optional field that configures the prefix that will be applied to the cluster identity attribute during the process of mapping JWT claims to cluster identity attributes.
@@ -252,12 +265,23 @@ spec:
                           properties:
                             claim:
                               description: |-
-                                claim is a required field that configures the JWT token claim whose value is assigned to the cluster identity field associated with this mapping.
+                                claim is a optional field that configures the JWT token claim whose value is assigned to the cluster identity field associated with this mapping.
+
+                                Precisely one of claim or expression must be set if the
+                                ExternalOIDCWithUpstreamParity feature gate is enabled.
 
                                 claim must not be an empty string ("") and must not exceed 256 characters.
                               maxLength: 256
                               minLength: 1
                               type: string
+                            expression:
+                              maxLength: 1024
+                              minLength: 1
+                              type: string
+                              x-kubernetes-validations:
+                              - message: claim must not be set when expression is
+                                  provided
+                                rule: 'has(self.expression) ? !has(self.claim) : true'
                             prefix:
                               description: |-
                                 prefix configures the prefix that should be prepended to the value of the JWT claim.
@@ -301,8 +325,6 @@ spec:
                               - NoPrefix
                               - Prefix
                               type: string
-                          required:
-                          - claim
                           type: object
                           x-kubernetes-validations:
                           - message: prefix must be set if prefixPolicy is 'Prefix',

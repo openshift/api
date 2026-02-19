@@ -435,7 +435,6 @@ tests:
                   message: "Empty expressions are invalid"
       expectedError: "spec.oidcProviders[0].userValidationRules[0].expression: Invalid value: \"\": spec.oidcProviders[0].userValidationRules[0].expression in body should be at least 1 chars long"
 
-
     - name: Invalid TokenUserValidationRule with expression only
       initial: |
         apiVersion: config.openshift.io/v1
@@ -456,3 +455,102 @@ tests:
               userValidationRules:
                 - expression: "user.username.startsWith('admin')"
       expectedError: "message: Required value"
+
+    - name: Can set username claim mapping using a CEL expression only
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: Authentication
+        spec:
+          type: OIDC
+          oidcProviders:
+          - name: myoidc
+            issuer:
+              issuerURL: https://meh.tld
+              audiences: ['openshift-aud']
+            claimMappings:
+              username:
+                expression: "has(claims.upn) ? claims.upn : claims.oid"
+      expected: |
+        apiVersion: config.openshift.io/v1
+        kind: Authentication
+        spec:
+          type: OIDC
+          oidcProviders:
+          - name: myoidc
+            issuer:
+              issuerURL: https://meh.tld
+              audiences: ['openshift-aud']
+            claimMappings:
+              username:
+                expression: "has(claims.upn) ? claims.upn : claims.oid"
+
+    - name: Cannot set both claim and expression for username mapping
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: Authentication
+        spec:
+          type: OIDC
+          oidcProviders:
+          - name: myoidc
+            issuer:
+              issuerURL: https://meh.tld
+              audiences: ['openshift-aud']
+            claimMappings:
+              username:
+                claim: "preferred_username"
+                expression: "claims.sub"
+      expectedError: "claim must not be set when expression is provided"
+
+    - name: Can set groups mapping using a CEL expression
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: Authentication
+        spec:
+          type: OIDC
+          oidcProviders:
+          - name: myoidc
+            issuer:
+              issuerURL: https://meh.tld
+              audiences: ['openshift-aud']
+            claimMappings:
+              username:
+                claim: "preferred_username"
+              groups:
+                expression: "claims.roles.split(',')"
+      expected: |
+        apiVersion: config.openshift.io/v1
+        kind: Authentication
+        spec:
+          type: OIDC
+          oidcProviders:
+          - name: myoidc
+            issuer:
+              issuerURL: https://meh.tld
+              audiences: ['openshift-aud']
+            claimMappings:
+              username:
+                claim: "preferred_username"
+              groups:
+                expression: "claims.roles.split(',')"
+
+    - name: Cannot set both claim and expression for groups mapping
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: Authentication
+        spec:
+          type: OIDC
+          oidcProviders:
+          - name: myoidc
+            issuer:
+              issuerURL: https://meh.tld
+              audiences: ['openshift-aud']
+            claimMappings:
+              username:
+                claim: "preferred_username"
+              groups:
+                claim: "roles"
+                expression: "claims.roles.split(',')"
+      expectedError: "claim must not be set when expression is provided"
+
+
+        

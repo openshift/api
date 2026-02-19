@@ -3,11 +3,13 @@ package openapi
 import (
 	"bytes"
 	"fmt"
+	"log"
 	"os"
 	"path/filepath"
 
 	"github.com/openshift/api/tools/codegen/pkg/generation"
 	"github.com/openshift/api/tools/codegen/pkg/utils"
+	"k8s.io/gengo/v2"
 	gengenerator "k8s.io/gengo/v2/generator"
 	"k8s.io/gengo/v2/parser"
 	"k8s.io/gengo/v2/types"
@@ -46,7 +48,12 @@ func generateOpenAPIDefinitions(globalParser *parser.Parser, universe types.Univ
 	klog.V(2).Infof("Generating openapi into %s", outputPackagePath)
 
 	myTargets := func(context *gengenerator.Context) []gengenerator.Target {
-		return generators.GetTargets(context, arguments)
+		boilerplate, err := gengo.GoBoilerplate(arguments.GoHeaderFile, gengo.StdBuildTag, gengo.StdGeneratedBy)
+		if err != nil {
+			log.Fatalf("Failed loading boilerplate: %v", err)
+		}
+
+		return generators.GetOpenAPITargets(context, arguments, boilerplate)
 	}
 
 	if err := generation.Execute(

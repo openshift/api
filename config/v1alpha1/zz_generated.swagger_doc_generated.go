@@ -486,4 +486,118 @@ func (Storage) SwaggerDoc() map[string]string {
 	return map_Storage
 }
 
+var map_CategoryOverride = map[string]string{
+	"":     "CategoryOverride identifies the certificate category to override.",
+	"name": "name identifies the certificate category. Valid values are \"Signer\", \"Serving\", and \"Client\".\n\nWhen set to Signer, the configuration applies to certificate authority (CA) certificates that sign other certificates.\n\nWhen set to Serving, the configuration applies to TLS server certificates used to serve HTTPS endpoints.\n\nWhen set to Client, the configuration applies to client authentication certificates used to authenticate to servers.",
+}
+
+func (CategoryOverride) SwaggerDoc() map[string]string {
+	return map_CategoryOverride
+}
+
+var map_CertificateConfig = map[string]string{
+	"":    "CertificateConfig specifies configuration parameters for certificates.",
+	"key": "key specifies the cryptographic parameters for the certificate's key pair. Currently this is the only configurable parameter. When omitted in an overrides entry, the key configuration from defaults is used.",
+}
+
+func (CertificateConfig) SwaggerDoc() map[string]string {
+	return map_CertificateConfig
+}
+
+var map_CertificateOverride = map[string]string{
+	"":            "CertificateOverride specifies a certificate configuration override. The type field determines what kind of override this is.",
+	"type":        "type determines what this override targets. Valid values are \"Category\".\n\nWhen set to Category, the override applies to all certificates of the specified category. The category field must be set.",
+	"category":    "category specifies an override for a category of certificates. Required when type is Category, and forbidden otherwise.",
+	"certificate": "certificate specifies the certificate configuration for this override.",
+}
+
+func (CertificateOverride) SwaggerDoc() map[string]string {
+	return map_CertificateOverride
+}
+
+var map_CustomPKIPolicy = map[string]string{
+	"": "CustomPKIPolicy contains administrator-specified cryptographic configuration. Administrators must specify defaults for all certificates and may optionally override specific categories of certificates.",
+}
+
+func (CustomPKIPolicy) SwaggerDoc() map[string]string {
+	return map_CustomPKIPolicy
+}
+
+var map_ECDSAKeyConfig = map[string]string{
+	"":      "ECDSAKeyConfig specifies parameters for ECDSA key generation.",
+	"curve": "curve specifies the elliptic curve for ECDSA keys. Valid values are \"P256\", \"P384\", and \"P521\".",
+}
+
+func (ECDSAKeyConfig) SwaggerDoc() map[string]string {
+	return map_ECDSAKeyConfig
+}
+
+var map_KeyConfig = map[string]string{
+	"":          "KeyConfig specifies cryptographic parameters for key generation.",
+	"algorithm": "algorithm specifies the key generation algorithm. Valid values are \"RSA\" and \"ECDSA\".",
+	"rsa":       "rsa specifies RSA key parameters. Required when algorithm is RSA, and forbidden otherwise.",
+	"ecdsa":     "ecdsa specifies ECDSA key parameters. Required when algorithm is ECDSA, and forbidden otherwise.",
+}
+
+func (KeyConfig) SwaggerDoc() map[string]string {
+	return map_KeyConfig
+}
+
+var map_PKI = map[string]string{
+	"":         "PKI configures cryptographic parameters for certificates generated internally by OpenShift components.\n\nCompatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.",
+	"metadata": "metadata is the standard object's metadata. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata",
+	"spec":     "spec holds user settable values for configuration",
+}
+
+func (PKI) SwaggerDoc() map[string]string {
+	return map_PKI
+}
+
+var map_PKICertificateManagement = map[string]string{
+	"":       "PKICertificateManagement determines whether components use hardcoded defaults (Unmanaged), follow OpenShift best practices (Default), or use administrator-specified cryptographic parameters (Custom). This provides flexibility for organizations with specific compliance requirements or security policies while maintaining backwards compatibility for existing clusters.",
+	"mode":   "mode determines how PKI configuration is managed. Valid values are \"Unmanaged\", \"Default\", and \"Custom\".\n\nWhen set to Unmanaged, components use their existing hardcoded certificate generation behavior, exactly as if this feature did not exist. Each component generates certificates using whatever parameters it was using before this feature. While most components use RSA 2048, some may use different parameters. Use of this mode might prevent upgrading to the next major OpenShift release.\n\nWhen set to Default, OpenShift-recommended best practices for certificate generation are applied. The specific parameters may evolve across OpenShift releases to adopt improved cryptographic standards. In the initial release, this matches Unmanaged behavior for each component. In future releases, this may adopt ECDSA or larger RSA keys based on industry best practices. Recommended for most customers who want to benefit from security improvements automatically.\n\nWhen set to Custom, the certificate management parameters can be set explicitly. Use the custom field to specify certificate generation parameters.",
+	"custom": "custom contains administrator-specified cryptographic configuration. Use the defaults and overrides fields to specify certificate generation parameters. Required when mode is Custom, and forbidden otherwise.",
+}
+
+func (PKICertificateManagement) SwaggerDoc() map[string]string {
+	return map_PKICertificateManagement
+}
+
+var map_PKIList = map[string]string{
+	"":      "PKIList is a collection of PKI resources.\n\nCompatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.",
+	"items": "items is a list of PKI resources",
+}
+
+func (PKIList) SwaggerDoc() map[string]string {
+	return map_PKIList
+}
+
+var map_PKIProfile = map[string]string{
+	"":          "PKIProfile defines the certificate generation parameters that OpenShift components use to create certificates. Overrides take precedence over defaults.",
+	"defaults":  "defaults specifies the default certificate configuration that applies to all certificates unless overridden by an overrides entry.",
+	"overrides": "overrides allows overriding certificate parameters for specific categories of certificates or specific named certificates. Overrides take precedence over defaults.",
+}
+
+func (PKIProfile) SwaggerDoc() map[string]string {
+	return map_PKIProfile
+}
+
+var map_PKISpec = map[string]string{
+	"":                      "PKISpec holds the specification for PKI configuration.",
+	"certificateManagement": "certificateManagement specifies how PKI configuration is managed for internally-generated certificates. This controls the certificate generation approach for all OpenShift components that create certificates internally, including certificate authorities, serving certificates, and client certificates.",
+}
+
+func (PKISpec) SwaggerDoc() map[string]string {
+	return map_PKISpec
+}
+
+var map_RSAKeyConfig = map[string]string{
+	"":        "RSAKeyConfig specifies parameters for RSA key generation.",
+	"keySize": "keySize specifies the size of RSA keys in bits. Valid values are multiples of 1024 from 2048 to 8192.",
+}
+
+func (RSAKeyConfig) SwaggerDoc() map[string]string {
+	return map_RSAKeyConfig
+}
+
 // AUTO-GENERATED FUNCTIONS END HERE

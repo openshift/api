@@ -1251,6 +1251,28 @@ spec:
                           must be provided for the API and internal API load balancers as well as the
                           ingress load balancer.
                         properties:
+                          cloudDnsIPs:
+                            description: |-
+                              cloudDnsIPs holds the IP addresses of the cloud platform DNS servers.
+                              These DNS server IP addresses are used when the cluster DNS type is ClusterHosted.
+                              For AWS, the DNS IPs are typically the VPC's CIDR base address plus 2 (e.g., 10.0.0.2 for VPC 10.0.0.0/16).
+                              This field is only valid when dnsType is set to ClusterHosted.
+                              When dnsType is not ClusterHosted, this field must not be set.
+                              Entries in cloudDnsIPs must be unique.
+                              A maximum of 16 IP addresses are permitted.
+                            format: ip
+                            items:
+                              description: IP is an IP address (for example, "10.0.0.0"
+                                or "fd00::").
+                              maxLength: 39
+                              minLength: 1
+                              type: string
+                              x-kubernetes-validations:
+                              - message: value must be a valid IP address
+                                rule: isIP(self)
+                            maxItems: 16
+                            type: array
+                            x-kubernetes-list-type: set
                           clusterHosted:
                             description: |-
                               clusterHosted holds the IP addresses of API, API-Int and Ingress Load

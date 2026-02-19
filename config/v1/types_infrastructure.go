@@ -870,6 +870,7 @@ type GCPResourceTag struct {
 // Load Balancer configuration needs to be provided so that the DNS solution hosted
 // within the cluster can be configured with those values.
 // +kubebuilder:validation:XValidation:rule="has(self.dnsType) && self.dnsType != 'ClusterHosted' ? !has(self.clusterHosted) : true",message="clusterHosted is permitted only when dnsType is ClusterHosted"
+// TODO: Is it useful to have a kubebuilder validation for CloudDnsIPs too?
 // +union
 type CloudLoadBalancerConfig struct {
 	// dnsType indicates the type of DNS solution in use within the cluster. Its default value of
@@ -897,6 +898,19 @@ type CloudLoadBalancerConfig struct {
 	// +optional
 	// +unionMember,optional
 	ClusterHosted *CloudLoadBalancerIPs `json:"clusterHosted,omitempty"`
+
+	// cloudDnsIPs holds the IP addresses of the cloud platform DNS servers.
+	// These DNS server IP addresses are used when the cluster DNS type is ClusterHosted.
+	// For AWS, the DNS IPs are typically the VPC's CIDR base address plus 2 (e.g., 10.0.0.2 for VPC 10.0.0.0/16).
+	// This field is only valid when dnsType is set to ClusterHosted.
+	// When dnsType is not ClusterHosted, this field must not be set.
+	// Entries in cloudDnsIPs must be unique.
+	// A maximum of 16 IP addresses are permitted.
+	// +kubebuilder:validation:Format=ip
+	// +listType=set
+	// +kubebuilder:validation:MaxItems=16
+	// +optional
+	CloudDnsIPs []IP `json:"cloudDnsIPs,omitempty"`
 }
 
 // CloudLoadBalancerIPs contains the Load Balancer IPs for the cloud's API,

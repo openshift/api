@@ -293,16 +293,16 @@ func AllKnownVersions(payloadFeatureGatePath string) ([]uint64, error) {
 		return nil, err
 	}
 
-	versionSet := sets.NewInt()
+	versionSet := sets.New[uint64]()
 	for _, vfs := range allVersioned {
 		for _, version := range vfs.VersionRange {
-			versionSet.Insert(int(version))
+			versionSet.Insert(version)
 		}
 	}
 
 	versions := make([]uint64, 0, versionSet.Len())
 	for _, v := range versionSet.UnsortedList() {
-		versions = append(versions, uint64(v))
+		versions = append(versions, v)
 	}
 
 	sort.Slice(versions, func(i, j int) bool {
@@ -594,7 +594,7 @@ func (f *VersionFilter) UseCRD(metadata crdForFeatureSet) bool {
 }
 
 func (f *VersionFilter) String() string {
-	return fmt.Sprintf("version=%d", f.targetVersion)
+	return fmt.Sprintf("version=%v", f.targetVersion.UnsortedList())
 }
 
 type AndManifestFilter struct {

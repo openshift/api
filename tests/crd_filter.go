@@ -158,7 +158,7 @@ func versionsFrom(annotations map[string]string) sets.Set[uint64] {
 
 	versions := sets.New[uint64]()
 	for _, version := range strings.Split(versionString, ",") {
-		versionInt, err := strconv.ParseUint(version, 10, 64)
+		versionInt, err := strconv.ParseUint(strings.TrimSpace(version), 10, 64)
 		if err != nil {
 			continue
 		}

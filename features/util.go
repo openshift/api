@@ -187,14 +187,12 @@ func (b *featureGateBuilder) mustRegister() configv1.FeatureGateName {
 func (in *FeatureGateEnabledDisabled) DeepCopyInto(out *FeatureGateEnabledDisabled) {
 	*out = *in
 	if in.Enabled != nil {
-		in, out := &in.Enabled, &out.Enabled
-		*out = make([]FeatureGateDescription, len(*in))
-		copy(*out, *in)
+		out.Enabled = make([]FeatureGateDescription, len(in.Enabled))
+		copy(out.Enabled, in.Enabled)
 	}
 	if in.Disabled != nil {
-		in, out := &in.Disabled, &out.Disabled
-		*out = make([]FeatureGateDescription, len(*in))
-		copy(*out, *in)
+		out.Disabled = make([]FeatureGateDescription, len(in.Disabled))
+		copy(out.Disabled, in.Disabled)
 	}
 	return
 }

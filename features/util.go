@@ -188,11 +188,15 @@ func (in *FeatureGateEnabledDisabled) DeepCopyInto(out *FeatureGateEnabledDisabl
 	*out = *in
 	if in.Enabled != nil {
 		out.Enabled = make([]FeatureGateDescription, len(in.Enabled))
-		copy(out.Enabled, in.Enabled)
+		for i := range in.Enabled {
+			in.Enabled[i].DeepCopyInto(&out.Enabled[i])
+		}
 	}
 	if in.Disabled != nil {
 		out.Disabled = make([]FeatureGateDescription, len(in.Disabled))
-		copy(out.Disabled, in.Disabled)
+		for i := range in.Disabled {
+			in.Disabled[i].DeepCopyInto(&out.Disabled[i])
+		}
 	}
 	return
 }

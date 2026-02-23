@@ -350,11 +350,25 @@ type TokenClaimMappings struct {
 }
 
 // TokenClaimMapping allows specifying a JWT token claim to be used when mapping claims from an authentication token to cluster identities.
+// +openshift:validation:FeatureGateAwareXValidation:featureGate=ExternalOIDCWithUpstreamParity,rule="!(has(self.claim) && has(self.expression))",message="claim and expression cannot both be set"
 type TokenClaimMapping struct {
 	// claim is a required field that configures the JWT token claim whose value is assigned to the cluster identity field associated with this mapping.
 	//
 	// +required
+	// +kubebuilder:validation:MinLength=1
+	// +kubebuilder:validation:MaxLength=256
 	Claim string `json:"claim"`
+
+	// expression is an optional CEL expression used to derive
+	// group values from JWT claims.
+	//
+	// When specified, claim must not be set.
+	//
+	// +optional
+	// +openshift:enable:FeatureGate=ExternalOIDCWithUpstreamParity
+	// +kubebuilder:validation:MinLength=1
+	// +kubebuilder:validation:MaxLength=1024
+	Expression string `json:"expression,omitempty"`
 }
 
 // TokenClaimOrExpressionMapping allows specifying either a JWT token claim or CEL expression to be used when mapping claims from an authentication token to cluster identities.
@@ -590,6 +604,7 @@ type OIDCClientReference struct {
 
 // +kubebuilder:validation:XValidation:rule="has(self.prefixPolicy) && self.prefixPolicy == 'Prefix' ? (has(self.prefix) && size(self.prefix.prefixString) > 0) : !has(self.prefix)",message="prefix must be set if prefixPolicy is 'Prefix', but must remain unset otherwise"
 // +union
+// +openshift:validation:FeatureGateAwareXValidation:featureGate=ExternalOIDCWithUpstreamParity,rule="!(has(self.claim) && has(self.expression))",message="claim and expression cannot both be set"
 type UsernameClaimMapping struct {
 	// claim is a optional field that configures the JWT token claim whose value is assigned to the cluster identity field associated with this mapping.
 	//
@@ -601,7 +616,8 @@ type UsernameClaimMapping struct {
 	// +optional
 	// +kubebuilder:validation:MinLength:=1
 	// +kubebuilder:validation:MaxLength:=256
-	Claim string `json:"claim"`
+	// +kubebuilder:validation:XValidation:rule="has(self.claim)",message="claim must be set"
+	Claim string `json:"claim,omitempty"`
 
 	// expression is an optional CEL expression used to derive
 	// the username from JWT claims.
@@ -616,8 +632,6 @@ type UsernameClaimMapping struct {
 	// +openshift:enable:FeatureGate=ExternalOIDCWithUpstreamParity
 	// +kubebuilder:validation:MinLength=1
 	// +kubebuilder:validation:MaxLength=1024
-	// +kubebuilder:validation:XValidation:rule="has(self.expression) ? !has(self.claim) : true",message="claim must not be set when expression is provided"
-
 	Expression string `json:"expression,omitempty"`
 
 	// prefixPolicy is an optional field that configures how a prefix should be applied to the value of the JWT claim specified in the 'claim' field.
@@ -687,18 +701,6 @@ type UsernamePrefix struct {
 // that allows for an optional prefix.
 type PrefixedClaimMapping struct {
 	TokenClaimMapping `json:",inline"`
-
-	// expression is an optional CEL expression used to derive
-	// group values from JWT claims.
-	//
-	// When specified, claim must not be set.
-	//
-	// +optional
-	// +openshift:enable:FeatureGate=ExternalOIDCWithUpstreamParity
-	// +kubebuilder:validation:MinLength=1
-	// +kubebuilder:validation:MaxLength=1024
-	// +kubebuilder:validation:XValidation:rule="has(self.expression) ? !has(self.claim) : true",message="claim must not be set when expression is provided"
-	Expression string `json:"expression,omitempty"`
 
 	// prefix is an optional field that configures the prefix that will be applied to the cluster identity attribute during the process of mapping JWT claims to cluster identity attributes.
 	//

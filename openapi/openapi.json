@@ -11456,6 +11456,10 @@
           "description": "claim is a required field that configures the JWT token claim whose value is assigned to the cluster identity field associated with this mapping.",
           "type": "string",
           "default": ""
+        },
+        "expression": {
+          "description": "expression is an optional CEL expression used to derive group values from JWT claims.\n\nWhen specified, claim must not be set.",
+          "type": "string"
         }
       }
     },
@@ -11724,10 +11728,10 @@
       "properties": {
         "claim": {
           "description": "claim is a optional field that configures the JWT token claim whose value is assigned to the cluster identity field associated with this mapping.\n\nPrecisely one of claim or expression must be set if the ExternalOIDCWithUpstreamParity feature gate is enabled.\n\nclaim must not be an empty string (\"\") and must not exceed 256 characters.",
-          "type": "string",
-          "default": ""
+          "type": "string"
         },
         "expression": {
+          "description": "expression is an optional CEL expression used to derive the username from JWT claims.\n\nCEL expressions have access to the token claims through a CEL variable, 'claims'.\n\nPrecisely one of claim or expression must be set if the ExternalOIDCWithUpstreamParity feature gate is enabled.",
           "type": "string"
         },
         "prefix": {

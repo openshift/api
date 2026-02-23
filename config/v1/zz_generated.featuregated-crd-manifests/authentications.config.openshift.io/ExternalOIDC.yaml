@@ -95,6 +95,8 @@ spec:
                               description: claim is a required field that configures
                                 the JWT token claim whose value is assigned to the
                                 cluster identity field associated with this mapping.
+                              maxLength: 256
+                              minLength: 1
                               type: string
                             prefix:
                               description: |-
@@ -124,6 +126,9 @@ spec:
                               maxLength: 256
                               minLength: 1
                               type: string
+                              x-kubernetes-validations:
+                              - message: claim must be set
+                                rule: has(self.claim)
                             prefix:
                               description: |-
                                 prefix configures the prefix that should be prepended to the value of the JWT claim.

@@ -457,9 +457,8 @@ func (OIDCProvider) SwaggerDoc() map[string]string {
 }
 
 var map_PrefixedClaimMapping = map[string]string{
-	"":           "PrefixedClaimMapping configures a claim mapping that allows for an optional prefix.",
-	"expression": "expression is an optional CEL expression used to derive group values from JWT claims.\n\nWhen specified, claim must not be set.",
-	"prefix":     "prefix is an optional field that configures the prefix that will be applied to the cluster identity attribute during the process of mapping JWT claims to cluster identity attributes.\n\nWhen omitted (\"\"), no prefix is applied to the cluster identity attribute.\n\nExample: if `prefix` is set to \"myoidc:\" and the `claim` in JWT contains an array of strings \"a\", \"b\" and \"c\", the mapping will result in an array of string \"myoidc:a\", \"myoidc:b\" and \"myoidc:c\".",
+	"":       "PrefixedClaimMapping configures a claim mapping that allows for an optional prefix.",
+	"prefix": "prefix is an optional field that configures the prefix that will be applied to the cluster identity attribute during the process of mapping JWT claims to cluster identity attributes.\n\nWhen omitted (\"\"), no prefix is applied to the cluster identity attribute.\n\nExample: if `prefix` is set to \"myoidc:\" and the `claim` in JWT contains an array of strings \"a\", \"b\" and \"c\", the mapping will result in an array of string \"myoidc:a\", \"myoidc:b\" and \"myoidc:c\".",
 }
 
 func (PrefixedClaimMapping) SwaggerDoc() map[string]string {
@@ -467,8 +466,9 @@ func (PrefixedClaimMapping) SwaggerDoc() map[string]string {
 }
 
 var map_TokenClaimMapping = map[string]string{
-	"":      "TokenClaimMapping allows specifying a JWT token claim to be used when mapping claims from an authentication token to cluster identities.",
-	"claim": "claim is a required field that configures the JWT token claim whose value is assigned to the cluster identity field associated with this mapping.",
+	"":           "TokenClaimMapping allows specifying a JWT token claim to be used when mapping claims from an authentication token to cluster identities.",
+	"claim":      "claim is a required field that configures the JWT token claim whose value is assigned to the cluster identity field associated with this mapping.",
+	"expression": "expression is an optional CEL expression used to derive group values from JWT claims.\n\nWhen specified, claim must not be set.",
 }
 
 func (TokenClaimMapping) SwaggerDoc() map[string]string {
@@ -548,6 +548,7 @@ func (TokenUserValidationRule) SwaggerDoc() map[string]string {
 
 var map_UsernameClaimMapping = map[string]string{
 	"claim":        "claim is a optional field that configures the JWT token claim whose value is assigned to the cluster identity field associated with this mapping.\n\nPrecisely one of claim or expression must be set if the ExternalOIDCWithUpstreamParity feature gate is enabled.\n\nclaim must not be an empty string (\"\") and must not exceed 256 characters.",
+	"expression":   "expression is an optional CEL expression used to derive the username from JWT claims.\n\nCEL expressions have access to the token claims through a CEL variable, 'claims'.\n\nPrecisely one of claim or expression must be set if the ExternalOIDCWithUpstreamParity feature gate is enabled.",
 	"prefixPolicy": "prefixPolicy is an optional field that configures how a prefix should be applied to the value of the JWT claim specified in the 'claim' field.\n\nAllowed values are 'Prefix', 'NoPrefix', and omitted (not provided or an empty string).\n\nWhen set to 'Prefix', the value specified in the prefix field will be prepended to the value of the JWT claim.\n\nThe prefix field must be set when prefixPolicy is 'Prefix'.\n\nWhen set to 'NoPrefix', no prefix will be prepended to the value of the JWT claim.\n\nWhen omitted, this means no opinion and the platform is left to choose any prefixes that are applied which is subject to change over time. Currently, the platform prepends `{issuerURL}#` to the value of the JWT claim when the claim is not 'email'.\n\nAs an example, consider the following scenario:\n\n   `prefix` is unset, `issuerURL` is set to `https://myoidc.tld`,\n   the JWT claims include \"username\":\"userA\" and \"email\":\"userA@myoidc.tld\",\n   and `claim` is set to:\n   - \"username\": the mapped value will be \"https://myoidc.tld#userA\"\n   - \"email\": the mapped value will be \"userA@myoidc.tld\"",
 	"prefix":       "prefix configures the prefix that should be prepended to the value of the JWT claim.\n\nprefix must be set when prefixPolicy is set to 'Prefix' and must be unset otherwise.",
 }

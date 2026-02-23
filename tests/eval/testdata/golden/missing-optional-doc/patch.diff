@@ -1,0 +1,19 @@
+diff --git a/config/v1/types_console.go b/config/v1/types_console.go
+--- a/config/v1/types_console.go
++++ b/config/v1/types_console.go
+@@ -33,7 +33,15 @@ type ConsoleSpec struct {
+ // ConsoleSpec is the specification of the desired behavior of the Console.
+ type ConsoleSpec struct {
+ 	// +optional
+ 	Authentication ConsoleAuthentication `json:"authentication"`
++
++	// customLogoURL specifies a URL for a custom logo image.
++	// The URL must be a valid HTTPS URL and cannot exceed 2048 characters.
++	// +optional
++	// +openshift:enable:FeatureGate=CustomConsoleLogo
++	// +kubebuilder:validation:Pattern=`^$|^https://[^\s]+$`
++	// +kubebuilder:validation:MaxLength=2048
++	CustomLogoURL string `json:"customLogoURL,omitempty"`
+ }
+ 
+ // ConsoleStatus defines the observed status of the Console.

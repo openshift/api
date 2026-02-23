@@ -616,7 +616,6 @@ type UsernameClaimMapping struct {
 	// +optional
 	// +kubebuilder:validation:MinLength:=1
 	// +kubebuilder:validation:MaxLength:=256
-	// +kubebuilder:validation:XValidation:rule="has(self.claim)",message="claim must be set"
 	Claim string `json:"claim,omitempty"`
 
 	// expression is an optional CEL expression used to derive

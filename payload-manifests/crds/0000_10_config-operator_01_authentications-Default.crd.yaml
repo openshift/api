@@ -263,9 +263,6 @@ spec:
                               maxLength: 256
                               minLength: 1
                               type: string
-                              x-kubernetes-validations:
-                              - message: claim must be set
-                                rule: has(self.claim)
                             prefix:
                               description: |-
                                 prefix configures the prefix that should be prepended to the value of the JWT claim.

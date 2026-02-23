@@ -275,9 +275,6 @@ spec:
                               maxLength: 256
                               minLength: 1
                               type: string
-                              x-kubernetes-validations:
-                              - message: claim must be set
-                                rule: has(self.claim)
                             expression:
                               description: |-
                                 expression is an optional CEL expression used to derive

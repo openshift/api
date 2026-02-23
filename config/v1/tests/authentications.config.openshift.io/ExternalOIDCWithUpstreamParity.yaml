@@ -499,7 +499,7 @@ tests:
               username:
                 claim: "preferred_username"
                 expression: "claims.sub"
-      expectedError: "claim must not be set when expression is provided"
+      expectedError: "claim and expression cannot both be set"
 
     - name: Can set groups mapping using a CEL expression
       initial: |

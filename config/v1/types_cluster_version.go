@@ -283,6 +283,16 @@ type UpdateHistory struct {
 // ClusterID is string RFC4122 uuid.
 type ClusterID string
 
+// UpdateMode defines how an update should be processed.
+// +enum
+// +kubebuilder:validation:Enum=Preflight
+type UpdateMode string
+
+const (
+	// UpdateModePreflight allows an update to be checked for compatibility without committing to updating the cluster.
+	UpdateModePreflight UpdateMode = "Preflight"
+)
+
 // ClusterVersionArchitecture enumerates valid cluster architectures.
 // +kubebuilder:validation:Enum="Multi";""
 type ClusterVersionArchitecture string
@@ -704,6 +714,7 @@ type URL string
 // Update represents an administrator update request.
 // +kubebuilder:validation:XValidation:rule="has(self.architecture) && has(self.image) ? (self.architecture == \"\" || self.image == \"\") : true",message="cannot set both Architecture and Image"
 // +kubebuilder:validation:XValidation:rule="has(self.architecture) && self.architecture != \"\" ? self.version != \"\" : true",message="Version must be set if Architecture is set"
+// +openshift:validation:FeatureGateAwareXValidation:featureGate=ClusterUpdatePreflight,rule="!has(self.mode) || !has(self.force) || !self.force",message="force and mode are mutually exclusive"
 // +k8s:deepcopy-gen=true
 type Update struct {
 	// architecture is an optional field that indicates the desired
@@ -760,6 +771,23 @@ type Update struct {
 	// +listMapKey=name
 	// +optional
 	AcceptRisks []AcceptRisk `json:"acceptRisks,omitempty"`
+
+	// mode determines how an update should be processed.
+	// The only valid value is "Preflight".
+	// When omitted, the cluster performs a normal update by applying the specified version or image to the cluster.
+	// This is the standard update behavior.
+	// When set to "Preflight", the cluster runs compatibility checks against the target release without
+	// performing an actual update. Compatibility results, including any detected risks, are reported
+	// in status.conditionalUpdates and status.conditionalUpdateRisks alongside risks from the update
+	// recommendation service.
+	// This allows administrators to assess update readiness and address issues before committing to the update.
+	// Preflight mode is particularly useful for skip-level updates where upgrade compatibility needs to be
+	// verified across multiple minor versions.
+	// When mode is set to "Preflight", the same rules for version, image, and architecture apply as for normal updates.
+	// The mode and force fields are mutually exclusive - mode cannot be set when force is true.
+	// +openshift:enable:FeatureGate=ClusterUpdatePreflight
+	// +optional
+	Mode UpdateMode `json:"mode,omitempty"`
 }
 
 // AcceptRisk represents a risk that is considered acceptable.

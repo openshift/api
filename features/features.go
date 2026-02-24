@@ -6,8 +6,10 @@ import (
 )
 
 // Generating this many versions future proofs us until at least 2040.
-const minOpenshiftVersion uint64 = 4
-const maxOpenshiftVersion uint64 = 10
+const (
+	minOpenshiftVersion uint64 = 4
+	maxOpenshiftVersion uint64 = 10
+)
 
 func FeatureSets(version uint64, clusterProfile ClusterProfileName, featureSet configv1.FeatureSet) *FeatureGateEnabledDisabled {
 	enabledDisabled := &FeatureGateEnabledDisabled{}
@@ -507,7 +509,7 @@ var (
 						contactPerson("tremes").
 						productScope(ocpSpecific).
 						enhancementPR(legacyFeatureGateWithoutEnhancement).
-						enable(inTechPreviewNoUpgrade(), inDevPreviewNoUpgrade()).
+						enable(inDefault(), inOKD(), inDevPreviewNoUpgrade(), inTechPreviewNoUpgrade()).
 						mustRegister()
 
 	FeatureGateInsightsConfig = newFeatureGate("InsightsConfig").
@@ -515,7 +517,7 @@ var (
 					contactPerson("tremes").
 					productScope(ocpSpecific).
 					enhancementPR(legacyFeatureGateWithoutEnhancement).
-					enable(inTechPreviewNoUpgrade(), inDevPreviewNoUpgrade()).
+					enable(inDefault(), inOKD(), inDevPreviewNoUpgrade(), inTechPreviewNoUpgrade()).
 					mustRegister()
 
 	FeatureGateMetricsCollectionProfiles = newFeatureGate("MetricsCollectionProfiles").

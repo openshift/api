@@ -11663,6 +11663,13 @@
           "type": "string",
           "default": ""
         },
+        "mode": {
+          "description": "mode determines how an update should be processed. The only valid value is \"Preflight\". When omitted, the cluster performs a normal update by applying the specified version or image to the cluster. This is the standard update behavior. When set to \"Preflight\", the cluster runs compatibility checks against the target release without performing an actual update. The target release's CVO will execute pre-checks and report any detected risks in status.conditionalUpdateRisks, alongside risks from the update recommendation service. status.conditionalUpdates contains references/entries that point to the detailed risk objects stored in status.conditionalUpdateRisks from both the update graph and preflight checks executed by the target release's CVO. This allows administrators to assess update readiness and address issues before committing to the update. Preflight mode is particularly useful for skip-level updates where upgrade compatibility needs to be verified across multiple minor versions. When mode is set to \"Preflight\", the same rules for version, image, and architecture apply as for normal updates. The mode and force fields are mutually exclusive - mode cannot be set when force is true.\n\nPossible enum values:\n - `\"Preflight\"` allows an update to be checked for compatibility without committing to updating the cluster.",
+          "type": "string",
+          "enum": [
+            "Preflight"
+          ]
+        },
         "version": {
           "description": "version is a semantic version identifying the update version. version is required if architecture is specified. If both version and image are set, the version extracted from the referenced image must match the specified version.",
           "type": "string",

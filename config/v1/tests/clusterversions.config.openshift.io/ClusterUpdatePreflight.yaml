@@ -1,0 +1,227 @@
+apiVersion: apiextensions.k8s.io/v1 # Hack because controller-gen complains if we don't have this
+name: "ClusterVersion"
+crdName: clusterversions.config.openshift.io
+featureGates:
+  - ClusterUpdatePreflight
+tests:
+  onCreate:
+    - name: Should be able to create with mode Preflight
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: ClusterVersion
+        spec:
+          clusterID: foo
+          desiredUpdate:
+            version: 4.22.0
+            mode: Preflight
+      expected: |
+        apiVersion: config.openshift.io/v1
+        kind: ClusterVersion
+        spec:
+          clusterID: foo
+          desiredUpdate:
+            version: 4.22.0
+            mode: Preflight
+    - name: Should be able to omit mode field (default behavior)
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: ClusterVersion
+        spec:
+          clusterID: foo
+          desiredUpdate:
+            version: 4.22.0
+      expected: |
+        apiVersion: config.openshift.io/v1
+        kind: ClusterVersion
+        spec:
+          clusterID: foo
+          desiredUpdate:
+            version: 4.22.0
+    - name: Should be able to use Preflight mode with acceptRisks
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: ClusterVersion
+        spec:
+          clusterID: foo
+          desiredUpdate:
+            version: 4.22.0
+            mode: Preflight
+            acceptRisks:
+              - name: RiskA
+              - name: RiskB
+      expected: |
+        apiVersion: config.openshift.io/v1
+        kind: ClusterVersion
+        spec:
+          clusterID: foo
+          desiredUpdate:
+            version: 4.22.0
+            mode: Preflight
+            acceptRisks:
+              - name: RiskA
+              - name: RiskB
+    - name: Should be able to use Preflight mode with image
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: ClusterVersion
+        spec:
+          clusterID: foo
+          desiredUpdate:
+            image: quay.io/openshift-release-dev/ocp-release@sha256:example
+            mode: Preflight
+      expected: |
+        apiVersion: config.openshift.io/v1
+        kind: ClusterVersion
+        spec:
+          clusterID: foo
+          desiredUpdate:
+            image: quay.io/openshift-release-dev/ocp-release@sha256:example
+            mode: Preflight
+    - name: Invalid mode value should be rejected
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: ClusterVersion
+        spec:
+          clusterID: foo
+          desiredUpdate:
+            version: 4.22.0
+            mode: InvalidMode
+      expectedError: "Unsupported value: \"InvalidMode\""
+    - name: Empty mode value should be rejected
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: ClusterVersion
+        spec:
+          clusterID: foo
+          desiredUpdate:
+            version: 4.22.0
+            mode: ""
+      expectedError: "Unsupported value: \"\""
+    - name: Should reject when both force and mode are set
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: ClusterVersion
+        spec:
+          clusterID: foo
+          desiredUpdate:
+            version: 4.22.0
+            mode: Preflight
+            force: true
+      expectedError: "force and mode are mutually exclusive"
+    - name: Should allow Preflight mode when force is explicitly false
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: ClusterVersion
+        spec:
+          clusterID: foo
+          desiredUpdate:
+            version: 4.22.0
+            mode: Preflight
+            force: false
+      expected: |
+        apiVersion: config.openshift.io/v1
+        kind: ClusterVersion
+        spec:
+          clusterID: foo
+          desiredUpdate:
+            version: 4.22.0
+            mode: Preflight
+            force: false
+  onUpdate:
+    - name: Should be able to transition from normal to Preflight mode
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: ClusterVersion
+        spec:
+          clusterID: foo
+          desiredUpdate:
+            version: 4.22.0
+      updated: |
+        apiVersion: config.openshift.io/v1
+        kind: ClusterVersion
+        spec:
+          clusterID: foo
+          desiredUpdate:
+            version: 4.22.0
+            mode: Preflight
+      expected: |
+        apiVersion: config.openshift.io/v1
+        kind: ClusterVersion
+        spec:
+          clusterID: foo
+          desiredUpdate:
+            version: 4.22.0
+            mode: Preflight
+    - name: Should allow clearing Preflight mode back to normal
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: ClusterVersion
+        spec:
+          clusterID: foo
+          desiredUpdate:
+            version: 4.22.0
+            mode: Preflight
+      updated: |
+        apiVersion: config.openshift.io/v1
+        kind: ClusterVersion
+        spec:
+          clusterID: foo
+          desiredUpdate:
+            version: 4.22.0
+      expected: |
+        apiVersion: config.openshift.io/v1
+        kind: ClusterVersion
+        spec:
+          clusterID: foo
+          desiredUpdate:
+            version: 4.22.0
+    - name: Should allow changing target version while in Preflight mode
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: ClusterVersion
+        spec:
+          clusterID: foo
+          desiredUpdate:
+            version: 4.22.0
+            mode: Preflight
+      updated: |
+        apiVersion: config.openshift.io/v1
+        kind: ClusterVersion
+        spec:
+          clusterID: foo
+          desiredUpdate:
+            version: 4.23.0
+            mode: Preflight
+      expected: |
+        apiVersion: config.openshift.io/v1
+        kind: ClusterVersion
+        spec:
+          clusterID: foo
+          desiredUpdate:
+            version: 4.23.0
+            mode: Preflight
+    - name: Should allow changing from image to version in Preflight mode
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: ClusterVersion
+        spec:
+          clusterID: foo
+          desiredUpdate:
+            image: quay.io/openshift-release-dev/ocp-release@sha256:example
+            mode: Preflight
+      updated: |
+        apiVersion: config.openshift.io/v1
+        kind: ClusterVersion
+        spec:
+          clusterID: foo
+          desiredUpdate:
+            version: 4.23.0
+            mode: Preflight
+      expected: |
+        apiVersion: config.openshift.io/v1
+        kind: ClusterVersion
+        spec:
+          clusterID: foo
+          desiredUpdate:
+            version: 4.23.0
+            mode: Preflight

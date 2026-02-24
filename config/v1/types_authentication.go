@@ -350,11 +350,13 @@ type TokenClaimMappings struct {
 }
 
 // TokenClaimMapping allows specifying a JWT token claim to be used when mapping claims from an authentication token to cluster identities.
-// +openshift:validation:FeatureGateAwareXValidation:featureGate=ExternalOIDCWithUpstreamParity,rule="!(has(self.claim) && has(self.expression))",message="claim and expression cannot both be set"
+// +openshift:validation:FeatureGateAwareXValidation:featureGate="";ExternalOIDC;ExternalOIDCWithUIDAndExtraClaimMappings,rule="!has(self.claim)",message="claim is required";
+// +openshift:validation:FeatureGateAwareXValidation:featureGate=ExternalOIDCWithUpstreamParity,rule="!has(self.claim) && !has(self.expression)",message="claim or expression must be specified"
 type TokenClaimMapping struct {
-	// claim is a required field that configures the JWT token claim whose value is assigned to the cluster identity field associated with this mapping.
+	// claim is an optional field for specifying the JWT token claim that is used in the mapping.
+	// The value of this claim will be assigned to the field in which this mapping is associated.
 	//
-	// +required
+	// +optional
 	// +kubebuilder:validation:MinLength=1
 	// +kubebuilder:validation:MaxLength=256
 	Claim string `json:"claim"`
@@ -604,7 +606,8 @@ type OIDCClientReference struct {
 
 // +kubebuilder:validation:XValidation:rule="has(self.prefixPolicy) && self.prefixPolicy == 'Prefix' ? (has(self.prefix) && size(self.prefix.prefixString) > 0) : !has(self.prefix)",message="prefix must be set if prefixPolicy is 'Prefix', but must remain unset otherwise"
 // +union
-// +openshift:validation:FeatureGateAwareXValidation:featureGate=ExternalOIDCWithUpstreamParity,rule="!(has(self.claim) && has(self.expression))",message="claim and expression cannot both be set"
+// +openshift:validation:FeatureGateAwareXValidation:featureGate="";ExternalOIDC;ExternalOIDCWithUIDAndExtraClaimMappings,rule="!has(self.claim)",message="claim is required";
+// +openshift:validation:FeatureGateAwareXValidation:featureGate=ExternalOIDCWithUpstreamParity,rule="!has(self.claim) && !has(self.expression)",message="claim or expression must be specified"
 type UsernameClaimMapping struct {
 	// claim is a optional field that configures the JWT token claim whose value is assigned to the cluster identity field associated with this mapping.
 	//

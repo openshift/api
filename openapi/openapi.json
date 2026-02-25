@@ -6339,7 +6339,7 @@
       ],
       "properties": {
         "ciphers": {
-          "description": "ciphers is used to specify the cipher algorithms that are negotiated during the TLS handshake.  Operators may remove entries their operands do not support.  For example, to use DES-CBC3-SHA  (yaml):\n\n  ciphers:\n    - DES-CBC3-SHA",
+          "description": "ciphers is used to specify the cipher algorithms that are negotiated during the TLS handshake. Operators may remove entries that their operands do not support. For example, to use only ECDHE-RSA-AES128-GCM-SHA256 (yaml):\n\n  ciphers:\n    - ECDHE-RSA-AES128-GCM-SHA256\n\nTLS 1.3 cipher suites (e.g. TLS_AES_128_GCM_SHA256) are not configurable and are always enabled when TLS 1.3 is negotiated.",
           "type": "array",
           "items": {
             "type": "string",
@@ -11311,7 +11311,7 @@
       ],
       "properties": {
         "ciphers": {
-          "description": "ciphers is used to specify the cipher algorithms that are negotiated during the TLS handshake.  Operators may remove entries their operands do not support.  For example, to use DES-CBC3-SHA  (yaml):\n\n  ciphers:\n    - DES-CBC3-SHA",
+          "description": "ciphers is used to specify the cipher algorithms that are negotiated during the TLS handshake. Operators may remove entries that their operands do not support. For example, to use only ECDHE-RSA-AES128-GCM-SHA256 (yaml):\n\n  ciphers:\n    - ECDHE-RSA-AES128-GCM-SHA256\n\nTLS 1.3 cipher suites (e.g. TLS_AES_128_GCM_SHA256) are not configurable and are always enabled when TLS 1.3 is negotiated.",
           "type": "array",
           "items": {
             "type": "string",
@@ -11335,7 +11335,7 @@
           "$ref": "#/definitions/com.github.openshift.api.config.v1.CustomTLSProfile"
         },
         "intermediate": {
-          "description": "intermediate is a TLS profile for use when you do not need compatibility with legacy clients and want to remain highly secure while being compatible with most clients currently in use.\n\nThe cipher list includes TLS 1.3 ciphers for forward compatibility, followed by the \"intermediate\" profile ciphers.\n\nThis profile is equivalent to a Custom profile specified as:\n  minTLSVersion: VersionTLS12\n  ciphers:\n    - TLS_AES_128_GCM_SHA256\n    - TLS_AES_256_GCM_SHA384\n    - TLS_CHACHA20_POLY1305_SHA256\n    - ECDHE-ECDSA-AES128-GCM-SHA256\n    - ECDHE-RSA-AES128-GCM-SHA256\n    - ECDHE-ECDSA-AES256-GCM-SHA384\n    - ECDHE-RSA-AES256-GCM-SHA384\n    - ECDHE-ECDSA-CHACHA20-POLY1305\n    - ECDHE-RSA-CHACHA20-POLY1305\n    - DHE-RSA-AES128-GCM-SHA256\n    - DHE-RSA-AES256-GCM-SHA384",
+          "description": "intermediate is a TLS profile for use when you do not need compatibility with legacy clients and want to remain highly secure while being compatible with most clients currently in use.\n\nThis profile is equivalent to a Custom profile specified as:\n  minTLSVersion: VersionTLS12\n  ciphers:\n    - TLS_AES_128_GCM_SHA256\n    - TLS_AES_256_GCM_SHA384\n    - TLS_CHACHA20_POLY1305_SHA256\n    - ECDHE-ECDSA-AES128-GCM-SHA256\n    - ECDHE-RSA-AES128-GCM-SHA256\n    - ECDHE-ECDSA-AES256-GCM-SHA384\n    - ECDHE-RSA-AES256-GCM-SHA384\n    - ECDHE-ECDSA-CHACHA20-POLY1305\n    - ECDHE-RSA-CHACHA20-POLY1305",
           "$ref": "#/definitions/com.github.openshift.api.config.v1.IntermediateTLSProfile"
         },
         "modern": {
@@ -11343,11 +11343,11 @@
           "$ref": "#/definitions/com.github.openshift.api.config.v1.ModernTLSProfile"
         },
         "old": {
-          "description": "old is a TLS profile for use when services need to be accessed by very old clients or libraries and should be used only as a last resort.\n\nThe cipher list includes TLS 1.3 ciphers for forward compatibility, followed by the \"old\" profile ciphers.\n\nThis profile is equivalent to a Custom profile specified as:\n  minTLSVersion: VersionTLS10\n  ciphers:\n    - TLS_AES_128_GCM_SHA256\n    - TLS_AES_256_GCM_SHA384\n    - TLS_CHACHA20_POLY1305_SHA256\n    - ECDHE-ECDSA-AES128-GCM-SHA256\n    - ECDHE-RSA-AES128-GCM-SHA256\n    - ECDHE-ECDSA-AES256-GCM-SHA384\n    - ECDHE-RSA-AES256-GCM-SHA384\n    - ECDHE-ECDSA-CHACHA20-POLY1305\n    - ECDHE-RSA-CHACHA20-POLY1305\n    - DHE-RSA-AES128-GCM-SHA256\n    - DHE-RSA-AES256-GCM-SHA384\n    - DHE-RSA-CHACHA20-POLY1305\n    - ECDHE-ECDSA-AES128-SHA256\n    - ECDHE-RSA-AES128-SHA256\n    - ECDHE-ECDSA-AES128-SHA\n    - ECDHE-RSA-AES128-SHA\n    - ECDHE-ECDSA-AES256-SHA384\n    - ECDHE-RSA-AES256-SHA384\n    - ECDHE-ECDSA-AES256-SHA\n    - ECDHE-RSA-AES256-SHA\n    - DHE-RSA-AES128-SHA256\n    - DHE-RSA-AES256-SHA256\n    - AES128-GCM-SHA256\n    - AES256-GCM-SHA384\n    - AES128-SHA256\n    - AES256-SHA256\n    - AES128-SHA\n    - AES256-SHA\n    - DES-CBC3-SHA",
+          "description": "old is a TLS profile for use when services need to be accessed by very old clients or libraries and should be used only as a last resort.\n\nThis profile is equivalent to a Custom profile specified as:\n  minTLSVersion: VersionTLS10\n  ciphers:\n    - TLS_AES_128_GCM_SHA256\n    - TLS_AES_256_GCM_SHA384\n    - TLS_CHACHA20_POLY1305_SHA256\n    - ECDHE-ECDSA-AES128-GCM-SHA256\n    - ECDHE-RSA-AES128-GCM-SHA256\n    - ECDHE-ECDSA-AES256-GCM-SHA384\n    - ECDHE-RSA-AES256-GCM-SHA384\n    - ECDHE-ECDSA-CHACHA20-POLY1305\n    - ECDHE-RSA-CHACHA20-POLY1305\n    - ECDHE-ECDSA-AES128-SHA256\n    - ECDHE-RSA-AES128-SHA256\n    - ECDHE-ECDSA-AES128-SHA\n    - ECDHE-RSA-AES128-SHA\n    - ECDHE-ECDSA-AES256-SHA\n    - ECDHE-RSA-AES256-SHA\n    - AES128-GCM-SHA256\n    - AES256-GCM-SHA384\n    - AES128-SHA256\n    - AES128-SHA\n    - AES256-SHA\n    - DES-CBC3-SHA",
           "$ref": "#/definitions/com.github.openshift.api.config.v1.OldTLSProfile"
         },
         "type": {
-          "description": "type is one of Old, Intermediate, Modern or Custom. Custom provides the ability to specify individual TLS security profile parameters.\n\nThe profiles are currently based on version 5.0 of the Mozilla Server Side TLS configuration guidelines (released 2019-06-28) with TLS 1.3 ciphers added for forward compatibility. See: https://ssl-config.mozilla.org/guidelines/5.0.json\n\nThe profiles are intent based, so they may change over time as new ciphers are developed and existing ciphers are found to be insecure. Depending on precisely which ciphers are available to a process, the list may be reduced.",
+          "description": "type is one of Old, Intermediate, Modern or Custom. Custom provides the ability to specify individual TLS security profile parameters.\n\nThe profiles are based on version 5.7 of the Mozilla Server Side TLS configuration guidelines. The cipher lists consist of the configuration's \"ciphersuites\" followed by the Go-specific \"ciphers\" from the guidelines. See: https://ssl-config.mozilla.org/guidelines/5.7.json\n\nThe profiles are intent based, so they may change over time as new ciphers are developed and existing ciphers are found to be insecure. Depending on precisely which ciphers are available to a process, the list may be reduced.",
           "type": "string",
           "default": ""
         }
@@ -26310,7 +26310,13 @@
     },
     "com.github.openshift.api.machineconfiguration.v1alpha1.OSImageStreamSpec": {
       "description": "OSImageStreamSpec defines the desired state of a OSImageStream.",
-      "type": "object"
+      "type": "object",
+      "properties": {
+        "defaultStream": {
+          "description": "defaultStream is the desired name of the stream that should be used as the default when no specific stream is requested by a MachineConfigPool.\n\nThis field is set by the installer during installation. Users may need to update it if the currently selected stream is no longer available, for example when the stream has reached its End of Life. The MachineConfigOperator uses this value to determine which stream from status.availableStreams to apply as the default for MachineConfigPools that do not specify a stream override.\n\nIt must be a valid RFC 1123 subdomain between 1 and 253 characters in length, consisting of lowercase alphanumeric characters, hyphens ('-'), and periods ('.').",
+          "type": "string"
+        }
+      }
     },
     "com.github.openshift.api.machineconfiguration.v1alpha1.OSImageStreamStatus": {
       "description": "OSImageStreamStatus describes the current state of a OSImageStream",
@@ -29156,6 +29162,25 @@
           "description": "subscriptionID defines the Azure subscription that contains the disk encryption set. The value should meet the following conditions: 1. It should be a 128-bit number. 2. It should be 36 characters (32 hexadecimal characters and 4 hyphens) long. 3. It should be displayed in five groups separated by hyphens (-). 4. The first group should be 8 characters long. 5. The second, third, and fourth groups should be 4 characters long. 6. The fifth group should be 12 characters long. An Example SubscrionID: f2007bbf-f802-4a47-9336-cf7c6b89b378",
           "type": "string",
           "default": ""
+        }
+      }
+    },
+    "com.github.openshift.api.operator.v1.BGPManagedConfig": {
+      "description": "BGPManagedConfig contains configuration options for BGP when routing is \"Managed\".",
+      "type": "object",
+      "required": [
+        "bgpTopology"
+      ],
+      "properties": {
+        "asNumber": {
+          "description": "asNumber is the 2-byte or 4-byte Autonomous System Number (ASN) to be used in the generated FRR configuration. Valid values are 1 to 4294967295. When omitted, this defaults to 64512.",
+          "type": "integer",
+          "format": "int64",
+          "default": 64512
+        },
+        "bgpTopology": {
+          "description": "bgpTopology defines the BGP topology to be used. Allowed values are \"FullMesh\". When set to \"FullMesh\", every node deploys a BGP router, forming a BGP full mesh. This field is required when BGPManagedConfig is specified.",
+          "type": "string"
         }
       }
     },
@@ -33530,6 +33555,24 @@
         }
       }
     },
+    "com.github.openshift.api.operator.v1.NoOverlayConfig": {
+      "description": "NoOverlayConfig contains configuration options for networks operating in no-overlay mode.",
+      "type": "object",
+      "required": [
+        "outboundSNAT",
+        "routing"
+      ],
+      "properties": {
+        "outboundSNAT": {
+          "description": "outboundSNAT defines the SNAT behavior for outbound traffic from pods. Allowed values are \"Enabled\" and \"Disabled\". When set to \"Enabled\", SNAT is performed on outbound traffic from pods. When set to \"Disabled\", SNAT is not performed and pod IPs are preserved in outbound traffic. This field is required when the network operates in no-overlay mode. This field can be set to any value at installation time and can be changed afterwards.",
+          "type": "string"
+        },
+        "routing": {
+          "description": "routing specifies whether the pod network routing is managed by OVN-Kubernetes or users. Allowed values are \"Managed\" and \"Unmanaged\". When set to \"Managed\", OVN-Kubernetes manages the pod network routing configuration through BGP. When set to \"Unmanaged\", users are responsible for configuring the pod network routing. This field is required when the network operates in no-overlay mode. This field is immutable once set.",
+          "type": "string"
+        }
+      }
+    },
     "com.github.openshift.api.operator.v1.NodeDisruptionPolicyClusterStatus": {
       "description": "NodeDisruptionPolicyClusterStatus is the type for the status object, rendered by the controller as a merge of cluster defaults and user provided policies",
       "type": "object",
@@ -34046,6 +34089,11 @@
       "description": "ovnKubernetesConfig contains the configuration parameters for networks using the ovn-kubernetes network project",
       "type": "object",
       "properties": {
+        "bgpManagedConfig": {
+          "description": "bgpManagedConfig configures the BGP properties for networks (default network or CUDNs) in no-overlay mode that specify routing=\"Managed\" in their noOverlayConfig. It is required when noOverlayConfig.routing is set to \"Managed\". When omitted, this means the user does not configure BGP for managed routing. This field can be set at installation time or on day 2, and can be modified at any time.",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.operator.v1.BGPManagedConfig"
+        },
         "egressIPConfig": {
           "description": "egressIPConfig holds the configuration for EgressIP options.",
           "default": {},
@@ -34084,12 +34132,21 @@
           "type": "integer",
           "format": "int64"
         },
+        "noOverlayConfig": {
+          "description": "noOverlayConfig contains configuration for no-overlay mode. This configuration applies to the default (primary) network only. It is required when transport is \"NoOverlay\". When omitted, this means the user does not configure no-overlay mode options.",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.operator.v1.NoOverlayConfig"
+        },
         "policyAuditConfig": {
           "description": "policyAuditConfig is the configuration for network policy audit events. If unset, reported defaults are used.",
           "$ref": "#/definitions/com.github.openshift.api.operator.v1.PolicyAuditConfig"
         },
         "routeAdvertisements": {
           "description": "routeAdvertisements determines if the functionality to advertise cluster network routes through a dynamic routing protocol, such as BGP, is enabled or not. This functionality is configured through the ovn-kubernetes RouteAdvertisements CRD. Requires the 'FRR' routing capability provider to be enabled as an additional routing capability. Allowed values are \"Enabled\", \"Disabled\" and ommited. When omitted, this means the user has no opinion and the platform is left to choose reasonable defaults. These defaults are subject to change over time. The current default is \"Disabled\".",
+          "type": "string"
+        },
+        "transport": {
+          "description": "transport describes the transport protocol for east-west traffic for the default network. Allowed values are \"NoOverlay\" and \"Geneve\". When set to \"NoOverlay\", the default network operates in no-overlay mode. When set to \"Geneve\", the default network uses Geneve overlay. When omitted, this means the user has no opinion and the platform chooses a reasonable default which is subject to change over time. The current default is \"Geneve\". This field can only be set at installation time and cannot be changed afterwards.",
           "type": "string"
         },
         "v4InternalSubnet": {
@@ -35897,7 +35954,6 @@
         },
         "spec": {
           "description": "spec is the specification of the desired behavior of the capi-operator.",
-          "default": {},
           "$ref": "#/definitions/com.github.openshift.api.operator.v1alpha1.ClusterAPISpec"
         },
         "status": {
@@ -35906,6 +35962,96 @@
           "$ref": "#/definitions/com.github.openshift.api.operator.v1alpha1.ClusterAPIStatus"
         }
       }
+    },
+    "com.github.openshift.api.operator.v1alpha1.ClusterAPIInstallerComponent": {
+      "description": "ClusterAPIInstallerComponent defines a component which will be installed by this revision.",
+      "type": "object",
+      "required": [
+        "type"
+      ],
+      "properties": {
+        "image": {
+          "description": "image defines an image source for a component. The image must contain a /capi-operator-installer directory containing the component manifests.",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.operator.v1alpha1.ClusterAPIInstallerComponentImage"
+        },
+        "type": {
+          "description": "type is the source type of the component. The only valid value is Image. When set to Image, the image field must be set and will define an image source for the component.\n\nPossible enum values:\n - `\"Image\"` is an image source for a component.",
+          "type": "string",
+          "enum": [
+            "Image"
+          ]
+        }
+      },
+      "x-kubernetes-unions": [
+        {
+          "discriminator": "type",
+          "fields-to-discriminateBy": {
+            "image": "Image"
+          }
+        }
+      ]
+    },
+    "com.github.openshift.api.operator.v1alpha1.ClusterAPIInstallerComponentImage": {
+      "description": "ClusterAPIInstallerComponentImage defines an image source for a component.",
+      "type": "object",
+      "required": [
+        "ref",
+        "profile"
+      ],
+      "properties": {
+        "profile": {
+          "description": "profile is the name of a profile to use from the image.\n\nA profile name may be up to 255 characters long. It must consist of alphanumeric characters, '-', or '_'.",
+          "type": "string"
+        },
+        "ref": {
+          "description": "ref is an image reference to the image containing the component manifests. The reference must be a valid image digest reference in the format host[:port][/namespace]/name@sha256:<digest>. The digest must be 64 characters long, and consist only of lowercase hexadecimal characters, a-f and 0-9. The length of the field must be between 1 to 447 characters.",
+          "type": "string"
+        }
+      }
+    },
+    "com.github.openshift.api.operator.v1alpha1.ClusterAPIInstallerRevision": {
+      "type": "object",
+      "required": [
+        "name",
+        "revision",
+        "contentID",
+        "components"
+      ],
+      "properties": {
+        "components": {
+          "description": "components is list of components which will be installed by this revision. Components will be installed in the order they are listed.\n\nThe maximum number of components is 32.",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/com.github.openshift.api.operator.v1alpha1.ClusterAPIInstallerComponent"
+          },
+          "x-kubernetes-list-type": "atomic"
+        },
+        "contentID": {
+          "description": "contentID uniquely identifies the content of this revision. The contentID must be between 1 and 255 characters long.",
+          "type": "string"
+        },
+        "name": {
+          "description": "name is the name of a revision.",
+          "type": "string"
+        },
+        "revision": {
+          "description": "revision is a monotonically increasing number that is assigned to a revision.",
+          "type": "integer",
+          "format": "int64"
+        },
+        "unmanagedCustomResourceDefinitions": {
+          "description": "unmanagedCustomResourceDefinitions is a list of the names of ClusterResourceDefinition (CRD) objects which are included in this revision, but which should not be installed or updated. If not set, all CRDs in the revision will be managed by the CAPI operator.",
+          "type": "array",
+          "items": {
+            "type": "string",
+            "default": ""
+          },
+          "x-kubernetes-list-type": "atomic"
+        }
+      },
+      "x-kubernetes-map-type": "atomic"
     },
     "com.github.openshift.api.operator.v1alpha1.ClusterAPIList": {
       "description": "ClusterAPIList contains a list of ClusterAPI configurations\n\nCompatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.",
@@ -35939,11 +36085,11 @@
       }
     },
     "com.github.openshift.api.operator.v1alpha1.ClusterAPISpec": {
-      "description": "ClusterAPISpec defines the desired configuration of the capi-operator.",
+      "description": "ClusterAPISpec defines the desired configuration of the capi-operator. The spec is required but we deliberately allow it to be empty.",
       "type": "object",
       "properties": {
         "unmanagedCustomResourceDefinitions": {
-          "description": "unmanagedCustomResourceDefinitions is a list of ClusterResourceDefinition (CRD) names that should not be managed by the capi-operator installer controller. This allows external actors to own specific CRDs while capi-operator manages others.\n\nEach CRD name must be a valid DNS-1123 subdomain consisting of lowercase alphanumeric characters, '-' or '.', and must start and end with an alphanumeric character, with a maximum length of 253 characters. Example: \"clusters.cluster.x-k8s.io\"\n\nItems cannot be removed from this list once added.\n\nThe maximum number of unmanagedCustomResourceDefinitions is 128.",
+          "description": "unmanagedCustomResourceDefinitions is a list of ClusterResourceDefinition (CRD) names that should not be managed by the capi-operator installer controller. This allows external actors to own specific CRDs while capi-operator manages others.\n\nEach CRD name must be a valid DNS-1123 subdomain consisting of lowercase alphanumeric characters, '-' or '.', and must start and end with an alphanumeric character, with a maximum length of 253 characters. CRD names must contain at least two '.' characters. Example: \"clusters.cluster.x-k8s.io\"\n\nItems cannot be removed from this list once added.\n\nThe maximum number of unmanagedCustomResourceDefinitions is 128.",
           "type": "array",
           "items": {
             "type": "string",
@@ -35956,22 +36102,25 @@
     "com.github.openshift.api.operator.v1alpha1.ClusterAPIStatus": {
       "description": "ClusterAPIStatus describes the current state of the capi-operator.",
       "type": "object",
+      "required": [
+        "desiredRevision",
+        "revisions"
+      ],
       "properties": {
-        "activeConfigMaps": {
-          "description": "activeConfigMaps is a list of ConfigMap names that the installer controller has successfully reconciled. This represents the currently deployed CAPI provider components.\n\nEach ConfigMap name must be a valid DNS-1123 label consisting of lowercase alphanumeric characters or hyphens, starting and ending with an alphanumeric character, with a maximum length of 63 characters.\n\nThis field is owned by the installer controller and is updated atomically after a successful reconciliation.\n\nThe maximum number of activeConfigMaps is 128.",
-          "type": "array",
-          "items": {
-            "type": "string",
-            "default": ""
-          },
-          "x-kubernetes-list-type": "atomic"
+        "currentRevision": {
+          "description": "currentRevision is the name of the most recently fully applied revision. It is written by the installer controller. If it is absent, it indicates that no revision has been fully applied yet. If set, currentRevision must correspond to an entry in the revisions list.",
+          "type": "string"
         },
-        "targetConfigMaps": {
-          "description": "targetConfigMaps is a list of ConfigMap names that the staging controller has validated and approved for reconciliation. The installer controller will reconcile these ConfigMaps.\n\nEach ConfigMap name must be a valid DNS-1123 label consisting of lowercase alphanumeric characters or hyphens, starting and ending with an alphanumeric character, with a maximum length of 63 characters.\n\nThis field is owned by the staging controller and is updated atomically to a consistent set of transport ConfigMaps that have passed validation checks.\n\nThe maximum number of targetConfigMaps is 128.",
+        "desiredRevision": {
+          "description": "desiredRevision is the name of the desired revision. It is written by the revision controller. It must be set to the name of the entry in the revisions list with the highest revision number.",
+          "type": "string"
+        },
+        "revisions": {
+          "description": "revisions is a list of all currently active revisions. A revision is active until the installer controller updates currentRevision to a later revision. It is written by the revision controller.\n\nThe maximum number of revisions is 16. All revisions must have a unique name. All revisions must have a unique revision number. When adding a revision, the revision number must be greater than the highest revision number in the list. Revisions are immutable, although they can be deleted.",
           "type": "array",
           "items": {
-            "type": "string",
-            "default": ""
+            "default": {},
+            "$ref": "#/definitions/com.github.openshift.api.operator.v1alpha1.ClusterAPIInstallerRevision"
           },
           "x-kubernetes-list-type": "atomic"
         }
@@ -37023,7 +37172,8 @@
           "items": {
             "default": {},
             "$ref": "#/definitions/com.github.openshift.api.operatoringress.v1.DNSRecord"
-          }
+          },
+          "x-kubernetes-list-type": "atomic"
         },
         "kind": {
           "description": "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
@@ -37074,7 +37224,8 @@
           "items": {
             "type": "string",
             "default": ""
-          }
+          },
+          "x-kubernetes-list-type": "atomic"
         }
       }
     },
@@ -37093,7 +37244,8 @@
           "items": {
             "default": {},
             "$ref": "#/definitions/com.github.openshift.api.operatoringress.v1.DNSZoneStatus"
-          }
+          },
+          "x-kubernetes-list-type": "atomic"
         }
       }
     },
@@ -37137,7 +37289,8 @@
           "items": {
             "default": {},
             "$ref": "#/definitions/com.github.openshift.api.operatoringress.v1.DNSZoneCondition"
-          }
+          },
+          "x-kubernetes-list-type": "atomic"
         },
         "dnsZone": {
           "description": "dnsZone is the zone where the record is published.",
@@ -52174,77 +52327,6 @@
       "description": "IntOrString is a type that can hold an int32 or a string.  When used in JSON or YAML marshalling and unmarshalling, it produces or consumes the inner type.  This allows you to have, for example, a JSON field that can accept a name or number.",
       "type": "string",
       "format": "int-or-string"
-    },
-    "io.k8s.apimachinery.pkg.version.Info": {
-      "description": "Info contains versioning information. how we'll want to distribute that information.",
-      "type": "object",
-      "required": [
-        "major",
-        "minor",
-        "gitVersion",
-        "gitCommit",
-        "gitTreeState",
-        "buildDate",
-        "goVersion",
-        "compiler",
-        "platform"
-      ],
-      "properties": {
-        "buildDate": {
-          "type": "string",
-          "default": ""
-        },
-        "compiler": {
-          "type": "string",
-          "default": ""
-        },
-        "emulationMajor": {
-          "description": "EmulationMajor is the major version of the emulation version",
-          "type": "string"
-        },
-        "emulationMinor": {
-          "description": "EmulationMinor is the minor version of the emulation version",
-          "type": "string"
-        },
-        "gitCommit": {
-          "type": "string",
-          "default": ""
-        },
-        "gitTreeState": {
-          "type": "string",
-          "default": ""
-        },
-        "gitVersion": {
-          "type": "string",
-          "default": ""
-        },
-        "goVersion": {
-          "type": "string",
-          "default": ""
-        },
-        "major": {
-          "description": "Major is the major version of the binary version",
-          "type": "string",
-          "default": ""
-        },
-        "minCompatibilityMajor": {
-          "description": "MinCompatibilityMajor is the major version of the minimum compatibility version",
-          "type": "string"
-        },
-        "minCompatibilityMinor": {
-          "description": "MinCompatibilityMinor is the minor version of the minimum compatibility version",
-          "type": "string"
-        },
-        "minor": {
-          "description": "Minor is the minor version of the binary version",
-          "type": "string",
-          "default": ""
-        },
-        "platform": {
-          "type": "string",
-          "default": ""
-        }
-      }
     }
   }
 }

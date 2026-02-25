@@ -180,6 +180,7 @@ var map_ClusterMonitoringSpec = map[string]string{
 	"metricsServerConfig":      "metricsServerConfig is an optional field that can be used to configure the Kubernetes Metrics Server that runs in the openshift-monitoring namespace. Specifically, it can configure how the Metrics Server instance is deployed, pod scheduling, its audit policy and log verbosity. When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time.",
 	"prometheusOperatorConfig": "prometheusOperatorConfig is an optional field that can be used to configure the Prometheus Operator component. Specifically, it can configure how the Prometheus Operator instance is deployed, pod scheduling, and resource allocation. When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time.",
 	"prometheusOperatorAdmissionWebhookConfig": "prometheusOperatorAdmissionWebhookConfig is an optional field that can be used to configure the admission webhook component of Prometheus Operator that runs in the openshift-monitoring namespace. The admission webhook validates PrometheusRule and AlertmanagerConfig objects to ensure they are semantically valid, mutates PrometheusRule annotations, and converts AlertmanagerConfig objects between API versions. When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time.",
+	"openShiftStateMetricsConfig":              "openShiftStateMetricsConfig is an optional field that can be used to configure the openshift-state-metrics agent that runs in the openshift-monitoring namespace. The openshift-state-metrics agent generates metrics about the state of OpenShift-specific Kubernetes objects, such as routes, builds, and deployments. When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time.",
 }
 
 func (ClusterMonitoringSpec) SwaggerDoc() map[string]string {
@@ -217,6 +218,18 @@ var map_MetricsServerConfig = map[string]string{
 
 func (MetricsServerConfig) SwaggerDoc() map[string]string {
 	return map_MetricsServerConfig
+}
+
+var map_OpenShiftStateMetricsConfig = map[string]string{
+	"":                          "OpenShiftStateMetricsConfig provides configuration options for the openshift-state-metrics agent that runs in the `openshift-monitoring` namespace. The openshift-state-metrics agent generates metrics about the state of OpenShift-specific Kubernetes objects, such as routes, builds, and deployments.",
+	"nodeSelector":              "nodeSelector defines the nodes on which the Pods are scheduled. nodeSelector is optional.\n\nWhen omitted, this means the user has no opinion and the platform is left to choose reasonable defaults. These defaults are subject to change over time. The current default value is `kubernetes.io/os: linux`. When specified, nodeSelector must contain at least 1 entry and must not contain more than 10 entries.",
+	"resources":                 "resources defines the compute resource requests and limits for the openshift-state-metrics container. This includes CPU, memory and HugePages constraints to help control scheduling and resource usage. When not specified, defaults are used by the platform. Requests cannot exceed limits. This field is optional. More info: https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/ This is a simplified API that maps to Kubernetes ResourceRequirements. The current default values are:\n  resources:\n   - name: cpu\n     request: 1m\n     limit: null\n   - name: memory\n     request: 32Mi\n     limit: null\nMaximum length for this list is 10. Minimum length for this list is 1. Each resource name must be unique within this list.",
+	"tolerations":               "tolerations defines tolerations for the pods. tolerations is optional.\n\nWhen omitted, this means the user has no opinion and the platform is left to choose reasonable defaults. These defaults are subject to change over time. Defaults are empty/unset. Maximum length for this list is 10. Minimum length for this list is 1.",
+	"topologySpreadConstraints": "topologySpreadConstraints defines rules for how openshift-state-metrics Pods should be distributed across topology domains such as zones, nodes, or other user-defined labels. topologySpreadConstraints is optional. This helps improve high availability and resource efficiency by avoiding placing too many replicas in the same failure domain.\n\nWhen omitted, this means no opinion and the platform is left to choose a default, which is subject to change over time. This field maps directly to the `topologySpreadConstraints` field in the Pod spec. Default is empty list. Maximum length for this list is 10. Minimum length for this list is 1. Entries must have unique topologyKey and whenUnsatisfiable pairs.",
+}
+
+func (OpenShiftStateMetricsConfig) SwaggerDoc() map[string]string {
+	return map_OpenShiftStateMetricsConfig
 }
 
 var map_PrometheusOperatorAdmissionWebhookConfig = map[string]string{

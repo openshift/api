@@ -467,7 +467,7 @@ func (PrefixedClaimMapping) SwaggerDoc() map[string]string {
 
 var map_TokenClaimMapping = map[string]string{
 	"":           "TokenClaimMapping allows specifying a JWT token claim to be used when mapping claims from an authentication token to cluster identities.",
-	"claim":      "claim is a required field that configures the JWT token claim whose value is assigned to the cluster identity field associated with this mapping.",
+	"claim":      "claim is an optional field for specifying the JWT token claim that is used in the mapping. The value of this claim will be assigned to the field in which this mapping is associated.",
 	"expression": "expression is an optional CEL expression used to derive group values from JWT claims.\n\nWhen specified, claim must not be set.",
 }
 

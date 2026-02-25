@@ -499,7 +499,7 @@ tests:
               username:
                 claim: "preferred_username"
                 expression: "claims.sub"
-      expectedError: "claim and expression cannot both be set"
+      expectedError: "claim or expression must be specified"
 
     - name: Can set groups mapping using a CEL expression
       initial: |
@@ -550,7 +550,7 @@ tests:
               groups:
                 claim: "roles"
                 expression: "claims.roles.split(',')"
-      expectedError: "claim must not be set when expression is provided"
+      expectedError: "exactly one of claim or expression must be specified"
 
 
         

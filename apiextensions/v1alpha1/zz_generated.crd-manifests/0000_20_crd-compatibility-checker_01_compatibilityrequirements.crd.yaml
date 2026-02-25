@@ -138,6 +138,7 @@ spec:
                           x-kubernetes-list-type: set
                       required:
                       - path
+                      - versions
                       type: object
                     maxItems: 64
                     minItems: 1

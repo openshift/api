@@ -1545,6 +1545,7 @@ spec:
                                   When using the ClusterHosted DNS type, Load Balancer IP addresses
                                   must be provided for the API and internal API load balancers as well as the
                                   ingress load balancer.
+                                  For Azure platform, cloudLoadBalancerConfig.dnsType can be updated after it has been set.
                                 properties:
                                   clusterHosted:
                                     description: |-
@@ -1620,7 +1621,6 @@ spec:
                                       It can be set to `ClusterHosted` to bypass the configuration of the cloud default DNS. In this mode,
                                       the cluster needs to provide a self-hosted DNS solution for the cluster's installation to succeed.
                                       The cluster's use of the cloud's Load Balancers is unaffected by this setting.
-                                      The value is immutable after it has been set at install time.
                                       Currently, there is no way for the customer to add additional DNS entries into the cluster hosted DNS.
                                       Enabling this functionality allows the user to start their own DNS solution outside the cluster after
                                       installation is complete. The customer would be responsible for configuring this custom DNS solution,
@@ -1629,9 +1629,6 @@ spec:
                                     - ClusterHosted
                                     - PlatformDefault
                                     type: string
-                                    x-kubernetes-validations:
-                                    - message: dnsType is immutable
-                                      rule: oldSelf == '' || self == oldSelf
                                 type: object
                                 x-kubernetes-validations:
                                 - message: clusterHosted is permitted only when dnsType

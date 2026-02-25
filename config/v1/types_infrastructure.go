@@ -553,12 +553,14 @@ type AWSPlatformStatus struct {
 	// cloudLoadBalancerConfig holds configuration related to DNS and cloud
 	// load balancers. It allows configuration of in-cluster DNS as an alternative
 	// to the platform default DNS implementation.
+	// The value of cloudLoadBalancerConfig.dnsType is immutable after it has been set at install time.
 	// When using the ClusterHosted DNS type, Load Balancer IP addresses
 	// must be provided for the API and internal API load balancers as well as the
 	// ingress load balancer.
 	//
 	// +default={"dnsType": "PlatformDefault"}
 	// +kubebuilder:default={"dnsType": "PlatformDefault"}
+	// +kubebuilder:validation:XValidation:rule="has(oldSelf.dnsType) ? (oldSelf.dnsType == '' || self.dnsType == oldSelf.dnsType) : true",message="dnsType is immutable once set"
 	// +openshift:enable:FeatureGate=AWSClusterHostedDNSInstall
 	// +optional
 	// +nullable
@@ -640,6 +642,7 @@ type AzurePlatformStatus struct {
 	// When using the ClusterHosted DNS type, Load Balancer IP addresses
 	// must be provided for the API and internal API load balancers as well as the
 	// ingress load balancer.
+	// For Azure platform, cloudLoadBalancerConfig.dnsType can be updated after it has been set.
 	//
 	// +default={"dnsType": "PlatformDefault"}
 	// +kubebuilder:default={"dnsType": "PlatformDefault"}
@@ -781,12 +784,14 @@ type GCPPlatformStatus struct {
 	// cloudLoadBalancerConfig holds configuration related to DNS and cloud
 	// load balancers. It allows configuration of in-cluster DNS as an alternative
 	// to the platform default DNS implementation.
+	// The value of cloudLoadBalancerConfig.dnsType is immutable after it has been set at install time.
 	// When using the ClusterHosted DNS type, Load Balancer IP addresses
 	// must be provided for the API and internal API load balancers as well as the
 	// ingress load balancer.
 	//
 	// +default={"dnsType": "PlatformDefault"}
 	// +kubebuilder:default={"dnsType": "PlatformDefault"}
+	// +kubebuilder:validation:XValidation:rule="has(oldSelf.dnsType) ? (oldSelf.dnsType == '' || self.dnsType == oldSelf.dnsType) : true",message="dnsType is immutable once set"
 	// +openshift:enable:FeatureGate=GCPClusterHostedDNSInstall
 	// +optional
 	// +nullable
@@ -877,7 +882,6 @@ type CloudLoadBalancerConfig struct {
 	// It can be set to `ClusterHosted` to bypass the configuration of the cloud default DNS. In this mode,
 	// the cluster needs to provide a self-hosted DNS solution for the cluster's installation to succeed.
 	// The cluster's use of the cloud's Load Balancers is unaffected by this setting.
-	// The value is immutable after it has been set at install time.
 	// Currently, there is no way for the customer to add additional DNS entries into the cluster hosted DNS.
 	// Enabling this functionality allows the user to start their own DNS solution outside the cluster after
 	// installation is complete. The customer would be responsible for configuring this custom DNS solution,
@@ -885,7 +889,6 @@ type CloudLoadBalancerConfig struct {
 	// +default="PlatformDefault"
 	// +kubebuilder:default:="PlatformDefault"
 	// +kubebuilder:validation:Enum="ClusterHosted";"PlatformDefault"
-	// +kubebuilder:validation:XValidation:rule="oldSelf == '' || self == oldSelf",message="dnsType is immutable"
 	// +optional
 	// +unionDiscriminator
 	DNSType DNSType `json:"dnsType,omitempty"`

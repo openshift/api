@@ -350,14 +350,15 @@ type TokenClaimMappings struct {
 }
 
 // TokenClaimMapping allows specifying a JWT token claim to be used when mapping claims from an authentication token to cluster identities.
-// +openshift:validation:FeatureGateAwareXValidation:featureGate="";ExternalOIDC;ExternalOIDCWithUIDAndExtraClaimMappings,rule="!has(self.claim)",message="claim is required";
-// +openshift:validation:FeatureGateAwareXValidation:featureGate=ExternalOIDCWithUpstreamParity,rule="!has(self.claim) && !has(self.expression)",message="claim or expression must be specified"
+// +openshift:validation:FeatureGateAwareXValidation:featureGate="",rule="!has(self.claim)",message="claim is required"
+// +openshift:validation:FeatureGateAwareXValidation:featureGate=ExternalOIDC,rule="!has(self.claim)",message="claim is required"
+// +openshift:validation:FeatureGateAwareXValidation:featureGate=ExternalOIDCWithUIDAndExtraClaimMappings,rule="!has(self.claim)",message="claim is required"
+// +openshift:validation:FeatureGateAwareXValidation:featureGate=ExternalOIDCWithUpstreamParity,rule="size(self.?claim.orValue("")) > 0 ? !has(self.expression) : has(self.expression)",message="claim or expression must be specified"
 type TokenClaimMapping struct {
 	// claim is an optional field for specifying the JWT token claim that is used in the mapping.
 	// The value of this claim will be assigned to the field in which this mapping is associated.
 	//
 	// +optional
-	// +kubebuilder:validation:MinLength=1
 	// +kubebuilder:validation:MaxLength=256
 	Claim string `json:"claim"`
 
@@ -606,8 +607,10 @@ type OIDCClientReference struct {
 
 // +kubebuilder:validation:XValidation:rule="has(self.prefixPolicy) && self.prefixPolicy == 'Prefix' ? (has(self.prefix) && size(self.prefix.prefixString) > 0) : !has(self.prefix)",message="prefix must be set if prefixPolicy is 'Prefix', but must remain unset otherwise"
 // +union
-// +openshift:validation:FeatureGateAwareXValidation:featureGate="";ExternalOIDC;ExternalOIDCWithUIDAndExtraClaimMappings,rule="!has(self.claim)",message="claim is required";
-// +openshift:validation:FeatureGateAwareXValidation:featureGate=ExternalOIDCWithUpstreamParity,rule="!has(self.claim) && !has(self.expression)",message="claim or expression must be specified"
+// +openshift:validation:FeatureGateAwareXValidation:featureGate="",rule="!has(self.claim)",message="claim is required"
+// +openshift:validation:FeatureGateAwareXValidation:featureGate=ExternalOIDC,rule="!has(self.claim)",message="claim is required"
+// +openshift:validation:FeatureGateAwareXValidation:featureGate=ExternalOIDCWithUIDAndExtraClaimMappings,rule="!has(self.claim)",message="claim is required"
+// +openshift:validation:FeatureGateAwareXValidation:featureGate=ExternalOIDCWithUpstreamParity,rule="has(self.claim) ? !has(self.expression) : has(self.expression)",message="claim or expression must be specified"
 type UsernameClaimMapping struct {
 	// claim is a optional field that configures the JWT token claim whose value is assigned to the cluster identity field associated with this mapping.
 	//
@@ -617,9 +620,8 @@ type UsernameClaimMapping struct {
 	// claim must not be an empty string ("") and must not exceed 256 characters.
 	//
 	// +optional
-	// +kubebuilder:validation:MinLength:=1
 	// +kubebuilder:validation:MaxLength:=256
-	Claim string `json:"claim,omitempty"`
+	Claim string `json:"claim"`
 
 	// expression is an optional CEL expression used to derive
 	// the username from JWT claims.

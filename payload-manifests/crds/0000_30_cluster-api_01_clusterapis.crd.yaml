@@ -121,8 +121,9 @@ spec:
                   properties:
                     components:
                       description: |-
-                        components is list of components which will be installed by this
-                        revision. Components will be installed in the order they are listed.
+                        components is a list of components which will be installed by this
+                        revision. Components will be installed in the order they are listed. If
+                        omitted no components will be installed.
 
                         The maximum number of components is 32.
                       items:
@@ -224,7 +225,6 @@ spec:
                       type: array
                       x-kubernetes-list-type: atomic
                   required:
-                  - components
                   - contentID
                   - name
                   - revision

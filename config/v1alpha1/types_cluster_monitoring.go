@@ -107,6 +107,12 @@ type ClusterMonitoringSpec struct {
 	// When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time.
 	// +optional
 	PrometheusOperatorAdmissionWebhookConfig PrometheusOperatorAdmissionWebhookConfig `json:"prometheusOperatorAdmissionWebhookConfig,omitempty,omitzero"`
+	// openShiftStateMetricsConfig is an optional field that can be used to configure the openshift-state-metrics
+	// agent that runs in the openshift-monitoring namespace. The openshift-state-metrics agent generates metrics
+	// about the state of OpenShift-specific Kubernetes objects, such as routes, builds, and deployments.
+	// When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time.
+	// +optional
+	OpenShiftStateMetricsConfig OpenShiftStateMetricsConfig `json:"openShiftStateMetricsConfig,omitempty,omitzero"`
 }
 
 // UserDefinedMonitoring config for user-defined projects.
@@ -546,6 +552,79 @@ type PrometheusOperatorAdmissionWebhookConfig struct {
 	// +kubebuilder:validation:MinItems=1
 	Resources []ContainerResource `json:"resources,omitempty"`
 	// topologySpreadConstraints defines rules for how admission webhook Pods should be distributed
+	// across topology domains such as zones, nodes, or other user-defined labels.
+	// topologySpreadConstraints is optional.
+	// This helps improve high availability and resource efficiency by avoiding placing
+	// too many replicas in the same failure domain.
+	//
+	// When omitted, this means no opinion and the platform is left to choose a default, which is subject to change over time.
+	// This field maps directly to the `topologySpreadConstraints` field in the Pod spec.
+	// Default is empty list.
+	// Maximum length for this list is 10.
+	// Minimum length for this list is 1.
+	// Entries must have unique topologyKey and whenUnsatisfiable pairs.
+	// +kubebuilder:validation:MaxItems=10
+	// +kubebuilder:validation:MinItems=1
+	// +listType=map
+	// +listMapKey=topologyKey
+	// +listMapKey=whenUnsatisfiable
+	// +optional
+	TopologySpreadConstraints []v1.TopologySpreadConstraint `json:"topologySpreadConstraints,omitempty"`
+}
+
+// OpenShiftStateMetricsConfig provides configuration options for the openshift-state-metrics agent
+// that runs in the `openshift-monitoring` namespace. The openshift-state-metrics agent generates
+// metrics about the state of OpenShift-specific Kubernetes objects, such as routes, builds, and deployments.
+// +kubebuilder:validation:MinProperties=1
+type OpenShiftStateMetricsConfig struct {
+	// nodeSelector defines the nodes on which the Pods are scheduled.
+	// nodeSelector is optional.
+	//
+	// When omitted, this means the user has no opinion and the platform is left
+	// to choose reasonable defaults. These defaults are subject to change over time.
+	// The current default value is `kubernetes.io/os: linux`.
+	// When specified, nodeSelector must contain at least 1 entry and must not contain more than 10 entries.
+	// +optional
+	// +kubebuilder:validation:MinProperties=1
+	// +kubebuilder:validation:MaxProperties=10
+	NodeSelector map[string]string `json:"nodeSelector,omitempty"`
+	// resources defines the compute resource requests and limits for the openshift-state-metrics container.
+	// This includes CPU, memory and HugePages constraints to help control scheduling and resource usage.
+	// When not specified, defaults are used by the platform. Requests cannot exceed limits.
+	// This field is optional.
+	// More info: https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/
+	// This is a simplified API that maps to Kubernetes ResourceRequirements.
+	// The current default values are:
+	//   resources:
+	//    - name: cpu
+	//      request: 1m
+	//      limit: null
+	//    - name: memory
+	//      request: 32Mi
+	//      limit: null
+	// Maximum length for this list is 10.
+	// Minimum length for this list is 1.
+	// Each resource name must be unique within this list.
+	// +optional
+	// +listType=map
+	// +listMapKey=name
+	// +kubebuilder:validation:MaxItems=10
+	// +kubebuilder:validation:MinItems=1
+	Resources []ContainerResource `json:"resources,omitempty"`
+	// tolerations defines tolerations for the pods.
+	// tolerations is optional.
+	//
+	// When omitted, this means the user has no opinion and the platform is left
+	// to choose reasonable defaults. These defaults are subject to change over time.
+	// Defaults are empty/unset.
+	// Maximum length for this list is 10.
+	// Minimum length for this list is 1.
+	// +kubebuilder:validation:MaxItems=10
+	// +kubebuilder:validation:MinItems=1
+	// +listType=atomic
+	// +optional
+	Tolerations []v1.Toleration `json:"tolerations,omitempty"`
+	// topologySpreadConstraints defines rules for how openshift-state-metrics Pods should be distributed
 	// across topology domains such as zones, nodes, or other user-defined labels.
 	// topologySpreadConstraints is optional.
 	// This helps improve high availability and resource efficiency by avoiding placing

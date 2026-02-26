@@ -203,7 +203,7 @@ spec:
                           type: object
                           x-kubernetes-validations:
                           - message: claim is required
-                            rule: '!has(self.claim)'
+                            rule: has(self.claim)
                         uid:
                           description: |-
                             uid is an optional field for configuring the claim mapping used to construct the uid for the cluster identity.
@@ -309,7 +309,7 @@ spec:
                           type: object
                           x-kubernetes-validations:
                           - message: claim is required
-                            rule: '!has(self.claim)'
+                            rule: has(self.claim)
                           - message: prefix must be set if prefixPolicy is 'Prefix',
                               but must remain unset otherwise
                             rule: 'has(self.prefixPolicy) && self.prefixPolicy ==

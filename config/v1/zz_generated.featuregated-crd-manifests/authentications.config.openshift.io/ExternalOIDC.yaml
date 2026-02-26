@@ -108,7 +108,7 @@ spec:
                           type: object
                           x-kubernetes-validations:
                           - message: claim is required
-                            rule: '!has(self.claim)'
+                            rule: has(self.claim)
                         username:
                           description: username is a required field that configures
                             how the username of a cluster identity should be constructed
@@ -172,7 +172,7 @@ spec:
                           type: object
                           x-kubernetes-validations:
                           - message: claim is required
-                            rule: '!has(self.claim)'
+                            rule: has(self.claim)
                           - message: prefix must be set if prefixPolicy is 'Prefix',
                               but must remain unset otherwise
                             rule: 'has(self.prefixPolicy) && self.prefixPolicy ==

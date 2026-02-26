@@ -3,6 +3,7 @@ name: "Authentication"
 crdName: authentications.config.openshift.io
 featureGates:
   - ExternalOIDC
+  - -ExternalOIDCWithUpstreamParity
 tests:
   onCreate:
     - name: Should be able to create a minimal Authentication
@@ -60,6 +61,8 @@ tests:
                 prefixPolicy: Prefix
                 prefix:
                   prefixString: "myoidc:"
+              groups:
+                claim: "roles"
       expected: |
         apiVersion: config.openshift.io/v1
         kind: Authentication
@@ -76,6 +79,8 @@ tests:
                 prefixPolicy: Prefix
                 prefix:
                   prefixString: "myoidc:"
+              groups:
+                claim: "roles"
     - name: Cannot leave username claim prefix blank with policy Prefix
       initial: |
         apiVersion: config.openshift.io/v1

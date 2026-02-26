@@ -592,6 +592,209 @@ tests:
                 valueExpression: "claims.foo"
       expectedError: "the domain of the key must consist of only lower case alphanumeric characters, '-' or '.', and must start and end with an alphanumeric character"
   onUpdate:
+    - name: Should allow updating other fields if existing username claim mapping is empty string
+      initialCRDPatches:
+        - op: remove
+          path: /spec/versions/0/schema/openAPIV3Schema/properties/spec/properties/oidcProviders/items/properties/claimMappings/properties/username/properties/claim/minLength
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: Authentication
+        spec:
+          type: OIDC
+          oidcProviders:
+          - name: myoidc
+            issuer:
+              issuerURL: https://meh.tld
+              audiences: ['openshift-aud']
+            claimMappings:
+              username:
+                claim: ""
+      updated: |
+        apiVersion: config.openshift.io/v1
+        kind: Authentication
+        spec:
+          type: OIDC
+          oidcProviders:
+          - name: myoidc
+            issuer:
+              issuerURL: https://huh.tld
+              audiences: ['openshift-aud']
+            claimMappings:
+              username:
+                claim: ""
+      expected: |
+        apiVersion: config.openshift.io/v1
+        kind: Authentication
+        spec:
+          type: OIDC
+          oidcProviders:
+          - name: myoidc
+            issuer:
+              issuerURL: https://huh.tld
+              audiences: ['openshift-aud']
+            claimMappings:
+              username:
+                claim: ""
+    - name: Should allow updating username claim mapping from a previously invalid empty value to a valid value
+      initialCRDPatches:
+        - op: remove
+          path: /spec/versions/0/schema/openAPIV3Schema/properties/spec/properties/oidcProviders/items/properties/claimMappings/properties/username/properties/claim/minLength
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: Authentication
+        spec:
+          type: OIDC
+          oidcProviders:
+          - name: myoidc
+            issuer:
+              issuerURL: https://meh.tld
+              audiences: ['openshift-aud']
+            claimMappings:
+              username:
+                claim: ""
+      updated: |
+        apiVersion: config.openshift.io/v1
+        kind: Authentication
+        spec:
+          type: OIDC
+          oidcProviders:
+          - name: myoidc
+            issuer:
+              issuerURL: https://meh.tld
+              audiences: ['openshift-aud']
+            claimMappings:
+              username:
+                claim: "preferred_username"
+      expected: |
+        apiVersion: config.openshift.io/v1
+        kind: Authentication
+        spec:
+          type: OIDC
+          oidcProviders:
+          - name: myoidc
+            issuer:
+              issuerURL: https://meh.tld
+              audiences: ['openshift-aud']
+            claimMappings:
+              username:
+                claim: "preferred_username"
+    - name: Should allow updating other fields if existing username claim mapping is longer than 256 characters
+      initialCRDPatches:
+        - op: remove
+          path: /spec/versions/0/schema/openAPIV3Schema/properties/spec/properties/oidcProviders/items/properties/claimMappings/properties/username/properties/claim/maxLength
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: Authentication
+        spec:
+          type: OIDC
+          oidcProviders:
+          - name: myoidc
+            issuer:
+              issuerURL: https://meh.tld
+              audiences: ['openshift-aud']
+            claimMappings:
+              username:
+                claim: "thisisanincrediblylongclaimnamethatwhileacceptableinjwtsisgenerallyadvisedagainstbecauseitisextremelylongandnoteasilyusablebutmaybethereisausecaseouttherethathasdecidedthattheyneedtousethisextremelylongclaimnameforsomereasoneventhoughtheyreallyshouldreconsiderthis"
+      updated: |
+        apiVersion: config.openshift.io/v1
+        kind: Authentication
+        spec:
+          type: OIDC
+          oidcProviders:
+          - name: myoidc
+            issuer:
+              issuerURL: https://huh.tld
+              audiences: ['openshift-aud']
+            claimMappings:
+              username:
+                claim: "thisisanincrediblylongclaimnamethatwhileacceptableinjwtsisgenerallyadvisedagainstbecauseitisextremelylongandnoteasilyusablebutmaybethereisausecaseouttherethathasdecidedthattheyneedtousethisextremelylongclaimnameforsomereasoneventhoughtheyreallyshouldreconsiderthis"
+      expected: |
+        apiVersion: config.openshift.io/v1
+        kind: Authentication
+        spec:
+          type: OIDC
+          oidcProviders:
+          - name: myoidc
+            issuer:
+              issuerURL: https://huh.tld
+              audiences: ['openshift-aud']
+            claimMappings:
+              username:
+                claim: "thisisanincrediblylongclaimnamethatwhileacceptableinjwtsisgenerallyadvisedagainstbecauseitisextremelylongandnoteasilyusablebutmaybethereisausecaseouttherethathasdecidedthattheyneedtousethisextremelylongclaimnameforsomereasoneventhoughtheyreallyshouldreconsiderthis"
+    - name: Should allow updating username claim mapping from a previously invalid long value to a valid value
+      initialCRDPatches:
+        - op: remove
+          path: /spec/versions/0/schema/openAPIV3Schema/properties/spec/properties/oidcProviders/items/properties/claimMappings/properties/username/properties/claim/maxLength
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: Authentication
+        spec:
+          type: OIDC
+          oidcProviders:
+          - name: myoidc
+            issuer:
+              issuerURL: https://meh.tld
+              audiences: ['openshift-aud']
+            claimMappings:
+              username:
+                claim: "thisisanincrediblylongclaimnamethatwhileacceptableinjwtsisgenerallyadvisedagainstbecauseitisextremelylongandnoteasilyusablebutmaybethereisausecaseouttherethathasdecidedthattheyneedtousethisextremelylongclaimnameforsomereasoneventhoughtheyreallyshouldreconsiderthis"
+      updated: |
+        apiVersion: config.openshift.io/v1
+        kind: Authentication
+        spec:
+          type: OIDC
+          oidcProviders:
+          - name: myoidc
+            issuer:
+              issuerURL: https://meh.tld
+              audiences: ['openshift-aud']
+            claimMappings:
+              username:
+                claim: "preferred_username"
+      expected: |
+        apiVersion: config.openshift.io/v1
+        kind: Authentication
+        spec:
+          type: OIDC
+          oidcProviders:
+          - name: myoidc
+            issuer:
+              issuerURL: https://meh.tld
+              audiences: ['openshift-aud']
+            claimMappings:
+              username:
+                claim: "preferred_username"
+    - name: Should not allow updating username claim mapping from a previously invalid long value to a still invalid long value
+      initialCRDPatches:
+        - op: remove
+          path: /spec/versions/0/schema/openAPIV3Schema/properties/spec/properties/oidcProviders/items/properties/claimMappings/properties/username/properties/claim/maxLength
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: Authentication
+        spec:
+          type: OIDC
+          oidcProviders:
+          - name: myoidc
+            issuer:
+              issuerURL: https://meh.tld
+              audiences: ['openshift-aud']
+            claimMappings:
+              username:
+                claim: "thisisanincrediblylongclaimnamethatwhileacceptableinjwtsisgenerallyadvisedagainstbecauseitisextremelylongandnoteasilyusablebutmaybethereisausecaseouttherethathasdecidedthattheyneedtousethisextremelylongclaimnameforsomereasoneventhoughtheyreallyshouldreconsiderthis"
+      updated: |
+        apiVersion: config.openshift.io/v1
+        kind: Authentication
+        spec:
+          type: OIDC
+          oidcProviders:
+          - name: myoidc
+            issuer:
+              issuerURL: https://meh.tld
+              audiences: ['openshift-aud']
+            claimMappings:
+              username:
+                claim: "thisisanincrediblylongclaimnamethatwhileacceptableinjwtsisgenerallyadvisedagainstbecauseitisextremelylongandnoteasilyusablebutmaybethereisausecaseouttherethathasdecidedthattheyneedtousethisextremelylongclaimnameforsomereasoneventhoughtheyreallyshouldreconsiderthisandstilltoolong"
+      expectedError: "Too long: may not be more than 256 bytes"
     - name: Updating OIDC provider with a client that's not in the status
       initial: |
         apiVersion: config.openshift.io/v1

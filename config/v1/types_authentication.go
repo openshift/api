@@ -612,7 +612,7 @@ type OIDCClientReference struct {
 // +openshift:validation:FeatureGateAwareXValidation:featureGate=ExternalOIDCWithUIDAndExtraClaimMappings,rule="has(self.claim)",message="claim is required"
 // +openshift:validation:FeatureGateAwareXValidation:featureGate=ExternalOIDCWithUpstreamParity,rule="has(self.claim) ? !has(self.expression) : has(self.expression)",message="claim or expression must be specified"
 type UsernameClaimMapping struct {
-	// claim is a optional field that configures the JWT token claim whose value is assigned to the cluster identity field associated with this mapping.
+	// claim is an optional field that configures the JWT token claim whose value is assigned to the cluster identity field associated with this mapping.
 	//
 	// Precisely one of claim or expression must be set if the
 	// ExternalOIDCWithUpstreamParity feature gate is enabled.

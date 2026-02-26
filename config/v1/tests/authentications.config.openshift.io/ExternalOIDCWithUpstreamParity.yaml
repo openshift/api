@@ -550,7 +550,7 @@ tests:
               groups:
                 claim: "roles"
                 expression: "claims.roles.split(',')"
-      expectedError: "exactly one of claim or expression must be specified"
+      expectedError: "precisely one of claim or expression must be set"
   onUpdate:
     - name: Should allow updating other fields if existing username claim mapping is longer than 256 characters
       initialCRDPatches:

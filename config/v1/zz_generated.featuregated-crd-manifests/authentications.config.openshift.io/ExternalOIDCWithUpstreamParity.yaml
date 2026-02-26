@@ -126,7 +126,7 @@ spec:
                           properties:
                             claim:
                               description: |-
-                                claim is a optional field that configures the JWT token claim whose value is assigned to the cluster identity field associated with this mapping.
+                                claim is an optional field that configures the JWT token claim whose value is assigned to the cluster identity field associated with this mapping.
 
                                 Precisely one of claim or expression must be set if the
                                 ExternalOIDCWithUpstreamParity feature gate is enabled.

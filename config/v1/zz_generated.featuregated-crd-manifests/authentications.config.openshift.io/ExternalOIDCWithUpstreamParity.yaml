@@ -116,8 +116,10 @@ spec:
                               type: string
                           type: object
                           x-kubernetes-validations:
-                          - message: exactly one of claim or expression must be specified
-                            rule: (size(self.?claim.orValue("")) > 0) != has(self.expression)
+                          - message: expression must not be set if claim is specified
+                              and is not an empty string
+                            rule: '(size(self.?claim.orValue("")) > 0) ? !has(self.expression)
+                              : true'
                         username:
                           description: username is a required field that configures
                             how the username of a cluster identity should be constructed
@@ -193,7 +195,8 @@ spec:
                               type: string
                           type: object
                           x-kubernetes-validations:
-                          - message: claim or expression must be specified
+                          - message: precisely one of claim or expression must be
+                              set
                             rule: 'has(self.claim) ? !has(self.expression) : has(self.expression)'
                           - message: prefix must be set if prefixPolicy is 'Prefix',
                               but must remain unset otherwise

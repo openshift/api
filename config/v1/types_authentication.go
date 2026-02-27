@@ -353,7 +353,7 @@ type TokenClaimMappings struct {
 // +openshift:validation:FeatureGateAwareXValidation:featureGate="",rule="has(self.claim)",message="claim is required"
 // +openshift:validation:FeatureGateAwareXValidation:featureGate=ExternalOIDC,rule="has(self.claim)",message="claim is required"
 // +openshift:validation:FeatureGateAwareXValidation:featureGate=ExternalOIDCWithUIDAndExtraClaimMappings,rule="has(self.claim)",message="claim is required"
-// +openshift:validation:FeatureGateAwareXValidation:featureGate=ExternalOIDCWithUpstreamParity,rule="(size(self.?claim.orValue(\"\")) > 0) != has(self.expression)",message="exactly one of claim or expression must be specified"
+// +openshift:validation:FeatureGateAwareXValidation:featureGate=ExternalOIDCWithUpstreamParity,rule="(size(self.?claim.orValue(\"\")) > 0) ? !has(self.expression) : true",message="expression must not be set if claim is specified and is not an empty string"
 type TokenClaimMapping struct {
 	// claim is an optional field for specifying the JWT token claim that is used in the mapping.
 	// The value of this claim will be assigned to the field in which this mapping is associated.
@@ -610,7 +610,7 @@ type OIDCClientReference struct {
 // +openshift:validation:FeatureGateAwareXValidation:featureGate="",rule="has(self.claim)",message="claim is required"
 // +openshift:validation:FeatureGateAwareXValidation:featureGate=ExternalOIDC,rule="has(self.claim)",message="claim is required"
 // +openshift:validation:FeatureGateAwareXValidation:featureGate=ExternalOIDCWithUIDAndExtraClaimMappings,rule="has(self.claim)",message="claim is required"
-// +openshift:validation:FeatureGateAwareXValidation:featureGate=ExternalOIDCWithUpstreamParity,rule="has(self.claim) ? !has(self.expression) : has(self.expression)",message="claim or expression must be specified"
+// +openshift:validation:FeatureGateAwareXValidation:featureGate=ExternalOIDCWithUpstreamParity,rule="has(self.claim) ? !has(self.expression) : has(self.expression)",message="precisely one of claim or expression must be set"
 type UsernameClaimMapping struct {
 	// claim is an optional field that configures the JWT token claim whose value is assigned to the cluster identity field associated with this mapping.
 	//

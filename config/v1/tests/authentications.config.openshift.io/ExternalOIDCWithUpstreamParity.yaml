@@ -499,7 +499,7 @@ tests:
               username:
                 claim: "preferred_username"
                 expression: "claims.sub"
-      expectedError: "precisely one of claim or expression must be set"
+      expectedError: "expression must not be set if claim is specified and is not an empty string"
 
     - name: Can set groups mapping using a CEL expression
       initial: |
@@ -550,7 +550,65 @@ tests:
               groups:
                 claim: "roles"
                 expression: "claims.roles.split(',')"
-      expectedError: "precisely one of claim or expression must be set"
+      expectedError: "expression must not be set if claim is specified and is not an empty string"
+    
+    - name: Should allow empty claim with expression
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: Authentication
+        spec:
+          type: OIDC
+          oidcProviders:
+          - name: myoidc
+            issuer:
+              issuerURL: https://example.tld
+              audiences: ['openshift-aud']
+            claimMappings:
+              groups:
+                claim: ""
+                expression: "claims.groups"
+      expected: |
+        apiVersion: config.openshift.io/v1
+        kind: Authentication
+        spec:
+          type: OIDC
+          oidcProviders:
+          - name: myoidc
+            issuer:
+              issuerURL: https://example.tld
+              audiences: ['openshift-aud']
+            claimMappings:
+              groups:
+                claim: ""
+                expression: "claims.groups"
+
+    - name: Should allow empty claim without expression
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: Authentication
+        spec:
+          type: OIDC
+          oidcProviders:
+          - name: myoidc
+            issuer:
+              issuerURL: https://example.tld
+              audiences: ['openshift-aud']
+            claimMappings:
+              groups:
+                claim: ""
+      expected: |
+        apiVersion: config.openshift.io/v1
+        kind: Authentication
+        spec:
+          type: OIDC
+          oidcProviders:
+          - name: myoidc
+            issuer:
+              issuerURL: https://example.tld
+              audiences: ['openshift-aud']
+            claimMappings:
+              groups:
+                claim: ""
   onUpdate:
     - name: Should allow updating other fields if existing username claim mapping is longer than 256 characters
       initialCRDPatches:

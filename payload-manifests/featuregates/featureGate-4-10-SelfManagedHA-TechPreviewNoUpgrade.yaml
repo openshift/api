@@ -29,9 +29,6 @@
                         "name": "ClusterAPIInstall"
                     },
                     {
-                        "name": "ClusterAPIMachineManagementVSphere"
-                    },
-                    {
                         "name": "EventedPLEG"
                     },
                     {
@@ -122,6 +119,9 @@
                     },
                     {
                         "name": "ClusterAPIMachineManagement"
+                    },
+                    {
+                        "name": "ClusterAPIMachineManagementVSphere"
                     },
                     {
                         "name": "ClusterMonitoringConfig"

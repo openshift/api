@@ -557,7 +557,7 @@ var (
 							contactPerson("jcpowermac").
 							productScope(ocpSpecific).
 							enhancementPR("https://github.com/openshift/enhancements/pull/1465").
-							enable(inDevPreviewNoUpgrade()).
+							enable(inTechPreviewNoUpgrade(), inDevPreviewNoUpgrade()).
 							mustRegister()
 
 	FeatureGateClusterMonitoringConfig = newFeatureGate("ClusterMonitoringConfig").

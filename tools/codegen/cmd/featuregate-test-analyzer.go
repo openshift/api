@@ -170,6 +170,11 @@ func (o *FeatureGateTestAnalyzerOptions) Run(ctx context.Context) error {
 		fmt.Fprintf(o.Out, "No new Default FeatureGates found.\n")
 	}
 
+	release, err := getRelease()
+	if err != nil {
+		return fmt.Errorf("couldn't determine release version: %w", err)
+	}
+
 	featureGateHTMLData := []utils.HTMLFeatureGate{}
 	recentlyEnabledFeatureGates := sets.KeySet(recentlyEnabledFeatureGatesToClusterProfiles)
 	for _, enabledFeatureGate := range sets.List(recentlyEnabledFeatureGates) {
@@ -198,7 +203,7 @@ func (o *FeatureGateTestAnalyzerOptions) Run(ctx context.Context) error {
 			fmt.Fprintf(o.Out, "INSUFFICIENT CI testing for %q.\n", enabledFeatureGate)
 		}
 		errs = append(errs, currErrs...)
-		featureGateHTMLData = append(featureGateHTMLData, buildHTMLFeatureGateData(enabledFeatureGate, testingResults, currErrs))
+		featureGateHTMLData = append(featureGateHTMLData, buildHTMLFeatureGateData(enabledFeatureGate, testingResults, currErrs, release))
 
 	}
 
@@ -218,11 +223,20 @@ func (o *FeatureGateTestAnalyzerOptions) Run(ctx context.Context) error {
 	return errors.Join(errs...)
 }
 
-func buildHTMLFeatureGateData(name string, testingResults map[JobVariant]*TestingResults, errs []error) utils.HTMLFeatureGate {
+func buildHTMLFeatureGateData(name string, testingResults map[JobVariant]*TestingResults, errs []error, release string) utils.HTMLFeatureGate {
 	jobVariantsSet := sets.KeySet(testingResults)
 	jobVariants := jobVariantsSet.UnsortedList()
-	sort.Sort(OrderedJobVariants(jobVariants))
 
+	// For HTML sort so that the network stacks are in the same order.
+	var networkStackOrder = map[string]int{
+		"":     0,
+		"ipv4": 1,
+		"ipv6": 2,
+		"dual": 3,
+	}
+	sort.SliceStable(jobVariants, func(i, j int) bool {
+		return networkStackOrder[jobVariants[i].NetworkStack] < networkStackOrder[jobVariants[j].NetworkStack]
+	})
 	variants := make([]utils.HTMLVariantColumn, 0, len(jobVariants))
 	for i, jv := range jobVariants {
 		variants = append(variants, utils.HTMLVariantColumn{
@@ -250,7 +264,16 @@ func buildHTMLFeatureGateData(name string, testingResults map[JobVariant]*Testin
 		for i, jobVariant := range jobVariants {
 			allTesting := testingResults[jobVariant]
 			testResults := testResultByName(allTesting.TestResults, testName)
-			cell := utils.HTMLTestCell{}
+			cell := utils.HTMLTestCell{
+				SippyURL: sippy.BuildSippyTestAnalysisURL(
+					release,
+					testName,
+					jobVariant.Topology,
+					jobVariant.Cloud,
+					jobVariant.Architecture,
+					jobVariant.NetworkStack,
+				),
+			}
 			if testResults == nil {
 				cell.Failed = true
 			} else {
@@ -657,6 +680,17 @@ func getLatestRelease() (string, error) {
 	return "", fmt.Errorf("no valid development releases found")
 }
 
+func getRelease() (string, error) {
+	// if its not main branch, then use the ENV var to determine the release version
+	currentRelease := os.Getenv("PULL_BASE_REF")
+	if strings.Contains(currentRelease, "release-") {
+		// example: release-4.18, release-4.17
+		return strings.TrimPrefix(currentRelease, "release-"), nil
+	}
+	// means its main branch
+	return getLatestRelease()
+}
+
 func listTestResultForVariant(featureGate string, jobVariant JobVariant) (*TestingResults, error) {
 	// Substring here matches for both [OCPFeatureGate:...] and [FeatureGate:...]
 	testPattern := fmt.Sprintf("FeatureGate:%s]", featureGate)
@@ -687,19 +721,9 @@ func listTestResultForVariant(featureGate string, jobVariant JobVariant) (*Testi
 
 	testNameToResults := map[string]*TestResults{}
 	queries := sippy.QueriesFor(jobVariant.Cloud, jobVariant.Architecture, jobVariant.Topology, jobVariant.NetworkStack, testPattern)
-	var release string
-	// if its not main branch, then use the ENV var to determine the release version
-	currentRelease := os.Getenv("PULL_BASE_REF")
-	if strings.Contains(currentRelease, "release-") {
-		// example: release-4.18, release-4.17
-		release = strings.TrimPrefix(currentRelease, "release-")
-	} else {
-		// means its main branch
-		var err error
-		release, err = getLatestRelease()
-		if err != nil {
-			return nil, fmt.Errorf("couldn't fetch latest release version: %w", err)
-		}
+	release, err := getRelease()
+	if err != nil {
+		return nil, fmt.Errorf("couldn't fetch latest release version: %w", err)
 	}
 	fmt.Printf("Querying sippy release %s for test run results\n", release)
 

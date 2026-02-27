@@ -30,6 +30,7 @@ type HTMLTestCell struct {
 	TotalRuns      int
 	FailedRuns     int
 	Failed         bool
+	SippyURL       string
 }
 
 const HTMLTemplateSrc = `<!DOCTYPE html>
@@ -56,6 +57,8 @@ const HTMLTemplateSrc = `<!DOCTYPE html>
         th:first-child, td:first-child { text-align: left; }
         th { background-color: #f8f9fa; }
         .network-stack { font-weight: bold; color: #0056b3; }
+        a.cell-link { color: inherit; text-decoration: none; display: block; }
+        a.cell-link:hover { text-decoration: underline; }
         .alert { padding: 12px 20px; margin-bottom: 20px; border-radius: 4px; }
         .alert-success { background-color: #d4edda; border: 1px solid #c3e6cb; color: #155724; }
         .alert-danger { background-color: #f8d7da; border: 1px solid #f5c6cb; color: #721c24; }
@@ -100,9 +103,11 @@ const HTMLTemplateSrc = `<!DOCTYPE html>
                 <td class="test-name">{{$test.TestName}}</td>
                 {{range $cell := $test.Cells}}
                 <td class="{{if $cell.Failed}}fail-cell{{else}}pass-cell{{end}}" data-pass-percent="{{$cell.PassPercent}}">
+                    {{if $cell.SippyURL}}<a class="cell-link" href="{{$cell.SippyURL}}" target="_blank" rel="noopener">{{end}}
                     {{if $cell.Failed}}<strong>FAIL</strong><br>{{end}}
                     {{$cell.PassPercent}}% ({{$cell.SuccessfulRuns}} / {{$cell.TotalRuns}})
                     {{if gt $cell.FailedRuns 0}}<br><small>{{$cell.FailedRuns}} failed</small>{{end}}
+                    {{if $cell.SippyURL}}</a>{{end}}
                 </td>
                 {{end}}
             </tr>

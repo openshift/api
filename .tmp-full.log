@@ -1,4 +1,0 @@
-make -C tests integration
-go mod tidy
-go mod vendor
-go mod verify

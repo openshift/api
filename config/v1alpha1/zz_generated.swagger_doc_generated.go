@@ -170,7 +170,7 @@ func (Audit) SwaggerDoc() map[string]string {
 var map_AuthorizationConfig = map[string]string{
 	"":            "AuthorizationConfig defines the authentication method for Alertmanager connections.",
 	"type":        "type specifies the authentication type to use. Valid value is \"BearerToken\" (bearer token authentication). When set to BearerToken, the bearerToken field must be specified.",
-	"bearerToken": "bearerToken defines the secret reference containing the bearer token. Required when type is \"BearerToken\". The secret must exist in the openshift-monitoring namespace.",
+	"bearerToken": "bearerToken defines the secret reference containing the bearer token. Required when type is \"BearerToken\", and forbidden otherwise. The secret must exist in the openshift-monitoring namespace.",
 }
 
 func (AuthorizationConfig) SwaggerDoc() map[string]string {
@@ -253,7 +253,7 @@ func (DropEqualActionConfig) SwaggerDoc() map[string]string {
 var map_HashModActionConfig = map[string]string{
 	"":            "HashModActionConfig configures the HashMod action. target_label is set to the modulus of a hash of the concatenated source_labels (target = hash % modulus).",
 	"targetLabel": "targetLabel is the label name where the hash modulus result is written. Must be between 1 and 128 characters in length.",
-	"modulus":     "modulus is the divisor applied to the hash of the concatenated source label values (target = hash % modulus). Required when using the HashMod action so the intended behavior is explicit. Must be at least 1.",
+	"modulus":     "modulus is the divisor applied to the hash of the concatenated source label values (target = hash % modulus). Required when using the HashMod action so the intended behavior is explicit. Must be between 1 and 1000000.",
 }
 
 func (HashModActionConfig) SwaggerDoc() map[string]string {
@@ -281,7 +281,7 @@ func (Label) SwaggerDoc() map[string]string {
 
 var map_LabelMapActionConfig = map[string]string{
 	"":            "LabelMapActionConfig configures the LabelMap action. Regex is matched against all source label names (not just source_labels). Matching label values are copied to new label names given by replacement, with match group references (${1}, ${2}, ...) substituted.",
-	"replacement": "replacement is the template for new label names; match group references (${1}, ${2}, ...) are substituted from the matched label name. When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time. The default value is \"$1\" (the first capture group). Must be at most 255 characters in length.",
+	"replacement": "replacement is the template for new label names; match group references (${1}, ${2}, ...) are substituted from the matched label name. Required when using the LabelMap action so the intended behavior is explicit and the platform does not need to apply defaults. Use \"$1\" for the first capture group, \"$2\" for the second, etc. Must be between 1 and 255 characters in length. Empty string is invalid as it would produce invalid label names.",
 }
 
 func (LabelMapActionConfig) SwaggerDoc() map[string]string {
@@ -298,8 +298,7 @@ func (LowercaseActionConfig) SwaggerDoc() map[string]string {
 }
 
 var map_MetadataConfig = map[string]string{
-	"":             "MetadataConfig defines settings for sending series metadata to remote write storage.",
-	"mode":         "mode controls whether series metadata is sent to the remote write endpoint. When set to \"Send\", Prometheus sends metadata about time series to the remote write endpoint. When omitted or set to \"DoNotSend\", no metadata is sent. Valid values are \"Send\" and \"DoNotSend\".",
+	"":             "MetadataConfig defines settings for sending series metadata to remote write storage. Presence of this object enables metadata sending; use sendInterval to tune the send interval.",
 	"sendInterval": "sendInterval defines the interval at which metadata is sent. When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time. Must be a valid duration string (e.g., \"30s\", \"1m\", \"5m\"). Minimum value is 1 second. Maximum value is 24 hours.",
 }
 
@@ -378,6 +377,16 @@ func (PrometheusOperatorConfig) SwaggerDoc() map[string]string {
 	return map_PrometheusOperatorConfig
 }
 
+var map_PrometheusRemoteWriteHeader = map[string]string{
+	"":      "PrometheusRemoteWriteHeader defines a custom HTTP header for remote write requests. The header name must not be one of the reserved headers set by Prometheus.",
+	"name":  "name is the HTTP header name. Must not be a reserved header (see validation). Must be between 1 and 256 characters.",
+	"value": "value is the HTTP header value. Must be at most 4096 characters.",
+}
+
+func (PrometheusRemoteWriteHeader) SwaggerDoc() map[string]string {
+	return map_PrometheusRemoteWriteHeader
+}
+
 var map_QueueConfig = map[string]string{
 	"":                         "QueueConfig allows tuning configuration for remote write queue parameters.",
 	"capacity":                 "capacity is the number of samples to buffer per shard before we start dropping them. When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time. The default value is 10000. Minimum value is 1. Maximum value is 1000000.",
@@ -397,13 +406,13 @@ func (QueueConfig) SwaggerDoc() map[string]string {
 var map_RelabelActionConfig = map[string]string{
 	"":          "RelabelActionConfig represents the action to perform and its configuration. Exactly one action-specific configuration must be specified based on the action type.",
 	"type":      "type specifies the action to perform on the matched labels. Allowed values are Replace, Lowercase, Uppercase, Keep, Drop, KeepEqual, DropEqual, HashMod, LabelMap, LabelDrop, LabelKeep.\n\nWhen set to Replace, regex is matched against the concatenated source_labels; target_label is set to replacement with match group references (${1}, ${2}, ...) substituted. If regex does not match, no replacement takes place.\n\nWhen set to Lowercase, the concatenated source_labels are mapped to their lower case. Requires Prometheus >= v2.36.0.\n\nWhen set to Uppercase, the concatenated source_labels are mapped to their upper case. Requires Prometheus >= v2.36.0.\n\nWhen set to Keep, targets for which regex does not match the concatenated source_labels are dropped.\n\nWhen set to Drop, targets for which regex matches the concatenated source_labels are dropped.\n\nWhen set to KeepEqual, targets for which the concatenated source_labels do not match target_label are dropped. Requires Prometheus >= v2.41.0.\n\nWhen set to DropEqual, targets for which the concatenated source_labels do match target_label are dropped. Requires Prometheus >= v2.41.0.\n\nWhen set to HashMod, target_label is set to the modulus of a hash of the concatenated source_labels.\n\nWhen set to LabelMap, regex is matched against all source label names (not just source_labels); matching label values are copied to new names given by replacement with ${1}, ${2}, ... substituted.\n\nWhen set to LabelDrop, regex is matched against all label names; any label that matches is removed.\n\nWhen set to LabelKeep, regex is matched against all label names; any label that does not match is removed.",
-	"replace":   "replace configures the Replace action. Required when type is Replace.",
-	"hashMod":   "hashMod configures the HashMod action. Required when type is HashMod.",
-	"labelMap":  "labelMap configures the LabelMap action. Required when type is LabelMap.",
-	"lowercase": "lowercase configures the Lowercase action. Required when type is Lowercase. Requires Prometheus >= v2.36.0.",
-	"uppercase": "uppercase configures the Uppercase action. Required when type is Uppercase. Requires Prometheus >= v2.36.0.",
-	"keepEqual": "keepEqual configures the KeepEqual action. Required when type is KeepEqual. Requires Prometheus >= v2.41.0.",
-	"dropEqual": "dropEqual configures the DropEqual action. Required when type is DropEqual. Requires Prometheus >= v2.41.0.",
+	"replace":   "replace configures the Replace action. Required when type is Replace, and forbidden otherwise.",
+	"hashMod":   "hashMod configures the HashMod action. Required when type is HashMod, and forbidden otherwise.",
+	"labelMap":  "labelMap configures the LabelMap action. Required when type is LabelMap, and forbidden otherwise.",
+	"lowercase": "lowercase configures the Lowercase action. Required when type is Lowercase, and forbidden otherwise. Requires Prometheus >= v2.36.0.",
+	"uppercase": "uppercase configures the Uppercase action. Required when type is Uppercase, and forbidden otherwise. Requires Prometheus >= v2.36.0.",
+	"keepEqual": "keepEqual configures the KeepEqual action. Required when type is KeepEqual, and forbidden otherwise. Requires Prometheus >= v2.41.0.",
+	"dropEqual": "dropEqual configures the DropEqual action. Required when type is DropEqual, and forbidden otherwise. Requires Prometheus >= v2.41.0.",
 }
 
 func (RelabelActionConfig) SwaggerDoc() map[string]string {
@@ -424,13 +433,13 @@ func (RelabelConfig) SwaggerDoc() map[string]string {
 }
 
 var map_RemoteWriteAuthorization = map[string]string{
-	"type":            "type specifies the authorization method to use.",
+	"type":            "type specifies the authorization method to use. Allowed values are BearerToken, BearerTokenFile, BasicAuth, OAuth2, SigV4.\n\nWhen set to BearerToken, the bearer token is read from a Secret referenced by the bearerToken field.\n\nWhen set to BearerTokenFile, the bearer token is read from a file path (e.g. service account token); the bearerTokenFile field must be set.\n\nWhen set to BasicAuth, HTTP basic authentication is used; the basicAuth field (username and password from Secrets) must be set.\n\nWhen set to OAuth2, OAuth2 client credentials flow is used; the oauth2 field (clientId, clientSecret, tokenUrl) must be set.\n\nWhen set to SigV4, AWS Signature Version 4 is used for authentication; the sigv4 field must be set.",
 	"credentials":     "credentials defines a key of a Secret in the namespace that contains the credentials for authentication.",
-	"bearerToken":     "bearerToken defines the secret reference containing the bearer token. bearerToken is deprecated: this will be removed in a future release. *Warning: this field shouldn't be used because the token value appears in clear-text. Prefer using `authorization`.* Required when type is \"BearerToken\".",
-	"bearerTokenFile": "bearerTokenFile is the path to a file containing the bearer token (e.g. service account token). Required when type is \"BearerTokenFile\". In practice only the service account token path can be used. Must be between 1 and 1024 characters.",
-	"basicAuth":       "basicAuth defines HTTP basic authentication credentials. Required when type is \"BasicAuth\".",
-	"oauth2":          "oauth2 defines OAuth2 client credentials authentication. Required when type is \"OAuth2\".",
-	"sigv4":           "sigv4 defines AWS Signature Version 4 authentication. Required when type is \"SigV4\".",
+	"bearerToken":     "bearerToken defines the secret reference containing the bearer token. bearerToken is deprecated: this will be removed in a future release. *Warning: this field shouldn't be used because the token value appears in clear-text. Prefer using `authorization`.* Required when type is \"BearerToken\", and forbidden otherwise.",
+	"bearerTokenFile": "bearerTokenFile is the path to a file containing the bearer token (e.g. service account token). Required when type is \"BearerTokenFile\", and forbidden otherwise. In practice only the service account token path can be used. Must be between 1 and 1024 characters.",
+	"basicAuth":       "basicAuth defines HTTP basic authentication credentials. Required when type is \"BasicAuth\", and forbidden otherwise.",
+	"oauth2":          "oauth2 defines OAuth2 client credentials authentication. Required when type is \"OAuth2\", and forbidden otherwise.",
+	"sigv4":           "sigv4 defines AWS Signature Version 4 authentication. Required when type is \"SigV4\", and forbidden otherwise.",
 }
 
 func (RemoteWriteAuthorization) SwaggerDoc() map[string]string {
@@ -442,12 +451,12 @@ var map_RemoteWriteSpec = map[string]string{
 	"url":                  "url is the URL of the remote write endpoint. Must be a valid URL with http or https scheme and a non-empty hostname. Query parameters, fragments, and user information (e.g. user:password@host) are not allowed. Empty string is invalid. Must be between 1 and 2048 characters in length.",
 	"name":                 "name is an optional identifier for this remote write configuration. This name is used in metrics and logging to differentiate remote write queues. When omitted, Prometheus generates a unique name automatically. If specified, this name must be unique. Must contain only alphanumeric characters, hyphens, and underscores. Must be between 1 and 63 characters in length when specified.",
 	"authorization":        "authorization defines the authorization method for the remote write endpoint. When omitted, no authorization is performed. When set, type must be one of BearerToken, BearerTokenFile, BasicAuth, OAuth2, or SigV4, and the corresponding nested config must be set.",
-	"headers":              "headers specifies the custom HTTP headers to be sent along with each remote write request. Sending custom headers makes the configuration of a proxy in between optional and helps the receiver recognize the given source better. Clients MAY allow users to send custom HTTP headers; they MUST NOT allow users to configure them in such a way as to send reserved headers. Headers set by Prometheus cannot be overwritten. For more info see https://github.com/prometheus/prometheus/pull/8416. When omitted, no custom headers are sent. Maximum of 50 headers can be specified. Each header name must be between 1 and 256 characters, and each header value must be between 0 and 4096 characters.",
-	"metadataConfig":       "metadataConfig configures the sending of series metadata to remote storage When omitted, no metadata is sent.",
+	"headers":              "headers specifies the custom HTTP headers to be sent along with each remote write request. Sending custom headers makes the configuration of a proxy in between optional and helps the receiver recognize the given source better. Clients MAY allow users to send custom HTTP headers; they MUST NOT allow users to configure them in such a way as to send reserved headers. Headers set by Prometheus cannot be overwritten. When omitted, no custom headers are sent. Maximum of 50 headers can be specified. Each header name must be unique.",
+	"metadataConfig":       "metadataConfig configures the sending of series metadata to remote storage. When omitted, no metadata is sent. When present (even with no fields set), metadata is sent to the remote write endpoint.",
 	"proxyUrl":             "proxyUrl defines an optional proxy URL. If the cluster-wide proxy is enabled, it replaces the proxyUrl setting. The cluster-wide proxy supports both HTTP and HTTPS proxies, with HTTPS taking precedence. When omitted, no proxy is used. Must be a valid URL with http or https scheme. Must be between 1 and 2048 characters in length.",
 	"queueConfig":          "queueConfig allows tuning configuration for remote write queue parameters. When omitted, default queue configuration is used.",
 	"remoteTimeoutSeconds": "remoteTimeoutSeconds defines the timeout in seconds for requests to the remote write endpoint. When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time. Minimum value is 1 second. Maximum value is 600 seconds (10 minutes).",
-	"exemplarsMode":        "exemplarsMode controls whether exemplars are sent via remote write. When set to \"Send\", Prometheus is configured to store a maximum of 100,000 exemplars in memory and send them with remote write. Note that this setting only applies to user-defined monitoring. It is not applicable to default in-cluster monitoring. When omitted or set to \"DoNotSend\", exemplars are not sent. Valid values are \"Send\" and \"DoNotSend\".",
+	"exemplarsMode":        "exemplarsMode controls whether exemplars are sent via remote write. When set to \"Send\", Prometheus is configured to store a maximum of 100,000 exemplars in memory and send them with remote write. Note that this setting only applies to user-defined monitoring. It is not applicable to default in-cluster monitoring. When omitted or set to \"DoNotSend\", exemplars are not sent. Valid values are \"Send\", \"DoNotSend\" and omitted.",
 	"tlsConfig":            "tlsConfig defines TLS authentication settings for the remote write endpoint. When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time.",
 	"writeRelabelConfigs":  "writeRelabelConfigs is a list of relabeling rules to apply before sending data to the remote endpoint. When omitted, no relabeling is performed and all metrics are sent as-is. Minimum of 1 and maximum of 10 relabeling rules can be specified. Each rule must have a unique name.",
 }

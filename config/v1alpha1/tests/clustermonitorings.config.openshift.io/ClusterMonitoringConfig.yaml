@@ -1024,7 +1024,7 @@ tests:
           prometheusConfig:
             remoteWrite:
               - url: invalid-url
-      expectedError: "spec.prometheusConfig.remoteWrite[0].url: Invalid value: \"string\": must be a valid URL with http or https scheme"
+      expectedError: "spec.prometheusConfig.remoteWrite[0].url: Invalid value: \"string\": must be a valid URL"
     - name: Should reject PrometheusConfig with remoteWrite URL not http/https
       initial: |
         apiVersion: config.openshift.io/v1alpha1
@@ -1035,7 +1035,7 @@ tests:
           prometheusConfig:
             remoteWrite:
               - url: ftp://remote.example.com/write
-      expectedError: "spec.prometheusConfig.remoteWrite[0].url: Invalid value: \"string\": must be a valid URL with http or https scheme"
+      expectedError: "spec.prometheusConfig.remoteWrite[0].url: Invalid value: \"string\": must use http or https scheme"
     - name: Should reject PrometheusConfig with remoteWrite name invalid characters
       initial: |
         apiVersion: config.openshift.io/v1alpha1
@@ -1048,6 +1048,20 @@ tests:
               - url: https://remote.example.com/write
                 name: invalid@name
       expectedError: "spec.prometheusConfig.remoteWrite[0].name: Invalid value: \"string\": must contain only alphanumeric characters, hyphens, and underscores"
+    - name: Should reject PrometheusConfig with remoteWrite duplicate names
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: "Disabled"
+          prometheusConfig:
+            remoteWrite:
+              - url: https://remote1.example.com/write
+                name: my-remote-write
+              - url: https://remote2.example.com/write
+                name: my-remote-write
+      expectedError: 'spec.prometheusConfig: Invalid value: "object": when specified, name must be unique across all remote write configurations'
     - name: Should reject PrometheusConfig with additionalAlertmanagerConfigs exceeding max items
       initial: |
         apiVersion: config.openshift.io/v1alpha1
@@ -1800,6 +1814,39 @@ tests:
                     action:
                       type: LabelMap
       expectedError: 'spec.prometheusConfig.remoteWrite[0].writeRelabelConfigs[0].action: Invalid value: "object": labelMap is required when type is LabelMap, and forbidden otherwise'
+    - name: Should reject PrometheusConfig with LabelMap action missing replacement
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: "Disabled"
+          prometheusConfig:
+            remoteWrite:
+              - url: https://remote.example.com/write
+                writeRelabelConfigs:
+                  - name: labelmap-action
+                    action:
+                      type: LabelMap
+                      labelMap: {}
+      expectedError: 'spec.prometheusConfig.remoteWrite[0].writeRelabelConfigs[0].action.labelMap.replacement: Required value'
+    - name: Should reject PrometheusConfig with LabelMap action empty replacement
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: "Disabled"
+          prometheusConfig:
+            remoteWrite:
+              - url: https://remote.example.com/write
+                writeRelabelConfigs:
+                  - name: labelmap-action
+                    action:
+                      type: LabelMap
+                      labelMap:
+                        replacement: ""
+      expectedError: 'spec.prometheusConfig.remoteWrite[0].writeRelabelConfigs[0].action.labelMap.replacement: Invalid value: "": spec.prometheusConfig.remoteWrite[0].writeRelabelConfigs[0].action.labelMap.replacement in body should be at least 1 chars long'
     - name: Should reject PrometheusConfig with RelabelConfig name missing
       initial: |
         apiVersion: config.openshift.io/v1alpha1
@@ -1987,6 +2034,24 @@ tests:
                       type: HashMod
                       hashMod: {}
       expectedError: 'spec.prometheusConfig.remoteWrite[0].writeRelabelConfigs[0].action.hashMod.targetLabel: Required value'
+    - name: Should reject PrometheusConfig with HashMod action modulus exceeding maximum
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: "Disabled"
+          prometheusConfig:
+            remoteWrite:
+              - url: https://remote.example.com/write
+                writeRelabelConfigs:
+                  - name: hashmod-action
+                    action:
+                      type: HashMod
+                      hashMod:
+                        targetLabel: shard
+                        modulus: 1000001
+      expectedError: 'spec.prometheusConfig.remoteWrite[0].writeRelabelConfigs[0].action.hashMod.modulus: Invalid value: 1000001: spec.prometheusConfig.remoteWrite[0].writeRelabelConfigs[0].action.hashMod.modulus in body should be less than or equal to 1000000'
     - name: Should reject PrometheusConfig with writeRelabelConfigs duplicate names
       initial: |
         apiVersion: config.openshift.io/v1alpha1

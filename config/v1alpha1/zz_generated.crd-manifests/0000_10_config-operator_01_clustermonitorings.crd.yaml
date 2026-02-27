@@ -1324,7 +1324,7 @@ spec:
                             bearerToken:
                               description: |-
                                 bearerToken defines the secret reference containing the bearer token.
-                                Required when type is "BearerToken".
+                                Required when type is "BearerToken", and forbidden otherwise.
                                 The secret must exist in the openshift-monitoring namespace.
                               properties:
                                 key:
@@ -1757,7 +1757,7 @@ spec:
                             basicAuth:
                               description: |-
                                 basicAuth defines HTTP basic authentication credentials.
-                                Required when type is "BasicAuth".
+                                Required when type is "BasicAuth", and forbidden otherwise.
                               properties:
                                 password:
                                   description: |-
@@ -1839,7 +1839,7 @@ spec:
                                 bearerToken is deprecated: this will be removed in a future release.
                                 *Warning: this field shouldn't be used because the token value appears
                                 in clear-text. Prefer using `authorization`.*
-                                Required when type is "BearerToken".
+                                Required when type is "BearerToken", and forbidden otherwise.
                               properties:
                                 key:
                                   description: |-
@@ -1874,7 +1874,7 @@ spec:
                             bearerTokenFile:
                               description: |-
                                 bearerTokenFile is the path to a file containing the bearer token (e.g. service account token).
-                                Required when type is "BearerTokenFile". In practice only the service account token path can be used.
+                                Required when type is "BearerTokenFile", and forbidden otherwise. In practice only the service account token path can be used.
                                 Must be between 1 and 1024 characters.
                               maxLength: 1024
                               minLength: 1
@@ -1907,7 +1907,7 @@ spec:
                             oauth2:
                               description: |-
                                 oauth2 defines OAuth2 client credentials authentication.
-                                Required when type is "OAuth2".
+                                Required when type is "OAuth2", and forbidden otherwise.
                               properties:
                                 clientId:
                                   description: |-
@@ -2013,10 +2013,11 @@ spec:
                                   minLength: 1
                                   type: string
                                   x-kubernetes-validations:
-                                  - message: must be a valid URL with http or https
-                                      scheme
-                                    rule: isURL(self) && (url(self).getScheme() ==
-                                      'http' || url(self).getScheme() == 'https')
+                                  - message: must be a valid URL
+                                    rule: isURL(self)
+                                  - message: must use http or https scheme
+                                    rule: '!isURL(self) || url(self).getScheme() ==
+                                      ''http'' || url(self).getScheme() == ''https'''
                               required:
                               - clientId
                               - clientSecret
@@ -2025,7 +2026,7 @@ spec:
                             sigv4:
                               description: |-
                                 sigv4 defines AWS Signature Version 4 authentication.
-                                Required when type is "SigV4".
+                                Required when type is "SigV4", and forbidden otherwise.
                               minProperties: 0
                               properties:
                                 accessKey:
@@ -2131,8 +2132,19 @@ spec:
                                   x-kubernetes-map-type: atomic
                               type: object
                             type:
-                              description: type specifies the authorization method
-                                to use.
+                              description: |-
+                                type specifies the authorization method to use.
+                                Allowed values are BearerToken, BearerTokenFile, BasicAuth, OAuth2, SigV4.
+
+                                When set to BearerToken, the bearer token is read from a Secret referenced by the bearerToken field.
+
+                                When set to BearerTokenFile, the bearer token is read from a file path (e.g. service account token); the bearerTokenFile field must be set.
+
+                                When set to BasicAuth, HTTP basic authentication is used; the basicAuth field (username and password from Secrets) must be set.
+
+                                When set to OAuth2, OAuth2 client credentials flow is used; the oauth2 field (clientId, clientSecret, tokenUrl) must be set.
+
+                                When set to SigV4, AWS Signature Version 4 is used for authentication; the sigv4 field must be set.
                               enum:
                               - BearerToken
                               - BearerTokenFile
@@ -2144,63 +2156,90 @@ spec:
                           - type
                           type: object
                           x-kubernetes-validations:
-                          - message: bearerToken is required when type is BearerToken
-                            rule: self.type != 'BearerToken' || has(self.bearerToken)
+                          - message: bearerToken is required when type is BearerToken,
+                              and forbidden otherwise
+                            rule: 'has(self.type) && self.type == ''BearerToken''
+                              ? has(self.bearerToken) : !has(self.bearerToken)'
                           - message: bearerTokenFile is required and must be non-empty
-                              when type is BearerTokenFile
-                            rule: self.type != 'BearerTokenFile' || (has(self.bearerTokenFile)
-                              && size(self.bearerTokenFile) > 0)
-                          - message: basicAuth is required when type is BasicAuth
-                            rule: self.type != 'BasicAuth' || has(self.basicAuth)
-                          - message: oauth2 is required when type is OAuth2
-                            rule: self.type != 'OAuth2' || has(self.oauth2)
-                          - message: sigv4 is required when type is SigV4
-                            rule: self.type != 'SigV4' || has(self.sigv4)
-                          - message: authorization is required when type is Authorization
-                            rule: self.type != 'Authorization' || has(self.authorization)
+                              when type is BearerTokenFile, and forbidden otherwise
+                            rule: 'has(self.type) && self.type == ''BearerTokenFile''
+                              ? (has(self.bearerTokenFile) && size(self.bearerTokenFile)
+                              > 0) : !has(self.bearerTokenFile)'
+                          - message: basicAuth is required when type is BasicAuth,
+                              and forbidden otherwise
+                            rule: 'has(self.type) && self.type == ''BasicAuth'' ?
+                              has(self.basicAuth) : !has(self.basicAuth)'
+                          - message: oauth2 is required when type is OAuth2, and forbidden
+                              otherwise
+                            rule: 'has(self.type) && self.type == ''OAuth2'' ? has(self.oauth2)
+                              : !has(self.oauth2)'
+                          - message: sigv4 is required when type is SigV4, and forbidden
+                              otherwise
+                            rule: 'has(self.type) && self.type == ''SigV4'' ? has(self.sigv4)
+                              : !has(self.sigv4)'
                         exemplarsMode:
                           description: |-
                             exemplarsMode controls whether exemplars are sent via remote write.
                             When set to "Send", Prometheus is configured to store a maximum of 100,000 exemplars in memory and send them with remote write.
                             Note that this setting only applies to user-defined monitoring. It is not applicable to default in-cluster monitoring.
                             When omitted or set to "DoNotSend", exemplars are not sent.
-                            Valid values are "Send" and "DoNotSend".
+                            Valid values are "Send", "DoNotSend" and omitted.
                           enum:
                           - Send
                           - DoNotSend
                           type: string
                         headers:
-                          additionalProperties:
-                            type: string
                           description: |-
                             headers specifies the custom HTTP headers to be sent along with each remote write request.
                             Sending custom headers makes the configuration of a proxy in between optional and helps the
                             receiver recognize the given source better.
                             Clients MAY allow users to send custom HTTP headers; they MUST NOT allow users to configure
                             them in such a way as to send reserved headers. Headers set by Prometheus cannot be overwritten.
-                            For more info see https://github.com/prometheus/prometheus/pull/8416.
                             When omitted, no custom headers are sent.
-                            Maximum of 50 headers can be specified.
-                            Each header name must be between 1 and 256 characters, and each header value must be between 0 and 4096 characters.
-                          maxProperties: 50
-                          minProperties: 0
-                          type: object
+                            Maximum of 50 headers can be specified. Each header name must be unique.
+                          items:
+                            description: |-
+                              PrometheusRemoteWriteHeader defines a custom HTTP header for remote write requests.
+                              The header name must not be one of the reserved headers set by Prometheus.
+                            properties:
+                              name:
+                                description: |-
+                                  name is the HTTP header name. Must not be a reserved header (see validation).
+                                  Must be between 1 and 256 characters.
+                                maxLength: 256
+                                minLength: 1
+                                type: string
+                              value:
+                                description: value is the HTTP header value. Must
+                                  be at most 4096 characters.
+                                maxLength: 4096
+                                type: string
+                            required:
+                            - name
+                            - value
+                            type: object
+                            x-kubernetes-validations:
+                            - message: header name must not be a reserved Prometheus
+                                header (Host, Authorization, Content-Encoding, Content-Type,
+                                X-Prometheus-Remote-Write-Version, User-Agent, Connection,
+                                Keep-Alive, Proxy-Authenticate, Proxy-Authorization,
+                                WWW-Authenticate)
+                              rule: '!self.name.lowerAscii() in [''host'', ''authorization'',
+                                ''content-encoding'', ''content-type'', ''x-prometheus-remote-write-version'',
+                                ''user-agent'', ''connection'', ''keep-alive'', ''proxy-authenticate'',
+                                ''proxy-authorization'', ''www-authenticate'']'
+                          maxItems: 50
+                          type: array
+                          x-kubernetes-list-map-keys:
+                          - name
+                          x-kubernetes-list-type: map
                         metadataConfig:
                           description: |-
-                            metadataConfig configures the sending of series metadata to remote storage
+                            metadataConfig configures the sending of series metadata to remote storage.
                             When omitted, no metadata is sent.
+                            When present (even with no fields set), metadata is sent to the remote write endpoint.
                           minProperties: 0
                           properties:
-                            mode:
-                              description: |-
-                                mode controls whether series metadata is sent to the remote write endpoint.
-                                When set to "Send", Prometheus sends metadata about time series to the remote write endpoint.
-                                When omitted or set to "DoNotSend", no metadata is sent.
-                                Valid values are "Send" and "DoNotSend".
-                              enum:
-                              - Send
-                              - DoNotSend
-                              type: string
                             sendInterval:
                               description: |-
                                 sendInterval defines the interval at which metadata is sent.
@@ -2494,13 +2533,22 @@ spec:
                           minLength: 1
                           type: string
                           x-kubernetes-validations:
-                          - message: must be a valid URL with http or https scheme,
-                              non-empty hostname, and no query parameters, fragments,
-                              or user information
-                            rule: isURL(self) && (url(self).getScheme() == 'http'
-                              || url(self).getScheme() == 'https') && size(url(self).getHostname())
-                              > 0 && url(self).getQuery().size() == 0 && !self.matches('.*#.*')
-                              && !self.matches('.*@.*')
+                          - message: must be a valid URL
+                            rule: isURL(self)
+                          - message: must use http or https scheme
+                            rule: '!isURL(self) || url(self).getScheme() == ''http''
+                              || url(self).getScheme() == ''https'''
+                          - message: must have a non-empty hostname
+                            rule: '!isURL(self) || size(url(self).getHostname()) >
+                              0'
+                          - message: query parameters are not allowed
+                            rule: '!isURL(self) || url(self).getQuery().size() ==
+                              0'
+                          - message: fragments are not allowed
+                            rule: '!self.matches(''.*#.*'')'
+                          - message: user information (e.g. user:password@host) is
+                              not allowed
+                            rule: '!self.matches(''.*@.*'')'
                         writeRelabelConfigs:
                           description: |-
                             writeRelabelConfigs is a list of relabeling rules to apply before sending data to the remote endpoint.
@@ -2518,7 +2566,7 @@ spec:
                                   dropEqual:
                                     description: |-
                                       dropEqual configures the DropEqual action.
-                                      Required when type is DropEqual.
+                                      Required when type is DropEqual, and forbidden otherwise.
                                       Requires Prometheus >= v2.41.0.
                                     properties:
                                       targetLabel:
@@ -2534,14 +2582,15 @@ spec:
                                   hashMod:
                                     description: |-
                                       hashMod configures the HashMod action.
-                                      Required when type is HashMod.
+                                      Required when type is HashMod, and forbidden otherwise.
                                     properties:
                                       modulus:
                                         description: |-
                                           modulus is the divisor applied to the hash of the concatenated source label values (target = hash % modulus).
                                           Required when using the HashMod action so the intended behavior is explicit.
-                                          Must be at least 1.
+                                          Must be between 1 and 1000000.
                                         format: int64
+                                        maximum: 1000000
                                         minimum: 1
                                         type: integer
                                       targetLabel:
@@ -2558,7 +2607,7 @@ spec:
                                   keepEqual:
                                     description: |-
                                       keepEqual configures the KeepEqual action.
-                                      Required when type is KeepEqual.
+                                      Required when type is KeepEqual, and forbidden otherwise.
                                       Requires Prometheus >= v2.41.0.
                                     properties:
                                       targetLabel:
@@ -2574,23 +2623,25 @@ spec:
                                   labelMap:
                                     description: |-
                                       labelMap configures the LabelMap action.
-                                      Required when type is LabelMap.
+                                      Required when type is LabelMap, and forbidden otherwise.
                                     minProperties: 0
                                     properties:
                                       replacement:
                                         description: |-
                                           replacement is the template for new label names; match group references (${1}, ${2}, ...) are substituted from the matched label name.
-                                          When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time.
-                                          The default value is "$1" (the first capture group).
-                                          Must be at most 255 characters in length.
+                                          Required when using the LabelMap action so the intended behavior is explicit and the platform does not need to apply defaults.
+                                          Use "$1" for the first capture group, "$2" for the second, etc.
+                                          Must be between 1 and 255 characters in length. Empty string is invalid as it would produce invalid label names.
                                         maxLength: 255
-                                        minLength: 0
+                                        minLength: 1
                                         type: string
+                                    required:
+                                    - replacement
                                     type: object
                                   lowercase:
                                     description: |-
                                       lowercase configures the Lowercase action.
-                                      Required when type is Lowercase.
+                                      Required when type is Lowercase, and forbidden otherwise.
                                       Requires Prometheus >= v2.36.0.
                                     properties:
                                       targetLabel:
@@ -2606,7 +2657,7 @@ spec:
                                   replace:
                                     description: |-
                                       replace configures the Replace action.
-                                      Required when type is Replace.
+                                      Required when type is Replace, and forbidden otherwise.
                                     properties:
                                       replacement:
                                         description: |-
@@ -2670,7 +2721,7 @@ spec:
                                   uppercase:
                                     description: |-
                                       uppercase configures the Uppercase action.
-                                      Required when type is Uppercase.
+                                      Required when type is Uppercase, and forbidden otherwise.
                                       Requires Prometheus >= v2.36.0.
                                     properties:
                                       targetLabel:
@@ -2786,12 +2837,6 @@ spec:
                       required:
                       - url
                       type: object
-                      x-kubernetes-validations:
-                      - message: urlAuthorization cannot be set at the same time as
-                          basicAuth or oauth2 in authorization
-                        rule: '!has(self.urlAuthorization) || !has(self.authorization)
-                          || (self.authorization.type != ''BasicAuth'' && self.authorization.type
-                          != ''OAuth2'')'
                     maxItems: 10
                     minItems: 1
                     type: array
@@ -3558,6 +3603,12 @@ spec:
                         type: object
                     type: object
                 type: object
+                x-kubernetes-validations:
+                - message: when specified, name must be unique across all remote write
+                    configurations
+                  rule: '!has(self.remoteWrite) || self.remoteWrite.size() == 0 ||
+                    self.remoteWrite.filter(i, size(i.name) > 0).all(i, self.remoteWrite.filter(j,
+                    j.name == i.name).size() == 1)'
               prometheusOperatorAdmissionWebhookConfig:
                 description: |-
                   prometheusOperatorAdmissionWebhookConfig is an optional field that can be used to configure the

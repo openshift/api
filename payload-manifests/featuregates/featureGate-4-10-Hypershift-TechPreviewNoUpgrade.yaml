@@ -352,6 +352,9 @@
                         "name": "StoragePerformantSecurityPolicy"
                     },
                     {
+                        "name": "TLSAdherence"
+                    },
+                    {
                         "name": "UpgradeStatus"
                     },
                     {

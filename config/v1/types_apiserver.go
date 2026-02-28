@@ -34,6 +34,7 @@ type APIServer struct {
 	Status APIServerStatus `json:"status"`
 }
 
+// +openshift:validation:FeatureGateAwareXValidation:featureGate=TLSAdherence,rule="has(oldSelf.tlsAdherence) ? has(self.tlsAdherence) : true",message="tlsAdherence may not be removed once set"
 type APIServerSpec struct {
 	// servingCert is the TLS cert info for serving secure traffic. If not specified, operator managed certificates
 	// will be used for serving secure traffic.
@@ -62,6 +63,37 @@ type APIServerSpec struct {
 	// The current default is the Intermediate profile.
 	// +optional
 	TLSSecurityProfile *TLSSecurityProfile `json:"tlsSecurityProfile,omitempty"`
+	// tlsAdherence controls which components in the cluster adhere to the TLS security profile
+	// configured on this APIServer resource.
+	//
+	// Valid values are "LegacyExternalAPIServerComponentsOnly" and "StrictAllComponents".
+	//
+	// When set to "LegacyExternalAPIServerComponentsOnly", only the externally exposed
+	// API server components (kube-apiserver, openshift-apiserver, oauth-apiserver) honor the configured
+	// TLS profile. Other components continue to use their individual TLS configurations.
+	//
+	// When set to "StrictAllComponents", all components must honor the configured TLS profile
+	// unless they have a component-specific TLS configuration that overrides it.
+	// This mode is recommended for security-conscious deployments and is required for
+	// certain compliance frameworks.
+	//
+	// Note: Some components such as Kubelet and IngressController have their own dedicated TLS
+	// configuration mechanisms via KubeletConfig and IngressController CRs respectively. When these
+	// component-specific TLS configurations are set, they take precedence over the cluster-wide
+	// tlsSecurityProfile. When not set, these components fall back to the cluster-wide default.
+	//
+	// Components that encounter an unknown value for tlsAdherence should treat it as "StrictAllComponents"
+	// and log a warning to ensure forward compatibility while defaulting to the more secure behavior.
+	//
+	// This field is optional.
+	// When omitted, this means the user has no opinion and the platform is left to choose reasonable defaults.
+	// These defaults are subject to change over time.
+	// The current default is LegacyExternalAPIServerComponentsOnly.
+	//
+	// Once set, this field may be changed to a different value, but may not be removed.
+	// +openshift:enable:FeatureGate=TLSAdherence
+	// +optional
+	TLSAdherence TLSAdherencePolicy `json:"tlsAdherence,omitempty"`
 	// audit specifies the settings for audit configuration to be applied to all OpenShift-provided
 	// API servers in the cluster.
 	// +optional
@@ -236,6 +268,32 @@ const (
 
 type APIServerStatus struct {
 }
+
+// TLSAdherencePolicy defines which components adhere to the TLS security profile.
+// Implementors should use the ShouldAllComponentsAdhere helper function from library-go
+// rather than checking these values directly.
+// +kubebuilder:validation:Enum=LegacyExternalAPIServerComponentsOnly;StrictAllComponents
+type TLSAdherencePolicy string
+
+const (
+	// TLSAdherencePolicyNoOpinion represents an empty/unset value for tlsAdherence.
+	// This value cannot be explicitly set and is only present when the field is omitted.
+	// When the field is omitted, the cluster defaults to LegacyExternalAPIServerComponentsOnly
+	// behavior. Components should treat this the same as LegacyExternalAPIServerComponentsOnly.
+	TLSAdherencePolicyNoOpinion TLSAdherencePolicy = ""
+
+	// TLSAdherencePolicyLegacyExternalAPIServerComponentsOnly means only the externally exposed
+	// API server components (kube-apiserver, openshift-apiserver, oauth-apiserver) honor
+	// the configured TLS profile. Other components continue to use their individual TLS
+	// configurations.
+	TLSAdherencePolicyLegacyExternalAPIServerComponentsOnly TLSAdherencePolicy = "LegacyExternalAPIServerComponentsOnly"
+
+	// TLSAdherencePolicyStrictAllComponents means all components must honor the configured TLS
+	// profile unless they have a component-specific TLS configuration that overrides it.
+	// This mode is recommended for security-conscious deployments and is required
+	// for certain compliance frameworks.
+	TLSAdherencePolicyStrictAllComponents TLSAdherencePolicy = "StrictAllComponents"
+)
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 

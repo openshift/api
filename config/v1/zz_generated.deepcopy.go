@@ -980,6 +980,11 @@ func (in *CloudLoadBalancerConfig) DeepCopyInto(out *CloudLoadBalancerConfig) {
 		*out = new(CloudLoadBalancerIPs)
 		(*in).DeepCopyInto(*out)
 	}
+	if in.CloudDNSIPs != nil {
+		in, out := &in.CloudDNSIPs, &out.CloudDNSIPs
+		*out = make([]IP, len(*in))
+		copy(*out, *in)
+	}
 	return
 }
 

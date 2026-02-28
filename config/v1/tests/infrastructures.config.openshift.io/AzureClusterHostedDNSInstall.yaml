@@ -104,7 +104,7 @@ tests:
                 dnsType: ClusterHosted
               ipFamily: IPv4
             type: Azure
-    - name: Should not allow changing the immutable dnsType field
+    - name: Should allow changing dnsType field for Azure platform
       initial: |
         apiVersion: config.openshift.io/v1
         kind: Infrastructure
@@ -140,7 +140,24 @@ tests:
               cloudLoadBalancerConfig:
                 dnsType: PlatformDefault
             type: Azure
-      expectedStatusError: "status.platformStatus.azure.cloudLoadBalancerConfig.dnsType: Invalid value: \"string\": dnsType is immutable"
+      expected: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        spec:
+          platformSpec:
+            type: Azure
+            azure: {}
+        status:
+          controlPlaneTopology: HighlyAvailable
+          cpuPartitioning: None
+          infrastructureTopology: HighlyAvailable
+          platform: Azure
+          platformStatus:
+            azure:
+              cloudLoadBalancerConfig:
+                dnsType: PlatformDefault
+              ipFamily: IPv4
+            type: Azure
     - name: Should not accept non-IP address values for Load Balancer IPs
       initial: |
         apiVersion: config.openshift.io/v1

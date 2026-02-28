@@ -138,7 +138,7 @@ tests:
               cloudLoadBalancerConfig:
                 dnsType: PlatformDefault
             type: GCP
-      expectedStatusError: "status.platformStatus.gcp.cloudLoadBalancerConfig.dnsType: Invalid value: \"string\": dnsType is immutable"
+      expectedStatusError: "status.platformStatus.gcp.cloudLoadBalancerConfig: Invalid value: \"object\": dnsType is immutable once set"
     - name: Should not accept non-IP address values for Load Balancer IPs
       initial: |
         apiVersion: config.openshift.io/v1

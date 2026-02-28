@@ -28847,9 +28847,27 @@
           },
           "x-kubernetes-list-type": "atomic"
         },
+        "proxyProtocol": {
+          "description": "proxyProtocol enables PROXY protocol on the Network Load Balancer's target groups.\n\nWhen enabled, the NLB will prepend a PROXY protocol header to each TCP connection that contains the original source and destination IP addresses and ports. This allows the backend to see the true client IP address while preserving the ability to handle hairpin connections (connections from pods to a service that targets those same pods).\n\nWhen enabled, the NLB target group attribute `preserve_client_ip.enabled` is set to false and `proxy_protocol_v2.enabled` is set to true. Application backends must be configured to parse the PROXY protocol header to extract the original client IP address.\n\nWhen this field is not set or set to false, client IP preservation is enabled (the default AWS NLB behavior), which may cause hairpin connection failures for internal load balancers.\n\nSee https://docs.aws.amazon.com/elasticloadbalancing/latest/network/load-balancer-target-groups.html#proxy-protocol for more information about PROXY protocol support on AWS Network Load Balancers.",
+          "$ref": "#/definitions/com.github.openshift.api.operator.v1.AWSProxyProtocol"
+        },
         "subnets": {
           "description": "subnets specifies the subnets to which the load balancer will attach. The subnets may be specified by either their ID or name. The total number of subnets is limited to 10.\n\nIn order for the load balancer to be provisioned with subnets, each subnet must exist, each subnet must be from a different availability zone, and the load balancer service must be recreated to pick up new values.\n\nWhen omitted from the spec, the subnets will be auto-discovered for each availability zone. Auto-discovered subnets are not reported in the status of the IngressController object.",
           "$ref": "#/definitions/com.github.openshift.api.operator.v1.AWSSubnets"
+        }
+      }
+    },
+    "com.github.openshift.api.operator.v1.AWSProxyProtocol": {
+      "description": "AWSProxyProtocol contains configuration for enabling PROXY protocol on an AWS Network Load Balancer.",
+      "type": "object",
+      "required": [
+        "enabled"
+      ],
+      "properties": {
+        "enabled": {
+          "description": "enabled specifies whether PROXY protocol should be enabled on the Network Load Balancer's target groups.\n\nWhen set to true, the NLB target group will have PROXY protocol v2 enabled and client IP preservation disabled. This allows backends to receive the original client IP via the PROXY protocol header while avoiding hairpin connection failures that can occur with client IP preservation on internal load balancers.\n\nWhen set to false or when the proxyProtocol field is omitted, client IP preservation remains enabled (the default NLB behavior).",
+          "type": "boolean",
+          "default": false
         }
       }
     },

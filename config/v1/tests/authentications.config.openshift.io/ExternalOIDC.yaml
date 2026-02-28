@@ -535,6 +535,90 @@ tests:
             claimMappings:
               username:
                 claim: "thisisanincrediblylongclaimnamethatwhileacceptableinjwtsisgenerallyadvisedagainstbecauseitisextremelylongandnoteasilyusablebutmaybethereisausecaseouttherethathasdecidedthattheyneedtousethisextremelylongclaimnameforsomereasoneventhoughtheyreallyshouldreconsiderthis"
+    - name: Should allow updating groups claim mapping from a previously invalid long value to a valid value
+      initialCRDPatches:
+        - op: remove
+          path: /spec/versions/0/schema/openAPIV3Schema/properties/spec/properties/oidcProviders/items/properties/claimMappings/properties/groups/properties/claim/maxLength
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: Authentication
+        spec:
+          type: OIDC
+          oidcProviders:
+          - name: myoidc
+            issuer:
+              issuerURL: https://meh.tld
+              audiences: ['openshift-aud']
+            claimMappings:
+              username:
+                claim: "claim"
+              groups:
+                claim: "thisisanextremelylonggroupclaimnamethatexceedsthetypicalmaximummappinglengthandshouldfailvalidationbecauseitiswaytoobigforsaneuse-thisisanextremelylonggroupclaimnamethatexceedsthetypicalmaximummappinglengthandshouldfailvalidationbecauseitiswaytoobigforsaneuse-thisisanextremelylonggroupclaimnamethatexceedsthetypicalmaximummappinglengthandshouldfailvalidationbecauseitiswaytoobigforsaneuse"
+      updated: |
+        apiVersion: config.openshift.io/v1
+        kind: Authentication
+        spec:
+          type: OIDC
+          oidcProviders:
+          - name: myoidc
+            issuer:
+              issuerURL: https://meh.tld
+              audiences: ['openshift-aud']
+            claimMappings:
+              username:
+                claim: "claim"
+              groups:
+                claim: "groups"
+      expected: |
+        apiVersion: config.openshift.io/v1
+        kind: Authentication
+        spec:
+          type: OIDC
+          oidcProviders:
+          - name: myoidc
+            issuer:
+              issuerURL: https://meh.tld
+              audiences: ['openshift-aud']
+            claimMappings:
+              username:
+                claim: "claim"
+              groups:
+                claim: "groups"
+    - name: Should not allow updating groups claim mapping from a previously invalid long value to a still invalid long value
+      initialCRDPatches:
+        - op: remove
+          path: /spec/versions/0/schema/openAPIV3Schema/properties/spec/properties/oidcProviders/items/properties/claimMappings/properties/groups/properties/claim/maxLength
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: Authentication
+        spec:
+          type: OIDC
+          oidcProviders:
+          - name: myoidc
+            issuer:
+              issuerURL: https://meh.tld
+              audiences: ['openshift-aud']
+            claimMappings:
+              username:
+                claim: "claim"
+              groups:
+                claim: "thisisanextremelylonggroupclaimnamethatexceedsthetypicalmaximummappinglengthandshouldfailvalidationbecauseitiswaytoobigforsaneuse-thisisanextremelylonggroupclaimnamethatexceedsthetypicalmaximummappinglengthandshouldfailvalidationbecauseitiswaytoobigforsaneuse-thisisanextremelylonggroupclaimnamethatexceedsthetypicalmaximummappinglengthandshouldfailvalidationbecauseitiswaytoobigforsaneuse"
+      updated: |        
+        apiVersion: config.openshift.io/v1
+        kind: Authentication
+        spec:
+          type: OIDC
+          oidcProviders:
+          - name: myoidc
+            issuer:
+              issuerURL: https://meh.tld
+              audiences: ['openshift-aud']
+            claimMappings:
+              username:
+                claim: "claim"
+              groups:
+                claim: "thisisanextremelylonggroupclaimnamethatexceedsthetypicalmaximummappinglengthandshouldfailvalidationbecauseitiswaytoobigforsaneuse-thisisanextremelylonggroupclaimnamethatexceedsthetypicalmaximummappinglengthandshouldfailvalidationbecauseitiswaytoobigforsaneuse-thisisanextremelylonggroupclaimnamethatexceedsthetypicalmaximummappinglengthandshouldfailvalidationbecauseitiswaytoobigforsaneuse"
+      expectedError: "Too long: may not be more than 256 bytes"
     - name: Should allow updating other fields if issuerURL contains fragment
       initialCRDPatches:
         - op: remove

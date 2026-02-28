@@ -1,0 +1,557 @@
+apiVersion: apiextensions.k8s.io/v1 # Hack because controller-gen complains if we don't have this
+name: "PKI"
+crdName: pkis.config.openshift.io
+featureGates:
+- ConfigurablePKI
+tests:
+  onCreate:
+    - name: Should be able to create a PKI with mode Unmanaged
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: PKI
+        metadata:
+          name: cluster
+        spec:
+          certificateManagement:
+            mode: Unmanaged
+      expected: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: PKI
+        metadata:
+          name: cluster
+        spec:
+          certificateManagement:
+            mode: Unmanaged
+    - name: Should be able to create a PKI with mode Default
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: PKI
+        metadata:
+          name: cluster
+        spec:
+          certificateManagement:
+            mode: Default
+      expected: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: PKI
+        metadata:
+          name: cluster
+        spec:
+          certificateManagement:
+            mode: Default
+    - name: Should be able to create a PKI with mode Custom with minimal config
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: PKI
+        metadata:
+          name: cluster
+        spec:
+          certificateManagement:
+            mode: Custom
+            custom:
+              defaults:
+                key:
+                  algorithm: RSA
+                  rsa:
+                    keySize: 2048
+      expected: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: PKI
+        metadata:
+          name: cluster
+        spec:
+          certificateManagement:
+            mode: Custom
+            custom:
+              defaults:
+                key:
+                  algorithm: RSA
+                  rsa:
+                    keySize: 2048
+    - name: Should be able to create a PKI with mode Custom with ECDSA
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: PKI
+        metadata:
+          name: cluster
+        spec:
+          certificateManagement:
+            mode: Custom
+            custom:
+              defaults:
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P384
+      expected: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: PKI
+        metadata:
+          name: cluster
+        spec:
+          certificateManagement:
+            mode: Custom
+            custom:
+              defaults:
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P384
+    - name: Should be able to create a PKI with mode Custom with signerCertificates override
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: PKI
+        metadata:
+          name: cluster
+        spec:
+          certificateManagement:
+            mode: Custom
+            custom:
+              defaults:
+                key:
+                  algorithm: RSA
+                  rsa:
+                    keySize: 2048
+              signerCertificates:
+                key:
+                  algorithm: RSA
+                  rsa:
+                    keySize: 4096
+      expected: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: PKI
+        metadata:
+          name: cluster
+        spec:
+          certificateManagement:
+            mode: Custom
+            custom:
+              defaults:
+                key:
+                  algorithm: RSA
+                  rsa:
+                    keySize: 2048
+              signerCertificates:
+                key:
+                  algorithm: RSA
+                  rsa:
+                    keySize: 4096
+    - name: Should be able to create a PKI with mode Custom with all category overrides
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: PKI
+        metadata:
+          name: cluster
+        spec:
+          certificateManagement:
+            mode: Custom
+            custom:
+              defaults:
+                key:
+                  algorithm: RSA
+                  rsa:
+                    keySize: 2048
+              signerCertificates:
+                key:
+                  algorithm: RSA
+                  rsa:
+                    keySize: 4096
+              servingCertificates:
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              clientCertificates:
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P384
+      expected: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: PKI
+        metadata:
+          name: cluster
+        spec:
+          certificateManagement:
+            mode: Custom
+            custom:
+              defaults:
+                key:
+                  algorithm: RSA
+                  rsa:
+                    keySize: 2048
+              signerCertificates:
+                key:
+                  algorithm: RSA
+                  rsa:
+                    keySize: 4096
+              servingCertificates:
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P256
+              clientCertificates:
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P384
+    - name: Should not allow mode Unmanaged with custom field set
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: PKI
+        metadata:
+          name: cluster
+        spec:
+          certificateManagement:
+            mode: Unmanaged
+            custom:
+              defaults:
+                key:
+                  algorithm: RSA
+                  rsa:
+                    keySize: 2048
+      expectedError: "spec.certificateManagement: Invalid value: \"object\": custom is required when mode is Custom, and forbidden otherwise"
+    - name: Should not allow mode Default with custom field set
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: PKI
+        metadata:
+          name: cluster
+        spec:
+          certificateManagement:
+            mode: Default
+            custom:
+              defaults:
+                key:
+                  algorithm: RSA
+                  rsa:
+                    keySize: 2048
+      expectedError: "spec.certificateManagement: Invalid value: \"object\": custom is required when mode is Custom, and forbidden otherwise"
+    - name: Should not allow mode Custom without custom field
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: PKI
+        metadata:
+          name: cluster
+        spec:
+          certificateManagement:
+            mode: Custom
+      expectedError: "spec.certificateManagement: Invalid value: \"object\": custom is required when mode is Custom, and forbidden otherwise"
+    - name: Should not allow mode missing
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: PKI
+        metadata:
+          name: cluster
+        spec:
+          certificateManagement: {}
+      expectedError: "spec.certificateManagement.mode: Required value"
+    - name: Should not allow RSA algorithm without rsa field
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: PKI
+        metadata:
+          name: cluster
+        spec:
+          certificateManagement:
+            mode: Custom
+            custom:
+              defaults:
+                key:
+                  algorithm: RSA
+      expectedError: "spec.certificateManagement.custom.defaults.key: Invalid value: \"object\": rsa is required when algorithm is RSA, and forbidden otherwise"
+    - name: Should not allow ECDSA algorithm without ecdsa field
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: PKI
+        metadata:
+          name: cluster
+        spec:
+          certificateManagement:
+            mode: Custom
+            custom:
+              defaults:
+                key:
+                  algorithm: ECDSA
+      expectedError: "spec.certificateManagement.custom.defaults.key: Invalid value: \"object\": ecdsa is required when algorithm is ECDSA, and forbidden otherwise"
+    - name: Should not allow rsa field with ECDSA algorithm
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: PKI
+        metadata:
+          name: cluster
+        spec:
+          certificateManagement:
+            mode: Custom
+            custom:
+              defaults:
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P384
+                  rsa:
+                    keySize: 2048
+      expectedError: "spec.certificateManagement.custom.defaults.key: Invalid value: \"object\": rsa is required when algorithm is RSA, and forbidden otherwise"
+    - name: Should not allow ecdsa field with RSA algorithm
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: PKI
+        metadata:
+          name: cluster
+        spec:
+          certificateManagement:
+            mode: Custom
+            custom:
+              defaults:
+                key:
+                  algorithm: RSA
+                  rsa:
+                    keySize: 2048
+                  ecdsa:
+                    curve: P384
+      expectedError: "spec.certificateManagement.custom.defaults.key: Invalid value: \"object\": ecdsa is required when algorithm is ECDSA, and forbidden otherwise"
+    - name: Should not allow RSA keySize below minimum
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: PKI
+        metadata:
+          name: cluster
+        spec:
+          certificateManagement:
+            mode: Custom
+            custom:
+              defaults:
+                key:
+                  algorithm: RSA
+                  rsa:
+                    keySize: 1024
+      expectedError: "spec.certificateManagement.custom.defaults.key.rsa.keySize in body should be greater than or equal to 2048"
+    - name: Should not allow RSA keySize above maximum
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: PKI
+        metadata:
+          name: cluster
+        spec:
+          certificateManagement:
+            mode: Custom
+            custom:
+              defaults:
+                key:
+                  algorithm: RSA
+                  rsa:
+                    keySize: 9216
+      expectedError: "spec.certificateManagement.custom.defaults.key.rsa.keySize in body should be less than or equal to 8192"
+    - name: Should not allow RSA keySize that is not a multiple of 1024
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: PKI
+        metadata:
+          name: cluster
+        spec:
+          certificateManagement:
+            mode: Custom
+            custom:
+              defaults:
+                key:
+                  algorithm: RSA
+                  rsa:
+                    keySize: 3000
+      expectedError: "spec.certificateManagement.custom.defaults.key.rsa.keySize in body should be a multiple of 1024"
+    - name: Should not allow invalid algorithm value
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: PKI
+        metadata:
+          name: cluster
+        spec:
+          certificateManagement:
+            mode: Custom
+            custom:
+              defaults:
+                key:
+                  algorithm: DSA
+      expectedError: "spec.certificateManagement.custom.defaults.key.algorithm: Unsupported value: \"DSA\": supported values: \"RSA\", \"ECDSA\""
+    - name: Should not allow invalid ECDSA curve value
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: PKI
+        metadata:
+          name: cluster
+        spec:
+          certificateManagement:
+            mode: Custom
+            custom:
+              defaults:
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P224
+      expectedError: "spec.certificateManagement.custom.defaults.key.ecdsa.curve: Unsupported value: \"P224\": supported values: \"P256\", \"P384\", \"P521\""
+    - name: Should not allow invalid mode value
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: PKI
+        metadata:
+          name: cluster
+        spec:
+          certificateManagement:
+            mode: Invalid
+      expectedError: "spec.certificateManagement.mode: Unsupported value: \"Invalid\": supported values: \"Unmanaged\", \"Default\", \"Custom\""
+    - name: Should not allow empty signerCertificates override
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: PKI
+        metadata:
+          name: cluster
+        spec:
+          certificateManagement:
+            mode: Custom
+            custom:
+              defaults:
+                key:
+                  algorithm: RSA
+                  rsa:
+                    keySize: 2048
+              signerCertificates: {}
+      expectedError: "spec.certificateManagement.custom.signerCertificates in body should have at least 1 properties"
+    - name: Should not allow empty servingCertificates override
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: PKI
+        metadata:
+          name: cluster
+        spec:
+          certificateManagement:
+            mode: Custom
+            custom:
+              defaults:
+                key:
+                  algorithm: RSA
+                  rsa:
+                    keySize: 2048
+              servingCertificates: {}
+      expectedError: "spec.certificateManagement.custom.servingCertificates in body should have at least 1 properties"
+    - name: Should not allow empty clientCertificates override
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: PKI
+        metadata:
+          name: cluster
+        spec:
+          certificateManagement:
+            mode: Custom
+            custom:
+              defaults:
+                key:
+                  algorithm: RSA
+                  rsa:
+                    keySize: 2048
+              clientCertificates: {}
+      expectedError: "spec.certificateManagement.custom.clientCertificates in body should have at least 1 properties"
+  onUpdate:
+    - name: Should allow transition from Unmanaged to Default
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: PKI
+        metadata:
+          name: cluster
+        spec:
+          certificateManagement:
+            mode: Unmanaged
+      updated: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: PKI
+        metadata:
+          name: cluster
+        spec:
+          certificateManagement:
+            mode: Default
+      expected: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: PKI
+        metadata:
+          name: cluster
+        spec:
+          certificateManagement:
+            mode: Default
+    - name: Should allow transition from Default to Custom
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: PKI
+        metadata:
+          name: cluster
+        spec:
+          certificateManagement:
+            mode: Default
+      updated: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: PKI
+        metadata:
+          name: cluster
+        spec:
+          certificateManagement:
+            mode: Custom
+            custom:
+              defaults:
+                key:
+                  algorithm: RSA
+                  rsa:
+                    keySize: 4096
+      expected: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: PKI
+        metadata:
+          name: cluster
+        spec:
+          certificateManagement:
+            mode: Custom
+            custom:
+              defaults:
+                key:
+                  algorithm: RSA
+                  rsa:
+                    keySize: 4096
+    - name: Should allow updating custom configuration
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: PKI
+        metadata:
+          name: cluster
+        spec:
+          certificateManagement:
+            mode: Custom
+            custom:
+              defaults:
+                key:
+                  algorithm: RSA
+                  rsa:
+                    keySize: 2048
+      updated: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: PKI
+        metadata:
+          name: cluster
+        spec:
+          certificateManagement:
+            mode: Custom
+            custom:
+              defaults:
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P384
+      expected: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: PKI
+        metadata:
+          name: cluster
+        spec:
+          certificateManagement:
+            mode: Custom
+            custom:
+              defaults:
+                key:
+                  algorithm: ECDSA
+                  ecdsa:
+                    curve: P384

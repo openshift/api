@@ -767,7 +767,7 @@ var (
 				contactPerson("jaypoulz").
 				productScope(ocpSpecific).
 				enhancementPR("https://github.com/openshift/enhancements/pull/1675").
-				enable(inTechPreviewNoUpgrade(), inDevPreviewNoUpgrade()).
+				enable(inDefault(), inOKD(), inTechPreviewNoUpgrade(), inDevPreviewNoUpgrade()).
 				mustRegister()
 
 	FeatureGateGatewayAPIController = newFeatureGate("GatewayAPIController").

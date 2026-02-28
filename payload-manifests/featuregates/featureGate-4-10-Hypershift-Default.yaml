@@ -120,9 +120,6 @@
                         "name": "DRAPartitionableDevices"
                     },
                     {
-                        "name": "DualReplica"
-                    },
-                    {
                         "name": "DyanmicServiceEndpointIBMCloud"
                     },
                     {
@@ -279,6 +276,9 @@
                     },
                     {
                         "name": "ConsolePluginContentSecurityPolicy"
+                    },
+                    {
+                        "name": "DualReplica"
                     },
                     {
                         "name": "ExternalOIDC"

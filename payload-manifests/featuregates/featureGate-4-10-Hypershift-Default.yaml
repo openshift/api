@@ -132,9 +132,6 @@
                         "name": "EtcdBackendQuota"
                     },
                     {
-                        "name": "EventTTL"
-                    },
-                    {
                         "name": "EventedPLEG"
                     },
                     {
@@ -279,6 +276,9 @@
                     },
                     {
                         "name": "ConsolePluginContentSecurityPolicy"
+                    },
+                    {
+                        "name": "EventTTL"
                     },
                     {
                         "name": "ExternalOIDC"

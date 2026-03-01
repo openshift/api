@@ -945,7 +945,7 @@ var (
 			contactPerson("tjungblu").
 			productScope(ocpSpecific).
 			enhancementPR("https://github.com/openshift/enhancements/pull/1857").
-			enable(inTechPreviewNoUpgrade(), inDevPreviewNoUpgrade()).
+			enable(inDefault(), inOKD(), inTechPreviewNoUpgrade(), inDevPreviewNoUpgrade()).
 			mustRegister()
 
 	FeatureGateMutableCSINodeAllocatableCount = newFeatureGate("MutableCSINodeAllocatableCount").

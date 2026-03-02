@@ -1,0 +1,248 @@
+apiVersion: apiextensions.k8s.io/v1 # Hack because controller-gen complains if we don't have this
+name: "ContainerRuntimeConfig"
+crdName: containerruntimeconfigs.machineconfiguration.openshift.io
+featureGates:
+- AdditionalStorageConfig
+tests:
+  onCreate:
+    # AdditionalLayerStores - comprehensive validation tests
+    - name: Should be able to create ContainerRuntimeConfig with multiple additionalLayerStores
+      initial: |
+        apiVersion: machineconfiguration.openshift.io/v1
+        kind: ContainerRuntimeConfig
+        spec:
+          containerRuntimeConfig:
+            additionalLayerStores:
+              - path: /var/lib/stargz-store
+              - path: /mnt/nydus-store
+              - path: /opt/layer_store-v1.0
+      expected: |
+        apiVersion: machineconfiguration.openshift.io/v1
+        kind: ContainerRuntimeConfig
+        spec:
+          containerRuntimeConfig:
+            additionalLayerStores:
+              - path: /var/lib/stargz-store
+              - path: /mnt/nydus-store
+              - path: /opt/layer_store-v1.0
+
+    - name: Should fail if additionalLayerStores path is empty
+      initial: |
+        apiVersion: machineconfiguration.openshift.io/v1
+        kind: ContainerRuntimeConfig
+        spec:
+          containerRuntimeConfig:
+            additionalLayerStores:
+              - path: ""
+      expectedError: "path in body should be at least 1 chars long"
+
+    - name: Should fail if additionalLayerStores path is not absolute
+      initial: |
+        apiVersion: machineconfiguration.openshift.io/v1
+        kind: ContainerRuntimeConfig
+        spec:
+          containerRuntimeConfig:
+            additionalLayerStores:
+              - path: var/lib/stargz-store
+      expectedError: "path must be absolute and contain only alphanumeric characters, '/', '.', '_', and '-'"
+
+    - name: Should fail if additionalLayerStores path contains spaces
+      initial: |
+        apiVersion: machineconfiguration.openshift.io/v1
+        kind: ContainerRuntimeConfig
+        spec:
+          containerRuntimeConfig:
+            additionalLayerStores:
+              - path: /var/lib/stargz store
+      expectedError: "path must be absolute and contain only alphanumeric characters, '/', '.', '_', and '-'"
+
+    - name: Should fail if additionalLayerStores path contains invalid characters
+      initial: |
+        apiVersion: machineconfiguration.openshift.io/v1
+        kind: ContainerRuntimeConfig
+        spec:
+          containerRuntimeConfig:
+            additionalLayerStores:
+              - path: /var/lib/stargz@store
+      expectedError: "path must be absolute and contain only alphanumeric characters, '/', '.', '_', and '-'"
+
+    - name: Should fail if additionalLayerStores path is too long
+      initial: |
+        apiVersion: machineconfiguration.openshift.io/v1
+        kind: ContainerRuntimeConfig
+        spec:
+          containerRuntimeConfig:
+            additionalLayerStores:
+              - path: /aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+      expectedError: "Too long: may not be more than 256 bytes"
+
+    - name: Should fail if additionalLayerStores exceeds maximum of 5 items
+      initial: |
+        apiVersion: machineconfiguration.openshift.io/v1
+        kind: ContainerRuntimeConfig
+        spec:
+          containerRuntimeConfig:
+            additionalLayerStores:
+              - path: /var/lib/store1
+              - path: /var/lib/store2
+              - path: /var/lib/store3
+              - path: /var/lib/store4
+              - path: /var/lib/store5
+              - path: /var/lib/store6
+      expectedError: "Too many: 6: must have at most 5 items"
+
+    - name: Should fail if additionalLayerStores item has no path field
+      initial: |
+        apiVersion: machineconfiguration.openshift.io/v1
+        kind: ContainerRuntimeConfig
+        spec:
+          containerRuntimeConfig:
+            additionalLayerStores:
+              - {}
+      expectedError: "path: Required value"
+
+    - name: Should fail if additionalLayerStores contains duplicate paths
+      initial: |
+        apiVersion: machineconfiguration.openshift.io/v1
+        kind: ContainerRuntimeConfig
+        spec:
+          containerRuntimeConfig:
+            additionalLayerStores:
+              - path: /var/lib/stargz-store
+              - path: /var/lib/stargz-store
+      expectedError: "additionalLayerStores must not contain duplicate paths"
+
+    # AdditionalImageStores - test max items validation (different from layer stores)
+    - name: Should fail if additionalImageStores exceeds maximum of 10 items
+      initial: |
+        apiVersion: machineconfiguration.openshift.io/v1
+        kind: ContainerRuntimeConfig
+        spec:
+          containerRuntimeConfig:
+            additionalImageStores:
+              - path: /var/lib/store1
+              - path: /var/lib/store2
+              - path: /var/lib/store3
+              - path: /var/lib/store4
+              - path: /var/lib/store5
+              - path: /var/lib/store6
+              - path: /var/lib/store7
+              - path: /var/lib/store8
+              - path: /var/lib/store9
+              - path: /var/lib/store10
+              - path: /var/lib/store11
+      expectedError: "Too many: 11: must have at most 10 items"
+
+    - name: Should fail if additionalImageStores path is not absolute
+      initial: |
+        apiVersion: machineconfiguration.openshift.io/v1
+        kind: ContainerRuntimeConfig
+        spec:
+          containerRuntimeConfig:
+            additionalImageStores:
+              - path: var/lib/images
+      expectedError: "path must be absolute and contain only alphanumeric characters, '/', '.', '_', and '-'"
+
+    - name: Should fail if additionalImageStores item has no path field
+      initial: |
+        apiVersion: machineconfiguration.openshift.io/v1
+        kind: ContainerRuntimeConfig
+        spec:
+          containerRuntimeConfig:
+            additionalImageStores:
+              - {}
+      expectedError: "path: Required value"
+
+    - name: Should fail if additionalImageStores contains duplicate paths
+      initial: |
+        apiVersion: machineconfiguration.openshift.io/v1
+        kind: ContainerRuntimeConfig
+        spec:
+          containerRuntimeConfig:
+            additionalImageStores:
+              - path: /mnt/nfs-images
+              - path: /mnt/nfs-images
+      expectedError: "additionalImageStores must not contain duplicate paths"
+
+    # AdditionalArtifactStores - test max items validation (different from layer stores)
+    - name: Should fail if additionalArtifactStores exceeds maximum of 10 items
+      initial: |
+        apiVersion: machineconfiguration.openshift.io/v1
+        kind: ContainerRuntimeConfig
+        spec:
+          containerRuntimeConfig:
+            additionalArtifactStores:
+              - path: /var/lib/store1
+              - path: /var/lib/store2
+              - path: /var/lib/store3
+              - path: /var/lib/store4
+              - path: /var/lib/store5
+              - path: /var/lib/store6
+              - path: /var/lib/store7
+              - path: /var/lib/store8
+              - path: /var/lib/store9
+              - path: /var/lib/store10
+              - path: /var/lib/store11
+      expectedError: "Too many: 11: must have at most 10 items"
+
+    - name: Should fail if additionalArtifactStores path is not absolute
+      initial: |
+        apiVersion: machineconfiguration.openshift.io/v1
+        kind: ContainerRuntimeConfig
+        spec:
+          containerRuntimeConfig:
+            additionalArtifactStores:
+              - path: var/lib/artifacts
+      expectedError: "path must be absolute and contain only alphanumeric characters, '/', '.', '_', and '-'"
+
+    - name: Should fail if additionalArtifactStores item has no path field
+      initial: |
+        apiVersion: machineconfiguration.openshift.io/v1
+        kind: ContainerRuntimeConfig
+        spec:
+          containerRuntimeConfig:
+            additionalArtifactStores:
+              - {}
+      expectedError: "path: Required value"
+
+    - name: Should fail if additionalArtifactStores contains duplicate paths
+      initial: |
+        apiVersion: machineconfiguration.openshift.io/v1
+        kind: ContainerRuntimeConfig
+        spec:
+          containerRuntimeConfig:
+            additionalArtifactStores:
+              - path: /mnt/ssd-artifacts
+              - path: /mnt/ssd-artifacts
+      expectedError: "additionalArtifactStores must not contain duplicate paths"
+
+    # Combined test - all storage types together with other fields
+    - name: Should be able to create ContainerRuntimeConfig with all storage types and existing fields
+      initial: |
+        apiVersion: machineconfiguration.openshift.io/v1
+        kind: ContainerRuntimeConfig
+        spec:
+          containerRuntimeConfig:
+            defaultRuntime: crun
+            logLevel: info
+            additionalLayerStores:
+              - path: /var/lib/stargz-store
+            additionalImageStores:
+              - path: /mnt/nfs-images
+              - path: /mnt/ssd-images
+            additionalArtifactStores:
+              - path: /mnt/ssd-artifacts
+      expected: |
+        apiVersion: machineconfiguration.openshift.io/v1
+        kind: ContainerRuntimeConfig
+        spec:
+          containerRuntimeConfig:
+            defaultRuntime: crun
+            logLevel: info
+            additionalLayerStores:
+              - path: /var/lib/stargz-store
+            additionalImageStores:
+              - path: /mnt/nfs-images
+              - path: /mnt/ssd-images
+            additionalArtifactStores:
+              - path: /mnt/ssd-artifacts

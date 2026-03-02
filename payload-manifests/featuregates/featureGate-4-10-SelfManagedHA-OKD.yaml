@@ -242,9 +242,6 @@
                         "name": "NutanixMultiSubnets"
                     },
                     {
-                        "name": "OSStreams"
-                    },
-                    {
                         "name": "OVNObservability"
                     },
                     {
@@ -350,6 +347,9 @@
                     },
                     {
                         "name": "NewOLMWebhookProviderOpenshiftServiceCA"
+                    },
+                    {
+                        "name": "OSStreams"
                     },
                     {
                         "name": "OpenShiftPodSecurityAdmission"

@@ -1,0 +1,417 @@
+apiVersion: apiextensions.k8s.io/v1 # Hack because controller-gen complains if we don't have this
+name: "Network"
+crdName: networks.operator.openshift.io
+featureGates:
+- NoOverlayMode
+tests:
+  onCreate:
+  - name: Should be able to create Network with Geneve transport (default)
+    initial: |
+      apiVersion: operator.openshift.io/v1
+      kind: Network
+      spec:
+        defaultNetwork:
+          ovnKubernetesConfig:
+            transport: Geneve
+    expected: |
+      apiVersion: operator.openshift.io/v1
+      kind: Network
+      spec:
+        disableNetworkDiagnostics: false
+        logLevel: Normal
+        operatorLogLevel: Normal
+        defaultNetwork:
+          ovnKubernetesConfig:
+            transport: Geneve
+            ipsecConfig:
+              mode: Disabled
+  - name: Should fail if NoOverlay transport is set without NoOverlayConfig
+    initial: |
+      apiVersion: operator.openshift.io/v1
+      kind: Network
+      spec:
+        defaultNetwork:
+          ovnKubernetesConfig:
+            transport: NoOverlay
+    expectedError: "noOverlayConfig must be set if and only if transport is NoOverlay"
+  - name: Should fail if NoOverlayConfig is set with Geneve transport
+    initial: |
+      apiVersion: operator.openshift.io/v1
+      kind: Network
+      spec:
+        defaultNetwork:
+          ovnKubernetesConfig:
+            transport: Geneve
+            noOverlayConfig:
+              outboundSNAT: Enabled
+              routing: Unmanaged
+    expectedError: "noOverlayConfig must be set if and only if transport is NoOverlay"
+  - name: Should be able to create Network with NoOverlay transport and Unmanaged routing
+    initial: |
+      apiVersion: operator.openshift.io/v1
+      kind: Network
+      spec:
+        defaultNetwork:
+          ovnKubernetesConfig:
+            transport: NoOverlay
+            noOverlayConfig:
+              outboundSNAT: Enabled
+              routing: Unmanaged
+    expected: |
+      apiVersion: operator.openshift.io/v1
+      kind: Network
+      spec:
+        disableNetworkDiagnostics: false
+        logLevel: Normal
+        operatorLogLevel: Normal
+        defaultNetwork:
+          ovnKubernetesConfig:
+            transport: NoOverlay
+            noOverlayConfig:
+              outboundSNAT: Enabled
+              routing: Unmanaged
+            ipsecConfig:
+              mode: Disabled
+  - name: Should be able to create Network with outboundSNAT Disabled at installation time
+    initial: |
+      apiVersion: operator.openshift.io/v1
+      kind: Network
+      spec:
+        defaultNetwork:
+          ovnKubernetesConfig:
+            transport: NoOverlay
+            noOverlayConfig:
+              outboundSNAT: Disabled
+              routing: Unmanaged
+    expected: |
+      apiVersion: operator.openshift.io/v1
+      kind: Network
+      spec:
+        disableNetworkDiagnostics: false
+        logLevel: Normal
+        operatorLogLevel: Normal
+        defaultNetwork:
+          ovnKubernetesConfig:
+            transport: NoOverlay
+            noOverlayConfig:
+              outboundSNAT: Disabled
+              routing: Unmanaged
+            ipsecConfig:
+              mode: Disabled
+  - name: Should fail if routing is Managed without BGPManagedConfig
+    initial: |
+      apiVersion: operator.openshift.io/v1
+      kind: Network
+      spec:
+        defaultNetwork:
+          ovnKubernetesConfig:
+            transport: NoOverlay
+            noOverlayConfig:
+              outboundSNAT: Enabled
+              routing: Managed
+    expectedError: "bgpManagedConfig is required when noOverlayConfig.routing is Managed"
+  - name: Should be able to create Network with NoOverlay transport and Managed routing with BGPManagedConfig
+    initial: |
+      apiVersion: operator.openshift.io/v1
+      kind: Network
+      spec:
+        defaultNetwork:
+          ovnKubernetesConfig:
+            transport: NoOverlay
+            noOverlayConfig:
+              outboundSNAT: Enabled
+              routing: Managed
+            bgpManagedConfig:
+              bgpTopology: FullMesh
+    expected: |
+      apiVersion: operator.openshift.io/v1
+      kind: Network
+      spec:
+        disableNetworkDiagnostics: false
+        logLevel: Normal
+        operatorLogLevel: Normal
+        defaultNetwork:
+          ovnKubernetesConfig:
+            transport: NoOverlay
+            noOverlayConfig:
+              outboundSNAT: Enabled
+              routing: Managed
+            bgpManagedConfig:
+              asNumber: 64512
+              bgpTopology: FullMesh
+            ipsecConfig:
+              mode: Disabled
+  onUpdate:
+  - name: Should not allow changing transport
+    initial: |
+      apiVersion: operator.openshift.io/v1
+      kind: Network
+      spec:
+        defaultNetwork:
+          ovnKubernetesConfig:
+            transport: Geneve
+    updated: |
+      apiVersion: operator.openshift.io/v1
+      kind: Network
+      spec:
+        defaultNetwork:
+          ovnKubernetesConfig:
+            transport: NoOverlay
+            noOverlayConfig:
+              outboundSNAT: Disabled
+              routing: Unmanaged
+    expectedError: "transport can only be set at installation time"
+  - name: Should not allow removing transport once set to a non-empty value
+    initial: |
+      apiVersion: operator.openshift.io/v1
+      kind: Network
+      spec:
+        defaultNetwork:
+          ovnKubernetesConfig:
+            transport: Geneve
+    updated: |
+      apiVersion: operator.openshift.io/v1
+      kind: Network
+      spec:
+        defaultNetwork:
+          ovnKubernetesConfig: {}
+    expectedError: "transport cannot be removed once set to a non-empty value"
+  - name: Should not allow setting transport from empty to NoOverlay on day 2
+    initial: |
+      apiVersion: operator.openshift.io/v1
+      kind: Network
+      spec:
+        defaultNetwork:
+          ovnKubernetesConfig: {}
+    updated: |
+      apiVersion: operator.openshift.io/v1
+      kind: Network
+      spec:
+        defaultNetwork:
+          ovnKubernetesConfig:
+            transport: NoOverlay
+            noOverlayConfig:
+              outboundSNAT: Enabled
+              routing: Unmanaged
+    expectedError: "transport can only be set at installation time"
+  - name: Should allow changing outboundSNAT in noOverlayConfig on day 2
+    initial: |
+      apiVersion: operator.openshift.io/v1
+      kind: Network
+      spec:
+        defaultNetwork:
+          ovnKubernetesConfig:
+            transport: NoOverlay
+            noOverlayConfig:
+              outboundSNAT: Enabled
+              routing: Unmanaged
+    updated: |
+      apiVersion: operator.openshift.io/v1
+      kind: Network
+      spec:
+        defaultNetwork:
+          ovnKubernetesConfig:
+            transport: NoOverlay
+            noOverlayConfig:
+              outboundSNAT: Disabled
+              routing: Unmanaged
+    expected: |
+      apiVersion: operator.openshift.io/v1
+      kind: Network
+      spec:
+        disableNetworkDiagnostics: false
+        logLevel: Normal
+        operatorLogLevel: Normal
+        defaultNetwork:
+          ovnKubernetesConfig:
+            transport: NoOverlay
+            noOverlayConfig:
+              outboundSNAT: Disabled
+              routing: Unmanaged
+            ipsecConfig:
+              mode: Disabled
+  - name: Should not allow changing routing in noOverlayConfig
+    initial: |
+      apiVersion: operator.openshift.io/v1
+      kind: Network
+      spec:
+        defaultNetwork:
+          ovnKubernetesConfig:
+            transport: NoOverlay
+            noOverlayConfig:
+              outboundSNAT: Enabled
+              routing: Unmanaged
+    updated: |
+      apiVersion: operator.openshift.io/v1
+      kind: Network
+      spec:
+        defaultNetwork:
+          ovnKubernetesConfig:
+            transport: NoOverlay
+            noOverlayConfig:
+              outboundSNAT: Enabled
+              routing: Managed
+            bgpManagedConfig:
+              bgpTopology: FullMesh
+    expectedError: "routing is immutable once set"
+  - name: Should allow setting bgpManagedConfig on day 2 if not set at installation time
+    initial: |
+      apiVersion: operator.openshift.io/v1
+      kind: Network
+      spec:
+        defaultNetwork:
+          ovnKubernetesConfig:
+            transport: NoOverlay
+            noOverlayConfig:
+              outboundSNAT: Enabled
+              routing: Unmanaged
+    updated: |
+      apiVersion: operator.openshift.io/v1
+      kind: Network
+      spec:
+        defaultNetwork:
+          ovnKubernetesConfig:
+            transport: NoOverlay
+            noOverlayConfig:
+              outboundSNAT: Enabled
+              routing: Unmanaged
+            bgpManagedConfig:
+              bgpTopology: FullMesh
+    expected: |
+      apiVersion: operator.openshift.io/v1
+      kind: Network
+      spec:
+        disableNetworkDiagnostics: false
+        logLevel: Normal
+        operatorLogLevel: Normal
+        defaultNetwork:
+          ovnKubernetesConfig:
+            transport: NoOverlay
+            noOverlayConfig:
+              outboundSNAT: Enabled
+              routing: Unmanaged
+            bgpManagedConfig:
+              asNumber: 64512
+              bgpTopology: FullMesh
+            ipsecConfig:
+              mode: Disabled
+  - name: Should allow changing bgpManagedConfig after initial configuration
+    initial: |
+      apiVersion: operator.openshift.io/v1
+      kind: Network
+      spec:
+        defaultNetwork:
+          ovnKubernetesConfig:
+            transport: NoOverlay
+            noOverlayConfig:
+              outboundSNAT: Enabled
+              routing: Managed
+            bgpManagedConfig:
+              bgpTopology: FullMesh
+    updated: |
+      apiVersion: operator.openshift.io/v1
+      kind: Network
+      spec:
+        defaultNetwork:
+          ovnKubernetesConfig:
+            transport: NoOverlay
+            noOverlayConfig:
+              outboundSNAT: Enabled
+              routing: Managed
+            bgpManagedConfig:
+              asNumber: 65000
+              bgpTopology: FullMesh
+    expected: |
+      apiVersion: operator.openshift.io/v1
+      kind: Network
+      spec:
+        disableNetworkDiagnostics: false
+        logLevel: Normal
+        operatorLogLevel: Normal
+        defaultNetwork:
+          ovnKubernetesConfig:
+            transport: NoOverlay
+            noOverlayConfig:
+              outboundSNAT: Enabled
+              routing: Managed
+            bgpManagedConfig:
+              asNumber: 65000
+              bgpTopology: FullMesh
+            ipsecConfig:
+              mode: Disabled
+  - name: Should allow removing bgpManagedConfig when routing is Unmanaged
+    initial: |
+      apiVersion: operator.openshift.io/v1
+      kind: Network
+      spec:
+        defaultNetwork:
+          ovnKubernetesConfig:
+            transport: NoOverlay
+            noOverlayConfig:
+              outboundSNAT: Enabled
+              routing: Unmanaged
+            bgpManagedConfig:
+              bgpTopology: FullMesh
+    updated: |
+      apiVersion: operator.openshift.io/v1
+      kind: Network
+      spec:
+        defaultNetwork:
+          ovnKubernetesConfig:
+            transport: NoOverlay
+            noOverlayConfig:
+              outboundSNAT: Enabled
+              routing: Unmanaged
+    expected: |
+      apiVersion: operator.openshift.io/v1
+      kind: Network
+      spec:
+        disableNetworkDiagnostics: false
+        logLevel: Normal
+        operatorLogLevel: Normal
+        defaultNetwork:
+          ovnKubernetesConfig:
+            transport: NoOverlay
+            noOverlayConfig:
+              outboundSNAT: Enabled
+              routing: Unmanaged
+            ipsecConfig:
+              mode: Disabled
+  - name: Should not allow removing noOverlayConfig once set
+    initial: |
+      apiVersion: operator.openshift.io/v1
+      kind: Network
+      spec:
+        defaultNetwork:
+          ovnKubernetesConfig:
+            transport: NoOverlay
+            noOverlayConfig:
+              outboundSNAT: Enabled
+              routing: Unmanaged
+    updated: |
+      apiVersion: operator.openshift.io/v1
+      kind: Network
+      spec:
+        defaultNetwork:
+          ovnKubernetesConfig:
+            transport: NoOverlay
+    expectedError: "noOverlayConfig cannot be removed once set"
+  - name: Should fail if noOverlayConfig is added on day 2 with Geneve transport
+    initial: |
+      apiVersion: operator.openshift.io/v1
+      kind: Network
+      spec:
+        defaultNetwork:
+          ovnKubernetesConfig:
+            transport: Geneve
+    updated: |
+      apiVersion: operator.openshift.io/v1
+      kind: Network
+      spec:
+        defaultNetwork:
+          ovnKubernetesConfig:
+            transport: Geneve
+            noOverlayConfig:
+              outboundSNAT: Enabled
+              routing: Unmanaged
+    expectedError: "noOverlayConfig must be set if and only if transport is NoOverlay"

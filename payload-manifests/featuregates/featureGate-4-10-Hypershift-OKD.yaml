@@ -167,9 +167,6 @@
                         "name": "GatewayAPIWithoutOLM"
                     },
                     {
-                        "name": "ImageModeStatusReporting"
-                    },
-                    {
                         "name": "IngressControllerDynamicConfigurationManager"
                     },
                     {
@@ -302,6 +299,9 @@
                     },
                     {
                         "name": "HyperShiftOnlyDynamicResourceAllocation"
+                    },
+                    {
+                        "name": "ImageModeStatusReporting"
                     },
                     {
                         "name": "ImageStreamImportMode"

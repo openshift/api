@@ -559,6 +559,13 @@ var (
 						enhancementPR("https://github.com/openshift/enhancements/pull/1465").
 						enable(inTechPreviewNoUpgrade(), inDevPreviewNoUpgrade()).
 						mustRegister()
+	FeatureGateMachineAPIMigrationVSphere = newFeatureGate("MachineAPIMigrationVSphere").
+						reportProblemsToJiraComponent("SPLAT").
+						contactPerson("jcpowermac").
+						productScope(ocpSpecific).
+						enhancementPR("https://github.com/openshift/enhancements/pull/1465").
+						enable(inDevPreviewNoUpgrade()).
+						mustRegister()
 
 	FeatureGateClusterAPIMachineManagement = newFeatureGate("ClusterAPIMachineManagement").
 						reportProblemsToJiraComponent("Cloud Compute / Cluster API Providers").

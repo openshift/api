@@ -189,6 +189,9 @@
                         "name": "MachineAPIMigrationOpenStack"
                     },
                     {
+                        "name": "MachineAPIMigrationVSphere"
+                    },
+                    {
                         "name": "MachineAPIOperatorDisableMachineHealthCheckController"
                     },
                     {

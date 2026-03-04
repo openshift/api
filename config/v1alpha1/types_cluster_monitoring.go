@@ -581,7 +581,7 @@ type PrometheusOperatorAdmissionWebhookConfig struct {
 // Use this configuration to control
 // Prometheus deployment, pod scheduling, resource allocation, retention policies, and external integrations.
 // +kubebuilder:validation:MinProperties=1
-// +kubebuilder:validation:XValidation:rule="!has(self.remoteWrite) || self.remoteWrite.size() == 0 || self.remoteWrite.filter(i, size(i.name) > 0).all(i, self.remoteWrite.filter(j, j.name == i.name).size() == 1)",message="when specified, name must be unique across all remote write configurations"
+// +kubebuilder:validation:XValidation:rule="!has(self.remoteWrite) || self.remoteWrite.size() == 0 || self.remoteWrite.filter(i, has(i.name) && size(i.name) > 0).all(i, self.remoteWrite.filter(j, has(j.name) && j.name == i.name).size() == 1)",message="when specified, name must be unique across all remote write configurations"
 type PrometheusConfig struct {
 	// additionalAlertmanagerConfigs configures additional Alertmanager instances that receive alerts from
 	// the Prometheus component. This is useful for organizations that need to:
@@ -673,11 +673,10 @@ type PrometheusConfig struct {
 	// Remote write allows Prometheus to send metrics it collects to external long-term storage systems.
 	// When omitted, no remote write endpoints are configured.
 	// When provided, at least one configuration must be specified (minimum 1, maximum 10 items).
-	// Each entry must have a unique URL.
+	// When a name is specified, it must be unique across all entries.
 	// +kubebuilder:validation:MinItems=1
 	// +kubebuilder:validation:MaxItems=10
-	// +listType=map
-	// +listMapKey=url
+	// +listType=atomic
 	// +optional
 	RemoteWrite []RemoteWriteSpec `json:"remoteWrite,omitempty"`
 	// resources defines the compute resource requests and limits for the Prometheus container.
@@ -875,7 +874,7 @@ type RemoteWriteSpec struct {
 	Name string `json:"name,omitempty"`
 	// authorization defines the authorization method for the remote write endpoint.
 	// When omitted, no authorization is performed.
-	// When set, type must be one of BearerToken, BearerTokenFile, BasicAuth, OAuth2, or SigV4, and the corresponding nested config must be set.
+	// When set, type must be one of BearerToken, BearerTokenFile, BasicAuth, OAuth2, SigV4, Authorization, or ServiceAccount; the corresponding nested config must be set (ServiceAccount has no config).
 	// +optional
 	AuthorizationConfig RemoteWriteAuthorization `json:"authorization,omitzero"`
 	// headers specifies the custom HTTP headers to be sent along with each remote write request.
@@ -885,14 +884,17 @@ type RemoteWriteSpec struct {
 	// them in such a way as to send reserved headers. Headers set by Prometheus cannot be overwritten.
 	// When omitted, no custom headers are sent.
 	// Maximum of 50 headers can be specified. Each header name must be unique.
+	// Each header name must contain only alphanumeric characters, hyphens, and underscores, and must not be a reserved Prometheus header (Host, Authorization, Content-Encoding, Content-Type, X-Prometheus-Remote-Write-Version, User-Agent, Connection, Keep-Alive, Proxy-Authenticate, Proxy-Authorization, WWW-Authenticate).
 	// +optional
 	// +kubebuilder:validation:MaxItems=50
+	// +kubebuilder:validation:items:XValidation:rule="self.name.matches('^[a-zA-Z0-9_-]+$')",message="header name must contain only alphanumeric characters, hyphens, and underscores"
+	// +kubebuilder:validation:items:XValidation:rule="!self.name.matches('(?i)^(host|authorization|content-encoding|content-type|x-prometheus-remote-write-version|user-agent|connection|keep-alive|proxy-authenticate|proxy-authorization|www-authenticate)$')",message="header name must not be a reserved Prometheus header (Host, Authorization, Content-Encoding, Content-Type, X-Prometheus-Remote-Write-Version, User-Agent, Connection, Keep-Alive, Proxy-Authenticate, Proxy-Authorization, WWW-Authenticate)"
 	// +listType=map
 	// +listMapKey=name
 	Headers []PrometheusRemoteWriteHeader `json:"headers,omitempty"`
 	// metadataConfig configures the sending of series metadata to remote storage.
 	// When omitted, no metadata is sent.
-	// When present (even with no fields set), metadata is sent to the remote write endpoint.
+	// When set (including as an empty object metadataConfig: {}), metadata is sent to the remote write endpoint; omitted sub-fields use platform defaults (e.g. send interval 30 seconds).
 	// +optional
 	MetadataConfig *MetadataConfig `json:"metadataConfig,omitempty,omitzero"`
 	// proxyUrl defines an optional proxy URL.
@@ -919,10 +921,10 @@ type RemoteWriteSpec struct {
 	// +kubebuilder:validation:Maximum=600
 	RemoteTimeoutSeconds int32 `json:"remoteTimeoutSeconds,omitempty"`
 	// exemplarsMode controls whether exemplars are sent via remote write.
+	// Valid values are "Send", "DoNotSend" and omitted.
 	// When set to "Send", Prometheus is configured to store a maximum of 100,000 exemplars in memory and send them with remote write.
 	// Note that this setting only applies to user-defined monitoring. It is not applicable to default in-cluster monitoring.
 	// When omitted or set to "DoNotSend", exemplars are not sent.
-	// Valid values are "Send", "DoNotSend" and omitted.
 	// +optional
 	ExemplarsMode ExemplarsMode `json:"exemplarsMode,omitempty"`
 	// tlsConfig defines TLS authentication settings for the remote write endpoint.
@@ -942,11 +944,12 @@ type RemoteWriteSpec struct {
 }
 
 // PrometheusRemoteWriteHeader defines a custom HTTP header for remote write requests.
-// The header name must not be one of the reserved headers set by Prometheus.
-// +kubebuilder:validation:XValidation:rule="!self.name.lowerAscii() in ['host', 'authorization', 'content-encoding', 'content-type', 'x-prometheus-remote-write-version', 'user-agent', 'connection', 'keep-alive', 'proxy-authenticate', 'proxy-authorization', 'www-authenticate']",message="header name must not be a reserved Prometheus header (Host, Authorization, Content-Encoding, Content-Type, X-Prometheus-Remote-Write-Version, User-Agent, Connection, Keep-Alive, Proxy-Authenticate, Proxy-Authorization, WWW-Authenticate)"
+// The header name must not be one of the reserved headers set by Prometheus (Host, Authorization, Content-Encoding, Content-Type, X-Prometheus-Remote-Write-Version, User-Agent, Connection, Keep-Alive, Proxy-Authenticate, Proxy-Authorization, WWW-Authenticate).
+// Header names must contain only case-insensitive alphanumeric characters, hyphens (-), and underscores (_); other characters (e.g. emoji) are rejected by validation.
+// Validation is enforced on the Headers field in RemoteWriteSpec.
 type PrometheusRemoteWriteHeader struct {
-	// name is the HTTP header name. Must not be a reserved header (see validation).
-	// Must be between 1 and 256 characters.
+	// name is the HTTP header name. Must not be a reserved header (see type documentation).
+	// Must contain only alphanumeric characters, hyphens, and underscores; invalid characters are rejected. Must be between 1 and 256 characters.
 	// +required
 	// +kubebuilder:validation:MinLength=1
 	// +kubebuilder:validation:MaxLength=256
@@ -970,7 +973,7 @@ type BasicAuth struct {
 }
 
 // RemoteWriteAuthorizationType defines the authorization method for remote write endpoints.
-// +kubebuilder:validation:Enum=BearerToken;BearerTokenFile;BasicAuth;OAuth2;SigV4
+// +kubebuilder:validation:Enum=BearerToken;BearerTokenFile;BasicAuth;OAuth2;SigV4;Authorization;ServiceAccount
 type RemoteWriteAuthorizationType string
 
 const (
@@ -984,7 +987,12 @@ const (
 	RemoteWriteAuthorizationTypeOAuth2 RemoteWriteAuthorizationType = "OAuth2"
 	// RemoteWriteAuthorizationTypeSigV4 indicates AWS Signature Version 4.
 	RemoteWriteAuthorizationTypeSigV4 RemoteWriteAuthorizationType = "SigV4"
-	// RemoteWriterAuthorizationTypeAuthorization indicates authorization from a secret.
+	// RemoteWriteAuthorizationTypeAuthorization indicates authorization from a secret (Prometheus SafeAuthorization pattern).
+	// The secret key contains the credentials (e.g. a Bearer token). Use the credentials field.
+	RemoteWriteAuthorizationTypeAuthorization RemoteWriteAuthorizationType = "Authorization"
+	// RemoteWriteAuthorizationTypeServiceAccount indicates use of the pod's service account token for machine identity.
+	// No additional field is required; the operator configures the token path.
+	RemoteWriteAuthorizationTypeServiceAccount RemoteWriteAuthorizationType = "ServiceAccount"
 )
 
 // RemoteWriteAuthorization defines the authorization method for a remote write endpoint.
@@ -994,11 +1002,11 @@ const (
 // +kubebuilder:validation:XValidation:rule="has(self.type) && self.type == 'BasicAuth' ? has(self.basicAuth) : !has(self.basicAuth)",message="basicAuth is required when type is BasicAuth, and forbidden otherwise"
 // +kubebuilder:validation:XValidation:rule="has(self.type) && self.type == 'OAuth2' ? has(self.oauth2) : !has(self.oauth2)",message="oauth2 is required when type is OAuth2, and forbidden otherwise"
 // +kubebuilder:validation:XValidation:rule="has(self.type) && self.type == 'SigV4' ? has(self.sigv4) : !has(self.sigv4)",message="sigv4 is required when type is SigV4, and forbidden otherwise"
-
+// +kubebuilder:validation:XValidation:rule="has(self.type) && self.type == 'Authorization' ? has(self.credentials) : !has(self.credentials)",message="credentials is required when type is Authorization, and forbidden otherwise"
 // +union
 type RemoteWriteAuthorization struct {
 	// type specifies the authorization method to use.
-	// Allowed values are BearerToken, BearerTokenFile, BasicAuth, OAuth2, SigV4.
+	// Allowed values are BearerToken, BearerTokenFile, BasicAuth, OAuth2, SigV4, Authorization, ServiceAccount.
 	//
 	// When set to BearerToken, the bearer token is read from a Secret referenced by the bearerToken field.
 	//
@@ -1009,17 +1017,19 @@ type RemoteWriteAuthorization struct {
 	// When set to OAuth2, OAuth2 client credentials flow is used; the oauth2 field (clientId, clientSecret, tokenUrl) must be set.
 	//
 	// When set to SigV4, AWS Signature Version 4 is used for authentication; the sigv4 field must be set.
+	//
+	// When set to Authorization, credentials are read from a single Secret key (Prometheus SafeAuthorization pattern). The secret key typically contains a Bearer token. Use the credentials field.
+	//
+	// When set to ServiceAccount, the pod's service account token is used for machine identity. No additional field is required; the operator configures the token path.
 	// +unionDiscriminator
 	// +required
 	Type RemoteWriteAuthorizationType `json:"type,omitempty"`
-	// credentials defines a key of a Secret in the namespace that contains the credentials for authentication.
+	// credentials defines the secret reference containing the credentials for authentication (e.g. Bearer token).
+	// Required when type is "Authorization", and forbidden otherwise. Maps to Prometheus SafeAuthorization. The secret must exist in the openshift-monitoring namespace.
 	// +unionMember
 	// +optional
 	Credentials *v1.SecretKeySelector `json:"credentials,omitempty"`
 	// bearerToken defines the secret reference containing the bearer token.
-	// bearerToken is deprecated: this will be removed in a future release.
-	// *Warning: this field shouldn't be used because the token value appears
-	// in clear-text. Prefer using `authorization`.*
 	// Required when type is "BearerToken", and forbidden otherwise.
 	// +unionMember
 	// +optional
@@ -1050,18 +1060,16 @@ type RemoteWriteAuthorization struct {
 }
 
 // MetadataConfig defines settings for sending series metadata to remote write storage.
-// Presence of this object enables metadata sending; use sendInterval to tune the send interval.
-// +kubebuilder:validation:MinProperties=0
+// When present (including as an empty object), metadata is sent; omitted fields use platform defaults (e.g. send interval 30 seconds).
 type MetadataConfig struct {
-	// sendInterval defines the interval at which metadata is sent.
-	// When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time.
-	// Must be a valid duration string (e.g., "30s", "1m", "5m").
+	// sendIntervalSeconds is the interval in seconds at which metadata is sent.
+	// When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time (e.g. 30 seconds).
 	// Minimum value is 1 second.
-	// Maximum value is 24 hours.
+	// Maximum value is 86400 seconds (24 hours).
 	// +optional
-	// +kubebuilder:validation:MinLength=1
-	// +kubebuilder:validation:MaxLength=20
-	SendInterval string `json:"sendInterval,omitempty"`
+	// +kubebuilder:validation:Minimum=1
+	// +kubebuilder:validation:Maximum=86400
+	SendIntervalSeconds int32 `json:"sendIntervalSeconds,omitempty"`
 }
 
 // OAuth2 defines OAuth2 authentication settings for the remote write endpoint.
@@ -1097,14 +1105,28 @@ type OAuth2 struct {
 	// endpointParams defines additional parameters to append to the token URL.
 	// When omitted, no additional parameters are sent.
 	// Maximum of 20 parameters can be specified.
-	// Each parameter name must be between 1 and 256 characters, and each parameter value must be between 0 and 4096 characters.
 	// +optional
-	// +kubebuilder:validation:MinProperties=0
-	// +kubebuilder:validation:MaxProperties=20
-	EndpointParams map[string]string `json:"endpointParams,omitempty"`
+	// +kubebuilder:validation:MaxItems=20
+	// +listType=map
+	// +listMapKey=name
+	EndpointParams []OAuth2EndpointParam `json:"endpointParams,omitempty"`
+}
+
+// OAuth2EndpointParam defines a name/value parameter for the OAuth2 token URL.
+type OAuth2EndpointParam struct {
+	// name is the parameter name. Must be between 1 and 256 characters.
+	// +required
+	// +kubebuilder:validation:MinLength=1
+	// +kubebuilder:validation:MaxLength=256
+	Name string `json:"name"`
+	// value is the parameter value. Must be between 0 and 4096 characters.
+	// +required
+	// +kubebuilder:validation:MaxLength=4096
+	Value string `json:"value"`
 }
 
 // QueueConfig allows tuning configuration for remote write queue parameters.
+// Configure this when you need to control throughput, backpressure, or retry behavior—for example to avoid overloading the remote endpoint, to reduce memory usage, or to tune for high-cardinality workloads. Consider capacity, maxShards, and batchSendDeadlineSeconds for throughput; minBackoffMilliseconds and maxBackoffMilliseconds for retries; and rateLimitedAction when the remote returns HTTP 429.
 // +kubebuilder:validation:MinProperties=1
 type QueueConfig struct {
 	// capacity is the number of samples to buffer per shard before we start dropping them.
@@ -1168,15 +1190,16 @@ type QueueConfig struct {
 	// +kubebuilder:validation:Maximum=3600000
 	MaxBackoffMilliseconds int32 `json:"maxBackoffMilliseconds,omitempty"`
 	// rateLimitedAction controls what to do when the remote write endpoint returns HTTP 429 (Too Many Requests).
+	// When omitted, no retries are performed on rate limit responses.
 	// When set to "Retry", Prometheus will retry such requests using the backoff settings above.
-	// When omitted or set to "DoNotRetry", no retries are performed on rate limit responses.
-	// Valid values are "Retry" and "DoNotRetry".
+	// Valid value when set is "Retry".
 	// +optional
 	RateLimitedAction RateLimitedAction `json:"rateLimitedAction,omitempty"`
 }
 
 // Sigv4 defines AWS Signature Version 4 authentication settings.
-// +kubebuilder:validation:MinProperties=0
+// At least one of region, accessKey/secretKey, profile, or roleArn must be set so the platform can perform authentication.
+// +kubebuilder:validation:MinProperties=1
 type Sigv4 struct {
 	// region is the AWS region.
 	// When omitted, the region is derived from the environment or instance metadata.
@@ -1325,7 +1348,7 @@ type RelabelActionConfig struct {
 	// Required when type is LabelMap, and forbidden otherwise.
 	// +unionMember
 	// +optional
-	LabelMap *LabelMapActionConfig `json:"labelMap,omitempty,omitzero"`
+	LabelMap LabelMapActionConfig `json:"labelMap,omitempty,omitzero"`
 
 	// lowercase configures the Lowercase action.
 	// Required when type is Lowercase, and forbidden otherwise.
@@ -1445,7 +1468,6 @@ type DropEqualActionConfig struct {
 
 // LabelMapActionConfig configures the LabelMap action.
 // Regex is matched against all source label names (not just source_labels). Matching label values are copied to new label names given by replacement, with match group references (${1}, ${2}, ...) substituted.
-// +kubebuilder:validation:MinProperties=0
 type LabelMapActionConfig struct {
 	// replacement is the template for new label names; match group references (${1}, ${2}, ...) are substituted from the matched label name.
 	// Required when using the LabelMap action so the intended behavior is explicit and the platform does not need to apply defaults.
@@ -1454,7 +1476,7 @@ type LabelMapActionConfig struct {
 	// +required
 	// +kubebuilder:validation:MinLength=1
 	// +kubebuilder:validation:MaxLength=255
-	Replacement *string `json:"replacement,omitempty"`
+	Replacement string `json:"replacement,omitempty"`
 }
 
 // TLSConfig represents TLS configuration for Alertmanager connections.
@@ -1658,14 +1680,13 @@ const (
 )
 
 // RateLimitedAction defines what to do when the remote write endpoint returns HTTP 429 (Too Many Requests).
-// +kubebuilder:validation:Enum=Retry;DoNotRetry
+// Omission of this field means do not retry. When set, the only valid value is Retry.
+// +kubebuilder:validation:Enum=Retry
 type RateLimitedAction string
 
 const (
 	// RateLimitedActionRetry means requests will be retried on HTTP 429 responses.
 	RateLimitedActionRetry RateLimitedAction = "Retry"
-	// RateLimitedActionDoNotRetry means no retries are performed on HTTP 429 responses.
-	RateLimitedActionDoNotRetry RateLimitedAction = "DoNotRetry"
 )
 
 // Audit profile configurations

@@ -1002,7 +1002,7 @@ tests:
               - url: https://remote10.example.com/write
               - url: https://remote11.example.com/write
       expectedError: 'spec.prometheusConfig.remoteWrite: Too many: 11: must have at most 10 items'
-    - name: Should reject PrometheusConfig with remoteWrite duplicate URLs
+    - name: Should accept PrometheusConfig with remoteWrite same URL and different names
       initial: |
         apiVersion: config.openshift.io/v1alpha1
         kind: ClusterMonitoring
@@ -1011,9 +1011,22 @@ tests:
             mode: "Disabled"
           prometheusConfig:
             remoteWrite:
-              - url: https://remote.example.com/write
-              - url: https://remote.example.com/write
-      expectedError: 'spec.prometheusConfig.remoteWrite[1]: Duplicate value: map[string]interface {}{"url":"https://remote.example.com/write"}'
+              - name: one
+                url: https://remote.example.com/write
+              - name: two
+                url: https://remote.example.com/write
+      expected: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: "Disabled"
+          prometheusConfig:
+            remoteWrite:
+              - name: one
+                url: https://remote.example.com/write
+              - name: two
+                url: https://remote.example.com/write
     - name: Should reject PrometheusConfig with remoteWrite invalid URL
       initial: |
         apiVersion: config.openshift.io/v1alpha1
@@ -1429,6 +1442,7 @@ tests:
                       type: HashMod
                       hashMod:
                         targetLabel: shard
+                        modulus: 10
       expected: |
         apiVersion: config.openshift.io/v1alpha1
         kind: ClusterMonitoring
@@ -1446,6 +1460,7 @@ tests:
                       type: HashMod
                       hashMod:
                         targetLabel: shard
+                        modulus: 10
     - name: Should accept PrometheusConfig with RelabelConfig LabelMap action
       initial: |
         apiVersion: config.openshift.io/v1alpha1
@@ -1723,7 +1738,8 @@ tests:
                       type: Replace
                       hashMod:
                         targetLabel: shard
-      expectedError: 'spec.prometheusConfig.remoteWrite[0].writeRelabelConfigs[0].action: Invalid value: "object": hashMod is required when type is HashMod, and forbidden otherwise'
+                        modulus: 10
+      expectedError: 'spec.prometheusConfig.remoteWrite[0].writeRelabelConfigs[0].action: Invalid value: "object": replace is required when type is Replace, and forbidden otherwise'
     - name: Should reject PrometheusConfig with HashMod action missing hashMod config
       initial: |
         apiVersion: config.openshift.io/v1alpha1

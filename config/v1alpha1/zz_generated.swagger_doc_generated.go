@@ -298,8 +298,8 @@ func (LowercaseActionConfig) SwaggerDoc() map[string]string {
 }
 
 var map_MetadataConfig = map[string]string{
-	"":             "MetadataConfig defines settings for sending series metadata to remote write storage. Presence of this object enables metadata sending; use sendInterval to tune the send interval.",
-	"sendInterval": "sendInterval defines the interval at which metadata is sent. When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time. Must be a valid duration string (e.g., \"30s\", \"1m\", \"5m\"). Minimum value is 1 second. Maximum value is 24 hours.",
+	"":                    "MetadataConfig defines settings for sending series metadata to remote write storage. When present (including as an empty object), metadata is sent; omitted fields use platform defaults (e.g. send interval 30 seconds).",
+	"sendIntervalSeconds": "sendIntervalSeconds is the interval in seconds at which metadata is sent. When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time (e.g. 30 seconds). Minimum value is 1 second. Maximum value is 86400 seconds (24 hours).",
 }
 
 func (MetadataConfig) SwaggerDoc() map[string]string {
@@ -326,11 +326,21 @@ var map_OAuth2 = map[string]string{
 	"clientSecret":   "clientSecret defines the secret reference containing the OAuth2 client secret. The secret must exist in the openshift-monitoring namespace.",
 	"tokenUrl":       "tokenUrl is the URL to fetch the token from. Must be a valid URL with http or https scheme. Must be between 1 and 2048 characters in length.",
 	"scopes":         "scopes is a list of OAuth2 scopes to request. When omitted, no scopes are requested. Maximum of 20 scopes can be specified. Each scope must be between 1 and 256 characters.",
-	"endpointParams": "endpointParams defines additional parameters to append to the token URL. When omitted, no additional parameters are sent. Maximum of 20 parameters can be specified. Each parameter name must be between 1 and 256 characters, and each parameter value must be between 0 and 4096 characters.",
+	"endpointParams": "endpointParams defines additional parameters to append to the token URL. When omitted, no additional parameters are sent. Maximum of 20 parameters can be specified.",
 }
 
 func (OAuth2) SwaggerDoc() map[string]string {
 	return map_OAuth2
+}
+
+var map_OAuth2EndpointParam = map[string]string{
+	"":      "OAuth2EndpointParam defines a name/value parameter for the OAuth2 token URL.",
+	"name":  "name is the parameter name. Must be between 1 and 256 characters.",
+	"value": "value is the parameter value. Must be between 0 and 4096 characters.",
+}
+
+func (OAuth2EndpointParam) SwaggerDoc() map[string]string {
+	return map_OAuth2EndpointParam
 }
 
 var map_PrometheusConfig = map[string]string{
@@ -341,7 +351,7 @@ var map_PrometheusConfig = map[string]string{
 	"logLevel":                      "logLevel defines the verbosity of logs emitted by Prometheus. This field allows users to control the amount and severity of logs generated, which can be useful for debugging issues or reducing noise in production environments. Allowed values are Error, Warn, Info, and Debug. When set to Error, only errors will be logged. When set to Warn, both warnings and errors will be logged. When set to Info, general information, warnings, and errors will all be logged. When set to Debug, detailed debugging information will be logged. When omitted, this means no opinion and the platform is left to choose a reasonable default, that is subject to change over time. The current default value is `Info`.",
 	"nodeSelector":                  "nodeSelector defines the nodes on which the Pods are scheduled. nodeSelector is optional.\n\nWhen omitted, this means the user has no opinion and the platform is left to choose reasonable defaults. These defaults are subject to change over time. The current default value is `kubernetes.io/os: linux`. When specified, nodeSelector must contain at least one key-value pair (minimum of 1) and must not contain more than 10 entries.",
 	"queryLogFile":                  "queryLogFile specifies the file to which PromQL queries are logged. This setting can be either a filename, in which case the queries are saved to an `emptyDir` volume at `/var/log/prometheus`, or a full path to a location where an `emptyDir` volume will be mounted and the queries saved. Writing to `/dev/stderr`, `/dev/stdout` or `/dev/null` is supported, but writing to any other `/dev/` path is not supported. Relative paths are also not supported. By default, PromQL queries are not logged. Must be an absolute path starting with `/` or a simple filename without path separators. Must not contain consecutive slashes, end with a slash, or include '..' path traversal. Must contain only alphanumeric characters, '.', '_', '-', or '/'. Must be between 1 and 255 characters in length.",
-	"remoteWrite":                   "remoteWrite defines the remote write configuration, including URL, authentication, and relabeling settings. Remote write allows Prometheus to send metrics it collects to external long-term storage systems. When omitted, no remote write endpoints are configured. When provided, at least one configuration must be specified (minimum 1, maximum 10 items). Each entry must have a unique URL.",
+	"remoteWrite":                   "remoteWrite defines the remote write configuration, including URL, authentication, and relabeling settings. Remote write allows Prometheus to send metrics it collects to external long-term storage systems. When omitted, no remote write endpoints are configured. When provided, at least one configuration must be specified (minimum 1, maximum 10 items). When a name is specified, it must be unique across all entries.",
 	"resources":                     "resources defines the compute resource requests and limits for the Prometheus container. This includes CPU, memory and HugePages constraints to help control scheduling and resource usage. When not specified, defaults are used by the platform. Requests cannot exceed limits. Each entry must have a unique resource name. Minimum of 1 and maximum of 10 resource entries can be specified. The current default values are:\n  resources:\n   - name: cpu\n     request: 4m\n   - name: memory\n     request: 40Mi",
 	"retention":                     "retention configures how long Prometheus retains metrics data and how much storage it can use. When omitted, the platform chooses reasonable defaults (currently 15 days retention, no size limit).",
 	"tolerations":                   "tolerations defines tolerations for the pods. tolerations is optional.\n\nWhen omitted, this means the user has no opinion and the platform is left to choose reasonable defaults. These defaults are subject to change over time. Defaults are empty/unset. Maximum length for this list is 10 Minimum length for this list is 1",
@@ -378,8 +388,8 @@ func (PrometheusOperatorConfig) SwaggerDoc() map[string]string {
 }
 
 var map_PrometheusRemoteWriteHeader = map[string]string{
-	"":      "PrometheusRemoteWriteHeader defines a custom HTTP header for remote write requests. The header name must not be one of the reserved headers set by Prometheus.",
-	"name":  "name is the HTTP header name. Must not be a reserved header (see validation). Must be between 1 and 256 characters.",
+	"":      "PrometheusRemoteWriteHeader defines a custom HTTP header for remote write requests. The header name must not be one of the reserved headers set by Prometheus (Host, Authorization, Content-Encoding, Content-Type, X-Prometheus-Remote-Write-Version, User-Agent, Connection, Keep-Alive, Proxy-Authenticate, Proxy-Authorization, WWW-Authenticate). Header names must contain only case-insensitive alphanumeric characters, hyphens (-), and underscores (_); other characters (e.g. emoji) are rejected by validation. Validation is enforced on the Headers field in RemoteWriteSpec.",
+	"name":  "name is the HTTP header name. Must not be a reserved header (see type documentation). Must contain only alphanumeric characters, hyphens, and underscores; invalid characters are rejected. Must be between 1 and 256 characters.",
 	"value": "value is the HTTP header value. Must be at most 4096 characters.",
 }
 
@@ -388,7 +398,7 @@ func (PrometheusRemoteWriteHeader) SwaggerDoc() map[string]string {
 }
 
 var map_QueueConfig = map[string]string{
-	"":                         "QueueConfig allows tuning configuration for remote write queue parameters.",
+	"":                         "QueueConfig allows tuning configuration for remote write queue parameters. Configure this when you need to control throughput, backpressure, or retry behavior—for example to avoid overloading the remote endpoint, to reduce memory usage, or to tune for high-cardinality workloads. Consider capacity, maxShards, and batchSendDeadlineSeconds for throughput; minBackoffMilliseconds and maxBackoffMilliseconds for retries; and rateLimitedAction when the remote returns HTTP 429.",
 	"capacity":                 "capacity is the number of samples to buffer per shard before we start dropping them. When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time. The default value is 10000. Minimum value is 1. Maximum value is 1000000.",
 	"maxShards":                "maxShards is the maximum number of shards, i.e. amount of concurrency. When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time. The default value is 200. Minimum value is 1. Maximum value is 10000.",
 	"minShards":                "minShards is the minimum number of shards, i.e. amount of concurrency. When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time. The default value is 1. Minimum value is 1. Maximum value is 10000.",
@@ -396,7 +406,7 @@ var map_QueueConfig = map[string]string{
 	"batchSendDeadlineSeconds": "batchSendDeadlineSeconds is the maximum time in seconds a sample will wait in buffer before being sent. When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time. Minimum value is 1 second. Maximum value is 3600 seconds (1 hour).",
 	"minBackoffMilliseconds":   "minBackoffMilliseconds is the minimum retry delay in milliseconds. When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time. Minimum value is 1 millisecond. Maximum value is 3600000 milliseconds (1 hour).",
 	"maxBackoffMilliseconds":   "maxBackoffMilliseconds is the maximum retry delay in milliseconds. When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time. Minimum value is 1 millisecond. Maximum value is 3600000 milliseconds (1 hour).",
-	"rateLimitedAction":        "rateLimitedAction controls what to do when the remote write endpoint returns HTTP 429 (Too Many Requests). When set to \"Retry\", Prometheus will retry such requests using the backoff settings above. When omitted or set to \"DoNotRetry\", no retries are performed on rate limit responses. Valid values are \"Retry\" and \"DoNotRetry\".",
+	"rateLimitedAction":        "rateLimitedAction controls what to do when the remote write endpoint returns HTTP 429 (Too Many Requests). When omitted, no retries are performed on rate limit responses. When set to \"Retry\", Prometheus will retry such requests using the backoff settings above. Valid value when set is \"Retry\".",
 }
 
 func (QueueConfig) SwaggerDoc() map[string]string {
@@ -433,9 +443,10 @@ func (RelabelConfig) SwaggerDoc() map[string]string {
 }
 
 var map_RemoteWriteAuthorization = map[string]string{
-	"type":            "type specifies the authorization method to use. Allowed values are BearerToken, BearerTokenFile, BasicAuth, OAuth2, SigV4.\n\nWhen set to BearerToken, the bearer token is read from a Secret referenced by the bearerToken field.\n\nWhen set to BearerTokenFile, the bearer token is read from a file path (e.g. service account token); the bearerTokenFile field must be set.\n\nWhen set to BasicAuth, HTTP basic authentication is used; the basicAuth field (username and password from Secrets) must be set.\n\nWhen set to OAuth2, OAuth2 client credentials flow is used; the oauth2 field (clientId, clientSecret, tokenUrl) must be set.\n\nWhen set to SigV4, AWS Signature Version 4 is used for authentication; the sigv4 field must be set.",
-	"credentials":     "credentials defines a key of a Secret in the namespace that contains the credentials for authentication.",
-	"bearerToken":     "bearerToken defines the secret reference containing the bearer token. bearerToken is deprecated: this will be removed in a future release. *Warning: this field shouldn't be used because the token value appears in clear-text. Prefer using `authorization`.* Required when type is \"BearerToken\", and forbidden otherwise.",
+	"":                "RemoteWriteAuthorization defines the authorization method for a remote write endpoint. Exactly one of the nested configs must be set according to the type discriminator.",
+	"type":            "type specifies the authorization method to use. Allowed values are BearerToken, BearerTokenFile, BasicAuth, OAuth2, SigV4, Authorization, ServiceAccount.\n\nWhen set to BearerToken, the bearer token is read from a Secret referenced by the bearerToken field.\n\nWhen set to BearerTokenFile, the bearer token is read from a file path (e.g. service account token); the bearerTokenFile field must be set.\n\nWhen set to BasicAuth, HTTP basic authentication is used; the basicAuth field (username and password from Secrets) must be set.\n\nWhen set to OAuth2, OAuth2 client credentials flow is used; the oauth2 field (clientId, clientSecret, tokenUrl) must be set.\n\nWhen set to SigV4, AWS Signature Version 4 is used for authentication; the sigv4 field must be set.\n\nWhen set to Authorization, credentials are read from a single Secret key (Prometheus SafeAuthorization pattern). The secret key typically contains a Bearer token. Use the credentials field.\n\nWhen set to ServiceAccount, the pod's service account token is used for machine identity. No additional field is required; the operator configures the token path.",
+	"credentials":     "credentials defines the secret reference containing the credentials for authentication (e.g. Bearer token). Required when type is \"Authorization\", and forbidden otherwise. Maps to Prometheus SafeAuthorization. The secret must exist in the openshift-monitoring namespace.",
+	"bearerToken":     "bearerToken defines the secret reference containing the bearer token. Required when type is \"BearerToken\", and forbidden otherwise.",
 	"bearerTokenFile": "bearerTokenFile is the path to a file containing the bearer token (e.g. service account token). Required when type is \"BearerTokenFile\", and forbidden otherwise. In practice only the service account token path can be used. Must be between 1 and 1024 characters.",
 	"basicAuth":       "basicAuth defines HTTP basic authentication credentials. Required when type is \"BasicAuth\", and forbidden otherwise.",
 	"oauth2":          "oauth2 defines OAuth2 client credentials authentication. Required when type is \"OAuth2\", and forbidden otherwise.",
@@ -450,13 +461,13 @@ var map_RemoteWriteSpec = map[string]string{
 	"":                     "RemoteWriteSpec represents configuration for remote write endpoints.",
 	"url":                  "url is the URL of the remote write endpoint. Must be a valid URL with http or https scheme and a non-empty hostname. Query parameters, fragments, and user information (e.g. user:password@host) are not allowed. Empty string is invalid. Must be between 1 and 2048 characters in length.",
 	"name":                 "name is an optional identifier for this remote write configuration. This name is used in metrics and logging to differentiate remote write queues. When omitted, Prometheus generates a unique name automatically. If specified, this name must be unique. Must contain only alphanumeric characters, hyphens, and underscores. Must be between 1 and 63 characters in length when specified.",
-	"authorization":        "authorization defines the authorization method for the remote write endpoint. When omitted, no authorization is performed. When set, type must be one of BearerToken, BearerTokenFile, BasicAuth, OAuth2, or SigV4, and the corresponding nested config must be set.",
-	"headers":              "headers specifies the custom HTTP headers to be sent along with each remote write request. Sending custom headers makes the configuration of a proxy in between optional and helps the receiver recognize the given source better. Clients MAY allow users to send custom HTTP headers; they MUST NOT allow users to configure them in such a way as to send reserved headers. Headers set by Prometheus cannot be overwritten. When omitted, no custom headers are sent. Maximum of 50 headers can be specified. Each header name must be unique.",
-	"metadataConfig":       "metadataConfig configures the sending of series metadata to remote storage. When omitted, no metadata is sent. When present (even with no fields set), metadata is sent to the remote write endpoint.",
+	"authorization":        "authorization defines the authorization method for the remote write endpoint. When omitted, no authorization is performed. When set, type must be one of BearerToken, BearerTokenFile, BasicAuth, OAuth2, SigV4, Authorization, or ServiceAccount; the corresponding nested config must be set (ServiceAccount has no config).",
+	"headers":              "headers specifies the custom HTTP headers to be sent along with each remote write request. Sending custom headers makes the configuration of a proxy in between optional and helps the receiver recognize the given source better. Clients MAY allow users to send custom HTTP headers; they MUST NOT allow users to configure them in such a way as to send reserved headers. Headers set by Prometheus cannot be overwritten. When omitted, no custom headers are sent. Maximum of 50 headers can be specified. Each header name must be unique. Each header name must contain only alphanumeric characters, hyphens, and underscores, and must not be a reserved Prometheus header (Host, Authorization, Content-Encoding, Content-Type, X-Prometheus-Remote-Write-Version, User-Agent, Connection, Keep-Alive, Proxy-Authenticate, Proxy-Authorization, WWW-Authenticate).",
+	"metadataConfig":       "metadataConfig configures the sending of series metadata to remote storage. When omitted, no metadata is sent. When set (including as an empty object metadataConfig: {}), metadata is sent to the remote write endpoint; omitted sub-fields use platform defaults (e.g. send interval 30 seconds).",
 	"proxyUrl":             "proxyUrl defines an optional proxy URL. If the cluster-wide proxy is enabled, it replaces the proxyUrl setting. The cluster-wide proxy supports both HTTP and HTTPS proxies, with HTTPS taking precedence. When omitted, no proxy is used. Must be a valid URL with http or https scheme. Must be between 1 and 2048 characters in length.",
 	"queueConfig":          "queueConfig allows tuning configuration for remote write queue parameters. When omitted, default queue configuration is used.",
 	"remoteTimeoutSeconds": "remoteTimeoutSeconds defines the timeout in seconds for requests to the remote write endpoint. When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time. Minimum value is 1 second. Maximum value is 600 seconds (10 minutes).",
-	"exemplarsMode":        "exemplarsMode controls whether exemplars are sent via remote write. When set to \"Send\", Prometheus is configured to store a maximum of 100,000 exemplars in memory and send them with remote write. Note that this setting only applies to user-defined monitoring. It is not applicable to default in-cluster monitoring. When omitted or set to \"DoNotSend\", exemplars are not sent. Valid values are \"Send\", \"DoNotSend\" and omitted.",
+	"exemplarsMode":        "exemplarsMode controls whether exemplars are sent via remote write. Valid values are \"Send\", \"DoNotSend\" and omitted. When set to \"Send\", Prometheus is configured to store a maximum of 100,000 exemplars in memory and send them with remote write. Note that this setting only applies to user-defined monitoring. It is not applicable to default in-cluster monitoring. When omitted or set to \"DoNotSend\", exemplars are not sent.",
 	"tlsConfig":            "tlsConfig defines TLS authentication settings for the remote write endpoint. When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time.",
 	"writeRelabelConfigs":  "writeRelabelConfigs is a list of relabeling rules to apply before sending data to the remote endpoint. When omitted, no relabeling is performed and all metrics are sent as-is. Minimum of 1 and maximum of 10 relabeling rules can be specified. Each rule must have a unique name.",
 }
@@ -496,7 +507,7 @@ func (SecretKeySelector) SwaggerDoc() map[string]string {
 }
 
 var map_Sigv4 = map[string]string{
-	"":          "Sigv4 defines AWS Signature Version 4 authentication settings.",
+	"":          "Sigv4 defines AWS Signature Version 4 authentication settings. At least one of region, accessKey/secretKey, profile, or roleArn must be set so the platform can perform authentication.",
 	"region":    "region is the AWS region. When omitted, the region is derived from the environment or instance metadata. Must be between 1 and 128 characters.",
 	"accessKey": "accessKey defines the secret reference containing the AWS access key ID. The secret must exist in the openshift-monitoring namespace. When omitted, the access key is derived from the environment or instance metadata.",
 	"secretKey": "secretKey defines the secret reference containing the AWS secret access key. The secret must exist in the openshift-monitoring namespace. When omitted, the secret key is derived from the environment or instance metadata.",

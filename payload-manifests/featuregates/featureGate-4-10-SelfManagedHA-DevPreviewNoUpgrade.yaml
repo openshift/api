@@ -175,6 +175,9 @@
                         "name": "ExternalOIDC"
                     },
                     {
+                        "name": "ExternalOIDCExternalClaimsSourcing"
+                    },
+                    {
                         "name": "ExternalOIDCWithUIDAndExtraClaimMappings"
                     },
                     {

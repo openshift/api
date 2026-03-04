@@ -73,6 +73,9 @@
                         "name": "AWSDualStackInstall"
                     },
                     {
+                        "name": "AWSEuropeanSovereignCloudInstall"
+                    },
+                    {
                         "name": "AWSServiceLBNetworkSecurityGroup"
                     },
                     {

@@ -66,11 +66,12 @@ type APIServerSpec struct {
 	// tlsAdherence controls which components in the cluster adhere to the TLS security profile
 	// configured on this APIServer resource.
 	//
-	// Valid values are "LegacyExternalAPIServerComponentsOnly" and "StrictAllComponents".
+	// Valid values are "LegacyAdheringComponentsOnly" and "StrictAllComponents".
 	//
-	// When set to "LegacyExternalAPIServerComponentsOnly", only the externally exposed
-	// API server components (kube-apiserver, openshift-apiserver, oauth-apiserver) honor the configured
-	// TLS profile. Other components continue to use their individual TLS configurations.
+	// When set to "LegacyAdheringComponentsOnly", components that already honor the cluster-wide
+	// TLS profile continue
+	// to do so. Components that do not already honor it continue to use their individual TLS
+	// configurations.
 	//
 	// When set to "StrictAllComponents", all components must honor the configured TLS profile
 	// unless they have a component-specific TLS configuration that overrides it.
@@ -88,7 +89,7 @@ type APIServerSpec struct {
 	// This field is optional.
 	// When omitted, this means the user has no opinion and the platform is left to choose reasonable defaults.
 	// These defaults are subject to change over time.
-	// The current default is LegacyExternalAPIServerComponentsOnly.
+	// The current default is LegacyAdheringComponentsOnly.
 	//
 	// Once set, this field may be changed to a different value, but may not be removed.
 	// +openshift:enable:FeatureGate=TLSAdherence
@@ -270,23 +271,26 @@ type APIServerStatus struct {
 }
 
 // TLSAdherencePolicy defines which components adhere to the TLS security profile.
-// Implementors should use the ShouldAllComponentsAdhere helper function from library-go
+// Implementors should use the ShouldHonorClusterTLSProfile helper function from library-go
 // rather than checking these values directly.
-// +kubebuilder:validation:Enum=LegacyExternalAPIServerComponentsOnly;StrictAllComponents
+// +kubebuilder:validation:Enum=LegacyAdheringComponentsOnly;StrictAllComponents
 type TLSAdherencePolicy string
 
 const (
 	// TLSAdherencePolicyNoOpinion represents an empty/unset value for tlsAdherence.
 	// This value cannot be explicitly set and is only present when the field is omitted.
-	// When the field is omitted, the cluster defaults to LegacyExternalAPIServerComponentsOnly
-	// behavior. Components should treat this the same as LegacyExternalAPIServerComponentsOnly.
+	// When the field is omitted, the cluster defaults to LegacyAdheringComponentsOnly
+	// behavior. Components should treat this the same as LegacyAdheringComponentsOnly.
 	TLSAdherencePolicyNoOpinion TLSAdherencePolicy = ""
 
-	// TLSAdherencePolicyLegacyExternalAPIServerComponentsOnly means only the externally exposed
-	// API server components (kube-apiserver, openshift-apiserver, oauth-apiserver) honor
-	// the configured TLS profile. Other components continue to use their individual TLS
-	// configurations.
-	TLSAdherencePolicyLegacyExternalAPIServerComponentsOnly TLSAdherencePolicy = "LegacyExternalAPIServerComponentsOnly"
+	// TLSAdherencePolicyLegacyAdheringComponentsOnly maintains backward-compatible behavior.
+	// Components that already honor the cluster-wide TLS profile (such as kube-apiserver,
+	// openshift-apiserver, oauth-apiserver, and others) continue to do so. Components that do
+	// not already honor it continue to use their individual TLS configurations (e.g.,
+	// IngressController.spec.tlsSecurityProfile, KubeletConfig.spec.tlsSecurityProfile,
+	// or component defaults). No additional components are required to start honoring the
+	// cluster-wide profile in this mode.
+	TLSAdherencePolicyLegacyAdheringComponentsOnly TLSAdherencePolicy = "LegacyAdheringComponentsOnly"
 
 	// TLSAdherencePolicyStrictAllComponents means all components must honor the configured TLS
 	// profile unless they have a component-specific TLS configuration that overrides it.

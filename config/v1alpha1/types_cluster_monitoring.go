@@ -886,6 +886,7 @@ type RemoteWriteSpec struct {
 	// Maximum of 50 headers can be specified. Each header name must be unique.
 	// Each header name must contain only alphanumeric characters, hyphens, and underscores, and must not be a reserved Prometheus header (Host, Authorization, Content-Encoding, Content-Type, X-Prometheus-Remote-Write-Version, User-Agent, Connection, Keep-Alive, Proxy-Authenticate, Proxy-Authorization, WWW-Authenticate).
 	// +optional
+	// +kubebuilder:validation:MinItems=0
 	// +kubebuilder:validation:MaxItems=50
 	// +kubebuilder:validation:items:XValidation:rule="self.name.matches('^[a-zA-Z0-9_-]+$')",message="header name must contain only alphanumeric characters, hyphens, and underscores"
 	// +kubebuilder:validation:items:XValidation:rule="!self.name.matches('(?i)^(host|authorization|content-encoding|content-type|x-prometheus-remote-write-version|user-agent|connection|keep-alive|proxy-authenticate|proxy-authorization|www-authenticate)$')",message="header name must not be a reserved Prometheus header (Host, Authorization, Content-Encoding, Content-Type, X-Prometheus-Remote-Write-Version, User-Agent, Connection, Keep-Alive, Proxy-Authenticate, Proxy-Authorization, WWW-Authenticate)"
@@ -953,11 +954,12 @@ type PrometheusRemoteWriteHeader struct {
 	// +required
 	// +kubebuilder:validation:MinLength=1
 	// +kubebuilder:validation:MaxLength=256
-	Name string `json:"name"`
+	Name string `json:"name,omitempty"`
 	// value is the HTTP header value. Must be at most 4096 characters.
 	// +required
+	// +kubebuilder:validation:MinLength=0
 	// +kubebuilder:validation:MaxLength=4096
-	Value string `json:"value"`
+	Value *string `json:"value,omitempty"`
 }
 
 // BasicAuth defines basic authentication settings for the remote write endpoint URL.
@@ -1056,11 +1058,12 @@ type RemoteWriteAuthorization struct {
 	// Required when type is "SigV4", and forbidden otherwise.
 	// +unionMember
 	// +optional
-	Sigv4 *Sigv4 `json:"sigv4,omitempty,omitzero"`
+	Sigv4 Sigv4 `json:"sigv4,omitempty,omitzero"`
 }
 
 // MetadataConfig defines settings for sending series metadata to remote write storage.
 // When present (including as an empty object), metadata is sent; omitted fields use platform defaults (e.g. send interval 30 seconds).
+// +kubebuilder:validation:MinProperties=0
 type MetadataConfig struct {
 	// sendIntervalSeconds is the interval in seconds at which metadata is sent.
 	// When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time (e.g. 30 seconds).
@@ -1106,6 +1109,7 @@ type OAuth2 struct {
 	// When omitted, no additional parameters are sent.
 	// Maximum of 20 parameters can be specified.
 	// +optional
+	// +kubebuilder:validation:MinItems=0
 	// +kubebuilder:validation:MaxItems=20
 	// +listType=map
 	// +listMapKey=name
@@ -1118,11 +1122,12 @@ type OAuth2EndpointParam struct {
 	// +required
 	// +kubebuilder:validation:MinLength=1
 	// +kubebuilder:validation:MaxLength=256
-	Name string `json:"name"`
+	Name string `json:"name,omitempty"`
 	// value is the parameter value. Must be between 0 and 4096 characters.
 	// +required
+	// +kubebuilder:validation:MinLength=0
 	// +kubebuilder:validation:MaxLength=4096
-	Value string `json:"value"`
+	Value *string `json:"value,omitempty"`
 }
 
 // QueueConfig allows tuning configuration for remote write queue parameters.

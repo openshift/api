@@ -1996,12 +1996,14 @@ spec:
                                         description: value is the parameter value.
                                           Must be between 0 and 4096 characters.
                                         maxLength: 4096
+                                        minLength: 0
                                         type: string
                                     required:
                                     - name
                                     - value
                                     type: object
                                   maxItems: 20
+                                  minItems: 0
                                   type: array
                                   x-kubernetes-list-map-keys:
                                   - name
@@ -2242,6 +2244,7 @@ spec:
                                 description: value is the HTTP header value. Must
                                   be at most 4096 characters.
                                 maxLength: 4096
+                                minLength: 0
                                 type: string
                             required:
                             - name
@@ -2258,6 +2261,7 @@ spec:
                                 WWW-Authenticate)
                               rule: '!self.name.matches(''(?i)^(host|authorization|content-encoding|content-type|x-prometheus-remote-write-version|user-agent|connection|keep-alive|proxy-authenticate|proxy-authorization|www-authenticate)$'')'
                           maxItems: 50
+                          minItems: 0
                           type: array
                           x-kubernetes-list-map-keys:
                           - name
@@ -2267,6 +2271,7 @@ spec:
                             metadataConfig configures the sending of series metadata to remote storage.
                             When omitted, no metadata is sent.
                             When set (including as an empty object metadataConfig: {}), metadata is sent to the remote write endpoint; omitted sub-fields use platform defaults (e.g. send interval 30 seconds).
+                          minProperties: 0
                           properties:
                             sendIntervalSeconds:
                               description: |-
@@ -3002,9 +3007,10 @@ spec:
                         operator:
                           description: |-
                             Operator represents a key's relationship to the value.
-                            Valid operators are Exists and Equal. Defaults to Equal.
+                            Valid operators are Exists, Equal, Lt, and Gt. Defaults to Equal.
                             Exists is equivalent to wildcard for value, so that a pod can
                             tolerate all taints of a particular category.
+                            Lt and Gt perform numeric comparisons (requires feature gate TaintTolerationComparisonOperators).
                           type: string
                         tolerationSeconds:
                           description: |-
@@ -3335,7 +3341,7 @@ spec:
                           resources:
                             description: |-
                               resources represents the minimum resources the volume should have.
-                              If RecoverVolumeExpansionFailure feature is enabled users are allowed to specify resource requirements
+                              Users are allowed to specify resource requirements
                               that are lower than previous value but must still be higher than capacity recorded in the
                               status field of the claim.
                               More info: https://kubernetes.io/docs/concepts/storage/persistent-volumes#resources
@@ -3494,9 +3500,7 @@ spec:
                               ignore the update for the purpose it was designed. For
                               example - a controller that\nonly is responsible for
                               resizing capacity of the volume, should ignore PVC updates
-                              that change other valid\nresources associated with PVC.\n\nThis
-                              is an alpha field and requires enabling RecoverVolumeExpansionFailure
-                              feature."
+                              that change other valid\nresources associated with PVC."
                             type: object
                             x-kubernetes-map-type: granular
                           allocatedResources:
@@ -3528,9 +3532,7 @@ spec:
                               ignore the update for the purpose it was designed. For
                               example - a controller that\nonly is responsible for
                               resizing capacity of the volume, should ignore PVC updates
-                              that change other valid\nresources associated with PVC.\n\nThis
-                              is an alpha field and requires enabling RecoverVolumeExpansionFailure
-                              feature."
+                              that change other valid\nresources associated with PVC."
                             type: object
                           capacity:
                             additionalProperties:

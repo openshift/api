@@ -1,6 +1,10 @@
 package sippy
 
-import "fmt"
+import (
+	"encoding/json"
+	"fmt"
+	"net/url"
+)
 
 type SippyQueryStruct struct {
 	Items        []SippyQueryItem `json:"items"`
@@ -92,4 +96,69 @@ func QueriesFor(cloud, architecture, topology, networkStack, testPattern string)
 	}
 
 	return queries
+}
+
+func BuildSippyTestAnalysisURL(release, testName, topology, cloud, architecture, networkStack string) string {
+	filterItems := []SippyQueryItem{
+		{
+			ColumnField:   "name",
+			OperatorValue: "equals",
+			Value:         testName,
+		},
+		{
+			ColumnField:   "variants",
+			Not:           true,
+			OperatorValue: "has entry",
+			Value:         "never-stable",
+		},
+		{
+			ColumnField:   "variants",
+			Not:           true,
+			OperatorValue: "has entry",
+			Value:         "aggregated",
+		},
+		{
+			ColumnField:   "variants",
+			OperatorValue: "has entry",
+			Value:         fmt.Sprintf("Topology:%s", topology),
+		},
+		{
+			ColumnField:   "variants",
+			OperatorValue: "has entry",
+			Value:         fmt.Sprintf("Platform:%s", cloud),
+		},
+		{
+			ColumnField:   "variants",
+			OperatorValue: "has entry",
+			Value:         fmt.Sprintf("Architecture:%s", architecture),
+		},
+	}
+	if networkStack != "" {
+		filterItems = append(filterItems, SippyQueryItem{
+			ColumnField:   "variants",
+			OperatorValue: "has entry",
+			Value:         fmt.Sprintf("NetworkStack:%s", networkStack),
+		})
+	}
+
+	filterObj := SippyQueryStruct{
+		Items:        filterItems,
+		LinkOperator: "and",
+	}
+	filterJSON, err := json.Marshal(filterObj)
+	if err != nil {
+		return ""
+	}
+
+	u := &url.URL{
+		Scheme: "https",
+		Host:   "sippy.dptools.openshift.org",
+		Path:   fmt.Sprintf("sippy-ng/tests/%s/analysis", release),
+	}
+	q := u.Query()
+	q.Set("filters", string(filterJSON))
+	q.Set("test", testName)
+	u.RawQuery = q.Encode()
+
+	return u.String()
 }

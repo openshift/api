@@ -29,9 +29,6 @@
                         "name": "ClusterAPIInstall"
                     },
                     {
-                        "name": "ClusterAPIMachineManagementVSphere"
-                    },
-                    {
                         "name": "EventedPLEG"
                     },
                     {
@@ -97,6 +94,9 @@
                         "name": "AWSServiceLBNetworkSecurityGroup"
                     },
                     {
+                        "name": "AdditionalStorageConfig"
+                    },
+                    {
                         "name": "AutomatedEtcdBackup"
                     },
                     {
@@ -140,6 +140,27 @@
                     },
                     {
                         "name": "ClusterAPIMachineManagement"
+                    },
+                    {
+                        "name": "ClusterAPIMachineManagementAWS"
+                    },
+                    {
+                        "name": "ClusterAPIMachineManagementAzure"
+                    },
+                    {
+                        "name": "ClusterAPIMachineManagementBareMetal"
+                    },
+                    {
+                        "name": "ClusterAPIMachineManagementGCP"
+                    },
+                    {
+                        "name": "ClusterAPIMachineManagementOpenStack"
+                    },
+                    {
+                        "name": "ClusterAPIMachineManagementPowerVS"
+                    },
+                    {
+                        "name": "ClusterAPIMachineManagementVSphere"
                     },
                     {
                         "name": "ClusterMonitoringConfig"
@@ -248,6 +269,12 @@
                     },
                     {
                         "name": "MachineAPIMigration"
+                    },
+                    {
+                        "name": "MachineAPIMigrationAWS"
+                    },
+                    {
+                        "name": "MachineAPIMigrationOpenStack"
                     },
                     {
                         "name": "MachineConfigNodes"

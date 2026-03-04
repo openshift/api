@@ -167,6 +167,8 @@ tests:
             defaultSelection: StorageOnly
           excludedFields:
           - path: spec.fieldToExclude
+            versions:
+            - v1
           - path: status.anotherField
             versions:
             - v1alpha1
@@ -201,6 +203,8 @@ tests:
             defaultSelection: StorageOnly
           excludedFields:
           - path: spec.fieldToExclude
+            versions:
+            - v1
           - path: status.anotherField
             versions:
             - v1alpha1
@@ -237,6 +241,8 @@ tests:
             defaultSelection: StorageOnly
           excludedFields:
           - path: spec.fieldToExclude
+            versions:
+            - v1
           - path: spec.fieldToExclude
             versions:
             - v1alpha1
@@ -274,6 +280,8 @@ tests:
             defaultSelection: StorageOnly
           excludedFields:
           - path: "1invalidFieldName"
+            versions:
+            - v1
     expectedError: "spec.compatibilitySchema.excludedFields[0].path: Invalid value"
 
   - name: Should not be able to create CompatibilityRequirement with invalid DNS 1035 label in additionalVersions
@@ -376,6 +384,8 @@ tests:
             defaultSelection: StorageOnly
           excludedFields:
           - path: spec.thisFieldNameIsWayTooLongBecauseItExceedsSixtyThreeCharactersInLength
+            versions:
+            - v1
     expectedError: "path must be dot-separated field names, each starting with a letter and containing only letters, digits, and underscores not exceeding 63 characters"
 
   - name: Should not be able to create CompatibilityRequirement with excludedFields path containing more than 16 fields
@@ -410,6 +420,8 @@ tests:
             defaultSelection: StorageOnly
           excludedFields:
           - path: a.b.c.d.e.f.g.h.i.j.k.l.m.n.o.p.q
+            versions:
+            - v1
     expectedError: "path must be dot-separated field names, each starting with a letter and containing only letters, digits, and underscores not exceeding 63 characters. There may be at most 16 fields in the path"
 
   - name: Should not be able to create CompatibilityRequirement with excludedFields path containing invalid characters
@@ -444,6 +456,8 @@ tests:
             defaultSelection: StorageOnly
           excludedFields:
           - path: spec.field-name
+            versions:
+            - v1
     expectedError: "path must be dot-separated field names, each starting with a letter and containing only letters, digits, and underscores not exceeding 63 characters"
 
   - name: Should be able to create CompatibilityRequirement with excludedFields path containing exactly 16 fields
@@ -478,6 +492,8 @@ tests:
             defaultSelection: StorageOnly
           excludedFields:
           - path: a.b.c.d.e.f.g.h.i.j.k.l.m.n.o.p
+            versions:
+            - v1
     expected: |
       apiVersion: apiextensions.openshift.io/v1alpha1
       kind: CompatibilityRequirement
@@ -509,6 +525,8 @@ tests:
             defaultSelection: StorageOnly
           excludedFields:
           - path: a.b.c.d.e.f.g.h.i.j.k.l.m.n.o.p
+            versions:
+            - v1
 
   - name: Should not be able to create CompatibilityRequirement with empty objectSchemaValidation.namespaceSelector
     initial: |

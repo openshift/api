@@ -208,6 +208,18 @@ var (
 					enable(inDevPreviewNoUpgrade()).
 					mustRegister()
 
+	// NOTE: When NoOverlayMode graduates to GA, add '+kubebuilder:default=Geneve' to the Transport
+	// field in operator/v1/types_network.go so the default is visible in the CRD schema and applied
+	// by the API server automatically. Currently CNO handles the default (treating omitted as Geneve)
+	// because the field is feature-gated and existing ungated tests don't expect this field in outputs.
+	FeatureGateNoOverlayMode = newFeatureGate("NoOverlayMode").
+				reportProblemsToJiraComponent("Networking/ovn-kubernetes").
+				contactPerson("pliurh").
+				productScope(ocpSpecific).
+				enhancementPR("https://github.com/openshift/enhancements/pull/1859").
+				enable(inDevPreviewNoUpgrade(), inTechPreviewNoUpgrade()).
+				mustRegister()
+
 	FeatureGateEVPN = newFeatureGate("EVPN").
 			reportProblemsToJiraComponent("Networking/ovn-kubernetes").
 			contactPerson("jcaamano").

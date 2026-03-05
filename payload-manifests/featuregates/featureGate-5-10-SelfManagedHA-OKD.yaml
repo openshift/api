@@ -242,6 +242,9 @@
                         "name": "MutableTopology"
                     },
                     {
+                        "name": "NMStateOptIn"
+                    },
+                    {
                         "name": "NetworkConnect"
                     },
                     {

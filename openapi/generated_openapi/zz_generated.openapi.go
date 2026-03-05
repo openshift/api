@@ -17402,6 +17402,14 @@ func schema_openshift_api_config_v1_InfrastructureStatus(ref common.ReferenceCal
 							Ref:         ref(configv1.TopologyTransitionStatus{}.OpenAPIModelName()),
 						},
 					},
+					"bridgeTopology": {
+						SchemaProps: spec.SchemaProps{
+							Description: "bridgeTopology specifies how the br-ex bridge for OVNKubernetes will be created by NMState. Valid values are \"Disabled\" and \"Standard\". The default is 'Disabled' which means br-ex will be managed by configure-ovs.sh instead of NMState. 'Standard' will create a standard br-ex, similar to what would be done by configure-ovs.sh.",
+							Default:     "Disabled",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
 					"cpuPartitioning": {
 						SchemaProps: spec.SchemaProps{
 							Description: "cpuPartitioning expresses if CPU partitioning is a currently enabled feature in the cluster. CPU Partitioning means that this cluster can support partitioning workloads to specific CPU Sets. Valid values are \"None\" and \"AllNodes\". When omitted, the default value is \"None\". The default value of \"None\" indicates that no nodes will be setup with CPU partitioning. The \"AllNodes\" value indicates that all nodes have been setup with CPU partitioning, and can then be further configured via the PerformanceProfile API.",

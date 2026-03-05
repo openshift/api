@@ -394,6 +394,7 @@ infrastructures.config.openshift.io:
   - DyanmicServiceEndpointIBMCloud
   - GCPSovereignCloudInstall
   - MutableTopology
+  - NMStateOptIn
   - NutanixMultiSubnets
   - OnPremDNSRecords
   - OpenStackMaxAllowedAddressPairs

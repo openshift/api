@@ -164,6 +164,16 @@ type InfrastructureStatus struct {
 	// +optional
 	TopologyTransitionStatus TopologyTransitionStatus `json:"topologyTransitionStatus,omitzero"`
 
+	// bridgeTopology specifies how the br-ex bridge for OVNKubernetes will be created by NMState.
+	// Valid values are "Disabled" and "Standard".
+	// The default is 'Disabled' which means br-ex will be managed by configure-ovs.sh instead of NMState.
+	// 'Standard' will create a standard br-ex, similar to what would be done by configure-ovs.sh.
+	// +openshift:enable:FeatureGate=NMStateOptIn
+	// +default="Disabled"
+	// +kubebuilder:validation:Enum=Disabled;Standard
+	// +optional
+	BridgeTopology BridgeTopologyMode `json:"bridgeTopology,omitempty"`
+
 	// cpuPartitioning expresses if CPU partitioning is a currently enabled feature in the cluster.
 	// CPU Partitioning means that this cluster can support partitioning workloads to specific CPU Sets.
 	// Valid values are "None" and "AllNodes". When omitted, the default value is "None".
@@ -201,6 +211,17 @@ const (
 	// that any of the control plane components such as kubernetes API server or etcd are visible within
 	// the cluster.
 	ExternalTopologyMode TopologyMode = "External"
+)
+
+// BridgeTopologyMode defines how the br-ex bridge for OVNKubernetes should be created.
+type BridgeTopologyMode string
+
+const (
+	// DisabledBridgeTopologyMode means br-ex will be managed by configure-ovs.sh instead of NMState.
+	DisabledBridgeTopologyMode BridgeTopologyMode = "Disabled"
+
+	// StandardBridgeTopologyMode will create a standard br-ex, similar to what would be done by configure-ovs.sh.
+	StandardBridgeTopologyMode BridgeTopologyMode = "Standard"
 )
 
 // CPUPartitioningMode defines the mode for CPU partitioning

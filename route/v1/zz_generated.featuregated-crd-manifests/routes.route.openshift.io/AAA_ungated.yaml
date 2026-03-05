@@ -443,6 +443,23 @@ spec:
                       the short service name (service.namespace.svc), which allows infrastructure generated certificates to automatically
                       verify.
                     type: string
+                  externalCertificate:
+                    description: |-
+                      externalCertificate provides certificate contents as a secret reference.
+                      This should be a single serving certificate, not a certificate
+                      chain. Do not include a CA certificate. The secret referenced should
+                      be present in the same namespace as that of the Route.
+                      Forbidden when `certificate` is set.
+                      The router service account needs to be granted with read-only access to this secret,
+                      please refer to openshift docs for additional details.
+                    properties:
+                      name:
+                        description: |-
+                          name of the referent.
+                          More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names
+                        type: string
+                    type: object
+                    x-kubernetes-map-type: atomic
                   insecureEdgeTerminationPolicy:
                     description: |-
                       insecureEdgeTerminationPolicy indicates the desired behavior for insecure connections to a route. While
@@ -489,6 +506,8 @@ spec:
                   rule: 'has(self.termination) && has(self.insecureEdgeTerminationPolicy)
                     ? !((self.termination==''passthrough'') && (self.insecureEdgeTerminationPolicy==''Allow''))
                     : true'
+                - message: cannot have both spec.tls.certificate and spec.tls.externalCertificate
+                  rule: '!(has(self.certificate) && has(self.externalCertificate))'
               to:
                 description: |-
                   to is an object the route should use as the primary backend. Only the Service kind

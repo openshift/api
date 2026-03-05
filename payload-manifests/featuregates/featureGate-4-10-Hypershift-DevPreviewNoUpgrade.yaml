@@ -337,9 +337,6 @@
                         "name": "ProvisioningRequestAvailable"
                     },
                     {
-                        "name": "RouteExternalCertificate"
-                    },
-                    {
                         "name": "SELinuxMount"
                     },
                     {

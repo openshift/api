@@ -10537,14 +10537,15 @@
     "com.github.openshift.api.config.v1.PrefixedClaimMapping": {
       "description": "PrefixedClaimMapping configures a claim mapping that allows for an optional prefix.",
       "type": "object",
-      "required": [
-        "claim"
-      ],
       "properties": {
         "claim": {
-          "description": "claim is a required field that configures the JWT token claim whose value is assigned to the cluster identity field associated with this mapping.",
+          "description": "claim is an optional field for specifying the JWT token claim that is used in the mapping. The value of this claim will be assigned to the field in which this mapping is associated. claim must not exceed 256 characters in length. When set to the empty string `\"\"`, this means that no named claim should be used for the group mapping. claim is required when the ExternalOIDCWithUpstreamParity feature gate is not enabled.",
           "type": "string",
           "default": ""
+        },
+        "expression": {
+          "description": "expression is an optional CEL expression used to derive group values from JWT claims.\n\nCEL expressions have access to the token claims through a CEL variable, 'claims'.\n\nexpression must be at least 1 character and must not exceed 1024 characters in length .\n\nWhen specified, claim must not be set or be explicitly set to the empty string (`\"\"`).",
+          "type": "string"
         },
         "prefix": {
           "description": "prefix is an optional field that configures the prefix that will be applied to the cluster identity attribute during the process of mapping JWT claims to cluster identity attributes.\n\nWhen omitted (\"\"), no prefix is applied to the cluster identity attribute.\n\nExample: if `prefix` is set to \"myoidc:\" and the `claim` in JWT contains an array of strings \"a\", \"b\" and \"c\", the mapping will result in an array of string \"myoidc:a\", \"myoidc:b\" and \"myoidc:c\".",
@@ -11444,14 +11445,15 @@
     "com.github.openshift.api.config.v1.TokenClaimMapping": {
       "description": "TokenClaimMapping allows specifying a JWT token claim to be used when mapping claims from an authentication token to cluster identities.",
       "type": "object",
-      "required": [
-        "claim"
-      ],
       "properties": {
         "claim": {
-          "description": "claim is a required field that configures the JWT token claim whose value is assigned to the cluster identity field associated with this mapping.",
+          "description": "claim is an optional field for specifying the JWT token claim that is used in the mapping. The value of this claim will be assigned to the field in which this mapping is associated. claim must not exceed 256 characters in length. When set to the empty string `\"\"`, this means that no named claim should be used for the group mapping. claim is required when the ExternalOIDCWithUpstreamParity feature gate is not enabled.",
           "type": "string",
           "default": ""
+        },
+        "expression": {
+          "description": "expression is an optional CEL expression used to derive group values from JWT claims.\n\nCEL expressions have access to the token claims through a CEL variable, 'claims'.\n\nexpression must be at least 1 character and must not exceed 1024 characters in length .\n\nWhen specified, claim must not be set or be explicitly set to the empty string (`\"\"`).",
+          "type": "string"
         }
       }
     },
@@ -11717,14 +11719,14 @@
     },
     "com.github.openshift.api.config.v1.UsernameClaimMapping": {
       "type": "object",
-      "required": [
-        "claim"
-      ],
       "properties": {
         "claim": {
-          "description": "claim is a required field that configures the JWT token claim whose value is assigned to the cluster identity field associated with this mapping.\n\nclaim must not be an empty string (\"\") and must not exceed 256 characters.",
-          "type": "string",
-          "default": ""
+          "description": "claim is an optional field that configures the JWT token claim whose value is assigned to the cluster identity field associated with this mapping. claim is required when the ExternalOIDCWithUpstreamParity feature gate is not enabled. When the ExternalOIDCWithUpstreamParity feature gate is enabled, claim must not be set when expression is set.\n\nclaim must not be an empty string (\"\") and must not exceed 256 characters.",
+          "type": "string"
+        },
+        "expression": {
+          "description": "expression is an optional CEL expression used to derive the username from JWT claims.\n\nCEL expressions have access to the token claims through a CEL variable, 'claims'.\n\nexpression must be at least 1 character and must not exceed 1024 characters in length. expression must not be set when claim is set.",
+          "type": "string"
         },
         "prefix": {
           "description": "prefix configures the prefix that should be prepended to the value of the JWT claim.\n\nprefix must be set when prefixPolicy is set to 'Prefix' and must be unset otherwise.",
@@ -11741,6 +11743,7 @@
           "discriminator": "prefixPolicy",
           "fields-to-discriminateBy": {
             "claim": "Claim",
+            "expression": "Expression",
             "prefix": "Prefix"
           }
         }

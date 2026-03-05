@@ -553,5 +553,5 @@ type DynamicHostAllocationSpec struct {
 	// +listType=map
 	// +listMapKey=name
 	// +optional
-	Tags *[]TagSpecification `json:"tags,omitempty"`
+	Tags []TagSpecification `json:"tags,omitempty"`
 }

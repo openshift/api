@@ -593,12 +593,8 @@ func (in *DynamicHostAllocationSpec) DeepCopyInto(out *DynamicHostAllocationSpec
 	*out = *in
 	if in.Tags != nil {
 		in, out := &in.Tags, &out.Tags
-		*out = new([]TagSpecification)
-		if **in != nil {
-			in, out := *in, *out
-			*out = make([]TagSpecification, len(*in))
-			copy(*out, *in)
-		}
+		*out = make([]TagSpecification, len(*in))
+		copy(*out, *in)
 	}
 	return
 }

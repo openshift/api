@@ -482,6 +482,7 @@ spec:
                         namespace of the referent that follows the DNS1123 subdomain format.
                         It must be at most 253 characters in length.
                       maxLength: 253
+                      minLength: 1
                       type: string
                       x-kubernetes-validations:
                       - message: a lowercase RFC 1123 subdomain must consist of lower

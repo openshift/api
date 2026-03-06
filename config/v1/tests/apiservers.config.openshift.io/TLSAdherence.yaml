@@ -86,6 +86,23 @@ tests:
           audit:
             profile: Default
           tlsAdherence: LegacyAdheringComponentsOnly
+    - name: Should be able to set tlsAdherence from unset on update
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: APIServer
+        spec: {}
+      updated: |
+        apiVersion: config.openshift.io/v1
+        kind: APIServer
+        spec:
+          tlsAdherence: StrictAllComponents
+      expected: |
+        apiVersion: config.openshift.io/v1
+        kind: APIServer
+        spec:
+          audit:
+            profile: Default
+          tlsAdherence: StrictAllComponents
     - name: Should not allow removing tlsAdherence once set
       initial: |
         apiVersion: config.openshift.io/v1

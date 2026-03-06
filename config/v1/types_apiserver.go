@@ -63,7 +63,7 @@ type APIServerSpec struct {
 	// The current default is the Intermediate profile.
 	// +optional
 	TLSSecurityProfile *TLSSecurityProfile `json:"tlsSecurityProfile,omitempty"`
-	// tlsAdherence controls which components in the cluster adhere to the TLS security profile
+	// tlsAdherence controls if components in the cluster adhere to the TLS security profile
 	// configured on this APIServer resource.
 	//
 	// Valid values are "LegacyAdheringComponentsOnly" and "StrictAllComponents".

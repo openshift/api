@@ -581,7 +581,6 @@ type PrometheusOperatorAdmissionWebhookConfig struct {
 // Use this configuration to control
 // Prometheus deployment, pod scheduling, resource allocation, retention policies, and external integrations.
 // +kubebuilder:validation:MinProperties=1
-// +kubebuilder:validation:XValidation:rule="!has(self.remoteWrite) || self.remoteWrite.size() == 0 || self.remoteWrite.filter(i, has(i.name) && size(i.name) > 0).all(i, self.remoteWrite.filter(j, has(j.name) && j.name == i.name).size() == 1)",message="when specified, name must be unique across all remote write configurations"
 type PrometheusConfig struct {
 	// additionalAlertmanagerConfigs configures additional Alertmanager instances that receive alerts from
 	// the Prometheus component. This is useful for organizations that need to:
@@ -591,7 +590,7 @@ type PrometheusConfig struct {
 	//   - Maintain separate alert routing for compliance or organizational requirements
 	// When omitted, no additional Alertmanager instances are configured (default behavior).
 	// When provided, at least one configuration must be specified (minimum 1, maximum 10 items).
-	// Each entry must have a unique name field.
+	// Entries must have unique names (name is the list key).
 	// +optional
 	// +kubebuilder:validation:MinItems=1
 	// +kubebuilder:validation:MaxItems=10
@@ -673,10 +672,11 @@ type PrometheusConfig struct {
 	// Remote write allows Prometheus to send metrics it collects to external long-term storage systems.
 	// When omitted, no remote write endpoints are configured.
 	// When provided, at least one configuration must be specified (minimum 1, maximum 10 items).
-	// When a name is specified, it must be unique across all entries.
+	// Entries must have unique names (name is the list key).
 	// +kubebuilder:validation:MinItems=1
 	// +kubebuilder:validation:MaxItems=10
-	// +listType=atomic
+	// +listType=map
+	// +listMapKey=name
 	// +optional
 	RemoteWrite []RemoteWriteSpec `json:"remoteWrite,omitempty"`
 	// resources defines the compute resource requests and limits for the Prometheus container.
@@ -861,20 +861,18 @@ type RemoteWriteSpec struct {
 	// +kubebuilder:validation:XValidation:rule="!self.matches('.*#.*')",message="fragments are not allowed"
 	// +kubebuilder:validation:XValidation:rule="!self.matches('.*@.*')",message="user information (e.g. user:password@host) is not allowed"
 	URL string `json:"url,omitempty"`
-	// name is an optional identifier for this remote write configuration.
+	// name is a required identifier for this remote write configuration (name is the list key for the remoteWrite list).
 	// This name is used in metrics and logging to differentiate remote write queues.
-	// When omitted, Prometheus generates a unique name automatically.
-	// If specified, this name must be unique.
 	// Must contain only alphanumeric characters, hyphens, and underscores.
-	// Must be between 1 and 63 characters in length when specified.
-	// +optional
+	// Must be between 1 and 63 characters in length.
+	// +required
 	// +kubebuilder:validation:MinLength=1
 	// +kubebuilder:validation:MaxLength=63
 	// +kubebuilder:validation:XValidation:rule="self.matches('^[a-zA-Z0-9_-]+$')",message="must contain only alphanumeric characters, hyphens, and underscores"
 	Name string `json:"name,omitempty"`
 	// authorization defines the authorization method for the remote write endpoint.
 	// When omitted, no authorization is performed.
-	// When set, type must be one of BearerToken, BearerTokenFile, BasicAuth, OAuth2, SigV4, Authorization, or ServiceAccount; the corresponding nested config must be set (ServiceAccount has no config).
+	// When set, type must be one of BearerToken, BasicAuth, OAuth2, SigV4, SafeAuthorization, or ServiceAccount; the corresponding nested config must be set (ServiceAccount has no config).
 	// +optional
 	AuthorizationConfig RemoteWriteAuthorization `json:"authorization,omitzero"`
 	// headers specifies the custom HTTP headers to be sent along with each remote write request.
@@ -895,7 +893,8 @@ type RemoteWriteSpec struct {
 	Headers []PrometheusRemoteWriteHeader `json:"headers,omitempty"`
 	// metadataConfig configures the sending of series metadata to remote storage.
 	// When omitted, no metadata is sent.
-	// When set (including as an empty object metadataConfig: {}), metadata is sent to the remote write endpoint; omitted sub-fields use platform defaults (e.g. send interval 30 seconds).
+	// When set to sendPolicy: Default, metadata is sent using platform-chosen defaults (e.g. send interval 30 seconds).
+	// When set to sendPolicy: Custom, metadata is sent using the settings in the custom field (e.g. custom.sendIntervalSeconds).
 	// +optional
 	MetadataConfig *MetadataConfig `json:"metadataConfig,omitempty,omitzero"`
 	// proxyUrl defines an optional proxy URL.
@@ -975,23 +974,21 @@ type BasicAuth struct {
 }
 
 // RemoteWriteAuthorizationType defines the authorization method for remote write endpoints.
-// +kubebuilder:validation:Enum=BearerToken;BearerTokenFile;BasicAuth;OAuth2;SigV4;Authorization;ServiceAccount
+// +kubebuilder:validation:Enum=BearerToken;BasicAuth;OAuth2;SigV4;SafeAuthorization;ServiceAccount
 type RemoteWriteAuthorizationType string
 
 const (
 	// RemoteWriteAuthorizationTypeBearerToken indicates bearer token from a secret.
 	RemoteWriteAuthorizationTypeBearerToken RemoteWriteAuthorizationType = "BearerToken"
-	// RemoteWriteAuthorizationTypeBearerTokenFile indicates bearer token from a file path (e.g. service account token).
-	RemoteWriteAuthorizationTypeBearerTokenFile RemoteWriteAuthorizationType = "BearerTokenFile"
 	// RemoteWriteAuthorizationTypeBasicAuth indicates HTTP basic authentication.
 	RemoteWriteAuthorizationTypeBasicAuth RemoteWriteAuthorizationType = "BasicAuth"
 	// RemoteWriteAuthorizationTypeOAuth2 indicates OAuth2 client credentials.
 	RemoteWriteAuthorizationTypeOAuth2 RemoteWriteAuthorizationType = "OAuth2"
 	// RemoteWriteAuthorizationTypeSigV4 indicates AWS Signature Version 4.
 	RemoteWriteAuthorizationTypeSigV4 RemoteWriteAuthorizationType = "SigV4"
-	// RemoteWriteAuthorizationTypeAuthorization indicates authorization from a secret (Prometheus SafeAuthorization pattern).
-	// The secret key contains the credentials (e.g. a Bearer token). Use the credentials field.
-	RemoteWriteAuthorizationTypeAuthorization RemoteWriteAuthorizationType = "Authorization"
+	// RemoteWriteAuthorizationTypeSafeAuthorization indicates authorization from a secret (Prometheus SafeAuthorization pattern).
+	// The secret key contains the credentials (e.g. a Bearer token). Use the authorization field.
+	RemoteWriteAuthorizationTypeSafeAuthorization RemoteWriteAuthorizationType = "SafeAuthorization"
 	// RemoteWriteAuthorizationTypeServiceAccount indicates use of the pod's service account token for machine identity.
 	// No additional field is required; the operator configures the token path.
 	RemoteWriteAuthorizationTypeServiceAccount RemoteWriteAuthorizationType = "ServiceAccount"
@@ -1000,19 +997,16 @@ const (
 // RemoteWriteAuthorization defines the authorization method for a remote write endpoint.
 // Exactly one of the nested configs must be set according to the type discriminator.
 // +kubebuilder:validation:XValidation:rule="has(self.type) && self.type == 'BearerToken' ? has(self.bearerToken) : !has(self.bearerToken)",message="bearerToken is required when type is BearerToken, and forbidden otherwise"
-// +kubebuilder:validation:XValidation:rule="has(self.type) && self.type == 'BearerTokenFile' ? (has(self.bearerTokenFile) && size(self.bearerTokenFile) > 0) : !has(self.bearerTokenFile)",message="bearerTokenFile is required and must be non-empty when type is BearerTokenFile, and forbidden otherwise"
 // +kubebuilder:validation:XValidation:rule="has(self.type) && self.type == 'BasicAuth' ? has(self.basicAuth) : !has(self.basicAuth)",message="basicAuth is required when type is BasicAuth, and forbidden otherwise"
 // +kubebuilder:validation:XValidation:rule="has(self.type) && self.type == 'OAuth2' ? has(self.oauth2) : !has(self.oauth2)",message="oauth2 is required when type is OAuth2, and forbidden otherwise"
 // +kubebuilder:validation:XValidation:rule="has(self.type) && self.type == 'SigV4' ? has(self.sigv4) : !has(self.sigv4)",message="sigv4 is required when type is SigV4, and forbidden otherwise"
-// +kubebuilder:validation:XValidation:rule="has(self.type) && self.type == 'Authorization' ? has(self.credentials) : !has(self.credentials)",message="credentials is required when type is Authorization, and forbidden otherwise"
+// +kubebuilder:validation:XValidation:rule="has(self.type) && self.type == 'SafeAuthorization' ? has(self.authorization) : !has(self.authorization)",message="authorization is required when type is SafeAuthorization, and forbidden otherwise"
 // +union
 type RemoteWriteAuthorization struct {
 	// type specifies the authorization method to use.
-	// Allowed values are BearerToken, BearerTokenFile, BasicAuth, OAuth2, SigV4, Authorization, ServiceAccount.
+	// Allowed values are BearerToken, BasicAuth, OAuth2, SigV4, SafeAuthorization, ServiceAccount.
 	//
 	// When set to BearerToken, the bearer token is read from a Secret referenced by the bearerToken field.
-	//
-	// When set to BearerTokenFile, the bearer token is read from a file path (e.g. service account token); the bearerTokenFile field must be set.
 	//
 	// When set to BasicAuth, HTTP basic authentication is used; the basicAuth field (username and password from Secrets) must be set.
 	//
@@ -1020,30 +1014,22 @@ type RemoteWriteAuthorization struct {
 	//
 	// When set to SigV4, AWS Signature Version 4 is used for authentication; the sigv4 field must be set.
 	//
-	// When set to Authorization, credentials are read from a single Secret key (Prometheus SafeAuthorization pattern). The secret key typically contains a Bearer token. Use the credentials field.
+	// When set to SafeAuthorization, credentials are read from a single Secret key (Prometheus SafeAuthorization pattern). The secret key typically contains a Bearer token. Use the authorization field.
 	//
 	// When set to ServiceAccount, the pod's service account token is used for machine identity. No additional field is required; the operator configures the token path.
 	// +unionDiscriminator
 	// +required
 	Type RemoteWriteAuthorizationType `json:"type,omitempty"`
-	// credentials defines the secret reference containing the credentials for authentication (e.g. Bearer token).
-	// Required when type is "Authorization", and forbidden otherwise. Maps to Prometheus SafeAuthorization. The secret must exist in the openshift-monitoring namespace.
+	// authorization defines the secret reference containing the credentials for authentication (e.g. Bearer token).
+	// Required when type is "SafeAuthorization", and forbidden otherwise. Maps to Prometheus SafeAuthorization. The secret must exist in the openshift-monitoring namespace.
 	// +unionMember
 	// +optional
-	Credentials *v1.SecretKeySelector `json:"credentials,omitempty"`
+	Authorization *v1.SecretKeySelector `json:"authorization,omitempty"`
 	// bearerToken defines the secret reference containing the bearer token.
 	// Required when type is "BearerToken", and forbidden otherwise.
 	// +unionMember
 	// +optional
 	BearerToken SecretKeySelector `json:"bearerToken,omitempty,omitzero"`
-	// bearerTokenFile is the path to a file containing the bearer token (e.g. service account token).
-	// Required when type is "BearerTokenFile", and forbidden otherwise. In practice only the service account token path can be used.
-	// Must be between 1 and 1024 characters.
-	// +unionMember
-	// +optional
-	// +kubebuilder:validation:MinLength=1
-	// +kubebuilder:validation:MaxLength=1024
-	BearerTokenFile string `json:"bearerTokenFile,omitempty"`
 	// basicAuth defines HTTP basic authentication credentials.
 	// Required when type is "BasicAuth", and forbidden otherwise.
 	// +unionMember
@@ -1061,14 +1047,35 @@ type RemoteWriteAuthorization struct {
 	Sigv4 Sigv4 `json:"sigv4,omitempty,omitzero"`
 }
 
-// MetadataConfig defines settings for sending series metadata to remote write storage.
-// When present (including as an empty object), metadata is sent; omitted fields use platform defaults (e.g. send interval 30 seconds).
-// +kubebuilder:validation:MinProperties=0
+// MetadataConfigSendPolicy defines whether to send metadata with platform defaults or with custom settings.
+// +kubebuilder:validation:Enum=Default;Custom
+type MetadataConfigSendPolicy string
+
+const (
+	// MetadataConfigSendPolicyDefault indicates metadata is sent using platform-chosen defaults (e.g. send interval 30 seconds).
+	MetadataConfigSendPolicyDefault MetadataConfigSendPolicy = "Default"
+	// MetadataConfigSendPolicyCustom indicates metadata is sent using the settings in the custom field.
+	MetadataConfigSendPolicyCustom MetadataConfigSendPolicy = "Custom"
+)
+
+// MetadataConfig defines whether and how to send series metadata to remote write storage.
+// +kubebuilder:validation:XValidation:rule="self.sendPolicy == 'Default' ? !has(self.custom) : has(self.custom)",message="custom is required when sendPolicy is Custom, and forbidden when sendPolicy is Default"
 type MetadataConfig struct {
+	// sendPolicy specifies whether to send metadata and how it is configured.
+	// Default: send metadata using platform-chosen defaults (e.g. send interval 30 seconds).
+	// Custom: send metadata using the settings in the custom field.
+	// +required
+	SendPolicy MetadataConfigSendPolicy `json:"sendPolicy,omitempty"`
+	// custom defines custom metadata send settings. Required when sendPolicy is Custom, and forbidden when sendPolicy is Default.
+	// +optional
+	Custom *MetadataConfigCustom `json:"custom,omitempty"`
+}
+
+// MetadataConfigCustom defines custom settings for sending series metadata when sendPolicy is Custom.
+type MetadataConfigCustom struct {
 	// sendIntervalSeconds is the interval in seconds at which metadata is sent.
-	// When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time (e.g. 30 seconds).
-	// Minimum value is 1 second.
-	// Maximum value is 86400 seconds (24 hours).
+	// When omitted, the platform chooses a reasonable default (e.g. 30 seconds).
+	// Minimum value is 1 second. Maximum value is 86400 seconds (24 hours).
 	// +optional
 	// +kubebuilder:validation:Minimum=1
 	// +kubebuilder:validation:Maximum=86400
@@ -1107,7 +1114,7 @@ type OAuth2 struct {
 	Scopes []string `json:"scopes,omitempty"`
 	// endpointParams defines additional parameters to append to the token URL.
 	// When omitted, no additional parameters are sent.
-	// Maximum of 20 parameters can be specified.
+	// Maximum of 20 parameters can be specified. Entries must have unique names (name is the list key).
 	// +optional
 	// +kubebuilder:validation:MinItems=0
 	// +kubebuilder:validation:MaxItems=20
@@ -1123,10 +1130,13 @@ type OAuth2EndpointParam struct {
 	// +kubebuilder:validation:MinLength=1
 	// +kubebuilder:validation:MaxLength=256
 	Name string `json:"name,omitempty"`
-	// value is the parameter value. Must be between 0 and 4096 characters.
-	// +required
+	// value is the optional parameter value. When omitted, the query parameter is applied as ?name (no value).
+	// When set (including to the empty string), it is applied as ?name=value. Empty string may be used when the
+	// external system expects a parameter with an empty value (e.g. ?parameter="").
+	// Must be between 0 and 2048 characters when present (aligned with common URL length recommendations).
+	// +optional
 	// +kubebuilder:validation:MinLength=0
-	// +kubebuilder:validation:MaxLength=4096
+	// +kubebuilder:validation:MaxLength=2048
 	Value *string `json:"value,omitempty"`
 }
 

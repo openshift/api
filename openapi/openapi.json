@@ -24785,11 +24785,28 @@
       }
     },
     "com.github.openshift.api.config.v1alpha1.MetadataConfig": {
-      "description": "MetadataConfig defines settings for sending series metadata to remote write storage. When present (including as an empty object), metadata is sent; omitted fields use platform defaults (e.g. send interval 30 seconds).",
+      "description": "MetadataConfig defines whether and how to send series metadata to remote write storage.",
+      "type": "object",
+      "required": [
+        "sendPolicy"
+      ],
+      "properties": {
+        "custom": {
+          "description": "custom defines custom metadata send settings. Required when sendPolicy is Custom, and forbidden when sendPolicy is Default.",
+          "$ref": "#/definitions/com.github.openshift.api.config.v1alpha1.MetadataConfigCustom"
+        },
+        "sendPolicy": {
+          "description": "sendPolicy specifies whether to send metadata and how it is configured. Default: send metadata using platform-chosen defaults (e.g. send interval 30 seconds). Custom: send metadata using the settings in the custom field.",
+          "type": "string"
+        }
+      }
+    },
+    "com.github.openshift.api.config.v1alpha1.MetadataConfigCustom": {
+      "description": "MetadataConfigCustom defines custom settings for sending series metadata when sendPolicy is Custom.",
       "type": "object",
       "properties": {
         "sendIntervalSeconds": {
-          "description": "sendIntervalSeconds is the interval in seconds at which metadata is sent. When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time (e.g. 30 seconds). Minimum value is 1 second. Maximum value is 86400 seconds (24 hours).",
+          "description": "sendIntervalSeconds is the interval in seconds at which metadata is sent. When omitted, the platform chooses a reasonable default (e.g. 30 seconds). Minimum value is 1 second. Maximum value is 86400 seconds (24 hours).",
           "type": "integer",
           "format": "int32"
         }
@@ -24872,7 +24889,7 @@
           "$ref": "#/definitions/com.github.openshift.api.config.v1alpha1.SecretKeySelector"
         },
         "endpointParams": {
-          "description": "endpointParams defines additional parameters to append to the token URL. When omitted, no additional parameters are sent. Maximum of 20 parameters can be specified.",
+          "description": "endpointParams defines additional parameters to append to the token URL. When omitted, no additional parameters are sent. Maximum of 20 parameters can be specified. Entries must have unique names (name is the list key).",
           "type": "array",
           "items": {
             "default": {},
@@ -24902,8 +24919,7 @@
       "description": "OAuth2EndpointParam defines a name/value parameter for the OAuth2 token URL.",
       "type": "object",
       "required": [
-        "name",
-        "value"
+        "name"
       ],
       "properties": {
         "name": {
@@ -24911,7 +24927,7 @@
           "type": "string"
         },
         "value": {
-          "description": "value is the parameter value. Must be between 0 and 4096 characters.",
+          "description": "value is the optional parameter value. When omitted, the query parameter is applied as ?name (no value). When set (including to the empty string), it is applied as ?name=value. Empty string may be used when the external system expects a parameter with an empty value (e.g. ?parameter=\"\"). Must be between 0 and 2048 characters when present (aligned with common URL length recommendations).",
           "type": "string"
         }
       }
@@ -25212,7 +25228,7 @@
       "type": "object",
       "properties": {
         "additionalAlertmanagerConfigs": {
-          "description": "additionalAlertmanagerConfigs configures additional Alertmanager instances that receive alerts from the Prometheus component. This is useful for organizations that need to:\n  - Send alerts to external monitoring systems (like PagerDuty, Slack, or custom webhooks)\n  - Route different types of alerts to different teams or systems\n  - Integrate with existing enterprise alerting infrastructure\n  - Maintain separate alert routing for compliance or organizational requirements\nWhen omitted, no additional Alertmanager instances are configured (default behavior). When provided, at least one configuration must be specified (minimum 1, maximum 10 items). Each entry must have a unique name field.",
+          "description": "additionalAlertmanagerConfigs configures additional Alertmanager instances that receive alerts from the Prometheus component. This is useful for organizations that need to:\n  - Send alerts to external monitoring systems (like PagerDuty, Slack, or custom webhooks)\n  - Route different types of alerts to different teams or systems\n  - Integrate with existing enterprise alerting infrastructure\n  - Maintain separate alert routing for compliance or organizational requirements\nWhen omitted, no additional Alertmanager instances are configured (default behavior). When provided, at least one configuration must be specified (minimum 1, maximum 10 items). Entries must have unique names (name is the list key).",
           "type": "array",
           "items": {
             "default": {},
@@ -25261,13 +25277,16 @@
           "type": "string"
         },
         "remoteWrite": {
-          "description": "remoteWrite defines the remote write configuration, including URL, authentication, and relabeling settings. Remote write allows Prometheus to send metrics it collects to external long-term storage systems. When omitted, no remote write endpoints are configured. When provided, at least one configuration must be specified (minimum 1, maximum 10 items). When a name is specified, it must be unique across all entries.",
+          "description": "remoteWrite defines the remote write configuration, including URL, authentication, and relabeling settings. Remote write allows Prometheus to send metrics it collects to external long-term storage systems. When omitted, no remote write endpoints are configured. When provided, at least one configuration must be specified (minimum 1, maximum 10 items). Entries must have unique names (name is the list key).",
           "type": "array",
           "items": {
             "default": {},
             "$ref": "#/definitions/com.github.openshift.api.config.v1alpha1.RemoteWriteSpec"
           },
-          "x-kubernetes-list-type": "atomic"
+          "x-kubernetes-list-map-keys": [
+            "name"
+          ],
+          "x-kubernetes-list-type": "map"
         },
         "resources": {
           "description": "resources defines the compute resource requests and limits for the Prometheus container. This includes CPU, memory and HugePages constraints to help control scheduling and resource usage. When not specified, defaults are used by the platform. Requests cannot exceed limits. Each entry must have a unique resource name. Minimum of 1 and maximum of 10 resource entries can be specified. The current default values are:\n  resources:\n   - name: cpu\n     request: 4m\n   - name: memory\n     request: 40Mi",
@@ -25579,6 +25598,10 @@
         "type"
       ],
       "properties": {
+        "authorization": {
+          "description": "authorization defines the secret reference containing the credentials for authentication (e.g. Bearer token). Required when type is \"SafeAuthorization\", and forbidden otherwise. Maps to Prometheus SafeAuthorization. The secret must exist in the openshift-monitoring namespace.",
+          "$ref": "#/definitions/SecretKeySelector.v1.core.api.k8s.io"
+        },
         "basicAuth": {
           "description": "basicAuth defines HTTP basic authentication credentials. Required when type is \"BasicAuth\", and forbidden otherwise.",
           "default": {},
@@ -25588,14 +25611,6 @@
           "description": "bearerToken defines the secret reference containing the bearer token. Required when type is \"BearerToken\", and forbidden otherwise.",
           "default": {},
           "$ref": "#/definitions/com.github.openshift.api.config.v1alpha1.SecretKeySelector"
-        },
-        "bearerTokenFile": {
-          "description": "bearerTokenFile is the path to a file containing the bearer token (e.g. service account token). Required when type is \"BearerTokenFile\", and forbidden otherwise. In practice only the service account token path can be used. Must be between 1 and 1024 characters.",
-          "type": "string"
-        },
-        "credentials": {
-          "description": "credentials defines the secret reference containing the credentials for authentication (e.g. Bearer token). Required when type is \"Authorization\", and forbidden otherwise. Maps to Prometheus SafeAuthorization. The secret must exist in the openshift-monitoring namespace.",
-          "$ref": "#/definitions/SecretKeySelector.v1.core.api.k8s.io"
         },
         "oauth2": {
           "description": "oauth2 defines OAuth2 client credentials authentication. Required when type is \"OAuth2\", and forbidden otherwise.",
@@ -25608,7 +25623,7 @@
           "$ref": "#/definitions/com.github.openshift.api.config.v1alpha1.Sigv4"
         },
         "type": {
-          "description": "type specifies the authorization method to use. Allowed values are BearerToken, BearerTokenFile, BasicAuth, OAuth2, SigV4, Authorization, ServiceAccount.\n\nWhen set to BearerToken, the bearer token is read from a Secret referenced by the bearerToken field.\n\nWhen set to BearerTokenFile, the bearer token is read from a file path (e.g. service account token); the bearerTokenFile field must be set.\n\nWhen set to BasicAuth, HTTP basic authentication is used; the basicAuth field (username and password from Secrets) must be set.\n\nWhen set to OAuth2, OAuth2 client credentials flow is used; the oauth2 field (clientId, clientSecret, tokenUrl) must be set.\n\nWhen set to SigV4, AWS Signature Version 4 is used for authentication; the sigv4 field must be set.\n\nWhen set to Authorization, credentials are read from a single Secret key (Prometheus SafeAuthorization pattern). The secret key typically contains a Bearer token. Use the credentials field.\n\nWhen set to ServiceAccount, the pod's service account token is used for machine identity. No additional field is required; the operator configures the token path.",
+          "description": "type specifies the authorization method to use. Allowed values are BearerToken, BasicAuth, OAuth2, SigV4, SafeAuthorization, ServiceAccount.\n\nWhen set to BearerToken, the bearer token is read from a Secret referenced by the bearerToken field.\n\nWhen set to BasicAuth, HTTP basic authentication is used; the basicAuth field (username and password from Secrets) must be set.\n\nWhen set to OAuth2, OAuth2 client credentials flow is used; the oauth2 field (clientId, clientSecret, tokenUrl) must be set.\n\nWhen set to SigV4, AWS Signature Version 4 is used for authentication; the sigv4 field must be set.\n\nWhen set to SafeAuthorization, credentials are read from a single Secret key (Prometheus SafeAuthorization pattern). The secret key typically contains a Bearer token. Use the authorization field.\n\nWhen set to ServiceAccount, the pod's service account token is used for machine identity. No additional field is required; the operator configures the token path.",
           "type": "string"
         }
       },
@@ -25616,10 +25631,9 @@
         {
           "discriminator": "type",
           "fields-to-discriminateBy": {
+            "authorization": "Authorization",
             "basicAuth": "BasicAuth",
             "bearerToken": "BearerToken",
-            "bearerTokenFile": "BearerTokenFile",
-            "credentials": "Credentials",
             "oauth2": "OAuth2",
             "sigv4": "Sigv4"
           }
@@ -25630,11 +25644,12 @@
       "description": "RemoteWriteSpec represents configuration for remote write endpoints.",
       "type": "object",
       "required": [
-        "url"
+        "url",
+        "name"
       ],
       "properties": {
         "authorization": {
-          "description": "authorization defines the authorization method for the remote write endpoint. When omitted, no authorization is performed. When set, type must be one of BearerToken, BearerTokenFile, BasicAuth, OAuth2, SigV4, Authorization, or ServiceAccount; the corresponding nested config must be set (ServiceAccount has no config).",
+          "description": "authorization defines the authorization method for the remote write endpoint. When omitted, no authorization is performed. When set, type must be one of BearerToken, BasicAuth, OAuth2, SigV4, SafeAuthorization, or ServiceAccount; the corresponding nested config must be set (ServiceAccount has no config).",
           "default": {},
           "$ref": "#/definitions/com.github.openshift.api.config.v1alpha1.RemoteWriteAuthorization"
         },
@@ -25655,11 +25670,11 @@
           "x-kubernetes-list-type": "map"
         },
         "metadataConfig": {
-          "description": "metadataConfig configures the sending of series metadata to remote storage. When omitted, no metadata is sent. When set (including as an empty object metadataConfig: {}), metadata is sent to the remote write endpoint; omitted sub-fields use platform defaults (e.g. send interval 30 seconds).",
+          "description": "metadataConfig configures the sending of series metadata to remote storage. When omitted, no metadata is sent. When set to sendPolicy: Default, metadata is sent using platform-chosen defaults (e.g. send interval 30 seconds). When set to sendPolicy: Custom, metadata is sent using the settings in the custom field (e.g. custom.sendIntervalSeconds).",
           "$ref": "#/definitions/com.github.openshift.api.config.v1alpha1.MetadataConfig"
         },
         "name": {
-          "description": "name is an optional identifier for this remote write configuration. This name is used in metrics and logging to differentiate remote write queues. When omitted, Prometheus generates a unique name automatically. If specified, this name must be unique. Must contain only alphanumeric characters, hyphens, and underscores. Must be between 1 and 63 characters in length when specified.",
+          "description": "name is a required identifier for this remote write configuration (name is the list key for the remoteWrite list). This name is used in metrics and logging to differentiate remote write queues. Must contain only alphanumeric characters, hyphens, and underscores. Must be between 1 and 63 characters in length.",
           "type": "string"
         },
         "proxyUrl": {
@@ -29901,11 +29916,7 @@
           "items": {
             "default": {},
             "$ref": "#/definitions/com.github.openshift.api.insights.v1alpha1.GathererConfig"
-          },
-          "x-kubernetes-list-map-keys": [
-            "name"
-          ],
-          "x-kubernetes-list-type": "map"
+          }
         },
         "storage": {
           "description": "storage is an optional field that allows user to define persistent storage for gathering jobs to store the Insights data archive. If omitted, the gathering job will use ephemeral storage.",
@@ -29964,12 +29975,7 @@
           "items": {
             "default": {},
             "$ref": "#/definitions/com.github.openshift.api.insights.v1alpha1.ObjectReference"
-          },
-          "x-kubernetes-list-map-keys": [
-            "name",
-            "namespace"
-          ],
-          "x-kubernetes-list-type": "map"
+          }
         },
         "startTime": {
           "description": "startTime is the time when Insights data gathering started.",
@@ -30090,8 +30096,7 @@
       "required": [
         "group",
         "resource",
-        "name",
-        "namespace"
+        "name"
       ],
       "properties": {
         "group": {
@@ -36279,10 +36284,6 @@
           ],
           "x-kubernetes-list-type": "map"
         },
-        "dedicatedHost": {
-          "description": "dedicatedHost tracks the dynamically allocated dedicated host. This field is populated when allocationStrategy is Dynamic (with or without DynamicHostAllocation). When omitted, this indicates that the dedicated host has not yet been allocated, or allocation is in progress.",
-          "$ref": "#/definitions/com.github.openshift.api.machine.v1beta1.DedicatedHostStatus"
-        },
         "instanceId": {
           "description": "instanceId is the instance ID of the machine created in AWS",
           "type": "string"
@@ -36734,44 +36735,12 @@
     "com.github.openshift.api.machine.v1beta1.DedicatedHost": {
       "description": "DedicatedHost represents the configuration for the usage of dedicated host.",
       "type": "object",
-      "properties": {
-        "allocationStrategy": {
-          "description": "allocationStrategy specifies if the dedicated host will be provided by the admin through the id field or if the host will be dynamically allocated. Valid values are UserProvided and Dynamic. When omitted, the value defaults to \"UserProvided\", which requires the id field to be set. When allocationStrategy is set to UserProvided, an ID of the dedicated host to assign must be provided. When allocationStrategy is set to Dynamic, a dedicated host will be allocated and used to assign instances. When allocationStrategy is set to Dynamic, and dynamicHostAllocation is configured, a dedicated host will be allocated and the tags in dynamicHostAllocation will be assigned to that host.\n\nPossible enum values:\n - `\"Dynamic\"` specifies that the system should dynamically allocate a dedicated host for instances.\n - `\"UserProvided\"` specifies that the system should assign instances to a user-provided dedicated host.",
-          "type": "string",
-          "default": "UserProvided",
-          "enum": [
-            "Dynamic",
-            "UserProvided"
-          ]
-        },
-        "dynamicHostAllocation": {
-          "description": "dynamicHostAllocation specifies tags to apply to a dynamically allocated dedicated host. This field is only allowed when allocationStrategy is Dynamic, and is mutually exclusive with id. When specified, a dedicated host will be allocated with the provided tags applied. When omitted (and allocationStrategy is Dynamic), a dedicated host will be allocated without any additional tags.",
-          "$ref": "#/definitions/com.github.openshift.api.machine.v1beta1.DynamicHostAllocationSpec"
-        },
-        "id": {
-          "description": "id identifies the AWS Dedicated Host on which the instance must run. The value must start with \"h-\" followed by either 8 or 17 lowercase hexadecimal characters (0-9 and a-f). The use of 8 lowercase hexadecimal characters is for older legacy hosts that may not have been migrated to newer format. Must be either 10 or 19 characters in length. This field is required when allocationStrategy is UserProvided, and forbidden otherwise. When omitted with allocationStrategy set to Dynamic, the platform will dynamically allocate a dedicated host.",
-          "type": "string"
-        }
-      },
-      "x-kubernetes-unions": [
-        {
-          "discriminator": "allocationStrategy",
-          "fields-to-discriminateBy": {
-            "dynamicHostAllocation": "DynamicHostAllocation",
-            "id": "ID"
-          }
-        }
-      ]
-    },
-    "com.github.openshift.api.machine.v1beta1.DedicatedHostStatus": {
-      "description": "DedicatedHostStatus defines the observed state of a dynamically allocated dedicated host associated with an AWSMachine. This struct is used to track the ID of the dedicated host.",
-      "type": "object",
       "required": [
         "id"
       ],
       "properties": {
         "id": {
-          "description": "id tracks the dynamically allocated dedicated host ID. This field is populated when allocationStrategy is Dynamic (with or without DynamicHostAllocation). The value must start with \"h-\" followed by either 8 or 17 lowercase hexadecimal characters (0-9 and a-f). The use of 8 lowercase hexadecimal characters is for older legacy hosts that may not have been migrated to newer format. Must be either 10 or 19 characters in length.",
+          "description": "id identifies the AWS Dedicated Host on which the instance must run. The value must start with \"h-\" followed by either 8 or 17 lowercase hexadecimal characters (0-9 and a-f). The use of 8 lowercase hexadecimal characters is for older legacy hosts that may not have been migrated to newer format. Must be either 10 or 19 characters in length.",
           "type": "string"
         }
       }
@@ -36793,24 +36762,6 @@
         "ephemeralStorageLocation": {
           "description": "ephemeralStorageLocation enables ephemeral OS when set to 'Local'. Possible values include: 'Local'. See https://docs.microsoft.com/en-us/azure/virtual-machines/ephemeral-os-disks for full details. Empty value means no opinion and the platform chooses a default, which is subject to change over time. Currently the default is that disks are saved to remote Azure storage.",
           "type": "string"
-        }
-      }
-    },
-    "com.github.openshift.api.machine.v1beta1.DynamicHostAllocationSpec": {
-      "description": "DynamicHostAllocationSpec defines the configuration for dynamic dedicated host allocation. This specification always allocates exactly one dedicated host per machine. At least one property must be specified when this struct is used. Currently only Tags are available for configuring, but in the future more configs may become available.",
-      "type": "object",
-      "properties": {
-        "tags": {
-          "description": "tags specifies a set of key-value pairs to apply to the allocated dedicated host. When omitted, no additional user-defined tags will be applied to the allocated host. A maximum of 50 tags can be specified.",
-          "type": "array",
-          "items": {
-            "default": {},
-            "$ref": "#/definitions/com.github.openshift.api.machine.v1beta1.TagSpecification"
-          },
-          "x-kubernetes-list-map-keys": [
-            "name"
-          ],
-          "x-kubernetes-list-type": "map"
         }
       }
     },
@@ -38193,16 +38144,17 @@
       "description": "TagSpecification is the name/value pair for a tag",
       "type": "object",
       "required": [
-        "name"
+        "name",
+        "value"
       ],
       "properties": {
         "name": {
-          "description": "name of the tag. This field is required and must be a non-empty string. Must be between 1 and 128 characters in length.",
+          "description": "name of the tag",
           "type": "string",
           "default": ""
         },
         "value": {
-          "description": "value of the tag. When omitted, this creates a tag with an empty string as the value.",
+          "description": "value of the tag",
           "type": "string",
           "default": ""
         }

@@ -1309,7 +1309,7 @@ spec:
                         - Maintain separate alert routing for compliance or organizational requirements
                       When omitted, no additional Alertmanager instances are configured (default behavior).
                       When provided, at least one configuration must be specified (minimum 1, maximum 10 items).
-                      Each entry must have a unique name field.
+                      Entries must have unique names (name is the list key).
                     items:
                       description: |-
                         AdditionalAlertmanagerConfig represents configuration for additional Alertmanager instances.
@@ -1743,7 +1743,7 @@ spec:
                       Remote write allows Prometheus to send metrics it collects to external long-term storage systems.
                       When omitted, no remote write endpoints are configured.
                       When provided, at least one configuration must be specified (minimum 1, maximum 10 items).
-                      When a name is specified, it must be unique across all entries.
+                      Entries must have unique names (name is the list key).
                     items:
                       description: RemoteWriteSpec represents configuration for remote
                         write endpoints.
@@ -1752,8 +1752,34 @@ spec:
                           description: |-
                             authorization defines the authorization method for the remote write endpoint.
                             When omitted, no authorization is performed.
-                            When set, type must be one of BearerToken, BearerTokenFile, BasicAuth, OAuth2, SigV4, Authorization, or ServiceAccount; the corresponding nested config must be set (ServiceAccount has no config).
+                            When set, type must be one of BearerToken, BasicAuth, OAuth2, SigV4, SafeAuthorization, or ServiceAccount; the corresponding nested config must be set (ServiceAccount has no config).
                           properties:
+                            authorization:
+                              description: |-
+                                authorization defines the secret reference containing the credentials for authentication (e.g. Bearer token).
+                                Required when type is "SafeAuthorization", and forbidden otherwise. Maps to Prometheus SafeAuthorization. The secret must exist in the openshift-monitoring namespace.
+                              properties:
+                                key:
+                                  description: The key of the secret to select from.  Must
+                                    be a valid secret key.
+                                  type: string
+                                name:
+                                  default: ""
+                                  description: |-
+                                    Name of the referent.
+                                    This field is effectively required, but due to backwards compatibility is
+                                    allowed to be empty. Instances of this type with an empty value here are
+                                    almost certainly wrong.
+                                    More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names
+                                  type: string
+                                optional:
+                                  description: Specify whether the Secret or its key
+                                    must be defined
+                                  type: boolean
+                              required:
+                              - key
+                              type: object
+                              x-kubernetes-map-type: atomic
                             basicAuth:
                               description: |-
                                 basicAuth defines HTTP basic authentication credentials.
@@ -1868,40 +1894,6 @@ spec:
                               - name
                               type: object
                               x-kubernetes-map-type: atomic
-                            bearerTokenFile:
-                              description: |-
-                                bearerTokenFile is the path to a file containing the bearer token (e.g. service account token).
-                                Required when type is "BearerTokenFile", and forbidden otherwise. In practice only the service account token path can be used.
-                                Must be between 1 and 1024 characters.
-                              maxLength: 1024
-                              minLength: 1
-                              type: string
-                            credentials:
-                              description: |-
-                                credentials defines the secret reference containing the credentials for authentication (e.g. Bearer token).
-                                Required when type is "Authorization", and forbidden otherwise. Maps to Prometheus SafeAuthorization. The secret must exist in the openshift-monitoring namespace.
-                              properties:
-                                key:
-                                  description: The key of the secret to select from.  Must
-                                    be a valid secret key.
-                                  type: string
-                                name:
-                                  default: ""
-                                  description: |-
-                                    Name of the referent.
-                                    This field is effectively required, but due to backwards compatibility is
-                                    allowed to be empty. Instances of this type with an empty value here are
-                                    almost certainly wrong.
-                                    More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names
-                                  type: string
-                                optional:
-                                  description: Specify whether the Secret or its key
-                                    must be defined
-                                  type: boolean
-                              required:
-                              - key
-                              type: object
-                              x-kubernetes-map-type: atomic
                             oauth2:
                               description: |-
                                 oauth2 defines OAuth2 client credentials authentication.
@@ -1981,7 +1973,7 @@ spec:
                                   description: |-
                                     endpointParams defines additional parameters to append to the token URL.
                                     When omitted, no additional parameters are sent.
-                                    Maximum of 20 parameters can be specified.
+                                    Maximum of 20 parameters can be specified. Entries must have unique names (name is the list key).
                                   items:
                                     description: OAuth2EndpointParam defines a name/value
                                       parameter for the OAuth2 token URL.
@@ -1993,14 +1985,16 @@ spec:
                                         minLength: 1
                                         type: string
                                       value:
-                                        description: value is the parameter value.
-                                          Must be between 0 and 4096 characters.
-                                        maxLength: 4096
+                                        description: |-
+                                          value is the optional parameter value. When omitted, the query parameter is applied as ?name (no value).
+                                          When set (including to the empty string), it is applied as ?name=value. Empty string may be used when the
+                                          external system expects a parameter with an empty value (e.g. ?parameter="").
+                                          Must be between 0 and 2048 characters when present (aligned with common URL length recommendations).
+                                        maxLength: 2048
                                         minLength: 0
                                         type: string
                                     required:
                                     - name
-                                    - value
                                     type: object
                                   maxItems: 20
                                   minItems: 0
@@ -2152,11 +2146,9 @@ spec:
                             type:
                               description: |-
                                 type specifies the authorization method to use.
-                                Allowed values are BearerToken, BearerTokenFile, BasicAuth, OAuth2, SigV4, Authorization, ServiceAccount.
+                                Allowed values are BearerToken, BasicAuth, OAuth2, SigV4, SafeAuthorization, ServiceAccount.
 
                                 When set to BearerToken, the bearer token is read from a Secret referenced by the bearerToken field.
-
-                                When set to BearerTokenFile, the bearer token is read from a file path (e.g. service account token); the bearerTokenFile field must be set.
 
                                 When set to BasicAuth, HTTP basic authentication is used; the basicAuth field (username and password from Secrets) must be set.
 
@@ -2164,16 +2156,15 @@ spec:
 
                                 When set to SigV4, AWS Signature Version 4 is used for authentication; the sigv4 field must be set.
 
-                                When set to Authorization, credentials are read from a single Secret key (Prometheus SafeAuthorization pattern). The secret key typically contains a Bearer token. Use the credentials field.
+                                When set to SafeAuthorization, credentials are read from a single Secret key (Prometheus SafeAuthorization pattern). The secret key typically contains a Bearer token. Use the authorization field.
 
                                 When set to ServiceAccount, the pod's service account token is used for machine identity. No additional field is required; the operator configures the token path.
                               enum:
                               - BearerToken
-                              - BearerTokenFile
                               - BasicAuth
                               - OAuth2
                               - SigV4
-                              - Authorization
+                              - SafeAuthorization
                               - ServiceAccount
                               type: string
                           required:
@@ -2184,11 +2175,6 @@ spec:
                               and forbidden otherwise
                             rule: 'has(self.type) && self.type == ''BearerToken''
                               ? has(self.bearerToken) : !has(self.bearerToken)'
-                          - message: bearerTokenFile is required and must be non-empty
-                              when type is BearerTokenFile, and forbidden otherwise
-                            rule: 'has(self.type) && self.type == ''BearerTokenFile''
-                              ? (has(self.bearerTokenFile) && size(self.bearerTokenFile)
-                              > 0) : !has(self.bearerTokenFile)'
                           - message: basicAuth is required when type is BasicAuth,
                               and forbidden otherwise
                             rule: 'has(self.type) && self.type == ''BasicAuth'' ?
@@ -2201,10 +2187,10 @@ spec:
                               otherwise
                             rule: 'has(self.type) && self.type == ''SigV4'' ? has(self.sigv4)
                               : !has(self.sigv4)'
-                          - message: credentials is required when type is Authorization,
+                          - message: authorization is required when type is SafeAuthorization,
                               and forbidden otherwise
-                            rule: 'has(self.type) && self.type == ''Authorization''
-                              ? has(self.credentials) : !has(self.credentials)'
+                            rule: 'has(self.type) && self.type == ''SafeAuthorization''
+                              ? has(self.authorization) : !has(self.authorization)'
                         exemplarsMode:
                           description: |-
                             exemplarsMode controls whether exemplars are sent via remote write.
@@ -2270,28 +2256,47 @@ spec:
                           description: |-
                             metadataConfig configures the sending of series metadata to remote storage.
                             When omitted, no metadata is sent.
-                            When set (including as an empty object metadataConfig: {}), metadata is sent to the remote write endpoint; omitted sub-fields use platform defaults (e.g. send interval 30 seconds).
-                          minProperties: 0
+                            When set to sendPolicy: Default, metadata is sent using platform-chosen defaults (e.g. send interval 30 seconds).
+                            When set to sendPolicy: Custom, metadata is sent using the settings in the custom field (e.g. custom.sendIntervalSeconds).
                           properties:
-                            sendIntervalSeconds:
+                            custom:
+                              description: custom defines custom metadata send settings.
+                                Required when sendPolicy is Custom, and forbidden
+                                when sendPolicy is Default.
+                              properties:
+                                sendIntervalSeconds:
+                                  description: |-
+                                    sendIntervalSeconds is the interval in seconds at which metadata is sent.
+                                    When omitted, the platform chooses a reasonable default (e.g. 30 seconds).
+                                    Minimum value is 1 second. Maximum value is 86400 seconds (24 hours).
+                                  format: int32
+                                  maximum: 86400
+                                  minimum: 1
+                                  type: integer
+                              type: object
+                            sendPolicy:
                               description: |-
-                                sendIntervalSeconds is the interval in seconds at which metadata is sent.
-                                When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time (e.g. 30 seconds).
-                                Minimum value is 1 second.
-                                Maximum value is 86400 seconds (24 hours).
-                              format: int32
-                              maximum: 86400
-                              minimum: 1
-                              type: integer
+                                sendPolicy specifies whether to send metadata and how it is configured.
+                                Default: send metadata using platform-chosen defaults (e.g. send interval 30 seconds).
+                                Custom: send metadata using the settings in the custom field.
+                              enum:
+                              - Default
+                              - Custom
+                              type: string
+                          required:
+                          - sendPolicy
                           type: object
+                          x-kubernetes-validations:
+                          - message: custom is required when sendPolicy is Custom,
+                              and forbidden when sendPolicy is Default
+                            rule: 'self.sendPolicy == ''Default'' ? !has(self.custom)
+                              : has(self.custom)'
                         name:
                           description: |-
-                            name is an optional identifier for this remote write configuration.
+                            name is a required identifier for this remote write configuration (name is the list key for the remoteWrite list).
                             This name is used in metrics and logging to differentiate remote write queues.
-                            When omitted, Prometheus generates a unique name automatically.
-                            If specified, this name must be unique.
                             Must contain only alphanumeric characters, hyphens, and underscores.
-                            Must be between 1 and 63 characters in length when specified.
+                            Must be between 1 and 63 characters in length.
                           maxLength: 63
                           minLength: 1
                           type: string
@@ -2866,12 +2871,15 @@ spec:
                           - name
                           x-kubernetes-list-type: map
                       required:
+                      - name
                       - url
                       type: object
                     maxItems: 10
                     minItems: 1
                     type: array
-                    x-kubernetes-list-type: atomic
+                    x-kubernetes-list-map-keys:
+                    - name
+                    x-kubernetes-list-type: map
                   resources:
                     description: |-
                       resources defines the compute resource requests and limits for the Prometheus container.
@@ -3629,13 +3637,6 @@ spec:
                         type: object
                     type: object
                 type: object
-                x-kubernetes-validations:
-                - message: when specified, name must be unique across all remote write
-                    configurations
-                  rule: '!has(self.remoteWrite) || self.remoteWrite.size() == 0 ||
-                    self.remoteWrite.filter(i, has(i.name) && size(i.name) > 0).all(i,
-                    self.remoteWrite.filter(j, has(j.name) && j.name == i.name).size()
-                    == 1)'
               prometheusOperatorAdmissionWebhookConfig:
                 description: |-
                   prometheusOperatorAdmissionWebhookConfig is an optional field that can be used to configure the

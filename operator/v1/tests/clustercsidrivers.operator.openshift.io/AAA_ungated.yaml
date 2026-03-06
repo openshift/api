@@ -39,3 +39,153 @@ tests:
             driverType: IBMCloud
             ibmcloud: {}
       expectedError: "spec.driverConfig.ibmcloud.encryptionKeyCRN: Required value, <nil>: Invalid value: \"null\": some validation rules were not checked because the object was invalid; correct the existing errors to complete validation"
+    - name: Should be able to specify an AWS KMS key ARN
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: ClusterCSIDriver
+        metadata:
+          name: ebs.csi.aws.com
+        spec:
+          driverConfig:
+            driverType: AWS
+            aws:
+              kmsKeyARN: arn:aws:kms:us-east-1:123456789012:key/12345678-1234-1234-1234-123456789012
+      expected: |
+        apiVersion: operator.openshift.io/v1
+        kind: ClusterCSIDriver
+        metadata:
+          name: ebs.csi.aws.com
+        spec:
+          logLevel: Normal
+          operatorLogLevel: Normal
+          driverConfig:
+            driverType: AWS
+            aws:
+              kmsKeyARN: arn:aws:kms:us-east-1:123456789012:key/12345678-1234-1234-1234-123456789012
+    - name: Should be able to specify an AWS KMS key alias ARN
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: ClusterCSIDriver
+        metadata:
+          name: ebs.csi.aws.com
+        spec:
+          driverConfig:
+            driverType: AWS
+            aws:
+              kmsKeyARN: arn:aws:kms:us-east-1:123456789012:alias/my-key
+      expected: |
+        apiVersion: operator.openshift.io/v1
+        kind: ClusterCSIDriver
+        metadata:
+          name: ebs.csi.aws.com
+        spec:
+          logLevel: Normal
+          operatorLogLevel: Normal
+          driverConfig:
+            driverType: AWS
+            aws:
+              kmsKeyARN: arn:aws:kms:us-east-1:123456789012:alias/my-key
+    - name: Should be able to specify an AWS China KMS key ARN
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: ClusterCSIDriver
+        metadata:
+          name: ebs.csi.aws.com
+        spec:
+          driverConfig:
+            driverType: AWS
+            aws:
+              kmsKeyARN: arn:aws-cn:kms:cn-north-1:123456789012:key/12345678-1234-1234-1234-123456789012
+      expected: |
+        apiVersion: operator.openshift.io/v1
+        kind: ClusterCSIDriver
+        metadata:
+          name: ebs.csi.aws.com
+        spec:
+          logLevel: Normal
+          operatorLogLevel: Normal
+          driverConfig:
+            driverType: AWS
+            aws:
+              kmsKeyARN: arn:aws-cn:kms:cn-north-1:123456789012:key/12345678-1234-1234-1234-123456789012
+    - name: Should be able to specify an AWS GovCloud KMS key ARN
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: ClusterCSIDriver
+        metadata:
+          name: ebs.csi.aws.com
+        spec:
+          driverConfig:
+            driverType: AWS
+            aws:
+              kmsKeyARN: arn:aws-us-gov:kms:us-gov-west-1:123456789012:key/12345678-1234-1234-1234-123456789012
+      expected: |
+        apiVersion: operator.openshift.io/v1
+        kind: ClusterCSIDriver
+        metadata:
+          name: ebs.csi.aws.com
+        spec:
+          logLevel: Normal
+          operatorLogLevel: Normal
+          driverConfig:
+            driverType: AWS
+            aws:
+              kmsKeyARN: arn:aws-us-gov:kms:us-gov-west-1:123456789012:key/12345678-1234-1234-1234-123456789012
+    - name: Should be able to specify an AWS ISO KMS key ARN
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: ClusterCSIDriver
+        metadata:
+          name: ebs.csi.aws.com
+        spec:
+          driverConfig:
+            driverType: AWS
+            aws:
+              kmsKeyARN: arn:aws-iso:kms:us-iso-east-1:123456789012:key/12345678-1234-1234-1234-123456789012
+      expected: |
+        apiVersion: operator.openshift.io/v1
+        kind: ClusterCSIDriver
+        metadata:
+          name: ebs.csi.aws.com
+        spec:
+          logLevel: Normal
+          operatorLogLevel: Normal
+          driverConfig:
+            driverType: AWS
+            aws:
+              kmsKeyARN: arn:aws-iso:kms:us-iso-east-1:123456789012:key/12345678-1234-1234-1234-123456789012
+    - name: Should be able to specify an AWS EUSC KMS key ARN
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: ClusterCSIDriver
+        metadata:
+          name: ebs.csi.aws.com
+        spec:
+          driverConfig:
+            driverType: AWS
+            aws:
+              kmsKeyARN: arn:aws-eusc:kms:eusc-de-east-1:123456789012:key/12345678-1234-1234-1234-123456789012
+      expected: |
+        apiVersion: operator.openshift.io/v1
+        kind: ClusterCSIDriver
+        metadata:
+          name: ebs.csi.aws.com
+        spec:
+          logLevel: Normal
+          operatorLogLevel: Normal
+          driverConfig:
+            driverType: AWS
+            aws:
+              kmsKeyARN: arn:aws-eusc:kms:eusc-de-east-1:123456789012:key/12345678-1234-1234-1234-123456789012
+    - name: Should not be able to specify invalid AWS KMS key ARN
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: ClusterCSIDriver
+        metadata:
+          name: ebs.csi.aws.com
+        spec:
+          driverConfig:
+            driverType: AWS
+            aws:
+              kmsKeyARN: arn:aws-invalid:kms:us-east-1:123456789012:key/12345678-1234-1234-1234-123456789012
+      expectedError: "spec.driverConfig.aws.kmsKeyARN in body should match '^arn:(aws|aws-cn|aws-us-gov|aws-iso|aws-iso-b|aws-iso-e|aws-iso-f|aws-eusc):kms:[a-z0-9-]+:[0-9]{12}:(key|alias)\\/.*$'"

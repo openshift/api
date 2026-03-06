@@ -322,6 +322,9 @@
                         "name": "MutatingAdmissionPolicy"
                     },
                     {
+                        "name": "NoOverlayMode"
+                    },
+                    {
                         "name": "NutanixMultiSubnets"
                     },
                     {

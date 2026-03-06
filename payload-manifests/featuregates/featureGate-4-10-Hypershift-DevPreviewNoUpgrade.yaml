@@ -319,6 +319,9 @@
                         "name": "NetworkConnect"
                     },
                     {
+                        "name": "NoOverlayMode"
+                    },
+                    {
                         "name": "NutanixMultiSubnets"
                     },
                     {

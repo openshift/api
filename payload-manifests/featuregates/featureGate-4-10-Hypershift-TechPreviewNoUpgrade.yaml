@@ -17,6 +17,9 @@
             {
                 "disabled": [
                     {
+                        "name": "AWSServiceLBNetworkSecurityGroup"
+                    },
+                    {
                         "name": "ClientsAllowCBOR"
                     },
                     {
@@ -95,9 +98,6 @@
                     },
                     {
                         "name": "AWSDualStackInstall"
-                    },
-                    {
-                        "name": "AWSServiceLBNetworkSecurityGroup"
                     },
                     {
                         "name": "AdditionalStorageConfig"

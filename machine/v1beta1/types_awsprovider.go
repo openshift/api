@@ -265,18 +265,72 @@ const (
 	MetadataServiceAuthenticationOptional = "Optional"
 )
 
+// HTTPEndpointState describes the state of the HTTP metadata endpoint.
+type HTTPEndpointState string
+
+const (
+	// HTTPEndpointDisabled disables the HTTP metadata endpoint.
+	HTTPEndpointDisabled HTTPEndpointState = "Disabled"
+	// HTTPEndpointEnabled enables the HTTP metadata endpoint.
+	HTTPEndpointEnabled HTTPEndpointState = "Enabled"
+)
+
+// InstanceMetadataTagsState describes the state of access to instance tags from the instance metadata.
+type InstanceMetadataTagsState string
+
+const (
+	// InstanceMetadataTagsDisabled disables access to instance tags from the instance metadata.
+	InstanceMetadataTagsDisabled InstanceMetadataTagsState = "Disabled"
+	// InstanceMetadataTagsEnabled enables access to instance tags from the instance metadata.
+	InstanceMetadataTagsEnabled InstanceMetadataTagsState = "Enabled"
+)
+
 // MetadataServiceOptions defines the options available to a user when configuring
 // Instance Metadata Service (IMDS) Options.
 type MetadataServiceOptions struct {
+	// httpEndpoint enables or disables the HTTP metadata endpoint on your instances.
+	// Valid values are "Enabled" and "Disabled".
+	// When set to Enabled, the HTTP metadata endpoint is accessible.
+	// When set to Disabled, you cannot access your instance metadata.
+	// When omitted, the value is determined by account-level settings in the AWS Region, or the AWS service default if not configured at the account level.
+	// The typical AWS service default is Enabled.
+	// +kubebuilder:validation:Enum=Enabled;Disabled
+	// +optional
+	HTTPEndpoint *HTTPEndpointState `json:"httpEndpoint,omitempty"`
+
+	// httpPutResponseHopLimit is the maximum number of hops that the metadata token can travel.
+	// Valid values range from 1 to 64.
+	// When omitted, the value is determined by AWS in the following order of precedence:
+	// 1) Account-level settings in the AWS Region (if configured)
+	// 2) AMI configuration: 1 when ImdsSupport is v1.0, 2 when ImdsSupport is v2.0
+	// +kubebuilder:validation:Minimum=1
+	// +kubebuilder:validation:Maximum=64
+	// +optional
+	HTTPPutResponseHopLimit *int64 `json:"httpPutResponseHopLimit,omitempty"`
+
 	// authentication determines whether or not the host requires the use of authentication when interacting with the metadata service.
-	// When using authentication, this enforces v2 interaction method (IMDSv2) with the metadata service.
-	// When omitted, this means the user has no opinion and the value is left to the platform to choose a good
-	// default, which is subject to change over time. The current default is optional.
+	// When set to Required, this enforces v2 interaction method (IMDSv2) with the metadata service.
+	// When set to Optional, both IMDSv1 and IMDSv2 are allowed.
+	// When omitted, the value is determined by AWS in the following order of precedence:
+	// 1) Account-level settings in the AWS Region (if configured)
+	// 2) AMI configuration: Required when ImdsSupport is v2.0, Optional when ImdsSupport is v1.0
 	// At this point this field represents `HttpTokens` parameter from `InstanceMetadataOptionsRequest` structure in AWS EC2 API
 	// https://docs.aws.amazon.com/AWSEC2/latest/APIReference/API_InstanceMetadataOptionsRequest.html
 	// +kubebuilder:validation:Enum=Required;Optional
 	// +optional
 	Authentication MetadataServiceAuthentication `json:"authentication,omitempty"`
+
+	// instanceMetadataTags enables or disables access to instance tags from the instance metadata.
+	// Valid values are "Enabled" and "Disabled".
+	// When set to Enabled, you can retrieve your instance tags from the instance metadata.
+	// When set to Disabled, instance tags are not accessible from the instance metadata.
+	// When omitted, the value is determined by account-level settings in the AWS Region, or the AWS service default if not configured at the account level.
+	// The typical AWS service default is Disabled.
+	// For more information, see the AWS documentation:
+	// https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/Using_Tags.html#work-with-tags-in-IMDS
+	// +kubebuilder:validation:Enum=Enabled;Disabled
+	// +optional
+	InstanceMetadataTags *InstanceMetadataTagsState `json:"instanceMetadataTags,omitempty"`
 }
 
 // AWSResourceReference is a reference to a specific AWS resource by ID, ARN, or filters.

@@ -24360,6 +24360,36 @@
         }
       }
     },
+    "com.github.openshift.api.config.v1alpha1.EffectiveConfigInput": {
+      "description": "EffectiveConfigInput holds the configuration sources for computing the effective ClusterMonitoring spec. The operator should obtain ConfigMap and CR (when the CRD is enabled) and pass them here so that merge is centralized in one place.\n\nWhen CRDEnabled is false (e.g. non-TechPreview), the CR is not available; the effective config is computed from Defaults + ConfigMap only, avoiding any dependency on the ClusterMonitoring CR.",
+      "type": "object",
+      "required": [
+        "Defaults",
+        "ConfigMapSpec",
+        "CRSpec",
+        "CRDEnabled"
+      ],
+      "properties": {
+        "CRDEnabled": {
+          "description": "CRDEnabled is true when the ClusterMonitoring CRD is installed (e.g. feature gate ClusterMonitoringConfig). When false, CRSpec is ignored.",
+          "type": "boolean",
+          "default": false
+        },
+        "CRSpec": {
+          "description": "CRSpec is the spec from the ClusterMonitoring CR, when the CRD is installed. Nil when CRD is not enabled.",
+          "$ref": "#/definitions/com.github.openshift.api.config.v1alpha1.ClusterMonitoringSpec"
+        },
+        "ConfigMapSpec": {
+          "description": "ConfigMapSpec is the spec parsed from the cluster-monitoring ConfigMap, if present. Nil if not used.",
+          "$ref": "#/definitions/com.github.openshift.api.config.v1alpha1.ClusterMonitoringSpec"
+        },
+        "Defaults": {
+          "description": "Defaults is the platform default spec.",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.config.v1alpha1.ClusterMonitoringSpec"
+        }
+      }
+    },
     "com.github.openshift.api.config.v1alpha1.EtcdBackupSpec": {
       "description": "EtcdBackupSpec provides configuration for automated etcd backups to the cluster-etcd-operator",
       "type": "object",
@@ -25671,6 +25701,7 @@
         },
         "metadataConfig": {
           "description": "metadataConfig configures the sending of series metadata to remote storage. When omitted, no metadata is sent. When set to sendPolicy: Default, metadata is sent using platform-chosen defaults (e.g. send interval 30 seconds). When set to sendPolicy: Custom, metadata is sent using the settings in the custom field (e.g. custom.sendIntervalSeconds).",
+          "default": {},
           "$ref": "#/definitions/com.github.openshift.api.config.v1alpha1.MetadataConfig"
         },
         "name": {

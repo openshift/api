@@ -896,7 +896,7 @@ type RemoteWriteSpec struct {
 	// When set to sendPolicy: Default, metadata is sent using platform-chosen defaults (e.g. send interval 30 seconds).
 	// When set to sendPolicy: Custom, metadata is sent using the settings in the custom field (e.g. custom.sendIntervalSeconds).
 	// +optional
-	MetadataConfig *MetadataConfig `json:"metadataConfig,omitempty,omitzero"`
+	MetadataConfig MetadataConfig `json:"metadataConfig,omitempty,omitzero"`
 	// proxyUrl defines an optional proxy URL.
 	// If the cluster-wide proxy is enabled, it replaces the proxyUrl setting.
 	// The cluster-wide proxy supports both HTTP and HTTPS proxies, with HTTPS taking precedence.
@@ -1072,6 +1072,7 @@ type MetadataConfig struct {
 }
 
 // MetadataConfigCustom defines custom settings for sending series metadata when sendPolicy is Custom.
+// +kubebuilder:validation:MinProperties=0
 type MetadataConfigCustom struct {
 	// sendIntervalSeconds is the interval in seconds at which metadata is sent.
 	// When omitted, the platform chooses a reasonable default (e.g. 30 seconds).

@@ -2263,6 +2263,7 @@ spec:
                               description: custom defines custom metadata send settings.
                                 Required when sendPolicy is Custom, and forbidden
                                 when sendPolicy is Default.
+                              minProperties: 0
                               properties:
                                 sendIntervalSeconds:
                                   description: |-

@@ -266,9 +266,6 @@
                         "name": "VSphereConfigurableMaxAllowedBlockVolumesPerNode"
                     },
                     {
-                        "name": "VSphereHostVMGroupZonal"
-                    },
-                    {
                         "name": "VSphereMixedNodeEnv"
                     },
                     {
@@ -380,6 +377,9 @@
                     },
                     {
                         "name": "UserNamespacesSupport"
+                    },
+                    {
+                        "name": "VSphereHostVMGroupZonal"
                     },
                     {
                         "name": "VSphereMultiDisk"

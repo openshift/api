@@ -301,12 +301,6 @@
                         "name": "GCPClusterHostedDNSInstall"
                     },
                     {
-                        "name": "GatewayAPI"
-                    },
-                    {
-                        "name": "GatewayAPIController"
-                    },
-                    {
                         "name": "HighlyAvailableArbiter"
                     },
                     {

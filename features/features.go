@@ -99,14 +99,6 @@ var (
 						enable(inTechPreviewNoUpgrade(), inDevPreviewNoUpgrade()).
 						mustRegister()
 
-	FeatureGateGatewayAPI = newFeatureGate("GatewayAPI").
-				reportProblemsToJiraComponent("Routing").
-				contactPerson("miciah").
-				productScope(ocpSpecific).
-				enhancementPR(legacyFeatureGateWithoutEnhancement).
-				enable(inDefault(), inOKD(), inTechPreviewNoUpgrade(), inDevPreviewNoUpgrade()).
-				mustRegister()
-
 	FeatureGateOpenShiftPodSecurityAdmission = newFeatureGate("OpenShiftPodSecurityAdmission").
 							reportProblemsToJiraComponent("auth").
 							contactPerson("ibihim").
@@ -792,19 +784,6 @@ var (
 				enhancementPR("https://github.com/openshift/enhancements/pull/1675").
 				enable(inTechPreviewNoUpgrade(), inDevPreviewNoUpgrade()).
 				mustRegister()
-
-	FeatureGateGatewayAPIController = newFeatureGate("GatewayAPIController").
-					reportProblemsToJiraComponent("Routing").
-					contactPerson("miciah").
-					productScope(ocpSpecific).
-		// Previously, the "GatewayAPI" feature gate managed both the GatewayAPI CRDs
-		// and the Gateway Controller. However, with the introduction of Gateway CRD
-		// lifecycle management (EP#1756), these responsibilities were separated.
-		// A dedicated feature gate now controls the Gateway Controller to distinguish
-		// its production readiness from that of the CRDs.
-		enhancementPR("https://github.com/openshift/enhancements/pull/1756").
-		enable(inDefault(), inOKD(), inTechPreviewNoUpgrade(), inDevPreviewNoUpgrade()).
-		mustRegister()
 
 	FeatureShortCertRotation = newFeatureGate("ShortCertRotation").
 					reportProblemsToJiraComponent("kube-apiserver").

@@ -520,6 +520,14 @@ var (
 						enable(inClusterProfile(SelfManaged), inDevPreviewNoUpgrade(), inTechPreviewNoUpgrade()).
 						mustRegister()
 
+	FeatureGateNewOLMConfigAPI = newFeatureGate("NewOLMConfigAPI").
+					reportProblemsToJiraComponent("olm").
+					contactPerson("anik120").
+					productScope(ocpSpecific).
+					enhancementPR("https://github.com/openshift/enhancements/pull/1915").
+					enableForClusterProfile(SelfManaged, configv1.DevPreviewNoUpgrade, configv1.TechPreviewNoUpgrade).
+					mustRegister()
+
 	FeatureGateInsightsOnDemandDataGather = newFeatureGate("InsightsOnDemandDataGather").
 						reportProblemsToJiraComponent("insights").
 						contactPerson("tremes").

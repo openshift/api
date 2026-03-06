@@ -317,19 +317,7 @@
                         "name": "MachineConfigNodes"
                     },
                     {
-                        "name": "ManagedBootImages"
-                    },
-                    {
-                        "name": "ManagedBootImagesAWS"
-                    },
-                    {
-                        "name": "ManagedBootImagesAzure"
-                    },
-                    {
                         "name": "ManagedBootImagesCPMS"
-                    },
-                    {
-                        "name": "ManagedBootImagesvSphere"
                     },
                     {
                         "name": "MetricsCollectionProfiles"

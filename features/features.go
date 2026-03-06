@@ -304,38 +304,6 @@ var (
 					enable(inTechPreviewNoUpgrade(), inDevPreviewNoUpgrade()).
 					mustRegister()
 
-	FeatureGateManagedBootImages = newFeatureGate("ManagedBootImages").
-					reportProblemsToJiraComponent("MachineConfigOperator").
-					contactPerson("djoshy").
-					productScope(ocpSpecific).
-					enhancementPR(legacyFeatureGateWithoutEnhancement).
-					enable(inDefault(), inOKD(), inTechPreviewNoUpgrade(), inDevPreviewNoUpgrade()).
-					mustRegister()
-
-	FeatureGateManagedBootImagesAWS = newFeatureGate("ManagedBootImagesAWS").
-					reportProblemsToJiraComponent("MachineConfigOperator").
-					contactPerson("djoshy").
-					productScope(ocpSpecific).
-					enhancementPR(legacyFeatureGateWithoutEnhancement).
-					enable(inDefault(), inOKD(), inTechPreviewNoUpgrade(), inDevPreviewNoUpgrade()).
-					mustRegister()
-
-	FeatureGateManagedBootImagesvSphere = newFeatureGate("ManagedBootImagesvSphere").
-						reportProblemsToJiraComponent("MachineConfigOperator").
-						contactPerson("rsaini").
-						productScope(ocpSpecific).
-						enhancementPR("https://github.com/openshift/enhancements/pull/1496").
-						enable(inDefault(), inOKD(), inTechPreviewNoUpgrade(), inDevPreviewNoUpgrade()).
-						mustRegister()
-
-	FeatureGateManagedBootImagesAzure = newFeatureGate("ManagedBootImagesAzure").
-						reportProblemsToJiraComponent("MachineConfigOperator").
-						contactPerson("djoshy").
-						productScope(ocpSpecific).
-						enhancementPR("https://github.com/openshift/enhancements/pull/1761").
-						enable(inDefault(), inOKD(), inTechPreviewNoUpgrade(), inDevPreviewNoUpgrade()).
-						mustRegister()
-
 	FeatureGateManagedBootImagesCPMS = newFeatureGate("ManagedBootImagesCPMS").
 						reportProblemsToJiraComponent("MachineConfigOperator").
 						contactPerson("djoshy").

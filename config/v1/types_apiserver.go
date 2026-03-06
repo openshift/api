@@ -68,27 +68,28 @@ type APIServerSpec struct {
 	//
 	// Valid values are "LegacyAdheringComponentsOnly" and "StrictAllComponents".
 	//
-	// When set to "LegacyAdheringComponentsOnly", components that already honor the cluster-wide
-	// TLS profile continue
-	// to do so. Components that do not already honor it continue to use their individual TLS
-	// configurations.
+	// When set to "LegacyAdheringComponentsOnly", components that already honor the
+	// cluster-wide TLS profile continue to do so. Components that do not already honor
+	// it continue to use their individual TLS configurations.
 	//
-	// When set to "StrictAllComponents", all components must honor the configured TLS profile
-	// unless they have a component-specific TLS configuration that overrides it.
-	// This mode is recommended for security-conscious deployments and is required for
-	// certain compliance frameworks.
+	// When set to "StrictAllComponents", all components must honor the configured TLS
+	// profile unless they have a component-specific TLS configuration that overrides
+	// it. This mode is recommended for security-conscious deployments and is required
+	// for certain compliance frameworks.
 	//
-	// Note: Some components such as Kubelet and IngressController have their own dedicated TLS
-	// configuration mechanisms via KubeletConfig and IngressController CRs respectively. When these
-	// component-specific TLS configurations are set, they take precedence over the cluster-wide
-	// tlsSecurityProfile. When not set, these components fall back to the cluster-wide default.
+	// Note: Some components such as Kubelet and IngressController have their own
+	// dedicated TLS configuration mechanisms via KubeletConfig and IngressController
+	// CRs respectively. When these component-specific TLS configurations are set,
+	// they take precedence over the cluster-wide tlsSecurityProfile. When not set,
+	// these components fall back to the cluster-wide default.
 	//
-	// Components that encounter an unknown value for tlsAdherence should treat it as "StrictAllComponents"
-	// and log a warning to ensure forward compatibility while defaulting to the more secure behavior.
+	// Components that encounter an unknown value for tlsAdherence should treat it
+	// as "StrictAllComponents" and log a warning to ensure forward compatibility
+	// while defaulting to the more secure behavior.
 	//
 	// This field is optional.
-	// When omitted, this means the user has no opinion and the platform is left to choose reasonable defaults.
-	// These defaults are subject to change over time.
+	// When omitted, this means the user has no opinion and the platform is left
+	// to choose reasonable defaults. These defaults are subject to change over time.
 	// The current default is LegacyAdheringComponentsOnly.
 	//
 	// Once set, this field may be changed to a different value, but may not be removed.

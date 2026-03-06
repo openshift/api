@@ -25671,6 +25671,7 @@
         },
         "metadataConfig": {
           "description": "metadataConfig configures the sending of series metadata to remote storage. When omitted, no metadata is sent. When set to sendPolicy: Default, metadata is sent using platform-chosen defaults (e.g. send interval 30 seconds). When set to sendPolicy: Custom, metadata is sent using the settings in the custom field (e.g. custom.sendIntervalSeconds).",
+          "default": {},
           "$ref": "#/definitions/com.github.openshift.api.config.v1alpha1.MetadataConfig"
         },
         "name": {

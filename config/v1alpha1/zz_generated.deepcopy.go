@@ -1782,11 +1782,7 @@ func (in *RemoteWriteSpec) DeepCopyInto(out *RemoteWriteSpec) {
 			(*in)[i].DeepCopyInto(&(*out)[i])
 		}
 	}
-	if in.MetadataConfig != nil {
-		in, out := &in.MetadataConfig, &out.MetadataConfig
-		*out = new(MetadataConfig)
-		(*in).DeepCopyInto(*out)
-	}
+	in.MetadataConfig.DeepCopyInto(&out.MetadataConfig)
 	out.QueueConfig = in.QueueConfig
 	out.TLSConfig = in.TLSConfig
 	if in.WriteRelabelConfigs != nil {

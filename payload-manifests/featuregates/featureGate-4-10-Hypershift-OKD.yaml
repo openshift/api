@@ -251,9 +251,6 @@
                         "name": "NutanixMultiSubnets"
                     },
                     {
-                        "name": "OSStreams"
-                    },
-                    {
                         "name": "OVNObservability"
                     },
                     {
@@ -335,6 +332,9 @@
                     },
                     {
                         "name": "MutableCSINodeAllocatableCount"
+                    },
+                    {
+                        "name": "OSStreams"
                     },
                     {
                         "name": "OpenShiftPodSecurityAdmission"

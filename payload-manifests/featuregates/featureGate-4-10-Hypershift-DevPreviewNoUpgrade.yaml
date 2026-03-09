@@ -154,6 +154,9 @@
                         "name": "ClusterUpdateAcceptRisks"
                     },
                     {
+                        "name": "ClusterUpdatePreflight"
+                    },
+                    {
                         "name": "ClusterVersionOperatorConfiguration"
                     },
                     {
@@ -193,6 +196,9 @@
                         "name": "ExternalOIDC"
                     },
                     {
+                        "name": "ExternalOIDCExternalClaimsSourcing"
+                    },
+                    {
                         "name": "ExternalOIDCWithUIDAndExtraClaimMappings"
                     },
                     {
@@ -215,12 +221,6 @@
                     },
                     {
                         "name": "GCPDualStackInstall"
-                    },
-                    {
-                        "name": "GatewayAPI"
-                    },
-                    {
-                        "name": "GatewayAPIController"
                     },
                     {
                         "name": "GatewayAPIWithoutOLM"
@@ -271,22 +271,13 @@
                         "name": "MachineAPIMigrationOpenStack"
                     },
                     {
+                        "name": "MachineAPIMigrationVSphere"
+                    },
+                    {
                         "name": "MachineConfigNodes"
                     },
                     {
-                        "name": "ManagedBootImages"
-                    },
-                    {
-                        "name": "ManagedBootImagesAWS"
-                    },
-                    {
-                        "name": "ManagedBootImagesAzure"
-                    },
-                    {
                         "name": "ManagedBootImagesCPMS"
-                    },
-                    {
-                        "name": "ManagedBootImagesvSphere"
                     },
                     {
                         "name": "MaxUnavailableStatefulSet"

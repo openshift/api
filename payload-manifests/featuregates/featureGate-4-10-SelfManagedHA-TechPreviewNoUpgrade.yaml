@@ -29,10 +29,16 @@
                         "name": "ClusterAPIInstall"
                     },
                     {
+                        "name": "ClusterUpdatePreflight"
+                    },
+                    {
                         "name": "EventedPLEG"
                     },
                     {
                         "name": "Example2"
+                    },
+                    {
+                        "name": "ExternalOIDCExternalClaimsSourcing"
                     },
                     {
                         "name": "ExternalSnapshotMetadata"
@@ -42,6 +48,9 @@
                     },
                     {
                         "name": "KMSEncryptionProvider"
+                    },
+                    {
+                        "name": "MachineAPIMigrationVSphere"
                     },
                     {
                         "name": "MachineAPIOperatorDisableMachineHealthCheckController"
@@ -208,12 +217,6 @@
                         "name": "GCPDualStackInstall"
                     },
                     {
-                        "name": "GatewayAPI"
-                    },
-                    {
-                        "name": "GatewayAPIController"
-                    },
-                    {
                         "name": "GatewayAPIWithoutOLM"
                     },
                     {
@@ -259,19 +262,7 @@
                         "name": "MachineConfigNodes"
                     },
                     {
-                        "name": "ManagedBootImages"
-                    },
-                    {
-                        "name": "ManagedBootImagesAWS"
-                    },
-                    {
-                        "name": "ManagedBootImagesAzure"
-                    },
-                    {
                         "name": "ManagedBootImagesCPMS"
-                    },
-                    {
-                        "name": "ManagedBootImagesvSphere"
                     },
                     {
                         "name": "MaxUnavailableStatefulSet"

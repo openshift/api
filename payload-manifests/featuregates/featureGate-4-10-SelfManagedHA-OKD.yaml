@@ -113,6 +113,9 @@
                         "name": "ClusterUpdateAcceptRisks"
                     },
                     {
+                        "name": "ClusterUpdatePreflight"
+                    },
+                    {
                         "name": "ClusterVersionOperatorConfiguration"
                     },
                     {
@@ -147,6 +150,9 @@
                     },
                     {
                         "name": "Example2"
+                    },
+                    {
+                        "name": "ExternalOIDCExternalClaimsSourcing"
                     },
                     {
                         "name": "ExternalOIDCWithUpstreamParity"
@@ -195,6 +201,9 @@
                     },
                     {
                         "name": "MachineAPIMigrationOpenStack"
+                    },
+                    {
+                        "name": "MachineAPIMigrationVSphere"
                     },
                     {
                         "name": "MachineAPIOperatorDisableMachineHealthCheckController"
@@ -292,12 +301,6 @@
                         "name": "GCPClusterHostedDNSInstall"
                     },
                     {
-                        "name": "GatewayAPI"
-                    },
-                    {
-                        "name": "GatewayAPIController"
-                    },
-                    {
                         "name": "HighlyAvailableArbiter"
                     },
                     {
@@ -319,19 +322,7 @@
                         "name": "MachineConfigNodes"
                     },
                     {
-                        "name": "ManagedBootImages"
-                    },
-                    {
-                        "name": "ManagedBootImagesAWS"
-                    },
-                    {
-                        "name": "ManagedBootImagesAzure"
-                    },
-                    {
                         "name": "ManagedBootImagesCPMS"
-                    },
-                    {
-                        "name": "ManagedBootImagesvSphere"
                     },
                     {
                         "name": "MetricsCollectionProfiles"

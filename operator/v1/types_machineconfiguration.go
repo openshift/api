@@ -429,8 +429,8 @@ const (
 
 // MachineManagerManagedResourceType is a string enum used in the MachineManager type to describe the resource
 // type to be registered.
-// +kubebuilder:validation:Enum:="machinesets"
-// +openshift:validation:FeatureGateAwareEnum:requiredFeatureGate=ManagedBootImagesCPMS,enum=machinesets;controlplanemachinesets
+// +openshift:validation:FeatureGateAwareEnum:featureGate="",enum=machinesets
+// +openshift:validation:FeatureGateAwareEnum:featureGate=ManagedBootImagesCPMS,enum=machinesets;controlplanemachinesets
 type MachineManagerMachineSetsResourceType string
 
 const (

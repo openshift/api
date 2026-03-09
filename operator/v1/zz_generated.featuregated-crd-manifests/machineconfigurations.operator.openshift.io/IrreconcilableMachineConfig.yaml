@@ -139,8 +139,6 @@ spec:
                             Valid values are machinesets and controlplanemachinesets.
                             machinesets means that the machine manager will only register resources of the kind MachineSet.
                             controlplanemachinesets means that the machine manager will only register resources of the kind ControlPlaneMachineSet.
-                          enum:
-                          - machinesets
                           type: string
                         selection:
                           description: selection allows granular control of the machine
@@ -772,8 +770,6 @@ spec:
                             Valid values are machinesets and controlplanemachinesets.
                             machinesets means that the machine manager will only register resources of the kind MachineSet.
                             controlplanemachinesets means that the machine manager will only register resources of the kind ControlPlaneMachineSet.
-                          enum:
-                          - machinesets
                           type: string
                         selection:
                           description: selection allows granular control of the machine

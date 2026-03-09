@@ -107,6 +107,12 @@ type ClusterMonitoringSpec struct {
 	// When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time.
 	// +optional
 	PrometheusOperatorAdmissionWebhookConfig PrometheusOperatorAdmissionWebhookConfig `json:"prometheusOperatorAdmissionWebhookConfig,omitempty,omitzero"`
+	// nodeExporterConfig is an optional field that can be used to configure the node-exporter agent
+	// that runs as a DaemonSet in the openshift-monitoring namespace. The node-exporter agent collects
+	// hardware and OS-level metrics from every node in the cluster.
+	// When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time.
+	// +optional
+	NodeExporterConfig NodeExporterConfig `json:"nodeExporterConfig,omitempty,omitzero"`
 }
 
 // UserDefinedMonitoring config for user-defined projects.
@@ -565,6 +571,386 @@ type PrometheusOperatorAdmissionWebhookConfig struct {
 	// +optional
 	TopologySpreadConstraints []v1.TopologySpreadConstraint `json:"topologySpreadConstraints,omitempty"`
 }
+
+// NodeExporterConfig provides configuration options for the node-exporter agent
+// that runs as a DaemonSet in the `openshift-monitoring` namespace. The node-exporter agent collects
+// hardware and OS-level metrics from every node in the cluster, including CPU, memory, disk, and
+// network statistics.
+// +kubebuilder:validation:MinProperties=1
+type NodeExporterConfig struct {
+	// nodeSelector defines the nodes on which the Pods are scheduled.
+	// nodeSelector is optional.
+	//
+	// When omitted, this means the user has no opinion and the platform is left
+	// to choose reasonable defaults. These defaults are subject to change over time.
+	// The current default value is `kubernetes.io/os: linux`.
+	// When specified, nodeSelector must contain at least 1 entry and must not contain more than 10 entries.
+	// +optional
+	// +kubebuilder:validation:MinProperties=1
+	// +kubebuilder:validation:MaxProperties=10
+	NodeSelector map[string]string `json:"nodeSelector,omitempty"`
+	// resources defines the compute resource requests and limits for the node-exporter container.
+	// This includes CPU, memory and HugePages constraints to help control scheduling and resource usage.
+	// When not specified, defaults are used by the platform. Requests cannot exceed limits.
+	// This field is optional.
+	// More info: https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/
+	// This is a simplified API that maps to Kubernetes ResourceRequirements.
+	// The current default values are:
+	//   resources:
+	//    - name: cpu
+	//      request: 8m
+	//      limit: null
+	//    - name: memory
+	//      request: 32Mi
+	//      limit: null
+	// Maximum length for this list is 10.
+	// Minimum length for this list is 1.
+	// Each resource name must be unique within this list.
+	// +optional
+	// +listType=map
+	// +listMapKey=name
+	// +kubebuilder:validation:MaxItems=10
+	// +kubebuilder:validation:MinItems=1
+	Resources []ContainerResource `json:"resources,omitempty"`
+	// tolerations defines tolerations for the pods.
+	// tolerations is optional.
+	//
+	// When omitted, this means the user has no opinion and the platform is left
+	// to choose reasonable defaults. These defaults are subject to change over time.
+	// The current default is to tolerate all taints (operator: Exists without any key),
+	// which is typical for DaemonSets that must run on every node.
+	// Maximum length for this list is 10.
+	// Minimum length for this list is 1.
+	// +kubebuilder:validation:MaxItems=10
+	// +kubebuilder:validation:MinItems=1
+	// +listType=atomic
+	// +optional
+	Tolerations []v1.Toleration `json:"tolerations,omitempty"`
+	// collectors configures which node-exporter metric collectors are enabled.
+	// collectors is optional.
+	// Each collector can be individually enabled or disabled. Some collectors may have
+	// additional configuration options.
+	//
+	// When omitted, this means no opinion and the platform is left to choose a reasonable
+	// default, which is subject to change over time.
+	// +optional
+	Collectors NodeExporterCollectorConfig `json:"collectors,omitempty,omitzero"`
+	// maxProcs sets the target number of CPUs on which the node-exporter process will run.
+	// maxProcs is optional.
+	// Use this setting to override the default value, which is set either to 4 or to the number
+	// of CPUs on the host, whichever is smaller.
+	// The default value is computed at runtime and set via the GOMAXPROCS environment variable before
+	// node-exporter is launched.
+	// If a kernel deadlock occurs or if performance degrades when reading from sysfs concurrently,
+	// you can change this value to 1, which limits node-exporter to running on one CPU.
+	// For nodes with a high CPU count, setting the limit to a low number saves resources by preventing
+	// Go routines from being scheduled to run on all CPUs. However, I/O performance degrades if the
+	// maxProcs value is set too low and there are many metrics to collect.
+	// The minimum value is 1 and the maximum value is 1024.
+	// When omitted, this means no opinion and the platform is left to choose a reasonable default,
+	// which is subject to change over time. The current default is min(4, number of host CPUs).
+	// +optional
+	// +kubebuilder:validation:Minimum=1
+	// +kubebuilder:validation:Maximum=1024
+	MaxProcs int32 `json:"maxProcs,omitempty"`
+	// ignoredNetworkDevices is a list of regular expression patterns that match network devices
+	// to be excluded from the relevant collector configuration such as netdev, netclass, and ethtool.
+	// ignoredNetworkDevices is optional.
+	//
+	// When omitted, the Cluster Monitoring Operator uses a predefined list of devices to be excluded
+	// to minimize the impact on memory usage.
+	// When set as an empty list, no devices are excluded.
+	// If you modify this setting, monitor the prometheus-k8s deployment closely for excessive memory usage.
+	// Maximum length for this list is 50.
+	// Each entry must be at most 1024 characters long.
+	// +kubebuilder:validation:MaxItems=50
+	// +kubebuilder:validation:MinItems=0
+	// +listType=set
+	// +optional
+	IgnoredNetworkDevices []NodeExporterIgnoredNetworkDevice `json:"ignoredNetworkDevices,omitempty"`
+}
+
+// NodeExporterIgnoredNetworkDevice is a regular expression pattern that matches a network device name
+// to be excluded from node-exporter metric collection for collectors such as netdev, netclass, and ethtool.
+// Must be at least 1 character and at most 1024 characters.
+// +kubebuilder:validation:MinLength=1
+// +kubebuilder:validation:MaxLength=1024
+type NodeExporterIgnoredNetworkDevice string
+
+// NodeExporterCollectorState defines whether a node-exporter collector is enabled or disabled.
+// Valid values are "Enabled" and "Disabled".
+// +kubebuilder:validation:Enum=Enabled;Disabled
+// +enum
+type NodeExporterCollectorState string
+
+const (
+	// NodeExporterCollectorEnabled means the collector is active and will produce metrics.
+	NodeExporterCollectorEnabled NodeExporterCollectorState = "Enabled"
+	// NodeExporterCollectorDisabled means the collector is inactive and will not produce metrics.
+	NodeExporterCollectorDisabled NodeExporterCollectorState = "Disabled"
+)
+
+// NodeExporterNetlinkState defines whether the netlink implementation of the netclass
+// collector is used. Valid values are "Enabled" and "Disabled".
+// +kubebuilder:validation:Enum=Enabled;Disabled
+// +enum
+type NodeExporterNetlinkState string
+
+const (
+	// NodeExporterNetlinkEnabled activates the netlink implementation.
+	NodeExporterNetlinkEnabled NodeExporterNetlinkState = "Enabled"
+	// NodeExporterNetlinkDisabled deactivates the netlink implementation, falling back to the default sysfs implementation.
+	NodeExporterNetlinkDisabled NodeExporterNetlinkState = "Disabled"
+)
+
+// NodeExporterCollectorConfig defines settings for individual collectors
+// of the node-exporter agent. Each collector can be individually enabled or disabled.
+// +kubebuilder:validation:MinProperties=1
+type NodeExporterCollectorConfig struct {
+	// cpuFreq configures the cpufreq collector, which collects CPU frequency statistics.
+	// cpuFreq is optional.
+	// When omitted, this means no opinion and the platform is left to choose a reasonable default,
+	// which is subject to change over time. The current default is disabled.
+	// Under certain circumstances, enabling the cpufreq collector increases CPU usage on machines
+	// with many cores. If you enable this collector and have machines with many cores, monitor your
+	// systems closely for excessive CPU usage.
+	// +optional
+	CpuFreq NodeExporterCollectorCpufreqConfig `json:"cpuFreq,omitempty,omitzero"`
+	// tcpStat configures the tcpstat collector, which collects TCP connection statistics.
+	// tcpStat is optional.
+	// When omitted, this means no opinion and the platform is left to choose a reasonable default,
+	// which is subject to change over time. The current default is disabled.
+	// +optional
+	TcpStat NodeExporterCollectorTcpStatConfig `json:"tcpStat,omitempty,omitzero"`
+	// ethtool configures the ethtool collector, which collects ethernet device statistics.
+	// ethtool is optional.
+	// When omitted, this means no opinion and the platform is left to choose a reasonable default,
+	// which is subject to change over time. The current default is disabled.
+	// +optional
+	Ethtool NodeExporterCollectorEthtoolConfig `json:"ethtool,omitempty,omitzero"`
+	// netDev configures the netdev collector, which collects network device statistics.
+	// netDev is optional.
+	// When omitted, this means no opinion and the platform is left to choose a reasonable default,
+	// which is subject to change over time. The current default is enabled.
+	// +optional
+	NetDev NodeExporterCollectorNetDevConfig `json:"netDev,omitempty,omitzero"`
+	// netClass configures the netclass collector, which collects information about network devices.
+	// netClass is optional.
+	// When omitted, this means no opinion and the platform is left to choose a reasonable default,
+	// which is subject to change over time. The current default is enabled with netlink mode active.
+	// +optional
+	NetClass NodeExporterCollectorNetClassConfig `json:"netClass,omitempty,omitzero"`
+	// buddyInfo configures the buddyinfo collector, which collects statistics about memory
+	// fragmentation from the node_buddyinfo_blocks metric. This metric collects data from /proc/buddyinfo.
+	// buddyInfo is optional.
+	// When omitted, this means no opinion and the platform is left to choose a reasonable default,
+	// which is subject to change over time. The current default is disabled.
+	// +optional
+	BuddyInfo NodeExporterCollectorBuddyInfoConfig `json:"buddyInfo,omitempty,omitzero"`
+	// mountStats configures the mountstats collector, which collects statistics about NFS volume
+	// I/O activities.
+	// mountStats is optional.
+	// When omitted, this means no opinion and the platform is left to choose a reasonable default,
+	// which is subject to change over time. The current default is disabled.
+	// Enabling this collector may produce metrics with high cardinality. If you enable this
+	// collector, closely monitor the prometheus-k8s deployment for excessive memory usage.
+	// +optional
+	MountStats NodeExporterCollectorMountStatsConfig `json:"mountStats,omitempty,omitzero"`
+	// ksmd configures the ksmd collector, which collects statistics from the kernel same-page
+	// merger daemon.
+	// ksmd is optional.
+	// When omitted, this means no opinion and the platform is left to choose a reasonable default,
+	// which is subject to change over time. The current default is disabled.
+	// +optional
+	Ksmd NodeExporterCollectorKSMDConfig `json:"ksmd,omitempty,omitzero"`
+	// processes configures the processes collector, which collects statistics from processes and
+	// threads running in the system.
+	// processes is optional.
+	// When omitted, this means no opinion and the platform is left to choose a reasonable default,
+	// which is subject to change over time. The current default is disabled.
+	// +optional
+	Processes NodeExporterCollectorProcessesConfig `json:"processes,omitempty,omitzero"`
+	// systemd configures the systemd collector, which collects statistics on the systemd daemon
+	// and its managed services.
+	// systemd is optional.
+	// When omitted, this means no opinion and the platform is left to choose a reasonable default,
+	// which is subject to change over time. The current default is disabled.
+	// Enabling this collector with a long list of selected units may produce metrics with high
+	// cardinality. If you enable this collector, closely monitor the prometheus-k8s deployment
+	// for excessive memory usage.
+	// +optional
+	Systemd NodeExporterCollectorSystemdConfig `json:"systemd,omitempty,omitzero"`
+}
+
+// NodeExporterCollectorCpufreqConfig provides configuration for the cpufreq collector
+// of the node-exporter agent. The cpufreq collector collects CPU frequency statistics.
+// It is disabled by default.
+type NodeExporterCollectorCpufreqConfig struct {
+	// enabled enables or disables the cpufreq collector.
+	// This field is required.
+	// Valid values are "Enabled" and "Disabled".
+	// When set to "Enabled", the cpufreq collector is active and CPU frequency statistics are collected.
+	// When set to "Disabled", the cpufreq collector is inactive.
+	// +required
+	Enabled NodeExporterCollectorState `json:"enabled,omitempty"`
+}
+
+// NodeExporterCollectorTcpStatConfig provides configuration for the tcpstat collector
+// of the node-exporter agent. The tcpstat collector collects TCP connection statistics.
+// It is disabled by default.
+type NodeExporterCollectorTcpStatConfig struct {
+	// enabled enables or disables the tcpstat collector.
+	// This field is required.
+	// Valid values are "Enabled" and "Disabled".
+	// When set to "Enabled", the tcpstat collector is active and TCP connection statistics are collected.
+	// When set to "Disabled", the tcpstat collector is inactive.
+	// +required
+	Enabled NodeExporterCollectorState `json:"enabled,omitempty"`
+}
+
+// NodeExporterCollectorEthtoolConfig provides configuration for the ethtool collector
+// of the node-exporter agent. The ethtool collector collects ethernet device statistics.
+// It is disabled by default.
+type NodeExporterCollectorEthtoolConfig struct {
+	// enabled enables or disables the ethtool collector.
+	// This field is required.
+	// Valid values are "Enabled" and "Disabled".
+	// When set to "Enabled", the ethtool collector is active and ethernet device statistics are collected.
+	// When set to "Disabled", the ethtool collector is inactive.
+	// +required
+	Enabled NodeExporterCollectorState `json:"enabled,omitempty"`
+}
+
+// NodeExporterCollectorNetDevConfig provides configuration for the netdev collector
+// of the node-exporter agent. The netdev collector collects network device statistics
+// such as bytes, packets, errors, and drops per device.
+// It is enabled by default.
+type NodeExporterCollectorNetDevConfig struct {
+	// enabled enables or disables the netdev collector.
+	// This field is required.
+	// Valid values are "Enabled" and "Disabled".
+	// When set to "Enabled", the netdev collector is active and network device statistics are collected.
+	// When set to "Disabled", the netdev collector is inactive and the corresponding metrics become unavailable.
+	// +required
+	Enabled NodeExporterCollectorState `json:"enabled,omitempty"`
+}
+
+// NodeExporterCollectorNetClassConfig provides configuration for the netclass collector
+// of the node-exporter agent. The netclass collector collects information about network devices
+// such as network speed, MTU, and carrier status.
+// It is enabled by default.
+type NodeExporterCollectorNetClassConfig struct {
+	// enabled enables or disables the netclass collector.
+	// This field is required.
+	// Valid values are "Enabled" and "Disabled".
+	// When set to "Enabled", the netclass collector is active and network class information is collected.
+	// When set to "Disabled", the netclass collector is inactive and the corresponding metrics become unavailable.
+	// +required
+	Enabled NodeExporterCollectorState `json:"enabled,omitempty"`
+	// useNetlink activates the netlink implementation of the netclass collector.
+	// useNetlink is optional.
+	// This implementation improves the performance of the netclass collector.
+	// Valid values are "Enabled" and "Disabled".
+	// When set to "Enabled", the netlink implementation is used for improved performance.
+	// When set to "Disabled", the default sysfs implementation is used.
+	// When omitted, this means no opinion and the platform is left to choose a reasonable default,
+	// which is subject to change over time. The current default is "Enabled".
+	// +optional
+	UseNetlink NodeExporterNetlinkState `json:"useNetlink,omitempty"`
+}
+
+// NodeExporterCollectorBuddyInfoConfig provides configuration for the buddyinfo collector
+// of the node-exporter agent. The buddyinfo collector collects statistics about memory fragmentation
+// from the node_buddyinfo_blocks metric using data from /proc/buddyinfo.
+// It is disabled by default.
+type NodeExporterCollectorBuddyInfoConfig struct {
+	// enabled enables or disables the buddyinfo collector.
+	// This field is required.
+	// Valid values are "Enabled" and "Disabled".
+	// When set to "Enabled", the buddyinfo collector is active and memory fragmentation statistics are collected.
+	// When set to "Disabled", the buddyinfo collector is inactive.
+	// +required
+	Enabled NodeExporterCollectorState `json:"enabled,omitempty"`
+}
+
+// NodeExporterCollectorMountStatsConfig provides configuration for the mountstats collector
+// of the node-exporter agent. The mountstats collector collects statistics about NFS volume I/O activities.
+// It is disabled by default.
+// Enabling this collector may produce metrics with high cardinality. If you enable this
+// collector, closely monitor the prometheus-k8s deployment for excessive memory usage.
+type NodeExporterCollectorMountStatsConfig struct {
+	// enabled enables or disables the mountstats collector.
+	// This field is required.
+	// Valid values are "Enabled" and "Disabled".
+	// When set to "Enabled", the mountstats collector is active and NFS volume I/O statistics are collected.
+	// When set to "Disabled", the mountstats collector is inactive.
+	// +required
+	Enabled NodeExporterCollectorState `json:"enabled,omitempty"`
+}
+
+// NodeExporterCollectorKSMDConfig provides configuration for the ksmd collector
+// of the node-exporter agent. The ksmd collector collects statistics from the kernel
+// same-page merger daemon.
+// It is disabled by default.
+type NodeExporterCollectorKSMDConfig struct {
+	// enabled enables or disables the ksmd collector.
+	// This field is required.
+	// Valid values are "Enabled" and "Disabled".
+	// When set to "Enabled", the ksmd collector is active and kernel same-page merger statistics are collected.
+	// When set to "Disabled", the ksmd collector is inactive.
+	// +required
+	Enabled NodeExporterCollectorState `json:"enabled,omitempty"`
+}
+
+// NodeExporterCollectorProcessesConfig provides configuration for the processes collector
+// of the node-exporter agent. The processes collector collects statistics from processes and threads
+// running in the system.
+// It is disabled by default.
+type NodeExporterCollectorProcessesConfig struct {
+	// enabled enables or disables the processes collector.
+	// This field is required.
+	// Valid values are "Enabled" and "Disabled".
+	// When set to "Enabled", the processes collector is active and process/thread statistics are collected.
+	// When set to "Disabled", the processes collector is inactive.
+	// +required
+	Enabled NodeExporterCollectorState `json:"enabled,omitempty"`
+}
+
+// NodeExporterCollectorSystemdConfig provides configuration for the systemd collector
+// of the node-exporter agent. The systemd collector collects statistics on the systemd daemon
+// and its managed services.
+// It is disabled by default.
+// Enabling this collector with a long list of selected units may produce metrics with high
+// cardinality. If you enable this collector, closely monitor the prometheus-k8s deployment
+// for excessive memory usage.
+type NodeExporterCollectorSystemdConfig struct {
+	// enabled enables or disables the systemd collector.
+	// This field is required.
+	// Valid values are "Enabled" and "Disabled".
+	// When set to "Enabled", the systemd collector is active and systemd unit statistics are collected.
+	// When set to "Disabled", the systemd collector is inactive.
+	// +required
+	Enabled NodeExporterCollectorState `json:"enabled,omitempty"`
+	// units is a list of regular expression patterns that match systemd units to be included
+	// by the systemd collector.
+	// units is optional.
+	// By default, the list is empty, so the collector exposes no metrics for systemd units.
+	// Each entry is a regular expression pattern and must be at least 1 character and at most 1024 characters.
+	// Maximum length for this list is 50.
+	// Minimum length for this list is 1.
+	// Entries in this list must be unique.
+	// +kubebuilder:validation:MaxItems=50
+	// +kubebuilder:validation:MinItems=1
+	// +listType=set
+	// +optional
+	Units []NodeExporterSystemdUnit `json:"units,omitempty"`
+}
+
+// NodeExporterSystemdUnit is a regular expression pattern that matches a systemd unit name.
+// Must be at least 1 character and at most 1024 characters.
+// +kubebuilder:validation:MinLength=1
+// +kubebuilder:validation:MaxLength=1024
+type NodeExporterSystemdUnit string
 
 // AuditProfile defines the audit log level for the Metrics Server.
 // +kubebuilder:validation:Enum=None;Metadata;Request;RequestResponse

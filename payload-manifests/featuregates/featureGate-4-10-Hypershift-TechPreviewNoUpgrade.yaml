@@ -238,9 +238,6 @@
                         "name": "GatewayAPIWithoutOLM"
                     },
                     {
-                        "name": "HighlyAvailableArbiter"
-                    },
-                    {
                         "name": "HyperShiftOnlyDynamicResourceAllocation"
                     },
                     {

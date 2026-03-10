@@ -208,9 +208,6 @@
                         "name": "GatewayAPIWithoutOLM"
                     },
                     {
-                        "name": "HighlyAvailableArbiter"
-                    },
-                    {
                         "name": "ImageModeStatusReporting"
                     },
                     {

@@ -292,6 +292,9 @@
                         "name": "NewOLMCatalogdAPIV1Metas"
                     },
                     {
+                        "name": "NewOLMConfigAPI"
+                    },
+                    {
                         "name": "NewOLMOwnSingleNamespace"
                     },
                     {

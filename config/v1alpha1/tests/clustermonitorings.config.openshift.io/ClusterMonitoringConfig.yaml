@@ -577,3 +577,193 @@ tests:
           prometheusOperatorAdmissionWebhookConfig:
             resources: []
       expectedError: 'spec.prometheusOperatorAdmissionWebhookConfig.resources: Invalid value: 0: spec.prometheusOperatorAdmissionWebhookConfig.resources in body should have at least 1 items'
+    - name: Should be able to create MonitoringPluginConfig with valid resources
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          monitoringPluginConfig:
+            resources:
+              - name: "cpu"
+                request: "10m"
+              - name: "memory"
+                request: "50Mi"
+      expected: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          monitoringPluginConfig:
+            resources:
+              - name: "cpu"
+                request: "10m"
+              - name: "memory"
+                request: "50Mi"
+    - name: Should be able to create MonitoringPluginConfig with valid tolerations
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          monitoringPluginConfig:
+            tolerations:
+              - key: "node-role.kubernetes.io/infra"
+                operator: "Exists"
+                effect: "NoSchedule"
+      expected: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          monitoringPluginConfig:
+            tolerations:
+              - key: "node-role.kubernetes.io/infra"
+                operator: "Exists"
+                effect: "NoSchedule"
+    - name: Should be able to create MonitoringPluginConfig with valid topologySpreadConstraints
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          monitoringPluginConfig:
+            topologySpreadConstraints:
+              - maxSkew: 1
+                topologyKey: topology.kubernetes.io/zone
+                whenUnsatisfiable: DoNotSchedule
+      expected: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          monitoringPluginConfig:
+            topologySpreadConstraints:
+              - maxSkew: 1
+                topologyKey: topology.kubernetes.io/zone
+                whenUnsatisfiable: DoNotSchedule
+    - name: Should be able to create MonitoringPluginConfig with all fields
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          monitoringPluginConfig:
+            nodeSelector:
+              kubernetes.io/os: linux
+            resources:
+              - name: "cpu"
+                request: "10m"
+                limit: "50m"
+              - name: "memory"
+                request: "50Mi"
+                limit: "100Mi"
+            tolerations:
+              - operator: "Exists"
+            topologySpreadConstraints:
+              - maxSkew: 1
+                topologyKey: topology.kubernetes.io/zone
+                whenUnsatisfiable: DoNotSchedule
+      expected: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          monitoringPluginConfig:
+            nodeSelector:
+              kubernetes.io/os: linux
+            resources:
+              - name: "cpu"
+                request: "10m"
+                limit: "50m"
+              - name: "memory"
+                request: "50Mi"
+                limit: "100Mi"
+            tolerations:
+              - operator: "Exists"
+            topologySpreadConstraints:
+              - maxSkew: 1
+                topologyKey: topology.kubernetes.io/zone
+                whenUnsatisfiable: DoNotSchedule
+    - name: Should reject MonitoringPluginConfig with empty object
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          monitoringPluginConfig: {}
+      expectedError: 'spec.monitoringPluginConfig: Invalid value: 0: spec.monitoringPluginConfig in body should have at least 1 properties'
+    - name: Should reject MonitoringPluginConfig with too many resources
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          monitoringPluginConfig:
+            resources:
+              - name: "cpu"
+                request: "100m"
+              - name: "memory"
+                request: "64Mi"
+              - name: "hugepages-2Mi"
+                request: "32Mi"
+              - name: "hugepages-1Gi"
+                request: "1Gi"
+              - name: "ephemeral-storage"
+                request: "1Gi"
+              - name: "nvidia.com/gpu"
+                request: "1"
+              - name: "example.com/foo"
+                request: "1"
+              - name: "example.com/bar"
+                request: "1"
+              - name: "example.com/baz"
+                request: "1"
+              - name: "example.com/qux"
+                request: "1"
+              - name: "example.com/quux"
+                request: "1"
+      expectedError: 'spec.monitoringPluginConfig.resources: Too many: 11: must have at most 10 items'
+    - name: Should reject MonitoringPluginConfig with duplicate resource names
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          monitoringPluginConfig:
+            resources:
+              - name: "cpu"
+                request: "100m"
+              - name: "cpu"
+                request: "200m"
+      expectedError: "Duplicate value"
+    - name: Should reject MonitoringPluginConfig with duplicate topologySpreadConstraints
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          monitoringPluginConfig:
+            topologySpreadConstraints:
+              - maxSkew: 1
+                topologyKey: topology.kubernetes.io/zone
+                whenUnsatisfiable: DoNotSchedule
+              - maxSkew: 2
+                topologyKey: topology.kubernetes.io/zone
+                whenUnsatisfiable: DoNotSchedule
+      expectedError: "Duplicate value"
+    - name: Should reject MonitoringPluginConfig with limit less than request
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          monitoringPluginConfig:
+            resources:
+              - name: "cpu"
+                request: "500m"
+                limit: "200m"
+      expectedError: 'spec.monitoringPluginConfig.resources[0]: Invalid value: "object": limit must be greater than or equal to request'
+    - name: Should reject MonitoringPluginConfig with empty resources array
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          monitoringPluginConfig:
+            resources: []
+      expectedError: 'spec.monitoringPluginConfig.resources: Invalid value: 0: spec.monitoringPluginConfig.resources in body should have at least 1 items'
+    - name: Should reject MonitoringPluginConfig with empty topologySpreadConstraints array
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          monitoringPluginConfig:
+            topologySpreadConstraints: []
+      expectedError: 'spec.monitoringPluginConfig.topologySpreadConstraints: Invalid value: 0: spec.monitoringPluginConfig.topologySpreadConstraints in body should have at least 1 items'

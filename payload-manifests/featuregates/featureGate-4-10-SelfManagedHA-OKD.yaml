@@ -29,9 +29,6 @@
                         "name": "AWSDualStackInstall"
                     },
                     {
-                        "name": "AWSServiceLBNetworkSecurityGroup"
-                    },
-                    {
                         "name": "AdditionalStorageConfig"
                     },
                     {
@@ -279,6 +276,9 @@
                     }
                 ],
                 "enabled": [
+                    {
+                        "name": "AWSServiceLBNetworkSecurityGroup"
+                    },
                     {
                         "name": "AzureWorkloadIdentity"
                     },

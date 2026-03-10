@@ -247,3 +247,176 @@ tests:
                   - 10.10.10.20
             type: AWS
       expectedStatusError: "status.platformStatus.aws.cloudLoadBalancerConfig.clusterHosted.apiIntLoadBalancerIPs[2]: Duplicate value: \"10.10.10.20\""
+    - name: Should be able to set cloudDNSIPs when dnsType is ClusterHosted
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        spec:
+          platformSpec:
+            aws: {}
+            type: AWS
+        status:
+          controlPlaneTopology: HighlyAvailable
+          infrastructureTopology: HighlyAvailable
+          platform: AWS
+          platformStatus:
+            aws:
+              cloudLoadBalancerConfig:
+                dnsType: ClusterHosted
+            type: AWS
+      updated: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        spec:
+          platformSpec:
+            type: AWS
+            aws: {}
+        status:
+          controlPlaneTopology: HighlyAvailable
+          infrastructureTopology: HighlyAvailable
+          platform: AWS
+          platformStatus:
+            aws:
+              cloudLoadBalancerConfig:
+                dnsType: ClusterHosted
+                cloudDNSIPs:
+                - 10.0.0.2
+                - 10.0.0.3
+                - 10.0.0.4
+            type: AWS
+      expected: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        spec:
+          platformSpec:
+            type: AWS
+            aws: {}
+        status:
+          controlPlaneTopology: HighlyAvailable
+          cpuPartitioning: None
+          infrastructureTopology: HighlyAvailable
+          platform: AWS
+          platformStatus:
+            aws:
+              cloudLoadBalancerConfig:
+                dnsType: ClusterHosted
+                cloudDNSIPs:
+                - 10.0.0.2
+                - 10.0.0.3
+                - 10.0.0.4
+              ipFamily: IPv4
+            type: AWS
+    - name: Should not accept cloudDNSIPs when dnsType is PlatformDefault
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        spec:
+          platformSpec:
+            aws: {}
+            type: AWS
+        status:
+          controlPlaneTopology: HighlyAvailable
+          infrastructureTopology: HighlyAvailable
+          platform: AWS
+          platformStatus:
+            aws: {}
+            type: AWS
+      updated: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        spec:
+          platformSpec:
+            type: AWS
+            aws: {}
+        status:
+          controlPlaneTopology: HighlyAvailable
+          infrastructureTopology: HighlyAvailable
+          platform: AWS
+          platformStatus:
+            aws:
+              cloudLoadBalancerConfig:
+                dnsType: PlatformDefault
+                cloudDNSIPs:
+                - 10.0.0.2
+            type: AWS
+      expectedStatusError: "status.platformStatus.aws.cloudLoadBalancerConfig: Invalid value: \"object\": cloudDNSIPs is permitted only when dnsType is ClusterHosted"
+    - name: Should not accept non-IP address values for cloudDNSIPs
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        spec:
+          platformSpec:
+            aws: {}
+            type: AWS
+        status:
+          controlPlaneTopology: HighlyAvailable
+          infrastructureTopology: HighlyAvailable
+          platform: AWS
+          platformStatus:
+            aws:
+              cloudLoadBalancerConfig:
+                dnsType: ClusterHosted
+                cloudDNSIPs:
+                - 10.0.0.2
+            type: AWS
+      updated: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        spec:
+          platformSpec:
+            type: AWS
+            aws: {}
+        status:
+          controlPlaneTopology: HighlyAvailable
+          infrastructureTopology: HighlyAvailable
+          platform: AWS
+          platformStatus:
+            aws:
+              cloudLoadBalancerConfig:
+                dnsType: ClusterHosted
+                cloudDNSIPs:
+                - 10.0.0.2
+                - not-an-ip-address
+            type: AWS
+      expectedStatusError: "status.platformStatus.aws.cloudLoadBalancerConfig.cloudDNSIPs[1]: Invalid value: \"string\": value must be a valid IP address"
+    - name: Should not accept duplicate IP addresses in cloudDNSIPs
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        spec:
+          platformSpec:
+            aws: {}
+            type: AWS
+        status:
+          controlPlaneTopology: HighlyAvailable
+          infrastructureTopology: HighlyAvailable
+          platform: AWS
+          platformStatus:
+            aws:
+              cloudLoadBalancerConfig:
+                dnsType: ClusterHosted
+                cloudDNSIPs:
+                - 10.0.0.2
+                - 10.0.0.3
+            type: AWS
+      updated: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        spec:
+          platformSpec:
+            type: AWS
+            aws: {}
+        status:
+          controlPlaneTopology: HighlyAvailable
+          infrastructureTopology: HighlyAvailable
+          platform: AWS
+          platformStatus:
+            aws:
+              cloudLoadBalancerConfig:
+                dnsType: ClusterHosted
+                cloudDNSIPs:
+                - 10.0.0.2
+                - 10.0.0.3
+                - 10.0.0.2
+            type: AWS
+      expectedStatusError: "status.platformStatus.aws.cloudLoadBalancerConfig.cloudDNSIPs[2]: Duplicate value: \"10.0.0.2\""

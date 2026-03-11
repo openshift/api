@@ -250,9 +250,6 @@
                         "name": "ImageStreamImportMode"
                     },
                     {
-                        "name": "ImageVolume"
-                    },
-                    {
                         "name": "IngressControllerDynamicConfigurationManager"
                     },
                     {

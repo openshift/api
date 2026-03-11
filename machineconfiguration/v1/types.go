@@ -740,7 +740,7 @@ type KubeletConfig struct {
 // KubeletConfigSpec configures the kubelet running on cluster nodes.
 type KubeletConfigSpec struct {
 	// autoSizingReserved controls whether system-reserved CPU and memory are automatically
-	// calculated based on each node's installed capacity. When enabled, prevents node failure
+	// calculated based on each node's installed capacity. When set to true, this prevents node failure
 	// from resource starvation of system components (kubelet, CRI-O) without manual configuration.
 	// When omitted, this means the user has no opinion and the platform is left to choose a reasonable default,
 	// which is subject to change over time. The current default is true for worker nodes and false for control plane nodes.
@@ -757,8 +757,8 @@ type KubeletConfigSpec struct {
 	LogLevel *int32 `json:"logLevel,omitempty"`
 
 	// machineConfigPoolSelector selects which pools the KubeletConfig should apply to.
-	// A nil selector results in no pools being selected, meaning this kubelet configuration
-	// will not be applied to any nodes in the cluster.
+	// When omitted or set to an empty selector {}, no pools are selected, which is equivalent
+	// to not matching any MachineConfigPool.
 	// +optional
 	MachineConfigPoolSelector *metav1.LabelSelector `json:"machineConfigPoolSelector,omitempty"`
 	// kubeletConfig contains upstream Kubernetes kubelet configuration fields.

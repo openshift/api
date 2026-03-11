@@ -170,6 +170,32 @@ tests:
           logLevel: 3
           tlsSecurityProfile:
             type: Modern
+    - name: Should allow migrating from Custom to Old TLS profile
+      initialCRDPatches:
+        - op: remove
+          path: /spec/versions/0/schema/openAPIV3Schema/properties/spec/properties/tlsSecurityProfile/x-kubernetes-validations
+      initial: |
+        apiVersion: machineconfiguration.openshift.io/v1
+        kind: KubeletConfig
+        spec:
+          tlsSecurityProfile:
+            type: Custom
+            custom:
+              ciphers:
+                - ECDHE-ECDSA-AES128-GCM-SHA256
+              minTLSVersion: VersionTLS12
+      updated: |
+        apiVersion: machineconfiguration.openshift.io/v1
+        kind: KubeletConfig
+        spec:
+          tlsSecurityProfile:
+            type: Old
+      expected: |
+        apiVersion: machineconfiguration.openshift.io/v1
+        kind: KubeletConfig
+        spec:
+          tlsSecurityProfile:
+            type: Old
     - name: Should allow updating other fields with a previously valid logLevel outside current range
       initialCRDPatches:
         - op: remove
@@ -193,3 +219,24 @@ tests:
         spec:
           logLevel: 15
           autoSizingReserved: true
+    - name: Should allow migrating from invalid logLevel to valid value
+      initialCRDPatches:
+        - op: remove
+          path: /spec/versions/0/schema/openAPIV3Schema/properties/spec/properties/logLevel/maximum
+        - op: remove
+          path: /spec/versions/0/schema/openAPIV3Schema/properties/spec/properties/logLevel/minimum
+      initial: |
+        apiVersion: machineconfiguration.openshift.io/v1
+        kind: KubeletConfig
+        spec:
+          logLevel: 15
+      updated: |
+        apiVersion: machineconfiguration.openshift.io/v1
+        kind: KubeletConfig
+        spec:
+          logLevel: 5
+      expected: |
+        apiVersion: machineconfiguration.openshift.io/v1
+        kind: KubeletConfig
+        spec:
+          logLevel: 5

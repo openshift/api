@@ -1,0 +1,72 @@
+/*
+Copyright 2023 The bpfman Authors.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+*/
+
+// All fields are required unless explicitly marked optional
+package v1alpha1
+
+// ClKprobeProgramInfo contains the information for the kprobe program
+type ClKretprobeProgramInfo struct {
+	// links is an optional field and is the list of attachment points to which the
+	// KRetProbe program should be attached. The eBPF program is loaded in kernel
+	// memory when the BPF Application CRD is created and the selected Kubernetes
+	// nodes are active. The eBPF program will not be triggered until the program
+	// has also been attached to an attachment point described in this list. Items
+	// may be added or removed from the list at any point, causing the eBPF program
+	// to be attached or detached.
+	//
+	// The attachment point for a KRetProbe program is a Linux kernel function.
+	// +optional
+	// +kubebuilder:validation:MaxItems=1023
+	// +listType=atomic
+	Links []ClKretprobeAttachInfo `json:"links,omitempty"`
+}
+
+type ClKretprobeAttachInfo struct {
+	// function is a required field and specifies the name of the Linux kernel
+	// function to attach the KRetProbe program. function must not be an empty
+	// string, must not exceed 64 characters in length, must start with alpha
+	// characters and must only contain alphanumeric characters.
+	// +required
+	// +kubebuilder:validation:Pattern="^[a-zA-Z][a-zA-Z0-9_]+."
+	// +kubebuilder:validation:MinLength=1
+	// +kubebuilder:validation:MaxLength=64
+	Function string `json:"function,omitempty"`
+}
+
+type ClKretprobeProgramInfoState struct {
+	// links is a list of attachment points for the KRetProbe program. Each entry
+	// in the list includes a linkStatus, which indicates if the attachment was
+	// successful or not on this node, a linkId, which is the kernel ID for the
+	// link if successfully attached, and other attachment specific data.
+	// +optional
+	// +kubebuilder:validation:MaxItems=1023
+	// +listType=atomic
+	Links []ClKretprobeAttachInfoState `json:"links,omitempty"`
+}
+
+type ClKretprobeAttachInfoState struct {
+	AttachInfoStateCommon `json:",inline"`
+
+	// function is a required field and specifies the name of the Linux kernel
+	// function to attach the KRetProbe program. function must not be an empty
+	// string, must not exceed 64 characters in length, must start with alpha
+	// characters and must only contain alphanumeric characters.
+	// +required
+	// +kubebuilder:validation:Pattern="^[a-zA-Z][a-zA-Z0-9_]+."
+	// +kubebuilder:validation:MinLength=1
+	// +kubebuilder:validation:MaxLength=64
+	Function string `json:"function,omitempty"`
+}

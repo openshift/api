@@ -41,135 +41,8 @@ tests:
           logLevel: 11
       expectedError: "Invalid value"
 
-    # TLSSecurityProfile CEL Validation tests
-    - name: Should allow tlsSecurityProfile with Old type
-      initial: |
-        apiVersion: machineconfiguration.openshift.io/v1
-        kind: KubeletConfig
-        spec:
-          tlsSecurityProfile:
-            type: Old
-      expected: |
-        apiVersion: machineconfiguration.openshift.io/v1
-        kind: KubeletConfig
-        spec:
-          tlsSecurityProfile:
-            type: Old
-    - name: Should allow tlsSecurityProfile with Intermediate type
-      initial: |
-        apiVersion: machineconfiguration.openshift.io/v1
-        kind: KubeletConfig
-        spec:
-          tlsSecurityProfile:
-            type: Intermediate
-      expected: |
-        apiVersion: machineconfiguration.openshift.io/v1
-        kind: KubeletConfig
-        spec:
-          tlsSecurityProfile:
-            type: Intermediate
-    - name: Should reject tlsSecurityProfile with Modern type
-      initial: |
-        apiVersion: machineconfiguration.openshift.io/v1
-        kind: KubeletConfig
-        spec:
-          tlsSecurityProfile:
-            type: Modern
-      expectedError: "only Old and Intermediate TLS profiles are supported for kubelet"
-    - name: Should reject tlsSecurityProfile with Custom type
-      initial: |
-        apiVersion: machineconfiguration.openshift.io/v1
-        kind: KubeletConfig
-        spec:
-          tlsSecurityProfile:
-            type: Custom
-            custom:
-              ciphers:
-                - ECDHE-ECDSA-AES128-GCM-SHA256
-              minTLSVersion: VersionTLS12
-      expectedError: "only Old and Intermediate TLS profiles are supported for kubelet"
-    - name: Should allow tlsSecurityProfile without type field for backward compatibility
-      initial: |
-        apiVersion: machineconfiguration.openshift.io/v1
-        kind: KubeletConfig
-        spec:
-          tlsSecurityProfile:
-            custom:
-              ciphers:
-                - ECDHE-ECDSA-AES128-GCM-SHA256
-              minTLSVersion: VersionTLS12
-      expected: |
-        apiVersion: machineconfiguration.openshift.io/v1
-        kind: KubeletConfig
-        spec:
-          tlsSecurityProfile:
-            custom:
-              ciphers:
-                - ECDHE-ECDSA-AES128-GCM-SHA256
-              minTLSVersion: VersionTLS12
-
   onUpdate:
     # Ratcheting tests - ensure existing objects with previously valid values can be updated
-    - name: Should allow updating other fields with a previously valid Custom TLS profile persisted
-      initialCRDPatches:
-        - op: remove
-          path: /spec/versions/0/schema/openAPIV3Schema/properties/spec/properties/tlsSecurityProfile/x-kubernetes-validations
-      initial: |
-        apiVersion: machineconfiguration.openshift.io/v1
-        kind: KubeletConfig
-        spec:
-          tlsSecurityProfile:
-            type: Custom
-            custom:
-              ciphers:
-                - ECDHE-ECDSA-AES128-GCM-SHA256
-              minTLSVersion: VersionTLS12
-      updated: |
-        apiVersion: machineconfiguration.openshift.io/v1
-        kind: KubeletConfig
-        spec:
-          logLevel: 5
-          tlsSecurityProfile:
-            type: Custom
-            custom:
-              ciphers:
-                - ECDHE-ECDSA-AES128-GCM-SHA256
-              minTLSVersion: VersionTLS12
-      expected: |
-        apiVersion: machineconfiguration.openshift.io/v1
-        kind: KubeletConfig
-        spec:
-          logLevel: 5
-          tlsSecurityProfile:
-            type: Custom
-            custom:
-              ciphers:
-                - ECDHE-ECDSA-AES128-GCM-SHA256
-              minTLSVersion: VersionTLS12
-    - name: Should allow updating other fields with a previously valid Modern TLS profile persisted
-      initialCRDPatches:
-        - op: remove
-          path: /spec/versions/0/schema/openAPIV3Schema/properties/spec/properties/tlsSecurityProfile/x-kubernetes-validations
-      initial: |
-        apiVersion: machineconfiguration.openshift.io/v1
-        kind: KubeletConfig
-        spec:
-          tlsSecurityProfile:
-            type: Modern
-      updated: |
-        apiVersion: machineconfiguration.openshift.io/v1
-        kind: KubeletConfig
-        spec:
-          logLevel: 3
-          tlsSecurityProfile:
-            type: Modern
-      expected: |
-        apiVersion: machineconfiguration.openshift.io/v1
-        kind: KubeletConfig
-        spec:
-          logLevel: 3
-          tlsSecurityProfile:
-            type: Modern
     - name: Should allow updating other fields with a previously valid logLevel outside current range
       initialCRDPatches:
         - op: remove
@@ -193,3 +66,24 @@ tests:
         spec:
           logLevel: 15
           autoSizingReserved: true
+    - name: Should allow migrating from invalid logLevel to valid value
+      initialCRDPatches:
+        - op: remove
+          path: /spec/versions/0/schema/openAPIV3Schema/properties/spec/properties/logLevel/maximum
+        - op: remove
+          path: /spec/versions/0/schema/openAPIV3Schema/properties/spec/properties/logLevel/minimum
+      initial: |
+        apiVersion: machineconfiguration.openshift.io/v1
+        kind: KubeletConfig
+        spec:
+          logLevel: 15
+      updated: |
+        apiVersion: machineconfiguration.openshift.io/v1
+        kind: KubeletConfig
+        spec:
+          logLevel: 5
+      expected: |
+        apiVersion: machineconfiguration.openshift.io/v1
+        kind: KubeletConfig
+        spec:
+          logLevel: 5

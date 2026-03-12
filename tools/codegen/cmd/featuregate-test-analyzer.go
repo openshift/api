@@ -188,22 +188,59 @@ func (o *FeatureGateTestAnalyzerOptions) Run(ctx context.Context) error {
 
 		writeTestingMarkDown(testingResults, md)
 
-		currErrs := checkIfTestingIsSufficient(enabledFeatureGate, testingResults)
-		if len(currErrs) == 0 {
+		validationResults := checkIfTestingIsSufficient(enabledFeatureGate, testingResults)
+
+		// Separate warnings from blocking errors
+		blockingErrors := []error{}
+		warnings := []error{}
+		for _, vr := range validationResults {
+			if vr.IsWarning {
+				warnings = append(warnings, vr.Error)
+			} else {
+				blockingErrors = append(blockingErrors, vr.Error)
+			}
+		}
+
+		if len(validationResults) == 0 {
 			md.Textf("Sufficient CI testing for %q.\n", enabledFeatureGate)
 			fmt.Fprintf(o.Out, "Sufficient CI testing for %q.\n", enabledFeatureGate)
 		} else {
-			md.Textf("INSUFFICIENT CI testing for %q.\n", enabledFeatureGate)
+			if len(blockingErrors) > 0 {
+				md.Textf("INSUFFICIENT CI testing for %q.\n", enabledFeatureGate)
+				fmt.Fprintf(o.Out, "INSUFFICIENT CI testing for %q.\n", enabledFeatureGate)
+			} else {
+				md.Textf("CI testing issues found for %q (non-blocking warnings).\n", enabledFeatureGate)
+				fmt.Fprintf(o.Out, "CI testing issues found for %q (non-blocking warnings).\n", enabledFeatureGate)
+			}
+
 			md.Textf("* At least five tests are expected for a feature\n")
 			md.Textf("* Tests must be be run on every TechPreview platform (ask for an exception if your feature doesn't support a variant)")
 			md.Textf("* All tests must run at least 14 times on every platform")
 			md.Textf("* All tests must pass at least 95%% of the time")
+			md.Textf("* JobTier must be one of: standard, informing, blocking\n")
 			md.Text("")
+
+			if len(warnings) > 0 {
+				md.Textf("**Non-blocking warnings (optional variants):**\n")
+				for _, warn := range warnings {
+					md.Textf("  - %s\n", warn.Error())
+				}
+				md.Text("")
+			}
+
+			if len(blockingErrors) > 0 {
+				md.Textf("**Blocking errors:**\n")
+				for _, err := range blockingErrors {
+					md.Textf("  - %s\n", err.Error())
+				}
+				md.Text("")
+			}
 			md.Text("")
-			fmt.Fprintf(o.Out, "INSUFFICIENT CI testing for %q.\n", enabledFeatureGate)
 		}
-		errs = append(errs, currErrs...)
-		featureGateHTMLData = append(featureGateHTMLData, buildHTMLFeatureGateData(enabledFeatureGate, testingResults, currErrs, release))
+
+		// Only add blocking errors to the error list (warnings don't fail the job)
+		errs = append(errs, blockingErrors...)
+		featureGateHTMLData = append(featureGateHTMLData, buildHTMLFeatureGateData(enabledFeatureGate, testingResults, blockingErrors, release))
 
 	}
 
@@ -223,7 +260,7 @@ func (o *FeatureGateTestAnalyzerOptions) Run(ctx context.Context) error {
 	return errors.Join(errs...)
 }
 
-func buildHTMLFeatureGateData(name string, testingResults map[JobVariant]*TestingResults, errs []error, release string) utils.HTMLFeatureGate {
+func buildHTMLFeatureGateData(name string, testingResults map[JobVariant]*TestingResults, blockingErrors []error, release string) utils.HTMLFeatureGate {
 	jobVariantsSet := sets.KeySet(testingResults)
 	jobVariants := jobVariantsSet.UnsortedList()
 
@@ -244,6 +281,8 @@ func buildHTMLFeatureGateData(name string, testingResults map[JobVariant]*Testin
 			Cloud:        jv.Cloud,
 			Architecture: jv.Architecture,
 			NetworkStack: jv.NetworkStack,
+			OS:           jv.OS,
+			JobTiers:     jv.JobTiers,
 			ColIndex:     i + 1,
 		})
 	}
@@ -272,6 +311,7 @@ func buildHTMLFeatureGateData(name string, testingResults map[JobVariant]*Testin
 					jobVariant.Cloud,
 					jobVariant.Architecture,
 					jobVariant.NetworkStack,
+					jobVariant.OS,
 				),
 			}
 			if testResults == nil {
@@ -296,7 +336,7 @@ func buildHTMLFeatureGateData(name string, testingResults map[JobVariant]*Testin
 
 	return utils.HTMLFeatureGate{
 		Name:       name,
-		Sufficient: len(errs) == 0,
+		Sufficient: len(blockingErrors) == 0,
 		Variants:   variants,
 		Tests:      tests,
 	}
@@ -326,15 +366,29 @@ func writeHTMLFromTemplate(filename string, featureGateHTMLData []utils.HTMLFeat
 	return nil
 }
 
-func checkIfTestingIsSufficient(featureGate string, testingResults map[JobVariant]*TestingResults) []error {
-	errs := []error{}
+func checkIfTestingIsSufficient(featureGate string, testingResults map[JobVariant]*TestingResults) []ValidationResult {
+	results := []ValidationResult{}
+
 	for jobVariant, testedVariant := range testingResults {
+		// Use the Optional field to determine if validation failures are warnings or errors
+		// Optional variants (like RHEL 10 in 4.22) have non-blocking warnings
+		isOptional := jobVariant.Optional
+
 		if len(testedVariant.TestResults) < requiredNumberOfTests {
-			errs = append(errs, fmt.Errorf("error: only %d tests found, need at least %d for %q on %v", len(testedVariant.TestResults), requiredNumberOfTests, featureGate, jobVariant))
+			results = append(results, ValidationResult{
+				Error: fmt.Errorf("error: only %d tests found, need at least %d for %q on %v",
+					len(testedVariant.TestResults), requiredNumberOfTests, featureGate, jobVariant),
+				IsWarning: isOptional,
+			})
 		}
+
 		for _, testResults := range testedVariant.TestResults {
 			if testResults.TotalRuns < requiredNumberOfTestRunsPerVariant {
-				errs = append(errs, fmt.Errorf("error: %q only has %d runs, need at least %d runs for %q on %v", testResults.TestName, testResults.TotalRuns, requiredNumberOfTestRunsPerVariant, featureGate, jobVariant))
+				results = append(results, ValidationResult{
+					Error: fmt.Errorf("error: %q only has %d runs, need at least %d runs for %q on %v",
+						testResults.TestName, testResults.TotalRuns, requiredNumberOfTestRunsPerVariant, featureGate, jobVariant),
+					IsWarning: isOptional,
+				})
 			}
 			if testResults.TotalRuns == 0 {
 				continue
@@ -343,12 +397,16 @@ func checkIfTestingIsSufficient(featureGate string, testingResults map[JobVarian
 			if passPercent < requiredPassRateOfTestsPerVariant {
 				displayExpected := int(requiredPassRateOfTestsPerVariant * 100)
 				displayActual := int(passPercent * 100)
-				errs = append(errs, fmt.Errorf("error: %q only passed %d%%, need at least %d%% for %q on %v", testResults.TestName, displayActual, displayExpected, featureGate, jobVariant))
+				results = append(results, ValidationResult{
+					Error: fmt.Errorf("error: %q only passed %d%%, need at least %d%% for %q on %v",
+						testResults.TestName, displayActual, displayExpected, featureGate, jobVariant),
+					IsWarning: isOptional,
+				})
 			}
 		}
 	}
 
-	return errs
+	return results
 }
 
 func writeTestingMarkDown(testingResults map[JobVariant]*TestingResults, md *utils.Markdown) {
@@ -363,6 +421,12 @@ func writeTestingMarkDown(testingResults map[JobVariant]*TestingResults, md *uti
 		columnHeader := fmt.Sprintf("%v <br/> %v <br/> %v ", jobVariant.Topology, jobVariant.Cloud, jobVariant.Architecture)
 		if jobVariant.NetworkStack != "" {
 			columnHeader = columnHeader + fmt.Sprintf("<br/> %v ", jobVariant.NetworkStack)
+		}
+		if jobVariant.OS != "" {
+			columnHeader = columnHeader + fmt.Sprintf("<br/> OS:%v ", jobVariant.OS)
+		}
+		if jobVariant.JobTiers != "" {
+			columnHeader = columnHeader + fmt.Sprintf("<br/> Tiers:%v ", jobVariant.JobTiers)
 		}
 		md.Exact(columnHeader)
 	}
@@ -458,6 +522,13 @@ var (
 			Architecture: "amd64",
 			Topology:     "single",
 		},
+		{
+			Cloud:        "aws",
+			Architecture: "amd64",
+			Topology:     "ha",
+			OS:           "rhel10",
+			Optional:     true, // RHEL 10 is optional in 4.22, will be required in OCP 5
+		},
 
 		// TODO restore these once we run TechPreview jobs that contain them
 		//{
@@ -533,6 +604,9 @@ type JobVariant struct {
 	Architecture string
 	Topology     string
 	NetworkStack string
+	OS           string
+	JobTiers     string // Comma-separated tiers (e.g., "standard,informing,blocking"). If empty, defaults to "standard,informing,blocking"
+	Optional     bool   // If true, validation failures for this variant are non-blocking warnings
 }
 
 type OrderedJobVariants []JobVariant
@@ -575,10 +649,36 @@ type TestResults struct {
 	FlakedRuns     int
 }
 
+// ValidationResult represents a validation error or warning
+type ValidationResult struct {
+	Error     error
+	IsWarning bool // if true, this is a non-blocking warning (for optional variants)
+}
+
 func testResultByName(results []TestResults, testName string) *TestResults {
 	for _, curr := range results {
 		if curr.TestName == testName {
 			return &curr
+		}
+	}
+	return nil
+}
+
+func validateJobTiers(jobVariant JobVariant) error {
+	if jobVariant.JobTiers == "" {
+		return nil // Empty is valid - will default to standard,informing,blocking
+	}
+
+	validTiers := map[string]bool{
+		"standard":  true,
+		"informing": true,
+		"blocking":  true,
+	}
+
+	for _, tier := range strings.Split(jobVariant.JobTiers, ",") {
+		tier = strings.TrimSpace(tier)
+		if tier != "" && !validTiers[tier] {
+			return fmt.Errorf("invalid JobTier %q in variant %+v - must be one of: standard, informing, blocking", tier, jobVariant)
 		}
 	}
 	return nil
@@ -603,6 +703,13 @@ func listTestResultFor(featureGate string, clusterProfiles sets.Set[string]) (ma
 		}
 
 		jobVariantsToCheck = append(jobVariantsToCheck, selfManagedPlatformVariants...)
+	}
+
+	// Validate all variants before making expensive API calls
+	for _, jobVariant := range jobVariantsToCheck {
+		if err := validateJobTiers(jobVariant); err != nil {
+			return nil, err
+		}
 	}
 
 	for _, jobVariant := range jobVariantsToCheck {
@@ -720,7 +827,7 @@ func listTestResultForVariant(featureGate string, jobVariant JobVariant) (*Testi
 	}
 
 	testNameToResults := map[string]*TestResults{}
-	queries := sippy.QueriesFor(jobVariant.Cloud, jobVariant.Architecture, jobVariant.Topology, jobVariant.NetworkStack, testPattern)
+	queries := sippy.QueriesFor(jobVariant.Cloud, jobVariant.Architecture, jobVariant.Topology, jobVariant.NetworkStack, jobVariant.OS, jobVariant.JobTiers, testPattern)
 	release, err := getRelease()
 	if err != nil {
 		return nil, fmt.Errorf("couldn't fetch latest release version: %w", err)

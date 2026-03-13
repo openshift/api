@@ -313,9 +313,6 @@
                         "name": "KMSv1"
                     },
                     {
-                        "name": "MachineConfigNodes"
-                    },
-                    {
                         "name": "ManagedBootImagesCPMS"
                     },
                     {
@@ -335,9 +332,6 @@
                     },
                     {
                         "name": "OpenShiftPodSecurityAdmission"
-                    },
-                    {
-                        "name": "PinnedImages"
                     },
                     {
                         "name": "RouteExternalCertificate"

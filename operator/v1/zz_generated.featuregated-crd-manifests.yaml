@@ -132,7 +132,8 @@ dnses.operator.openshift.io:
   CRDName: dnses.operator.openshift.io
   Capability: ""
   Category: ""
-  FeatureGates: []
+  FeatureGates:
+  - DNSTemplatePlugin
   FilenameOperatorName: dns
   FilenameOperatorOrdering: "00"
   FilenameRunLevel: "0000_70"

@@ -120,6 +120,9 @@
                         "name": "DNSNameResolver"
                     },
                     {
+                        "name": "DNSTemplatePlugin"
+                    },
+                    {
                         "name": "DRAPartitionableDevices"
                     },
                     {

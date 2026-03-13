@@ -599,6 +599,42 @@ tests:
               osExtensionsImage: quay.io/openshift-release-dev/ocp-v4.0-art-dev@sha256:9f8e7d6c5b4a3f2e1d0c9b8a7f6e5d4c3b2a1f0e9d8c7b6a5f4e3d2c1b0a9f8e
       expectedError: "spec.defaultStream must reference an existing stream name from status.availableStreams"
 
+    - name: Should reject removing spec.defaultStream once it has been set
+      initial: |
+        apiVersion: machineconfiguration.openshift.io/v1alpha1
+        kind: OSImageStream
+        metadata:
+          name: cluster
+        spec:
+          defaultStream: rhel-coreos
+      updated: |
+        apiVersion: machineconfiguration.openshift.io/v1alpha1
+        kind: OSImageStream
+        metadata:
+          name: cluster
+        spec: {}
+      expectedError: "spec.defaultStream cannot be removed once set"
+
+    - name: Should allow updating spec without defaultStream when it was never set
+      initial: |
+        apiVersion: machineconfiguration.openshift.io/v1alpha1
+        kind: OSImageStream
+        metadata:
+          name: cluster
+        spec: {}
+      updated: |
+        apiVersion: machineconfiguration.openshift.io/v1alpha1
+        kind: OSImageStream
+        metadata:
+          name: cluster
+        spec: {}
+      expected: |
+        apiVersion: machineconfiguration.openshift.io/v1alpha1
+        kind: OSImageStream
+        metadata:
+          name: cluster
+        spec: {}
+
     - name: Should allow updating stale spec.defaultStream to a valid stream after forced upgrade
       initial: |
         apiVersion: machineconfiguration.openshift.io/v1alpha1

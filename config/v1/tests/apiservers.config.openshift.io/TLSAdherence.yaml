@@ -1,0 +1,116 @@
+apiVersion: apiextensions.k8s.io/v1
+name: "APIServer"
+crdName: apiservers.config.openshift.io
+featureGates:
+- TLSAdherence
+tests:
+  onCreate:
+    - name: Should be able to create without tlsAdherence
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: APIServer
+        spec: {}
+      expected: |
+        apiVersion: config.openshift.io/v1
+        kind: APIServer
+        spec:
+          audit:
+            profile: Default
+    - name: Should be able to create with tlsAdherence set to LegacyAdheringComponentsOnly
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: APIServer
+        spec:
+          tlsAdherence: LegacyAdheringComponentsOnly
+      expected: |
+        apiVersion: config.openshift.io/v1
+        kind: APIServer
+        spec:
+          audit:
+            profile: Default
+          tlsAdherence: LegacyAdheringComponentsOnly
+    - name: Should be able to create with tlsAdherence set to StrictAllComponents
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: APIServer
+        spec:
+          tlsAdherence: StrictAllComponents
+      expected: |
+        apiVersion: config.openshift.io/v1
+        kind: APIServer
+        spec:
+          audit:
+            profile: Default
+          tlsAdherence: StrictAllComponents
+    - name: Should reject invalid tlsAdherence value
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: APIServer
+        spec:
+          tlsAdherence: InvalidValue
+      expectedError: 'spec.tlsAdherence: Unsupported value: "InvalidValue": supported values: "LegacyAdheringComponentsOnly", "StrictAllComponents"'
+  onUpdate:
+    - name: Should be able to update tlsAdherence from LegacyAdheringComponentsOnly to StrictAllComponents
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: APIServer
+        spec:
+          tlsAdherence: LegacyAdheringComponentsOnly
+      updated: |
+        apiVersion: config.openshift.io/v1
+        kind: APIServer
+        spec:
+          tlsAdherence: StrictAllComponents
+      expected: |
+        apiVersion: config.openshift.io/v1
+        kind: APIServer
+        spec:
+          audit:
+            profile: Default
+          tlsAdherence: StrictAllComponents
+    - name: Should be able to update tlsAdherence from StrictAllComponents to LegacyAdheringComponentsOnly
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: APIServer
+        spec:
+          tlsAdherence: StrictAllComponents
+      updated: |
+        apiVersion: config.openshift.io/v1
+        kind: APIServer
+        spec:
+          tlsAdherence: LegacyAdheringComponentsOnly
+      expected: |
+        apiVersion: config.openshift.io/v1
+        kind: APIServer
+        spec:
+          audit:
+            profile: Default
+          tlsAdherence: LegacyAdheringComponentsOnly
+    - name: Should be able to set tlsAdherence from unset on update
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: APIServer
+        spec: {}
+      updated: |
+        apiVersion: config.openshift.io/v1
+        kind: APIServer
+        spec:
+          tlsAdherence: StrictAllComponents
+      expected: |
+        apiVersion: config.openshift.io/v1
+        kind: APIServer
+        spec:
+          audit:
+            profile: Default
+          tlsAdherence: StrictAllComponents
+    - name: Should not allow removing tlsAdherence once set
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: APIServer
+        spec:
+          tlsAdherence: StrictAllComponents
+      updated: |
+        apiVersion: config.openshift.io/v1
+        kind: APIServer
+        spec: {}
+      expectedError: "tlsAdherence may not be removed once set"

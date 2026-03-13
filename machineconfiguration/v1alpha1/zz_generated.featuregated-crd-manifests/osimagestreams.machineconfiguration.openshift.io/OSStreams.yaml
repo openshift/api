@@ -71,6 +71,7 @@ spec:
                   valid value is accepted.
 
                   When omitted, the operator determines the default stream automatically.
+                  Once set, this field cannot be removed.
 
                   It must be a valid RFC 1123 subdomain between 1 and 253 characters in length,
                   consisting of lowercase alphanumeric characters, hyphens ('-'), and periods ('.').
@@ -83,6 +84,9 @@ spec:
                     character.
                   rule: '!format.dns1123Subdomain().validate(self).hasValue()'
             type: object
+            x-kubernetes-validations:
+            - message: spec.defaultStream cannot be removed once set
+              rule: '!has(oldSelf.defaultStream) || has(self.defaultStream)'
           status:
             description: |-
               status describes the last observed state of this OSImageStream.

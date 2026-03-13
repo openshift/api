@@ -58,7 +58,7 @@ func Test_listTestResultFor(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			//t.Skip("this is for ease of manual testing")
+			t.Skip("this is for ease of manual testing")
 
 			got, err := listTestResultFor(tt.args.featureGate, sets.New[string](tt.args.clusterProfile))
 			if (err != nil) != tt.wantErr {

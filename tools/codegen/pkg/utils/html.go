@@ -18,6 +18,7 @@ type HTMLVariantColumn struct {
 	NetworkStack string
 	OS           string
 	JobTiers     string
+	Optional     bool
 	ColIndex     int
 }
 
@@ -94,7 +95,7 @@ const HTMLTemplateSrc = `<!DOCTYPE html>
                 <th class="sortable sort-indicator" data-table="{{$fgIdx}}" data-col="0" data-sort="text">Test Name</th>
                 {{range $v := $fg.Variants}}
                 <th class="sortable sort-indicator" data-table="{{$fgIdx}}" data-col="{{$v.ColIndex}}" data-sort="percent">
-                    {{$v.Topology}}<br>{{$v.Cloud}}<br>{{$v.Architecture}}{{if $v.NetworkStack}}<br><span class="network-stack">{{$v.NetworkStack}}</span>{{end}}{{if $v.OS}}<br>OS: {{$v.OS}}{{end}}{{if $v.JobTiers}}<br>Tiers: {{$v.JobTiers}}{{end}}
+                    {{$v.Topology}}<br>{{$v.Cloud}}<br>{{$v.Architecture}}{{if $v.NetworkStack}}<br><span class="network-stack">{{$v.NetworkStack}}</span>{{end}}{{if $v.OS}}<br>OS: {{$v.OS}}{{end}}{{if $v.JobTiers}}<br>Tiers: {{$v.JobTiers}}{{end}}{{if $v.Optional}}<br><em>(Optional)</em>{{end}}
                 </th>
                 {{end}}
             </tr>

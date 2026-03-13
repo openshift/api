@@ -109,6 +109,10 @@ func QueriesFor(cloud, architecture, topology, networkStack, os, jobTiers, testP
 				jobTiersList = append(jobTiersList, trimmed)
 			}
 		}
+		// If all tiers were whitespace/empty after trimming, use defaults
+		if len(jobTiersList) == 0 {
+			jobTiersList = []string{"standard", "informing", "blocking"}
+		}
 	}
 
 	// Generate one query per JobTier (to work around API's single LinkOperator limitation)

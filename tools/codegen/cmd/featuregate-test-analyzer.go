@@ -283,6 +283,7 @@ func buildHTMLFeatureGateData(name string, testingResults map[JobVariant]*Testin
 			NetworkStack: jv.NetworkStack,
 			OS:           jv.OS,
 			JobTiers:     jv.JobTiers,
+			Optional:     jv.Optional,
 			ColIndex:     i + 1,
 		})
 	}
@@ -675,12 +676,22 @@ func validateJobTiers(jobVariant JobVariant) error {
 		"blocking":  true,
 	}
 
+	hasValidTier := false
 	for _, tier := range strings.Split(jobVariant.JobTiers, ",") {
 		tier = strings.TrimSpace(tier)
-		if tier != "" && !validTiers[tier] {
-			return fmt.Errorf("invalid JobTier %q in variant %+v - must be one of: standard, informing, blocking", tier, jobVariant)
+		if tier != "" {
+			hasValidTier = true
+			if !validTiers[tier] {
+				return fmt.Errorf("invalid JobTier %q in variant %+v - must be one of: standard, informing, blocking", tier, jobVariant)
+			}
 		}
 	}
+
+	// Reject malformed strings like "," or " , " that contain no valid tiers
+	if !hasValidTier {
+		return fmt.Errorf("JobTiers string %q contains no valid tier names in variant %+v", jobVariant.JobTiers, jobVariant)
+	}
+
 	return nil
 }
 
@@ -883,11 +894,12 @@ func listTestResultForVariant(featureGate string, jobVariant JobVariant) (*Testi
 
 			// Try to find enough test results in the last week, but if we have to we can extend
 			// the window to two weeks.
+			// NOTE: Use += to accumulate results across multiple JobTier queries
 			if currTest.CurrentRuns >= requiredNumberOfTestRunsPerVariant {
-				testResults.TotalRuns = currTest.CurrentRuns
-				testResults.SuccessfulRuns = currTest.CurrentSuccesses
-				testResults.FailedRuns = currTest.CurrentFailures
-				testResults.FlakedRuns = currTest.CurrentFlakes
+				testResults.TotalRuns += currTest.CurrentRuns
+				testResults.SuccessfulRuns += currTest.CurrentSuccesses
+				testResults.FailedRuns += currTest.CurrentFailures
+				testResults.FlakedRuns += currTest.CurrentFlakes
 			} else {
 				fmt.Printf("Insufficient results in last 7 days, increasing lookback to 2 weeks...")
 				testResults.TotalRuns += currTest.CurrentRuns + currTest.PreviousRuns

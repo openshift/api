@@ -704,6 +704,7 @@ var map_DNSSpec = map[string]string{
 	"operatorLogLevel":  "operatorLogLevel controls the logging level of the DNS Operator. Valid values are: \"Normal\", \"Debug\", \"Trace\". Defaults to \"Normal\". setting operatorLogLevel: Trace will produce extremely verbose logs.",
 	"logLevel":          "logLevel describes the desired logging verbosity for CoreDNS. Any one of the following values may be specified: * Normal logs errors from upstream resolvers. * Debug logs errors, NXDOMAIN responses, and NODATA responses. * Trace logs errors and all responses.\n Setting logLevel: Trace will produce extremely verbose logs.\nValid values are: \"Normal\", \"Debug\", \"Trace\". Defaults to \"Normal\".",
 	"cache":             "cache describes the caching configuration that applies to all server blocks listed in the Corefile. This field allows a cluster admin to optionally configure: * positiveTTL which is a duration for which positive responses should be cached. * negativeTTL which is a duration for which negative responses should be cached. If this is not configured, OpenShift will configure positive and negative caching with a default value that is subject to change. At the time of writing, the default positiveTTL is 900 seconds and the default negativeTTL is 30 seconds or as noted in the respective Corefile for your version of OpenShift.",
+	"template":          "template is an optional configuration for custom DNS query handling via the CoreDNS template plugin. The template defines how to handle queries matching specific zones and query types.\n\nThe template applies to all domains (custom domains from spec.servers and the cluster domain) to ensure consistent DNS resolution across all paths.\n\nWhen this field is not set, no template plugin configuration is added to CoreDNS.",
 }
 
 func (DNSSpec) SwaggerDoc() map[string]string {
@@ -752,6 +753,27 @@ var map_Server = map[string]string{
 
 func (Server) SwaggerDoc() map[string]string {
 	return map_Server
+}
+
+var map_Template = map[string]string{
+	"":           "Template defines a template for custom DNS query handling via the CoreDNS template plugin. Template enables filtering or custom responses for DNS queries matching specific zones and query types.",
+	"zones":      "zones specifies the DNS zones this template applies to. Each zone must be a valid DNS name as defined in RFC 1123. The special zone \".\" matches all domains (catch-all). Multiple zones can be specified to apply the same template actions to multiple domains.\n\nNote: root zone (\".\") includes cluster domain (cluster.local); use specific zones to avoid impacting IPv6 queries in IPv6 or dual-stack clusters.\n\nExamples: - [\".\"] matches all domains (catch-all for global AAAA filtering) - [\"example.com\"] matches only example.com and its subdomains - [\"example.com\", \"test.com\"] matches both domains and their subdomains",
+	"queryType":  "queryType specifies the DNS query type to match. Valid values are \"AAAA\".",
+	"queryClass": "queryClass specifies the DNS query class to match. Valid values are \"IN\".",
+	"action":     "action defines how to handle queries matching this template's zones and query type. The action builds a single DNS response by specifying the response code and may be extended by additional fields in the future.",
+}
+
+func (Template) SwaggerDoc() map[string]string {
+	return map_Template
+}
+
+var map_TemplateAction = map[string]string{
+	"":      "TemplateAction defines how to construct a DNS response for queries matching the template.",
+	"rcode": "rcode is the DNS response code to return. Valid values are \"NOERROR\".\n\nWhen set, the template returns a response with no answer records. For AAAA filtering, this means IPv6 address queries return successfully but with no IPv6 addresses, causing clients to fall back to IPv4 (A record) queries.",
+}
+
+func (TemplateAction) SwaggerDoc() map[string]string {
+	return map_TemplateAction
 }
 
 var map_Upstream = map[string]string{

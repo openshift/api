@@ -50,9 +50,6 @@
                         "name": "AzureMultiDisk"
                     },
                     {
-                        "name": "BootImageSkewEnforcement"
-                    },
-                    {
                         "name": "BootcNodeManagement"
                     },
                     {
@@ -292,6 +289,9 @@
                         "name": "AzureWorkloadIdentity"
                     },
                     {
+                        "name": "BootImageSkewEnforcement"
+                    },
+                    {
                         "name": "BuildCSIVolumes"
                     },
                     {
@@ -314,9 +314,6 @@
                     },
                     {
                         "name": "ImageStreamImportMode"
-                    },
-                    {
-                        "name": "ImageVolume"
                     },
                     {
                         "name": "InsightsConfig"

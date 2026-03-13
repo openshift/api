@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/url"
+	"strings"
 )
 
 type SippyQueryStruct struct {
@@ -50,55 +51,95 @@ type SippyTestInfo struct {
 	OpenBugs                  int         `json:"open_bugs"`
 }
 
-func QueriesFor(cloud, architecture, topology, networkStack, testPattern string) []*SippyQueryStruct {
-	queries := []*SippyQueryStruct{
+func QueriesFor(cloud, architecture, topology, networkStack, os, jobTiers, testPattern string) []*SippyQueryStruct {
+	// Build base query items that are common to all JobTier queries
+	baseItems := []SippyQueryItem{
 		{
-			Items: []SippyQueryItem{
-				{
-					ColumnField:   "variants",
-					Not:           false,
-					OperatorValue: "contains",
-					Value:         fmt.Sprintf("Platform:%s", cloud),
-				},
-				{
-					ColumnField:   "variants",
-					Not:           false,
-					OperatorValue: "contains",
-					Value:         fmt.Sprintf("Architecture:%s", architecture),
-				},
-				{
-					ColumnField:   "variants",
-					Not:           false,
-					OperatorValue: "contains",
-					Value:         fmt.Sprintf("Topology:%s", topology),
-				},
-				{
-					ColumnField:   "name",
-					Not:           false,
-					OperatorValue: "contains",
-					Value:         testPattern,
-				},
-			},
-			LinkOperator: "and",
+			ColumnField:   "variants",
+			Not:           false,
+			OperatorValue: "contains",
+			Value:         fmt.Sprintf("Platform:%s", cloud),
+		},
+		{
+			ColumnField:   "variants",
+			Not:           false,
+			OperatorValue: "contains",
+			Value:         fmt.Sprintf("Architecture:%s", architecture),
+		},
+		{
+			ColumnField:   "variants",
+			Not:           false,
+			OperatorValue: "contains",
+			Value:         fmt.Sprintf("Topology:%s", topology),
+		},
+		{
+			ColumnField:   "name",
+			Not:           false,
+			OperatorValue: "contains",
+			Value:         testPattern,
 		},
 	}
 
 	if networkStack != "" {
-		queries[0].Items = append(queries[0].Items,
-			SippyQueryItem{
-				ColumnField:   "variants",
-				Not:           false,
-				OperatorValue: "contains",
-				Value:         fmt.Sprintf("NetworkStack:%s", networkStack),
-			},
-		)
+		baseItems = append(baseItems, SippyQueryItem{
+			ColumnField:   "variants",
+			Not:           false,
+			OperatorValue: "contains",
+			Value:         fmt.Sprintf("NetworkStack:%s", networkStack),
+		})
+	}
 
+	if os != "" {
+		baseItems = append(baseItems, SippyQueryItem{
+			ColumnField:   "variants",
+			Not:           false,
+			OperatorValue: "contains",
+			Value:         fmt.Sprintf("OS:%s", os),
+		})
+	}
+
+	// Parse JobTiers - comma-separated string, default to standard/informing/blocking if empty
+	var jobTiersList []string
+	if jobTiers == "" {
+		jobTiersList = []string{"standard", "informing", "blocking"}
+	} else {
+		// Split by comma and trim whitespace
+		for _, tier := range strings.Split(jobTiers, ",") {
+			if trimmed := strings.TrimSpace(tier); trimmed != "" {
+				jobTiersList = append(jobTiersList, trimmed)
+			}
+		}
+		// If all tiers were whitespace/empty after trimming, use defaults
+		if len(jobTiersList) == 0 {
+			jobTiersList = []string{"standard", "informing", "blocking"}
+		}
+	}
+
+	// Generate one query per JobTier (to work around API's single LinkOperator limitation)
+	var queries []*SippyQueryStruct
+	for _, jobTier := range jobTiersList {
+		// Copy base items for this query
+		items := make([]SippyQueryItem, len(baseItems))
+		copy(items, baseItems)
+
+		// Add JobTier filter
+		items = append(items, SippyQueryItem{
+			ColumnField:   "variants",
+			Not:           false,
+			OperatorValue: "contains",
+			Value:         fmt.Sprintf("JobTier:%s", jobTier),
+		})
+
+		queries = append(queries, &SippyQueryStruct{
+			Items:        items,
+			LinkOperator: "and",
+		})
 	}
 
 	return queries
 }
 
-func BuildSippyTestAnalysisURL(release, testName, topology, cloud, architecture, networkStack string) string {
+func BuildSippyTestAnalysisURL(release, testName, topology, cloud, architecture, networkStack, os string) string {
 	filterItems := []SippyQueryItem{
 		{
 			ColumnField:   "name",
@@ -140,6 +181,15 @@ func BuildSippyTestAnalysisURL(release, testName, topology, cloud, architecture,
 			Value:         fmt.Sprintf("NetworkStack:%s", networkStack),
 		})
 	}
+	if os != "" {
+		filterItems = append(filterItems, SippyQueryItem{
+			ColumnField:   "variants",
+			OperatorValue: "has entry",
+			Value:         fmt.Sprintf("OS:%s", os),
+		})
+	}
+	// Note: We don't filter by JobTier in the URL so the link shows all tiers
+	// The actual queries filter by each tier separately and merge results
 
 	filterObj := SippyQueryStruct{
 		Items:        filterItems,

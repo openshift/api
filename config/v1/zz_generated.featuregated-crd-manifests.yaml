@@ -372,8 +372,6 @@ infrastructures.config.openshift.io:
   - DualReplica
   - DyanmicServiceEndpointIBMCloud
   - GCPClusterHostedDNSInstall
-  - HighlyAvailableArbiter
-  - HighlyAvailableArbiter+DualReplica
   - NutanixMultiSubnets
   - OnPremDNSRecords
   - VSphereHostVMGroupZonal

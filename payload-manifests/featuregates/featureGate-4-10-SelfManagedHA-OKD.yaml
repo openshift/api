@@ -298,9 +298,6 @@
                         "name": "GCPClusterHostedDNSInstall"
                     },
                     {
-                        "name": "HighlyAvailableArbiter"
-                    },
-                    {
                         "name": "ImageStreamImportMode"
                     },
                     {

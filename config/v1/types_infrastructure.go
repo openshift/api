@@ -103,10 +103,8 @@ type InfrastructureStatus struct {
 	// The 'External' mode indicates that the control plane is hosted externally to the cluster and that
 	// its components are not visible within the cluster.
 	// +kubebuilder:default=HighlyAvailable
-	// +openshift:validation:FeatureGateAwareEnum:featureGate="",enum=HighlyAvailable;SingleReplica;External
-	// +openshift:validation:FeatureGateAwareEnum:featureGate=HighlyAvailableArbiter,enum=HighlyAvailable;HighlyAvailableArbiter;SingleReplica;External
-	// +openshift:validation:FeatureGateAwareEnum:featureGate=DualReplica,enum=HighlyAvailable;SingleReplica;DualReplica;External
-	// +openshift:validation:FeatureGateAwareEnum:requiredFeatureGate=HighlyAvailableArbiter;DualReplica,enum=HighlyAvailable;HighlyAvailableArbiter;SingleReplica;DualReplica;External
+	// +openshift:validation:FeatureGateAwareEnum:featureGate="",enum=HighlyAvailable;HighlyAvailableArbiter;SingleReplica;External
+	// +openshift:validation:FeatureGateAwareEnum:featureGate=DualReplica,enum=HighlyAvailable;HighlyAvailableArbiter;SingleReplica;DualReplica;External
 	// +optional
 	ControlPlaneTopology TopologyMode `json:"controlPlaneTopology"`
 

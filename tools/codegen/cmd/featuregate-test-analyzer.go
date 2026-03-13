@@ -806,9 +806,6 @@ func listTestResultForVariant(featureGate string, jobVariant JobVariant) (*Testi
 
 // Check for Arbiter and DualReplica or Fencing featureGates as these have special topologies
 func matchTwoNodeFeatureGates(featureGate string, topology string) bool {
-	if strings.Contains(featureGate, "arbiter") && strings.Contains(topology, "arbiter") {
-		return true
-	}
 	if (strings.Contains(featureGate, "dualreplica") || strings.Contains(featureGate, "fencing")) && strings.Contains(topology, "fencing") {
 		return true
 	}

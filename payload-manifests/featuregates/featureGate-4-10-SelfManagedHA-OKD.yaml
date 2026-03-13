@@ -173,9 +173,6 @@
                         "name": "HyperShiftOnlyDynamicResourceAllocation"
                     },
                     {
-                        "name": "ImageModeStatusReporting"
-                    },
-                    {
                         "name": "IngressControllerDynamicConfigurationManager"
                     },
                     {
@@ -299,6 +296,9 @@
                     },
                     {
                         "name": "HighlyAvailableArbiter"
+                    },
+                    {
+                        "name": "ImageModeStatusReporting"
                     },
                     {
                         "name": "ImageStreamImportMode"

@@ -116,6 +116,26 @@ type DNSSpec struct {
 	// 30 seconds or as noted in the respective Corefile for your version of OpenShift.
 	// +optional
 	Cache DNSCache `json:"cache,omitempty"`
+
+	// templates is an optional list of template configurations for custom DNS
+	// query handling.
+	// Each template defines how to handle queries matching specific zones and
+	// query types.
+	//
+	// Templates are injected into ALL Corefile server blocks (both custom
+	// servers from spec.servers and the default .:5353 block). This ensures
+	// consistent behavior across all DNS resolution paths.
+	//
+	// Templates are evaluated in order of zone specificity (most specific first).
+	// The kubernetes plugin always processes cluster.local queries before templates.
+	//
+	// IMPORTANT: AAAA filtering in dual-stack clusters requires careful configuration.
+	// The operator automatically excludes cluster.local from broad filters to prevent
+	// breaking IPv6 service connectivity.
+	//
+	// +optional
+	// +openshift:enable:FeatureGate=DNSTemplatePlugin
+	Templates []Template `json:"templates,omitempty"`
 }
 
 // DNSCache defines the fields for configuring DNS caching.
@@ -466,6 +486,87 @@ const (
 	// Available indicates the DNS controller daemonset is available.
 	DNSAvailable = "Available"
 )
+
+// QueryType represents DNS query types supported by templates.
+// Only AAAA is supported in the initial implementation.
+// Valid value is "AAAA".
+// +kubebuilder:validation:Enum=AAAA
+type QueryType string
+
+const (
+	// QueryTypeAAAA represents IPv6 address records (AAAA).
+	QueryTypeAAAA QueryType = "AAAA"
+	// Future expansion: A, CNAME, etc.
+)
+
+// QueryClass represents DNS query classes supported by templates.
+// Only IN is supported in the initial implementation.
+// Valid value is "IN".
+// +kubebuilder:validation:Enum=IN
+type QueryClass string
+
+const (
+	// QueryClassIN represents the Internet class.
+	QueryClassIN QueryClass = "IN"
+	// Future expansion: CH (Chaos), etc.
+)
+
+// ResponseCode represents DNS response codes.
+// Only NOERROR is supported in the initial implementation.
+// Valid value is "NOERROR".
+// +kubebuilder:validation:Enum=NOERROR
+type ResponseCode string
+
+const (
+	// ResponseCodeNOERROR indicates successful query with or without answers.
+	ResponseCodeNOERROR ResponseCode = "NOERROR"
+	// Future expansion: NXDOMAIN, SERVFAIL, etc.
+)
+
+// Template defines a template for custom DNS query handling.
+type Template struct {
+	// zones specifies the DNS zones this template applies to.
+	// Each zone must be a valid DNS name as defined in RFC 1123.
+	// The special zone "." matches all domains (catch-all).
+	// At least one zone must be specified.
+	// +kubebuilder:validation:Required
+	// +kubebuilder:validation:MinItems=1
+	Zones []string `json:"zones"`
+
+	// queryType specifies the DNS query type to match.
+	// +kubebuilder:validation:Required
+	// +kubebuilder:default=AAAA
+	QueryType QueryType `json:"queryType"`
+
+	// queryClass specifies the DNS query class to match.
+	// +kubebuilder:validation:Required
+	// +kubebuilder:default=IN
+	QueryClass QueryClass `json:"queryClass"`
+
+	// action defines what the template should do with matching queries.
+	// Exactly one action type must be specified.
+	// +kubebuilder:validation:Required
+	Action TemplateAction `json:"action"`
+}
+
+// TemplateAction defines the action taken by the template.
+// This is a discriminated union - exactly one action type must be specified.
+
+// +union
+// +kubebuilder:validation:XValidation:rule="has(self.response)",message="response must be specified"
+type TemplateAction struct {
+	// +kubebuilder:validation:Required
+	// +unionDiscriminator
+	Response *ReturnEmptyAction `json:"response"`
+}
+
+// ReturnEmptyAction configures returning empty responses for filtering.
+type ReturnEmptyAction struct {
+	// +kubebuilder:validation:Required
+	// +kubebuilder:validation:Enum=NOERROR
+	// +kubebuilder:default=NOERROR
+	Rcode ResponseCode `json:"rcode"`
+}
 
 // DNSStatus defines the observed status of the DNS.
 type DNSStatus struct {

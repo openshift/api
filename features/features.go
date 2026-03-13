@@ -249,6 +249,14 @@ var (
 					enable(inTechPreviewNoUpgrade(), inDevPreviewNoUpgrade()).
 					mustRegister()
 
+	FeatureGateDNSTemplatePlugin = newFeatureGate("DNSTemplatePlugin").
+					reportProblemsToJiraComponent("dns").
+					contactPerson("grzpiotrowski").
+					productScope(ocpSpecific).
+					enhancementPR("https://issues.redhat.com/browse/NE-2118").
+					enable(inTechPreviewNoUpgrade(), inDevPreviewNoUpgrade()).
+					mustRegister()
+
 	FeatureGateMachineConfigNodes = newFeatureGate("MachineConfigNodes").
 					reportProblemsToJiraComponent("MachineConfigOperator").
 					contactPerson("ijanssen").

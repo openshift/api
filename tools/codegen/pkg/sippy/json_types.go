@@ -5,6 +5,8 @@ import (
 	"fmt"
 	"net/url"
 	"strings"
+
+	"k8s.io/apimachinery/pkg/util/sets"
 )
 
 type SippyQueryStruct struct {
@@ -103,15 +105,18 @@ func QueriesFor(cloud, architecture, topology, networkStack, os, jobTiers, testP
 	if jobTiers == "" {
 		jobTiersList = []string{"standard", "informing", "blocking"}
 	} else {
-		// Split by comma and trim whitespace
+		// Split by comma, trim whitespace, and deduplicate using sets
+		tierSet := sets.New[string]()
 		for _, tier := range strings.Split(jobTiers, ",") {
 			if trimmed := strings.TrimSpace(tier); trimmed != "" {
-				jobTiersList = append(jobTiersList, trimmed)
+				tierSet.Insert(trimmed)
 			}
 		}
 		// If all tiers were whitespace/empty after trimming, use defaults
-		if len(jobTiersList) == 0 {
+		if tierSet.Len() == 0 {
 			jobTiersList = []string{"standard", "informing", "blocking"}
+		} else {
+			jobTiersList = sets.List(tierSet)
 		}
 	}
 

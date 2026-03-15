@@ -224,6 +224,9 @@
                         "name": "NetworkConnect"
                     },
                     {
+                        "name": "NetworkObservabilityInstall"
+                    },
+                    {
                         "name": "NewOLMBoxCutterRuntime"
                     },
                     {

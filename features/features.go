@@ -1021,11 +1021,18 @@ var (
 				enable(inDevPreviewNoUpgrade(), inTechPreviewNoUpgrade()).
 				mustRegister()
 
-        FeatureGateConfidentialCluster = newFeatureGate("ConfidentialCluster").
-                                        reportProblemsToJiraComponent("ConfidentialClusters").
-                                        contactPerson("fjin").
-                                        productScope(ocpSpecific).
-                                        enhancementPR("https://github.com/openshift/enhancements/pull/1962").
-                                        enable(inDevPreviewNoUpgrade()).
-                                        mustRegister()
+	FeatureGateConfidentialCluster = newFeatureGate("ConfidentialCluster").
+					reportProblemsToJiraComponent("ConfidentialClusters").
+					contactPerson("fjin").
+					productScope(ocpSpecific).
+					enhancementPR("https://github.com/openshift/enhancements/pull/1962").
+					enable(inDevPreviewNoUpgrade()).
+					mustRegister()
+	FeatureGateNetworkObservabilityInstall = newFeatureGate("NetworkObservabilityInstall").
+						reportProblemsToJiraComponent("netobserv").
+						contactPerson("jtakvori").
+						productScope(ocpSpecific).
+						enhancementPR("https://github.com/openshift/enhancements/pull/1908").
+						enable(inDevPreviewNoUpgrade(), inTechPreviewNoUpgrade()).
+						mustRegister()
 )

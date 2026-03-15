@@ -283,6 +283,9 @@
                         "name": "MutatingAdmissionPolicy"
                     },
                     {
+                        "name": "NetworkObservabilityInstall"
+                    },
+                    {
                         "name": "NewOLM"
                     },
                     {

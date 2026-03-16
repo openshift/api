@@ -236,6 +236,9 @@
                         "name": "NewOLMConfigAPI"
                     },
                     {
+                        "name": "NewOLMOwnSingleNamespace"
+                    },
+                    {
                         "name": "NewOLMPreflightPermissionChecks"
                     },
                     {
@@ -332,9 +335,6 @@
                     },
                     {
                         "name": "NewOLM"
-                    },
-                    {
-                        "name": "NewOLMOwnSingleNamespace"
                     },
                     {
                         "name": "NewOLMWebhookProviderOpenshiftServiceCA"

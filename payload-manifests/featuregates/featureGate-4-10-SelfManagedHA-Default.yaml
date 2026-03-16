@@ -27,6 +27,9 @@
                         "name": "AWSDualStackInstall"
                     },
                     {
+                        "name": "AWSEuropeanSovereignCloudInstall"
+                    },
+                    {
                         "name": "AdditionalStorageConfig"
                     },
                     {

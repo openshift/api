@@ -253,6 +253,9 @@
                         "name": "MachineAPIMigrationVSphere"
                     },
                     {
+                        "name": "MachineConfigNodes"
+                    },
+                    {
                         "name": "ManagedBootImagesCPMS"
                     },
                     {
@@ -314,6 +317,9 @@
                     },
                     {
                         "name": "OpenShiftPodSecurityAdmission"
+                    },
+                    {
+                        "name": "PinnedImages"
                     },
                     {
                         "name": "ProvisioningRequestAvailable"

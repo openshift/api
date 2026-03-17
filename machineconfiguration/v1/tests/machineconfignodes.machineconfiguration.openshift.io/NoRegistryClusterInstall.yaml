@@ -2,6 +2,7 @@ apiVersion: apiextensions.k8s.io/v1 # Hack because controller-gen complains if w
 name: "[TechPreview] InternalReleaseImage"
 crdName: machineconfignodes.machineconfiguration.openshift.io
 featureGates:
+- MachineConfigNodes
 - NoRegistryClusterInstall
 tests:
   onUpdate:

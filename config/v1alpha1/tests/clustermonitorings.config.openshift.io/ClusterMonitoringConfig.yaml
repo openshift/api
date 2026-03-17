@@ -34,7 +34,7 @@ tests:
                 - name: "cpu"
                   request: "200m"
       expectedError: 'spec.alertmanagerConfig.customConfig.resources[1]: Duplicate value: map[string]interface {}{"name":"cpu"}'
-    - name: Should reject ContainerResource with more than 10 items
+    - name: Should reject ContainerResource with more than 5 items
       initial: |
         apiVersion: config.openshift.io/v1alpha1
         kind: ClusterMonitoring
@@ -57,17 +57,7 @@ tests:
                   request: "1Gi"
                 - name: "nvidia.com/gpu"
                   request: "1"
-                - name: "example.com/foo"
-                  request: "1"
-                - name: "example.com/bar"
-                  request: "1"
-                - name: "example.com/baz"
-                  request: "1"
-                - name: "example.com/qux"
-                  request: "1"
-                - name: "example.com/quux"
-                  request: "1"
-      expectedError: 'spec.alertmanagerConfig.customConfig.resources: Too many: 11: must have at most 10 items'
+      expectedError: 'spec.alertmanagerConfig.customConfig.resources: Too many: 6: must have at most 5 items'
     - name: Should reject ContainerResource request with MaxLength violation
       initial: |
         apiVersion: config.openshift.io/v1alpha1
@@ -319,7 +309,7 @@ tests:
                 request: "500m"
                 limit: "200m"
       expectedError: 'spec.metricsServerConfig.resources[0]: Invalid value: "object": limit must be greater than or equal to request'
-    - name: Should reject MetricsServerConfig with more than 10 resource items
+    - name: Should reject MetricsServerConfig with more than 5 resource items
       initial: |
         apiVersion: config.openshift.io/v1alpha1
         kind: ClusterMonitoring
@@ -340,17 +330,7 @@ tests:
                 request: "1Gi"
               - name: "nvidia.com/gpu"
                 request: "1"
-              - name: "example.com/foo"
-                request: "1"
-              - name: "example.com/bar"
-                request: "1"
-              - name: "example.com/baz"
-                request: "1"
-              - name: "example.com/qux"
-                request: "1"
-              - name: "example.com/quux"
-                request: "1"
-      expectedError: 'spec.metricsServerConfig.resources: Too many: 11: must have at most 10 items'
+      expectedError: 'spec.metricsServerConfig.resources: Too many: 6: must have at most 5 items'
     - name: Should be able to create PrometheusOperatorAdmissionWebhookConfig with valid resources
       initial: |
         apiVersion: config.openshift.io/v1alpha1
@@ -498,17 +478,7 @@ tests:
                 request: "1Gi"
               - name: "nvidia.com/gpu"
                 request: "1"
-              - name: "example.com/foo"
-                request: "1"
-              - name: "example.com/bar"
-                request: "1"
-              - name: "example.com/baz"
-                request: "1"
-              - name: "example.com/qux"
-                request: "1"
-              - name: "example.com/quux"
-                request: "1"
-      expectedError: 'spec.prometheusOperatorAdmissionWebhookConfig.resources: Too many: 11: must have at most 10 items'
+      expectedError: 'spec.prometheusOperatorAdmissionWebhookConfig.resources: Too many: 6: must have at most 5 items'
     - name: Should reject PrometheusOperatorAdmissionWebhookConfig with limit less than request
       initial: |
         apiVersion: config.openshift.io/v1alpha1
@@ -710,17 +680,7 @@ tests:
                 request: "1Gi"
               - name: "nvidia.com/gpu"
                 request: "1"
-              - name: "example.com/foo"
-                request: "1"
-              - name: "example.com/bar"
-                request: "1"
-              - name: "example.com/baz"
-                request: "1"
-              - name: "example.com/qux"
-                request: "1"
-              - name: "example.com/quux"
-                request: "1"
-      expectedError: 'spec.openShiftStateMetricsConfig.resources: Too many: 11: must have at most 10 items'
+      expectedError: 'spec.openShiftStateMetricsConfig.resources: Too many: 6: must have at most 5 items'
     - name: Should reject OpenShiftStateMetricsConfig with limit less than request
       initial: |
         apiVersion: config.openshift.io/v1alpha1
@@ -815,3 +775,1317 @@ tests:
                 topologyKey: topology.kubernetes.io/zone
                 whenUnsatisfiable: DoNotSchedule
       expectedError: "Duplicate value"
+    - name: Should be able to create TelemeterClientConfig with valid resources
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          telemeterClientConfig:
+            resources:
+              - name: "cpu"
+                request: "1m"
+                limit: "200m"
+              - name: "memory"
+                request: "40Mi"
+                limit: "200Mi"
+      expected: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          telemeterClientConfig:
+            resources:
+              - name: "cpu"
+                request: "1m"
+                limit: "200m"
+              - name: "memory"
+                request: "40Mi"
+                limit: "200Mi"
+    - name: Should be able to create TelemeterClientConfig with valid tolerations
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          telemeterClientConfig:
+            tolerations:
+              - key: "node-role.kubernetes.io/infra"
+                operator: "Exists"
+                effect: "NoSchedule"
+      expected: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          telemeterClientConfig:
+            tolerations:
+              - key: "node-role.kubernetes.io/infra"
+                operator: "Exists"
+                effect: "NoSchedule"
+    - name: Should be able to create TelemeterClientConfig with valid topologySpreadConstraints
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          telemeterClientConfig:
+            topologySpreadConstraints:
+              - maxSkew: 1
+                topologyKey: topology.kubernetes.io/zone
+                whenUnsatisfiable: DoNotSchedule
+                labelSelector:
+                  matchLabels:
+                    app: telemeter-client
+              - maxSkew: 2
+                topologyKey: kubernetes.io/hostname
+                whenUnsatisfiable: ScheduleAnyway
+                labelSelector:
+                  matchLabels:
+                    app: telemeter-client
+      expected: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          telemeterClientConfig:
+            topologySpreadConstraints:
+              - maxSkew: 1
+                topologyKey: topology.kubernetes.io/zone
+                whenUnsatisfiable: DoNotSchedule
+                labelSelector:
+                  matchLabels:
+                    app: telemeter-client
+              - maxSkew: 2
+                topologyKey: kubernetes.io/hostname
+                whenUnsatisfiable: ScheduleAnyway
+                labelSelector:
+                  matchLabels:
+                    app: telemeter-client
+    - name: Should be able to create TelemeterClientConfig with all fields
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          telemeterClientConfig:
+            nodeSelector:
+              kubernetes.io/os: linux
+            resources:
+              - name: "cpu"
+                request: "1m"
+              - name: "memory"
+                request: "40Mi"
+            tolerations:
+              - key: "node-role.kubernetes.io/infra"
+                operator: "Exists"
+                effect: "NoSchedule"
+            topologySpreadConstraints:
+              - maxSkew: 1
+                topologyKey: topology.kubernetes.io/zone
+                whenUnsatisfiable: DoNotSchedule
+      expected: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          telemeterClientConfig:
+            nodeSelector:
+              kubernetes.io/os: linux
+            resources:
+              - name: "cpu"
+                request: "1m"
+              - name: "memory"
+                request: "40Mi"
+            tolerations:
+              - key: "node-role.kubernetes.io/infra"
+                operator: "Exists"
+                effect: "NoSchedule"
+            topologySpreadConstraints:
+              - maxSkew: 1
+                topologyKey: topology.kubernetes.io/zone
+                whenUnsatisfiable: DoNotSchedule
+    - name: Should reject TelemeterClientConfig with empty object
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          telemeterClientConfig: {}
+      expectedError: 'spec.telemeterClientConfig: Invalid value: 0: spec.telemeterClientConfig in body should have at least 1 properties'
+    - name: Should reject TelemeterClientConfig with duplicate resource names
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          telemeterClientConfig:
+            resources:
+              - name: "cpu"
+                request: "100m"
+              - name: "cpu"
+                request: "200m"
+      expectedError: "Duplicate value"
+    - name: Should reject TelemeterClientConfig with duplicate topologySpreadConstraints
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          telemeterClientConfig:
+            topologySpreadConstraints:
+              - maxSkew: 1
+                topologyKey: topology.kubernetes.io/zone
+                whenUnsatisfiable: DoNotSchedule
+              - maxSkew: 2
+                topologyKey: topology.kubernetes.io/zone
+                whenUnsatisfiable: DoNotSchedule
+      expectedError: "Duplicate value"
+    - name: Should reject TelemeterClientConfig with too many resources
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          telemeterClientConfig:
+            resources:
+              - name: "cpu"
+                request: "100m"
+              - name: "memory"
+                request: "64Mi"
+              - name: "hugepages-2Mi"
+                request: "32Mi"
+              - name: "hugepages-1Gi"
+                request: "1Gi"
+              - name: "ephemeral-storage"
+                request: "1Gi"
+              - name: "nvidia.com/gpu"
+                request: "1"
+      expectedError: 'spec.telemeterClientConfig.resources: Too many: 6: must have at most 5 items'
+    - name: Should reject TelemeterClientConfig with limit less than request
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          telemeterClientConfig:
+            resources:
+              - name: "cpu"
+                request: "500m"
+                limit: "200m"
+      expectedError: 'spec.telemeterClientConfig.resources[0]: Invalid value: "object": limit must be greater than or equal to request'
+    - name: Should reject TelemeterClientConfig with too many topologySpreadConstraints
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          telemeterClientConfig:
+            topologySpreadConstraints:
+              - maxSkew: 1
+                topologyKey: "zone1"
+                whenUnsatisfiable: DoNotSchedule
+              - maxSkew: 1
+                topologyKey: "zone2"
+                whenUnsatisfiable: DoNotSchedule
+              - maxSkew: 1
+                topologyKey: "zone3"
+                whenUnsatisfiable: DoNotSchedule
+              - maxSkew: 1
+                topologyKey: "zone4"
+                whenUnsatisfiable: DoNotSchedule
+              - maxSkew: 1
+                topologyKey: "zone5"
+                whenUnsatisfiable: DoNotSchedule
+              - maxSkew: 1
+                topologyKey: "zone6"
+                whenUnsatisfiable: DoNotSchedule
+              - maxSkew: 1
+                topologyKey: "zone7"
+                whenUnsatisfiable: DoNotSchedule
+              - maxSkew: 1
+                topologyKey: "zone8"
+                whenUnsatisfiable: DoNotSchedule
+              - maxSkew: 1
+                topologyKey: "zone9"
+                whenUnsatisfiable: DoNotSchedule
+              - maxSkew: 1
+                topologyKey: "zone10"
+                whenUnsatisfiable: DoNotSchedule
+              - maxSkew: 1
+                topologyKey: "zone11"
+                whenUnsatisfiable: DoNotSchedule
+      expectedError: 'spec.telemeterClientConfig.topologySpreadConstraints: Too many: 11: must have at most 10 items'
+    - name: Should reject TelemeterClientConfig with empty topologySpreadConstraints array
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          telemeterClientConfig:
+            topologySpreadConstraints: []
+      expectedError: 'spec.telemeterClientConfig.topologySpreadConstraints: Invalid value: 0: spec.telemeterClientConfig.topologySpreadConstraints in body should have at least 1 items'
+    - name: Should reject TelemeterClientConfig with empty resources array
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          telemeterClientConfig:
+            resources: []
+      expectedError: 'spec.telemeterClientConfig.resources: Invalid value: 0: spec.telemeterClientConfig.resources in body should have at least 1 items'
+    - name: Should reject TelemeterClientConfig with empty nodeSelector
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          telemeterClientConfig:
+            nodeSelector: {}
+      expectedError: 'spec.telemeterClientConfig.nodeSelector: Invalid value: 0: spec.telemeterClientConfig.nodeSelector in body should have at least 1 properties'
+    - name: Should reject TelemeterClientConfig with more than 10 nodeSelector entries
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          telemeterClientConfig:
+            nodeSelector:
+              key1: val1
+              key2: val2
+              key3: val3
+              key4: val4
+              key5: val5
+              key6: val6
+              key7: val7
+              key8: val8
+              key9: val9
+              key10: val10
+              key11: val11
+      expectedError: 'spec.telemeterClientConfig.nodeSelector: Too many: 11: must have at most 10 items'
+    - name: Should reject TelemeterClientConfig with empty tolerations array
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          telemeterClientConfig:
+            tolerations: []
+      expectedError: 'spec.telemeterClientConfig.tolerations: Invalid value: 0: spec.telemeterClientConfig.tolerations in body should have at least 1 items'
+    - name: Should reject TelemeterClientConfig with more than 10 tolerations
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          telemeterClientConfig:
+            tolerations:
+              - key: "key1"
+                operator: "Exists"
+                effect: "NoSchedule"
+              - key: "key2"
+                operator: "Exists"
+                effect: "NoSchedule"
+              - key: "key3"
+                operator: "Exists"
+                effect: "NoSchedule"
+              - key: "key4"
+                operator: "Exists"
+                effect: "NoSchedule"
+              - key: "key5"
+                operator: "Exists"
+                effect: "NoSchedule"
+              - key: "key6"
+                operator: "Exists"
+                effect: "NoSchedule"
+              - key: "key7"
+                operator: "Exists"
+                effect: "NoSchedule"
+              - key: "key8"
+                operator: "Exists"
+                effect: "NoSchedule"
+              - key: "key9"
+                operator: "Exists"
+                effect: "NoSchedule"
+              - key: "key10"
+                operator: "Exists"
+                effect: "NoSchedule"
+              - key: "key11"
+                operator: "Exists"
+                effect: "NoSchedule"
+      expectedError: 'spec.telemeterClientConfig.tolerations: Too many: 11: must have at most 10 items'
+  onUpdate:
+    - name: Should reject updating TelemeterClientConfig to empty object
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          telemeterClientConfig:
+            resources:
+              - name: "cpu"
+                request: "1m"
+      updated: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          telemeterClientConfig: {}
+      expectedError: 'spec.telemeterClientConfig: Invalid value: 0: spec.telemeterClientConfig in body should have at least 1 properties'
+    - name: Should allow updating other fields while retaining more than 5 resources via ratcheting
+      initialCRDPatches:
+        - op: replace
+          path: /spec/versions/0/schema/openAPIV3Schema/properties/spec/properties/alertmanagerConfig/properties/customConfig/properties/resources/maxItems
+          value: 10
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          alertmanagerConfig:
+            deploymentMode: "CustomConfig"
+            customConfig:
+              logLevel: "Info"
+              resources:
+                - name: "cpu"
+                  request: "100m"
+                - name: "memory"
+                  request: "64Mi"
+                - name: "hugepages-2Mi"
+                  request: "32Mi"
+                - name: "hugepages-1Gi"
+                  request: "1Gi"
+                - name: "ephemeral-storage"
+                  request: "1Gi"
+                - name: "nvidia.com/gpu"
+                  request: "1"
+                - name: "example.com/foo"
+                  request: "1"
+      updated: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          alertmanagerConfig:
+            deploymentMode: "CustomConfig"
+            customConfig:
+              logLevel: "Debug"
+              resources:
+                - name: "cpu"
+                  request: "100m"
+                - name: "memory"
+                  request: "64Mi"
+                - name: "hugepages-2Mi"
+                  request: "32Mi"
+                - name: "hugepages-1Gi"
+                  request: "1Gi"
+                - name: "ephemeral-storage"
+                  request: "1Gi"
+                - name: "nvidia.com/gpu"
+                  request: "1"
+                - name: "example.com/foo"
+                  request: "1"
+      expected: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          alertmanagerConfig:
+            deploymentMode: "CustomConfig"
+            customConfig:
+              logLevel: "Debug"
+              resources:
+                - name: "cpu"
+                  request: "100m"
+                - name: "memory"
+                  request: "64Mi"
+                - name: "hugepages-2Mi"
+                  request: "32Mi"
+                - name: "hugepages-1Gi"
+                  request: "1Gi"
+                - name: "ephemeral-storage"
+                  request: "1Gi"
+                - name: "nvidia.com/gpu"
+                  request: "1"
+                - name: "example.com/foo"
+                  request: "1"
+    - name: Should not allow updating persisted resources exceeding new maxItems to a different invalid list
+      initialCRDPatches:
+        - op: replace
+          path: /spec/versions/0/schema/openAPIV3Schema/properties/spec/properties/alertmanagerConfig/properties/customConfig/properties/resources/maxItems
+          value: 10
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          alertmanagerConfig:
+            deploymentMode: "CustomConfig"
+            customConfig:
+              resources:
+                - name: "cpu"
+                  request: "100m"
+                - name: "memory"
+                  request: "64Mi"
+                - name: "hugepages-2Mi"
+                  request: "32Mi"
+                - name: "hugepages-1Gi"
+                  request: "1Gi"
+                - name: "ephemeral-storage"
+                  request: "1Gi"
+                - name: "nvidia.com/gpu"
+                  request: "1"
+                - name: "example.com/foo"
+                  request: "1"
+      updated: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          alertmanagerConfig:
+            deploymentMode: "CustomConfig"
+            customConfig:
+              resources:
+                - name: "cpu"
+                  request: "100m"
+                - name: "memory"
+                  request: "64Mi"
+                - name: "hugepages-2Mi"
+                  request: "32Mi"
+                - name: "hugepages-1Gi"
+                  request: "1Gi"
+                - name: "ephemeral-storage"
+                  request: "1Gi"
+                - name: "nvidia.com/gpu"
+                  request: "1"
+                - name: "example.com/bar"
+                  request: "2"
+      expectedError: 'spec.alertmanagerConfig.customConfig.resources: Too many: 7: must have at most 5 items'
+    - name: Should allow reducing persisted resources exceeding new maxItems to a valid count
+      initialCRDPatches:
+        - op: replace
+          path: /spec/versions/0/schema/openAPIV3Schema/properties/spec/properties/alertmanagerConfig/properties/customConfig/properties/resources/maxItems
+          value: 10
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          alertmanagerConfig:
+            deploymentMode: "CustomConfig"
+            customConfig:
+              resources:
+                - name: "cpu"
+                  request: "100m"
+                - name: "memory"
+                  request: "64Mi"
+                - name: "hugepages-2Mi"
+                  request: "32Mi"
+                - name: "hugepages-1Gi"
+                  request: "1Gi"
+                - name: "ephemeral-storage"
+                  request: "1Gi"
+                - name: "nvidia.com/gpu"
+                  request: "1"
+                - name: "example.com/foo"
+                  request: "1"
+      updated: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          alertmanagerConfig:
+            deploymentMode: "CustomConfig"
+            customConfig:
+              resources:
+                - name: "cpu"
+                  request: "100m"
+                - name: "memory"
+                  request: "64Mi"
+      expected: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          alertmanagerConfig:
+            deploymentMode: "CustomConfig"
+            customConfig:
+              resources:
+                - name: "cpu"
+                  request: "100m"
+                - name: "memory"
+                  request: "64Mi"
+    - name: Should allow updating metricsServerConfig while retaining more than 5 resources via ratcheting
+      initialCRDPatches:
+        - op: replace
+          path: /spec/versions/0/schema/openAPIV3Schema/properties/spec/properties/metricsServerConfig/properties/resources/maxItems
+          value: 10
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          metricsServerConfig:
+            resources:
+              - name: "cpu"
+                request: "100m"
+              - name: "memory"
+                request: "64Mi"
+              - name: "hugepages-2Mi"
+                request: "32Mi"
+              - name: "hugepages-1Gi"
+                request: "1Gi"
+              - name: "ephemeral-storage"
+                request: "1Gi"
+              - name: "nvidia.com/gpu"
+                request: "1"
+              - name: "example.com/foo"
+                request: "1"
+      updated: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          metricsServerConfig:
+            verbosity: "Info"
+            resources:
+              - name: "cpu"
+                request: "100m"
+              - name: "memory"
+                request: "64Mi"
+              - name: "hugepages-2Mi"
+                request: "32Mi"
+              - name: "hugepages-1Gi"
+                request: "1Gi"
+              - name: "ephemeral-storage"
+                request: "1Gi"
+              - name: "nvidia.com/gpu"
+                request: "1"
+              - name: "example.com/foo"
+                request: "1"
+      expected: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          metricsServerConfig:
+            verbosity: "Info"
+            resources:
+              - name: "cpu"
+                request: "100m"
+              - name: "memory"
+                request: "64Mi"
+              - name: "hugepages-2Mi"
+                request: "32Mi"
+              - name: "hugepages-1Gi"
+                request: "1Gi"
+              - name: "ephemeral-storage"
+                request: "1Gi"
+              - name: "nvidia.com/gpu"
+                request: "1"
+              - name: "example.com/foo"
+                request: "1"
+    - name: Should not allow updating metricsServerConfig persisted resources exceeding new maxItems to a different invalid list
+      initialCRDPatches:
+        - op: replace
+          path: /spec/versions/0/schema/openAPIV3Schema/properties/spec/properties/metricsServerConfig/properties/resources/maxItems
+          value: 10
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          metricsServerConfig:
+            resources:
+              - name: "cpu"
+                request: "100m"
+              - name: "memory"
+                request: "64Mi"
+              - name: "hugepages-2Mi"
+                request: "32Mi"
+              - name: "hugepages-1Gi"
+                request: "1Gi"
+              - name: "ephemeral-storage"
+                request: "1Gi"
+              - name: "nvidia.com/gpu"
+                request: "1"
+              - name: "example.com/foo"
+                request: "1"
+      updated: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          metricsServerConfig:
+            resources:
+              - name: "cpu"
+                request: "100m"
+              - name: "memory"
+                request: "64Mi"
+              - name: "hugepages-2Mi"
+                request: "32Mi"
+              - name: "hugepages-1Gi"
+                request: "1Gi"
+              - name: "ephemeral-storage"
+                request: "1Gi"
+              - name: "nvidia.com/gpu"
+                request: "1"
+              - name: "example.com/bar"
+                request: "2"
+      expectedError: 'spec.metricsServerConfig.resources: Too many: 7: must have at most 5 items'
+    - name: Should allow reducing metricsServerConfig persisted resources exceeding new maxItems to a valid count
+      initialCRDPatches:
+        - op: replace
+          path: /spec/versions/0/schema/openAPIV3Schema/properties/spec/properties/metricsServerConfig/properties/resources/maxItems
+          value: 10
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          metricsServerConfig:
+            resources:
+              - name: "cpu"
+                request: "100m"
+              - name: "memory"
+                request: "64Mi"
+              - name: "hugepages-2Mi"
+                request: "32Mi"
+              - name: "hugepages-1Gi"
+                request: "1Gi"
+              - name: "ephemeral-storage"
+                request: "1Gi"
+              - name: "nvidia.com/gpu"
+                request: "1"
+              - name: "example.com/foo"
+                request: "1"
+      updated: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          metricsServerConfig:
+            resources:
+              - name: "cpu"
+                request: "100m"
+              - name: "memory"
+                request: "64Mi"
+      expected: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          metricsServerConfig:
+            resources:
+              - name: "cpu"
+                request: "100m"
+              - name: "memory"
+                request: "64Mi"
+    - name: Should allow updating prometheusOperatorConfig while retaining more than 5 resources via ratcheting
+      initialCRDPatches:
+        - op: replace
+          path: /spec/versions/0/schema/openAPIV3Schema/properties/spec/properties/prometheusOperatorConfig/properties/resources/maxItems
+          value: 10
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          prometheusOperatorConfig:
+            resources:
+              - name: "cpu"
+                request: "100m"
+              - name: "memory"
+                request: "64Mi"
+              - name: "hugepages-2Mi"
+                request: "32Mi"
+              - name: "hugepages-1Gi"
+                request: "1Gi"
+              - name: "ephemeral-storage"
+                request: "1Gi"
+              - name: "nvidia.com/gpu"
+                request: "1"
+              - name: "example.com/foo"
+                request: "1"
+      updated: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          prometheusOperatorConfig:
+            logLevel: "Debug"
+            resources:
+              - name: "cpu"
+                request: "100m"
+              - name: "memory"
+                request: "64Mi"
+              - name: "hugepages-2Mi"
+                request: "32Mi"
+              - name: "hugepages-1Gi"
+                request: "1Gi"
+              - name: "ephemeral-storage"
+                request: "1Gi"
+              - name: "nvidia.com/gpu"
+                request: "1"
+              - name: "example.com/foo"
+                request: "1"
+      expected: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          prometheusOperatorConfig:
+            logLevel: "Debug"
+            resources:
+              - name: "cpu"
+                request: "100m"
+              - name: "memory"
+                request: "64Mi"
+              - name: "hugepages-2Mi"
+                request: "32Mi"
+              - name: "hugepages-1Gi"
+                request: "1Gi"
+              - name: "ephemeral-storage"
+                request: "1Gi"
+              - name: "nvidia.com/gpu"
+                request: "1"
+              - name: "example.com/foo"
+                request: "1"
+    - name: Should not allow updating prometheusOperatorConfig persisted resources exceeding new maxItems to a different invalid list
+      initialCRDPatches:
+        - op: replace
+          path: /spec/versions/0/schema/openAPIV3Schema/properties/spec/properties/prometheusOperatorConfig/properties/resources/maxItems
+          value: 10
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          prometheusOperatorConfig:
+            resources:
+              - name: "cpu"
+                request: "100m"
+              - name: "memory"
+                request: "64Mi"
+              - name: "hugepages-2Mi"
+                request: "32Mi"
+              - name: "hugepages-1Gi"
+                request: "1Gi"
+              - name: "ephemeral-storage"
+                request: "1Gi"
+              - name: "nvidia.com/gpu"
+                request: "1"
+              - name: "example.com/foo"
+                request: "1"
+      updated: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          prometheusOperatorConfig:
+            resources:
+              - name: "cpu"
+                request: "100m"
+              - name: "memory"
+                request: "64Mi"
+              - name: "hugepages-2Mi"
+                request: "32Mi"
+              - name: "hugepages-1Gi"
+                request: "1Gi"
+              - name: "ephemeral-storage"
+                request: "1Gi"
+              - name: "nvidia.com/gpu"
+                request: "1"
+              - name: "example.com/bar"
+                request: "2"
+      expectedError: 'spec.prometheusOperatorConfig.resources: Too many: 7: must have at most 5 items'
+    - name: Should allow reducing prometheusOperatorConfig persisted resources exceeding new maxItems to a valid count
+      initialCRDPatches:
+        - op: replace
+          path: /spec/versions/0/schema/openAPIV3Schema/properties/spec/properties/prometheusOperatorConfig/properties/resources/maxItems
+          value: 10
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          prometheusOperatorConfig:
+            resources:
+              - name: "cpu"
+                request: "100m"
+              - name: "memory"
+                request: "64Mi"
+              - name: "hugepages-2Mi"
+                request: "32Mi"
+              - name: "hugepages-1Gi"
+                request: "1Gi"
+              - name: "ephemeral-storage"
+                request: "1Gi"
+              - name: "nvidia.com/gpu"
+                request: "1"
+              - name: "example.com/foo"
+                request: "1"
+      updated: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          prometheusOperatorConfig:
+            resources:
+              - name: "cpu"
+                request: "100m"
+              - name: "memory"
+                request: "64Mi"
+      expected: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          prometheusOperatorConfig:
+            resources:
+              - name: "cpu"
+                request: "100m"
+              - name: "memory"
+                request: "64Mi"
+    - name: Should allow updating prometheusOperatorAdmissionWebhookConfig while retaining more than 5 resources via ratcheting
+      initialCRDPatches:
+        - op: replace
+          path: /spec/versions/0/schema/openAPIV3Schema/properties/spec/properties/prometheusOperatorAdmissionWebhookConfig/properties/resources/maxItems
+          value: 10
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          prometheusOperatorAdmissionWebhookConfig:
+            resources:
+              - name: "cpu"
+                request: "100m"
+              - name: "memory"
+                request: "64Mi"
+              - name: "hugepages-2Mi"
+                request: "32Mi"
+              - name: "hugepages-1Gi"
+                request: "1Gi"
+              - name: "ephemeral-storage"
+                request: "1Gi"
+              - name: "nvidia.com/gpu"
+                request: "1"
+              - name: "example.com/foo"
+                request: "1"
+      updated: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          prometheusOperatorAdmissionWebhookConfig:
+            resources:
+              - name: "cpu"
+                request: "100m"
+              - name: "memory"
+                request: "64Mi"
+              - name: "hugepages-2Mi"
+                request: "32Mi"
+              - name: "hugepages-1Gi"
+                request: "1Gi"
+              - name: "ephemeral-storage"
+                request: "1Gi"
+              - name: "nvidia.com/gpu"
+                request: "1"
+              - name: "example.com/foo"
+                request: "1"
+            topologySpreadConstraints:
+              - maxSkew: 1
+                topologyKey: "topology.kubernetes.io/zone"
+                whenUnsatisfiable: "DoNotSchedule"
+      expected: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          prometheusOperatorAdmissionWebhookConfig:
+            resources:
+              - name: "cpu"
+                request: "100m"
+              - name: "memory"
+                request: "64Mi"
+              - name: "hugepages-2Mi"
+                request: "32Mi"
+              - name: "hugepages-1Gi"
+                request: "1Gi"
+              - name: "ephemeral-storage"
+                request: "1Gi"
+              - name: "nvidia.com/gpu"
+                request: "1"
+              - name: "example.com/foo"
+                request: "1"
+            topologySpreadConstraints:
+              - maxSkew: 1
+                topologyKey: "topology.kubernetes.io/zone"
+                whenUnsatisfiable: "DoNotSchedule"
+    - name: Should not allow updating prometheusOperatorAdmissionWebhookConfig persisted resources exceeding new maxItems to a different invalid list
+      initialCRDPatches:
+        - op: replace
+          path: /spec/versions/0/schema/openAPIV3Schema/properties/spec/properties/prometheusOperatorAdmissionWebhookConfig/properties/resources/maxItems
+          value: 10
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          prometheusOperatorAdmissionWebhookConfig:
+            resources:
+              - name: "cpu"
+                request: "100m"
+              - name: "memory"
+                request: "64Mi"
+              - name: "hugepages-2Mi"
+                request: "32Mi"
+              - name: "hugepages-1Gi"
+                request: "1Gi"
+              - name: "ephemeral-storage"
+                request: "1Gi"
+              - name: "nvidia.com/gpu"
+                request: "1"
+              - name: "example.com/foo"
+                request: "1"
+      updated: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          prometheusOperatorAdmissionWebhookConfig:
+            resources:
+              - name: "cpu"
+                request: "100m"
+              - name: "memory"
+                request: "64Mi"
+              - name: "hugepages-2Mi"
+                request: "32Mi"
+              - name: "hugepages-1Gi"
+                request: "1Gi"
+              - name: "ephemeral-storage"
+                request: "1Gi"
+              - name: "nvidia.com/gpu"
+                request: "1"
+              - name: "example.com/bar"
+                request: "2"
+      expectedError: 'spec.prometheusOperatorAdmissionWebhookConfig.resources: Too many: 7: must have at most 5 items'
+    - name: Should allow reducing prometheusOperatorAdmissionWebhookConfig persisted resources exceeding new maxItems to a valid count
+      initialCRDPatches:
+        - op: replace
+          path: /spec/versions/0/schema/openAPIV3Schema/properties/spec/properties/prometheusOperatorAdmissionWebhookConfig/properties/resources/maxItems
+          value: 10
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          prometheusOperatorAdmissionWebhookConfig:
+            resources:
+              - name: "cpu"
+                request: "100m"
+              - name: "memory"
+                request: "64Mi"
+              - name: "hugepages-2Mi"
+                request: "32Mi"
+              - name: "hugepages-1Gi"
+                request: "1Gi"
+              - name: "ephemeral-storage"
+                request: "1Gi"
+              - name: "nvidia.com/gpu"
+                request: "1"
+              - name: "example.com/foo"
+                request: "1"
+      updated: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          prometheusOperatorAdmissionWebhookConfig:
+            resources:
+              - name: "cpu"
+                request: "100m"
+              - name: "memory"
+                request: "64Mi"
+      expected: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          prometheusOperatorAdmissionWebhookConfig:
+            resources:
+              - name: "cpu"
+                request: "100m"
+              - name: "memory"
+                request: "64Mi"
+    - name: Should allow updating openShiftStateMetricsConfig while retaining more than 5 resources via ratcheting
+      initialCRDPatches:
+        - op: replace
+          path: /spec/versions/0/schema/openAPIV3Schema/properties/spec/properties/openShiftStateMetricsConfig/properties/resources/maxItems
+          value: 10
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          openShiftStateMetricsConfig:
+            resources:
+              - name: "cpu"
+                request: "100m"
+              - name: "memory"
+                request: "64Mi"
+              - name: "hugepages-2Mi"
+                request: "32Mi"
+              - name: "hugepages-1Gi"
+                request: "1Gi"
+              - name: "ephemeral-storage"
+                request: "1Gi"
+              - name: "nvidia.com/gpu"
+                request: "1"
+              - name: "example.com/foo"
+                request: "1"
+      updated: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          openShiftStateMetricsConfig:
+            nodeSelector:
+              kubernetes.io/os: "linux"
+            resources:
+              - name: "cpu"
+                request: "100m"
+              - name: "memory"
+                request: "64Mi"
+              - name: "hugepages-2Mi"
+                request: "32Mi"
+              - name: "hugepages-1Gi"
+                request: "1Gi"
+              - name: "ephemeral-storage"
+                request: "1Gi"
+              - name: "nvidia.com/gpu"
+                request: "1"
+              - name: "example.com/foo"
+                request: "1"
+      expected: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          openShiftStateMetricsConfig:
+            nodeSelector:
+              kubernetes.io/os: "linux"
+            resources:
+              - name: "cpu"
+                request: "100m"
+              - name: "memory"
+                request: "64Mi"
+              - name: "hugepages-2Mi"
+                request: "32Mi"
+              - name: "hugepages-1Gi"
+                request: "1Gi"
+              - name: "ephemeral-storage"
+                request: "1Gi"
+              - name: "nvidia.com/gpu"
+                request: "1"
+              - name: "example.com/foo"
+                request: "1"
+    - name: Should not allow updating openShiftStateMetricsConfig persisted resources exceeding new maxItems to a different invalid list
+      initialCRDPatches:
+        - op: replace
+          path: /spec/versions/0/schema/openAPIV3Schema/properties/spec/properties/openShiftStateMetricsConfig/properties/resources/maxItems
+          value: 10
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          openShiftStateMetricsConfig:
+            resources:
+              - name: "cpu"
+                request: "100m"
+              - name: "memory"
+                request: "64Mi"
+              - name: "hugepages-2Mi"
+                request: "32Mi"
+              - name: "hugepages-1Gi"
+                request: "1Gi"
+              - name: "ephemeral-storage"
+                request: "1Gi"
+              - name: "nvidia.com/gpu"
+                request: "1"
+              - name: "example.com/foo"
+                request: "1"
+      updated: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          openShiftStateMetricsConfig:
+            resources:
+              - name: "cpu"
+                request: "100m"
+              - name: "memory"
+                request: "64Mi"
+              - name: "hugepages-2Mi"
+                request: "32Mi"
+              - name: "hugepages-1Gi"
+                request: "1Gi"
+              - name: "ephemeral-storage"
+                request: "1Gi"
+              - name: "nvidia.com/gpu"
+                request: "1"
+              - name: "example.com/bar"
+                request: "2"
+      expectedError: 'spec.openShiftStateMetricsConfig.resources: Too many: 7: must have at most 5 items'
+    - name: Should allow reducing openShiftStateMetricsConfig persisted resources exceeding new maxItems to a valid count
+      initialCRDPatches:
+        - op: replace
+          path: /spec/versions/0/schema/openAPIV3Schema/properties/spec/properties/openShiftStateMetricsConfig/properties/resources/maxItems
+          value: 10
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          openShiftStateMetricsConfig:
+            resources:
+              - name: "cpu"
+                request: "100m"
+              - name: "memory"
+                request: "64Mi"
+              - name: "hugepages-2Mi"
+                request: "32Mi"
+              - name: "hugepages-1Gi"
+                request: "1Gi"
+              - name: "ephemeral-storage"
+                request: "1Gi"
+              - name: "nvidia.com/gpu"
+                request: "1"
+              - name: "example.com/foo"
+                request: "1"
+      updated: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          openShiftStateMetricsConfig:
+            resources:
+              - name: "cpu"
+                request: "100m"
+              - name: "memory"
+                request: "64Mi"
+      expected: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          openShiftStateMetricsConfig:
+            resources:
+              - name: "cpu"
+                request: "100m"
+              - name: "memory"
+                request: "64Mi"
+    - name: Should allow updating prometheusConfig while retaining more than 5 resources via ratcheting
+      initialCRDPatches:
+        - op: replace
+          path: /spec/versions/0/schema/openAPIV3Schema/properties/spec/properties/prometheusConfig/properties/resources/maxItems
+          value: 10
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          prometheusConfig:
+            resources:
+              - name: "cpu"
+                request: "100m"
+              - name: "memory"
+                request: "64Mi"
+              - name: "hugepages-2Mi"
+                request: "32Mi"
+              - name: "hugepages-1Gi"
+                request: "1Gi"
+              - name: "ephemeral-storage"
+                request: "1Gi"
+              - name: "nvidia.com/gpu"
+                request: "1"
+              - name: "example.com/foo"
+                request: "1"
+      updated: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          prometheusConfig:
+            tolerations:
+              - key: "node-role.kubernetes.io/master"
+                operator: "Exists"
+                effect: "NoSchedule"
+            resources:
+              - name: "cpu"
+                request: "100m"
+              - name: "memory"
+                request: "64Mi"
+              - name: "hugepages-2Mi"
+                request: "32Mi"
+              - name: "hugepages-1Gi"
+                request: "1Gi"
+              - name: "ephemeral-storage"
+                request: "1Gi"
+              - name: "nvidia.com/gpu"
+                request: "1"
+              - name: "example.com/foo"
+                request: "1"
+      expected: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          prometheusConfig:
+            tolerations:
+              - key: "node-role.kubernetes.io/master"
+                operator: "Exists"
+                effect: "NoSchedule"
+            resources:
+              - name: "cpu"
+                request: "100m"
+              - name: "memory"
+                request: "64Mi"
+              - name: "hugepages-2Mi"
+                request: "32Mi"
+              - name: "hugepages-1Gi"
+                request: "1Gi"
+              - name: "ephemeral-storage"
+                request: "1Gi"
+              - name: "nvidia.com/gpu"
+                request: "1"
+              - name: "example.com/foo"
+                request: "1"
+    - name: Should not allow updating prometheusConfig persisted resources exceeding new maxItems to a different invalid list
+      initialCRDPatches:
+        - op: replace
+          path: /spec/versions/0/schema/openAPIV3Schema/properties/spec/properties/prometheusConfig/properties/resources/maxItems
+          value: 10
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          prometheusConfig:
+            resources:
+              - name: "cpu"
+                request: "100m"
+              - name: "memory"
+                request: "64Mi"
+              - name: "hugepages-2Mi"
+                request: "32Mi"
+              - name: "hugepages-1Gi"
+                request: "1Gi"
+              - name: "ephemeral-storage"
+                request: "1Gi"
+              - name: "nvidia.com/gpu"
+                request: "1"
+              - name: "example.com/foo"
+                request: "1"
+      updated: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          prometheusConfig:
+            resources:
+              - name: "cpu"
+                request: "100m"
+              - name: "memory"
+                request: "64Mi"
+              - name: "hugepages-2Mi"
+                request: "32Mi"
+              - name: "hugepages-1Gi"
+                request: "1Gi"
+              - name: "ephemeral-storage"
+                request: "1Gi"
+              - name: "nvidia.com/gpu"
+                request: "1"
+              - name: "example.com/bar"
+                request: "2"
+      expectedError: 'spec.prometheusConfig.resources: Too many: 7: must have at most 5 items'
+    - name: Should allow reducing prometheusConfig persisted resources exceeding new maxItems to a valid count
+      initialCRDPatches:
+        - op: replace
+          path: /spec/versions/0/schema/openAPIV3Schema/properties/spec/properties/prometheusConfig/properties/resources/maxItems
+          value: 10
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          prometheusConfig:
+            resources:
+              - name: "cpu"
+                request: "100m"
+              - name: "memory"
+                request: "64Mi"
+              - name: "hugepages-2Mi"
+                request: "32Mi"
+              - name: "hugepages-1Gi"
+                request: "1Gi"
+              - name: "ephemeral-storage"
+                request: "1Gi"
+              - name: "nvidia.com/gpu"
+                request: "1"
+              - name: "example.com/foo"
+                request: "1"
+      updated: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          prometheusConfig:
+            resources:
+              - name: "cpu"
+                request: "100m"
+              - name: "memory"
+                request: "64Mi"
+      expected: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          prometheusConfig:
+            resources:
+              - name: "cpu"
+                request: "100m"
+              - name: "memory"
+                request: "64Mi"

@@ -815,3 +815,356 @@ tests:
                 topologyKey: topology.kubernetes.io/zone
                 whenUnsatisfiable: DoNotSchedule
       expectedError: "Duplicate value"
+    - name: Should be able to create NodeExporterConfig with valid resources
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          nodeExporterConfig:
+            resources:
+              - name: "cpu"
+                request: "50m"
+                limit: "200m"
+              - name: "memory"
+                request: "50Mi"
+                limit: "200Mi"
+      expected: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          nodeExporterConfig:
+            resources:
+              - name: "cpu"
+                request: "50m"
+                limit: "200m"
+              - name: "memory"
+                request: "50Mi"
+                limit: "200Mi"
+    - name: Should be able to create NodeExporterConfig with valid tolerations
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          nodeExporterConfig:
+            tolerations:
+              - operator: "Exists"
+      expected: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          nodeExporterConfig:
+            tolerations:
+              - operator: "Exists"
+    - name: Should be able to create NodeExporterConfig with collectors
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          nodeExporterConfig:
+            collectors:
+              cpuFreq:
+                collectionPolicy: Collect
+              tcpStat:
+                collectionPolicy: DoNotCollect
+              netDev:
+                collectionPolicy: Collect
+              netClass:
+                collectionPolicy: Collect
+                statsGatherer: Netlink
+              systemd:
+                collectionPolicy: Collect
+                units:
+                  - "kubelet.service"
+                  - "crio.service"
+      expected: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          nodeExporterConfig:
+            collectors:
+              cpuFreq:
+                collectionPolicy: Collect
+              tcpStat:
+                collectionPolicy: DoNotCollect
+              netDev:
+                collectionPolicy: Collect
+              netClass:
+                collectionPolicy: Collect
+                statsGatherer: Netlink
+              systemd:
+                collectionPolicy: Collect
+                units:
+                  - "kubelet.service"
+                  - "crio.service"
+    - name: Should be able to create NodeExporterConfig with all fields
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          nodeExporterConfig:
+            nodeSelector:
+              kubernetes.io/os: linux
+            resources:
+              - name: "cpu"
+                request: "50m"
+                limit: "200m"
+            tolerations:
+              - operator: "Exists"
+            collectors:
+              cpuFreq:
+                collectionPolicy: Collect
+              buddyInfo:
+                collectionPolicy: DoNotCollect
+            maxProcs: 4
+            ignoredNetworkDevices:
+              - "^veth.*$"
+              - "^docker.*$"
+      expected: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          nodeExporterConfig:
+            nodeSelector:
+              kubernetes.io/os: linux
+            resources:
+              - name: "cpu"
+                request: "50m"
+                limit: "200m"
+            tolerations:
+              - operator: "Exists"
+            collectors:
+              cpuFreq:
+                collectionPolicy: Collect
+              buddyInfo:
+                collectionPolicy: DoNotCollect
+            maxProcs: 4
+            ignoredNetworkDevices:
+              - "^veth.*$"
+              - "^docker.*$"
+    - name: Should reject NodeExporterConfig with empty object
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          nodeExporterConfig: {}
+      expectedError: 'spec.nodeExporterConfig: Invalid value: 0: spec.nodeExporterConfig in body should have at least 1 properties'
+    - name: Should reject NodeExporterConfig with too many resources
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          nodeExporterConfig:
+            resources:
+              - name: "cpu"
+                request: "100m"
+              - name: "memory"
+                request: "64Mi"
+              - name: "hugepages-2Mi"
+                request: "32Mi"
+              - name: "hugepages-1Gi"
+                request: "1Gi"
+              - name: "ephemeral-storage"
+                request: "1Gi"
+              - name: "nvidia.com/gpu"
+                request: "1"
+              - name: "example.com/foo"
+                request: "1"
+              - name: "example.com/bar"
+                request: "1"
+              - name: "example.com/baz"
+                request: "1"
+              - name: "example.com/qux"
+                request: "1"
+              - name: "example.com/quux"
+                request: "1"
+      expectedError: 'spec.nodeExporterConfig.resources: Too many: 11: must have at most 10 items'
+    - name: Should reject NodeExporterConfig with duplicate resource names
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          nodeExporterConfig:
+            resources:
+              - name: "cpu"
+                request: "100m"
+              - name: "cpu"
+                request: "200m"
+      expectedError: 'spec.nodeExporterConfig.resources[1]: Duplicate value: map[string]interface {}{"name":"cpu"}'
+    - name: Should reject NodeExporterConfig with limit less than request
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          nodeExporterConfig:
+            resources:
+              - name: "cpu"
+                request: "500m"
+                limit: "200m"
+      expectedError: 'spec.nodeExporterConfig.resources[0]: Invalid value: "object": limit must be greater than or equal to request'
+    - name: Should reject NodeExporterConfig with empty resources array
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          nodeExporterConfig:
+            resources: []
+      expectedError: 'spec.nodeExporterConfig.resources: Invalid value: 0: spec.nodeExporterConfig.resources in body should have at least 1 items'
+    - name: Should reject NodeExporterConfig with empty collectors object
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          nodeExporterConfig:
+            collectors: {}
+      expectedError: 'spec.nodeExporterConfig.collectors: Invalid value: 0: spec.nodeExporterConfig.collectors in body should have at least 1 properties'
+    - name: Should accept NodeExporterConfig with empty ignoredNetworkDevices list
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          nodeExporterConfig:
+            ignoredNetworkDevices: []
+      expected: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          nodeExporterConfig:
+            ignoredNetworkDevices: []
+    - name: Should reject NodeExporterConfig with maxProcs below minimum
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          nodeExporterConfig:
+            maxProcs: -1
+      expectedError: 'spec.nodeExporterConfig.maxProcs'
+    - name: Should reject NodeExporterConfig with maxProcs exceeding maximum
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          nodeExporterConfig:
+            maxProcs: 1025
+      expectedError: 'spec.nodeExporterConfig.maxProcs'
+    - name: Should reject netClass with statsGatherer set when collector is DoNotCollect
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          nodeExporterConfig:
+            collectors:
+              netClass:
+                collectionPolicy: DoNotCollect
+                statsGatherer: Netlink
+      expectedError: 'statsGatherer can only be specified when the netclass collector collectionPolicy is Collect'
+    - name: Should accept netClass DoNotCollect without statsGatherer
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          nodeExporterConfig:
+            collectors:
+              netClass:
+                collectionPolicy: DoNotCollect
+      expected: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          nodeExporterConfig:
+            collectors:
+              netClass:
+                collectionPolicy: DoNotCollect
+    - name: Should reject systemd with units set when collector is DoNotCollect
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          nodeExporterConfig:
+            collectors:
+              systemd:
+                collectionPolicy: DoNotCollect
+                units:
+                  - "kubelet.service"
+      expectedError: 'units can only be specified when the systemd collector collectionPolicy is Collect'
+    - name: Should accept systemd DoNotCollect without units
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          nodeExporterConfig:
+            collectors:
+              systemd:
+                collectionPolicy: DoNotCollect
+      expected: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          nodeExporterConfig:
+            collectors:
+              systemd:
+                collectionPolicy: DoNotCollect
+    - name: Should reject NodeExporterConfig with empty nodeSelector
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          nodeExporterConfig:
+            nodeSelector: {}
+      expectedError: 'spec.nodeExporterConfig.nodeSelector: Invalid value: 0: spec.nodeExporterConfig.nodeSelector in body should have at least 1 properties'
+    - name: Should reject NodeExporterConfig with too many nodeSelector entries
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          nodeExporterConfig:
+            nodeSelector:
+              key1: val1
+              key2: val2
+              key3: val3
+              key4: val4
+              key5: val5
+              key6: val6
+              key7: val7
+              key8: val8
+              key9: val9
+              key10: val10
+              key11: val11
+      expectedError: 'spec.nodeExporterConfig.nodeSelector: Too many: 11: must have at most 10 items'
+    - name: Should reject NodeExporterConfig with empty tolerations array
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          nodeExporterConfig:
+            tolerations: []
+      expectedError: 'spec.nodeExporterConfig.tolerations: Invalid value: 0: spec.nodeExporterConfig.tolerations in body should have at least 1 items'
+    - name: Should reject NodeExporterConfig with too many tolerations
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          nodeExporterConfig:
+            tolerations:
+              - key: "key1"
+                operator: "Exists"
+              - key: "key2"
+                operator: "Exists"
+              - key: "key3"
+                operator: "Exists"
+              - key: "key4"
+                operator: "Exists"
+              - key: "key5"
+                operator: "Exists"
+              - key: "key6"
+                operator: "Exists"
+              - key: "key7"
+                operator: "Exists"
+              - key: "key8"
+                operator: "Exists"
+              - key: "key9"
+                operator: "Exists"
+              - key: "key10"
+                operator: "Exists"
+              - key: "key11"
+                operator: "Exists"
+      expectedError: 'spec.nodeExporterConfig.tolerations: Too many: 11: must have at most 10 items'

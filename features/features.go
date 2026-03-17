@@ -996,4 +996,10 @@ var (
 					enhancementPR("https://github.com/openshift/enhancements/pull/1933").
 					enable(inDevPreviewNoUpgrade(), inTechPreviewNoUpgrade()).
 					mustRegister()
-)
+
+	FeatureGateConsoleCustomLoginServerURL = newFeatureGate("ConsoleCustomLoginServerURL").
+							reportProblemsToJiraComponent("Management Console").
+							contactPerson("console-dev").
+							productScope(ocpSpecific).
+							enable(inTechPreviewNoUpgrade(), inDevPreviewNoUpgrade()).
+							mustRegister()

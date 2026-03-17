@@ -179,6 +179,7 @@ var map_ClusterMonitoringSpec = map[string]string{
 	"prometheusOperatorConfig": "prometheusOperatorConfig is an optional field that can be used to configure the Prometheus Operator component. Specifically, it can configure how the Prometheus Operator instance is deployed, pod scheduling, and resource allocation. When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time.",
 	"prometheusOperatorAdmissionWebhookConfig": "prometheusOperatorAdmissionWebhookConfig is an optional field that can be used to configure the admission webhook component of Prometheus Operator that runs in the openshift-monitoring namespace. The admission webhook validates PrometheusRule and AlertmanagerConfig objects to ensure they are semantically valid, mutates PrometheusRule annotations, and converts AlertmanagerConfig objects between API versions. When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time.",
 	"openShiftStateMetricsConfig":              "openShiftStateMetricsConfig is an optional field that can be used to configure the openshift-state-metrics agent that runs in the openshift-monitoring namespace. The openshift-state-metrics agent generates metrics about the state of OpenShift-specific Kubernetes objects, such as routes, builds, and deployments. When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time.",
+	"monitoringPluginConfig":                   "monitoringPluginConfig is an optional field that can be used to configure the monitoring plugin that runs as a dynamic plugin of the OpenShift web console. The monitoring plugin provides the monitoring UI in the OpenShift web console for visualizing metrics, alerts, and dashboards. When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time. The current default deploys the monitoring-plugin as a single-replica Deployment on linux nodes with 10m CPU and 50Mi memory requests, and no custom tolerations or topology spread constraints. When set, at least one field must be specified within monitoringPluginConfig.",
 }
 
 func (ClusterMonitoringSpec) SwaggerDoc() map[string]string {
@@ -291,6 +292,18 @@ var map_MetricsServerConfig = map[string]string{
 
 func (MetricsServerConfig) SwaggerDoc() map[string]string {
 	return map_MetricsServerConfig
+}
+
+var map_MonitoringPluginConfig = map[string]string{
+	"":                          "MonitoringPluginConfig provides configuration options for the monitoring plugin that runs as a dynamic plugin of the OpenShift web console. The monitoring plugin provides the monitoring UI in the OpenShift web console for visualizing metrics, alerts, and dashboards. At least one field must be specified; an empty monitoringPluginConfig object is not allowed.",
+	"nodeSelector":              "nodeSelector defines the nodes on which the Pods are scheduled. nodeSelector is optional.\n\nWhen omitted, this means the user has no opinion and the platform is left to choose reasonable defaults. These defaults are subject to change over time. The current default value is `kubernetes.io/os: linux`. When specified, nodeSelector must contain at least 1 entry and must not contain more than 10 entries.",
+	"resources":                 "resources defines the compute resource requests and limits for the monitoring-plugin container. This includes CPU, memory and HugePages constraints to help control scheduling and resource usage. When not specified, defaults are used by the platform. Requests cannot exceed limits. This field is optional. More info: https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/ This is a simplified API that maps to Kubernetes ResourceRequirements. The current default values are:\n  resources:\n   - name: cpu\n     request: 10m\n   - name: memory\n     request: 50Mi",
+	"tolerations":               "tolerations defines the tolerations required for the monitoring-plugin Pods. This field is optional.\n\nWhen omitted, the monitoring-plugin Pods will not have any tolerations, which means they will only be scheduled on nodes with no taints. When specified, tolerations must contain at least 1 entry and must not contain more than 10 entries.",
+	"topologySpreadConstraints": "topologySpreadConstraints defines how the monitoring-plugin Pods are spread across nodes. This field is optional.\n\nWhen omitted, the monitoring-plugin Pods will use the default scheduling constraints. When specified, topologySpreadConstraints must contain at least 1 entry and must not contain more than 10 entries.",
+}
+
+func (MonitoringPluginConfig) SwaggerDoc() map[string]string {
+	return map_MonitoringPluginConfig
 }
 
 var map_OAuth2 = map[string]string{

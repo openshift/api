@@ -617,6 +617,107 @@ tests:
                 claim: "preferred_username"
               groups:
                 claim: ""
+    - name: Cannot set prefixPolicy to Prefix when using username expression
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: Authentication
+        spec:
+          type: OIDC
+          oidcProviders:
+          - name: myoidc
+            issuer:
+              issuerURL: https://meh.tld
+              audiences: ['openshift-aud']
+            claimMappings:
+              username:
+                expression: "claims.sub"
+                prefixPolicy: Prefix
+                prefix:
+                  prefixString: "myoidc:"
+      expectedError: "prefixPolicy must not be set to 'Prefix' when expression is set"
+
+    - name: Can set prefixPolicy to NoPrefix when using username expression
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: Authentication
+        spec:
+          type: OIDC
+          oidcProviders:
+          - name: myoidc
+            issuer:
+              issuerURL: https://meh.tld
+              audiences: ['openshift-aud']
+            claimMappings:
+              username:
+                expression: "claims.sub"
+                prefixPolicy: NoPrefix
+      expected: |
+        apiVersion: config.openshift.io/v1
+        kind: Authentication
+        spec:
+          type: OIDC
+          oidcProviders:
+          - name: myoidc
+            issuer:
+              issuerURL: https://meh.tld
+              audiences: ['openshift-aud']
+            claimMappings:
+              username:
+                expression: "claims.sub"
+                prefixPolicy: NoPrefix
+    
+    - name: Cannot set prefix to non-empty value when using groups expression
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: Authentication
+        spec:
+          type: OIDC
+          oidcProviders:
+          - name: myoidc
+            issuer:
+              issuerURL: https://meh.tld
+              audiences: ['openshift-aud']
+            claimMappings:
+              username:
+                claim: "preferred_username"
+              groups:
+                expression: "claims.groups"
+                prefix: "oidc-group:"
+      expectedError: "prefix must not be set to a non-empty value when expression is set"
+
+    - name: Can set prefix to empty string when using groups expression
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: Authentication
+        spec:
+          type: OIDC
+          oidcProviders:
+          - name: myoidc
+            issuer:
+              issuerURL: https://meh.tld
+              audiences: ['openshift-aud']
+            claimMappings:
+              username:
+                claim: "preferred_username"
+              groups:
+                expression: "claims.groups"
+                prefix: ""
+      expected: |
+        apiVersion: config.openshift.io/v1
+        kind: Authentication
+        spec:
+          type: OIDC
+          oidcProviders:
+          - name: myoidc
+            issuer:
+              issuerURL: https://meh.tld
+              audiences: ['openshift-aud']
+            claimMappings:
+              username:
+                claim: "preferred_username"
+              groups:
+                expression: "claims.groups"
+                prefix: ""
   onUpdate:
     - name: Should allow updating other fields if existing username claim mapping is longer than 256 characters
       initialCRDPatches:

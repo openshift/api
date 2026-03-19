@@ -203,12 +203,12 @@ var (
 					mustRegister()
 
 	FeatureGateNoOverlayMode = newFeatureGate("NoOverlayMode").
-				reportProblemsToJiraComponent("Networking/ovn-kubernetes").
-				contactPerson("pliurh").
-				productScope(ocpSpecific).
-				enhancementPR("https://github.com/openshift/enhancements/pull/1859").
-				enable(inDevPreviewNoUpgrade(), inTechPreviewNoUpgrade()).
-				mustRegister()
+					reportProblemsToJiraComponent("Networking/ovn-kubernetes").
+					contactPerson("pliurh").
+					productScope(ocpSpecific).
+					enhancementPR("https://github.com/openshift/enhancements/pull/1859").
+					enable(inDevPreviewNoUpgrade(), inTechPreviewNoUpgrade()).
+					mustRegister()
 
 	FeatureGateEVPN = newFeatureGate("EVPN").
 			reportProblemsToJiraComponent("Networking/ovn-kubernetes").
@@ -664,6 +664,14 @@ var (
 								enhancementPR("https://github.com/openshift/enhancements/pull/1687").
 								enable(inDevPreviewNoUpgrade(), inTechPreviewNoUpgrade()).
 								mustRegister()
+
+	FeatureGateIngressControllerHTTPSLogFormat = newFeatureGate("IngressControllerHTTPSLogFormat").
+							reportProblemsToJiraComponent("Networking / router").
+							contactPerson("rohara").
+							productScope(ocpSpecific).
+							enhancementPR("https://github.com/openshift/enhancements/pull/1832").
+							enable(inDevPreviewNoUpgrade(), inTechPreviewNoUpgrade()).
+							mustRegister()
 
 	FeatureGateMinimumKubeletVersion = newFeatureGate("MinimumKubeletVersion").
 						reportProblemsToJiraComponent("Node").

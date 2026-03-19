@@ -220,6 +220,9 @@
                         "name": "IngressControllerDynamicConfigurationManager"
                     },
                     {
+                        "name": "IngressControllerHTTPSLogFormat"
+                    },
+                    {
                         "name": "InsightsConfig"
                     },
                     {

@@ -1,0 +1,67 @@
+apiVersion: apiextensions.k8s.io/v1 # Hack because controller-gen complains if we don't have this
+name: "IngressController"
+crdName: ingresscontrollers.operator.openshift.io
+featureGates:
+- IngressControllerHTTPSLogFormat
+tests:
+  onCreate:
+    - name: Should be able to create a minimal ingresscontroller with tcpLogFormat
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: IngressController
+        metadata:
+          name: default
+          namespace: openshift-ingress-operator
+        spec:
+          logging:
+            access:
+              destination:
+                type: Container
+              logEmptyRequests: "Ignore"
+              tcpLogFormat: "%ci:%cp [%t] %ft %b/%s %Tw/%Tc/%Tt %B %ts"
+      expected: |
+        apiVersion: operator.openshift.io/v1
+        kind: IngressController
+        metadata:
+          name: default
+          namespace: openshift-ingress-operator
+        spec:
+          httpEmptyRequestsPolicy: Respond
+          idleConnectionTerminationPolicy: Immediate
+          closedClientConnectionPolicy: Continue
+          logging:
+            access:
+              destination:
+                type: Container
+              logEmptyRequests: "Ignore"
+              tcpLogFormat: "%ci:%cp [%t] %ft %b/%s %Tw/%Tc/%Tt %B %ts"
+    - name: Should be able to create a minimal ingresscontroller with httpsLogFormat
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: IngressController
+        metadata:
+          name: default
+          namespace: openshift-ingress-operator
+        spec:
+          logging:
+            access:
+              destination:
+                type: Container
+              logEmptyRequests: "Ignore"
+              httpsLogFormat: "%ci:%cp [%tr] %ft %b/%s %TR/%Tw/%Tc/%Tr/%Ta %ST %B %CC"
+      expected: |
+        apiVersion: operator.openshift.io/v1
+        kind: IngressController
+        metadata:
+          name: default
+          namespace: openshift-ingress-operator
+        spec:
+          httpEmptyRequestsPolicy: Respond
+          idleConnectionTerminationPolicy: Immediate
+          closedClientConnectionPolicy: Continue
+          logging:
+            access:
+              destination:
+                type: Container
+              logEmptyRequests: "Ignore"
+              httpsLogFormat: "%ci:%cp [%tr] %ft %b/%s %TR/%Tw/%Tc/%Tr/%Ta %ST %B %CC"

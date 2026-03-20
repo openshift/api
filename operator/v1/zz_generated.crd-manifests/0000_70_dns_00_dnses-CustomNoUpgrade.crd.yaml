@@ -192,6 +192,7 @@ spec:
                           type: string
                       type: object
                     type: array
+                    x-kubernetes-list-type: atomic
                 type: object
               operatorLogLevel:
                 default: Normal
@@ -338,6 +339,7 @@ spec:
                             type: string
                           maxItems: 15
                           type: array
+                          x-kubernetes-list-type: set
                       type: object
                     name:
                       description: |-
@@ -352,8 +354,15 @@ spec:
                       items:
                         type: string
                       type: array
+                      x-kubernetes-list-type: set
+                  required:
+                  - name
+                  - zones
                   type: object
                 type: array
+                x-kubernetes-list-map-keys:
+                - name
+                x-kubernetes-list-type: map
               template:
                 description: |-
                   template is an optional configuration for custom DNS query handling via the CoreDNS template plugin.
@@ -608,6 +617,7 @@ spec:
                       type: object
                     maxItems: 15
                     type: array
+                    x-kubernetes-list-type: atomic
                 type: object
             type: object
           status:
@@ -676,6 +686,9 @@ spec:
                   - type
                   type: object
                 type: array
+                x-kubernetes-list-map-keys:
+                - type
+                x-kubernetes-list-type: map
             required:
             - clusterDomain
             - clusterIP

@@ -52,6 +52,8 @@ type DNSSpec struct {
 	// If this field is nil, no servers are created.
 	//
 	// +optional
+	// +listType=map
+	// +listMapKey=name
 	Servers []Server `json:"servers,omitempty"`
 
 	// upstreamResolvers defines a schema for configuring CoreDNS
@@ -179,10 +181,13 @@ var (
 type Server struct {
 	// name is required and specifies a unique name for the server. Name must comply
 	// with the Service Name Syntax of rfc6335.
+	// +required
 	Name string `json:"name"`
 	// zones is required and specifies the subdomains that Server is authoritative for.
 	// Zones must conform to the rfc1123 definition of a subdomain. Specifying the
 	// cluster domain (i.e., "cluster.local") is invalid.
+	// +required
+	// +listType=set
 	Zones []string `json:"zones"`
 	// forwardPlugin defines a schema for configuring CoreDNS to proxy DNS messages
 	// to upstream resolvers.
@@ -282,6 +287,7 @@ type ForwardPlugin struct {
 	// A maximum of 15 upstreams is allowed per ForwardPlugin.
 	//
 	// +kubebuilder:validation:MaxItems=15
+	// +listType=set
 	Upstreams []string `json:"upstreams"`
 
 	// policy is used to determine the order in which upstream servers are selected for querying.
@@ -342,6 +348,7 @@ type UpstreamResolvers struct {
 	// +optional
 	// +kubebuilder:validation:MaxItems=15
 	// +kubebuilder:default={{"type":"SystemResolvConf"}}
+	// +listType=atomic
 	Upstreams []Upstream `json:"upstreams"`
 
 	// policy is used to determine the order in which upstream servers are selected for querying.
@@ -471,6 +478,7 @@ type DNSNodePlacement struct {
 	// https://kubernetes.io/docs/concepts/scheduling-eviction/taint-and-toleration/
 	//
 	// +optional
+	// +listType=atomic
 	Tolerations []corev1.Toleration `json:"tolerations,omitempty"`
 }
 
@@ -600,6 +608,8 @@ type DNSStatus struct {
 	//
 	// +patchMergeKey=type
 	// +patchStrategy=merge
+	// +listType=map
+	// +listMapKey=type
 	// +optional
 	Conditions []OperatorCondition `json:"conditions,omitempty" patchStrategy:"merge" patchMergeKey:"type"`
 }

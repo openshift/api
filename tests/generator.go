@@ -10,6 +10,7 @@ import (
 
 	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
+	format "github.com/onsi/gomega/format"
 	yamlpatch "github.com/vmware-archive/yaml-patch"
 
 	"github.com/ghodss/yaml"
@@ -100,6 +101,7 @@ func loadSuiteFile(path string) (SuiteSpec, error) {
 
 // GenerateTestSuite generates a Ginkgo test suite from the provided SuiteSpec.
 func GenerateTestSuite(suiteSpec SuiteSpec) {
+	format.MaxLength = 0
 	for i := range suiteSpec.PerTestRuntimeInfo.CRDFilenames {
 		crdFilename := suiteSpec.PerTestRuntimeInfo.CRDFilenames[i]
 

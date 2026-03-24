@@ -158,6 +158,12 @@ type ClusterMonitoringSpec struct {
 	// When set, at least one field must be specified within monitoringPluginConfig.
 	// +optional
 	MonitoringPluginConfig MonitoringPluginConfig `json:"monitoringPluginConfig,omitempty,omitzero"`
+	// kubeStateMetricsConfig is an optional field that can be used to configure the kube-state-metrics
+	// agent that runs in the openshift-monitoring namespace. kube-state-metrics generates metrics about
+	// the state of Kubernetes objects such as Deployments, Nodes, and Pods.
+	// When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time.
+	// +optional
+	KubeStateMetricsConfig KubeStateMetricsConfig `json:"kubeStateMetricsConfig,omitempty,omitzero"`
 }
 
 // OpenShiftStateMetricsConfig provides configuration options for the openshift-state-metrics agent
@@ -2491,4 +2497,132 @@ type Audit struct {
 	// for more information about auditing and log levels.
 	// +required
 	Profile AuditProfile `json:"profile,omitempty"`
+}
+
+// KubeStateMetricsConfig provides configuration options for the kube-state-metrics agent
+// that runs in the `openshift-monitoring` namespace. kube-state-metrics generates metrics
+// about the state of Kubernetes objects such as Deployments, Nodes, and Pods.
+// +kubebuilder:validation:MinProperties=1
+type KubeStateMetricsConfig struct {
+	// nodeSelector defines the nodes on which the Pods are scheduled.
+	// nodeSelector is optional.
+	//
+	// When omitted, this means the user has no opinion and the platform is left
+	// to choose reasonable defaults. These defaults are subject to change over time.
+	// The current default value is `kubernetes.io/os: linux`.
+	// When specified, nodeSelector must contain at least 1 entry and must not contain more than 10 entries.
+	// +optional
+	// +kubebuilder:validation:MinProperties=1
+	// +kubebuilder:validation:MaxProperties=10
+	NodeSelector map[string]string `json:"nodeSelector,omitempty"`
+	// resources defines the compute resource requests and limits for the kube-state-metrics container.
+	// This includes CPU, memory and HugePages constraints to help control scheduling and resource usage.
+	// When not specified, defaults are used by the platform. Requests cannot exceed limits.
+	// This field is optional.
+	// More info: https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/
+	// This is a simplified API that maps to Kubernetes ResourceRequirements.
+	// The current default values are:
+	//   resources:
+	//    - name: cpu
+	//      request: 4m
+	//    - name: memory
+	//      request: 40Mi
+	// Maximum length for this list is 5.
+	// Minimum length for this list is 1.
+	// Each resource name must be unique within this list.
+	// +optional
+	// +listType=map
+	// +listMapKey=name
+	// +kubebuilder:validation:MaxItems=5
+	// +kubebuilder:validation:MinItems=1
+	Resources []ContainerResource `json:"resources,omitempty"`
+	// tolerations defines tolerations for the pods.
+	// tolerations is optional.
+	//
+	// When omitted, this means the user has no opinion and the platform is left
+	// to choose reasonable defaults. These defaults are subject to change over time.
+	// Defaults are empty/unset.
+	// When specified, tolerations must contain at least 1 entry and must not contain more than 10 entries.
+	// +kubebuilder:validation:MaxItems=10
+	// +kubebuilder:validation:MinItems=1
+	// +listType=atomic
+	// +optional
+	Tolerations []v1.Toleration `json:"tolerations,omitempty"`
+	// topologySpreadConstraints defines rules for how kube-state-metrics Pods should be distributed
+	// across topology domains such as zones, nodes, or other user-defined labels.
+	// topologySpreadConstraints is optional.
+	// This helps improve high availability and resource efficiency by avoiding placing
+	// too many replicas in the same failure domain.
+	//
+	// When omitted, this means no opinion and the platform is left to choose a default, which is subject to change over time.
+	// This field maps directly to the `topologySpreadConstraints` field in the Pod spec.
+	// Defaults are empty/unset.
+	// When specified, topologySpreadConstraints must contain at least 1 entry and must not contain more than 10 entries.
+	// Entries must have unique topologyKey and whenUnsatisfiable pairs.
+	// +kubebuilder:validation:MaxItems=10
+	// +kubebuilder:validation:MinItems=1
+	// +listType=map
+	// +listMapKey=topologyKey
+	// +listMapKey=whenUnsatisfiable
+	// +optional
+	TopologySpreadConstraints []v1.TopologySpreadConstraint `json:"topologySpreadConstraints,omitempty"`
+	// additionalResourceLabels defines additional Kubernetes resource labels to expose as metrics
+	// in kube-state-metrics, in addition to the default set.
+	// Currently, only "jobs" and "cronjobs" resources are supported due to cardinality concerns.
+	// Each entry specifies a resource name and a list of Kubernetes label names to expose.
+	// Use "*" in the labels list to expose all labels for a given resource.
+	// additionalResourceLabels is optional.
+	// When omitted, only the default set of resource labels is exposed.
+	// Maximum length for this list is 2.
+	// Minimum length for this list is 1.
+	// Each resource name must be unique within this list.
+	// +optional
+	// +kubebuilder:validation:MaxItems=2
+	// +kubebuilder:validation:MinItems=1
+	// +listType=map
+	// +listMapKey=resource
+	AdditionalResourceLabels []KubeStateMetricsResourceLabels `json:"additionalResourceLabels,omitempty"`
+}
+
+// KubeStateMetricsResourceName is the name of a Kubernetes resource whose labels can be exposed
+// as metrics by kube-state-metrics. Currently, only "jobs" and "cronjobs" are supported
+// due to cardinality concerns.
+// Valid values are "jobs" and "cronjobs".
+// +kubebuilder:validation:Enum=jobs;cronjobs
+type KubeStateMetricsResourceName string
+
+const (
+	// KubeStateMetricsResourceJobs indicates the Kubernetes Jobs resource.
+	KubeStateMetricsResourceJobs KubeStateMetricsResourceName = "jobs"
+	// KubeStateMetricsResourceCronJobs indicates the Kubernetes CronJobs resource.
+	KubeStateMetricsResourceCronJobs KubeStateMetricsResourceName = "cronjobs"
+)
+
+// KubeStateMetricsLabelName is the name of a Kubernetes label to expose as a metric
+// via kube-state-metrics. Use "*" to expose all labels for a resource.
+// Must be at least 1 character and at most 256 characters in length.
+// +kubebuilder:validation:MinLength=1
+// +kubebuilder:validation:MaxLength=256
+type KubeStateMetricsLabelName string
+
+// KubeStateMetricsResourceLabels defines which Kubernetes labels to expose as metrics
+// for a given resource type in kube-state-metrics.
+type KubeStateMetricsResourceLabels struct {
+	// resource is the Kubernetes resource name whose labels should be exposed as metrics.
+	// Currently, only "jobs" and "cronjobs" are supported due to cardinality concerns.
+	// Valid values are "jobs" and "cronjobs".
+	// This field is required.
+	// +required
+	Resource KubeStateMetricsResourceName `json:"resource,omitempty"`
+	// labels is the list of Kubernetes label names to expose as metrics for this resource.
+	// Use "*" to expose all labels for the specified resource.
+	// This field is required.
+	// Each label name must be unique within this list.
+	// Minimum length for this list is 1.
+	// Maximum length for this list is 50.
+	// +required
+	// +kubebuilder:validation:MinItems=1
+	// +kubebuilder:validation:MaxItems=50
+	// +listType=set
+	Labels []KubeStateMetricsLabelName `json:"labels,omitempty"`
 }

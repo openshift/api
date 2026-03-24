@@ -23087,13 +23087,9 @@
           "$ref": "#/definitions/com.github.openshift.api.config.v1.TokenRequiredClaim"
         },
         "type": {
-          "description": "type is an optional field that configures the type of the validation rule.\n\nAllowed values are \"RequiredClaim\" and \"CEL\".\n\nWhen set to 'RequiredClaim', the Kubernetes API server will be configured to validate that the incoming JWT contains the required claim and that its value matches the required value.\n\nWhen set to 'CEL', the Kubernetes API server will be configured to validate the incoming JWT against the configured CEL expression.\n\nPossible enum values:\n - `\"CEL\"` indicates that the token validation is defined via a CEL expression. Used as a value for TokenValidationRuleType.\n - `\"RequiredClaim\"` indicates that the token must contain a specific claim. Used as a value for TokenValidationRuleType.",
+          "description": "type is an optional field that configures the type of the validation rule.\n\nAllowed values are \"RequiredClaim\" and \"CEL\".\n\nWhen set to 'RequiredClaim', the Kubernetes API server will be configured to validate that the incoming JWT contains the required claim and that its value matches the required value.\n\nWhen set to 'CEL', the Kubernetes API server will be configured to validate the incoming JWT against the configured CEL expression.",
           "type": "string",
-          "default": "",
-          "enum": [
-            "CEL",
-            "RequiredClaim"
-          ]
+          "default": ""
         }
       }
     },
@@ -23292,14 +23288,9 @@
           "$ref": "#/definitions/com.github.openshift.api.config.v1.UsernamePrefix"
         },
         "prefixPolicy": {
-          "description": "prefixPolicy is an optional field that configures how a prefix should be applied to the value of the JWT claim specified in the 'claim' field.\n\nAllowed values are 'Prefix', 'NoPrefix', and omitted (not provided or an empty string).\n\nWhen set to 'Prefix', the value specified in the prefix field will be prepended to the value of the JWT claim. The prefix field must be set when prefixPolicy is 'Prefix'. Must not be set to 'Prefix' when expression is set. When set to 'NoPrefix', no prefix will be prepended to the value of the JWT claim. When omitted, this means no opinion and the platform is left to choose any prefixes that are applied which is subject to change over time. Currently, the platform prepends `{issuerURL}#` to the value of the JWT claim when the claim is not 'email'.\n\nAs an example, consider the following scenario:\n\n   `prefix` is unset, `issuerURL` is set to `https://myoidc.tld`,\n   the JWT claims include \"username\":\"userA\" and \"email\":\"userA@myoidc.tld\",\n   and `claim` is set to:\n   - \"username\": the mapped value will be \"https://myoidc.tld#userA\"\n   - \"email\": the mapped value will be \"userA@myoidc.tld\"\n\n\nPossible enum values:\n - `\"\"` let's the cluster assign prefixes. If the username claim is email, there is no prefix If the username claim is anything else, it is prefixed by the issuerURL\n - `\"NoPrefix\"` means the username claim value will not have any prefix\n - `\"Prefix\"` means the prefix value must be specified. It cannot be empty",
+          "description": "prefixPolicy is an optional field that configures how a prefix should be applied to the value of the JWT claim specified in the 'claim' field.\n\nAllowed values are 'Prefix', 'NoPrefix', and omitted (not provided or an empty string).\n\nWhen set to 'Prefix', the value specified in the prefix field will be prepended to the value of the JWT claim. The prefix field must be set when prefixPolicy is 'Prefix'. Must not be set to 'Prefix' when expression is set. When set to 'NoPrefix', no prefix will be prepended to the value of the JWT claim. When omitted, this means no opinion and the platform is left to choose any prefixes that are applied which is subject to change over time. Currently, the platform prepends `{issuerURL}#` to the value of the JWT claim when the claim is not 'email'.\n\nAs an example, consider the following scenario:\n\n   `prefix` is unset, `issuerURL` is set to `https://myoidc.tld`,\n   the JWT claims include \"username\":\"userA\" and \"email\":\"userA@myoidc.tld\",\n   and `claim` is set to:\n   - \"username\": the mapped value will be \"https://myoidc.tld#userA\"\n   - \"email\": the mapped value will be \"userA@myoidc.tld\"",
           "type": "string",
-          "default": "",
-          "enum": [
-            "",
-            "NoPrefix",
-            "Prefix"
-          ]
+          "default": ""
         }
       },
       "x-kubernetes-unions": [
@@ -24167,15 +24158,15 @@
           "default": {},
           "$ref": "#/definitions/com.github.openshift.api.config.v1alpha1.AlertmanagerConfig"
         },
+        "kubeStateMetricsConfig": {
+          "description": "kubeStateMetricsConfig is an optional field that can be used to configure the kube-state-metrics agent that runs in the openshift-monitoring namespace. kube-state-metrics generates metrics about the state of Kubernetes objects such as Deployments, Nodes, and Pods. When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time.",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.config.v1alpha1.KubeStateMetricsConfig"
+        },
         "metricsServerConfig": {
           "description": "metricsServerConfig is an optional field that can be used to configure the Kubernetes Metrics Server that runs in the openshift-monitoring namespace. Specifically, it can configure how the Metrics Server instance is deployed, pod scheduling, its audit policy and log verbosity. When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time.",
           "default": {},
           "$ref": "#/definitions/com.github.openshift.api.config.v1alpha1.MetricsServerConfig"
-        },
-        "monitoringPluginConfig": {
-          "description": "monitoringPluginConfig is an optional field that can be used to configure the monitoring plugin that runs as a dynamic plugin of the OpenShift web console. The monitoring plugin provides the monitoring UI in the OpenShift web console for visualizing metrics, alerts, and dashboards. When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time. The current default deploys the monitoring-plugin as a single-replica Deployment on linux nodes with 10m CPU and 50Mi memory requests, and no custom tolerations or topology spread constraints. When set, at least one field must be specified within monitoringPluginConfig.",
-          "default": {},
-          "$ref": "#/definitions/com.github.openshift.api.config.v1alpha1.MonitoringPluginConfig"
         },
         "nodeExporterConfig": {
           "description": "nodeExporterConfig is an optional field that can be used to configure the node-exporter agent that runs as a DaemonSet in the openshift-monitoring namespace. The node-exporter agent collects hardware and OS-level metrics from every node in the cluster. When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time.",
@@ -24501,6 +24492,89 @@
         }
       ]
     },
+    "com.github.openshift.api.config.v1alpha1.KubeStateMetricsConfig": {
+      "description": "KubeStateMetricsConfig provides configuration options for the kube-state-metrics agent that runs in the `openshift-monitoring` namespace. kube-state-metrics generates metrics about the state of Kubernetes objects such as Deployments, Nodes, and Pods.",
+      "type": "object",
+      "properties": {
+        "additionalResourceLabels": {
+          "description": "additionalResourceLabels defines additional Kubernetes resource labels to expose as metrics in kube-state-metrics, in addition to the default set. Currently, only \"jobs\" and \"cronjobs\" resources are supported due to cardinality concerns. Each entry specifies a resource name and a list of Kubernetes label names to expose. Use \"*\" in the labels list to expose all labels for a given resource. additionalResourceLabels is optional. When omitted, only the default set of resource labels is exposed. Maximum length for this list is 2. Minimum length for this list is 1. Each resource name must be unique within this list.",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/com.github.openshift.api.config.v1alpha1.KubeStateMetricsResourceLabels"
+          },
+          "x-kubernetes-list-map-keys": [
+            "resource"
+          ],
+          "x-kubernetes-list-type": "map"
+        },
+        "nodeSelector": {
+          "description": "nodeSelector defines the nodes on which the Pods are scheduled. nodeSelector is optional.\n\nWhen omitted, this means the user has no opinion and the platform is left to choose reasonable defaults. These defaults are subject to change over time. The current default value is `kubernetes.io/os: linux`. When specified, nodeSelector must contain at least 1 entry and must not contain more than 10 entries.",
+          "type": "object",
+          "additionalProperties": {
+            "type": "string",
+            "default": ""
+          }
+        },
+        "resources": {
+          "description": "resources defines the compute resource requests and limits for the kube-state-metrics container. This includes CPU, memory and HugePages constraints to help control scheduling and resource usage. When not specified, defaults are used by the platform. Requests cannot exceed limits. This field is optional. More info: https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/ This is a simplified API that maps to Kubernetes ResourceRequirements. The current default values are:\n  resources:\n   - name: cpu\n     request: 4m\n   - name: memory\n     request: 40Mi\nMaximum length for this list is 5. Minimum length for this list is 1. Each resource name must be unique within this list.",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/com.github.openshift.api.config.v1alpha1.ContainerResource"
+          },
+          "x-kubernetes-list-map-keys": [
+            "name"
+          ],
+          "x-kubernetes-list-type": "map"
+        },
+        "tolerations": {
+          "description": "tolerations defines tolerations for the pods. tolerations is optional.\n\nWhen omitted, this means the user has no opinion and the platform is left to choose reasonable defaults. These defaults are subject to change over time. Defaults are empty/unset. When specified, tolerations must contain at least 1 entry and must not contain more than 10 entries.",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/Toleration.v1.core.api.k8s.io"
+          },
+          "x-kubernetes-list-type": "atomic"
+        },
+        "topologySpreadConstraints": {
+          "description": "topologySpreadConstraints defines rules for how kube-state-metrics Pods should be distributed across topology domains such as zones, nodes, or other user-defined labels. topologySpreadConstraints is optional. This helps improve high availability and resource efficiency by avoiding placing too many replicas in the same failure domain.\n\nWhen omitted, this means no opinion and the platform is left to choose a default, which is subject to change over time. This field maps directly to the `topologySpreadConstraints` field in the Pod spec. Defaults are empty/unset. When specified, topologySpreadConstraints must contain at least 1 entry and must not contain more than 10 entries. Entries must have unique topologyKey and whenUnsatisfiable pairs.",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/TopologySpreadConstraint.v1.core.api.k8s.io"
+          },
+          "x-kubernetes-list-map-keys": [
+            "topologyKey",
+            "whenUnsatisfiable"
+          ],
+          "x-kubernetes-list-type": "map"
+        }
+      }
+    },
+    "com.github.openshift.api.config.v1alpha1.KubeStateMetricsResourceLabels": {
+      "description": "KubeStateMetricsResourceLabels defines which Kubernetes labels to expose as metrics for a given resource type in kube-state-metrics.",
+      "type": "object",
+      "required": [
+        "resource",
+        "labels"
+      ],
+      "properties": {
+        "labels": {
+          "description": "labels is the list of Kubernetes label names to expose as metrics for this resource. Use \"*\" to expose all labels for the specified resource. This field is required. Each label name must be unique within this list. Minimum length for this list is 1. Maximum length for this list is 50.",
+          "type": "array",
+          "items": {
+            "type": "string",
+            "default": ""
+          },
+          "x-kubernetes-list-type": "set"
+        },
+        "resource": {
+          "description": "resource is the Kubernetes resource name whose labels should be exposed as metrics. Currently, only \"jobs\" and \"cronjobs\" are supported due to cardinality concerns. Valid values are \"jobs\" and \"cronjobs\". This field is required.",
+          "type": "string"
+        }
+      }
+    },
     "com.github.openshift.api.config.v1alpha1.Label": {
       "description": "Label represents a key/value pair for external labels.",
       "type": "object",
@@ -24628,54 +24702,6 @@
         "verbosity": {
           "description": "verbosity defines the verbosity of log messages for Metrics Server. Valid values are Errors, Info, Trace, TraceAll and omitted. When set to Errors, only critical messages and errors are logged. When set to Info, only basic information messages are logged. When set to Trace, information useful for general debugging is logged. When set to TraceAll, detailed information about metric scraping is logged. When omitted, this means no opinion and the platform is left to choose a reasonable default, that is subject to change over time. The current default value is `Errors`",
           "type": "string"
-        }
-      }
-    },
-    "com.github.openshift.api.config.v1alpha1.MonitoringPluginConfig": {
-      "description": "MonitoringPluginConfig provides configuration options for the monitoring plugin that runs as a dynamic plugin of the OpenShift web console. The monitoring plugin provides the monitoring UI in the OpenShift web console for visualizing metrics, alerts, and dashboards. At least one field must be specified; an empty monitoringPluginConfig object is not allowed.",
-      "type": "object",
-      "properties": {
-        "nodeSelector": {
-          "description": "nodeSelector defines the nodes on which the Pods are scheduled. nodeSelector is optional.\n\nWhen omitted, this means the user has no opinion and the platform is left to choose reasonable defaults. These defaults are subject to change over time. The current default value is `kubernetes.io/os: linux`. When specified, nodeSelector must contain at least 1 entry and must not contain more than 10 entries.",
-          "type": "object",
-          "additionalProperties": {
-            "type": "string",
-            "default": ""
-          }
-        },
-        "resources": {
-          "description": "resources defines the compute resource requests and limits for the monitoring-plugin container. This includes CPU, memory and HugePages constraints to help control scheduling and resource usage. When not specified, defaults are used by the platform. Requests cannot exceed limits. This field is optional. More info: https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/ This is a simplified API that maps to Kubernetes ResourceRequirements. The current default values are:\n  resources:\n   - name: cpu\n     request: 10m\n   - name: memory\n     request: 50Mi\n\nWhen specified, resources must contain at least 1 entry and must not exceed 5 entries.",
-          "type": "array",
-          "items": {
-            "default": {},
-            "$ref": "#/definitions/com.github.openshift.api.config.v1alpha1.ContainerResource"
-          },
-          "x-kubernetes-list-map-keys": [
-            "name"
-          ],
-          "x-kubernetes-list-type": "map"
-        },
-        "tolerations": {
-          "description": "tolerations defines the tolerations required for the monitoring-plugin Pods. This field is optional.\n\nWhen omitted, the monitoring-plugin Pods will not have any tolerations, which means they will only be scheduled on nodes with no taints. When specified, tolerations must contain at least 1 entry and must not contain more than 10 entries.",
-          "type": "array",
-          "items": {
-            "default": {},
-            "$ref": "#/definitions/Toleration.v1.core.api.k8s.io"
-          },
-          "x-kubernetes-list-type": "atomic"
-        },
-        "topologySpreadConstraints": {
-          "description": "topologySpreadConstraints defines rules for how monitoring-plugin Pods should be distributed across topology domains such as zones, nodes, or other user-defined labels. topologySpreadConstraints is optional. This helps improve high availability and resource efficiency by avoiding placing too many replicas in the same failure domain.\n\nWhen omitted, this means no opinion and the platform is left to choose a default, which is subject to change over time. This field maps directly to the `topologySpreadConstraints` field in the Pod spec. Default is empty list. When specified, this list must contain at least 1 entry and must not exceed 10 entries.",
-          "type": "array",
-          "items": {
-            "default": {},
-            "$ref": "#/definitions/TopologySpreadConstraint.v1.core.api.k8s.io"
-          },
-          "x-kubernetes-list-map-keys": [
-            "topologyKey",
-            "whenUnsatisfiable"
-          ],
-          "x-kubernetes-list-type": "map"
         }
       }
     },
@@ -38160,10 +38186,6 @@
           "description": "The number of replicas that have labels matching the labels of the machine template of the MachineSet.",
           "type": "integer",
           "format": "int32"
-        },
-        "labelSelector": {
-          "description": "labelSelector is a label selector, in string format, for Machines corresponding to the MachineSet. It is exposed via the scale subresource as status.selector. When omitted, the MachineSet controller has not yet reconciled spec.selector into status.labelSelector. When present, it must not be empty and must not exceed 4096 characters.",
-          "type": "string"
         },
         "observedGeneration": {
           "description": "observedGeneration reflects the generation of the most recently observed MachineSet.",
@@ -52351,7 +52373,7 @@
           "type": "string"
         },
         "defaultAddCapabilities": {
-          "description": "defaultAddCapabilities is the default set of capabilities that will be added to the container unless the pod spec specifically drops the capability.  You may not list a capability in both DefaultAddCapabilities and RequiredDropCapabilities.",
+          "description": "defaultAddCapabilities is the default set of capabilities that will be added to the container unless the pod spec specifically drops the capability.  You may not list a capabiility in both DefaultAddCapabilities and RequiredDropCapabilities.",
           "type": "array",
           "items": {
             "type": "string",
@@ -52425,7 +52447,7 @@
           "$ref": "#/definitions/com.github.openshift.api.security.v1.SELinuxContextStrategyOptions"
         },
         "seccompProfiles": {
-          "description": "seccompProfiles lists the allowed profiles that may be set for the pod or container's seccomp annotations.  An unset (nil) or empty value means that no profiles may be specified by the pod or container.\tThe wildcard '*' may be used to allow all profiles.  When used to generate a value for a pod the first non-wildcard profile will be used as the default.",
+          "description": "seccompProfiles lists the allowed profiles that may be set for the pod or container's seccomp annotations.  An unset (nil) or empty value means that no profiles may be specifid by the pod or container.\tThe wildcard '*' may be used to allow all profiles.  When used to generate a value for a pod the first non-wildcard profile will be used as the default.",
           "type": "array",
           "items": {
             "type": "string",

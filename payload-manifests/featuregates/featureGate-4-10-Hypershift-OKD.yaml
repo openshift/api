@@ -316,9 +316,6 @@
                         "name": "GCPClusterHostedDNSInstall"
                     },
                     {
-                        "name": "HighlyAvailableArbiter"
-                    },
-                    {
                         "name": "HyperShiftOnlyDynamicResourceAllocation"
                     },
                     {

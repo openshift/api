@@ -217,7 +217,7 @@ func (o *FeatureGateTestAnalyzerOptions) Run(ctx context.Context) error {
 			md.Textf("* Tests must be be run on every TechPreview platform (ask for an exception if your feature doesn't support a variant)")
 			md.Textf("* All tests must run at least 14 times on every platform")
 			md.Textf("* All tests must pass at least 95%% of the time")
-			md.Textf("* JobTier must be one of: standard, informing, blocking\n")
+			md.Textf("* JobTier must be one of: standard, informing, blocking, candidate (candidate is allowed but produces a warning as it is not covered by Component Readiness)\n")
 			md.Text("")
 
 			if len(warnings) > 0 {
@@ -374,6 +374,18 @@ func checkIfTestingIsSufficient(featureGate string, testingResults map[JobVarian
 		// Use the Optional field to determine if validation failures are warnings or errors
 		// Optional variants (like RHEL 10 in 4.22) have non-blocking warnings
 		isOptional := jobVariant.Optional
+
+		// If candidate-tier queries returned results for this variant, emit a warning.
+		// Candidate tier jobs are not covered by the Component Readiness main view and
+		// do not have our standard regression protection mechanisms. The results are still
+		// included in the pass/fail calculation alongside other tiers.
+		if testedVariant.HasCandidateTierResults {
+			results = append(results, ValidationResult{
+				Error: fmt.Errorf("warning: variant %v includes test data from candidate-tier jobs which are not covered by Component Readiness and lack standard regression protection",
+					jobVariant),
+				IsWarning: true,
+			})
+		}
 
 		if len(testedVariant.TestResults) < requiredNumberOfTests {
 			results = append(results, ValidationResult{
@@ -639,7 +651,8 @@ func (a OrderedJobVariants) Less(i, j int) bool {
 type TestingResults struct {
 	JobVariant JobVariant
 
-	TestResults []TestResults
+	TestResults              []TestResults
+	HasCandidateTierResults  bool // true if candidate-tier queries returned any test data
 }
 
 type TestResults struct {
@@ -674,6 +687,7 @@ func validateJobTiers(jobVariant JobVariant) error {
 		"standard":  true,
 		"informing": true,
 		"blocking":  true,
+		"candidate": true,
 	}
 
 	hasValidTier := false
@@ -682,7 +696,7 @@ func validateJobTiers(jobVariant JobVariant) error {
 		if tier != "" {
 			hasValidTier = true
 			if !validTiers[tier] {
-				return fmt.Errorf("invalid JobTier %q in variant %+v - must be one of: standard, informing, blocking", tier, jobVariant)
+				return fmt.Errorf("invalid JobTier %q in variant %+v - must be one of: standard, informing, blocking, candidate", tier, jobVariant)
 			}
 		}
 	}
@@ -838,6 +852,7 @@ func listTestResultForVariant(featureGate string, jobVariant JobVariant) (*Testi
 	}
 
 	testNameToResults := map[string]*TestResults{}
+	hasCandidateTierResults := false
 	queries := sippy.QueriesFor(jobVariant.Cloud, jobVariant.Architecture, jobVariant.Topology, jobVariant.NetworkStack, jobVariant.OS, jobVariant.JobTiers, testPattern)
 	release, err := getRelease()
 	if err != nil {
@@ -884,6 +899,10 @@ func listTestResultForVariant(featureGate string, jobVariant JobVariant) (*Testi
 			return nil, err
 		}
 
+		if currQuery.TierName == "candidate" && len(testInfos) > 0 {
+			hasCandidateTierResults = true
+		}
+
 		for _, currTest := range testInfos {
 			testResults, ok := testNameToResults[currTest.Name]
 			if !ok {
@@ -912,8 +931,9 @@ func listTestResultForVariant(featureGate string, jobVariant JobVariant) (*Testi
 	}
 
 	jobVariantResults := &TestingResults{
-		JobVariant:  jobVariant,
-		TestResults: nil,
+		JobVariant:              jobVariant,
+		TestResults:             nil,
+		HasCandidateTierResults: hasCandidateTierResults,
 	}
 	testNames := sets.StringKeySet(testNameToResults)
 	for _, testName := range testNames.List() {

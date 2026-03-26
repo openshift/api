@@ -833,7 +833,7 @@ func listTestResultForVariant(featureGate string, jobVariant JobVariant) (*Testi
 	}
 
 	sippyClient := &http.Client{
-		Timeout:   30 * time.Second,
+		Timeout:   2 * time.Minute,
 		Transport: defaultTransport,
 	}
 

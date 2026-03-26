@@ -126,6 +126,16 @@ type ClusterMonitoringSpec struct {
 	// When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time.
 	// +optional
 	OpenShiftStateMetricsConfig OpenShiftStateMetricsConfig `json:"openShiftStateMetricsConfig,omitempty,omitzero"`
+	// monitoringPluginConfig is an optional field that can be used to configure the monitoring plugin
+	// that runs as a dynamic plugin of the OpenShift web console. The monitoring plugin provides
+	// the monitoring UI in the OpenShift web console for visualizing metrics, alerts, and dashboards.
+	// When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time.
+	// The current default deploys the monitoring-plugin as a single-replica Deployment
+	// on linux nodes with 10m CPU and 50Mi memory requests, and no custom tolerations
+	// or topology spread constraints.
+	// When set, at least one field must be specified within monitoringPluginConfig.
+	// +optional
+	MonitoringPluginConfig MonitoringPluginConfig `json:"monitoringPluginConfig,omitempty,omitzero"`
 }
 
 // OpenShiftStateMetricsConfig provides configuration options for the openshift-state-metrics agent
@@ -198,6 +208,72 @@ type OpenShiftStateMetricsConfig struct {
 	// +listMapKey=topologyKey
 	// +listMapKey=whenUnsatisfiable
 	// +optional
+	TopologySpreadConstraints []v1.TopologySpreadConstraint `json:"topologySpreadConstraints,omitempty"`
+}
+
+// MonitoringPluginConfig provides configuration options for the monitoring plugin
+// that runs as a dynamic plugin of the OpenShift web console.
+// The monitoring plugin provides the monitoring UI in the OpenShift web console
+// for visualizing metrics, alerts, and dashboards.
+// At least one field must be specified; an empty monitoringPluginConfig object is not allowed.
+// +kubebuilder:validation:MinProperties=1
+type MonitoringPluginConfig struct {
+	// nodeSelector defines the nodes on which the Pods are scheduled.
+	// nodeSelector is optional.
+	//
+	// When omitted, this means the user has no opinion and the platform is left
+	// to choose reasonable defaults. These defaults are subject to change over time.
+	// The current default value is `kubernetes.io/os: linux`.
+	// When specified, nodeSelector must contain at least 1 entry and must not contain more than 10 entries.
+	// +optional
+	// +kubebuilder:validation:MinProperties=1
+	// +kubebuilder:validation:MaxProperties=10
+	NodeSelector map[string]string `json:"nodeSelector,omitempty"`
+	// resources defines the compute resource requests and limits for the monitoring-plugin container.
+	// This includes CPU, memory and HugePages constraints to help control scheduling and resource usage.
+	// When not specified, defaults are used by the platform. Requests cannot exceed limits.
+	// This field is optional.
+	// More info: https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/
+	// This is a simplified API that maps to Kubernetes ResourceRequirements.
+	// The current default values are:
+	//   resources:
+	//    - name: cpu
+	//      request: 10m
+	//    - name: memory
+	//      request: 50Mi
+	//
+	// ---
+	// maxItems is set to 10 based on the typical number of Kubernetes resource types
+	// (cpu, memory, ephemeral-storage, and up to 7 HugePages sizes).
+	// When specified, resources must contain at least 1 entry.
+	// +optional
+	// +listType=map
+	// +listMapKey=name
+	// +kubebuilder:validation:MaxItems=10
+	// +kubebuilder:validation:MinItems=1
+	Resources []ContainerResource `json:"resources,omitempty"`
+	// tolerations defines the tolerations required for the monitoring-plugin Pods.
+	// This field is optional.
+	//
+	// When omitted, the monitoring-plugin Pods will not have any tolerations, which
+	// means they will only be scheduled on nodes with no taints.
+	// When specified, tolerations must contain at least 1 entry and must not contain more than 10 entries.
+	// +optional
+	// +listType=atomic
+	// +kubebuilder:validation:MinItems=1
+	// +kubebuilder:validation:MaxItems=10
+	Tolerations []v1.Toleration `json:"tolerations,omitempty"`
+	// topologySpreadConstraints defines how the monitoring-plugin Pods are spread across nodes.
+	// This field is optional.
+	//
+	// When omitted, the monitoring-plugin Pods will use the default scheduling
+	// constraints.
+	// When specified, topologySpreadConstraints must contain at least 1 entry and
+	// must not contain more than 10 entries.
+	// +optional
+	// +listType=atomic
+	// +kubebuilder:validation:MinItems=1
+	// +kubebuilder:validation:MaxItems=10
 	TopologySpreadConstraints []v1.TopologySpreadConstraint `json:"topologySpreadConstraints,omitempty"`
 }
 

@@ -179,6 +179,7 @@ var map_ClusterMonitoringSpec = map[string]string{
 	"prometheusOperatorConfig": "prometheusOperatorConfig is an optional field that can be used to configure the Prometheus Operator component. Specifically, it can configure how the Prometheus Operator instance is deployed, pod scheduling, and resource allocation. When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time.",
 	"prometheusOperatorAdmissionWebhookConfig": "prometheusOperatorAdmissionWebhookConfig is an optional field that can be used to configure the admission webhook component of Prometheus Operator that runs in the openshift-monitoring namespace. The admission webhook validates PrometheusRule and AlertmanagerConfig objects to ensure they are semantically valid, mutates PrometheusRule annotations, and converts AlertmanagerConfig objects between API versions. When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time.",
 	"openShiftStateMetricsConfig":              "openShiftStateMetricsConfig is an optional field that can be used to configure the openshift-state-metrics agent that runs in the openshift-monitoring namespace. The openshift-state-metrics agent generates metrics about the state of OpenShift-specific Kubernetes objects, such as routes, builds, and deployments. When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time.",
+	"kubeStateMetricsConfig":                   "kubeStateMetricsConfig is an optional field that can be used to configure the kube-state-metrics agent that runs in the openshift-monitoring namespace. kube-state-metrics generates metrics about the state of Kubernetes objects such as Deployments, Nodes, and Pods. When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time.",
 }
 
 func (ClusterMonitoringSpec) SwaggerDoc() map[string]string {
@@ -230,6 +231,18 @@ var map_KeepEqualActionConfig = map[string]string{
 
 func (KeepEqualActionConfig) SwaggerDoc() map[string]string {
 	return map_KeepEqualActionConfig
+}
+
+var map_KubeStateMetricsConfig = map[string]string{
+	"":                          "KubeStateMetricsConfig provides configuration options for the kube-state-metrics agent that runs in the `openshift-monitoring` namespace. kube-state-metrics generates metrics about the state of Kubernetes objects such as Deployments, Nodes, and Pods.",
+	"nodeSelector":              "nodeSelector defines the nodes on which the Pods are scheduled. nodeSelector is optional.\n\nWhen omitted, this means the user has no opinion and the platform is left to choose reasonable defaults. These defaults are subject to change over time. The current default value is `kubernetes.io/os: linux`. When specified, nodeSelector must contain at least 1 entry and must not contain more than 10 entries.",
+	"resources":                 "resources defines the compute resource requests and limits for the kube-state-metrics container. This includes CPU, memory and HugePages constraints to help control scheduling and resource usage. When not specified, defaults are used by the platform. Requests cannot exceed limits. This field is optional. More info: https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/ This is a simplified API that maps to Kubernetes ResourceRequirements. The current default values are:\n  resources:\n   - name: cpu\n     request: 4m\n     limit: null\n   - name: memory\n     request: 40Mi\n     limit: null\nWhen specified, resources must contain at least 1 entry and must not contain more than 10 entries. Each resource name must be unique within this list.",
+	"tolerations":               "tolerations defines tolerations for the pods. tolerations is optional.\n\nWhen omitted, this means the user has no opinion and the platform is left to choose reasonable defaults. These defaults are subject to change over time. Defaults are empty/unset. When specified, tolerations must contain at least 1 entry and must not contain more than 10 entries.",
+	"topologySpreadConstraints": "topologySpreadConstraints defines rules for how kube-state-metrics Pods should be distributed across topology domains such as zones, nodes, or other user-defined labels. topologySpreadConstraints is optional. This helps improve high availability and resource efficiency by avoiding placing too many replicas in the same failure domain.\n\nWhen omitted, this means no opinion and the platform is left to choose a default, which is subject to change over time. This field maps directly to the `topologySpreadConstraints` field in the Pod spec. Defaults are empty/unset. When specified, topologySpreadConstraints must contain at least 1 entry and must not contain more than 10 entries. Entries must have unique topologyKey and whenUnsatisfiable pairs.",
+}
+
+func (KubeStateMetricsConfig) SwaggerDoc() map[string]string {
+	return map_KubeStateMetricsConfig
 }
 
 var map_Label = map[string]string{

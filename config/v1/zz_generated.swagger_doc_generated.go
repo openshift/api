@@ -988,7 +988,7 @@ func (ConsoleStatus) SwaggerDoc() map[string]string {
 
 var map_AWSDNSSpec = map[string]string{
 	"":                   "AWSDNSSpec contains DNS configuration specific to the Amazon Web Services cloud provider.",
-	"privateZoneIAMRole": "privateZoneIAMRole contains the ARN of an IAM role that should be assumed when performing operations on the cluster's private hosted zone specified in the cluster DNS config. When left empty, no role should be assumed.",
+	"privateZoneIAMRole": "privateZoneIAMRole contains the ARN of an IAM role that should be assumed when performing operations on the cluster's private hosted zone specified in the cluster DNS config. When left empty, no role should be assumed.\n\nThe ARN must follow the format: arn:<partition>:iam::<account-id>:role/<role-name>, where: <partition> is the AWS partition (aws, aws-cn, aws-us-gov, or aws-eusc), <account-id> is a 12-digit numeric identifier for the AWS account, <role-name> is the IAM role name.",
 }
 
 func (AWSDNSSpec) SwaggerDoc() map[string]string {

@@ -1,0 +1,133 @@
+apiVersion: apiextensions.k8s.io/v1 # Hack because controller-gen complains if we don't have this
+name: "ClusterCSIDriver"
+crdName: clustercsidrivers.operator.openshift.io
+featureGates:
+- AWSEuropeanSovereignCloudInstall
+tests:
+  onCreate:
+    - name: Should be able to create a minimal ClusterCSIDriver
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: ClusterCSIDriver
+        metadata:
+          name: csi.sharedresource.openshift.io
+        spec: {} # No spec is required for a ClusterCSIDriver
+      expected: |
+        apiVersion: operator.openshift.io/v1
+        kind: ClusterCSIDriver
+        metadata:
+          name: csi.sharedresource.openshift.io
+        spec:
+          logLevel: Normal
+          operatorLogLevel: Normal
+    - name: Should be able to specify an AWS KMS key ARN
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: ClusterCSIDriver
+        metadata:
+          name: ebs.csi.aws.com
+        spec:
+          driverConfig:
+            driverType: AWS
+            aws:
+              kmsKeyARN: arn:aws:kms:us-east-1:123456789012:key/12345678-1234-1234-1234-123456789012
+      expected: |
+        apiVersion: operator.openshift.io/v1
+        kind: ClusterCSIDriver
+        metadata:
+          name: ebs.csi.aws.com
+        spec:
+          driverConfig:
+            driverType: AWS
+            aws:
+              kmsKeyARN: arn:aws:kms:us-east-1:123456789012:key/12345678-1234-1234-1234-123456789012
+          logLevel: Normal
+          operatorLogLevel: Normal
+    - name: Should be able to specify an AWS European Sovereign Cloud KMS key ARN
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: ClusterCSIDriver
+        metadata:
+          name: ebs.csi.aws.com
+        spec:
+          driverConfig:
+            driverType: AWS
+            aws:
+              kmsKeyARN: arn:aws-eusc:kms:eusc-de-east-1:123456789012:key/12345678-1234-1234-1234-123456789012
+      expected: |
+        apiVersion: operator.openshift.io/v1
+        kind: ClusterCSIDriver
+        metadata:
+          name: ebs.csi.aws.com
+        spec:
+          driverConfig:
+            driverType: AWS
+            aws:
+              kmsKeyARN: arn:aws-eusc:kms:eusc-de-east-1:123456789012:key/12345678-1234-1234-1234-123456789012
+          logLevel: Normal
+          operatorLogLevel: Normal
+    - name: Should be able to specify an AWS European Sovereign Cloud KMS alias ARN
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: ClusterCSIDriver
+        metadata:
+          name: ebs.csi.aws.com
+        spec:
+          driverConfig:
+            driverType: AWS
+            aws:
+              kmsKeyARN: arn:aws-eusc:kms:eusc-de-east-1:123456789012:alias/my-key-alias
+      expected: |
+        apiVersion: operator.openshift.io/v1
+        kind: ClusterCSIDriver
+        metadata:
+          name: ebs.csi.aws.com
+        spec:
+          driverConfig:
+            driverType: AWS
+            aws:
+              kmsKeyARN: arn:aws-eusc:kms:eusc-de-east-1:123456789012:alias/my-key-alias
+          logLevel: Normal
+          operatorLogLevel: Normal
+    - name: Should not be able to specify an invalid AWS KMS key ARN
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: ClusterCSIDriver
+        metadata:
+          name: ebs.csi.aws.com
+        spec:
+          driverConfig:
+            driverType: AWS
+            aws:
+              kmsKeyARN: arn:aws:kms:us-east-1:invalid:key/12345678-1234-1234-1234-123456789012
+      expectedError: "ClusterCSIDriver.operator.openshift.io \"ebs.csi.aws.com\" is invalid: spec.driverConfig.aws.kmsKeyARN: Invalid value: \"string\": kmsKeyARN must be a valid AWS KMS key ARN in the format: arn:<partition>:kms:<region>:<account-id>:(key|alias)/<key-id-or-alias>"
+  onUpdate:
+    - name: Can switch from empty (default), to AWS driver with aws-eusc KMS key ARN
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: ClusterCSIDriver
+        metadata:
+          name: ebs.csi.aws.com
+        spec: {}
+      updated: |
+        apiVersion: operator.openshift.io/v1
+        kind: ClusterCSIDriver
+        metadata:
+          name: ebs.csi.aws.com
+        spec:
+          driverConfig:
+            driverType: AWS
+            aws:
+              kmsKeyARN: arn:aws-eusc:kms:eusc-de-east-1:123456789012:key/12345678-1234-1234-1234-123456789012
+      expected: |
+        apiVersion: operator.openshift.io/v1
+        kind: ClusterCSIDriver
+        metadata:
+          name: ebs.csi.aws.com
+        spec:
+          driverConfig:
+            driverType: AWS
+            aws:
+              kmsKeyARN: arn:aws-eusc:kms:eusc-de-east-1:123456789012:key/12345678-1234-1234-1234-123456789012
+          logLevel: Normal
+          operatorLogLevel: Normal

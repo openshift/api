@@ -50,7 +50,7 @@ tests:
             type: AWS
             aws:
               privateZoneIAMRole: arn:aws:iam:bad:123456789012:role/foo
-      expectedError: "DNS.config.openshift.io \"cluster\" is invalid: spec.platform.aws.privateZoneIAMRole: Invalid value: \"arn:aws:iam:bad:123456789012:role/foo\": spec.platform.aws.privateZoneIAMRole in body should match '^arn:(aws|aws-cn|aws-us-gov):iam::[0-9]{12}:role\\/.*$'"
+      expectedError: "DNS.config.openshift.io \"cluster\" is invalid: spec.platform.aws.privateZoneIAMRole: Invalid value: \"string\": privateZoneIAMRole must be a valid AWS IAM role ARN in the format: arn:<partition>:iam::<account-id>:role/<role-name>"
     - name: Should not be able to specify different type and platform
       initial: |
         apiVersion: config.openshift.io/v1

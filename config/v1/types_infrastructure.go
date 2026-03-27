@@ -295,7 +295,9 @@ type ExternalPlatformSpec struct {
 // PlatformSpec holds the desired state specific to the underlying infrastructure provider
 // of the current cluster. Since these are used at spec-level for the underlying cluster, it
 // is supposed that only one of the spec structs is set.
-// +kubebuilder:validation:XValidation:rule="!has(oldSelf.vsphere) && has(self.vsphere) ? size(self.vsphere.vcenters) < 2 : true",message="vcenters can have at most 1 item when configured post-install"
+// +openshift:validation:FeatureGateAwareXValidation:featureGate="",rule="!has(oldSelf.vsphere) && has(self.vsphere) && has(self.vsphere.vcenters) ? size(self.vsphere.vcenters) < 2 : true",message="vcenters can have at most 1 item when configured post-install"
+// +openshift:validation:FeatureGateAwareXValidation:featureGate=VSphereMultiVCenterDay2,rule="has(oldSelf.vsphere) && has(oldSelf.vsphere.vcenters) ? (has(self.vsphere) && has(self.vsphere.vcenters) && size(self.vsphere.vcenters) > 0) : true",message="vcenters is required once set and must have at least 1 item"
+// +openshift:validation:FeatureGateAwareXValidation:featureGate=VSphereMultiVCenterDay2,rule="!has(oldSelf.vsphere) && has(self.vsphere) && has(self.vsphere.vcenters) ? size(self.vsphere.vcenters) > 0 : true",message="vcenters must have at least 1 item when initially configured"
 type PlatformSpec struct {
 	// type is the underlying infrastructure provider for the cluster. This
 	// value controls whether infrastructure automation such as service load
@@ -1641,7 +1643,6 @@ type VSpherePlatformNodeNetworking struct {
 // use these fields for configuration.
 // +kubebuilder:validation:XValidation:rule="!has(oldSelf.apiServerInternalIPs) || has(self.apiServerInternalIPs)",message="apiServerInternalIPs list is required once set"
 // +kubebuilder:validation:XValidation:rule="!has(oldSelf.ingressIPs) || has(self.ingressIPs)",message="ingressIPs list is required once set"
-// +kubebuilder:validation:XValidation:rule="!has(oldSelf.vcenters) && has(self.vcenters) ? size(self.vcenters) < 2 : true",message="vcenters can have at most 1 item when configured post-install"
 type VSpherePlatformSpec struct {
 	// vcenters holds the connection details for services to communicate with vCenter.
 	// Currently, only a single vCenter is supported, but in tech preview 3 vCenters are supported.
@@ -1655,7 +1656,8 @@ type VSpherePlatformSpec struct {
 	// + in openshift-config.
 	// +kubebuilder:validation:MinItems=0
 	// +kubebuilder:validation:MaxItems=3
-	// +kubebuilder:validation:XValidation:rule="size(self) != size(oldSelf) ? size(oldSelf) == 0 && size(self) < 2 : true",message="vcenters cannot be added or removed once set"
+	// +openshift:validation:FeatureGateAwareXValidation:featureGate="",rule="size(self) != size(oldSelf) ? size(oldSelf) == 0 && size(self) < 2 : true",message="vcenters cannot be added or removed once set"
+	// +openshift:validation:FeatureGateAwareXValidation:featureGate=VSphereMultiVCenterDay2,rule="size(self) != size(oldSelf) ? size(self) > 0 : true",message="vcenters must have at least 1 item"
 	// +listType=atomic
 	// +optional
 	VCenters []VSpherePlatformVCenterSpec `json:"vcenters,omitempty"`

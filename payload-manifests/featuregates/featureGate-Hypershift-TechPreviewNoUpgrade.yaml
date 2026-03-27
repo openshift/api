@@ -67,6 +67,9 @@
                     },
                     {
                         "name": "ShortCertRotation"
+                    },
+                    {
+                        "name": "VSphereMultiVCenterDay2"
                     }
                 ],
                 "enabled": [

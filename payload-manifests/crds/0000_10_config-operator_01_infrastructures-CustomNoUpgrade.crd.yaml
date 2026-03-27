@@ -1083,23 +1083,24 @@ spec:
                         type: array
                         x-kubernetes-list-type: atomic
                         x-kubernetes-validations:
-                        - message: vcenters cannot be added or removed once set
-                          rule: 'size(self) != size(oldSelf) ? size(oldSelf) == 0
-                            && size(self) < 2 : true'
+                        - message: vcenters must have at least 1 item
+                          rule: 'size(self) != size(oldSelf) ? size(self) > 0 : true'
                     type: object
                     x-kubernetes-validations:
                     - message: apiServerInternalIPs list is required once set
                       rule: '!has(oldSelf.apiServerInternalIPs) || has(self.apiServerInternalIPs)'
                     - message: ingressIPs list is required once set
                       rule: '!has(oldSelf.ingressIPs) || has(self.ingressIPs)'
-                    - message: vcenters can have at most 1 item when configured post-install
-                      rule: '!has(oldSelf.vcenters) && has(self.vcenters) ? size(self.vcenters)
-                        < 2 : true'
                 type: object
                 x-kubernetes-validations:
-                - message: vcenters can have at most 1 item when configured post-install
-                  rule: '!has(oldSelf.vsphere) && has(self.vsphere) ? size(self.vsphere.vcenters)
-                    < 2 : true'
+                - message: vcenters is required once set and must have at least 1
+                    item
+                  rule: 'has(oldSelf.vsphere) && has(oldSelf.vsphere.vcenters) ? (has(self.vsphere)
+                    && has(self.vsphere.vcenters) && size(self.vsphere.vcenters) >
+                    0) : true'
+                - message: vcenters must have at least 1 item when initially configured
+                  rule: '!has(oldSelf.vsphere) && has(self.vsphere) && has(self.vsphere.vcenters)
+                    ? size(self.vsphere.vcenters) > 0 : true'
             type: object
           status:
             description: status holds observed values from the cluster. They may not

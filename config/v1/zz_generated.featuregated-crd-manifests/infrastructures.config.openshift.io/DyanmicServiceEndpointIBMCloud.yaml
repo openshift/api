@@ -1053,24 +1053,13 @@ spec:
                         minItems: 0
                         type: array
                         x-kubernetes-list-type: atomic
-                        x-kubernetes-validations:
-                        - message: vcenters cannot be added or removed once set
-                          rule: 'size(self) != size(oldSelf) ? size(oldSelf) == 0
-                            && size(self) < 2 : true'
                     type: object
                     x-kubernetes-validations:
                     - message: apiServerInternalIPs list is required once set
                       rule: '!has(oldSelf.apiServerInternalIPs) || has(self.apiServerInternalIPs)'
                     - message: ingressIPs list is required once set
                       rule: '!has(oldSelf.ingressIPs) || has(self.ingressIPs)'
-                    - message: vcenters can have at most 1 item when configured post-install
-                      rule: '!has(oldSelf.vcenters) && has(self.vcenters) ? size(self.vcenters)
-                        < 2 : true'
                 type: object
-                x-kubernetes-validations:
-                - message: vcenters can have at most 1 item when configured post-install
-                  rule: '!has(oldSelf.vsphere) && has(self.vsphere) ? size(self.vsphere.vcenters)
-                    < 2 : true'
             type: object
           status:
             description: status holds observed values from the cluster. They may not

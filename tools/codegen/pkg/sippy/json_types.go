@@ -12,6 +12,7 @@ import (
 type SippyQueryStruct struct {
 	Items        []SippyQueryItem `json:"items"`
 	LinkOperator string           `json:"linkOperator"`
+	TierName     string           `json:"-"` // not serialized, used to track which tier this query is for
 }
 
 type SippyQueryItem struct {
@@ -138,6 +139,7 @@ func QueriesFor(cloud, architecture, topology, networkStack, os, jobTiers, testP
 		queries = append(queries, &SippyQueryStruct{
 			Items:        items,
 			LinkOperator: "and",
+			TierName:     jobTier,
 		})
 	}
 

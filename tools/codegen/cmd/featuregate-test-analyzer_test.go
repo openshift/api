@@ -79,6 +79,195 @@ func Test_listTestResultFor(t *testing.T) {
 	}
 }
 
+func Test_validateJobTiers_candidate(t *testing.T) {
+	tests := []struct {
+		name    string
+		variant JobVariant
+		wantErr bool
+	}{
+		{
+			name:    "candidate is valid",
+			variant: JobVariant{Cloud: "aws", Architecture: "amd64", Topology: "ha", JobTiers: "candidate"},
+			wantErr: false,
+		},
+		{
+			name:    "candidate with standard is valid",
+			variant: JobVariant{Cloud: "aws", Architecture: "amd64", Topology: "ha", JobTiers: "standard,candidate"},
+			wantErr: false,
+		},
+		{
+			name:    "invalid tier still rejected",
+			variant: JobVariant{Cloud: "aws", Architecture: "amd64", Topology: "ha", JobTiers: "bogus"},
+			wantErr: true,
+		},
+		{
+			name:    "candidate with invalid tier rejected",
+			variant: JobVariant{Cloud: "aws", Architecture: "amd64", Topology: "ha", JobTiers: "candidate,bogus"},
+			wantErr: true,
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			err := validateJobTiers(tt.variant)
+			if (err != nil) != tt.wantErr {
+				t.Errorf("validateJobTiers() error = %v, wantErr %v", err, tt.wantErr)
+			}
+		})
+	}
+}
+
+func Test_checkIfTestingIsSufficient_CandidateVariants(t *testing.T) {
+	sufficientTests := []TestResults{
+		{TestName: "test1", TotalRuns: 15, SuccessfulRuns: 15},
+		{TestName: "test2", TotalRuns: 15, SuccessfulRuns: 15},
+		{TestName: "test3", TotalRuns: 15, SuccessfulRuns: 15},
+		{TestName: "test4", TotalRuns: 15, SuccessfulRuns: 15},
+		{TestName: "test5", TotalRuns: 15, SuccessfulRuns: 15},
+	}
+	insufficientTests := []TestResults{
+		{TestName: "test1", TotalRuns: 15, SuccessfulRuns: 15},
+		{TestName: "test2", TotalRuns: 15, SuccessfulRuns: 15},
+		// Only 2 tests, need 5
+	}
+
+	tests := []struct {
+		name               string
+		featureGate        string
+		testingResults     map[JobVariant]*TestingResults
+		wantBlockingErrors int
+		wantWarnings       int
+	}{
+		{
+			name:        "candidate tier returned results with sufficient tests - warning about component readiness",
+			featureGate: "TestFeature",
+			testingResults: map[JobVariant]*TestingResults{
+				{
+					Cloud:        "aws",
+					Architecture: "amd64",
+					Topology:     "ha",
+				}: {
+					TestResults:             sufficientTests,
+					HasCandidateTierResults: true,
+				},
+			},
+			wantBlockingErrors: 0,
+			wantWarnings:       1, // component readiness warning
+		},
+		{
+			name:        "candidate tier returned results with insufficient tests - blocking error plus warning",
+			featureGate: "TestFeature",
+			testingResults: map[JobVariant]*TestingResults{
+				{
+					Cloud:        "aws",
+					Architecture: "amd64",
+					Topology:     "ha",
+				}: {
+					TestResults:             insufficientTests,
+					HasCandidateTierResults: true,
+				},
+			},
+			wantBlockingErrors: 1, // insufficient tests is still blocking
+			wantWarnings:       1, // component readiness warning
+		},
+		{
+			name:        "no candidate tier results - no warning",
+			featureGate: "TestFeature",
+			testingResults: map[JobVariant]*TestingResults{
+				{
+					Cloud:        "aws",
+					Architecture: "amd64",
+					Topology:     "ha",
+				}: {
+					TestResults:             sufficientTests,
+					HasCandidateTierResults: false,
+				},
+			},
+			wantBlockingErrors: 0,
+			wantWarnings:       0,
+		},
+		{
+			name:        "candidate tier returned results with low pass rate - blocking error plus warning",
+			featureGate: "TestFeature",
+			testingResults: map[JobVariant]*TestingResults{
+				{
+					Cloud:        "aws",
+					Architecture: "amd64",
+					Topology:     "ha",
+				}: {
+					TestResults: []TestResults{
+						{TestName: "test1", TotalRuns: 20, SuccessfulRuns: 18}, // 90%
+						{TestName: "test2", TotalRuns: 15, SuccessfulRuns: 15},
+						{TestName: "test3", TotalRuns: 15, SuccessfulRuns: 15},
+						{TestName: "test4", TotalRuns: 15, SuccessfulRuns: 15},
+						{TestName: "test5", TotalRuns: 15, SuccessfulRuns: 15},
+					},
+					HasCandidateTierResults: true,
+				},
+			},
+			wantBlockingErrors: 1, // low pass rate is still blocking
+			wantWarnings:       1, // component readiness warning
+		},
+		{
+			name:        "mix of variants - one with candidate results one without",
+			featureGate: "TestFeature",
+			testingResults: map[JobVariant]*TestingResults{
+				{
+					Cloud:        "aws",
+					Architecture: "amd64",
+					Topology:     "ha",
+				}: {
+					TestResults:             sufficientTests,
+					HasCandidateTierResults: false,
+				},
+				{
+					Cloud:        "gcp",
+					Architecture: "amd64",
+					Topology:     "ha",
+				}: {
+					TestResults:             sufficientTests,
+					HasCandidateTierResults: true,
+				},
+			},
+			wantBlockingErrors: 0,
+			wantWarnings:       1, // only gcp variant has candidate warning
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			results := checkIfTestingIsSufficient(tt.featureGate, tt.testingResults)
+
+			blockingErrors := 0
+			warnings := 0
+			for _, result := range results {
+				if result.IsWarning {
+					warnings++
+				} else {
+					blockingErrors++
+				}
+			}
+
+			if blockingErrors != tt.wantBlockingErrors {
+				t.Errorf("got %d blocking errors, want %d", blockingErrors, tt.wantBlockingErrors)
+				for _, result := range results {
+					if !result.IsWarning {
+						t.Logf("  Blocking error: %v", result.Error)
+					}
+				}
+			}
+			if warnings != tt.wantWarnings {
+				t.Errorf("got %d warnings, want %d", warnings, tt.wantWarnings)
+				for _, result := range results {
+					if result.IsWarning {
+						t.Logf("  Warning: %v", result.Error)
+					}
+				}
+			}
+		})
+	}
+}
+
 func Test_checkIfTestingIsSufficient_OptionalVariants(t *testing.T) {
 	tests := []struct {
 		name               string

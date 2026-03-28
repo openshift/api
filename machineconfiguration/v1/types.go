@@ -752,7 +752,10 @@ type KubeletConfigSpec struct {
 
 	// If unset, the default is based on the apiservers.config.openshift.io/cluster resource.
 	// Note that only Old and Intermediate profiles are currently supported, and
-	// the maximum available minTLSVersion is VersionTLS12.
+	// the maximum available minTLSVersion is VersionTLS13.
+	// When set, this TLS configuration is applied to both the kubelet and CRI-O
+	// on nodes matching the pool selector. CRI-O receives the minimum TLS version
+	// via a drop-in configuration file managed by the ContainerRuntimeConfig controller.
 	// +optional
 	TLSSecurityProfile *configv1.TLSSecurityProfile `json:"tlsSecurityProfile,omitempty"`
 }

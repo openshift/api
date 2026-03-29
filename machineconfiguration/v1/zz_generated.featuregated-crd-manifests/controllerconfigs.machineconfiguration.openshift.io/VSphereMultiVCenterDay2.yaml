@@ -6,7 +6,7 @@ metadata:
     api.openshift.io/filename-cvo-runlevel: "0000_80"
     api.openshift.io/filename-operator: machine-config
     api.openshift.io/filename-ordering: "01"
-    feature-gate.release.openshift.io/VSphereHostVMGroupZonal: "true"
+    feature-gate.release.openshift.io/VSphereMultiVCenterDay2: "true"
   labels:
     openshift.io/operator-managed: ""
   name: controllerconfigs.machineconfiguration.openshift.io
@@ -1113,19 +1113,6 @@ spec:
                                   - topology
                                   - zone
                                   type: object
-                                  x-kubernetes-validations:
-                                  - message: when zoneAffinity type is HostGroup,
-                                      regionAffinity type must be ComputeCluster
-                                    rule: 'has(self.zoneAffinity) && self.zoneAffinity.type
-                                      == ''HostGroup'' ?  has(self.regionAffinity)
-                                      && self.regionAffinity.type == ''ComputeCluster''
-                                      : true'
-                                  - message: when zoneAffinity type is ComputeCluster,
-                                      regionAffinity type must be Datacenter
-                                    rule: 'has(self.zoneAffinity) && self.zoneAffinity.type
-                                      == ''ComputeCluster'' ?  has(self.regionAffinity)
-                                      && self.regionAffinity.type == ''Datacenter''
-                                      : true'
                                 type: array
                                 x-kubernetes-list-map-keys:
                                 - name
@@ -1297,14 +1284,25 @@ spec:
                                 minItems: 0
                                 type: array
                                 x-kubernetes-list-type: atomic
+                                x-kubernetes-validations:
+                                - message: vcenters must have at least 1 item
+                                  rule: '!has(oldSelf.vsphere) && has(self.vsphere)
+                                    ? size(self) > 0 : true'
                             type: object
                             x-kubernetes-validations:
+                            - message: vcenters must have at least 1 item
+                              rule: '!has(oldSelf.vsphere) && has(self.vsphere) ?
+                                size(self.vsphere.vcenters) > 0 : true'
                             - message: apiServerInternalIPs list is required once
                                 set
                               rule: '!has(oldSelf.apiServerInternalIPs) || has(self.apiServerInternalIPs)'
                             - message: ingressIPs list is required once set
                               rule: '!has(oldSelf.ingressIPs) || has(self.ingressIPs)'
                         type: object
+                        x-kubernetes-validations:
+                        - message: vcenters must have at least 1 item
+                          rule: '!has(oldSelf.vsphere) && has(self.vsphere) ? size(self.vsphere.vcenters)
+                            > 0 : true'
                     type: object
                   status:
                     description: status holds observed values from the cluster. They

@@ -171,9 +171,6 @@
                         "name": "GCPDualStackInstall"
                     },
                     {
-                        "name": "GatewayAPIWithoutOLM"
-                    },
-                    {
                         "name": "ImageModeStatusReporting"
                     },
                     {
@@ -309,6 +306,9 @@
                     },
                     {
                         "name": "GCPClusterHostedDNSInstall"
+                    },
+                    {
+                        "name": "GatewayAPIWithoutOLM"
                     },
                     {
                         "name": "HyperShiftOnlyDynamicResourceAllocation"

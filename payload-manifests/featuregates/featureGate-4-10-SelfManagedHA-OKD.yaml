@@ -38,9 +38,6 @@
                         "name": "AutomatedEtcdBackup"
                     },
                     {
-                        "name": "AzureClusterHostedDNSInstall"
-                    },
-                    {
                         "name": "AzureDedicatedHosts"
                     },
                     {
@@ -287,6 +284,9 @@
                 "enabled": [
                     {
                         "name": "AWSServiceLBNetworkSecurityGroup"
+                    },
+                    {
+                        "name": "AzureClusterHostedDNSInstall"
                     },
                     {
                         "name": "AzureWorkloadIdentity"

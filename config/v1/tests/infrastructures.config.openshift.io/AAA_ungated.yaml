@@ -384,6 +384,8 @@ tests:
           platform: Azure
           platformStatus:
             azure:
+              cloudLoadBalancerConfig:
+                dnsType: PlatformDefault
               resourceGroupName: bar
               resourceTags:
                 - {key: "key", value: "value"}

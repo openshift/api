@@ -3,6 +3,7 @@ name: "Infrastructure"
 crdName: infrastructures.config.openshift.io
 featureGates:
 - AzureClusterHostedDNSInstall
+- -AzureDualStackInstall
 tests:
   onCreate:
     - name: Should be able to create a minimal Infrastructure
@@ -60,7 +61,6 @@ tests:
             azure:
               cloudLoadBalancerConfig:
                 dnsType: PlatformDefault
-              ipFamily: IPv4
             type: Azure
     - name: should be able to set dnsType to non-default value of `ClusterHosted`
       initial: |
@@ -102,7 +102,6 @@ tests:
             azure:
               cloudLoadBalancerConfig:
                 dnsType: ClusterHosted
-              ipFamily: IPv4
             type: Azure
     - name: Should not allow changing the immutable dnsType field
       initial: |

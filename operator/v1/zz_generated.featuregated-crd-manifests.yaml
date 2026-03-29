@@ -178,6 +178,7 @@ ingresscontrollers.operator.openshift.io:
   Category: ""
   FeatureGates:
   - IngressControllerDynamicConfigurationManager
+  - IngressControllerHTTPSLogFormat
   FilenameOperatorName: ingress
   FilenameOperatorOrdering: "00"
   FilenameRunLevel: "0000_50"

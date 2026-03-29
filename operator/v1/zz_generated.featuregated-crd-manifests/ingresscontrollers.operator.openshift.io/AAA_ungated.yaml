@@ -1654,7 +1654,7 @@ spec:
                           If this field is empty, log messages use the implementation's default
                           HTTP log format.  For HAProxy's default HTTP log format, see the
                           HAProxy documentation:
-                          http://cbonte.github.io/haproxy-dconv/2.0/configuration.html#8.2.3
+                          http://docs.haproxy.org/2.8/configuration.html#8.2.3
 
                           Note that this format only applies to cleartext HTTP connections
                           and to secure HTTP connections for which the ingress controller

@@ -1,0 +1,330 @@
+apiVersion: apiextensions.k8s.io/v1 # Hack because controller-gen complains if we don't have this
+name: "DNS"
+crdName: dnses.operator.openshift.io
+featureGates:
+- DNSTemplatePlugin
+tests:
+  onCreate:
+    - name: Should be able to create a DNS with template - catch-all zone
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: DNS
+        spec:
+          template:
+            zones: ["."]
+            queryType: AAAA
+            queryClass: IN
+            action:
+              rcode: NOERROR
+      expected: |
+        apiVersion: operator.openshift.io/v1
+        kind: DNS
+        spec:
+          logLevel: Normal
+          operatorLogLevel: Normal
+          upstreamResolvers:
+            policy: Sequential
+            upstreams:
+            - port: 53
+              type: SystemResolvConf
+          template:
+            zones: ["."]
+            queryType: AAAA
+            queryClass: IN
+            action:
+              rcode: NOERROR
+    - name: Should be able to create a DNS with template - specific zone
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: DNS
+        spec:
+          template:
+            zones: ["example.com"]
+            queryType: AAAA
+            queryClass: IN
+            action:
+              rcode: NOERROR
+      expected: |
+        apiVersion: operator.openshift.io/v1
+        kind: DNS
+        spec:
+          logLevel: Normal
+          operatorLogLevel: Normal
+          upstreamResolvers:
+            policy: Sequential
+            upstreams:
+            - port: 53
+              type: SystemResolvConf
+          template:
+            zones: ["example.com"]
+            queryType: AAAA
+            queryClass: IN
+            action:
+              rcode: NOERROR
+    - name: Should be able to create a DNS with template - multiple zones
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: DNS
+        spec:
+          template:
+            zones: ["example.com", "test.com", "corp.com"]
+            queryType: AAAA
+            queryClass: IN
+            action:
+              rcode: NOERROR
+      expected: |
+        apiVersion: operator.openshift.io/v1
+        kind: DNS
+        spec:
+          logLevel: Normal
+          operatorLogLevel: Normal
+          upstreamResolvers:
+            policy: Sequential
+            upstreams:
+            - port: 53
+              type: SystemResolvConf
+          template:
+            zones: ["example.com", "test.com", "corp.com"]
+            queryType: AAAA
+            queryClass: IN
+            action:
+              rcode: NOERROR
+    - name: Should be able to create a DNS without template (optional field)
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: DNS
+        spec:
+          servers: []
+      expected: |
+        apiVersion: operator.openshift.io/v1
+        kind: DNS
+        spec:
+          logLevel: Normal
+          operatorLogLevel: Normal
+          upstreamResolvers:
+            policy: Sequential
+            upstreams:
+            - port: 53
+              type: SystemResolvConf
+          servers: []
+    - name: Should reject DNS with template - missing zones
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: DNS
+        spec:
+          template:
+            queryType: AAAA
+            queryClass: IN
+            action:
+              rcode: NOERROR
+      expectedError: "Required value"
+    - name: Should reject DNS with template - empty zones array
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: DNS
+        spec:
+          template:
+            zones: []
+            queryType: AAAA
+            queryClass: IN
+            action:
+              rcode: NOERROR
+      expectedError: "zones in body should have at least 1 items"
+    - name: Should reject DNS with template - invalid queryType
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: DNS
+        spec:
+          template:
+            zones: ["."]
+            queryType: A
+            queryClass: IN
+            action:
+              rcode: NOERROR
+      expectedError: 'Unsupported value: "A": supported values: "AAAA"'
+    - name: Should reject DNS with template - invalid queryClass
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: DNS
+        spec:
+          template:
+            zones: ["."]
+            queryType: AAAA
+            queryClass: CH
+            action:
+              rcode: NOERROR
+      expectedError: 'Unsupported value: "CH": supported values: "IN"'
+    - name: Should reject DNS with template - missing action
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: DNS
+        spec:
+          template:
+            zones: ["."]
+            queryType: AAAA
+            queryClass: IN
+      expectedError: "Required value"
+    - name: Should reject DNS with template - missing rcode
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: DNS
+        spec:
+          template:
+            zones: ["."]
+            queryType: AAAA
+            queryClass: IN
+            action: {}
+      expectedError: "Required value"
+    - name: Should reject DNS with template - invalid rcode
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: DNS
+        spec:
+          template:
+            zones: ["."]
+            queryType: AAAA
+            queryClass: IN
+            action:
+              rcode: NXDOMAIN
+      expectedError: 'Unsupported value: "NXDOMAIN": supported values: "NOERROR"'
+  onUpdate:
+    - name: Should be able to add template to existing DNS
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: DNS
+        spec: {}
+      updated: |
+        apiVersion: operator.openshift.io/v1
+        kind: DNS
+        spec:
+          template:
+            zones: ["."]
+            queryType: AAAA
+            queryClass: IN
+            action:
+              rcode: NOERROR
+      expected: |
+        apiVersion: operator.openshift.io/v1
+        kind: DNS
+        spec:
+          logLevel: Normal
+          operatorLogLevel: Normal
+          upstreamResolvers:
+            policy: Sequential
+            upstreams:
+            - port: 53
+              type: SystemResolvConf
+          template:
+            zones: ["."]
+            queryType: AAAA
+            queryClass: IN
+            action:
+              rcode: NOERROR
+    - name: Should be able to update template zones
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: DNS
+        spec:
+          template:
+            zones: ["example.com"]
+            queryType: AAAA
+            queryClass: IN
+            action:
+              rcode: NOERROR
+      updated: |
+        apiVersion: operator.openshift.io/v1
+        kind: DNS
+        spec:
+          template:
+            zones: ["example.com", "test.com"]
+            queryType: AAAA
+            queryClass: IN
+            action:
+              rcode: NOERROR
+      expected: |
+        apiVersion: operator.openshift.io/v1
+        kind: DNS
+        spec:
+          logLevel: Normal
+          operatorLogLevel: Normal
+          upstreamResolvers:
+            policy: Sequential
+            upstreams:
+            - port: 53
+              type: SystemResolvConf
+          template:
+            zones: ["example.com", "test.com"]
+            queryType: AAAA
+            queryClass: IN
+            action:
+              rcode: NOERROR
+    - name: Should be able to remove template from existing DNS
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: DNS
+        spec:
+          template:
+            zones: ["."]
+            queryType: AAAA
+            queryClass: IN
+            action:
+              rcode: NOERROR
+      updated: |
+        apiVersion: operator.openshift.io/v1
+        kind: DNS
+        spec: {}
+      expected: |
+        apiVersion: operator.openshift.io/v1
+        kind: DNS
+        spec:
+          logLevel: Normal
+          operatorLogLevel: Normal
+          upstreamResolvers:
+            policy: Sequential
+            upstreams:
+            - port: 53
+              type: SystemResolvConf
+    - name: Should reject update with invalid queryType
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: DNS
+        spec:
+          template:
+            zones: ["."]
+            queryType: AAAA
+            queryClass: IN
+            action:
+              rcode: NOERROR
+      updated: |
+        apiVersion: operator.openshift.io/v1
+        kind: DNS
+        spec:
+          template:
+            zones: ["."]
+            queryType: CNAME
+            queryClass: IN
+            action:
+              rcode: NOERROR
+      expectedError: 'Unsupported value: "CNAME"'
+    - name: Should reject update with empty zones
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: DNS
+        spec:
+          template:
+            zones: ["."]
+            queryType: AAAA
+            queryClass: IN
+            action:
+              rcode: NOERROR
+      updated: |
+        apiVersion: operator.openshift.io/v1
+        kind: DNS
+        spec:
+          template:
+            zones: []
+            queryType: AAAA
+            queryClass: IN
+            action:
+              rcode: NOERROR
+      expectedError: "zones in body should have at least 1 items"

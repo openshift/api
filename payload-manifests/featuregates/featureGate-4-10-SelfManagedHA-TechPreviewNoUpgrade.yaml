@@ -32,6 +32,9 @@
                         "name": "ClusterUpdatePreflight"
                     },
                     {
+                        "name": "ConfidentialCluster"
+                    },
+                    {
                         "name": "EventedPLEG"
                     },
                     {

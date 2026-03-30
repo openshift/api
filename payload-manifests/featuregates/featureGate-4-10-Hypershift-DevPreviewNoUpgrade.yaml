@@ -301,6 +301,9 @@
                         "name": "NetworkConnect"
                     },
                     {
+                        "name": "NetworkObservabilityInstall"
+                    },
+                    {
                         "name": "NoOverlayMode"
                     },
                     {

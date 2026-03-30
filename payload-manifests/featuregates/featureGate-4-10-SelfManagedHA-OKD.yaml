@@ -116,6 +116,9 @@
                         "name": "ClusterVersionOperatorConfiguration"
                     },
                     {
+                        "name": "ConfidentialCluster"
+                    },
+                    {
                         "name": "ConfigurablePKI"
                     },
                     {

@@ -586,18 +586,21 @@ var (
 			Architecture: "amd64",
 			Topology:     "two-node-fencing",
 			NetworkStack: "ipv4",
+			JobTiers:     "candidate,standard,informing,blocking",
 		},
 		{
 			Cloud:        "metal",
 			Architecture: "amd64",
 			Topology:     "two-node-fencing",
 			NetworkStack: "ipv6",
+			JobTiers:     "candidate,standard,informing,blocking",
 		},
 		{
 			Cloud:        "metal",
 			Architecture: "amd64",
 			Topology:     "two-node-fencing",
 			NetworkStack: "dual",
+			JobTiers:     "candidate,standard,informing,blocking",
 		},
 	}
 
@@ -651,8 +654,8 @@ func (a OrderedJobVariants) Less(i, j int) bool {
 type TestingResults struct {
 	JobVariant JobVariant
 
-	TestResults              []TestResults
-	HasCandidateTierResults  bool // true if candidate-tier queries returned any test data
+	TestResults             []TestResults
+	HasCandidateTierResults bool // true if candidate-tier queries returned any test data
 }
 
 type TestResults struct {

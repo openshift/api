@@ -370,6 +370,9 @@
                         "name": "VSphereMultiNetworks"
                     },
                     {
+                        "name": "VSphereMultiVCenterDay2"
+                    },
+                    {
                         "name": "VolumeGroupSnapshot"
                     }
                 ],

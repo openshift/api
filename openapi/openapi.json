@@ -48288,6 +48288,10 @@
           "default": {},
           "$ref": "#/definitions/com.github.openshift.api.operator.v1alpha1.ClusterAPIInstallerComponentImage"
         },
+        "name": {
+          "description": "name is the human-readable name of the component. The value has no effect, and will not be set if the component does not define a name in its manifests. If set it must consist of alphanumeric characters, or '-', and may not exceed 255 characters.",
+          "type": "string"
+        },
         "type": {
           "description": "type is the source type of the component. The only valid value is Image. When set to Image, the image field must be set and will define an image source for the component.\n\nPossible enum values:\n - `\"Image\"` is an image source for a component.",
           "type": "string",
@@ -48323,6 +48327,35 @@
         }
       }
     },
+    "com.github.openshift.api.operator.v1alpha1.ClusterAPIInstallerComponentSource": {
+      "description": "ClusterAPIInstallerComponentSource defines the source of a component which will be installed by this revision.",
+      "type": "object",
+      "required": [
+        "type"
+      ],
+      "properties": {
+        "image": {
+          "description": "image defines an image source for a component. The image must contain a /capi-operator-installer directory containing the component manifests.",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.operator.v1alpha1.ClusterAPIInstallerComponentImage"
+        },
+        "type": {
+          "description": "type is the source type of the component. The only valid value is Image. When set to Image, the image field must be set and will define an image source for the component.\n\nPossible enum values:\n - `\"Image\"` is an image source for a component.",
+          "type": "string",
+          "enum": [
+            "Image"
+          ]
+        }
+      },
+      "x-kubernetes-unions": [
+        {
+          "discriminator": "type",
+          "fields-to-discriminateBy": {
+            "image": "Image"
+          }
+        }
+      ]
+    },
     "com.github.openshift.api.operator.v1alpha1.ClusterAPIInstallerRevision": {
       "type": "object",
       "required": [
@@ -48344,6 +48377,15 @@
           "description": "contentID uniquely identifies the content of this revision. The contentID must be between 1 and 255 characters long.",
           "type": "string"
         },
+        "manifestSubstitutions": {
+          "description": "manifestSubstitutions is a list of envsubst style substitutions which will be applied to manifests in the revision during rendering. If defined it must not be empty, and may not contain more than 32 items. Each manifest substitution must have a unique key.",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/com.github.openshift.api.operator.v1alpha1.ClusterAPIInstallerRevisionManifestSubstitution"
+          },
+          "x-kubernetes-list-type": "atomic"
+        },
         "name": {
           "description": "name is the name of a revision.",
           "type": "string"
@@ -48364,6 +48406,24 @@
         }
       },
       "x-kubernetes-map-type": "atomic"
+    },
+    "com.github.openshift.api.operator.v1alpha1.ClusterAPIInstallerRevisionManifestSubstitution": {
+      "description": "ClusterAPIInstallerRevisionManifestSubstitution defines an envsubst style substitution which will be applied to manifests in a revision during rendering.",
+      "type": "object",
+      "required": [
+        "key",
+        "value"
+      ],
+      "properties": {
+        "key": {
+          "description": "key is the name of the envsubst variable to substitute. It must be a valid envsubst variable name, consisting of letters, digits, and underscores, and must start with a letter or underscore. The key must not be empty, and must not exceed 255 characters.",
+          "type": "string"
+        },
+        "value": {
+          "description": "value is the value to substitute for the envsubst variable. It may be empty, in which case the variable will be substituted with an empty string. The value must not exceed 4096 characters.",
+          "type": "string"
+        }
+      }
     },
     "com.github.openshift.api.operator.v1alpha1.ClusterAPIList": {
       "description": "ClusterAPIList contains a list of ClusterAPI configurations\n\nCompatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.",
@@ -48426,6 +48486,11 @@
         "desiredRevision": {
           "description": "desiredRevision is the name of the desired revision. It is written by the revision controller. It must be set to the name of the entry in the revisions list with the highest revision number.",
           "type": "string"
+        },
+        "observedRevisionGeneration": {
+          "description": "observedRevisionGeneration is the generation of the ClusterAPI object that was last observed by the revision controller. If specified it must be greater than or equal to 1. It may not decrease or be unset once set.",
+          "type": "integer",
+          "format": "int64"
         },
         "revisions": {
           "description": "revisions is a list of all currently active revisions. A revision is active until the installer controller updates currentRevision to a later revision. It is written by the revision controller.\n\nThe maximum number of revisions is 16. All revisions must have a unique name. All revisions must have a unique revision number. When adding a revision, the revision number must be greater than the highest revision number in the list. Revisions are immutable, although they can be deleted.",

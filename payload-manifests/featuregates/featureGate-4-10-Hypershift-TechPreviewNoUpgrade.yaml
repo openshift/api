@@ -229,12 +229,6 @@
                         "name": "ExternalOIDCWithUpstreamParity"
                     },
                     {
-                        "name": "GCPClusterHostedDNS"
-                    },
-                    {
-                        "name": "GCPClusterHostedDNSInstall"
-                    },
-                    {
                         "name": "GCPCustomAPIEndpoints"
                     },
                     {

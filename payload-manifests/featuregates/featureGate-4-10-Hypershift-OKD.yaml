@@ -161,9 +161,6 @@
                         "name": "ExternalSnapshotMetadata"
                     },
                     {
-                        "name": "GCPClusterHostedDNS"
-                    },
-                    {
                         "name": "GCPCustomAPIEndpoints"
                     },
                     {
@@ -311,9 +308,6 @@
                     },
                     {
                         "name": "ExternalOIDCWithUIDAndExtraClaimMappings"
-                    },
-                    {
-                        "name": "GCPClusterHostedDNSInstall"
                     },
                     {
                         "name": "HyperShiftOnlyDynamicResourceAllocation"

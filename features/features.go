@@ -1020,4 +1020,12 @@ var (
 				enhancementPR("https://github.com/openshift/enhancements/pull/1910").
 				enable(inDevPreviewNoUpgrade(), inTechPreviewNoUpgrade()).
 				mustRegister()
+
+        FeatureGateConfidentialCluster = newFeatureGate("ConfidentialCluster").
+                                        reportProblemsToJiraComponent("ConfidentialClusters").
+                                        contactPerson("fjin").
+                                        productScope(ocpSpecific).
+                                        enhancementPR("https://github.com/openshift/enhancements/pull/1962").
+                                        enable(inDevPreviewNoUpgrade()).
+                                        mustRegister()
 )

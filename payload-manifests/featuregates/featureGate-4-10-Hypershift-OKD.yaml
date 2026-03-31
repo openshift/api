@@ -182,9 +182,6 @@
                         "name": "ImageModeStatusReporting"
                     },
                     {
-                        "name": "IngressControllerDynamicConfigurationManager"
-                    },
-                    {
                         "name": "IrreconcilableMachineConfig"
                     },
                     {
@@ -323,6 +320,9 @@
                     },
                     {
                         "name": "ImageStreamImportMode"
+                    },
+                    {
+                        "name": "IngressControllerDynamicConfigurationManager"
                     },
                     {
                         "name": "InsightsConfig"

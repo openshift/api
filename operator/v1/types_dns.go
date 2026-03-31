@@ -52,6 +52,8 @@ type DNSSpec struct {
 	// If this field is nil, no servers are created.
 	//
 	// +optional
+	// +listType=map
+	// +listMapKey=name
 	Servers []Server `json:"servers,omitempty"`
 
 	// upstreamResolvers defines a schema for configuring CoreDNS
@@ -116,6 +118,18 @@ type DNSSpec struct {
 	// 30 seconds or as noted in the respective Corefile for your version of OpenShift.
 	// +optional
 	Cache DNSCache `json:"cache,omitempty"`
+
+	// template is an optional configuration for custom DNS query handling via the CoreDNS template plugin.
+	// The template defines how to handle queries matching specific zones and query types.
+	//
+	// The template applies to all domains (custom domains from spec.servers and the cluster domain)
+	// to ensure consistent DNS resolution across all paths.
+	//
+	// When this field is not set, no template plugin configuration is added to CoreDNS.
+	//
+	// +optional
+	// +openshift:enable:FeatureGate=DNSTemplatePlugin
+	Template Template `json:"template,omitempty,omitzero"`
 }
 
 // DNSCache defines the fields for configuring DNS caching.
@@ -167,10 +181,13 @@ var (
 type Server struct {
 	// name is required and specifies a unique name for the server. Name must comply
 	// with the Service Name Syntax of rfc6335.
+	// +required
 	Name string `json:"name"`
 	// zones is required and specifies the subdomains that Server is authoritative for.
 	// Zones must conform to the rfc1123 definition of a subdomain. Specifying the
 	// cluster domain (i.e., "cluster.local") is invalid.
+	// +required
+	// +listType=set
 	Zones []string `json:"zones"`
 	// forwardPlugin defines a schema for configuring CoreDNS to proxy DNS messages
 	// to upstream resolvers.
@@ -270,6 +287,7 @@ type ForwardPlugin struct {
 	// A maximum of 15 upstreams is allowed per ForwardPlugin.
 	//
 	// +kubebuilder:validation:MaxItems=15
+	// +listType=set
 	Upstreams []string `json:"upstreams"`
 
 	// policy is used to determine the order in which upstream servers are selected for querying.
@@ -330,6 +348,7 @@ type UpstreamResolvers struct {
 	// +optional
 	// +kubebuilder:validation:MaxItems=15
 	// +kubebuilder:default={{"type":"SystemResolvConf"}}
+	// +listType=atomic
 	Upstreams []Upstream `json:"upstreams"`
 
 	// policy is used to determine the order in which upstream servers are selected for querying.
@@ -459,6 +478,7 @@ type DNSNodePlacement struct {
 	// https://kubernetes.io/docs/concepts/scheduling-eviction/taint-and-toleration/
 	//
 	// +optional
+	// +listType=atomic
 	Tolerations []corev1.Toleration `json:"tolerations,omitempty"`
 }
 
@@ -466,6 +486,90 @@ const (
 	// Available indicates the DNS controller daemonset is available.
 	DNSAvailable = "Available"
 )
+
+// QueryType represents DNS query types supported by templates.
+// +kubebuilder:validation:Enum=AAAA
+type QueryType string
+
+const (
+	// QueryTypeAAAA represents IPv6 address records (AAAA).
+	QueryTypeAAAA QueryType = "AAAA"
+)
+
+// QueryClass represents DNS query classes supported by templates.
+// Valid value is "IN".
+// +kubebuilder:validation:Enum=IN
+type QueryClass string
+
+const (
+	// QueryClassIN represents the Internet class.
+	QueryClassIN QueryClass = "IN"
+)
+
+// ResponseCode represents DNS response codes.
+// +kubebuilder:validation:Enum=NOERROR
+type ResponseCode string
+
+const (
+	// ResponseCodeNOERROR indicates a successful DNS query with or without answer records.
+	ResponseCodeNOERROR ResponseCode = "NOERROR"
+)
+
+// Template defines a template for custom DNS query handling via the CoreDNS template plugin.
+// Template enables filtering or custom responses for DNS queries matching specific zones and query types.
+type Template struct {
+	// zones specifies the DNS zones this template applies to.
+	// Each zone must be a valid DNS name as defined in RFC 1123.
+	// The special zone "." matches all domains (catch-all).
+	// Multiple zones can be specified to apply the same template actions to multiple domains.
+	//
+	// Note: root zone (".") includes cluster domain (cluster.local); use specific zones to avoid impacting IPv6 queries in IPv6 or dual-stack clusters.
+	//
+	// Examples:
+	// - ["."] matches all domains (catch-all for global AAAA filtering)
+	// - ["example.com"] matches only example.com and its subdomains
+	// - ["example.com", "test.com"] matches both domains and their subdomains
+	//
+	// +listType=set
+	// +kubebuilder:validation:MinItems=1
+	// +kubebuilder:validation:MaxItems=15
+	// +kubebuilder:validation:items:MinLength=1
+	// +kubebuilder:validation:items:MaxLength=253
+	// +required
+	Zones []string `json:"zones,omitempty"`
+
+	// queryType specifies the DNS query type to match.
+	// Valid values are "AAAA".
+	//
+	// +required
+	QueryType QueryType `json:"queryType,omitempty"`
+
+	// queryClass specifies the DNS query class to match.
+	// Valid values are "IN".
+	//
+	// +required
+	QueryClass QueryClass `json:"queryClass,omitempty"`
+
+	// action defines how to handle queries matching this template's zones and query type.
+	// The action builds a single DNS response by specifying the response code and may be
+	// extended by additional fields in the future.
+	//
+	// +required
+	Action TemplateAction `json:"action,omitzero"`
+}
+
+// TemplateAction defines how to construct a DNS response for queries matching the template.
+type TemplateAction struct {
+	// rcode is the DNS response code to return.
+	// Valid values are "NOERROR".
+	//
+	// When set, the template returns a response with no answer records. For AAAA filtering,
+	// this means IPv6 address queries return successfully but with no IPv6 addresses,
+	// causing clients to fall back to IPv4 (A record) queries.
+	//
+	// +required
+	Rcode ResponseCode `json:"rcode,omitempty"`
+}
 
 // DNSStatus defines the observed status of the DNS.
 type DNSStatus struct {
@@ -504,6 +608,8 @@ type DNSStatus struct {
 	//
 	// +patchMergeKey=type
 	// +patchStrategy=merge
+	// +listType=map
+	// +listMapKey=type
 	// +optional
 	Conditions []OperatorCondition `json:"conditions,omitempty" patchStrategy:"merge" patchMergeKey:"type"`
 }

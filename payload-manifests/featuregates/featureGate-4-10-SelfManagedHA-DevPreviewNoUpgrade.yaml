@@ -196,12 +196,6 @@
                         "name": "ExternalSnapshotMetadata"
                     },
                     {
-                        "name": "GCPClusterHostedDNS"
-                    },
-                    {
-                        "name": "GCPClusterHostedDNSInstall"
-                    },
-                    {
                         "name": "GCPCustomAPIEndpoints"
                     },
                     {

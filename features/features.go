@@ -272,14 +272,6 @@ var (
 					enhancementPR(legacyFeatureGateWithoutEnhancement).
 					mustRegister()
 
-	FeatureGateGCPClusterHostedDNS = newFeatureGate("GCPClusterHostedDNS").
-					reportProblemsToJiraComponent("Installer").
-					contactPerson("barbacbd").
-					productScope(ocpSpecific).
-					enhancementPR(legacyFeatureGateWithoutEnhancement).
-					enable(inTechPreviewNoUpgrade(), inDevPreviewNoUpgrade()).
-					mustRegister()
-
 	FeatureGateAWSClusterHostedDNS = newFeatureGate("AWSClusterHostedDNS").
 					reportProblemsToJiraComponent("Installer").
 					contactPerson("barbacbd").
@@ -831,14 +823,6 @@ var (
 						productScope(ocpSpecific).
 						enhancementPR("https://github.com/openshift/enhancements/pull/1821").
 						enable(inClusterProfile(SelfManaged), inTechPreviewNoUpgrade(), inDevPreviewNoUpgrade()).
-						mustRegister()
-
-	FeatureGateGCPClusterHostedDNSInstall = newFeatureGate("GCPClusterHostedDNSInstall").
-						reportProblemsToJiraComponent("Installer").
-						contactPerson("barbacbd").
-						productScope(ocpSpecific).
-						enhancementPR("https://github.com/openshift/enhancements/pull/1468").
-						enable(inDefault(), inOKD(), inTechPreviewNoUpgrade(), inDevPreviewNoUpgrade()).
 						mustRegister()
 
 	FeatureGateAWSClusterHostedDNSInstall = newFeatureGate("AWSClusterHostedDNSInstall").

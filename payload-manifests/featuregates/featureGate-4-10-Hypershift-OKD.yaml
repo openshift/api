@@ -41,9 +41,6 @@
                         "name": "AutomatedEtcdBackup"
                     },
                     {
-                        "name": "AzureClusterHostedDNSInstall"
-                    },
-                    {
                         "name": "AzureDedicatedHosts"
                     },
                     {
@@ -297,6 +294,9 @@
                     }
                 ],
                 "enabled": [
+                    {
+                        "name": "AzureClusterHostedDNSInstall"
+                    },
                     {
                         "name": "AzureWorkloadIdentity"
                     },

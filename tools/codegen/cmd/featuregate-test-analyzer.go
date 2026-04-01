@@ -618,7 +618,7 @@ type JobVariant struct {
 	Topology     string
 	NetworkStack string
 	OS           string
-	JobTiers     string // Comma-separated tiers (e.g., "standard,informing,blocking"). If empty, defaults to "standard,informing,blocking"
+	JobTiers     string // Comma-separated tiers (e.g., "standard,informing,blocking"). If empty, defaults to "standard,informing,blocking,candidate"
 	Optional     bool   // If true, validation failures for this variant are non-blocking warnings
 }
 
@@ -680,7 +680,7 @@ func testResultByName(results []TestResults, testName string) *TestResults {
 
 func validateJobTiers(jobVariant JobVariant) error {
 	if jobVariant.JobTiers == "" {
-		return nil // Empty is valid - will default to standard,informing,blocking
+		return nil // Empty is valid - will default to standard,informing,blocking,candidate
 	}
 
 	validTiers := map[string]bool{

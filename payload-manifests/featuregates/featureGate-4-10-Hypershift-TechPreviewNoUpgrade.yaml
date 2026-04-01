@@ -32,6 +32,9 @@
                         "name": "ClusterUpdatePreflight"
                     },
                     {
+                        "name": "ConfidentialCluster"
+                    },
+                    {
                         "name": "EventedPLEG"
                     },
                     {
@@ -87,6 +90,9 @@
                     },
                     {
                         "name": "ShortCertRotation"
+                    },
+                    {
+                        "name": "VSphereMultiVCenterDay2"
                     }
                 ],
                 "enabled": [

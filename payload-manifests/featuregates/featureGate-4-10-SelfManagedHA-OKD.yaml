@@ -38,9 +38,6 @@
                         "name": "AutomatedEtcdBackup"
                     },
                     {
-                        "name": "AzureClusterHostedDNSInstall"
-                    },
-                    {
                         "name": "AzureDedicatedHosts"
                     },
                     {
@@ -114,6 +111,9 @@
                     },
                     {
                         "name": "ClusterVersionOperatorConfiguration"
+                    },
+                    {
+                        "name": "ConfidentialCluster"
                     },
                     {
                         "name": "ConfigurablePKI"
@@ -284,12 +284,18 @@
                         "name": "VSphereMixedNodeEnv"
                     },
                     {
+                        "name": "VSphereMultiVCenterDay2"
+                    },
+                    {
                         "name": "VolumeGroupSnapshot"
                     }
                 ],
                 "enabled": [
                     {
                         "name": "AWSServiceLBNetworkSecurityGroup"
+                    },
+                    {
+                        "name": "AzureClusterHostedDNSInstall"
                     },
                     {
                         "name": "AzureWorkloadIdentity"

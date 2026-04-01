@@ -1,0 +1,89 @@
+apiVersion: apiextensions.k8s.io/v1 # Hack because controller-gen complains if we don't have this
+name: "KubeletConfig"
+crdName: kubeletconfigs.machineconfiguration.openshift.io
+tests:
+  onCreate:
+    # LogLevel Boundary Tests
+    - name: Should be able to set logLevel to 0 (minimum)
+      initial: |
+        apiVersion: machineconfiguration.openshift.io/v1
+        kind: KubeletConfig
+        spec:
+          logLevel: 0
+      expected: |
+        apiVersion: machineconfiguration.openshift.io/v1
+        kind: KubeletConfig
+        spec:
+          logLevel: 0
+    - name: Should be able to set logLevel to 10 (maximum)
+      initial: |
+        apiVersion: machineconfiguration.openshift.io/v1
+        kind: KubeletConfig
+        spec:
+          logLevel: 10
+      expected: |
+        apiVersion: machineconfiguration.openshift.io/v1
+        kind: KubeletConfig
+        spec:
+          logLevel: 10
+    - name: Should reject logLevel less than 0
+      initial: |
+        apiVersion: machineconfiguration.openshift.io/v1
+        kind: KubeletConfig
+        spec:
+          logLevel: -1
+      expectedError: "Invalid value"
+    - name: Should reject logLevel greater than 10
+      initial: |
+        apiVersion: machineconfiguration.openshift.io/v1
+        kind: KubeletConfig
+        spec:
+          logLevel: 11
+      expectedError: "Invalid value"
+
+  onUpdate:
+    # Ratcheting tests - ensure existing objects with previously valid values can be updated
+    - name: Should allow updating other fields with a previously valid logLevel outside current range
+      initialCRDPatches:
+        - op: remove
+          path: /spec/versions/0/schema/openAPIV3Schema/properties/spec/properties/logLevel/maximum
+        - op: remove
+          path: /spec/versions/0/schema/openAPIV3Schema/properties/spec/properties/logLevel/minimum
+      initial: |
+        apiVersion: machineconfiguration.openshift.io/v1
+        kind: KubeletConfig
+        spec:
+          logLevel: 15
+      updated: |
+        apiVersion: machineconfiguration.openshift.io/v1
+        kind: KubeletConfig
+        spec:
+          logLevel: 15
+          autoSizingReserved: true
+      expected: |
+        apiVersion: machineconfiguration.openshift.io/v1
+        kind: KubeletConfig
+        spec:
+          logLevel: 15
+          autoSizingReserved: true
+    - name: Should allow migrating from invalid logLevel to valid value
+      initialCRDPatches:
+        - op: remove
+          path: /spec/versions/0/schema/openAPIV3Schema/properties/spec/properties/logLevel/maximum
+        - op: remove
+          path: /spec/versions/0/schema/openAPIV3Schema/properties/spec/properties/logLevel/minimum
+      initial: |
+        apiVersion: machineconfiguration.openshift.io/v1
+        kind: KubeletConfig
+        spec:
+          logLevel: 15
+      updated: |
+        apiVersion: machineconfiguration.openshift.io/v1
+        kind: KubeletConfig
+        spec:
+          logLevel: 5
+      expected: |
+        apiVersion: machineconfiguration.openshift.io/v1
+        kind: KubeletConfig
+        spec:
+          logLevel: 5

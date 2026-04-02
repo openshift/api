@@ -7,10 +7,16 @@ type TLSSecurityProfile struct {
 	// type is one of Old, Intermediate, Modern or Custom. Custom provides the
 	// ability to specify individual TLS security profile parameters.
 	//
-	// The profiles are based on version 5.7 of the Mozilla Server Side TLS
-	// configuration guidelines. The cipher lists consist of the configuration's
-	// "ciphersuites" followed by the Go-specific "ciphers" from the guidelines.
-	// See: https://ssl-config.mozilla.org/guidelines/5.7.json
+	// The cipher lists in these profiles are based on version 5.7 of the Mozilla
+	// Server Side TLS configuration guidelines. The cipher lists consist of the
+	// configuration's "ciphersuites" followed by the Go-specific "ciphers" from the
+	// guidelines. See: https://ssl-config.mozilla.org/guidelines/5.7.json
+	//
+	// The groups lists are based on Go's crypto/tls default curve preferences
+	// (Go 1.24+), which include post-quantum hybrid group X25519MLKEM768.
+	// Note that X25519MLKEM768 is not FIPS-approved and should be ignored by
+	// components running in FIPS mode.
+	// See: https://pkg.go.dev/crypto/tls#CurveID
 	//
 	// The profiles are intent based, so they may change over time as new ciphers are
 	// developed and existing ciphers are found to be insecure. Depending on
@@ -23,7 +29,7 @@ type TLSSecurityProfile struct {
 	// old is a TLS profile for use when services need to be accessed by very old
 	// clients or libraries and should be used only as a last resort.
 	//
-	// The curve list includes by default the following curves:
+	// The supported groups list includes by default the following groups:
 	// X25519, secp256r1, secp384r1, X25519MLKEM768.
 	//
 	// This profile is equivalent to a Custom profile specified as:
@@ -59,7 +65,7 @@ type TLSSecurityProfile struct {
 	// legacy clients and want to remain highly secure while being compatible with
 	// most clients currently in use.
 	//
-	// The curve list includes by default the following curves:
+	// The supported groups list includes by default the following groups:
 	// X25519, secp256r1, secp384r1, X25519MLKEM768.
 	//
 	// This profile is equivalent to a Custom profile specified as:
@@ -81,7 +87,7 @@ type TLSSecurityProfile struct {
 
 	// modern is a TLS security profile for use with clients that support TLS 1.3 and
 	// do not need backward compatibility for older clients.
-	// The curve list includes by default the following curves:
+	// The supported groups list includes by default the following groups:
 	// X25519, secp256r1, secp384r1, X25519MLKEM768.
 	// This profile is equivalent to a Custom profile specified as:
 	//   minTLSVersion: VersionTLS13
@@ -97,7 +103,7 @@ type TLSSecurityProfile struct {
 	// custom is a user-defined TLS security profile. Be extremely careful using a custom
 	// profile as invalid configurations can be catastrophic.
 	//
-	// The curve list for this profile is empty by default.
+	// The supported groups list for this profile is empty by default.
 	//
 	// An example custom profile looks like this:
 	//
@@ -152,25 +158,27 @@ const (
 	TLSProfileCustomType TLSProfileType = "Custom"
 )
 
-// TLSCurve is a named curve identifier that can be used in TLSProfile.Curves.
-// There is a one-to-one mapping between these names and the curve IDs defined
-// in crypto/tls package based on IANA's "TLS Supported Groups" registry:
+// TLSGroup is a supported group identifier that can be used in TLSProfile.Groups.
+// There is a one-to-one mapping between these names and the group IDs defined
+// in Go's crypto/tls package based on IANA's "TLS Supported Groups" registry:
 // https://www.iana.org/assignments/tls-parameters/tls-parameters.xhtml#tls-parameters-8
+// Note that X25519MLKEM768 is a post-quantum hybrid group that is not
+// FIPS-approved and should be ignored by components running in FIPS mode.
 //
 // +kubebuilder:validation:Enum=X25519;secp256r1;secp384r1;secp521r1;X25519MLKEM768
-type TLSCurve string
+type TLSGroup string
 
 const (
-	// TLSCurveX25519 represents X25519.
-	TLSCurveX25519 TLSCurve = "X25519"
-	// TLSCurveSecp256r1 represents P-256 (secp256r1).
-	TLSCurveSecP256r1 TLSCurve = "secp256r1"
-	// TLSCurveSecP384r1 represents P-384 (secp384r1).
-	TLSCurveSecP384r1 TLSCurve = "secp384r1"
-	// TLSCurveSecP521r1 represents P-521 (secp521r1).
-	TLSCurveSecP521r1 TLSCurve = "secp521r1"
-	// TLSCurveX25519MLKEM768 represents X25519MLKEM768.
-	TLSCurveX25519MLKEM768 TLSCurve = "X25519MLKEM768"
+	// TLSGroupX25519 represents X25519.
+	TLSGroupX25519 TLSGroup = "X25519"
+	// TLSGroupSecP256r1 represents P-256 (secp256r1).
+	TLSGroupSecP256r1 TLSGroup = "secp256r1"
+	// TLSGroupSecP384r1 represents P-384 (secp384r1).
+	TLSGroupSecP384r1 TLSGroup = "secp384r1"
+	// TLSGroupSecP521r1 represents P-521 (secp521r1).
+	TLSGroupSecP521r1 TLSGroup = "secp521r1"
+	// TLSGroupX25519MLKEM768 represents X25519MLKEM768.
+	TLSGroupX25519MLKEM768 TLSGroup = "X25519MLKEM768"
 )
 
 // TLSProfileSpec is the desired behavior of a TLSSecurityProfile.
@@ -186,17 +194,18 @@ type TLSProfileSpec struct {
 	// and are always enabled when TLS 1.3 is negotiated.
 	// +listType=atomic
 	Ciphers []string `json:"ciphers"`
-	// curves is an optional field used to specify the elliptic curves that are used during
-	// the TLS handshake.  Operators may remove entries their operands do
-	// not support.
+	// groups is an optional field used to specify the supported groups (formerly known as
+	// elliptic curves) that are used during the TLS handshake.  Operators may remove entries
+	// their operands do not support.
 	//
 	// When omitted, this means no opinion and the platform is left to choose reasonable defaults which are
 	// subject to change over time and may be different per platform component depending on the underlying TLS
-	// libraries they use. If specified, the list must contain at least one curve and each curve must be unique.
+	// libraries they use. If specified, the list must contain at least one and at most 5 groups,
+	// and each group must be unique.
 	//
 	// For example, to use X25519 and secp256r1 (yaml):
 	//
-	//   curves:
+	//   groups:
 	//     - X25519
 	//     - secp256r1
 	//
@@ -204,8 +213,8 @@ type TLSProfileSpec struct {
 	// +listType=set
 	// +kubebuilder:validation:MaxItems=5
 	// +kubebuilder:validation:MinItems=1
-	// +openshift:enable:FeatureGate=TLSCurvePreferences
-	Curves []TLSCurve `json:"curves,omitempty"`
+	// +openshift:enable:FeatureGate=TLSGroupPreferences
+	Groups []TLSGroup `json:"groups,omitempty"`
 	// minTLSVersion is used to specify the minimal version of the TLS protocol
 	// that is negotiated during the TLS handshake. For example, to use TLS
 	// versions 1.1, 1.2 and 1.3 (yaml):
@@ -238,19 +247,23 @@ const (
 
 // TLSProfiles contains a map of TLSProfileType names to TLSProfileSpec.
 //
-// These profiles are based on version 5.7 of the Mozilla Server Side TLS
-// configuration guidelines. See: https://ssl-config.mozilla.org/guidelines/5.7.json
+// The cipher lists in these profiles are based on version 5.7 of the Mozilla
+// Server Side TLS configuration guidelines.
+// See: https://ssl-config.mozilla.org/guidelines/5.7.json
 //
 // Each Ciphers slice is the configuration's "ciphersuites" followed by the
 // Go-specific "ciphers" from the guidelines JSON.
 //
+// The groups lists are based on Go's crypto/tls default curve preferences
+// (Go 1.24+). See: https://pkg.go.dev/crypto/tls#CurveID
 // TLSProfiles Old, Intermediate, Modern include by default the following
-// curves: X25519, secp256r1, secp384r1, X25519MLKEM768
+// groups: X25519, secp256r1, secp384r1, X25519MLKEM768
 //
 // NOTE: The caller needs to make sure to check that these constants are valid
 // for their binary. Not all entries map to values for all binaries. In the case
 // of ties, the kube-apiserver wins. Do not fail, just be sure to include only
-// valid entries and everything will be ok.
+// valid entries and everything will be ok. In particular, X25519MLKEM768 is
+// not FIPS-approved and must be omitted by components running in FIPS mode.
 var TLSProfiles = map[TLSProfileType]*TLSProfileSpec{
 	TLSProfileOldType: {
 		Ciphers: []string{
@@ -276,11 +289,11 @@ var TLSProfiles = map[TLSProfileType]*TLSProfileSpec{
 			"AES256-SHA",
 			"DES-CBC3-SHA",
 		},
-		Curves: []TLSCurve{
-			TLSCurveX25519,
-			TLSCurveSecP256r1,
-			TLSCurveSecP384r1,
-			TLSCurveX25519MLKEM768,
+		Groups: []TLSGroup{
+			TLSGroupX25519,
+			TLSGroupSecP256r1,
+			TLSGroupSecP384r1,
+			TLSGroupX25519MLKEM768,
 		},
 		MinTLSVersion: VersionTLS10,
 	},
@@ -296,11 +309,11 @@ var TLSProfiles = map[TLSProfileType]*TLSProfileSpec{
 			"ECDHE-ECDSA-CHACHA20-POLY1305",
 			"ECDHE-RSA-CHACHA20-POLY1305",
 		},
-		Curves: []TLSCurve{
-			TLSCurveX25519,
-			TLSCurveSecP256r1,
-			TLSCurveSecP384r1,
-			TLSCurveX25519MLKEM768,
+		Groups: []TLSGroup{
+			TLSGroupX25519,
+			TLSGroupSecP256r1,
+			TLSGroupSecP384r1,
+			TLSGroupX25519MLKEM768,
 		},
 		MinTLSVersion: VersionTLS12,
 	},
@@ -310,11 +323,11 @@ var TLSProfiles = map[TLSProfileType]*TLSProfileSpec{
 			"TLS_AES_256_GCM_SHA384",
 			"TLS_CHACHA20_POLY1305_SHA256",
 		},
-		Curves: []TLSCurve{
-			TLSCurveX25519,
-			TLSCurveSecP256r1,
-			TLSCurveSecP384r1,
-			TLSCurveX25519MLKEM768,
+		Groups: []TLSGroup{
+			TLSGroupX25519,
+			TLSGroupSecP256r1,
+			TLSGroupSecP384r1,
+			TLSGroupX25519MLKEM768,
 		},
 		MinTLSVersion: VersionTLS13,
 	},

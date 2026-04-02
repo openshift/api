@@ -1029,7 +1029,7 @@ var (
 					enable(inDevPreviewNoUpgrade()).
 					mustRegister()
 
-	FeatureGateTLSCurvePreferences = newFeatureGate("TLSCurvePreferences").
+	FeatureGateTLSGroupPreferences = newFeatureGate("TLSGroupPreferences").
 						reportProblemsToJiraComponent("Networking / router").
 						contactPerson("davidesalerno").
 						productScope(ocpSpecific).

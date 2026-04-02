@@ -1188,3 +1188,221 @@ tests:
               components:
                 - type: Image
       expectedStatusError: "image is required when type is Image, and forbidden otherwise"
+
+    # observedRevisionGeneration validation tests
+
+    - name: Should reject observedGeneration less than 1
+      initial: |
+        apiVersion: operator.openshift.io/v1alpha1
+        kind: ClusterAPI
+        metadata:
+          name: cluster
+        spec: {}
+      updated: |
+        apiVersion: operator.openshift.io/v1alpha1
+        kind: ClusterAPI
+        metadata:
+          name: cluster
+        spec: {}
+        status:
+          observedRevisionGeneration: 0
+          desiredRevision: rev-1
+          revisions:
+            - name: rev-1
+              revision: 1
+              contentID: content-1
+              components:
+                - type: Image
+                  image:
+                    ref: quay.io/openshift/cluster-api@sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+                    profile: default
+      expectedStatusError: "should be greater than or equal to 1"
+
+    - name: Should accept increasing observedGeneration
+      initial: |
+        apiVersion: operator.openshift.io/v1alpha1
+        kind: ClusterAPI
+        metadata:
+          name: cluster
+        spec: {}
+        status:
+          observedRevisionGeneration: 1
+          desiredRevision: rev-1
+          revisions:
+            - name: rev-1
+              revision: 1
+              contentID: content-1
+              components:
+                - type: Image
+                  image:
+                    ref: quay.io/openshift/cluster-api@sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+                    profile: default
+      updated: |
+        apiVersion: operator.openshift.io/v1alpha1
+        kind: ClusterAPI
+        metadata:
+          name: cluster
+        spec: {}
+        status:
+          observedRevisionGeneration: 2
+          desiredRevision: rev-1
+          revisions:
+            - name: rev-1
+              revision: 1
+              contentID: content-1
+              components:
+                - type: Image
+                  image:
+                    ref: quay.io/openshift/cluster-api@sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+                    profile: default
+      expected: |
+        apiVersion: operator.openshift.io/v1alpha1
+        kind: ClusterAPI
+        metadata:
+          name: cluster
+        spec: {}
+        status:
+          observedRevisionGeneration: 2
+          desiredRevision: rev-1
+          revisions:
+            - name: rev-1
+              revision: 1
+              contentID: content-1
+              components:
+                - type: Image
+                  image:
+                    ref: quay.io/openshift/cluster-api@sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+                    profile: default
+
+    - name: Should accept keeping observedGeneration the same
+      initial: |
+        apiVersion: operator.openshift.io/v1alpha1
+        kind: ClusterAPI
+        metadata:
+          name: cluster
+        spec: {}
+        status:
+          observedRevisionGeneration: 1
+          desiredRevision: rev-1
+          revisions:
+            - name: rev-1
+              revision: 1
+              contentID: content-1
+              components:
+                - type: Image
+                  image:
+                    ref: quay.io/openshift/cluster-api@sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+                    profile: default
+      updated: |
+        apiVersion: operator.openshift.io/v1alpha1
+        kind: ClusterAPI
+        metadata:
+          name: cluster
+        spec: {}
+        status:
+          observedRevisionGeneration: 1
+          desiredRevision: rev-1
+          revisions:
+            - name: rev-1
+              revision: 1
+              contentID: content-1
+              components:
+                - type: Image
+                  image:
+                    ref: quay.io/openshift/cluster-api@sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+                    profile: default
+      expected: |
+        apiVersion: operator.openshift.io/v1alpha1
+        kind: ClusterAPI
+        metadata:
+          name: cluster
+        spec: {}
+        status:
+          observedRevisionGeneration: 1
+          desiredRevision: rev-1
+          revisions:
+            - name: rev-1
+              revision: 1
+              contentID: content-1
+              components:
+                - type: Image
+                  image:
+                    ref: quay.io/openshift/cluster-api@sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+                    profile: default
+
+    - name: Should reject decreasing observedGeneration
+      initial: |
+        apiVersion: operator.openshift.io/v1alpha1
+        kind: ClusterAPI
+        metadata:
+          name: cluster
+        spec: {}
+        status:
+          observedRevisionGeneration: 5
+          desiredRevision: rev-1
+          revisions:
+            - name: rev-1
+              revision: 1
+              contentID: content-1
+              components:
+                - type: Image
+                  image:
+                    ref: quay.io/openshift/cluster-api@sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+                    profile: default
+      updated: |
+        apiVersion: operator.openshift.io/v1alpha1
+        kind: ClusterAPI
+        metadata:
+          name: cluster
+        spec: {}
+        status:
+          observedRevisionGeneration: 3
+          desiredRevision: rev-1
+          revisions:
+            - name: rev-1
+              revision: 1
+              contentID: content-1
+              components:
+                - type: Image
+                  image:
+                    ref: quay.io/openshift/cluster-api@sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+                    profile: default
+      expectedStatusError: "observedRevisionGeneration may not decrease"
+
+    - name: Should reject unsetting observedGeneration once set
+      initial: |
+        apiVersion: operator.openshift.io/v1alpha1
+        kind: ClusterAPI
+        metadata:
+          name: cluster
+        spec: {}
+        status:
+          observedRevisionGeneration: 1
+          desiredRevision: rev-1
+          revisions:
+            - name: rev-1
+              revision: 1
+              contentID: content-1
+              components:
+                - type: Image
+                  image:
+                    ref: quay.io/openshift/cluster-api@sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+                    profile: default
+      updated: |
+        apiVersion: operator.openshift.io/v1alpha1
+        kind: ClusterAPI
+        metadata:
+          name: cluster
+        spec: {}
+        status:
+          desiredRevision: rev-1
+          revisions:
+            - name: rev-1
+              revision: 1
+              contentID: content-1
+              components:
+                - type: Image
+                  image:
+                    ref: quay.io/openshift/cluster-api@sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+                    profile: default
+      expectedStatusError: "observedRevisionGeneration may not be unset once set"

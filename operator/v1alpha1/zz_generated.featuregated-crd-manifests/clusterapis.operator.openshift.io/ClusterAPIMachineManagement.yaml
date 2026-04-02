@@ -107,6 +107,17 @@ spec:
                 maxLength: 255
                 minLength: 1
                 type: string
+              observedRevisionGeneration:
+                description: |-
+                  observedRevisionGeneration is the generation of the ClusterAPI object that was last observed by the revision controller.
+                  If specified it must be greater than or equal to 1, and less than 2^53. It may not decrease or be unset once set.
+                format: int64
+                maximum: 9007199254740991
+                minimum: 1
+                type: integer
+                x-kubernetes-validations:
+                - message: observedRevisionGeneration may not decrease
+                  rule: self >= oldSelf
               revisions:
                 description: |-
                   revisions is a list of all currently active revisions. A revision is
@@ -316,6 +327,8 @@ spec:
                 list
               rule: '!has(self.currentRevision) || self.revisions.exists(r, r.name
                 == self.currentRevision)'
+            - message: observedRevisionGeneration may not be unset once set
+              rule: '!has(oldSelf.observedRevisionGeneration) || has(self.observedRevisionGeneration)'
         required:
         - metadata
         - spec
@@ -323,6 +336,8 @@ spec:
         x-kubernetes-validations:
         - message: clusterapi is a singleton, .metadata.name must be 'cluster'
           rule: self.metadata.name == 'cluster'
+        - message: status may not be removed once set
+          rule: '!has(oldSelf.status) || has(self.status)'
     served: true
     storage: true
     subresources:

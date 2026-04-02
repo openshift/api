@@ -20,6 +20,7 @@ import (
 // Compatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.
 // +openshift:compatibility-gen:level=4
 // +kubebuilder:validation:XValidation:rule="self.metadata.name == 'cluster'",message="clusterapi is a singleton, .metadata.name must be 'cluster'"
+// +kubebuilder:validation:XValidation:rule="!has(oldSelf.status) || has(self.status)",message="status may not be removed once set"
 type ClusterAPI struct {
 	metav1.TypeMeta `json:",inline"`
 
@@ -78,6 +79,7 @@ type RevisionName string
 // ClusterAPIStatus describes the current state of the capi-operator.
 // +kubebuilder:validation:XValidation:rule="self.revisions.exists(r, r.name == self.desiredRevision && self.revisions.all(s, s.revision <= r.revision))",message="desiredRevision must be the name of the revision with the highest revision number"
 // +kubebuilder:validation:XValidation:rule="!has(self.currentRevision) || self.revisions.exists(r, r.name == self.currentRevision)",message="currentRevision must correspond to an entry in the revisions list"
+// +kubebuilder:validation:XValidation:rule="!has(oldSelf.observedRevisionGeneration) || has(self.observedRevisionGeneration)",message="observedRevisionGeneration may not be unset once set"
 type ClusterAPIStatus struct {
 	// currentRevision is the name of the most recently fully applied revision.
 	// It is written by the installer controller. If it is absent, it indicates
@@ -111,6 +113,15 @@ type ClusterAPIStatus struct {
 	// +kubebuilder:validation:XValidation:rule="self.all(new, oldSelf.exists(old, old.name == new.name) || oldSelf.all(old, new.revision > old.revision))",message="new revisions must have a revision number greater than all existing revisions"
 	// +kubebuilder:validation:XValidation:rule="oldSelf.all(old, !self.exists(new, new.name == old.name) || self.exists(new, new == old))",message="existing revisions are immutable, but may be removed"
 	Revisions []ClusterAPIInstallerRevision `json:"revisions,omitempty"`
+
+	// observedRevisionGeneration is the generation of the ClusterAPI object that was last observed by the revision controller.
+	// If specified it must be greater than or equal to 1, and less than 2^53. It may not decrease or be unset once set.
+	//
+	// +optional
+	// +kubebuilder:validation:Minimum=1
+	// +kubebuilder:validation:Maximum=9007199254740991
+	// +kubebuilder:validation:XValidation:rule="self >= oldSelf",message="observedRevisionGeneration may not decrease"
+	ObservedRevisionGeneration int64 `json:"observedRevisionGeneration,omitempty"`
 }
 
 // +structType=atomic

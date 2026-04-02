@@ -262,18 +262,10 @@ func (o *FeatureGateTestAnalyzerOptions) Run(ctx context.Context) error {
 
 func buildHTMLFeatureGateData(name string, testingResults map[JobVariant]*TestingResults, blockingErrors []error, release string) utils.HTMLFeatureGate {
 	jobVariantsSet := sets.KeySet(testingResults)
-	jobVariants := jobVariantsSet.UnsortedList()
+	jobVariants := OrderedJobVariants(jobVariantsSet.UnsortedList())
 
-	// For HTML sort so that the network stacks are in the same order.
-	var networkStackOrder = map[string]int{
-		"":     0,
-		"ipv4": 1,
-		"ipv6": 2,
-		"dual": 3,
-	}
-	sort.SliceStable(jobVariants, func(i, j int) bool {
-		return networkStackOrder[jobVariants[i].NetworkStack] < networkStackOrder[jobVariants[j].NetworkStack]
-	})
+	sort.Sort(jobVariants)
+
 	variants := make([]utils.HTMLVariantColumn, 0, len(jobVariants))
 	for i, jv := range jobVariants {
 		variants = append(variants, utils.HTMLVariantColumn{
@@ -645,14 +637,41 @@ func (a OrderedJobVariants) Less(i, j int) bool {
 		return false
 	}
 
+	// Map these to an ordered list of strings so that we can define the order
+	// rather than them being alphabetical.
+	var networkStackOrder = map[string]string{
+		"":     "0",
+		"ipv4": "1",
+		"ipv6": "2",
+		"dual": "3",
+	}
+
+	if strings.Compare(networkStackOrder[a[i].NetworkStack], networkStackOrder[a[j].NetworkStack]) < 0 {
+		return true
+	} else if strings.Compare(networkStackOrder[a[i].NetworkStack], networkStackOrder[a[j].NetworkStack]) > 0 {
+		return false
+	}
+
+	if strings.Compare(a[i].OS, a[j].OS) < 0 {
+		return true
+	} else if strings.Compare(a[i].OS, a[j].OS) > 0 {
+		return false
+	}
+
+	if strings.Compare(a[i].JobTiers, a[j].JobTiers) < 0 {
+		return true
+	} else if strings.Compare(a[i].JobTiers, a[j].JobTiers) > 0 {
+		return false
+	}
+
 	return false
 }
 
 type TestingResults struct {
 	JobVariant JobVariant
 
-	TestResults              []TestResults
-	HasCandidateTierResults  bool // true if candidate-tier queries returned any test data
+	TestResults             []TestResults
+	HasCandidateTierResults bool // true if candidate-tier queries returned any test data
 }
 
 type TestResults struct {

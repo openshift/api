@@ -276,7 +276,7 @@
                         "name": "TLSAdherence"
                     },
                     {
-                        "name": "TLSCurvePreferences"
+                        "name": "TLSGroupPreferences"
                     },
                     {
                         "name": "VSphereConfigurableMaxAllowedBlockVolumesPerNode"

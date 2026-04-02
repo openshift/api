@@ -6,6 +6,8 @@ import (
 	"testing"
 
 	"k8s.io/apimachinery/pkg/util/sets"
+
+	"github.com/openshift/api/tools/codegen/pkg/sippy"
 )
 
 func Test_listTestResultFor(t *testing.T) {
@@ -473,5 +475,44 @@ func Test_checkIfTestingIsSufficient_OptionalVariants(t *testing.T) {
 				}
 			}
 		})
+	}
+}
+
+func Test_defaultQueriesIncludeCandidateTier(t *testing.T) {
+	// When JobTiers is empty, QueriesFor should generate queries for all tiers
+	// including candidate. This test is added to prevent regressions for candidate-tier
+	// jobs being excluded, which is used by some TP jobs.
+	queries := sippy.QueriesFor("vsphere", "amd64", "ha", "", "", "", "FeatureGate:TestGate]")
+
+	tierNames := sets.New[string]()
+	for _, q := range queries {
+		tierNames.Insert(q.TierName)
+	}
+
+	expectedTiers := []string{"standard", "informing", "blocking", "candidate"}
+	for _, tier := range expectedTiers {
+		if !tierNames.Has(tier) {
+			t.Errorf("default queries missing tier %q - got tiers: %v", tier, sets.List(tierNames))
+		}
+	}
+}
+
+func Test_allRequiredVariantsQueryCandidateTier(t *testing.T) {
+	// Verify that all required variant definitions will query for the candidate
+	// tier, either explicitly via JobTiers or via the default.
+	allVariants := append(append([]JobVariant{}, requiredSelfManagedJobVariants...), requiredHypershiftJobVariants...)
+
+	for _, variant := range allVariants {
+		queries := sippy.QueriesFor(variant.Cloud, variant.Architecture, variant.Topology, variant.NetworkStack, variant.OS, variant.JobTiers, "FeatureGate:Test]")
+		hasCandidateQuery := false
+		for _, q := range queries {
+			if q.TierName == "candidate" {
+				hasCandidateQuery = true
+				break
+			}
+		}
+		if !hasCandidateQuery {
+			t.Errorf("variant %+v does not query candidate tier - some platforms only run TechPreview tests in candidate-tier jobs", variant)
+		}
 	}
 }

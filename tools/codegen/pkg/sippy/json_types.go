@@ -101,10 +101,10 @@ func QueriesFor(cloud, architecture, topology, networkStack, os, jobTiers, testP
 		})
 	}
 
-	// Parse JobTiers - comma-separated string, default to standard/informing/blocking if empty
+	// Parse JobTiers - comma-separated string, default to standard/informing/blocking/candidate if empty
 	var jobTiersList []string
 	if jobTiers == "" {
-		jobTiersList = []string{"standard", "informing", "blocking"}
+		jobTiersList = []string{"standard", "informing", "blocking", "candidate"}
 	} else {
 		// Split by comma, trim whitespace, and deduplicate using sets
 		tierSet := sets.New[string]()
@@ -115,7 +115,7 @@ func QueriesFor(cloud, architecture, topology, networkStack, os, jobTiers, testP
 		}
 		// If all tiers were whitespace/empty after trimming, use defaults
 		if tierSet.Len() == 0 {
-			jobTiersList = []string{"standard", "informing", "blocking"}
+			jobTiersList = []string{"standard", "informing", "blocking", "candidate"}
 		} else {
 			jobTiersList = sets.List(tierSet)
 		}

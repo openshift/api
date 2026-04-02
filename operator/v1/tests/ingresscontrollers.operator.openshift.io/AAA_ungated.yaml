@@ -738,6 +738,75 @@ tests:
         spec:
           domain: "this-domain.has-208-characters.which-on.its-own-would-not-exceed.the-limit-of-253-chars.but-combined-with-the-ingress-controller-name.with-40-chars.and-the-router-prefix.ends-up-as-a-too-long.canonical-domain"
       expectedError: "The combined 'router-' + metadata.name + '.' + .spec.domain cannot exceed 253 characters"
+    - name: Should be able to create an IngressController with TCP log format
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: IngressController
+        spec:
+          logging:
+            access:
+              destination:
+                type: Container
+              httpLogFormat: "%ci:%cp [%t] %ft %b/%s %Tw/%Tc/%Tt %B %ts %ac/%fc/%bc/%sc/%rc %sq/%bq"
+      expected: |
+        apiVersion: operator.openshift.io/v1
+        kind: IngressController
+        spec:
+          httpEmptyRequestsPolicy: Respond
+          idleConnectionTerminationPolicy: Immediate
+          closedClientConnectionPolicy: Continue
+          logging:
+            access:
+              destination:
+                type: Container
+              httpLogFormat: "%ci:%cp [%t] %ft %b/%s %Tw/%Tc/%Tt %B %ts %ac/%fc/%bc/%sc/%rc %sq/%bq"
+              logEmptyRequests: Log
+    - name: Should be able to create an IngressController with HTTP log format
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: IngressController
+        spec:
+          logging:
+            access:
+              destination:
+                type: Container
+              httpLogFormat: "%ci:%cp [%tr] %ft %b/%s %TR/%Tw/%Tc/%Tr/%Ta %ST %B %CC %CS %tsc %ac/%fc/%bc/%sc/%rc %sq/%bq %hr %hs %{+Q}r"
+      expected: |
+        apiVersion: operator.openshift.io/v1
+        kind: IngressController
+        spec:
+          httpEmptyRequestsPolicy: Respond
+          idleConnectionTerminationPolicy: Immediate
+          closedClientConnectionPolicy: Continue
+          logging:
+            access:
+              destination:
+                type: Container
+              httpLogFormat: "%ci:%cp [%tr] %ft %b/%s %TR/%Tw/%Tc/%Tr/%Ta %ST %B %CC %CS %tsc %ac/%fc/%bc/%sc/%rc %sq/%bq %hr %hs %{+Q}r"
+              logEmptyRequests: Log
+    - name: Should be able to create an IngressController with HTTPS log format
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: IngressController
+        spec:
+          logging:
+            access:
+              destination:
+                type: Container
+              httpLogFormat: "%ci:%cp [%tr] %ft %b/%s %TR/%Tw/%Tc/%Tr/%Ta %ST %B %CC %CS %tsc %ac/%fc/%bc/%sc/%rc %sq/%bq %hr %hs %{+Q}r %[fc_err]/%[ssl_fc_err,hex]/%[ssl_c_err]/%[ssl_c_ca_err]/%[ssl_fc_is_resumed] %[ssl_fc_sni]/%sslv/%sslc"
+      expected: |
+        apiVersion: operator.openshift.io/v1
+        kind: IngressController
+        spec:
+          httpEmptyRequestsPolicy: Respond
+          idleConnectionTerminationPolicy: Immediate
+          closedClientConnectionPolicy: Continue
+          logging:
+            access:
+              destination:
+                type: Container
+              httpLogFormat: "%ci:%cp [%tr] %ft %b/%s %TR/%Tw/%Tc/%Tr/%Ta %ST %B %CC %CS %tsc %ac/%fc/%bc/%sc/%rc %sq/%bq %hr %hs %{+Q}r %[fc_err]/%[ssl_fc_err,hex]/%[ssl_c_err]/%[ssl_c_ca_err]/%[ssl_fc_is_resumed] %[ssl_fc_sni]/%sslv/%sslc"
+              logEmptyRequests: Log
   onUpdate:
     - name: Should be able to update invalid domain to a valid domain
       initialCRDPatches:

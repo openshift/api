@@ -218,10 +218,11 @@ func (ClusterAPISpec) SwaggerDoc() map[string]string {
 }
 
 var map_ClusterAPIStatus = map[string]string{
-	"":                "ClusterAPIStatus describes the current state of the capi-operator.",
-	"currentRevision": "currentRevision is the name of the most recently fully applied revision. It is written by the installer controller. If it is absent, it indicates that no revision has been fully applied yet. If set, currentRevision must correspond to an entry in the revisions list.",
-	"desiredRevision": "desiredRevision is the name of the desired revision. It is written by the revision controller. It must be set to the name of the entry in the revisions list with the highest revision number.",
-	"revisions":       "revisions is a list of all currently active revisions. A revision is active until the installer controller updates currentRevision to a later revision. It is written by the revision controller.\n\nThe maximum number of revisions is 16. All revisions must have a unique name. All revisions must have a unique revision number. When adding a revision, the revision number must be greater than the highest revision number in the list. Revisions are immutable, although they can be deleted.",
+	"":                           "ClusterAPIStatus describes the current state of the capi-operator.",
+	"currentRevision":            "currentRevision is the name of the most recently fully applied revision. It is written by the installer controller. If it is absent, it indicates that no revision has been fully applied yet. If set, currentRevision must correspond to an entry in the revisions list.",
+	"desiredRevision":            "desiredRevision is the name of the desired revision. It is written by the revision controller. It must be set to the name of the entry in the revisions list with the highest revision number.",
+	"revisions":                  "revisions is a list of all currently active revisions. A revision is active until the installer controller updates currentRevision to a later revision. It is written by the revision controller.\n\nThe maximum number of revisions is 16. All revisions must have a unique name. All revisions must have a unique revision number. When adding a revision, the revision number must be greater than the highest revision number in the list. Revisions are immutable, although they can be deleted.",
+	"observedRevisionGeneration": "observedRevisionGeneration is the generation of the ClusterAPI object that was last observed by the revision controller. If specified it must be greater than or equal to 1, and less than 2^53. It may not decrease or be unset once set.",
 }
 
 func (ClusterAPIStatus) SwaggerDoc() map[string]string {

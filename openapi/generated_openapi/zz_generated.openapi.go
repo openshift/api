@@ -22030,7 +22030,7 @@ func schema_openshift_api_config_v1_VSpherePlatformSpec(ref common.ReferenceCall
 							},
 						},
 						SchemaProps: spec.SchemaProps{
-							Description: "vcenters holds the connection details for services to communicate with vCenter. Currently, only a single vCenter is supported, but in tech preview 3 vCenters are supported. Once the cluster has been installed, you are unable to change the current number of defined vCenters except in the case where the cluster has been upgraded from a version of OpenShift where the vsphere platform spec was not present.  You may make modifications to the existing vCenters that are defined in the vcenters list in order to match with any added or modified failure domains.",
+							Description: "vcenters holds the connection details for services to communicate with vCenter. Currently, up to 3 vCenters are supported. Once the cluster has been installed, you are unable to change the current number of defined vCenters except when 1.) the cluster has been upgraded from a version of OpenShift where the vsphere platform spec was not present or 2.) in TechPreview you are able to add and remove vCenters but may not remove all vCenters.  You may make modifications to the existing vCenters that are defined in the vcenters list in order to match with any added or modified failure domains.",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{

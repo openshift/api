@@ -492,7 +492,7 @@ tests:
             namespace: openshift-config
           releaseImage: ""
           rootCAData: Y2VydGlmaWNhdGUK
-      expectedError: "vcenters must have at least 1 item"
+      expectedError: "spec.platformSpec.vsphere.vcenters in body should have at least 1 items"
     - name: Should not be able to remove vcenters field entirely once configured
       initial: |
         apiVersion: machineconfiguration.openshift.io/v1

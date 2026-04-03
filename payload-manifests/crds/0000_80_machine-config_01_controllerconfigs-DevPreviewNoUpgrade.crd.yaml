@@ -1324,10 +1324,11 @@ spec:
                               vcenters:
                                 description: |-
                                   vcenters holds the connection details for services to communicate with vCenter.
-                                  Currently, only a single vCenter is supported, but in tech preview 3 vCenters are supported.
+                                  Currently, up to 3 vCenters are supported.
                                   Once the cluster has been installed, you are unable to change the current number of defined
-                                  vCenters except in the case where the cluster has been upgraded from a version of OpenShift
-                                  where the vsphere platform spec was not present.  You may make modifications to the existing
+                                  vCenters except when 1.) the cluster has been upgraded from a version of OpenShift
+                                  where the vsphere platform spec was not present or 2.) in TechPreview you are able to add and
+                                  remove vCenters but may not remove all vCenters.  You may make modifications to the existing
                                   vCenters that are defined in the vcenters list in order to match with any added or modified
                                   failure domains.
                                 items:
@@ -1368,13 +1369,11 @@ spec:
                                   - server
                                   type: object
                                 maxItems: 3
-                                minItems: 0
+                                minItems: 1
                                 type: array
                                 x-kubernetes-list-type: atomic
                                 x-kubernetes-validations:
-                                - message: vcenters must have at least 1 item
-                                  rule: 'size(self) != size(oldSelf) ? size(self)
-                                    > 0 : true'
+                                - rule: "true"
                             type: object
                             x-kubernetes-validations:
                             - message: apiServerInternalIPs list is required once
@@ -1384,15 +1383,9 @@ spec:
                               rule: '!has(oldSelf.ingressIPs) || has(self.ingressIPs)'
                         type: object
                         x-kubernetes-validations:
-                        - message: vcenters is required once set and must have at
-                            least 1 item
-                          rule: 'has(oldSelf.vsphere) && has(oldSelf.vsphere.vcenters)
-                            ? (has(self.vsphere) && has(self.vsphere.vcenters) &&
-                            size(self.vsphere.vcenters) > 0) : true'
-                        - message: vcenters must have at least 1 item when initially
-                            configured
-                          rule: '!has(oldSelf.vsphere) && has(self.vsphere) && has(self.vsphere.vcenters)
-                            ? size(self.vsphere.vcenters) > 0 : true'
+                        - message: vcenters is required once set and cannot be removed
+                          rule: 'oldSelf.?vsphere.vcenters.hasValue() ? self.?vsphere.vcenters.hasValue()
+                            : true'
                     type: object
                   status:
                     description: status holds observed values from the cluster. They

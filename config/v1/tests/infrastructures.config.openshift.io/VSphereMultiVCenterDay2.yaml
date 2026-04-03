@@ -386,7 +386,7 @@ tests:
                   - network1
                   resourcePool: /DC1/host/cluster1/Resources
                 zone: zone1
-      expectedError: "vcenters must have at least 1 item"
+      expectedError: "spec.platformSpec.vsphere.vcenters in body should have at least 1 items"
     - name: Should be able to update existing vcenter details without changing vcenter count
       initial: |
         apiVersion: config.openshift.io/v1
@@ -720,7 +720,7 @@ tests:
                   - network1
                   resourcePool: /DC1/host/cluster1/Resources
                 zone: zone1
-      expectedError: "vcenters must have at least 1 item"
+      expectedError: "spec.platformSpec.vsphere.vcenters in body should have at least 1 items"
     - name: Should not be able to remove vcenters field entirely once set
       initial: |
         apiVersion: config.openshift.io/v1

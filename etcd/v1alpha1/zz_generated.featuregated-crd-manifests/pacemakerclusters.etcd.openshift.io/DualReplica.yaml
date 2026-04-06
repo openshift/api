@@ -289,7 +289,8 @@ spec:
                         to the node they can fence (their target), not the node where monitoring operations run.
                         Each fencing agent entry includes a unique name, fencing type, target node, and health conditions.
                         A node is considered fence-capable if at least one fencing agent is healthy.
-                        Expected to have 1 fencing agent per node, but up to 8 are supported for redundancy.
+                        A healthy node is expected to have at least 1 fencing agent, but the list may be empty
+                        when fencing agent discovery fails.
                         Names must be unique within this array.
                       items:
                         description: |-
@@ -429,7 +430,7 @@ spec:
                         - name
                         type: object
                       maxItems: 8
-                      minItems: 1
+                      minItems: 0
                       type: array
                       x-kubernetes-list-map-keys:
                       - name

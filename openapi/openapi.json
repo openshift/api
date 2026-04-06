@@ -26840,6 +26840,15 @@
       "description": "GCPNetworkInterface describes network interfaces for GCP",
       "type": "object",
       "properties": {
+        "ipv6AccessType": {
+          "description": "ipv6AccessType indicates whether the IPv6 endpoint can be accessed from the Internet. Valid values are \"External\" or \"Internal\". Only valid when stackType is \"DualStack\".",
+          "type": "string",
+          "default": "External"
+        },
+        "ipv6Address": {
+          "description": "ipv6Address is an IPv6 address that is assigned to the network interface of an instance. To use a static internal IP address, it must be unused and in the same region as the instance's zone. If not specified and stackType is \"DualStack\", Google Cloud can automatically assign an internal IPv6 address.",
+          "type": "string"
+        },
         "network": {
           "description": "network is the network name.",
           "type": "string"
@@ -26851,6 +26860,11 @@
         "publicIP": {
           "description": "publicIP indicates if true a public IP will be used",
           "type": "boolean"
+        },
+        "stackType": {
+          "description": "stackType determines the IP stack configuration for the network interface. This field defaults to IPv4Only. Valid values are \"IPv4Only\" and \"DualStack\".",
+          "type": "string",
+          "default": "IPv4Only"
         },
         "subnetwork": {
           "description": "subnetwork is the subnetwork name.",

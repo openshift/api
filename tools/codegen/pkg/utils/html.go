@@ -47,6 +47,7 @@ const HTMLTemplateSrc = `<!DOCTYPE html>
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <style>
         body { padding: 20px; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+		.container-fluid { padding-bottom: 20px; }
         .sortable { cursor: pointer; user-select: none; }
         .sortable:hover { background-color: #e9ecef; }
         .sort-indicator::after { content: ' \2195'; opacity: 0.3; font-size: 0.8em; }

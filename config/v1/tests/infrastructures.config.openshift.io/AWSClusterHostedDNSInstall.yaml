@@ -3,7 +3,6 @@ name: "Infrastructure"
 crdName: infrastructures.config.openshift.io
 featureGates:
 - AWSClusterHostedDNSInstall
-- -AWSDualStackInstall
 tests:
   onCreate:
     - name: Should be able to create a minimal Infrastructure
@@ -61,6 +60,7 @@ tests:
             aws:
               cloudLoadBalancerConfig:
                 dnsType: PlatformDefault
+              ipFamily: IPv4
             type: AWS
     - name: should be able to set dnsType to non-default value of `ClusterHosted`
       initial: |
@@ -102,6 +102,7 @@ tests:
             aws:
               cloudLoadBalancerConfig:
                 dnsType: ClusterHosted
+              ipFamily: IPv4
             type: AWS
     - name: Should not allow changing the immutable dnsType field
       initial: |
@@ -138,6 +139,7 @@ tests:
             aws:
               cloudLoadBalancerConfig:
                 dnsType: PlatformDefault
+              ipFamily: IPv4
             type: AWS
       expectedStatusError: "status.platformStatus.aws.cloudLoadBalancerConfig.dnsType: Invalid value: \"string\": dnsType is immutable"
     - name: Should not accept non-IP address values for Load Balancer IPs
@@ -214,6 +216,7 @@ tests:
                 clusterHosted:
                   apiIntLoadBalancerIPs:
                   - 10.10.10.20
+              ipFamily: IPv4
             type: AWS
       expectedStatusError: "status.platformStatus.aws.cloudLoadBalancerConfig: Invalid value: \"object\": clusterHosted is permitted only when dnsType is ClusterHosted"
     - name: Should not accept duplicate IP addresses for any of the Load Balancer IPs

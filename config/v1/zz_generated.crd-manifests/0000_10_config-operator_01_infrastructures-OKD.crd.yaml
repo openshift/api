@@ -1185,6 +1185,21 @@ spec:
                     description: aws contains settings specific to the Amazon Web
                       Services infrastructure provider.
                     properties:
+                      ipFamily:
+                        default: IPv4
+                        description: |-
+                          ipFamily specifies the IP protocol family that should be used for AWS
+                          network resources. This controls whether AWS resources are created with
+                          IPv4-only, or dual-stack networking with IPv4 or IPv6 as the primary
+                          protocol family.
+                        enum:
+                        - IPv4
+                        - DualStackIPv6Primary
+                        - DualStackIPv4Primary
+                        type: string
+                        x-kubernetes-validations:
+                        - message: ipFamily is immutable once set
+                          rule: oldSelf == '' || self == oldSelf
                       region:
                         description: region holds the default AWS region for new AWS
                           resources created by the cluster.

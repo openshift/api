@@ -853,7 +853,7 @@ var (
 					contactPerson("sadasu").
 					productScope(ocpSpecific).
 					enhancementPR("https://github.com/openshift/enhancements/pull/1806").
-					enable(inTechPreviewNoUpgrade(), inDevPreviewNoUpgrade()).
+					enable(inDefault(), inOKD(), inTechPreviewNoUpgrade(), inDevPreviewNoUpgrade()).
 					mustRegister()
 
 	FeatureGateAzureDualStackInstall = newFeatureGate("AzureDualStackInstall").
@@ -1005,11 +1005,11 @@ var (
 				enable(inDevPreviewNoUpgrade(), inTechPreviewNoUpgrade()).
 				mustRegister()
 
-        FeatureGateConfidentialCluster = newFeatureGate("ConfidentialCluster").
-                                        reportProblemsToJiraComponent("ConfidentialClusters").
-                                        contactPerson("fjin").
-                                        productScope(ocpSpecific).
-                                        enhancementPR("https://github.com/openshift/enhancements/pull/1962").
-                                        enable(inDevPreviewNoUpgrade()).
-                                        mustRegister()
+	FeatureGateConfidentialCluster = newFeatureGate("ConfidentialCluster").
+					reportProblemsToJiraComponent("ConfidentialClusters").
+					contactPerson("fjin").
+					productScope(ocpSpecific).
+					enhancementPR("https://github.com/openshift/enhancements/pull/1962").
+					enable(inDevPreviewNoUpgrade()).
+					mustRegister()
 )

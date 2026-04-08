@@ -578,18 +578,21 @@ var (
 			Architecture: "amd64",
 			Topology:     "two-node-fencing",
 			NetworkStack: "ipv4",
+			JobTiers:     "candidate,standard,informing,blocking",
 		},
 		{
 			Cloud:        "metal",
 			Architecture: "amd64",
 			Topology:     "two-node-fencing",
 			NetworkStack: "ipv6",
+			JobTiers:     "candidate,standard,informing,blocking",
 		},
 		{
 			Cloud:        "metal",
 			Architecture: "amd64",
 			Topology:     "two-node-fencing",
 			NetworkStack: "dual",
+			JobTiers:     "candidate,standard,informing,blocking",
 		},
 	}
 

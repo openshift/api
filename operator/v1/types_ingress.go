@@ -186,6 +186,21 @@ type IngressControllerSpec struct {
 	// +optional
 	NodePlacement *NodePlacement `json:"nodePlacement,omitempty"`
 
+	// resources defines resource requirements (requests and limits) for the
+	// router pods (HAProxy and optional sidecar containers). This field allows
+	// setting resource limits, for example to achieve Guaranteed QoS class for
+	// router pods when requests and limits are set consistently.
+	//
+	// When this field is set, it takes precedence over spec.nodePlacement.resources
+	// for configuring router pod resources.
+	//
+	// When this field is omitted, the operator uses its default resource
+	// configuration for router pods.
+	//
+	// +openshift:enable:FeatureGate=IngressRouterResourceLimits
+	// +optional
+	Resources *RouterResourceRequirements `json:"resources,omitempty"`
+
 	// tlsSecurityProfile specifies settings for TLS connections for ingresscontrollers.
 	//
 	// If unset, the default is based on the apiservers.config.openshift.io/cluster resource.
@@ -471,6 +486,37 @@ type NodePlacement struct {
 	// +optional
 	// +listType=atomic
 	Tolerations []corev1.Toleration `json:"tolerations,omitempty"`
+}
+
+// RouterResourceRequirements defines resource requirements for ingress router
+// pod containers.
+type RouterResourceRequirements struct {
+	// routerContainer specifies resource requirements (requests and limits) for the
+	// router (HAProxy) container in router pods.
+	//
+	// When omitted, the operator uses its default resource configuration for the
+	// router container.
+	//
+	// +optional
+	RouterContainer *corev1.ResourceRequirements `json:"routerContainer,omitempty"`
+
+	// metricsContainer specifies resource requirements for the metrics sidecar
+	// container in router pods.
+	//
+	// When omitted, the operator uses its default resource configuration for the
+	// metrics container.
+	//
+	// +optional
+	MetricsContainer *corev1.ResourceRequirements `json:"metricsContainer,omitempty"`
+
+	// logsContainer specifies resource requirements for the logs sidecar container
+	// in router pods when the logs sidecar is enabled.
+	//
+	// When omitted, the operator uses its default resource configuration for the
+	// logs container.
+	//
+	// +optional
+	LogsContainer *corev1.ResourceRequirements `json:"logsContainer,omitempty"`
 }
 
 // EndpointPublishingStrategyType is a way to publish ingress controller endpoints.

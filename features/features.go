@@ -657,6 +657,16 @@ var (
 								enable(inDevPreviewNoUpgrade(), inTechPreviewNoUpgrade()).
 								mustRegister()
 
+	// FeatureGateIngressRouterResourceLimits enables configuration of resource limits
+	// for ingress router pods via IngressController API.
+	FeatureGateIngressRouterResourceLimits = newFeatureGate("IngressRouterResourceLimits").
+						reportProblemsToJiraComponent("Networking/router").
+						contactPerson("miciah").
+						productScope(ocpSpecific).
+						enhancementPR("https://github.com/openshift/enhancements/pull/1877").
+						enable(inTechPreviewNoUpgrade(), inDevPreviewNoUpgrade()).
+						mustRegister()
+
 	FeatureGateMinimumKubeletVersion = newFeatureGate("MinimumKubeletVersion").
 						reportProblemsToJiraComponent("Node").
 						contactPerson("haircommander").

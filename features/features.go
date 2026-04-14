@@ -104,7 +104,7 @@ var (
 							contactPerson("ibihim").
 							productScope(ocpSpecific).
 							enhancementPR("https://github.com/openshift/enhancements/pull/899").
-							enable(inDefault(), inOKD(), inTechPreviewNoUpgrade(), inDevPreviewNoUpgrade()).
+							enable(inTechPreviewNoUpgrade(), inDevPreviewNoUpgrade()).
 							mustRegister()
 
 	FeatureGateBuildCSIVolumes = newFeatureGate("BuildCSIVolumes").

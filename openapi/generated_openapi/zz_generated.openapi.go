@@ -41024,6 +41024,13 @@ func schema_openshift_api_machine_v1beta1_MachineSetStatus(ref common.ReferenceC
 							Format:      "int64",
 						},
 					},
+					"labelSelector": {
+						SchemaProps: spec.SchemaProps{
+							Description: "labelSelector is a label selector, in string format, for Machines corresponding to the MachineSet. It is exposed via the scale subresource as status.selector. When omitted, the MachineSet controller has not yet reconciled spec.selector into status.labelSelector. When present, it must not be empty and must not exceed 4096 characters.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
 					"errorReason": {
 						SchemaProps: spec.SchemaProps{
 							Description: "In the event that there is a terminal problem reconciling the replicas, both ErrorReason and ErrorMessage will be set. ErrorReason will be populated with a succinct value suitable for machine interpretation, while ErrorMessage will contain a more verbose string suitable for logging and human consumption.\n\nThese fields should not be set for transitive errors that a controller faces that are expected to be fixed automatically over time (like service outages), but instead indicate that something is fundamentally wrong with the MachineTemplate's spec or the configuration of the machine controller, and that manual intervention is required. Examples of terminal errors would be invalid combinations of settings in the spec, values that are unsupported by the machine controller, or the responsible machine controller itself being critically misconfigured.\n\nAny transient errors that occur during the reconciliation of Machines can be added as events to the MachineSet object and/or logged in the controller's output.",

@@ -1,7 +1,7 @@
 package v1
 
 // KMSConfig defines the configuration for the KMS instance
-// that will be used with KMSEncryptionProvider encryption
+// that will be used with KMS encryption
 // +kubebuilder:validation:XValidation:rule="has(self.type) && self.type == 'AWS' ?  has(self.aws) : !has(self.aws)",message="aws config is required when kms provider type is AWS, and forbidden otherwise"
 // +union
 type KMSConfig struct {

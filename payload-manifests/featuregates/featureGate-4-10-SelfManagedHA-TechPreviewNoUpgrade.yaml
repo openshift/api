@@ -47,9 +47,6 @@
                         "name": "HyperShiftOnlyDynamicResourceAllocation"
                     },
                     {
-                        "name": "KMSEncryptionProvider"
-                    },
-                    {
                         "name": "MachineAPIMigrationVSphere"
                     },
                     {

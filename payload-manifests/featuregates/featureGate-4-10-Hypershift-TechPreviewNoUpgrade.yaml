@@ -44,9 +44,6 @@
                         "name": "ExternalSnapshotMetadata"
                     },
                     {
-                        "name": "KMSEncryptionProvider"
-                    },
-                    {
                         "name": "MachineAPIMigrationVSphere"
                     },
                     {

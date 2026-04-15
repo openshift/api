@@ -31,7 +31,7 @@ func (AdditionalImageStore) SwaggerDoc() map[string]string {
 
 var map_AdditionalLayerStore = map[string]string{
 	"":     "AdditionalLayerStore defines a read-only storage location for Open Container Initiative (OCI) container image layers.",
-	"path": "path specifies the absolute location of the additional layer store. The path must exist on the node before configuration is applied. When a container image is requested, layers found at this location will be used instead of retrieving from the registry. The path is required and must be between 1 and 256 characters long, begin with a forward slash, and only contain the characters a-z, A-Z, 0-9, '/', '.', '_', and '-'. Consecutive forward slashes are not permitted.",
+	"path": "path specifies the absolute location of the additional layer store. The path must exist on the node before configuration is applied. When a container image is requested, layers found at this location will be used instead of retrieving from the registry. The path is required and must be between 1 and 256 characters long, begin with a forward slash, and only contain the characters a-z, A-Z, 0-9, '/', '.', '_', '-', and may end with the ':ref' suffix for reference-based layer organization (e.g., /var/lib/stargz-store/store:ref for stargz-store). Consecutive forward slashes are not permitted.",
 }
 
 func (AdditionalLayerStore) SwaggerDoc() map[string]string {

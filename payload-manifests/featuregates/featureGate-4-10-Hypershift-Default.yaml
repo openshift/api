@@ -162,6 +162,9 @@
                         "name": "GCPDualStackInstall"
                     },
                     {
+                        "name": "GCPKMSEncryptionInstall"
+                    },
+                    {
                         "name": "ImageModeStatusReporting"
                     },
                     {

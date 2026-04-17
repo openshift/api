@@ -18,6 +18,7 @@
 | ClusterUpdatePreflight| | | <span style="background-color: #519450">Enabled</span> | <span style="background-color: #519450">Enabled</span> | | | |  |
 | ConfidentialCluster| | | <span style="background-color: #519450">Enabled</span> | <span style="background-color: #519450">Enabled</span> | | | |  |
 | Example2| | | <span style="background-color: #519450">Enabled</span> | <span style="background-color: #519450">Enabled</span> | | | |  |
+| GCPSovereignCloudInstall| | | <span style="background-color: #519450">Enabled</span> | <span style="background-color: #519450">Enabled</span> | | | |  |
 | MachineAPIMigrationVSphere| | | <span style="background-color: #519450">Enabled</span> | <span style="background-color: #519450">Enabled</span> | | | |  |
 | NetworkConnect| | | <span style="background-color: #519450">Enabled</span> | <span style="background-color: #519450">Enabled</span> | | | |  |
 | NewOLMBoxCutterRuntime| | | | <span style="background-color: #519450">Enabled</span> | | | | <span style="background-color: #519450">Enabled</span>  |

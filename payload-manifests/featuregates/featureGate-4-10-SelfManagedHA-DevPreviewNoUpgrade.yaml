@@ -205,6 +205,9 @@
                         "name": "GCPDualStackInstall"
                     },
                     {
+                        "name": "GCPSovereignCloudInstall"
+                    },
+                    {
                         "name": "GatewayAPIWithoutOLM"
                     },
                     {

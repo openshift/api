@@ -47,6 +47,9 @@
                         "name": "ExternalSnapshotMetadata"
                     },
                     {
+                        "name": "GCPSovereignCloudInstall"
+                    },
+                    {
                         "name": "KMSEncryptionProvider"
                     },
                     {

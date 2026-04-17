@@ -1,0 +1,325 @@
+apiVersion: apiextensions.k8s.io/v1
+name: "KubeletConfig"
+crdName: kubeletconfigs.machineconfiguration.openshift.io
+featureGates:
+  - TLSGroupPreferences
+tests:
+  onCreate:
+    - name: Should be able to create with Custom TLS profile and groups
+      initial: |
+        apiVersion: machineconfiguration.openshift.io/v1
+        kind: KubeletConfig
+        spec:
+          tlsSecurityProfile:
+            type: Custom
+            custom:
+              minTLSVersion: VersionTLS12
+              ciphers:
+                - TLS_AES_128_GCM_SHA256
+                - TLS_AES_256_GCM_SHA384
+              groups:
+                - X25519
+                - secp256r1
+      expected: |
+        apiVersion: machineconfiguration.openshift.io/v1
+        kind: KubeletConfig
+        spec:
+          tlsSecurityProfile:
+            type: Custom
+            custom:
+              minTLSVersion: VersionTLS12
+              ciphers:
+                - TLS_AES_128_GCM_SHA256
+                - TLS_AES_256_GCM_SHA384
+              groups:
+                - X25519
+                - secp256r1
+    - name: Should be able to create with all supported curves
+      initial: |
+        apiVersion: machineconfiguration.openshift.io/v1
+        kind: KubeletConfig
+        spec:
+          tlsSecurityProfile:
+            type: Custom
+            custom:
+              minTLSVersion: VersionTLS12
+              ciphers:
+                - TLS_AES_128_GCM_SHA256
+              groups:
+                - X25519
+                - secp256r1
+                - secp384r1
+                - secp521r1
+                - X25519MLKEM768
+      expected: |
+        apiVersion: machineconfiguration.openshift.io/v1
+        kind: KubeletConfig
+        spec:
+          tlsSecurityProfile:
+            type: Custom
+            custom:
+              minTLSVersion: VersionTLS12
+              ciphers:
+                - TLS_AES_128_GCM_SHA256
+              groups:
+                - X25519
+                - secp256r1
+                - secp384r1
+                - secp521r1
+                - X25519MLKEM768
+    - name: Should fail to create with Custom TLS profile and empty curves
+      initial: |
+        apiVersion: machineconfiguration.openshift.io/v1
+        kind: KubeletConfig
+        spec:
+          tlsSecurityProfile:
+            type: Custom
+            custom:
+              minTLSVersion: VersionTLS12
+              ciphers:
+                - TLS_AES_128_GCM_SHA256
+              groups: []
+      expectedError: "spec.tlsSecurityProfile.custom.groups in body should have at least 1 items"
+    - name: Should be able to create with Custom TLS profile and groups omitted
+      initial: |
+        apiVersion: machineconfiguration.openshift.io/v1
+        kind: KubeletConfig
+        spec:
+          tlsSecurityProfile:
+            type: Custom
+            custom:
+              minTLSVersion: VersionTLS12
+              ciphers:
+                - TLS_AES_128_GCM_SHA256
+      expected: |
+        apiVersion: machineconfiguration.openshift.io/v1
+        kind: KubeletConfig
+        spec:
+          tlsSecurityProfile:
+            type: Custom
+            custom:
+              minTLSVersion: VersionTLS12
+              ciphers:
+                - TLS_AES_128_GCM_SHA256
+    - name: Should be able to create with Custom TLS profile VersionTLS10 and groups
+      initial: |
+        apiVersion: machineconfiguration.openshift.io/v1
+        kind: KubeletConfig
+        spec:
+          tlsSecurityProfile:
+            type: Custom
+            custom:
+              minTLSVersion: VersionTLS10
+              ciphers:
+                - TLS_AES_128_GCM_SHA256
+              groups:
+                - secp256r1
+                - secp384r1
+      expected: |
+        apiVersion: machineconfiguration.openshift.io/v1
+        kind: KubeletConfig
+        spec:
+          tlsSecurityProfile:
+            type: Custom
+            custom:
+              minTLSVersion: VersionTLS10
+              ciphers:
+                - TLS_AES_128_GCM_SHA256
+              groups:
+                - secp256r1
+                - secp384r1
+    - name: Should be able to create with Custom TLS profile VersionTLS11 and groups
+      initial: |
+        apiVersion: machineconfiguration.openshift.io/v1
+        kind: KubeletConfig
+        spec:
+          tlsSecurityProfile:
+            type: Custom
+            custom:
+              minTLSVersion: VersionTLS11
+              ciphers:
+                - TLS_AES_128_GCM_SHA256
+              groups:
+                - secp384r1
+      expected: |
+        apiVersion: machineconfiguration.openshift.io/v1
+        kind: KubeletConfig
+        spec:
+          tlsSecurityProfile:
+            type: Custom
+            custom:
+              minTLSVersion: VersionTLS11
+              ciphers:
+                - TLS_AES_128_GCM_SHA256
+              groups:
+                - secp384r1
+    - name: Should fail to create with more than 5 groups
+      initial: |
+        apiVersion: machineconfiguration.openshift.io/v1
+        kind: KubeletConfig
+        spec:
+          tlsSecurityProfile:
+            type: Custom
+            custom:
+              minTLSVersion: VersionTLS12
+              ciphers:
+                - TLS_AES_128_GCM_SHA256
+              groups:
+                - X25519
+                - secp256r1
+                - secp384r1
+                - secp521r1
+                - X25519MLKEM768
+                - X25519
+      expectedError: "spec.tlsSecurityProfile.custom.groups: Too many: 6: must have at most 5 items"
+    - name: Should fail to create with invalid group value
+      initial: |
+        apiVersion: machineconfiguration.openshift.io/v1
+        kind: KubeletConfig
+        spec:
+          tlsSecurityProfile:
+            type: Custom
+            custom:
+              minTLSVersion: VersionTLS12
+              ciphers:
+                - TLS_AES_128_GCM_SHA256
+              groups:
+                - InvalidCurve
+      expectedError: "spec.tlsSecurityProfile.custom.groups[0]: Unsupported value: \"InvalidCurve\": supported values: \"X25519\", \"secp256r1\", \"secp384r1\", \"secp521r1\", \"X25519MLKEM768\""
+  onUpdate:
+    - name: Should be able to add groups to existing Custom TLS profile
+      initial: |
+        apiVersion: machineconfiguration.openshift.io/v1
+        kind: KubeletConfig
+        spec:
+          tlsSecurityProfile:
+            type: Custom
+            custom:
+              minTLSVersion: VersionTLS12
+              ciphers:
+                - TLS_AES_128_GCM_SHA256
+      updated: |
+        apiVersion: machineconfiguration.openshift.io/v1
+        kind: KubeletConfig
+        spec:
+          tlsSecurityProfile:
+            type: Custom
+            custom:
+              minTLSVersion: VersionTLS12
+              ciphers:
+                - TLS_AES_128_GCM_SHA256
+              groups:
+                - X25519
+                - secp256r1
+      expected: |
+        apiVersion: machineconfiguration.openshift.io/v1
+        kind: KubeletConfig
+        spec:
+          tlsSecurityProfile:
+            type: Custom
+            custom:
+              minTLSVersion: VersionTLS12
+              ciphers:
+                - TLS_AES_128_GCM_SHA256
+              groups:
+                - X25519
+                - secp256r1
+    - name: Should be able to update groups in existing Custom TLS profile
+      initial: |
+        apiVersion: machineconfiguration.openshift.io/v1
+        kind: KubeletConfig
+        spec:
+          tlsSecurityProfile:
+            type: Custom
+            custom:
+              minTLSVersion: VersionTLS12
+              ciphers:
+                - TLS_AES_128_GCM_SHA256
+              groups:
+                - X25519
+      updated: |
+        apiVersion: machineconfiguration.openshift.io/v1
+        kind: KubeletConfig
+        spec:
+          tlsSecurityProfile:
+            type: Custom
+            custom:
+              minTLSVersion: VersionTLS12
+              ciphers:
+                - TLS_AES_128_GCM_SHA256
+              groups:
+                - secp256r1
+                - secp384r1
+      expected: |
+        apiVersion: machineconfiguration.openshift.io/v1
+        kind: KubeletConfig
+        spec:
+          tlsSecurityProfile:
+            type: Custom
+            custom:
+              minTLSVersion: VersionTLS12
+              ciphers:
+                - TLS_AES_128_GCM_SHA256
+              groups:
+                - secp256r1
+                - secp384r1
+    - name: Should be able to remove groups field from existing Custom TLS profile
+      initial: |
+        apiVersion: machineconfiguration.openshift.io/v1
+        kind: KubeletConfig
+        spec:
+          tlsSecurityProfile:
+            type: Custom
+            custom:
+              minTLSVersion: VersionTLS12
+              ciphers:
+                - TLS_AES_128_GCM_SHA256
+              groups:
+                - X25519
+                - secp256r1
+      updated: |
+        apiVersion: machineconfiguration.openshift.io/v1
+        kind: KubeletConfig
+        spec:
+          tlsSecurityProfile:
+            type: Custom
+            custom:
+              minTLSVersion: VersionTLS12
+              ciphers:
+                - TLS_AES_128_GCM_SHA256
+      expected: |
+        apiVersion: machineconfiguration.openshift.io/v1
+        kind: KubeletConfig
+        spec:
+          tlsSecurityProfile:
+            type: Custom
+            custom:
+              minTLSVersion: VersionTLS12
+              ciphers:
+                - TLS_AES_128_GCM_SHA256
+    - name: Should fail to remove all groups from existing Custom TLS profile
+      initial: |
+        apiVersion: machineconfiguration.openshift.io/v1
+        kind: KubeletConfig
+        spec:
+          tlsSecurityProfile:
+            type: Custom
+            custom:
+              minTLSVersion: VersionTLS12
+              ciphers:
+                - TLS_AES_128_GCM_SHA256
+              groups:
+                - X25519
+                - secp256r1
+      updated: |
+        apiVersion: machineconfiguration.openshift.io/v1
+        kind: KubeletConfig
+        spec:
+          tlsSecurityProfile:
+            type: Custom
+            custom:
+              minTLSVersion: VersionTLS12
+              ciphers:
+                - TLS_AES_128_GCM_SHA256
+              groups: []
+      expectedError: "spec.tlsSecurityProfile.custom.groups in body should have at least 1 items"

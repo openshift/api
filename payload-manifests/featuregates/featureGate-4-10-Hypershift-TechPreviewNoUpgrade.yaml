@@ -346,6 +346,9 @@
                         "name": "TLSAdherence"
                     },
                     {
+                        "name": "TLSGroupPreferences"
+                    },
+                    {
                         "name": "UpgradeStatus"
                     },
                     {

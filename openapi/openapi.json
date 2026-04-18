@@ -23087,9 +23087,13 @@
           "$ref": "#/definitions/com.github.openshift.api.config.v1.TokenRequiredClaim"
         },
         "type": {
-          "description": "type is an optional field that configures the type of the validation rule.\n\nAllowed values are \"RequiredClaim\" and \"CEL\".\n\nWhen set to 'RequiredClaim', the Kubernetes API server will be configured to validate that the incoming JWT contains the required claim and that its value matches the required value.\n\nWhen set to 'CEL', the Kubernetes API server will be configured to validate the incoming JWT against the configured CEL expression.",
+          "description": "type is an optional field that configures the type of the validation rule.\n\nAllowed values are \"RequiredClaim\" and \"CEL\".\n\nWhen set to 'RequiredClaim', the Kubernetes API server will be configured to validate that the incoming JWT contains the required claim and that its value matches the required value.\n\nWhen set to 'CEL', the Kubernetes API server will be configured to validate the incoming JWT against the configured CEL expression.\n\nPossible enum values:\n - `\"CEL\"` indicates that the token validation is defined via a CEL expression. Used as a value for TokenValidationRuleType.\n - `\"RequiredClaim\"` indicates that the token must contain a specific claim. Used as a value for TokenValidationRuleType.",
           "type": "string",
-          "default": ""
+          "default": "",
+          "enum": [
+            "CEL",
+            "RequiredClaim"
+          ]
         }
       }
     },
@@ -23288,9 +23292,14 @@
           "$ref": "#/definitions/com.github.openshift.api.config.v1.UsernamePrefix"
         },
         "prefixPolicy": {
-          "description": "prefixPolicy is an optional field that configures how a prefix should be applied to the value of the JWT claim specified in the 'claim' field.\n\nAllowed values are 'Prefix', 'NoPrefix', and omitted (not provided or an empty string).\n\nWhen set to 'Prefix', the value specified in the prefix field will be prepended to the value of the JWT claim. The prefix field must be set when prefixPolicy is 'Prefix'. Must not be set to 'Prefix' when expression is set. When set to 'NoPrefix', no prefix will be prepended to the value of the JWT claim. When omitted, this means no opinion and the platform is left to choose any prefixes that are applied which is subject to change over time. Currently, the platform prepends `{issuerURL}#` to the value of the JWT claim when the claim is not 'email'.\n\nAs an example, consider the following scenario:\n\n   `prefix` is unset, `issuerURL` is set to `https://myoidc.tld`,\n   the JWT claims include \"username\":\"userA\" and \"email\":\"userA@myoidc.tld\",\n   and `claim` is set to:\n   - \"username\": the mapped value will be \"https://myoidc.tld#userA\"\n   - \"email\": the mapped value will be \"userA@myoidc.tld\"",
+          "description": "prefixPolicy is an optional field that configures how a prefix should be applied to the value of the JWT claim specified in the 'claim' field.\n\nAllowed values are 'Prefix', 'NoPrefix', and omitted (not provided or an empty string).\n\nWhen set to 'Prefix', the value specified in the prefix field will be prepended to the value of the JWT claim. The prefix field must be set when prefixPolicy is 'Prefix'. Must not be set to 'Prefix' when expression is set. When set to 'NoPrefix', no prefix will be prepended to the value of the JWT claim. When omitted, this means no opinion and the platform is left to choose any prefixes that are applied which is subject to change over time. Currently, the platform prepends `{issuerURL}#` to the value of the JWT claim when the claim is not 'email'.\n\nAs an example, consider the following scenario:\n\n   `prefix` is unset, `issuerURL` is set to `https://myoidc.tld`,\n   the JWT claims include \"username\":\"userA\" and \"email\":\"userA@myoidc.tld\",\n   and `claim` is set to:\n   - \"username\": the mapped value will be \"https://myoidc.tld#userA\"\n   - \"email\": the mapped value will be \"userA@myoidc.tld\"\n\n\nPossible enum values:\n - `\"\"` let's the cluster assign prefixes. If the username claim is email, there is no prefix If the username claim is anything else, it is prefixed by the issuerURL\n - `\"NoPrefix\"` means the username claim value will not have any prefix\n - `\"Prefix\"` means the prefix value must be specified. It cannot be empty",
           "type": "string",
-          "default": ""
+          "default": "",
+          "enum": [
+            "",
+            "NoPrefix",
+            "Prefix"
+          ]
         }
       },
       "x-kubernetes-unions": [
@@ -52338,7 +52347,7 @@
           "type": "string"
         },
         "defaultAddCapabilities": {
-          "description": "defaultAddCapabilities is the default set of capabilities that will be added to the container unless the pod spec specifically drops the capability.  You may not list a capabiility in both DefaultAddCapabilities and RequiredDropCapabilities.",
+          "description": "defaultAddCapabilities is the default set of capabilities that will be added to the container unless the pod spec specifically drops the capability.  You may not list a capability in both DefaultAddCapabilities and RequiredDropCapabilities.",
           "type": "array",
           "items": {
             "type": "string",
@@ -52412,7 +52421,7 @@
           "$ref": "#/definitions/com.github.openshift.api.security.v1.SELinuxContextStrategyOptions"
         },
         "seccompProfiles": {
-          "description": "seccompProfiles lists the allowed profiles that may be set for the pod or container's seccomp annotations.  An unset (nil) or empty value means that no profiles may be specifid by the pod or container.\tThe wildcard '*' may be used to allow all profiles.  When used to generate a value for a pod the first non-wildcard profile will be used as the default.",
+          "description": "seccompProfiles lists the allowed profiles that may be set for the pod or container's seccomp annotations.  An unset (nil) or empty value means that no profiles may be specified by the pod or container.\tThe wildcard '*' may be used to allow all profiles.  When used to generate a value for a pod the first non-wildcard profile will be used as the default.",
           "type": "array",
           "items": {
             "type": "string",

@@ -266,9 +266,6 @@
                         "name": "VSphereConfigurableMaxAllowedBlockVolumesPerNode"
                     },
                     {
-                        "name": "VSphereMixedNodeEnv"
-                    },
-                    {
                         "name": "VSphereMultiVCenterDay2"
                     },
                     {
@@ -365,6 +362,9 @@
                     },
                     {
                         "name": "VSphereHostVMGroupZonal"
+                    },
+                    {
+                        "name": "VSphereMixedNodeEnv"
                     },
                     {
                         "name": "VSphereMultiDisk"

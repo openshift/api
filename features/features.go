@@ -797,7 +797,7 @@ var (
 					contactPerson("vr4manta").
 					productScope(ocpSpecific).
 					enhancementPR("https://github.com/openshift/enhancements/pull/1772").
-					enable(inTechPreviewNoUpgrade(), inDevPreviewNoUpgrade()).
+					enable(inDefault(), inOKD(), inTechPreviewNoUpgrade(), inDevPreviewNoUpgrade()).
 					mustRegister()
 
 	FeatureGateVSphereMultiVCenterDay2 = newFeatureGate("VSphereMultiVCenterDay2").
@@ -1005,11 +1005,11 @@ var (
 				enable(inDevPreviewNoUpgrade(), inTechPreviewNoUpgrade()).
 				mustRegister()
 
-        FeatureGateConfidentialCluster = newFeatureGate("ConfidentialCluster").
-                                        reportProblemsToJiraComponent("ConfidentialClusters").
-                                        contactPerson("fjin").
-                                        productScope(ocpSpecific).
-                                        enhancementPR("https://github.com/openshift/enhancements/pull/1962").
-                                        enable(inDevPreviewNoUpgrade()).
-                                        mustRegister()
+	FeatureGateConfidentialCluster = newFeatureGate("ConfidentialCluster").
+					reportProblemsToJiraComponent("ConfidentialClusters").
+					contactPerson("fjin").
+					productScope(ocpSpecific).
+					enhancementPR("https://github.com/openshift/enhancements/pull/1962").
+					enable(inDevPreviewNoUpgrade()).
+					mustRegister()
 )

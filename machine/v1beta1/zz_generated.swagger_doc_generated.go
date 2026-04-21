@@ -528,11 +528,14 @@ func (GCPMetadata) SwaggerDoc() map[string]string {
 }
 
 var map_GCPNetworkInterface = map[string]string{
-	"":           "GCPNetworkInterface describes network interfaces for GCP",
-	"publicIP":   "publicIP indicates if true a public IP will be used",
-	"network":    "network is the network name.",
-	"projectID":  "projectID is the project in which the GCP machine provider will create the VM.",
-	"subnetwork": "subnetwork is the subnetwork name.",
+	"":               "GCPNetworkInterface describes network interfaces for GCP",
+	"publicIP":       "publicIP indicates if true a public IP will be used",
+	"network":        "network is the network name.",
+	"projectID":      "projectID is the project in which the GCP machine provider will create the VM.",
+	"subnetwork":     "subnetwork is the subnetwork name.",
+	"stackType":      "stackType determines the IP stack configuration for the network interface. This field defaults to IPv4Only. Valid values are \"IPv4Only\" and \"DualStack\".",
+	"ipv6Address":    "ipv6Address is an IPv6 internal network address for this network interface. To use a static internal IP address, it must be unused and in the same region as the instance's zone. If not specified and stackType is \"DualStack\", Google Cloud can automatically assign an internal IPv6 address.",
+	"ipv6AccessType": "ipv6AccessType indicates whether the IPv6 endpoint can be accessed from the Internet. Valid values are \"External\" or \"Internal\". Only valid when stackType is \"DualStack\".",
 }
 
 func (GCPNetworkInterface) SwaggerDoc() map[string]string {

@@ -51,6 +51,42 @@ tests:
                     reason: "Degraded"
                     message: ""
                     lastTransitionTime: "2024-12-01T08:04:21Z"
+              - name: ocp-release-bundle-4.19.0-x86_64
+                image: localhost/openshift/release-images@sha256:e98795f7932441b30bb8bcfbbf05912875383fad1f2b3be08a22ec148d68607f
+                conditions:
+                  - type: Mounted
+                    status: "False" 
+                    reason: "Mounted"
+                    message: ""
+                    lastTransitionTime: "2024-12-01T08:04:30Z"
+                  - type: Available
+                    status: "True"               
+                    reason: "Available"
+                    message: "Release ocp-release-bundle-4.19.0-x86_64 is currently available on node master-0"
+                    lastTransitionTime: "2024-12-01T08:04:30Z"
+                  - type: Degraded
+                    status: "False"               
+                    reason: "Degraded"
+                    message: ""
+                    lastTransitionTime: "2024-12-01T08:04:30Z"
+              - name: ocp-release-bundle-4.20.0-x86_64
+                image: localhost.localdomain/openshift/release-images@sha256:f98795f7932441b30bb8bcfbbf05912875383fad1f2b3be08a22ec148d68607f
+                conditions:
+                  - type: Mounted
+                    status: "False" 
+                    reason: "Mounted"
+                    message: ""
+                    lastTransitionTime: "2024-12-01T08:04:40Z"
+                  - type: Available
+                    status: "True"               
+                    reason: "Available"
+                    message: "Release ocp-release-bundle-4.20.0-x86_64 is currently available on node master-0"
+                    lastTransitionTime: "2024-12-01T08:04:40Z"
+                  - type: Degraded
+                    status: "False"               
+                    reason: "Degraded"
+                    message: ""
+                    lastTransitionTime: "2024-12-01T08:04:40Z"
       expected: |
         apiVersion: machineconfiguration.openshift.io/v1
         kind: MachineConfigNode
@@ -84,3 +120,39 @@ tests:
                     reason: "Degraded"
                     message: ""
                     lastTransitionTime: "2024-12-01T08:04:21Z"
+              - name: ocp-release-bundle-4.19.0-x86_64
+                image: localhost/openshift/release-images@sha256:e98795f7932441b30bb8bcfbbf05912875383fad1f2b3be08a22ec148d68607f
+                conditions:
+                  - type: Mounted
+                    status: "False" 
+                    reason: "Mounted"
+                    message: ""
+                    lastTransitionTime: "2024-12-01T08:04:30Z"
+                  - type: Available
+                    status: "True"               
+                    reason: "Available"
+                    message: "Release ocp-release-bundle-4.19.0-x86_64 is currently available on node master-0"
+                    lastTransitionTime: "2024-12-01T08:04:30Z"
+                  - type: Degraded
+                    status: "False"               
+                    reason: "Degraded"
+                    message: ""
+                    lastTransitionTime: "2024-12-01T08:04:30Z"
+              - name: ocp-release-bundle-4.20.0-x86_64
+                image: localhost.localdomain/openshift/release-images@sha256:f98795f7932441b30bb8bcfbbf05912875383fad1f2b3be08a22ec148d68607f
+                conditions:
+                  - type: Mounted
+                    status: "False" 
+                    reason: "Mounted"
+                    message: ""
+                    lastTransitionTime: "2024-12-01T08:04:40Z"
+                  - type: Available
+                    status: "True"               
+                    reason: "Available"
+                    message: "Release ocp-release-bundle-4.20.0-x86_64 is currently available on node master-0"
+                    lastTransitionTime: "2024-12-01T08:04:40Z"
+                  - type: Degraded
+                    status: "False"               
+                    reason: "Degraded"
+                    message: ""
+                    lastTransitionTime: "2024-12-01T08:04:40Z"

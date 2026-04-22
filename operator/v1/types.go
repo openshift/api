@@ -3,6 +3,7 @@ package v1
 import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/runtime"
+	"k8s.io/apimachinery/pkg/types"
 )
 
 // MyOperatorResource is an example operator configuration type
@@ -265,6 +266,12 @@ type NodeStatus struct {
 	// nodeName is the name of the node
 	// +required
 	NodeName string `json:"nodeName"`
+
+	// nodeUID is the UID of the node.
+	// This field is used to detect that a node has been deleted and recreated with the same name.
+	// When the UID changes, it indicates the node is a new instance and the status should be reset.
+	// +optional
+	NodeUID types.UID `json:"nodeUID,omitempty"`
 
 	// currentRevision is the generation of the most recently successful deployment.
 	// Can not be set on creation of a nodeStatus. Updates must only increase the value.

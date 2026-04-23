@@ -10,7 +10,7 @@ diff --git a/config/v1/types_console.go b/config/v1/types_console.go
 +	// theme specifies the console color theme.
 +	// +optional
 +	// +kubebuilder:validation:Enum=Light;Dark
-+ // When omitted the default theme is used.
++	// When omitted the default theme is used.
 +	Theme string `json:"theme,omitempty"`
  }
  

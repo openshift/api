@@ -27,6 +27,10 @@ test-downstream: ## Run only the tests. Use downstream Kubebuilder artifacts pub
 	@# This should be the same as upstream, except it uses the --index option to set to our build index, not upstream's.
 	KUBEBUILDER_ASSETS="$(shell $(ENVTEST) use $(ENVTEST_K8S_DOWNSTREAM_VERSION) -p path --bin-dir $(PROJECT_DIR)/bin --index https://raw.githubusercontent.com/openshift/api/master/envtest-releases.yaml)" ./hack/test.sh
 
+.PHONY: eval
+eval: ## Run API review eval tests (requires claude CLI and API key)
+	cd eval && go test -v -ginkgo.v ./...
+
 .PHONY: vendor
 vendor:
 	go mod tidy

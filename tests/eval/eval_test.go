@@ -63,10 +63,15 @@ or
 {"pass": false, "reason": "Explanation of what was missing or what unexpected issue was found"}`
 )
 
+type testCase struct {
+	Name           string
+	Patch          []byte
+	ExpectedIssues string
+}
+
 var (
 	tempDir           string
 	localRepoRoot     string
-	testCases         []string
 	goldenModel       string
 	integrationModel  string
 	judgeModel        string
@@ -99,7 +104,7 @@ var _ = BeforeSuite(func() {
 
 	var err error
 	localRepoRoot, err = filepath.Abs(filepath.Join("..", ".."))
-	Expect(err).NotTo(HaveOccurred())
+	Expect(err).NotTo(HaveOccurred(), "failed to resolve repository root")
 
 	By("verifying local AGENTS.md exists")
 	_, err = os.Stat(filepath.Join(localRepoRoot, "AGENTS.md"))
@@ -119,11 +124,6 @@ var _ = BeforeSuite(func() {
 	Expect(err).NotTo(HaveOccurred(), "git clone failed: %s", string(output))
 
 	copyLocalFiles()
-
-	goldenPath := filepath.Join(localRepoRoot, "tests", "eval", testdataDir, goldenDir)
-	testCases, err = discoverTestCases(goldenPath)
-	Expect(err).NotTo(HaveOccurred())
-	Expect(testCases).NotTo(BeEmpty(), "no test cases found in testdata/golden directory")
 })
 
 var _ = AfterSuite(func() {
@@ -177,59 +177,49 @@ func resetRepo() {
 	copyLocalFiles()
 }
 
-func discoverTestCases(testdataPath string) ([]string, error) {
+func discoverTestCases(testdataPath string) ([]testCase, error) {
 	entries, err := os.ReadDir(testdataPath)
 	if err != nil {
 		return nil, fmt.Errorf("failed to read testdata directory: %w", err)
 	}
 
-	var cases []string
+	var cases []testCase
 	for _, entry := range entries {
-		if entry.IsDir() {
-			patchPath := filepath.Join(testdataPath, entry.Name(), patchFileName)
-			expectedPath := filepath.Join(testdataPath, entry.Name(), expectedFileName)
-
-			if _, err := os.Stat(patchPath); err != nil {
-				return nil, fmt.Errorf("patch.diff missing in %s: %w", entry.Name(), err)
-			}
-			if _, err := os.Stat(expectedPath); err != nil {
-				return nil, fmt.Errorf("expected.txt missing in %s: %w", entry.Name(), err)
-			}
-
-			cases = append(cases, entry.Name())
+		if !entry.IsDir() {
+			continue
 		}
+
+		patch, err := os.ReadFile(filepath.Join(testdataPath, entry.Name(), patchFileName))
+		if err != nil {
+			return nil, fmt.Errorf("patch.diff missing in %s: %w", entry.Name(), err)
+		}
+
+		expected, err := os.ReadFile(filepath.Join(testdataPath, entry.Name(), expectedFileName))
+		if err != nil {
+			return nil, fmt.Errorf("expected.txt missing in %s: %w", entry.Name(), err)
+		}
+
+		cases = append(cases, testCase{
+			Name:           entry.Name(),
+			Patch:          patch,
+			ExpectedIssues: strings.TrimSpace(string(expected)),
+		})
 	}
 	return cases, nil
 }
 
-func loadGoldenEntries() []TableEntry {
+func loadEntries(dir string) []TableEntry {
 	cwd, err := os.Getwd()
 	Expect(err).NotTo(HaveOccurred())
 
-	goldenPath := filepath.Join(cwd, testdataDir, goldenDir)
-	cases, err := discoverTestCases(goldenPath)
-	Expect(err).NotTo(HaveOccurred())
-
-	var entries []TableEntry
-	for _, tc := range cases {
-		entries = append(entries, Entry(tc, tc))
-	}
-	return entries
-}
-
-func loadIntegrationEntries() []TableEntry {
-	cwd, err := os.Getwd()
-	Expect(err).NotTo(HaveOccurred())
-
-	integrationPath := filepath.Join(cwd, testdataDir, integrationDir)
-	cases, err := discoverTestCases(integrationPath)
+	cases, err := discoverTestCases(filepath.Join(cwd, testdataDir, dir))
 	if err != nil || len(cases) == 0 {
 		return nil
 	}
 
 	var entries []TableEntry
 	for _, tc := range cases {
-		entries = append(entries, Entry(tc, tc))
+		entries = append(entries, Entry(tc.Name, tc))
 	}
 	return entries
 }
@@ -247,19 +237,15 @@ func stripMarkdownCodeBlock(s string) string {
 	return strings.TrimSpace(s)
 }
 
-func readAndApplyPatch(patchPath string) {
-	By("reading and applying patch")
-	patchContent, err := os.ReadFile(patchPath)
-	Expect(err).NotTo(HaveOccurred())
-
+func applyPatch(patch []byte) {
+	By("applying patch")
 	cmd := exec.Command("git", "apply", "-")
 	cmd.Dir = tempDir
-	cmd.Stdin = bytes.NewReader(patchContent)
+	cmd.Stdin = bytes.NewReader(patch)
 	output, err := cmd.CombinedOutput()
 	Expect(err).NotTo(HaveOccurred(), "git apply failed: %s", string(output))
 }
 
-// runAPIReview and runJudge can probably share some common code.
 func runAPIReview(model string) (string, float64) {
 	By(fmt.Sprintf("running API review via Claude (%s)", model))
 	ctx, cancel := context.WithTimeout(context.Background(), claudeTimeout)
@@ -317,47 +303,39 @@ func runJudge(model, reviewOutput, expectedIssues string) (evalResult, float64) 
 	return result, parsed.TotalCostUSD
 }
 
-func runTestCase(tier, tc, reviewModel, judgeModelName string) {
+func runTestCase(tc testCase, reviewModel, judgeModelName string) {
 	resetRepo()
-
-	testCaseDir := filepath.Join(localRepoRoot, "tests", "eval", testdataDir, tier, tc)
-	readAndApplyPatch(filepath.Join(testCaseDir, patchFileName))
-
-	expectedContent, err := os.ReadFile(filepath.Join(testCaseDir, expectedFileName))
-	Expect(err).NotTo(HaveOccurred())
-	expectedIssues := strings.TrimSpace(string(expectedContent))
+	applyPatch(tc.Patch)
 
 	reviewOutput, reviewCost := runAPIReview(reviewModel)
-	result, judgeCost := runJudge(judgeModelName, reviewOutput, expectedIssues)
+	result, judgeCost := runJudge(judgeModelName, reviewOutput, tc.ExpectedIssues)
 
 	GinkgoWriter.Printf("Cost: Reviewer=$%.4f, Judge=$%.4f, Total=$%.4f\n", reviewCost, judgeCost, reviewCost+judgeCost)
 	GinkgoWriter.Printf("Judge result: pass=%v, reason=%s\n", result.Pass, result.Reason)
-	Expect(result.Pass).To(BeTrue(), "API review did not match expected issues.\nJudge reason: %s\nReview output:\n%s\nExpected issues:\n%s", result.Reason, reviewOutput, expectedIssues)
+	Expect(result.Pass).To(BeTrue(), "API review did not match expected issues.\nJudge reason: %s\nReview output:\n%s\nExpected issues:\n%s", result.Reason, reviewOutput, tc.ExpectedIssues)
 }
 
 var _ = Describe("API Review Evaluation", func() {
 	Context("Golden Tests", func() {
-		goldenEntries := loadGoldenEntries()
-
 		DescribeTable("should correctly identify single issues",
-			func(tc string) {
-				runTestCase(goldenDir, tc, goldenModel, judgeModel)
+			func(tc testCase) {
+				runTestCase(tc, goldenModel, judgeModel)
 			},
-			goldenEntries,
+			loadEntries(goldenDir),
 		)
 	})
 
 	Context("Integration Tests", func() {
-		integrationEntries := loadIntegrationEntries()
-		if len(integrationEntries) == 0 {
+		entries := loadEntries(integrationDir)
+		if len(entries) == 0 {
 			return
 		}
 
 		DescribeTable("should correctly identify multiple issues",
-			func(tc string) {
-				runTestCase(integrationDir, tc, integrationModel, judgeModel)
+			func(tc testCase) {
+				runTestCase(tc, integrationModel, judgeModel)
 			},
-			integrationEntries,
+			entries,
 		)
 	})
 })

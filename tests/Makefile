@@ -29,7 +29,7 @@ test-downstream: ## Run only the tests. Use downstream Kubebuilder artifacts pub
 
 .PHONY: eval
 eval: ## Run API review eval tests (requires claude CLI and API key)
-	cd eval && go test -v -ginkgo.v ./...
+	cd eval && go test -v -ginkgo.v -tags eval ./...
 
 .PHONY: vendor
 vendor:

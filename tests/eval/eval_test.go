@@ -1,3 +1,5 @@
+//go:build eval
+
 package eval
 
 import (
@@ -8,6 +10,7 @@ import (
 	"os"
 	"os/exec"
 	"path/filepath"
+	"strconv"
 	"strings"
 	"testing"
 	"time"
@@ -25,16 +28,16 @@ const (
 	patchFileName    = "patch.diff"
 	expectedFileName = "expected.txt"
 
-	// Setting everything to haiku for development is cheap and quick.
-	// Opus is expensive, and seems best for the integration tests
-	// but often hallucinates more.
-	sonnetModel = "claude-sonnet-4-5@20250929"
-	opusModel   = "claude-opus-4-5@20251101"
-	haikuModel  = "claude-haiku-4-5@20251001"
+	sonnetModel = "claude-sonnet-4-6"
+	opusModel   = "claude-opus-4-6"
+	haikuModel  = "claude-haiku-4-5-20251001"
 
 	defaultGoldenModel      = sonnetModel
 	defaultIntegrationModel = opusModel
 	defaultJudgeModel       = haikuModel
+
+	// Adjust once we have baseline data from CI runs.
+	defaultThreshold = 0.8
 
 	judgePromptTemplate = `You are a judge evaluating an API review output against expected issues.
 
@@ -69,14 +72,25 @@ type testCase struct {
 	ExpectedIssues string
 }
 
+type testCaseResult struct {
+	Name     string
+	Passed   int
+	Runs     int
+	Rate     float64
+	Failures []string
+}
+
 var (
 	tempDir           string
 	localRepoRoot     string
 	goldenModel       string
 	integrationModel  string
 	judgeModel        string
+	evalRuns          int
+	evalThreshold     float64
 	totalReviewerCost float64
 	totalJudgeCost    float64
+	allResults        []testCaseResult
 )
 
 type claudeOutput struct {
@@ -103,6 +117,13 @@ var _ = BeforeSuite(func() {
 	judgeModel = envOrDefault("EVAL_JUDGE_MODEL", defaultJudgeModel)
 
 	var err error
+	evalRuns, err = strconv.Atoi(envOrDefault("EVAL_RUNS", "1"))
+	Expect(err).NotTo(HaveOccurred(), "EVAL_RUNS must be an integer")
+	Expect(evalRuns).To(BeNumerically(">", 0), "EVAL_RUNS must be positive")
+
+	evalThreshold, err = strconv.ParseFloat(envOrDefault("EVAL_THRESHOLD", fmt.Sprintf("%g", defaultThreshold)), 64)
+	Expect(err).NotTo(HaveOccurred(), "EVAL_THRESHOLD must be a float")
+
 	localRepoRoot, err = filepath.Abs(filepath.Join("..", ".."))
 	Expect(err).NotTo(HaveOccurred(), "failed to resolve repository root")
 
@@ -131,7 +152,21 @@ var _ = AfterSuite(func() {
 		By("cleaning up temp directory")
 		os.RemoveAll(tempDir)
 	}
-	fmt.Printf("\nTotal Cost: $%.4f (Reviewer: $%.4f, Judge: $%.4f)\n", totalReviewerCost+totalJudgeCost, totalReviewerCost, totalJudgeCost)
+
+	if len(allResults) > 0 {
+		fmt.Printf("\n%-35s | %6s | %4s | %s\n", "Test Case", "Passed", "Runs", "Rate")
+		fmt.Printf("%s\n", strings.Repeat("-", 65))
+		for _, r := range allResults {
+			line := fmt.Sprintf("%-35s | %6d | %4d | %3.0f%%", r.Name, r.Passed, r.Runs, r.Rate*100)
+			if r.Rate < evalThreshold {
+				line += " <- FAIL"
+			}
+			fmt.Println(line)
+		}
+		fmt.Printf("\nThreshold: %.0f%%\n", evalThreshold*100)
+	}
+
+	fmt.Printf("Total Cost: $%.4f (Reviewer: $%.4f, Judge: $%.4f)\n", totalReviewerCost+totalJudgeCost, totalReviewerCost, totalJudgeCost)
 })
 
 func copyLocalFiles() {
@@ -304,15 +339,36 @@ func runJudge(model, reviewOutput, expectedIssues string) (evalResult, float64) 
 }
 
 func runTestCase(tc testCase, reviewModel, judgeModelName string) {
-	resetRepo()
-	applyPatch(tc.Patch)
+	result := testCaseResult{Name: tc.Name, Runs: evalRuns}
 
-	reviewOutput, reviewCost := runAPIReview(reviewModel)
-	result, judgeCost := runJudge(judgeModelName, reviewOutput, tc.ExpectedIssues)
+	for i := range evalRuns {
+		By(fmt.Sprintf("run %d/%d", i+1, evalRuns))
+		resetRepo()
+		applyPatch(tc.Patch)
 
-	GinkgoWriter.Printf("Cost: Reviewer=$%.4f, Judge=$%.4f, Total=$%.4f\n", reviewCost, judgeCost, reviewCost+judgeCost)
-	GinkgoWriter.Printf("Judge result: pass=%v, reason=%s\n", result.Pass, result.Reason)
-	Expect(result.Pass).To(BeTrue(), "API review did not match expected issues.\nJudge reason: %s\nReview output:\n%s\nExpected issues:\n%s", result.Reason, reviewOutput, tc.ExpectedIssues)
+		reviewOutput, reviewCost := runAPIReview(reviewModel)
+		judgeResult, judgeCost := runJudge(judgeModelName, reviewOutput, tc.ExpectedIssues)
+
+		GinkgoWriter.Printf("Run %d/%d: pass=%v, Reviewer=$%.4f, Judge=$%.4f\n",
+			i+1, evalRuns, judgeResult.Pass, reviewCost, judgeCost)
+		GinkgoWriter.Printf("Judge reason: %s\n", judgeResult.Reason)
+
+		if judgeResult.Pass {
+			result.Passed++
+		} else {
+			result.Failures = append(result.Failures, fmt.Sprintf("run %d: %s", i+1, judgeResult.Reason))
+		}
+	}
+
+	result.Rate = float64(result.Passed) / float64(result.Runs)
+	allResults = append(allResults, result)
+
+	GinkgoWriter.Printf("Result: %d/%d passed (%.0f%%), threshold: %.0f%%\n",
+		result.Passed, result.Runs, result.Rate*100, evalThreshold*100)
+
+	Expect(result.Rate).To(BeNumerically(">=", evalThreshold),
+		"pass rate %.0f%% below threshold %.0f%% for %s.\nFailures:\n%s",
+		result.Rate*100, evalThreshold*100, tc.Name, strings.Join(result.Failures, "\n"))
 }
 
 var _ = Describe("API Review Evaluation", func() {

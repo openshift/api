@@ -103,7 +103,6 @@ type SecurityContextConstraints struct {
 	// When "AllowHostLevel" is set, a pod author may set `hostUsers` to either `true` or `false`.
 	// When "RequirePodLevel" is set, a pod author must set `hostUsers` to `false`.
 	// When omitted, the default value is "AllowHostLevel".
-	// +openshift:enable:FeatureGate=UserNamespacesPodSecurityStandards
 	// +kubebuilder:validation:Enum="AllowHostLevel";"RequirePodLevel"
 	// +kubebuilder:default:="AllowHostLevel"
 	// +default="AllowHostLevel"

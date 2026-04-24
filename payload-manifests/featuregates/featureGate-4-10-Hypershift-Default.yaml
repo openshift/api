@@ -129,9 +129,6 @@
                         "name": "DyanmicServiceEndpointIBMCloud"
                     },
                     {
-                        "name": "EVPN"
-                    },
-                    {
                         "name": "EtcdBackendQuota"
                     },
                     {
@@ -297,6 +294,9 @@
                     },
                     {
                         "name": "DualReplica"
+                    },
+                    {
+                        "name": "EVPN"
                     },
                     {
                         "name": "EventTTL"

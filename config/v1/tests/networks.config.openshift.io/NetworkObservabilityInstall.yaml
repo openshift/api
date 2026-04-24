@@ -1,0 +1,46 @@
+apiVersion: apiextensions.k8s.io/v1 # Hack because controller-gen complains if we don't have this
+name: "Network"
+crdName: networks.config.openshift.io
+featureGates:
+  - NetworkObservabilityInstall
+tests:
+  onCreate:
+    - name: Should be able to set NetworkObservability with empty string (default)
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: Network
+        spec:
+          networkObservability:
+            installationPolicy: ""
+      expected: |
+        apiVersion: config.openshift.io/v1
+        kind: Network
+        spec:
+          networkObservability:
+            installationPolicy: ""
+    - name: Should be able to set NetworkObservability InstallAndEnable
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: Network
+        spec:
+          networkObservability:
+            installationPolicy: InstallAndEnable
+      expected: |
+        apiVersion: config.openshift.io/v1
+        kind: Network
+        spec:
+          networkObservability:
+            installationPolicy: InstallAndEnable
+    - name: Should be able to set NetworkObservability DoNotInstall
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: Network
+        spec:
+          networkObservability:
+            installationPolicy: DoNotInstall
+      expected: |
+        apiVersion: config.openshift.io/v1
+        kind: Network
+        spec:
+          networkObservability:
+            installationPolicy: DoNotInstall

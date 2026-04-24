@@ -1,0 +1,1067 @@
+apiVersion: apiextensions.k8s.io/v1 # Hack because controller-gen complains if we don't have this
+name: "Infrastructure"
+crdName: infrastructures.config.openshift.io
+featureGates:
+- VSphereMultiVCenterDay2
+tests:
+  onCreate:
+    - name: Should be able to create a minimal Infrastructure
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        spec: {} # No spec is required for a Infrastructure
+      expected: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        spec: {}
+    - name: Should be able to create Infrastructure with vSphere platform and 1 vcenter
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        spec:
+          cloudConfig:
+            key: config
+            name: cloud-provider-config
+          platformSpec:
+            type: VSphere
+            vsphere:
+              vcenters:
+              - datacenters:
+                - IBMCloud
+                port: 443
+                server: vcenter1.example.com
+              failureDomains:
+              - name: fd1
+                region: region1
+                server: vcenter1.example.com
+                topology:
+                  computeCluster: /IBMCloud/host/cluster1
+                  datacenter: IBMCloud
+                  datastore: /IBMCloud/datastore/ds1
+                  networks:
+                  - network1
+                  resourcePool: /IBMCloud/host/cluster1/Resources
+                zone: zone1
+      expected: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        spec:
+          cloudConfig:
+            key: config
+            name: cloud-provider-config
+          platformSpec:
+            type: VSphere
+            vsphere:
+              vcenters:
+              - datacenters:
+                - IBMCloud
+                port: 443
+                server: vcenter1.example.com
+              failureDomains:
+              - name: fd1
+                region: region1
+                server: vcenter1.example.com
+                topology:
+                  computeCluster: /IBMCloud/host/cluster1
+                  datacenter: IBMCloud
+                  datastore: /IBMCloud/datastore/ds1
+                  networks:
+                  - network1
+                  resourcePool: /IBMCloud/host/cluster1/Resources
+                zone: zone1
+    - name: Should be able to create Infrastructure with vSphere platform and 2 vcenters
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        spec:
+          cloudConfig:
+            key: config
+            name: cloud-provider-config
+          platformSpec:
+            type: VSphere
+            vsphere:
+              vcenters:
+              - datacenters:
+                - DC1
+                port: 443
+                server: vcenter1.example.com
+              - datacenters:
+                - DC2
+                port: 443
+                server: vcenter2.example.com
+              failureDomains:
+              - name: fd1
+                region: region1
+                server: vcenter1.example.com
+                topology:
+                  computeCluster: /DC1/host/cluster1
+                  datacenter: DC1
+                  datastore: /DC1/datastore/ds1
+                  networks:
+                  - network1
+                  resourcePool: /DC1/host/cluster1/Resources
+                zone: zone1
+              - name: fd2
+                region: region2
+                server: vcenter2.example.com
+                topology:
+                  computeCluster: /DC2/host/cluster2
+                  datacenter: DC2
+                  datastore: /DC2/datastore/ds2
+                  networks:
+                  - network2
+                  resourcePool: /DC2/host/cluster2/Resources
+                zone: zone2
+      expected: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        spec:
+          cloudConfig:
+            key: config
+            name: cloud-provider-config
+          platformSpec:
+            type: VSphere
+            vsphere:
+              vcenters:
+              - datacenters:
+                - DC1
+                port: 443
+                server: vcenter1.example.com
+              - datacenters:
+                - DC2
+                port: 443
+                server: vcenter2.example.com
+              failureDomains:
+              - name: fd1
+                region: region1
+                server: vcenter1.example.com
+                topology:
+                  computeCluster: /DC1/host/cluster1
+                  datacenter: DC1
+                  datastore: /DC1/datastore/ds1
+                  networks:
+                  - network1
+                  resourcePool: /DC1/host/cluster1/Resources
+                zone: zone1
+              - name: fd2
+                region: region2
+                server: vcenter2.example.com
+                topology:
+                  computeCluster: /DC2/host/cluster2
+                  datacenter: DC2
+                  datastore: /DC2/datastore/ds2
+                  networks:
+                  - network2
+                  resourcePool: /DC2/host/cluster2/Resources
+                zone: zone2
+    - name: Should be able to create Infrastructure with vSphere platform and 3 vcenters
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        spec:
+          cloudConfig:
+            key: config
+            name: cloud-provider-config
+          platformSpec:
+            type: VSphere
+            vsphere:
+              vcenters:
+              - datacenters:
+                - DC1
+                port: 443
+                server: vcenter1.example.com
+              - datacenters:
+                - DC2
+                port: 443
+                server: vcenter2.example.com
+              - datacenters:
+                - DC3
+                port: 443
+                server: vcenter3.example.com
+              failureDomains:
+              - name: fd1
+                region: region1
+                server: vcenter1.example.com
+                topology:
+                  computeCluster: /DC1/host/cluster1
+                  datacenter: DC1
+                  datastore: /DC1/datastore/ds1
+                  networks:
+                  - network1
+                  resourcePool: /DC1/host/cluster1/Resources
+                zone: zone1
+      expected: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        spec:
+          cloudConfig:
+            key: config
+            name: cloud-provider-config
+          platformSpec:
+            type: VSphere
+            vsphere:
+              vcenters:
+              - datacenters:
+                - DC1
+                port: 443
+                server: vcenter1.example.com
+              - datacenters:
+                - DC2
+                port: 443
+                server: vcenter2.example.com
+              - datacenters:
+                - DC3
+                port: 443
+                server: vcenter3.example.com
+              failureDomains:
+              - name: fd1
+                region: region1
+                server: vcenter1.example.com
+                topology:
+                  computeCluster: /DC1/host/cluster1
+                  datacenter: DC1
+                  datastore: /DC1/datastore/ds1
+                  networks:
+                  - network1
+                  resourcePool: /DC1/host/cluster1/Resources
+                zone: zone1
+    - name: Should not be able to create Infrastructure with duplicate vcenter server values
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        spec:
+          cloudConfig:
+            key: config
+            name: cloud-provider-config
+          platformSpec:
+            type: VSphere
+            vsphere:
+              vcenters:
+              - datacenters:
+                - DC1
+                port: 443
+                server: vcenter1.example.com
+              - datacenters:
+                - DC2
+                port: 443
+                server: vcenter1.example.com
+              failureDomains:
+              - name: fd1
+                region: region1
+                server: vcenter1.example.com
+                topology:
+                  computeCluster: /DC1/host/cluster1
+                  datacenter: DC1
+                  datastore: /DC1/datastore/ds1
+                  networks:
+                  - network1
+                  resourcePool: /DC1/host/cluster1/Resources
+                zone: zone1
+      expectedError: "vcenters must have unique server values"
+  onUpdate:
+    - name: Should be able to add vsphere platform with 1 vcenter post-install
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        spec:
+          platformSpec:
+            type: VSphere
+      updated: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        spec:
+          cloudConfig:
+            key: config
+            name: cloud-provider-config
+          platformSpec:
+            type: VSphere
+            vsphere:
+              vcenters:
+              - datacenters:
+                - DC1
+                port: 443
+                server: vcenter1.example.com
+              failureDomains:
+              - name: fd1
+                region: region1
+                server: vcenter1.example.com
+                topology:
+                  computeCluster: /DC1/host/cluster1
+                  datacenter: DC1
+                  datastore: /DC1/datastore/ds1
+                  networks:
+                  - network1
+                  resourcePool: /DC1/host/cluster1/Resources
+                zone: zone1
+      expected: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        spec:
+          cloudConfig:
+            key: config
+            name: cloud-provider-config
+          platformSpec:
+            type: VSphere
+            vsphere:
+              vcenters:
+              - datacenters:
+                - DC1
+                port: 443
+                server: vcenter1.example.com
+              failureDomains:
+              - name: fd1
+                region: region1
+                server: vcenter1.example.com
+                topology:
+                  computeCluster: /DC1/host/cluster1
+                  datacenter: DC1
+                  datastore: /DC1/datastore/ds1
+                  networks:
+                  - network1
+                  resourcePool: /DC1/host/cluster1/Resources
+                zone: zone1
+    - name: Should be able to add vsphere platform with 2 vcenters post-install
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        spec:
+          platformSpec:
+            type: VSphere
+      updated: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        spec:
+          cloudConfig:
+            key: config
+            name: cloud-provider-config
+          platformSpec:
+            type: VSphere
+            vsphere:
+              vcenters:
+              - datacenters:
+                - DC1
+                port: 443
+                server: vcenter1.example.com
+              - datacenters:
+                - DC2
+                port: 443
+                server: vcenter2.example.com
+              failureDomains:
+              - name: fd1
+                region: region1
+                server: vcenter1.example.com
+                topology:
+                  computeCluster: /DC1/host/cluster1
+                  datacenter: DC1
+                  datastore: /DC1/datastore/ds1
+                  networks:
+                  - network1
+                  resourcePool: /DC1/host/cluster1/Resources
+                zone: zone1
+      expected: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        spec:
+          cloudConfig:
+            key: config
+            name: cloud-provider-config
+          platformSpec:
+            type: VSphere
+            vsphere:
+              vcenters:
+              - datacenters:
+                - DC1
+                port: 443
+                server: vcenter1.example.com
+              - datacenters:
+                - DC2
+                port: 443
+                server: vcenter2.example.com
+              failureDomains:
+              - name: fd1
+                region: region1
+                server: vcenter1.example.com
+                topology:
+                  computeCluster: /DC1/host/cluster1
+                  datacenter: DC1
+                  datastore: /DC1/datastore/ds1
+                  networks:
+                  - network1
+                  resourcePool: /DC1/host/cluster1/Resources
+                zone: zone1
+    - name: Should not be able to add vsphere platform with 0 vcenters post-install
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        spec:
+          platformSpec:
+            type: VSphere
+      updated: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        spec:
+          cloudConfig:
+            key: config
+            name: cloud-provider-config
+          platformSpec:
+            type: VSphere
+            vsphere:
+              vcenters: []
+              failureDomains:
+              - name: fd1
+                region: region1
+                server: vcenter1.example.com
+                topology:
+                  computeCluster: /DC1/host/cluster1
+                  datacenter: DC1
+                  datastore: /DC1/datastore/ds1
+                  networks:
+                  - network1
+                  resourcePool: /DC1/host/cluster1/Resources
+                zone: zone1
+      expectedError: "spec.platformSpec.vsphere.vcenters in body should have at least 1 items"
+    - name: Should be able to update existing vcenter details without changing vcenter count
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        spec:
+          cloudConfig:
+            key: config
+            name: cloud-provider-config
+          platformSpec:
+            type: VSphere
+            vsphere:
+              vcenters:
+              - datacenters:
+                - DC1
+                port: 443
+                server: vcenter1.example.com
+              failureDomains:
+              - name: fd1
+                region: region1
+                server: vcenter1.example.com
+                topology:
+                  computeCluster: /DC1/host/cluster1
+                  datacenter: DC1
+                  datastore: /DC1/datastore/ds1
+                  networks:
+                  - network1
+                  resourcePool: /DC1/host/cluster1/Resources
+                zone: zone1
+      updated: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        spec:
+          cloudConfig:
+            key: config
+            name: cloud-provider-config
+          platformSpec:
+            type: VSphere
+            vsphere:
+              vcenters:
+              - datacenters:
+                - DC1
+                - DC1-NEW
+                port: 443
+                server: vcenter1.example.com
+              failureDomains:
+              - name: fd1
+                region: region1
+                server: vcenter1.example.com
+                topology:
+                  computeCluster: /DC1/host/cluster1
+                  datacenter: DC1
+                  datastore: /DC1/datastore/ds1
+                  networks:
+                  - network1
+                  resourcePool: /DC1/host/cluster1/Resources
+                zone: zone1
+      expected: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        spec:
+          cloudConfig:
+            key: config
+            name: cloud-provider-config
+          platformSpec:
+            type: VSphere
+            vsphere:
+              vcenters:
+              - datacenters:
+                - DC1
+                - DC1-NEW
+                port: 443
+                server: vcenter1.example.com
+              failureDomains:
+              - name: fd1
+                region: region1
+                server: vcenter1.example.com
+                topology:
+                  computeCluster: /DC1/host/cluster1
+                  datacenter: DC1
+                  datastore: /DC1/datastore/ds1
+                  networks:
+                  - network1
+                  resourcePool: /DC1/host/cluster1/Resources
+                zone: zone1
+    - name: Should be able to add vcenters when already have 1 vcenter
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        spec:
+          cloudConfig:
+            key: config
+            name: cloud-provider-config
+          platformSpec:
+            type: VSphere
+            vsphere:
+              vcenters:
+              - datacenters:
+                - DC1
+                port: 443
+                server: vcenter1.example.com
+              failureDomains:
+              - name: fd1
+                region: region1
+                server: vcenter1.example.com
+                topology:
+                  computeCluster: /DC1/host/cluster1
+                  datacenter: DC1
+                  datastore: /DC1/datastore/ds1
+                  networks:
+                  - network1
+                  resourcePool: /DC1/host/cluster1/Resources
+                zone: zone1
+      updated: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        spec:
+          cloudConfig:
+            key: config
+            name: cloud-provider-config
+          platformSpec:
+            type: VSphere
+            vsphere:
+              vcenters:
+              - datacenters:
+                - DC1
+                port: 443
+                server: vcenter1.example.com
+              - datacenters:
+                - DC2
+                port: 443
+                server: vcenter2.example.com
+              failureDomains:
+              - name: fd1
+                region: region1
+                server: vcenter1.example.com
+                topology:
+                  computeCluster: /DC1/host/cluster1
+                  datacenter: DC1
+                  datastore: /DC1/datastore/ds1
+                  networks:
+                  - network1
+                  resourcePool: /DC1/host/cluster1/Resources
+                zone: zone1
+              - name: fd2
+                region: region2
+                server: vcenter2.example.com
+                topology:
+                  computeCluster: /DC2/host/cluster2
+                  datacenter: DC2
+                  datastore: /DC2/datastore/ds2
+                  networks:
+                  - network2
+                  resourcePool: /DC2/host/cluster2/Resources
+                zone: zone2
+      expected: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        spec:
+          cloudConfig:
+            key: config
+            name: cloud-provider-config
+          platformSpec:
+            type: VSphere
+            vsphere:
+              vcenters:
+              - datacenters:
+                - DC1
+                port: 443
+                server: vcenter1.example.com
+              - datacenters:
+                - DC2
+                port: 443
+                server: vcenter2.example.com
+              failureDomains:
+              - name: fd1
+                region: region1
+                server: vcenter1.example.com
+                topology:
+                  computeCluster: /DC1/host/cluster1
+                  datacenter: DC1
+                  datastore: /DC1/datastore/ds1
+                  networks:
+                  - network1
+                  resourcePool: /DC1/host/cluster1/Resources
+                zone: zone1
+              - name: fd2
+                region: region2
+                server: vcenter2.example.com
+                topology:
+                  computeCluster: /DC2/host/cluster2
+                  datacenter: DC2
+                  datastore: /DC2/datastore/ds2
+                  networks:
+                  - network2
+                  resourcePool: /DC2/host/cluster2/Resources
+                zone: zone2
+    - name: Should be able to reduce vcenters from 2 to 1
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        spec:
+          cloudConfig:
+            key: config
+            name: cloud-provider-config
+          platformSpec:
+            type: VSphere
+            vsphere:
+              vcenters:
+              - datacenters:
+                - DC1
+                port: 443
+                server: vcenter1.example.com
+              - datacenters:
+                - DC2
+                port: 443
+                server: vcenter2.example.com
+              failureDomains:
+              - name: fd1
+                region: region1
+                server: vcenter1.example.com
+                topology:
+                  computeCluster: /DC1/host/cluster1
+                  datacenter: DC1
+                  datastore: /DC1/datastore/ds1
+                  networks:
+                  - network1
+                  resourcePool: /DC1/host/cluster1/Resources
+                zone: zone1
+      updated: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        spec:
+          cloudConfig:
+            key: config
+            name: cloud-provider-config
+          platformSpec:
+            type: VSphere
+            vsphere:
+              vcenters:
+              - datacenters:
+                - DC1
+                port: 443
+                server: vcenter1.example.com
+              failureDomains:
+              - name: fd1
+                region: region1
+                server: vcenter1.example.com
+                topology:
+                  computeCluster: /DC1/host/cluster1
+                  datacenter: DC1
+                  datastore: /DC1/datastore/ds1
+                  networks:
+                  - network1
+                  resourcePool: /DC1/host/cluster1/Resources
+                zone: zone1
+      expected: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        spec:
+          cloudConfig:
+            key: config
+            name: cloud-provider-config
+          platformSpec:
+            type: VSphere
+            vsphere:
+              vcenters:
+              - datacenters:
+                - DC1
+                port: 443
+                server: vcenter1.example.com
+              failureDomains:
+              - name: fd1
+                region: region1
+                server: vcenter1.example.com
+                topology:
+                  computeCluster: /DC1/host/cluster1
+                  datacenter: DC1
+                  datastore: /DC1/datastore/ds1
+                  networks:
+                  - network1
+                  resourcePool: /DC1/host/cluster1/Resources
+                zone: zone1
+    - name: Should not be able to reduce vcenters to 0
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        spec:
+          cloudConfig:
+            key: config
+            name: cloud-provider-config
+          platformSpec:
+            type: VSphere
+            vsphere:
+              vcenters:
+              - datacenters:
+                - DC1
+                port: 443
+                server: vcenter1.example.com
+              failureDomains:
+              - name: fd1
+                region: region1
+                server: vcenter1.example.com
+                topology:
+                  computeCluster: /DC1/host/cluster1
+                  datacenter: DC1
+                  datastore: /DC1/datastore/ds1
+                  networks:
+                  - network1
+                  resourcePool: /DC1/host/cluster1/Resources
+                zone: zone1
+      updated: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        spec:
+          cloudConfig:
+            key: config
+            name: cloud-provider-config
+          platformSpec:
+            type: VSphere
+            vsphere:
+              vcenters: []
+              failureDomains:
+              - name: fd1
+                region: region1
+                server: vcenter1.example.com
+                topology:
+                  computeCluster: /DC1/host/cluster1
+                  datacenter: DC1
+                  datastore: /DC1/datastore/ds1
+                  networks:
+                  - network1
+                  resourcePool: /DC1/host/cluster1/Resources
+                zone: zone1
+      expectedError: "spec.platformSpec.vsphere.vcenters in body should have at least 1 items"
+    - name: Should not be able to remove vcenters field entirely once set
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        spec:
+          cloudConfig:
+            key: config
+            name: cloud-provider-config
+          platformSpec:
+            type: VSphere
+            vsphere:
+              vcenters:
+              - datacenters:
+                - DC1
+                port: 443
+                server: vcenter1.example.com
+              failureDomains:
+              - name: fd1
+                region: region1
+                server: vcenter1.example.com
+                topology:
+                  computeCluster: /DC1/host/cluster1
+                  datacenter: DC1
+                  datastore: /DC1/datastore/ds1
+                  networks:
+                  - network1
+                  resourcePool: /DC1/host/cluster1/Resources
+                zone: zone1
+      updated: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        spec:
+          cloudConfig:
+            key: config
+            name: cloud-provider-config
+          platformSpec:
+            type: VSphere
+            vsphere:
+              failureDomains:
+              - name: fd1
+                region: region1
+                server: vcenter1.example.com
+                topology:
+                  computeCluster: /DC1/host/cluster1
+                  datacenter: DC1
+                  datastore: /DC1/datastore/ds1
+                  networks:
+                  - network1
+                  resourcePool: /DC1/host/cluster1/Resources
+                zone: zone1
+      expectedError: "vcenters is required once set"
+    - name: Should not be able to swap vcenters (same count, different servers)
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        spec:
+          cloudConfig:
+            key: config
+            name: cloud-provider-config
+          platformSpec:
+            type: VSphere
+            vsphere:
+              vcenters:
+              - datacenters:
+                - DC1
+                port: 443
+                server: vcenter1.example.com
+              - datacenters:
+                - DC2
+                port: 443
+                server: vcenter2.example.com
+              failureDomains:
+              - name: fd1
+                region: region1
+                server: vcenter1.example.com
+                topology:
+                  computeCluster: /DC1/host/cluster1
+                  datacenter: DC1
+                  datastore: /DC1/datastore/ds1
+                  networks:
+                  - network1
+                  resourcePool: /DC1/host/cluster1/Resources
+                zone: zone1
+      updated: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        spec:
+          cloudConfig:
+            key: config
+            name: cloud-provider-config
+          platformSpec:
+            type: VSphere
+            vsphere:
+              vcenters:
+              - datacenters:
+                - DC1
+                port: 443
+                server: vcenter1.example.com
+              - datacenters:
+                - DC3
+                port: 443
+                server: vcenter3.example.com
+              failureDomains:
+              - name: fd1
+                region: region1
+                server: vcenter1.example.com
+                topology:
+                  computeCluster: /DC1/host/cluster1
+                  datacenter: DC1
+                  datastore: /DC1/datastore/ds1
+                  networks:
+                  - network1
+                  resourcePool: /DC1/host/cluster1/Resources
+                zone: zone1
+      expectedError: "Cannot add and remove vCenters at the same time"
+    - name: Should not be able to add and remove vcenters when increasing count (2 to 3)
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        spec:
+          cloudConfig:
+            key: config
+            name: cloud-provider-config
+          platformSpec:
+            type: VSphere
+            vsphere:
+              vcenters:
+              - datacenters:
+                - DC1
+                port: 443
+                server: vcenter1.example.com
+              - datacenters:
+                - DC2
+                port: 443
+                server: vcenter2.example.com
+              failureDomains:
+              - name: fd1
+                region: region1
+                server: vcenter1.example.com
+                topology:
+                  computeCluster: /DC1/host/cluster1
+                  datacenter: DC1
+                  datastore: /DC1/datastore/ds1
+                  networks:
+                  - network1
+                  resourcePool: /DC1/host/cluster1/Resources
+                zone: zone1
+      updated: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        spec:
+          cloudConfig:
+            key: config
+            name: cloud-provider-config
+          platformSpec:
+            type: VSphere
+            vsphere:
+              vcenters:
+              - datacenters:
+                - DC1
+                port: 443
+                server: vcenter1.example.com
+              - datacenters:
+                - DC3
+                port: 443
+                server: vcenter3.example.com
+              - datacenters:
+                - DC4
+                port: 443
+                server: vcenter4.example.com
+              failureDomains:
+              - name: fd1
+                region: region1
+                server: vcenter1.example.com
+                topology:
+                  computeCluster: /DC1/host/cluster1
+                  datacenter: DC1
+                  datastore: /DC1/datastore/ds1
+                  networks:
+                  - network1
+                  resourcePool: /DC1/host/cluster1/Resources
+                zone: zone1
+      expectedError: "Cannot add and remove vCenters at the same time"
+    - name: Should not be able to add and remove vcenters when decreasing count (3 to 2)
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        spec:
+          cloudConfig:
+            key: config
+            name: cloud-provider-config
+          platformSpec:
+            type: VSphere
+            vsphere:
+              vcenters:
+              - datacenters:
+                - DC1
+                port: 443
+                server: vcenter1.example.com
+              - datacenters:
+                - DC2
+                port: 443
+                server: vcenter2.example.com
+              - datacenters:
+                - DC3
+                port: 443
+                server: vcenter3.example.com
+              failureDomains:
+              - name: fd1
+                region: region1
+                server: vcenter1.example.com
+                topology:
+                  computeCluster: /DC1/host/cluster1
+                  datacenter: DC1
+                  datastore: /DC1/datastore/ds1
+                  networks:
+                  - network1
+                  resourcePool: /DC1/host/cluster1/Resources
+                zone: zone1
+      updated: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        spec:
+          cloudConfig:
+            key: config
+            name: cloud-provider-config
+          platformSpec:
+            type: VSphere
+            vsphere:
+              vcenters:
+              - datacenters:
+                - DC1
+                port: 443
+                server: vcenter1.example.com
+              - datacenters:
+                - DC4
+                port: 443
+                server: vcenter4.example.com
+              failureDomains:
+              - name: fd1
+                region: region1
+                server: vcenter1.example.com
+                topology:
+                  computeCluster: /DC1/host/cluster1
+                  datacenter: DC1
+                  datastore: /DC1/datastore/ds1
+                  networks:
+                  - network1
+                  resourcePool: /DC1/host/cluster1/Resources
+                zone: zone1
+      expectedError: "Cannot add and remove vCenters at the same time"
+    - name: Should not be able to add a vcenter with duplicate server value
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        spec:
+          cloudConfig:
+            key: config
+            name: cloud-provider-config
+          platformSpec:
+            type: VSphere
+            vsphere:
+              vcenters:
+              - datacenters:
+                - DC1
+                port: 443
+                server: vcenter1.example.com
+              failureDomains:
+              - name: fd1
+                region: region1
+                server: vcenter1.example.com
+                topology:
+                  computeCluster: /DC1/host/cluster1
+                  datacenter: DC1
+                  datastore: /DC1/datastore/ds1
+                  networks:
+                  - network1
+                  resourcePool: /DC1/host/cluster1/Resources
+                zone: zone1
+      updated: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        spec:
+          cloudConfig:
+            key: config
+            name: cloud-provider-config
+          platformSpec:
+            type: VSphere
+            vsphere:
+              vcenters:
+              - datacenters:
+                - DC1
+                port: 443
+                server: vcenter1.example.com
+              - datacenters:
+                - DC2
+                port: 443
+                server: vcenter1.example.com
+              failureDomains:
+              - name: fd1
+                region: region1
+                server: vcenter1.example.com
+                topology:
+                  computeCluster: /DC1/host/cluster1
+                  datacenter: DC1
+                  datastore: /DC1/datastore/ds1
+                  networks:
+                  - network1
+                  resourcePool: /DC1/host/cluster1/Resources
+                zone: zone1
+      expectedError: "vcenters must have unique server values"

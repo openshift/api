@@ -241,6 +241,9 @@
                         "name": "GCPDualStackInstall"
                     },
                     {
+                        "name": "GCPKMSEncryptionInstall"
+                    },
+                    {
                         "name": "GatewayAPIWithoutOLM"
                     },
                     {

@@ -159,6 +159,9 @@
                         "name": "GCPDualStackInstall"
                     },
                     {
+                        "name": "GCPSovereignCloudInstall"
+                    },
+                    {
                         "name": "HyperShiftOnlyDynamicResourceAllocation"
                     },
                     {

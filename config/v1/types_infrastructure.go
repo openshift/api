@@ -107,6 +107,7 @@ type InfrastructureStatus struct {
 	// +kubebuilder:default=HighlyAvailable
 	// +openshift:validation:FeatureGateAwareEnum:featureGate="",enum=HighlyAvailable;HighlyAvailableArbiter;SingleReplica;External
 	// +openshift:validation:FeatureGateAwareEnum:featureGate=DualReplica,enum=HighlyAvailable;HighlyAvailableArbiter;SingleReplica;DualReplica;External
+	// +openshift:validation:FeatureGateAwareEnum:featureGate=AdaptableTopology,enum=HighlyAvailable;HighlyAvailableArbiter;SingleReplica;DualReplica;Adaptable;External
 	// +optional
 	ControlPlaneTopology TopologyMode `json:"controlPlaneTopology"`
 
@@ -119,6 +120,7 @@ type InfrastructureStatus struct {
 	// NOTE: External topology mode is not applicable for this field.
 	// +kubebuilder:default=HighlyAvailable
 	// +kubebuilder:validation:Enum=HighlyAvailable;SingleReplica
+	// +openshift:validation:FeatureGateAwareEnum:featureGate=AdaptableTopology,enum=HighlyAvailable;SingleReplica;Adaptable
 	// +optional
 	InfrastructureTopology TopologyMode `json:"infrastructureTopology,omitempty"`
 
@@ -159,6 +161,10 @@ const (
 	// that any of the control plane components such as kubernetes API server or etcd are visible within
 	// the cluster.
 	ExternalTopologyMode TopologyMode = "External"
+
+	// "Adaptable" is for clusters that dynamically adjust control-plane and
+	// infrastructure behavior based on current node count.
+	AdaptableTopologyMode TopologyMode = "Adaptable"
 )
 
 // CPUPartitioningMode defines the mode for CPU partitioning

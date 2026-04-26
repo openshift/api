@@ -12,6 +12,126 @@ tests:
         apiVersion: config.openshift.io/v1
         kind: Image
         spec: {}
+    - name: Should not allow creating an Image with a tagged registry entry in blockedRegistries
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: Image
+        spec:
+          registrySources:
+            blockedRegistries: ["registry.io/myrepo:latest"]
+      expectedError: "spec.registrySources.blockedRegistries[0]"
+    - name: Should not allow creating an Image with a tagged registry entry in allowedRegistries
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: Image
+        spec:
+          registrySources:
+            allowedRegistries: ["registry.io/myrepo:latest"]
+      expectedError: "spec.registrySources.allowedRegistries[0]"
+    - name: Should not allow creating an Image with a tagged registry entry in insecureRegistries
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: Image
+        spec:
+          registrySources:
+            insecureRegistries: ["registry.io/myrepo:latest"]
+      expectedError: "spec.registrySources.insecureRegistries[0]"
+    - name: Should not allow creating an Image with a digest registry entry in blockedRegistries
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: Image
+        spec:
+          registrySources:
+            blockedRegistries: ["registry.io/myrepo@sha256:abc123"]
+      expectedError: "spec.registrySources.blockedRegistries[0]"
+    - name: Should not allow creating an Image with a digest registry entry in allowedRegistries
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: Image
+        spec:
+          registrySources:
+            allowedRegistries: ["registry.io/myrepo@sha256:abc123"]
+      expectedError: "spec.registrySources.allowedRegistries[0]"
+    - name: Should not allow creating an Image with a digest registry entry in insecureRegistries
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: Image
+        spec:
+          registrySources:
+            insecureRegistries: ["registry.io/myrepo@sha256:abc123"]
+      expectedError: "spec.registrySources.insecureRegistries[0]"
+    - name: Should not allow creating an Image with an empty string in blockedRegistries
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: Image
+        spec:
+          registrySources:
+            blockedRegistries: [""]
+      expectedError: "spec.registrySources.blockedRegistries[0]"
+    - name: Should not allow creating an Image with an empty string in allowedRegistries
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: Image
+        spec:
+          registrySources:
+            allowedRegistries: [""]
+      expectedError: "spec.registrySources.allowedRegistries[0]"
+    - name: Should not allow creating an Image with an empty string in insecureRegistries
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: Image
+        spec:
+          registrySources:
+            insecureRegistries: [""]
+      expectedError: "spec.registrySources.insecureRegistries[0]"
+    - name: Should allow creating an Image with valid registry entries in blockedRegistries and insecureRegistries
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: Image
+        spec:
+          registrySources:
+            blockedRegistries:
+              - "registry.io"
+              - "registry.io/myrepo"
+              - "*.example.com"
+              - "localhost:5000/repo"
+            insecureRegistries:
+              - "insecure.registry.io"
+              - "*.insecure.example.com"
+      expected: |
+        apiVersion: config.openshift.io/v1
+        kind: Image
+        spec:
+          registrySources:
+            blockedRegistries:
+              - "registry.io"
+              - "registry.io/myrepo"
+              - "*.example.com"
+              - "localhost:5000/repo"
+            insecureRegistries:
+              - "insecure.registry.io"
+              - "*.insecure.example.com"
+    - name: Should allow creating an Image with valid registry entries in allowedRegistries
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: Image
+        spec:
+          registrySources:
+            allowedRegistries:
+              - "registry.io"
+              - "registry.io/myrepo"
+              - "*.example.com"
+              - "localhost:5000/repo"
+      expected: |
+        apiVersion: config.openshift.io/v1
+        kind: Image
+        spec:
+          registrySources:
+            allowedRegistries:
+              - "registry.io"
+              - "registry.io/myrepo"
+              - "*.example.com"
+              - "localhost:5000/repo"
   onUpdate:
     - name: Should allow updating other fields with an invalid persisted registrySources in spec
       initialCRDPatches:
@@ -114,3 +234,187 @@ tests:
             allowedRegistries: ["test"]
             blockedRegistries: ["test"]
       expectedError: 'Only one of blockedRegistries or allowedRegistries may be set'
+    - name: Should allow updating other fields when an invalid tagged blockedRegistries entry is persisted
+      initialCRDPatches:
+        - op: remove
+          path: /spec/versions/0/schema/openAPIV3Schema/properties/spec/properties/registrySources/properties/blockedRegistries/items/x-kubernetes-validations
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: Image
+        spec:
+          registrySources:
+            blockedRegistries: ["registry.io/myrepo:latest"]
+      updated: |
+        apiVersion: config.openshift.io/v1
+        kind: Image
+        spec:
+          externalRegistryHostnames: ["registry.example.com"]
+          registrySources:
+            blockedRegistries: ["registry.io/myrepo:latest"]
+      expected: |
+        apiVersion: config.openshift.io/v1
+        kind: Image
+        spec:
+          externalRegistryHostnames: ["registry.example.com"]
+          registrySources:
+            blockedRegistries: ["registry.io/myrepo:latest"]
+    - name: Should allow updating other fields when an invalid tagged allowedRegistries entry is persisted
+      initialCRDPatches:
+        - op: remove
+          path: /spec/versions/0/schema/openAPIV3Schema/properties/spec/properties/registrySources/properties/allowedRegistries/items/x-kubernetes-validations
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: Image
+        spec:
+          registrySources:
+            allowedRegistries: ["registry.io/myrepo:latest"]
+      updated: |
+        apiVersion: config.openshift.io/v1
+        kind: Image
+        spec:
+          externalRegistryHostnames: ["registry.example.com"]
+          registrySources:
+            allowedRegistries: ["registry.io/myrepo:latest"]
+      expected: |
+        apiVersion: config.openshift.io/v1
+        kind: Image
+        spec:
+          externalRegistryHostnames: ["registry.example.com"]
+          registrySources:
+            allowedRegistries: ["registry.io/myrepo:latest"]
+    - name: Should allow updating other fields when an invalid tagged insecureRegistries entry is persisted
+      initialCRDPatches:
+        - op: remove
+          path: /spec/versions/0/schema/openAPIV3Schema/properties/spec/properties/registrySources/properties/insecureRegistries/items/x-kubernetes-validations
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: Image
+        spec:
+          registrySources:
+            insecureRegistries: ["registry.io/myrepo:latest"]
+      updated: |
+        apiVersion: config.openshift.io/v1
+        kind: Image
+        spec:
+          externalRegistryHostnames: ["registry.example.com"]
+          registrySources:
+            insecureRegistries: ["registry.io/myrepo:latest"]
+      expected: |
+        apiVersion: config.openshift.io/v1
+        kind: Image
+        spec:
+          externalRegistryHostnames: ["registry.example.com"]
+          registrySources:
+            insecureRegistries: ["registry.io/myrepo:latest"]
+    - name: Should not allow adding a new invalid tagged entry to blockedRegistries even when an invalid entry is already persisted
+      initialCRDPatches:
+        - op: remove
+          path: /spec/versions/0/schema/openAPIV3Schema/properties/spec/properties/registrySources/properties/blockedRegistries/items/x-kubernetes-validations
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: Image
+        spec:
+          registrySources:
+            blockedRegistries: ["registry.io/myrepo:latest"]
+      updated: |
+        apiVersion: config.openshift.io/v1
+        kind: Image
+        spec:
+          registrySources:
+            blockedRegistries: ["registry.io/myrepo:latest", "other.com/repo:v1"]
+      expectedError: "spec.registrySources.blockedRegistries"
+    - name: Should not allow appending to blockedRegistries when an invalid entry is already persisted because listType atomic re-validates the whole list
+      initialCRDPatches:
+        - op: remove
+          path: /spec/versions/0/schema/openAPIV3Schema/properties/spec/properties/registrySources/properties/blockedRegistries/items/x-kubernetes-validations
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: Image
+        spec:
+          registrySources:
+            blockedRegistries: ["registry.io/myrepo:latest"]
+      updated: |
+        apiVersion: config.openshift.io/v1
+        kind: Image
+        spec:
+          registrySources:
+            blockedRegistries: ["registry.io/myrepo:latest", "valid.registry.io"]
+      expectedError: "spec.registrySources.blockedRegistries"
+    - name: Should allow updating other fields when an empty string is persisted in blockedRegistries
+      initialCRDPatches:
+        - op: remove
+          path: /spec/versions/0/schema/openAPIV3Schema/properties/spec/properties/registrySources/properties/blockedRegistries/items/minLength
+        - op: remove
+          path: /spec/versions/0/schema/openAPIV3Schema/properties/spec/properties/registrySources/properties/blockedRegistries/items/x-kubernetes-validations
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: Image
+        spec:
+          registrySources:
+            blockedRegistries: [""]
+      updated: |
+        apiVersion: config.openshift.io/v1
+        kind: Image
+        spec:
+          externalRegistryHostnames: ["registry.example.com"]
+          registrySources:
+            blockedRegistries: [""]
+      expected: |
+        apiVersion: config.openshift.io/v1
+        kind: Image
+        spec:
+          externalRegistryHostnames: ["registry.example.com"]
+          registrySources:
+            blockedRegistries: [""]
+    - name: Should allow updating other fields when an empty string is persisted in allowedRegistries
+      initialCRDPatches:
+        - op: remove
+          path: /spec/versions/0/schema/openAPIV3Schema/properties/spec/properties/registrySources/properties/allowedRegistries/items/minLength
+        - op: remove
+          path: /spec/versions/0/schema/openAPIV3Schema/properties/spec/properties/registrySources/properties/allowedRegistries/items/x-kubernetes-validations
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: Image
+        spec:
+          registrySources:
+            allowedRegistries: [""]
+      updated: |
+        apiVersion: config.openshift.io/v1
+        kind: Image
+        spec:
+          externalRegistryHostnames: ["registry.example.com"]
+          registrySources:
+            allowedRegistries: [""]
+      expected: |
+        apiVersion: config.openshift.io/v1
+        kind: Image
+        spec:
+          externalRegistryHostnames: ["registry.example.com"]
+          registrySources:
+            allowedRegistries: [""]
+    - name: Should allow updating other fields when an empty string is persisted in insecureRegistries
+      initialCRDPatches:
+        - op: remove
+          path: /spec/versions/0/schema/openAPIV3Schema/properties/spec/properties/registrySources/properties/insecureRegistries/items/minLength
+        - op: remove
+          path: /spec/versions/0/schema/openAPIV3Schema/properties/spec/properties/registrySources/properties/insecureRegistries/items/x-kubernetes-validations
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: Image
+        spec:
+          registrySources:
+            insecureRegistries: [""]
+      updated: |
+        apiVersion: config.openshift.io/v1
+        kind: Image
+        spec:
+          externalRegistryHostnames: ["registry.example.com"]
+          registrySources:
+            insecureRegistries: [""]
+      expected: |
+        apiVersion: config.openshift.io/v1
+        kind: Image
+        spec:
+          externalRegistryHostnames: ["registry.example.com"]
+          registrySources:
+            insecureRegistries: [""]

@@ -1373,9 +1373,6 @@ spec:
                           The 'SingleReplica' mode will be used in single-node deployments
                           and the operators should not configure the operand for highly-available operation
                           NOTE: External topology mode is not applicable for this field.
-                        enum:
-                        - HighlyAvailable
-                        - SingleReplica
                         type: string
                       platform:
                         description: |-

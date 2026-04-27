@@ -6,6 +6,7 @@ metadata:
     api.openshift.io/filename-cvo-runlevel: "0000_10"
     api.openshift.io/filename-operator: config-operator
     api.openshift.io/filename-ordering: "01"
+    feature-gate.release.openshift.io/AdaptableTopology: "true"
     feature-gate.release.openshift.io/DualReplica: "true"
     release.openshift.io/bootstrap-required: "true"
   name: infrastructures.config.openshift.io
@@ -1043,6 +1044,7 @@ spec:
                 - HighlyAvailableArbiter
                 - SingleReplica
                 - DualReplica
+                - Adaptable
                 - External
                 type: string
               cpuPartitioning:
@@ -1081,6 +1083,10 @@ spec:
                   The 'SingleReplica' mode will be used in single-node deployments
                   and the operators should not configure the operand for highly-available operation
                   NOTE: External topology mode is not applicable for this field.
+                enum:
+                - HighlyAvailable
+                - SingleReplica
+                - Adaptable
                 type: string
               platform:
                 description: |-

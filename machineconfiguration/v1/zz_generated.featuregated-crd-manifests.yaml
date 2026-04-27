@@ -36,6 +36,7 @@ controllerconfigs.machineconfiguration.openshift.io:
   - AzureClusterHostedDNSInstall
   - AzureDualStackInstall
   - DualReplica
+  - DualReplica+AdaptableTopology
   - DyanmicServiceEndpointIBMCloud
   - NutanixMultiSubnets
   - OnPremDNSRecords

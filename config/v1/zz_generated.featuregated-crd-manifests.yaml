@@ -373,6 +373,7 @@ infrastructures.config.openshift.io:
   - AzureClusterHostedDNSInstall
   - AzureDualStackInstall
   - DualReplica
+  - DualReplica+AdaptableTopology
   - DyanmicServiceEndpointIBMCloud
   - NutanixMultiSubnets
   - OnPremDNSRecords

@@ -108,6 +108,7 @@ type InfrastructureStatus struct {
 	// +openshift:validation:FeatureGateAwareEnum:featureGate="",enum=HighlyAvailable;HighlyAvailableArbiter;SingleReplica;External
 	// +openshift:validation:FeatureGateAwareEnum:featureGate=DualReplica,enum=HighlyAvailable;HighlyAvailableArbiter;SingleReplica;DualReplica;External
 	// +openshift:validation:FeatureGateAwareEnum:featureGate=AdaptableTopology,enum=HighlyAvailable;HighlyAvailableArbiter;SingleReplica;DualReplica;Adaptable;External
+	// +openshift:validation:FeatureGateAwareEnum:requiredFeatureGate=DualReplica;AdaptableTopology,enum=HighlyAvailable;HighlyAvailableArbiter;SingleReplica;DualReplica;Adaptable;External
 	// +optional
 	ControlPlaneTopology TopologyMode `json:"controlPlaneTopology"`
 
@@ -119,7 +120,7 @@ type InfrastructureStatus struct {
 	// and the operators should not configure the operand for highly-available operation
 	// NOTE: External topology mode is not applicable for this field.
 	// +kubebuilder:default=HighlyAvailable
-	// +kubebuilder:validation:Enum=HighlyAvailable;SingleReplica
+	// +openshift:validation:FeatureGateAwareEnum:featureGate="",enum=HighlyAvailable;SingleReplica
 	// +openshift:validation:FeatureGateAwareEnum:featureGate=AdaptableTopology,enum=HighlyAvailable;SingleReplica;Adaptable
 	// +optional
 	InfrastructureTopology TopologyMode `json:"infrastructureTopology,omitempty"`

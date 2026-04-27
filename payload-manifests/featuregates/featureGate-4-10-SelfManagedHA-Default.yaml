@@ -290,9 +290,6 @@
                         "name": "BuildCSIVolumes"
                     },
                     {
-                        "name": "ConsolePluginContentSecurityPolicy"
-                    },
-                    {
                         "name": "DualReplica"
                     },
                     {

@@ -75,14 +75,6 @@ func AllFeatureSets() map[uint64]map[ClusterProfileName]map[configv1.FeatureSet]
 var (
 	allFeatureGates = map[configv1.FeatureGateName][]featureGateStatus{}
 
-	FeatureGateConsolePluginCSP = newFeatureGate("ConsolePluginContentSecurityPolicy").
-					reportProblemsToJiraComponent("Management Console").
-					contactPerson("jhadvig").
-					productScope(ocpSpecific).
-					enable(inDefault(), inOKD(), inTechPreviewNoUpgrade(), inDevPreviewNoUpgrade()).
-					enhancementPR("https://github.com/openshift/enhancements/pull/1706").
-					mustRegister()
-
 	FeatureGateServiceAccountTokenNodeBinding = newFeatureGate("ServiceAccountTokenNodeBinding").
 							reportProblemsToJiraComponent("apiserver-auth").
 							contactPerson("ibihim").
@@ -987,11 +979,11 @@ var (
 				enable(inDevPreviewNoUpgrade(), inTechPreviewNoUpgrade()).
 				mustRegister()
 
-        FeatureGateConfidentialCluster = newFeatureGate("ConfidentialCluster").
-                                        reportProblemsToJiraComponent("ConfidentialClusters").
-                                        contactPerson("fjin").
-                                        productScope(ocpSpecific).
-                                        enhancementPR("https://github.com/openshift/enhancements/pull/1962").
-                                        enable(inDevPreviewNoUpgrade()).
-                                        mustRegister()
+	FeatureGateConfidentialCluster = newFeatureGate("ConfidentialCluster").
+					reportProblemsToJiraComponent("ConfidentialClusters").
+					contactPerson("fjin").
+					productScope(ocpSpecific).
+					enhancementPR("https://github.com/openshift/enhancements/pull/1962").
+					enable(inDevPreviewNoUpgrade()).
+					mustRegister()
 )

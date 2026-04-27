@@ -3,6 +3,7 @@ name: "AWSDualStackInstall ControllerConfig"
 crdName: controllerconfigs.machineconfiguration.openshift.io
 featureGates:
 - AWSDualStackInstall
+- -AWSClusterHostedDNSInstall
 tests:
   onCreate:
     - name: Should be able to create a minimal ControllerConfig
@@ -93,8 +94,6 @@ tests:
                 aws:
                   region: us-east-1
                   ipFamily: IPv4
-                  cloudLoadBalancerConfig:
-                    dnsType: PlatformDefault
           ipFamilies: IPv4
           kubeAPIServerServingCAData: Y2VydGlmaWNhdGUK
           network: null
@@ -219,8 +218,6 @@ tests:
                 aws:
                   region: us-east-1
                   ipFamily: DualStackIPv6Primary
-                  cloudLoadBalancerConfig:
-                    dnsType: PlatformDefault
           ipFamilies: IPv4
           kubeAPIServerServingCAData: Y2VydGlmaWNhdGUK
           network: null

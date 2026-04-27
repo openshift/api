@@ -5,7 +5,26 @@ source "$(dirname "${BASH_SOURCE}")/lib/init.sh"
 crd_globs="\
     apiextensions/v1alpha1/zz_generated.crd-manifests/*_crd-compatibility-checker_*.crd*yaml\
     authorization/v1/zz_generated.crd-manifests/*_config-operator_*.crd*yaml\
-    config/v1/zz_generated.crd-manifests/*_config-operator_*.crd*yaml\
+    config/v1/zz_generated.crd-manifests/*_config-operator_01_apiservers*.crd.yaml\
+    config/v1/zz_generated.crd-manifests/*_config-operator_01_authentications*.crd.yaml\
+    config/v1/zz_generated.crd-manifests/*_config-operator_01_clusterimagepolicies*.crd.yaml\
+    config/v1/zz_generated.crd-manifests/*_config-operator_01_consoles*.crd.yaml\
+    config/v1/zz_generated.crd-manifests/*_config-operator_01_dnses*.crd.yaml\
+    config/v1/zz_generated.crd-manifests/*_config-operator_01_featuregates*.crd.yaml\
+    config/v1/zz_generated.crd-manifests/*_config-operator_01_imagecontentpolicies*.crd.yaml\
+    config/v1/zz_generated.crd-manifests/*_config-operator_01_imagedigestmirrorsets*.crd.yaml\
+    config/v1/zz_generated.crd-manifests/*_config-operator_01_imagepolicies*.crd.yaml\
+    config/v1/zz_generated.crd-manifests/*_config-operator_01_images*.crd.yaml\
+    config/v1/zz_generated.crd-manifests/*_config-operator_01_imagetagmirrorsets*.crd.yaml\
+    config/v1/zz_generated.crd-manifests/*_config-operator_01_infrastructures*.crd.yaml\
+    config/v1/zz_generated.crd-manifests/*_config-operator_01_ingresses*.crd.yaml\
+    config/v1/zz_generated.crd-manifests/*_config-operator_01_insightsdatagathers*.crd.yaml\
+    config/v1/zz_generated.crd-manifests/*_config-operator_01_networks*.crd.yaml\
+    config/v1/zz_generated.crd-manifests/*_config-operator_01_nodes*.crd.yaml\
+    config/v1/zz_generated.crd-manifests/*_config-operator_01_oauths*.crd.yaml\
+    config/v1/zz_generated.crd-manifests/*_config-operator_01_projects*.crd.yaml\
+    config/v1/zz_generated.crd-manifests/*_config-operator_01_proxies*.crd.yaml\
+    config/v1/zz_generated.crd-manifests/*_config-operator_01_schedulers*.crd.yaml\
     machine/v1/zz_generated.crd-manifests/*.crd*yaml\
     operator/v1/zz_generated.crd-manifests//*_config-operator_*.crd*yaml\
     operator/v1alpha1/zz_generated.crd-manifests//*_config-operator_*.crd*yaml\

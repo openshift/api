@@ -30,6 +30,9 @@
                         "name": "AWSEuropeanSovereignCloudInstall"
                     },
                     {
+                        "name": "AdaptableTopology"
+                    },
+                    {
                         "name": "AdditionalStorageConfig"
                     },
                     {

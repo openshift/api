@@ -58,6 +58,9 @@
                         "name": "AWSServiceLBNetworkSecurityGroup"
                     },
                     {
+                        "name": "AdaptableTopology"
+                    },
+                    {
                         "name": "AdditionalStorageConfig"
                     },
                     {

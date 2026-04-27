@@ -1,0 +1,81 @@
+apiVersion: apiextensions.k8s.io/v1 # Hack because controller-gen complains if we don't have this
+name: "Infrastructure"
+crdName: infrastructures.config.openshift.io
+featureGates:
+- AdaptableTopology
+tests:
+  onCreate:
+    - name: Should be able to create a minimal Infrastructure
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        spec: {} # No spec is required for a Infrastructure
+      expected: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        spec: {}
+  onUpdate:
+    - name: status should allow controlPlaneTopology value for `Adaptable` on platform None
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        spec:
+          platformSpec:
+            type: None
+      updated: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        spec:
+          platformSpec:
+            type: None
+        status:
+          controlPlaneTopology: Adaptable
+          infrastructureTopology: HighlyAvailable
+          platform: None
+          platformStatus:
+            type: None
+      expected: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        spec:
+          platformSpec:
+            type: None
+        status:
+          controlPlaneTopology: Adaptable
+          cpuPartitioning: None
+          infrastructureTopology: HighlyAvailable
+          platform: None
+          platformStatus:
+            type: None
+    - name: status should allow infrastructureTopology value for `Adaptable` on platform None
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        spec:
+          platformSpec:
+            type: None
+      updated: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        spec:
+          platformSpec:
+            type: None
+        status:
+          controlPlaneTopology: HighlyAvailable
+          infrastructureTopology: Adaptable
+          platform: None
+          platformStatus:
+            type: None
+      expected: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        spec:
+          platformSpec:
+            type: None
+        status:
+          controlPlaneTopology: HighlyAvailable
+          cpuPartitioning: None
+          infrastructureTopology: Adaptable
+          platform: None
+          platformStatus:
+            type: None

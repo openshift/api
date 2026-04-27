@@ -6,7 +6,7 @@ metadata:
     api.openshift.io/filename-cvo-runlevel: "0000_80"
     api.openshift.io/filename-operator: machine-config
     api.openshift.io/filename-ordering: "01"
-    feature-gate.release.openshift.io/AWSDualStackInstall: "true"
+    feature-gate.release.openshift.io/AdaptableTopology: "true"
   labels:
     openshift.io/operator-managed: ""
   name: controllerconfigs.machineconfiguration.openshift.io
@@ -1335,6 +1335,13 @@ spec:
                           its components are not visible within the cluster.
                           The 'HighlyAvailableArbiter' mode indicates that the control plane will consist of 2 control-plane nodes
                           that run conventional services and 1 smaller sized arbiter node that runs a bare minimum of services to maintain quorum.
+                        enum:
+                        - HighlyAvailable
+                        - HighlyAvailableArbiter
+                        - SingleReplica
+                        - DualReplica
+                        - Adaptable
+                        - External
                         type: string
                       cpuPartitioning:
                         default: None
@@ -1372,6 +1379,10 @@ spec:
                           The 'SingleReplica' mode will be used in single-node deployments
                           and the operators should not configure the operand for highly-available operation
                           NOTE: External topology mode is not applicable for this field.
+                        enum:
+                        - HighlyAvailable
+                        - SingleReplica
+                        - Adaptable
                         type: string
                       platform:
                         description: |-
@@ -1450,21 +1461,6 @@ spec:
                             description: aws contains settings specific to the Amazon
                               Web Services infrastructure provider.
                             properties:
-                              ipFamily:
-                                default: IPv4
-                                description: |-
-                                  ipFamily specifies the IP protocol family that should be used for AWS
-                                  network resources. This controls whether AWS resources are created with
-                                  IPv4-only, or dual-stack networking with IPv4 or IPv6 as the primary
-                                  protocol family.
-                                enum:
-                                - IPv4
-                                - DualStackIPv6Primary
-                                - DualStackIPv4Primary
-                                type: string
-                                x-kubernetes-validations:
-                                - message: ipFamily is immutable once set
-                                  rule: oldSelf == '' || self == oldSelf
                               region:
                                 description: region holds the default AWS region for
                                   new AWS resources created by the cluster.

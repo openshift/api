@@ -32,9 +32,11 @@ controllerconfigs.machineconfiguration.openshift.io:
   - AWSClusterHostedDNSInstall
   - AWSDualStackInstall
   - AWSEuropeanSovereignCloudInstall
+  - AdaptableTopology
   - AzureClusterHostedDNSInstall
   - AzureDualStackInstall
   - DualReplica
+  - DualReplica+AdaptableTopology
   - DyanmicServiceEndpointIBMCloud
   - NutanixMultiSubnets
   - OnPremDNSRecords

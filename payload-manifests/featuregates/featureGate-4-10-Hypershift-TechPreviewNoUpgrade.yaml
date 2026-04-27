@@ -17,6 +17,9 @@
             {
                 "disabled": [
                     {
+                        "name": "AdaptableTopology"
+                    },
+                    {
                         "name": "ClientsAllowCBOR"
                     },
                     {

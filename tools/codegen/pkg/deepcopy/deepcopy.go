@@ -40,7 +40,6 @@ func generateDeepcopyFunctions(p *parser.Parser, universe types.Universe, path, 
 	}
 
 	args := &args.Args{
-		BoundingDirs: []string{packagePath},
 		GoHeaderFile: headerFilePath,
 		OutputFile:   outputBaseFileName,
 	}

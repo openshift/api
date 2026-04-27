@@ -1495,13 +1495,35 @@ type AccessLogging struct {
 	// +required
 	Destination LoggingDestination `json:"destination"`
 
+	// tcpLogFormat specifies the format of the log message for a TCP
+	// connection.
+	//
+	// If this field is empty, log messages use the implementation's default
+	// TCP log format.  When set, the value must be between 1 and 1024
+	// characters long.For HAProxy's default TCP log format, see the
+	// HAProxy documentation:
+	// http://docs.haproxy.org/2.8/configuration.html#8.2.2
+	//
+	// Note that this log message is used for the initial TCP connection
+	// associated with a TLS session.  Note that for edge-terminated and
+	// reencrypt routes, you may see a second log message for the HTTP
+	// request in addition to the log message for the TCP connection.  Use
+	// the httpsLogFormat option to customize the log format for the HTTPS
+	// request.
+	//
+	// +kubebuilder:validation:MinLength=1
+	// +kubebuilder:validation:MaxLength=1024
+	// +openshift:enable:FeatureGate=IngressControllerHTTPSLogFormat
+	// +optional
+	TcpLogFormat string `json:"tcpLogFormat,omitempty"`
+
 	// httpLogFormat specifies the format of the log message for an HTTP
 	// request.
 	//
 	// If this field is empty, log messages use the implementation's default
 	// HTTP log format.  For HAProxy's default HTTP log format, see the
 	// HAProxy documentation:
-	// http://cbonte.github.io/haproxy-dconv/2.0/configuration.html#8.2.3
+	// http://docs.haproxy.org/2.8/configuration.html#8.2.3
 	//
 	// Note that this format only applies to cleartext HTTP connections
 	// and to secure HTTP connections for which the ingress controller
@@ -1511,6 +1533,26 @@ type AccessLogging struct {
 	//
 	// +optional
 	HttpLogFormat string `json:"httpLogFormat,omitempty"`
+
+	// httpsLogFormat specifies the format of the log message for an HTTPS
+	// request.
+	//
+	// If this field is empty, log messages use the implementation's default
+	// HTTPS log format.  When set, the value must be between 1 and 1024
+	// characters long.For HAProxy's default HTTPS log format, see the
+	// HAProxy documentation:
+	// http://docs.haproxy.org/2.8/configuration.html#8.2.4
+	//
+	// Note that this format only applies to HTTPS connections for which the
+	// ingress controller terminates encryption (that is, edge-terminated or
+	// reencrypt connections).  It does not affect the log format for TLS
+	// passthrough connections.
+	//
+	// +kubebuilder:validation:MinLength=1
+	// +kubebuilder:validation:MaxLength=1024
+	// +openshift:enable:FeatureGate=IngressControllerHTTPSLogFormat
+	// +optional
+	HttpsLogFormat string `json:"httpsLogFormat,omitempty"`
 
 	// httpCaptureHeaders defines HTTP headers that should be captured in
 	// access logs.  If this field is empty, no headers are captured.

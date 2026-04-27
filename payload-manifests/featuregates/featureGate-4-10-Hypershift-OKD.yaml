@@ -170,6 +170,9 @@
                         "name": "IngressControllerDynamicConfigurationManager"
                     },
                     {
+                        "name": "IngressControllerHTTPSLogFormat"
+                    },
+                    {
                         "name": "IrreconcilableMachineConfig"
                     },
                     {

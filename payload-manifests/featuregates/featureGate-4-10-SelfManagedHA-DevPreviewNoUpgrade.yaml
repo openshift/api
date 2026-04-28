@@ -229,9 +229,6 @@
                         "name": "KMSEncryption"
                     },
                     {
-                        "name": "KMSEncryptionProvider"
-                    },
-                    {
                         "name": "KMSv1"
                     },
                     {

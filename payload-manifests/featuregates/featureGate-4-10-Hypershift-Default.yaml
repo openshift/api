@@ -174,9 +174,6 @@
                         "name": "KMSEncryption"
                     },
                     {
-                        "name": "KMSEncryptionProvider"
-                    },
-                    {
                         "name": "MachineAPIMigration"
                     },
                     {

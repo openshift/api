@@ -26,42 +26,6 @@ tests:
               - path: /mnt/nydus-store
               - path: /opt/layer_store-v1.0
 
-    - name: Should be able to create ContainerRuntimeConfig with additionalLayerStores using :ref suffix for stargz-store
-      initial: |
-        apiVersion: machineconfiguration.openshift.io/v1
-        kind: ContainerRuntimeConfig
-        spec:
-          containerRuntimeConfig:
-            additionalLayerStores:
-              - path: /var/lib/stargz-store/store:ref
-      expected: |
-        apiVersion: machineconfiguration.openshift.io/v1
-        kind: ContainerRuntimeConfig
-        spec:
-          containerRuntimeConfig:
-            additionalLayerStores:
-              - path: /var/lib/stargz-store/store:ref
-
-    - name: Should be able to create ContainerRuntimeConfig with mixed additionalLayerStores paths (with and without :ref)
-      initial: |
-        apiVersion: machineconfiguration.openshift.io/v1
-        kind: ContainerRuntimeConfig
-        spec:
-          containerRuntimeConfig:
-            additionalLayerStores:
-              - path: /var/lib/stargz-store/store:ref
-              - path: /mnt/nydus-store
-              - path: /opt/layer-store:ref
-      expected: |
-        apiVersion: machineconfiguration.openshift.io/v1
-        kind: ContainerRuntimeConfig
-        spec:
-          containerRuntimeConfig:
-            additionalLayerStores:
-              - path: /var/lib/stargz-store/store:ref
-              - path: /mnt/nydus-store
-              - path: /opt/layer-store:ref
-
     - name: Should fail if additionalLayerStores path is empty
       initial: |
         apiVersion: machineconfiguration.openshift.io/v1
@@ -80,7 +44,7 @@ tests:
           containerRuntimeConfig:
             additionalLayerStores:
               - path: var/lib/stargz-store
-      expectedError: "path must be absolute and contain only alphanumeric characters, '/', '.', '_', '-', and optionally end with ':ref'"
+      expectedError: "path must be absolute and contain only alphanumeric characters, '/', '.', '_', and '-'"
 
     - name: Should fail if additionalLayerStores path contains spaces
       initial: |
@@ -90,7 +54,7 @@ tests:
           containerRuntimeConfig:
             additionalLayerStores:
               - path: /var/lib/stargz store
-      expectedError: "path must be absolute and contain only alphanumeric characters, '/', '.', '_', '-', and optionally end with ':ref'"
+      expectedError: "path must be absolute and contain only alphanumeric characters, '/', '.', '_', and '-'"
 
     - name: Should fail if additionalLayerStores path contains invalid characters
       initial: |
@@ -100,17 +64,7 @@ tests:
           containerRuntimeConfig:
             additionalLayerStores:
               - path: /var/lib/stargz@store
-      expectedError: "path must be absolute and contain only alphanumeric characters, '/', '.', '_', '-', and optionally end with ':ref'"
-
-    - name: Should fail if additionalLayerStores path contains colon with suffix other than :ref
-      initial: |
-        apiVersion: machineconfiguration.openshift.io/v1
-        kind: ContainerRuntimeConfig
-        spec:
-          containerRuntimeConfig:
-            additionalLayerStores:
-              - path: /var/lib/stargz-store:other
-      expectedError: "path must be absolute and contain only alphanumeric characters, '/', '.', '_', '-', and optionally end with ':ref'"
+      expectedError: "path must be absolute and contain only alphanumeric characters, '/', '.', '_', and '-'"
 
     - name: Should fail if additionalLayerStores path is too long
       initial: |

@@ -31,6 +31,7 @@ authentications.config.openshift.io:
   Category: ""
   FeatureGates:
   - ExternalOIDC
+  - ExternalOIDCExternalClaimsSourcing
   - ExternalOIDCWithUIDAndExtraClaimMappings
   - ExternalOIDCWithUpstreamParity
   FilenameOperatorName: config-operator

@@ -86,6 +86,9 @@
                         "name": "NoRegistryClusterInstall"
                     },
                     {
+                        "name": "OLMLifecycleAndCompatibility"
+                    },
+                    {
                         "name": "ProvisioningRequestAvailable"
                     },
                     {

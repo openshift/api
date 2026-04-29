@@ -243,6 +243,9 @@
                         "name": "NutanixMultiSubnets"
                     },
                     {
+                        "name": "OLMLifecycleAndCompatibility"
+                    },
+                    {
                         "name": "OSStreams"
                     },
                     {

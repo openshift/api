@@ -7,7 +7,6 @@ apiservers.config.openshift.io:
   Category: ""
   FeatureGates:
   - KMSEncryption
-  - KMSEncryptionProvider
   - TLSAdherence
   - TLSGroupPreferences
   FilenameOperatorName: config-operator
@@ -374,7 +373,6 @@ infrastructures.config.openshift.io:
   - AzureDualStackInstall
   - DualReplica
   - DyanmicServiceEndpointIBMCloud
-  - GCPClusterHostedDNSInstall
   - NutanixMultiSubnets
   - OnPremDNSRecords
   - VSphereHostVMGroupZonal

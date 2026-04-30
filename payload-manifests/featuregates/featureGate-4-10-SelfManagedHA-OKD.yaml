@@ -125,9 +125,6 @@
                         "name": "DRAPartitionableDevices"
                     },
                     {
-                        "name": "DualReplica"
-                    },
-                    {
                         "name": "DyanmicServiceEndpointIBMCloud"
                     },
                     {
@@ -135,9 +132,6 @@
                     },
                     {
                         "name": "EtcdBackendQuota"
-                    },
-                    {
-                        "name": "EventTTL"
                     },
                     {
                         "name": "EventedPLEG"
@@ -158,9 +152,6 @@
                         "name": "ExternalSnapshotMetadata"
                     },
                     {
-                        "name": "GCPClusterHostedDNS"
-                    },
-                    {
                         "name": "GCPCustomAPIEndpoints"
                     },
                     {
@@ -168,9 +159,6 @@
                     },
                     {
                         "name": "GCPDualStackInstall"
-                    },
-                    {
-                        "name": "GatewayAPIWithoutOLM"
                     },
                     {
                         "name": "HyperShiftOnlyDynamicResourceAllocation"
@@ -186,9 +174,6 @@
                     },
                     {
                         "name": "KMSEncryption"
-                    },
-                    {
-                        "name": "KMSEncryptionProvider"
                     },
                     {
                         "name": "MachineAPIMigration"
@@ -310,7 +295,10 @@
                         "name": "BuildCSIVolumes"
                     },
                     {
-                        "name": "ConsolePluginContentSecurityPolicy"
+                        "name": "DualReplica"
+                    },
+                    {
+                        "name": "EventTTL"
                     },
                     {
                         "name": "ExternalOIDC"
@@ -319,7 +307,7 @@
                         "name": "ExternalOIDCWithUIDAndExtraClaimMappings"
                     },
                     {
-                        "name": "GCPClusterHostedDNSInstall"
+                        "name": "GatewayAPIWithoutOLM"
                     },
                     {
                         "name": "ImageStreamImportMode"
@@ -368,12 +356,6 @@
                     },
                     {
                         "name": "UpgradeStatus"
-                    },
-                    {
-                        "name": "UserNamespacesPodSecurityStandards"
-                    },
-                    {
-                        "name": "UserNamespacesSupport"
                     },
                     {
                         "name": "VSphereHostVMGroupZonal"

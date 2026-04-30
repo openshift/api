@@ -50,9 +50,6 @@
                         "name": "HyperShiftOnlyDynamicResourceAllocation"
                     },
                     {
-                        "name": "KMSEncryptionProvider"
-                    },
-                    {
                         "name": "MachineAPIMigrationVSphere"
                     },
                     {
@@ -175,9 +172,6 @@
                         "name": "ConfigurablePKI"
                     },
                     {
-                        "name": "ConsolePluginContentSecurityPolicy"
-                    },
-                    {
                         "name": "DNSNameResolver"
                     },
                     {
@@ -206,12 +200,6 @@
                     },
                     {
                         "name": "ExternalOIDCWithUpstreamParity"
-                    },
-                    {
-                        "name": "GCPClusterHostedDNS"
-                    },
-                    {
-                        "name": "GCPClusterHostedDNSInstall"
                     },
                     {
                         "name": "GCPCustomAPIEndpoints"
@@ -359,12 +347,6 @@
                     },
                     {
                         "name": "UpgradeStatus"
-                    },
-                    {
-                        "name": "UserNamespacesPodSecurityStandards"
-                    },
-                    {
-                        "name": "UserNamespacesSupport"
                     },
                     {
                         "name": "VSphereConfigurableMaxAllowedBlockVolumesPerNode"

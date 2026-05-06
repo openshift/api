@@ -330,6 +330,7 @@ networks.operator.openshift.io:
   FeatureGates:
   - AdditionalRoutingCapabilities
   - NetworkLiveMigration
+  - NoOverlayMode
   - RouteAdvertisements
   FilenameOperatorName: network
   FilenameOperatorOrdering: "01"

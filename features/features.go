@@ -211,6 +211,14 @@ var (
 					enableIn(configv1.Default, configv1.DevPreviewNoUpgrade, configv1.TechPreviewNoUpgrade).
 					mustRegister()
 
+	FeatureGateNoOverlayMode = newFeatureGate("NoOverlayMode").
+				reportProblemsToJiraComponent("Networking/ovn-kubernetes").
+				contactPerson("pliurh").
+				productScope(ocpSpecific).
+				enhancementPR("https://github.com/openshift/enhancements/pull/1859").
+				enable(inDevPreviewNoUpgrade(), inTechPreviewNoUpgrade()).
+				mustRegister()
+
 	FeatureGateEVPN = newFeatureGate("EVPN").
 				reportProblemsToJiraComponent("Networking/ovn-kubernetes").
 				contactPerson("jcaamano").

@@ -245,6 +245,12 @@ type ComponentRouteSpec struct {
 	// the Secret specification for a serving certificate will not be needed.
 	// +optional
 	ServingCertKeyPairSecret SecretNameReference `json:"servingCertKeyPairSecret"`
+
+	// labels defines additional labels to be applied to the route created
+	// for the component. These labels are used by the IngressController to
+	// determine which routes it should manage.
+	// +optional
+	Labels map[string]string `json:"labels,omitempty"`
 }
 
 // ComponentRouteStatus contains information allowing configuration of a route's hostname and serving certificate.

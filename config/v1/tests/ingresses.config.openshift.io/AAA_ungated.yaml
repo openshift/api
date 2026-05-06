@@ -54,3 +54,91 @@ tests:
         spec:
           domain: apps.example.com
           appsDomain: custom.example.com
+    - name: Should be able to create an Ingress with componentRoutes containing labels
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: Ingress
+        spec:
+          domain: apps.example.com
+          componentRoutes:
+            - name: console
+              namespace: openshift-console
+              hostname: console.example.com
+              labels:
+                ingress: shard-console
+      expected: |
+        apiVersion: config.openshift.io/v1
+        kind: Ingress
+        spec:
+          domain: apps.example.com
+          componentRoutes:
+            - name: console
+              namespace: openshift-console
+              hostname: console.example.com
+              labels:
+                ingress: shard-console
+    - name: Should be able to add labels to componentRoutes on update
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: Ingress
+        spec:
+          domain: apps.example.com
+          componentRoutes:
+            - name: console
+              namespace: openshift-console
+              hostname: console.example.com
+      updated: |
+        apiVersion: config.openshift.io/v1
+        kind: Ingress
+        spec:
+          domain: apps.example.com
+          componentRoutes:
+            - name: console
+              namespace: openshift-console
+              hostname: console.example.com
+              labels:
+                ingress: shard-console
+      expected: |
+        apiVersion: config.openshift.io/v1
+        kind: Ingress
+        spec:
+          domain: apps.example.com
+          componentRoutes:
+            - name: console
+              namespace: openshift-console
+              hostname: console.example.com
+              labels:
+                ingress: shard-console
+    - name: Should be able to create an Ingress with multiple componentRoutes with labels
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: Ingress
+        spec:
+          domain: apps.example.com
+          componentRoutes:
+            - name: console-2
+              namespace: openshift-console
+              hostname: console.internal.corp.example.com
+              labels:
+                ingress: shard-console2
+            - name: console-3
+              namespace: openshift-console
+              hostname: console.private.corp.example.com
+              labels:
+                ingress: shard-console3
+      expected: |
+        apiVersion: config.openshift.io/v1
+        kind: Ingress
+        spec:
+          domain: apps.example.com
+          componentRoutes:
+            - name: console-2
+              namespace: openshift-console
+              hostname: console.internal.corp.example.com
+              labels:
+                ingress: shard-console2
+            - name: console-3
+              namespace: openshift-console
+              hostname: console.private.corp.example.com
+              labels:
+                ingress: shard-console3

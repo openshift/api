@@ -216,7 +216,7 @@ var (
 				contactPerson("pliurh").
 				productScope(ocpSpecific).
 				enhancementPR("https://github.com/openshift/enhancements/pull/1859").
-				enable(inDevPreviewNoUpgrade(), inTechPreviewNoUpgrade()).
+				enableIn(configv1.DevPreviewNoUpgrade, configv1.TechPreviewNoUpgrade).
 				mustRegister()
 
 	FeatureGateEVPN = newFeatureGate("EVPN").

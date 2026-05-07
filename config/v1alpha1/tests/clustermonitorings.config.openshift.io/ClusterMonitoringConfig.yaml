@@ -1181,6 +1181,10 @@ tests:
         kind: ClusterMonitoring
         spec:
           thanosQuerierConfig:
+            logLevel: "Debug"
+            requestLogging:
+              policy: "AllRequests"
+            crossOriginRequestPolicy: "DenyAll"
             nodeSelector:
               kubernetes.io/os: linux
             resources:
@@ -1201,6 +1205,10 @@ tests:
         kind: ClusterMonitoring
         spec:
           thanosQuerierConfig:
+            logLevel: "Debug"
+            requestLogging:
+              policy: "AllRequests"
+            crossOriginRequestPolicy: "DenyAll"
             nodeSelector:
               kubernetes.io/os: linux
             resources:
@@ -1434,6 +1442,139 @@ tests:
                 topologyKey: topology.kubernetes.io/zone
                 whenUnsatisfiable: DoNotSchedule
       expectedError: "Duplicate value"
+    - name: Should accept ThanosQuerierConfig with logLevel set to Error
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          thanosQuerierConfig:
+            logLevel: "Error"
+      expected: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          thanosQuerierConfig:
+            logLevel: "Error"
+    - name: Should accept ThanosQuerierConfig with logLevel set to Warn
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          thanosQuerierConfig:
+            logLevel: "Warn"
+      expected: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          thanosQuerierConfig:
+            logLevel: "Warn"
+    - name: Should accept ThanosQuerierConfig with logLevel set to Info
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          thanosQuerierConfig:
+            logLevel: "Info"
+      expected: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          thanosQuerierConfig:
+            logLevel: "Info"
+    - name: Should accept ThanosQuerierConfig with logLevel set to Debug
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          thanosQuerierConfig:
+            logLevel: "Debug"
+      expected: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          thanosQuerierConfig:
+            logLevel: "Debug"
+    - name: Should reject ThanosQuerierConfig with invalid logLevel
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          thanosQuerierConfig:
+            logLevel: "InvalidLevel"
+      expectedError: 'spec.thanosQuerierConfig.logLevel: Unsupported value: "InvalidLevel": supported values: "Error", "Warn", "Info", "Debug"'
+    - name: Should accept ThanosQuerierConfig with requestLogging policy set to AllRequests
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          thanosQuerierConfig:
+            requestLogging:
+              policy: "AllRequests"
+      expected: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          thanosQuerierConfig:
+            requestLogging:
+              policy: "AllRequests"
+    - name: Should accept ThanosQuerierConfig with requestLogging policy set to NoRequests
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          thanosQuerierConfig:
+            requestLogging:
+              policy: "NoRequests"
+      expected: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          thanosQuerierConfig:
+            requestLogging:
+              policy: "NoRequests"
+    - name: Should reject ThanosQuerierConfig with invalid requestLogging policy
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          thanosQuerierConfig:
+            requestLogging:
+              policy: "InvalidValue"
+      expectedError: 'spec.thanosQuerierConfig.requestLogging.policy: Unsupported value: "InvalidValue": supported values: "AllRequests", "NoRequests"'
+    - name: Should accept ThanosQuerierConfig with crossOriginRequestPolicy set to AllowAll
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          thanosQuerierConfig:
+            crossOriginRequestPolicy: "AllowAll"
+      expected: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          thanosQuerierConfig:
+            crossOriginRequestPolicy: "AllowAll"
+    - name: Should accept ThanosQuerierConfig with crossOriginRequestPolicy set to DenyAll
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          thanosQuerierConfig:
+            crossOriginRequestPolicy: "DenyAll"
+      expected: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          thanosQuerierConfig:
+            crossOriginRequestPolicy: "DenyAll"
+    - name: Should reject ThanosQuerierConfig with invalid crossOriginRequestPolicy
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          thanosQuerierConfig:
+            crossOriginRequestPolicy: "InvalidValue"
+      expectedError: 'spec.thanosQuerierConfig.crossOriginRequestPolicy: Unsupported value: "InvalidValue": supported values: "AllowAll", "DenyAll"'
     - name: Should be able to create MonitoringPluginConfig with valid resources
       initial: |
         apiVersion: config.openshift.io/v1alpha1

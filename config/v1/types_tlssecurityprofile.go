@@ -13,7 +13,7 @@ type TLSSecurityProfile struct {
 	// guidelines. See: https://ssl-config.mozilla.org/guidelines/5.7.json
 	//
 	// The groups lists are based on Go's crypto/tls default curve preferences
-	// (Go 1.24+), which include post-quantum hybrid group X25519MLKEM768.
+	// (Go 1.25+), which include post-quantum hybrid group X25519MLKEM768.
 	// Note that X25519MLKEM768 is not FIPS-approved and should be ignored by
 	// components running in FIPS mode.
 	// See: https://pkg.go.dev/crypto/tls#CurveID
@@ -30,7 +30,7 @@ type TLSSecurityProfile struct {
 	// clients or libraries and should be used only as a last resort.
 	//
 	// The supported groups list includes by default the following groups:
-	// X25519, secp256r1, secp384r1, X25519MLKEM768.
+	// X25519, secp256r1, secp384r1, secp521r1, X25519MLKEM768.
 	//
 	// This profile is equivalent to a Custom profile specified as:
 	//   minTLSVersion: VersionTLS10
@@ -66,7 +66,7 @@ type TLSSecurityProfile struct {
 	// most clients currently in use.
 	//
 	// The supported groups list includes by default the following groups:
-	// X25519, secp256r1, secp384r1, X25519MLKEM768.
+	// X25519, secp256r1, secp384r1, secp521r1, X25519MLKEM768.
 	//
 	// This profile is equivalent to a Custom profile specified as:
 	//   minTLSVersion: VersionTLS12
@@ -88,7 +88,7 @@ type TLSSecurityProfile struct {
 	// modern is a TLS security profile for use with clients that support TLS 1.3 and
 	// do not need backward compatibility for older clients.
 	// The supported groups list includes by default the following groups:
-	// X25519, secp256r1, secp384r1, X25519MLKEM768.
+	// X25519, secp256r1, secp384r1, secp521r1, X25519MLKEM768.
 	// This profile is equivalent to a Custom profile specified as:
 	//   minTLSVersion: VersionTLS13
 	//   ciphers:
@@ -165,7 +165,7 @@ const (
 // Note that X25519MLKEM768 is a post-quantum hybrid group that is not
 // FIPS-approved and should be ignored by components running in FIPS mode.
 //
-// +kubebuilder:validation:Enum=X25519;secp256r1;secp384r1;secp521r1;X25519MLKEM768
+// +kubebuilder:validation:Enum=X25519;secp256r1;secp384r1;secp521r1;X25519MLKEM768;SecP256r1MLKEM768;SecP384r1MLKEM1024
 type TLSGroup string
 
 const (
@@ -179,6 +179,10 @@ const (
 	TLSGroupSecP521r1 TLSGroup = "secp521r1"
 	// TLSGroupX25519MLKEM768 represents X25519MLKEM768.
 	TLSGroupX25519MLKEM768 TLSGroup = "X25519MLKEM768"
+	// TLSGroupSecP256r1MLKEM768 represents SecP256r1MLKEM768.
+	TLSGroupSecP256r1MLKEM768 TLSGroup = "SecP256r1MLKEM768"
+	// TLSGroupSecP384r1MLKEM1024 represents SecP384r1MLKEM1024.
+	TLSGroupSecP384r1MLKEM1024 TLSGroup = "SecP384r1MLKEM1024"
 )
 
 // TLSProfileSpec is the desired behavior of a TLSSecurityProfile.
@@ -200,7 +204,7 @@ type TLSProfileSpec struct {
 	//
 	// When omitted, this means no opinion and the platform is left to choose reasonable defaults which are
 	// subject to change over time and may be different per platform component depending on the underlying TLS
-	// libraries they use. If specified, the list must contain at least one and at most 5 groups,
+	// libraries they use. If specified, the list must contain at least one and at most 7 groups,
 	// and each group must be unique.
 	//
 	// For example, to use X25519 and secp256r1 (yaml):
@@ -211,7 +215,7 @@ type TLSProfileSpec struct {
 	//
 	// +optional
 	// +listType=set
-	// +kubebuilder:validation:MaxItems=5
+	// +kubebuilder:validation:MaxItems=7
 	// +kubebuilder:validation:MinItems=1
 	// +openshift:enable:FeatureGate=TLSGroupPreferences
 	Groups []TLSGroup `json:"groups,omitempty"`
@@ -255,9 +259,9 @@ const (
 // Go-specific "ciphers" from the guidelines JSON.
 //
 // The groups lists are based on Go's crypto/tls default curve preferences
-// (Go 1.24+). See: https://pkg.go.dev/crypto/tls#CurveID
+// (Go 1.25+). See: https://pkg.go.dev/crypto/tls#CurveID
 // TLSProfiles Old, Intermediate, Modern include by default the following
-// groups: X25519, secp256r1, secp384r1, X25519MLKEM768
+// groups: X25519, secp256r1, secp384r1, secp521r1, X25519MLKEM768
 //
 // NOTE: The caller needs to make sure to check that these constants are valid
 // for their binary. Not all entries map to values for all binaries. In the case
@@ -293,6 +297,7 @@ var TLSProfiles = map[TLSProfileType]*TLSProfileSpec{
 			TLSGroupX25519,
 			TLSGroupSecP256r1,
 			TLSGroupSecP384r1,
+			TLSGroupSecP521r1,
 			TLSGroupX25519MLKEM768,
 		},
 		MinTLSVersion: VersionTLS10,
@@ -313,6 +318,7 @@ var TLSProfiles = map[TLSProfileType]*TLSProfileSpec{
 			TLSGroupX25519,
 			TLSGroupSecP256r1,
 			TLSGroupSecP384r1,
+			TLSGroupSecP521r1,
 			TLSGroupX25519MLKEM768,
 		},
 		MinTLSVersion: VersionTLS12,
@@ -327,6 +333,7 @@ var TLSProfiles = map[TLSProfileType]*TLSProfileSpec{
 			TLSGroupX25519,
 			TLSGroupSecP256r1,
 			TLSGroupSecP384r1,
+			TLSGroupSecP521r1,
 			TLSGroupX25519MLKEM768,
 		},
 		MinTLSVersion: VersionTLS13,

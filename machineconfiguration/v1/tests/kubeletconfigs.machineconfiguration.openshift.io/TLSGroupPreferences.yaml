@@ -34,7 +34,7 @@ tests:
               groups:
                 - X25519
                 - secp256r1
-    - name: Should be able to create with all supported curves
+    - name: Should be able to create with all supported groups
       initial: |
         apiVersion: machineconfiguration.openshift.io/v1
         kind: KubeletConfig
@@ -51,6 +51,8 @@ tests:
                 - secp384r1
                 - secp521r1
                 - X25519MLKEM768
+                - SecP256r1MLKEM768
+                - SecP384r1MLKEM1024
       expected: |
         apiVersion: machineconfiguration.openshift.io/v1
         kind: KubeletConfig
@@ -67,6 +69,8 @@ tests:
                 - secp384r1
                 - secp521r1
                 - X25519MLKEM768
+                - SecP256r1MLKEM768
+                - SecP384r1MLKEM1024
     - name: Should fail to create with Custom TLS profile and empty curves
       initial: |
         apiVersion: machineconfiguration.openshift.io/v1
@@ -153,7 +157,7 @@ tests:
                 - TLS_AES_128_GCM_SHA256
               groups:
                 - secp384r1
-    - name: Should fail to create with more than 5 groups
+    - name: Should fail to create with more than 7 groups
       initial: |
         apiVersion: machineconfiguration.openshift.io/v1
         kind: KubeletConfig
@@ -170,8 +174,10 @@ tests:
                 - secp384r1
                 - secp521r1
                 - X25519MLKEM768
+                - SecP256r1MLKEM768
+                - SecP384r1MLKEM1024
                 - X25519
-      expectedError: "spec.tlsSecurityProfile.custom.groups: Too many: 6: must have at most 5 items"
+      expectedError: "spec.tlsSecurityProfile.custom.groups: Too many: 8: must have at most 7 items"
     - name: Should fail to create with invalid group value
       initial: |
         apiVersion: machineconfiguration.openshift.io/v1
@@ -185,7 +191,7 @@ tests:
                 - TLS_AES_128_GCM_SHA256
               groups:
                 - InvalidCurve
-      expectedError: "spec.tlsSecurityProfile.custom.groups[0]: Unsupported value: \"InvalidCurve\": supported values: \"X25519\", \"secp256r1\", \"secp384r1\", \"secp521r1\", \"X25519MLKEM768\""
+      expectedError: "spec.tlsSecurityProfile.custom.groups[0]: Unsupported value: \"InvalidCurve\": supported values: \"X25519\", \"secp256r1\", \"secp384r1\", \"secp521r1\", \"X25519MLKEM768\", \"SecP256r1MLKEM768\", \"SecP384r1MLKEM1024\""
   onUpdate:
     - name: Should be able to add groups to existing Custom TLS profile
       initial: |

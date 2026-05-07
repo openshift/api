@@ -1,10 +1,10 @@
 package v1
 
-// KMSConfig defines the configuration for the KMS instance
+// KMSPluginConfig defines the configuration for the KMS instance
 // that will be used with KMS encryption
 // +kubebuilder:validation:XValidation:rule="self.type == 'Vault' ? has(self.vault) : !has(self.vault)",message="vault config is required when kms provider type is Vault, and forbidden otherwise"
 // +union
-type KMSConfig struct {
+type KMSPluginConfig struct {
 	// type defines the kind of platform for the KMS provider.
 	// Allowed values are Vault.
 	// When set to Vault, the plugin connects to a HashiCorp Vault server for key management.
@@ -20,7 +20,7 @@ type KMSConfig struct {
 	//
 	// +unionMember
 	// +optional
-	Vault VaultKMSConfig `json:"vault,omitempty,omitzero"`
+	Vault VaultKMSPluginConfig `json:"vault,omitempty,omitzero"`
 
 	// --- TOMBSTONE ---
 	// aws was a field that allowed configuring AWS KMS.
@@ -122,8 +122,8 @@ type VaultAppRoleAuthentication struct {
 	Secret VaultSecretReference `json:"secret,omitzero"`
 }
 
-// VaultKMSConfig defines the KMS plugin configuration specific to Vault KMS
-type VaultKMSConfig struct {
+// VaultKMSPluginConfig defines the KMS plugin configuration specific to Vault KMS
+type VaultKMSPluginConfig struct {
 	// kmsPluginImage specifies the container image for the HashiCorp Vault KMS plugin.
 	//
 	// The image must be a fully qualified OCI image pull spec with a SHA256 digest.

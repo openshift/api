@@ -2329,14 +2329,14 @@ func (Storage) SwaggerDoc() map[string]string {
 	return map_Storage
 }
 
-var map_KMSConfig = map[string]string{
-	"":      "KMSConfig defines the configuration for the KMS instance that will be used with KMS encryption",
+var map_KMSPluginConfig = map[string]string{
+	"":      "KMSPluginConfig defines the configuration for the KMS instance that will be used with KMS encryption",
 	"type":  "type defines the kind of platform for the KMS provider. Allowed values are Vault. When set to Vault, the plugin connects to a HashiCorp Vault server for key management.",
 	"vault": "vault defines the configuration for the Vault KMS plugin. The plugin connects to a Vault Enterprise server that is managed by the user outside the purview of the control plane. This field must be set when type is Vault, and must be unset otherwise.",
 }
 
-func (KMSConfig) SwaggerDoc() map[string]string {
-	return map_KMSConfig
+func (KMSPluginConfig) SwaggerDoc() map[string]string {
+	return map_KMSPluginConfig
 }
 
 var map_VaultAppRoleAuthentication = map[string]string{
@@ -2367,8 +2367,8 @@ func (VaultConfigMapReference) SwaggerDoc() map[string]string {
 	return map_VaultConfigMapReference
 }
 
-var map_VaultKMSConfig = map[string]string{
-	"":               "VaultKMSConfig defines the KMS plugin configuration specific to Vault KMS",
+var map_VaultKMSPluginConfig = map[string]string{
+	"":               "VaultKMSPluginConfig defines the KMS plugin configuration specific to Vault KMS",
 	"kmsPluginImage": "kmsPluginImage specifies the container image for the HashiCorp Vault KMS plugin.\n\nThe image must be a fully qualified OCI image pull spec with a SHA256 digest. The format is: host[:port][/namespace]/name@sha256:<digest> where the digest must be 64 characters long and consist only of lowercase hexadecimal characters, a-f and 0-9. The total length must be between 75 and 447 characters.\n\nShort names (e.g., \"vault-plugin\" or \"hashicorp/vault-plugin\") are not allowed. The registry hostname must be included and must contain at least one dot. Image tags (e.g., \":latest\", \":v1.0.0\") are not allowed.\n\nConsult the OpenShift documentation for compatible plugin versions with your cluster version, then obtain the image digest for that version from HashiCorp's container registry.\n\nFor disconnected environments, mirror the plugin image to an accessible registry and reference the mirrored location with its digest.",
 	"vaultAddress":   "vaultAddress specifies the address of the HashiCorp Vault instance. The value must be a valid HTTPS URL containing only scheme, host, and optional port. Paths, user info, query parameters, and fragments are not allowed.\n\nFormat: https://hostname[:port] Example: https://vault.example.com:8200\n\nThe value must be between 1 and 512 characters.",
 	"vaultNamespace": "vaultNamespace specifies the Vault namespace where the Transit secrets engine is mounted. This is only applicable for Vault Enterprise installations. When this field is not set, no namespace is used.\n\nThe value must be between 1 and 4096 characters. The namespace cannot end with a forward slash, cannot contain spaces, and cannot be one of the reserved strings: root, sys, audit, auth, cubbyhole, or identity.",
@@ -2378,8 +2378,8 @@ var map_VaultKMSConfig = map[string]string{
 	"transitKey":     "transitKey specifies the name of the encryption key in Vault's Transit engine. This key is used to encrypt and decrypt data.\n\nThe key name must be between 1 and 512 characters and cannot contain spaces or forward slashes.",
 }
 
-func (VaultKMSConfig) SwaggerDoc() map[string]string {
-	return map_VaultKMSConfig
+func (VaultKMSPluginConfig) SwaggerDoc() map[string]string {
+	return map_VaultKMSPluginConfig
 }
 
 var map_VaultSecretReference = map[string]string{

@@ -240,7 +240,7 @@ type APIServerEncryption struct {
 	// +openshift:enable:FeatureGate=KMSEncryption
 	// +unionMember
 	// +optional
-	KMS *KMSConfig `json:"kms,omitempty"`
+	KMS KMSPluginConfig `json:"kms,omitempty,omitzero"`
 }
 
 // +openshift:validation:FeatureGateAwareEnum:featureGate="",enum="";identity;aescbc;aesgcm

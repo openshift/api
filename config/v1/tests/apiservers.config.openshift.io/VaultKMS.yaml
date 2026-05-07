@@ -209,6 +209,145 @@ tests:
                       name: vault-approle
                 transitKey: my-encryption-key
 
+    # RFC 3986 unreserved character tests
+    - name: Should accept transitMount with period character
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: APIServer
+        spec:
+          encryption:
+            type: KMS
+            kms:
+              type: Vault
+              vault:
+                kmsPluginImage: registry.example.com/vault-plugin@sha256:0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef
+                vaultAddress: https://vault.example.com:8200
+                authentication:
+                  type: AppRole
+                  appRole:
+                    secret:
+                      name: vault-approle
+                transitMount: transit.v1
+                transitKey: my-key
+      expected: |
+        apiVersion: config.openshift.io/v1
+        kind: APIServer
+        spec:
+          audit:
+            profile: Default
+          encryption:
+            type: KMS
+            kms:
+              type: Vault
+              vault:
+                kmsPluginImage: registry.example.com/vault-plugin@sha256:0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef
+                vaultAddress: https://vault.example.com:8200
+                authentication:
+                  type: AppRole
+                  appRole:
+                    secret:
+                      name: vault-approle
+                transitMount: transit.v1
+                transitKey: my-key
+
+    - name: Should accept transitMount with tilde character
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: APIServer
+        spec:
+          encryption:
+            type: KMS
+            kms:
+              type: Vault
+              vault:
+                kmsPluginImage: registry.example.com/vault-plugin@sha256:0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef
+                vaultAddress: https://vault.example.com:8200
+                authentication:
+                  type: AppRole
+                  appRole:
+                    secret:
+                      name: vault-approle
+                transitMount: transit~backup
+                transitKey: my-key
+      expected: |
+        apiVersion: config.openshift.io/v1
+        kind: APIServer
+        spec:
+          audit:
+            profile: Default
+          encryption:
+            type: KMS
+            kms:
+              type: Vault
+              vault:
+                kmsPluginImage: registry.example.com/vault-plugin@sha256:0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef
+                vaultAddress: https://vault.example.com:8200
+                authentication:
+                  type: AppRole
+                  appRole:
+                    secret:
+                      name: vault-approle
+                transitMount: transit~backup
+                transitKey: my-key
+
+    - name: Should accept transitKey with period character
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: APIServer
+        spec:
+          encryption:
+            type: KMS
+            kms:
+              type: Vault
+              vault:
+                kmsPluginImage: registry.example.com/vault-plugin@sha256:0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef
+                vaultAddress: https://vault.example.com:8200
+                authentication:
+                  type: AppRole
+                  appRole:
+                    secret:
+                      name: vault-approle
+                transitKey: encryption.key.v1
+      expected: |
+        apiVersion: config.openshift.io/v1
+        kind: APIServer
+        spec:
+          audit:
+            profile: Default
+          encryption:
+            type: KMS
+            kms:
+              type: Vault
+              vault:
+                kmsPluginImage: registry.example.com/vault-plugin@sha256:0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef
+                vaultAddress: https://vault.example.com:8200
+                authentication:
+                  type: AppRole
+                  appRole:
+                    secret:
+                      name: vault-approle
+                transitKey: encryption.key.v1
+
+    - name: Should reject transitKey with tilde character
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: APIServer
+        spec:
+          encryption:
+            type: KMS
+            kms:
+              type: Vault
+              vault:
+                kmsPluginImage: registry.example.com/vault-plugin@sha256:0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef
+                vaultAddress: https://vault.example.com:8200
+                authentication:
+                  type: AppRole
+                  appRole:
+                    secret:
+                      name: vault-approle
+                transitKey: key~backup
+      expectedError: "transitKey must only contain alphanumeric characters, hyphens, periods, and underscores"
+
     # Type validation - vault field must be set when type is Vault
     - name: Should reject KMS type Vault without vault config
       initial: |
@@ -632,7 +771,7 @@ tests:
                       name: vault-approle
                 transitMount: my transit
                 transitKey: my-key
-      expectedError: "transitMount cannot contain spaces"
+      expectedError: "transitMount must only contain RFC 3986 unreserved characters (alphanumeric, hyphen, period, underscore, tilde) and forward slashes"
 
     - name: Should reject transitMount containing consecutive forward slashes
       initial: |
@@ -674,7 +813,7 @@ tests:
                     secret:
                       name: vault-approle
                 transitKey: my encryption key
-      expectedError: "transitKey cannot contain spaces"
+      expectedError: "transitKey must only contain alphanumeric characters, hyphens, periods, and underscores"
 
     - name: Should reject transitKey containing forward slashes
       initial: |
@@ -695,6 +834,47 @@ tests:
                       name: vault-approle
                 transitKey: my/key
       expectedError: "transitKey cannot contain forward slashes"
+
+    - name: Should reject transitMount with special characters
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: APIServer
+        spec:
+          encryption:
+            type: KMS
+            kms:
+              type: Vault
+              vault:
+                kmsPluginImage: registry.example.com/vault-plugin@sha256:0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef
+                vaultAddress: https://vault.example.com:8200
+                authentication:
+                  type: AppRole
+                  appRole:
+                    secret:
+                      name: vault-approle
+                transitMount: transit@test
+                transitKey: my-key
+      expectedError: "transitMount must only contain RFC 3986 unreserved characters (alphanumeric, hyphen, period, underscore, tilde) and forward slashes"
+
+    - name: Should reject transitKey with special characters
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: APIServer
+        spec:
+          encryption:
+            type: KMS
+            kms:
+              type: Vault
+              vault:
+                kmsPluginImage: registry.example.com/vault-plugin@sha256:0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef
+                vaultAddress: https://vault.example.com:8200
+                authentication:
+                  type: AppRole
+                  appRole:
+                    secret:
+                      name: vault-approle
+                transitKey: my@key
+      expectedError: "transitKey must only contain alphanumeric characters, hyphens, periods, and underscores"
 
     # serverName validation tests
     - name: Should reject invalid serverName

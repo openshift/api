@@ -2018,20 +2018,6 @@ spec:
                     maximum: 1024
                     minimum: 1
                     type: integer
-                  nodeSelector:
-                    additionalProperties:
-                      type: string
-                    description: |-
-                      nodeSelector defines the nodes on which the Pods are scheduled.
-                      nodeSelector is optional.
-
-                      When omitted, this means the user has no opinion and the platform is left
-                      to choose reasonable defaults. These defaults are subject to change over time.
-                      The current default value is `kubernetes.io/os: linux`.
-                      When specified, nodeSelector must contain at least 1 entry and must not contain more than 10 entries.
-                    maxProperties: 10
-                    minProperties: 1
-                    type: object
                   resources:
                     description: |-
                       resources defines the compute resource requests and limits for the node-exporter container.
@@ -2112,58 +2098,6 @@ spec:
                     x-kubernetes-list-map-keys:
                     - name
                     x-kubernetes-list-type: map
-                  tolerations:
-                    description: |-
-                      tolerations defines tolerations for the pods.
-                      tolerations is optional.
-
-                      When omitted, this means the user has no opinion and the platform is left
-                      to choose reasonable defaults. These defaults are subject to change over time.
-                      The current default is to tolerate all taints (operator: Exists without any key),
-                      which is typical for DaemonSets that must run on every node.
-                      Maximum length for this list is 10.
-                      Minimum length for this list is 1.
-                    items:
-                      description: |-
-                        The pod this Toleration is attached to tolerates any taint that matches
-                        the triple <key,value,effect> using the matching operator <operator>.
-                      properties:
-                        effect:
-                          description: |-
-                            Effect indicates the taint effect to match. Empty means match all taint effects.
-                            When specified, allowed values are NoSchedule, PreferNoSchedule and NoExecute.
-                          type: string
-                        key:
-                          description: |-
-                            Key is the taint key that the toleration applies to. Empty means match all taint keys.
-                            If the key is empty, operator must be Exists; this combination means to match all values and all keys.
-                          type: string
-                        operator:
-                          description: |-
-                            Operator represents a key's relationship to the value.
-                            Valid operators are Exists, Equal, Lt, and Gt. Defaults to Equal.
-                            Exists is equivalent to wildcard for value, so that a pod can
-                            tolerate all taints of a particular category.
-                            Lt and Gt perform numeric comparisons (requires feature gate TaintTolerationComparisonOperators).
-                          type: string
-                        tolerationSeconds:
-                          description: |-
-                            TolerationSeconds represents the period of time the toleration (which must be
-                            of effect NoExecute, otherwise this field is ignored) tolerates the taint. By default,
-                            it is not set, which means tolerate the taint forever (do not evict). Zero and
-                            negative values will be treated as 0 (evict immediately) by the system.
-                          format: int64
-                          type: integer
-                        value:
-                          description: |-
-                            Value is the taint value the toleration matches to.
-                            If the operator is Exists, the value should be empty, otherwise just a regular string.
-                          type: string
-                      type: object
-                    maxItems: 10
-                    minItems: 1
-                    type: array
-                    x-kubernetes-list-type: atomic
                 type: object
               openShiftStateMetricsConfig:
                 description: |-

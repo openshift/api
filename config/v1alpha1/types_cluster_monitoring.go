@@ -240,17 +240,6 @@ type OpenShiftStateMetricsConfig struct {
 // At least one field must be specified.
 // +kubebuilder:validation:MinProperties=1
 type NodeExporterConfig struct {
-	// nodeSelector defines the nodes on which the Pods are scheduled.
-	// nodeSelector is optional.
-	//
-	// When omitted, this means the user has no opinion and the platform is left
-	// to choose reasonable defaults. These defaults are subject to change over time.
-	// The current default value is `kubernetes.io/os: linux`.
-	// When specified, nodeSelector must contain at least 1 entry and must not contain more than 10 entries.
-	// +optional
-	// +kubebuilder:validation:MinProperties=1
-	// +kubebuilder:validation:MaxProperties=10
-	NodeSelector map[string]string `json:"nodeSelector,omitempty"`
 	// resources defines the compute resource requests and limits for the node-exporter container.
 	// This includes CPU, memory and HugePages constraints to help control scheduling and resource usage.
 	// When not specified, defaults are used by the platform. Requests cannot exceed limits.
@@ -276,20 +265,27 @@ type NodeExporterConfig struct {
 	// +kubebuilder:validation:MaxItems=5
 	// +kubebuilder:validation:MinItems=1
 	Resources []ContainerResource `json:"resources,omitempty"`
-	// tolerations defines tolerations for the pods.
-	// tolerations is optional.
+
+	// --- TOMBSTONE ---
+	// nodeSelector was a field that defined the nodes on which the Pods are scheduled.
+	// It was removed because node-exporter runs as a DaemonSet on all nodes,
+	// and the CMO does not support this field.
+	// The field name "nodeSelector" and json tag are reserved to prevent reuse
+	// with a different backing type.
 	//
-	// When omitted, this means the user has no opinion and the platform is left
-	// to choose reasonable defaults. These defaults are subject to change over time.
-	// The current default is to tolerate all taints (operator: Exists without any key),
-	// which is typical for DaemonSets that must run on every node.
-	// Maximum length for this list is 10.
-	// Minimum length for this list is 1.
-	// +kubebuilder:validation:MaxItems=10
-	// +kubebuilder:validation:MinItems=1
-	// +listType=atomic
 	// +optional
-	Tolerations []v1.Toleration `json:"tolerations,omitempty"`
+	// NodeSelector map[string]string `json:"nodeSelector,omitempty"`
+
+	// --- TOMBSTONE ---
+	// tolerations was a field that defined tolerations for the pods.
+	// It was removed because node-exporter runs as a DaemonSet on all nodes,
+	// and the CMO does not support this field.
+	// The field name "tolerations" and json tag are reserved to prevent reuse
+	// with a different backing type.
+	//
+	// +optional
+	// Tolerations []v1.Toleration `json:"tolerations,omitempty"`
+
 	// collectors configures which node-exporter metric collectors are enabled.
 	// collectors is optional.
 	// Each collector can be individually enabled or disabled. Some collectors may have

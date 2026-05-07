@@ -1799,21 +1799,6 @@ tests:
               - name: "memory"
                 request: "50Mi"
                 limit: "200Mi"
-    - name: Should be able to create NodeExporterConfig with valid tolerations
-      initial: |
-        apiVersion: config.openshift.io/v1alpha1
-        kind: ClusterMonitoring
-        spec:
-          nodeExporterConfig:
-            tolerations:
-              - operator: "Exists"
-      expected: |
-        apiVersion: config.openshift.io/v1alpha1
-        kind: ClusterMonitoring
-        spec:
-          nodeExporterConfig:
-            tolerations:
-              - operator: "Exists"
     - name: Should be able to create NodeExporterConfig with collectors
       initial: |
         apiVersion: config.openshift.io/v1alpha1
@@ -1869,14 +1854,10 @@ tests:
         kind: ClusterMonitoring
         spec:
           nodeExporterConfig:
-            nodeSelector:
-              kubernetes.io/os: linux
             resources:
               - name: "cpu"
                 request: "50m"
                 limit: "200m"
-            tolerations:
-              - operator: "Exists"
             collectors:
               cpuFreq:
                 collectionPolicy: Collect
@@ -1891,14 +1872,10 @@ tests:
         kind: ClusterMonitoring
         spec:
           nodeExporterConfig:
-            nodeSelector:
-              kubernetes.io/os: linux
             resources:
               - name: "cpu"
                 request: "50m"
                 limit: "200m"
-            tolerations:
-              - operator: "Exists"
             collectors:
               cpuFreq:
                 collectionPolicy: Collect
@@ -2062,71 +2039,6 @@ tests:
             collectors:
               systemd:
                 collectionPolicy: DoNotCollect
-    - name: Should reject NodeExporterConfig with empty nodeSelector
-      initial: |
-        apiVersion: config.openshift.io/v1alpha1
-        kind: ClusterMonitoring
-        spec:
-          nodeExporterConfig:
-            nodeSelector: {}
-      expectedError: 'spec.nodeExporterConfig.nodeSelector: Invalid value: 0: spec.nodeExporterConfig.nodeSelector in body should have at least 1 properties'
-    - name: Should reject NodeExporterConfig with too many nodeSelector entries
-      initial: |
-        apiVersion: config.openshift.io/v1alpha1
-        kind: ClusterMonitoring
-        spec:
-          nodeExporterConfig:
-            nodeSelector:
-              key1: val1
-              key2: val2
-              key3: val3
-              key4: val4
-              key5: val5
-              key6: val6
-              key7: val7
-              key8: val8
-              key9: val9
-              key10: val10
-              key11: val11
-      expectedError: 'spec.nodeExporterConfig.nodeSelector: Too many: 11: must have at most 10 items'
-    - name: Should reject NodeExporterConfig with empty tolerations array
-      initial: |
-        apiVersion: config.openshift.io/v1alpha1
-        kind: ClusterMonitoring
-        spec:
-          nodeExporterConfig:
-            tolerations: []
-      expectedError: 'spec.nodeExporterConfig.tolerations: Invalid value: 0: spec.nodeExporterConfig.tolerations in body should have at least 1 items'
-    - name: Should reject NodeExporterConfig with too many tolerations
-      initial: |
-        apiVersion: config.openshift.io/v1alpha1
-        kind: ClusterMonitoring
-        spec:
-          nodeExporterConfig:
-            tolerations:
-              - key: "key1"
-                operator: "Exists"
-              - key: "key2"
-                operator: "Exists"
-              - key: "key3"
-                operator: "Exists"
-              - key: "key4"
-                operator: "Exists"
-              - key: "key5"
-                operator: "Exists"
-              - key: "key6"
-                operator: "Exists"
-              - key: "key7"
-                operator: "Exists"
-              - key: "key8"
-                operator: "Exists"
-              - key: "key9"
-                operator: "Exists"
-              - key: "key10"
-                operator: "Exists"
-              - key: "key11"
-                operator: "Exists"
-      expectedError: 'spec.nodeExporterConfig.tolerations: Too many: 11: must have at most 10 items'
     - name: Should reject systemd collect with empty object
       initial: |
         apiVersion: config.openshift.io/v1alpha1

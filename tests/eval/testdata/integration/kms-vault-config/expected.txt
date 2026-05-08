@@ -1,0 +1,11 @@
+enum value Vault listed but meaning not explained in comment for type field
+missing HTTPS URL validation for serverAddress field
+MinLength and MaxLength constraints not documented in comment for serverAddress
+documented length constraint for transitKeyName not enforced with MaxLength marker
+MinLength constraint not documented in comment for transitKeyName
+MinLength constraint not documented in comment for transitMountPath
+optional field namespace does not explain behavior when omitted
+MinLength and MaxLength constraints not documented in comment for namespace
+MinLength and MaxLength constraints not documented in comment for caCertificate
+MinLength constraint not documented in comment for SecretNameReference name field
+ExternalSecretStoreConfig CEL XValidation can be simplified has(self.type) is redundant

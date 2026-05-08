@@ -1,0 +1,20 @@
+diff --git a/config/v1/types_console.go b/config/v1/types_console.go
+--- a/config/v1/types_console.go
++++ b/config/v1/types_console.go
+@@ -38,7 +38,16 @@ type Console struct {
+ // ConsoleSpec is the specification of the desired behavior of the Console.
+ type ConsoleSpec struct {
+ 	// +optional
+ 	Authentication ConsoleAuthentication `json:"authentication"`
++
++	// customLogoURL specifies a URL for a custom logo image to display
++	// in the console header. The URL must begin with https:// and must
++	// be between 1 and 2048 characters.
++	// +optional
++	// +kubebuilder:validation:MinLength=1
++	// +kubebuilder:validation:MaxLength=2048
++	// +kubebuilder:validation:XValidation:rule="self.startsWith('https://')",message="customLogoURL must begin with https://"
++	CustomLogoURL string `json:"customLogoURL,omitempty"`
+ }
+ 
+ // ConsoleStatus defines the observed status of the Console.

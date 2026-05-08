@@ -1,0 +1,128 @@
+diff --git a/config/v1/types_console.go b/config/v1/types_console.go
+--- a/config/v1/types_console.go
++++ b/config/v1/types_console.go
+@@ -33,7 +33,15 @@ type ConsoleSpec struct {
+ // ConsoleSpec is the specification of the desired behavior of the Console.
+ type ConsoleSpec struct {
+-	// +optional
+-	Authentication ConsoleAuthentication `json:"authentication"`
++	// authentication configures console authentication behavior.
++	// When omitted, default authentication settings are used.
++	// +optional
++	Authentication ConsoleAuthentication `json:"authentication"`
++
++	// metricsCollector configures the metrics collector sidecar for the console.
++	// When omitted, no metrics collector is deployed.
++	// +optional
++	// +openshift:enable:FeatureGate=ConsoleMetricsCollector
++	MetricsCollector MetricsCollectorConfig `json:"metricsCollector,omitempty,omitzero"`
+ }
+ 
+ // ConsoleStatus defines the observed status of the Console.
+@@ -78,3 +84,91 @@ type ConsoleAuthentication struct {
+ 	// +kubebuilder:validation:Pattern=`^$|^((https):\/\/?)[^\s()<>]+(?:\([\w\d]+\)|([^[:punct:]\s]|\/?))$`
+ 	LogoutRedirect string `json:"logoutRedirect,omitempty"`
+ }
++
++// MetricsCollectorPolicy specifies whether the collector is active.
++// +kubebuilder:validation:Enum=Enabled;Disabled;Auto
++type MetricsCollectorPolicy string
++
++// MetricsCollectorConfig defines the configuration for console metrics collection.
++// +kubebuilder:validation:MinProperties=1
++type MetricsCollectorConfig struct {
++	// collectionPolicy configures whether metrics are collected.
++	// When omitted, the platform default is used.
++	// +optional
++	CollectionPolicy MetricsCollectorPolicy `json:"collectionPolicy,omitempty"`
++
++	// targets is a list of metric scrape target paths.
++	// The list may be empty to indicate no additional targets beyond defaults.
++	// Each target must be unique.
++	// When omitted, only default targets are scraped.
++	// +optional
++	// +kubebuilder:validation:MinItems=1
++	// +kubebuilder:validation:MaxItems=20
++	// +listType=set
++	Targets []string `json:"targets,omitempty"`
++
++	// maxRetries specifies the number of retry attempts for failed scrapes.
++	// When omitted, no retries are attempted.
++	// +optional
++	// +kubebuilder:validation:Minimum=0
++	// +kubebuilder:validation:Maximum=10
++	MaxRetries int32 `json:"maxRetries,omitempty"`
++
++	// retryInterval specifies the duration between retry attempts in seconds.
++	// This field is required when maxRetries is greater than 0.
++	// When omitted, retries happen immediately with no delay.
++	// The value must be between 1 and 300.
++	// +optional
++	// +kubebuilder:validation:Minimum=1
++	// +kubebuilder:validation:Maximum=300
++	RetryInterval int32 `json:"retryInterval,omitempty"`
++
++	// metricsPort specifies the port on which the collector exposes metrics.
++	// +optional
++	// +kubebuilder:validation:Minimum=1024
++	// +kubebuilder:validation:Maximum=65535
++	MetricsPort int32 `json:"metricsPort,omitempty"`
++
++	// scrapeInterval specifies the interval in seconds between metric scrapes.
++	// When omitted, the platform default interval is used.
++	// +optional
++	// +kubebuilder:validation:Minimum=5
++	// +kubebuilder:validation:Maximum=3600
++	ScrapeInterval int32 `json:"scrapeInterval,omitempty"`
++
++	// ignoredPaths is a list of regular expression patterns matching URL paths
++	// to exclude from metric collection.
++	//
++	// When omitted, the platform uses a predefined list of paths to exclude.
++	// When set as an empty list, no paths are excluded.
++	// Maximum length for this list is 50.
++	// +kubebuilder:validation:MaxItems=50
++	// +kubebuilder:validation:MinItems=1
++	// +listType=set
++	// +optional
++	IgnoredPaths []string `json:"ignoredPaths,omitempty"`
++
++	// tlsConfig configures TLS settings for the metrics collector endpoint.
++	// When the collector is disabled, this field is ignored.
++	// When omitted, the platform default TLS settings are used.
++	// +optional
++	TLSConfig MetricsCollectorTLSConfig `json:"tlsConfig,omitempty,omitzero"`
++}
++
++// MetricsCollectorTLSConfig defines TLS settings for the metrics collector.
++// +kubebuilder:validation:MinProperties=1
++type MetricsCollectorTLSConfig struct {
++	// certFile specifies the path to the TLS certificate file.
++	// When omitted, the platform default certificate is used.
++	// +optional
++	// +kubebuilder:validation:MinLength=1
++	// +kubebuilder:validation:MaxLength=4096
++	CertFile string `json:"certFile,omitempty"`
++
++	// keyFile specifies the path to the TLS key file.
++	// When omitted, the platform default key is used.
++	// +optional
++	// +kubebuilder:validation:MinLength=1
++	// +kubebuilder:validation:MaxLength=4096
++	KeyFile string `json:"keyFile,omitempty"`
++}
+diff --git a/features/features.go b/features/features.go
+--- a/features/features.go
++++ b/features/features.go
+@@ -972,2 +972,11 @@
+ 					mustRegister()
+ )
++
++var (
++	FeatureGateConsoleMetricsCollector = newFeatureGate("ConsoleMetricsCollector").
++						reportProblemsToJiraComponent("Management-Console").
++						contactPerson("jhadvig").
++						productScope(ocpSpecific).
++						enable(inTechPreviewNoUpgrade()).
++						mustRegister()
++)

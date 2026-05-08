@@ -1,0 +1,30 @@
+diff --git a/config/v1/types_console.go b/config/v1/types_console.go
+--- a/config/v1/types_console.go
++++ b/config/v1/types_console.go
+@@ -33,7 +33,26 @@ type ConsoleSpec struct {
+ // ConsoleSpec is the specification of the desired behavior of the Console.
++// +kubebuilder:validation:XValidation:rule="!(has(self.customAlertTitle) && has(self.customAlertHTML))",message="customAlertTitle and customAlertHTML are mutually exclusive"
+ type ConsoleSpec struct {
+ 	// +optional
+ 	Authentication ConsoleAuthentication `json:"authentication"`
++
++	// customAlertTitle specifies a plain text alert title to display in the
++	// console. The title must be between 1 and 128 characters.
++	// This field is mutually exclusive with customAlertHTML.
++	// When omitted, no custom alert title is displayed.
++	// +optional
++	// +kubebuilder:validation:MinLength=1
++	// +kubebuilder:validation:MaxLength=128
++	CustomAlertTitle string `json:"customAlertTitle,omitempty"`
++
++	// customAlertHTML specifies an HTML alert message to display in the console.
++	// The message must be between 1 and 1024 characters.
++	// This field is mutually exclusive with customAlertTitle.
++	// When omitted, no custom alert is displayed.
++	// +optional
++	// +kubebuilder:validation:MinLength=1
++	// +kubebuilder:validation:MaxLength=1024
++	CustomAlertHTML string `json:"customAlertHTML,omitempty"`
+ }
+ 
+ // ConsoleStatus defines the observed status of the Console.

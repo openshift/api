@@ -7,25 +7,6 @@ parameters:
     required: false
 ---
 
-# Output Format Requirements
-You MUST use this EXACT format for ALL review feedback:
-
-
-+LineNumber: Brief description
-**Current (problematic) code:**
-```go
-[exact code from the PR diff]
-```
-
-**Suggested change:**
-```diff
-- [old code line]
-+ [new code line]
-```
-
-**Explanation:** [Why this change is needed]
-
-
 I'll run a comprehensive API review for OpenShift API changes. This can review either a specific GitHub PR or local changes against upstream master.
 
 ## Step 1: Pre-flight checks and determine review mode
@@ -133,25 +114,29 @@ echo "✅ Linting checks passed."
 
 ## Step 4: Documentation validation
 
-For each changed API file, I'll validate:
+**CRITICAL: Only review new or modified lines (the `+` lines in the diff). Do NOT flag pre-existing issues in unchanged context lines. There is significant tech debt in existing APIs and reviewing it is out of scope.**
 
-1. **Field Documentation**: All struct fields must have documentation comments
-2. **Optional Field Behavior**: Optional fields must explain what happens when they are omitted
-3. **Validation Documentation**: Validation rules must be documented and match markers
+For each changed API file, I'll validate only the new/modified lines for:
 
-Let me check each changed file for these requirements:
+1. **Field Documentation**: New struct fields must have documentation comments
+2. **Optional Field Behavior**: New optional fields must explain what happens when the field is omitted (not provided). This is about omission, not about empty values — empty strings or empty lists are a separate concern handled by validation markers.
+3. **Validation Documentation**: New validation rules must be documented and match markers. For `+kubebuilder:validation:Enum` fields, each enum value must be listed AND its meaning explained using the "When set to X, ..." pattern (e.g., "When set to Vault, HashiCorp Vault is used as the secret store"). Simply listing values without explaining what they do is insufficient.
+4. **Contradicting Validation vs Documentation**: Check if validation markers contradict the comment prose. For example, if `+kubebuilder:validation:MinItems=1` is set but the comment says "an empty list means no items are excluded", the validation prevents the behavior the documentation describes. The validation markers are the source of truth for runtime behavior, so the documentation must accurately describe what the validation permits. Note: "omitted" (field not provided) is different from "empty" (field present with zero items or empty string). `MinItems=1` preventing empty lists does NOT contradict documentation about omitted behavior — only flag a contradiction when documentation describes behavior for a value that the validation markers explicitly prevent.
+5. **Missing Cross-field Validation**: When documentation states a relationship between fields (e.g., "mutually exclusive with FieldX", "required when FieldY is set", "cannot be used together with FieldZ"), there MUST be a corresponding `+kubebuilder:validation:XValidation` rule enforcing that relationship. Documentation alone is not sufficient — the cluster will not enforce undocumented-in-code relationships.
+6. **Undocumented Constraints**: ALL kubebuilder constraint markers (`MinLength`, `MaxLength`, `MinItems`, `MaxItems`, `Minimum`, `Maximum`, `MaxProperties`, `Pattern`) MUST be documented in the field's comment. If a field has `+kubebuilder:validation:MinLength=5` but the comment does not mention the minimum length requirement, that is an issue. Exception: `MinProperties` does not need to be documented — it is a structural constraint (\"don't send an empty object\") that is self-evident from the type definition.
+7. **CEL Expression Review**: For `+kubebuilder:validation:XValidation` rules, check that CEL expressions are logically correct: no unreachable branches, correct enum value references that match the actual `+kubebuilder:validation:Enum` values, proper use of `has()` guards for optional fields, and no tautological or contradictory conditions. Prefer combined ternary expressions for related required/forbidden checks (e.g., `self.type == 'X' ? has(self.x) : !has(self.x)`). Flag verbose or overly complex CEL that could be simplified.
+
+**IMPORTANT: Only report issues that violate one of the 7 numbered rules above. Do not report design suggestions, code cleanup, type choice recommendations (e.g. `*int32` vs `int32`), missing `enhancementPR` calls, or best practices that fall outside these rules. A false positive is worse than a missed issue.**
 
 ```thinking
-I need to analyze the changed files to:
-1. Find struct fields without documentation
-2. Find optional fields without behavior documentation
-3. Find validation annotations without corresponding documentation
-
-For each Go file, I'll:
-- Look for struct field definitions
-- Check if they have preceding comment documentation
-- For optional fields (those with `+kubebuilder:validation:Optional` or `+optional`), verify behavior is explained
-- For fields with validation annotations, ensure the validation is documented
+For EACH changed field, check ALL of the following:
+1. Field documentation present?
+2. Optional fields explain omitted behavior?
+3. Validation markers documented and match?
+4. Any validation marker contradicting the comment prose?
+5. Documented field relationships enforced with XValidation?
+6. ALL constraint markers (MinLength, MaxLength, MinItems, MaxItems, Minimum, Maximum, MinProperties, MaxProperties, Pattern) documented in comment?
+7. CEL expressions logically correct? Prefer combined ternary for required/forbidden checks?
 ```
 
 ## Step 5: Generate comprehensive review report
@@ -195,3 +180,25 @@ fi
 4. MUST compare against the detected remote's master branch
 5. MUST include both committed and staged changes in analysis
 6. No branch switching required since we're reviewing local changes
+
+## FINAL OUTPUT — MANDATORY
+
+**After completing all analysis, you MUST produce a text response listing every issue found.** If you do not output text, the review is lost. Do not end on a tool call.
+
+Use this EXACT format for EACH issue:
+
++LineNumber: Brief description
+**Current (problematic) code:**
+```go
+[exact code from the PR diff]
+```
+
+**Suggested change:**
+```diff
+- [old code line]
++ [new code line]
+```
+
+**Explanation:** [Why this change is needed]
+
+Every issue must be enumerated individually. Do NOT summarize into tables or counts. If no issues are found, say "No issues found."

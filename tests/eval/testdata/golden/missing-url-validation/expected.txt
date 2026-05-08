@@ -1,0 +1,1 @@
+documented HTTPS requirement for webhookEndpoint not enforced with validation marker

@@ -1,0 +1,1 @@
+validation marker MinItems=1 contradicts documented behavior that empty list means no namespaces are excluded

@@ -1,0 +1,1 @@
+documented mutual exclusivity between inactivityTimeoutMinutes and sessionDurationMinutes not enforced with XValidation rule

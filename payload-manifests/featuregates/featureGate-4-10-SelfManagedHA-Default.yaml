@@ -168,6 +168,9 @@
                         "name": "KMSEncryption"
                     },
                     {
+                        "name": "LightspeedAgents"
+                    },
+                    {
                         "name": "MachineAPIMigration"
                     },
                     {

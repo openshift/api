@@ -226,6 +226,9 @@
                         "name": "KMSv1"
                     },
                     {
+                        "name": "LightspeedAgents"
+                    },
+                    {
                         "name": "MachineAPIMigration"
                     },
                     {

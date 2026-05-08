@@ -970,4 +970,12 @@ var (
 					enhancementPR("https://github.com/openshift/enhancements/pull/1962").
 					enable(inDevPreviewNoUpgrade()).
 					mustRegister()
+
+	FeatureGateLightspeedAgents = newFeatureGate("LightspeedAgents").
+					reportProblemsToJiraComponent("Lightspeed").
+					contactPerson("harpatil").
+					productScope(ocpSpecific).
+					enhancementPR("https://github.com/openshift/enhancements/pull/XXXX").
+					enable(inDevPreviewNoUpgrade(), inTechPreviewNoUpgrade()).
+					mustRegister()
 )

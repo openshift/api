@@ -88,7 +88,7 @@ var (
 						contactPerson("benluddy").
 						productScope(kubernetes).
 						enhancementPR("https://github.com/kubernetes/enhancements/issues/3962").
-						enable(inTechPreviewNoUpgrade(), inDevPreviewNoUpgrade()).
+						enable(inDefault(), inOKD(), inTechPreviewNoUpgrade(), inDevPreviewNoUpgrade()).
 						mustRegister()
 
 	FeatureGateOpenShiftPodSecurityAdmission = newFeatureGate("OpenShiftPodSecurityAdmission").
@@ -621,7 +621,6 @@ var (
 						enhancementPR(legacyFeatureGateWithoutEnhancement).
 						enable(inDefault(), inOKD(), inTechPreviewNoUpgrade(), inDevPreviewNoUpgrade()).
 						mustRegister()
-
 
 	FeatureGateVSphereMultiNetworks = newFeatureGate("VSphereMultiNetworks").
 					reportProblemsToJiraComponent("SPLAT").

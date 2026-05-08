@@ -975,7 +975,7 @@ var (
 					reportProblemsToJiraComponent("Lightspeed").
 					contactPerson("harpatil").
 					productScope(ocpSpecific).
-					enhancementPR("https://github.com/openshift/enhancements/pull/XXXX").
+					enhancementPR("https://github.com/openshift/enhancements/pull/2003").
 					enable(inDevPreviewNoUpgrade(), inTechPreviewNoUpgrade()).
 					mustRegister()
 )

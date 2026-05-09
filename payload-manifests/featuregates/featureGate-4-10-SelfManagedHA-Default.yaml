@@ -120,13 +120,7 @@
                         "name": "DNSNameResolver"
                     },
                     {
-                        "name": "DRAPartitionableDevices"
-                    },
-                    {
                         "name": "DyanmicServiceEndpointIBMCloud"
-                    },
-                    {
-                        "name": "EVPN"
                     },
                     {
                         "name": "EtcdBackendQuota"
@@ -237,6 +231,9 @@
                         "name": "NutanixMultiSubnets"
                     },
                     {
+                        "name": "OLMLifecycleAndCompatibility"
+                    },
+                    {
                         "name": "OSStreams"
                     },
                     {
@@ -294,6 +291,9 @@
                     },
                     {
                         "name": "DualReplica"
+                    },
+                    {
+                        "name": "EVPN"
                     },
                     {
                         "name": "EventTTL"

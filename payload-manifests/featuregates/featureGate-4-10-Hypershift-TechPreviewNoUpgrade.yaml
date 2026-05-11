@@ -17,6 +17,9 @@
             {
                 "disabled": [
                     {
+                        "name": "AuthenticationComponentProxy"
+                    },
+                    {
                         "name": "ClientsAllowCBOR"
                     },
                     {

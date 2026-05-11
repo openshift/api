@@ -322,6 +322,9 @@
                         "name": "OpenShiftPodSecurityAdmission"
                     },
                     {
+                        "name": "ResourceStateMetrics"
+                    },
+                    {
                         "name": "RouteExternalCertificate"
                     },
                     {

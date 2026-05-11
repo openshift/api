@@ -978,6 +978,7 @@ var (
 					enhancementPR("https://github.com/openshift/enhancements/pull/1962").
 					enable(inDevPreviewNoUpgrade()).
 					mustRegister()
+
 	FeatureGateNetworkObservabilityInstall = newFeatureGate("NetworkObservabilityInstall").
 						reportProblemsToJiraComponent("netobserv").
 						contactPerson("jtakvori").
@@ -1000,5 +1001,13 @@ var (
 					productScope(ocpSpecific).
 					enhancementPR("https://github.com/openshift/enhancements/pull/2008").
 					enable(inClusterProfile(SelfManaged), inDevPreviewNoUpgrade()).
+					mustRegister()
+
+	FeatureGateResourceStateMetrics = newFeatureGate("ResourceStateMetrics").
+					reportProblemsToJiraComponent("Monitoring").
+					contactPerson("rexagod").
+					productScope(kubernetes).
+					enhancementPR("https://github.com/kubernetes/enhancements/issues/4785").
+					enable(inTechPreviewNoUpgrade(), inDevPreviewNoUpgrade()).
 					mustRegister()
 )

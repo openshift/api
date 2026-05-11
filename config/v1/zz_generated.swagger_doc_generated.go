@@ -2341,7 +2341,7 @@ func (KMSPluginConfig) SwaggerDoc() map[string]string {
 
 var map_VaultAppRoleAuthentication = map[string]string{
 	"":       "VaultAppRoleAuthentication defines the configuration for AppRole authentication with Vault.",
-	"secret": "secret references a secret in the openshift-config namespace containing the AppRole credentials used to authenticate with Vault. The secret must contain two keys: \"roleID\" for the AppRole Role ID and \"secretID\" for the AppRole Secret ID.\n\nThe namespace for the secret is openshift-config.",
+	"secret": "secret references a secret in the openshift-config namespace containing the AppRole credentials used to authenticate with Vault. The secret must contain two keys: \"role-id\" for the AppRole Role ID and \"secret-id\" for the AppRole Secret ID.",
 }
 
 func (VaultAppRoleAuthentication) SwaggerDoc() map[string]string {
@@ -2374,8 +2374,8 @@ var map_VaultKMSPluginConfig = map[string]string{
 	"vaultNamespace": "vaultNamespace specifies the Vault namespace where the Transit secrets engine is mounted. This is only applicable for Vault Enterprise installations. When this field is not set, no namespace is used.\n\nThe value must be between 1 and 4096 characters. The namespace cannot end with a forward slash, cannot contain spaces, and cannot be one of the reserved strings: root, sys, audit, auth, cubbyhole, or identity.",
 	"tls":            "tls contains the TLS configuration for connecting to the Vault server. When this field is not set, system default TLS settings are used.",
 	"authentication": "authentication defines the authentication method used to authenticate with Vault.",
-	"transitMount":   "transitMount specifies the mount path of the Vault Transit engine. The value must be between 1 and 1024 characters when specified.\n\nWhen omitted, this means the user has no opinion and the platform is left to choose a reasonable default. These defaults are subject to change over time. The current default is \"transit\".\n\nThe mount path cannot start or end with a forward slash, cannot contain spaces, and cannot contain consecutive forward slashes.",
-	"transitKey":     "transitKey specifies the name of the encryption key in Vault's Transit engine. This key is used to encrypt and decrypt data.\n\nThe key name must be between 1 and 512 characters and cannot contain spaces or forward slashes.",
+	"transitMount":   "transitMount specifies the mount path of the Vault Transit engine.\n\nWhen omitted, this means the user has no opinion and the platform is left to choose a reasonable default. These defaults are subject to change over time. The current default is \"transit\".\n\nThe transit mount must be between 1 and 1024 characters when specified, cannot start or end with a forward slash, cannot contain consecutive forward slashes, and must only contain RFC 3986 unreserved characters (alphanumeric, hyphen, period, underscore, tilde) and forward slashes as path separators.",
+	"transitKey":     "transitKey specifies the name of the encryption key in Vault's Transit engine. This key is used to encrypt and decrypt data.\n\nThe transit key must be between 1 and 512 characters, cannot contain forward slashes, and must only contain alphanumeric characters, hyphens, periods, and underscores.",
 }
 
 func (VaultKMSPluginConfig) SwaggerDoc() map[string]string {

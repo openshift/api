@@ -5,21 +5,14 @@ featureGates:
 - KMSEncryption
 tests:
   onCreate:
-    - name: Should be able to create with KMS type without kms config
+    - name: Should reject KMS encryption type without kms config
       initial: |
         apiVersion: config.openshift.io/v1
         kind: APIServer
         spec:
           encryption:
             type: KMS
-      expected: |
-        apiVersion: config.openshift.io/v1
-        kind: APIServer
-        spec:
-          audit:
-            profile: Default
-          encryption:
-            type: KMS
+      expectedError: "kms config is required when encryption type is KMS"
     - name: Should be able to create with aescbc encryption
       initial: |
         apiVersion: config.openshift.io/v1
@@ -65,3 +58,23 @@ tests:
             profile: Default
           encryption:
             type: identity
+
+    - name: Should reject kms config when encryption type is not KMS
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: APIServer
+        spec:
+          encryption:
+            type: aescbc
+            kms:
+              type: Vault
+              vault:
+                kmsPluginImage: registry.example.com/vault-plugin@sha256:0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef
+                vaultAddress: https://vault.example.com:8200
+                authentication:
+                  type: AppRole
+                  appRole:
+                    secret:
+                      name: vault-approle
+                transitKey: my-key
+      expectedError: "kms config is required when encryption type is KMS, and forbidden otherwise"

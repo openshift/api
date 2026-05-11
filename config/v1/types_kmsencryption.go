@@ -114,9 +114,7 @@ const (
 type VaultAppRoleAuthentication struct {
 	// secret references a secret in the openshift-config namespace containing
 	// the AppRole credentials used to authenticate with Vault.
-	// The secret must contain two keys: "roleID" for the AppRole Role ID and "secretID" for the AppRole Secret ID.
-	//
-	// The namespace for the secret is openshift-config.
+	// The secret must contain two keys: "role-id" for the AppRole Role ID and "secret-id" for the AppRole Secret ID.
 	//
 	// +required
 	Secret VaultSecretReference `json:"secret,omitzero"`
@@ -194,33 +192,35 @@ type VaultKMSPluginConfig struct {
 	Authentication VaultAuthentication `json:"authentication,omitzero"`
 
 	// transitMount specifies the mount path of the Vault Transit engine.
-	// The value must be between 1 and 1024 characters when specified.
 	//
 	// When omitted, this means the user has no opinion and the platform is left
 	// to choose a reasonable default. These defaults are subject to change over time.
 	// The current default is "transit".
 	//
-	// The mount path cannot start or end with a forward slash, cannot contain spaces,
-	// and cannot contain consecutive forward slashes.
+	// The transit mount must be between 1 and 1024 characters when specified, cannot start or
+	// end with a forward slash, cannot contain consecutive forward slashes, and must only contain
+	// RFC 3986 unreserved characters (alphanumeric, hyphen, period, underscore, tilde) and forward
+	// slashes as path separators.
 	//
 	// +kubebuilder:validation:MinLength=1
 	// +kubebuilder:validation:MaxLength=1024
 	// +kubebuilder:validation:XValidation:rule="!self.startsWith('/')",message="transitMount cannot start with a forward slash"
 	// +kubebuilder:validation:XValidation:rule="!self.endsWith('/')",message="transitMount cannot end with a forward slash"
-	// +kubebuilder:validation:XValidation:rule="!self.contains(' ')",message="transitMount cannot contain spaces"
 	// +kubebuilder:validation:XValidation:rule="!self.contains('//')",message="transitMount cannot contain consecutive forward slashes"
+	// +kubebuilder:validation:XValidation:rule="self.matches('^[a-zA-Z0-9._~/-]+$')",message="transitMount must only contain RFC 3986 unreserved characters (alphanumeric, hyphen, period, underscore, tilde) and forward slashes"
 	// +optional
 	TransitMount string `json:"transitMount,omitempty"`
 
 	// transitKey specifies the name of the encryption key in Vault's Transit engine.
 	// This key is used to encrypt and decrypt data.
 	//
-	// The key name must be between 1 and 512 characters and cannot contain spaces or forward slashes.
+	// The transit key must be between 1 and 512 characters, cannot contain forward slashes,
+	// and must only contain alphanumeric characters, hyphens, periods, and underscores.
 	//
 	// +kubebuilder:validation:MinLength=1
 	// +kubebuilder:validation:MaxLength=512
-	// +kubebuilder:validation:XValidation:rule="!self.contains(' ')",message="transitKey cannot contain spaces"
 	// +kubebuilder:validation:XValidation:rule="!self.contains('/')",message="transitKey cannot contain forward slashes"
+	// +kubebuilder:validation:XValidation:rule="self.matches('^[a-zA-Z0-9._-]+$')",message="transitKey must only contain alphanumeric characters, hyphens, periods, and underscores"
 	// +required
 	TransitKey string `json:"transitKey,omitempty"`
 }

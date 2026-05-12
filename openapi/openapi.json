@@ -37768,6 +37768,10 @@
           "type": "integer",
           "format": "int32"
         },
+        "labelSelector": {
+          "description": "labelSelector is a label selector, in string format, for Machines corresponding to the MachineSet. It is exposed via the scale subresource as status.selector. When omitted, the MachineSet controller has not yet reconciled spec.selector into status.labelSelector. When present, it must not be empty and must not exceed 4096 characters.",
+          "type": "string"
+        },
         "observedGeneration": {
           "description": "observedGeneration reflects the generation of the most recently observed MachineSet.",
           "type": "integer",
@@ -48384,7 +48388,10 @@
             "default": {},
             "$ref": "#/definitions/com.github.openshift.api.operator.v1alpha1.ClusterAPIInstallerRevisionManifestSubstitution"
           },
-          "x-kubernetes-list-type": "atomic"
+          "x-kubernetes-list-map-keys": [
+            "key"
+          ],
+          "x-kubernetes-list-type": "map"
         },
         "name": {
           "description": "name is the name of a revision.",
@@ -48488,7 +48495,7 @@
           "type": "string"
         },
         "observedRevisionGeneration": {
-          "description": "observedRevisionGeneration is the generation of the ClusterAPI object that was last observed by the revision controller. If specified it must be greater than or equal to 1. It may not decrease or be unset once set.",
+          "description": "observedRevisionGeneration is the generation of the ClusterAPI object that was last observed by the revision controller. If specified it must be greater than or equal to 1, and less than 2^53. It may not decrease or be unset once set.",
           "type": "integer",
           "format": "int64"
         },

@@ -2151,7 +2151,7 @@ var map_ComponentRouteSpec = map[string]string{
 	"name":                     "name is the logical name of the route to customize.\n\nThe namespace and name of this componentRoute must match a corresponding entry in the list of status.componentRoutes if the route is to be customized.",
 	"hostname":                 "hostname is the hostname that should be used by the route.",
 	"servingCertKeyPairSecret": "servingCertKeyPairSecret is a reference to a secret of type `kubernetes.io/tls` in the openshift-config namespace. The serving cert/key pair must match and will be used by the operator to fulfill the intent of serving with this name. If the custom hostname uses the default routing suffix of the cluster, the Secret specification for a serving certificate will not be needed.",
-	"labels":                   "labels defines additional labels to be applied to the route created for the component. These labels are used by the IngressController to determine which routes it should manage.",
+	"labels":                   "labels defines additional labels to be applied to the route created for the component. These labels are used by the IngressController to determine which routes it should manage. Label keys and values must conform to Kubernetes label conventions: keys must be 1-63 characters (with optional prefix up to 253 characters), and values must be 0-63 characters, consisting of alphanumeric characters, '-', '_', or '.', and must start and end with an alphanumeric character.",
 }
 
 func (ComponentRouteSpec) SwaggerDoc() map[string]string {

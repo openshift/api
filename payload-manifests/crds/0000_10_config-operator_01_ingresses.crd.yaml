@@ -82,7 +82,20 @@ spec:
                         labels defines additional labels to be applied to the route created
                         for the component. These labels are used by the IngressController to
                         determine which routes it should manage.
+                        Label keys and values must conform to Kubernetes label conventions:
+                        keys must be 1-63 characters (with optional prefix up to 253 characters),
+                        and values must be 0-63 characters, consisting of alphanumeric characters,
+                        '-', '_', or '.', and must start and end with an alphanumeric character.
+                      maxProperties: 8
                       type: object
+                      x-kubernetes-map-type: granular
+                      x-kubernetes-validations:
+                      - message: label keys must be valid Kubernetes label keys
+                        rule: self.all(key, key.matches('^([a-z0-9]([-a-z0-9]*[a-z0-9])?(\\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*[/])?([A-Za-z0-9]([-A-Za-z0-9_.]{0,61}[A-Za-z0-9])?)$'))
+                      - message: label values must be valid Kubernetes label values
+                          (at most 63 characters, alphanumeric, '-', '_', or '.',
+                          must start and end with alphanumeric)
+                        rule: self.all(key, self[key].matches('^(([A-Za-z0-9][-A-Za-z0-9_.]{0,61})?[A-Za-z0-9])?$'))
                     name:
                       description: |-
                         name is the logical name of the route to customize.

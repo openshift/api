@@ -165,9 +165,6 @@
                         "name": "IrreconcilableMachineConfig"
                     },
                     {
-                        "name": "KMSEncryption"
-                    },
-                    {
                         "name": "MachineAPIMigration"
                     },
                     {
@@ -306,6 +303,9 @@
                     },
                     {
                         "name": "InsightsOnDemandDataGather"
+                    },
+                    {
+                        "name": "KMSEncryption"
                     },
                     {
                         "name": "KMSv1"

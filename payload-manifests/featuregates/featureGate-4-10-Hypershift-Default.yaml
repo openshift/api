@@ -198,9 +198,6 @@
                         "name": "MultiDiskSetup"
                     },
                     {
-                        "name": "MutatingAdmissionPolicy"
-                    },
-                    {
                         "name": "NetworkConnect"
                     },
                     {
@@ -335,10 +332,10 @@
                         "name": "MutableCSINodeAllocatableCount"
                     },
                     {
-                        "name": "OpenShiftPodSecurityAdmission"
+                        "name": "MutatingAdmissionPolicy"
                     },
                     {
-                        "name": "RouteExternalCertificate"
+                        "name": "OpenShiftPodSecurityAdmission"
                     },
                     {
                         "name": "ServiceAccountTokenNodeBinding"

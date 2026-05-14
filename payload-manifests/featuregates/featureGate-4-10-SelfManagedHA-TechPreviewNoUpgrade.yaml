@@ -319,9 +319,6 @@
                         "name": "OpenShiftPodSecurityAdmission"
                     },
                     {
-                        "name": "RouteExternalCertificate"
-                    },
-                    {
                         "name": "SELinuxMount"
                     },
                     {

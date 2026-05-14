@@ -140,9 +140,6 @@
                         "name": "ExternalOIDCExternalClaimsSourcing"
                     },
                     {
-                        "name": "ExternalOIDCWithUpstreamParity"
-                    },
-                    {
                         "name": "ExternalSnapshotMetadata"
                     },
                     {
@@ -323,6 +320,9 @@
                     },
                     {
                         "name": "ExternalOIDCWithUIDAndExtraClaimMappings"
+                    },
+                    {
+                        "name": "ExternalOIDCWithUpstreamParity"
                     },
                     {
                         "name": "GatewayAPIWithoutOLM"

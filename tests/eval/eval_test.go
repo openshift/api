@@ -30,8 +30,8 @@ const (
 
 	// Pinned commit that all eval patches are written against.
 	// Override with EVAL_BASE_REF env var during development.
-	// Update this when rebasing patches — see EVAL_EXPANSION.md § "Updating the Eval Baseline".
-	defaultEvalBaseRef = "FILL_BEFORE_MERGE"
+	// Update this when rebasing patches — see README.md § "Updating the baseline".
+	defaultEvalBaseRef = "ecec2e859"
 
 	defaultGoldenModel      = "sonnet"
 	defaultIntegrationModel = "opus"
@@ -134,8 +134,8 @@ var _ = SynchronizedBeforeSuite(func() []byte {
 	_, err = os.Stat(filepath.Join(root, "AGENTS.md"))
 	Expect(err).NotTo(HaveOccurred(), "AGENTS.md must exist in repository root")
 
-	_, err = os.Stat(filepath.Join(root, ".claude", "commands", "api-review.md"))
-	Expect(err).NotTo(HaveOccurred(), ".claude/commands/api-review.md must exist")
+	_, err = os.Stat(filepath.Join(root, ".claude", "skills", "api-review", "SKILL.md"))
+	Expect(err).NotTo(HaveOccurred(), ".claude/skills/api-review/SKILL.md must exist")
 
 	return []byte(root)
 }, func(data []byte) {
@@ -303,21 +303,10 @@ func createWorktree(patch []byte) string {
 	output, err := cmd.CombinedOutput()
 	Expect(err).NotTo(HaveOccurred(), "git worktree add failed: %s", string(output))
 
-	By("copying .claude/commands from working tree")
-	srcCommands := filepath.Join(repoRoot, ".claude", "commands")
-	dstCommands := filepath.Join(dir, ".claude", "commands")
-	err = os.MkdirAll(dstCommands, 0o755)
-	Expect(err).NotTo(HaveOccurred(), "failed to create .claude/commands in worktree")
-	cmdFiles, err := os.ReadDir(srcCommands)
-	Expect(err).NotTo(HaveOccurred(), "failed to read .claude/commands")
-	for _, f := range cmdFiles {
-		if f.IsDir() {
-			continue
-		}
-		data, readErr := os.ReadFile(filepath.Join(srcCommands, f.Name()))
-		Expect(readErr).NotTo(HaveOccurred())
-		Expect(os.WriteFile(filepath.Join(dstCommands, f.Name()), data, 0o644)).To(Succeed())
-	}
+	By("copying .claude/skills from working tree")
+	srcSkills := filepath.Join(repoRoot, ".claude", "skills")
+	dstSkills := filepath.Join(dir, ".claude", "skills")
+	Expect(copyDirRecursive(srcSkills, dstSkills)).To(Succeed())
 
 	By("applying patch in worktree")
 	cmd = exec.Command("git", "apply", "--3way", "-")
@@ -327,6 +316,27 @@ func createWorktree(patch []byte) string {
 	Expect(err).NotTo(HaveOccurred(), "git apply failed: %s", string(output))
 
 	return dir
+}
+
+func copyDirRecursive(src, dst string) error {
+	return filepath.Walk(src, func(path string, info os.FileInfo, err error) error {
+		if err != nil {
+			return err
+		}
+		rel, err := filepath.Rel(src, path)
+		if err != nil {
+			return err
+		}
+		target := filepath.Join(dst, rel)
+		if info.IsDir() {
+			return os.MkdirAll(target, 0o755)
+		}
+		data, err := os.ReadFile(path)
+		if err != nil {
+			return err
+		}
+		return os.WriteFile(target, data, 0o644)
+	})
 }
 
 func removeWorktree(dir string) {
@@ -469,7 +479,7 @@ func runTestCase(tc testCase, reviewModel, judgeModelName, judgePromptTemplate s
 }
 
 var _ = Describe("API Review Evaluation", func() {
-	Context("Golden Tests", func() {
+	Context("Golden Tests", Label("golden"), func() {
 		DescribeTable("should correctly identify single issues",
 			func(tc testCase) {
 				runTestCase(tc, goldenModel, judgeModel, goldenJudgePrompt)
@@ -478,7 +488,7 @@ var _ = Describe("API Review Evaluation", func() {
 		)
 	})
 
-	Context("Integration Tests", func() {
+	Context("Integration Tests", Label("integration"), func() {
 		entries := loadEntries(integrationDir)
 		if len(entries) == 0 {
 			return

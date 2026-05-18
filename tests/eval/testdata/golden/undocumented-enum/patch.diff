@@ -8,7 +8,7 @@ diff --git a/config/v1/types_console.go b/config/v1/types_console.go
  	Authentication ConsoleAuthentication `json:"authentication"`
 +
 +	// theme specifies the console color theme.
-+	// When omitted, the default theme is used.
++	// When omitted, the Light theme is used.
 +	// +optional
 +	// +kubebuilder:validation:Enum=Light;Dark
 +	Theme string `json:"theme,omitempty"`

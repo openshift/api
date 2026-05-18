@@ -185,20 +185,20 @@ integration:
 #   EVAL_GOLDEN_MODEL=...    Model for golden tests (default: sonnet)
 #   EVAL_INTEGRATION_MODEL=... Model for integration tests (default: opus)
 #   EVAL_JUDGE_MODEL=...     Model for judging results (default: haiku)
-#   EVAL_GOLDEN_PROCS=8      Max parallel golden tests (default: 8)
-#   EVAL_INTEGRATION_PROCS=4 Max parallel integration tests (default: 4)
+#   EVAL_GOLDEN_PROCS=4      Max parallel golden tests (default: 4)
+#   EVAL_INTEGRATION_PROCS=2 Max parallel integration tests (default: 2)
 #   EVAL_GINKGO_ARGS=...     Extra ginkgo args
 .PHONY: eval
 eval:
-	make -C tests eval
+	$(MAKE) -C tests eval
 
 .PHONY: eval-golden
 eval-golden:
-	make -C tests eval-golden
+	$(MAKE) -C tests eval-golden
 
 .PHONY: eval-integration
 eval-integration:
-	make -C tests eval-integration
+	$(MAKE) -C tests eval-integration
 
 tests-vendor:
 	make -C tests vendor

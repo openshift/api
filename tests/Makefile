@@ -36,11 +36,11 @@ eval: eval-golden eval-integration ## Run all eval tests: goldens first, then in
 
 .PHONY: eval-golden
 eval-golden: ## Run golden eval tests (single-issue, uses sonnet by default)
-	$(GINKGO) -r -v --tags eval --procs=$(EVAL_GOLDEN_PROCS) --output-interceptor-mode=none $(EVAL_GINKGO_ARGS) --keep-going --timeout=30m --focus="Golden Tests" ./eval/
+	$(GINKGO) -r -v --tags eval --procs=$(EVAL_GOLDEN_PROCS) $(EVAL_GINKGO_ARGS) --keep-going --timeout=30m --junit-report=junit-eval-golden.xml --label-filter="golden" ./eval/
 
 .PHONY: eval-integration
 eval-integration: ## Run integration eval tests (multi-issue, uses opus by default)
-	$(GINKGO) -r -v --tags eval --procs=$(EVAL_INTEGRATION_PROCS) --output-interceptor-mode=none $(EVAL_GINKGO_ARGS) --keep-going --timeout=30m --focus="Integration Tests" ./eval/
+	$(GINKGO) -r -v --tags eval --procs=$(EVAL_INTEGRATION_PROCS) $(EVAL_GINKGO_ARGS) --keep-going --timeout=30m --junit-report=junit-eval-integration.xml --label-filter="integration" ./eval/
 
 .PHONY: vendor
 vendor:

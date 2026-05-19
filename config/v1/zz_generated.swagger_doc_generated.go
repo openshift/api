@@ -2511,6 +2511,15 @@ func (NetworkMigration) SwaggerDoc() map[string]string {
 	return map_NetworkMigration
 }
 
+var map_NetworkObservabilitySpec = map[string]string{
+	"":                   "NetworkObservabilitySpec defines the configuration for network observability installation",
+	"installationPolicy": "installationPolicy controls whether network observability is installed during cluster deployment. Valid values are \"InstallAndEnable\" and \"NoAction\". When set to \"InstallAndEnable\", ensure that network observability will be installed and enabled on the cluster. If already installed, no action taken, but if it gets uninstalled, it will install it again. When set to \"NoAction\", nothing will be done regarding Network observability.",
+}
+
+func (NetworkObservabilitySpec) SwaggerDoc() map[string]string {
+	return map_NetworkObservabilitySpec
+}
+
 var map_NetworkSpec = map[string]string{
 	"":                     "NetworkSpec is the desired network configuration. As a general rule, this SHOULD NOT be read directly. Instead, you should consume the NetworkStatus, as it indicates the currently deployed configuration. Currently, most spec fields are immutable after installation. Please view the individual ones for further details on each.",
 	"clusterNetwork":       "IP address pool to use for pod IPs. This field is immutable after installation.",
@@ -2519,6 +2528,7 @@ var map_NetworkSpec = map[string]string{
 	"externalIP":           "externalIP defines configuration for controllers that affect Service.ExternalIP. If nil, then ExternalIP is not allowed to be set.",
 	"serviceNodePortRange": "The port range allowed for Services of type NodePort. If not specified, the default of 30000-32767 will be used. Such Services without a NodePort specified will have one automatically allocated from this range. This parameter can be updated after the cluster is installed.",
 	"networkDiagnostics":   "networkDiagnostics defines network diagnostics configuration.\n\nTakes precedence over spec.disableNetworkDiagnostics in network.operator.openshift.io. If networkDiagnostics is not specified or is empty, and the spec.disableNetworkDiagnostics flag in network.operator.openshift.io is set to true, the network diagnostics feature will be disabled.",
+	"networkObservability": "networkObservability is an optional field that configures network observability installation during cluster deployment (day-0). When omitted, unless this is a SNO cluster, network observability will be installed if not already present, after that, no action taken.",
 }
 
 func (NetworkSpec) SwaggerDoc() map[string]string {

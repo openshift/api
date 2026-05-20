@@ -137,6 +137,7 @@ func (AuthenticationStatus) SwaggerDoc() map[string]string {
 
 var map_OAuthAPIServerStatus = map[string]string{
 	"latestAvailableRevision": "latestAvailableRevision is the latest revision used as suffix of revisioned secrets like encryption-config. A new revision causes a new deployment of pods.",
+	"encryptionStatus":        "encryptionStatus contains status reports for the KMS plugin health and its key rotation.",
 }
 
 func (OAuthAPIServerStatus) SwaggerDoc() map[string]string {
@@ -1327,6 +1328,7 @@ func (KubeAPIServerSpec) SwaggerDoc() map[string]string {
 
 var map_KubeAPIServerStatus = map[string]string{
 	"serviceAccountIssuers": "serviceAccountIssuers tracks history of used service account issuers. The item without expiration time represents the currently used service account issuer. The other items represents service account issuers that were used previously and are still being trusted. The default expiration for the items is set by the platform and it defaults to 24h. see: https://kubernetes.io/docs/tasks/configure-pod-container/configure-service-account/#service-account-token-volume-projection",
+	"encryptionStatus":      "encryptionStatus contains status reports for the KMS plugin health and its key rotation.",
 }
 
 func (KubeAPIServerStatus) SwaggerDoc() map[string]string {
@@ -2078,6 +2080,14 @@ var map_OpenShiftAPIServerList = map[string]string{
 
 func (OpenShiftAPIServerList) SwaggerDoc() map[string]string {
 	return map_OpenShiftAPIServerList
+}
+
+var map_OpenShiftAPIServerStatus = map[string]string{
+	"encryptionStatus": "encryptionStatus contains status reports for the KMS plugin health and its key rotation.",
+}
+
+func (OpenShiftAPIServerStatus) SwaggerDoc() map[string]string {
+	return map_OpenShiftAPIServerStatus
 }
 
 var map_OpenShiftControllerManager = map[string]string{

@@ -1,6 +1,7 @@
 package v1
 
 import (
+	v1 "github.com/openshift/api/config/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
@@ -49,6 +50,11 @@ type OAuthAPIServerStatus struct {
 	// +optional
 	// +kubebuilder:validation:Minimum=0
 	LatestAvailableRevision int32 `json:"latestAvailableRevision,omitempty"`
+
+	// encryptionStatus contains status reports for the KMS plugin health and its key rotation.
+	// +optional
+	// +openshift:enable:FeatureGate=KMSEncryption
+	EncryptionStatus v1.APIServerEncryptionStatus `json:"encryptionStatus,omitempty,omitzero"`
 }
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object

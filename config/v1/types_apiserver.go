@@ -267,6 +267,124 @@ const (
 	EncryptionTypeKMS EncryptionType = "KMS"
 )
 
+// +openshift:validation:FeatureGateAwareEnum:featureGate=KMSEncryption,enum="";healthy;unhealthy;error
+type KMSPluginHealthStatus string
+
+const (
+	KMSPluginHealthStatusHealthy KMSPluginHealthStatus = "healthy"
+
+	KMSPluginHealthStatusUnhealthy KMSPluginHealthStatus = "unhealthy"
+
+	KMSPluginHealthStatusError KMSPluginHealthStatus = "error"
+)
+
+// +openshift:compatibility-gen:level=1
+type KMSPluginHealthReport struct {
+
+	// nodeName is the name of the node this instance of the plugin runs on.
+	// The combination of NodeName/KeyId makes this health report unique.
+	// The value must be at most 512 characters.
+	// +kubebuilder:validation:MinLength=1
+	// +kubebuilder:validation:MaxLength=512
+	// +required
+	NodeName string `json:"nodeName,omitempty"`
+
+	// keyId is the encryption-key-secret id (kms-{keyId}.sock), a unique identifier of the plugin on that node.
+	// This is not a cryptographic key used to encrypt/decrypt any resources.
+	// The value must be at most 512 characters.
+	// +kubebuilder:validation:MinLength=1
+	// +kubebuilder:validation:MaxLength=512
+	// +required
+	KeyId string `json:"keyId,omitempty"`
+
+	// status contains a health indicator for the respective KMS plugin
+	// The field can have three states: healthy, unhealthy, error.
+	// With error and unhealthy containing additional information in Detail.
+	//
+	// +kubebuilder:validation:MinLength=1
+	// +kubebuilder:validation:MaxLength=10
+	// +required
+	Status KMSPluginHealthStatus `json:"status,omitempty"`
+
+	// lastChecked is a timestamp of when the probe was last checked.
+	// +required
+	LastChecked metav1.Time `json:"lastChecked,omitempty"`
+
+	// kekId refers to the remote KEK id from KMS v2 StatusResponse.key_id.
+	// This is not a cryptographic key, but a unique representation of the KEK.
+	// +kubebuilder:validation:MinLength=0
+	// +kubebuilder:validation:MaxLength=1024
+	// +optional
+	KEKId *string `json:"kekId,omitempty"`
+
+	// detail contains additional error/health information; omitted when healthy
+	// +kubebuilder:validation:MinLength=0
+	// +kubebuilder:validation:MaxLength=1024
+	// +optional
+	Detail *string `json:"detail,omitempty"`
+}
+
+// +openshift:compatibility-gen:level=1
+// +kubebuilder:validation:XValidation:rule="!has(self.migrationStartTime) || has(self.discoveryTime)",message="migrationStartTime requires discoveryTime to be set"
+// +kubebuilder:validation:XValidation:rule="!has(self.migrationFinishTime) || (has(self.discoveryTime) && has(self.migrationStartTime))",message="migrationFinishTime requires discoveryTime and migrationStartTime to be set"
+// +kubebuilder:validation:XValidation:rule="!has(oldSelf.discoveryTime) || self.discoveryTime == oldSelf.discoveryTime",message="discoveryTime is immutable once set"
+// +kubebuilder:validation:XValidation:rule="!has(oldSelf.migrationStartTime) || self.migrationStartTime == oldSelf.migrationStartTime",message="migrationStartTime is immutable once set"
+// +kubebuilder:validation:XValidation:rule="!has(oldSelf.migrationFinishTime) || self.migrationFinishTime == oldSelf.migrationFinishTime",message="migrationFinishTime is immutable once set"
+type KMSPluginRotationStatus struct {
+	// kekId refers to the remote KEK id from KMS v2 StatusResponse.key_id.
+	// This id can change externally and tells OpenShift when to trigger a migration of the configured resources.
+	// +kubebuilder:validation:MinLength=1
+	// +kubebuilder:validation:MaxLength=1024
+	// +required
+	KEKId string `json:"kekId,omitempty"`
+
+	// discoveryTime contains the time when the operator has detected a change in the status keyId, this
+	// is determined by all nodes agreeing on the same KEKid.
+	// This can be used to give additional time for key convergence or cache invalidation before a migration is started.
+	// When omitted, the KEKId has not been observed from all nodes yet.
+	// migrationStartTime and migrationFinishTime require discoveryTime to be set.
+	// Once set, discoveryTime is immutable.
+	// +optional
+	DiscoveryTime *metav1.Time `json:"discoveryTime,omitempty"`
+
+	// migrationStartTime contains the time when the operator has kicked off a storage migration, triggered by a change
+	// in the KEKid. When omitted, no migration has been triggered yet.
+	// migrationStartTime requires discoveryTime to be set.
+	// migrationFinishTime requires migrationStartTime to be set.
+	// Once set, migrationStartTime is immutable.
+	// +optional
+	MigrationStartTime *metav1.Time `json:"migrationStartTime,omitempty"`
+
+	// migrationFinishTime contains the time when the storage migration completed successfully.
+	// If this value is unset, but a migrationStartTime is supplied, a migration is currently in progress.
+	// migrationFinishTime requires discoveryTime and migrationStartTime to be set.
+	// Once set, migrationFinishTime is immutable.
+	// +optional
+	MigrationFinishTime *metav1.Time `json:"migrationFinishTime,omitempty"`
+}
+
+// +openshift:compatibility-gen:level=1
+// +kubebuilder:validation:MinProperties=1
+type APIServerEncryptionStatus struct {
+	// healthReports contains all KMS plugin health reports for this APIServer.
+	// When omitted, no health reports are available.
+	// +optional
+	// +kubebuilder:validation:MinItems=0
+	// +kubebuilder:validation:MaxItems=100
+	// +listType=atomic
+	HealthReports []KMSPluginHealthReport `json:"healthReports,omitempty"`
+
+	// keyRotationStatus contains the status of the last three key rotations that were running.
+	// When omitted, no key rotations have been recorded.
+	// The list is limited to the 10 most recent rotation records and is a map keyed by kekId.
+	// +optional
+	// +kubebuilder:validation:MinItems=0
+	// +kubebuilder:validation:MaxItems=10
+	// +listType=map
+	// +listMapKey=kekId
+	KeyRotationStatus []KMSPluginRotationStatus `json:"keyRotationStatus,omitempty"`
+}
+
 type APIServerStatus struct {
 }
 

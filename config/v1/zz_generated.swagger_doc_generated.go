@@ -286,6 +286,15 @@ func (APIServerEncryption) SwaggerDoc() map[string]string {
 	return map_APIServerEncryption
 }
 
+var map_APIServerEncryptionStatus = map[string]string{
+	"healthReports":     "healthReports contains all KMS plugin health reports for this APIServer. When omitted, no health reports are available.",
+	"keyRotationStatus": "keyRotationStatus contains the status of the last three key rotations that were running. When omitted, no key rotations have been recorded. The list is limited to the 10 most recent rotation records and is a map keyed by kekId.",
+}
+
+func (APIServerEncryptionStatus) SwaggerDoc() map[string]string {
+	return map_APIServerEncryptionStatus
+}
+
 var map_APIServerList = map[string]string{
 	"":         "Compatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).",
 	"metadata": "metadata is the standard list's metadata. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata",
@@ -344,6 +353,30 @@ var map_AuditCustomRule = map[string]string{
 
 func (AuditCustomRule) SwaggerDoc() map[string]string {
 	return map_AuditCustomRule
+}
+
+var map_KMSPluginHealthReport = map[string]string{
+	"nodeName":    "nodeName is the name of the node this instance of the plugin runs on. The combination of NodeName/KeyId makes this health report unique. The value must be at most 512 characters.",
+	"keyId":       "keyId is the encryption-key-secret id (kms-{keyId}.sock), a unique identifier of the plugin on that node. This is not a cryptographic key used to encrypt/decrypt any resources. The value must be at most 512 characters.",
+	"status":      "status contains a health indicator for the respective KMS plugin The field can have three states: healthy, unhealthy, error. With error and unhealthy containing additional information in Detail.",
+	"lastChecked": "lastChecked is a timestamp of when the probe was last checked.",
+	"kekId":       "kekId refers to the remote KEK id from KMS v2 StatusResponse.key_id. This is not a cryptographic key, but a unique representation of the KEK.",
+	"detail":      "detail contains additional error/health information; omitted when healthy",
+}
+
+func (KMSPluginHealthReport) SwaggerDoc() map[string]string {
+	return map_KMSPluginHealthReport
+}
+
+var map_KMSPluginRotationStatus = map[string]string{
+	"kekId":               "kekId refers to the remote KEK id from KMS v2 StatusResponse.key_id. This id can change externally and tells OpenShift when to trigger a migration of the configured resources.",
+	"discoveryTime":       "discoveryTime contains the time when the operator has detected a change in the status keyId, this is determined by all nodes agreeing on the same KEKid. This can be used to give additional time for key convergence or cache invalidation before a migration is started. When omitted, the KEKId has not been observed from all nodes yet. migrationStartTime and migrationFinishTime require discoveryTime to be set. Once set, discoveryTime is immutable.",
+	"migrationStartTime":  "migrationStartTime contains the time when the operator has kicked off a storage migration, triggered by a change in the KEKid. When omitted, no migration has been triggered yet. migrationStartTime requires discoveryTime to be set. migrationFinishTime requires migrationStartTime to be set. Once set, migrationStartTime is immutable.",
+	"migrationFinishTime": "migrationFinishTime contains the time when the storage migration completed successfully. If this value is unset, but a migrationStartTime is supplied, a migration is currently in progress. migrationFinishTime requires discoveryTime and migrationStartTime to be set. Once set, migrationFinishTime is immutable.",
+}
+
+func (KMSPluginRotationStatus) SwaggerDoc() map[string]string {
+	return map_KMSPluginRotationStatus
 }
 
 var map_Authentication = map[string]string{

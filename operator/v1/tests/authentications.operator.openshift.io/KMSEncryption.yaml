@@ -1,0 +1,314 @@
+apiVersion: apiextensions.k8s.io/v1 # Hack because controller-gen complains if we don't have this
+name: "Authentication"
+crdName: authentications.operator.openshift.io
+featureGates:
+  - KMSEncryption
+tests:
+  onUpdate:
+    - name: Should be able to set key rotation status with only kekId
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: Authentication
+        spec:
+          logLevel: Normal
+          operatorLogLevel: Normal
+      updated: |
+        apiVersion: operator.openshift.io/v1
+        kind: Authentication
+        spec:
+          logLevel: Normal
+          operatorLogLevel: Normal
+        status:
+          oauthAPIServer:
+            encryptionStatus:
+              keyRotationStatus:
+                - kekId: key-1
+      expected: |
+        apiVersion: operator.openshift.io/v1
+        kind: Authentication
+        spec:
+          logLevel: Normal
+          operatorLogLevel: Normal
+        status:
+          oauthAPIServer:
+            encryptionStatus:
+              keyRotationStatus:
+                - kekId: key-1
+    - name: Should be able to set discoveryTime after kekId
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: Authentication
+        spec:
+          logLevel: Normal
+          operatorLogLevel: Normal
+        status:
+          oauthAPIServer:
+            encryptionStatus:
+              keyRotationStatus:
+                - kekId: key-1
+      updated: |
+        apiVersion: operator.openshift.io/v1
+        kind: Authentication
+        spec:
+          logLevel: Normal
+          operatorLogLevel: Normal
+        status:
+          oauthAPIServer:
+            encryptionStatus:
+              keyRotationStatus:
+                - kekId: key-1
+                  discoveryTime: "2024-01-01T00:00:00Z"
+      expected: |
+        apiVersion: operator.openshift.io/v1
+        kind: Authentication
+        spec:
+          logLevel: Normal
+          operatorLogLevel: Normal
+        status:
+          oauthAPIServer:
+            encryptionStatus:
+              keyRotationStatus:
+                - kekId: key-1
+                  discoveryTime: "2024-01-01T00:00:00Z"
+    - name: Should be able to set migrationStartTime after discoveryTime
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: Authentication
+        spec:
+          logLevel: Normal
+          operatorLogLevel: Normal
+        status:
+          oauthAPIServer:
+            encryptionStatus:
+              keyRotationStatus:
+                - kekId: key-1
+                  discoveryTime: "2024-01-01T00:00:00Z"
+      updated: |
+        apiVersion: operator.openshift.io/v1
+        kind: Authentication
+        spec:
+          logLevel: Normal
+          operatorLogLevel: Normal
+        status:
+          oauthAPIServer:
+            encryptionStatus:
+              keyRotationStatus:
+                - kekId: key-1
+                  discoveryTime: "2024-01-01T00:00:00Z"
+                  migrationStartTime: "2024-01-01T01:00:00Z"
+      expected: |
+        apiVersion: operator.openshift.io/v1
+        kind: Authentication
+        spec:
+          logLevel: Normal
+          operatorLogLevel: Normal
+        status:
+          oauthAPIServer:
+            encryptionStatus:
+              keyRotationStatus:
+                - kekId: key-1
+                  discoveryTime: "2024-01-01T00:00:00Z"
+                  migrationStartTime: "2024-01-01T01:00:00Z"
+    - name: Should be able to set migrationFinishTime after migrationStartTime
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: Authentication
+        spec:
+          logLevel: Normal
+          operatorLogLevel: Normal
+        status:
+          oauthAPIServer:
+            encryptionStatus:
+              keyRotationStatus:
+                - kekId: key-1
+                  discoveryTime: "2024-01-01T00:00:00Z"
+                  migrationStartTime: "2024-01-01T01:00:00Z"
+      updated: |
+        apiVersion: operator.openshift.io/v1
+        kind: Authentication
+        spec:
+          logLevel: Normal
+          operatorLogLevel: Normal
+        status:
+          oauthAPIServer:
+            encryptionStatus:
+              keyRotationStatus:
+                - kekId: key-1
+                  discoveryTime: "2024-01-01T00:00:00Z"
+                  migrationStartTime: "2024-01-01T01:00:00Z"
+                  migrationFinishTime: "2024-01-01T02:00:00Z"
+      expected: |
+        apiVersion: operator.openshift.io/v1
+        kind: Authentication
+        spec:
+          logLevel: Normal
+          operatorLogLevel: Normal
+        status:
+          oauthAPIServer:
+            encryptionStatus:
+              keyRotationStatus:
+                - kekId: key-1
+                  discoveryTime: "2024-01-01T00:00:00Z"
+                  migrationStartTime: "2024-01-01T01:00:00Z"
+                  migrationFinishTime: "2024-01-01T02:00:00Z"
+    - name: Should not be able to set migrationStartTime without discoveryTime
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: Authentication
+        spec:
+          logLevel: Normal
+          operatorLogLevel: Normal
+        status:
+          oauthAPIServer:
+            encryptionStatus:
+              keyRotationStatus:
+                - kekId: key-1
+      updated: |
+        apiVersion: operator.openshift.io/v1
+        kind: Authentication
+        spec:
+          logLevel: Normal
+          operatorLogLevel: Normal
+        status:
+          oauthAPIServer:
+            encryptionStatus:
+              keyRotationStatus:
+                - kekId: key-1
+                  migrationStartTime: "2024-01-01T01:00:00Z"
+      expectedStatusError: "migrationStartTime requires discoveryTime to be set"
+    - name: Should not be able to set migrationFinishTime without discoveryTime and migrationStartTime
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: Authentication
+        spec:
+          logLevel: Normal
+          operatorLogLevel: Normal
+        status:
+          oauthAPIServer:
+            encryptionStatus:
+              keyRotationStatus:
+                - kekId: key-1
+                  discoveryTime: "2024-01-01T00:00:00Z"
+      updated: |
+        apiVersion: operator.openshift.io/v1
+        kind: Authentication
+        spec:
+          logLevel: Normal
+          operatorLogLevel: Normal
+        status:
+          oauthAPIServer:
+            encryptionStatus:
+              keyRotationStatus:
+                - kekId: key-1
+                  discoveryTime: "2024-01-01T00:00:00Z"
+                  migrationFinishTime: "2024-01-01T02:00:00Z"
+      expectedStatusError: "migrationFinishTime requires discoveryTime and migrationStartTime to be set"
+    - name: Should not be able to change discoveryTime once set
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: Authentication
+        spec:
+          logLevel: Normal
+          operatorLogLevel: Normal
+        status:
+          oauthAPIServer:
+            encryptionStatus:
+              keyRotationStatus:
+                - kekId: key-1
+                  discoveryTime: "2024-01-01T00:00:00Z"
+      updated: |
+        apiVersion: operator.openshift.io/v1
+        kind: Authentication
+        spec:
+          logLevel: Normal
+          operatorLogLevel: Normal
+        status:
+          oauthAPIServer:
+            encryptionStatus:
+              keyRotationStatus:
+                - kekId: key-1
+                  discoveryTime: "2024-01-02T00:00:00Z"
+      expectedStatusError: "discoveryTime is immutable once set"
+    - name: Should not be able to change migrationStartTime once set
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: Authentication
+        spec:
+          logLevel: Normal
+          operatorLogLevel: Normal
+        status:
+          oauthAPIServer:
+            encryptionStatus:
+              keyRotationStatus:
+                - kekId: key-1
+                  discoveryTime: "2024-01-01T00:00:00Z"
+                  migrationStartTime: "2024-01-01T01:00:00Z"
+      updated: |
+        apiVersion: operator.openshift.io/v1
+        kind: Authentication
+        spec:
+          logLevel: Normal
+          operatorLogLevel: Normal
+        status:
+          oauthAPIServer:
+            encryptionStatus:
+              keyRotationStatus:
+                - kekId: key-1
+                  discoveryTime: "2024-01-01T00:00:00Z"
+                  migrationStartTime: "2024-01-01T02:00:00Z"
+      expectedStatusError: "migrationStartTime is immutable once set"
+    - name: Should not be able to change migrationFinishTime once set
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: Authentication
+        spec:
+          logLevel: Normal
+          operatorLogLevel: Normal
+        status:
+          oauthAPIServer:
+            encryptionStatus:
+              keyRotationStatus:
+                - kekId: key-1
+                  discoveryTime: "2024-01-01T00:00:00Z"
+                  migrationStartTime: "2024-01-01T01:00:00Z"
+                  migrationFinishTime: "2024-01-01T02:00:00Z"
+      updated: |
+        apiVersion: operator.openshift.io/v1
+        kind: Authentication
+        spec:
+          logLevel: Normal
+          operatorLogLevel: Normal
+        status:
+          oauthAPIServer:
+            encryptionStatus:
+              keyRotationStatus:
+                - kekId: key-1
+                  discoveryTime: "2024-01-01T00:00:00Z"
+                  migrationStartTime: "2024-01-01T01:00:00Z"
+                  migrationFinishTime: "2024-01-01T03:00:00Z"
+      expectedStatusError: "migrationFinishTime is immutable once set"
+    - name: Should not be able to unset discoveryTime once set
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: Authentication
+        spec:
+          logLevel: Normal
+          operatorLogLevel: Normal
+        status:
+          oauthAPIServer:
+            encryptionStatus:
+              keyRotationStatus:
+                - kekId: key-1
+                  discoveryTime: "2024-01-01T00:00:00Z"
+      updated: |
+        apiVersion: operator.openshift.io/v1
+        kind: Authentication
+        spec:
+          logLevel: Normal
+          operatorLogLevel: Normal
+        status:
+          oauthAPIServer:
+            encryptionStatus:
+              keyRotationStatus:
+                - kekId: key-1
+      expectedStatusError: "discoveryTime is immutable once set"

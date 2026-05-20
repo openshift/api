@@ -1,6 +1,7 @@
 package v1
 
 import (
+	v1 "github.com/openshift/api/config/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
@@ -63,6 +64,11 @@ type KubeAPIServerStatus struct {
 	// +optional
 	// +listType=atomic
 	ServiceAccountIssuers []ServiceAccountIssuerStatus `json:"serviceAccountIssuers,omitempty"`
+
+	// encryptionStatus contains status reports for the KMS plugin health and its key rotation.
+	// +optional
+	// +openshift:enable:FeatureGate=KMSEncryption
+	EncryptionStatus v1.APIServerEncryptionStatus `json:"encryptionStatus,omitempty,omitzero"`
 }
 
 type ServiceAccountIssuerStatus struct {

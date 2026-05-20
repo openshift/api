@@ -1,0 +1,349 @@
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    api-approved.openshift.io: https://github.com/openshift/api/pull/475
+    api.openshift.io/filename-cvo-runlevel: "0000_30"
+    api.openshift.io/filename-operator: openshift-apiserver
+    api.openshift.io/filename-ordering: "01"
+    feature-gate.release.openshift.io/KMSEncryption: "true"
+  name: openshiftapiservers.operator.openshift.io
+spec:
+  group: operator.openshift.io
+  names:
+    categories:
+    - coreoperators
+    kind: OpenShiftAPIServer
+    listKind: OpenShiftAPIServerList
+    plural: openshiftapiservers
+    singular: openshiftapiserver
+  scope: Cluster
+  versions:
+  - name: v1
+    schema:
+      openAPIV3Schema:
+        description: |-
+          OpenShiftAPIServer provides information to configure an operator to manage openshift-apiserver.
+
+          Compatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).
+        properties:
+          apiVersion:
+            description: |-
+              APIVersion defines the versioned schema of this representation of an object.
+              Servers should convert recognized schemas to the latest internal value, and
+              may reject unrecognized values.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
+            type: string
+          kind:
+            description: |-
+              Kind is a string value representing the REST resource this object represents.
+              Servers may infer this from the endpoint the client submits requests to.
+              Cannot be updated.
+              In CamelCase.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: spec is the specification of the desired behavior of the
+              OpenShift API Server.
+            properties:
+              logLevel:
+                default: Normal
+                description: |-
+                  logLevel is an intent based logging for an overall component.  It does not give fine grained control, but it is a
+                  simple way to manage coarse grained logging choices that operators have to interpret for their operands.
+
+                  Valid values are: "Normal", "Debug", "Trace", "TraceAll".
+                  Defaults to "Normal".
+                enum:
+                - ""
+                - Normal
+                - Debug
+                - Trace
+                - TraceAll
+                type: string
+              managementState:
+                description: managementState indicates whether and how the operator
+                  should manage the component
+                pattern: ^(Managed|Unmanaged|Force|Removed)$
+                type: string
+              observedConfig:
+                description: |-
+                  observedConfig holds a sparse config that controller has observed from the cluster state.  It exists in spec because
+                  it is an input to the level for the operator
+                nullable: true
+                type: object
+                x-kubernetes-preserve-unknown-fields: true
+              operatorLogLevel:
+                default: Normal
+                description: |-
+                  operatorLogLevel is an intent based logging for the operator itself.  It does not give fine grained control, but it is a
+                  simple way to manage coarse grained logging choices that operators have to interpret for themselves.
+
+                  Valid values are: "Normal", "Debug", "Trace", "TraceAll".
+                  Defaults to "Normal".
+                enum:
+                - ""
+                - Normal
+                - Debug
+                - Trace
+                - TraceAll
+                type: string
+              unsupportedConfigOverrides:
+                description: |-
+                  unsupportedConfigOverrides overrides the final configuration that was computed by the operator.
+                  Red Hat does not support the use of this field.
+                  Misuse of this field could lead to unexpected behavior or conflict with other configuration options.
+                  Seek guidance from the Red Hat support before using this field.
+                  Use of this property blocks cluster upgrades, it must be removed before upgrading your cluster.
+                nullable: true
+                type: object
+                x-kubernetes-preserve-unknown-fields: true
+            type: object
+          status:
+            description: status defines the observed status of the OpenShift API Server.
+            properties:
+              conditions:
+                description: conditions is a list of conditions and their status
+                items:
+                  description: OperatorCondition is just the standard condition fields.
+                  properties:
+                    lastTransitionTime:
+                      description: |-
+                        lastTransitionTime is the last time the condition transitioned from one status to another.
+                        This should be when the underlying condition changed.  If that is not known, then using the time when the API field changed is acceptable.
+                      format: date-time
+                      type: string
+                    message:
+                      type: string
+                    reason:
+                      type: string
+                    status:
+                      description: status of the condition, one of True, False, Unknown.
+                      enum:
+                      - "True"
+                      - "False"
+                      - Unknown
+                      type: string
+                    type:
+                      description: type of condition in CamelCase or in foo.example.com/CamelCase.
+                      maxLength: 316
+                      pattern: ^([a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*/)?(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])$
+                      type: string
+                  required:
+                  - lastTransitionTime
+                  - status
+                  - type
+                  type: object
+                type: array
+                x-kubernetes-list-map-keys:
+                - type
+                x-kubernetes-list-type: map
+              encryptionStatus:
+                description: encryptionStatus contains status reports for the KMS
+                  plugin health and its key rotation.
+                minProperties: 1
+                properties:
+                  healthReports:
+                    description: |-
+                      healthReports contains all KMS plugin health reports for this APIServer.
+                      When omitted, no health reports are available.
+                    items:
+                      properties:
+                        detail:
+                          description: detail contains additional error/health information;
+                            omitted when healthy
+                          maxLength: 1024
+                          minLength: 0
+                          type: string
+                        kekId:
+                          description: |-
+                            kekId refers to the remote KEK id from KMS v2 StatusResponse.key_id.
+                            This is not a cryptographic key, but a unique representation of the KEK.
+                          maxLength: 1024
+                          minLength: 0
+                          type: string
+                        keyId:
+                          description: |-
+                            keyId is the encryption-key-secret id (kms-{keyId}.sock), a unique identifier of the plugin on that node.
+                            This is not a cryptographic key used to encrypt/decrypt any resources.
+                            The value must be at most 512 characters.
+                          maxLength: 512
+                          minLength: 1
+                          type: string
+                        lastChecked:
+                          description: lastChecked is a timestamp of when the probe
+                            was last checked.
+                          format: date-time
+                          type: string
+                        nodeName:
+                          description: |-
+                            nodeName is the name of the node this instance of the plugin runs on.
+                            The combination of NodeName/KeyId makes this health report unique.
+                            The value must be at most 512 characters.
+                          maxLength: 512
+                          minLength: 1
+                          type: string
+                        status:
+                          description: |-
+                            status contains a health indicator for the respective KMS plugin
+                            The field can have three states: healthy, unhealthy, error.
+                            With error and unhealthy containing additional information in Detail.
+                          enum:
+                          - ""
+                          - healthy
+                          - unhealthy
+                          - error
+                          maxLength: 10
+                          minLength: 1
+                          type: string
+                      required:
+                      - keyId
+                      - lastChecked
+                      - nodeName
+                      - status
+                      type: object
+                    maxItems: 100
+                    minItems: 0
+                    type: array
+                    x-kubernetes-list-type: atomic
+                  keyRotationStatus:
+                    description: |-
+                      keyRotationStatus contains the status of the last three key rotations that were running.
+                      When omitted, no key rotations have been recorded.
+                      The list is limited to the 10 most recent rotation records and is a map keyed by kekId.
+                    items:
+                      properties:
+                        discoveryTime:
+                          description: |-
+                            discoveryTime contains the time when the operator has detected a change in the status keyId, this
+                            is determined by all nodes agreeing on the same KEKid.
+                            This can be used to give additional time for key convergence or cache invalidation before a migration is started.
+                            When omitted, the KEKId has not been observed from all nodes yet.
+                            migrationStartTime and migrationFinishTime require discoveryTime to be set.
+                            Once set, discoveryTime is immutable.
+                          format: date-time
+                          type: string
+                        kekId:
+                          description: |-
+                            kekId refers to the remote KEK id from KMS v2 StatusResponse.key_id.
+                            This id can change externally and tells OpenShift when to trigger a migration of the configured resources.
+                          maxLength: 1024
+                          minLength: 1
+                          type: string
+                        migrationFinishTime:
+                          description: |-
+                            migrationFinishTime contains the time when the storage migration completed successfully.
+                            If this value is unset, but a migrationStartTime is supplied, a migration is currently in progress.
+                            migrationFinishTime requires discoveryTime and migrationStartTime to be set.
+                            Once set, migrationFinishTime is immutable.
+                          format: date-time
+                          type: string
+                        migrationStartTime:
+                          description: |-
+                            migrationStartTime contains the time when the operator has kicked off a storage migration, triggered by a change
+                            in the KEKid. When omitted, no migration has been triggered yet.
+                            migrationStartTime requires discoveryTime to be set.
+                            migrationFinishTime requires migrationStartTime to be set.
+                            Once set, migrationStartTime is immutable.
+                          format: date-time
+                          type: string
+                      required:
+                      - kekId
+                      type: object
+                      x-kubernetes-validations:
+                      - message: migrationStartTime requires discoveryTime to be set
+                        rule: '!has(self.migrationStartTime) || has(self.discoveryTime)'
+                      - message: migrationFinishTime requires discoveryTime and migrationStartTime
+                          to be set
+                        rule: '!has(self.migrationFinishTime) || (has(self.discoveryTime)
+                          && has(self.migrationStartTime))'
+                      - message: discoveryTime is immutable once set
+                        rule: '!has(oldSelf.discoveryTime) || self.discoveryTime ==
+                          oldSelf.discoveryTime'
+                      - message: migrationStartTime is immutable once set
+                        rule: '!has(oldSelf.migrationStartTime) || self.migrationStartTime
+                          == oldSelf.migrationStartTime'
+                      - message: migrationFinishTime is immutable once set
+                        rule: '!has(oldSelf.migrationFinishTime) || self.migrationFinishTime
+                          == oldSelf.migrationFinishTime'
+                    maxItems: 10
+                    minItems: 0
+                    type: array
+                    x-kubernetes-list-map-keys:
+                    - kekId
+                    x-kubernetes-list-type: map
+                type: object
+              generations:
+                description: generations are used to determine when an item needs
+                  to be reconciled or has changed in a way that needs a reaction.
+                items:
+                  description: GenerationStatus keeps track of the generation for
+                    a given resource so that decisions about forced updates can be
+                    made.
+                  properties:
+                    group:
+                      description: group is the group of the thing you're tracking
+                      type: string
+                    hash:
+                      description: hash is an optional field set for resources without
+                        generation that are content sensitive like secrets and configmaps
+                      type: string
+                    lastGeneration:
+                      description: lastGeneration is the last generation of the workload
+                        controller involved
+                      format: int64
+                      type: integer
+                    name:
+                      description: name is the name of the thing you're tracking
+                      type: string
+                    namespace:
+                      description: namespace is where the thing you're tracking is
+                      type: string
+                    resource:
+                      description: resource is the resource type of the thing you're
+                        tracking
+                      type: string
+                  required:
+                  - group
+                  - name
+                  - namespace
+                  - resource
+                  type: object
+                type: array
+                x-kubernetes-list-map-keys:
+                - group
+                - resource
+                - namespace
+                - name
+                x-kubernetes-list-type: map
+              latestAvailableRevision:
+                description: latestAvailableRevision is the deploymentID of the most
+                  recent deployment
+                format: int32
+                type: integer
+                x-kubernetes-validations:
+                - message: must only increase
+                  rule: self >= oldSelf
+              observedGeneration:
+                description: observedGeneration is the last generation change you've
+                  dealt with
+                format: int64
+                type: integer
+              readyReplicas:
+                description: readyReplicas indicates how many replicas are ready and
+                  at the desired state
+                format: int32
+                type: integer
+              version:
+                description: version is the level this availability applies to
+                type: string
+            type: object
+        required:
+        - spec
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}

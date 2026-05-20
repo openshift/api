@@ -162,6 +162,9 @@
                         "name": "IngressControllerDynamicConfigurationManager"
                     },
                     {
+                        "name": "IngressControllerMultipleHAProxyVersions"
+                    },
+                    {
                         "name": "IrreconcilableMachineConfig"
                     },
                     {

@@ -188,6 +188,22 @@ tests:
                 - SecP384r1MLKEM1024
                 - X25519
       expectedError: "spec.tlsSecurityProfile.custom.groups: Too many: 8: must have at most 7 items"
+    - name: Should fail to create with duplicate groups
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: APIServer
+        spec:
+          tlsSecurityProfile:
+            type: Custom
+            custom:
+              minTLSVersion: VersionTLS12
+              ciphers:
+                - TLS_AES_128_GCM_SHA256
+              groups:
+                - X25519
+                - secp256r1
+                - X25519
+      expectedError: "groups cannot contain duplicates"
     - name: Should fail to create with invalid group value
       initial: |
         apiVersion: config.openshift.io/v1

@@ -24,7 +24,6 @@ crd_globs="\
     operator/v1/zz_generated.crd-manifests/0000_50_openshift-controller-manager_02_openshiftcontrollermanagers*.crd.yaml
     machineconfiguration/v1/zz_generated.crd-manifests/*.crd.yaml
     machineconfiguration/v1alpha1/zz_generated.crd-manifests/0000_80_machine-config_01_internalreleaseimages*.crd.yaml
-    machineconfiguration/v1alpha1/zz_generated.crd-manifests/0000_80_machine-config_01_osimagestreams*.crd.yaml
     operator/v1/zz_generated.crd-manifests/0000_80_machine-config_01_machineconfigurations*.crd.yaml
     config/v1alpha1/zz_generated.crd-manifests/0000_10_config-operator_01_clustermonitoring*.crd.yaml
     config/v1alpha1/zz_generated.crd-manifests/0000_10_config-operator_01_criocredentialproviderconfigs*.crd.yaml

@@ -794,7 +794,36 @@ type AlertmanagerConfig struct {
 	// When set to CustomConfig, the Alertmanager will be deployed with custom configuration.
 	// +optional
 	CustomConfig AlertmanagerCustomConfig `json:"customConfig,omitempty,omitzero"`
+	// userAlertmanagerConfigSelection is an optional field that controls whether user-defined
+	// namespaces can be selected for AlertmanagerConfig lookups on the platform Alertmanager
+	// instance in the `openshift-monitoring` namespace.
+	// Valid values are Selectable and None.
+	// When set to Selectable, the platform Alertmanager discovers AlertmanagerConfig resources
+	// in user-defined namespaces. This is equivalent to `enableUserAlertmanagerConfig: true` in
+	// the cluster-monitoring-config ConfigMap.
+	// When set to None, user-defined namespaces are not selected for AlertmanagerConfig lookups
+	// on the platform Alertmanager. This is equivalent to `enableUserAlertmanagerConfig: false`
+	// in the cluster-monitoring-config ConfigMap.
+	// This setting only applies when the user-workload monitoring Alertmanager is not enabled.
+	// When omitted, the default value is None.
+	// +optional
+	// +kubebuilder:validation:Enum=Selectable;None
+	UserAlertmanagerConfigSelection UserAlertmanagerConfigSelection `json:"userAlertmanagerConfigSelection,omitempty"`
 }
+
+// UserAlertmanagerConfigSelection controls whether the platform Alertmanager selects
+// AlertmanagerConfig resources from user-defined namespaces.
+// +enum
+type UserAlertmanagerConfigSelection string
+
+const (
+	// UserAlertmanagerConfigSelectionSelectable enables user-defined namespaces to be selected
+	// for AlertmanagerConfig lookups on the platform Alertmanager.
+	UserAlertmanagerConfigSelectionSelectable UserAlertmanagerConfigSelection = "Selectable"
+	// UserAlertmanagerConfigSelectionNone disables user-defined namespaces from being selected
+	// for AlertmanagerConfig lookups on the platform Alertmanager.
+	UserAlertmanagerConfigSelectionNone UserAlertmanagerConfigSelection = "None"
+)
 
 // AlertmanagerCustomConfig represents the configuration for a custom Alertmanager deployment.
 // alertmanagerCustomConfig provides configuration options for the default Alertmanager instance

@@ -18,6 +18,36 @@ tests:
         spec:
           userDefined:
             mode: "Disabled"
+    - name: Should accept userAlertmanagerConfigSelection on alertmanagerConfig
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: "Disabled"
+          alertmanagerConfig:
+            deploymentMode: "DefaultConfig"
+            userAlertmanagerConfigSelection: Selectable
+      expected: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: "Disabled"
+          alertmanagerConfig:
+            deploymentMode: "DefaultConfig"
+            userAlertmanagerConfigSelection: Selectable
+    - name: Should reject invalid userAlertmanagerConfigSelection on alertmanagerConfig
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: "Disabled"
+          alertmanagerConfig:
+            deploymentMode: "DefaultConfig"
+            userAlertmanagerConfigSelection: Enabled
+      expectedError: 'spec.alertmanagerConfig.userAlertmanagerConfigSelection: Unsupported value: "Enabled": supported values: "Selectable", "None"'
     - name: Should reject ContainerResource with duplicate names
       initial: |
         apiVersion: config.openshift.io/v1alpha1

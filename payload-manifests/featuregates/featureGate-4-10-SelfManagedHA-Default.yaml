@@ -27,9 +27,6 @@
                         "name": "AWSEuropeanSovereignCloudInstall"
                     },
                     {
-                        "name": "AdditionalStorageConfig"
-                    },
-                    {
                         "name": "AutomatedEtcdBackup"
                     },
                     {
@@ -285,6 +282,9 @@
                     },
                     {
                         "name": "AWSServiceLBNetworkSecurityGroup"
+                    },
+                    {
+                        "name": "AdditionalStorageConfig"
                     },
                     {
                         "name": "AzureClusterHostedDNSInstall"

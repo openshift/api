@@ -243,9 +243,6 @@
                         "name": "NoOverlayMode"
                     },
                     {
-                        "name": "NoRegistryClusterInstall"
-                    },
-                    {
                         "name": "NutanixMultiSubnets"
                     },
                     {
@@ -354,6 +351,9 @@
                     },
                     {
                         "name": "NewOLMWebhookProviderOpenshiftServiceCA"
+                    },
+                    {
+                        "name": "NoRegistryClusterInstall"
                     },
                     {
                         "name": "OLMLifecycleAndCompatibility"

@@ -457,12 +457,12 @@ var (
 					mustRegister()
 
 	FeatureGateOLMLifecycleAndCompatibility = newFeatureGate("OLMLifecycleAndCompatibility").
-								reportProblemsToJiraComponent("olm").
-								contactPerson("joelanford").
-								productScope(ocpSpecific).
-								enhancementPR("https://github.com/openshift/enhancements/pull/1991").
-								enable(inClusterProfile(SelfManaged), inTechPreviewNoUpgrade(), inDevPreviewNoUpgrade()).
-								mustRegister()
+						reportProblemsToJiraComponent("olm").
+						contactPerson("joelanford").
+						productScope(ocpSpecific).
+						enhancementPR("https://github.com/openshift/enhancements/pull/1991").
+						enable(inClusterProfile(SelfManaged), inTechPreviewNoUpgrade(), inDevPreviewNoUpgrade()).
+						mustRegister()
 
 	FeatureGateInsightsOnDemandDataGather = newFeatureGate("InsightsOnDemandDataGather").
 						reportProblemsToJiraComponent("insights").
@@ -787,7 +787,7 @@ var (
 						contactPerson("andfasano").
 						productScope(ocpSpecific).
 						enhancementPR("https://github.com/openshift/enhancements/pull/1821").
-						enable(inClusterProfile(SelfManaged), inTechPreviewNoUpgrade(), inDevPreviewNoUpgrade()).
+						enable(inDefault(), inOKD(), inClusterProfile(SelfManaged), inTechPreviewNoUpgrade(), inDevPreviewNoUpgrade()).
 						mustRegister()
 
 	FeatureGateAWSClusterHostedDNSInstall = newFeatureGate("AWSClusterHostedDNSInstall").

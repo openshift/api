@@ -20515,6 +20515,19 @@
         }
       }
     },
+    "com.github.openshift.api.config.v1.NetworkObservabilitySpec": {
+      "description": "NetworkObservabilitySpec defines the configuration for network observability installation",
+      "type": "object",
+      "required": [
+        "installationPolicy"
+      ],
+      "properties": {
+        "installationPolicy": {
+          "description": "installationPolicy controls whether network observability is installed during cluster deployment. Valid values are \"InstallAndEnable\" and \"NoAction\". When set to \"InstallAndEnable\", ensure that network observability will be installed and enabled on the cluster. If already installed, no action taken, but if it gets uninstalled, it will install it again. When set to \"NoAction\", nothing will be done regarding Network observability.",
+          "type": "string"
+        }
+      }
+    },
     "com.github.openshift.api.config.v1.NetworkSpec": {
       "description": "NetworkSpec is the desired network configuration. As a general rule, this SHOULD NOT be read directly. Instead, you should consume the NetworkStatus, as it indicates the currently deployed configuration. Currently, most spec fields are immutable after installation. Please view the individual ones for further details on each.",
       "type": "object",
@@ -20541,6 +20554,11 @@
           "description": "networkDiagnostics defines network diagnostics configuration.\n\nTakes precedence over spec.disableNetworkDiagnostics in network.operator.openshift.io. If networkDiagnostics is not specified or is empty, and the spec.disableNetworkDiagnostics flag in network.operator.openshift.io is set to true, the network diagnostics feature will be disabled.",
           "default": {},
           "$ref": "#/definitions/com.github.openshift.api.config.v1.NetworkDiagnostics"
+        },
+        "networkObservability": {
+          "description": "networkObservability is an optional field that configures network observability installation during cluster deployment (day-0). When omitted, unless this is a SNO cluster, network observability will be installed if not already present, after that, no action taken.",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.config.v1.NetworkObservabilitySpec"
         },
         "networkType": {
           "description": "networkType is the plugin that is to be deployed (e.g. OVNKubernetes). This should match a value that the cluster-network-operator understands, or else no networking will be installed. Currently supported values are: - OVNKubernetes This field is immutable after installation.",
@@ -25111,14 +25129,6 @@
           "type": "integer",
           "format": "int32"
         },
-        "nodeSelector": {
-          "description": "nodeSelector defines the nodes on which the Pods are scheduled. nodeSelector is optional.\n\nWhen omitted, this means the user has no opinion and the platform is left to choose reasonable defaults. These defaults are subject to change over time. The current default value is `kubernetes.io/os: linux`. When specified, nodeSelector must contain at least 1 entry and must not contain more than 10 entries.",
-          "type": "object",
-          "additionalProperties": {
-            "type": "string",
-            "default": ""
-          }
-        },
         "resources": {
           "description": "resources defines the compute resource requests and limits for the node-exporter container. This includes CPU, memory and HugePages constraints to help control scheduling and resource usage. When not specified, defaults are used by the platform. Requests cannot exceed limits. This field is optional. More info: https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/ This is a simplified API that maps to Kubernetes ResourceRequirements. The current default values are:\n  resources:\n   - name: cpu\n     request: 8m\n     limit: null\n   - name: memory\n     request: 32Mi\n     limit: null",
           "type": "array",
@@ -25130,15 +25140,6 @@
             "name"
           ],
           "x-kubernetes-list-type": "map"
-        },
-        "tolerations": {
-          "description": "tolerations defines tolerations for the pods. tolerations is optional.\n\nWhen omitted, this means the user has no opinion and the platform is left to choose reasonable defaults. These defaults are subject to change over time. The current default is to tolerate all taints (operator: Exists without any key), which is typical for DaemonSets that must run on every node. Maximum length for this list is 10. Minimum length for this list is 1.",
-          "type": "array",
-          "items": {
-            "default": {},
-            "$ref": "#/definitions/Toleration.v1.core.api.k8s.io"
-          },
-          "x-kubernetes-list-type": "atomic"
         }
       }
     },

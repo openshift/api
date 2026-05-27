@@ -18,7 +18,7 @@ tests:
         spec:
           userDefined:
             mode: "Disabled"
-    - name: Should accept userAlertmanagerConfigSelection on alertmanagerConfig
+    - name: Should accept userAlertmanagerConfigSelection on alertmanagerConfig customConfig
       initial: |
         apiVersion: config.openshift.io/v1alpha1
         kind: ClusterMonitoring
@@ -26,8 +26,9 @@ tests:
           userDefined:
             mode: "Disabled"
           alertmanagerConfig:
-            deploymentMode: "DefaultConfig"
-            userAlertmanagerConfigSelection: Selectable
+            deploymentMode: "CustomConfig"
+            customConfig:
+              userAlertmanagerConfigSelection: Selectable
       expected: |
         apiVersion: config.openshift.io/v1alpha1
         kind: ClusterMonitoring
@@ -35,9 +36,10 @@ tests:
           userDefined:
             mode: "Disabled"
           alertmanagerConfig:
-            deploymentMode: "DefaultConfig"
-            userAlertmanagerConfigSelection: Selectable
-    - name: Should reject invalid userAlertmanagerConfigSelection on alertmanagerConfig
+            deploymentMode: "CustomConfig"
+            customConfig:
+              userAlertmanagerConfigSelection: Selectable
+    - name: Should reject invalid userAlertmanagerConfigSelection on alertmanagerConfig customConfig
       initial: |
         apiVersion: config.openshift.io/v1alpha1
         kind: ClusterMonitoring
@@ -45,9 +47,10 @@ tests:
           userDefined:
             mode: "Disabled"
           alertmanagerConfig:
-            deploymentMode: "DefaultConfig"
-            userAlertmanagerConfigSelection: Enabled
-      expectedError: 'spec.alertmanagerConfig.userAlertmanagerConfigSelection: Unsupported value: "Enabled": supported values: "Selectable", "None"'
+            deploymentMode: "CustomConfig"
+            customConfig:
+              userAlertmanagerConfigSelection: Enabled
+      expectedError: 'spec.alertmanagerConfig.customConfig.userAlertmanagerConfigSelection: Unsupported value: "Enabled": supported values: "Selectable", "None"'
     - name: Should reject ContainerResource with duplicate names
       initial: |
         apiVersion: config.openshift.io/v1alpha1

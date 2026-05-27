@@ -26,18 +26,6 @@ spec:
                             - properties:
                                 address:
                                   format: ipv6
-              tuningOptions:
-                anyOf:
-                - properties:
-                    maxConnections:
-                      enum:
-                      - -1
-                      - 0
-                - properties:
-                    maxConnections:
-                      format: int32
-                      maximum: 2000000
-                      minimum: 2000
     subresources:
       scale:
         labelSelectorPath: .status.selector

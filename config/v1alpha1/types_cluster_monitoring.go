@@ -2377,6 +2377,34 @@ type TelemeterClientConfig struct {
 // At least one field must be specified; an empty thanosQuerierConfig object is not allowed.
 // +kubebuilder:validation:MinProperties=1
 type ThanosQuerierConfig struct {
+	// logLevel defines the verbosity of logs emitted by Thanos Querier.
+	// logLevel is optional.
+	// Allowed values are Error, Warn, Info, and Debug.
+	// When set to Error, only errors will be logged.
+	// When set to Warn, both warnings and errors will be logged.
+	// When set to Info, general information, warnings, and errors will all be logged.
+	// When set to Debug, detailed debugging information will be logged.
+	// When omitted, this means no opinion and the platform is left to choose a reasonable default, that is subject to change over time.
+	// The current default value is `Info`.
+	// +optional
+	LogLevel LogLevel `json:"logLevel,omitempty"`
+	// requestLogging configures request logging for Thanos Querier.
+	// requestLogging is optional.
+	// When provided, the policy field within is required.
+	// When omitted, this means no opinion and the platform is left to choose a reasonable default, that is subject to change over time.
+	// The current default behavior is to not log any requests.
+	// +optional
+	RequestLogging ThanosQuerierRequestLoggingConfig `json:"requestLogging,omitempty,omitzero"`
+	// crossOriginRequestPolicy configures the CORS (Cross-Origin Resource Sharing) policy
+	// for Thanos Querier's HTTP endpoints.
+	// crossOriginRequestPolicy is optional.
+	// Valid values are "AllowAll" and "DenyAll".
+	// When set to "AllowAll", CORS headers are added to responses, allowing cross-origin requests from any domain.
+	// When set to "DenyAll", no CORS headers are added and cross-origin requests are rejected by the browser.
+	// When omitted, this means no opinion and the platform is left to choose a reasonable default, that is subject to change over time.
+	// The current default value is "DenyAll".
+	// +optional
+	CrossOriginRequestPolicy CrossOriginRequestPolicy `json:"crossOriginRequestPolicy,omitempty"`
 	// nodeSelector defines the nodes on which the Pods are scheduled.
 	// nodeSelector is optional.
 	//
@@ -2444,6 +2472,42 @@ type ThanosQuerierConfig struct {
 	// +optional
 	TopologySpreadConstraints []v1.TopologySpreadConstraint `json:"topologySpreadConstraints,omitempty"`
 }
+
+// ThanosQuerierRequestLoggingConfig configures request logging for Thanos Querier.
+type ThanosQuerierRequestLoggingConfig struct {
+	// policy determines which HTTP and gRPC requests are logged by Thanos Querier.
+	// Valid values are "AllRequests" and "NoRequests".
+	// When set to "AllRequests", every request received by Thanos Querier is logged with method, path, and response status.
+	// The log level for request logs is derived from the logLevel field.
+	// When set to "NoRequests", request logging is turned off.
+	// +required
+	Policy RequestLoggingPolicy `json:"policy,omitempty"`
+}
+
+// RequestLoggingPolicy controls which HTTP and gRPC requests are logged.
+// Valid values are "AllRequests" and "NoRequests".
+// +kubebuilder:validation:Enum=AllRequests;NoRequests
+type RequestLoggingPolicy string
+
+const (
+	// RequestLoggingPolicyAllRequests enables logging of all incoming requests.
+	RequestLoggingPolicyAllRequests RequestLoggingPolicy = "AllRequests"
+	// RequestLoggingPolicyNoRequests disables request logging.
+	RequestLoggingPolicyNoRequests RequestLoggingPolicy = "NoRequests"
+)
+
+// CrossOriginRequestPolicy controls the CORS (Cross-Origin Resource Sharing) policy
+// for Thanos Querier's HTTP endpoints.
+// Valid values are "AllowAll" and "DenyAll".
+// +kubebuilder:validation:Enum=AllowAll;DenyAll
+type CrossOriginRequestPolicy string
+
+const (
+	// CrossOriginRequestPolicyAllowAll sets CORS headers allowing requests from any origin.
+	CrossOriginRequestPolicyAllowAll CrossOriginRequestPolicy = "AllowAll"
+	// CrossOriginRequestPolicyDenyAll does not set CORS headers, rejecting cross-origin requests.
+	CrossOriginRequestPolicyDenyAll CrossOriginRequestPolicy = "DenyAll"
+)
 
 // AuditProfile defines the audit log level for the Metrics Server.
 // +kubebuilder:validation:Enum=None;Metadata;Request;RequestResponse

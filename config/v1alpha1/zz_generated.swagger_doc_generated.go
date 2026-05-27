@@ -696,6 +696,9 @@ func (TelemeterClientConfig) SwaggerDoc() map[string]string {
 
 var map_ThanosQuerierConfig = map[string]string{
 	"":                          "ThanosQuerierConfig provides configuration options for the Thanos Querier component that runs in the `openshift-monitoring` namespace. At least one field must be specified; an empty thanosQuerierConfig object is not allowed.",
+	"logLevel":                  "logLevel defines the verbosity of logs emitted by Thanos Querier. logLevel is optional. Allowed values are Error, Warn, Info, and Debug. When set to Error, only errors will be logged. When set to Warn, both warnings and errors will be logged. When set to Info, general information, warnings, and errors will all be logged. When set to Debug, detailed debugging information will be logged. When omitted, this means no opinion and the platform is left to choose a reasonable default, that is subject to change over time. The current default value is `Info`.",
+	"requestLogging":            "requestLogging configures request logging for Thanos Querier. requestLogging is optional. When provided, the policy field within is required. When omitted, this means no opinion and the platform is left to choose a reasonable default, that is subject to change over time. The current default behavior is to not log any requests.",
+	"crossOriginRequestPolicy":  "crossOriginRequestPolicy configures the CORS (Cross-Origin Resource Sharing) policy for Thanos Querier's HTTP endpoints. crossOriginRequestPolicy is optional. Valid values are \"AllowAll\" and \"DenyAll\". When set to \"AllowAll\", CORS headers are added to responses, allowing cross-origin requests from any domain. When set to \"DenyAll\", no CORS headers are added and cross-origin requests are rejected by the browser. When omitted, this means no opinion and the platform is left to choose a reasonable default, that is subject to change over time. The current default value is \"DenyAll\".",
 	"nodeSelector":              "nodeSelector defines the nodes on which the Pods are scheduled. nodeSelector is optional.\n\nWhen omitted, this means the user has no opinion and the platform is left to choose reasonable defaults. These defaults are subject to change over time. The current default value is `kubernetes.io/os: linux`. When specified, nodeSelector must contain at least 1 entry and must not contain more than 10 entries.",
 	"resources":                 "resources defines the compute resource requests and limits for the Thanos Querier container. resources is optional.\n\nWhen omitted, this means the user has no opinion and the platform is left to choose reasonable defaults. These defaults are subject to change over time. Requests cannot exceed limits. More info: https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/ This is a simplified API that maps to Kubernetes ResourceRequirements. The current default values are:\n  resources:\n   - name: cpu\n     request: 5m\n   - name: memory\n     request: 12Mi\nMaximum length for this list is 5. Minimum length for this list is 1. Each resource name must be unique within this list.",
 	"tolerations":               "tolerations defines tolerations for the pods. tolerations is optional.\n\nWhen omitted, this means the user has no opinion and the platform is left to choose reasonable defaults. These defaults are subject to change over time. Defaults are empty/unset. Maximum length for this list is 10. Minimum length for this list is 1.",
@@ -704,6 +707,15 @@ var map_ThanosQuerierConfig = map[string]string{
 
 func (ThanosQuerierConfig) SwaggerDoc() map[string]string {
 	return map_ThanosQuerierConfig
+}
+
+var map_ThanosQuerierRequestLoggingConfig = map[string]string{
+	"":       "ThanosQuerierRequestLoggingConfig configures request logging for Thanos Querier.",
+	"policy": "policy determines which HTTP and gRPC requests are logged by Thanos Querier. Valid values are \"AllRequests\" and \"NoRequests\". When set to \"AllRequests\", every request received by Thanos Querier is logged with method, path, and response status. The log level for request logs is derived from the logLevel field. When set to \"NoRequests\", request logging is turned off.",
+}
+
+func (ThanosQuerierRequestLoggingConfig) SwaggerDoc() map[string]string {
+	return map_ThanosQuerierRequestLoggingConfig
 }
 
 var map_UppercaseActionConfig = map[string]string{

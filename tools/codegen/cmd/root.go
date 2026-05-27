@@ -135,6 +135,7 @@ func allGenerators(genCtx generation.Context) []generation.Generator {
 	return []generation.Generator{
 		newCompatibilityGenerator(),
 		newDeepcopyGenerator(genCtx),
+		newModelNameGenerator(genCtx),
 		newSwaggerDocsGenerator(),
 		// The empty partial schema, schema patch and manifest merge must run in order.
 		newEmptyPartialSchemaGenerator(genCtx),

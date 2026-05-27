@@ -47,6 +47,11 @@ type Config struct {
 	// When omitted, the default configuration will be used.
 	// When provided, any equivalent flag provided values are ignored.
 	SwaggerDocs *SwaggerDocsConfig `json:"swaggerdocs,omitempty"`
+
+	// ModelName represents the configuration for the modelname generator.
+	// When omitted, the default configuration will be used.
+	// When provided, any equivalent flag provided values are ignored.
+	ModelName *ModelNameConfig `json:"modelname,omitempty"`
 }
 
 // CompatibilityConfig is the configuration for the compatibility generator.
@@ -153,5 +158,17 @@ type SwaggerDocsConfig struct {
 	// OutputFileName is the file name to use for writing the generated swagger
 	// docs to. This file will be created for each group version.
 	// Whem omitted, this will default to `zz_generated.swagger_doc_generated.go`.
+	OutputFileName string `json:"outputFileName,omitempty"`
+}
+
+// ModelNameConfig is the configuration for the modelname generator.
+type ModelNameConfig struct {
+	// Disabled determines whether the modelname generator should be run or not.
+	// This generator is enabled by default so this field defaults to false.
+	Disabled bool `json:"disabled,omitempty"`
+
+	// OutputFileName is the file name to use for writing the generated model
+	// names to. This file will be created for each group version.
+	// When omitted, this will default to `zz_generated.model_name.go`.
 	OutputFileName string `json:"outputFileName,omitempty"`
 }

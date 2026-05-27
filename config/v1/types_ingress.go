@@ -248,11 +248,15 @@ type ComponentRouteSpec struct {
 
 	// labels defines additional labels to be applied to the route created
 	// for the component. These labels are used by the IngressController to
-	// determine which routes it should manage.
+	// determine which routes it should manage. Changing labels may cause the
+	// route to be reassigned to a different IngressController.
+	// When omitted, no additional labels are applied to the component route.
 	// Label keys and values must conform to Kubernetes label conventions:
-	// keys must be 1-63 characters (with optional prefix up to 253 characters),
-	// and values must be 0-63 characters, consisting of alphanumeric characters,
-	// '-', '_', or '.', and must start and end with an alphanumeric character.
+	// keys must be 1-63 characters (with optional DNS subdomain prefix followed
+	// by a slash), and values must be 0-63 characters, consisting of alphanumeric
+	// characters, '-', '_', or '.', and must start and end with an alphanumeric
+	// character.
+	// A maximum of 8 labels may be specified.
 	// +optional
 	// +mapType=granular
 	// +kubebuilder:validation:MaxProperties=8

@@ -251,16 +251,17 @@ type ComponentRouteSpec struct {
 	// determine which routes it should manage. Changing labels may cause the
 	// route to be reassigned to a different IngressController.
 	// When omitted, no additional labels are applied to the component route.
-	// Label keys and values must conform to Kubernetes label conventions:
-	// keys must be 1-63 characters (with optional DNS subdomain prefix followed
-	// by a slash), and values must be 0-63 characters, consisting of alphanumeric
-	// characters, '-', '_', or '.', and must start and end with an alphanumeric
-	// character.
+	// Label keys and values must conform to Kubernetes label conventions.
+	// Keys with the "kubernetes.io/" and "k8s.io/" prefixes are reserved
+	// for Kubernetes use and may not be specified.
 	// A maximum of 8 labels may be specified.
+	// +openshift:enable:FeatureGate=IngressComponentRouteLabels
 	// +optional
 	// +mapType=granular
+	// +kubebuilder:validation:MinProperties=1
 	// +kubebuilder:validation:MaxProperties=8
-	// +kubebuilder:validation:XValidation:rule="self.all(key, key.matches('^([a-z0-9]([-a-z0-9]*[a-z0-9])?(\\\\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*[/])?([A-Za-z0-9]([-A-Za-z0-9_.]{0,61}[A-Za-z0-9])?)$'))",message="label keys must be valid Kubernetes label keys"
+	// +kubebuilder:validation:XValidation:rule="self.all(key, !format.qualifiedName().validate(key).hasValue())",message="label keys must be valid Kubernetes qualified names"
+	// +kubebuilder:validation:XValidation:rule="self.all(key, !key.startsWith('kubernetes.io/') && !key.startsWith('k8s.io/'))",message="label keys must not use reserved prefixes kubernetes.io/ or k8s.io/"
 	// +kubebuilder:validation:XValidation:rule="self.all(key, self[key].matches('^(([A-Za-z0-9][-A-Za-z0-9_.]{0,61})?[A-Za-z0-9])?$'))",message="label values must be valid Kubernetes label values (at most 63 characters, alphanumeric, '-', '_', or '.', must start and end with alphanumeric)"
 	Labels map[string]string `json:"labels,omitempty"`
 }

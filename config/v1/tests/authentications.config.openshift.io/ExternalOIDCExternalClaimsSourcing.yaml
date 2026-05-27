@@ -1,0 +1,1027 @@
+apiVersion: apiextensions.k8s.io/v1 # Hack because controller-gen complains if we don't have this
+name: "Authentication"
+crdName: authentications.config.openshift.io
+featureGates:
+- ExternalOIDCExternalClaimsSourcing
+tests:
+  onCreate:
+    - name: Should be able to create a minimal Authentication
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: Authentication
+        spec: {} # No spec is required for a Authentication
+      expected: |
+        apiVersion: config.openshift.io/v1
+        kind: Authentication
+        spec: {}
+    - name: Can set OIDC provider with minimal externalClaimsSources
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: Authentication
+        spec:
+          type: OIDC
+          oidcProviders:
+          - name: myoidc
+            issuer:
+              issuerURL: https://meh.tld
+              audiences: ['openshift-aud']
+            claimMappings:
+              username:
+                claim: "preferred_username"
+            externalClaimsSources:
+            - url:
+                hostname: userinfo.example.com
+                pathExpression: "['userinfo']"
+              mappings:
+              - name: email
+                expression: "response.email"
+      expected: |
+        apiVersion: config.openshift.io/v1
+        kind: Authentication
+        spec:
+          type: OIDC
+          oidcProviders:
+          - name: myoidc
+            issuer:
+              issuerURL: https://meh.tld
+              audiences: ['openshift-aud']
+            claimMappings:
+              username:
+                claim: "preferred_username"
+            externalClaimsSources:
+            - url:
+                hostname: userinfo.example.com
+                pathExpression: "['userinfo']"
+              mappings:
+              - name: email
+                expression: "response.email"
+    - name: Can set externalClaimsSources with RequestProvidedToken authentication
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: Authentication
+        spec:
+          type: OIDC
+          oidcProviders:
+          - name: myoidc
+            issuer:
+              issuerURL: https://meh.tld
+              audiences: ['openshift-aud']
+            claimMappings:
+              username:
+                claim: "preferred_username"
+            externalClaimsSources:
+            - authentication:
+                type: RequestProvidedToken
+              url:
+                hostname: userinfo.example.com
+                pathExpression: "['userinfo']"
+              mappings:
+              - name: email
+                expression: "response.email"
+      expected: |
+        apiVersion: config.openshift.io/v1
+        kind: Authentication
+        spec:
+          type: OIDC
+          oidcProviders:
+          - name: myoidc
+            issuer:
+              issuerURL: https://meh.tld
+              audiences: ['openshift-aud']
+            claimMappings:
+              username:
+                claim: "preferred_username"
+            externalClaimsSources:
+            - authentication:
+                type: RequestProvidedToken
+              url:
+                hostname: userinfo.example.com
+                pathExpression: "['userinfo']"
+              mappings:
+              - name: email
+                expression: "response.email"
+    - name: Can set externalClaimsSources with ClientCredential authentication
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: Authentication
+        spec:
+          type: OIDC
+          oidcProviders:
+          - name: myoidc
+            issuer:
+              issuerURL: https://meh.tld
+              audiences: ['openshift-aud']
+            claimMappings:
+              username:
+                claim: "preferred_username"
+            externalClaimsSources:
+            - authentication:
+                type: ClientCredential
+                clientCredential:
+                  clientID: my-client-id
+                  clientSecret:
+                    name: my-client-secret
+                  tokenEndpoint: https://auth.example.com/oauth2/token
+              url:
+                hostname: graph.example.com
+                pathExpression: "['v1.0', 'me']"
+              mappings:
+              - name: display_name
+                expression: "response.displayName"
+      expected: |
+        apiVersion: config.openshift.io/v1
+        kind: Authentication
+        spec:
+          type: OIDC
+          oidcProviders:
+          - name: myoidc
+            issuer:
+              issuerURL: https://meh.tld
+              audiences: ['openshift-aud']
+            claimMappings:
+              username:
+                claim: "preferred_username"
+            externalClaimsSources:
+            - authentication:
+                type: ClientCredential
+                clientCredential:
+                  clientID: my-client-id
+                  clientSecret:
+                    name: my-client-secret
+                  tokenEndpoint: https://auth.example.com/oauth2/token
+              url:
+                hostname: graph.example.com
+                pathExpression: "['v1.0', 'me']"
+              mappings:
+              - name: display_name
+                expression: "response.displayName"
+    - name: Can set externalClaimsSources with ClientCredential authentication with scopes
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: Authentication
+        spec:
+          type: OIDC
+          oidcProviders:
+          - name: myoidc
+            issuer:
+              issuerURL: https://meh.tld
+              audiences: ['openshift-aud']
+            claimMappings:
+              username:
+                claim: "preferred_username"
+            externalClaimsSources:
+            - authentication:
+                type: ClientCredential
+                clientCredential:
+                  clientID: my-client-id
+                  clientSecret:
+                    name: my-client-secret
+                  tokenEndpoint: https://auth.example.com/oauth2/token
+                  scopes:
+                  - openid
+                  - profile
+              url:
+                hostname: graph.example.com
+                pathExpression: "['v1.0', 'me']"
+              mappings:
+              - name: display_name
+                expression: "response.displayName"
+      expected: |
+        apiVersion: config.openshift.io/v1
+        kind: Authentication
+        spec:
+          type: OIDC
+          oidcProviders:
+          - name: myoidc
+            issuer:
+              issuerURL: https://meh.tld
+              audiences: ['openshift-aud']
+            claimMappings:
+              username:
+                claim: "preferred_username"
+            externalClaimsSources:
+            - authentication:
+                type: ClientCredential
+                clientCredential:
+                  clientID: my-client-id
+                  clientSecret:
+                    name: my-client-secret
+                  tokenEndpoint: https://auth.example.com/oauth2/token
+                  scopes:
+                  - openid
+                  - profile
+              url:
+                hostname: graph.example.com
+                pathExpression: "['v1.0', 'me']"
+              mappings:
+              - name: display_name
+                expression: "response.displayName"
+    - name: Can set externalClaimsSources with ClientCredential authentication with TLS
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: Authentication
+        spec:
+          type: OIDC
+          oidcProviders:
+          - name: myoidc
+            issuer:
+              issuerURL: https://meh.tld
+              audiences: ['openshift-aud']
+            claimMappings:
+              username:
+                claim: "preferred_username"
+            externalClaimsSources:
+            - authentication:
+                type: ClientCredential
+                clientCredential:
+                  clientID: my-client-id
+                  clientSecret:
+                    name: my-client-secret
+                  tokenEndpoint: https://auth.example.com/oauth2/token
+                  tls:
+                    certificateAuthority:
+                      name: my-ca-secret
+              url:
+                hostname: graph.example.com
+                pathExpression: "['v1.0', 'me']"
+              mappings:
+              - name: display_name
+                expression: "response.displayName"
+      expected: |
+        apiVersion: config.openshift.io/v1
+        kind: Authentication
+        spec:
+          type: OIDC
+          oidcProviders:
+          - name: myoidc
+            issuer:
+              issuerURL: https://meh.tld
+              audiences: ['openshift-aud']
+            claimMappings:
+              username:
+                claim: "preferred_username"
+            externalClaimsSources:
+            - authentication:
+                type: ClientCredential
+                clientCredential:
+                  clientID: my-client-id
+                  clientSecret:
+                    name: my-client-secret
+                  tokenEndpoint: https://auth.example.com/oauth2/token
+                  tls:
+                    certificateAuthority:
+                      name: my-ca-secret
+              url:
+                hostname: graph.example.com
+                pathExpression: "['v1.0', 'me']"
+              mappings:
+              - name: display_name
+                expression: "response.displayName"
+    - name: Can set externalClaimsSources with predicates
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: Authentication
+        spec:
+          type: OIDC
+          oidcProviders:
+          - name: myoidc
+            issuer:
+              issuerURL: https://meh.tld
+              audiences: ['openshift-aud']
+            claimMappings:
+              username:
+                claim: "preferred_username"
+            externalClaimsSources:
+            - url:
+                hostname: userinfo.example.com
+                pathExpression: "['userinfo']"
+              mappings:
+              - name: email
+                expression: "response.email"
+              predicates:
+              - expression: "claims.iss == 'https://meh.tld'"
+      expected: |
+        apiVersion: config.openshift.io/v1
+        kind: Authentication
+        spec:
+          type: OIDC
+          oidcProviders:
+          - name: myoidc
+            issuer:
+              issuerURL: https://meh.tld
+              audiences: ['openshift-aud']
+            claimMappings:
+              username:
+                claim: "preferred_username"
+            externalClaimsSources:
+            - url:
+                hostname: userinfo.example.com
+                pathExpression: "['userinfo']"
+              mappings:
+              - name: email
+                expression: "response.email"
+              predicates:
+              - expression: "claims.iss == 'https://meh.tld'"
+    - name: Can set externalClaimsSources with top-level TLS
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: Authentication
+        spec:
+          type: OIDC
+          oidcProviders:
+          - name: myoidc
+            issuer:
+              issuerURL: https://meh.tld
+              audiences: ['openshift-aud']
+            claimMappings:
+              username:
+                claim: "preferred_username"
+            externalClaimsSources:
+            - url:
+                hostname: userinfo.example.com
+                pathExpression: "['userinfo']"
+              mappings:
+              - name: email
+                expression: "response.email"
+              tls:
+                certificateAuthority:
+                  name: external-ca-secret
+      expected: |
+        apiVersion: config.openshift.io/v1
+        kind: Authentication
+        spec:
+          type: OIDC
+          oidcProviders:
+          - name: myoidc
+            issuer:
+              issuerURL: https://meh.tld
+              audiences: ['openshift-aud']
+            claimMappings:
+              username:
+                claim: "preferred_username"
+            externalClaimsSources:
+            - url:
+                hostname: userinfo.example.com
+                pathExpression: "['userinfo']"
+              mappings:
+              - name: email
+                expression: "response.email"
+              tls:
+                certificateAuthority:
+                  name: external-ca-secret
+    - name: Can set hostname with a valid port
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: Authentication
+        spec:
+          type: OIDC
+          oidcProviders:
+          - name: myoidc
+            issuer:
+              issuerURL: https://meh.tld
+              audiences: ['openshift-aud']
+            claimMappings:
+              username:
+                claim: "preferred_username"
+            externalClaimsSources:
+            - url:
+                hostname: userinfo.example.com:8443
+                pathExpression: "['userinfo']"
+              mappings:
+              - name: email
+                expression: "response.email"
+      expected: |
+        apiVersion: config.openshift.io/v1
+        kind: Authentication
+        spec:
+          type: OIDC
+          oidcProviders:
+          - name: myoidc
+            issuer:
+              issuerURL: https://meh.tld
+              audiences: ['openshift-aud']
+            claimMappings:
+              username:
+                claim: "preferred_username"
+            externalClaimsSources:
+            - url:
+                hostname: userinfo.example.com:8443
+                pathExpression: "['userinfo']"
+              mappings:
+              - name: email
+                expression: "response.email"
+    - name: Cannot set externalClaimsSources with missing clientCredential when type is ClientCredential
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: Authentication
+        spec:
+          type: OIDC
+          oidcProviders:
+          - name: myoidc
+            issuer:
+              issuerURL: https://meh.tld
+              audiences: ['openshift-aud']
+            claimMappings:
+              username:
+                claim: "preferred_username"
+            externalClaimsSources:
+            - authentication:
+                type: ClientCredential
+              url:
+                hostname: graph.example.com
+                pathExpression: "['v1.0', 'me']"
+              mappings:
+              - name: display_name
+                expression: "response.displayName"
+      expectedError: "clientCredential is required when type is ClientCredential, and forbidden otherwise"
+    - name: Cannot set externalClaimsSources with clientCredential when type is RequestProvidedToken
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: Authentication
+        spec:
+          type: OIDC
+          oidcProviders:
+          - name: myoidc
+            issuer:
+              issuerURL: https://meh.tld
+              audiences: ['openshift-aud']
+            claimMappings:
+              username:
+                claim: "preferred_username"
+            externalClaimsSources:
+            - authentication:
+                type: RequestProvidedToken
+                clientCredential:
+                  clientID: my-client-id
+                  clientSecret:
+                    name: my-client-secret
+                  tokenEndpoint: https://auth.example.com/oauth2/token
+              url:
+                hostname: userinfo.example.com
+                pathExpression: "['userinfo']"
+              mappings:
+              - name: email
+                expression: "response.email"
+      expectedError: "clientCredential is required when type is ClientCredential, and forbidden otherwise"
+    - name: Cannot set tokenEndpoint that is not a valid URL
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: Authentication
+        spec:
+          type: OIDC
+          oidcProviders:
+          - name: myoidc
+            issuer:
+              issuerURL: https://meh.tld
+              audiences: ['openshift-aud']
+            claimMappings:
+              username:
+                claim: "preferred_username"
+            externalClaimsSources:
+            - authentication:
+                type: ClientCredential
+                clientCredential:
+                  clientID: my-client-id
+                  clientSecret:
+                    name: my-client-secret
+                  tokenEndpoint: not-a-url
+              url:
+                hostname: graph.example.com
+                pathExpression: "['v1.0', 'me']"
+              mappings:
+              - name: display_name
+                expression: "response.displayName"
+      expectedError: "tokenEndpoint must be a valid HTTPS url"
+    - name: Cannot set tokenEndpoint that is not https
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: Authentication
+        spec:
+          type: OIDC
+          oidcProviders:
+          - name: myoidc
+            issuer:
+              issuerURL: https://meh.tld
+              audiences: ['openshift-aud']
+            claimMappings:
+              username:
+                claim: "preferred_username"
+            externalClaimsSources:
+            - authentication:
+                type: ClientCredential
+                clientCredential:
+                  clientID: my-client-id
+                  clientSecret:
+                    name: my-client-secret
+                  tokenEndpoint: http://auth.example.com/oauth2/token
+              url:
+                hostname: graph.example.com
+                pathExpression: "['v1.0', 'me']"
+              mappings:
+              - name: display_name
+                expression: "response.displayName"
+      expectedError: "tokenEndpoint must be a valid HTTPS url"
+    - name: Cannot set tokenEndpoint without a hostname
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: Authentication
+        spec:
+          type: OIDC
+          oidcProviders:
+          - name: myoidc
+            issuer:
+              issuerURL: https://meh.tld
+              audiences: ['openshift-aud']
+            claimMappings:
+              username:
+                claim: "preferred_username"
+            externalClaimsSources:
+            - authentication:
+                type: ClientCredential
+                clientCredential:
+                  clientID: my-client-id
+                  clientSecret:
+                    name: my-client-secret
+                  tokenEndpoint: https:///oauth2/token
+              url:
+                hostname: graph.example.com
+                pathExpression: "['v1.0', 'me']"
+              mappings:
+              - name: display_name
+                expression: "response.displayName"
+      expectedError: "tokenEndpoint must have a hostname"
+    - name: Cannot set tokenEndpoint without a path
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: Authentication
+        spec:
+          type: OIDC
+          oidcProviders:
+          - name: myoidc
+            issuer:
+              issuerURL: https://meh.tld
+              audiences: ['openshift-aud']
+            claimMappings:
+              username:
+                claim: "preferred_username"
+            externalClaimsSources:
+            - authentication:
+                type: ClientCredential
+                clientCredential:
+                  clientID: my-client-id
+                  clientSecret:
+                    name: my-client-secret
+                  tokenEndpoint: https://auth.example.com
+              url:
+                hostname: graph.example.com
+                pathExpression: "['v1.0', 'me']"
+              mappings:
+              - name: display_name
+                expression: "response.displayName"
+      expectedError: "tokenEndpoint must have a path"
+    - name: Cannot set tokenEndpoint with query parameters
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: Authentication
+        spec:
+          type: OIDC
+          oidcProviders:
+          - name: myoidc
+            issuer:
+              issuerURL: https://meh.tld
+              audiences: ['openshift-aud']
+            claimMappings:
+              username:
+                claim: "preferred_username"
+            externalClaimsSources:
+            - authentication:
+                type: ClientCredential
+                clientCredential:
+                  clientID: my-client-id
+                  clientSecret:
+                    name: my-client-secret
+                  tokenEndpoint: https://auth.example.com/oauth2/token?grant_type=client_credentials
+              url:
+                hostname: graph.example.com
+                pathExpression: "['v1.0', 'me']"
+              mappings:
+              - name: display_name
+                expression: "response.displayName"
+      expectedError: "tokenEndpoint must not have query parameters"
+    - name: Cannot set tokenEndpoint with a fragment
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: Authentication
+        spec:
+          type: OIDC
+          oidcProviders:
+          - name: myoidc
+            issuer:
+              issuerURL: https://meh.tld
+              audiences: ['openshift-aud']
+            claimMappings:
+              username:
+                claim: "preferred_username"
+            externalClaimsSources:
+            - authentication:
+                type: ClientCredential
+                clientCredential:
+                  clientID: my-client-id
+                  clientSecret:
+                    name: my-client-secret
+                  tokenEndpoint: https://auth.example.com/oauth2/token#frag
+              url:
+                hostname: graph.example.com
+                pathExpression: "['v1.0', 'me']"
+              mappings:
+              - name: display_name
+                expression: "response.displayName"
+      expectedError: "tokenEndpoint must not have a fragment"
+    - name: Cannot set tokenEndpoint with user info
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: Authentication
+        spec:
+          type: OIDC
+          oidcProviders:
+          - name: myoidc
+            issuer:
+              issuerURL: https://meh.tld
+              audiences: ['openshift-aud']
+            claimMappings:
+              username:
+                claim: "preferred_username"
+            externalClaimsSources:
+            - authentication:
+                type: ClientCredential
+                clientCredential:
+                  clientID: my-client-id
+                  clientSecret:
+                    name: my-client-secret
+                  tokenEndpoint: https://user:pass@auth.example.com/oauth2/token
+              url:
+                hostname: graph.example.com
+                pathExpression: "['v1.0', 'me']"
+              mappings:
+              - name: display_name
+                expression: "response.displayName"
+      expectedError: "tokenEndpoint must not have user info"
+    - name: Cannot set clientID with non-printable ASCII characters
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: Authentication
+        spec:
+          type: OIDC
+          oidcProviders:
+          - name: myoidc
+            issuer:
+              issuerURL: https://meh.tld
+              audiences: ['openshift-aud']
+            claimMappings:
+              username:
+                claim: "preferred_username"
+            externalClaimsSources:
+            - authentication:
+                type: ClientCredential
+                clientCredential:
+                  clientID: "my-client\tid"
+                  clientSecret:
+                    name: my-client-secret
+                  tokenEndpoint: https://auth.example.com/oauth2/token
+              url:
+                hostname: graph.example.com
+                pathExpression: "['v1.0', 'me']"
+              mappings:
+              - name: display_name
+                expression: "response.displayName"
+      expectedError: "clientID must only contain printable ASCII characters"
+    - name: Cannot set clientSecret name with invalid DNS characters
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: Authentication
+        spec:
+          type: OIDC
+          oidcProviders:
+          - name: myoidc
+            issuer:
+              issuerURL: https://meh.tld
+              audiences: ['openshift-aud']
+            claimMappings:
+              username:
+                claim: "preferred_username"
+            externalClaimsSources:
+            - authentication:
+                type: ClientCredential
+                clientCredential:
+                  clientID: my-client-id
+                  clientSecret:
+                    name: "INVALID_SECRET!"
+                  tokenEndpoint: https://auth.example.com/oauth2/token
+              url:
+                hostname: graph.example.com
+                pathExpression: "['v1.0', 'me']"
+              mappings:
+              - name: display_name
+                expression: "response.displayName"
+      expectedError: "name must start and end with a lowercase alphanumeric character, and must only contain lowercase alphanumeric characters, '-' or '.'"
+    - name: Cannot set scope with space characters
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: Authentication
+        spec:
+          type: OIDC
+          oidcProviders:
+          - name: myoidc
+            issuer:
+              issuerURL: https://meh.tld
+              audiences: ['openshift-aud']
+            claimMappings:
+              username:
+                claim: "preferred_username"
+            externalClaimsSources:
+            - authentication:
+                type: ClientCredential
+                clientCredential:
+                  clientID: my-client-id
+                  clientSecret:
+                    name: my-client-secret
+                  tokenEndpoint: https://auth.example.com/oauth2/token
+                  scopes:
+                  - "openid profile"
+              url:
+                hostname: graph.example.com
+                pathExpression: "['v1.0', 'me']"
+              mappings:
+              - name: display_name
+                expression: "response.displayName"
+      expectedError: "scopes must only contain printable ASCII characters excluding spaces, double quotes and backslashes"
+    - name: Cannot set scope with double quote characters
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: Authentication
+        spec:
+          type: OIDC
+          oidcProviders:
+          - name: myoidc
+            issuer:
+              issuerURL: https://meh.tld
+              audiences: ['openshift-aud']
+            claimMappings:
+              username:
+                claim: "preferred_username"
+            externalClaimsSources:
+            - authentication:
+                type: ClientCredential
+                clientCredential:
+                  clientID: my-client-id
+                  clientSecret:
+                    name: my-client-secret
+                  tokenEndpoint: https://auth.example.com/oauth2/token
+                  scopes:
+                  - 'scope"value'
+              url:
+                hostname: graph.example.com
+                pathExpression: "['v1.0', 'me']"
+              mappings:
+              - name: display_name
+                expression: "response.displayName"
+      expectedError: "scopes must only contain printable ASCII characters excluding spaces, double quotes and backslashes"
+    - name: Cannot set scope with backslash characters
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: Authentication
+        spec:
+          type: OIDC
+          oidcProviders:
+          - name: myoidc
+            issuer:
+              issuerURL: https://meh.tld
+              audiences: ['openshift-aud']
+            claimMappings:
+              username:
+                claim: "preferred_username"
+            externalClaimsSources:
+            - authentication:
+                type: ClientCredential
+                clientCredential:
+                  clientID: my-client-id
+                  clientSecret:
+                    name: my-client-secret
+                  tokenEndpoint: https://auth.example.com/oauth2/token
+                  scopes:
+                  - 'scope\value'
+              url:
+                hostname: graph.example.com
+                pathExpression: "['v1.0', 'me']"
+              mappings:
+              - name: display_name
+                expression: "response.displayName"
+      expectedError: "scopes must only contain printable ASCII characters excluding spaces, double quotes and backslashes"
+    - name: Cannot duplicate scopes
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: Authentication
+        spec:
+          type: OIDC
+          oidcProviders:
+          - name: myoidc
+            issuer:
+              issuerURL: https://meh.tld
+              audiences: ['openshift-aud']
+            claimMappings:
+              username:
+                claim: "preferred_username"
+            externalClaimsSources:
+            - authentication:
+                type: ClientCredential
+                clientCredential:
+                  clientID: my-client-id
+                  clientSecret:
+                    name: my-client-secret
+                  tokenEndpoint: https://auth.example.com/oauth2/token
+                  scopes:
+                  - myscope
+                  - myscope
+              url:
+                hostname: graph.example.com
+                pathExpression: "['v1.0', 'me']"
+              mappings:
+              - name: display_name
+                expression: "response.displayName"
+      expectedError: "Duplicate value: \"myscope\""
+    - name: Cannot set hostname that is not a valid hostname
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: Authentication
+        spec:
+          type: OIDC
+          oidcProviders:
+          - name: myoidc
+            issuer:
+              issuerURL: https://meh.tld
+              audiences: ['openshift-aud']
+            claimMappings:
+              username:
+                claim: "preferred_username"
+            externalClaimsSources:
+            - url:
+                hostname: "not a valid hostname!"
+                pathExpression: "['userinfo']"
+              mappings:
+              - name: email
+                expression: "response.email"
+      expectedError: "hostname must be a valid hostname"
+    - name: Cannot set hostname with invalid DNS characters
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: Authentication
+        spec:
+          type: OIDC
+          oidcProviders:
+          - name: myoidc
+            issuer:
+              issuerURL: https://meh.tld
+              audiences: ['openshift-aud']
+            claimMappings:
+              username:
+                claim: "preferred_username"
+            externalClaimsSources:
+            - url:
+                hostname: UPPER.example.com
+                pathExpression: "['userinfo']"
+              mappings:
+              - name: email
+                expression: "response.email"
+      expectedError: "hostname before port must start and end with a lowercase alphanumeric character, and must only contain lowercase alphanumeric characters, '-' or '.'"
+    - name: Cannot set hostname with port exceeding 65535
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: Authentication
+        spec:
+          type: OIDC
+          oidcProviders:
+          - name: myoidc
+            issuer:
+              issuerURL: https://meh.tld
+              audiences: ['openshift-aud']
+            claimMappings:
+              username:
+                claim: "preferred_username"
+            externalClaimsSources:
+            - url:
+                hostname: userinfo.example.com:99999
+                pathExpression: "['userinfo']"
+              mappings:
+              - name: email
+                expression: "response.email"
+      expectedError: "port must not exceed 65535"
+    - name: Can set multiple externalClaimsSources with unique mapping names across sources
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: Authentication
+        spec:
+          type: OIDC
+          oidcProviders:
+          - name: myoidc
+            issuer:
+              issuerURL: https://meh.tld
+              audiences: ['openshift-aud']
+            claimMappings:
+              username:
+                claim: "preferred_username"
+            externalClaimsSources:
+            - url:
+                hostname: userinfo.example.com
+                pathExpression: "['userinfo']"
+              mappings:
+              - name: email
+                expression: "response.email"
+              - name: name
+                expression: "response.name"
+            - url:
+                hostname: graph.example.com
+                pathExpression: "['v1.0', 'me']"
+              mappings:
+              - name: display_name
+                expression: "response.displayName"
+      expected: |
+        apiVersion: config.openshift.io/v1
+        kind: Authentication
+        spec:
+          type: OIDC
+          oidcProviders:
+          - name: myoidc
+            issuer:
+              issuerURL: https://meh.tld
+              audiences: ['openshift-aud']
+            claimMappings:
+              username:
+                claim: "preferred_username"
+            externalClaimsSources:
+            - url:
+                hostname: userinfo.example.com
+                pathExpression: "['userinfo']"
+              mappings:
+              - name: email
+                expression: "response.email"
+              - name: name
+                expression: "response.name"
+            - url:
+                hostname: graph.example.com
+                pathExpression: "['v1.0', 'me']"
+              mappings:
+              - name: display_name
+                expression: "response.displayName"
+    - name: Cannot set duplicate mapping names across externalClaimsSources
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: Authentication
+        spec:
+          type: OIDC
+          oidcProviders:
+          - name: myoidc
+            issuer:
+              issuerURL: https://meh.tld
+              audiences: ['openshift-aud']
+            claimMappings:
+              username:
+                claim: "preferred_username"
+            externalClaimsSources:
+            - url:
+                hostname: userinfo.example.com
+                pathExpression: "['userinfo']"
+              mappings:
+              - name: email
+                expression: "response.email"
+            - url:
+                hostname: graph.example.com
+                pathExpression: "['v1.0', 'me']"
+              mappings:
+              - name: email
+                expression: "response.mail"
+      expectedError: "mapping names must be unique across all external claim sources."
+    - name: Cannot set certificateAuthority name with invalid DNS characters
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: Authentication
+        spec:
+          type: OIDC
+          oidcProviders:
+          - name: myoidc
+            issuer:
+              issuerURL: https://meh.tld
+              audiences: ['openshift-aud']
+            claimMappings:
+              username:
+                claim: "preferred_username"
+            externalClaimsSources:
+            - url:
+                hostname: userinfo.example.com
+                pathExpression: "['userinfo']"
+              mappings:
+              - name: email
+                expression: "response.email"
+              tls:
+                certificateAuthority:
+                  name: "INVALID_NAME!"
+      expectedError: "name must start and end with a lowercase alphanumeric character, and must only contain lowercase alphanumeric characters, '-' or '.'"

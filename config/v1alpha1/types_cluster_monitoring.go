@@ -1377,7 +1377,7 @@ type PrometheusConfig struct {
 	// +kubebuilder:validation:MinItems=1
 	Resources []ContainerResource `json:"resources,omitempty"`
 	// retention configures how long Prometheus retains metrics data and how much storage it can use.
-	// When omitted, the platform chooses reasonable defaults (currently 15 days retention, no size limit).
+	// When omitted, the platform chooses reasonable defaults (currently 360 hours retention, no size limit).
 	// +optional
 	Retention Retention `json:"retention,omitempty,omitzero"`
 	// tolerations defines tolerations for the pods.
@@ -2272,24 +2272,24 @@ type SecretKeySelector struct {
 // Retention configures how long Prometheus retains metrics data and how much storage it can use.
 // +kubebuilder:validation:MinProperties=1
 type Retention struct {
-	// durationInDays specifies how many days Prometheus will retain metrics data.
+	// durationInDays specifies how many hours Prometheus will retain metrics data.
+	// The JSON field name is durationInDays for wire compatibility with persisted objects;
+	// the value unit is hours (not days).
 	// Prometheus automatically deletes data older than this duration.
 	// When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time.
-	// The default value is 15.
-	// Minimum value is 1 day.
-	// Maximum value is 365 days (1 year).
+	// The default value is 360 (equivalent to 15 days).
+	// Minimum value is 1 hour.
 	// +kubebuilder:validation:Minimum=1
-	// +kubebuilder:validation:Maximum=365
 	// +optional
-	DurationInDays int32 `json:"durationInDays,omitempty"`
+	DurationInHours int32 `json:"durationInDays,omitempty"`
 	// sizeInGiB specifies the maximum storage size in gibibytes (GiB) that Prometheus
 	// can use for data blocks and the write-ahead log (WAL).
 	// When the limit is reached, Prometheus will delete oldest data first.
 	// When omitted, no size limit is enforced and Prometheus uses available PersistentVolume capacity.
 	// Minimum value is 1 GiB.
-	// Maximum value is 16384 GiB (16 TiB).
+	// Maximum value is 2147483647 GiB (the maximum representable int32 value).
 	// +kubebuilder:validation:Minimum=1
-	// +kubebuilder:validation:Maximum=16384
+	// +kubebuilder:validation:Maximum=2147483647
 	// +optional
 	SizeInGiB int32 `json:"sizeInGiB,omitempty"`
 }

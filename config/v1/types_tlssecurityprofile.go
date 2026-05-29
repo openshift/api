@@ -11,7 +11,10 @@ type TLSSecurityProfile struct {
 	// Mozilla Server Side TLS configuration guidelines.
 	// See: https://ssl-config.mozilla.org/guidelines/5.8.json
 	//
-	// The groups are listed in preference order, with the most preferred group first.
+	// The groups are listed in suggested preference order, with the most preferred group first.
+	// Note that not all platform components honor the ordering: Go-based components use Go's
+	// internal preference order and treat this list as a filter of allowed groups rather than
+	// an ordered preference.
 	// Note that X25519MLKEM768 is a post-quantum hybrid group that is not
 	// FIPS-approved and should be ignored by components running in FIPS mode.
 	//
@@ -27,7 +30,8 @@ type TLSSecurityProfile struct {
 	// clients or libraries and should be used only as a last resort.
 	//
 	// The supported groups list includes by default the following groups
-	// in preference order: X25519MLKEM768, X25519, secp256r1, secp384r1.
+	// in suggested preference order (ordering may not be honored by all implementations):
+	// X25519MLKEM768, X25519, secp256r1, secp384r1.
 	//
 	// This profile is equivalent to a Custom profile specified as:
 	//   minTLSVersion: VersionTLS10
@@ -66,7 +70,8 @@ type TLSSecurityProfile struct {
 	// most clients currently in use.
 	//
 	// The supported groups list includes by default the following groups
-	// in preference order: X25519MLKEM768, X25519, secp256r1, secp384r1.
+	// in suggested preference order (ordering may not be honored by all implementations):
+	// X25519MLKEM768, X25519, secp256r1, secp384r1.
 	//
 	// This profile is equivalent to a Custom profile specified as:
 	//   minTLSVersion: VersionTLS12
@@ -88,7 +93,8 @@ type TLSSecurityProfile struct {
 	// modern is a TLS security profile for use with clients that support TLS 1.3 and
 	// do not need backward compatibility for older clients.
 	// The supported groups list includes by default the following groups
-	// in preference order: X25519MLKEM768, X25519, secp256r1, secp384r1.
+	// in suggested preference order (ordering may not be honored by all implementations):
+	// X25519MLKEM768, X25519, secp256r1, secp384r1.
 	// This profile is equivalent to a Custom profile specified as:
 	//   minTLSVersion: VersionTLS13
 	//   ciphers:
@@ -200,8 +206,10 @@ type TLSProfileSpec struct {
 	Ciphers []string `json:"ciphers"`
 	// groups is an optional, ordered field used to specify the supported groups (formerly known as
 	// elliptic curves) that are used during the TLS handshake.  The order of the groups represents
-	// preference, with the most preferred group first.  Operators may remove entries their operands
-	// do not support.
+	// a suggested preference, with the most preferred group first. Note that not all platform
+	// components honor the ordering: Go-based components use Go's internal preference order and
+	// treat this list as a filter of allowed groups rather than an ordered preference.
+	// Operators may remove entries their operands do not support.
 	//
 	// When omitted, this means no opinion and the platform is left to choose reasonable defaults which are
 	// subject to change over time and may be different per platform component depending on the underlying TLS
@@ -215,10 +223,9 @@ type TLSProfileSpec struct {
 	//     - secp256r1
 	//
 	// +optional
-	// +listType=atomic
+	// +listType=set
 	// +kubebuilder:validation:MaxItems=7
 	// +kubebuilder:validation:MinItems=1
-	// +kubebuilder:validation:XValidation:rule="self.all(x, self.exists_one(y, x == y))",message="groups cannot contain duplicates"
 	// +openshift:enable:FeatureGate=TLSGroupPreferences
 	Groups []TLSGroup `json:"groups,omitempty"`
 	// minTLSVersion is used to specify the minimal version of the TLS protocol
@@ -260,8 +267,9 @@ const (
 // Each Ciphers slice is the configuration's "ciphersuites" followed by the
 // "ciphers" from the guidelines JSON.
 //
-// Groups are listed in preference order. TLSProfiles Old, Intermediate, Modern
-// include by default the following groups: X25519MLKEM768, X25519, secp256r1, secp384r1
+// Groups are listed in suggested preference order, though Go-based components may use
+// their own internal ordering. TLSProfiles Old, Intermediate, Modern include by default
+// the following groups: X25519MLKEM768, X25519, secp256r1, secp384r1
 //
 // NOTE: The caller needs to make sure to check that these constants are valid
 // for their binary. Not all entries map to values for all binaries. In the case

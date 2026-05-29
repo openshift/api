@@ -164,6 +164,10 @@ const (
 	Classic AWSLBType = "Classic"
 )
 
+// LabelValue is the value part of a Kubernetes label.
+// +kubebuilder:validation:MaxLength=63
+type LabelValue string
+
 // ConsumingUser is an alias for string which we add validation to. Currently only service accounts are supported.
 // +kubebuilder:validation:Pattern="^system:serviceaccount:[a-z0-9]([-a-z0-9]*[a-z0-9])?:[a-z0-9]([-a-z0-9]*[a-z0-9])?(\\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*$"
 // +kubebuilder:validation:MinLength=1
@@ -263,7 +267,7 @@ type ComponentRouteSpec struct {
 	// +kubebuilder:validation:XValidation:rule="self.all(key, !format.qualifiedName().validate(key).hasValue())",message="label keys must be valid Kubernetes qualified names"
 	// +kubebuilder:validation:XValidation:rule="self.all(key, !key.startsWith('kubernetes.io/') && !key.startsWith('k8s.io/'))",message="label keys must not use reserved prefixes kubernetes.io/ or k8s.io/"
 	// +kubebuilder:validation:XValidation:rule="self.all(key, !format.labelValue().validate(self[key]).hasValue())",message="label values must be valid Kubernetes label values (at most 63 characters, alphanumeric, '-', '_', or '.', must start and end with alphanumeric)"
-	Labels map[string]string `json:"labels,omitempty"`
+	Labels map[string]LabelValue `json:"labels,omitempty"`
 }
 
 // ComponentRouteStatus contains information allowing configuration of a route's hostname and serving certificate.

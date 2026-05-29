@@ -78,6 +78,9 @@ spec:
                       type: string
                     labels:
                       additionalProperties:
+                        description: LabelValue is the value part of a Kubernetes
+                          label.
+                        maxLength: 63
                         type: string
                       description: |-
                         labels defines additional labels to be applied to the route created

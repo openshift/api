@@ -2880,6 +2880,66 @@ tests:
               - key: "key2"
                 operator: "Exists"
                 effect: "NoExecute"
+    - name: Should accept prometheusConfig retention duration
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: "Disabled"
+          prometheusConfig:
+            retention:
+              duration: "15h"
+      expected: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: "Disabled"
+          prometheusConfig:
+            retention:
+              duration: "15h"
+    - name: Should accept prometheusConfig retention size
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: "Disabled"
+          prometheusConfig:
+            retention:
+              size: "500MiB"
+      expected: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: "Disabled"
+          prometheusConfig:
+            retention:
+              size: "500MiB"
+    - name: Should reject invalid prometheusConfig retention duration
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: "Disabled"
+          prometheusConfig:
+            retention:
+              duration: "15days"
+      expectedError: 'spec.prometheusConfig.retention.duration: Invalid value: "15days"'
+    - name: Should reject invalid prometheusConfig retention size
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: "Disabled"
+          prometheusConfig:
+            retention:
+              size: "500Mi"
+      expectedError: 'spec.prometheusConfig.retention.size: Invalid value: "500Mi"'
   onUpdate:
     - name: Should allow updating KubeStateMetricsConfig resources
       initial: |

@@ -1377,7 +1377,7 @@ type PrometheusConfig struct {
 	// +kubebuilder:validation:MinItems=1
 	Resources []ContainerResource `json:"resources,omitempty"`
 	// retention configures how long Prometheus retains metrics data and how much storage it can use.
-	// When omitted, the platform chooses reasonable defaults (currently 360 hours retention, no size limit).
+	// When omitted, the platform chooses reasonable defaults (currently 15d retention, no size limit).
 	// +optional
 	Retention Retention `json:"retention,omitempty,omitzero"`
 	// tolerations defines tolerations for the pods.
@@ -2272,26 +2272,44 @@ type SecretKeySelector struct {
 // Retention configures how long Prometheus retains metrics data and how much storage it can use.
 // +kubebuilder:validation:MinProperties=1
 type Retention struct {
-	// durationInDays specifies how many hours Prometheus will retain metrics data.
-	// The JSON field name is durationInDays for wire compatibility with persisted objects;
-	// the value unit is hours (not days).
+	// durationInDays is tombstoned since the field was replaced by duration.
+	// DurationInDays int32 `json:"durationInDays,omitempty"`
+
+	// sizeInGiB is tombstoned since the field was replaced by size.
+	// SizeInGiB int32 `json:"sizeInGiB,omitempty"`
+
+	// duration is an optional field that specifies how long Prometheus retains metrics data.
+	// The format mimics the Prometheus Operator CRD retention field validation pattern so values
+	// can be passed through to the Prometheus custom resource without conversion.
+	// Valid values are Prometheus duration strings composed of non-negative integer components
+	// with unit suffixes y, w, d, h, m, s, or ms (for example, "15d", "24h", "15h").
+	// Must be at least 1 character and at most 64 characters.
+	// When set to "0", retention is disabled.
 	// Prometheus automatically deletes data older than this duration.
 	// When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time.
-	// The default value is 360 (equivalent to 15 days).
-	// Minimum value is 1 hour.
-	// +kubebuilder:validation:Minimum=1
+	// The current default value is `15d`.
+	// +kubebuilder:validation:MinLength=1
+	// +kubebuilder:validation:MaxLength=64
+	// +kubebuilder:validation:XValidation:rule=`self.matches('^(0|(([0-9]+)y)?(([0-9]+)w)?(([0-9]+)d)?(([0-9]+)h)?(([0-9]+)m)?(([0-9]+)s)?(([0-9]+)ms)?)$')`,message="must be a valid Prometheus duration string"
 	// +optional
-	DurationInHours int32 `json:"durationInDays,omitempty"`
-	// sizeInGiB specifies the maximum storage size in gibibytes (GiB) that Prometheus
+	Duration string `json:"duration,omitempty"`
+
+	// size is an optional field that specifies the maximum storage size that Prometheus
 	// can use for data blocks and the write-ahead log (WAL).
-	// When the limit is reached, Prometheus will delete oldest data first.
+	// The format mimics the Prometheus Operator CRD retentionSize field validation pattern so values
+	// can be passed through to the Prometheus custom resource without conversion.
+	// Valid values are Prometheus byte-size strings with an optional decimal prefix and a
+	// unit suffix B, KB, MB, GB, TB, EB, PB, or their binary equivalents KiB, MiB, GiB, TiB, EiB, PiB
+	// (for example, "500MiB", "10GiB").
+	// Must be at least 1 character and at most 32 characters.
+	// When set to "0", no size limit is enforced.
+	// When the limit is reached, Prometheus deletes oldest data first.
 	// When omitted, no size limit is enforced and Prometheus uses available PersistentVolume capacity.
-	// Minimum value is 1 GiB.
-	// Maximum value is 2147483647 GiB (the maximum representable int32 value).
-	// +kubebuilder:validation:Minimum=1
-	// +kubebuilder:validation:Maximum=2147483647
+	// +kubebuilder:validation:MinLength=1
+	// +kubebuilder:validation:MaxLength=32
+	// +kubebuilder:validation:XValidation:rule=`self.matches('^(0|([0-9]*[.])?[0-9]+((K|M|G|T|E|P)i?)?B)$')`,message="must be a valid Prometheus byte-size string"
 	// +optional
-	SizeInGiB int32 `json:"sizeInGiB,omitempty"`
+	Size string `json:"size,omitempty"`
 }
 
 // RelabelAction defines the action to perform in a relabeling rule.

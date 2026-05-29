@@ -390,27 +390,6 @@ tests:
                 transitKey: my-key
       expectedError: "appRole config is required when authentication type is AppRole"
 
-    # transitMount required field validation
-    - name: Should reject Vault KMS config without transitMount
-      initial: |
-        apiVersion: config.openshift.io/v1
-        kind: APIServer
-        spec:
-          encryption:
-            type: KMS
-            kms:
-              type: Vault
-              vault:
-                kmsPluginImage: registry.example.com/vault-plugin@sha256:0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef
-                vaultAddress: https://vault.example.com:8200
-                authentication:
-                  type: AppRole
-                  appRole:
-                    secret:
-                      name: vault-approle
-                transitKey: my-key
-      expectedError: "Required value"
-
     # kmsPluginImage validation tests
     - name: Should reject kmsPluginImage with tag instead of digest
       initial: |

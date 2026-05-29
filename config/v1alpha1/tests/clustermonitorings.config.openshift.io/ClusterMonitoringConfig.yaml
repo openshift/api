@@ -2928,7 +2928,7 @@ tests:
           prometheusConfig:
             retention:
               duration: "15days"
-      expectedError: 'spec.prometheusConfig.retention.duration: Invalid value: "15days"'
+      expectedError: 'spec.prometheusConfig.retention.duration: Invalid value: "string": must be a valid Prometheus duration string'
     - name: Should reject invalid prometheusConfig retention size
       initial: |
         apiVersion: config.openshift.io/v1alpha1
@@ -2939,7 +2939,31 @@ tests:
           prometheusConfig:
             retention:
               size: "500Mi"
-      expectedError: 'spec.prometheusConfig.retention.size: Invalid value: "500Mi"'
+      expectedError: 'spec.prometheusConfig.retention.size: Invalid value: "string": must be a valid Prometheus byte-size string'
+    - name: Should reject prometheusConfig retention with both durationInDays and duration
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: "Disabled"
+          prometheusConfig:
+            retention:
+              durationInDays: 15
+              duration: "15d"
+      expectedError: 'durationInDays and duration cannot both be set'
+    - name: Should reject prometheusConfig retention with both sizeInGiB and size
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: "Disabled"
+          prometheusConfig:
+            retention:
+              sizeInGiB: 500
+              size: "500GiB"
+      expectedError: 'sizeInGiB and size cannot both be set'
   onUpdate:
     - name: Should allow updating KubeStateMetricsConfig resources
       initial: |

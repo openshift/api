@@ -2271,36 +2271,34 @@ type SecretKeySelector struct {
 
 // Retention configures how long Prometheus retains metrics data and how much storage it can use.
 // +kubebuilder:validation:MinProperties=1
+// +kubebuilder:validation:XValidation:rule="!has(self.durationInDays) || !has(self.duration)",message="durationInDays and duration cannot both be set"
+// +kubebuilder:validation:XValidation:rule="!has(self.sizeInGiB) || !has(self.size)",message="sizeInGiB and size cannot both be set"
 type Retention struct {
-	// TOMBSTONE: This field was tombstoned in favor of `duration`.
-	// ---
 	// durationInDays specifies how many days Prometheus will retain metrics data.
+	// Deprecated: use duration instead. durationInDays and duration cannot both be set.
 	// Prometheus automatically deletes data older than this duration.
 	// When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time.
 	// The default value is 15.
 	// Minimum value is 1 day.
 	// Maximum value is 365 days (1 year).
-	// Former marker: kubebuilder:validation:Minimum=1
-	// Former marker: kubebuilder:validation:Maximum=365
-	// Former marker: optional
-	// DurationInDays int32 `json:"durationInDays,omitempty"`
+	// +kubebuilder:validation:Minimum=1
+	// +kubebuilder:validation:Maximum=365
+	// +optional
+	DurationInDays int32 `json:"durationInDays,omitempty"`
 
-	// TOMBSTONE: This field was tombstoned in favor of `size`.
-	// ---
 	// sizeInGiB specifies the maximum storage size in gibibytes (GiB) that Prometheus
 	// can use for data blocks and the write-ahead log (WAL).
+	// Deprecated: use size instead. sizeInGiB and size cannot both be set.
 	// When the limit is reached, Prometheus will delete oldest data first.
 	// When omitted, no size limit is enforced and Prometheus uses available PersistentVolume capacity.
 	// Minimum value is 1 GiB.
 	// Maximum value is 16384 GiB (16 TiB).
-	// Former marker: kubebuilder:validation:Minimum=1
-	// Former marker: kubebuilder:validation:Maximum=16384
-	// Former marker: optional
-	// SizeInGiB int32 `json:"sizeInGiB,omitempty"`
+	// +kubebuilder:validation:Minimum=1
+	// +kubebuilder:validation:Maximum=16384
+	// +optional
+	SizeInGiB int32 `json:"sizeInGiB,omitempty"`
 
 	// duration is an optional field that specifies how long Prometheus retains metrics data.
-	// The format mimics the Prometheus Operator CRD retention field validation pattern so values
-	// can be passed through to the Prometheus custom resource without conversion.
 	// Valid values are Prometheus duration strings composed of non-negative integer components
 	// with unit suffixes y, w, d, h, m, s, or ms (for example, "15d", "24h", "15h").
 	// Single-unit forms such as "15d" or "24h" are recommended over composite durations with
@@ -2320,14 +2318,11 @@ type Retention struct {
 
 	// size is an optional field that specifies the maximum storage size that Prometheus
 	// can use for data blocks and the write-ahead log (WAL).
-	// The format mimics the Prometheus Operator CRD retentionSize field validation pattern so values
-	// can be passed through to the Prometheus custom resource without conversion.
 	// Valid values are Prometheus byte-size strings with an optional decimal prefix and a
 	// unit suffix B, KB, MB, GB, TB, EB, PB, or their binary equivalents KiB, MiB, GiB, TiB, EiB, PiB
 	// (for example, "500MiB", "10GiB").
 	// Must be at least 1 character and at most 32 characters.
-	// When set to "0", no size limit is enforced. This matches the Prometheus Operator
-	// retentionSize field, where "0" is the canonical form for disabling size-based retention.
+	// When set to "0", no size limit is enforced.
 	// When the limit is reached, Prometheus deletes oldest data first.
 	// When omitted, no size limit is enforced and Prometheus uses available PersistentVolume capacity.
 	// +kubebuilder:validation:MinLength=1

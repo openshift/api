@@ -4601,8 +4601,6 @@ spec:
                       duration:
                         description: |-
                           duration is an optional field that specifies how long Prometheus retains metrics data.
-                          The format mimics the Prometheus Operator CRD retention field validation pattern so values
-                          can be passed through to the Prometheus custom resource without conversion.
                           Valid values are Prometheus duration strings composed of non-negative integer components
                           with unit suffixes y, w, d, h, m, s, or ms (for example, "15d", "24h", "15h").
                           Single-unit forms such as "15d" or "24h" are recommended over composite durations with
@@ -4620,18 +4618,28 @@ spec:
                         x-kubernetes-validations:
                         - message: must be a valid Prometheus duration string
                           rule: self.matches('^(0|(([0-9]+)y)?(([0-9]+)w)?(([0-9]+)d)?(([0-9]+)h)?(([0-9]+)m)?(([0-9]+)s)?(([0-9]+)ms)?)$')
+                      durationInDays:
+                        description: |-
+                          durationInDays specifies how many days Prometheus will retain metrics data.
+                          Deprecated: use duration instead. durationInDays and duration cannot both be set.
+                          Prometheus automatically deletes data older than this duration.
+                          When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time.
+                          The default value is 15.
+                          Minimum value is 1 day.
+                          Maximum value is 365 days (1 year).
+                        format: int32
+                        maximum: 365
+                        minimum: 1
+                        type: integer
                       size:
                         description: |-
                           size is an optional field that specifies the maximum storage size that Prometheus
                           can use for data blocks and the write-ahead log (WAL).
-                          The format mimics the Prometheus Operator CRD retentionSize field validation pattern so values
-                          can be passed through to the Prometheus custom resource without conversion.
                           Valid values are Prometheus byte-size strings with an optional decimal prefix and a
                           unit suffix B, KB, MB, GB, TB, EB, PB, or their binary equivalents KiB, MiB, GiB, TiB, EiB, PiB
                           (for example, "500MiB", "10GiB").
                           Must be at least 1 character and at most 32 characters.
-                          When set to "0", no size limit is enforced. This matches the Prometheus Operator
-                          retentionSize field, where "0" is the canonical form for disabling size-based retention.
+                          When set to "0", no size limit is enforced.
                           When the limit is reached, Prometheus deletes oldest data first.
                           When omitted, no size limit is enforced and Prometheus uses available PersistentVolume capacity.
                         maxLength: 32
@@ -4640,7 +4648,25 @@ spec:
                         x-kubernetes-validations:
                         - message: must be a valid Prometheus byte-size string
                           rule: self.matches('^(0|([0-9]*[.])?[0-9]+((K|M|G|T|E|P)i?)?B)$')
+                      sizeInGiB:
+                        description: |-
+                          sizeInGiB specifies the maximum storage size in gibibytes (GiB) that Prometheus
+                          can use for data blocks and the write-ahead log (WAL).
+                          Deprecated: use size instead. sizeInGiB and size cannot both be set.
+                          When the limit is reached, Prometheus will delete oldest data first.
+                          When omitted, no size limit is enforced and Prometheus uses available PersistentVolume capacity.
+                          Minimum value is 1 GiB.
+                          Maximum value is 16384 GiB (16 TiB).
+                        format: int32
+                        maximum: 16384
+                        minimum: 1
+                        type: integer
                     type: object
+                    x-kubernetes-validations:
+                    - message: durationInDays and duration cannot both be set
+                      rule: '!has(self.durationInDays) || !has(self.duration)'
+                    - message: sizeInGiB and size cannot both be set
+                      rule: '!has(self.sizeInGiB) || !has(self.size)'
                   tolerations:
                     description: |-
                       tolerations defines tolerations for the pods.

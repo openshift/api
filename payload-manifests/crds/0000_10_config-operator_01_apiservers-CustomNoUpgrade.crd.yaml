@@ -349,10 +349,14 @@ spec:
                             description: |-
                               transitMount specifies the mount path of the Vault Transit engine.
 
-                              The transit mount must be between 1 and 1024 characters, cannot start or
-                              end with a forward slash, cannot contain consecutive forward slashes, and
-                              must only contain RFC 3986 unreserved characters (alphanumeric, hyphen,
-                              period, underscore, tilde) and forward slashes as path separators.
+                              When omitted, this means the user has no opinion and the platform is left
+                              to choose a reasonable default. These defaults are subject to change over time.
+                              The current default is "transit".
+
+                              The transit mount must be between 1 and 1024 characters when specified, cannot start or
+                              end with a forward slash, cannot contain consecutive forward slashes, and must only contain
+                              RFC 3986 unreserved characters (alphanumeric, hyphen, period, underscore, tilde) and forward
+                              slashes as path separators.
                             maxLength: 1024
                             minLength: 1
                             type: string
@@ -419,7 +423,6 @@ spec:
                         - authentication
                         - kmsPluginImage
                         - transitKey
-                        - transitMount
                         - vaultAddress
                         type: object
                     required:

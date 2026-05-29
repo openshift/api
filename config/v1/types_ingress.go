@@ -254,7 +254,7 @@ type ComponentRouteSpec struct {
 	// Label keys and values must conform to Kubernetes label conventions.
 	// Keys with the "kubernetes.io/" and "k8s.io/" prefixes are reserved
 	// for Kubernetes use and may not be specified.
-	// A maximum of 8 labels may be specified.
+	// When specified, labels must contain at least one entry, up to a maximum of 8.
 	// +openshift:enable:FeatureGate=IngressComponentRouteLabels
 	// +optional
 	// +mapType=granular
@@ -262,7 +262,7 @@ type ComponentRouteSpec struct {
 	// +kubebuilder:validation:MaxProperties=8
 	// +kubebuilder:validation:XValidation:rule="self.all(key, !format.qualifiedName().validate(key).hasValue())",message="label keys must be valid Kubernetes qualified names"
 	// +kubebuilder:validation:XValidation:rule="self.all(key, !key.startsWith('kubernetes.io/') && !key.startsWith('k8s.io/'))",message="label keys must not use reserved prefixes kubernetes.io/ or k8s.io/"
-	// +kubebuilder:validation:XValidation:rule="self.all(key, self[key].matches('^(([A-Za-z0-9][-A-Za-z0-9_.]{0,61})?[A-Za-z0-9])?$'))",message="label values must be valid Kubernetes label values (at most 63 characters, alphanumeric, '-', '_', or '.', must start and end with alphanumeric)"
+	// +kubebuilder:validation:XValidation:rule="self.all(key, !format.labelValue().validate(self[key]).hasValue())",message="label values must be valid Kubernetes label values (at most 63 characters, alphanumeric, '-', '_', or '.', must start and end with alphanumeric)"
 	Labels map[string]string `json:"labels,omitempty"`
 }
 

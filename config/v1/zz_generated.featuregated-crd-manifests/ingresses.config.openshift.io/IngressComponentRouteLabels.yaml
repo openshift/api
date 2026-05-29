@@ -88,7 +88,7 @@ spec:
                         Label keys and values must conform to Kubernetes label conventions.
                         Keys with the "kubernetes.io/" and "k8s.io/" prefixes are reserved
                         for Kubernetes use and may not be specified.
-                        A maximum of 8 labels may be specified.
+                        When specified, labels must contain at least one entry, up to a maximum of 8.
                       maxProperties: 8
                       minProperties: 1
                       type: object
@@ -102,7 +102,7 @@ spec:
                       - message: label values must be valid Kubernetes label values
                           (at most 63 characters, alphanumeric, '-', '_', or '.',
                           must start and end with alphanumeric)
-                        rule: self.all(key, self[key].matches('^(([A-Za-z0-9][-A-Za-z0-9_.]{0,61})?[A-Za-z0-9])?$'))
+                        rule: self.all(key, !format.labelValue().validate(self[key]).hasValue())
                     name:
                       description: |-
                         name is the logical name of the route to customize.

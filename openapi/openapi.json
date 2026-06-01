@@ -15834,6 +15834,7 @@
       "properties": {
         "kms": {
           "description": "kms defines the configuration for the external KMS instance that manages the encryption keys, when KMS encryption is enabled sensitive resources will be encrypted using keys managed by an externally configured KMS instance.\n\nThe Key Management Service (KMS) instance provides symmetric encryption and is responsible for managing the lifecyle of the encryption keys outside of the control plane. This allows integration with an external provider to manage the data encryption keys securely.",
+          "default": {},
           "$ref": "#/definitions/com.github.openshift.api.config.v1.KMSPluginConfig"
         },
         "type": {
@@ -16855,6 +16856,42 @@
           "type": "number",
           "format": "float",
           "default": 0
+        }
+      }
+    },
+    "com.github.openshift.api.config.v1.ClientCredentialConfig": {
+      "description": "ClientCredentialConfig configures the client credentials and token endpoint to use to get an access token via the OAuth2 client credentials grant flow.",
+      "type": "object",
+      "required": [
+        "clientID",
+        "clientSecret",
+        "tokenEndpoint"
+      ],
+      "properties": {
+        "clientID": {
+          "description": "clientID is a required client identifier to use during the OAuth2 client credentials flow. clientID must be at least 1 character in length, must not exceed 256 characters in length, and must only contain printable ASCII characters.",
+          "type": "string"
+        },
+        "clientSecret": {
+          "description": "clientSecret is the client secret to use during the OAuth2 client credentials flow. clientSecret must be at least 1 character in length, must not exceed 256 characters in length, and must only contain printable ASCII characters.",
+          "type": "string"
+        },
+        "scopes": {
+          "description": "scopes is an optional list of OAuth2 scopes to request when obtaining an access token.\n\nIf not specified, the token endpoint's default scopes will be used.\n\nWhen specified, there must be at least 1 entry and must not exceed 16 entries. Each entry must be at least 1 character in length and must not exceed 256 characters in length. Each entry must only contain printable ASCII characters, excluding spaces, double quotes (\") and backslashes (\\).",
+          "type": "array",
+          "items": {
+            "type": "string",
+            "default": ""
+          }
+        },
+        "tls": {
+          "description": "tls is an optional field that allows configuring the TLS settings used to interact with the identity provider as an OAuth2 client.",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.config.v1.ExternalSourceTLS"
+        },
+        "tokenEndpoint": {
+          "description": "tokenEndpoint is a required URL to query for an access token using the client credential OAuth2 flow. tokenEndpoint must be at least 1 character in length and must not exceed 2048 characters in length. tokenEndpoint must be a valid HTTPS URL. tokenEndpoint must have a host and a path. tokenEndpoint must not contain query parameters, fragments, or user information (e.g., \"user:password@host\").",
+          "type": "string"
         }
       }
     },
@@ -18134,6 +18171,55 @@
         }
       }
     },
+    "com.github.openshift.api.config.v1.ExternalClaimsSource": {
+      "description": "ExternalClaimsSource provides the configuration for a single external claim source.",
+      "type": "object",
+      "required": [
+        "url",
+        "mappings"
+      ],
+      "properties": {
+        "authentication": {
+          "description": "authentication is an optional field that configures how the apiserver authenticates with an external claims source. When not specified, anonymous authentication is used.",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.config.v1.ExternalSourceAuthentication"
+        },
+        "conditions": {
+          "description": "conditions is an optional list of conditions in which claims should attempt to be fetched from this external source.\n\nWhen omitted or empty, claims are always attempted to be fetched from this external source.\n\nWhen specified, all conditions must evaluate to 'true' before claims are attempted to be fetched from this external source.\n\nconditions must not exceed 16 entries. Entries must have unique expressions.",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/com.github.openshift.api.config.v1.ExternalSourceCondition"
+          },
+          "x-kubernetes-list-map-keys": [
+            "expression"
+          ],
+          "x-kubernetes-list-type": "map"
+        },
+        "mappings": {
+          "description": "mappings is a required list of the claim and response handling expression pairs that produces the claims from the external source. mappings must have at least 1 entry and must not exceed 16 entries. Entries must have a unique name across all external claim sources.",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/com.github.openshift.api.config.v1.SourcedClaimMapping"
+          },
+          "x-kubernetes-list-map-keys": [
+            "name"
+          ],
+          "x-kubernetes-list-type": "map"
+        },
+        "tls": {
+          "description": "tls is an optional field that configures the http client TLS settings when fetching external claims from this source.",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.config.v1.ExternalSourceTLS"
+        },
+        "url": {
+          "description": "url is a required configuration of the URL for which the external claims are located.",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.config.v1.SourceURL"
+        }
+      }
+    },
     "com.github.openshift.api.config.v1.ExternalIPConfig": {
       "description": "ExternalIPConfig specifies some IP blocks relevant for the ExternalIP field of a Service resource.",
       "type": "object",
@@ -18196,6 +18282,68 @@
           "description": "cloudControllerManager contains settings specific to the external Cloud Controller Manager (a.k.a. CCM or CPI). When omitted, new nodes will be not tainted and no extra initialization from the cloud controller manager is expected.",
           "default": {},
           "$ref": "#/definitions/com.github.openshift.api.config.v1.CloudControllerManagerStatus"
+        }
+      }
+    },
+    "com.github.openshift.api.config.v1.ExternalSourceAuthentication": {
+      "description": "ExternalSourceAuthentication configures how the apiserver should attempt to authenticate with an external claims source.",
+      "type": "object",
+      "required": [
+        "type"
+      ],
+      "properties": {
+        "clientCredential": {
+          "description": "clientCredential configures the client credentials and token endpoint to use to get an access token. clientCredential is required when type is 'ClientCredential', and forbidden otherwise.",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.config.v1.ClientCredentialConfig"
+        },
+        "type": {
+          "description": "type is a required field that sets the type of authentication method used by the authenticator when fetching external claims.\n\nAllowed values are 'RequestProvidedToken' and 'ClientCredential'.\n\nWhen set to 'RequestProvidedToken', the authenticator will use the token provided to the kube-apiserver as part of the request to authenticate with the external claims source.\n\nWhen set to 'ClientCredential', the authenticator will use the configured client-id, client-secret, and token endpoint to fetch an access token using the OAuth2 client credentials grant flow. The fetched access token will then be used to authenticate with the external claims source.\n\n\nPossible enum values:\n - `\"ClientCredential\"` is an ExternalSourceAuthenticationType that represents that the authenticator should use the OAuth2 client credentials grant flow to obtain an access token for authenticating with the external claims source. This is useful for scenarios such as fetching user information from Microsoft's Graph API where a separate client credential is needed to access the API.\n - `\"RequestProvidedToken\"` is an ExternalSourceAuthenticationType that represents that the token being evaluated for authentication should be used for authenticating with the external claims source. This is useful for scenarios where a token has multiple audiences and scopes so that it can be used to access both the cluster and the UserInfo endpoint that contains additional information about the user not present in the token.",
+          "type": "string",
+          "enum": [
+            "ClientCredential",
+            "RequestProvidedToken"
+          ]
+        }
+      }
+    },
+    "com.github.openshift.api.config.v1.ExternalSourceCertificateAuthoritySecretReference": {
+      "description": "CertificateAuthoritySecretReference is a reference to a Secret in the openshift-config namespace that should be used for configuring the certificate authority to be used when sourcing claims from external sources.",
+      "type": "object",
+      "required": [
+        "name"
+      ],
+      "properties": {
+        "name": {
+          "description": "name is the required name of the Secret that exists in the openshift-config namespace.\n\nIt must be at least 1 character in length, must not exceed 253 characters in length, must start and end with a lowercase alphanumeric character, and must only contain lowercase alphanumeric characters, '-' or '.'.",
+          "type": "string"
+        }
+      }
+    },
+    "com.github.openshift.api.config.v1.ExternalSourceCondition": {
+      "description": "ExternalSourceCondition configures a singular condition that must return true before the external source is queried to retrieve external claims.",
+      "type": "object",
+      "required": [
+        "expression"
+      ],
+      "properties": {
+        "expression": {
+          "description": "expression is a required CEL expression that is used to determine whether or not an external source should be used to fetch external claims.\n\nThe expression must return a boolean value, where true means that the source should be consulted and false means that it should not.\n\nClaims from the token used for the request to the kube-apiserver are made available via the `claims` variable.\n\nexpression must be at least 1 character and must not exceed 1024 characters in length.",
+          "type": "string"
+        }
+      }
+    },
+    "com.github.openshift.api.config.v1.ExternalSourceTLS": {
+      "description": "ExternalSourceTLS configures the TLS options that the apiserver uses as a client when making a request to the external claim source.",
+      "type": "object",
+      "required": [
+        "certificateAuthority"
+      ],
+      "properties": {
+        "certificateAuthority": {
+          "description": "certificateAuthority is a required reference to a secret in the openshift-config namespace that contains the CA certificate to use to validate TLS connections with the external claims source.",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.config.v1.ExternalSourceCertificateAuthoritySecretReference"
         }
       }
     },
@@ -21203,6 +21351,15 @@
           },
           "x-kubernetes-list-type": "atomic"
         },
+        "externalClaimsSources": {
+          "description": "externalClaimSources is an optional field that can be used to configure sources, external to the token provided in a request, in which claims should be fetched from and made available to the claim mapping process that is used to build the identity of a token holder.\n\nFor example, fetching additional user metadata from an OIDC provider's UserInfo endpoint.\n\nWhen not specified, only claims present in the token itself will be available in the claim mapping process.\n\nWhen specified, at least one external claim source must be specified and no more than 5 sources may be specified.",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/com.github.openshift.api.config.v1.ExternalClaimsSource"
+          },
+          "x-kubernetes-list-type": "atomic"
+        },
         "issuer": {
           "description": "issuer is a required field that configures how the platform interacts with the identity provider and how tokens issued from the identity provider are evaluated by the Kubernetes API server.",
           "default": {},
@@ -22323,7 +22480,7 @@
       "type": "object",
       "properties": {
         "allowedRegistries": {
-          "description": "allowedRegistries are the only registries permitted for image pull and push actions. All other registries are denied.\n\nOnly one of BlockedRegistries or AllowedRegistries may be set.",
+          "description": "allowedRegistries are the only registries permitted for image pull and push actions. All other registries are denied. Each entry must be a valid registry scope in the format hostname[:port][/path], optionally prefixed with \"*.\" for wildcard subdomains (e.g., \"*.example.com\"). The hostname must consist of valid DNS labels separated by dots, where each label contains only alphanumeric characters and hyphens and does not start or end with a hyphen. Entries must not be empty, must not include tags (e.g., \":latest\") or digests (e.g., \"@sha256:...\"), and must be at most 256 characters in length. The list may contain at most 1024 entries.\n\nOnly one of BlockedRegistries or AllowedRegistries may be set.",
           "type": "array",
           "items": {
             "type": "string",
@@ -22332,7 +22489,7 @@
           "x-kubernetes-list-type": "atomic"
         },
         "blockedRegistries": {
-          "description": "blockedRegistries cannot be used for image pull and push actions. All other registries are permitted.\n\nOnly one of BlockedRegistries or AllowedRegistries may be set.",
+          "description": "blockedRegistries cannot be used for image pull and push actions. All other registries are permitted. Each entry must be a valid registry scope in the format hostname[:port][/path], optionally prefixed with \"*.\" for wildcard subdomains (e.g., \"*.example.com\"). The hostname must consist of valid DNS labels separated by dots, where each label contains only alphanumeric characters and hyphens and does not start or end with a hyphen. Entries must not be empty, must not include tags (e.g., \":latest\") or digests (e.g., \"@sha256:...\"), and must be at most 256 characters in length. The list may contain at most 1024 entries.\n\nOnly one of BlockedRegistries or AllowedRegistries may be set.",
           "type": "array",
           "items": {
             "type": "string",
@@ -22350,7 +22507,7 @@
           "x-kubernetes-list-type": "set"
         },
         "insecureRegistries": {
-          "description": "insecureRegistries are registries which do not have a valid TLS certificates or only support HTTP connections.",
+          "description": "insecureRegistries are registries which do not have a valid TLS certificates or only support HTTP connections. Each entry must be a valid registry scope in the format hostname[:port][/path], optionally prefixed with \"*.\" for wildcard subdomains (e.g., \"*.example.com\"). The hostname must consist of valid DNS labels separated by dots, where each label contains only alphanumeric characters and hyphens and does not start or end with a hyphen. Entries must not be empty, must not include tags (e.g., \":latest\") or digests (e.g., \"@sha256:...\"), and must be at most 256 characters in length. The list may contain at most 1024 entries.",
           "type": "array",
           "items": {
             "type": "string",
@@ -22739,6 +22896,42 @@
           "description": "url contains the upstream custom signature store URL. url should be a valid absolute http/https URI of an upstream signature store as per rfc1738. This must be provided and cannot be empty.",
           "type": "string",
           "default": ""
+        }
+      }
+    },
+    "com.github.openshift.api.config.v1.SourceURL": {
+      "description": "SourceURL configures the options used to build the URL that is queried for external claims.",
+      "type": "object",
+      "required": [
+        "hostname",
+        "pathExpression"
+      ],
+      "properties": {
+        "hostname": {
+          "description": "hostname is a required hostname for which the external claims are located.\n\nIt must be a valid DNS subdomain name as per RFC1123.\n\nThis means that it must start and end with a lowercase alphanumeric character, must only consist of lowercase alphanumeric characters, '-', and '.'. hostname must be at least 1 character in length and must not exceed 253 characters in length. hostname may optionally specify a port in the format ':{port}'. If a port is specified it must not exceed 65535.",
+          "type": "string"
+        },
+        "pathExpression": {
+          "description": "pathExpression is a required CEL expression that returns a list of string values used to construct the URL path. Claims from the token used for the request to the kube-apiserver are made available via the `claims` variable. expression must be at least 1 character in length and must not exceed 1024 characters in length.",
+          "type": "string"
+        }
+      }
+    },
+    "com.github.openshift.api.config.v1.SourcedClaimMapping": {
+      "description": "SourcedClaimMapping configures the mapping behavior for a single external claim from the response the apiserver received from the external claim source.",
+      "type": "object",
+      "required": [
+        "name",
+        "expression"
+      ],
+      "properties": {
+        "expression": {
+          "description": "expression is a required CEL expression that will produce a value to be assigned to the claim. The full response body from the request to the external claim source is provided via the `response` variable. expression must be at least 1 character and must not exceed 1024 characters in length.",
+          "type": "string"
+        },
+        "name": {
+          "description": "name is a required name of the claim that will be produced and made available during the claim-to-identity mapping process. name must consist of only lowercase alpha characters and underscores ('_'). name must be at least 1 character and must not exceed 256 characters in length.",
+          "type": "string"
         }
       }
     },
@@ -23703,7 +23896,7 @@
       ],
       "properties": {
         "secret": {
-          "description": "secret references a secret in the openshift-config namespace containing the AppRole credentials used to authenticate with Vault. The secret must contain two keys: \"role-id\" for the AppRole Role ID and \"secret-id\" for the AppRole Secret ID.",
+          "description": "secret references a secret in the openshift-config namespace containing the AppRole credentials used to authenticate with Vault. The referenced Secret must contain two keys: \"role-id\" for the AppRole Role ID and \"secret-id\" for the AppRole Secret ID.",
           "default": {},
           "$ref": "#/definitions/com.github.openshift.api.config.v1.VaultSecretReference"
         }
@@ -23755,6 +23948,7 @@
         "kmsPluginImage",
         "vaultAddress",
         "authentication",
+        "transitMount",
         "transitKey"
       ],
       "properties": {
@@ -23777,7 +23971,7 @@
           "type": "string"
         },
         "transitMount": {
-          "description": "transitMount specifies the mount path of the Vault Transit engine.\n\nWhen omitted, this means the user has no opinion and the platform is left to choose a reasonable default. These defaults are subject to change over time. The current default is \"transit\".\n\nThe transit mount must be between 1 and 1024 characters when specified, cannot start or end with a forward slash, cannot contain consecutive forward slashes, and must only contain RFC 3986 unreserved characters (alphanumeric, hyphen, period, underscore, tilde) and forward slashes as path separators.",
+          "description": "transitMount specifies the mount path of the Vault Transit engine.\n\nThe transit mount must be between 1 and 1024 characters, cannot start or end with a forward slash, cannot contain consecutive forward slashes, and must only contain RFC 3986 unreserved characters (alphanumeric, hyphen, period, underscore, tilde) and forward slashes as path separators.",
           "type": "string"
         },
         "vaultAddress": {
@@ -23808,7 +24002,7 @@
       "type": "object",
       "properties": {
         "caBundle": {
-          "description": "caBundle references a ConfigMap in the openshift-config namespace containing the CA certificate bundle used to verify the TLS connection to the Vault server. The ConfigMap must contain the CA bundle in the key \"ca-bundle.crt\". When this field is not set, the system's trusted CA certificates are used.\n\nThe namespace for the ConfigMap is openshift-config.\n\nExample ConfigMap:\n  apiVersion: v1\n  kind: ConfigMap\n  metadata:\n    name: vault-ca-bundle\n    namespace: openshift-config\n  data:\n    ca-bundle.crt: |\n      -----BEGIN CERTIFICATE-----\n      ...\n      -----END CERTIFICATE-----",
+          "description": "caBundle references a ConfigMap in the openshift-config namespace containing the CA certificate bundle used to verify the TLS connection to the Vault server. The referenced ConfigMap must contain the CA bundle in the key \"ca-bundle.crt\". When this field is not set, the system's trusted CA certificates are used.\n\nThe namespace for the ConfigMap is openshift-config.\n\nExample ConfigMap:\n  apiVersion: v1\n  kind: ConfigMap\n  metadata:\n    name: vault-ca-bundle\n    namespace: openshift-config\n  data:\n    ca-bundle.crt: |\n      -----BEGIN CERTIFICATE-----\n      ...\n      -----END CERTIFICATE-----",
           "default": {},
           "$ref": "#/definitions/com.github.openshift.api.config.v1.VaultConfigMapReference"
         },
@@ -24844,6 +25038,11 @@
           "default": {},
           "$ref": "#/definitions/com.github.openshift.api.config.v1alpha1.NodeExporterCollectorProcessesConfig"
         },
+        "softirqs": {
+          "description": "softirqs configures the softirqs collector, which exposes detailed softirq statistics from /proc/softirqs. softirqs is optional. When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time. The current default is disabled. Enable when you need visibility into kernel softirq processing across CPUs.",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.config.v1alpha1.NodeExporterCollectorSoftirqsConfig"
+        },
         "systemd": {
           "description": "systemd configures the systemd collector, which collects statistics on the systemd daemon and its managed services. systemd is optional. When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time. The current default is disabled. Enabling this collector with a long list of selected units may produce metrics with high cardinality. If you enable this collector, closely monitor the prometheus-k8s deployment for excessive memory usage. Enable when you need metrics for specific units; scope units carefully.",
           "default": {},
@@ -24994,6 +25193,23 @@
       "properties": {
         "collectionPolicy": {
           "description": "collectionPolicy declares whether the processes collector collects metrics. This field is required. Valid values are \"Collect\" and \"DoNotCollect\". When set to \"Collect\", the processes collector is active and process/thread statistics are collected. When set to \"DoNotCollect\", the processes collector is inactive.\n\nPossible enum values:\n - `\"Collect\"` means the collector is active and will produce metrics.\n - `\"DoNotCollect\"` means the collector is inactive and will not produce metrics.",
+          "type": "string",
+          "enum": [
+            "Collect",
+            "DoNotCollect"
+          ]
+        }
+      }
+    },
+    "com.github.openshift.api.config.v1alpha1.NodeExporterCollectorSoftirqsConfig": {
+      "description": "NodeExporterCollectorSoftirqsConfig provides configuration for the softirqs collector of the node-exporter agent. The softirqs collector exposes detailed softirq statistics from /proc/softirqs. It is disabled by default.",
+      "type": "object",
+      "required": [
+        "collectionPolicy"
+      ],
+      "properties": {
+        "collectionPolicy": {
+          "description": "collectionPolicy declares whether the softirqs collector collects metrics. This field is required. Valid values are \"Collect\" and \"DoNotCollect\". When set to \"Collect\", the softirqs collector is active and softirq statistics are collected. When set to \"DoNotCollect\", the softirqs collector is inactive.\n\nPossible enum values:\n - `\"Collect\"` means the collector is active and will produce metrics.\n - `\"DoNotCollect\"` means the collector is inactive and will not produce metrics.",
           "type": "string",
           "enum": [
             "Collect",

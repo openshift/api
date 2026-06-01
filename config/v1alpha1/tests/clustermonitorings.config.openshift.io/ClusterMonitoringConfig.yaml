@@ -1181,6 +1181,10 @@ tests:
         kind: ClusterMonitoring
         spec:
           thanosQuerierConfig:
+            logLevel: "Debug"
+            requestLogging:
+              policy: "AllRequests"
+            crossOriginRequestPolicy: "DenyAll"
             nodeSelector:
               kubernetes.io/os: linux
             resources:
@@ -1201,6 +1205,10 @@ tests:
         kind: ClusterMonitoring
         spec:
           thanosQuerierConfig:
+            logLevel: "Debug"
+            requestLogging:
+              policy: "AllRequests"
+            crossOriginRequestPolicy: "DenyAll"
             nodeSelector:
               kubernetes.io/os: linux
             resources:
@@ -1434,6 +1442,139 @@ tests:
                 topologyKey: topology.kubernetes.io/zone
                 whenUnsatisfiable: DoNotSchedule
       expectedError: "Duplicate value"
+    - name: Should accept ThanosQuerierConfig with logLevel set to Error
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          thanosQuerierConfig:
+            logLevel: "Error"
+      expected: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          thanosQuerierConfig:
+            logLevel: "Error"
+    - name: Should accept ThanosQuerierConfig with logLevel set to Warn
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          thanosQuerierConfig:
+            logLevel: "Warn"
+      expected: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          thanosQuerierConfig:
+            logLevel: "Warn"
+    - name: Should accept ThanosQuerierConfig with logLevel set to Info
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          thanosQuerierConfig:
+            logLevel: "Info"
+      expected: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          thanosQuerierConfig:
+            logLevel: "Info"
+    - name: Should accept ThanosQuerierConfig with logLevel set to Debug
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          thanosQuerierConfig:
+            logLevel: "Debug"
+      expected: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          thanosQuerierConfig:
+            logLevel: "Debug"
+    - name: Should reject ThanosQuerierConfig with invalid logLevel
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          thanosQuerierConfig:
+            logLevel: "InvalidLevel"
+      expectedError: 'spec.thanosQuerierConfig.logLevel: Unsupported value: "InvalidLevel": supported values: "Error", "Warn", "Info", "Debug"'
+    - name: Should accept ThanosQuerierConfig with requestLogging policy set to AllRequests
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          thanosQuerierConfig:
+            requestLogging:
+              policy: "AllRequests"
+      expected: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          thanosQuerierConfig:
+            requestLogging:
+              policy: "AllRequests"
+    - name: Should accept ThanosQuerierConfig with requestLogging policy set to NoRequests
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          thanosQuerierConfig:
+            requestLogging:
+              policy: "NoRequests"
+      expected: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          thanosQuerierConfig:
+            requestLogging:
+              policy: "NoRequests"
+    - name: Should reject ThanosQuerierConfig with invalid requestLogging policy
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          thanosQuerierConfig:
+            requestLogging:
+              policy: "InvalidValue"
+      expectedError: 'spec.thanosQuerierConfig.requestLogging.policy: Unsupported value: "InvalidValue": supported values: "AllRequests", "NoRequests"'
+    - name: Should accept ThanosQuerierConfig with crossOriginRequestPolicy set to AllowAll
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          thanosQuerierConfig:
+            crossOriginRequestPolicy: "AllowAll"
+      expected: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          thanosQuerierConfig:
+            crossOriginRequestPolicy: "AllowAll"
+    - name: Should accept ThanosQuerierConfig with crossOriginRequestPolicy set to DenyAll
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          thanosQuerierConfig:
+            crossOriginRequestPolicy: "DenyAll"
+      expected: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          thanosQuerierConfig:
+            crossOriginRequestPolicy: "DenyAll"
+    - name: Should reject ThanosQuerierConfig with invalid crossOriginRequestPolicy
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          thanosQuerierConfig:
+            crossOriginRequestPolicy: "InvalidValue"
+      expectedError: 'spec.thanosQuerierConfig.crossOriginRequestPolicy: Unsupported value: "InvalidValue": supported values: "AllowAll", "DenyAll"'
     - name: Should be able to create MonitoringPluginConfig with valid resources
       initial: |
         apiVersion: config.openshift.io/v1alpha1
@@ -1799,21 +1940,6 @@ tests:
               - name: "memory"
                 request: "50Mi"
                 limit: "200Mi"
-    - name: Should be able to create NodeExporterConfig with valid tolerations
-      initial: |
-        apiVersion: config.openshift.io/v1alpha1
-        kind: ClusterMonitoring
-        spec:
-          nodeExporterConfig:
-            tolerations:
-              - operator: "Exists"
-      expected: |
-        apiVersion: config.openshift.io/v1alpha1
-        kind: ClusterMonitoring
-        spec:
-          nodeExporterConfig:
-            tolerations:
-              - operator: "Exists"
     - name: Should be able to create NodeExporterConfig with collectors
       initial: |
         apiVersion: config.openshift.io/v1alpha1
@@ -1869,14 +1995,10 @@ tests:
         kind: ClusterMonitoring
         spec:
           nodeExporterConfig:
-            nodeSelector:
-              kubernetes.io/os: linux
             resources:
               - name: "cpu"
                 request: "50m"
                 limit: "200m"
-            tolerations:
-              - operator: "Exists"
             collectors:
               cpuFreq:
                 collectionPolicy: Collect
@@ -1891,14 +2013,10 @@ tests:
         kind: ClusterMonitoring
         spec:
           nodeExporterConfig:
-            nodeSelector:
-              kubernetes.io/os: linux
             resources:
               - name: "cpu"
                 request: "50m"
                 limit: "200m"
-            tolerations:
-              - operator: "Exists"
             collectors:
               cpuFreq:
                 collectionPolicy: Collect
@@ -2062,71 +2180,6 @@ tests:
             collectors:
               systemd:
                 collectionPolicy: DoNotCollect
-    - name: Should reject NodeExporterConfig with empty nodeSelector
-      initial: |
-        apiVersion: config.openshift.io/v1alpha1
-        kind: ClusterMonitoring
-        spec:
-          nodeExporterConfig:
-            nodeSelector: {}
-      expectedError: 'spec.nodeExporterConfig.nodeSelector: Invalid value: 0: spec.nodeExporterConfig.nodeSelector in body should have at least 1 properties'
-    - name: Should reject NodeExporterConfig with too many nodeSelector entries
-      initial: |
-        apiVersion: config.openshift.io/v1alpha1
-        kind: ClusterMonitoring
-        spec:
-          nodeExporterConfig:
-            nodeSelector:
-              key1: val1
-              key2: val2
-              key3: val3
-              key4: val4
-              key5: val5
-              key6: val6
-              key7: val7
-              key8: val8
-              key9: val9
-              key10: val10
-              key11: val11
-      expectedError: 'spec.nodeExporterConfig.nodeSelector: Too many: 11: must have at most 10 items'
-    - name: Should reject NodeExporterConfig with empty tolerations array
-      initial: |
-        apiVersion: config.openshift.io/v1alpha1
-        kind: ClusterMonitoring
-        spec:
-          nodeExporterConfig:
-            tolerations: []
-      expectedError: 'spec.nodeExporterConfig.tolerations: Invalid value: 0: spec.nodeExporterConfig.tolerations in body should have at least 1 items'
-    - name: Should reject NodeExporterConfig with too many tolerations
-      initial: |
-        apiVersion: config.openshift.io/v1alpha1
-        kind: ClusterMonitoring
-        spec:
-          nodeExporterConfig:
-            tolerations:
-              - key: "key1"
-                operator: "Exists"
-              - key: "key2"
-                operator: "Exists"
-              - key: "key3"
-                operator: "Exists"
-              - key: "key4"
-                operator: "Exists"
-              - key: "key5"
-                operator: "Exists"
-              - key: "key6"
-                operator: "Exists"
-              - key: "key7"
-                operator: "Exists"
-              - key: "key8"
-                operator: "Exists"
-              - key: "key9"
-                operator: "Exists"
-              - key: "key10"
-                operator: "Exists"
-              - key: "key11"
-                operator: "Exists"
-      expectedError: 'spec.nodeExporterConfig.tolerations: Too many: 11: must have at most 10 items'
     - name: Should reject systemd collect with empty object
       initial: |
         apiVersion: config.openshift.io/v1alpha1

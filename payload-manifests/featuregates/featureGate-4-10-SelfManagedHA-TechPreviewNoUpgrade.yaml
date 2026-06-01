@@ -274,6 +274,9 @@
                         "name": "MutatingAdmissionPolicy"
                     },
                     {
+                        "name": "NetworkObservabilityInstall"
+                    },
+                    {
                         "name": "NewOLM"
                     },
                     {
@@ -341,6 +344,9 @@
                     },
                     {
                         "name": "TLSAdherence"
+                    },
+                    {
+                        "name": "TLSGroupPreferences"
                     },
                     {
                         "name": "UpgradeStatus"

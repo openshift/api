@@ -301,6 +301,9 @@
                         "name": "MutatingAdmissionPolicy"
                     },
                     {
+                        "name": "NetworkObservabilityInstall"
+                    },
+                    {
                         "name": "NoOverlayMode"
                     },
                     {
@@ -341,6 +344,9 @@
                     },
                     {
                         "name": "TLSAdherence"
+                    },
+                    {
+                        "name": "TLSGroupPreferences"
                     },
                     {
                         "name": "UpgradeStatus"

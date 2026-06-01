@@ -204,6 +204,9 @@
                         "name": "NetworkConnect"
                     },
                     {
+                        "name": "NetworkObservabilityInstall"
+                    },
+                    {
                         "name": "NewOLM"
                     },
                     {
@@ -259,6 +262,9 @@
                     },
                     {
                         "name": "TLSAdherence"
+                    },
+                    {
+                        "name": "TLSGroupPreferences"
                     },
                     {
                         "name": "VSphereConfigurableMaxAllowedBlockVolumesPerNode"

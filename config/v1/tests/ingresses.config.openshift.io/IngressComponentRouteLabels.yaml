@@ -84,7 +84,7 @@ tests:
               hostname: console.example.com
               labels:
                 example.com/my-label: value
-    - name: Should be able to create componentRoutes with max-length label key and value
+    - name: Should be able to create componentRoutes with max-length label value
       initial: |
         apiVersion: config.openshift.io/v1
         kind: Ingress
@@ -95,7 +95,7 @@ tests:
               namespace: openshift-console
               hostname: console.example.com
               labels:
-                abcdefghijklmnopqrstuvwxyz0123456789abcdefghijklmnopqrstuvwxyz012: abcdefghijklmnopqrstuvwxyz0123456789abcdefghijklmnopqrstuvwxyz012
+                my-label: abcdefghijklmnopqrstuvwxyz0123456789abcdefghijklmnopqrstuvwxyz0
       expected: |
         apiVersion: config.openshift.io/v1
         kind: Ingress
@@ -106,7 +106,7 @@ tests:
               namespace: openshift-console
               hostname: console.example.com
               labels:
-                abcdefghijklmnopqrstuvwxyz0123456789abcdefghijklmnopqrstuvwxyz012: abcdefghijklmnopqrstuvwxyz0123456789abcdefghijklmnopqrstuvwxyz012
+                my-label: abcdefghijklmnopqrstuvwxyz0123456789abcdefghijklmnopqrstuvwxyz0
     - name: Should reject componentRoutes with invalid label value
       initial: |
         apiVersion: config.openshift.io/v1
@@ -199,7 +199,7 @@ tests:
                 label7: value7
                 label8: value8
                 label9: value9
-      expectedError: "Too many properties"
+      expectedError: "must have at most 8 items"
   onUpdate:
     - name: Should be able to add labels to componentRoutes on update
       initial: |

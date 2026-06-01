@@ -260,6 +260,8 @@ type ComponentRouteSpec struct {
 	// route to be reassigned to a different IngressController.
 	// When omitted, no additional labels are applied to the component route.
 	// Label keys and values must conform to Kubernetes label conventions.
+	// Label values are validated at the CRD level. Label keys are validated
+	// by the Route API when the route is created or updated.
 	// When specified, labels must contain at least one entry, up to a maximum of 8.
 	// +openshift:enable:FeatureGate=IngressComponentRouteLabels
 	// +optional

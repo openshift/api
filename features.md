@@ -3,6 +3,7 @@
 | ClientsAllowCBOR| | | | | |  |
 | ClusterAPIInstall| | | | | |  |
 | EventedPLEG| | | | | |  |
+| GatewayAPIWithoutOLM| | | | | |  |
 | MachineAPIOperatorDisableMachineHealthCheckController| | | | | |  |
 | MultiArchInstallAzure| | | | | |  |
 | NewOLMBoxCutterRuntime| | | | | |  |

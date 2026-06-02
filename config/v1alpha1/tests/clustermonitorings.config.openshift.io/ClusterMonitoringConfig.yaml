@@ -2918,6 +2918,44 @@ tests:
           prometheusConfig:
             retention:
               size: "500MiB"
+    - name: Should accept prometheusConfig retention duration of zero to disable time-based retention
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: "Disabled"
+          prometheusConfig:
+            retention:
+              duration: "0"
+      expected: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: "Disabled"
+          prometheusConfig:
+            retention:
+              duration: "0"
+    - name: Should accept prometheusConfig retention size of zero to disable size-based retention
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: "Disabled"
+          prometheusConfig:
+            retention:
+              size: "0"
+      expected: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: "Disabled"
+          prometheusConfig:
+            retention:
+              size: "0"
     - name: Should reject invalid prometheusConfig retention duration
       initial: |
         apiVersion: config.openshift.io/v1alpha1
@@ -2928,7 +2966,29 @@ tests:
           prometheusConfig:
             retention:
               duration: "15days"
-      expectedError: 'spec.prometheusConfig.retention.duration: Invalid value: "string": must be a valid Prometheus duration string'
+      expectedError: 'must be "0" to disable time-based retention, or a duration string with only positive unit values'
+    - name: Should reject prometheusConfig retention duration with zero-valued unit
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: "Disabled"
+          prometheusConfig:
+            retention:
+              duration: "0d"
+      expectedError: 'must be "0" to disable time-based retention, or a duration string with only positive unit values'
+    - name: Should reject prometheusConfig retention duration with zero-valued composite unit
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: "Disabled"
+          prometheusConfig:
+            retention:
+              duration: "0y5d"
+      expectedError: 'must be "0" to disable time-based retention, or a duration string with only positive unit values'
     - name: Should reject invalid prometheusConfig retention size
       initial: |
         apiVersion: config.openshift.io/v1alpha1
@@ -2939,8 +2999,8 @@ tests:
           prometheusConfig:
             retention:
               size: "500Mi"
-      expectedError: 'spec.prometheusConfig.retention.size: Invalid value: "string": must be a valid Prometheus byte-size string'
-    - name: Should reject prometheusConfig retention with both durationInDays and duration
+      expectedError: 'must be "0" to disable size-based retention, or a positive byte-size string'
+    - name: Should reject prometheusConfig retention size with zero-valued unit
       initial: |
         apiVersion: config.openshift.io/v1alpha1
         kind: ClusterMonitoring
@@ -2949,10 +3009,9 @@ tests:
             mode: "Disabled"
           prometheusConfig:
             retention:
-              durationInDays: 15
-              duration: "15d"
-      expectedError: 'durationInDays and duration cannot both be set'
-    - name: Should reject prometheusConfig retention with both sizeInGiB and size
+              size: "0MiB"
+      expectedError: 'must be "0" to disable size-based retention, or a positive byte-size string'
+    - name: Should reject prometheusConfig retention size with zero bytes unit
       initial: |
         apiVersion: config.openshift.io/v1alpha1
         kind: ClusterMonitoring
@@ -2961,9 +3020,8 @@ tests:
             mode: "Disabled"
           prometheusConfig:
             retention:
-              sizeInGiB: 500
-              size: "500GiB"
-      expectedError: 'sizeInGiB and size cannot both be set'
+              size: "0B"
+      expectedError: 'must be "0" to disable size-based retention, or a positive byte-size string'
   onUpdate:
     - name: Should allow updating KubeStateMetricsConfig resources
       initial: |

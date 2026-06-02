@@ -808,30 +808,42 @@ func getLatestRelease() (string, error) {
 	}
 
 	var result struct {
-		Releases []string `json:"releases"`
-		Dates    map[string]struct {
-			GA               *time.Time `json:"ga,omitempty"`
+		ReleaseAttrs map[string]struct {
 			DevelopmentStart *time.Time `json:"development_start,omitempty"`
-		} `json:"dates"`
+			Product          string     `json:"product,omitempty"`
+		} `json:"release_attrs,omitempty"`
 	}
+
 	err = json.Unmarshal(body, &result)
 	if err != nil {
 		return "", fmt.Errorf("error unmarshalling JSON: %v", err)
 	}
 
-	if len(result.Releases) == 0 {
-		return "", fmt.Errorf("no releases found")
-	}
+	latestRelease := ""
+	latestReleaseStart := time.Time{}
 
-	for _, release := range result.Releases {
-		if dates, ok := result.Dates[release]; ok {
-			if dates.DevelopmentStart != nil && !dates.DevelopmentStart.IsZero() && time.Now().After(*dates.DevelopmentStart) {
-				return release, nil
-			}
+	for release, releaseAttrs := range result.ReleaseAttrs {
+		if releaseAttrs.Product != "OCP" {
+			// We only want to consider OCP releases.
+			continue
+		}
+
+		if releaseAttrs.DevelopmentStart != nil && !releaseAttrs.DevelopmentStart.IsZero() && time.Now().Before(*releaseAttrs.DevelopmentStart) {
+			// We only want to consider releases that have started development.
+			continue
+		}
+
+		if releaseAttrs.DevelopmentStart != nil && !releaseAttrs.DevelopmentStart.IsZero() && releaseAttrs.DevelopmentStart.After(latestReleaseStart) {
+			latestRelease = release
+			latestReleaseStart = *releaseAttrs.DevelopmentStart
 		}
 	}
 
-	return "", fmt.Errorf("no valid development releases found")
+	if latestRelease == "" {
+		return "", fmt.Errorf("no valid development releases found")
+	}
+
+	return latestRelease, nil
 }
 
 func getRelease() (string, error) {

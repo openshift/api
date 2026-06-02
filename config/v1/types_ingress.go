@@ -167,7 +167,7 @@ const (
 // LabelValue is the value part of a Kubernetes label.
 // A label value must be 0-63 characters, consisting of alphanumeric characters,
 // '-', '_', or '.', and must start and end with an alphanumeric character.
-// An empty string is a valid label value.
+	// +kubebuilder:validation:XValidation:rule="!format.labelValue().validate(self).hasValue()",message="label values must be valid Kubernetes label values (at most 63 characters, alphanumeric, '-', '_', or '.', must start and end with alphanumeric)"
 // +kubebuilder:validation:MaxLength=63
 // +kubebuilder:validation:Pattern=`^(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])?$`
 type LabelValue string
@@ -260,8 +260,8 @@ type ComponentRouteSpec struct {
 	// route to be reassigned to a different IngressController.
 	// When omitted, no additional labels are applied to the component route.
 	// Label keys and values must conform to Kubernetes label conventions.
-	// Label values are validated at the CRD level. Label keys are validated
-	// by the Route API when the route is created or updated.
+	// Label keys must be valid qualified names per Kubernetes label conventions.
+	// Keys with the "kubernetes.io/" and "k8s.io/" prefixes are reserved and may not be used.
 	// When specified, labels must contain at least one entry, up to a maximum of 8.
 	// +openshift:enable:FeatureGate=IngressComponentRouteLabels
 	// +optional

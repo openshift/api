@@ -644,7 +644,7 @@ var (
 						contactPerson("leoli").
 						productScope(ocpSpecific).
 						enhancementPR("https://github.com/openshift/enhancements/pull/XXXX").
-						enable(inTechPreviewNoUpgrade(), inDevPreviewNoUpgrade()).
+						enable(inDevPreviewNoUpgrade(), inTechPreviewNoUpgrade()).
 						mustRegister()
 
 	FeatureGateMinimumKubeletVersion = newFeatureGate("MinimumKubeletVersion").

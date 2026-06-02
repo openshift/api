@@ -945,4 +945,11 @@ var (
 								enhancementPR("https://github.com/kubernetes/enhancements/issues/4381").
 								enableForClusterProfile(Hypershift, configv1.DevPreviewNoUpgrade, configv1.TechPreviewNoUpgrade, configv1.Default).
 								mustRegister()
+
+    FeatureGateGatewayAPIWithoutOLM = newFeatureGate("GatewayAPIWithoutOLM").
+                                    reportProblemsToJiraComponent("Routing").
+                                    contactPerson("miciah").
+                                    productScope(ocpSpecific).
+                                    enhancementPR("https://github.com/openshift/enhancements/pull/1933").
+                                    mustRegister()
 )

@@ -114,6 +114,7 @@ spec:
                   - name
                   - namespace
                   type: object
+                maxItems: 250
                 type: array
                 x-kubernetes-list-map-keys:
                 - namespace

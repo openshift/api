@@ -68,6 +68,7 @@ type IngressSpec struct {
 	// +listType=map
 	// +listMapKey=namespace
 	// +listMapKey=name
+	// +kubebuilder:validation:MaxItems=250
 	ComponentRoutes []ComponentRouteSpec `json:"componentRoutes,omitempty"`
 
 	// requiredHSTSPolicies specifies HSTS policies that are required to be set on newly created  or updated routes
@@ -167,9 +168,8 @@ const (
 // LabelValue is the value part of a Kubernetes label.
 // A label value must be 0-63 characters, consisting of alphanumeric characters,
 // '-', '_', or '.', and must start and end with an alphanumeric character.
-	// +kubebuilder:validation:XValidation:rule="!format.labelValue().validate(self).hasValue()",message="label values must be valid Kubernetes label values (at most 63 characters, alphanumeric, '-', '_', or '.', must start and end with alphanumeric)"
 // +kubebuilder:validation:MaxLength=63
-// +kubebuilder:validation:Pattern=`^(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])?$`
+// +kubebuilder:validation:XValidation:rule="!format.labelValue().validate(self).hasValue()",message="label values must be valid Kubernetes label values (at most 63 characters, alphanumeric, '-', '_', or '.', must start and end with alphanumeric)"
 type LabelValue string
 
 // ConsumingUser is an alias for string which we add validation to. Currently only service accounts are supported.
@@ -268,6 +268,8 @@ type ComponentRouteSpec struct {
 	// +mapType=granular
 	// +kubebuilder:validation:MinProperties=1
 	// +kubebuilder:validation:MaxProperties=8
+	// +kubebuilder:validation:XValidation:rule="self.all(key, !format.qualifiedName().validate(key).hasValue())",message="label keys must be valid qualified names"
+	// +kubebuilder:validation:XValidation:rule="self.all(key, !key.startsWith('kubernetes.io/') && !key.startsWith('k8s.io/'))",message="kubernetes.io/ and k8s.io/ prefixed label keys are reserved and may not be used"
 	Labels map[string]LabelValue `json:"labels,omitempty"`
 }
 

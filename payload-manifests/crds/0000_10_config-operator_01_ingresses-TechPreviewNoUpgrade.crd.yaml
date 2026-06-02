@@ -82,10 +82,13 @@ spec:
                           LabelValue is the value part of a Kubernetes label.
                           A label value must be 0-63 characters, consisting of alphanumeric characters,
                           '-', '_', or '.', and must start and end with an alphanumeric character.
-                          An empty string is a valid label value.
                         maxLength: 63
-                        pattern: ^(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])?$
                         type: string
+                        x-kubernetes-validations:
+                        - message: label values must be valid Kubernetes label values
+                            (at most 63 characters, alphanumeric, '-', '_', or '.',
+                            must start and end with alphanumeric)
+                          rule: '!format.labelValue().validate(self).hasValue()'
                       description: |-
                         labels defines additional labels to be applied to the route created
                         for the component. These labels are used by the IngressController to
@@ -93,13 +96,19 @@ spec:
                         route to be reassigned to a different IngressController.
                         When omitted, no additional labels are applied to the component route.
                         Label keys and values must conform to Kubernetes label conventions.
-                        Label values are validated at the CRD level. Label keys are validated
-                        by the Route API when the route is created or updated.
+                        Label keys must be valid qualified names per Kubernetes label conventions.
+                        Keys with the "kubernetes.io/" and "k8s.io/" prefixes are reserved and may not be used.
                         When specified, labels must contain at least one entry, up to a maximum of 8.
                       maxProperties: 8
                       minProperties: 1
                       type: object
                       x-kubernetes-map-type: granular
+                      x-kubernetes-validations:
+                      - message: label keys must be valid qualified names
+                        rule: self.all(key, !format.qualifiedName().validate(key).hasValue())
+                      - message: kubernetes.io/ and k8s.io/ prefixed label keys are
+                          reserved and may not be used
+                        rule: self.all(key, !key.startsWith('kubernetes.io/') && !key.startsWith('k8s.io/'))
                     name:
                       description: |-
                         name is the logical name of the route to customize.
@@ -138,6 +147,7 @@ spec:
                   - name
                   - namespace
                   type: object
+                maxItems: 250
                 type: array
                 x-kubernetes-list-map-keys:
                 - namespace

@@ -166,6 +166,58 @@ tests:
               hostname: console.example.com
               labels:
                 openshift.io/my-label: value
+    - name: Should reject componentRoutes with invalid label key
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: Ingress
+        spec:
+          domain: apps.example.com
+          componentRoutes:
+            - name: console
+              namespace: openshift-console
+              hostname: console.example.com
+              labels:
+                "!!!bad": value
+      expectedError: "label keys must be valid qualified names"
+    - name: Should reject componentRoutes with reserved kubernetes.io/ label prefix
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: Ingress
+        spec:
+          domain: apps.example.com
+          componentRoutes:
+            - name: console
+              namespace: openshift-console
+              hostname: console.example.com
+              labels:
+                kubernetes.io/name: value
+      expectedError: "kubernetes.io/ and k8s.io/ prefixed label keys are reserved"
+    - name: Should reject componentRoutes with reserved k8s.io/ label prefix
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: Ingress
+        spec:
+          domain: apps.example.com
+          componentRoutes:
+            - name: console
+              namespace: openshift-console
+              hostname: console.example.com
+              labels:
+                k8s.io/name: value
+      expectedError: "kubernetes.io/ and k8s.io/ prefixed label keys are reserved"
+    - name: Should reject componentRoutes with label key name over 63 characters
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: Ingress
+        spec:
+          domain: apps.example.com
+          componentRoutes:
+            - name: console
+              namespace: openshift-console
+              hostname: console.example.com
+              labels:
+                aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa: value
+      expectedError: "label keys must be valid qualified names"
     - name: Should reject componentRoutes with label value starting with dash
       initial: |
         apiVersion: config.openshift.io/v1

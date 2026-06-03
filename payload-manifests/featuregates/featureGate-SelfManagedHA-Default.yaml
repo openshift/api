@@ -71,9 +71,6 @@
                         "name": "GCPCustomAPIEndpoints"
                     },
                     {
-                        "name": "GatewayAPIWithoutOLM"
-                    },
-                    {
                         "name": "HighlyAvailableArbiter"
                     },
                     {
@@ -239,6 +236,9 @@
                     },
                     {
                         "name": "GatewayAPIController"
+                    },
+                    {
+                        "name": "GatewayAPIWithoutOLM"
                     },
                     {
                         "name": "HardwareSpeed"

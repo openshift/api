@@ -95,6 +95,9 @@
                         "name": "GCPCustomAPIEndpointsInstall"
                     },
                     {
+                        "name": "GatewayAPIWithoutOLM"
+                    },
+                    {
                         "name": "ImageModeStatusReporting"
                     },
                     {

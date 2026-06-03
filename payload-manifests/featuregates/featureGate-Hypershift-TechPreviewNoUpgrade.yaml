@@ -31,9 +31,6 @@
                         "name": "Example2"
                     },
                     {
-                        "name": "GatewayAPIWithoutOLM"
-                    },
-                    {
                         "name": "MachineAPIOperatorDisableMachineHealthCheckController"
                     },
                     {
@@ -151,6 +148,9 @@
                     },
                     {
                         "name": "GatewayAPIController"
+                    },
+                    {
+                        "name": "GatewayAPIWithoutOLM"
                     },
                     {
                         "name": "HardwareSpeed"

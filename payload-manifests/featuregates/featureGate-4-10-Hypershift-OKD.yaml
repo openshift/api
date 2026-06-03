@@ -254,6 +254,9 @@
                         "name": "ProvisioningRequestAvailable"
                     },
                     {
+                        "name": "RHCOS10DefaultInstall"
+                    },
+                    {
                         "name": "SELinuxMount"
                     },
                     {

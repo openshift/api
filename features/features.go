@@ -891,6 +891,15 @@ var (
 				enable(inTechPreviewNoUpgrade(), inDevPreviewNoUpgrade()).
 				mustRegister()
 
+	FeatureGateRHCOS10DefaultInstall = newFeatureGate("RHCOS10DefaultInstall").
+				reportProblemsToJiraComponent("MachineConfigOperator").
+				contactPerson("zzlotnik").
+				productScope(ocpSpecific).
+				enhancementPR("https://github.com/openshift/enhancements/pull/1874").
+				enable(inClusterProfile(SelfManaged), inVersion(5, greaterThanOrEqual), inDevPreviewNoUpgrade(), inTechPreviewNoUpgrade(), inDefault(), inOKD()).
+				enable(inClusterProfile(SelfManaged), inVersion(5, lessThan), inDevPreviewNoUpgrade(), inTechPreviewNoUpgrade()).
+				mustRegister()
+
 	FeatureGateCRDCompatibilityRequirementOperator = newFeatureGate("CRDCompatibilityRequirementOperator").
 							reportProblemsToJiraComponent("Cloud Compute / Cluster API Providers").
 							contactPerson("ddonati").

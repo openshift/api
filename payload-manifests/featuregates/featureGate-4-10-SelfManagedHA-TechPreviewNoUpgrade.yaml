@@ -322,6 +322,9 @@
                         "name": "OpenShiftPodSecurityAdmission"
                     },
                     {
+                        "name": "RHCOS10DefaultInstall"
+                    },
+                    {
                         "name": "RouteExternalCertificate"
                     },
                     {

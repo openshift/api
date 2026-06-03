@@ -2310,7 +2310,7 @@ type Retention struct {
 	// The current default value is `15d`.
 	// +kubebuilder:validation:MinLength=1
 	// +kubebuilder:validation:MaxLength=64
-	// +kubebuilder:validation:XValidation:rule=`self == "0" || (self.matches('^([1-9][0-9]*y)?([1-9][0-9]*w)?([1-9][0-9]*d)?([1-9][0-9]*h)?([1-9][0-9]*m)?([1-9][0-9]*s)?([1-9][0-9]*ms)?$') && self.matches('[1-9][0-9]*(ms|y|w|d|h|m|s)'))`,message=`must be "0" to disable time-based retention, or a duration string with only positive unit values`
+	// +kubebuilder:validation:XValidation:rule=`self == "0" || self.matches('^([1-9][0-9]*y)?([1-9][0-9]*w)?([1-9][0-9]*d)?([1-9][0-9]*h)?([1-9][0-9]*m)?([1-9][0-9]*s)?([1-9][0-9]*ms)?$')`,message=`must be "0" to disable time-based retention, or a duration string with only positive unit values`
 	// +optional
 	Duration string `json:"duration,omitempty"`
 

@@ -23981,7 +23981,6 @@
         "kmsPluginImage",
         "vaultAddress",
         "authentication",
-        "transitMount",
         "transitKey"
       ],
       "properties": {
@@ -24004,7 +24003,7 @@
           "type": "string"
         },
         "transitMount": {
-          "description": "transitMount specifies the mount path of the Vault Transit engine.\n\nThe transit mount must be between 1 and 1024 characters, cannot start or end with a forward slash, cannot contain consecutive forward slashes, and must only contain RFC 3986 unreserved characters (alphanumeric, hyphen, period, underscore, tilde) and forward slashes as path separators.",
+          "description": "transitMount specifies the mount path of the Vault Transit engine.\n\nWhen omitted, this means the user has no opinion and the platform is left to choose a reasonable default. These defaults are subject to change over time. The current default is \"transit\".\n\nThe transit mount must be between 1 and 1024 characters when specified, cannot start or end with a forward slash, cannot contain consecutive forward slashes, and must only contain RFC 3986 unreserved characters (alphanumeric, hyphen, period, underscore, tilde) and forward slashes as path separators.",
           "type": "string"
         },
         "vaultAddress": {
@@ -26230,11 +26229,11 @@
       "type": "object",
       "properties": {
         "duration": {
-          "description": "duration is an optional field that specifies how long Prometheus retains metrics data. Valid values are Prometheus duration strings composed of non-negative integer components with unit suffixes y, w, d, h, m, s, or ms (for example, \"15d\", \"24h\", \"15h\"). Single-unit forms such as \"15d\" or \"24h\" are recommended over composite durations with zero-valued components (for example, \"0y5d\"), which are redundant but valid upstream. Must be at least 1 character and at most 64 characters. When set to \"0\", time-based retention is disabled. Other zero-duration forms such as \"0d\", \"0h\", or \"0y\" are semantically equivalent in Prometheus parsing, but \"0\" is the canonical documented form for disabling time-based retention. Prometheus automatically deletes data older than this duration. When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time. The current default value is `15d`.",
+          "description": "duration is an optional field that specifies how long Prometheus retains metrics data. Valid values are Prometheus-style duration strings with unit suffixes y, w, d, h, m, s, or ms (for example, \"15d\", \"24h\", or \"5d1h30m\"). Each unit value must be a positive integer. Composite durations must follow the fixed unit order y, w, d, h, m, s, ms. Must be at least 1 character and at most 64 characters. When set to \"0\", time-based retention is disabled. This is the only supported form for disabling time-based retention; other zero-duration representations such as \"0d\", \"0h\", or \"0y\" are rejected. Prometheus automatically deletes data older than this duration. When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time. The current default value is `15d`.",
           "type": "string"
         },
         "size": {
-          "description": "size is an optional field that specifies the maximum storage size that Prometheus can use for data blocks and the write-ahead log (WAL). Valid values are Prometheus byte-size strings with an optional decimal prefix and a unit suffix B, KB, MB, GB, TB, EB, PB, or their binary equivalents KiB, MiB, GiB, TiB, EiB, PiB (for example, \"500MiB\", \"10GiB\"). Must be at least 1 character and at most 32 characters. When set to \"0\", no size limit is enforced. When the limit is reached, Prometheus deletes oldest data first. When omitted, no size limit is enforced and Prometheus uses available PersistentVolume capacity.",
+          "description": "size is an optional field that specifies the maximum storage size that Prometheus can use for data blocks and the write-ahead log (WAL). Valid values are byte-size strings with an optional decimal prefix and a unit suffix B, KB, MB, GB, TB, EB, PB, or their binary equivalents KiB, MiB, GiB, TiB, EiB, PiB (for example, \"500MiB\", \"10GiB\"). The numeric value must be greater than zero. Must be at least 1 character and at most 32 characters. When set to \"0\", no size limit is enforced. This is the only supported form for disabling size-based retention; other zero-size representations such as \"0B\" or \"0MiB\" are rejected. When the limit is reached, Prometheus deletes oldest data first. When omitted, no size limit is enforced and Prometheus uses available PersistentVolume capacity.",
           "type": "string"
         }
       }

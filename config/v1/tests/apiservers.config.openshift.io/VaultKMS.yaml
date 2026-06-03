@@ -23,7 +23,6 @@ tests:
                   appRole:
                     secret:
                       name: vault-approle
-                transitMount: transit
                 transitKey: my-encryption-key
       expected: |
         apiVersion: config.openshift.io/v1
@@ -43,7 +42,6 @@ tests:
                   appRole:
                     secret:
                       name: vault-approle
-                transitMount: transit
                 transitKey: my-encryption-key
 
     - name: Should accept kmsPluginImage with simple two-level path like quay.io/vault/kms-plugin
@@ -63,7 +61,6 @@ tests:
                   appRole:
                     secret:
                       name: vault-approle
-                transitMount: transit
                 transitKey: my-encryption-key
       expected: |
         apiVersion: config.openshift.io/v1
@@ -83,7 +80,6 @@ tests:
                   appRole:
                     secret:
                       name: vault-approle
-                transitMount: transit
                 transitKey: my-encryption-key
 
     - name: Should be able to create with full Vault KMS Plugin config including all optional fields
@@ -154,7 +150,6 @@ tests:
                   appRole:
                     secret:
                       name: vault-approle
-                transitMount: transit
                 transitKey: my-encryption-key
       expected: |
         apiVersion: config.openshift.io/v1
@@ -174,7 +169,6 @@ tests:
                   appRole:
                     secret:
                       name: vault-approle
-                transitMount: transit
                 transitKey: my-encryption-key
 
     - name: Should accept kmsPluginImage with deep multi-level namespace path
@@ -194,7 +188,6 @@ tests:
                   appRole:
                     secret:
                       name: vault-approle
-                transitMount: transit
                 transitKey: my-encryption-key
       expected: |
         apiVersion: config.openshift.io/v1
@@ -214,7 +207,6 @@ tests:
                   appRole:
                     secret:
                       name: vault-approle
-                transitMount: transit
                 transitKey: my-encryption-key
 
     # RFC 3986 unreserved character tests
@@ -315,7 +307,6 @@ tests:
                   appRole:
                     secret:
                       name: vault-approle
-                transitMount: transit
                 transitKey: encryption.key.v1
       expected: |
         apiVersion: config.openshift.io/v1
@@ -335,7 +326,6 @@ tests:
                   appRole:
                     secret:
                       name: vault-approle
-                transitMount: transit
                 transitKey: encryption.key.v1
 
     - name: Should reject transitKey with tilde character
@@ -355,7 +345,6 @@ tests:
                   appRole:
                     secret:
                       name: vault-approle
-                transitMount: transit
                 transitKey: key~backup
       expectedError: "transitKey must only contain alphanumeric characters, hyphens, periods, and underscores"
 
@@ -386,7 +375,6 @@ tests:
                 vaultAddress: https://vault.example.com:8200
                 authentication:
                   type: AppRole
-                transitMount: transit
                 transitKey: my-key
       expectedError: "appRole config is required when authentication type is AppRole"
 
@@ -408,7 +396,6 @@ tests:
                   appRole:
                     secret:
                       name: vault-approle
-                transitMount: transit
                 transitKey: my-key
       expectedError: "the OCI Image reference must end with a valid '@sha256:<digest>' suffix"
 
@@ -429,7 +416,6 @@ tests:
                   appRole:
                     secret:
                       name: vault-approle
-                transitMount: transit
                 transitKey: my-key
       expectedError: "the OCI Image name should follow the host[:port][/namespace]/name format"
 
@@ -450,7 +436,6 @@ tests:
                   appRole:
                     secret:
                       name: vault-approle
-                transitMount: transit
                 transitKey: my-key
       expectedError: "the OCI Image reference must end with a valid '@sha256:<digest>' suffix, where '<digest>' is 64 characters long"
 
@@ -472,7 +457,6 @@ tests:
                   appRole:
                     secret:
                       name: vault-approle
-                transitMount: transit
                 transitKey: my-key
       expectedError: "must use the 'https' scheme"
 
@@ -493,7 +477,6 @@ tests:
                   appRole:
                     secret:
                       name: vault-approle
-                transitMount: transit
                 transitKey: my-key
       expectedError: "must not contain a path"
 
@@ -514,7 +497,6 @@ tests:
                   appRole:
                     secret:
                       name: vault-approle
-                transitMount: transit
                 transitKey: my-key
       expectedError: "must not have a query"
 
@@ -535,7 +517,6 @@ tests:
                   appRole:
                     secret:
                       name: vault-approle
-                transitMount: transit
                 transitKey: my-key
       expectedError: "must not have a fragment"
 
@@ -556,7 +537,6 @@ tests:
                   appRole:
                     secret:
                       name: vault-approle
-                transitMount: transit
                 transitKey: my-key
       expectedError: "must not have user info"
 
@@ -579,7 +559,6 @@ tests:
                   appRole:
                     secret:
                       name: vault-approle
-                transitMount: transit
                 transitKey: my-key
       expectedError: "vaultNamespace cannot end with a forward slash"
 
@@ -601,7 +580,6 @@ tests:
                   appRole:
                     secret:
                       name: vault-approle
-                transitMount: transit
                 transitKey: my-key
       expectedError: "vaultNamespace cannot contain spaces"
 
@@ -623,7 +601,6 @@ tests:
                   appRole:
                     secret:
                       name: vault-approle
-                transitMount: transit
                 transitKey: my-key
       expectedError: "vaultNamespace cannot be a reserved string"
 
@@ -645,7 +622,6 @@ tests:
                   appRole:
                     secret:
                       name: vault-approle
-                transitMount: transit
                 transitKey: my-key
       expectedError: "vaultNamespace cannot be a reserved string"
 
@@ -667,7 +643,6 @@ tests:
                   appRole:
                     secret:
                       name: vault-approle
-                transitMount: transit
                 transitKey: my-key
       expectedError: "vaultNamespace cannot be a reserved string"
 
@@ -689,7 +664,6 @@ tests:
                   appRole:
                     secret:
                       name: vault-approle
-                transitMount: transit
                 transitKey: my-key
       expectedError: "vaultNamespace cannot be a reserved string"
 
@@ -711,7 +685,6 @@ tests:
                   appRole:
                     secret:
                       name: vault-approle
-                transitMount: transit
                 transitKey: my-key
       expectedError: "vaultNamespace cannot be a reserved string"
 
@@ -733,7 +706,6 @@ tests:
                   appRole:
                     secret:
                       name: vault-approle
-                transitMount: transit
                 transitKey: my-key
       expectedError: "vaultNamespace cannot be a reserved string"
 
@@ -840,7 +812,6 @@ tests:
                   appRole:
                     secret:
                       name: vault-approle
-                transitMount: transit
                 transitKey: my encryption key
       expectedError: "transitKey must only contain alphanumeric characters, hyphens, periods, and underscores"
 
@@ -861,7 +832,6 @@ tests:
                   appRole:
                     secret:
                       name: vault-approle
-                transitMount: transit
                 transitKey: my/key
       expectedError: "transitKey cannot contain forward slashes"
 
@@ -903,7 +873,6 @@ tests:
                   appRole:
                     secret:
                       name: vault-approle
-                transitMount: transit
                 transitKey: my@key
       expectedError: "transitKey must only contain alphanumeric characters, hyphens, periods, and underscores"
 
@@ -927,7 +896,6 @@ tests:
                   appRole:
                     secret:
                       name: vault-approle
-                transitMount: transit
                 transitKey: my-key
       expectedError: "serverName must be a valid DNS hostname"
 
@@ -949,7 +917,6 @@ tests:
                   appRole:
                     secret:
                       name: invalid_secret_name!
-                transitMount: transit
                 transitKey: my-key
       expectedError: "name must be a valid DNS subdomain name"
 
@@ -973,6 +940,5 @@ tests:
                   appRole:
                     secret:
                       name: vault-approle
-                transitMount: transit
                 transitKey: my-key
       expectedError: "name must be a valid DNS subdomain name"

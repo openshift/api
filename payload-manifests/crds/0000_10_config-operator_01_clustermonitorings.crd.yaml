@@ -4616,8 +4616,7 @@ spec:
                         x-kubernetes-validations:
                         - message: must be "0" to disable time-based retention, or
                             a duration string with only positive unit values
-                          rule: self == "0" || (self.matches('^([1-9][0-9]*y)?([1-9][0-9]*w)?([1-9][0-9]*d)?([1-9][0-9]*h)?([1-9][0-9]*m)?([1-9][0-9]*s)?([1-9][0-9]*ms)?$')
-                            && self.matches('[1-9][0-9]*(ms|y|w|d|h|m|s)'))
+                          rule: self == "0" || self.matches('^([1-9][0-9]*y)?([1-9][0-9]*w)?([1-9][0-9]*d)?([1-9][0-9]*h)?([1-9][0-9]*m)?([1-9][0-9]*s)?([1-9][0-9]*ms)?$')
                       size:
                         description: |-
                           size is an optional field that specifies the maximum storage size that Prometheus

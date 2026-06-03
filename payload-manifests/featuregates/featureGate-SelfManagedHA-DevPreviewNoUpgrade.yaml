@@ -129,6 +129,9 @@
                         "name": "GatewayAPIController"
                     },
                     {
+                        "name": "GatewayAPIWithoutOLM"
+                    },
+                    {
                         "name": "HardwareSpeed"
                     },
                     {

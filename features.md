@@ -2,6 +2,7 @@
 | ------ | --- | --- | --- | --- | --- | ---  |
 | ClusterAPIInstall| | | | | |  |
 | EventedPLEG| | | | | |  |
+| GatewayAPIWithoutOLM| | | | | |  |
 | MachineAPIOperatorDisableMachineHealthCheckController| | | | | |  |
 | MultiArchInstallAzure| | | | | |  |
 | ShortCertRotation| | | | | |  |

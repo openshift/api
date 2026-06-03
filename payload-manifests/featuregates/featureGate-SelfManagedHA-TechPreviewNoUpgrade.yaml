@@ -31,6 +31,9 @@
                         "name": "Example2"
                     },
                     {
+                        "name": "GatewayAPIWithoutOLM"
+                    },
+                    {
                         "name": "MachineAPIOperatorDisableMachineHealthCheckController"
                     },
                     {

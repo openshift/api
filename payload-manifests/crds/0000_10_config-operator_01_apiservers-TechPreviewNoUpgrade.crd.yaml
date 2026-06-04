@@ -196,7 +196,7 @@ spec:
                                     description: |-
                                       secret references a secret in the openshift-config namespace containing
                                       the AppRole credentials used to authenticate with Vault.
-                                      The referenced Secret must contain two keys: "role-id" for the AppRole Role ID and "secret-id" for the AppRole Secret ID.
+                                      The secret must contain two keys: "role-id" for the AppRole Role ID and "secret-id" for the AppRole Secret ID.
                                     properties:
                                       name:
                                         description: |-
@@ -276,7 +276,7 @@ spec:
                                 description: |-
                                   caBundle references a ConfigMap in the openshift-config namespace containing
                                   the CA certificate bundle used to verify the TLS connection to the Vault server.
-                                  The referenced ConfigMap must contain the CA bundle in the key "ca-bundle.crt".
+                                  The ConfigMap must contain the CA bundle in the key "ca-bundle.crt".
                                   When this field is not set, the system's trusted CA certificates are used.
 
                                   The namespace for the ConfigMap is openshift-config.

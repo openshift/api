@@ -2434,7 +2434,7 @@ func (KMSPluginConfig) SwaggerDoc() map[string]string {
 
 var map_VaultAppRoleAuthentication = map[string]string{
 	"":       "VaultAppRoleAuthentication defines the configuration for AppRole authentication with Vault.",
-	"secret": "secret references a secret in the openshift-config namespace containing the AppRole credentials used to authenticate with Vault. The referenced Secret must contain two keys: \"role-id\" for the AppRole Role ID and \"secret-id\" for the AppRole Secret ID.",
+	"secret": "secret references a secret in the openshift-config namespace containing the AppRole credentials used to authenticate with Vault. The secret must contain two keys: \"role-id\" for the AppRole Role ID and \"secret-id\" for the AppRole Secret ID.",
 }
 
 func (VaultAppRoleAuthentication) SwaggerDoc() map[string]string {
@@ -2486,7 +2486,7 @@ func (VaultSecretReference) SwaggerDoc() map[string]string {
 
 var map_VaultTLSConfig = map[string]string{
 	"":           "VaultTLSConfig contains TLS configuration for connecting to Vault.",
-	"caBundle":   "caBundle references a ConfigMap in the openshift-config namespace containing the CA certificate bundle used to verify the TLS connection to the Vault server. The referenced ConfigMap must contain the CA bundle in the key \"ca-bundle.crt\". When this field is not set, the system's trusted CA certificates are used.\n\nThe namespace for the ConfigMap is openshift-config.\n\nExample ConfigMap:\n  apiVersion: v1\n  kind: ConfigMap\n  metadata:\n    name: vault-ca-bundle\n    namespace: openshift-config\n  data:\n    ca-bundle.crt: |",
+	"caBundle":   "caBundle references a ConfigMap in the openshift-config namespace containing the CA certificate bundle used to verify the TLS connection to the Vault server. The ConfigMap must contain the CA bundle in the key \"ca-bundle.crt\". When this field is not set, the system's trusted CA certificates are used.\n\nThe namespace for the ConfigMap is openshift-config.\n\nExample ConfigMap:\n  apiVersion: v1\n  kind: ConfigMap\n  metadata:\n    name: vault-ca-bundle\n    namespace: openshift-config\n  data:\n    ca-bundle.crt: |",
 	"serverName": "serverName specifies the Server Name Indication (SNI) to use when connecting to Vault via TLS. This is useful when the Vault server's hostname doesn't match its TLS certificate. When this field is not set, the hostname from vaultAddress is used for SNI.\n\nThe value must be a valid DNS hostname: it must contain no more than 253 characters, contain only lowercase alphanumeric characters, '-' or '.', and start and end with an alphanumeric character.",
 }
 

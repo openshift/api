@@ -76,6 +76,5 @@ tests:
                   appRole:
                     secret:
                       name: vault-approle
-                transitMount: transit
                 transitKey: my-key
       expectedError: "kms config is required when encryption type is KMS, and forbidden otherwise"

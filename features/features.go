@@ -638,12 +638,11 @@ var (
 								enable(inDevPreviewNoUpgrade(), inTechPreviewNoUpgrade()).
 								mustRegister()
 
-	// TODO(leoli): Replace with actual enhancement PR URL once filed. currently consulting the team for next step
 	FeatureGateIngressComponentRouteLabels = newFeatureGate("IngressComponentRouteLabels").
 						reportProblemsToJiraComponent("Management Console").
 						contactPerson("leoli").
 						productScope(ocpSpecific).
-						enhancementPR("https://github.com/openshift/enhancements/pull/XXXX").
+						enhancementPR("https://github.com/openshift/enhancements/pull/2033").
 						enable(inDevPreviewNoUpgrade(), inTechPreviewNoUpgrade()).
 						mustRegister()
 

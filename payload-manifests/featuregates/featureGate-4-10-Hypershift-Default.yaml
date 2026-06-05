@@ -198,6 +198,9 @@
                         "name": "MultiDiskSetup"
                     },
                     {
+                        "name": "MutableTopology"
+                    },
+                    {
                         "name": "NetworkConnect"
                     },
                     {

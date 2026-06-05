@@ -259,6 +259,9 @@
                         "name": "MutableCSINodeAllocatableCount"
                     },
                     {
+                        "name": "MutableTopology"
+                    },
+                    {
                         "name": "MutatingAdmissionPolicy"
                     },
                     {

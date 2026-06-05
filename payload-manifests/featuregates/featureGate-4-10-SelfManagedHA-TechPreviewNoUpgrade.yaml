@@ -59,6 +59,9 @@
                         "name": "MultiArchInstallAzure"
                     },
                     {
+                        "name": "MutableTopology"
+                    },
+                    {
                         "name": "NetworkConnect"
                     },
                     {

@@ -31,6 +31,9 @@
                         "name": "ExternalSnapshotMetadata"
                     },
                     {
+                        "name": "GatewayAPIWithoutOLM"
+                    },
+                    {
                         "name": "MachineAPIOperatorDisableMachineHealthCheckController"
                     },
                     {

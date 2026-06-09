@@ -994,7 +994,7 @@ var (
 				contactPerson("joelanford").
 				productScope(ocpSpecific).
 				enhancementPR("https://github.com/openshift/enhancements/pull/1910").
-				enable(inOKD(), inDevPreviewNoUpgrade(), inTechPreviewNoUpgrade()).
+				enable(inDefault(), inOKD(), inTechPreviewNoUpgrade(), inDevPreviewNoUpgrade()).
 				mustRegister()
 
 	FeatureGateConfidentialCluster = newFeatureGate("ConfidentialCluster").

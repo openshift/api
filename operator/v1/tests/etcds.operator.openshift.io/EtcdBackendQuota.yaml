@@ -39,7 +39,7 @@ tests:
           logLevel: Normal
           operatorLogLevel: Normal
           backendQuotaGiB: 16
-    - name: Should be able to create with 20 BackendQuotaGiB
+    - name: Should not be able to create with more than 16 BackendQuotaGiB (20)
       initial: |
         apiVersion: operator.openshift.io/v1
         kind: Etcd
@@ -47,32 +47,7 @@ tests:
           name: gib20
         spec:
           backendQuotaGiB: 20
-      expected: |
-        apiVersion: operator.openshift.io/v1
-        kind: Etcd
-        metadata:
-          name: gib20
-        spec:
-          logLevel: Normal
-          operatorLogLevel: Normal
-          backendQuotaGiB: 20
-    - name: Should be able to create with 32 BackendQuotaGiB
-      initial: |
-        apiVersion: operator.openshift.io/v1
-        kind: Etcd
-        metadata:
-          name: gib32
-        spec:
-          backendQuotaGiB: 32
-      expected: |
-        apiVersion: operator.openshift.io/v1
-        kind: Etcd
-        metadata:
-          name: gib32
-        spec:
-          logLevel: Normal
-          operatorLogLevel: Normal
-          backendQuotaGiB: 32
+      expectedError: "spec.backendQuotaGiB: Invalid value: 20: spec.backendQuotaGiB in body should be less than or equal to 16"
     - name: Should not be able to create with less than 8 BackendQuotaGiB
       initial: |
         apiVersion: operator.openshift.io/v1
@@ -82,7 +57,7 @@ tests:
         spec:
           backendQuotaGiB: 6
       expectedError: "spec.backendQuotaGiB: Invalid value: 6: spec.backendQuotaGiB in body should be greater than or equal to 8"
-    - name: Should not be able to create with more than 32 BackendQuotaGiB
+    - name: Should not be able to create with more than 16 BackendQuotaGiB (40)
       initial: |
         apiVersion: operator.openshift.io/v1
         kind: Etcd
@@ -90,7 +65,7 @@ tests:
           name: gib40
         spec:
           backendQuotaGiB: 40
-      expectedError: "spec.backendQuotaGiB: Invalid value: 40: spec.backendQuotaGiB in body should be less than or equal to 32"
+      expectedError: "spec.backendQuotaGiB: Invalid value: 40: spec.backendQuotaGiB in body should be less than or equal to 16"
   onUpdate:
     - name: Should be able to create with default then upgrade to 16
       initial: |
@@ -132,7 +107,7 @@ tests:
         spec:
           backendQuotaGiB: 8
       expectedError: etcd backendQuotaGiB may not be decreased
-    - name: Should not be allowed to upgrade to more than 32 BackendQuotaGiB
+    - name: Should not be allowed to upgrade to more than 16 BackendQuotaGiB
       initial: |
         apiVersion: operator.openshift.io/v1
         kind: Etcd
@@ -147,4 +122,4 @@ tests:
           name: gib40
         spec:
           backendQuotaGiB: 40
-      expectedError: "spec.backendQuotaGiB: Invalid value: 40: spec.backendQuotaGiB in body should be less than or equal to 32"
+      expectedError: "spec.backendQuotaGiB: Invalid value: 40: spec.backendQuotaGiB in body should be less than or equal to 16"

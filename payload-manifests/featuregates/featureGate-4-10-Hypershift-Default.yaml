@@ -255,6 +255,9 @@
                         "name": "SELinuxMount"
                     },
                     {
+                        "name": "SELinuxMountGAReadiness"
+                    },
+                    {
                         "name": "ShortCertRotation"
                     },
                     {

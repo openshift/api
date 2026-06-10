@@ -15834,7 +15834,8 @@
       "properties": {
         "kms": {
           "description": "kms defines the configuration for the external KMS instance that manages the encryption keys, when KMS encryption is enabled sensitive resources will be encrypted using keys managed by an externally configured KMS instance.\n\nThe Key Management Service (KMS) instance provides symmetric encryption and is responsible for managing the lifecyle of the encryption keys outside of the control plane. This allows integration with an external provider to manage the data encryption keys securely.",
-          "$ref": "#/definitions/com.github.openshift.api.config.v1.KMSConfig"
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.config.v1.KMSPluginConfig"
         },
         "type": {
           "description": "type defines what encryption type should be used to encrypt resources at the datastore layer. When this field is unset (i.e. when it is set to the empty string), identity is implied. The behavior of unset can and will change over time.  Even if encryption is enabled by default, the meaning of unset may change to a different encryption type based on changes in best practices.\n\nWhen encryption is enabled, all sensitive resources shipped with the platform are encrypted. This list of sensitive resources can and will change over time.  The current authoritative list is:\n\n  1. secrets\n  2. configmaps\n  3. routes.route.openshift.io\n  4. oauthaccesstokens.oauth.openshift.io\n  5. oauthauthorizetokens.oauth.openshift.io",
@@ -15992,26 +15993,6 @@
           "fields-to-discriminateBy": {}
         }
       ]
-    },
-    "com.github.openshift.api.config.v1.AWSKMSConfig": {
-      "description": "AWSKMSConfig defines the KMS config specific to AWS KMS provider",
-      "type": "object",
-      "required": [
-        "keyARN",
-        "region"
-      ],
-      "properties": {
-        "keyARN": {
-          "description": "keyARN specifies the Amazon Resource Name (ARN) of the AWS KMS key used for encryption. The value must adhere to the format `arn:aws:kms:<region>:<account_id>:key/<key_id>`, where: - `<region>` is the AWS region consisting of lowercase letters and hyphens followed by a number. - `<account_id>` is a 12-digit numeric identifier for the AWS account. - `<key_id>` is a unique identifier for the KMS key, consisting of lowercase hexadecimal characters and hyphens.",
-          "type": "string",
-          "default": ""
-        },
-        "region": {
-          "description": "region specifies the AWS region where the KMS instance exists, and follows the format `<region-prefix>-<region-name>-<number>`, e.g.: `us-east-1`. Only lowercase letters and hyphens followed by numbers are allowed.",
-          "type": "string",
-          "default": ""
-        }
-      }
     },
     "com.github.openshift.api.config.v1.AWSPlatformSpec": {
       "description": "AWSPlatformSpec holds the desired state of the Amazon Web Services infrastructure provider. This only includes fields that can be modified in the cluster.",
@@ -16875,6 +16856,57 @@
           "type": "number",
           "format": "float",
           "default": 0
+        }
+      }
+    },
+    "com.github.openshift.api.config.v1.ClientCredentialConfig": {
+      "description": "ClientCredentialConfig configures the client credentials and token endpoint to use to get an access token via the OAuth2 client credentials grant flow.",
+      "type": "object",
+      "required": [
+        "clientID",
+        "clientSecret",
+        "tokenEndpoint"
+      ],
+      "properties": {
+        "clientID": {
+          "description": "clientID is a required client identifier to use during the OAuth2 client credentials flow. clientID must be at least 1 character in length, must not exceed 256 characters in length, and must only contain printable ASCII characters.",
+          "type": "string"
+        },
+        "clientSecret": {
+          "description": "clientSecret is a required reference to a Secret in the openshift-config namespace to be used as the client secret during the OAuth2 client credentials flow.\n\nThe key 'client-secret' is used to locate the client secret data in the Secret.",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.config.v1.ClientSecretSecretReference"
+        },
+        "scopes": {
+          "description": "scopes is an optional list of OAuth2 scopes to request when obtaining an access token.\n\nIf not specified, the token endpoint's default scopes will be used.\n\nWhen specified, there must be at least 1 entry and must not exceed 16 entries. Each entry must be at least 1 character in length and must not exceed 256 characters in length. Each entry must only contain printable ASCII characters, excluding spaces, double quotes and backslashes. Entries must be unique.",
+          "type": "array",
+          "items": {
+            "type": "string",
+            "default": ""
+          },
+          "x-kubernetes-list-type": "set"
+        },
+        "tls": {
+          "description": "tls is an optional field that allows configuring the TLS settings used to interact with the identity provider as an OAuth2 client.\n\nWhen omitted, system default TLS settings will be used for the OAuth2 client.",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.config.v1.ExternalSourceTLS"
+        },
+        "tokenEndpoint": {
+          "description": "tokenEndpoint is a required URL to query for an access token using the client credential OAuth2 flow. tokenEndpoint must be at least 1 character in length and must not exceed 2048 characters in length. tokenEndpoint must be a valid HTTPS URL. tokenEndpoint must have a host and a path. tokenEndpoint must not contain query parameters, fragments, or user information (e.g., \"user:password@host\").",
+          "type": "string"
+        }
+      }
+    },
+    "com.github.openshift.api.config.v1.ClientSecretSecretReference": {
+      "description": "ClientSecretSecretReference is a reference to a Secret in the openshift-config namespace that should be used for configuring the client secret to be used when sourcing claims from external sources with the client credential authentication flow.",
+      "type": "object",
+      "required": [
+        "name"
+      ],
+      "properties": {
+        "name": {
+          "description": "name is the required name of the Secret that exists in the openshift-config namespace.\n\nIt must be at least 1 character in length, must not exceed 253 characters in length, must start and end with a lowercase alphanumeric character, and must only contain lowercase alphanumeric characters, '-' or '.'.",
+          "type": "string"
         }
       }
     },
@@ -17887,6 +17919,15 @@
           },
           "x-kubernetes-list-type": "atomic"
         },
+        "groups": {
+          "description": "groups is an optional, ordered field used to specify the supported groups (formerly known as elliptic curves) that are used during the TLS handshake.  The order of the groups represents a suggested preference, with the most preferred group first. Note that not all platform components honor the ordering: Go-based components use Go's internal preference order and treat this list as a filter of allowed groups rather than an ordered preference. Operators may remove entries their operands do not support.\n\nWhen omitted, this means no opinion and the platform is left to choose reasonable defaults which are subject to change over time and may be different per platform component depending on the underlying TLS libraries they use. If specified, the list must contain at least one and at most 7 groups, and each group must be unique.\n\nFor example, to use X25519 and secp256r1 (yaml):\n\n  groups:\n    - X25519\n    - secp256r1",
+          "type": "array",
+          "items": {
+            "type": "string",
+            "default": ""
+          },
+          "x-kubernetes-list-type": "set"
+        },
         "minTLSVersion": {
           "description": "minTLSVersion is used to specify the minimal version of the TLS protocol that is negotiated during the TLS handshake. For example, to use TLS versions 1.1, 1.2 and 1.3 (yaml):\n\n  minTLSVersion: VersionTLS11",
           "type": "string",
@@ -18154,6 +18195,55 @@
         }
       }
     },
+    "com.github.openshift.api.config.v1.ExternalClaimsSource": {
+      "description": "ExternalClaimsSource provides the configuration for a single external claim source.",
+      "type": "object",
+      "required": [
+        "url",
+        "mappings"
+      ],
+      "properties": {
+        "authentication": {
+          "description": "authentication is an optional field that configures how the apiserver authenticates with an external claims source. When not specified, anonymous authentication is used which means no 'Authorization' header is sent in the HTTP request to fetch the external claims.",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.config.v1.ExternalSourceAuthentication"
+        },
+        "mappings": {
+          "description": "mappings is a required list of the claim and response handling expression pairs that produces the claims from the external source. mappings must have at least 1 entry and must not exceed 16 entries. Entries must have a unique name across all external claim sources.",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/com.github.openshift.api.config.v1.SourcedClaimMapping"
+          },
+          "x-kubernetes-list-map-keys": [
+            "name"
+          ],
+          "x-kubernetes-list-type": "map"
+        },
+        "predicates": {
+          "description": "predicates is an optional list of constraints in which claims should attempt to be fetched from this external source.\n\nWhen omitted, claims are always fetched from this external source.\n\nWhen specified, all predicates must evaluate to 'true' before claims are attempted to be fetched from this external source. predicates must have at least 1 entry and must not exceed 16 entries. Entries must have unique expressions.",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/com.github.openshift.api.config.v1.ExternalSourcePredicate"
+          },
+          "x-kubernetes-list-map-keys": [
+            "expression"
+          ],
+          "x-kubernetes-list-type": "map"
+        },
+        "tls": {
+          "description": "tls is an optional field that configures the http client TLS settings when fetching external claims from this source.\n\nWhen omitted, system default TLS settings will be used for fetching claims from the external source.",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.config.v1.ExternalSourceTLS"
+        },
+        "url": {
+          "description": "url is a required configuration of the URL for which the external claims are located.",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.config.v1.SourceURL"
+        }
+      }
+    },
     "com.github.openshift.api.config.v1.ExternalIPConfig": {
       "description": "ExternalIPConfig specifies some IP blocks relevant for the ExternalIP field of a Service resource.",
       "type": "object",
@@ -18216,6 +18306,68 @@
           "description": "cloudControllerManager contains settings specific to the external Cloud Controller Manager (a.k.a. CCM or CPI). When omitted, new nodes will be not tainted and no extra initialization from the cloud controller manager is expected.",
           "default": {},
           "$ref": "#/definitions/com.github.openshift.api.config.v1.CloudControllerManagerStatus"
+        }
+      }
+    },
+    "com.github.openshift.api.config.v1.ExternalSourceAuthentication": {
+      "description": "ExternalSourceAuthentication configures how the apiserver should attempt to authenticate with an external claims source.",
+      "type": "object",
+      "required": [
+        "type"
+      ],
+      "properties": {
+        "clientCredential": {
+          "description": "clientCredential configures the client credentials and token endpoint to use to get an access token. clientCredential is required when type is 'ClientCredential', and forbidden otherwise.",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.config.v1.ClientCredentialConfig"
+        },
+        "type": {
+          "description": "type is a required field that sets the type of authentication method used by the authenticator when fetching external claims.\n\nAllowed values are 'RequestProvidedToken' and 'ClientCredential'.\n\nWhen set to 'RequestProvidedToken', the authenticator will use the token provided to the kube-apiserver as part of the request to authenticate with the external claims source.\n\nWhen set to 'ClientCredential', the authenticator will use the configured client-id, client-secret, and token endpoint to fetch an access token using the OAuth2 client credentials grant flow. The fetched access token will then be used to authenticate with the external claims source.\n\n\nPossible enum values:\n - `\"ClientCredential\"` is an ExternalSourceAuthenticationType that represents that the authenticator should use the OAuth2 client credentials grant flow to obtain an access token for authenticating with the external claims source. This is useful for scenarios such as fetching user information from Microsoft's Graph API where a separate client credential is needed to access the API.\n - `\"RequestProvidedToken\"` is an ExternalSourceAuthenticationType that represents that the token being evaluated for authentication should be used for authenticating with the external claims source. This is useful for scenarios where a token has multiple audiences and scopes so that it can be used to access both the cluster and the UserInfo endpoint that contains additional information about the user not present in the token.",
+          "type": "string",
+          "enum": [
+            "ClientCredential",
+            "RequestProvidedToken"
+          ]
+        }
+      }
+    },
+    "com.github.openshift.api.config.v1.ExternalSourceCertificateAuthorityConfigMapReference": {
+      "description": "ExternalSourceCertificateAuthorityConfigMapReference is a reference to a ConfigMap in the openshift-config namespace that should be used for configuring the certificate authority to be used when sourcing claims from external sources.",
+      "type": "object",
+      "required": [
+        "name"
+      ],
+      "properties": {
+        "name": {
+          "description": "name is the required name of the ConfigMap that exists in the openshift-config namespace. The key \"ca-bundle.crt\" must be present and must contain the CA certificate to be used to verify the external source's TLS certificate.\n\nIt must be at least 1 character in length, must not exceed 253 characters in length, must start and end with a lowercase alphanumeric character, and must only contain lowercase alphanumeric characters, '-' or '.'.",
+          "type": "string"
+        }
+      }
+    },
+    "com.github.openshift.api.config.v1.ExternalSourcePredicate": {
+      "description": "ExternalSourcePredicate configures a singular condition that must return true before the external source is queried to retrieve external claims.",
+      "type": "object",
+      "required": [
+        "expression"
+      ],
+      "properties": {
+        "expression": {
+          "description": "expression is a required CEL expression that is used to determine whether or not an external source should be used to fetch external claims.\n\nThe expression must return a boolean value, where true means that the source should be consulted and false means that it should not.\n\nClaims from the token used for the request to the kube-apiserver are made available via the `claims` variable.\n\nThe contents of the `claims` variable varies based on the claims that are present in the token being validated. It is the responsibility of those configuring this field to understand what claims the identity provider includes when issuing tokens.\n\nexpression must be at least 1 character and must not exceed 1024 characters in length.",
+          "type": "string"
+        }
+      }
+    },
+    "com.github.openshift.api.config.v1.ExternalSourceTLS": {
+      "description": "ExternalSourceTLS configures the TLS options that the apiserver uses as a client when making a request to the external claim source.",
+      "type": "object",
+      "required": [
+        "certificateAuthority"
+      ],
+      "properties": {
+        "certificateAuthority": {
+          "description": "certificateAuthority is a required reference to a ConfigMap in the openshift-config namespace that contains the CA certificate to use to validate TLS connections with the external claims source. The key \"ca-bundle.crt\" must be present in the referenced ConfigMap and must contain the CA certificate to be used to verify the external source's TLS certificate.",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.config.v1.ExternalSourceCertificateAuthorityConfigMapReference"
         }
       }
     },
@@ -20085,28 +20237,29 @@
       "description": "IntermediateTLSProfile is a TLS security profile based on the \"intermediate\" configuration of the Mozilla Server Side TLS configuration guidelines.",
       "type": "object"
     },
-    "com.github.openshift.api.config.v1.KMSConfig": {
-      "description": "KMSConfig defines the configuration for the KMS instance that will be used with KMSEncryptionProvider encryption",
+    "com.github.openshift.api.config.v1.KMSPluginConfig": {
+      "description": "KMSPluginConfig defines the configuration for the KMS instance that will be used with KMS encryption",
       "type": "object",
       "required": [
         "type"
       ],
       "properties": {
-        "aws": {
-          "description": "aws defines the key config for using an AWS KMS instance for the encryption. The AWS KMS instance is managed by the user outside the purview of the control plane.",
-          "$ref": "#/definitions/com.github.openshift.api.config.v1.AWSKMSConfig"
-        },
         "type": {
-          "description": "type defines the kind of platform for the KMS provider. Available provider types are AWS only.",
+          "description": "type defines the kind of platform for the KMS provider. Allowed values are Vault. When set to Vault, the plugin connects to a HashiCorp Vault server for key management.",
           "type": "string",
           "default": ""
+        },
+        "vault": {
+          "description": "vault defines the configuration for the Vault KMS plugin. The plugin connects to a Vault Enterprise server that is managed by the user outside the purview of the control plane. This field must be set when type is Vault, and must be unset otherwise.",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.config.v1.VaultKMSPluginConfig"
         }
       },
       "x-kubernetes-unions": [
         {
           "discriminator": "type",
           "fields-to-discriminateBy": {
-            "aws": "AWS"
+            "vault": "Vault"
           }
         }
       ]
@@ -20533,6 +20686,19 @@
         }
       }
     },
+    "com.github.openshift.api.config.v1.NetworkObservabilitySpec": {
+      "description": "NetworkObservabilitySpec defines the configuration for network observability installation",
+      "type": "object",
+      "required": [
+        "installationPolicy"
+      ],
+      "properties": {
+        "installationPolicy": {
+          "description": "installationPolicy controls whether network observability is installed during cluster deployment. Valid values are \"InstallAndEnable\" and \"NoAction\". When set to \"InstallAndEnable\", ensure that network observability will be installed and enabled on the cluster. If already installed, no action taken, but if it gets uninstalled, it will install it again. When set to \"NoAction\", nothing will be done regarding Network observability.",
+          "type": "string"
+        }
+      }
+    },
     "com.github.openshift.api.config.v1.NetworkSpec": {
       "description": "NetworkSpec is the desired network configuration. As a general rule, this SHOULD NOT be read directly. Instead, you should consume the NetworkStatus, as it indicates the currently deployed configuration. Currently, most spec fields are immutable after installation. Please view the individual ones for further details on each.",
       "type": "object",
@@ -20559,6 +20725,11 @@
           "description": "networkDiagnostics defines network diagnostics configuration.\n\nTakes precedence over spec.disableNetworkDiagnostics in network.operator.openshift.io. If networkDiagnostics is not specified or is empty, and the spec.disableNetworkDiagnostics flag in network.operator.openshift.io is set to true, the network diagnostics feature will be disabled.",
           "default": {},
           "$ref": "#/definitions/com.github.openshift.api.config.v1.NetworkDiagnostics"
+        },
+        "networkObservability": {
+          "description": "networkObservability is an optional field that configures network observability installation during cluster deployment (day-0). When omitted, unless this is a SNO cluster, network observability will be installed if not already present, after that, no action taken.",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.config.v1.NetworkObservabilitySpec"
         },
         "networkType": {
           "description": "networkType is the plugin that is to be deployed (e.g. OVNKubernetes). This should match a value that the cluster-network-operator understands, or else no networking will be installed. Currently supported values are: - OVNKubernetes This field is immutable after installation.",
@@ -21219,6 +21390,15 @@
           "items": {
             "default": {},
             "$ref": "#/definitions/com.github.openshift.api.config.v1.TokenClaimValidationRule"
+          },
+          "x-kubernetes-list-type": "atomic"
+        },
+        "externalClaimsSources": {
+          "description": "externalClaimsSources is an optional field that can be used to configure sources, external to the token provided in a request, in which claims should be fetched from and made available to the claim mapping process that is used to build the identity of a token holder.\n\nFor example, fetching additional user metadata from an OIDC provider's UserInfo endpoint.\n\nWhen not specified, only claims present in the token itself will be available in the claim mapping process.\n\nWhen specified, at least one external claim source must be specified and no more than 5 sources may be specified. All external claim sources must have unique claim mappings. When an external source responds and resolves additional claims successfully, they will be made available as claims during the claim mapping process. Externally sourced claims with the same name as a claim existing within the token will overwrite the claim data from the token with the externally sourced information. If an external source does not respond, responds with an error, or the additional claim data cannot be resolved from the response successfully it will not be included in the claim data passed to the claim mapping process.",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/com.github.openshift.api.config.v1.ExternalClaimsSource"
           },
           "x-kubernetes-list-type": "atomic"
         },
@@ -22342,7 +22522,7 @@
       "type": "object",
       "properties": {
         "allowedRegistries": {
-          "description": "allowedRegistries are the only registries permitted for image pull and push actions. All other registries are denied.\n\nOnly one of BlockedRegistries or AllowedRegistries may be set.",
+          "description": "allowedRegistries are the only registries permitted for image pull and push actions. All other registries are denied. Each entry must be a valid registry scope in the format hostname[:port][/path], optionally prefixed with \"*.\" for wildcard subdomains (e.g., \"*.example.com\"). The hostname must consist of valid DNS labels separated by dots, where each label contains only alphanumeric characters and hyphens and does not start or end with a hyphen. Entries must not be empty, must not include tags (e.g., \":latest\") or digests (e.g., \"@sha256:...\"), and must be at most 256 characters in length. The list may contain at most 1024 entries.\n\nOnly one of BlockedRegistries or AllowedRegistries may be set.",
           "type": "array",
           "items": {
             "type": "string",
@@ -22351,7 +22531,7 @@
           "x-kubernetes-list-type": "atomic"
         },
         "blockedRegistries": {
-          "description": "blockedRegistries cannot be used for image pull and push actions. All other registries are permitted.\n\nOnly one of BlockedRegistries or AllowedRegistries may be set.",
+          "description": "blockedRegistries cannot be used for image pull and push actions. All other registries are permitted. Each entry must be a valid registry scope in the format hostname[:port][/path], optionally prefixed with \"*.\" for wildcard subdomains (e.g., \"*.example.com\"). The hostname must consist of valid DNS labels separated by dots, where each label contains only alphanumeric characters and hyphens and does not start or end with a hyphen. Entries must not be empty, must not include tags (e.g., \":latest\") or digests (e.g., \"@sha256:...\"), and must be at most 256 characters in length. The list may contain at most 1024 entries.\n\nOnly one of BlockedRegistries or AllowedRegistries may be set.",
           "type": "array",
           "items": {
             "type": "string",
@@ -22369,7 +22549,7 @@
           "x-kubernetes-list-type": "set"
         },
         "insecureRegistries": {
-          "description": "insecureRegistries are registries which do not have a valid TLS certificates or only support HTTP connections.",
+          "description": "insecureRegistries are registries which do not have a valid TLS certificates or only support HTTP connections. Each entry must be a valid registry scope in the format hostname[:port][/path], optionally prefixed with \"*.\" for wildcard subdomains (e.g., \"*.example.com\"). The hostname must consist of valid DNS labels separated by dots, where each label contains only alphanumeric characters and hyphens and does not start or end with a hyphen. Entries must not be empty, must not include tags (e.g., \":latest\") or digests (e.g., \"@sha256:...\"), and must be at most 256 characters in length. The list may contain at most 1024 entries.",
           "type": "array",
           "items": {
             "type": "string",
@@ -22761,6 +22941,42 @@
         }
       }
     },
+    "com.github.openshift.api.config.v1.SourceURL": {
+      "description": "SourceURL configures the options used to build the URL that is queried for external claims.",
+      "type": "object",
+      "required": [
+        "hostname",
+        "pathExpression"
+      ],
+      "properties": {
+        "hostname": {
+          "description": "hostname is a required hostname for which the external claims are located.\n\nIt must be a valid DNS subdomain name as per RFC1123.\n\nThis means that it must start and end with a lowercase alphanumeric character, must only consist of lowercase alphanumeric characters, '-', and '.'. hostname may optionally specify a port in the format ':{port}'. If a port is specified it must not exceed 65535.\n\nhostname must be at least 1 character in length. When specifying a port, hostname must not exceed 259 characters in length. When not specifying a port, hostname must not exceed 253 characters in length.",
+          "type": "string"
+        },
+        "pathExpression": {
+          "description": "pathExpression is a required CEL expression that returns a list of string values used to construct the URL path. Claims from the token used for the request to the kube-apiserver are made available via the `claims` variable. expression must be at least 1 character in length and must not exceed 1024 characters in length.\n\nValues in the returned list will be joined with the hostname using a forward slash (`/`) as a separator. Values in the returned list do not need to include the forward slash. If a forward slash is included in a returned value, it will be encoded as `%2F`.\n\nExample of a static path configuration:\n\n    pathExpression: ['realms', 'k8s', 'protocol', 'openid-connect', 'userinfo']\n\nThe above example would resolve to the path: '/realms/k8s/protocol/openid-connect/userinfo'\n\nExample of a dynamic path configuration:\n\n    pathExpression: \"['admin', 'realms', 'k8s', 'users'] + [claims.sub] + ['groups']\"\n\nAssuming 'claims.sub' is set to '12345', the above example would resolve to the path: '/admin/realms/k8s/users/12345/groups'",
+          "type": "string"
+        }
+      }
+    },
+    "com.github.openshift.api.config.v1.SourcedClaimMapping": {
+      "description": "SourcedClaimMapping configures the mapping behavior for a single external claim from the response the apiserver received from the external claim source.",
+      "type": "object",
+      "required": [
+        "name",
+        "expression"
+      ],
+      "properties": {
+        "expression": {
+          "description": "expression is a required CEL expression that will produce a value to be assigned to the claim. The full response body from the request to the external claim source is provided via the `response.body` variable.\n\nThe contents of the `response.body` variable varies based on the response received from the external source. It is the responsibility of those configuring this expression to understand what is returned from the external source.\n\nexpression must be at least 1 character and must not exceed 1024 characters in length.",
+          "type": "string"
+        },
+        "name": {
+          "description": "name is a required name of the claim that will be produced and made available during the claim-to-identity mapping process. name must consist of only lowercase alpha characters and underscores ('_'). name must be at least 1 character and must not exceed 256 characters in length.",
+          "type": "string"
+        }
+      }
+    },
     "com.github.openshift.api.config.v1.Storage": {
       "description": "Storage provides persistent storage configuration options for gathering jobs. If the type is set to PersistentVolume, then the PersistentVolume must be defined. If the type is set to Ephemeral, then the PersistentVolume must not be defined.",
       "type": "object",
@@ -22868,6 +23084,15 @@
           },
           "x-kubernetes-list-type": "atomic"
         },
+        "groups": {
+          "description": "groups is an optional, ordered field used to specify the supported groups (formerly known as elliptic curves) that are used during the TLS handshake.  The order of the groups represents a suggested preference, with the most preferred group first. Note that not all platform components honor the ordering: Go-based components use Go's internal preference order and treat this list as a filter of allowed groups rather than an ordered preference. Operators may remove entries their operands do not support.\n\nWhen omitted, this means no opinion and the platform is left to choose reasonable defaults which are subject to change over time and may be different per platform component depending on the underlying TLS libraries they use. If specified, the list must contain at least one and at most 7 groups, and each group must be unique.\n\nFor example, to use X25519 and secp256r1 (yaml):\n\n  groups:\n    - X25519\n    - secp256r1",
+          "type": "array",
+          "items": {
+            "type": "string",
+            "default": ""
+          },
+          "x-kubernetes-list-type": "set"
+        },
         "minTLSVersion": {
           "description": "minTLSVersion is used to specify the minimal version of the TLS protocol that is negotiated during the TLS handshake. For example, to use TLS versions 1.1, 1.2 and 1.3 (yaml):\n\n  minTLSVersion: VersionTLS11",
           "type": "string",
@@ -22880,23 +23105,23 @@
       "type": "object",
       "properties": {
         "custom": {
-          "description": "custom is a user-defined TLS security profile. Be extremely careful using a custom profile as invalid configurations can be catastrophic. An example custom profile looks like this:\n\n  minTLSVersion: VersionTLS11\n  ciphers:\n    - ECDHE-ECDSA-CHACHA20-POLY1305\n    - ECDHE-RSA-CHACHA20-POLY1305\n    - ECDHE-RSA-AES128-GCM-SHA256\n    - ECDHE-ECDSA-AES128-GCM-SHA256",
+          "description": "custom is a user-defined TLS security profile. Be extremely careful using a custom profile as invalid configurations can be catastrophic.\n\nThe supported groups list for this profile is empty by default.\n\nAn example custom profile looks like this:\n\n  minTLSVersion: VersionTLS11\n  ciphers:\n    - ECDHE-ECDSA-CHACHA20-POLY1305\n    - ECDHE-RSA-CHACHA20-POLY1305\n    - ECDHE-RSA-AES128-GCM-SHA256\n    - ECDHE-ECDSA-AES128-GCM-SHA256",
           "$ref": "#/definitions/com.github.openshift.api.config.v1.CustomTLSProfile"
         },
         "intermediate": {
-          "description": "intermediate is a TLS profile for use when you do not need compatibility with legacy clients and want to remain highly secure while being compatible with most clients currently in use.\n\nThis profile is equivalent to a Custom profile specified as:\n  minTLSVersion: VersionTLS12\n  ciphers:\n    - TLS_AES_128_GCM_SHA256\n    - TLS_AES_256_GCM_SHA384\n    - TLS_CHACHA20_POLY1305_SHA256\n    - ECDHE-ECDSA-AES128-GCM-SHA256\n    - ECDHE-RSA-AES128-GCM-SHA256\n    - ECDHE-ECDSA-AES256-GCM-SHA384\n    - ECDHE-RSA-AES256-GCM-SHA384\n    - ECDHE-ECDSA-CHACHA20-POLY1305\n    - ECDHE-RSA-CHACHA20-POLY1305",
+          "description": "intermediate is a TLS profile for use when you do not need compatibility with legacy clients and want to remain highly secure while being compatible with most clients currently in use.\n\nThe supported groups list includes by default the following groups in suggested preference order (ordering may not be honored by all implementations): X25519MLKEM768, X25519, secp256r1, secp384r1.\n\nThis profile is equivalent to a Custom profile specified as:\n  minTLSVersion: VersionTLS12\n  ciphers:\n    - TLS_AES_128_GCM_SHA256\n    - TLS_AES_256_GCM_SHA384\n    - TLS_CHACHA20_POLY1305_SHA256\n    - ECDHE-ECDSA-AES128-GCM-SHA256\n    - ECDHE-RSA-AES128-GCM-SHA256\n    - ECDHE-ECDSA-AES256-GCM-SHA384\n    - ECDHE-RSA-AES256-GCM-SHA384\n    - ECDHE-ECDSA-CHACHA20-POLY1305\n    - ECDHE-RSA-CHACHA20-POLY1305",
           "$ref": "#/definitions/com.github.openshift.api.config.v1.IntermediateTLSProfile"
         },
         "modern": {
-          "description": "modern is a TLS security profile for use with clients that support TLS 1.3 and do not need backward compatibility for older clients.\n\nThis profile is equivalent to a Custom profile specified as:\n  minTLSVersion: VersionTLS13\n  ciphers:\n    - TLS_AES_128_GCM_SHA256\n    - TLS_AES_256_GCM_SHA384\n    - TLS_CHACHA20_POLY1305_SHA256",
+          "description": "modern is a TLS security profile for use with clients that support TLS 1.3 and do not need backward compatibility for older clients. The supported groups list includes by default the following groups in suggested preference order (ordering may not be honored by all implementations): X25519MLKEM768, X25519, secp256r1, secp384r1. This profile is equivalent to a Custom profile specified as:\n  minTLSVersion: VersionTLS13\n  ciphers:\n    - TLS_AES_128_GCM_SHA256\n    - TLS_AES_256_GCM_SHA384\n    - TLS_CHACHA20_POLY1305_SHA256",
           "$ref": "#/definitions/com.github.openshift.api.config.v1.ModernTLSProfile"
         },
         "old": {
-          "description": "old is a TLS profile for use when services need to be accessed by very old clients or libraries and should be used only as a last resort.\n\nThis profile is equivalent to a Custom profile specified as:\n  minTLSVersion: VersionTLS10\n  ciphers:\n    - TLS_AES_128_GCM_SHA256\n    - TLS_AES_256_GCM_SHA384\n    - TLS_CHACHA20_POLY1305_SHA256\n    - ECDHE-ECDSA-AES128-GCM-SHA256\n    - ECDHE-RSA-AES128-GCM-SHA256\n    - ECDHE-ECDSA-AES256-GCM-SHA384\n    - ECDHE-RSA-AES256-GCM-SHA384\n    - ECDHE-ECDSA-CHACHA20-POLY1305\n    - ECDHE-RSA-CHACHA20-POLY1305\n    - ECDHE-ECDSA-AES128-SHA256\n    - ECDHE-RSA-AES128-SHA256\n    - ECDHE-ECDSA-AES128-SHA\n    - ECDHE-RSA-AES128-SHA\n    - ECDHE-ECDSA-AES256-SHA\n    - ECDHE-RSA-AES256-SHA\n    - AES128-GCM-SHA256\n    - AES256-GCM-SHA384\n    - AES128-SHA256\n    - AES128-SHA\n    - AES256-SHA\n    - DES-CBC3-SHA",
+          "description": "old is a TLS profile for use when services need to be accessed by very old clients or libraries and should be used only as a last resort.\n\nThe supported groups list includes by default the following groups in suggested preference order (ordering may not be honored by all implementations): X25519MLKEM768, X25519, secp256r1, secp384r1.\n\nThis profile is equivalent to a Custom profile specified as:\n  minTLSVersion: VersionTLS10\n  ciphers:\n    - TLS_AES_128_GCM_SHA256\n    - TLS_AES_256_GCM_SHA384\n    - TLS_CHACHA20_POLY1305_SHA256\n    - ECDHE-ECDSA-AES128-GCM-SHA256\n    - ECDHE-RSA-AES128-GCM-SHA256\n    - ECDHE-ECDSA-AES256-GCM-SHA384\n    - ECDHE-RSA-AES256-GCM-SHA384\n    - ECDHE-ECDSA-CHACHA20-POLY1305\n    - ECDHE-RSA-CHACHA20-POLY1305\n    - ECDHE-ECDSA-AES128-SHA256\n    - ECDHE-RSA-AES128-SHA256\n    - ECDHE-ECDSA-AES128-SHA\n    - ECDHE-RSA-AES128-SHA\n    - ECDHE-ECDSA-AES256-SHA384\n    - ECDHE-RSA-AES256-SHA384\n    - ECDHE-ECDSA-AES256-SHA\n    - ECDHE-RSA-AES256-SHA\n    - AES128-GCM-SHA256\n    - AES256-GCM-SHA384\n    - AES128-SHA256\n    - AES256-SHA256\n    - AES128-SHA\n    - AES256-SHA\n    - DES-CBC3-SHA",
           "$ref": "#/definitions/com.github.openshift.api.config.v1.OldTLSProfile"
         },
         "type": {
-          "description": "type is one of Old, Intermediate, Modern or Custom. Custom provides the ability to specify individual TLS security profile parameters.\n\nThe profiles are based on version 5.7 of the Mozilla Server Side TLS configuration guidelines. The cipher lists consist of the configuration's \"ciphersuites\" followed by the Go-specific \"ciphers\" from the guidelines. See: https://ssl-config.mozilla.org/guidelines/5.7.json\n\nThe profiles are intent based, so they may change over time as new ciphers are developed and existing ciphers are found to be insecure. Depending on precisely which ciphers are available to a process, the list may be reduced.",
+          "description": "type is one of Old, Intermediate, Modern or Custom. Custom provides the ability to specify individual TLS security profile parameters.\n\nThe cipher and groups lists in these profiles are based on version 5.8 of the Mozilla Server Side TLS configuration guidelines. See: https://ssl-config.mozilla.org/guidelines/5.8.json\n\nThe groups are listed in suggested preference order, with the most preferred group first. Note that not all platform components honor the ordering: Go-based components use Go's internal preference order and treat this list as a filter of allowed groups rather than an ordered preference. Note that X25519MLKEM768 is a post-quantum hybrid group that is not FIPS-approved and should be ignored by components running in FIPS mode.\n\nThe profiles are intent based, so they may change over time as new ciphers are developed and existing ciphers are found to be insecure. Depending on precisely which ciphers are available to a process, the list may be reduced.",
           "type": "string",
           "default": ""
         }
@@ -23714,6 +23939,130 @@
         }
       }
     },
+    "com.github.openshift.api.config.v1.VaultAppRoleAuthentication": {
+      "description": "VaultAppRoleAuthentication defines the configuration for AppRole authentication with Vault.",
+      "type": "object",
+      "required": [
+        "secret"
+      ],
+      "properties": {
+        "secret": {
+          "description": "secret references a secret in the openshift-config namespace containing the AppRole credentials used to authenticate with Vault. The referenced Secret must contain two keys: \"role-id\" for the AppRole Role ID and \"secret-id\" for the AppRole Secret ID.",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.config.v1.VaultSecretReference"
+        }
+      }
+    },
+    "com.github.openshift.api.config.v1.VaultAuthentication": {
+      "description": "VaultAuthentication defines the authentication method used to authenticate with Vault.",
+      "type": "object",
+      "required": [
+        "type"
+      ],
+      "properties": {
+        "appRole": {
+          "description": "appRole defines the configuration for AppRole authentication. This field must be set when type is AppRole, and must be unset otherwise.",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.config.v1.VaultAppRoleAuthentication"
+        },
+        "type": {
+          "description": "type defines the authentication method used to authenticate with Vault. Allowed values are AppRole. When set to AppRole, the plugin uses AppRole credentials to authenticate with Vault.",
+          "type": "string"
+        }
+      },
+      "x-kubernetes-unions": [
+        {
+          "discriminator": "type",
+          "fields-to-discriminateBy": {
+            "appRole": "AppRole"
+          }
+        }
+      ]
+    },
+    "com.github.openshift.api.config.v1.VaultConfigMapReference": {
+      "description": "VaultConfigMapReference references a ConfigMap in the openshift-config namespace.",
+      "type": "object",
+      "required": [
+        "name"
+      ],
+      "properties": {
+        "name": {
+          "description": "name is the metadata.name of the referenced ConfigMap in the openshift-config namespace. The name must be a valid DNS subdomain name: it must contain no more than 253 characters, contain only lowercase alphanumeric characters, '-' or '.', and start and end with an alphanumeric character.",
+          "type": "string"
+        }
+      }
+    },
+    "com.github.openshift.api.config.v1.VaultKMSPluginConfig": {
+      "description": "VaultKMSPluginConfig defines the KMS plugin configuration specific to Vault KMS",
+      "type": "object",
+      "required": [
+        "kmsPluginImage",
+        "vaultAddress",
+        "authentication",
+        "transitMount",
+        "transitKey"
+      ],
+      "properties": {
+        "authentication": {
+          "description": "authentication defines the authentication method used to authenticate with Vault.",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.config.v1.VaultAuthentication"
+        },
+        "kmsPluginImage": {
+          "description": "kmsPluginImage specifies the container image for the HashiCorp Vault KMS plugin.\n\nThe image must be a fully qualified OCI image pull spec with a SHA256 digest. The format is: host[:port][/namespace]/name@sha256:<digest> where the digest must be 64 characters long and consist only of lowercase hexadecimal characters, a-f and 0-9. The total length must be between 75 and 447 characters.\n\nShort names (e.g., \"vault-plugin\" or \"hashicorp/vault-plugin\") are not allowed. The registry hostname must be included and must contain at least one dot. Image tags (e.g., \":latest\", \":v1.0.0\") are not allowed.\n\nConsult the OpenShift documentation for compatible plugin versions with your cluster version, then obtain the image digest for that version from HashiCorp's container registry.\n\nFor disconnected environments, mirror the plugin image to an accessible registry and reference the mirrored location with its digest.",
+          "type": "string"
+        },
+        "tls": {
+          "description": "tls contains the TLS configuration for connecting to the Vault server. When this field is not set, system default TLS settings are used.",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.config.v1.VaultTLSConfig"
+        },
+        "transitKey": {
+          "description": "transitKey specifies the name of the encryption key in Vault's Transit engine. This key is used to encrypt and decrypt data.\n\nThe transit key must be between 1 and 512 characters, cannot contain forward slashes, and must only contain alphanumeric characters, hyphens, periods, and underscores.",
+          "type": "string"
+        },
+        "transitMount": {
+          "description": "transitMount specifies the mount path of the Vault Transit engine.\n\nThe transit mount must be between 1 and 1024 characters, cannot start or end with a forward slash, cannot contain consecutive forward slashes, and must only contain RFC 3986 unreserved characters (alphanumeric, hyphen, period, underscore, tilde) and forward slashes as path separators.",
+          "type": "string"
+        },
+        "vaultAddress": {
+          "description": "vaultAddress specifies the address of the HashiCorp Vault instance. The value must be a valid HTTPS URL containing only scheme, host, and optional port. Paths, user info, query parameters, and fragments are not allowed.\n\nFormat: https://hostname[:port] Example: https://vault.example.com:8200\n\nThe value must be between 1 and 512 characters.",
+          "type": "string"
+        },
+        "vaultNamespace": {
+          "description": "vaultNamespace specifies the Vault namespace where the Transit secrets engine is mounted. This is only applicable for Vault Enterprise installations. When this field is not set, no namespace is used.\n\nThe value must be between 1 and 4096 characters. The namespace cannot end with a forward slash, cannot contain spaces, and cannot be one of the reserved strings: root, sys, audit, auth, cubbyhole, or identity.",
+          "type": "string"
+        }
+      }
+    },
+    "com.github.openshift.api.config.v1.VaultSecretReference": {
+      "description": "VaultSecretReference references a secret in the openshift-config namespace.",
+      "type": "object",
+      "required": [
+        "name"
+      ],
+      "properties": {
+        "name": {
+          "description": "name is the metadata.name of the referenced secret in the openshift-config namespace. The name must be a valid DNS subdomain name: it must contain no more than 253 characters, contain only lowercase alphanumeric characters, '-' or '.', and start and end with an alphanumeric character.",
+          "type": "string"
+        }
+      }
+    },
+    "com.github.openshift.api.config.v1.VaultTLSConfig": {
+      "description": "VaultTLSConfig contains TLS configuration for connecting to Vault.",
+      "type": "object",
+      "properties": {
+        "caBundle": {
+          "description": "caBundle references a ConfigMap in the openshift-config namespace containing the CA certificate bundle used to verify the TLS connection to the Vault server. The referenced ConfigMap must contain the CA bundle in the key \"ca-bundle.crt\". When this field is not set, the system's trusted CA certificates are used.\n\nThe namespace for the ConfigMap is openshift-config.\n\nExample ConfigMap:\n  apiVersion: v1\n  kind: ConfigMap\n  metadata:\n    name: vault-ca-bundle\n    namespace: openshift-config\n  data:\n    ca-bundle.crt: |\n      -----BEGIN CERTIFICATE-----\n      ...\n      -----END CERTIFICATE-----",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.config.v1.VaultConfigMapReference"
+        },
+        "serverName": {
+          "description": "serverName specifies the Server Name Indication (SNI) to use when connecting to Vault via TLS. This is useful when the Vault server's hostname doesn't match its TLS certificate. When this field is not set, the hostname from vaultAddress is used for SNI.\n\nThe value must be a valid DNS hostname: it must contain no more than 253 characters, contain only lowercase alphanumeric characters, '-' or '.', and start and end with an alphanumeric character.",
+          "type": "string"
+        }
+      }
+    },
     "com.github.openshift.api.config.v1.WebhookTokenAuthenticator": {
       "description": "webhookTokenAuthenticator holds the necessary configuration options for a remote token authenticator",
       "type": "object",
@@ -23793,7 +24142,7 @@
       }
     },
     "com.github.openshift.api.config.v1alpha1.AlertmanagerCustomConfig": {
-      "description": "AlertmanagerCustomConfig represents the configuration for a custom Alertmanager deployment. alertmanagerCustomConfig provides configuration options for the default Alertmanager instance that runs in the `openshift-monitoring` namespace. Use this configuration to control whether the default Alertmanager is deployed, how it logs, and how its pods are scheduled.",
+      "description": "AlertmanagerCustomConfig represents the configuration for a custom Alertmanager deployment. alertmanagerCustomConfig provides configuration options for the default Alertmanager instance that runs in the `openshift-monitoring` namespace. Use this configuration to control whether user-defined namespaces are selected for AlertmanagerConfig lookups, how it logs, and how its pods are scheduled.",
       "type": "object",
       "properties": {
         "logLevel": {
@@ -23850,6 +24199,14 @@
             "whenUnsatisfiable"
           ],
           "x-kubernetes-list-type": "map"
+        },
+        "userAlertmanagerConfigSelection": {
+          "description": "userAlertmanagerConfigSelection is an optional field that controls whether user-defined namespaces can be selected for AlertmanagerConfig lookups on the platform Alertmanager instance in the `openshift-monitoring` namespace. Valid values are Selectable and None. When set to Selectable, the platform Alertmanager discovers AlertmanagerConfig resources in user-defined namespaces. This is equivalent to `enableUserAlertmanagerConfig: true` in the cluster-monitoring-config ConfigMap. When set to None, user-defined namespaces are not selected for AlertmanagerConfig lookups on the platform Alertmanager. This is equivalent to `enableUserAlertmanagerConfig: false` in the cluster-monitoring-config ConfigMap. This setting only applies when the user-workload monitoring Alertmanager is not enabled. When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time. The current default value is `None`.\n\nPossible enum values:\n - `\"None\"` disables user-defined namespaces from being selected for AlertmanagerConfig lookups on the platform Alertmanager.\n - `\"Selectable\"` enables user-defined namespaces to be selected for AlertmanagerConfig lookups on the platform Alertmanager.",
+          "type": "string",
+          "enum": [
+            "None",
+            "Selectable"
+          ]
         },
         "volumeClaimTemplate": {
           "description": "volumeClaimTemplate defines persistent storage for Alertmanager. Use this setting to configure the persistent volume claim, including storage class and volume size. If omitted, the Pod uses ephemeral storage and alert data will not persist across restarts.",
@@ -24167,10 +24524,25 @@
           "default": {},
           "$ref": "#/definitions/com.github.openshift.api.config.v1alpha1.AlertmanagerConfig"
         },
+        "kubeStateMetricsConfig": {
+          "description": "kubeStateMetricsConfig is an optional field that can be used to configure the kube-state-metrics agent that runs in the openshift-monitoring namespace. kube-state-metrics generates metrics about the state of Kubernetes objects such as Deployments, Nodes, and Pods. When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time.",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.config.v1alpha1.KubeStateMetricsConfig"
+        },
         "metricsServerConfig": {
           "description": "metricsServerConfig is an optional field that can be used to configure the Kubernetes Metrics Server that runs in the openshift-monitoring namespace. Specifically, it can configure how the Metrics Server instance is deployed, pod scheduling, its audit policy and log verbosity. When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time.",
           "default": {},
           "$ref": "#/definitions/com.github.openshift.api.config.v1alpha1.MetricsServerConfig"
+        },
+        "monitoringPluginConfig": {
+          "description": "monitoringPluginConfig is an optional field that can be used to configure the monitoring plugin that runs as a dynamic plugin of the OpenShift web console. The monitoring plugin provides the monitoring UI in the OpenShift web console for visualizing metrics, alerts, and dashboards. When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time. The current default deploys the monitoring-plugin as a single-replica Deployment on linux nodes with 10m CPU and 50Mi memory requests, and no custom tolerations or topology spread constraints. When set, at least one field must be specified within monitoringPluginConfig.",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.config.v1alpha1.MonitoringPluginConfig"
+        },
+        "nodeExporterConfig": {
+          "description": "nodeExporterConfig is an optional field that can be used to configure the node-exporter agent that runs as a DaemonSet in the openshift-monitoring namespace. The node-exporter agent collects hardware and OS-level metrics from every node in the cluster. When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time.",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.config.v1alpha1.NodeExporterConfig"
         },
         "openShiftStateMetricsConfig": {
           "description": "openShiftStateMetricsConfig is an optional field that can be used to configure the openshift-state-metrics agent that runs in the openshift-monitoring namespace. The openshift-state-metrics agent generates metrics about the state of OpenShift-specific Kubernetes objects, such as routes, builds, and deployments. When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time.",
@@ -24491,6 +24863,89 @@
         }
       ]
     },
+    "com.github.openshift.api.config.v1alpha1.KubeStateMetricsConfig": {
+      "description": "KubeStateMetricsConfig provides configuration options for the kube-state-metrics agent that runs in the `openshift-monitoring` namespace. kube-state-metrics generates metrics about the state of Kubernetes objects such as Deployments, Nodes, and Pods.",
+      "type": "object",
+      "properties": {
+        "additionalResourceLabels": {
+          "description": "additionalResourceLabels defines additional Kubernetes resource labels to expose as metrics in kube-state-metrics. Currently, only \"Job\" and \"CronJob\" resources are supported due to cardinality concerns. Each entry specifies a resource name and a list of Kubernetes label names to expose. Use \"*\" in the labels list to expose all labels for a given resource. additionalResourceLabels is optional. When omitted, no additional Kubernetes object labels are exposed as metrics by kube-state-metrics beyond its built-in metric labels (e.g. namespace, job_name). Use this field to opt in to exposing specific Kubernetes labels as metric labels for the supported resource types. Minimum length for this list is 1. Maximum length for this list is 2. Each resource name must be unique within this list.",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/com.github.openshift.api.config.v1alpha1.KubeStateMetricsResourceLabels"
+          },
+          "x-kubernetes-list-map-keys": [
+            "resource"
+          ],
+          "x-kubernetes-list-type": "map"
+        },
+        "nodeSelector": {
+          "description": "nodeSelector defines the nodes on which the Pods are scheduled. nodeSelector is optional.\n\nWhen omitted, this means the user has no opinion and the platform is left to choose reasonable defaults. These defaults are subject to change over time. The current default value is `kubernetes.io/os: linux`. When specified, nodeSelector must contain at least 1 entry and must not contain more than 10 entries.",
+          "type": "object",
+          "additionalProperties": {
+            "type": "string",
+            "default": ""
+          }
+        },
+        "resources": {
+          "description": "resources defines the compute resource requests and limits for the kube-state-metrics container. This includes CPU, memory and HugePages constraints to help control scheduling and resource usage. When not specified, defaults are used by the platform. Requests cannot exceed limits. This field is optional. More info: https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/ This is a simplified API that maps to Kubernetes ResourceRequirements. The current default values are:\n  resources:\n   - name: cpu\n     request: 4m\n     limit: null\n   - name: memory\n     request: 40Mi\n     limit: null\nMaximum length for this list is 5. Minimum length for this list is 1. Each resource name must be unique within this list.",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/com.github.openshift.api.config.v1alpha1.ContainerResource"
+          },
+          "x-kubernetes-list-map-keys": [
+            "name"
+          ],
+          "x-kubernetes-list-type": "map"
+        },
+        "tolerations": {
+          "description": "tolerations defines tolerations for the pods. tolerations is optional.\n\nWhen omitted, no tolerations are applied. This default is subject to change over time. When specified, tolerations must contain at least 1 entry and must not contain more than 10 entries. Each toleration's operator, when specified, must be either \"Exists\" or \"Equal\". Each toleration's effect, when specified, must be one of \"NoSchedule\", \"PreferNoSchedule\", or \"NoExecute\". An empty or unset effect means match all effects.",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/Toleration.v1.core.api.k8s.io"
+          },
+          "x-kubernetes-list-type": "atomic"
+        },
+        "topologySpreadConstraints": {
+          "description": "topologySpreadConstraints defines rules for how kube-state-metrics Pods should be distributed across topology domains such as zones, nodes, or other user-defined labels. topologySpreadConstraints is optional. This helps improve high availability and resource efficiency by avoiding placing too many replicas in the same failure domain.\n\nThis field maps directly to the `topologySpreadConstraints` field in the Pod spec. When omitted, no topology spread constraints are applied. This default is subject to change over time. When specified, topologySpreadConstraints must contain at least 1 entry and must not contain more than 10 entries. Entries must have unique topologyKey and whenUnsatisfiable pairs. Each entry's whenUnsatisfiable must be either \"DoNotSchedule\" or \"ScheduleAnyway\". Each entry's maxSkew must be at least 1. When minDomains is specified, it must be at least 1 and whenUnsatisfiable must be \"DoNotSchedule\".",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/TopologySpreadConstraint.v1.core.api.k8s.io"
+          },
+          "x-kubernetes-list-map-keys": [
+            "topologyKey",
+            "whenUnsatisfiable"
+          ],
+          "x-kubernetes-list-type": "map"
+        }
+      }
+    },
+    "com.github.openshift.api.config.v1alpha1.KubeStateMetricsResourceLabels": {
+      "description": "KubeStateMetricsResourceLabels defines which Kubernetes labels to expose as metrics for a given resource type in kube-state-metrics.",
+      "type": "object",
+      "required": [
+        "resource",
+        "labels"
+      ],
+      "properties": {
+        "labels": {
+          "description": "labels is the list of Kubernetes label names to expose as metrics for this resource. Use \"*\" to expose all labels for the specified resource. When \"*\" is specified, it must be the only entry in the list; mixing \"*\" with specific label names is not allowed. This field is required. Each label name must be unique within this list. Minimum length for this list is 1. Maximum length for this list is 50.",
+          "type": "array",
+          "items": {
+            "type": "string",
+            "default": ""
+          },
+          "x-kubernetes-list-type": "set"
+        },
+        "resource": {
+          "description": "resource is the Kubernetes resource name whose labels should be exposed as metrics. Currently, only \"Job\" and \"CronJob\" are supported due to cardinality concerns. Valid values are \"Job\" and \"CronJob\". This field is required.",
+          "type": "string"
+        }
+      }
+    },
     "com.github.openshift.api.config.v1alpha1.Label": {
       "description": "Label represents a key/value pair for external labels.",
       "type": "object",
@@ -24618,6 +25073,394 @@
         "verbosity": {
           "description": "verbosity defines the verbosity of log messages for Metrics Server. Valid values are Errors, Info, Trace, TraceAll and omitted. When set to Errors, only critical messages and errors are logged. When set to Info, only basic information messages are logged. When set to Trace, information useful for general debugging is logged. When set to TraceAll, detailed information about metric scraping is logged. When omitted, this means no opinion and the platform is left to choose a reasonable default, that is subject to change over time. The current default value is `Errors`",
           "type": "string"
+        }
+      }
+    },
+    "com.github.openshift.api.config.v1alpha1.MonitoringPluginConfig": {
+      "description": "MonitoringPluginConfig provides configuration options for the monitoring plugin that runs as a dynamic plugin of the OpenShift web console. The monitoring plugin provides the monitoring UI in the OpenShift web console for visualizing metrics, alerts, and dashboards. At least one field must be specified; an empty monitoringPluginConfig object is not allowed.",
+      "type": "object",
+      "properties": {
+        "nodeSelector": {
+          "description": "nodeSelector defines the nodes on which the Pods are scheduled. nodeSelector is optional.\n\nWhen omitted, this means the user has no opinion and the platform is left to choose reasonable defaults. These defaults are subject to change over time. The current default value is `kubernetes.io/os: linux`. When specified, nodeSelector must contain at least 1 entry and must not contain more than 10 entries.",
+          "type": "object",
+          "additionalProperties": {
+            "type": "string",
+            "default": ""
+          }
+        },
+        "resources": {
+          "description": "resources defines the compute resource requests and limits for the monitoring-plugin container. This includes CPU, memory and HugePages constraints to help control scheduling and resource usage. When not specified, defaults are used by the platform. Requests cannot exceed limits. This field is optional. More info: https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/ This is a simplified API that maps to Kubernetes ResourceRequirements. The current default values are:\n  resources:\n   - name: cpu\n     request: 10m\n   - name: memory\n     request: 50Mi\n\nWhen specified, resources must contain at least 1 entry and must not exceed 5 entries.",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/com.github.openshift.api.config.v1alpha1.ContainerResource"
+          },
+          "x-kubernetes-list-map-keys": [
+            "name"
+          ],
+          "x-kubernetes-list-type": "map"
+        },
+        "tolerations": {
+          "description": "tolerations defines the tolerations required for the monitoring-plugin Pods. This field is optional.\n\nWhen omitted, the monitoring-plugin Pods will not have any tolerations, which means they will only be scheduled on nodes with no taints. When specified, tolerations must contain at least 1 entry and must not contain more than 10 entries.",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/Toleration.v1.core.api.k8s.io"
+          },
+          "x-kubernetes-list-type": "atomic"
+        },
+        "topologySpreadConstraints": {
+          "description": "topologySpreadConstraints defines rules for how monitoring-plugin Pods should be distributed across topology domains such as zones, nodes, or other user-defined labels. topologySpreadConstraints is optional. This helps improve high availability and resource efficiency by avoiding placing too many replicas in the same failure domain.\n\nWhen omitted, this means no opinion and the platform is left to choose a default, which is subject to change over time. This field maps directly to the `topologySpreadConstraints` field in the Pod spec. Default is empty list. When specified, this list must contain at least 1 entry and must not exceed 10 entries.",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/TopologySpreadConstraint.v1.core.api.k8s.io"
+          },
+          "x-kubernetes-list-map-keys": [
+            "topologyKey",
+            "whenUnsatisfiable"
+          ],
+          "x-kubernetes-list-type": "map"
+        }
+      }
+    },
+    "com.github.openshift.api.config.v1alpha1.NodeExporterCollectorBuddyInfoConfig": {
+      "description": "NodeExporterCollectorBuddyInfoConfig provides configuration for the buddyinfo collector of the node-exporter agent. The buddyinfo collector collects statistics about memory fragmentation from the node_buddyinfo_blocks metric using data from /proc/buddyinfo. It is disabled by default.",
+      "type": "object",
+      "required": [
+        "collectionPolicy"
+      ],
+      "properties": {
+        "collectionPolicy": {
+          "description": "collectionPolicy declares whether the buddyinfo collector collects metrics. This field is required. Valid values are \"Collect\" and \"DoNotCollect\". When set to \"Collect\", the buddyinfo collector is active and memory fragmentation statistics are collected. When set to \"DoNotCollect\", the buddyinfo collector is inactive.\n\nPossible enum values:\n - `\"Collect\"` means the collector is active and will produce metrics.\n - `\"DoNotCollect\"` means the collector is inactive and will not produce metrics.",
+          "type": "string",
+          "enum": [
+            "Collect",
+            "DoNotCollect"
+          ]
+        }
+      }
+    },
+    "com.github.openshift.api.config.v1alpha1.NodeExporterCollectorConfig": {
+      "description": "NodeExporterCollectorConfig defines settings for individual collectors of the node-exporter agent. Each collector can be individually set to collect or not collect metrics. At least one collector must be specified.",
+      "type": "object",
+      "properties": {
+        "buddyInfo": {
+          "description": "buddyInfo configures the buddyinfo collector, which collects statistics about memory fragmentation from the node_buddyinfo_blocks metric. This metric collects data from /proc/buddyinfo. buddyInfo is optional. When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time. The current default is disabled. Enable when investigating kernel memory fragmentation; typically for advanced troubleshooting only.",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.config.v1alpha1.NodeExporterCollectorBuddyInfoConfig"
+        },
+        "cpuFreq": {
+          "description": "cpuFreq configures the cpufreq collector, which collects CPU frequency statistics. cpuFreq is optional. When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time. The current default is disabled. Consider enabling when you need to observe CPU frequency scaling; expect higher CPU usage on many-core nodes when collectionPolicy is Collect.",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.config.v1alpha1.NodeExporterCollectorCpufreqConfig"
+        },
+        "ethtool": {
+          "description": "ethtool configures the ethtool collector, which collects ethernet device statistics. ethtool is optional. When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time. The current default is disabled. Enable when you need NIC driver-level ethtool metrics beyond generic netdev counters.",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.config.v1alpha1.NodeExporterCollectorEthtoolConfig"
+        },
+        "ksmd": {
+          "description": "ksmd configures the ksmd collector, which collects statistics from the kernel same-page merger daemon. ksmd is optional. When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time. The current default is disabled. Enable on nodes where KSM is in use and you want visibility into merging activity.",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.config.v1alpha1.NodeExporterCollectorKSMDConfig"
+        },
+        "mountStats": {
+          "description": "mountStats configures the mountstats collector, which collects statistics about NFS volume I/O activities. mountStats is optional. When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time. The current default is disabled. Enabling this collector may produce metrics with high cardinality. If you enable this collector, closely monitor the prometheus-k8s deployment for excessive memory usage. Enable when you care about per-mount NFS client statistics.",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.config.v1alpha1.NodeExporterCollectorMountStatsConfig"
+        },
+        "netClass": {
+          "description": "netClass configures the netclass collector, which collects information about network devices. netClass is optional. When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time. The current default is enabled with netlink mode active. Use statsGatherer when sysfs vs netlink implementation matters or when matching node_exporter tuning.",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.config.v1alpha1.NodeExporterCollectorNetClassConfig"
+        },
+        "netDev": {
+          "description": "netDev configures the netdev collector, which collects network device statistics. netDev is optional. When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time. The current default is enabled. Turn off if you must reduce per-interface metric cardinality on hosts with many virtual interfaces.",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.config.v1alpha1.NodeExporterCollectorNetDevConfig"
+        },
+        "processes": {
+          "description": "processes configures the processes collector, which collects statistics from processes and threads running in the system. processes is optional. When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time. The current default is disabled. Enable for process/thread-level insight; can be expensive on busy nodes.",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.config.v1alpha1.NodeExporterCollectorProcessesConfig"
+        },
+        "softirqs": {
+          "description": "softirqs configures the softirqs collector, which exposes detailed softirq statistics from /proc/softirqs. softirqs is optional. When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time. The current default is disabled. Enable when you need visibility into kernel softirq processing across CPUs.",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.config.v1alpha1.NodeExporterCollectorSoftirqsConfig"
+        },
+        "systemd": {
+          "description": "systemd configures the systemd collector, which collects statistics on the systemd daemon and its managed services. systemd is optional. When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time. The current default is disabled. Enabling this collector with a long list of selected units may produce metrics with high cardinality. If you enable this collector, closely monitor the prometheus-k8s deployment for excessive memory usage. Enable when you need metrics for specific units; scope units carefully.",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.config.v1alpha1.NodeExporterCollectorSystemdConfig"
+        },
+        "tcpStat": {
+          "description": "tcpStat configures the tcpstat collector, which collects TCP connection statistics. tcpStat is optional. When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time. The current default is disabled. Enable when debugging TCP connection behavior or capacity at the node level.",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.config.v1alpha1.NodeExporterCollectorTcpStatConfig"
+        }
+      }
+    },
+    "com.github.openshift.api.config.v1alpha1.NodeExporterCollectorCpufreqConfig": {
+      "description": "NodeExporterCollectorCpufreqConfig provides configuration for the cpufreq collector of the node-exporter agent. The cpufreq collector collects CPU frequency statistics. It is disabled by default.",
+      "type": "object",
+      "required": [
+        "collectionPolicy"
+      ],
+      "properties": {
+        "collectionPolicy": {
+          "description": "collectionPolicy declares whether the cpufreq collector collects metrics. This field is required. Valid values are \"Collect\" and \"DoNotCollect\". When set to \"Collect\", the cpufreq collector is active and CPU frequency statistics are collected. When set to \"DoNotCollect\", the cpufreq collector is inactive.\n\nPossible enum values:\n - `\"Collect\"` means the collector is active and will produce metrics.\n - `\"DoNotCollect\"` means the collector is inactive and will not produce metrics.",
+          "type": "string",
+          "enum": [
+            "Collect",
+            "DoNotCollect"
+          ]
+        }
+      }
+    },
+    "com.github.openshift.api.config.v1alpha1.NodeExporterCollectorEthtoolConfig": {
+      "description": "NodeExporterCollectorEthtoolConfig provides configuration for the ethtool collector of the node-exporter agent. The ethtool collector collects ethernet device statistics. It is disabled by default.",
+      "type": "object",
+      "required": [
+        "collectionPolicy"
+      ],
+      "properties": {
+        "collectionPolicy": {
+          "description": "collectionPolicy declares whether the ethtool collector collects metrics. This field is required. Valid values are \"Collect\" and \"DoNotCollect\". When set to \"Collect\", the ethtool collector is active and ethernet device statistics are collected. When set to \"DoNotCollect\", the ethtool collector is inactive.\n\nPossible enum values:\n - `\"Collect\"` means the collector is active and will produce metrics.\n - `\"DoNotCollect\"` means the collector is inactive and will not produce metrics.",
+          "type": "string",
+          "enum": [
+            "Collect",
+            "DoNotCollect"
+          ]
+        }
+      }
+    },
+    "com.github.openshift.api.config.v1alpha1.NodeExporterCollectorKSMDConfig": {
+      "description": "NodeExporterCollectorKSMDConfig provides configuration for the ksmd collector of the node-exporter agent. The ksmd collector collects statistics from the kernel same-page merger daemon. It is disabled by default.",
+      "type": "object",
+      "required": [
+        "collectionPolicy"
+      ],
+      "properties": {
+        "collectionPolicy": {
+          "description": "collectionPolicy declares whether the ksmd collector collects metrics. This field is required. Valid values are \"Collect\" and \"DoNotCollect\". When set to \"Collect\", the ksmd collector is active and kernel same-page merger statistics are collected. When set to \"DoNotCollect\", the ksmd collector is inactive.\n\nPossible enum values:\n - `\"Collect\"` means the collector is active and will produce metrics.\n - `\"DoNotCollect\"` means the collector is inactive and will not produce metrics.",
+          "type": "string",
+          "enum": [
+            "Collect",
+            "DoNotCollect"
+          ]
+        }
+      }
+    },
+    "com.github.openshift.api.config.v1alpha1.NodeExporterCollectorMountStatsConfig": {
+      "description": "NodeExporterCollectorMountStatsConfig provides configuration for the mountstats collector of the node-exporter agent. The mountstats collector collects statistics about NFS volume I/O activities. It is disabled by default. Enabling this collector may produce metrics with high cardinality. If you enable this collector, closely monitor the prometheus-k8s deployment for excessive memory usage.",
+      "type": "object",
+      "required": [
+        "collectionPolicy"
+      ],
+      "properties": {
+        "collectionPolicy": {
+          "description": "collectionPolicy declares whether the mountstats collector collects metrics. This field is required. Valid values are \"Collect\" and \"DoNotCollect\". When set to \"Collect\", the mountstats collector is active and NFS volume I/O statistics are collected. When set to \"DoNotCollect\", the mountstats collector is inactive.\n\nPossible enum values:\n - `\"Collect\"` means the collector is active and will produce metrics.\n - `\"DoNotCollect\"` means the collector is inactive and will not produce metrics.",
+          "type": "string",
+          "enum": [
+            "Collect",
+            "DoNotCollect"
+          ]
+        }
+      }
+    },
+    "com.github.openshift.api.config.v1alpha1.NodeExporterCollectorNetClassCollectConfig": {
+      "description": "NodeExporterCollectorNetClassCollectConfig holds configuration options for the netclass collector when it is actively collecting metrics. At least one field must be specified.",
+      "type": "object",
+      "properties": {
+        "statsGatherer": {
+          "description": "statsGatherer selects which implementation the netclass collector uses to gather statistics (sysfs or netlink). statsGatherer is optional. Valid values are \"Sysfs\" and \"Netlink\". When set to \"Netlink\", the netlink implementation is used; when set to \"Sysfs\", the sysfs implementation is used. When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time. The current default is Netlink.\n\nPossible enum values:\n - `\"Netlink\"` uses the netlink-based implementation.\n - `\"Sysfs\"` uses the sysfs-based implementation.",
+          "type": "string",
+          "enum": [
+            "Netlink",
+            "Sysfs"
+          ]
+        }
+      }
+    },
+    "com.github.openshift.api.config.v1alpha1.NodeExporterCollectorNetClassConfig": {
+      "description": "NodeExporterCollectorNetClassConfig provides configuration for the netclass collector of the node-exporter agent. The netclass collector collects information about network devices such as network speed, MTU, and carrier status. It is enabled by default. When collectionPolicy is DoNotCollect, the collect field must not be set.",
+      "type": "object",
+      "required": [
+        "collectionPolicy"
+      ],
+      "properties": {
+        "collect": {
+          "description": "collect contains configuration options that apply only when the netclass collector is actively collecting metrics (i.e. when collectionPolicy is Collect). collect is optional and may be omitted even when collectionPolicy is Collect. collect may only be set when collectionPolicy is Collect. When set, at least one field must be specified within collect.",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.config.v1alpha1.NodeExporterCollectorNetClassCollectConfig"
+        },
+        "collectionPolicy": {
+          "description": "collectionPolicy declares whether the netclass collector collects metrics. This field is required. Valid values are \"Collect\" and \"DoNotCollect\". When set to \"Collect\", the netclass collector is active and network class information is collected. When set to \"DoNotCollect\", the netclass collector is inactive and the corresponding metrics become unavailable. When set to \"DoNotCollect\", the collect field must not be set.\n\nPossible enum values:\n - `\"Collect\"` means the collector is active and will produce metrics.\n - `\"DoNotCollect\"` means the collector is inactive and will not produce metrics.",
+          "type": "string",
+          "enum": [
+            "Collect",
+            "DoNotCollect"
+          ]
+        }
+      },
+      "x-kubernetes-unions": [
+        {
+          "discriminator": "collectionPolicy",
+          "fields-to-discriminateBy": {
+            "collect": "Collect"
+          }
+        }
+      ]
+    },
+    "com.github.openshift.api.config.v1alpha1.NodeExporterCollectorNetDevConfig": {
+      "description": "NodeExporterCollectorNetDevConfig provides configuration for the netdev collector of the node-exporter agent. The netdev collector collects network device statistics such as bytes, packets, errors, and drops per device. It is enabled by default.",
+      "type": "object",
+      "required": [
+        "collectionPolicy"
+      ],
+      "properties": {
+        "collectionPolicy": {
+          "description": "collectionPolicy declares whether the netdev collector collects metrics. This field is required. Valid values are \"Collect\" and \"DoNotCollect\". When set to \"Collect\", the netdev collector is active and network device statistics are collected. When set to \"DoNotCollect\", the netdev collector is inactive and the corresponding metrics become unavailable.\n\nPossible enum values:\n - `\"Collect\"` means the collector is active and will produce metrics.\n - `\"DoNotCollect\"` means the collector is inactive and will not produce metrics.",
+          "type": "string",
+          "enum": [
+            "Collect",
+            "DoNotCollect"
+          ]
+        }
+      }
+    },
+    "com.github.openshift.api.config.v1alpha1.NodeExporterCollectorProcessesConfig": {
+      "description": "NodeExporterCollectorProcessesConfig provides configuration for the processes collector of the node-exporter agent. The processes collector collects statistics from processes and threads running in the system. It is disabled by default.",
+      "type": "object",
+      "required": [
+        "collectionPolicy"
+      ],
+      "properties": {
+        "collectionPolicy": {
+          "description": "collectionPolicy declares whether the processes collector collects metrics. This field is required. Valid values are \"Collect\" and \"DoNotCollect\". When set to \"Collect\", the processes collector is active and process/thread statistics are collected. When set to \"DoNotCollect\", the processes collector is inactive.\n\nPossible enum values:\n - `\"Collect\"` means the collector is active and will produce metrics.\n - `\"DoNotCollect\"` means the collector is inactive and will not produce metrics.",
+          "type": "string",
+          "enum": [
+            "Collect",
+            "DoNotCollect"
+          ]
+        }
+      }
+    },
+    "com.github.openshift.api.config.v1alpha1.NodeExporterCollectorSoftirqsConfig": {
+      "description": "NodeExporterCollectorSoftirqsConfig provides configuration for the softirqs collector of the node-exporter agent. The softirqs collector exposes detailed softirq statistics from /proc/softirqs. It is disabled by default.",
+      "type": "object",
+      "required": [
+        "collectionPolicy"
+      ],
+      "properties": {
+        "collectionPolicy": {
+          "description": "collectionPolicy declares whether the softirqs collector collects metrics. This field is required. Valid values are \"Collect\" and \"DoNotCollect\". When set to \"Collect\", the softirqs collector is active and softirq statistics are collected. When set to \"DoNotCollect\", the softirqs collector is inactive.\n\nPossible enum values:\n - `\"Collect\"` means the collector is active and will produce metrics.\n - `\"DoNotCollect\"` means the collector is inactive and will not produce metrics.",
+          "type": "string",
+          "enum": [
+            "Collect",
+            "DoNotCollect"
+          ]
+        }
+      }
+    },
+    "com.github.openshift.api.config.v1alpha1.NodeExporterCollectorSystemdCollectConfig": {
+      "description": "NodeExporterCollectorSystemdCollectConfig holds configuration options for the systemd collector when it is actively collecting metrics. At least one field must be specified.",
+      "type": "object",
+      "properties": {
+        "units": {
+          "description": "units is a list of regular expression patterns that match systemd units to be included by the systemd collector. units is optional. By default, the list is empty, so the collector exposes no metrics for systemd units. Each entry is a regular expression pattern and must be at least 1 character and at most 1024 characters. Maximum length for this list is 50. Minimum length for this list is 1. Entries in this list must be unique.",
+          "type": "array",
+          "items": {
+            "type": "string",
+            "default": ""
+          },
+          "x-kubernetes-list-type": "set"
+        }
+      }
+    },
+    "com.github.openshift.api.config.v1alpha1.NodeExporterCollectorSystemdConfig": {
+      "description": "NodeExporterCollectorSystemdConfig provides configuration for the systemd collector of the node-exporter agent. The systemd collector collects statistics on the systemd daemon and its managed services. It is disabled by default. Enabling this collector with a long list of selected units may produce metrics with high cardinality. If you enable this collector, closely monitor the prometheus-k8s deployment for excessive memory usage. When collectionPolicy is DoNotCollect, the collect field must not be set.",
+      "type": "object",
+      "required": [
+        "collectionPolicy"
+      ],
+      "properties": {
+        "collect": {
+          "description": "collect contains configuration options that apply only when the systemd collector is actively collecting metrics (i.e. when collectionPolicy is Collect). collect is optional and may be omitted even when collectionPolicy is Collect. collect may only be set when collectionPolicy is Collect. When set, at least one field must be specified within collect.",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.config.v1alpha1.NodeExporterCollectorSystemdCollectConfig"
+        },
+        "collectionPolicy": {
+          "description": "collectionPolicy declares whether the systemd collector collects metrics. This field is required. Valid values are \"Collect\" and \"DoNotCollect\". When set to \"Collect\", the systemd collector is active and systemd unit statistics are collected. When set to \"DoNotCollect\", the systemd collector is inactive and the collect field must not be set.\n\nPossible enum values:\n - `\"Collect\"` means the collector is active and will produce metrics.\n - `\"DoNotCollect\"` means the collector is inactive and will not produce metrics.",
+          "type": "string",
+          "enum": [
+            "Collect",
+            "DoNotCollect"
+          ]
+        }
+      },
+      "x-kubernetes-unions": [
+        {
+          "discriminator": "collectionPolicy",
+          "fields-to-discriminateBy": {
+            "collect": "Collect"
+          }
+        }
+      ]
+    },
+    "com.github.openshift.api.config.v1alpha1.NodeExporterCollectorTcpStatConfig": {
+      "description": "NodeExporterCollectorTcpStatConfig provides configuration for the tcpstat collector of the node-exporter agent. The tcpstat collector collects TCP connection statistics. It is disabled by default.",
+      "type": "object",
+      "required": [
+        "collectionPolicy"
+      ],
+      "properties": {
+        "collectionPolicy": {
+          "description": "collectionPolicy declares whether the tcpstat collector collects metrics. This field is required. Valid values are \"Collect\" and \"DoNotCollect\". When set to \"Collect\", the tcpstat collector is active and TCP connection statistics are collected. When set to \"DoNotCollect\", the tcpstat collector is inactive.\n\nPossible enum values:\n - `\"Collect\"` means the collector is active and will produce metrics.\n - `\"DoNotCollect\"` means the collector is inactive and will not produce metrics.",
+          "type": "string",
+          "enum": [
+            "Collect",
+            "DoNotCollect"
+          ]
+        }
+      }
+    },
+    "com.github.openshift.api.config.v1alpha1.NodeExporterConfig": {
+      "description": "NodeExporterConfig provides configuration options for the node-exporter agent that runs as a DaemonSet in the `openshift-monitoring` namespace. The node-exporter agent collects hardware and OS-level metrics from every node in the cluster, including CPU, memory, disk, and network statistics. At least one field must be specified.",
+      "type": "object",
+      "properties": {
+        "collectors": {
+          "description": "collectors configures which node-exporter metric collectors are enabled. collectors is optional. Each collector can be individually enabled or disabled. Some collectors may have additional configuration options.\n\nWhen omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time.",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.config.v1alpha1.NodeExporterCollectorConfig"
+        },
+        "ignoredNetworkDevices": {
+          "description": "ignoredNetworkDevices is a list of regular expression patterns that match network devices to be excluded from the relevant collector configuration such as netdev, netclass, and ethtool. ignoredNetworkDevices is optional.\n\nWhen omitted, the Cluster Monitoring Operator uses a predefined list of devices to be excluded to minimize the impact on memory usage. When set as an empty list, no devices are excluded. If you modify this setting, monitor the prometheus-k8s deployment closely for excessive memory usage. Maximum length for this list is 50. Each entry must be at least 1 character and at most 1024 characters long.",
+          "type": "array",
+          "items": {
+            "type": "string",
+            "default": ""
+          },
+          "x-kubernetes-list-type": "set"
+        },
+        "maxProcs": {
+          "description": "maxProcs sets the target number of CPUs on which the node-exporter process will run. maxProcs is optional. Use this setting to override the default value, which is set either to 4 or to the number of CPUs on the host, whichever is smaller. The default value is computed at runtime and set via the GOMAXPROCS environment variable before node-exporter is launched. If a kernel deadlock occurs or if performance degrades when reading from sysfs concurrently, you can change this value to 1, which limits node-exporter to running on one CPU. For nodes with a high CPU count, setting the limit to a low number saves resources by preventing Go routines from being scheduled to run on all CPUs. However, I/O performance degrades if the maxProcs value is set too low and there are many metrics to collect. The minimum value is 1 and the maximum value is 1024. When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time. The current default is min(4, number of host CPUs).",
+          "type": "integer",
+          "format": "int32"
+        },
+        "resources": {
+          "description": "resources defines the compute resource requests and limits for the node-exporter container. This includes CPU, memory and HugePages constraints to help control scheduling and resource usage. When not specified, defaults are used by the platform. Requests cannot exceed limits. This field is optional. More info: https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/ This is a simplified API that maps to Kubernetes ResourceRequirements. The current default values are:\n  resources:\n   - name: cpu\n     request: 8m\n     limit: null\n   - name: memory\n     request: 32Mi\n     limit: null",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/com.github.openshift.api.config.v1alpha1.ContainerResource"
+          },
+          "x-kubernetes-list-map-keys": [
+            "name"
+          ],
+          "x-kubernetes-list-type": "map"
         }
       }
     },
@@ -24968,7 +25811,7 @@
           "x-kubernetes-list-type": "map"
         },
         "retention": {
-          "description": "retention configures how long Prometheus retains metrics data and how much storage it can use. When omitted, the platform chooses reasonable defaults (currently 15 days retention, no size limit).",
+          "description": "retention configures how long Prometheus retains metrics data and how much storage it can use. When omitted, the platform chooses reasonable defaults (currently 15d retention, no size limit).",
           "default": {},
           "$ref": "#/definitions/com.github.openshift.api.config.v1alpha1.Retention"
         },
@@ -25404,15 +26247,13 @@
       "description": "Retention configures how long Prometheus retains metrics data and how much storage it can use.",
       "type": "object",
       "properties": {
-        "durationInDays": {
-          "description": "durationInDays specifies how many days Prometheus will retain metrics data. Prometheus automatically deletes data older than this duration. When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time. The default value is 15. Minimum value is 1 day. Maximum value is 365 days (1 year).",
-          "type": "integer",
-          "format": "int32"
+        "duration": {
+          "description": "duration is an optional field that specifies how long Prometheus retains metrics data. Valid values are Prometheus-style duration strings with unit suffixes y, w, d, h, m, s, or ms (for example, \"15d\", \"24h\", or \"5d1h30m\"). Each unit value must be a positive integer. Composite durations must follow the fixed unit order y, w, d, h, m, s, ms. Must be at least 1 character and at most 64 characters. When set to \"0\", time-based retention is disabled. This is the only supported form for disabling time-based retention; other zero-duration representations such as \"0d\", \"0h\", or \"0y\" are rejected. Prometheus automatically deletes data older than this duration. When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time. The current default value is `15d`.",
+          "type": "string"
         },
-        "sizeInGiB": {
-          "description": "sizeInGiB specifies the maximum storage size in gibibytes (GiB) that Prometheus can use for data blocks and the write-ahead log (WAL). When the limit is reached, Prometheus will delete oldest data first. When omitted, no size limit is enforced and Prometheus uses available PersistentVolume capacity. Minimum value is 1 GiB. Maximum value is 16384 GiB (16 TiB).",
-          "type": "integer",
-          "format": "int32"
+        "size": {
+          "description": "size is an optional field that specifies the maximum storage size that Prometheus can use for data blocks and the write-ahead log (WAL). Valid values are byte-size strings with an optional decimal prefix and a unit suffix B, KB, MB, GB, TB, EB, PB, or their binary equivalents KiB, MiB, GiB, TiB, EiB, PiB (for example, \"500MiB\", \"10GiB\"). The numeric value must be greater than zero. Must be at least 1 character and at most 32 characters. When set to \"0\", no size limit is enforced. This is the only supported form for disabling size-based retention; other zero-size representations such as \"0B\" or \"0MiB\" are rejected. When the limit is reached, Prometheus deletes oldest data first. When omitted, no size limit is enforced and Prometheus uses available PersistentVolume capacity.",
+          "type": "string"
         }
       }
     },
@@ -25627,6 +26468,14 @@
       "description": "ThanosQuerierConfig provides configuration options for the Thanos Querier component that runs in the `openshift-monitoring` namespace. At least one field must be specified; an empty thanosQuerierConfig object is not allowed.",
       "type": "object",
       "properties": {
+        "crossOriginRequestPolicy": {
+          "description": "crossOriginRequestPolicy configures the CORS (Cross-Origin Resource Sharing) policy for Thanos Querier's HTTP endpoints. crossOriginRequestPolicy is optional. Valid values are \"AllowAll\" and \"DenyAll\". When set to \"AllowAll\", CORS headers are added to responses, allowing cross-origin requests from any domain. When set to \"DenyAll\", no CORS headers are added and cross-origin requests are rejected by the browser. When omitted, this means no opinion and the platform is left to choose a reasonable default, that is subject to change over time. The current default value is \"DenyAll\".",
+          "type": "string"
+        },
+        "logLevel": {
+          "description": "logLevel defines the verbosity of logs emitted by Thanos Querier. logLevel is optional. Allowed values are Error, Warn, Info, and Debug. When set to Error, only errors will be logged. When set to Warn, both warnings and errors will be logged. When set to Info, general information, warnings, and errors will all be logged. When set to Debug, detailed debugging information will be logged. When omitted, this means no opinion and the platform is left to choose a reasonable default, that is subject to change over time. The current default value is `Info`.",
+          "type": "string"
+        },
         "nodeSelector": {
           "description": "nodeSelector defines the nodes on which the Pods are scheduled. nodeSelector is optional.\n\nWhen omitted, this means the user has no opinion and the platform is left to choose reasonable defaults. These defaults are subject to change over time. The current default value is `kubernetes.io/os: linux`. When specified, nodeSelector must contain at least 1 entry and must not contain more than 10 entries.",
           "type": "object",
@@ -25634,6 +26483,11 @@
             "type": "string",
             "default": ""
           }
+        },
+        "requestLogging": {
+          "description": "requestLogging configures request logging for Thanos Querier. requestLogging is optional. When provided, the policy field within is required. When omitted, this means no opinion and the platform is left to choose a reasonable default, that is subject to change over time. The current default behavior is to not log any requests.",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.config.v1alpha1.ThanosQuerierRequestLoggingConfig"
         },
         "resources": {
           "description": "resources defines the compute resource requests and limits for the Thanos Querier container. resources is optional.\n\nWhen omitted, this means the user has no opinion and the platform is left to choose reasonable defaults. These defaults are subject to change over time. Requests cannot exceed limits. More info: https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/ This is a simplified API that maps to Kubernetes ResourceRequirements. The current default values are:\n  resources:\n   - name: cpu\n     request: 5m\n   - name: memory\n     request: 12Mi\nMaximum length for this list is 5. Minimum length for this list is 1. Each resource name must be unique within this list.",
@@ -25668,6 +26522,19 @@
             "whenUnsatisfiable"
           ],
           "x-kubernetes-list-type": "map"
+        }
+      }
+    },
+    "com.github.openshift.api.config.v1alpha1.ThanosQuerierRequestLoggingConfig": {
+      "description": "ThanosQuerierRequestLoggingConfig configures request logging for Thanos Querier.",
+      "type": "object",
+      "required": [
+        "policy"
+      ],
+      "properties": {
+        "policy": {
+          "description": "policy determines which HTTP and gRPC requests are logged by Thanos Querier. Valid values are \"AllRequests\" and \"NoRequests\". When set to \"AllRequests\", every request received by Thanos Querier is logged with method, path, and response status. The log level for request logs is derived from the logLevel field. When set to \"NoRequests\", request logging is turned off.",
+          "type": "string"
         }
       }
     },
@@ -43101,7 +43968,7 @@
       ],
       "properties": {
         "backendQuotaGiB": {
-          "description": "backendQuotaGiB sets the etcd backend storage size limit in gibibytes. The value should be an integer not less than 8 and not more than 32. When not specified, the default value is 8.",
+          "description": "backendQuotaGiB sets the etcd backend storage size limit in gibibytes. The value should be an integer not less than 8 and not more than 16. When not specified, the default value is 8.",
           "type": "integer",
           "format": "int32",
           "default": 8
@@ -51958,7 +52825,7 @@
           "type": "string"
         },
         "defaultAddCapabilities": {
-          "description": "defaultAddCapabilities is the default set of capabilities that will be added to the container unless the pod spec specifically drops the capability.  You may not list a capabiility in both DefaultAddCapabilities and RequiredDropCapabilities.",
+          "description": "defaultAddCapabilities is the default set of capabilities that will be added to the container unless the pod spec specifically drops the capability.  You may not list a capability in both DefaultAddCapabilities and RequiredDropCapabilities.",
           "type": "array",
           "items": {
             "type": "string",
@@ -52032,7 +52899,7 @@
           "$ref": "#/definitions/com.github.openshift.api.security.v1.SELinuxContextStrategyOptions"
         },
         "seccompProfiles": {
-          "description": "seccompProfiles lists the allowed profiles that may be set for the pod or container's seccomp annotations.  An unset (nil) or empty value means that no profiles may be specifid by the pod or container.\tThe wildcard '*' may be used to allow all profiles.  When used to generate a value for a pod the first non-wildcard profile will be used as the default.",
+          "description": "seccompProfiles lists the allowed profiles that may be set for the pod or container's seccomp annotations.  An unset (nil) or empty value means that no profiles may be specified by the pod or container.\tThe wildcard '*' may be used to allow all profiles.  When used to generate a value for a pod the first non-wildcard profile will be used as the default.",
           "type": "array",
           "items": {
             "type": "string",

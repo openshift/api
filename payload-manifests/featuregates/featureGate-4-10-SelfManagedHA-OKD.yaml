@@ -236,9 +236,6 @@
                         "name": "OLMLifecycleAndCompatibility"
                     },
                     {
-                        "name": "OSStreams"
-                    },
-                    {
                         "name": "OVNObservability"
                     },
                     {
@@ -338,6 +335,9 @@
                     },
                     {
                         "name": "NewOLMWebhookProviderOpenshiftServiceCA"
+                    },
+                    {
+                        "name": "OSStreams"
                     },
                     {
                         "name": "OpenShiftPodSecurityAdmission"

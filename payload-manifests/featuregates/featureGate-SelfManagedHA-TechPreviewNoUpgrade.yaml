@@ -52,9 +52,6 @@
                     },
                     {
                         "name": "ShortCertRotation"
-                    },
-                    {
-                        "name": "VSphereMultiVCenterDay2"
                     }
                 ],
                 "enabled": [
@@ -357,6 +354,9 @@
                     },
                     {
                         "name": "VSphereMultiNetworks"
+                    },
+                    {
+                        "name": "VSphereMultiVCenterDay2"
                     },
                     {
                         "name": "VolumeAttributesClass"

@@ -79,24 +79,6 @@ spec:
                     items:
                       description: ClusterVersionCapability enumerates optional, core
                         cluster components.
-                      enum:
-                      - openshift-samples
-                      - baremetal
-                      - marketplace
-                      - Console
-                      - Insights
-                      - Storage
-                      - CSISnapshot
-                      - NodeTuning
-                      - MachineAPI
-                      - Build
-                      - DeploymentConfig
-                      - ImageRegistry
-                      - OperatorLifecycleManager
-                      - CloudCredential
-                      - Ingress
-                      - CloudControllerManager
-                      - OperatorLifecycleManagerV1
                       type: string
                     type: array
                     x-kubernetes-list-type: atomic
@@ -347,24 +329,6 @@ spec:
                     items:
                       description: ClusterVersionCapability enumerates optional, core
                         cluster components.
-                      enum:
-                      - openshift-samples
-                      - baremetal
-                      - marketplace
-                      - Console
-                      - Insights
-                      - Storage
-                      - CSISnapshot
-                      - NodeTuning
-                      - MachineAPI
-                      - Build
-                      - DeploymentConfig
-                      - ImageRegistry
-                      - OperatorLifecycleManager
-                      - CloudCredential
-                      - Ingress
-                      - CloudControllerManager
-                      - OperatorLifecycleManagerV1
                       type: string
                     type: array
                     x-kubernetes-list-type: atomic
@@ -374,24 +338,6 @@ spec:
                     items:
                       description: ClusterVersionCapability enumerates optional, core
                         cluster components.
-                      enum:
-                      - openshift-samples
-                      - baremetal
-                      - marketplace
-                      - Console
-                      - Insights
-                      - Storage
-                      - CSISnapshot
-                      - NodeTuning
-                      - MachineAPI
-                      - Build
-                      - DeploymentConfig
-                      - ImageRegistry
-                      - OperatorLifecycleManager
-                      - CloudCredential
-                      - Ingress
-                      - CloudControllerManager
-                      - OperatorLifecycleManagerV1
                       type: string
                     type: array
                     x-kubernetes-list-type: atomic
@@ -1023,17 +969,6 @@ spec:
         required:
         - spec
         type: object
-        x-kubernetes-validations:
-        - message: the `marketplace` capability requires the `OperatorLifecycleManager`
-            capability, which is neither explicitly or implicitly enabled in this
-            cluster, please enable the `OperatorLifecycleManager` capability
-          rule: 'has(self.spec.capabilities) && has(self.spec.capabilities.additionalEnabledCapabilities)
-            && self.spec.capabilities.baselineCapabilitySet == ''None'' && ''marketplace''
-            in self.spec.capabilities.additionalEnabledCapabilities ? ''OperatorLifecycleManager''
-            in self.spec.capabilities.additionalEnabledCapabilities || (has(self.status)
-            && has(self.status.capabilities) && has(self.status.capabilities.enabledCapabilities)
-            && ''OperatorLifecycleManager'' in self.status.capabilities.enabledCapabilities)
-            : true'
     served: true
     storage: true
     subresources:

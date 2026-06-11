@@ -67,6 +67,7 @@ spec:
                   To determine the set of configurable Routes, look at namespace and name of entries in the
                   .status.componentRoutes list, where participating operators write the status of
                   configurable routes.
+                  A maximum of 250 component routes may be configured.
                 items:
                   description: ComponentRouteSpec allows for configuration of a route's
                     hostname and serving certificate.
@@ -80,8 +81,9 @@ spec:
                       additionalProperties:
                         description: |-
                           LabelValue is the value part of a Kubernetes label.
-                          A label value must be 0-63 characters, consisting of alphanumeric characters,
-                          '-', '_', or '.', and must start and end with an alphanumeric character.
+                          A label value must be either empty or 1-63 characters, consisting of
+                          alphanumeric characters, '-', '_', or '.', starting and ending with
+                          an alphanumeric character.
                         maxLength: 63
                         type: string
                         x-kubernetes-validations:

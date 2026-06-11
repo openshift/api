@@ -44,9 +44,6 @@
                         "name": "ExternalOIDCExternalClaimsSourcing"
                     },
                     {
-                        "name": "ExternalSnapshotMetadata"
-                    },
-                    {
                         "name": "HyperShiftOnlyDynamicResourceAllocation"
                     },
                     {
@@ -215,6 +212,9 @@
                     },
                     {
                         "name": "ExternalOIDCWithUpstreamParity"
+                    },
+                    {
+                        "name": "ExternalSnapshotMetadata"
                     },
                     {
                         "name": "GCPCustomAPIEndpoints"

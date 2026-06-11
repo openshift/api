@@ -166,8 +166,9 @@ const (
 )
 
 // LabelValue is the value part of a Kubernetes label.
-// A label value must be 0-63 characters, consisting of alphanumeric characters,
-// '-', '_', or '.', and must start and end with an alphanumeric character.
+// A label value must be either empty or 1-63 characters, consisting of
+// alphanumeric characters, '-', '_', or '.', starting and ending with
+// an alphanumeric character.
 // +kubebuilder:validation:MaxLength=63
 // +kubebuilder:validation:XValidation:rule="!format.labelValue().validate(self).hasValue()",message="label values must be valid Kubernetes label values (at most 63 characters, alphanumeric, '-', '_', or '.', must start and end with alphanumeric)"
 type LabelValue string

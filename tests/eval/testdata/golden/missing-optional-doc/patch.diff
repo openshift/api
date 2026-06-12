@@ -1,0 +1,16 @@
+diff --git a/config/v1/types_console.go b/config/v1/types_console.go
+--- a/config/v1/types_console.go
++++ b/config/v1/types_console.go
+@@ -38,7 +38,12 @@ type Console struct {
+ // ConsoleSpec is the specification of the desired behavior of the Console.
+ type ConsoleSpec struct {
+ 	// +optional
+ 	Authentication ConsoleAuthentication `json:"authentication"`
++
++	// customBrandingLabel specifies a label to display in the console header
++	// for custom branding purposes.
++	// +optional
++	CustomBrandingLabel string `json:"customBrandingLabel,omitempty"`
+ }
+ 
+ // ConsoleStatus defines the observed status of the Console.

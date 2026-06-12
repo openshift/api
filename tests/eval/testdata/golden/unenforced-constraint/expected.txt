@@ -1,0 +1,1 @@
+documented maximum length of 253 characters not enforced with MaxLength validation marker

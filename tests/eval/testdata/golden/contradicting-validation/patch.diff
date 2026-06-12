@@ -1,0 +1,23 @@
+diff --git a/config/v1/types_console.go b/config/v1/types_console.go
+--- a/config/v1/types_console.go
++++ b/config/v1/types_console.go
+@@ -33,7 +33,19 @@ type ConsoleSpec struct {
+ // ConsoleSpec is the specification of the desired behavior of the Console.
+ type ConsoleSpec struct {
+ 	// +optional
+ 	Authentication ConsoleAuthentication `json:"authentication"`
++
++	// excludedNamespaces is a list of namespaces to exclude from the console UI.
++	// An empty list means no namespaces are excluded.
++	// The list must contain between 1 and 50 unique items, each at most 253 characters.
++	// Duplicate namespace names are not allowed.
++	// When omitted, all namespaces are shown.
++	// +optional
++	// +kubebuilder:validation:MinItems=1
++	// +kubebuilder:validation:MaxItems=50
++	// +kubebuilder:validation:items:MaxLength=253
++	// +listType=set
++	ExcludedNamespaces []string `json:"excludedNamespaces,omitempty"`
+ }
+ 
+ // ConsoleStatus defines the observed status of the Console.

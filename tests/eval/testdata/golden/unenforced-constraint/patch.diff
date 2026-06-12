@@ -1,0 +1,18 @@
+diff --git a/config/v1/types_console.go b/config/v1/types_console.go
+--- a/config/v1/types_console.go
++++ b/config/v1/types_console.go
+@@ -33,7 +33,14 @@ type ConsoleSpec struct {
+ // ConsoleSpec is the specification of the desired behavior of the Console.
+ type ConsoleSpec struct {
+ 	// +optional
+ 	Authentication ConsoleAuthentication `json:"authentication"`
++
++	// pluginName specifies the name of a console plugin to load.
++	// The name must be at least 1 character and must not exceed 253 characters.
++	// When omitted, no additional plugin is loaded.
++	// +optional
++	// +kubebuilder:validation:MinLength=1
++	PluginName string `json:"pluginName,omitempty"`
+ }
+
+ // ConsoleStatus defines the observed status of the Console.

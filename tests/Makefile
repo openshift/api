@@ -11,6 +11,10 @@ ENVTEST_K8S_UPSTREAM_VERSION = ${ENVTEST_K8S_VERSION}
 
 PROJECT_DIR := $(shell dirname $(abspath $(lastword $(MAKEFILE_LIST))))
 ENVTEST = go run ${PROJECT_DIR}/vendor/sigs.k8s.io/controller-runtime/tools/setup-envtest
+GINKGO = go run ${PROJECT_DIR}/vendor/github.com/onsi/ginkgo/v2/ginkgo
+EVAL_GINKGO_ARGS ?=
+EVAL_GOLDEN_PROCS ?= 4
+EVAL_INTEGRATION_PROCS ?= 2
 
 .PHONY: integration
 integration: verify-vendor test
@@ -26,6 +30,17 @@ test-upstream: ## Run only the tests. Use upstream Kubebuilder artifacts. Note, 
 test-downstream: ## Run only the tests. Use downstream Kubebuilder artifacts published in a GCS bucket in openshift-gce-devel.
 	@# This should be the same as upstream, except it uses the --index option to set to our build index, not upstream's.
 	KUBEBUILDER_ASSETS="$(shell $(ENVTEST) use $(ENVTEST_K8S_DOWNSTREAM_VERSION) -p path --bin-dir $(PROJECT_DIR)/bin --index https://raw.githubusercontent.com/openshift/api/master/envtest-releases.yaml)" ./hack/test.sh
+
+.PHONY: eval
+eval: eval-golden eval-integration ## Run all eval tests: goldens first, then integration
+
+.PHONY: eval-golden
+eval-golden: ## Run golden eval tests (single-issue, uses sonnet by default)
+	$(GINKGO) -r -v --tags eval --procs=$(EVAL_GOLDEN_PROCS) $(EVAL_GINKGO_ARGS) --keep-going --timeout=30m --junit-report=junit-eval-golden.xml --label-filter="golden" ./eval/
+
+.PHONY: eval-integration
+eval-integration: ## Run integration eval tests (multi-issue, uses opus by default)
+	$(GINKGO) -r -v --tags eval --procs=$(EVAL_INTEGRATION_PROCS) $(EVAL_GINKGO_ARGS) --keep-going --timeout=30m --junit-report=junit-eval-integration.xml --label-filter="integration" ./eval/
 
 .PHONY: vendor
 vendor:

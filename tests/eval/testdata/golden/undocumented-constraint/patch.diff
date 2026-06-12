@@ -1,0 +1,20 @@
+diff --git a/config/v1/types_console.go b/config/v1/types_console.go
+--- a/config/v1/types_console.go
++++ b/config/v1/types_console.go
+@@ -33,7 +33,16 @@ type ConsoleSpec struct {
+ // ConsoleSpec is the specification of the desired behavior of the Console.
+ type ConsoleSpec struct {
+ 	// +optional
+ 	Authentication ConsoleAuthentication `json:"authentication"`
++
++	// customProductName specifies a custom product name to display in the
++	// console header instead of the default "OpenShift" branding.
++	// When omitted, the default product name is used.
++	// +optional
++	// +kubebuilder:validation:MinLength=3
++	// +kubebuilder:validation:MaxLength=64
++	// +kubebuilder:validation:Pattern=`^[a-zA-Z][a-zA-Z0-9 .-]*$`
++	CustomProductName string `json:"customProductName,omitempty"`
+ }
+ 
+ // ConsoleStatus defines the observed status of the Console.

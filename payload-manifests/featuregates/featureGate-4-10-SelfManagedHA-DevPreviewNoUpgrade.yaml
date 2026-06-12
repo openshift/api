@@ -29,6 +29,18 @@
                         "name": "HyperShiftOnlyDynamicResourceAllocation"
                     },
                     {
+                        "name": "MachineAPIMigrationAzure"
+                    },
+                    {
+                        "name": "MachineAPIMigrationBareMetal"
+                    },
+                    {
+                        "name": "MachineAPIMigrationGCP"
+                    },
+                    {
+                        "name": "MachineAPIMigrationPowerVS"
+                    },
+                    {
                         "name": "MachineAPIOperatorDisableMachineHealthCheckController"
                     },
                     {

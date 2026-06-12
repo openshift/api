@@ -176,7 +176,19 @@
                         "name": "MachineAPIMigrationAWS"
                     },
                     {
+                        "name": "MachineAPIMigrationAzure"
+                    },
+                    {
+                        "name": "MachineAPIMigrationBareMetal"
+                    },
+                    {
+                        "name": "MachineAPIMigrationGCP"
+                    },
+                    {
                         "name": "MachineAPIMigrationOpenStack"
+                    },
+                    {
+                        "name": "MachineAPIMigrationPowerVS"
                     },
                     {
                         "name": "MachineAPIMigrationVSphere"

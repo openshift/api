@@ -3,6 +3,10 @@
 | ClientsAllowCBOR| | | | | | | |  |
 | ClusterAPIInstall| | | | | | | |  |
 | EventedPLEG| | | | | | | |  |
+| MachineAPIMigrationAzure| | | | | | | |  |
+| MachineAPIMigrationBareMetal| | | | | | | |  |
+| MachineAPIMigrationGCP| | | | | | | |  |
+| MachineAPIMigrationPowerVS| | | | | | | |  |
 | MachineAPIOperatorDisableMachineHealthCheckController| | | | | | | |  |
 | MultiArchInstallAzure| | | | | | | |  |
 | ShortCertRotation| | | | | | | |  |

@@ -204,7 +204,8 @@ type schemaCheckGenerationContext struct {
 // It finds all CRD manifests, loads the data and the original version of the manifest for comparison.
 func loadSchemaCheckGenerationContextsForVersion(version generation.APIVersionContext, gitBaseSHA string) ([]schemaCheckGenerationContext, error) {
 	repo, err := git.PlainOpenWithOptions(version.Path, &git.PlainOpenOptions{
-		DetectDotGit: true,
+		DetectDotGit:          true,
+		EnableDotGitCommonDir: true,
 	})
 	if err != nil {
 		return nil, fmt.Errorf("could not open git repository at %s: %w", version.Path, err)

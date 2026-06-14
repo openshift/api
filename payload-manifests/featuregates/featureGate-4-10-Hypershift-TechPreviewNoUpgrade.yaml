@@ -47,6 +47,18 @@
                         "name": "ExternalSnapshotMetadata"
                     },
                     {
+                        "name": "MachineAPIMigrationAzure"
+                    },
+                    {
+                        "name": "MachineAPIMigrationBareMetal"
+                    },
+                    {
+                        "name": "MachineAPIMigrationGCP"
+                    },
+                    {
+                        "name": "MachineAPIMigrationPowerVS"
+                    },
+                    {
                         "name": "MachineAPIMigrationVSphere"
                     },
                     {

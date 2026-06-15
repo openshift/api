@@ -8417,6 +8417,10 @@
           "default": {},
           "$ref": "#/definitions/com.github.openshift.api.config.v1.ConfigMapFileReference"
         },
+        "controlPlaneTopology": {
+          "description": "controlPlaneTopology expresses the desired topology configuration for control nodes. The 'HighlyAvailable' mode represents a \"normal\", 3 control node cluster. The 'SingleReplica' mode represents configuration where there is a single control node. If left blank, no change is required and no transitions will be triggered.",
+          "type": "string"
+        },
         "platformSpec": {
           "description": "platformSpec holds desired information specific to the underlying infrastructure provider.",
           "default": {},

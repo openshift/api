@@ -41,9 +41,6 @@
                         "name": "Example2"
                     },
                     {
-                        "name": "ExternalOIDCExternalClaimsSourcing"
-                    },
-                    {
                         "name": "HyperShiftOnlyDynamicResourceAllocation"
                     },
                     {
@@ -206,6 +203,9 @@
                     },
                     {
                         "name": "ExternalOIDC"
+                    },
+                    {
+                        "name": "ExternalOIDCExternalClaimsSourcing"
                     },
                     {
                         "name": "ExternalOIDCWithUIDAndExtraClaimMappings"

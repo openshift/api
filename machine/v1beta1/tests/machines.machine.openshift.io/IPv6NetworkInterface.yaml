@@ -1,0 +1,555 @@
+apiVersion: apiextensions.k8s.io/v1 # Hack because controller-gen complains if we don't have this
+name: "Machine (GCP IPv6 Network Interface Support)"
+crdName: machines.machine.openshift.io
+tests:
+  onCreate:
+  - name: Should be able to create a GCP machine with IPv4Only stack type
+    initial: |
+      apiVersion: machine.openshift.io/v1beta1
+      kind: Machine
+      spec:
+        providerSpec:
+          value:
+            apiVersion: machine.openshift.io/v1beta1
+            kind: GCPMachineProviderSpec
+            machineType: n1-standard-4
+            region: us-central1
+            zone: us-central1-a
+            networkInterfaces:
+            - network: test-network
+              subnetwork: test-subnet
+              stackType: IPv4Only
+    expected: |
+      apiVersion: machine.openshift.io/v1beta1
+      kind: Machine
+      spec:
+        authoritativeAPI: MachineAPI
+        providerSpec:
+          value:
+            apiVersion: machine.openshift.io/v1beta1
+            kind: GCPMachineProviderSpec
+            machineType: n1-standard-4
+            region: us-central1
+            zone: us-central1-a
+            networkInterfaces:
+            - network: test-network
+              subnetwork: test-subnet
+              stackType: IPv4Only
+  - name: Should be able to create a GCP machine with DualStack stack type
+    initial: |
+      apiVersion: machine.openshift.io/v1beta1
+      kind: Machine
+      spec:
+        providerSpec:
+          value:
+            apiVersion: machine.openshift.io/v1beta1
+            kind: GCPMachineProviderSpec
+            machineType: n1-standard-4
+            region: us-central1
+            zone: us-central1-a
+            networkInterfaces:
+            - network: test-network
+              subnetwork: test-subnet
+              stackType: DualStack
+    expected: |
+      apiVersion: machine.openshift.io/v1beta1
+      kind: Machine
+      spec:
+        authoritativeAPI: MachineAPI
+        providerSpec:
+          value:
+            apiVersion: machine.openshift.io/v1beta1
+            kind: GCPMachineProviderSpec
+            machineType: n1-standard-4
+            region: us-central1
+            zone: us-central1-a
+            networkInterfaces:
+            - network: test-network
+              subnetwork: test-subnet
+              stackType: DualStack
+  - name: Should be able to create a GCP machine with DualStack and external IPv6 access
+    initial: |
+      apiVersion: machine.openshift.io/v1beta1
+      kind: Machine
+      spec:
+        providerSpec:
+          value:
+            apiVersion: machine.openshift.io/v1beta1
+            kind: GCPMachineProviderSpec
+            machineType: n1-standard-4
+            region: us-central1
+            zone: us-central1-a
+            networkInterfaces:
+            - network: test-network
+              subnetwork: test-subnet
+              stackType: DualStack
+              ipv6AccessType: External
+    expected: |
+      apiVersion: machine.openshift.io/v1beta1
+      kind: Machine
+      spec:
+        authoritativeAPI: MachineAPI
+        providerSpec:
+          value:
+            apiVersion: machine.openshift.io/v1beta1
+            kind: GCPMachineProviderSpec
+            machineType: n1-standard-4
+            region: us-central1
+            zone: us-central1-a
+            networkInterfaces:
+            - network: test-network
+              subnetwork: test-subnet
+              stackType: DualStack
+              ipv6AccessType: External
+  - name: Should be able to create a GCP machine with DualStack and internal IPv6 access
+    initial: |
+      apiVersion: machine.openshift.io/v1beta1
+      kind: Machine
+      spec:
+        providerSpec:
+          value:
+            apiVersion: machine.openshift.io/v1beta1
+            kind: GCPMachineProviderSpec
+            machineType: n1-standard-4
+            region: us-central1
+            zone: us-central1-a
+            networkInterfaces:
+            - network: test-network
+              subnetwork: test-subnet
+              stackType: DualStack
+              ipv6AccessType: Internal
+    expected: |
+      apiVersion: machine.openshift.io/v1beta1
+      kind: Machine
+      spec:
+        authoritativeAPI: MachineAPI
+        providerSpec:
+          value:
+            apiVersion: machine.openshift.io/v1beta1
+            kind: GCPMachineProviderSpec
+            machineType: n1-standard-4
+            region: us-central1
+            zone: us-central1-a
+            networkInterfaces:
+            - network: test-network
+              subnetwork: test-subnet
+              stackType: DualStack
+              ipv6AccessType: Internal
+  - name: Should be able to create a GCP machine with DualStack and static IPv6 address
+    initial: |
+      apiVersion: machine.openshift.io/v1beta1
+      kind: Machine
+      spec:
+        providerSpec:
+          value:
+            apiVersion: machine.openshift.io/v1beta1
+            kind: GCPMachineProviderSpec
+            machineType: n1-standard-4
+            region: us-central1
+            zone: us-central1-a
+            networkInterfaces:
+            - network: test-network
+              subnetwork: test-subnet
+              stackType: DualStack
+              ipv6Address: "2001:db8::1"
+              ipv6AccessType: External
+    expected: |
+      apiVersion: machine.openshift.io/v1beta1
+      kind: Machine
+      spec:
+        authoritativeAPI: MachineAPI
+        providerSpec:
+          value:
+            apiVersion: machine.openshift.io/v1beta1
+            kind: GCPMachineProviderSpec
+            machineType: n1-standard-4
+            region: us-central1
+            zone: us-central1-a
+            networkInterfaces:
+            - network: test-network
+              subnetwork: test-subnet
+              stackType: DualStack
+              ipv6Address: "2001:db8::1"
+              ipv6AccessType: External
+  - name: Should be able to create a GCP machine with multiple network interfaces with different stack types
+    initial: |
+      apiVersion: machine.openshift.io/v1beta1
+      kind: Machine
+      spec:
+        providerSpec:
+          value:
+            apiVersion: machine.openshift.io/v1beta1
+            kind: GCPMachineProviderSpec
+            machineType: n1-standard-4
+            region: us-central1
+            zone: us-central1-a
+            networkInterfaces:
+            - network: test-network-1
+              subnetwork: test-subnet-1
+              stackType: IPv4Only
+            - network: test-network-2
+              subnetwork: test-subnet-2
+              stackType: DualStack
+              ipv6AccessType: External
+    expected: |
+      apiVersion: machine.openshift.io/v1beta1
+      kind: Machine
+      spec:
+        authoritativeAPI: MachineAPI
+        providerSpec:
+          value:
+            apiVersion: machine.openshift.io/v1beta1
+            kind: GCPMachineProviderSpec
+            machineType: n1-standard-4
+            region: us-central1
+            zone: us-central1-a
+            networkInterfaces:
+            - network: test-network-1
+              subnetwork: test-subnet-1
+              stackType: IPv4Only
+            - network: test-network-2
+              subnetwork: test-subnet-2
+              stackType: DualStack
+              ipv6AccessType: External
+  - name: Should reject invalid stackType value
+    initial: |
+      apiVersion: machine.openshift.io/v1beta1
+      kind: Machine
+      spec:
+        providerSpec:
+          value:
+            apiVersion: machine.openshift.io/v1beta1
+            kind: GCPMachineProviderSpec
+            machineType: n1-standard-4
+            region: us-central1
+            zone: us-central1-a
+            networkInterfaces:
+            - network: test-network
+              subnetwork: test-subnet
+              stackType: InvalidStackType
+    expectedError: "spec.providerSpec.value.networkInterfaces[0].stackType: Unsupported value: \"InvalidStackType\": supported values: \"DualStack\", \"IPv4Only\""
+  - name: Should reject invalid ipv6AccessType value
+    initial: |
+      apiVersion: machine.openshift.io/v1beta1
+      kind: Machine
+      spec:
+        providerSpec:
+          value:
+            apiVersion: machine.openshift.io/v1beta1
+            kind: GCPMachineProviderSpec
+            machineType: n1-standard-4
+            region: us-central1
+            zone: us-central1-a
+            networkInterfaces:
+            - network: test-network
+              subnetwork: test-subnet
+              stackType: DualStack
+              ipv6AccessType: InvalidAccessType
+    expectedError: "spec.providerSpec.value.networkInterfaces[0].ipv6AccessType: Unsupported value: \"InvalidAccessType\": supported values: \"External\", \"Internal\""
+  - name: Should be able to create a GCP machine with IPv4Only and IPv6 fields omitted
+    initial: |
+      apiVersion: machine.openshift.io/v1beta1
+      kind: Machine
+      spec:
+        providerSpec:
+          value:
+            apiVersion: machine.openshift.io/v1beta1
+            kind: GCPMachineProviderSpec
+            machineType: n1-standard-4
+            region: us-central1
+            zone: us-central1-a
+            networkInterfaces:
+            - network: test-network
+              subnetwork: test-subnet
+              stackType: IPv4Only
+    expected: |
+      apiVersion: machine.openshift.io/v1beta1
+      kind: Machine
+      spec:
+        authoritativeAPI: MachineAPI
+        providerSpec:
+          value:
+            apiVersion: machine.openshift.io/v1beta1
+            kind: GCPMachineProviderSpec
+            machineType: n1-standard-4
+            region: us-central1
+            zone: us-central1-a
+            networkInterfaces:
+            - network: test-network
+              subnetwork: test-subnet
+              stackType: IPv4Only
+  - name: Should default stackType to IPv4Only when not specified
+    initial: |
+      apiVersion: machine.openshift.io/v1beta1
+      kind: Machine
+      spec:
+        providerSpec:
+          value:
+            apiVersion: machine.openshift.io/v1beta1
+            kind: GCPMachineProviderSpec
+            machineType: n1-standard-4
+            region: us-central1
+            zone: us-central1-a
+            networkInterfaces:
+            - network: test-network
+              subnetwork: test-subnet
+    expected: |
+      apiVersion: machine.openshift.io/v1beta1
+      kind: Machine
+      spec:
+        authoritativeAPI: MachineAPI
+        providerSpec:
+          value:
+            apiVersion: machine.openshift.io/v1beta1
+            kind: GCPMachineProviderSpec
+            machineType: n1-standard-4
+            region: us-central1
+            zone: us-central1-a
+            networkInterfaces:
+            - network: test-network
+              subnetwork: test-subnet
+              stackType: IPv4Only
+  onUpdate:
+  - name: Should allow updating stackType from IPv4Only to DualStack
+    initial: |
+      apiVersion: machine.openshift.io/v1beta1
+      kind: Machine
+      spec:
+        providerSpec:
+          value:
+            apiVersion: machine.openshift.io/v1beta1
+            kind: GCPMachineProviderSpec
+            machineType: n1-standard-4
+            region: us-central1
+            zone: us-central1-a
+            networkInterfaces:
+            - network: test-network
+              subnetwork: test-subnet
+              stackType: IPv4Only
+    updated: |
+      apiVersion: machine.openshift.io/v1beta1
+      kind: Machine
+      spec:
+        providerSpec:
+          value:
+            apiVersion: machine.openshift.io/v1beta1
+            kind: GCPMachineProviderSpec
+            machineType: n1-standard-4
+            region: us-central1
+            zone: us-central1-a
+            networkInterfaces:
+            - network: test-network
+              subnetwork: test-subnet
+              stackType: DualStack
+    expected: |
+      apiVersion: machine.openshift.io/v1beta1
+      kind: Machine
+      spec:
+        authoritativeAPI: MachineAPI
+        providerSpec:
+          value:
+            apiVersion: machine.openshift.io/v1beta1
+            kind: GCPMachineProviderSpec
+            machineType: n1-standard-4
+            region: us-central1
+            zone: us-central1-a
+            networkInterfaces:
+            - network: test-network
+              subnetwork: test-subnet
+              stackType: DualStack
+  - name: Should allow updating stackType from DualStack to IPv4Only
+    initial: |
+      apiVersion: machine.openshift.io/v1beta1
+      kind: Machine
+      spec:
+        providerSpec:
+          value:
+            apiVersion: machine.openshift.io/v1beta1
+            kind: GCPMachineProviderSpec
+            machineType: n1-standard-4
+            region: us-central1
+            zone: us-central1-a
+            networkInterfaces:
+            - network: test-network
+              subnetwork: test-subnet
+              stackType: DualStack
+    updated: |
+      apiVersion: machine.openshift.io/v1beta1
+      kind: Machine
+      spec:
+        providerSpec:
+          value:
+            apiVersion: machine.openshift.io/v1beta1
+            kind: GCPMachineProviderSpec
+            machineType: n1-standard-4
+            region: us-central1
+            zone: us-central1-a
+            networkInterfaces:
+            - network: test-network
+              subnetwork: test-subnet
+              stackType: IPv4Only
+    expected: |
+      apiVersion: machine.openshift.io/v1beta1
+      kind: Machine
+      spec:
+        authoritativeAPI: MachineAPI
+        providerSpec:
+          value:
+            apiVersion: machine.openshift.io/v1beta1
+            kind: GCPMachineProviderSpec
+            machineType: n1-standard-4
+            region: us-central1
+            zone: us-central1-a
+            networkInterfaces:
+            - network: test-network
+              subnetwork: test-subnet
+              stackType: IPv4Only
+  - name: Should allow adding IPv6 address to existing DualStack interface
+    initial: |
+      apiVersion: machine.openshift.io/v1beta1
+      kind: Machine
+      spec:
+        providerSpec:
+          value:
+            apiVersion: machine.openshift.io/v1beta1
+            kind: GCPMachineProviderSpec
+            machineType: n1-standard-4
+            region: us-central1
+            zone: us-central1-a
+            networkInterfaces:
+            - network: test-network
+              subnetwork: test-subnet
+              stackType: DualStack
+    updated: |
+      apiVersion: machine.openshift.io/v1beta1
+      kind: Machine
+      spec:
+        providerSpec:
+          value:
+            apiVersion: machine.openshift.io/v1beta1
+            kind: GCPMachineProviderSpec
+            machineType: n1-standard-4
+            region: us-central1
+            zone: us-central1-a
+            networkInterfaces:
+            - network: test-network
+              subnetwork: test-subnet
+              stackType: DualStack
+              ipv6Address: "2001:db8::1"
+    expected: |
+      apiVersion: machine.openshift.io/v1beta1
+      kind: Machine
+      spec:
+        authoritativeAPI: MachineAPI
+        providerSpec:
+          value:
+            apiVersion: machine.openshift.io/v1beta1
+            kind: GCPMachineProviderSpec
+            machineType: n1-standard-4
+            region: us-central1
+            zone: us-central1-a
+            networkInterfaces:
+            - network: test-network
+              subnetwork: test-subnet
+              stackType: DualStack
+              ipv6Address: "2001:db8::1"
+  - name: Should allow changing ipv6AccessType from External to Internal
+    initial: |
+      apiVersion: machine.openshift.io/v1beta1
+      kind: Machine
+      spec:
+        providerSpec:
+          value:
+            apiVersion: machine.openshift.io/v1beta1
+            kind: GCPMachineProviderSpec
+            machineType: n1-standard-4
+            region: us-central1
+            zone: us-central1-a
+            networkInterfaces:
+            - network: test-network
+              subnetwork: test-subnet
+              stackType: DualStack
+              ipv6AccessType: External
+    updated: |
+      apiVersion: machine.openshift.io/v1beta1
+      kind: Machine
+      spec:
+        providerSpec:
+          value:
+            apiVersion: machine.openshift.io/v1beta1
+            kind: GCPMachineProviderSpec
+            machineType: n1-standard-4
+            region: us-central1
+            zone: us-central1-a
+            networkInterfaces:
+            - network: test-network
+              subnetwork: test-subnet
+              stackType: DualStack
+              ipv6AccessType: Internal
+    expected: |
+      apiVersion: machine.openshift.io/v1beta1
+      kind: Machine
+      spec:
+        authoritativeAPI: MachineAPI
+        providerSpec:
+          value:
+            apiVersion: machine.openshift.io/v1beta1
+            kind: GCPMachineProviderSpec
+            machineType: n1-standard-4
+            region: us-central1
+            zone: us-central1-a
+            networkInterfaces:
+            - network: test-network
+              subnetwork: test-subnet
+              stackType: DualStack
+              ipv6AccessType: Internal
+  - name: Should allow changing IPv6 address on DualStack interface
+    initial: |
+      apiVersion: machine.openshift.io/v1beta1
+      kind: Machine
+      spec:
+        providerSpec:
+          value:
+            apiVersion: machine.openshift.io/v1beta1
+            kind: GCPMachineProviderSpec
+            machineType: n1-standard-4
+            region: us-central1
+            zone: us-central1-a
+            networkInterfaces:
+            - network: test-network
+              subnetwork: test-subnet
+              stackType: DualStack
+              ipv6Address: "2001:db8::1"
+    updated: |
+      apiVersion: machine.openshift.io/v1beta1
+      kind: Machine
+      spec:
+        providerSpec:
+          value:
+            apiVersion: machine.openshift.io/v1beta1
+            kind: GCPMachineProviderSpec
+            machineType: n1-standard-4
+            region: us-central1
+            zone: us-central1-a
+            networkInterfaces:
+            - network: test-network
+              subnetwork: test-subnet
+              stackType: DualStack
+              ipv6Address: "2001:db8::2"
+    expected: |
+      apiVersion: machine.openshift.io/v1beta1
+      kind: Machine
+      spec:
+        authoritativeAPI: MachineAPI
+        providerSpec:
+          value:
+            apiVersion: machine.openshift.io/v1beta1
+            kind: GCPMachineProviderSpec
+            machineType: n1-standard-4
+            region: us-central1
+            zone: us-central1-a
+            networkInterfaces:
+            - network: test-network
+              subnetwork: test-subnet
+              stackType: DualStack
+              ipv6Address: "2001:db8::2"

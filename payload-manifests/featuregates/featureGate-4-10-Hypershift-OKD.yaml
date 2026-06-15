@@ -158,6 +158,9 @@
                         "name": "GCPDualStackInstall"
                     },
                     {
+                        "name": "GatewayAPIManagementMode"
+                    },
+                    {
                         "name": "ImageModeStatusReporting"
                     },
                     {

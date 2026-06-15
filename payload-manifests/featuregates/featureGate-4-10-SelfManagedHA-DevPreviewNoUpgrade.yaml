@@ -211,6 +211,9 @@
                         "name": "GCPDualStackInstall"
                     },
                     {
+                        "name": "GatewayAPIManagementMode"
+                    },
+                    {
                         "name": "GatewayAPIWithoutOLM"
                     },
                     {

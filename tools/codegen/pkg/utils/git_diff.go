@@ -15,7 +15,8 @@ import (
 // committed and current file contents is returned.
 func GitDiff(packagePath, fileName string) (string, error) {
 	repo, err := git.PlainOpenWithOptions(packagePath, &git.PlainOpenOptions{
-		DetectDotGit: true,
+		DetectDotGit:          true,
+		EnableDotGitCommonDir: true,
 	})
 	if err != nil {
 		return "", fmt.Errorf("error opening parent git repository: %w", err)

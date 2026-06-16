@@ -129,6 +129,20 @@ spec:
           status:
             description: status holds observed values from the cluster. They may not
               be overridden.
+            properties:
+              lastScheduledBackupCount:
+                description: |-
+                  lastScheduledBackupCount is the number of EtcdBackup resources created
+                  in the last scheduled execution. This typically corresponds to the number
+                  of master nodes in the cluster at the time of backup.
+                type: integer
+              lastScheduledTime:
+                description: |-
+                  lastScheduledTime is the time when the last scheduled backup was triggered.
+                  This is used by the controller to track when backups have been executed
+                  and to prevent duplicate executions on controller restart.
+                format: date-time
+                type: string
             type: object
         required:
         - spec

@@ -3,7 +3,6 @@
 | ClientsAllowCBOR| | | | | |  |
 | ClusterAPIInstall| | | | | |  |
 | EventedPLEG| | | | | |  |
-| GatewayAPIWithoutOLM| | | | | |  |
 | MachineAPIOperatorDisableMachineHealthCheckController| | | | | |  |
 | MultiArchInstallAzure| | | | | |  |
 | NewOLMBoxCutterRuntime| | | | | |  |
@@ -48,6 +47,7 @@
 | GCPCustomAPIEndpoints| | | <span style="background-color: #519450">Enabled</span> | <span style="background-color: #519450">Enabled</span> | <span style="background-color: #519450">Enabled</span> | <span style="background-color: #519450">Enabled</span>  |
 | GCPCustomAPIEndpointsInstall| | | <span style="background-color: #519450">Enabled</span> | <span style="background-color: #519450">Enabled</span> | <span style="background-color: #519450">Enabled</span> | <span style="background-color: #519450">Enabled</span>  |
 | GCPDualStackInstall| | | <span style="background-color: #519450">Enabled</span> | <span style="background-color: #519450">Enabled</span> | <span style="background-color: #519450">Enabled</span> | <span style="background-color: #519450">Enabled</span>  |
+| GatewayAPIWithoutOLM| | | <span style="background-color: #519450">Enabled</span> | <span style="background-color: #519450">Enabled</span> | <span style="background-color: #519450">Enabled</span> | <span style="background-color: #519450">Enabled</span>  |
 | ImageModeStatusReporting| | | <span style="background-color: #519450">Enabled</span> | <span style="background-color: #519450">Enabled</span> | <span style="background-color: #519450">Enabled</span> | <span style="background-color: #519450">Enabled</span>  |
 | IngressControllerDynamicConfigurationManager| | | <span style="background-color: #519450">Enabled</span> | <span style="background-color: #519450">Enabled</span> | <span style="background-color: #519450">Enabled</span> | <span style="background-color: #519450">Enabled</span>  |
 | InsightsConfig| | | <span style="background-color: #519450">Enabled</span> | <span style="background-color: #519450">Enabled</span> | <span style="background-color: #519450">Enabled</span> | <span style="background-color: #519450">Enabled</span>  |

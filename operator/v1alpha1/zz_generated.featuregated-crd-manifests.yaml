@@ -47,7 +47,7 @@ clusterversionoperators.operator.openshift.io:
 
 etcdbackups.operator.openshift.io:
   Annotations: {}
-  ApprovedPRNumber: https://github.com/openshift/api/pull/1482
+  ApprovedPRNumber: https://github.com/openshift/api/pull/2952
   CRDName: etcdbackups.operator.openshift.io
   Capability: ""
   Category: ""
@@ -61,7 +61,72 @@ etcdbackups.operator.openshift.io:
   KindName: EtcdBackup
   Labels: {}
   PluralName: etcdbackups
-  PrinterColumns: []
+  PrinterColumns:
+  - description: Type of storage used for the backup
+    jsonPath: .spec.storage.type
+    name: Storage Type
+    type: string
+  - description: Status of the EtcdBackup
+    jsonPath: .status.conditions[?(@.status=="True")].type
+    name: Status
+    type: string
+  - description: Age of the EtcdBackup
+    jsonPath: .metadata.creationTimestamp
+    name: Age
+    type: date
+  - description: Name of the node where the backup was executed
+    jsonPath: .status.nodeName
+    name: Node
+    priority: 1
+    type: string
+  - description: Name of the PVC where the backup is stored
+    jsonPath: .spec.storage.pvc.name
+    name: PVC
+    priority: 1
+    type: string
+  Scope: Cluster
+  ShortNames: null
+  TopLevelFeatureGates:
+  - AutomatedEtcdBackup
+  Version: v1alpha1
+
+etcdbackuppolicies.operator.openshift.io:
+  Annotations: {}
+  ApprovedPRNumber: https://github.com/openshift/api/pull/2952
+  CRDName: etcdbackuppolicies.operator.openshift.io
+  Capability: ""
+  Category: ""
+  FeatureGates:
+  - AutomatedEtcdBackup
+  FilenameOperatorName: etcd
+  FilenameOperatorOrdering: "01"
+  FilenameRunLevel: "0000_10"
+  GroupName: operator.openshift.io
+  HasStatus: true
+  KindName: EtcdBackupPolicy
+  Labels: {}
+  PluralName: etcdbackuppolicies
+  PrinterColumns:
+  - description: Type of storage used for the backup
+    jsonPath: .spec.storage.type
+    name: Storage Type
+    type: string
+  - description: Cron schedule for executing backups
+    jsonPath: .spec.schedule
+    name: Schedule
+    type: string
+  - description: Time zone in which the schedule is evaluated
+    jsonPath: .spec.timeZone
+    name: Time Zone
+    type: string
+  - description: Last time the schedule was executed
+    jsonPath: .status.lastScheduleTime
+    name: Last Schedule
+    type: date
+  - description: Age of the EtcdBackupPolicy
+    jsonPath: .metadata.creationTimestamp
+    name: Age
+    type: date
   Scope: Cluster
   ShortNames: null
   TopLevelFeatureGates:

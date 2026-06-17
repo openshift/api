@@ -2,7 +2,7 @@ apiVersion: apiextensions.k8s.io/v1 # Hack because controller-gen complains if w
 name: "Infrastructure"
 crdName: infrastructures.config.openshift.io
 featureGates:
-- -AWSClusterHostedDNSInstall
+- -AWSClusterHostedDNS
 - -VSphereMultiVCenterDay2
 tests:
   onCreate:
@@ -1733,6 +1733,8 @@ tests:
           platform: AWS
           platformStatus:
             aws:
+              cloudLoadBalancerConfig:
+                dnsType: PlatformDefault
               region: us-east-1
               resourceTags:
               - key: key with space
@@ -1779,6 +1781,8 @@ tests:
           platform: AWS
           platformStatus:
             aws:
+              cloudLoadBalancerConfig:
+                dnsType: PlatformDefault
               region: us-east-1
               resourceTags:
               - key: key:_./=+-@

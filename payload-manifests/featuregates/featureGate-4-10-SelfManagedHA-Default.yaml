@@ -18,9 +18,6 @@
                         "name": "AWSClusterHostedDNS"
                     },
                     {
-                        "name": "AWSClusterHostedDNSInstall"
-                    },
-                    {
                         "name": "AWSDedicatedHosts"
                     },
                     {
@@ -283,6 +280,9 @@
                     }
                 ],
                 "enabled": [
+                    {
+                        "name": "AWSClusterHostedDNSInstall"
+                    },
                     {
                         "name": "AWSServiceLBNetworkSecurityGroup"
                     },

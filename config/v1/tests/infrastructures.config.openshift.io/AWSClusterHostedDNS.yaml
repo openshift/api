@@ -3,6 +3,7 @@ name: "Infrastructure"
 crdName: infrastructures.config.openshift.io
 featureGates:
 - AWSClusterHostedDNSInstall
+- AWSDualStackInstall
 tests:
   onCreate:
     - name: Should be able to create a minimal Infrastructure

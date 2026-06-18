@@ -351,6 +351,53 @@ func (RepositoryDigestMirrors) SwaggerDoc() map[string]string {
 	return map_RepositoryDigestMirrors
 }
 
+var map_GatewayAPIIngressConfig = map[string]string{
+	"":               "GatewayAPIIngressConfig holds configuration for Gateway API integration in the Cluster Ingress Operator.",
+	"managementMode": "managementMode specifies how the Cluster Ingress Operator manages Gateway API Custom Resource Definitions (CRDs) and the associated Gateway controller stack.\n\nWhen set to \"Managed\" (the default), CIO installs, owns, and upgrades the Gateway API CRDs, protects them with a Validating Admission Policy, and deploys the full Gateway controller stack (the Istio instance deployed by CIO, GatewayClass, Gateway resources). This is the only fully supported configuration.\n\nWhen set to \"Unmanaged\", CIO does not install or manage Gateway API CRDs and does not deploy the Gateway controller stack. The cluster administrator or a third-party product is responsible for providing their own CRDs and Gateway controller. CIO reports observational status only. This mode also serves as a signal to layered products that the installed CRDs may not be the ones supported by the OpenShift Gateway API implementation.\n\nWhen omitted, the field defaults to \"Managed\".",
+}
+
+func (GatewayAPIIngressConfig) SwaggerDoc() map[string]string {
+	return map_GatewayAPIIngressConfig
+}
+
+var map_Ingress = map[string]string{
+	"":         "Ingress contains configuration options specific to the Ingress Operator itself.\n\nCompatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.",
+	"metadata": "metadata is the standard object's metadata.",
+	"spec":     "spec holds user settable values for configuration.",
+	"status":   "status holds observed values from the cluster.",
+}
+
+func (Ingress) SwaggerDoc() map[string]string {
+	return map_Ingress
+}
+
+var map_IngressList = map[string]string{
+	"":         "IngressList is a collection of Ingresses.\n\nCompatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.",
+	"metadata": "metadata is the standard list's metadata.",
+	"items":    "items is a list of Ingresses.",
+}
+
+func (IngressList) SwaggerDoc() map[string]string {
+	return map_IngressList
+}
+
+var map_IngressSpec = map[string]string{
+	"":           "IngressSpec defines the desired configuration of the cluster-ingress-operator",
+	"gatewayAPI": "gatewayAPI holds configuration for Gateway API integration, including how the Cluster Ingress Operator manages Gateway API CRDs and the Gateway controller stack.\n\nWhen omitted, the operator uses the default Gateway API configuration, which sets managementMode to \"Managed\".",
+}
+
+func (IngressSpec) SwaggerDoc() map[string]string {
+	return map_IngressSpec
+}
+
+var map_IngressStatus = map[string]string{
+	"": "IngressStatus describe the current state of cluster-ingress-operator",
+}
+
+func (IngressStatus) SwaggerDoc() map[string]string {
+	return map_IngressStatus
+}
+
 var map_OLM = map[string]string{
 	"":         "OLM provides information to configure an operator to manage the OLM controllers\n\nCompatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.",
 	"metadata": "metadata is the standard object's metadata. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata",

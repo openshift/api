@@ -45323,6 +45323,60 @@
         }
       }
     },
+    "com.github.openshift.api.operator.v1.KMSEncryptionStatus": {
+      "type": "object",
+      "properties": {
+        "healthReports": {
+          "description": "healthReports contains all KMS plugin health reports. When omitted, no health reports are available. Each entry must have a unique combination of nodeName and keyId.",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/com.github.openshift.api.operator.v1.KMSPluginHealthReport"
+          },
+          "x-kubernetes-list-map-keys": [
+            "nodeName",
+            "keyId"
+          ],
+          "x-kubernetes-list-type": "map"
+        }
+      }
+    },
+    "com.github.openshift.api.operator.v1.KMSPluginHealthReport": {
+      "type": "object",
+      "required": [
+        "nodeName",
+        "keyId",
+        "status",
+        "lastCheckedTime",
+        "kekId"
+      ],
+      "properties": {
+        "detail": {
+          "description": "detail contains additional error/health information for the respective KMS plugin. When omitted, no additional error or health information is provided. When set, the value must be between 1 and 1024 characters.",
+          "type": "string"
+        },
+        "kekId": {
+          "description": "kekId refers to the remote KEK id from KMS v2 StatusResponse.key_id. This is not a cryptographic key, but a unique representation of the KEK. The value must be between 1 and 1024 characters.",
+          "type": "string"
+        },
+        "keyId": {
+          "description": "keyId is the encryption-key-secret id (kms-{keyId}.sock), a unique identifier of the plugin on that node. This is not a cryptographic key used to encrypt/decrypt any resources. The value must be between 1 and 512 characters.",
+          "type": "string"
+        },
+        "lastCheckedTime": {
+          "description": "lastCheckedTime is a timestamp of when the probe was last checked.",
+          "$ref": "#/definitions/Time.v1.meta.apis.pkg.apimachinery.k8s.io"
+        },
+        "nodeName": {
+          "description": "nodeName is the name of the node this instance of the plugin runs on. The combination of nodeName and keyId makes this health report unique. The value must be a valid Kubernetes node name: a lowercase RFC 1123 subdomain consisting of lowercase alphanumeric characters, '-' or '.', starting and ending with an alphanumeric character, and be at most 253 characters in length.",
+          "type": "string"
+        },
+        "status": {
+          "description": "status contains a health indicator for the respective KMS plugin The field can have three states: healthy, unhealthy, error. With error and unhealthy containing additional information in Detail.",
+          "type": "string"
+        }
+      }
+    },
     "com.github.openshift.api.operator.v1.KubeAPIServer": {
       "description": "KubeAPIServer provides information to configure an operator to manage kube-apiserver.\n\nCompatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).",
       "type": "object",
@@ -45451,6 +45505,11 @@
             "type"
           ],
           "x-kubernetes-list-type": "map"
+        },
+        "encryptionStatus": {
+          "description": "encryptionStatus contains status reports for the KMS plugin health and its key rotation.",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.operator.v1.KMSEncryptionStatus"
         },
         "generations": {
           "description": "generations are used to determine when an item needs to be reconciled or has changed in a way that needs a reaction.",
@@ -47117,6 +47176,11 @@
     "com.github.openshift.api.operator.v1.OAuthAPIServerStatus": {
       "type": "object",
       "properties": {
+        "encryptionStatus": {
+          "description": "encryptionStatus contains status reports for the KMS plugin health and its key rotation.",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.operator.v1.KMSEncryptionStatus"
+        },
         "latestAvailableRevision": {
           "description": "latestAvailableRevision is the latest revision used as suffix of revisioned secrets like encryption-config. A new revision causes a new deployment of pods.",
           "type": "integer",
@@ -47450,6 +47514,11 @@
             "type"
           ],
           "x-kubernetes-list-type": "map"
+        },
+        "encryptionStatus": {
+          "description": "encryptionStatus contains status reports for the KMS plugin health and its key rotation.",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.operator.v1.KMSEncryptionStatus"
         },
         "generations": {
           "description": "generations are used to determine when an item needs to be reconciled or has changed in a way that needs a reaction.",

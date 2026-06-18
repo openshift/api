@@ -678,6 +678,138 @@ tests:
           tuningOptions:
             httpKeepAliveTimeout: 0.001ms
       expectedError: "IngressController.operator.openshift.io \"default\" is invalid: spec.tuningOptions.httpKeepAliveTimeout: Invalid value: \"string\": httpKeepAliveTimeout must be greater than or equal to 1 millisecond"
+    - name: Should be able to create an IngressController with maxConnections set to -1
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: IngressController
+        metadata:
+          name: default
+          namespace: openshift-ingress-operator
+        spec:
+          tuningOptions:
+            maxConnections: -1
+      expected: |
+        apiVersion: operator.openshift.io/v1
+        kind: IngressController
+        metadata:
+          name: default
+          namespace: openshift-ingress-operator
+        spec:
+          httpEmptyRequestsPolicy: Respond
+          idleConnectionTerminationPolicy: Immediate
+          closedClientConnectionPolicy: Continue
+          tuningOptions:
+            maxConnections: -1
+    - name: Should be able to create an IngressController with maxConnections at minimum range
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: IngressController
+        metadata:
+          name: default
+          namespace: openshift-ingress-operator
+        spec:
+          tuningOptions:
+            maxConnections: 2000
+      expected: |
+        apiVersion: operator.openshift.io/v1
+        kind: IngressController
+        metadata:
+          name: default
+          namespace: openshift-ingress-operator
+        spec:
+          httpEmptyRequestsPolicy: Respond
+          idleConnectionTerminationPolicy: Immediate
+          closedClientConnectionPolicy: Continue
+          tuningOptions:
+            maxConnections: 2000
+    - name: Should be able to create an IngressController with maxConnections at maximum range
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: IngressController
+        metadata:
+          name: default
+          namespace: openshift-ingress-operator
+        spec:
+          tuningOptions:
+            maxConnections: 2000000
+      expected: |
+        apiVersion: operator.openshift.io/v1
+        kind: IngressController
+        metadata:
+          name: default
+          namespace: openshift-ingress-operator
+        spec:
+          httpEmptyRequestsPolicy: Respond
+          idleConnectionTerminationPolicy: Immediate
+          closedClientConnectionPolicy: Continue
+          tuningOptions:
+            maxConnections: 2000000
+    - name: Should be able to create an IngressController with maxConnections in mid range
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: IngressController
+        metadata:
+          name: default
+          namespace: openshift-ingress-operator
+        spec:
+          tuningOptions:
+            maxConnections: 50000
+      expected: |
+        apiVersion: operator.openshift.io/v1
+        kind: IngressController
+        metadata:
+          name: default
+          namespace: openshift-ingress-operator
+        spec:
+          httpEmptyRequestsPolicy: Respond
+          idleConnectionTerminationPolicy: Immediate
+          closedClientConnectionPolicy: Continue
+          tuningOptions:
+            maxConnections: 50000
+    - name: Should not be able to create an IngressController with maxConnections below minimum range
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: IngressController
+        metadata:
+          name: default
+          namespace: openshift-ingress-operator
+        spec:
+          tuningOptions:
+            maxConnections: 500
+      expectedError: "maxConnections must be 0, -1, or between 2000 and 2000000"
+    - name: Should not be able to create an IngressController with maxConnections above maximum range
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: IngressController
+        metadata:
+          name: default
+          namespace: openshift-ingress-operator
+        spec:
+          tuningOptions:
+            maxConnections: 3000000
+      expectedError: "maxConnections must be 0, -1, or between 2000 and 2000000"
+    - name: Should not be able to create an IngressController with maxConnections of 1
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: IngressController
+        metadata:
+          name: default
+          namespace: openshift-ingress-operator
+        spec:
+          tuningOptions:
+            maxConnections: 1
+      expectedError: "maxConnections must be 0, -1, or between 2000 and 2000000"
+    - name: Should not be able to create an IngressController with maxConnections of 1999
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: IngressController
+        metadata:
+          name: default
+          namespace: openshift-ingress-operator
+        spec:
+          tuningOptions:
+            maxConnections: 1999
+      expectedError: "maxConnections must be 0, -1, or between 2000 and 2000000"
     - name: Should be able to create an IngressController with valid domain
       initial: |
         apiVersion: operator.openshift.io/v1
@@ -829,4 +961,97 @@ tests:
           idleConnectionTerminationPolicy: Immediate
           closedClientConnectionPolicy: Continue
           domain: "*.foo.com"
+          replicas: 3
+    - name: Should be able to update invalid maxConnections to a valid value
+      initialCRDPatches:
+        - op: remove
+          path: /spec/versions/0/schema/openAPIV3Schema/properties/spec/properties/tuningOptions/properties/maxConnections/x-kubernetes-validations
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: IngressController
+        metadata:
+          name: ic-maxconn-test
+          namespace: openshift-ingress-operator
+        spec:
+          tuningOptions:
+            maxConnections: 500
+      updated: |
+        apiVersion: operator.openshift.io/v1
+        kind: IngressController
+        metadata:
+          name: ic-maxconn-test
+          namespace: openshift-ingress-operator
+        spec:
+          tuningOptions:
+            maxConnections: 50000
+      expected: |
+        apiVersion: operator.openshift.io/v1
+        kind: IngressController
+        metadata:
+          name: ic-maxconn-test
+          namespace: openshift-ingress-operator
+        spec:
+          httpEmptyRequestsPolicy: Respond
+          idleConnectionTerminationPolicy: Immediate
+          closedClientConnectionPolicy: Continue
+          tuningOptions:
+            maxConnections: 50000
+    - name: Should not be able to update invalid maxConnections to another invalid value
+      initialCRDPatches:
+        - op: remove
+          path: /spec/versions/0/schema/openAPIV3Schema/properties/spec/properties/tuningOptions/properties/maxConnections/x-kubernetes-validations
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: IngressController
+        metadata:
+          name: ic-maxconn-test
+          namespace: openshift-ingress-operator
+        spec:
+          tuningOptions:
+            maxConnections: 500
+      updated: |
+        apiVersion: operator.openshift.io/v1
+        kind: IngressController
+        metadata:
+          name: ic-maxconn-test
+          namespace: openshift-ingress-operator
+        spec:
+          tuningOptions:
+            maxConnections: 999
+      expectedError: "maxConnections must be 0, -1, or between 2000 and 2000000"
+    - name: Should be able to update other fields while retaining invalid maxConnections due to ratcheting
+      initialCRDPatches:
+        - op: remove
+          path: /spec/versions/0/schema/openAPIV3Schema/properties/spec/properties/tuningOptions/properties/maxConnections/x-kubernetes-validations
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: IngressController
+        metadata:
+          name: ic-maxconn-test
+          namespace: openshift-ingress-operator
+        spec:
+          tuningOptions:
+            maxConnections: 500
+      updated: |
+        apiVersion: operator.openshift.io/v1
+        kind: IngressController
+        metadata:
+          name: ic-maxconn-test
+          namespace: openshift-ingress-operator
+        spec:
+          tuningOptions:
+            maxConnections: 500
+          replicas: 3
+      expected: |
+        apiVersion: operator.openshift.io/v1
+        kind: IngressController
+        metadata:
+          name: ic-maxconn-test
+          namespace: openshift-ingress-operator
+        spec:
+          httpEmptyRequestsPolicy: Respond
+          idleConnectionTerminationPolicy: Immediate
+          closedClientConnectionPolicy: Continue
+          tuningOptions:
+            maxConnections: 500
           replicas: 3

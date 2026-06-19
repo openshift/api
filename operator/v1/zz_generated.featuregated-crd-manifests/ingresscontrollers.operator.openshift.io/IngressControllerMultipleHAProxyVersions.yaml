@@ -3,11 +3,11 @@ kind: CustomResourceDefinition
 metadata:
   annotations:
     api-approved.openshift.io: https://github.com/openshift/api/pull/616
-    api.openshift.io/merged-by-featuregates: "true"
+    api.openshift.io/filename-cvo-runlevel: "0000_50"
+    api.openshift.io/filename-operator: ingress
+    api.openshift.io/filename-ordering: "00"
     capability.openshift.io/name: Ingress
-    include.release.openshift.io/ibm-cloud-managed: "true"
-    include.release.openshift.io/self-managed-high-availability: "true"
-    release.openshift.io/feature-set: DevPreviewNoUpgrade
+    feature-gate.release.openshift.io/IngressControllerMultipleHAProxyVersions: "true"
   name: ingresscontrollers.operator.openshift.io
 spec:
   group: operator.openshift.io
@@ -1484,13 +1484,6 @@ spec:
                             description: |-
                               syslog holds parameters for a syslog endpoint.  Present only if
                               type is Syslog.
-                            oneOf:
-                            - properties:
-                                address:
-                                  format: ipv4
-                            - properties:
-                                address:
-                                  format: ipv6
                             properties:
                               address:
                                 description: |-
@@ -2081,46 +2074,6 @@ spec:
                           type: string
                         type: array
                         x-kubernetes-list-type: atomic
-                      groups:
-                        description: |-
-                          groups is an optional, ordered field used to specify the supported groups (formerly known as
-                          elliptic curves) that are used during the TLS handshake.  The order of the groups represents
-                          a suggested preference, with the most preferred group first. Note that not all platform
-                          components honor the ordering: Go-based components use Go's internal preference order and
-                          treat this list as a filter of allowed groups rather than an ordered preference.
-                          Operators may remove entries their operands do not support.
-
-                          When omitted, this means no opinion and the platform is left to choose reasonable defaults which are
-                          subject to change over time and may be different per platform component depending on the underlying TLS
-                          libraries they use. If specified, the list must contain at least one and at most 7 groups,
-                          and each group must be unique.
-
-                          For example, to use X25519 and secp256r1 (yaml):
-
-                            groups:
-                              - X25519
-                              - secp256r1
-                        items:
-                          description: |-
-                            TLSGroup is a supported group identifier that can be used in TLSProfile.Groups.
-                            There is a one-to-one mapping between these names and the group IDs defined
-                            in Go's crypto/tls package based on IANA's "TLS Supported Groups" registry:
-                            https://www.iana.org/assignments/tls-parameters/tls-parameters.xhtml#tls-parameters-8
-                            Note that X25519MLKEM768 is a post-quantum hybrid group that is not
-                            FIPS-approved and should be ignored by components running in FIPS mode.
-                          enum:
-                          - X25519
-                          - secp256r1
-                          - secp384r1
-                          - secp521r1
-                          - X25519MLKEM768
-                          - SecP256r1MLKEM768
-                          - SecP384r1MLKEM1024
-                          type: string
-                        maxItems: 7
-                        minItems: 1
-                        type: array
-                        x-kubernetes-list-type: set
                       minTLSVersion:
                         description: |-
                           minTLSVersion is used to specify the minimal version of the TLS protocol
@@ -2264,37 +2217,6 @@ spec:
 
                       If unset, the default timeout is 30s
                     format: duration
-                    type: string
-                  configurationManagement:
-                    description: |-
-                      configurationManagement specifies how OpenShift router should update
-                      the HAProxy configuration.  The following values are valid for this
-                      field:
-
-                      * "ForkAndReload".
-                      * "Dynamic".
-
-                      Omitting this field means that the user has no opinion and the
-                      platform may choose a reasonable default. This default is subject to
-                      change over time.  The current default is "ForkAndReload".
-
-                      "ForkAndReload" means that OpenShift router should rewrite the
-                      HAProxy configuration file and instruct HAProxy to fork and reload.
-                      This is OpenShift router's traditional approach.
-
-                      "Dynamic" means that OpenShift router may use HAProxy's control
-                      socket for some configuration updates and fall back to fork and
-                      reload for other configuration updates.  This is a newer approach,
-                      which may be less mature than ForkAndReload.  This setting can
-                      improve load-balancing fairness and metrics accuracy and reduce CPU
-                      and memory usage if HAProxy has frequent configuration updates for
-                      route and endpoints updates.
-
-                      Note: The "Dynamic" option is currently experimental and should not
-                      be enabled on production clusters.
-                    enum:
-                    - Dynamic
-                    - ForkAndReload
                     type: string
                   connectTimeout:
                     description: |-
@@ -3445,46 +3367,6 @@ spec:
                       type: string
                     type: array
                     x-kubernetes-list-type: atomic
-                  groups:
-                    description: |-
-                      groups is an optional, ordered field used to specify the supported groups (formerly known as
-                      elliptic curves) that are used during the TLS handshake.  The order of the groups represents
-                      a suggested preference, with the most preferred group first. Note that not all platform
-                      components honor the ordering: Go-based components use Go's internal preference order and
-                      treat this list as a filter of allowed groups rather than an ordered preference.
-                      Operators may remove entries their operands do not support.
-
-                      When omitted, this means no opinion and the platform is left to choose reasonable defaults which are
-                      subject to change over time and may be different per platform component depending on the underlying TLS
-                      libraries they use. If specified, the list must contain at least one and at most 7 groups,
-                      and each group must be unique.
-
-                      For example, to use X25519 and secp256r1 (yaml):
-
-                        groups:
-                          - X25519
-                          - secp256r1
-                    items:
-                      description: |-
-                        TLSGroup is a supported group identifier that can be used in TLSProfile.Groups.
-                        There is a one-to-one mapping between these names and the group IDs defined
-                        in Go's crypto/tls package based on IANA's "TLS Supported Groups" registry:
-                        https://www.iana.org/assignments/tls-parameters/tls-parameters.xhtml#tls-parameters-8
-                        Note that X25519MLKEM768 is a post-quantum hybrid group that is not
-                        FIPS-approved and should be ignored by components running in FIPS mode.
-                      enum:
-                      - X25519
-                      - secp256r1
-                      - secp384r1
-                      - secp521r1
-                      - X25519MLKEM768
-                      - SecP256r1MLKEM768
-                      - SecP384r1MLKEM1024
-                      type: string
-                    maxItems: 7
-                    minItems: 1
-                    type: array
-                    x-kubernetes-list-type: set
                   minTLSVersion:
                     description: |-
                       minTLSVersion is used to specify the minimal version of the TLS protocol
@@ -3509,8 +3391,4 @@ spec:
     served: true
     storage: true
     subresources:
-      scale:
-        labelSelectorPath: .status.selector
-        specReplicasPath: .spec.replicas
-        statusReplicasPath: .status.availableReplicas
       status: {}

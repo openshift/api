@@ -727,7 +727,10 @@
               "default": {}
             },
             "type": "array",
-            "x-kubernetes-list-type": "atomic"
+            "x-kubernetes-list-type": "map",
+            "x-kubernetes-list-map-keys": [
+              "rule"
+            ]
           }
         },
         "type": "object"

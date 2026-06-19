@@ -137,6 +137,9 @@ spec:
                                 x-kubernetes-validations:
                                 - message: 'privateZoneIAMRole must be a valid AWS
                                     IAM role ARN in the format: arn:<partition>:iam::<account-id>:role/<role-name>'
+                                  rule: matches(self, '^arn:(aws|aws-cn|aws-us-gov):iam::[0-9]{12}:role/.*$')
+                                - message: 'privateZoneIAMRole must be a valid AWS
+                                    IAM role ARN in the format: arn:<partition>:iam::<account-id>:role/<role-name>'
                                   rule: matches(self, '^arn:(aws|aws-cn|aws-us-gov|aws-eusc):iam::[0-9]{12}:role/.*$')
                             type: object
                           type:
@@ -1373,6 +1376,10 @@ spec:
                                 type: array
                                 x-kubernetes-list-type: atomic
                                 x-kubernetes-validations:
+                                - message: vcenters cannot be added or removed once
+                                    set
+                                  rule: 'size(self) != size(oldSelf) ? size(oldSelf)
+                                    == 0 && size(self) < 2 : true'
                                 - message: Cannot add and remove vCenters at the same
                                     time
                                   rule: 'size(self) >= size(oldSelf) ? oldSelf.all(x,
@@ -1393,6 +1400,10 @@ spec:
                               rule: '!has(oldSelf.ingressIPs) || has(self.ingressIPs)'
                         type: object
                         x-kubernetes-validations:
+                        - message: vcenters can have at most 1 item when configured
+                            post-install
+                          rule: '!has(oldSelf.vsphere) && has(self.vsphere) ? (has(self.vsphere.vcenters)
+                            && size(self.vsphere.vcenters) < 2) : true'
                         - message: vcenters is required once set and cannot be removed
                           rule: 'oldSelf.?vsphere.vcenters.hasValue() ? self.?vsphere.vcenters.hasValue()
                             : true'

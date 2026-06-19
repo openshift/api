@@ -1305,6 +1305,10 @@ spec:
                                 type: array
                                 x-kubernetes-list-type: atomic
                                 x-kubernetes-validations:
+                                - message: vcenters cannot be added or removed once
+                                    set
+                                  rule: 'size(self) != size(oldSelf) ? size(oldSelf)
+                                    == 0 && size(self) < 2 : true'
                                 - message: vcenters must have unique server values
                                   rule: self.all(x, self.exists_one(y, y.server ==
                                     x.server))

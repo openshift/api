@@ -81,6 +81,9 @@ spec:
                         x-kubernetes-validations:
                         - message: 'privateZoneIAMRole must be a valid AWS IAM role
                             ARN in the format: arn:<partition>:iam::<account-id>:role/<role-name>'
+                          rule: matches(self, '^arn:(aws|aws-cn|aws-us-gov):iam::[0-9]{12}:role/.*$')
+                        - message: 'privateZoneIAMRole must be a valid AWS IAM role
+                            ARN in the format: arn:<partition>:iam::<account-id>:role/<role-name>'
                           rule: matches(self, '^arn:(aws|aws-cn|aws-us-gov|aws-eusc):iam::[0-9]{12}:role/.*$')
                     type: object
                   type:

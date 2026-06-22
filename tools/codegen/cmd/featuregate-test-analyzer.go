@@ -608,7 +608,7 @@ var (
 		{
 			Cloud:        "aws",
 			Architecture: "amd64",
-			Topology:     "hypershift",
+			Topology:     "external",
 		},
 		// ibm and powervs?
 	}

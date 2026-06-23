@@ -260,6 +260,13 @@ func (o *FeatureGateTestAnalyzerOptions) Run(ctx context.Context) error {
 	return errors.Join(errs...)
 }
 
+func topologyDisplayName(topology string) string {
+	if topology == "external" {
+		return "hypershift"
+	}
+	return topology
+}
+
 func buildHTMLFeatureGateData(name string, testingResults map[JobVariant]*TestingResults, blockingErrors []error, release string) utils.HTMLFeatureGate {
 	jobVariantsSet := sets.KeySet(testingResults)
 	jobVariants := OrderedJobVariants(jobVariantsSet.UnsortedList())
@@ -269,7 +276,7 @@ func buildHTMLFeatureGateData(name string, testingResults map[JobVariant]*Testin
 	variants := make([]utils.HTMLVariantColumn, 0, len(jobVariants))
 	for i, jv := range jobVariants {
 		variants = append(variants, utils.HTMLVariantColumn{
-			Topology:     jv.Topology,
+			Topology:     topologyDisplayName(jv.Topology),
 			Cloud:        jv.Cloud,
 			Architecture: jv.Architecture,
 			NetworkStack: jv.NetworkStack,
@@ -423,7 +430,7 @@ func writeTestingMarkDown(testingResults map[JobVariant]*TestingResults, md *uti
 	md.Exact("Test ")
 	for _, jobVariant := range jobVariants {
 		md.NextTableColumn()
-		columnHeader := fmt.Sprintf("%v <br/> %v <br/> %v ", jobVariant.Topology, jobVariant.Cloud, jobVariant.Architecture)
+		columnHeader := fmt.Sprintf("%v <br/> %v <br/> %v ", topologyDisplayName(jobVariant.Topology), jobVariant.Cloud, jobVariant.Architecture)
 		if jobVariant.NetworkStack != "" {
 			columnHeader = columnHeader + fmt.Sprintf("<br/> %v ", jobVariant.NetworkStack)
 		}
@@ -601,7 +608,7 @@ var (
 		{
 			Cloud:        "aws",
 			Architecture: "amd64",
-			Topology:     "hypershift",
+			Topology:     "external",
 		},
 		// ibm and powervs?
 	}

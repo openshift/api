@@ -2,7 +2,10 @@ package main
 
 import (
 	"encoding/json"
+	"fmt"
 	"reflect"
+	"sort"
+	"strings"
 	"testing"
 
 	"k8s.io/apimachinery/pkg/util/sets"
@@ -514,5 +517,495 @@ func Test_allRequiredVariantsQueryCandidateTier(t *testing.T) {
 		if !hasCandidateQuery {
 			t.Errorf("variant %+v does not query candidate tier - some platforms only run TechPreview tests in candidate-tier jobs", variant)
 		}
+	}
+}
+
+func Test_requiredHypershiftJobVariants_TopologyIsExternal(t *testing.T) {
+	// Sippy classifies hypershift jobs with Topology:"external", not "hypershift".
+	// Using the wrong value causes the verify-feature-promotion tool to find 0
+	// tests when querying Sippy for hypershift variants.
+	for i, variant := range requiredHypershiftJobVariants {
+		if variant.Topology != "external" {
+			t.Errorf("requiredHypershiftJobVariants[%d] has Topology=%q, want %q - Sippy classifies hypershift jobs as Topology:external",
+				i, variant.Topology, "external")
+		}
+	}
+}
+
+func Test_requiredHypershiftJobVariants_SippyQueriesUseExternalTopology(t *testing.T) {
+	for _, variant := range requiredHypershiftJobVariants {
+		queries := sippy.QueriesFor(variant.Cloud, variant.Architecture, variant.Topology, variant.NetworkStack, variant.OS, variant.JobTiers, "FeatureGate:Test]")
+		for _, query := range queries {
+			hasExternalTopology := false
+			for _, item := range query.Items {
+				if item.ColumnField == "variants" && item.Value == "Topology:external" {
+					hasExternalTopology = true
+					break
+				}
+			}
+			if !hasExternalTopology {
+				t.Errorf("Sippy query for hypershift variant %+v (tier=%s) does not contain Topology:external filter",
+					variant, query.TierName)
+			}
+		}
+	}
+}
+
+func Test_topologyDisplayName(t *testing.T) {
+	tests := []struct {
+		input string
+		want  string
+	}{
+		{"external", "hypershift"},
+		{"ha", "ha"},
+		{"single", "single"},
+		{"two-node-fencing", "two-node-fencing"},
+		{"two-node-arbiter", "two-node-arbiter"},
+		{"", ""},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.input, func(t *testing.T) {
+			got := topologyDisplayName(tt.input)
+			if got != tt.want {
+				t.Errorf("topologyDisplayName(%q) = %q, want %q", tt.input, got, tt.want)
+			}
+		})
+	}
+}
+
+func Test_nonHypershiftPlatforms(t *testing.T) {
+	tests := []struct {
+		input string
+		want  bool
+	}{
+		{"NutanixFeature", true},
+		{"nutanixfeature", true},
+		{"MetalFeature", true},
+		{"VSphereFeature", true},
+		{"OpenStackFeature", true},
+		{"AzureFeature", true},
+		{"GCPFeature", true},
+		{"AWSFeature", false},
+		{"GenericFeature", false},
+		{"HypershiftFeature", false},
+		{"ExternalFeature", false},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.input, func(t *testing.T) {
+			got := nonHypershiftPlatforms.MatchString(tt.input)
+			if got != tt.want {
+				t.Errorf("nonHypershiftPlatforms.MatchString(%q) = %v, want %v", tt.input, got, tt.want)
+			}
+		})
+	}
+}
+
+func Test_filterVariants(t *testing.T) {
+	tests := []struct {
+		name        string
+		featureGate string
+		variants    [][]JobVariant
+		want        []JobVariant
+	}{
+		{
+			name:        "AWS feature gate matches aws hypershift variant with external topology",
+			featureGate: "AWSServiceLBNetworkSecurityGroup",
+			variants: [][]JobVariant{
+				requiredHypershiftJobVariants,
+			},
+			want: []JobVariant{
+				{Cloud: "aws", Architecture: "amd64", Topology: "external"},
+			},
+		},
+		{
+			name:        "generic feature gate matches no hypershift variants",
+			featureGate: "GenericFeature",
+			variants: [][]JobVariant{
+				requiredHypershiftJobVariants,
+			},
+			want: nil,
+		},
+		{
+			name:        "VSphere feature gate matches vsphere self-managed variant",
+			featureGate: "VSphereControlPlaneMachineSet",
+			variants: [][]JobVariant{
+				requiredSelfManagedJobVariants,
+			},
+			want: []JobVariant{
+				{Cloud: "vsphere", Architecture: "amd64", Topology: "ha"},
+			},
+		},
+		{
+			name:        "Nutanix feature gate matches optional nutanix variant",
+			featureGate: "NutanixGate",
+			variants: [][]JobVariant{
+				optionalSelfManagedPlatformVariants,
+			},
+			want: []JobVariant{
+				{Cloud: "nutanix", Architecture: "amd64", Topology: "ha"},
+			},
+		},
+		{
+			name:        "Metal feature gate matches metal variants with network stacks",
+			featureGate: "MetalFeature",
+			variants: [][]JobVariant{
+				requiredSelfManagedJobVariants,
+			},
+			want: []JobVariant{
+				{Cloud: "metal", Architecture: "amd64", Topology: "ha", NetworkStack: "ipv4"},
+				{Cloud: "metal", Architecture: "amd64", Topology: "ha", NetworkStack: "ipv6"},
+				{Cloud: "metal", Architecture: "amd64", Topology: "ha", NetworkStack: "dual"},
+			},
+		},
+		{
+			name:        "feature gate with multiple variant lists",
+			featureGate: "MetalFeature",
+			variants: [][]JobVariant{
+				optionalSelfManagedPlatformVariants,
+				requiredSelfManagedJobVariants,
+			},
+			want: []JobVariant{
+				{Cloud: "metal", Architecture: "amd64", Topology: "two-node-arbiter", NetworkStack: "ipv4"},
+				{Cloud: "metal", Architecture: "amd64", Topology: "two-node-arbiter", NetworkStack: "ipv6"},
+				{Cloud: "metal", Architecture: "amd64", Topology: "two-node-arbiter", NetworkStack: "dual"},
+				{Cloud: "metal", Architecture: "amd64", Topology: "two-node-fencing", NetworkStack: "ipv4", JobTiers: "candidate,standard,informing,blocking"},
+				{Cloud: "metal", Architecture: "amd64", Topology: "two-node-fencing", NetworkStack: "ipv6", JobTiers: "candidate,standard,informing,blocking"},
+				{Cloud: "metal", Architecture: "amd64", Topology: "two-node-fencing", NetworkStack: "dual", JobTiers: "candidate,standard,informing,blocking"},
+				{Cloud: "metal", Architecture: "amd64", Topology: "ha", NetworkStack: "ipv4"},
+				{Cloud: "metal", Architecture: "amd64", Topology: "ha", NetworkStack: "ipv6"},
+				{Cloud: "metal", Architecture: "amd64", Topology: "ha", NetworkStack: "dual"},
+			},
+		},
+		{
+			name:        "DualReplica feature gate matches fencing topology variants",
+			featureGate: "DualReplicaFeature",
+			variants: [][]JobVariant{
+				optionalSelfManagedPlatformVariants,
+			},
+			want: []JobVariant{
+				{Cloud: "metal", Architecture: "amd64", Topology: "two-node-fencing", NetworkStack: "ipv4", JobTiers: "candidate,standard,informing,blocking"},
+				{Cloud: "metal", Architecture: "amd64", Topology: "two-node-fencing", NetworkStack: "ipv6", JobTiers: "candidate,standard,informing,blocking"},
+				{Cloud: "metal", Architecture: "amd64", Topology: "two-node-fencing", NetworkStack: "dual", JobTiers: "candidate,standard,informing,blocking"},
+			},
+		},
+		{
+			name:        "Fencing feature gate matches fencing topology variants",
+			featureGate: "FencingFeature",
+			variants: [][]JobVariant{
+				optionalSelfManagedPlatformVariants,
+			},
+			want: []JobVariant{
+				{Cloud: "metal", Architecture: "amd64", Topology: "two-node-fencing", NetworkStack: "ipv4", JobTiers: "candidate,standard,informing,blocking"},
+				{Cloud: "metal", Architecture: "amd64", Topology: "two-node-fencing", NetworkStack: "ipv6", JobTiers: "candidate,standard,informing,blocking"},
+				{Cloud: "metal", Architecture: "amd64", Topology: "two-node-fencing", NetworkStack: "dual", JobTiers: "candidate,standard,informing,blocking"},
+			},
+		},
+		{
+			name:        "amd64 in feature gate name matches amd64 variants only",
+			featureGate: "Amd64SpecificFeature",
+			variants: [][]JobVariant{
+				{
+					{Cloud: "aws", Architecture: "amd64", Topology: "ha"},
+					{Cloud: "aws", Architecture: "arm64", Topology: "ha"},
+				},
+			},
+			want: []JobVariant{
+				{Cloud: "aws", Architecture: "amd64", Topology: "ha"},
+			},
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			got := filterVariants(tt.featureGate, tt.variants...)
+			if !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("filterVariants(%q) =\n  %+v\nwant:\n  %+v", tt.featureGate, got, tt.want)
+			}
+		})
+	}
+}
+
+func Test_matchTwoNodeFeatureGates(t *testing.T) {
+	tests := []struct {
+		featureGate string
+		topology    string
+		want        bool
+	}{
+		{"dualreplicafeature", "two-node-fencing", true},
+		{"fencingfeature", "two-node-fencing", true},
+		{"dualreplicafeature", "ha", false},
+		{"fencingfeature", "ha", false},
+		{"genericfeature", "two-node-fencing", false},
+		{"genericfeature", "ha", false},
+		{"dualreplicafeature", "two-node-arbiter", false},
+	}
+
+	for _, tt := range tests {
+		name := fmt.Sprintf("%s/%s", tt.featureGate, tt.topology)
+		t.Run(name, func(t *testing.T) {
+			got := matchTwoNodeFeatureGates(tt.featureGate, tt.topology)
+			if got != tt.want {
+				t.Errorf("matchTwoNodeFeatureGates(%q, %q) = %v, want %v",
+					tt.featureGate, tt.topology, got, tt.want)
+			}
+		})
+	}
+}
+
+func Test_testResultByName(t *testing.T) {
+	results := []TestResults{
+		{TestName: "test-alpha", TotalRuns: 10, SuccessfulRuns: 9},
+		{TestName: "test-beta", TotalRuns: 20, SuccessfulRuns: 20},
+		{TestName: "test-gamma", TotalRuns: 5, SuccessfulRuns: 3},
+	}
+
+	tests := []struct {
+		name     string
+		testName string
+		wantNil  bool
+		wantName string
+	}{
+		{"found first", "test-alpha", false, "test-alpha"},
+		{"found middle", "test-beta", false, "test-beta"},
+		{"found last", "test-gamma", false, "test-gamma"},
+		{"not found", "test-delta", true, ""},
+		{"empty name", "", true, ""},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			got := testResultByName(results, tt.testName)
+			if tt.wantNil {
+				if got != nil {
+					t.Errorf("testResultByName(%q) = %+v, want nil", tt.testName, got)
+				}
+			} else {
+				if got == nil {
+					t.Fatalf("testResultByName(%q) = nil, want non-nil", tt.testName)
+				}
+				if got.TestName != tt.wantName {
+					t.Errorf("testResultByName(%q).TestName = %q, want %q",
+						tt.testName, got.TestName, tt.wantName)
+				}
+			}
+		})
+	}
+}
+
+func Test_OrderedJobVariants(t *testing.T) {
+	input := []JobVariant{
+		{Cloud: "gcp", Architecture: "amd64", Topology: "ha"},
+		{Cloud: "aws", Architecture: "amd64", Topology: "ha"},
+		{Cloud: "aws", Architecture: "amd64", Topology: "external"},
+		{Cloud: "metal", Architecture: "amd64", Topology: "ha", NetworkStack: "dual"},
+		{Cloud: "metal", Architecture: "amd64", Topology: "ha", NetworkStack: "ipv4"},
+		{Cloud: "metal", Architecture: "amd64", Topology: "ha", NetworkStack: "ipv6"},
+		{Cloud: "aws", Architecture: "amd64", Topology: "single"},
+	}
+
+	want := []JobVariant{
+		{Cloud: "aws", Architecture: "amd64", Topology: "external"},
+		{Cloud: "aws", Architecture: "amd64", Topology: "ha"},
+		{Cloud: "gcp", Architecture: "amd64", Topology: "ha"},
+		{Cloud: "metal", Architecture: "amd64", Topology: "ha", NetworkStack: "ipv4"},
+		{Cloud: "metal", Architecture: "amd64", Topology: "ha", NetworkStack: "ipv6"},
+		{Cloud: "metal", Architecture: "amd64", Topology: "ha", NetworkStack: "dual"},
+		{Cloud: "aws", Architecture: "amd64", Topology: "single"},
+	}
+
+	sorted := make([]JobVariant, len(input))
+	copy(sorted, input)
+	sort.Sort(OrderedJobVariants(sorted))
+
+	if !reflect.DeepEqual(sorted, want) {
+		t.Errorf("OrderedJobVariants sort:\ngot:  %+v\nwant: %+v", sorted, want)
+	}
+}
+
+func Test_validateJobTiers_comprehensive(t *testing.T) {
+	tests := []struct {
+		name    string
+		variant JobVariant
+		wantErr bool
+	}{
+		{
+			name:    "empty job tiers is valid",
+			variant: JobVariant{Cloud: "aws", Architecture: "amd64", Topology: "ha"},
+			wantErr: false,
+		},
+		{
+			name:    "standard is valid",
+			variant: JobVariant{Cloud: "aws", Architecture: "amd64", Topology: "ha", JobTiers: "standard"},
+			wantErr: false,
+		},
+		{
+			name:    "informing is valid",
+			variant: JobVariant{Cloud: "aws", Architecture: "amd64", Topology: "ha", JobTiers: "informing"},
+			wantErr: false,
+		},
+		{
+			name:    "blocking is valid",
+			variant: JobVariant{Cloud: "aws", Architecture: "amd64", Topology: "ha", JobTiers: "blocking"},
+			wantErr: false,
+		},
+		{
+			name:    "all valid tiers combined",
+			variant: JobVariant{Cloud: "aws", Architecture: "amd64", Topology: "ha", JobTiers: "standard,informing,blocking,candidate"},
+			wantErr: false,
+		},
+		{
+			name:    "invalid tier rejected",
+			variant: JobVariant{Cloud: "aws", Architecture: "amd64", Topology: "ha", JobTiers: "invalid"},
+			wantErr: true,
+		},
+		{
+			name:    "valid tier with invalid tier rejected",
+			variant: JobVariant{Cloud: "aws", Architecture: "amd64", Topology: "ha", JobTiers: "standard,invalid"},
+			wantErr: true,
+		},
+		{
+			name:    "only commas rejected",
+			variant: JobVariant{Cloud: "aws", Architecture: "amd64", Topology: "ha", JobTiers: ",,,"},
+			wantErr: true,
+		},
+		{
+			name:    "whitespace only tiers rejected",
+			variant: JobVariant{Cloud: "aws", Architecture: "amd64", Topology: "ha", JobTiers: " , , "},
+			wantErr: true,
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			err := validateJobTiers(tt.variant)
+			if (err != nil) != tt.wantErr {
+				t.Errorf("validateJobTiers(%+v) error = %v, wantErr %v", tt.variant, err, tt.wantErr)
+			}
+		})
+	}
+}
+
+func Test_allDefinedVariantsHaveValidJobTiers(t *testing.T) {
+	allVariants := []struct {
+		name     string
+		variants []JobVariant
+	}{
+		{"requiredSelfManagedJobVariants", requiredSelfManagedJobVariants},
+		{"optionalSelfManagedPlatformVariants", optionalSelfManagedPlatformVariants},
+		{"requiredHypershiftJobVariants", requiredHypershiftJobVariants},
+	}
+
+	for _, group := range allVariants {
+		for i, variant := range group.variants {
+			name := fmt.Sprintf("%s[%d]-%s-%s-%s", group.name, i, variant.Cloud, variant.Architecture, variant.Topology)
+			t.Run(name, func(t *testing.T) {
+				if err := validateJobTiers(variant); err != nil {
+					t.Errorf("variant %+v has invalid JobTiers: %v", variant, err)
+				}
+			})
+		}
+	}
+}
+
+func Test_buildHTMLFeatureGateData(t *testing.T) {
+	tests := []struct {
+		name           string
+		featureGate    string
+		testingResults map[JobVariant]*TestingResults
+		blockingErrors []error
+		release        string
+		wantSufficient bool
+		wantVariants   int
+		wantTests      int
+	}{
+		{
+			name:        "sufficient testing with external topology hypershift variant",
+			featureGate: "AWSFeature",
+			testingResults: map[JobVariant]*TestingResults{
+				{Cloud: "aws", Architecture: "amd64", Topology: "external"}: {
+					TestResults: []TestResults{
+						{TestName: "test1", TotalRuns: 15, SuccessfulRuns: 15},
+						{TestName: "test2", TotalRuns: 15, SuccessfulRuns: 15},
+					},
+				},
+			},
+			blockingErrors: nil,
+			release:        "4.18",
+			wantSufficient: true,
+			wantVariants:   1,
+			wantTests:      2,
+		},
+		{
+			name:        "multiple variants including external topology",
+			featureGate: "AWSFeature",
+			testingResults: map[JobVariant]*TestingResults{
+				{Cloud: "aws", Architecture: "amd64", Topology: "ha"}: {
+					TestResults: []TestResults{
+						{TestName: "test1", TotalRuns: 15, SuccessfulRuns: 15},
+					},
+				},
+				{Cloud: "aws", Architecture: "amd64", Topology: "external"}: {
+					TestResults: []TestResults{
+						{TestName: "test1", TotalRuns: 15, SuccessfulRuns: 15},
+					},
+				},
+			},
+			blockingErrors: nil,
+			release:        "4.18",
+			wantSufficient: true,
+			wantVariants:   2,
+			wantTests:      1,
+		},
+		{
+			name:        "with blocking errors",
+			featureGate: "AWSFeature",
+			testingResults: map[JobVariant]*TestingResults{
+				{Cloud: "aws", Architecture: "amd64", Topology: "external"}: {
+					TestResults: []TestResults{
+						{TestName: "test1", TotalRuns: 5, SuccessfulRuns: 5},
+					},
+				},
+			},
+			blockingErrors: []error{fmt.Errorf("insufficient tests")},
+			release:        "4.18",
+			wantSufficient: false,
+			wantVariants:   1,
+			wantTests:      1,
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			result := buildHTMLFeatureGateData(tt.featureGate, tt.testingResults, tt.blockingErrors, tt.release)
+
+			if result.Name != tt.featureGate {
+				t.Errorf("Name = %q, want %q", result.Name, tt.featureGate)
+			}
+			if result.Sufficient != tt.wantSufficient {
+				t.Errorf("Sufficient = %v, want %v", result.Sufficient, tt.wantSufficient)
+			}
+			if len(result.Variants) != tt.wantVariants {
+				t.Errorf("got %d variants, want %d", len(result.Variants), tt.wantVariants)
+			}
+			if len(result.Tests) != tt.wantTests {
+				t.Errorf("got %d tests, want %d", len(result.Tests), tt.wantTests)
+			}
+
+			for _, v := range result.Variants {
+				if v.Topology == "hypershift" {
+					for _, test := range result.Tests {
+						cell := test.Cells[v.ColIndex-1]
+						if !strings.Contains(cell.SippyURL, "Topology%3Aexternal") && !strings.Contains(cell.SippyURL, "Topology:external") {
+							t.Errorf("Sippy URL for hypershift variant should query Topology:external but got: %s", cell.SippyURL)
+						}
+					}
+				}
+				if v.Topology == "external" {
+					t.Errorf("HTML variant column should display %q not %q for hypershift variants", "hypershift", "external")
+				}
+			}
+		})
 	}
 }

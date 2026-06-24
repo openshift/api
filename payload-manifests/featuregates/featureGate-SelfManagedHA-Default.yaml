@@ -115,9 +115,6 @@
                         "name": "GCPDualStackInstall"
                     },
                     {
-                        "name": "GatewayAPIWithoutOLM"
-                    },
-                    {
                         "name": "HyperShiftOnlyDynamicResourceAllocation"
                     },
                     {
@@ -268,6 +265,9 @@
                     },
                     {
                         "name": "GatewayAPIController"
+                    },
+                    {
+                        "name": "GatewayAPIWithoutOLM"
                     },
                     {
                         "name": "HighlyAvailableArbiter"

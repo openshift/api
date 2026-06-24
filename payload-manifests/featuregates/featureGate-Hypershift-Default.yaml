@@ -115,9 +115,6 @@
                         "name": "GCPDualStackInstall"
                     },
                     {
-                        "name": "GatewayAPIWithoutOLM"
-                    },
-                    {
                         "name": "ImageModeStatusReporting"
                     },
                     {
@@ -271,6 +268,9 @@
                     },
                     {
                         "name": "GatewayAPIController"
+                    },
+                    {
+                        "name": "GatewayAPIWithoutOLM"
                     },
                     {
                         "name": "HighlyAvailableArbiter"

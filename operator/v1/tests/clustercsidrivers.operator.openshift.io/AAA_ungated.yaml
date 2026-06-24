@@ -39,3 +39,752 @@ tests:
             driverType: IBMCloud
             ibmcloud: {}
       expectedError: "spec.driverConfig.ibmcloud.encryptionKeyCRN: Required value, <nil>: Invalid value: \"null\": some validation rules were not checked because the object was invalid; correct the existing errors to complete validation"
+    - name: SecretsStore driverType must have secretsStore spec
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: ClusterCSIDriver
+        metadata:
+          name: secrets-store.csi.k8s.io
+        spec:
+          driverConfig:
+            driverType: SecretsStore
+      expectedError: "Invalid value: \"object\": secretsStore must be set if driverType is 'SecretsStore', but remain unset otherwise"
+    - name: SecretsStore spec must not be set without SecretsStore driverType
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: ClusterCSIDriver
+        metadata:
+          name: secrets-store.csi.k8s.io
+        spec:
+          driverConfig:
+            driverType: AWS
+            secretsStore:
+              secretRotation:
+                type: Custom
+                custom:
+                  rotationPollIntervalSeconds: 300
+      expectedError: "Invalid value: \"object\": secretsStore must be set if driverType is 'SecretsStore', but remain unset otherwise"
+    - name: Should reject secrets-store name with non-SecretsStore driverType
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: ClusterCSIDriver
+        metadata:
+          name: secrets-store.csi.k8s.io
+        spec:
+          driverConfig:
+            driverType: AWS
+      expectedError: "metadata.name 'secrets-store.csi.k8s.io' requires driverType 'SecretsStore'"
+    - name: Should reject SecretsStore driverType with non-secrets-store name
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: ClusterCSIDriver
+        metadata:
+          name: ebs.csi.aws.com
+        spec:
+          driverConfig:
+            driverType: SecretsStore
+            secretsStore:
+              secretRotation:
+                type: Custom
+                custom:
+                  rotationPollIntervalSeconds: 300
+      expectedError: "driverType 'SecretsStore' requires metadata.name 'secrets-store.csi.k8s.io'"
+    - name: Should allow secrets-store name without driverType for backward compatibility
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: ClusterCSIDriver
+        metadata:
+          name: secrets-store.csi.k8s.io
+        spec:
+          managementState: Managed
+      expected: |
+        apiVersion: operator.openshift.io/v1
+        kind: ClusterCSIDriver
+        metadata:
+          name: secrets-store.csi.k8s.io
+        spec:
+          logLevel: Normal
+          operatorLogLevel: Normal
+          managementState: Managed
+    - name: Should reject empty custom struct (MinProperties=1)
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: ClusterCSIDriver
+        metadata:
+          name: secrets-store.csi.k8s.io
+        spec:
+          driverConfig:
+            driverType: SecretsStore
+            secretsStore:
+              secretRotation:
+                type: Custom
+                custom: {}
+      expectedError: "spec.driverConfig.secretsStore.secretRotation.custom: Invalid value"
+    - name: Should create SecretsStore with Managed tokenRequests
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: ClusterCSIDriver
+        metadata:
+          name: secrets-store.csi.k8s.io
+        spec:
+          driverConfig:
+            driverType: SecretsStore
+            secretsStore:
+              tokenRequests:
+                type: Managed
+                managed:
+                  audiences:
+                    - audience: "sts.amazonaws.com"
+      expected: |
+        apiVersion: operator.openshift.io/v1
+        kind: ClusterCSIDriver
+        metadata:
+          name: secrets-store.csi.k8s.io
+        spec:
+          logLevel: Normal
+          operatorLogLevel: Normal
+          driverConfig:
+            driverType: SecretsStore
+            secretsStore:
+              tokenRequests:
+                type: Managed
+                managed:
+                  audiences:
+                    - audience: "sts.amazonaws.com"
+    - name: Should allow Unmanaged tokenRequests
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: ClusterCSIDriver
+        metadata:
+          name: secrets-store.csi.k8s.io
+        spec:
+          driverConfig:
+            driverType: SecretsStore
+            secretsStore:
+              tokenRequests:
+                type: Unmanaged
+      expected: |
+        apiVersion: operator.openshift.io/v1
+        kind: ClusterCSIDriver
+        metadata:
+          name: secrets-store.csi.k8s.io
+        spec:
+          logLevel: Normal
+          operatorLogLevel: Normal
+          driverConfig:
+            driverType: SecretsStore
+            secretsStore:
+              tokenRequests:
+                type: Unmanaged
+    - name: Should create SecretsStore with rotation None
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: ClusterCSIDriver
+        metadata:
+          name: secrets-store.csi.k8s.io
+        spec:
+          driverConfig:
+            driverType: SecretsStore
+            secretsStore:
+              secretRotation:
+                type: None
+      expected: |
+        apiVersion: operator.openshift.io/v1
+        kind: ClusterCSIDriver
+        metadata:
+          name: secrets-store.csi.k8s.io
+        spec:
+          logLevel: Normal
+          operatorLogLevel: Normal
+          driverConfig:
+            driverType: SecretsStore
+            secretsStore:
+              secretRotation:
+                type: None
+    - name: Should create SecretsStore with full configuration
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: ClusterCSIDriver
+        metadata:
+          name: secrets-store.csi.k8s.io
+        spec:
+          driverConfig:
+            driverType: SecretsStore
+            secretsStore:
+              secretRotation:
+                type: Custom
+                custom:
+                  rotationPollIntervalSeconds: 300
+              tokenRequests:
+                type: Managed
+                managed:
+                  audiences:
+                    - audience: "sts.amazonaws.com"
+                      expirationSeconds: 3600
+                    - audience: "api://AzureADTokenExchange"
+      expected: |
+        apiVersion: operator.openshift.io/v1
+        kind: ClusterCSIDriver
+        metadata:
+          name: secrets-store.csi.k8s.io
+        spec:
+          logLevel: Normal
+          operatorLogLevel: Normal
+          driverConfig:
+            driverType: SecretsStore
+            secretsStore:
+              secretRotation:
+                type: Custom
+                custom:
+                  rotationPollIntervalSeconds: 300
+              tokenRequests:
+                type: Managed
+                managed:
+                  audiences:
+                    - audience: "sts.amazonaws.com"
+                      expirationSeconds: 3600
+                    - audience: "api://AzureADTokenExchange"
+    - name: Should reject empty secretsStore struct
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: ClusterCSIDriver
+        metadata:
+          name: secrets-store.csi.k8s.io
+        spec:
+          driverConfig:
+            driverType: SecretsStore
+            secretsStore: {}
+      expectedError: "spec.driverConfig.secretsStore: Invalid value"
+    - name: Should reject secretRotation without type (discriminator required)
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: ClusterCSIDriver
+        metadata:
+          name: secrets-store.csi.k8s.io
+        spec:
+          driverConfig:
+            driverType: SecretsStore
+            secretsStore:
+              secretRotation: {}
+      expectedError: "spec.driverConfig.secretsStore.secretRotation.type"
+    - name: Should reject tokenRequests without type (discriminator required)
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: ClusterCSIDriver
+        metadata:
+          name: secrets-store.csi.k8s.io
+        spec:
+          driverConfig:
+            driverType: SecretsStore
+            secretsStore:
+              tokenRequests: {}
+      expectedError: "spec.driverConfig.secretsStore.tokenRequests.type"
+    - name: Should allow empty audience string for kube-apiserver default
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: ClusterCSIDriver
+        metadata:
+          name: secrets-store.csi.k8s.io
+        spec:
+          driverConfig:
+            driverType: SecretsStore
+            secretsStore:
+              tokenRequests:
+                type: Managed
+                managed:
+                  audiences:
+                    - audience: ""
+      expected: |
+        apiVersion: operator.openshift.io/v1
+        kind: ClusterCSIDriver
+        metadata:
+          name: secrets-store.csi.k8s.io
+        spec:
+          logLevel: Normal
+          operatorLogLevel: Normal
+          driverConfig:
+            driverType: SecretsStore
+            secretsStore:
+              tokenRequests:
+                type: Managed
+                managed:
+                  audiences:
+                    - audience: ""
+    - name: Should reject empty managed struct (MinProperties=1)
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: ClusterCSIDriver
+        metadata:
+          name: secrets-store.csi.k8s.io
+        spec:
+          driverConfig:
+            driverType: SecretsStore
+            secretsStore:
+              tokenRequests:
+                type: Managed
+                managed: {}
+      expectedError: "spec.driverConfig.secretsStore.tokenRequests.managed: Invalid value"
+    - name: Should allow Managed type with empty audiences to clear tokenRequests
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: ClusterCSIDriver
+        metadata:
+          name: secrets-store.csi.k8s.io
+        spec:
+          driverConfig:
+            driverType: SecretsStore
+            secretsStore:
+              tokenRequests:
+                type: Managed
+                managed:
+                  audiences: []
+      expected: |
+        apiVersion: operator.openshift.io/v1
+        kind: ClusterCSIDriver
+        metadata:
+          name: secrets-store.csi.k8s.io
+        spec:
+          logLevel: Normal
+          operatorLogLevel: Normal
+          driverConfig:
+            driverType: SecretsStore
+            secretsStore:
+              tokenRequests:
+                type: Managed
+                managed:
+                  audiences: []
+    - name: Should allow audience with expirationSeconds
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: ClusterCSIDriver
+        metadata:
+          name: secrets-store.csi.k8s.io
+        spec:
+          driverConfig:
+            driverType: SecretsStore
+            secretsStore:
+              tokenRequests:
+                type: Managed
+                managed:
+                  audiences:
+                    - audience: "sts.amazonaws.com"
+                      expirationSeconds: 7200
+      expected: |
+        apiVersion: operator.openshift.io/v1
+        kind: ClusterCSIDriver
+        metadata:
+          name: secrets-store.csi.k8s.io
+        spec:
+          logLevel: Normal
+          operatorLogLevel: Normal
+          driverConfig:
+            driverType: SecretsStore
+            secretsStore:
+              tokenRequests:
+                type: Managed
+                managed:
+                  audiences:
+                    - audience: "sts.amazonaws.com"
+                      expirationSeconds: 7200
+    - name: Should reject expirationSeconds below 600
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: ClusterCSIDriver
+        metadata:
+          name: secrets-store.csi.k8s.io
+        spec:
+          driverConfig:
+            driverType: SecretsStore
+            secretsStore:
+              tokenRequests:
+                type: Managed
+                managed:
+                  audiences:
+                    - audience: "sts.amazonaws.com"
+                      expirationSeconds: 300
+      expectedError: "spec.driverConfig.secretsStore.tokenRequests.managed.audiences[0].expirationSeconds: Invalid value"
+    - name: Should reject expirationSeconds above 315360000
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: ClusterCSIDriver
+        metadata:
+          name: secrets-store.csi.k8s.io
+        spec:
+          driverConfig:
+            driverType: SecretsStore
+            secretsStore:
+              tokenRequests:
+                type: Managed
+                managed:
+                  audiences:
+                    - audience: "sts.amazonaws.com"
+                      expirationSeconds: 315360001
+      expectedError: "spec.driverConfig.secretsStore.tokenRequests.managed.audiences[0].expirationSeconds: Invalid value"
+    - name: Should allow multiple audiences for multi-cloud WIF
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: ClusterCSIDriver
+        metadata:
+          name: secrets-store.csi.k8s.io
+        spec:
+          driverConfig:
+            driverType: SecretsStore
+            secretsStore:
+              tokenRequests:
+                type: Managed
+                managed:
+                  audiences:
+                    - audience: "sts.amazonaws.com"
+                      expirationSeconds: 3600
+                    - audience: "api://AzureADTokenExchange"
+                    - audience: "https://accounts.google.com"
+      expected: |
+        apiVersion: operator.openshift.io/v1
+        kind: ClusterCSIDriver
+        metadata:
+          name: secrets-store.csi.k8s.io
+        spec:
+          logLevel: Normal
+          operatorLogLevel: Normal
+          driverConfig:
+            driverType: SecretsStore
+            secretsStore:
+              tokenRequests:
+                type: Managed
+                managed:
+                  audiences:
+                    - audience: "sts.amazonaws.com"
+                      expirationSeconds: 3600
+                    - audience: "api://AzureADTokenExchange"
+                    - audience: "https://accounts.google.com"
+    - name: Should reject invalid secretRotation type enum
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: ClusterCSIDriver
+        metadata:
+          name: secrets-store.csi.k8s.io
+        spec:
+          driverConfig:
+            driverType: SecretsStore
+            secretsStore:
+              secretRotation:
+                type: Invalid
+      expectedError: "spec.driverConfig.secretsStore.secretRotation.type"
+    - name: Should reject invalid tokenRequests type enum
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: ClusterCSIDriver
+        metadata:
+          name: secrets-store.csi.k8s.io
+        spec:
+          driverConfig:
+            driverType: SecretsStore
+            secretsStore:
+              tokenRequests:
+                type: Invalid
+      expectedError: "spec.driverConfig.secretsStore.tokenRequests.type"
+    - name: Should reject Custom secretRotation without custom field
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: ClusterCSIDriver
+        metadata:
+          name: secrets-store.csi.k8s.io
+        spec:
+          driverConfig:
+            driverType: SecretsStore
+            secretsStore:
+              secretRotation:
+                type: Custom
+      expectedError: "custom must be set when type is 'Custom', and must not be set otherwise"
+    - name: Should reject rotationPollIntervalSeconds below 1
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: ClusterCSIDriver
+        metadata:
+          name: secrets-store.csi.k8s.io
+        spec:
+          driverConfig:
+            driverType: SecretsStore
+            secretsStore:
+              secretRotation:
+                type: Custom
+                custom:
+                  rotationPollIntervalSeconds: 0
+      expectedError: "spec.driverConfig.secretsStore.secretRotation.custom.rotationPollIntervalSeconds: Invalid value"
+    - name: Should reject rotationPollIntervalSeconds above 31560000
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: ClusterCSIDriver
+        metadata:
+          name: secrets-store.csi.k8s.io
+        spec:
+          driverConfig:
+            driverType: SecretsStore
+            secretsStore:
+              secretRotation:
+                type: Custom
+                custom:
+                  rotationPollIntervalSeconds: 31560001
+      expectedError: "spec.driverConfig.secretsStore.secretRotation.custom.rotationPollIntervalSeconds: Invalid value"
+    - name: Should reject Managed tokenRequests without managed field
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: ClusterCSIDriver
+        metadata:
+          name: secrets-store.csi.k8s.io
+        spec:
+          driverConfig:
+            driverType: SecretsStore
+            secretsStore:
+              tokenRequests:
+                type: Managed
+      expectedError: "managed must be set when type is 'Managed', and must not be set otherwise"
+    - name: Should reject duplicate audience entries
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: ClusterCSIDriver
+        metadata:
+          name: secrets-store.csi.k8s.io
+        spec:
+          driverConfig:
+            driverType: SecretsStore
+            secretsStore:
+              tokenRequests:
+                type: Managed
+                managed:
+                  audiences:
+                    - audience: "sts.amazonaws.com"
+                    - audience: "sts.amazonaws.com"
+      expectedError: "spec.driverConfig.secretsStore.tokenRequests.managed.audiences"
+  onUpdate:
+    - name: Should allow upgrading existing object without driverConfig to add SecretsStore config
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: ClusterCSIDriver
+        metadata:
+          name: secrets-store.csi.k8s.io
+        spec:
+          managementState: Managed
+      updated: |
+        apiVersion: operator.openshift.io/v1
+        kind: ClusterCSIDriver
+        metadata:
+          name: secrets-store.csi.k8s.io
+        spec:
+          managementState: Managed
+          driverConfig:
+            driverType: SecretsStore
+            secretsStore:
+              secretRotation:
+                type: None
+      expected: |
+        apiVersion: operator.openshift.io/v1
+        kind: ClusterCSIDriver
+        metadata:
+          name: secrets-store.csi.k8s.io
+        spec:
+          logLevel: Normal
+          operatorLogLevel: Normal
+          managementState: Managed
+          driverConfig:
+            driverType: SecretsStore
+            secretsStore:
+              secretRotation:
+                type: None
+    - name: Should allow updating unrelated fields on existing object without driverConfig
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: ClusterCSIDriver
+        metadata:
+          name: secrets-store.csi.k8s.io
+        spec:
+          managementState: Managed
+      updated: |
+        apiVersion: operator.openshift.io/v1
+        kind: ClusterCSIDriver
+        metadata:
+          name: secrets-store.csi.k8s.io
+        spec:
+          managementState: Managed
+          logLevel: Debug
+      expected: |
+        apiVersion: operator.openshift.io/v1
+        kind: ClusterCSIDriver
+        metadata:
+          name: secrets-store.csi.k8s.io
+        spec:
+          logLevel: Debug
+          operatorLogLevel: Normal
+          managementState: Managed
+    - name: Should not allow reverting tokenRequests type from Managed to Unmanaged
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: ClusterCSIDriver
+        metadata:
+          name: secrets-store.csi.k8s.io
+        spec:
+          driverConfig:
+            driverType: SecretsStore
+            secretsStore:
+              tokenRequests:
+                type: Managed
+                managed:
+                  audiences:
+                    - audience: "sts.amazonaws.com"
+      updated: |
+        apiVersion: operator.openshift.io/v1
+        kind: ClusterCSIDriver
+        metadata:
+          name: secrets-store.csi.k8s.io
+        spec:
+          driverConfig:
+            driverType: SecretsStore
+            secretsStore:
+              tokenRequests:
+                type: Unmanaged
+      expectedError: "tokenRequests type cannot be changed from Managed"
+    - name: Should not allow bypassing Managed immutability by removing and re-adding driverConfig
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: ClusterCSIDriver
+        metadata:
+          name: secrets-store.csi.k8s.io
+        spec:
+          driverConfig:
+            driverType: SecretsStore
+            secretsStore:
+              tokenRequests:
+                type: Managed
+                managed:
+                  audiences:
+                    - audience: "sts.amazonaws.com"
+      updated: |
+        apiVersion: operator.openshift.io/v1
+        kind: ClusterCSIDriver
+        metadata:
+          name: secrets-store.csi.k8s.io
+        spec:
+          driverConfig:
+            driverType: SecretsStore
+            secretsStore:
+              tokenRequests:
+                type: Unmanaged
+      expectedError: "tokenRequests type cannot be changed from Managed"
+    - name: Should not allow removing tokenRequests when type was Managed
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: ClusterCSIDriver
+        metadata:
+          name: secrets-store.csi.k8s.io
+        spec:
+          driverConfig:
+            driverType: SecretsStore
+            secretsStore:
+              tokenRequests:
+                type: Managed
+                managed:
+                  audiences:
+                    - audience: "sts.amazonaws.com"
+      updated: |
+        apiVersion: operator.openshift.io/v1
+        kind: ClusterCSIDriver
+        metadata:
+          name: secrets-store.csi.k8s.io
+        spec:
+          driverConfig:
+            driverType: SecretsStore
+            secretsStore:
+              secretRotation:
+                type: Custom
+                custom:
+                  rotationPollIntervalSeconds: 300
+      expectedError: "tokenRequests type cannot be changed from Managed"
+    - name: Should allow changing tokenRequests type from Unmanaged to Managed
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: ClusterCSIDriver
+        metadata:
+          name: secrets-store.csi.k8s.io
+        spec:
+          driverConfig:
+            driverType: SecretsStore
+            secretsStore:
+              tokenRequests:
+                type: Unmanaged
+      updated: |
+        apiVersion: operator.openshift.io/v1
+        kind: ClusterCSIDriver
+        metadata:
+          name: secrets-store.csi.k8s.io
+        spec:
+          driverConfig:
+            driverType: SecretsStore
+            secretsStore:
+              tokenRequests:
+                type: Managed
+                managed:
+                  audiences:
+                    - audience: "sts.amazonaws.com"
+      expected: |
+        apiVersion: operator.openshift.io/v1
+        kind: ClusterCSIDriver
+        metadata:
+          name: secrets-store.csi.k8s.io
+        spec:
+          logLevel: Normal
+          operatorLogLevel: Normal
+          driverConfig:
+            driverType: SecretsStore
+            secretsStore:
+              tokenRequests:
+                type: Managed
+                managed:
+                  audiences:
+                    - audience: "sts.amazonaws.com"
+    - name: Should allow updating audiences when type is Managed
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: ClusterCSIDriver
+        metadata:
+          name: secrets-store.csi.k8s.io
+        spec:
+          driverConfig:
+            driverType: SecretsStore
+            secretsStore:
+              tokenRequests:
+                type: Managed
+                managed:
+                  audiences:
+                    - audience: "sts.amazonaws.com"
+      updated: |
+        apiVersion: operator.openshift.io/v1
+        kind: ClusterCSIDriver
+        metadata:
+          name: secrets-store.csi.k8s.io
+        spec:
+          driverConfig:
+            driverType: SecretsStore
+            secretsStore:
+              tokenRequests:
+                type: Managed
+                managed:
+                  audiences:
+                    - audience: "sts.amazonaws.com"
+                    - audience: "api://AzureADTokenExchange"
+      expected: |
+        apiVersion: operator.openshift.io/v1
+        kind: ClusterCSIDriver
+        metadata:
+          name: secrets-store.csi.k8s.io
+        spec:
+          logLevel: Normal
+          operatorLogLevel: Normal
+          driverConfig:
+            driverType: SecretsStore
+            secretsStore:
+              tokenRequests:
+                type: Managed
+                managed:
+                  audiences:
+                    - audience: "sts.amazonaws.com"
+                    - audience: "api://AzureADTokenExchange"

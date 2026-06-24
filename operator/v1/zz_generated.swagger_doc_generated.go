@@ -516,13 +516,14 @@ func (AzureDiskEncryptionSet) SwaggerDoc() map[string]string {
 }
 
 var map_CSIDriverConfigSpec = map[string]string{
-	"":           "CSIDriverConfigSpec defines configuration spec that can be used to optionally configure a specific CSI Driver.",
-	"driverType": "driverType indicates type of CSI driver for which the driverConfig is being applied to. Valid values are: AWS, Azure, GCP, IBMCloud, vSphere and omitted. Consumers should treat unknown values as a NO-OP.",
-	"aws":        "aws is used to configure the AWS CSI driver.",
-	"azure":      "azure is used to configure the Azure CSI driver.",
-	"gcp":        "gcp is used to configure the GCP CSI driver.",
-	"ibmcloud":   "ibmcloud is used to configure the IBM Cloud CSI driver.",
-	"vSphere":    "vSphere is used to configure the vsphere CSI driver.",
+	"":             "CSIDriverConfigSpec defines configuration spec that can be used to optionally configure a specific CSI Driver.",
+	"driverType":   "driverType indicates type of CSI driver for which the driverConfig is being applied to. Valid values are: AWS, Azure, GCP, IBMCloud, vSphere, SecretsStore and omitted. Consumers should treat unknown values as a NO-OP.",
+	"aws":          "aws is used to configure the AWS CSI driver.",
+	"azure":        "azure is used to configure the Azure CSI driver.",
+	"gcp":          "gcp is used to configure the GCP CSI driver.",
+	"ibmcloud":     "ibmcloud is used to configure the IBM Cloud CSI driver.",
+	"vSphere":      "vSphere is used to configure the vsphere CSI driver.",
+	"secretsStore": "secretsStore is used to configure the Secrets Store CSI driver.",
 }
 
 func (CSIDriverConfigSpec) SwaggerDoc() map[string]string {
@@ -567,6 +568,15 @@ func (ClusterCSIDriverStatus) SwaggerDoc() map[string]string {
 	return map_ClusterCSIDriverStatus
 }
 
+var map_CustomSecretRotation = map[string]string{
+	"":                            "CustomSecretRotation holds configuration for custom secret rotation behavior.",
+	"rotationPollIntervalSeconds": "rotationPollIntervalSeconds is the minimum time in seconds between secret rotation attempts. The driver skips provider calls if less than this interval has elapsed since the last successful rotation. Must be at least 1 second and no more than 31560000 seconds (~1 year). When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time.",
+}
+
+func (CustomSecretRotation) SwaggerDoc() map[string]string {
+	return map_CustomSecretRotation
+}
+
 var map_GCPCSIDriverConfigSpec = map[string]string{
 	"":       "GCPCSIDriverConfigSpec defines properties that can be configured for the GCP CSI driver.",
 	"kmsKey": "kmsKey sets the cluster default storage class to encrypt volumes with customer-supplied encryption keys, rather than the default keys managed by GCP.",
@@ -595,6 +605,55 @@ var map_IBMCloudCSIDriverConfigSpec = map[string]string{
 
 func (IBMCloudCSIDriverConfigSpec) SwaggerDoc() map[string]string {
 	return map_IBMCloudCSIDriverConfigSpec
+}
+
+var map_ManagedTokenRequests = map[string]string{
+	"":          "ManagedTokenRequests holds the configuration for operator-managed service account token requests.",
+	"audiences": "audiences specifies service account token audiences that kubelet will provide to the CSI driver during NodePublishVolume calls. These tokens enable workload identity federation (WIF) with cloud providers such as AWS, Azure, and GCP. When empty, the operator clears all tokenRequests from the CSIDriver object.",
+}
+
+func (ManagedTokenRequests) SwaggerDoc() map[string]string {
+	return map_ManagedTokenRequests
+}
+
+var map_SecretsStoreCSIDriverConfigSpec = map[string]string{
+	"":               "SecretsStoreCSIDriverConfigSpec defines properties that can be configured for the Secrets Store CSI driver.",
+	"secretRotation": "secretRotation controls automatic secret rotation behavior. When omitted, secret rotation is enabled with a default poll interval of 2 minutes.",
+	"tokenRequests":  "tokenRequests controls service account token configuration for workload identity federation (WIF) with cloud providers. When omitted, the operator preserves any existing tokenRequests already configured on the CSIDriver object without modification.",
+}
+
+func (SecretsStoreCSIDriverConfigSpec) SwaggerDoc() map[string]string {
+	return map_SecretsStoreCSIDriverConfigSpec
+}
+
+var map_SecretsStoreSecretRotation = map[string]string{
+	"":       "SecretsStoreSecretRotation configures the automatic secret rotation behavior for the Secrets Store CSI driver.",
+	"type":   "type determines the secret rotation behavior. When \"None\", secret rotation is disabled and secrets are only fetched at initial pod mount time. When \"Custom\", secret rotation is enabled with the configuration specified in the custom field.",
+	"custom": "custom holds the custom rotation configuration. Only valid when type is \"Custom\".",
+}
+
+func (SecretsStoreSecretRotation) SwaggerDoc() map[string]string {
+	return map_SecretsStoreSecretRotation
+}
+
+var map_SecretsStoreTokenRequest = map[string]string{
+	"":                  "SecretsStoreTokenRequest specifies a service account token audience configuration for workload identity federation (WIF) with the Secrets Store CSI driver.",
+	"audience":          "audience is the intended audience of the service account token. An empty string means the issued token will use the kube-apiserver's default APIAudiences.",
+	"expirationSeconds": "expirationSeconds is the requested duration of validity of the service account token. The token issuer may return a token with a different validity duration. When omitted, the token expiration is determined by the kube-apiserver. Must be at least 600 seconds (10 minutes) and no more than 315360000 seconds (~10 years).",
+}
+
+func (SecretsStoreTokenRequest) SwaggerDoc() map[string]string {
+	return map_SecretsStoreTokenRequest
+}
+
+var map_SecretsStoreTokenRequests = map[string]string{
+	"":        "SecretsStoreTokenRequests configures how service account tokens are provided to the Secrets Store CSI driver for workload identity federation.",
+	"type":    "type determines how the operator manages tokenRequests on the CSIDriver object. When \"Unmanaged\", existing tokenRequests on the CSIDriver are preserved and the managed field is not used. When \"Managed\", the operator sets tokenRequests from the audiences specified in the managed field, replacing any previously configured values. Once set to \"Managed\", type cannot be reverted back to \"Unmanaged\".",
+	"managed": "managed holds configuration for operator-managed tokenRequests. Only valid when type is \"Managed\".",
+}
+
+func (SecretsStoreTokenRequests) SwaggerDoc() map[string]string {
+	return map_SecretsStoreTokenRequests
 }
 
 var map_VSphereCSIDriverConfigSpec = map[string]string{

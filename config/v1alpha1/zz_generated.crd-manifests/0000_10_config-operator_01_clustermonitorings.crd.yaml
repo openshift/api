@@ -3383,10 +3383,45 @@ spec:
                             When omitted, no authorization is performed.
                             When set, type must be one of Authorization, BasicAuth, OAuth2, SigV4, or ServiceAccount; the corresponding nested config must be set (ServiceAccount has no config).
                           properties:
-                            basicAuth:
+                            authorization:
                               description: |-
-                                basicAuth defines HTTP basic authentication credentials.
-                                Required when type is "BasicAuth", and forbidden otherwise.
+                                authorization defines the secret reference containing the authorization credentials (e.g. Bearer token).
+                                Required when type is "Authorization", and forbidden otherwise.
+                                The secret must exist in the openshift-monitoring namespace.
+                              properties:
+                                key:
+                                  description: |-
+                                    key is the key of the secret to select from.
+                                    Must consist of alphanumeric characters, '-', '_', or '.'.
+                                    Must be between 1 and 253 characters in length.
+                                  maxLength: 253
+                                  minLength: 1
+                                  type: string
+                                  x-kubernetes-validations:
+                                  - message: must contain only alphanumeric characters,
+                                      '-', '_', or '.'
+                                    rule: self.matches('^[a-zA-Z0-9._-]+$')
+                                name:
+                                  description: |-
+                                    name is the name of the secret in the `openshift-monitoring` namespace to select from.
+                                    Must be a valid Kubernetes secret name (lowercase alphanumeric, '-' or '.', start/end with alphanumeric).
+                                    Must be between 1 and 253 characters in length.
+                                  maxLength: 253
+                                  minLength: 1
+                                  type: string
+                                  x-kubernetes-validations:
+                                  - message: must be a valid secret name (lowercase
+                                      alphanumeric characters, '-' or '.', start and
+                                      end with alphanumeric)
+                                    rule: '!format.dns1123Subdomain().validate(self).hasValue()'
+                              required:
+                              - key
+                              - name
+                              type: object
+                              x-kubernetes-map-type: atomic
+                            basicAuth:
+                              description: BasicAuth defines basic authentication
+                                settings for the remote write endpoint URL.
                               properties:
                                 password:
                                   description: |-
@@ -3462,42 +3497,6 @@ spec:
                               - password
                               - username
                               type: object
-                            credentials:
-                              description: |-
-                                credentials defines the secret reference containing the authorization credentials (e.g. Bearer token).
-                                Required when type is "Authorization", and forbidden otherwise.
-                                The secret must exist in the openshift-monitoring namespace.
-                              properties:
-                                key:
-                                  description: |-
-                                    key is the key of the secret to select from.
-                                    Must consist of alphanumeric characters, '-', '_', or '.'.
-                                    Must be between 1 and 253 characters in length.
-                                  maxLength: 253
-                                  minLength: 1
-                                  type: string
-                                  x-kubernetes-validations:
-                                  - message: must contain only alphanumeric characters,
-                                      '-', '_', or '.'
-                                    rule: self.matches('^[a-zA-Z0-9._-]+$')
-                                name:
-                                  description: |-
-                                    name is the name of the secret in the `openshift-monitoring` namespace to select from.
-                                    Must be a valid Kubernetes secret name (lowercase alphanumeric, '-' or '.', start/end with alphanumeric).
-                                    Must be between 1 and 253 characters in length.
-                                  maxLength: 253
-                                  minLength: 1
-                                  type: string
-                                  x-kubernetes-validations:
-                                  - message: must be a valid secret name (lowercase
-                                      alphanumeric characters, '-' or '.', start and
-                                      end with alphanumeric)
-                                    rule: '!format.dns1123Subdomain().validate(self).hasValue()'
-                              required:
-                              - key
-                              - name
-                              type: object
-                              x-kubernetes-map-type: atomic
                             oauth2:
                               description: |-
                                 oauth2 defines OAuth2 client credentials authentication.
@@ -3752,7 +3751,7 @@ spec:
                                 type specifies the authorization method to use.
                                 Allowed values are Authorization, BasicAuth, OAuth2, SigV4, ServiceAccount.
 
-                                When set to Authorization, credentials are read from a single Secret key. The secret key typically contains a Bearer token. Use the credentials field.
+                                When set to Authorization, credentials are read from a single Secret key. The secret key typically contains a Bearer token. Use the authorization field.
 
                                 When set to BasicAuth, HTTP basic authentication is used; the basicAuth field (username and password from Secrets) must be set.
 
@@ -3772,10 +3771,10 @@ spec:
                           - type
                           type: object
                           x-kubernetes-validations:
-                          - message: credentials is required when type is Authorization,
+                          - message: authorization is required when type is Authorization,
                               and forbidden otherwise
                             rule: 'has(self.type) && self.type == ''Authorization''
-                              ? has(self.credentials) : !has(self.credentials)'
+                              ? has(self.authorization) : !has(self.authorization)'
                           - message: basicAuth is required when type is BasicAuth,
                               and forbidden otherwise
                             rule: 'has(self.type) && self.type == ''BasicAuth'' ?

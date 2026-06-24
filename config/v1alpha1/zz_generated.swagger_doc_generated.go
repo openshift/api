@@ -619,12 +619,11 @@ func (RelabelConfig) SwaggerDoc() map[string]string {
 }
 
 var map_RemoteWriteAuthorization = map[string]string{
-	"":            "RemoteWriteAuthorization defines the authorization method for a remote write endpoint. Exactly one of the nested configs must be set according to the type discriminator.",
-	"type":        "type specifies the authorization method to use. Allowed values are Authorization, BasicAuth, OAuth2, SigV4, ServiceAccount.\n\nWhen set to Authorization, credentials are read from a single Secret key. The secret key typically contains a Bearer token. Use the credentials field.\n\nWhen set to BasicAuth, HTTP basic authentication is used; the basicAuth field (username and password from Secrets) must be set.\n\nWhen set to OAuth2, OAuth2 client credentials flow is used; the oauth2 field (clientId, clientSecret, tokenUrl) must be set.\n\nWhen set to SigV4, AWS Signature Version 4 is used for authentication; the sigv4 field must be set.\n\nWhen set to ServiceAccount, the pod's service account token is used for machine identity. No additional field is required; the operator configures the token path.",
-	"credentials": "credentials defines the secret reference containing the authorization credentials (e.g. Bearer token). Required when type is \"Authorization\", and forbidden otherwise. The secret must exist in the openshift-monitoring namespace.",
-	"basicAuth":   "basicAuth defines HTTP basic authentication credentials. Required when type is \"BasicAuth\", and forbidden otherwise.",
-	"oauth2":      "oauth2 defines OAuth2 client credentials authentication. Required when type is \"OAuth2\", and forbidden otherwise.",
-	"sigv4":       "sigv4 defines AWS Signature Version 4 authentication. Required when type is \"SigV4\", and forbidden otherwise.",
+	"":              "RemoteWriteAuthorization defines the authorization method for a remote write endpoint. Nested config requirements depend on the type discriminator: Authorization requires authorization, BasicAuth requires basicAuth, OAuth2 requires oauth2, SigV4 requires sigv4, and ServiceAccount forbids all nested configs.",
+	"type":          "type specifies the authorization method to use. Allowed values are Authorization, BasicAuth, OAuth2, SigV4, ServiceAccount.\n\nWhen set to Authorization, credentials are read from a single Secret key. The secret key typically contains a Bearer token. Use the authorization field.\n\nWhen set to BasicAuth, HTTP basic authentication is used; the basicAuth field (username and password from Secrets) must be set.\n\nWhen set to OAuth2, OAuth2 client credentials flow is used; the oauth2 field (clientId, clientSecret, tokenUrl) must be set.\n\nWhen set to SigV4, AWS Signature Version 4 is used for authentication; the sigv4 field must be set.\n\nWhen set to ServiceAccount, the pod's service account token is used for machine identity. No additional field is required; the operator configures the token path.",
+	"authorization": "authorization defines the secret reference containing the authorization credentials (e.g. Bearer token). Required when type is \"Authorization\", and forbidden otherwise. The secret must exist in the openshift-monitoring namespace.",
+	"oauth2":        "oauth2 defines OAuth2 client credentials authentication. Required when type is \"OAuth2\", and forbidden otherwise.",
+	"sigv4":         "sigv4 defines AWS Signature Version 4 authentication. Required when type is \"SigV4\", and forbidden otherwise.",
 }
 
 func (RemoteWriteAuthorization) SwaggerDoc() map[string]string {

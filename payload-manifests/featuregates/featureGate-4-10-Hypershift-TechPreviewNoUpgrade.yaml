@@ -44,9 +44,6 @@
                         "name": "ExternalOIDCExternalClaimsSourcing"
                     },
                     {
-                        "name": "ExternalSnapshotMetadata"
-                    },
-                    {
                         "name": "MachineAPIMigrationAzure"
                     },
                     {
@@ -236,6 +233,9 @@
                     },
                     {
                         "name": "ExternalOIDCWithUpstreamParity"
+                    },
+                    {
+                        "name": "ExternalSnapshotMetadata"
                     },
                     {
                         "name": "GCPCustomAPIEndpoints"

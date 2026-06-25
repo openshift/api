@@ -3499,8 +3499,9 @@ spec:
                               - username
                               type: object
                             bearerToken:
-                              description: SecretKeySelector selects a key of a Secret
-                                in the `openshift-monitoring` namespace.
+                              description: |-
+                                bearerToken is a tombstoned field that is deprecated. Use authorization with type Authorization instead.
+                                This field remains in the API schema but is rejected by validation.
                               properties:
                                 key:
                                   description: |-
@@ -3674,7 +3675,9 @@ spec:
                               - tokenUrl
                               type: object
                             safeAuthorization:
-                              description: SecretKeySelector selects a key of a Secret.
+                              description: |-
+                                safeAuthorization is a tombstoned field that is deprecated. Use authorization with type Authorization instead.
+                                This field remains in the API schema but is rejected by validation.
                               properties:
                                 key:
                                   description: The key of the secret to select from.  Must

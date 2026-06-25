@@ -14584,7 +14584,7 @@
           "$ref": "#/definitions/com.github.openshift.api.config.v1alpha1.BasicAuth"
         },
         "bearerToken": {
-          "description": "--- TOMBSTONE --- bearerToken is deprecated. Use authorization with type Authorization instead. This field remains in the API schema but is rejected by validation.",
+          "description": "bearerToken is a tombstoned field that is deprecated. Use authorization with type Authorization instead. This field remains in the API schema but is rejected by validation.",
           "default": {},
           "$ref": "#/definitions/com.github.openshift.api.config.v1alpha1.SecretKeySelector"
         },
@@ -14594,7 +14594,7 @@
           "$ref": "#/definitions/com.github.openshift.api.config.v1alpha1.OAuth2"
         },
         "safeAuthorization": {
-          "description": "--- TOMBSTONE --- safeAuthorization is deprecated. Use authorization with type Authorization instead. This field remains in the API schema but is rejected by validation.",
+          "description": "safeAuthorization is a tombstoned field that is deprecated. Use authorization with type Authorization instead. This field remains in the API schema but is rejected by validation.",
           "$ref": "#/definitions/io.k8s.api.core.v1.SecretKeySelector"
         },
         "sigv4": {

@@ -1717,14 +1717,12 @@ type RemoteWriteAuthorization struct {
 	// +unionMember=Authorization
 	// +optional
 	Authorization SecretKeySelector `json:"authorization,omitempty,omitzero"`
-	// --- TOMBSTONE ---
-	// bearerToken is deprecated. Use authorization with type Authorization instead.
+	// bearerToken is a tombstoned field that is deprecated. Use authorization with type Authorization instead.
 	// This field remains in the API schema but is rejected by validation.
 	// +unionMember
 	// +optional
 	BearerToken SecretKeySelector `json:"bearerToken,omitempty,omitzero"`
-	// --- TOMBSTONE ---
-	// safeAuthorization is deprecated. Use authorization with type Authorization instead.
+	// safeAuthorization is a tombstoned field that is deprecated. Use authorization with type Authorization instead.
 	// This field remains in the API schema but is rejected by validation.
 	// +unionMember
 	// +optional

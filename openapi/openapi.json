@@ -14583,19 +14583,10 @@
           "default": {},
           "$ref": "#/definitions/com.github.openshift.api.config.v1alpha1.BasicAuth"
         },
-        "bearerToken": {
-          "description": "bearerToken is a tombstoned field that is deprecated. Use authorization with type Authorization instead. This field remains in the API schema but is rejected by validation.",
-          "default": {},
-          "$ref": "#/definitions/com.github.openshift.api.config.v1alpha1.SecretKeySelector"
-        },
         "oauth2": {
           "description": "oauth2 defines OAuth2 client credentials authentication. Required when type is \"OAuth2\", and forbidden otherwise.",
           "default": {},
           "$ref": "#/definitions/com.github.openshift.api.config.v1alpha1.OAuth2"
-        },
-        "safeAuthorization": {
-          "description": "safeAuthorization is a tombstoned field that is deprecated. Use authorization with type Authorization instead. This field remains in the API schema but is rejected by validation.",
-          "$ref": "#/definitions/io.k8s.api.core.v1.SecretKeySelector"
         },
         "sigv4": {
           "description": "sigv4 defines AWS Signature Version 4 authentication. Required when type is \"SigV4\", and forbidden otherwise.",
@@ -14603,7 +14594,7 @@
           "$ref": "#/definitions/com.github.openshift.api.config.v1alpha1.Sigv4"
         },
         "type": {
-          "description": "type specifies the authorization method to use. Allowed values are Authorization, BasicAuth, OAuth2, SigV4, and ServiceAccount. BearerToken and SafeAuthorization are deprecated and rejected by validation; use Authorization instead.\n\nWhen set to Authorization, credentials are read from a single Secret key. The secret key typically contains a Bearer token. Use the authorization field.\n\nWhen set to BasicAuth, HTTP basic authentication is used; the basicAuth field (username and password from Secrets) must be set.\n\nWhen set to OAuth2, OAuth2 client credentials flow is used; the oauth2 field (clientId, clientSecret, tokenUrl) must be set.\n\nWhen set to SigV4, AWS Signature Version 4 is used for authentication; the sigv4 field must be set.\n\nWhen set to ServiceAccount, the pod's service account token is used for machine identity. No additional field is required; the operator configures the token path.",
+          "description": "type specifies the authorization method to use. Allowed values are Authorization, BasicAuth, OAuth2, SigV4, and ServiceAccount.\n\nWhen set to Authorization, credentials are read from a single Secret key. The secret key typically contains a Bearer token. Use the authorization field.\n\nWhen set to BasicAuth, HTTP basic authentication is used; the basicAuth field (username and password from Secrets) must be set.\n\nWhen set to OAuth2, OAuth2 client credentials flow is used; the oauth2 field (clientId, clientSecret, tokenUrl) must be set.\n\nWhen set to SigV4, AWS Signature Version 4 is used for authentication; the sigv4 field must be set.\n\nWhen set to ServiceAccount, the pod's service account token is used for machine identity. No additional field is required; the operator configures the token path.",
           "type": "string"
         }
       },
@@ -14613,9 +14604,7 @@
           "fields-to-discriminateBy": {
             "authorization": "Authorization",
             "basicAuth": "BasicAuth",
-            "bearerToken": "BearerToken",
             "oauth2": "OAuth2",
-            "safeAuthorization": "SafeAuthorization",
             "sigv4": "Sigv4"
           }
         }

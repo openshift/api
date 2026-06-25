@@ -1654,7 +1654,7 @@ type BasicAuth struct {
 }
 
 // RemoteWriteAuthorizationType defines the authorization method for remote write endpoints.
-// +kubebuilder:validation:Enum=Authorization;BasicAuth;OAuth2;SigV4;ServiceAccount;BearerToken;SafeAuthorization
+// +kubebuilder:validation:Enum=Authorization;BasicAuth;OAuth2;SigV4;ServiceAccount
 type RemoteWriteAuthorizationType string
 
 const (
@@ -1672,14 +1672,16 @@ const (
 	RemoteWriteAuthorizationTypeServiceAccount RemoteWriteAuthorizationType = "ServiceAccount"
 
 	// --- TOMBSTONE ---
-	// RemoteWriteAuthorizationTypeBearerToken is deprecated. Use RemoteWriteAuthorizationTypeAuthorization instead.
-	// The value remains in the API schema but is rejected by validation.
-	RemoteWriteAuthorizationTypeBearerToken RemoteWriteAuthorizationType = "BearerToken"
+	// RemoteWriteAuthorizationTypeBearerToken was a constant for bearer token authentication from a secret.
+	// It has been removed in favor of RemoteWriteAuthorizationTypeAuthorization. The constant name is reserved to prevent reuse.
+	//
+	// RemoteWriteAuthorizationTypeBearerToken RemoteWriteAuthorizationType = "BearerToken"
 
 	// --- TOMBSTONE ---
-	// RemoteWriteAuthorizationTypeSafeAuthorization is deprecated. Use RemoteWriteAuthorizationTypeAuthorization instead.
-	// The value remains in the API schema but is rejected by validation.
-	RemoteWriteAuthorizationTypeSafeAuthorization RemoteWriteAuthorizationType = "SafeAuthorization"
+	// RemoteWriteAuthorizationTypeSafeAuthorization was a constant for authorization credentials from a secret (Prometheus SafeAuthorization pattern).
+	// It has been removed in favor of RemoteWriteAuthorizationTypeAuthorization. The constant name is reserved to prevent reuse.
+	//
+	// RemoteWriteAuthorizationTypeSafeAuthorization RemoteWriteAuthorizationType = "SafeAuthorization"
 )
 
 // RemoteWriteAuthorization defines the authorization method for a remote write endpoint.
@@ -1689,15 +1691,10 @@ const (
 // +kubebuilder:validation:XValidation:rule="has(self.type) && self.type == 'BasicAuth' ? has(self.basicAuth) : !has(self.basicAuth)",message="basicAuth is required when type is BasicAuth, and forbidden otherwise"
 // +kubebuilder:validation:XValidation:rule="has(self.type) && self.type == 'OAuth2' ? has(self.oauth2) : !has(self.oauth2)",message="oauth2 is required when type is OAuth2, and forbidden otherwise"
 // +kubebuilder:validation:XValidation:rule="has(self.type) && self.type == 'SigV4' ? has(self.sigv4) : !has(self.sigv4)",message="sigv4 is required when type is SigV4, and forbidden otherwise"
-// +kubebuilder:validation:XValidation:rule="!has(self.type) || self.type != 'BearerToken'",message="type BearerToken is deprecated, use Authorization instead"
-// +kubebuilder:validation:XValidation:rule="!has(self.type) || self.type != 'SafeAuthorization'",message="type SafeAuthorization is deprecated, use Authorization instead"
-// +kubebuilder:validation:XValidation:rule="!has(self.bearerToken)",message="bearerToken is deprecated, use authorization with type Authorization instead"
-// +kubebuilder:validation:XValidation:rule="!has(self.safeAuthorization)",message="safeAuthorization is deprecated, use authorization with type Authorization instead"
 // +union
 type RemoteWriteAuthorization struct {
 	// type specifies the authorization method to use.
 	// Allowed values are Authorization, BasicAuth, OAuth2, SigV4, and ServiceAccount.
-	// BearerToken and SafeAuthorization are deprecated and rejected by validation; use Authorization instead.
 	//
 	// When set to Authorization, credentials are read from a single Secret key. The secret key typically contains a Bearer token. Use the authorization field.
 	//
@@ -1717,16 +1714,6 @@ type RemoteWriteAuthorization struct {
 	// +unionMember=Authorization
 	// +optional
 	Authorization SecretKeySelector `json:"authorization,omitempty,omitzero"`
-	// bearerToken is a tombstoned field that is deprecated. Use authorization with type Authorization instead.
-	// This field remains in the API schema but is rejected by validation.
-	// +unionMember
-	// +optional
-	BearerToken SecretKeySelector `json:"bearerToken,omitempty,omitzero"`
-	// safeAuthorization is a tombstoned field that is deprecated. Use authorization with type Authorization instead.
-	// This field remains in the API schema but is rejected by validation.
-	// +unionMember
-	// +optional
-	SafeAuthorization *v1.SecretKeySelector `json:"safeAuthorization,omitempty"`
 	// basicAuth defines HTTP basic authentication credentials.
 	// Required when type is "BasicAuth", and forbidden otherwise.
 	// +unionMember
@@ -1742,6 +1729,22 @@ type RemoteWriteAuthorization struct {
 	// +unionMember
 	// +optional
 	Sigv4 Sigv4 `json:"sigv4,omitempty,omitzero"`
+
+	// --- TOMBSTONE ---
+	// bearerToken was a field for bearer token authentication from a secret.
+	// It has been removed in favor of authorization. The field name is reserved to prevent reuse.
+	//
+	// +unionMember
+	// +optional
+	// BearerToken SecretKeySelector `json:"bearerToken,omitempty,omitzero"`
+
+	// --- TOMBSTONE ---
+	// safeAuthorization was a field for authorization credentials from a secret (Prometheus SafeAuthorization pattern).
+	// It has been removed in favor of authorization. The field name is reserved to prevent reuse.
+	//
+	// +unionMember
+	// +optional
+	// SafeAuthorization *v1.SecretKeySelector `json:"safeAuthorization,omitempty"`
 }
 
 // MetadataConfigSendPolicy defines whether to send metadata with platform defaults or with custom settings.

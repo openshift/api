@@ -1756,12 +1756,6 @@ func (in *RelabelConfig) DeepCopy() *RelabelConfig {
 func (in *RemoteWriteAuthorization) DeepCopyInto(out *RemoteWriteAuthorization) {
 	*out = *in
 	out.Authorization = in.Authorization
-	out.BearerToken = in.BearerToken
-	if in.SafeAuthorization != nil {
-		in, out := &in.SafeAuthorization, &out.SafeAuthorization
-		*out = new(v1.SecretKeySelector)
-		(*in).DeepCopyInto(*out)
-	}
 	out.BasicAuth = in.BasicAuth
 	in.OAuth2.DeepCopyInto(&out.OAuth2)
 	out.Sigv4 = in.Sigv4

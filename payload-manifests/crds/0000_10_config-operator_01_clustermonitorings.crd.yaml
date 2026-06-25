@@ -3498,41 +3498,6 @@ spec:
                               - password
                               - username
                               type: object
-                            bearerToken:
-                              description: |-
-                                bearerToken is a tombstoned field that is deprecated. Use authorization with type Authorization instead.
-                                This field remains in the API schema but is rejected by validation.
-                              properties:
-                                key:
-                                  description: |-
-                                    key is the key of the secret to select from.
-                                    Must consist of alphanumeric characters, '-', '_', or '.'.
-                                    Must be between 1 and 253 characters in length.
-                                  maxLength: 253
-                                  minLength: 1
-                                  type: string
-                                  x-kubernetes-validations:
-                                  - message: must contain only alphanumeric characters,
-                                      '-', '_', or '.'
-                                    rule: self.matches('^[a-zA-Z0-9._-]+$')
-                                name:
-                                  description: |-
-                                    name is the name of the secret in the `openshift-monitoring` namespace to select from.
-                                    Must be a valid Kubernetes secret name (lowercase alphanumeric, '-' or '.', start/end with alphanumeric).
-                                    Must be between 1 and 253 characters in length.
-                                  maxLength: 253
-                                  minLength: 1
-                                  type: string
-                                  x-kubernetes-validations:
-                                  - message: must be a valid secret name (lowercase
-                                      alphanumeric characters, '-' or '.', start and
-                                      end with alphanumeric)
-                                    rule: '!format.dns1123Subdomain().validate(self).hasValue()'
-                              required:
-                              - key
-                              - name
-                              type: object
-                              x-kubernetes-map-type: atomic
                             oauth2:
                               description: |-
                                 oauth2 defines OAuth2 client credentials authentication.
@@ -3674,32 +3639,6 @@ spec:
                               - clientSecret
                               - tokenUrl
                               type: object
-                            safeAuthorization:
-                              description: |-
-                                safeAuthorization is a tombstoned field that is deprecated. Use authorization with type Authorization instead.
-                                This field remains in the API schema but is rejected by validation.
-                              properties:
-                                key:
-                                  description: The key of the secret to select from.  Must
-                                    be a valid secret key.
-                                  type: string
-                                name:
-                                  default: ""
-                                  description: |-
-                                    Name of the referent.
-                                    This field is effectively required, but due to backwards compatibility is
-                                    allowed to be empty. Instances of this type with an empty value here are
-                                    almost certainly wrong.
-                                    More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names
-                                  type: string
-                                optional:
-                                  description: Specify whether the Secret or its key
-                                    must be defined
-                                  type: boolean
-                              required:
-                              - key
-                              type: object
-                              x-kubernetes-map-type: atomic
                             sigv4:
                               description: |-
                                 sigv4 defines AWS Signature Version 4 authentication.
@@ -3812,7 +3751,6 @@ spec:
                               description: |-
                                 type specifies the authorization method to use.
                                 Allowed values are Authorization, BasicAuth, OAuth2, SigV4, and ServiceAccount.
-                                BearerToken and SafeAuthorization are deprecated and rejected by validation; use Authorization instead.
 
                                 When set to Authorization, credentials are read from a single Secret key. The secret key typically contains a Bearer token. Use the authorization field.
 
@@ -3829,8 +3767,6 @@ spec:
                               - OAuth2
                               - SigV4
                               - ServiceAccount
-                              - BearerToken
-                              - SafeAuthorization
                               type: string
                           required:
                           - type
@@ -3852,18 +3788,6 @@ spec:
                               otherwise
                             rule: 'has(self.type) && self.type == ''SigV4'' ? has(self.sigv4)
                               : !has(self.sigv4)'
-                          - message: type BearerToken is deprecated, use Authorization
-                              instead
-                            rule: '!has(self.type) || self.type != ''BearerToken'''
-                          - message: type SafeAuthorization is deprecated, use Authorization
-                              instead
-                            rule: '!has(self.type) || self.type != ''SafeAuthorization'''
-                          - message: bearerToken is deprecated, use authorization
-                              with type Authorization instead
-                            rule: '!has(self.bearerToken)'
-                          - message: safeAuthorization is deprecated, use authorization
-                              with type Authorization instead
-                            rule: '!has(self.safeAuthorization)'
                         exemplarsMode:
                           description: |-
                             exemplarsMode controls whether exemplars are sent via remote write.

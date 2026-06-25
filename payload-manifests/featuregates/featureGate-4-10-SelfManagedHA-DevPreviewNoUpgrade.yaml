@@ -331,6 +331,9 @@
                         "name": "ProvisioningRequestAvailable"
                     },
                     {
+                        "name": "ResourceStateMetrics"
+                    },
+                    {
                         "name": "RouteExternalCertificate"
                     },
                     {

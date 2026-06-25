@@ -252,6 +252,9 @@
                         "name": "ProvisioningRequestAvailable"
                     },
                     {
+                        "name": "ResourceStateMetrics"
+                    },
+                    {
                         "name": "SELinuxMount"
                     },
                     {

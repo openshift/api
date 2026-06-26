@@ -1029,4 +1029,12 @@ var (
 					enhancementPR("https://github.com/openshift/enhancements/pull/2008").
 					enable(inClusterProfile(SelfManaged), inDevPreviewNoUpgrade()).
 					mustRegister()
+
+	FeatureGateSELinuxMountGAReadiness = newFeatureGate("SELinuxMountGAReadiness").
+						reportProblemsToJiraComponent("Storage / Operators").
+						contactPerson("jsafrane").
+						productScope(ocpSpecific).
+						enhancementPR("https://github.com/openshift/enhancements/pull/2010").
+						enable(inTechPreviewNoUpgrade(), inDevPreviewNoUpgrade()).
+						mustRegister()
 )

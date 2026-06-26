@@ -6,8 +6,9 @@
 package generated_openapi
 
 import (
+	v1 "github.com/openshift/api/apiextensions/v1"
 	v1alpha1 "github.com/openshift/api/apiextensions/v1alpha1"
-	v1 "github.com/openshift/api/apiserver/v1"
+	apiserverv1 "github.com/openshift/api/apiserver/v1"
 	appsv1 "github.com/openshift/api/apps/v1"
 	authenticationv1alpha1 "github.com/openshift/api/authentication/v1alpha1"
 	authorizationv1 "github.com/openshift/api/authorization/v1"
@@ -67,6 +68,17 @@ import (
 
 func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenAPIDefinition {
 	return map[string]common.OpenAPIDefinition{
+		v1.APIExcludedField{}.OpenAPIModelName():                                               schema_openshift_api_apiextensions_v1_APIExcludedField(ref),
+		v1.APIVersions{}.OpenAPIModelName():                                                    schema_openshift_api_apiextensions_v1_APIVersions(ref),
+		v1.CRDData{}.OpenAPIModelName():                                                        schema_openshift_api_apiextensions_v1_CRDData(ref),
+		v1.CompatibilityRequirement{}.OpenAPIModelName():                                       schema_openshift_api_apiextensions_v1_CompatibilityRequirement(ref),
+		v1.CompatibilityRequirementList{}.OpenAPIModelName():                                   schema_openshift_api_apiextensions_v1_CompatibilityRequirementList(ref),
+		v1.CompatibilityRequirementSpec{}.OpenAPIModelName():                                   schema_openshift_api_apiextensions_v1_CompatibilityRequirementSpec(ref),
+		v1.CompatibilityRequirementStatus{}.OpenAPIModelName():                                 schema_openshift_api_apiextensions_v1_CompatibilityRequirementStatus(ref),
+		v1.CompatibilitySchema{}.OpenAPIModelName():                                            schema_openshift_api_apiextensions_v1_CompatibilitySchema(ref),
+		v1.CustomResourceDefinitionSchemaValidation{}.OpenAPIModelName():                       schema_openshift_api_apiextensions_v1_CustomResourceDefinitionSchemaValidation(ref),
+		v1.ObjectSchemaValidation{}.OpenAPIModelName():                                         schema_openshift_api_apiextensions_v1_ObjectSchemaValidation(ref),
+		v1.ObservedCRD{}.OpenAPIModelName():                                                    schema_openshift_api_apiextensions_v1_ObservedCRD(ref),
 		v1alpha1.APIExcludedField{}.OpenAPIModelName():                                         schema_openshift_api_apiextensions_v1alpha1_APIExcludedField(ref),
 		v1alpha1.APIVersions{}.OpenAPIModelName():                                              schema_openshift_api_apiextensions_v1alpha1_APIVersions(ref),
 		v1alpha1.CRDData{}.OpenAPIModelName():                                                  schema_openshift_api_apiextensions_v1alpha1_CRDData(ref),
@@ -78,14 +90,14 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		v1alpha1.CustomResourceDefinitionSchemaValidation{}.OpenAPIModelName():                 schema_openshift_api_apiextensions_v1alpha1_CustomResourceDefinitionSchemaValidation(ref),
 		v1alpha1.ObjectSchemaValidation{}.OpenAPIModelName():                                   schema_openshift_api_apiextensions_v1alpha1_ObjectSchemaValidation(ref),
 		v1alpha1.ObservedCRD{}.OpenAPIModelName():                                              schema_openshift_api_apiextensions_v1alpha1_ObservedCRD(ref),
-		v1.APIRequestCount{}.OpenAPIModelName():                                                schema_openshift_api_apiserver_v1_APIRequestCount(ref),
-		v1.APIRequestCountList{}.OpenAPIModelName():                                            schema_openshift_api_apiserver_v1_APIRequestCountList(ref),
-		v1.APIRequestCountSpec{}.OpenAPIModelName():                                            schema_openshift_api_apiserver_v1_APIRequestCountSpec(ref),
-		v1.APIRequestCountStatus{}.OpenAPIModelName():                                          schema_openshift_api_apiserver_v1_APIRequestCountStatus(ref),
-		v1.PerNodeAPIRequestLog{}.OpenAPIModelName():                                           schema_openshift_api_apiserver_v1_PerNodeAPIRequestLog(ref),
-		v1.PerResourceAPIRequestLog{}.OpenAPIModelName():                                       schema_openshift_api_apiserver_v1_PerResourceAPIRequestLog(ref),
-		v1.PerUserAPIRequestCount{}.OpenAPIModelName():                                         schema_openshift_api_apiserver_v1_PerUserAPIRequestCount(ref),
-		v1.PerVerbAPIRequestCount{}.OpenAPIModelName():                                         schema_openshift_api_apiserver_v1_PerVerbAPIRequestCount(ref),
+		apiserverv1.APIRequestCount{}.OpenAPIModelName():                                       schema_openshift_api_apiserver_v1_APIRequestCount(ref),
+		apiserverv1.APIRequestCountList{}.OpenAPIModelName():                                   schema_openshift_api_apiserver_v1_APIRequestCountList(ref),
+		apiserverv1.APIRequestCountSpec{}.OpenAPIModelName():                                   schema_openshift_api_apiserver_v1_APIRequestCountSpec(ref),
+		apiserverv1.APIRequestCountStatus{}.OpenAPIModelName():                                 schema_openshift_api_apiserver_v1_APIRequestCountStatus(ref),
+		apiserverv1.PerNodeAPIRequestLog{}.OpenAPIModelName():                                  schema_openshift_api_apiserver_v1_PerNodeAPIRequestLog(ref),
+		apiserverv1.PerResourceAPIRequestLog{}.OpenAPIModelName():                              schema_openshift_api_apiserver_v1_PerResourceAPIRequestLog(ref),
+		apiserverv1.PerUserAPIRequestCount{}.OpenAPIModelName():                                schema_openshift_api_apiserver_v1_PerUserAPIRequestCount(ref),
+		apiserverv1.PerVerbAPIRequestCount{}.OpenAPIModelName():                                schema_openshift_api_apiserver_v1_PerVerbAPIRequestCount(ref),
 		appsv1.CustomDeploymentStrategyParams{}.OpenAPIModelName():                             schema_openshift_api_apps_v1_CustomDeploymentStrategyParams(ref),
 		appsv1.DeploymentCause{}.OpenAPIModelName():                                            schema_openshift_api_apps_v1_DeploymentCause(ref),
 		appsv1.DeploymentCauseImageTrigger{}.OpenAPIModelName():                                schema_openshift_api_apps_v1_DeploymentCauseImageTrigger(ref),
@@ -1903,6 +1915,458 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 	}
 }
 
+func schema_openshift_api_apiextensions_v1_APIExcludedField(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "APIExcludedField describes a field in the schema which will not be validated by crdSchemaValidation or objectSchemaValidation.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"path": {
+						SchemaProps: spec.SchemaProps{
+							Description: "path is the path to the field in the schema. Paths are dot-separated field names (e.g., \"fieldA.fieldB.fieldC\") representing nested object fields. If part of the path is a slice (e.g., \"status.conditions\") the remaining path is applied to all items in the slice (e.g., \"status.conditions.lastTransitionTimestamp\"). Each field name must be a valid Kubernetes CRD field name: start with a letter, contain only letters, digits, and underscores, and be between 1 and 63 characters in length. A path may contain at most 16 fields.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"versions": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-type": "set",
+							},
+						},
+						SchemaProps: spec.SchemaProps{
+							Description: "versions are the API versions the field is excluded from. When not specified, the field is excluded from all versions.\n\nEach item must be at most 63 characters in length, and must consist of only lowercase alphanumeric characters and hyphens, and must start with an alphabetic character and end with an alphanumeric character. At most 32 versions may be specified.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Type:   []string{"string"},
+										Format: "",
+									},
+								},
+							},
+						},
+					},
+				},
+				Required: []string{"path", "versions"},
+			},
+		},
+	}
+}
+
+func schema_openshift_api_apiextensions_v1_APIVersions(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "APIVersions specifies a set of API versions of a CRD.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"defaultSelection": {
+						SchemaProps: spec.SchemaProps{
+							Description: "defaultSelection specifies a method for automatically selecting a set of versions to require.\n\nValid options are StorageOnly and AllServed. When set to StorageOnly, only the storage version is selected for compatibility assessment. When set to AllServed, all served versions are selected for compatibility assessment.\n\nThis field is required.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"additionalVersions": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-type": "set",
+							},
+						},
+						SchemaProps: spec.SchemaProps{
+							Description: "additionalVersions specifies a set api versions to require in addition to the default selection. It is explicitly permitted to specify a version in additionalVersions which was also selected by the default selection. The selections will be merged and deduplicated.\n\nEach item must be at most 63 characters in length, and must consist of only lowercase alphanumeric characters and hyphens, and must start with an alphabetic character and end with an alphanumeric character. At most 32 additional versions may be specified.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Type:   []string{"string"},
+										Format: "",
+									},
+								},
+							},
+						},
+					},
+				},
+				Required: []string{"defaultSelection"},
+			},
+		},
+	}
+}
+
+func schema_openshift_api_apiextensions_v1_CRDData(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "CRDData contains the complete definition of a CRD.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"type": {
+						SchemaProps: spec.SchemaProps{
+							Description: "type indicates the type of the CRD data. The only supported type is \"YAML\". When set to YAML, the value in the data field is expected to be a valid YAML document. This field is required.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"data": {
+						SchemaProps: spec.SchemaProps{
+							Description: "data contains the complete definition of the CRD. This field must be in the format specified by the type field. It may not be longer than 1572864 characters. This field is required.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+				},
+				Required: []string{"type", "data"},
+			},
+		},
+	}
+}
+
+func schema_openshift_api_apiextensions_v1_CompatibilityRequirement(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "CompatibilityRequirement expresses a set of requirements on a target CRD. It is used to ensure compatibility between different actors using the same CRD.\n\nCompatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"kind": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"apiVersion": {
+						SchemaProps: spec.SchemaProps{
+							Description: "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"metadata": {
+						SchemaProps: spec.SchemaProps{
+							Description: "metadata is the standard object's metadata. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata",
+							Default:     map[string]interface{}{},
+							Ref:         ref(metav1.ObjectMeta{}.OpenAPIModelName()),
+						},
+					},
+					"spec": {
+						SchemaProps: spec.SchemaProps{
+							Description: "spec is the specification of the desired behavior of the Compatibility Requirement.",
+							Default:     map[string]interface{}{},
+							Ref:         ref(v1.CompatibilityRequirementSpec{}.OpenAPIModelName()),
+						},
+					},
+					"status": {
+						SchemaProps: spec.SchemaProps{
+							Description: "status is the most recently observed status of the Compatibility Requirement.",
+							Default:     map[string]interface{}{},
+							Ref:         ref(v1.CompatibilityRequirementStatus{}.OpenAPIModelName()),
+						},
+					},
+				},
+				Required: []string{"metadata", "spec"},
+			},
+		},
+		Dependencies: []string{
+			v1.CompatibilityRequirementSpec{}.OpenAPIModelName(), v1.CompatibilityRequirementStatus{}.OpenAPIModelName(), metav1.ObjectMeta{}.OpenAPIModelName()},
+	}
+}
+
+func schema_openshift_api_apiextensions_v1_CompatibilityRequirementList(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "CompatibilityRequirementList is a collection of CompatibilityRequirements.\n\nCompatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"kind": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"apiVersion": {
+						SchemaProps: spec.SchemaProps{
+							Description: "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"metadata": {
+						SchemaProps: spec.SchemaProps{
+							Description: "metadata is the standard list's metadata. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata",
+							Default:     map[string]interface{}{},
+							Ref:         ref(metav1.ListMeta{}.OpenAPIModelName()),
+						},
+					},
+					"items": {
+						SchemaProps: spec.SchemaProps{
+							Description: "items is a list of CompatibilityRequirements.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Ref: ref(v1.CompatibilityRequirement{}.OpenAPIModelName()),
+									},
+								},
+							},
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			v1.CompatibilityRequirement{}.OpenAPIModelName(), metav1.ListMeta{}.OpenAPIModelName()},
+	}
+}
+
+func schema_openshift_api_apiextensions_v1_CompatibilityRequirementSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "CompatibilityRequirementSpec is the specification of the desired behavior of the Compatibility Requirement.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"compatibilitySchema": {
+						SchemaProps: spec.SchemaProps{
+							Description: "compatibilitySchema defines the schema used by customResourceDefinitionSchemaValidation and objectSchemaValidation. This field is required.",
+							Default:     map[string]interface{}{},
+							Ref:         ref(v1.CompatibilitySchema{}.OpenAPIModelName()),
+						},
+					},
+					"customResourceDefinitionSchemaValidation": {
+						SchemaProps: spec.SchemaProps{
+							Description: "customResourceDefinitionSchemaValidation ensures that updates to the installed CRD are compatible with this compatibility requirement. If not specified, admission of the target CRD will not be validated. This field is optional.",
+							Default:     map[string]interface{}{},
+							Ref:         ref(v1.CustomResourceDefinitionSchemaValidation{}.OpenAPIModelName()),
+						},
+					},
+					"objectSchemaValidation": {
+						SchemaProps: spec.SchemaProps{
+							Description: "objectSchemaValidation ensures that matching resources conform to compatibilitySchema. If not specified, admission of matching resources will not be validated. This field is optional.",
+							Default:     map[string]interface{}{},
+							Ref:         ref(v1.ObjectSchemaValidation{}.OpenAPIModelName()),
+						},
+					},
+				},
+				Required: []string{"compatibilitySchema"},
+			},
+		},
+		Dependencies: []string{
+			v1.CompatibilitySchema{}.OpenAPIModelName(), v1.CustomResourceDefinitionSchemaValidation{}.OpenAPIModelName(), v1.ObjectSchemaValidation{}.OpenAPIModelName()},
+	}
+}
+
+func schema_openshift_api_apiextensions_v1_CompatibilityRequirementStatus(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "CompatibilityRequirementStatus defines the observed status of the Compatibility Requirement.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"conditions": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-map-keys": []interface{}{
+									"type",
+								},
+								"x-kubernetes-list-type": "map",
+							},
+						},
+						SchemaProps: spec.SchemaProps{
+							Description: "conditions is a list of conditions and their status. Known condition types are Progressing, Admitted, and Compatible.\n\nThe Progressing condition indicates if reconciliation of a CompatibilityRequirement is still progressing or has finished.\n\nThe Admitted condition indicates if the validating webhook has been configured.\n\nThe Compatible condition indicates if the observed CRD is compatible with the requirement.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Ref: ref(metav1.Condition{}.OpenAPIModelName()),
+									},
+								},
+							},
+						},
+					},
+					"observedCRD": {
+						SchemaProps: spec.SchemaProps{
+							Description: "observedCRD documents the uid and generation of the CRD object when the current status was written. This field will be omitted if the target CRD does not exist or could not be retrieved.",
+							Default:     map[string]interface{}{},
+							Ref:         ref(v1.ObservedCRD{}.OpenAPIModelName()),
+						},
+					},
+					"crdName": {
+						SchemaProps: spec.SchemaProps{
+							Description: "crdName is the name of the target CRD. The target CRD is not required to exist, as we may legitimately place requirements on it before it is created.  The observed CRD is given in status.observedCRD, which will be empty if no CRD is observed. When present, must be between 1 and 253 characters and conform to RFC 1123 subdomain format: lowercase alphanumeric characters, '-' or '.', starting and ending with alphanumeric characters. When not specified, the requirement applies to any CRD name discovered from the compatibility schema. This field is optional. Once set, the value cannot be changed and must always remain set.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			v1.ObservedCRD{}.OpenAPIModelName(), metav1.Condition{}.OpenAPIModelName()},
+	}
+}
+
+func schema_openshift_api_apiextensions_v1_CompatibilitySchema(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "CompatibilitySchema defines the schema used by crdSchemaValidation and objectSchemaValidation.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"customResourceDefinition": {
+						SchemaProps: spec.SchemaProps{
+							Description: "customResourceDefinition contains the complete definition of the CRD for schema and object validation purposes. This field is required.",
+							Default:     map[string]interface{}{},
+							Ref:         ref(v1.CRDData{}.OpenAPIModelName()),
+						},
+					},
+					"requiredVersions": {
+						SchemaProps: spec.SchemaProps{
+							Description: "requiredVersions specifies a subset of the CRD's API versions which will be asserted for compatibility. This field is required.",
+							Default:     map[string]interface{}{},
+							Ref:         ref(v1.APIVersions{}.OpenAPIModelName()),
+						},
+					},
+					"excludedFields": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-type": "atomic",
+							},
+						},
+						SchemaProps: spec.SchemaProps{
+							Description: "excludedFields is a set of fields in the schema which will not be validated by crdSchemaValidation or objectSchemaValidation. The list may contain at most 64 fields. Each path in the list must be unique. When not specified, all fields in the schema will be validated.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Ref: ref(v1.APIExcludedField{}.OpenAPIModelName()),
+									},
+								},
+							},
+						},
+					},
+				},
+				Required: []string{"customResourceDefinition", "requiredVersions"},
+			},
+		},
+		Dependencies: []string{
+			v1.APIExcludedField{}.OpenAPIModelName(), v1.APIVersions{}.OpenAPIModelName(), v1.CRDData{}.OpenAPIModelName()},
+	}
+}
+
+func schema_openshift_api_apiextensions_v1_CustomResourceDefinitionSchemaValidation(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "CustomResourceDefinitionSchemaValidation ensures that updates to the installed CRD are compatible with this compatibility requirement.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"action": {
+						SchemaProps: spec.SchemaProps{
+							Description: "action determines whether violations are rejected (Deny) or admitted with an API warning (Warn). Valid options are Deny and Warn. When set to Deny, incompatible CRDs will be rejected and not admitted to the cluster. When set to Warn, incompatible CRDs will be allowed but a warning will be generated in the API response. This field is required.\n\nPossible enum values:\n - `\"Deny\"` means that incompatible CRDs will be rejected.\n - `\"Warn\"` means that incompatible CRDs will be allowed but a warning will be generated.",
+							Type:        []string{"string"},
+							Format:      "",
+							Enum:        []interface{}{"Deny", "Warn"},
+						},
+					},
+				},
+				Required: []string{"action"},
+			},
+		},
+	}
+}
+
+func schema_openshift_api_apiextensions_v1_ObjectSchemaValidation(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "ObjectSchemaValidation ensures that matching objects conform to the compatibilitySchema.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"action": {
+						SchemaProps: spec.SchemaProps{
+							Description: "action determines whether violations are rejected (Deny) or admitted with an API warning (Warn). Valid options are Deny and Warn. When set to Deny, incompatible Objects will be rejected and not admitted to the cluster. When set to Warn, incompatible Objects will be allowed but a warning will be generated in the API response. This field is required.\n\nPossible enum values:\n - `\"Deny\"` means that incompatible CRDs will be rejected.\n - `\"Warn\"` means that incompatible CRDs will be allowed but a warning will be generated.",
+							Type:        []string{"string"},
+							Format:      "",
+							Enum:        []interface{}{"Deny", "Warn"},
+						},
+					},
+					"namespaceSelector": {
+						SchemaProps: spec.SchemaProps{
+							Description: "namespaceSelector defines a label selector for namespaces. If defined, only objects in a namespace with matching labels will be subject to validation. When not specified, objects for validation will not be filtered by namespace.",
+							Default:     map[string]interface{}{},
+							Ref:         ref(metav1.LabelSelector{}.OpenAPIModelName()),
+						},
+					},
+					"objectSelector": {
+						SchemaProps: spec.SchemaProps{
+							Description: "objectSelector defines a label selector for objects. If defined, only objects with matching labels will be subject to validation. When not specified, objects for validation will not be filtered by label.",
+							Default:     map[string]interface{}{},
+							Ref:         ref(metav1.LabelSelector{}.OpenAPIModelName()),
+						},
+					},
+					"matchConditions": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-map-keys": []interface{}{
+									"name",
+								},
+								"x-kubernetes-list-type": "map",
+							},
+						},
+						SchemaProps: spec.SchemaProps{
+							Description: "matchConditions defines the matchConditions field of the resulting ValidatingWebhookConfiguration. When present, must contain between 1 and 64 match conditions. When not specified, the webhook will match all requests according to its other selectors.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Ref: ref(admissionregistrationv1.MatchCondition{}.OpenAPIModelName()),
+									},
+								},
+							},
+						},
+					},
+				},
+				Required: []string{"action"},
+			},
+		},
+		Dependencies: []string{
+			admissionregistrationv1.MatchCondition{}.OpenAPIModelName(), metav1.LabelSelector{}.OpenAPIModelName()},
+	}
+}
+
+func schema_openshift_api_apiextensions_v1_ObservedCRD(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "ObservedCRD contains information about the observed target CRD.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"uid": {
+						SchemaProps: spec.SchemaProps{
+							Description: "uid is the uid of the observed CRD. Must be a valid UUID consisting of lowercase hexadecimal digits in 5 hyphenated blocks (8-4-4-4-12 format). Length must be between 1 and 36 characters.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"generation": {
+						SchemaProps: spec.SchemaProps{
+							Description: "generation is the observed generation of the CRD. Must be a positive integer (minimum value of 1).",
+							Type:        []string{"integer"},
+							Format:      "int64",
+						},
+					},
+				},
+				Required: []string{"uid", "generation"},
+			},
+		},
+	}
+}
+
 func schema_openshift_api_apiextensions_v1alpha1_APIExcludedField(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -2387,14 +2851,14 @@ func schema_openshift_api_apiserver_v1_APIRequestCount(ref common.ReferenceCallb
 						SchemaProps: spec.SchemaProps{
 							Description: "spec defines the characteristics of the resource.",
 							Default:     map[string]interface{}{},
-							Ref:         ref(v1.APIRequestCountSpec{}.OpenAPIModelName()),
+							Ref:         ref(apiserverv1.APIRequestCountSpec{}.OpenAPIModelName()),
 						},
 					},
 					"status": {
 						SchemaProps: spec.SchemaProps{
 							Description: "status contains the observed state of the resource.",
 							Default:     map[string]interface{}{},
-							Ref:         ref(v1.APIRequestCountStatus{}.OpenAPIModelName()),
+							Ref:         ref(apiserverv1.APIRequestCountStatus{}.OpenAPIModelName()),
 						},
 					},
 				},
@@ -2402,7 +2866,7 @@ func schema_openshift_api_apiserver_v1_APIRequestCount(ref common.ReferenceCallb
 			},
 		},
 		Dependencies: []string{
-			v1.APIRequestCountSpec{}.OpenAPIModelName(), v1.APIRequestCountStatus{}.OpenAPIModelName(), metav1.ObjectMeta{}.OpenAPIModelName()},
+			apiserverv1.APIRequestCountSpec{}.OpenAPIModelName(), apiserverv1.APIRequestCountStatus{}.OpenAPIModelName(), metav1.ObjectMeta{}.OpenAPIModelName()},
 	}
 }
 
@@ -2440,7 +2904,7 @@ func schema_openshift_api_apiserver_v1_APIRequestCountList(ref common.ReferenceC
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
 									SchemaProps: spec.SchemaProps{
-										Ref: ref(v1.APIRequestCount{}.OpenAPIModelName()),
+										Ref: ref(apiserverv1.APIRequestCount{}.OpenAPIModelName()),
 									},
 								},
 							},
@@ -2451,7 +2915,7 @@ func schema_openshift_api_apiserver_v1_APIRequestCountList(ref common.ReferenceC
 			},
 		},
 		Dependencies: []string{
-			v1.APIRequestCount{}.OpenAPIModelName(), metav1.ListMeta{}.OpenAPIModelName()},
+			apiserverv1.APIRequestCount{}.OpenAPIModelName(), metav1.ListMeta{}.OpenAPIModelName()},
 	}
 }
 
@@ -2521,7 +2985,7 @@ func schema_openshift_api_apiserver_v1_APIRequestCountStatus(ref common.Referenc
 						SchemaProps: spec.SchemaProps{
 							Description: "currentHour contains request history for the current hour. This is porcelain to make the API easier to read by humans seeing if they addressed a problem. This field is reset on the hour.",
 							Default:     map[string]interface{}{},
-							Ref:         ref(v1.PerResourceAPIRequestLog{}.OpenAPIModelName()),
+							Ref:         ref(apiserverv1.PerResourceAPIRequestLog{}.OpenAPIModelName()),
 						},
 					},
 					"last24h": {
@@ -2531,7 +2995,7 @@ func schema_openshift_api_apiserver_v1_APIRequestCountStatus(ref common.Referenc
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
 									SchemaProps: spec.SchemaProps{
-										Ref: ref(v1.PerResourceAPIRequestLog{}.OpenAPIModelName()),
+										Ref: ref(apiserverv1.PerResourceAPIRequestLog{}.OpenAPIModelName()),
 									},
 								},
 							},
@@ -2542,7 +3006,7 @@ func schema_openshift_api_apiserver_v1_APIRequestCountStatus(ref common.Referenc
 			},
 		},
 		Dependencies: []string{
-			v1.PerResourceAPIRequestLog{}.OpenAPIModelName(), metav1.Condition{}.OpenAPIModelName()},
+			apiserverv1.PerResourceAPIRequestLog{}.OpenAPIModelName(), metav1.Condition{}.OpenAPIModelName()},
 	}
 }
 
@@ -2576,7 +3040,7 @@ func schema_openshift_api_apiserver_v1_PerNodeAPIRequestLog(ref common.Reference
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
 									SchemaProps: spec.SchemaProps{
-										Ref: ref(v1.PerUserAPIRequestCount{}.OpenAPIModelName()),
+										Ref: ref(apiserverv1.PerUserAPIRequestCount{}.OpenAPIModelName()),
 									},
 								},
 							},
@@ -2587,7 +3051,7 @@ func schema_openshift_api_apiserver_v1_PerNodeAPIRequestLog(ref common.Reference
 			},
 		},
 		Dependencies: []string{
-			v1.PerUserAPIRequestCount{}.OpenAPIModelName()},
+			apiserverv1.PerUserAPIRequestCount{}.OpenAPIModelName()},
 	}
 }
 
@@ -2605,7 +3069,7 @@ func schema_openshift_api_apiserver_v1_PerResourceAPIRequestLog(ref common.Refer
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
 									SchemaProps: spec.SchemaProps{
-										Ref: ref(v1.PerNodeAPIRequestLog{}.OpenAPIModelName()),
+										Ref: ref(apiserverv1.PerNodeAPIRequestLog{}.OpenAPIModelName()),
 									},
 								},
 							},
@@ -2624,7 +3088,7 @@ func schema_openshift_api_apiserver_v1_PerResourceAPIRequestLog(ref common.Refer
 			},
 		},
 		Dependencies: []string{
-			v1.PerNodeAPIRequestLog{}.OpenAPIModelName()},
+			apiserverv1.PerNodeAPIRequestLog{}.OpenAPIModelName()},
 	}
 }
 
@@ -2666,7 +3130,7 @@ func schema_openshift_api_apiserver_v1_PerUserAPIRequestCount(ref common.Referen
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
 									SchemaProps: spec.SchemaProps{
-										Ref: ref(v1.PerVerbAPIRequestCount{}.OpenAPIModelName()),
+										Ref: ref(apiserverv1.PerVerbAPIRequestCount{}.OpenAPIModelName()),
 									},
 								},
 							},
@@ -2677,7 +3141,7 @@ func schema_openshift_api_apiserver_v1_PerUserAPIRequestCount(ref common.Referen
 			},
 		},
 		Dependencies: []string{
-			v1.PerVerbAPIRequestCount{}.OpenAPIModelName()},
+			apiserverv1.PerVerbAPIRequestCount{}.OpenAPIModelName()},
 	}
 }
 

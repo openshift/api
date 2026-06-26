@@ -6,8 +6,5 @@ source "$(dirname "${BASH_SOURCE}")/lib/init.sh"
 output_path="${OUTPUT_PATH:-openapi}"
 output_package="${SCRIPT_ROOT}/${output_path}"
 
-GENERATOR=openapi EXTRA_ARGS=--openapi:output-package-path=${output_path}/generated_openapi ${SCRIPT_ROOT}/hack/update-codegen.sh
-
-go build github.com/openshift/api/openapi/cmd/models-schema
-
-./models-schema  | jq '.' > ${output_package}/openapi.json
+# Generate both Go and JSON OpenAPI schemas using the integrated codegen tool
+GENERATOR=openapi EXTRA_ARGS=--openapi:output-package-path=${output_path} ${SCRIPT_ROOT}/hack/update-codegen.sh

@@ -47,6 +47,9 @@
                         "name": "HyperShiftOnlyDynamicResourceAllocation"
                     },
                     {
+                        "name": "KarpenterOperator"
+                    },
+                    {
                         "name": "MachineAPIMigrationAzure"
                     },
                     {

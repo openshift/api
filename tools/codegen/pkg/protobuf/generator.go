@@ -1,8 +1,15 @@
 package protobuf
 
 import (
+	"context"
+	"errors"
 	"fmt"
 	"os"
+	"os/exec"
+	"path/filepath"
+	"strconv"
+	"strings"
+	"time"
 
 	"github.com/openshift/api/tools/codegen/pkg/generation"
 	"k8s.io/apimachinery/pkg/util/sets"
@@ -12,6 +19,9 @@ import (
 const (
 	// DefaultOutputFileBaseName is the default output file base name for the generated protobuf functions.
 	DefaultOutputFileBaseName = "generated.pb"
+
+	// minimumProtocVersion is the minimum version of protoc that is supported.
+	minimumProtocVersion = 23
 )
 
 // Options contains the configuration required for the protobuf generator.
@@ -85,6 +95,34 @@ func (g *generator) GenGroup(groupCtx generation.APIGroupContext) ([]generation.
 		return nil, nil
 	}
 
+	if proto := os.Getenv("PROTO_OPTIONAL"); proto != "" {
+		klog.Warningf("Skipping protobuf generation: PROTO_OPTIONAL set to a non-empty value: %s", proto)
+		return nil, nil
+	}
+
+	// Include the current executable dir in the PATH so that the generator can find the
+	// protoc-gen-gogo binary. It's likely it was built into the same directory.
+	currentExDir, err := currentExecutableDir()
+	if err != nil {
+		return nil, fmt.Errorf("failed to get current executable directory: %w", err)
+	}
+
+	originalPath := os.Getenv("PATH")
+	if err := os.Setenv("PATH", fmt.Sprintf("%s:%s", currentExDir, originalPath)); err != nil {
+		return nil, fmt.Errorf("failed to set PATH: %w", err)
+	}
+
+	defer func() {
+		if err := os.Setenv("PATH", originalPath); err != nil {
+			klog.Warningf("failed to restore PATH: %v", err)
+		}
+	}()
+
+	// Check the pre-requisite binaries exist.
+	if err := checkBinaries(); err != nil {
+		return nil, fmt.Errorf("could not verify required binaries: set PROTO_OPTIONAL to skip protobuf generation: %w", err)
+	}
+
 	// If there is no header file, create an empty file and pass that through.
 	headerFilePath := g.headerFilePath
 	if headerFilePath == "" {
@@ -92,9 +130,15 @@ func (g *generator) GenGroup(groupCtx generation.APIGroupContext) ([]generation.
 		if err != nil {
 			return nil, fmt.Errorf("failed to create temporary file: %w", err)
 		}
-		tmpFile.Close()
+		if err := tmpFile.Close(); err != nil {
+			return nil, fmt.Errorf("failed to close temporary file: %w", err)
+		}
 
-		defer os.Remove(tmpFile.Name())
+		defer func() {
+			if err := os.Remove(tmpFile.Name()); err != nil {
+				klog.Warningf("failed to remove temporary file: %v", err)
+			}
+		}()
 
 		headerFilePath = tmpFile.Name()
 	}
@@ -118,4 +162,63 @@ func (g *generator) GenGroup(groupCtx generation.APIGroupContext) ([]generation.
 	}
 
 	return nil, nil
+}
+
+// currentExecutableDir returns the absolute path to the directory containing the current executable.
+func currentExecutableDir() (string, error) {
+	ex, err := os.Executable()
+	if err != nil {
+		return "", err
+	}
+	return filepath.Abs(filepath.Dir(ex))
+}
+
+// checkBinaries checks that the required binaries are available.
+// It returns an error if any of the binaries are missing.
+// It looks for both the protoc and protoc-gen-gogo binaries.
+// It will also check that protoc is version 3.0.0 or higher.
+func checkBinaries() error {
+	if _, err := exec.LookPath("protoc-gen-gogo"); err != nil {
+		return errors.New("protoc-gen-gogo is required to generate protobuf files")
+	}
+
+	protoc, err := exec.LookPath("protoc")
+	if err != nil {
+		return errors.New("protoc is required to generate protobuf files")
+	}
+
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+
+	// Check that the protoc version is at least 3.0.0.
+	// The generator will fail with a cryptic error if the version is too old.
+	out, err := exec.CommandContext(ctx, protoc, "--version").Output()
+	if err != nil {
+		return fmt.Errorf("failed to get protoc version: %w", err)
+	}
+
+	// The output is of the form "libprotoc 3.0.0".
+	// We only care about the version number.
+	versionStrings := strings.Split(string(out), " ")
+	if len(versionStrings) < 2 {
+		return fmt.Errorf("failed to get protoc version: unexpected output format: %s", string(out))
+	}
+
+	version := versionStrings[1]
+	if version == "" {
+		return errors.New("failed to get protoc version")
+	}
+
+	// Check that the major version is at least 3.
+	// The minor version is not important.
+	majorVersion, err := strconv.Atoi(strings.Split(version, ".")[0])
+	if err != nil {
+		return fmt.Errorf("failed to parse protoc version: %w", err)
+	}
+
+	if majorVersion < minimumProtocVersion {
+		return fmt.Errorf("protoc version %s is too old, version %d.0.0 or newer is required", version, minimumProtocVersion)
+	}
+
+	return nil
 }

@@ -5,9 +5,7 @@ import (
 	"fmt"
 	"io/fs"
 	"os"
-	"os/exec"
 	"path/filepath"
-	"strconv"
 	"strings"
 
 	"github.com/openshift/api/tools/codegen/pkg/utils"
@@ -15,15 +13,11 @@ import (
 	kerrors "k8s.io/apimachinery/pkg/util/errors"
 	"k8s.io/apimachinery/pkg/util/sets"
 	"k8s.io/code-generator/cmd/go-to-protobuf/protobuf"
-	"k8s.io/klog/v2"
 )
 
 const (
 	defaultDropEmbeddedFields   = "k8s.io/apimachinery/pkg/apis/meta/v1.TypeMeta"
 	defaultAPIMachineryPackages = "-k8s.io/apimachinery/pkg/util/intstr,-k8s.io/apimachinery/pkg/api/resource,-k8s.io/apimachinery/pkg/runtime/schema,-k8s.io/apimachinery/pkg/runtime,-k8s.io/apimachinery/pkg/apis/meta/v1,-k8s.io/apimachinery/pkg/apis/meta/v1beta1,-k8s.io/api/core/v1,-k8s.io/api/rbac/v1"
-
-	// minimumProtocVersion is the minimum version of protoc that is supported.
-	minimumProtocVersion = 23
 )
 
 var (
@@ -33,26 +27,6 @@ var (
 
 // generateProtobufFunctions generates the Protobuf functions for the given API package paths.
 func generateProtobufFunctions(path, packagePath, headerFilePath string, verify bool) error {
-	// Include the current executable dir in the PATH so that the generator can find the
-	// protoc-gen-gogo binary. It's likely it was built into the same directory.
-	currentExDir, err := currentExecutableDir()
-	if err != nil {
-		return fmt.Errorf("failed to get current executable directory: %w", err)
-	}
-	originalPath := os.Getenv("PATH")
-	os.Setenv("PATH", fmt.Sprintf("%s:%s", currentExDir, originalPath))
-	defer os.Setenv("PATH", originalPath)
-
-	// Check the pre-requisite binaries exist.
-	if err := checkBinaries(); err != nil {
-		if os.Getenv("PROTO_OPTIONAL") != "" {
-			klog.Warningf("Skipping protobuf generation: %v", err)
-			return nil
-		}
-
-		return fmt.Errorf("could not verify required binaries: set PROTO_OPTIONAL to skip protobuf generation: %w", err)
-	}
-
 	wd, err := os.Getwd()
 	if err != nil {
 		return fmt.Errorf("failed to get working directory: %w", err)
@@ -129,57 +103,6 @@ func findDirectoryInParent(path string, target string) (string, error) {
 	}
 
 	return "", errors.New("could not find vendor directory")
-}
-
-// currentExecutableDir returns the absolute path to the directory containing the current executable.
-func currentExecutableDir() (string, error) {
-	ex, err := os.Executable()
-	if err != nil {
-		return "", err
-	}
-	return filepath.Abs(filepath.Dir(ex))
-}
-
-// checkBinaries checks that the required binaries are available.
-// It returns an error if any of the binaries are missing.
-// It looks for both the protoc and protoc-gen-gogo binaries.
-// It will also check that protoc is version 3.0.0 or higher.
-func checkBinaries() error {
-	if _, err := exec.LookPath("protoc-gen-gogo"); err != nil {
-		return errors.New("protoc-gen-gogo is required to generate protobuf files")
-	}
-
-	protoc, err := exec.LookPath("protoc")
-	if err != nil {
-		return errors.New("protoc is required to generate protobuf files")
-	}
-
-	// Check that the protoc version is at least 3.0.0.
-	// The generator will fail with a cryptic error if the version is too old.
-	out, err := exec.Command(protoc, "--version").Output()
-	if err != nil {
-		return fmt.Errorf("failed to get protoc version: %w", err)
-	}
-
-	// The output is of the form "libprotoc 3.0.0".
-	// We only care about the version number.
-	version := strings.Split(string(out), " ")[1]
-	if version == "" {
-		return errors.New("failed to get protoc version")
-	}
-
-	// Check that the major version is at least 3.
-	// The minor version is not important.
-	majorVersion, err := strconv.Atoi(strings.Split(version, ".")[0])
-	if err != nil {
-		return fmt.Errorf("failed to parse protoc version: %w", err)
-	}
-
-	if majorVersion < minimumProtocVersion {
-		return fmt.Errorf("protoc version %s is too old, version %d.0.0 or newer is required", version, minimumProtocVersion)
-	}
-
-	return nil
 }
 
 // verifyFiles verifies that the generated files are the same as the previously generated files.

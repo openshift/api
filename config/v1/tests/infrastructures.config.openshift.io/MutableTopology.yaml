@@ -1,0 +1,261 @@
+apiVersion: apiextensions.k8s.io/v1 # Hack because controller-gen complains if we don't have this
+name: "Infrastructure"
+crdName: infrastructures.config.openshift.io
+featureGates:
+- MutableTopology
+tests:
+  onCreate:
+    - name: Should be able to create a minimal Infrastructure without controlPlaneTopology in spec
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        spec: {}
+      expected: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        spec: {}
+    - name: Should be able to create Infrastructure with spec controlPlaneTopology set to HighlyAvailable
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        spec:
+          controlPlaneTopology: HighlyAvailable
+      expected: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        spec:
+          controlPlaneTopology: HighlyAvailable
+    - name: Should be able to create Infrastructure with spec controlPlaneTopology set to SingleReplica
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        spec:
+          controlPlaneTopology: SingleReplica
+      expected: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        spec:
+          controlPlaneTopology: SingleReplica
+    - name: Should not allow creating Infrastructure with spec controlPlaneTopology set to an invalid value
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        spec:
+          controlPlaneTopology: InvalidValue
+      expectedError: 'spec.controlPlaneTopology: Unsupported value: "InvalidValue": supported values: "HighlyAvailable", "SingleReplica"'
+    - name: Should not allow creating Infrastructure with spec controlPlaneTopology set to External
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        spec:
+          controlPlaneTopology: External
+      expectedError: 'spec.controlPlaneTopology: Unsupported value: "External": supported values: "HighlyAvailable", "SingleReplica"'
+    - name: Should not allow creating Infrastructure with spec controlPlaneTopology set to DualReplica
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        spec:
+          controlPlaneTopology: DualReplica
+      expectedError: 'spec.controlPlaneTopology: Unsupported value: "DualReplica": supported values: "HighlyAvailable", "SingleReplica"'
+    - name: Should not allow creating Infrastructure with spec controlPlaneTopology set to HighlyAvailableArbiter
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        spec:
+          controlPlaneTopology: HighlyAvailableArbiter
+      expectedError: 'spec.controlPlaneTopology: Unsupported value: "HighlyAvailableArbiter": supported values: "HighlyAvailable", "SingleReplica"'
+  onUpdate:
+    - name: Should allow updating spec controlPlaneTopology from SingleReplica to HighlyAvailable when status controlPlaneTopology is SingleReplica
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        spec:
+          controlPlaneTopology: SingleReplica
+        status:
+          controlPlaneTopology: SingleReplica
+          infrastructureTopology: HighlyAvailable
+          cpuPartitioning: None
+      updated: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        spec:
+          controlPlaneTopology: HighlyAvailable
+        status:
+          controlPlaneTopology: SingleReplica
+          infrastructureTopology: HighlyAvailable
+          cpuPartitioning: None
+      expected: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        spec:
+          controlPlaneTopology: HighlyAvailable
+        status:
+          controlPlaneTopology: SingleReplica
+          infrastructureTopology: HighlyAvailable
+          cpuPartitioning: None
+    - name: Should allow setting spec controlPlaneTopology to HighlyAvailable when it was not previously set and status controlPlaneTopology is SingleReplica
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        spec: {}
+        status:
+          controlPlaneTopology: SingleReplica
+          infrastructureTopology: HighlyAvailable
+          cpuPartitioning: None
+      updated: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        spec:
+          controlPlaneTopology: HighlyAvailable
+        status:
+          controlPlaneTopology: SingleReplica
+          infrastructureTopology: HighlyAvailable
+          cpuPartitioning: None
+      expected: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        spec:
+          controlPlaneTopology: HighlyAvailable
+        status:
+          controlPlaneTopology: SingleReplica
+          infrastructureTopology: HighlyAvailable
+          cpuPartitioning: None
+    - name: Should allow setting spec controlPlaneTopology to HighlyAvailable when status controlPlaneTopology is HighlyAvailable
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        spec: {}
+        status:
+          controlPlaneTopology: HighlyAvailable
+          infrastructureTopology: HighlyAvailable
+          cpuPartitioning: None
+      updated: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        spec:
+          controlPlaneTopology: HighlyAvailable
+        status:
+          controlPlaneTopology: HighlyAvailable
+          infrastructureTopology: HighlyAvailable
+          cpuPartitioning: None
+      expected: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        spec:
+          controlPlaneTopology: HighlyAvailable
+        status:
+          controlPlaneTopology: HighlyAvailable
+          infrastructureTopology: HighlyAvailable
+          cpuPartitioning: None
+    - name: Should allow setting spec controlPlaneTopology to SingleReplica when status controlPlaneTopology is SingleReplica
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        spec: {}
+        status:
+          controlPlaneTopology: SingleReplica
+          infrastructureTopology: HighlyAvailable
+          cpuPartitioning: None
+      updated: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        spec:
+          controlPlaneTopology: SingleReplica
+        status:
+          controlPlaneTopology: SingleReplica
+          infrastructureTopology: HighlyAvailable
+          cpuPartitioning: None
+      expected: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        spec:
+          controlPlaneTopology: SingleReplica
+        status:
+          controlPlaneTopology: SingleReplica
+          infrastructureTopology: HighlyAvailable
+          cpuPartitioning: None
+    - name: Should not allow setting spec controlPlaneTopology to SingleReplica when status controlPlaneTopology is HighlyAvailable
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        spec: {}
+        status:
+          controlPlaneTopology: HighlyAvailable
+          infrastructureTopology: HighlyAvailable
+          cpuPartitioning: None
+      updated: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        spec:
+          controlPlaneTopology: SingleReplica
+        status:
+          controlPlaneTopology: HighlyAvailable
+          infrastructureTopology: HighlyAvailable
+          cpuPartitioning: None
+      expectedError: "spec.controlPlaneTopology must match status.controlPlaneTopology or be set to HighlyAvailable when status.controlPlaneTopology is SingleReplica"
+    - name: Should allow removing spec controlPlaneTopology
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        spec:
+          controlPlaneTopology: HighlyAvailable
+        status:
+          controlPlaneTopology: SingleReplica
+          infrastructureTopology: HighlyAvailable
+          cpuPartitioning: None
+      updated: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        spec: {}
+        status:
+          controlPlaneTopology: SingleReplica
+          infrastructureTopology: HighlyAvailable
+          cpuPartitioning: None
+      expected: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        spec: {}
+        status:
+          controlPlaneTopology: SingleReplica
+          infrastructureTopology: HighlyAvailable
+          cpuPartitioning: None
+    - name: Should allow keeping spec controlPlaneTopology unchanged
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        spec:
+          controlPlaneTopology: HighlyAvailable
+        status:
+          controlPlaneTopology: SingleReplica
+          infrastructureTopology: HighlyAvailable
+          cpuPartitioning: None
+      updated: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        spec:
+          controlPlaneTopology: HighlyAvailable
+        status:
+          controlPlaneTopology: SingleReplica
+          infrastructureTopology: HighlyAvailable
+          cpuPartitioning: None
+      expected: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        spec:
+          controlPlaneTopology: HighlyAvailable
+        status:
+          controlPlaneTopology: SingleReplica
+          infrastructureTopology: HighlyAvailable
+          cpuPartitioning: None
+    - name: Should not allow updating spec controlPlaneTopology to an invalid value
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        spec:
+          controlPlaneTopology: HighlyAvailable
+      updated: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        spec:
+          controlPlaneTopology: InvalidValue
+      expectedError: 'spec.controlPlaneTopology: Unsupported value: "InvalidValue": supported values: "HighlyAvailable", "SingleReplica"'

@@ -569,8 +569,8 @@ func (ClusterCSIDriverStatus) SwaggerDoc() map[string]string {
 }
 
 var map_CustomSecretRotation = map[string]string{
-	"":                            "CustomSecretRotation holds configuration for custom secret rotation behavior.",
-	"rotationPollIntervalSeconds": "rotationPollIntervalSeconds is the minimum time in seconds between secret rotation attempts. The driver skips provider calls if less than this interval has elapsed since the last successful rotation. Must be at least 1 second and no more than 31560000 seconds (~1 year). When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time.",
+	"":                  "CustomSecretRotation holds configuration for custom secret rotation behavior.",
+	"minimumRefreshAge": "minimumRefreshAge is the minimum time in seconds between secret rotation attempts. Each time kubelet calls NodePublishVolume, the driver checks whether this interval has elapsed since the last successful provider call. If it has, the driver contacts the secret provider to fetch the latest secret values and updates the mounted volume. Setting this value below the kubelet syncFrequency (default: 1 minute) has no additional effect on the actual rotation cadence. Must be at least 1 second and no more than 31560000 seconds (~1 year). When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time.",
 }
 
 func (CustomSecretRotation) SwaggerDoc() map[string]string {

@@ -62,7 +62,7 @@ tests:
               secretRotation:
                 type: Custom
                 custom:
-                  rotationPollIntervalSeconds: 300
+                  minimumRefreshAge: 300
       expectedError: "Invalid value: \"object\": secretsStore must be set if driverType is 'SecretsStore', but remain unset otherwise"
     - name: Should reject secrets-store name with non-SecretsStore driverType
       initial: |
@@ -87,7 +87,7 @@ tests:
               secretRotation:
                 type: Custom
                 custom:
-                  rotationPollIntervalSeconds: 300
+                  minimumRefreshAge: 300
       expectedError: "driverType 'SecretsStore' requires metadata.name 'secrets-store.csi.k8s.io'"
     - name: Should allow secrets-store name without driverType for backward compatibility
       initial: |
@@ -214,7 +214,7 @@ tests:
               secretRotation:
                 type: Custom
                 custom:
-                  rotationPollIntervalSeconds: 300
+                  minimumRefreshAge: 300
               tokenRequests:
                 type: Managed
                 managed:
@@ -236,7 +236,7 @@ tests:
               secretRotation:
                 type: Custom
                 custom:
-                  rotationPollIntervalSeconds: 300
+                  minimumRefreshAge: 300
               tokenRequests:
                 type: Managed
                 managed:
@@ -496,7 +496,7 @@ tests:
               secretRotation:
                 type: Custom
       expectedError: "custom must be set when type is 'Custom', and must not be set otherwise"
-    - name: Should reject rotationPollIntervalSeconds below 1
+    - name: Should reject minimumRefreshAge below 1
       initial: |
         apiVersion: operator.openshift.io/v1
         kind: ClusterCSIDriver
@@ -509,9 +509,9 @@ tests:
               secretRotation:
                 type: Custom
                 custom:
-                  rotationPollIntervalSeconds: 0
-      expectedError: "spec.driverConfig.secretsStore.secretRotation.custom.rotationPollIntervalSeconds: Invalid value"
-    - name: Should reject rotationPollIntervalSeconds above 31560000
+                  minimumRefreshAge: 0
+      expectedError: "spec.driverConfig.secretsStore.secretRotation.custom.minimumRefreshAge: Invalid value"
+    - name: Should reject minimumRefreshAge above 31560000
       initial: |
         apiVersion: operator.openshift.io/v1
         kind: ClusterCSIDriver
@@ -524,8 +524,8 @@ tests:
               secretRotation:
                 type: Custom
                 custom:
-                  rotationPollIntervalSeconds: 31560001
-      expectedError: "spec.driverConfig.secretsStore.secretRotation.custom.rotationPollIntervalSeconds: Invalid value"
+                  minimumRefreshAge: 31560001
+      expectedError: "spec.driverConfig.secretsStore.secretRotation.custom.minimumRefreshAge: Invalid value"
     - name: Should reject Managed tokenRequests without managed field
       initial: |
         apiVersion: operator.openshift.io/v1
@@ -697,7 +697,7 @@ tests:
               secretRotation:
                 type: Custom
                 custom:
-                  rotationPollIntervalSeconds: 300
+                  minimumRefreshAge: 300
       expectedError: "tokenRequests type cannot be changed from Managed"
     - name: Should allow changing tokenRequests type from Unmanaged to Managed
       initial: |

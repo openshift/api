@@ -29,9 +29,6 @@
                         "name": "AWSEuropeanSovereignCloudInstall"
                     },
                     {
-                        "name": "AWSServiceLBNetworkSecurityGroup"
-                    },
-                    {
                         "name": "AdditionalStorageConfig"
                     },
                     {
@@ -296,6 +293,9 @@
                 "enabled": [
                     {
                         "name": "AWSClusterHostedDNSInstall"
+                    },
+                    {
+                        "name": "AWSServiceLBNetworkSecurityGroup"
                     },
                     {
                         "name": "AzureClusterHostedDNSInstall"

@@ -48,9 +48,6 @@
                         "name": "CBORServingAndStorage"
                     },
                     {
-                        "name": "CRDCompatibilityRequirementOperator"
-                    },
-                    {
                         "name": "ClientsAllowCBOR"
                     },
                     {
@@ -315,6 +312,9 @@
                     },
                     {
                         "name": "BuildCSIVolumes"
+                    },
+                    {
+                        "name": "CRDCompatibilityRequirementOperator"
                     },
                     {
                         "name": "CRIOCredentialProviderConfig"

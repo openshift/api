@@ -53,9 +53,6 @@
                         "name": "CBORServingAndStorage"
                     },
                     {
-                        "name": "CRDCompatibilityRequirementOperator"
-                    },
-                    {
                         "name": "CRIOCredentialProviderConfig"
                     },
                     {
@@ -326,6 +323,9 @@
                     },
                     {
                         "name": "BuildCSIVolumes"
+                    },
+                    {
+                        "name": "CRDCompatibilityRequirementOperator"
                     },
                     {
                         "name": "DualReplica"

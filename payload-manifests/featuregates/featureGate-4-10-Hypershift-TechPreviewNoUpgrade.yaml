@@ -44,6 +44,9 @@
                         "name": "ExternalOIDCExternalClaimsSourcing"
                     },
                     {
+                        "name": "KarpenterOperator"
+                    },
+                    {
                         "name": "MachineAPIMigrationAzure"
                     },
                     {

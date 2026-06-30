@@ -164,6 +164,9 @@
                         "name": "KMSEncryption"
                     },
                     {
+                        "name": "KarpenterOperator"
+                    },
+                    {
                         "name": "MachineAPIMigration"
                     },
                     {

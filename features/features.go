@@ -1036,4 +1036,12 @@ var (
 						enhancementPR("https://github.com/openshift/enhancements/pull/2010").
 						enable(inTechPreviewNoUpgrade(), inDevPreviewNoUpgrade()).
 						mustRegister()
+
+	FeatureGateKarpenterOperator = newFeatureGate("KarpenterOperator").
+					reportProblemsToJiraComponent("Karpenter").
+					contactPerson("maxcao13").
+					productScope(ocpSpecific).
+					enhancementPR("https://github.com/openshift/enhancements/pull/2007").
+					enable(inClusterProfile(SelfManaged), inDevPreviewNoUpgrade()).
+					mustRegister()
 )

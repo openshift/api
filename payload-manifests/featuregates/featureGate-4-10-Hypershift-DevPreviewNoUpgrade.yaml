@@ -26,6 +26,9 @@
                         "name": "EventedPLEG"
                     },
                     {
+                        "name": "KarpenterOperator"
+                    },
+                    {
                         "name": "MachineAPIMigrationAzure"
                     },
                     {

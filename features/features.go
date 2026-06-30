@@ -666,6 +666,14 @@ var (
 								enable(inDevPreviewNoUpgrade(), inTechPreviewNoUpgrade()).
 								mustRegister()
 
+	FeatureGateIngressComponentRouteLabels = newFeatureGate("IngressComponentRouteLabels").
+						reportProblemsToJiraComponent("Management Console").
+						contactPerson("leoli").
+						productScope(ocpSpecific).
+						enhancementPR("https://github.com/openshift/enhancements/pull/2033").
+						enable(inDevPreviewNoUpgrade(), inTechPreviewNoUpgrade()).
+						mustRegister()
+
 	FeatureGateMinimumKubeletVersion = newFeatureGate("MinimumKubeletVersion").
 						reportProblemsToJiraComponent("Node").
 						contactPerson("haircommander").

@@ -87,6 +87,8 @@ tests:
           platformStatus:
             aws:
               region: us-east-1
+              cloudLoadBalancerConfig:
+                dnsType: PlatformDefault
               ipFamily: DualStackIPv6Primary
             type: AWS
       expected: |
@@ -130,6 +132,8 @@ tests:
           platformStatus:
             aws:
               region: us-east-1
+              cloudLoadBalancerConfig:
+                dnsType: PlatformDefault
               ipFamily: DualStackIPv4Primary
             type: AWS
       expected: |
@@ -191,6 +195,8 @@ tests:
           platformStatus:
             aws:
               region: us-east-1
+              cloudLoadBalancerConfig:
+                dnsType: PlatformDefault
               ipFamily: IPv4
             type: AWS
       updated: |
@@ -207,6 +213,8 @@ tests:
           platformStatus:
             aws:
               region: us-east-1
+              cloudLoadBalancerConfig:
+                dnsType: PlatformDefault
               ipFamily: DualStackIPv6Primary
             type: AWS
       expectedStatusError: "status.platformStatus.aws.ipFamily: Invalid value: \"string\": ipFamily is immutable once set"
@@ -224,6 +232,8 @@ tests:
           platform: AWS
           platformStatus:
             aws:
+              cloudLoadBalancerConfig:
+                dnsType: PlatformDefault
               region: us-east-1
               ipFamily: DualStackIPv6Primary
             type: AWS
@@ -240,6 +250,8 @@ tests:
           platform: AWS
           platformStatus:
             aws:
+              cloudLoadBalancerConfig:
+                dnsType: PlatformDefault
               region: us-east-1
               ipFamily: DualStackIPv6Primary
             type: AWS
@@ -277,6 +289,8 @@ tests:
           platformStatus:
             aws:
               region: us-east-1
+              cloudLoadBalancerConfig:
+                dnsType: PlatformDefault
               ipFamily: DualStackIPv4Primary
             type: AWS
       updated: |

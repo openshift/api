@@ -853,7 +853,7 @@ var (
 					contactPerson("sadasu").
 					productScope(ocpSpecific).
 					enhancementPR("https://github.com/openshift/enhancements/pull/1806").
-					enable(inTechPreviewNoUpgrade(), inDevPreviewNoUpgrade()).
+					enable(inDefault(), inOKD(), inTechPreviewNoUpgrade(), inDevPreviewNoUpgrade()).
 					mustRegister()
 
 	FeatureGateAzureDualStackInstall = newFeatureGate("AzureDualStackInstall").

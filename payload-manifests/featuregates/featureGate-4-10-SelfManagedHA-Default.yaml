@@ -21,9 +21,6 @@
                         "name": "AWSDedicatedHosts"
                     },
                     {
-                        "name": "AWSDualStackInstall"
-                    },
-                    {
                         "name": "AWSEuropeanSovereignCloudInstall"
                     },
                     {
@@ -285,6 +282,9 @@
                 "enabled": [
                     {
                         "name": "AWSClusterHostedDNSInstall"
+                    },
+                    {
+                        "name": "AWSDualStackInstall"
                     },
                     {
                         "name": "AWSServiceLBNetworkSecurityGroup"

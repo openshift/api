@@ -924,7 +924,7 @@ var (
 							contactPerson("ddonati").
 							productScope(ocpSpecific).
 							enhancementPR("https://github.com/openshift/enhancements/pull/1845").
-							enable(inTechPreviewNoUpgrade(), inDevPreviewNoUpgrade()).
+							enable(inDefault(), inOKD(), inTechPreviewNoUpgrade(), inDevPreviewNoUpgrade()).
 							mustRegister()
 	FeatureGateOnPremDNSRecords = newFeatureGate("OnPremDNSRecords").
 					reportProblemsToJiraComponent("Networking / On-Prem DNS").

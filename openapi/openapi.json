@@ -14571,30 +14571,26 @@
       }
     },
     "com.github.openshift.api.config.v1alpha1.RemoteWriteAuthorization": {
-      "description": "RemoteWriteAuthorization defines the authorization method for a remote write endpoint. Exactly one of the nested configs must be set according to the type discriminator.",
+      "description": "RemoteWriteAuthorization defines the authorization method for a remote write endpoint. Nested config requirements depend on the type discriminator: Authorization requires authorization, BasicAuth requires basicAuth, OAuth2 requires oauth2, SigV4 requires sigv4, and ServiceAccount forbids all nested configs.",
       "type": "object",
       "required": [
         "type"
       ],
       "properties": {
+        "authorization": {
+          "description": "authorization defines the secret reference containing the authorization credentials (e.g. Bearer token). Required when type is \"Authorization\", and forbidden otherwise. The secret must exist in the openshift-monitoring namespace.",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.config.v1alpha1.SecretKeySelector"
+        },
         "basicAuth": {
           "description": "basicAuth defines HTTP basic authentication credentials. Required when type is \"BasicAuth\", and forbidden otherwise.",
           "default": {},
           "$ref": "#/definitions/com.github.openshift.api.config.v1alpha1.BasicAuth"
         },
-        "bearerToken": {
-          "description": "bearerToken defines the secret reference containing the bearer token. Required when type is \"BearerToken\", and forbidden otherwise.",
-          "default": {},
-          "$ref": "#/definitions/com.github.openshift.api.config.v1alpha1.SecretKeySelector"
-        },
         "oauth2": {
           "description": "oauth2 defines OAuth2 client credentials authentication. Required when type is \"OAuth2\", and forbidden otherwise.",
           "default": {},
           "$ref": "#/definitions/com.github.openshift.api.config.v1alpha1.OAuth2"
-        },
-        "safeAuthorization": {
-          "description": "safeAuthorization defines the secret reference containing the credentials for authentication (e.g. Bearer token). Required when type is \"SafeAuthorization\", and forbidden otherwise. Maps to Prometheus SafeAuthorization. The secret must exist in the openshift-monitoring namespace.",
-          "$ref": "#/definitions/io.k8s.api.core.v1.SecretKeySelector"
         },
         "sigv4": {
           "description": "sigv4 defines AWS Signature Version 4 authentication. Required when type is \"SigV4\", and forbidden otherwise.",
@@ -14602,7 +14598,7 @@
           "$ref": "#/definitions/com.github.openshift.api.config.v1alpha1.Sigv4"
         },
         "type": {
-          "description": "type specifies the authorization method to use. Allowed values are BearerToken, BasicAuth, OAuth2, SigV4, SafeAuthorization, ServiceAccount.\n\nWhen set to BearerToken, the bearer token is read from a Secret referenced by the bearerToken field.\n\nWhen set to BasicAuth, HTTP basic authentication is used; the basicAuth field (username and password from Secrets) must be set.\n\nWhen set to OAuth2, OAuth2 client credentials flow is used; the oauth2 field (clientId, clientSecret, tokenUrl) must be set.\n\nWhen set to SigV4, AWS Signature Version 4 is used for authentication; the sigv4 field must be set.\n\nWhen set to SafeAuthorization, credentials are read from a single Secret key (Prometheus SafeAuthorization pattern). The secret key typically contains a Bearer token. Use the safeAuthorization field.\n\nWhen set to ServiceAccount, the pod's service account token is used for machine identity. No additional field is required; the operator configures the token path.",
+          "description": "type specifies the authorization method to use. Allowed values are Authorization, BasicAuth, OAuth2, SigV4, and ServiceAccount.\n\nWhen set to Authorization, credentials are read from a single Secret key. The secret key typically contains a Bearer token. Use the authorization field.\n\nWhen set to BasicAuth, HTTP basic authentication is used; the basicAuth field (username and password from Secrets) must be set.\n\nWhen set to OAuth2, OAuth2 client credentials flow is used; the oauth2 field (clientId, clientSecret, tokenUrl) must be set.\n\nWhen set to SigV4, AWS Signature Version 4 is used for authentication; the sigv4 field must be set.\n\nWhen set to ServiceAccount, the pod's service account token is used for machine identity. No additional field is required; the operator configures the token path.",
           "type": "string"
         }
       },
@@ -14610,10 +14606,9 @@
         {
           "discriminator": "type",
           "fields-to-discriminateBy": {
+            "authorization": "Authorization",
             "basicAuth": "BasicAuth",
-            "bearerToken": "BearerToken",
             "oauth2": "OAuth2",
-            "safeAuthorization": "SafeAuthorization",
             "sigv4": "Sigv4"
           }
         }
@@ -14628,7 +14623,7 @@
       ],
       "properties": {
         "authorization": {
-          "description": "authorization defines the authorization method for the remote write endpoint. When omitted, no authorization is performed. When set, type must be one of BearerToken, BasicAuth, OAuth2, SigV4, SafeAuthorization, or ServiceAccount; the corresponding nested config must be set (ServiceAccount has no config).",
+          "description": "authorization defines the authorization method for the remote write endpoint. When omitted, no authorization is performed. When set, type must be one of Authorization, BasicAuth, OAuth2, SigV4, or ServiceAccount; the corresponding nested config must be set (ServiceAccount has no config).",
           "default": {},
           "$ref": "#/definitions/com.github.openshift.api.config.v1alpha1.RemoteWriteAuthorization"
         },

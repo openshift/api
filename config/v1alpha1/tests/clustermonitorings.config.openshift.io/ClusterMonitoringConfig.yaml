@@ -2880,6 +2880,107 @@ tests:
               - key: "key2"
                 operator: "Exists"
                 effect: "NoExecute"
+    - name: Should accept prometheusConfig remoteWrite Authorization authorization
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: "Disabled"
+          prometheusConfig:
+            remoteWrite:
+              - name: primary
+                url: https://example.com/api/v1/write
+                authorization:
+                  type: Authorization
+                  authorization:
+                    name: remote-write-token
+                    key: token
+      expected: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: "Disabled"
+          prometheusConfig:
+            remoteWrite:
+              - name: primary
+                url: https://example.com/api/v1/write
+                authorization:
+                  type: Authorization
+                  authorization:
+                    name: remote-write-token
+                    key: token
+    - name: Should accept prometheusConfig remoteWrite ServiceAccount without nested config
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: "Disabled"
+          prometheusConfig:
+            remoteWrite:
+              - name: primary
+                url: https://example.com/api/v1/write
+                authorization:
+                  type: ServiceAccount
+      expected: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: "Disabled"
+          prometheusConfig:
+            remoteWrite:
+              - name: primary
+                url: https://example.com/api/v1/write
+                authorization:
+                  type: ServiceAccount
+    - name: Should reject prometheusConfig remoteWrite Authorization without authorization field
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: "Disabled"
+          prometheusConfig:
+            remoteWrite:
+              - name: primary
+                url: https://example.com/api/v1/write
+                authorization:
+                  type: Authorization
+      expectedError: 'spec.prometheusConfig.remoteWrite[0].authorization: Invalid value: "object": authorization is required when type is Authorization, and forbidden otherwise'
+    - name: Should reject prometheusConfig remoteWrite ServiceAccount with authorization field
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: "Disabled"
+          prometheusConfig:
+            remoteWrite:
+              - name: primary
+                url: https://example.com/api/v1/write
+                authorization:
+                  type: ServiceAccount
+                  authorization:
+                    name: remote-write-token
+                    key: token
+      expectedError: 'spec.prometheusConfig.remoteWrite[0].authorization: Invalid value: "object": authorization is required when type is Authorization, and forbidden otherwise'
+    - name: Should reject prometheusConfig remoteWrite deprecated BearerToken type
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: "Disabled"
+          prometheusConfig:
+            remoteWrite:
+              - name: primary
+                url: https://example.com/api/v1/write
+                authorization:
+                  type: BearerToken
+      expectedError: 'spec.prometheusConfig.remoteWrite[0].authorization.type: Unsupported value: "BearerToken": supported values: "Authorization", "BasicAuth", "OAuth2", "SigV4", "ServiceAccount"'
     - name: Should accept prometheusConfig retention duration
       initial: |
         apiVersion: config.openshift.io/v1alpha1

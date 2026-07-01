@@ -30,6 +30,9 @@
                         "name": "AdditionalStorageConfig"
                     },
                     {
+                        "name": "AuthenticationComponentProxy"
+                    },
+                    {
                         "name": "AutomatedEtcdBackup"
                     },
                     {

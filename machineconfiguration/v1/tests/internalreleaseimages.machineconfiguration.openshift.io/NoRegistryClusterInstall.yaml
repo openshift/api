@@ -9,7 +9,7 @@ tests:
     initial: |
       apiVersion: machineconfiguration.openshift.io/v1
       kind: InternalReleaseImage
-      metadata:gi
+      metadata:
         name: cluster
       spec:
         releases:

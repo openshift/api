@@ -150,6 +150,9 @@
                         "name": "GCPDualStackInstall"
                     },
                     {
+                        "name": "GCPSovereignCloudInstall"
+                    },
+                    {
                         "name": "ImageModeStatusReporting"
                     },
                     {

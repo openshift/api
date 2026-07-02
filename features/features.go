@@ -666,6 +666,14 @@ var (
 								enable(inDevPreviewNoUpgrade(), inTechPreviewNoUpgrade()).
 								mustRegister()
 
+	FeatureGateIngressControllerMultipleHAProxyVersions = newFeatureGate("IngressControllerMultipleHAProxyVersions").
+								reportProblemsToJiraComponent("Networking/router").
+								contactPerson("miciah").
+								productScope(ocpSpecific).
+								enhancementPR("https://github.com/openshift/enhancements/pull/1965").
+								enable(inDevPreviewNoUpgrade(), inTechPreviewNoUpgrade()).
+								mustRegister()
+
 	FeatureGateMinimumKubeletVersion = newFeatureGate("MinimumKubeletVersion").
 						reportProblemsToJiraComponent("Node").
 						contactPerson("haircommander").

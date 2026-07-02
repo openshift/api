@@ -265,6 +265,9 @@
                         "name": "IngressControllerDynamicConfigurationManager"
                     },
                     {
+                        "name": "IngressControllerMultipleHAProxyVersions"
+                    },
+                    {
                         "name": "InsightsConfig"
                     },
                     {

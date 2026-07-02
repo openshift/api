@@ -102,7 +102,7 @@ var map_HealthCheck = map[string]string{
 	"":            "HealthCheck represents an Insights health check attributes.",
 	"description": "description is required field that provides basic description of the healthcheck. It must contain at least 10 characters and may not exceed 2048 characters.",
 	"totalRisk":   "totalRisk is the required field of the healthcheck. It is indicator of the total risk posed by the detected issue; combination of impact and likelihood. Allowed values are Low, Moderate, Important and Critical. The value represents the severity of the issue.",
-	"advisorURI":  "advisorURI is required field that provides the URL link to the Insights Advisor. The link must be a valid HTTPS URL and the maximum length is 2048 characters.",
+	"advisorURI":  "advisorURI is required field that provides the URL link to the Red Hat Lightspeed Advisor. The link must be a valid HTTPS URL and the maximum length is 2048 characters.",
 }
 
 func (HealthCheck) SwaggerDoc() map[string]string {

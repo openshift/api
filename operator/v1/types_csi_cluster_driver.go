@@ -520,6 +520,14 @@ type CustomSecretRotation struct {
 	// +kubebuilder:validation:Maximum=31560000
 	// +optional
 	MinimumRefreshAge int32 `json:"minimumRefreshAge,omitempty"`
+
+	// --- TOMBSTONE ---
+	// rotationPollIntervalSeconds was the previous name for minimumRefreshAge.
+	// The field has been renamed to better reflect its semantics.
+	// The JSON key is reserved to prevent reuse.
+	//
+	// +optional
+	// RotationPollIntervalSeconds int32 `json:"rotationPollIntervalSeconds,omitempty"`
 }
 
 // SecretsStoreTokenRequest specifies a service account token audience configuration

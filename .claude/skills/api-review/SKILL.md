@@ -64,7 +64,7 @@ git checkout <Original-Branch from preflight output>
 
 Use this EXACT format for EACH issue:
 
-+LineNumber: Brief description
+path/to/file.go:+LineNumber: Brief description
 **Current (problematic) code:**
 ```go
 [exact code from the PR diff]
@@ -77,5 +77,7 @@ Use this EXACT format for EACH issue:
 ```
 
 **Explanation:** [Why this change is needed]
+
+The `path/to/file.go` must be the relative path from the repository root (e.g., `config/v1/types_console.go`). The `+LineNumber` is the line number in the new version of the file.
 
 Every issue must be enumerated individually. Do NOT summarize into tables or counts. If no issues are found, say "No issues found."

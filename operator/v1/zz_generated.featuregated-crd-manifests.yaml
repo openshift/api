@@ -179,6 +179,7 @@ ingresscontrollers.operator.openshift.io:
   Category: ""
   FeatureGates:
   - IngressControllerDynamicConfigurationManager
+  - IngressControllerMultipleHAProxyVersions
   - TLSGroupPreferences
   FilenameOperatorName: ingress
   FilenameOperatorOrdering: "00"

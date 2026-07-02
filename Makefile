@@ -220,7 +220,7 @@ write-available-featuresets:
 
 .PHONY: clean
 clean:
-	rm -f render write-available-featuresets models-schema
+	rm -f render write-available-featuresets
 	rm -rf tools/_output
 
 VERSION     ?= $(shell git describe --always --abbrev=7)

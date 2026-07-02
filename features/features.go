@@ -1053,3 +1053,12 @@ var (
 					enable(inClusterProfile(SelfManaged), inDevPreviewNoUpgrade()).
 					mustRegister()
 )
+
+var (
+	FeatureGateExternalSecretStore = newFeatureGate("ExternalSecretStore").
+						reportProblemsToJiraComponent("Management-Console").
+						contactPerson("jhadvig").
+						productScope(ocpSpecific).
+						enable(inTechPreviewNoUpgrade()).
+						mustRegister()
+)

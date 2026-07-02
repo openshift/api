@@ -1310,8 +1310,8 @@ var map_HealthCheck = map[string]string{
 	"":            "healthCheck represents an Insights health check attributes.",
 	"description": "description provides basic description of the healtcheck.",
 	"totalRisk":   "totalRisk of the healthcheck. Indicator of the total risk posed by the detected issue; combination of impact and likelihood. The values can be from 1 to 4, and the higher the number, the more important the issue.",
-	"advisorURI":  "advisorURI provides the URL link to the Insights Advisor.",
-	"state":       "state determines what the current state of the health check is. Health check is enabled by default and can be disabled by the user in the Insights advisor user interface.",
+	"advisorURI":  "advisorURI provides the URL link to the Red Hat Lightspeed Advisor.",
+	"state":       "state determines what the current state of the health check is. Health check is enabled by default and can be disabled by the user in the Red Hat Lightspeed Advisor user interface.",
 }
 
 func (HealthCheck) SwaggerDoc() map[string]string {

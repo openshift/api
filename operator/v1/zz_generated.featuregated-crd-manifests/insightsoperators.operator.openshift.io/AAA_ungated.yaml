@@ -308,8 +308,8 @@ spec:
                         attributes.
                       properties:
                         advisorURI:
-                          description: advisorURI provides the URL link to the Insights
-                            Advisor.
+                          description: advisorURI provides the URL link to the Red
+                            Hat Lightspeed Advisor.
                           pattern: ^https:\/\/\S+
                           type: string
                         description:
@@ -322,7 +322,7 @@ spec:
                           description: |-
                             state determines what the current state of the health check is.
                             Health check is enabled by default and can be disabled
-                            by the user in the Insights advisor user interface.
+                            by the user in the Red Hat Lightspeed Advisor user interface.
                           enum:
                           - Enabled
                           - Disabled

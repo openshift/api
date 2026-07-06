@@ -31,9 +31,6 @@
                         "name": "ExternalSnapshotMetadata"
                     },
                     {
-                        "name": "GatewayAPIWithoutOLM"
-                    },
-                    {
                         "name": "MachineAPIOperatorDisableMachineHealthCheckController"
                     },
                     {
@@ -163,6 +160,9 @@
                     },
                     {
                         "name": "GatewayAPIController"
+                    },
+                    {
+                        "name": "GatewayAPIWithoutOLM"
                     },
                     {
                         "name": "HighlyAvailableArbiter"

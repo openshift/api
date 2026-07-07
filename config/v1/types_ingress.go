@@ -263,7 +263,7 @@ type ComponentRouteSpec struct {
 	// When omitted, no additional labels are applied to the component route.
 	// Label keys and values must conform to Kubernetes label conventions.
 	// Label keys must be valid qualified names per Kubernetes label conventions.
-	// Keys with the "kubernetes.io/" and "k8s.io/" prefixes are reserved and may not be used.
+	// Keys with the "kubernetes.io/", "k8s.io/", and "openshift.io/" prefixes are reserved and may not be used.
 	// When specified, labels must contain at least one entry, up to a maximum of 8.
 	// +openshift:enable:FeatureGate=IngressComponentRouteLabels
 	// +optional
@@ -271,7 +271,7 @@ type ComponentRouteSpec struct {
 	// +kubebuilder:validation:MinProperties=1
 	// +kubebuilder:validation:MaxProperties=8
 	// +kubebuilder:validation:XValidation:rule="self.all(key, !format.qualifiedName().validate(key).hasValue())",message="label keys must be valid qualified names"
-	// +kubebuilder:validation:XValidation:rule="self.all(key, !key.startsWith('kubernetes.io/') && !key.startsWith('k8s.io/'))",message="kubernetes.io/ and k8s.io/ prefixed label keys are reserved and may not be used"
+	// +kubebuilder:validation:XValidation:rule="self.all(key, !key.startsWith('kubernetes.io/') && !key.startsWith('k8s.io/') && !key.startsWith('openshift.io/'))",message="kubernetes.io/, k8s.io/, and openshift.io/ prefixed label keys are reserved and may not be used"
 	Labels map[string]LabelValue `json:"labels,omitempty"`
 }
 

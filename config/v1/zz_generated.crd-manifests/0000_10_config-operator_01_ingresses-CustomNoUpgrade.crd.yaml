@@ -99,7 +99,7 @@ spec:
                         When omitted, no additional labels are applied to the component route.
                         Label keys and values must conform to Kubernetes label conventions.
                         Label keys must be valid qualified names per Kubernetes label conventions.
-                        Keys with the "kubernetes.io/" and "k8s.io/" prefixes are reserved and may not be used.
+                        Keys with the "kubernetes.io/", "k8s.io/", and "openshift.io/" prefixes are reserved and may not be used.
                         When specified, labels must contain at least one entry, up to a maximum of 8.
                       maxProperties: 8
                       minProperties: 1
@@ -108,9 +108,10 @@ spec:
                       x-kubernetes-validations:
                       - message: label keys must be valid qualified names
                         rule: self.all(key, !format.qualifiedName().validate(key).hasValue())
-                      - message: kubernetes.io/ and k8s.io/ prefixed label keys are
-                          reserved and may not be used
-                        rule: self.all(key, !key.startsWith('kubernetes.io/') && !key.startsWith('k8s.io/'))
+                      - message: kubernetes.io/, k8s.io/, and openshift.io/ prefixed
+                          label keys are reserved and may not be used
+                        rule: self.all(key, !key.startsWith('kubernetes.io/') && !key.startsWith('k8s.io/')
+                          && !key.startsWith('openshift.io/'))
                     name:
                       description: |-
                         name is the logical name of the route to customize.

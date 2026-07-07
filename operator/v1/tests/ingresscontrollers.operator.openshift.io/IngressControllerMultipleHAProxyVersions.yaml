@@ -1,0 +1,185 @@
+apiVersion: apiextensions.k8s.io/v1 # Hack because controller-gen complains if we don't have this
+name: IngressController
+crdName: ingresscontrollers.operator.openshift.io
+featureGates:
+- IngressControllerMultipleHAProxyVersions
+tests:
+  onCreate:
+    - name: Should be able to configure HAProxy 2.8
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: IngressController
+        metadata:
+          name: default
+          namespace: openshift-ingress-operator
+        spec:
+          haproxyVersion: "2.8"
+      expected: |
+        apiVersion: operator.openshift.io/v1
+        kind: IngressController
+        metadata:
+          name: default
+          namespace: openshift-ingress-operator
+        spec:
+          httpEmptyRequestsPolicy: Respond
+          idleConnectionTerminationPolicy: Immediate
+          closedClientConnectionPolicy: Continue
+          haproxyVersion: "2.8"
+    - name: Should be able to configure HAProxy 3.2
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: IngressController
+        metadata:
+          name: default
+          namespace: openshift-ingress-operator
+        spec:
+          haproxyVersion: "3.2"
+      expected: |
+        apiVersion: operator.openshift.io/v1
+        kind: IngressController
+        metadata:
+          name: default
+          namespace: openshift-ingress-operator
+        spec:
+          httpEmptyRequestsPolicy: Respond
+          idleConnectionTerminationPolicy: Immediate
+          closedClientConnectionPolicy: Continue
+          haproxyVersion: "3.2"
+    - name: Should be able to unset HAProxy version
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: IngressController
+        metadata:
+          name: default
+          namespace: openshift-ingress-operator
+        spec: {}
+      expected: |
+        apiVersion: operator.openshift.io/v1
+        kind: IngressController
+        metadata:
+          name: default
+          namespace: openshift-ingress-operator
+        spec:
+          httpEmptyRequestsPolicy: Respond
+          idleConnectionTerminationPolicy: Immediate
+          closedClientConnectionPolicy: Continue
+    - name: Should not be able to specify empty version
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: IngressController
+        metadata:
+          name: default
+          namespace: openshift-ingress-operator
+        spec:
+          haproxyVersion: ""
+      expectedError: 'Unsupported value: "": supported values: "2.8", "3.2"'
+    - name: Should not be able to specify an unsupported version
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: IngressController
+        metadata:
+          name: default
+          namespace: openshift-ingress-operator
+        spec:
+          haproxyVersion: "2.6"
+      expectedError: 'Unsupported value: "2.6": supported values: "2.8", "3.2"'
+  onUpdate:
+    - name: Should be able to configure a version when version is unset
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: IngressController
+        metadata:
+          name: default
+          namespace: openshift-ingress-operator
+        spec:
+          httpEmptyRequestsPolicy: Respond
+          idleConnectionTerminationPolicy: Immediate
+          closedClientConnectionPolicy: Continue
+      updated: |
+        apiVersion: operator.openshift.io/v1
+        kind: IngressController
+        metadata:
+          name: default
+          namespace: openshift-ingress-operator
+        spec:
+          httpEmptyRequestsPolicy: Respond
+          idleConnectionTerminationPolicy: Immediate
+          closedClientConnectionPolicy: Continue
+          haproxyVersion: "2.8"
+      expected: |
+        apiVersion: operator.openshift.io/v1
+        kind: IngressController
+        metadata:
+          name: default
+          namespace: openshift-ingress-operator
+        spec:
+          httpEmptyRequestsPolicy: Respond
+          idleConnectionTerminationPolicy: Immediate
+          closedClientConnectionPolicy: Continue
+          haproxyVersion: "2.8"
+    - name: Should be able to unset version when it is configured
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: IngressController
+        metadata:
+          name: default
+          namespace: openshift-ingress-operator
+        spec:
+          httpEmptyRequestsPolicy: Respond
+          idleConnectionTerminationPolicy: Immediate
+          closedClientConnectionPolicy: Continue
+          haproxyVersion: "2.8"
+      updated: |
+        apiVersion: operator.openshift.io/v1
+        kind: IngressController
+        metadata:
+          name: default
+          namespace: openshift-ingress-operator
+        spec:
+          httpEmptyRequestsPolicy: Respond
+          idleConnectionTerminationPolicy: Immediate
+          closedClientConnectionPolicy: Continue
+      expected: |
+        apiVersion: operator.openshift.io/v1
+        kind: IngressController
+        metadata:
+          name: default
+          namespace: openshift-ingress-operator
+        spec:
+          httpEmptyRequestsPolicy: Respond
+          idleConnectionTerminationPolicy: Immediate
+          closedClientConnectionPolicy: Continue
+    - name: Should be able to configure a different version
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: IngressController
+        metadata:
+          name: default
+          namespace: openshift-ingress-operator
+        spec:
+          httpEmptyRequestsPolicy: Respond
+          idleConnectionTerminationPolicy: Immediate
+          closedClientConnectionPolicy: Continue
+          haproxyVersion: "2.8"
+      updated: |
+        apiVersion: operator.openshift.io/v1
+        kind: IngressController
+        metadata:
+          name: default
+          namespace: openshift-ingress-operator
+        spec:
+          httpEmptyRequestsPolicy: Respond
+          idleConnectionTerminationPolicy: Immediate
+          closedClientConnectionPolicy: Continue
+          haproxyVersion: "3.2"
+      expected: |
+        apiVersion: operator.openshift.io/v1
+        kind: IngressController
+        metadata:
+          name: default
+          namespace: openshift-ingress-operator
+        spec:
+          httpEmptyRequestsPolicy: Respond
+          idleConnectionTerminationPolicy: Immediate
+          closedClientConnectionPolicy: Continue
+          haproxyVersion: "3.2"

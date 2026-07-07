@@ -26,10 +26,28 @@
                         "name": "EventedPLEG"
                     },
                     {
+                        "name": "KarpenterOperator"
+                    },
+                    {
+                        "name": "MachineAPIMigrationAzure"
+                    },
+                    {
+                        "name": "MachineAPIMigrationBareMetal"
+                    },
+                    {
+                        "name": "MachineAPIMigrationGCP"
+                    },
+                    {
+                        "name": "MachineAPIMigrationPowerVS"
+                    },
+                    {
                         "name": "MachineAPIOperatorDisableMachineHealthCheckController"
                     },
                     {
                         "name": "MultiArchInstallAzure"
+                    },
+                    {
+                        "name": "MutableTopology"
                     },
                     {
                         "name": "NewOLM"
@@ -241,6 +259,9 @@
                         "name": "IngressControllerDynamicConfigurationManager"
                     },
                     {
+                        "name": "IngressControllerMultipleHAProxyVersions"
+                    },
+                    {
                         "name": "InsightsConfig"
                     },
                     {
@@ -323,6 +344,9 @@
                     },
                     {
                         "name": "SELinuxMount"
+                    },
+                    {
+                        "name": "SELinuxMountGAReadiness"
                     },
                     {
                         "name": "ServiceAccountTokenNodeBinding"

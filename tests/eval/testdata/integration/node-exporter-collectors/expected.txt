@@ -1,0 +1,11 @@
+enum values Enabled, Disabled, and Auto not documented in comment for MetricsCollectorPolicy
+validation marker MinItems=1 on targets contradicts documented behavior that list may be empty
+MaxItems constraint not documented in comment for targets
+Minimum and Maximum constraints not documented in comment for metricsPort
+Minimum and Maximum constraints not documented in comment for maxRetries
+documented relationship between maxRetries and retryInterval not enforced with XValidation rule
+optional field metricsPort does not explain behavior when omitted
+validation marker MinItems=1 on ignoredPaths contradicts documented behavior that empty list means no paths excluded
+Minimum and Maximum constraints not documented in comment for scrapeInterval
+MinLength and MaxLength constraints not documented in comment for certFile and keyFile
+TLSConfig collector relationship "When the collector is disabled, this field is ignored" lacks XValidation rule

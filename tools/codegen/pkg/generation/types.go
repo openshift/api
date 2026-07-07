@@ -23,6 +23,10 @@ type Config struct {
 	// When omitted, the default configuration will be used.
 	OpenAPI *OpenAPIConfig `json:"openapi,omitempty"`
 
+	// Protobuf represents the configuration of the go-to-protobuf generator.
+	// When omitted, the default configuration will be used.
+	Protobuf *ProtobufConfig `json:"protobuf,omitempty"`
+
 	// SchemaCheck represents the configuration for the schemacheck generator.
 	// When omitted, the default configuration will be used.
 	// When provided, any equivalent flag provided values are ignored.
@@ -47,6 +51,11 @@ type Config struct {
 	// When omitted, the default configuration will be used.
 	// When provided, any equivalent flag provided values are ignored.
 	SwaggerDocs *SwaggerDocsConfig `json:"swaggerdocs,omitempty"`
+
+	// ModelName represents the configuration for the modelname generator.
+	// When omitted, the default configuration will be used.
+	// When provided, any equivalent flag provided values are ignored.
+	ModelName *ModelNameConfig `json:"modelname,omitempty"`
 }
 
 // CompatibilityConfig is the configuration for the compatibility generator.
@@ -88,6 +97,23 @@ type OpenAPIConfig struct {
 	// group or not.
 	// This generator is enabled by default so this field defaults to false.
 	Disabled bool `json:"disabled,omitempty"`
+}
+
+// ProtobufConfig is the configuration for the go-to-protobuf generator.
+type ProtobufConfig struct {
+	// Disabled determines whether the go-to-protobuf generator should be run or not.
+	// This generator is disabled by default so this field defaults to true.
+	Disabled *bool `json:"disabled,omitempty"`
+
+	// DisabledVersions allows you to explicitly disable the generation of protobuf for
+	// specific versions of an API.
+	// This is a list of version names.
+	// When omitted, no versions are disabled.
+	DisabledVersions []string `json:"disabledVersions,omitempty"`
+
+	// HeaderFilePath is the path to the file containing the boilerplate header text.
+	// When omitted, no header is added to the generated files.
+	HeaderFilePath string `json:"headerFilePath,omitempty"`
 }
 
 // SchemaCheckConfig is the configuration for the schemacheck generator.
@@ -153,5 +179,17 @@ type SwaggerDocsConfig struct {
 	// OutputFileName is the file name to use for writing the generated swagger
 	// docs to. This file will be created for each group version.
 	// Whem omitted, this will default to `zz_generated.swagger_doc_generated.go`.
+	OutputFileName string `json:"outputFileName,omitempty"`
+}
+
+// ModelNameConfig is the configuration for the modelname generator.
+type ModelNameConfig struct {
+	// Disabled determines whether the modelname generator should be run or not.
+	// This generator is enabled by default so this field defaults to false.
+	Disabled bool `json:"disabled,omitempty"`
+
+	// OutputFileName is the file name to use for writing the generated model
+	// names to. This file will be created for each group version.
+	// When omitted, this will default to `zz_generated.model_name.go`.
 	OutputFileName string `json:"outputFileName,omitempty"`
 }

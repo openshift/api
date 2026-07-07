@@ -1,0 +1,21 @@
+diff --git a/config/v1/types_console.go b/config/v1/types_console.go
+--- a/config/v1/types_console.go
++++ b/config/v1/types_console.go
+@@ -33,7 +33,17 @@ type ConsoleSpec struct {
+ // ConsoleSpec is the specification of the desired behavior of the Console.
+ type ConsoleSpec struct {
+ 	// +optional
+ 	Authentication ConsoleAuthentication `json:"authentication"`
++
++	// webhookEndpoint specifies the URL of an external webhook endpoint
++	// that the console calls for custom validation of user actions.
++	// Must be a valid HTTPS URL.
++	// The URL must be between 1 and 512 characters.
++	// When omitted, no external webhook validation is performed.
++	// +optional
++	// +kubebuilder:validation:MinLength=1
++	// +kubebuilder:validation:MaxLength=512
++	WebhookEndpoint string `json:"webhookEndpoint,omitempty"`
+ }
+ 
+ // ConsoleStatus defines the observed status of the Console.

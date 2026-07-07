@@ -29,6 +29,18 @@
                         "name": "HyperShiftOnlyDynamicResourceAllocation"
                     },
                     {
+                        "name": "MachineAPIMigrationAzure"
+                    },
+                    {
+                        "name": "MachineAPIMigrationBareMetal"
+                    },
+                    {
+                        "name": "MachineAPIMigrationGCP"
+                    },
+                    {
+                        "name": "MachineAPIMigrationPowerVS"
+                    },
+                    {
                         "name": "MachineAPIOperatorDisableMachineHealthCheckController"
                     },
                     {
@@ -214,6 +226,9 @@
                         "name": "IngressControllerDynamicConfigurationManager"
                     },
                     {
+                        "name": "IngressControllerMultipleHAProxyVersions"
+                    },
+                    {
                         "name": "InsightsConfig"
                     },
                     {
@@ -227,6 +242,9 @@
                     },
                     {
                         "name": "KMSv1"
+                    },
+                    {
+                        "name": "KarpenterOperator"
                     },
                     {
                         "name": "MachineAPIMigration"
@@ -260,6 +278,9 @@
                     },
                     {
                         "name": "MutableCSINodeAllocatableCount"
+                    },
+                    {
+                        "name": "MutableTopology"
                     },
                     {
                         "name": "MutatingAdmissionPolicy"
@@ -323,6 +344,9 @@
                     },
                     {
                         "name": "SELinuxMount"
+                    },
+                    {
+                        "name": "SELinuxMountGAReadiness"
                     },
                     {
                         "name": "ServiceAccountTokenNodeBinding"

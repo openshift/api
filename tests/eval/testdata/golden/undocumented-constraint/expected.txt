@@ -1,0 +1,1 @@
+MinLength, MaxLength, and Pattern constraints not documented in field comment

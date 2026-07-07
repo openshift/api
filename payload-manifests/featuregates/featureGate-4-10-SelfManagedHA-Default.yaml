@@ -18,9 +18,6 @@
                         "name": "AWSClusterHostedDNS"
                     },
                     {
-                        "name": "AWSClusterHostedDNSInstall"
-                    },
-                    {
                         "name": "AWSDedicatedHosts"
                     },
                     {
@@ -165,10 +162,16 @@
                         "name": "IngressControllerDynamicConfigurationManager"
                     },
                     {
+                        "name": "IngressControllerMultipleHAProxyVersions"
+                    },
+                    {
                         "name": "IrreconcilableMachineConfig"
                     },
                     {
                         "name": "KMSEncryption"
+                    },
+                    {
+                        "name": "KarpenterOperator"
                     },
                     {
                         "name": "MachineAPIMigration"
@@ -177,7 +180,19 @@
                         "name": "MachineAPIMigrationAWS"
                     },
                     {
+                        "name": "MachineAPIMigrationAzure"
+                    },
+                    {
+                        "name": "MachineAPIMigrationBareMetal"
+                    },
+                    {
+                        "name": "MachineAPIMigrationGCP"
+                    },
+                    {
                         "name": "MachineAPIMigrationOpenStack"
+                    },
+                    {
+                        "name": "MachineAPIMigrationPowerVS"
                     },
                     {
                         "name": "MachineAPIMigrationVSphere"
@@ -199,6 +214,9 @@
                     },
                     {
                         "name": "MultiDiskSetup"
+                    },
+                    {
+                        "name": "MutableTopology"
                     },
                     {
                         "name": "NetworkConnect"
@@ -234,9 +252,6 @@
                         "name": "OLMLifecycleAndCompatibility"
                     },
                     {
-                        "name": "OSStreams"
-                    },
-                    {
                         "name": "OVNObservability"
                     },
                     {
@@ -247,6 +262,9 @@
                     },
                     {
                         "name": "SELinuxMount"
+                    },
+                    {
+                        "name": "SELinuxMountGAReadiness"
                     },
                     {
                         "name": "ShortCertRotation"
@@ -264,9 +282,6 @@
                         "name": "VSphereConfigurableMaxAllowedBlockVolumesPerNode"
                     },
                     {
-                        "name": "VSphereMixedNodeEnv"
-                    },
-                    {
                         "name": "VSphereMultiVCenterDay2"
                     },
                     {
@@ -274,6 +289,9 @@
                     }
                 ],
                 "enabled": [
+                    {
+                        "name": "AWSClusterHostedDNSInstall"
+                    },
                     {
                         "name": "AWSServiceLBNetworkSecurityGroup"
                     },
@@ -338,6 +356,9 @@
                         "name": "NewOLMWebhookProviderOpenshiftServiceCA"
                     },
                     {
+                        "name": "OSStreams"
+                    },
+                    {
                         "name": "OpenShiftPodSecurityAdmission"
                     },
                     {
@@ -360,6 +381,9 @@
                     },
                     {
                         "name": "VSphereHostVMGroupZonal"
+                    },
+                    {
+                        "name": "VSphereMixedNodeEnv"
                     },
                     {
                         "name": "VSphereMultiDisk"

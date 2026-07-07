@@ -738,6 +738,138 @@ tests:
         spec:
           domain: "this-domain.has-208-characters.which-on.its-own-would-not-exceed.the-limit-of-253-chars.but-combined-with-the-ingress-controller-name.with-40-chars.and-the-router-prefix.ends-up-as-a-too-long.canonical-domain"
       expectedError: "The combined 'router-' + metadata.name + '.' + .spec.domain cannot exceed 253 characters"
+    - name: Should be able to create an NLB IngressController with PROXY protocol
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: IngressController
+        metadata:
+          name: nlb-proxy
+          namespace: openshift-ingress-operator
+        spec:
+          endpointPublishingStrategy:
+            type: LoadBalancerService
+            loadBalancer:
+              scope: External
+              providerParameters:
+                type: AWS
+                aws:
+                  type: NLB
+                  networkLoadBalancer:
+                    protocol: PROXY
+      expected: |
+        apiVersion: operator.openshift.io/v1
+        kind: IngressController
+        metadata:
+          name: nlb-proxy
+          namespace: openshift-ingress-operator
+        spec:
+          httpEmptyRequestsPolicy: Respond
+          idleConnectionTerminationPolicy: Immediate
+          closedClientConnectionPolicy: Continue
+          endpointPublishingStrategy:
+            type: LoadBalancerService
+            loadBalancer:
+              dnsManagementPolicy: Managed
+              scope: External
+              providerParameters:
+                type: AWS
+                aws:
+                  type: NLB
+                  networkLoadBalancer:
+                    protocol: PROXY
+    - name: Should be able to create an NLB IngressController with TCP protocol
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: IngressController
+        metadata:
+          name: nlb-tcp
+          namespace: openshift-ingress-operator
+        spec:
+          endpointPublishingStrategy:
+            type: LoadBalancerService
+            loadBalancer:
+              scope: External
+              providerParameters:
+                type: AWS
+                aws:
+                  type: NLB
+                  networkLoadBalancer:
+                    protocol: TCP
+      expected: |
+        apiVersion: operator.openshift.io/v1
+        kind: IngressController
+        metadata:
+          name: nlb-tcp
+          namespace: openshift-ingress-operator
+        spec:
+          httpEmptyRequestsPolicy: Respond
+          idleConnectionTerminationPolicy: Immediate
+          closedClientConnectionPolicy: Continue
+          endpointPublishingStrategy:
+            type: LoadBalancerService
+            loadBalancer:
+              dnsManagementPolicy: Managed
+              scope: External
+              providerParameters:
+                type: AWS
+                aws:
+                  type: NLB
+                  networkLoadBalancer:
+                    protocol: TCP
+    - name: Should be able to create an NLB IngressController without protocol
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: IngressController
+        metadata:
+          name: nlb-no-protocol
+          namespace: openshift-ingress-operator
+        spec:
+          endpointPublishingStrategy:
+            type: LoadBalancerService
+            loadBalancer:
+              scope: External
+              providerParameters:
+                type: AWS
+                aws:
+                  type: NLB
+      expected: |
+        apiVersion: operator.openshift.io/v1
+        kind: IngressController
+        metadata:
+          name: nlb-no-protocol
+          namespace: openshift-ingress-operator
+        spec:
+          httpEmptyRequestsPolicy: Respond
+          idleConnectionTerminationPolicy: Immediate
+          closedClientConnectionPolicy: Continue
+          endpointPublishingStrategy:
+            type: LoadBalancerService
+            loadBalancer:
+              dnsManagementPolicy: Managed
+              scope: External
+              providerParameters:
+                type: AWS
+                aws:
+                  type: NLB
+    - name: Should not allow an invalid protocol value on NLB
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: IngressController
+        metadata:
+          name: nlb-invalid
+          namespace: openshift-ingress-operator
+        spec:
+          endpointPublishingStrategy:
+            type: LoadBalancerService
+            loadBalancer:
+              scope: External
+              providerParameters:
+                type: AWS
+                aws:
+                  type: NLB
+                  networkLoadBalancer:
+                    protocol: Invalid
+      expectedError: "Unsupported value: \"Invalid\": supported values: \"TCP\", \"PROXY\""
   onUpdate:
     - name: Should be able to update invalid domain to a valid domain
       initialCRDPatches:
@@ -830,3 +962,63 @@ tests:
           closedClientConnectionPolicy: Continue
           domain: "*.foo.com"
           replicas: 3
+    - name: NLB protocol should be mutable
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: IngressController
+        metadata:
+          name: nlb-mutable
+          namespace: openshift-ingress-operator
+        spec:
+          endpointPublishingStrategy:
+            type: LoadBalancerService
+            loadBalancer:
+              scope: External
+              providerParameters:
+                type: AWS
+                aws:
+                  type: NLB
+                  networkLoadBalancer:
+                    protocol: TCP
+      updated: |
+        apiVersion: operator.openshift.io/v1
+        kind: IngressController
+        metadata:
+          name: nlb-mutable
+          namespace: openshift-ingress-operator
+        spec:
+          httpEmptyRequestsPolicy: Respond
+          idleConnectionTerminationPolicy: Immediate
+          closedClientConnectionPolicy: Continue
+          endpointPublishingStrategy:
+            type: LoadBalancerService
+            loadBalancer:
+              dnsManagementPolicy: Managed
+              scope: External
+              providerParameters:
+                type: AWS
+                aws:
+                  type: NLB
+                  networkLoadBalancer:
+                    protocol: PROXY
+      expected: |
+        apiVersion: operator.openshift.io/v1
+        kind: IngressController
+        metadata:
+          name: nlb-mutable
+          namespace: openshift-ingress-operator
+        spec:
+          httpEmptyRequestsPolicy: Respond
+          idleConnectionTerminationPolicy: Immediate
+          closedClientConnectionPolicy: Continue
+          endpointPublishingStrategy:
+            type: LoadBalancerService
+            loadBalancer:
+              dnsManagementPolicy: Managed
+              scope: External
+              providerParameters:
+                type: AWS
+                aws:
+                  type: NLB
+                  networkLoadBalancer:
+                    protocol: PROXY

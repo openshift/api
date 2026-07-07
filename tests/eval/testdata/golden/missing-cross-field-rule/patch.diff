@@ -1,0 +1,29 @@
+diff --git a/config/v1/types_console.go b/config/v1/types_console.go
+--- a/config/v1/types_console.go
++++ b/config/v1/types_console.go
+@@ -33,7 +33,25 @@ type ConsoleSpec struct {
+ // ConsoleSpec is the specification of the desired behavior of the Console.
+ type ConsoleSpec struct {
+ 	// +optional
+ 	Authentication ConsoleAuthentication `json:"authentication"`
++
++	// inactivityTimeoutMinutes specifies the number of minutes of inactivity
++	// before the console session times out. The value must be between 1 and 1440.
++	// This field is mutually exclusive with sessionDurationMinutes.
++	// When omitted, the default timeout of 30 minutes is used.
++	// +optional
++	// +kubebuilder:validation:Minimum=1
++	// +kubebuilder:validation:Maximum=1440
++	InactivityTimeoutMinutes int32 `json:"inactivityTimeoutMinutes,omitempty"`
++
++	// sessionDurationMinutes specifies the fixed session duration in minutes.
++	// The value must be between 1 and 1440.
++	// This field is mutually exclusive with inactivityTimeoutMinutes.
++	// When omitted, session duration is controlled by inactivityTimeoutMinutes.
++	// +optional
++	// +kubebuilder:validation:Minimum=1
++	// +kubebuilder:validation:Maximum=1440
++	SessionDurationMinutes int32 `json:"sessionDurationMinutes,omitempty"`
+ }
+ 
+ // ConsoleStatus defines the observed status of the Console.

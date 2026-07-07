@@ -44,7 +44,19 @@
                         "name": "ExternalOIDCExternalClaimsSourcing"
                     },
                     {
-                        "name": "ExternalSnapshotMetadata"
+                        "name": "KarpenterOperator"
+                    },
+                    {
+                        "name": "MachineAPIMigrationAzure"
+                    },
+                    {
+                        "name": "MachineAPIMigrationBareMetal"
+                    },
+                    {
+                        "name": "MachineAPIMigrationGCP"
+                    },
+                    {
+                        "name": "MachineAPIMigrationPowerVS"
                     },
                     {
                         "name": "MachineAPIMigrationVSphere"
@@ -54,6 +66,9 @@
                     },
                     {
                         "name": "MultiArchInstallAzure"
+                    },
+                    {
+                        "name": "MutableTopology"
                     },
                     {
                         "name": "NetworkConnect"
@@ -90,9 +105,6 @@
                     },
                     {
                         "name": "ShortCertRotation"
-                    },
-                    {
-                        "name": "VSphereMultiVCenterDay2"
                     }
                 ],
                 "enabled": [
@@ -226,6 +238,9 @@
                         "name": "ExternalOIDCWithUpstreamParity"
                     },
                     {
+                        "name": "ExternalSnapshotMetadata"
+                    },
+                    {
                         "name": "GCPCustomAPIEndpoints"
                     },
                     {
@@ -251,6 +266,9 @@
                     },
                     {
                         "name": "IngressControllerDynamicConfigurationManager"
+                    },
+                    {
+                        "name": "IngressControllerMultipleHAProxyVersions"
                     },
                     {
                         "name": "InsightsConfig"
@@ -328,6 +346,9 @@
                         "name": "SELinuxMount"
                     },
                     {
+                        "name": "SELinuxMountGAReadiness"
+                    },
+                    {
                         "name": "ServiceAccountTokenNodeBinding"
                     },
                     {
@@ -365,6 +386,9 @@
                     },
                     {
                         "name": "VSphereMultiNetworks"
+                    },
+                    {
+                        "name": "VSphereMultiVCenterDay2"
                     },
                     {
                         "name": "VolumeGroupSnapshot"

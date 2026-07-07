@@ -2,8 +2,8 @@ apiVersion: apiextensions.k8s.io/v1 # Hack because controller-gen complains if w
 name: "Infrastructure"
 crdName: infrastructures.config.openshift.io
 featureGates:
-- -AWSClusterHostedDNSInstall
-- -VSphereMultiVCenterDay2
+  - -AWSClusterHostedDNS
+  - -VSphereMultiVCenterDay2
 tests:
   onCreate:
     - name: Should be able to create a minimal Infrastructure
@@ -46,7 +46,7 @@ tests:
             baremetal:
               apiServerInternalIPs:
                 - not-an-ip-address
-      expectedError: "spec.platformSpec.baremetal.apiServerInternalIPs[0]: Invalid value: \"string\": value must be a valid IP address"
+      expectedError: 'spec.platformSpec.baremetal.apiServerInternalIPs[0]: Invalid value: "string": value must be a valid IP address'
     - name: Should not be able to pass 2 IPv4 addresses to apiServerInternalIPs in the platform spec
       initial: |
         apiVersion: config.openshift.io/v1
@@ -115,7 +115,7 @@ tests:
             baremetal:
               ingressIPs:
                 - not-an-ip-address
-      expectedError: "spec.platformSpec.baremetal.ingressIPs[0]: Invalid value: \"string\": value must be a valid IP address"
+      expectedError: 'spec.platformSpec.baremetal.ingressIPs[0]: Invalid value: "string": value must be a valid IP address'
     - name: Should not be able to pass 2 IPv4 addresses to ingressIPs in the platform spec
       initial: |
         apiVersion: config.openshift.io/v1
@@ -184,7 +184,7 @@ tests:
             baremetal:
               machineNetworks:
                 - 192.0.2.1
-      expectedError: "spec.platformSpec.baremetal.machineNetworks[0]: Invalid value: \"string\": value must be a valid CIDR network address"
+      expectedError: 'spec.platformSpec.baremetal.machineNetworks[0]: Invalid value: "string": value must be a valid CIDR network address'
   onUpdate:
     - name: Should be able to change External platformName from unknown to something else
       initial: |
@@ -228,7 +228,7 @@ tests:
             type: External
             external:
               platformName: SomeOtherCoolplatformName
-      expectedError: " spec.platformSpec.external.platformName: Invalid value: \"string\": platform name cannot be changed once set"
+      expectedError: ' spec.platformSpec.external.platformName: Invalid value: "string": platform name cannot be changed once set'
     - name: Should not be able to modify an existing Azure ResourceTags Tag
       initial: |
         apiVersion: config.openshift.io/v1
@@ -254,7 +254,7 @@ tests:
             azure:
               resourceTags:
                 - {key: "key", value: "changed"}
-      expectedStatusError: "status.platformStatus.azure.resourceTags: Invalid value: \"array\": resourceTags are immutable and may only be configured during installation"
+      expectedStatusError: 'status.platformStatus.azure.resourceTags: Invalid value: "array": resourceTags are immutable and may only be configured during installation'
     - name: Should not be able to add a Tag to an existing Azure ResourceTags
       initial: |
         apiVersion: config.openshift.io/v1
@@ -281,7 +281,7 @@ tests:
               resourceTags:
                 - {key: "key", value: "value"}
                 - {key: "new", value: "entry"}
-      expectedStatusError: "status.platformStatus.azure.resourceTags: Invalid value: \"array\": resourceTags are immutable and may only be configured during installation"
+      expectedStatusError: 'status.platformStatus.azure.resourceTags: Invalid value: "array": resourceTags are immutable and may only be configured during installation'
     - name: Should not be able to remove a Tag from an existing Azure ResourceTags
       initial: |
         apiVersion: config.openshift.io/v1
@@ -306,7 +306,7 @@ tests:
             azure:
               resourceTags:
                 - {key: "key", value: "value"}
-      expectedStatusError: "status.platformStatus.azure.resourceTags: Invalid value: \"array\": resourceTags are immutable and may only be configured during installation"
+      expectedStatusError: 'status.platformStatus.azure.resourceTags: Invalid value: "array": resourceTags are immutable and may only be configured during installation'
     - name: Should not be able to add Azure ResourceTags to an empty platformStatus.azure
       initial: |
         apiVersion: config.openshift.io/v1
@@ -327,7 +327,7 @@ tests:
             azure:
               resourceTags:
                 - {key: "key", value: "value"}
-      expectedStatusError: "status.platformStatus.azure: Invalid value: \"object\": resourceTags may only be configured during installation"
+      expectedStatusError: 'status.platformStatus.azure: Invalid value: "object": resourceTags may only be configured during installation'
     - name: Should not be able to remove Azure ResourceTags from platformStatus.azure
       initial: |
         apiVersion: config.openshift.io/v1
@@ -349,7 +349,7 @@ tests:
           platformStatus:
             type: Azure
             azure: {}
-      expectedStatusError: "status.platformStatus.azure: Invalid value: \"object\": resourceTags may only be configured during installation"
+      expectedStatusError: 'status.platformStatus.azure: Invalid value: "object": resourceTags may only be configured during installation'
     - name: Should be able to modify the ResourceGroupName while Azure ResourceTags are present
       initial: |
         apiVersion: config.openshift.io/v1
@@ -461,7 +461,7 @@ tests:
           platformStatus:
             powervs:
               resourceGroup: other-resource-group-name
-      expectedStatusError: "status.platformStatus.powervs.resourceGroup: Invalid value: \"string\": resourceGroup is immutable once set"
+      expectedStatusError: 'status.platformStatus.powervs.resourceGroup: Invalid value: "string": resourceGroup is immutable once set'
     - name: Should not be able to unset PowerVS platform status's resourceGroup once it was set
       initial: |
         apiVersion: config.openshift.io/v1
@@ -486,7 +486,7 @@ tests:
           platformStatus:
             powervs:
               region: some-region
-      expectedStatusError: "status.platformStatus.powervs: Invalid value: \"object\": cannot unset resourceGroup once set"
+      expectedStatusError: 'status.platformStatus.powervs: Invalid value: "object": cannot unset resourceGroup once set'
     - name: Should set load balancer type to OpenShiftManagedDefault if not specified
       initial: |
         apiVersion: config.openshift.io/v1
@@ -635,7 +635,7 @@ tests:
               loadBalancer:
                 type: UserManaged
             type: BareMetal
-      expectedStatusError: "status.platformStatus.baremetal.loadBalancer.type: Invalid value: \"string\": type is immutable once set"
+      expectedStatusError: 'status.platformStatus.baremetal.loadBalancer.type: Invalid value: "string": type is immutable once set'
     - name: Should not allow changing the immutable OpenStack load balancer type field
       initial: |
         apiVersion: config.openshift.io/v1
@@ -669,7 +669,7 @@ tests:
               loadBalancer:
                 type: UserManaged
             type: OpenStack
-      expectedStatusError: "status.platformStatus.openstack.loadBalancer.type: Invalid value: \"string\": type is immutable once set"
+      expectedStatusError: 'status.platformStatus.openstack.loadBalancer.type: Invalid value: "string": type is immutable once set'
     - name: Should not allow removing the immutable OpenStack load balancer type field that was initially set
       initial: |
         apiVersion: config.openshift.io/v1
@@ -701,7 +701,7 @@ tests:
           platformStatus:
             openstack: {}
             type: OpenStack
-      expectedStatusError: "status.platformStatus.openstack.loadBalancer.type: Invalid value: \"string\": type is immutable once set"
+      expectedStatusError: 'status.platformStatus.openstack.loadBalancer.type: Invalid value: "string": type is immutable once set'
     - name: Should not allow removing the immutable BareMetal load balancer type field that was initially set
       initial: |
         apiVersion: config.openshift.io/v1
@@ -733,7 +733,7 @@ tests:
           platformStatus:
             baremetal: {}
             type: BareMetal
-      expectedStatusError: "status.platformStatus.baremetal.loadBalancer.type: Invalid value: \"string\": type is immutable once set"
+      expectedStatusError: 'status.platformStatus.baremetal.loadBalancer.type: Invalid value: "string": type is immutable once set'
     - name: Should not allow setting the load balancer type to a wrong value
       initial: |
         apiVersion: config.openshift.io/v1
@@ -756,7 +756,7 @@ tests:
               loadBalancer:
                 type: FooBar
             type: OpenStack
-      expectedStatusError: "platformStatus.openstack.loadBalancer.type: Unsupported value: \"FooBar\": supported values: \"OpenShiftManagedDefault\", \"UserManaged\""
+      expectedStatusError: 'platformStatus.openstack.loadBalancer.type: Unsupported value: "FooBar": supported values: "OpenShiftManagedDefault", "UserManaged"'
     - name: Should not be able to update cloudControllerManager state to empty string when state is already set to None
       initial: |
         apiVersion: config.openshift.io/v1
@@ -778,7 +778,7 @@ tests:
             external:
               cloudControllerManager:
                 state: ""
-      expectedStatusError: " status.platformStatus.external.cloudControllerManager.state: Invalid value: \"string\": state is immutable once set"
+      expectedStatusError: ' status.platformStatus.external.cloudControllerManager.state: Invalid value: "string": state is immutable once set'
     - name: Should not be able to update cloudControllerManager state to External when state is already set to None
       initial: |
         apiVersion: config.openshift.io/v1
@@ -802,7 +802,7 @@ tests:
             external:
               cloudControllerManager:
                 state: External
-      expectedStatusError: " status.platformStatus.external.cloudControllerManager.state: Invalid value: \"string\": state is immutable once set"
+      expectedStatusError: ' status.platformStatus.external.cloudControllerManager.state: Invalid value: "string": state is immutable once set'
     - name: Should be able to update cloudControllerManager state to None when state is already set to None
       initial: |
         apiVersion: config.openshift.io/v1
@@ -862,7 +862,7 @@ tests:
             type: External
             external:
               cloudControllerManager: {}
-      expectedStatusError: " status.platformStatus.external.cloudControllerManager: Invalid value: \"object\": state may not be added or removed once set"
+      expectedStatusError: ' status.platformStatus.external.cloudControllerManager: Invalid value: "object": state may not be added or removed once set'
     - name: Should not be able to update cloudControllerManager state to empty string when state is already set to External
       initial: |
         apiVersion: config.openshift.io/v1
@@ -886,7 +886,7 @@ tests:
             external:
               cloudControllerManager:
                 state: ""
-      expectedStatusError: " status.platformStatus.external.cloudControllerManager.state: Invalid value: \"string\": state is immutable once set"
+      expectedStatusError: ' status.platformStatus.external.cloudControllerManager.state: Invalid value: "string": state is immutable once set'
     - name: Should not be able to update cloudControllerManager state to None when state is already set to External
       initial: |
         apiVersion: config.openshift.io/v1
@@ -910,7 +910,7 @@ tests:
             external:
               cloudControllerManager:
                 state: None
-      expectedStatusError: " status.platformStatus.external.cloudControllerManager.state: Invalid value: \"string\": state is immutable once set"
+      expectedStatusError: ' status.platformStatus.external.cloudControllerManager.state: Invalid value: "string": state is immutable once set'
     - name: Should be able to update cloudControllerManager state to External when state is already set to External
       initial: |
         apiVersion: config.openshift.io/v1
@@ -970,7 +970,7 @@ tests:
             type: External
             external:
               cloudControllerManager: {}
-      expectedStatusError: " status.platformStatus.external.cloudControllerManager: Invalid value: \"object\": state may not be added or removed once set"
+      expectedStatusError: ' status.platformStatus.external.cloudControllerManager: Invalid value: "object": state may not be added or removed once set'
     - name: Should not be able to update cloudControllerManager state to None when state is already set to empty string
       initial: |
         apiVersion: config.openshift.io/v1
@@ -994,7 +994,7 @@ tests:
             external:
               cloudControllerManager:
                 state: None
-      expectedStatusError: " status.platformStatus.external.cloudControllerManager.state: Invalid value: \"string\": state is immutable once set"
+      expectedStatusError: ' status.platformStatus.external.cloudControllerManager.state: Invalid value: "string": state is immutable once set'
     - name: Should not be able to update cloudControllerManager state to External when state is already set to empty string
       initial: |
         apiVersion: config.openshift.io/v1
@@ -1018,7 +1018,7 @@ tests:
             external:
               cloudControllerManager:
                 state: External
-      expectedStatusError: " status.platformStatus.external.cloudControllerManager.state: Invalid value: \"string\": state is immutable once set"
+      expectedStatusError: ' status.platformStatus.external.cloudControllerManager.state: Invalid value: "string": state is immutable once set'
     - name: Should be able to update cloudControllerManager state to empty string when state is already set to empty string
       initial: |
         apiVersion: config.openshift.io/v1
@@ -1078,7 +1078,7 @@ tests:
             type: External
             external:
               cloudControllerManager: {}
-      expectedStatusError: " status.platformStatus.external.cloudControllerManager: Invalid value: \"object\": state may not be added or removed once set"
+      expectedStatusError: ' status.platformStatus.external.cloudControllerManager: Invalid value: "object": state may not be added or removed once set'
     - name: Should be able to update cloudControllerManager state to None when cloudControllerManager state is unset
       initial: |
         apiVersion: config.openshift.io/v1
@@ -1173,7 +1173,7 @@ tests:
             external:
               cloudControllerManager:
                 state: External
-      expectedStatusError: " status.platformStatus.external.cloudControllerManager: Invalid value: \"object\": state may not be added or removed once set"
+      expectedStatusError: ' status.platformStatus.external.cloudControllerManager: Invalid value: "object": state may not be added or removed once set'
     - name: Should be able to unset cloudControllerManager state when cloudControllerManager state is unset
       initial: |
         apiVersion: config.openshift.io/v1
@@ -1229,7 +1229,7 @@ tests:
             external:
               cloudControllerManager:
                 state: External
-      expectedStatusError: " status.platformStatus.external: Invalid value: \"object\": cloudControllerManager may not be added or removed once set"
+      expectedStatusError: ' status.platformStatus.external: Invalid value: "object": cloudControllerManager may not be added or removed once set'
     - name: Should not be able to remove cloudControllerManager when cloudControllerManager is set
       initial: |
         apiVersion: config.openshift.io/v1
@@ -1251,7 +1251,7 @@ tests:
           platformStatus:
             type: External
             external: {}
-      expectedStatusError: " status.platformStatus.external: Invalid value: \"object\": cloudControllerManager may not be added or removed once set"
+      expectedStatusError: ' status.platformStatus.external: Invalid value: "object": cloudControllerManager may not be added or removed once set'
     - name: Should be able to add valid (URL) ServiceEndpoints to IBMCloud PlatformStatus
       initial: |
         apiVersion: config.openshift.io/v1
@@ -1317,7 +1317,7 @@ tests:
               serviceEndpoints:
               - name: COS
                 url: " "
-      expectedStatusError: "status.platformStatus.ibmcloud.serviceEndpoints[0].url: Invalid value: \"string\": url must be a valid absolute URL"
+      expectedStatusError: 'status.platformStatus.ibmcloud.serviceEndpoints[0].url: Invalid value: "string": url must be a valid absolute URL'
     - name: Should not be able to add invalid (URL) ServiceEndpoints to IBMCloud PlatformStatus
       initial: |
         apiVersion: config.openshift.io/v1
@@ -1343,7 +1343,7 @@ tests:
                 url: https://dummy.vpc.com
               - name: COS
                 url: dummy-cos-com
-      expectedStatusError: "platformStatus.ibmcloud.serviceEndpoints[1].url: Invalid value: \"string\": url must be a valid absolute URL"
+      expectedStatusError: 'platformStatus.ibmcloud.serviceEndpoints[1].url: Invalid value: "string": url must be a valid absolute URL'
     - name: Should not be able to add invalid (Name) ServiceEndpoints to IBMCloud PlatformStatus
       initial: |
         apiVersion: config.openshift.io/v1
@@ -1369,14 +1369,14 @@ tests:
                 url: https://dummy.vpc.com
               - name: BadService
                 url: https://bad-service.com
-      expectedStatusError: "platformStatus.ibmcloud.serviceEndpoints[1].name: Unsupported value: \"BadService\": supported values: \"CIS\", \"COS\", \"COSConfig\", \"DNSServices\", \"GlobalCatalog\", \"GlobalSearch\", \"GlobalTagging\", \"HyperProtect\", \"IAM\", \"KeyProtect\", \"ResourceController\", \"ResourceManager\", \"VPC\""
+      expectedStatusError: 'platformStatus.ibmcloud.serviceEndpoints[1].name: Unsupported value: "BadService": supported values: "CIS", "COS", "COSConfig", "DNSServices", "GlobalCatalog", "GlobalSearch", "GlobalTagging", "HyperProtect", "IAM", "KeyProtect", "ResourceController", "ResourceManager", "VPC"'
     - name: Should allow updating other fields with an invalid persisted PowerVS service endpoint name in spec
       initialCRDPatches:
-      - op: replace
-        path: /spec/versions/0/schema/openAPIV3Schema/properties/spec/properties/platformSpec/properties/powervs/properties/serviceEndpoints/items/properties/name
-        value:
-          pattern: "^[a-z0-9-]+$"
-          type: string
+        - op: replace
+          path: /spec/versions/0/schema/openAPIV3Schema/properties/spec/properties/platformSpec/properties/powervs/properties/serviceEndpoints/items/properties/name
+          value:
+            pattern: "^[a-z0-9-]+$"
+            type: string
       initial: |
         apiVersion: config.openshift.io/v1
         kind: Infrastructure
@@ -1411,11 +1411,11 @@ tests:
                 url: https://abc
     - name: Should allow updating adding another slice entry with an invalid persisted PowerVS service endpoint name in spec
       initialCRDPatches:
-      - op: replace
-        path: /spec/versions/0/schema/openAPIV3Schema/properties/spec/properties/platformSpec/properties/powervs/properties/serviceEndpoints/items/properties/name
-        value:
-          pattern: "^[a-z0-9-]+$"
-          type: string
+        - op: replace
+          path: /spec/versions/0/schema/openAPIV3Schema/properties/spec/properties/platformSpec/properties/powervs/properties/serviceEndpoints/items/properties/name
+          value:
+            pattern: "^[a-z0-9-]+$"
+            type: string
       initial: |
         apiVersion: config.openshift.io/v1
         kind: Infrastructure
@@ -1452,11 +1452,11 @@ tests:
                 url: https://abc
     - name: Should not allow updating adding an invalid value to a still invalid value for a PowerVS service endpoint name in spec
       initialCRDPatches:
-      - op: replace
-        path: /spec/versions/0/schema/openAPIV3Schema/properties/spec/properties/platformSpec/properties/powervs/properties/serviceEndpoints/items/properties/name
-        value:
-          pattern: "^[a-z0-9-]+$"
-          type: string
+        - op: replace
+          path: /spec/versions/0/schema/openAPIV3Schema/properties/spec/properties/platformSpec/properties/powervs/properties/serviceEndpoints/items/properties/name
+          value:
+            pattern: "^[a-z0-9-]+$"
+            type: string
       initial: |
         apiVersion: config.openshift.io/v1
         kind: Infrastructure
@@ -1480,11 +1480,11 @@ tests:
       expectedError: 'spec.platformSpec.powervs.serviceEndpoints[0].name: Unsupported value: "dnsservices2": supported values: "CIS", "COS", "COSConfig", "DNSServices", "GlobalCatalog", "GlobalSearch", "GlobalTagging", "HyperProtect", "IAM", "KeyProtect", "Power", "ResourceController", "ResourceManager", "VPC"'
     - name: Should allow updating adding updating an invalid value to a valid value for PowerVS service endpoint name in spec
       initialCRDPatches:
-      - op: replace
-        path: /spec/versions/0/schema/openAPIV3Schema/properties/spec/properties/platformSpec/properties/powervs/properties/serviceEndpoints/items/properties/name
-        value:
-          pattern: "^[a-z0-9-]+$"
-          type: string
+        - op: replace
+          path: /spec/versions/0/schema/openAPIV3Schema/properties/spec/properties/platformSpec/properties/powervs/properties/serviceEndpoints/items/properties/name
+          value:
+            pattern: "^[a-z0-9-]+$"
+            type: string
       initial: |
         apiVersion: config.openshift.io/v1
         kind: Infrastructure
@@ -1517,11 +1517,11 @@ tests:
                 url: https://abc
     - name: Should allow updating other fields with an invalid persisted PowerVS service endpoint name in status
       initialCRDPatches:
-      - op: replace
-        path: /spec/versions/0/schema/openAPIV3Schema/properties/status/properties/platformStatus/properties/powervs/properties/serviceEndpoints/items/properties/name
-        value:
-          pattern: "^[a-z0-9-]+$"
-          type: string
+        - op: replace
+          path: /spec/versions/0/schema/openAPIV3Schema/properties/status/properties/platformStatus/properties/powervs/properties/serviceEndpoints/items/properties/name
+          value:
+            pattern: "^[a-z0-9-]+$"
+            type: string
       initial: |
         apiVersion: config.openshift.io/v1
         kind: Infrastructure
@@ -1562,11 +1562,11 @@ tests:
                 url: https://abc
     - name: Should allow updating adding another slice entry with an invalid persisted PowerVS service endpoint name in status
       initialCRDPatches:
-      - op: replace
-        path: /spec/versions/0/schema/openAPIV3Schema/properties/status/properties/platformStatus/properties/powervs/properties/serviceEndpoints/items/properties/name
-        value:
-          pattern: "^[a-z0-9-]+$"
-          type: string
+        - op: replace
+          path: /spec/versions/0/schema/openAPIV3Schema/properties/status/properties/platformStatus/properties/powervs/properties/serviceEndpoints/items/properties/name
+          value:
+            pattern: "^[a-z0-9-]+$"
+            type: string
       initial: |
         apiVersion: config.openshift.io/v1
         kind: Infrastructure
@@ -1609,11 +1609,11 @@ tests:
                 url: https://abc
     - name: Should not allow updating adding an invalid value to a still invalid value for a PowerVS service endpoint name in status
       initialCRDPatches:
-      - op: replace
-        path: /spec/versions/0/schema/openAPIV3Schema/properties/status/properties/platformStatus/properties/powervs/properties/serviceEndpoints/items/properties/name
-        value:
-          pattern: "^[a-z0-9-]+$"
-          type: string
+        - op: replace
+          path: /spec/versions/0/schema/openAPIV3Schema/properties/status/properties/platformStatus/properties/powervs/properties/serviceEndpoints/items/properties/name
+          value:
+            pattern: "^[a-z0-9-]+$"
+            type: string
       initial: |
         apiVersion: config.openshift.io/v1
         kind: Infrastructure
@@ -1639,11 +1639,11 @@ tests:
       expectedStatusError: 'status.platformStatus.powervs.serviceEndpoints[0].name: Unsupported value: "dnsservices2": supported values: "CIS", "COS", "COSConfig", "DNSServices", "GlobalCatalog", "GlobalSearch", "GlobalTagging", "HyperProtect", "IAM", "KeyProtect", "Power", "ResourceController", "ResourceManager", "VPC"'
     - name: Should allow updating adding updating an invalid value to a valid value for PowerVS service endpoint name in status
       initialCRDPatches:
-      - op: replace
-        path: /spec/versions/0/schema/openAPIV3Schema/properties/status/properties/platformStatus/properties/powervs/properties/serviceEndpoints/items/properties/name
-        value:
-          pattern: "^[a-z0-9-]+$"
-          type: string
+        - op: replace
+          path: /spec/versions/0/schema/openAPIV3Schema/properties/status/properties/platformStatus/properties/powervs/properties/serviceEndpoints/items/properties/name
+          value:
+            pattern: "^[a-z0-9-]+$"
+            type: string
       initial: |
         apiVersion: config.openshift.io/v1
         kind: Infrastructure
@@ -1733,6 +1733,8 @@ tests:
           platform: AWS
           platformStatus:
             aws:
+              cloudLoadBalancerConfig:
+                dnsType: PlatformDefault
               region: us-east-1
               resourceTags:
               - key: key with space
@@ -1779,6 +1781,8 @@ tests:
           platform: AWS
           platformStatus:
             aws:
+              cloudLoadBalancerConfig:
+                dnsType: PlatformDefault
               region: us-east-1
               resourceTags:
               - key: key:_./=+-@
@@ -1842,8 +1846,8 @@ tests:
       expectedStatusError: "invalid AWS resource tag value. The string can contain only the set of alphanumeric characters, space (' '), '_', '.', '/', '=', '+', '-', ':', '@'"
     - name: Should allow updating other fields with an invalid persisted vcenters array (empty) in spec
       initialCRDPatches:
-      - op: remove
-        path: /spec/versions/0/schema/openAPIV3Schema/properties/spec/properties/platformSpec/properties/vsphere/properties/vcenters/minItems
+        - op: remove
+          path: /spec/versions/0/schema/openAPIV3Schema/properties/spec/properties/platformSpec/properties/vsphere/properties/vcenters/minItems
       initial: |
         apiVersion: config.openshift.io/v1
         kind: Infrastructure
@@ -1876,8 +1880,8 @@ tests:
               vcenters: []
     - name: Should allow keeping an invalid persisted vcenters array (empty) in spec unchanged
       initialCRDPatches:
-      - op: remove
-        path: /spec/versions/0/schema/openAPIV3Schema/properties/spec/properties/platformSpec/properties/vsphere/properties/vcenters/minItems
+        - op: remove
+          path: /spec/versions/0/schema/openAPIV3Schema/properties/spec/properties/platformSpec/properties/vsphere/properties/vcenters/minItems
       initial: |
         apiVersion: config.openshift.io/v1
         kind: Infrastructure
@@ -1940,8 +1944,8 @@ tests:
                 zone: zone1
     - name: Should allow updating an invalid persisted vcenters array (empty) to a valid value (1 vcenter) in spec
       initialCRDPatches:
-      - op: remove
-        path: /spec/versions/0/schema/openAPIV3Schema/properties/spec/properties/platformSpec/properties/vsphere/properties/vcenters/minItems
+        - op: remove
+          path: /spec/versions/0/schema/openAPIV3Schema/properties/spec/properties/platformSpec/properties/vsphere/properties/vcenters/minItems
       initial: |
         apiVersion: config.openshift.io/v1
         kind: Infrastructure

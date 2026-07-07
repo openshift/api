@@ -15,7 +15,8 @@ import (
 // committed and current file contents is returned.
 func GitDiff(packagePath, fileName string) (string, error) {
 	repo, err := git.PlainOpenWithOptions(packagePath, &git.PlainOpenOptions{
-		DetectDotGit: true,
+		DetectDotGit:          true,
+		EnableDotGitCommonDir: true,
 	})
 	if err != nil {
 		return "", fmt.Errorf("error opening parent git repository: %w", err)
@@ -31,9 +32,25 @@ func GitDiff(packagePath, fileName string) (string, error) {
 		return "", fmt.Errorf("error getting worktree status: %w", err)
 	}
 
-	pathedFileName := filepath.Join(packagePath, fileName)
-	if status.File(pathedFileName).Worktree == git.Unmodified {
-		// The file is unmodified since the last commit, no diff to return.
+	absPackagePath, err := filepath.Abs(packagePath)
+	if err != nil {
+		return "", fmt.Errorf("error getting absolute package path: %w", err)
+	}
+
+	relativePath, err := filepath.Rel(wt.Filesystem.Root(), absPackagePath)
+	if err != nil {
+		return "", fmt.Errorf("error getting relative package path: %w", err)
+	}
+
+	pathedFileName := fileName
+	if relativePath != "." {
+		// This means the package wasn't the root of the repository,
+		// make sure the path is the complete relative path from the repo root.
+		pathedFileName = filepath.Join(relativePath, fileName)
+	}
+
+	worktreeStatus := status.File(pathedFileName).Worktree
+	if worktreeStatus == git.Unmodified {
 		return "", nil
 	}
 

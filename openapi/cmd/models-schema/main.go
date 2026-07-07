@@ -23,7 +23,7 @@ func main() {
 
 func output() error {
 	refFunc := func(name string) spec.Ref {
-		return spec.MustCreateRef(fmt.Sprintf("#/definitions/%s", friendlyName(name)))
+		return spec.MustCreateRef(fmt.Sprintf("#/definitions/%s", name))
 	}
 	defs := generated_openapi.GetOpenAPIDefinitions(refFunc)
 	schemaDefs := make(map[string]spec.Schema, len(defs))
@@ -35,12 +35,12 @@ func output() error {
 		// the type.
 		if schema, ok := v.Schema.Extensions[common.ExtensionV2Schema]; ok {
 			if v2Schema, isOpenAPISchema := schema.(spec.Schema); isOpenAPISchema {
-				schemaDefs[friendlyName(k)] = v2Schema
+				schemaDefs[k] = v2Schema
 				continue
 			}
 		}
 
-		schemaDefs[friendlyName(k)] = v.Schema
+		schemaDefs[k] = v.Schema
 	}
 	data, err := json.Marshal(&spec.Swagger{
 		SwaggerProps: spec.SwaggerProps{

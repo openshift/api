@@ -18,7 +18,6 @@
 | ClusterUpdatePreflight| | | <span style="background-color: #519450">Enabled</span> | <span style="background-color: #519450">Enabled</span> | | | |  |
 | ConfidentialCluster| | | <span style="background-color: #519450">Enabled</span> | <span style="background-color: #519450">Enabled</span> | | | |  |
 | Example2| | | <span style="background-color: #519450">Enabled</span> | <span style="background-color: #519450">Enabled</span> | | | |  |
-| ExternalOIDCExternalClaimsSourcing| | | <span style="background-color: #519450">Enabled</span> | <span style="background-color: #519450">Enabled</span> | | | |  |
 | MachineAPIMigrationVSphere| | | <span style="background-color: #519450">Enabled</span> | <span style="background-color: #519450">Enabled</span> | | | |  |
 | NetworkConnect| | | <span style="background-color: #519450">Enabled</span> | <span style="background-color: #519450">Enabled</span> | | | |  |
 | NewOLMBoxCutterRuntime| | | | <span style="background-color: #519450">Enabled</span> | | | | <span style="background-color: #519450">Enabled</span>  |
@@ -60,6 +59,7 @@
 | DyanmicServiceEndpointIBMCloud| | | <span style="background-color: #519450">Enabled</span> | <span style="background-color: #519450">Enabled</span> | | | <span style="background-color: #519450">Enabled</span> | <span style="background-color: #519450">Enabled</span>  |
 | EtcdBackendQuota| | | <span style="background-color: #519450">Enabled</span> | <span style="background-color: #519450">Enabled</span> | | | <span style="background-color: #519450">Enabled</span> | <span style="background-color: #519450">Enabled</span>  |
 | Example| | | <span style="background-color: #519450">Enabled</span> | <span style="background-color: #519450">Enabled</span> | | | <span style="background-color: #519450">Enabled</span> | <span style="background-color: #519450">Enabled</span>  |
+| ExternalOIDCExternalClaimsSourcing| | | <span style="background-color: #519450">Enabled</span> | <span style="background-color: #519450">Enabled</span> | | | <span style="background-color: #519450">Enabled</span> | <span style="background-color: #519450">Enabled</span>  |
 | ExternalOIDCWithUpstreamParity| | | <span style="background-color: #519450">Enabled</span> | <span style="background-color: #519450">Enabled</span> | | | <span style="background-color: #519450">Enabled</span> | <span style="background-color: #519450">Enabled</span>  |
 | ExternalSnapshotMetadata| | | <span style="background-color: #519450">Enabled</span> | <span style="background-color: #519450">Enabled</span> | | | <span style="background-color: #519450">Enabled</span> | <span style="background-color: #519450">Enabled</span>  |
 | GCPCustomAPIEndpoints| | | <span style="background-color: #519450">Enabled</span> | <span style="background-color: #519450">Enabled</span> | | | <span style="background-color: #519450">Enabled</span> | <span style="background-color: #519450">Enabled</span>  |

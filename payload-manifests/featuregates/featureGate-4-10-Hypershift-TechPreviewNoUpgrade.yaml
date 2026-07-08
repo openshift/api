@@ -44,9 +44,6 @@
                         "name": "Example2"
                     },
                     {
-                        "name": "ExternalOIDCExternalClaimsSourcing"
-                    },
-                    {
                         "name": "KarpenterOperator"
                     },
                     {
@@ -233,6 +230,9 @@
                     },
                     {
                         "name": "ExternalOIDC"
+                    },
+                    {
+                        "name": "ExternalOIDCExternalClaimsSourcing"
                     },
                     {
                         "name": "ExternalOIDCWithUIDAndExtraClaimMappings"

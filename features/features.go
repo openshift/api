@@ -397,7 +397,7 @@ var (
 							contactPerson("bpalmer").
 							productScope(ocpSpecific).
 							enhancementPR("https://github.com/openshift/enhancements/pull/1907").
-							enable(inDevPreviewNoUpgrade()).
+							enable(inDevPreviewNoUpgrade(), inTechPreviewNoUpgrade()).
 							mustRegister()
 
 	FeatureGateExample = newFeatureGate("Example").

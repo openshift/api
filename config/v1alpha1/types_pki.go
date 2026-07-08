@@ -189,13 +189,13 @@ type KeyConfig struct {
 	// Required when algorithm is RSA, and forbidden otherwise.
 	// +optional
 	// +unionMember
-	RSA RSAKeyConfig `json:"rsa,omitzero"`
+	RSA *RSAKeyConfig `json:"rsa,omitzero"` //nolint:kubeapilinter // Pointer required per Kubernetes API union member conventions (CNTRLPLANE-3700)
 
 	// ecdsa specifies ECDSA key parameters.
 	// Required when algorithm is ECDSA, and forbidden otherwise.
 	// +optional
 	// +unionMember
-	ECDSA ECDSAKeyConfig `json:"ecdsa,omitzero"`
+	ECDSA *ECDSAKeyConfig `json:"ecdsa,omitzero"` //nolint:kubeapilinter // Pointer required per Kubernetes API union member conventions (CNTRLPLANE-3700)
 }
 
 // RSAKeyConfig specifies parameters for RSA key generation.

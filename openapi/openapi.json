@@ -13309,12 +13309,10 @@
         },
         "ecdsa": {
           "description": "ecdsa specifies ECDSA key parameters. Required when algorithm is ECDSA, and forbidden otherwise.",
-          "default": {},
           "$ref": "#/definitions/com.github.openshift.api.config.v1alpha1.ECDSAKeyConfig"
         },
         "rsa": {
           "description": "rsa specifies RSA key parameters. Required when algorithm is RSA, and forbidden otherwise.",
-          "default": {},
           "$ref": "#/definitions/com.github.openshift.api.config.v1alpha1.RSAKeyConfig"
         }
       },

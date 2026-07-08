@@ -9257,7 +9257,7 @@
       ],
       "properties": {
         "installationPolicy": {
-          "description": "installationPolicy controls whether network observability is installed during cluster deployment. Valid values are \"InstallAndEnable\" and \"NoAction\". When set to \"InstallAndEnable\", ensure that network observability will be installed and enabled on the cluster. If already installed, no action taken, but if it gets uninstalled, it will install it again. When set to \"NoAction\", nothing will be done regarding Network observability.",
+          "description": "installationPolicy controls whether network observability is installed during cluster deployment. Valid values are \"InstallAndEnable\" and \"NoAction\". When set to \"InstallAndEnable\", ensure that network observability will be installed and enabled on the cluster. If already installed, no action taken, but if it gets uninstalled, it will install it again. When set to \"NoAction\", nothing will be done regarding Network observability. During the installation of NetworkObservability, the platform checks for any existing manual installations. If a successful installation using the OLMv0 or OLMv1 API is detected, it will be used. If the platform cannot determine how the current version was installed, or if the existing installation is incomplete, the installation process will stop.",
           "type": "string"
         }
       }
@@ -32116,8 +32116,8 @@
       "description": "CustomSecretRotation holds configuration for custom secret rotation behavior.",
       "type": "object",
       "properties": {
-        "rotationPollIntervalSeconds": {
-          "description": "rotationPollIntervalSeconds is the minimum time in seconds between secret rotation attempts. The driver skips provider calls if less than this interval has elapsed since the last successful rotation. Must be at least 1 second and no more than 31560000 seconds (~1 year). When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time.",
+        "minimumRefreshAge": {
+          "description": "minimumRefreshAge is the minimum time in seconds between secret rotation attempts. Each time kubelet calls NodePublishVolume, the driver checks whether this interval has elapsed since the last successful provider call. If it has, the driver contacts the secret provider to fetch the latest secret values and updates the mounted volume. Setting this value below the kubelet syncFrequency (default: 1 minute) has no additional effect on the actual rotation cadence. Must be at least 1 second and no more than 31560000 seconds (~1 year). When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time.",
           "type": "integer",
           "format": "int32"
         }
@@ -33572,6 +33572,10 @@
           "description": "endpointPublishingStrategy is used to publish the ingress controller endpoints to other networks, enable load balancer integrations, etc.\n\nIf unset, the default is based on infrastructure.config.openshift.io/cluster .status.platform:\n\n  AWS:          LoadBalancerService (with External scope)\n  Azure:        LoadBalancerService (with External scope)\n  GCP:          LoadBalancerService (with External scope)\n  IBMCloud:     LoadBalancerService (with External scope)\n  AlibabaCloud: LoadBalancerService (with External scope)\n  Libvirt:      HostNetwork\n\nAny other platform types (including None) default to HostNetwork.\n\nendpointPublishingStrategy cannot be updated.",
           "$ref": "#/definitions/com.github.openshift.api.operator.v1.EndpointPublishingStrategy"
         },
+        "haproxyVersion": {
+          "description": "haproxyVersion specifies the HAProxy version to use for this IngressController.\n\nOpenShift 5.0 introduces HAProxy 3.2 as its default version and supports HAProxy 2.8 from OpenShift 4.22 for migration purposes. When an OpenShift release introduces a new default HAProxy version, that HAProxy version becomes available as a pinnable value in subsequent OpenShift releases, providing a smooth migration path for administrators who want to defer HAProxy upgrades.\n\nValid values for OpenShift 5.0: - Unset (default): Uses HAProxy 3.2 (the default for OpenShift 5.0) - \"3.2\": Explicitly pins HAProxy 3.2 for preservation during cluster\n  upgrades to future OpenShift releases\n- \"2.8\": Uses HAProxy 2.8 from OpenShift 4.22 (migration support, will\n  be dropped in the next OpenShift release)\n\nIf a specific HAProxy version is set and would become unsupported in a target cluster upgrade, a preflight check will block the cluster upgrade until this field is updated to unset or a supported version.",
+          "type": "string"
+        },
         "httpCompression": {
           "description": "httpCompression defines a policy for HTTP traffic compression. By default, there is no HTTP compression.",
           "default": {},
@@ -33661,6 +33665,10 @@
           "description": "domain is the actual domain in use.",
           "type": "string",
           "default": ""
+        },
+        "effectiveHAProxyVersion": {
+          "description": "effectiveHAProxyVersion reports the HAProxy version currently in use by this IngressController. This reflects the resolved value of the spec.haproxyVersion field. When omitted, the effective value has not yet been resolved by the operator or the feature is not enabled for this cluster.\n\nExamples for OpenShift 5.0: - \"3.2\": Using HAProxy 3.2 - \"2.8\": Using HAProxy 2.8",
+          "type": "string"
         },
         "endpointPublishingStrategy": {
           "description": "endpointPublishingStrategy is the actual strategy in use.",
@@ -39837,6 +39845,10 @@
           "description": "masterURL is used for making server-to-server calls to exchange authorization codes for access tokens This field is deprecated and will be removed in a future release. See loginURL for details. Deprecated",
           "type": "string",
           "default": ""
+        },
+        "proxyTrustedCA": {
+          "description": "proxyTrustedCA is an optional path to a PEM-encoded CA bundle used to verify connections to an HTTPS proxy during outbound IdP requests. When omitted, proxy connections use the system trust roots only.",
+          "type": "string"
         },
         "sessionConfig": {
           "description": "sessionConfig hold information about configuring sessions.",

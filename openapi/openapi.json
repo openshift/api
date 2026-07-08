@@ -5271,6 +5271,100 @@
         }
       }
     },
+    "com.github.openshift.api.config.v1.CRIOCredentialProviderConfig": {
+      "description": "CRIOCredentialProviderConfig holds cluster-wide singleton resource configurations for CRI-O credential provider, the name of this instance is \"cluster\". CRI-O credential provider is a binary shipped with CRI-O that provides a way to obtain container image pull credentials from external sources. For example, it can be used to fetch mirror registry credentials from secrets resources in the cluster within the same namespace the pod will be running in. CRIOCredentialProviderConfig configuration specifies the pod image sources registries that should trigger the CRI-O credential provider execution, which will resolve the CRI-O mirror configurations and obtain the necessary credentials for pod creation. Note: Configuration changes will only take effect after the kubelet restarts, which is automatically managed by the cluster during rollout.\n\nThe resource is a singleton named \"cluster\".\n\nCompatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).",
+      "type": "object",
+      "required": [
+        "spec"
+      ],
+      "properties": {
+        "apiVersion": {
+          "description": "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+          "type": "string"
+        },
+        "kind": {
+          "description": "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+          "type": "string"
+        },
+        "metadata": {
+          "description": "metadata is the standard object's metadata. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata",
+          "default": {},
+          "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.ObjectMeta"
+        },
+        "spec": {
+          "description": "spec defines the desired configuration of the CRI-O Credential Provider. This field is required and must be provided when creating the resource.",
+          "$ref": "#/definitions/com.github.openshift.api.config.v1.CRIOCredentialProviderConfigSpec"
+        },
+        "status": {
+          "description": "status represents the current state of the CRIOCredentialProviderConfig. When omitted or nil, it indicates that the status has not yet been set by the controller. The controller will populate this field with validation conditions and operational state.",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.config.v1.CRIOCredentialProviderConfigStatus"
+        }
+      }
+    },
+    "com.github.openshift.api.config.v1.CRIOCredentialProviderConfigList": {
+      "description": "CRIOCredentialProviderConfigList contains a list of CRIOCredentialProviderConfig resources\n\nCompatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).",
+      "type": "object",
+      "required": [
+        "metadata",
+        "items"
+      ],
+      "properties": {
+        "apiVersion": {
+          "description": "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+          "type": "string"
+        },
+        "items": {
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/com.github.openshift.api.config.v1.CRIOCredentialProviderConfig"
+          }
+        },
+        "kind": {
+          "description": "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+          "type": "string"
+        },
+        "metadata": {
+          "description": "metadata is the standard list's metadata. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata",
+          "default": {},
+          "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.ListMeta"
+        }
+      }
+    },
+    "com.github.openshift.api.config.v1.CRIOCredentialProviderConfigSpec": {
+      "description": "CRIOCredentialProviderConfigSpec defines the desired configuration of the CRI-O Credential Provider.",
+      "type": "object",
+      "properties": {
+        "matchImages": {
+          "description": "matchImages is a list of string patterns used to determine whether the CRI-O credential provider should be invoked for a given image. This list is passed to the kubelet CredentialProviderConfig, and if any pattern matches the requested image, CRI-O credential provider will be invoked to obtain credentials for pulling that image or its mirrors. Depending on the platform, the CRI-O credential provider may be installed alongside an existing platform specific provider. Conflicts between the existing platform specific provider image match configuration and this list will be handled by the following precedence rule: credentials from built-in kubelet providers (e.g., ECR, GCR, ACR) take precedence over those from the CRIOCredentialProviderConfig when both match the same image. To avoid uncertainty, it is recommended to avoid configuring your private image patterns to overlap with existing platform specific provider config(e.g., the entries from https://github.com/openshift/machine-config-operator/blob/main/templates/common/aws/files/etc-kubernetes-credential-providers-ecr-credential-provider.yaml). You can check the resource's Status conditions to see if any entries were ignored due to exact matches with known built-in provider patterns.\n\nThis field is optional, the items of the list must contain between 1 and 50 entries. The list is treated as a set, so duplicate entries are not allowed.\n\nFor more details, see: https://kubernetes.io/docs/tasks/administer-cluster/kubelet-credential-provider/ https://github.com/cri-o/crio-credential-provider#architecture\n\nEach entry in matchImages is a pattern which can optionally contain a port and a path. Each entry must be no longer than 512 characters. Wildcards ('*') are supported for full subdomain labels, such as '*.k8s.io' or 'k8s.*.io', and for top-level domains, such as 'k8s.*' (which matches 'k8s.io' or 'k8s.net'). A global wildcard '*' (matching any domain) is not allowed. Wildcards may replace an entire hostname label (e.g., *.example.com), but they cannot appear within a label (e.g., f*oo.example.com) and are not allowed in the port or path. For example, 'example.*.com' is valid, but 'exa*mple.*.com' is not. Each wildcard matches only a single domain label, so '*.io' does **not** match '*.k8s.io'.\n\nA match exists between an image and a matchImage when all of the below are true: Both contain the same number of domain parts and each part matches. The URL path of an matchImages must be a prefix of the target image URL path. If the matchImages contains a port, then the port must match in the image as well.\n\nExample values of matchImages: - 123456789.dkr.ecr.us-east-1.amazonaws.com - *.azurecr.io - gcr.io - *.*.registry.io - registry.io:8080/path",
+          "type": "array",
+          "items": {
+            "type": "string",
+            "default": ""
+          },
+          "x-kubernetes-list-type": "set"
+        }
+      }
+    },
+    "com.github.openshift.api.config.v1.CRIOCredentialProviderConfigStatus": {
+      "description": "CRIOCredentialProviderConfigStatus defines the observed state of CRIOCredentialProviderConfig",
+      "type": "object",
+      "properties": {
+        "conditions": {
+          "description": "conditions represent the latest available observations of the configuration state. When omitted, it indicates that no conditions have been reported yet. The maximum number of conditions is 16. Conditions are stored as a map keyed by condition type, ensuring uniqueness.\n\nExpected condition types include: \"Validated\": indicates whether the matchImages configuration is valid",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Condition"
+          },
+          "x-kubernetes-list-map-keys": [
+            "type"
+          ],
+          "x-kubernetes-list-type": "map"
+        }
+      }
+    },
     "com.github.openshift.api.config.v1.CertInfo": {
       "description": "CertInfo relates a certificate with a private key",
       "type": "object",
@@ -8418,7 +8512,7 @@
           "$ref": "#/definitions/com.github.openshift.api.config.v1.ConfigMapFileReference"
         },
         "controlPlaneTopology": {
-          "description": "controlPlaneTopology expresses the desired topology configuration for control nodes. The 'HighlyAvailable' mode represents a \"normal\", 3 control node cluster. The 'SingleReplica' mode represents configuration where there is a single control node. If left blank, no change is required and no transitions will be triggered.",
+          "description": "controlPlaneTopology expresses the desired topology configuration for control nodes.\n\nWhen status.controlPlaneTopology is 'SingleReplica' and spec.controlPlaneTopology is set to 'HighlyAvailable', a transition will be triggered to reconfigure the cluster from SingleReplica to HighlyAvailable.\n\nWhen left blank or status.controlPlaneTopology and spec.controlPlaneTopology are the same value, no changes are required and no transitions will be triggered.\n\nThis value may be set to match status.controlPlaneTopology regardless of the current value.",
           "type": "string"
         },
         "platformSpec": {
@@ -30493,6 +30587,14 @@
           },
           "x-kubernetes-list-type": "atomic"
         },
+        "protocol": {
+          "description": "protocol specifies whether the Network Load Balancer uses PROXY protocol to forward connections to the IngressController.\n\nWhen set to \"TCP\", the NLB uses AWS's native client IP preservation. This may cause hairpin connection failures for internal load balancers when connections are made from pods to router pods on the same node.\n\nWhen set to \"PROXY\", the NLB disables native client IP preservation and uses PROXY protocol v2. The IngressController enables PROXY protocol on HAProxy so that it can parse PROXY protocol headers to obtain the original client IP. This avoids hairpin connection failures.\n\nThe following values are valid for this field:\n\n* \"TCP\". * \"PROXY\".\n\nWhen omitted, this means the user has no opinion and the value is left to the platform to choose a reasonable default, which is subject to change over time. The current default is \"PROXY\".\n\nNote that changing this field may cause brief connection failures during the transition as the NLB attribute change and router rollout occur independently.\n\n\nPossible enum values:\n - `\"PROXY\"` instructs the NLB to forward connections using PROXY protocol v2.\n - `\"TCP\"` instructs the NLB to forward connections using TCP without PROXY protocol.",
+          "type": "string",
+          "enum": [
+            "PROXY",
+            "TCP"
+          ]
+        },
         "subnets": {
           "description": "subnets specifies the subnets to which the load balancer will attach. The subnets may be specified by either their ID or name. The total number of subnets is limited to 10.\n\nIn order for the load balancer to be provisioned with subnets, each subnet must exist, each subnet must be from a different availability zone, and the load balancer service must be recreated to pick up new values.\n\nWhen omitted from the spec, the subnets will be auto-discovered for each availability zone. Auto-discovered subnets are not reported in the status of the IngressController object.",
           "$ref": "#/definitions/com.github.openshift.api.operator.v1.AWSSubnets"
@@ -30653,6 +30755,19 @@
         }
       }
     },
+    "com.github.openshift.api.operator.v1.AuthenticationConfigMapReference": {
+      "description": "AuthenticationConfigMapReference references a ConfigMap in the openshift-config namespace.",
+      "type": "object",
+      "required": [
+        "name"
+      ],
+      "properties": {
+        "name": {
+          "description": "name is the metadata.name of the referenced ConfigMap. Must be a valid DNS subdomain name (RFC 1123): at most 253 characters, only lowercase alphanumeric characters, '-' or '.', starting and ending with an alphanumeric character.",
+          "type": "string"
+        }
+      }
+    },
     "com.github.openshift.api.operator.v1.AuthenticationList": {
       "description": "AuthenticationList is a collection of items\n\nCompatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).",
       "type": "object",
@@ -30683,6 +30798,34 @@
         }
       }
     },
+    "com.github.openshift.api.operator.v1.AuthenticationProxyConfig": {
+      "description": "AuthenticationProxyConfig holds proxy configuration scoped to authentication components (the OAuth server and the cluster authentication operator).",
+      "type": "object",
+      "properties": {
+        "httpProxy": {
+          "description": "httpProxy is the URL of the proxy for HTTP requests. Must be a valid URL with http or https scheme, a non-empty hostname, and no path, query parameters, or fragment. Userinfo (e.g. user:password@host) is allowed for proxy authentication. Maximum length is 2048 characters.",
+          "type": "string"
+        },
+        "httpsProxy": {
+          "description": "httpsProxy is the URL of the proxy for HTTPS requests. Must be a valid URL with http or https scheme, a non-empty hostname, and no path, query parameters, or fragment. Userinfo (e.g. user:password@host) is allowed for proxy authentication. Maximum length is 2048 characters.",
+          "type": "string"
+        },
+        "noProxy": {
+          "description": "noProxy is a list of hostnames and/or CIDRs and/or IPs for which the proxy should not be used. Must contain at least one entry when set. Each entry must be between 1 and 253 characters long and at most 64 entries are allowed. Duplicate entries are not permitted. Entries that are not valid hostnames, CIDRs, or IPs are silently ignored. Cluster-internal defaults (.cluster.local, .svc, 127.0.0.1, localhost) are always appended automatically and do not need to be included.",
+          "type": "array",
+          "items": {
+            "type": "string",
+            "default": ""
+          },
+          "x-kubernetes-list-type": "set"
+        },
+        "trustedCA": {
+          "description": "trustedCA is a reference to a ConfigMap in the openshift-config namespace containing a CA certificate bundle under the key \"ca-bundle.crt\". This bundle is appended to the system trust store used by authentication components for proxy TLS connections. When omitted, only the system trust store is used.",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.operator.v1.AuthenticationConfigMapReference"
+        }
+      }
+    },
     "com.github.openshift.api.operator.v1.AuthenticationSpec": {
       "type": "object",
       "required": [
@@ -30705,6 +30848,11 @@
         "operatorLogLevel": {
           "description": "operatorLogLevel is an intent based logging for the operator itself.  It does not give fine grained control, but it is a simple way to manage coarse grained logging choices that operators have to interpret for themselves.\n\nValid values are: \"Normal\", \"Debug\", \"Trace\", \"TraceAll\". Defaults to \"Normal\".",
           "type": "string"
+        },
+        "proxy": {
+          "description": "proxy configures proxy settings for outbound connections made by the authentication stack. When set, it replaces the cluster-wide proxy (proxy.config.openshift.io/cluster) entirely for authentication — individual fields are not inherited from the cluster-wide configuration. When omitted, the cluster-wide proxy is used if configured; otherwise no proxy is used.",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.operator.v1.AuthenticationProxyConfig"
         },
         "unsupportedConfigOverrides": {
           "description": "unsupportedConfigOverrides overrides the final configuration that was computed by the operator. Red Hat does not support the use of this field. Misuse of this field could lead to unexpected behavior or conflict with other configuration options. Seek guidance from the Red Hat support before using this field. Use of this property blocks cluster upgrades, it must be removed before upgrading your cluster.",
@@ -30898,7 +31046,7 @@
           "$ref": "#/definitions/com.github.openshift.api.operator.v1.AzureCSIDriverConfigSpec"
         },
         "driverType": {
-          "description": "driverType indicates type of CSI driver for which the driverConfig is being applied to. Valid values are: AWS, Azure, GCP, IBMCloud, vSphere and omitted. Consumers should treat unknown values as a NO-OP.",
+          "description": "driverType indicates type of CSI driver for which the driverConfig is being applied to. Valid values are: AWS, Azure, GCP, IBMCloud, vSphere, SecretsStore and omitted. Consumers should treat unknown values as a NO-OP.",
           "type": "string",
           "default": ""
         },
@@ -30909,6 +31057,11 @@
         "ibmcloud": {
           "description": "ibmcloud is used to configure the IBM Cloud CSI driver.",
           "$ref": "#/definitions/com.github.openshift.api.operator.v1.IBMCloudCSIDriverConfigSpec"
+        },
+        "secretsStore": {
+          "description": "secretsStore is used to configure the Secrets Store CSI driver.",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.operator.v1.SecretsStoreCSIDriverConfigSpec"
         },
         "vSphere": {
           "description": "vSphere is used to configure the vsphere CSI driver.",
@@ -30923,6 +31076,7 @@
             "azure": "Azure",
             "gcp": "GCP",
             "ibmcloud": "IBMCloud",
+            "secretsStore": "SecretsStore",
             "vSphere": "VSphere"
           }
         }
@@ -31953,6 +32107,17 @@
       "properties": {
         "maxLength": {
           "description": "maxLength is the maximum length of the log message.\n\nValid values are integers in the range 480 to 8192, inclusive.\n\nWhen omitted, the default value is 1024.",
+          "type": "integer",
+          "format": "int32"
+        }
+      }
+    },
+    "com.github.openshift.api.operator.v1.CustomSecretRotation": {
+      "description": "CustomSecretRotation holds configuration for custom secret rotation behavior.",
+      "type": "object",
+      "properties": {
+        "rotationPollIntervalSeconds": {
+          "description": "rotationPollIntervalSeconds is the minimum time in seconds between secret rotation attempts. The driver skips provider calls if less than this interval has elapsed since the last successful rotation. Must be at least 1 second and no more than 31560000 seconds (~1 year). When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time.",
           "type": "integer",
           "format": "int32"
         }
@@ -34903,6 +35068,24 @@
         }
       }
     },
+    "com.github.openshift.api.operator.v1.ManagedTokenRequests": {
+      "description": "ManagedTokenRequests holds the configuration for operator-managed service account token requests.",
+      "type": "object",
+      "properties": {
+        "audiences": {
+          "description": "audiences specifies service account token audiences that kubelet will provide to the CSI driver during NodePublishVolume calls. These tokens enable workload identity federation (WIF) with cloud providers such as AWS, Azure, and GCP. When empty, the operator clears all tokenRequests from the CSIDriver object.",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/com.github.openshift.api.operator.v1.SecretsStoreTokenRequest"
+          },
+          "x-kubernetes-list-map-keys": [
+            "audience"
+          ],
+          "x-kubernetes-list-type": "map"
+        }
+      }
+    },
     "com.github.openshift.api.operator.v1.MyOperatorResource": {
       "description": "MyOperatorResource is an example operator configuration type\n\nCompatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.",
       "type": "object",
@@ -36621,6 +36804,92 @@
           "x-kubernetes-list-type": "atomic"
         }
       }
+    },
+    "com.github.openshift.api.operator.v1.SecretsStoreCSIDriverConfigSpec": {
+      "description": "SecretsStoreCSIDriverConfigSpec defines properties that can be configured for the Secrets Store CSI driver.",
+      "type": "object",
+      "properties": {
+        "secretRotation": {
+          "description": "secretRotation controls automatic secret rotation behavior. When omitted, secret rotation is enabled with a default poll interval of 2 minutes.",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.operator.v1.SecretsStoreSecretRotation"
+        },
+        "tokenRequests": {
+          "description": "tokenRequests controls service account token configuration for workload identity federation (WIF) with cloud providers. When omitted, the operator preserves any existing tokenRequests already configured on the CSIDriver object without modification.",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.operator.v1.SecretsStoreTokenRequests"
+        }
+      }
+    },
+    "com.github.openshift.api.operator.v1.SecretsStoreSecretRotation": {
+      "description": "SecretsStoreSecretRotation configures the automatic secret rotation behavior for the Secrets Store CSI driver.",
+      "type": "object",
+      "required": [
+        "type"
+      ],
+      "properties": {
+        "custom": {
+          "description": "custom holds the custom rotation configuration. Only valid when type is \"Custom\".",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.operator.v1.CustomSecretRotation"
+        },
+        "type": {
+          "description": "type determines the secret rotation behavior. When \"None\", secret rotation is disabled and secrets are only fetched at initial pod mount time. When \"Custom\", secret rotation is enabled with the configuration specified in the custom field.",
+          "type": "string"
+        }
+      },
+      "x-kubernetes-unions": [
+        {
+          "discriminator": "type",
+          "fields-to-discriminateBy": {
+            "custom": "Custom"
+          }
+        }
+      ]
+    },
+    "com.github.openshift.api.operator.v1.SecretsStoreTokenRequest": {
+      "description": "SecretsStoreTokenRequest specifies a service account token audience configuration for workload identity federation (WIF) with the Secrets Store CSI driver.",
+      "type": "object",
+      "required": [
+        "audience"
+      ],
+      "properties": {
+        "audience": {
+          "description": "audience is the intended audience of the service account token. An empty string means the issued token will use the kube-apiserver's default APIAudiences.",
+          "type": "string"
+        },
+        "expirationSeconds": {
+          "description": "expirationSeconds is the requested duration of validity of the service account token. The token issuer may return a token with a different validity duration. When omitted, the token expiration is determined by the kube-apiserver. Must be at least 600 seconds (10 minutes) and no more than 315360000 seconds (~10 years).",
+          "type": "integer",
+          "format": "int32"
+        }
+      }
+    },
+    "com.github.openshift.api.operator.v1.SecretsStoreTokenRequests": {
+      "description": "SecretsStoreTokenRequests configures how service account tokens are provided to the Secrets Store CSI driver for workload identity federation.",
+      "type": "object",
+      "required": [
+        "type"
+      ],
+      "properties": {
+        "managed": {
+          "description": "managed holds configuration for operator-managed tokenRequests. Only valid when type is \"Managed\".",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.operator.v1.ManagedTokenRequests"
+        },
+        "type": {
+          "description": "type determines how the operator manages tokenRequests on the CSIDriver object. When \"Unmanaged\", existing tokenRequests on the CSIDriver are preserved and the managed field is not used. When \"Managed\", the operator sets tokenRequests from the audiences specified in the managed field, replacing any previously configured values. Once set to \"Managed\", type cannot be reverted back to \"Unmanaged\".",
+          "type": "string"
+        }
+      },
+      "x-kubernetes-unions": [
+        {
+          "discriminator": "type",
+          "fields-to-discriminateBy": {
+            "managed": "Managed"
+          }
+        }
+      ]
     },
     "com.github.openshift.api.operator.v1.Server": {
       "description": "Server defines the schema for a server that runs per instance of CoreDNS.",

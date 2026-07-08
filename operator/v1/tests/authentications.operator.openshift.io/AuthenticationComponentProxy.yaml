@@ -1,0 +1,281 @@
+apiVersion: apiextensions.k8s.io/v1 # Hack because controller-gen complains if we don't have this
+name: "Authentication"
+crdName: authentications.operator.openshift.io
+featureGates:
+  - AuthenticationComponentProxy
+tests:
+  onCreate:
+    - name: Should accept a valid proxy configuration with httpProxy only
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: Authentication
+        metadata:
+          name: cluster
+        spec:
+          proxy:
+            httpProxy: "http://proxy.example.com:3128"
+      expected: |
+        apiVersion: operator.openshift.io/v1
+        kind: Authentication
+        metadata:
+          name: cluster
+        spec:
+          logLevel: Normal
+          operatorLogLevel: Normal
+          proxy:
+            httpProxy: "http://proxy.example.com:3128"
+    - name: Should accept a valid proxy configuration with httpsProxy only
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: Authentication
+        metadata:
+          name: cluster
+        spec:
+          proxy:
+            httpsProxy: "http://proxy.example.com:3129"
+      expected: |
+        apiVersion: operator.openshift.io/v1
+        kind: Authentication
+        metadata:
+          name: cluster
+        spec:
+          logLevel: Normal
+          operatorLogLevel: Normal
+          proxy:
+            httpsProxy: "http://proxy.example.com:3129"
+    - name: Should accept a valid proxy configuration with both httpProxy and httpsProxy
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: Authentication
+        metadata:
+          name: cluster
+        spec:
+          proxy:
+            httpProxy: "http://proxy.example.com:3128"
+            httpsProxy: "http://proxy.example.com:3129"
+      expected: |
+        apiVersion: operator.openshift.io/v1
+        kind: Authentication
+        metadata:
+          name: cluster
+        spec:
+          logLevel: Normal
+          operatorLogLevel: Normal
+          proxy:
+            httpProxy: "http://proxy.example.com:3128"
+            httpsProxy: "http://proxy.example.com:3129"
+    - name: Should accept a valid proxy configuration with noProxy
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: Authentication
+        metadata:
+          name: cluster
+        spec:
+          proxy:
+            httpsProxy: "http://proxy.example.com:3128"
+            noProxy:
+              - "idp.internal.example.com"
+              - ".corp.example.com"
+      expected: |
+        apiVersion: operator.openshift.io/v1
+        kind: Authentication
+        metadata:
+          name: cluster
+        spec:
+          logLevel: Normal
+          operatorLogLevel: Normal
+          proxy:
+            httpsProxy: "http://proxy.example.com:3128"
+            noProxy:
+              - "idp.internal.example.com"
+              - ".corp.example.com"
+    - name: Should accept a valid proxy configuration with trustedCA
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: Authentication
+        metadata:
+          name: cluster
+        spec:
+          proxy:
+            httpsProxy: "http://proxy.example.com:3128"
+            trustedCA:
+              name: "proxy-ca-bundle"
+      expected: |
+        apiVersion: operator.openshift.io/v1
+        kind: Authentication
+        metadata:
+          name: cluster
+        spec:
+          logLevel: Normal
+          operatorLogLevel: Normal
+          proxy:
+            httpsProxy: "http://proxy.example.com:3128"
+            trustedCA:
+              name: "proxy-ca-bundle"
+    - name: Should reject proxy with neither httpProxy nor httpsProxy
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: Authentication
+        metadata:
+          name: cluster
+        spec:
+          proxy:
+            noProxy:
+              - "example.com"
+      expectedError: "at least one of httpProxy or httpsProxy must be specified"
+    - name: Should reject httpProxy that is not a valid URL
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: Authentication
+        metadata:
+          name: cluster
+        spec:
+          proxy:
+            httpProxy: "not-a-url"
+      expectedError: "httpProxy must be a valid URL"
+    - name: Should reject httpProxy without a hostname
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: Authentication
+        metadata:
+          name: cluster
+        spec:
+          proxy:
+            httpProxy: "http://:3128"
+      expectedError: "httpProxy must contain a hostname"
+    - name: Should reject httpProxy with invalid scheme
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: Authentication
+        metadata:
+          name: cluster
+        spec:
+          proxy:
+            httpProxy: "ftp://proxy.example.com:3128"
+      expectedError: "httpProxy must use http or https scheme"
+    - name: Should reject httpProxy with a path
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: Authentication
+        metadata:
+          name: cluster
+        spec:
+          proxy:
+            httpProxy: "http://proxy.example.com:3128/path"
+      expectedError: "httpProxy must not contain a path"
+    - name: Should reject httpProxy with query parameters
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: Authentication
+        metadata:
+          name: cluster
+        spec:
+          proxy:
+            httpProxy: "http://proxy.example.com:3128?key=value"
+      expectedError: "httpProxy must not contain query parameters"
+    - name: Should reject httpProxy with a fragment
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: Authentication
+        metadata:
+          name: cluster
+        spec:
+          proxy:
+            httpProxy: "http://proxy.example.com:3128#frag"
+      expectedError: "httpProxy must not contain a fragment"
+    - name: Should reject httpsProxy that is not a valid URL
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: Authentication
+        metadata:
+          name: cluster
+        spec:
+          proxy:
+            httpsProxy: "not-a-url"
+      expectedError: "httpsProxy must be a valid URL"
+    - name: Should reject httpsProxy without a hostname
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: Authentication
+        metadata:
+          name: cluster
+        spec:
+          proxy:
+            httpsProxy: "http://:3128"
+      expectedError: "httpsProxy must contain a hostname"
+    - name: Should reject httpsProxy with invalid scheme
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: Authentication
+        metadata:
+          name: cluster
+        spec:
+          proxy:
+            httpsProxy: "ftp://proxy.example.com:3128"
+      expectedError: "httpsProxy must use http or https scheme"
+    - name: Should reject httpsProxy with a path
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: Authentication
+        metadata:
+          name: cluster
+        spec:
+          proxy:
+            httpsProxy: "http://proxy.example.com:3128/path"
+      expectedError: "httpsProxy must not contain a path"
+    - name: Should reject httpsProxy with query parameters
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: Authentication
+        metadata:
+          name: cluster
+        spec:
+          proxy:
+            httpsProxy: "http://proxy.example.com:3128?key=value"
+      expectedError: "httpsProxy must not contain query parameters"
+    - name: Should reject httpsProxy with a fragment
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: Authentication
+        metadata:
+          name: cluster
+        spec:
+          proxy:
+            httpsProxy: "http://proxy.example.com:3128#frag"
+      expectedError: "httpsProxy must not contain a fragment"
+    - name: Should reject duplicate noProxy entries
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: Authentication
+        metadata:
+          name: cluster
+        spec:
+          proxy:
+            httpProxy: "http://proxy.example.com:3128"
+            noProxy:
+              - "example.com"
+              - "example.com"
+      expectedError: "Duplicate value"
+    - name: Should reject empty noProxy entry
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: Authentication
+        metadata:
+          name: cluster
+        spec:
+          proxy:
+            httpProxy: "http://proxy.example.com:3128"
+            noProxy:
+              - ""
+      expectedError: "should be at least 1 chars long"
+    - name: Should reject empty noProxy list
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: Authentication
+        metadata:
+          name: cluster
+        spec:
+          proxy:
+            httpProxy: "http://proxy.example.com:3128"
+            noProxy: []
+      expectedError: "should have at least 1 items"

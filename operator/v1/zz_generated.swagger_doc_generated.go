@@ -118,6 +118,15 @@ func (Authentication) SwaggerDoc() map[string]string {
 	return map_Authentication
 }
 
+var map_AuthenticationConfigMapReference = map[string]string{
+	"":     "AuthenticationConfigMapReference references a ConfigMap in the openshift-config namespace.",
+	"name": "name is the metadata.name of the referenced ConfigMap. Must be a valid DNS subdomain name (RFC 1123): at most 253 characters, only lowercase alphanumeric characters, '-' or '.', starting and ending with an alphanumeric character.",
+}
+
+func (AuthenticationConfigMapReference) SwaggerDoc() map[string]string {
+	return map_AuthenticationConfigMapReference
+}
+
 var map_AuthenticationList = map[string]string{
 	"":         "AuthenticationList is a collection of items\n\nCompatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).",
 	"metadata": "metadata is the standard list's metadata. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata",
@@ -125,6 +134,26 @@ var map_AuthenticationList = map[string]string{
 
 func (AuthenticationList) SwaggerDoc() map[string]string {
 	return map_AuthenticationList
+}
+
+var map_AuthenticationProxyConfig = map[string]string{
+	"":           "AuthenticationProxyConfig holds proxy configuration scoped to authentication components (the OAuth server and the cluster authentication operator).",
+	"httpProxy":  "httpProxy is the URL of the proxy for HTTP requests. Must be a valid URL with http or https scheme, a non-empty hostname, and no path, query parameters, or fragment. Userinfo (e.g. user:password@host) is allowed for proxy authentication. Maximum length is 2048 characters.",
+	"httpsProxy": "httpsProxy is the URL of the proxy for HTTPS requests. Must be a valid URL with http or https scheme, a non-empty hostname, and no path, query parameters, or fragment. Userinfo (e.g. user:password@host) is allowed for proxy authentication. Maximum length is 2048 characters.",
+	"noProxy":    "noProxy is a list of hostnames and/or CIDRs and/or IPs for which the proxy should not be used. Must contain at least one entry when set. Each entry must be between 1 and 253 characters long and at most 64 entries are allowed. Duplicate entries are not permitted. Entries that are not valid hostnames, CIDRs, or IPs are silently ignored. Cluster-internal defaults (.cluster.local, .svc, 127.0.0.1, localhost) are always appended automatically and do not need to be included.",
+	"trustedCA":  "trustedCA is a reference to a ConfigMap in the openshift-config namespace containing a CA certificate bundle under the key \"ca-bundle.crt\". This bundle is appended to the system trust store used by authentication components for proxy TLS connections. When omitted, only the system trust store is used.",
+}
+
+func (AuthenticationProxyConfig) SwaggerDoc() map[string]string {
+	return map_AuthenticationProxyConfig
+}
+
+var map_AuthenticationSpec = map[string]string{
+	"proxy": "proxy configures proxy settings for outbound connections made by the authentication stack. When set, it replaces the cluster-wide proxy (proxy.config.openshift.io/cluster) entirely for authentication — individual fields are not inherited from the cluster-wide configuration. When omitted, the cluster-wide proxy is used if configured; otherwise no proxy is used.",
+}
+
+func (AuthenticationSpec) SwaggerDoc() map[string]string {
+	return map_AuthenticationSpec
 }
 
 var map_AuthenticationStatus = map[string]string{

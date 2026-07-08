@@ -18,7 +18,7 @@ const (
 
 var (
 	// DefaultOutputPackagePath is the default output package path for the generated openapi functions.
-	DefaultOutputPackagePath = filepath.Join("openapi", "generated_openapi")
+	DefaultOutputPackagePath = filepath.Join("openapi")
 
 	// defaultInputPaths contains the default list of input paths for the OpenAPI generator.
 	defaultInputPaths = []string{

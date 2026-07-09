@@ -24,6 +24,9 @@
                         "name": "AWSEuropeanSovereignCloudInstall"
                     },
                     {
+                        "name": "AdditionalStorageConfig"
+                    },
+                    {
                         "name": "AuthenticationComponentProxy"
                     },
                     {
@@ -150,9 +153,6 @@
                         "name": "GCPSovereignCloudInstall"
                     },
                     {
-                        "name": "GatewayAPIManagementMode"
-                    },
-                    {
                         "name": "HyperShiftOnlyDynamicResourceAllocation"
                     },
                     {
@@ -160,6 +160,14 @@
                     },
                     {
                         "name": "IngressComponentRouteLabels"
+                    },
+                    {
+                        "name": "IngressControllerLBSecurityGroupsAWS"
+                    },
+                    {
+                    },
+                    {
+                        "name": "IrreconcilableMachineConfig"
                     },
                     {
                         "name": "KMSEncryption"
@@ -234,6 +242,9 @@
                         "name": "NoOverlayMode"
                     },
                     {
+                        "name": "NoRegistryClusterInstall"
+                    },
+                    {
                         "name": "NutanixMultiSubnets"
                     },
                     {
@@ -284,9 +295,6 @@
                         "name": "AWSServiceLBNetworkSecurityGroup"
                     },
                     {
-                        "name": "AdditionalStorageConfig"
-                    },
-                    {
                         "name": "AzureWorkloadIdentity"
                     },
                     {
@@ -332,9 +340,6 @@
                         "name": "InsightsOnDemandDataGather"
                     },
                     {
-                        "name": "IrreconcilableMachineConfig"
-                    },
-                    {
                         "name": "KMSv1"
                     },
                     {
@@ -356,9 +361,6 @@
                         "name": "NewOLMWebhookProviderOpenshiftServiceCA"
                     },
                     {
-                        "name": "NoRegistryClusterInstall"
-                    },
-                    {
                         "name": "OLMLifecycleAndCompatibility"
                     },
                     {
@@ -366,6 +368,9 @@
                     },
                     {
                         "name": "OpenShiftPodSecurityAdmission"
+                    },
+                    {
+                        "name": "RouteExternalCertificate"
                     },
                     {
                         "name": "ServiceAccountTokenNodeBinding"

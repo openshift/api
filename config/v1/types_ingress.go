@@ -261,10 +261,18 @@ type ComponentRouteSpec struct {
 	// determine which routes it should manage. Changing labels may cause the
 	// route to be reassigned to a different IngressController.
 	// When omitted, no additional labels are applied to the component route.
-	// Label keys and values must conform to Kubernetes label conventions.
-	// Label keys must be valid qualified names per Kubernetes label conventions.
-	// Keys with the "kubernetes.io/", "k8s.io/", and "openshift.io/" prefixes are reserved and may not be used.
 	// When specified, labels must contain at least one entry, up to a maximum of 8.
+	// Label keys must be valid qualified names, consisting of a name segment and
+	// an optional prefix separated by a slash (/). The name segment must be at most
+	// 63 characters in length and must consist only of alphanumeric characters,
+	// dashes (-), underscores (_), and dots (.), and must start and end with
+	// alphanumeric characters. The prefix, if specified, must be a DNS subdomain:
+	// at most 253 characters in length, consisting of dot-separated segments where
+	// each segment starts and ends with an alphanumeric character.
+	// Label values must be either empty or 1-63 characters, consisting of
+	// alphanumeric characters, dashes (-), underscores (_), or dots (.),
+	// starting and ending with an alphanumeric character.
+	// Keys with the "kubernetes.io/", "k8s.io/", and "openshift.io/" prefixes are reserved and may not be used.
 	// +openshift:enable:FeatureGate=IngressComponentRouteLabels
 	// +optional
 	// +mapType=granular

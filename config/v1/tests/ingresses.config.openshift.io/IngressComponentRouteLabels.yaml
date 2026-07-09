@@ -119,7 +119,7 @@ tests:
               hostname: console.example.com
               labels:
                 ingress: "invalid value with spaces!"
-      expectedError: "Invalid value"
+      expectedError: "label values must be valid Kubernetes label values"
     - name: Should accept componentRoutes with empty string label value
       initial: |
         apiVersion: config.openshift.io/v1
@@ -155,7 +155,7 @@ tests:
               hostname: console.example.com
               labels:
                 openshift.io/my-label: value
-      expectedError: "openshift.io/ prefixed label keys are reserved"
+      expectedError: "kubernetes.io/, k8s.io/, and openshift.io/ prefixed label keys are reserved and may not be used"
     - name: Should accept componentRoutes with non-reserved prefix
       initial: |
         apiVersion: config.openshift.io/v1
@@ -204,7 +204,7 @@ tests:
               hostname: console.example.com
               labels:
                 kubernetes.io/name: value
-      expectedError: "prefixed label keys are reserved"
+      expectedError: "kubernetes.io/, k8s.io/, and openshift.io/ prefixed label keys are reserved and may not be used"
     - name: Should reject componentRoutes with reserved k8s.io/ label prefix
       initial: |
         apiVersion: config.openshift.io/v1
@@ -217,7 +217,7 @@ tests:
               hostname: console.example.com
               labels:
                 k8s.io/name: value
-      expectedError: "prefixed label keys are reserved"
+      expectedError: "kubernetes.io/, k8s.io/, and openshift.io/ prefixed label keys are reserved and may not be used"
     - name: Should reject componentRoutes with label key name over 63 characters
       initial: |
         apiVersion: config.openshift.io/v1
@@ -243,7 +243,7 @@ tests:
               hostname: console.example.com
               labels:
                 ingress: "-starts-with-dash"
-      expectedError: "Invalid value"
+      expectedError: "label values must be valid Kubernetes label values"
     - name: Should reject componentRoutes with more than 8 labels
       initial: |
         apiVersion: config.openshift.io/v1

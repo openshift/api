@@ -247,7 +247,7 @@ func (o *FeatureGateTestAnalyzerOptions) Run(ctx context.Context) error {
 	summaryMarkdown := md.ExactBytes()
 	if len(o.OutputDir) > 0 {
 		filename := filepath.Join(o.OutputDir, "feature-promotion-summary.md")
-		if err := os.WriteFile(filename, summaryMarkdown, 0644); err != nil {
+		if err := os.WriteFile(filename, summaryMarkdown, 0o644); err != nil {
 			errs = append(errs, err)
 		}
 
@@ -343,7 +343,6 @@ func buildHTMLFeatureGateData(name string, testingResults map[JobVariant]*Testin
 }
 
 func writeHTMLFromTemplate(filename string, featureGateHTMLData []utils.HTMLFeatureGate) error {
-
 	data := utils.HTMLTemplateData{
 		FeatureGates: featureGateHTMLData,
 	}
@@ -486,7 +485,6 @@ func writeTestingMarkDown(testingResults map[JobVariant]*TestingResults, md *uti
 	}
 	md.Text("")
 	md.Text("")
-
 }
 
 var (
@@ -649,7 +647,7 @@ func (a OrderedJobVariants) Less(i, j int) bool {
 
 	// Map these to an ordered list of strings so that we can define the order
 	// rather than them being alphabetical.
-	var networkStackOrder = map[string]string{
+	networkStackOrder := map[string]string{
 		"":     "0",
 		"ipv4": "1",
 		"ipv6": "2",
@@ -870,7 +868,7 @@ func listTestResultForVariant(featureGate string, jobVariant JobVariant) (*Testi
 
 	// Feature gates used by the installer don't need separate tests, use the overall install tests
 	if strings.Contains(featureGate, "Install") {
-		testPattern = fmt.Sprintf("install should succeed")
+		return verifyJobBasedFeatureGatePromotion(featureGate, jobVariant)
 	}
 
 	fmt.Printf("Query sippy for all test run results for pattern %q on variant %#v\n", testPattern, jobVariant)
@@ -990,4 +988,262 @@ func matchTwoNodeFeatureGates(featureGate string, topology string) bool {
 		return true
 	}
 	return false
+}
+
+func verifyJobBasedFeatureGatePromotion(featureGate string, jobVariant JobVariant) (*TestingResults, error) {
+	ocpRelease, err := getRelease()
+	if err != nil {
+		return nil, fmt.Errorf("getting release version: %w", err)
+	}
+
+	defaultTransport := &http.Transport{
+		Proxy:                 http.ProxyFromEnvironment,
+		ForceAttemptHTTP2:     true,
+		MaxIdleConns:          100,
+		IdleConnTimeout:       90 * time.Second,
+		TLSHandshakeTimeout:   10 * time.Second,
+		ExpectContinueTimeout: 1 * time.Second,
+		TLSClientConfig: &tls.Config{
+			InsecureSkipVerify: true,
+		},
+	}
+
+	sippyClient := &http.Client{
+		Timeout:   2 * time.Minute,
+		Transport: defaultTransport,
+	}
+
+	jobs, err := getJobsForFeatureGateFromSippy(sippyClient, ocpRelease, featureGate, jobVariant)
+	if err != nil {
+		return nil, fmt.Errorf("getting jobs for feature-gate %q for variant %v : %w", featureGate, jobVariant, err)
+	}
+
+	testResults := []TestResults{}
+
+	for _, job := range jobs {
+		results, err := verifyJobPassRate(sippyClient, ocpRelease, job, jobVariant)
+		if err != nil {
+			return nil, fmt.Errorf("verifying job pass rate for job %q: %w", job.Name, err)
+		}
+
+		testResults = append(testResults, *results)
+	}
+
+	return &TestingResults{
+		JobVariant:  jobVariant,
+		TestResults: testResults,
+	}, nil
+}
+
+func verifyJobPassRate(client *http.Client, release string, job sippy.SippyJob, variant JobVariant) (*TestResults, error) {
+	// Do an early check for 95% pass rate with at least 14 runs
+	runs := job.CurrentRuns
+	passes := job.CurrentPasses
+
+	if runs < requiredNumberOfTestRunsPerVariant {
+		fmt.Printf("Insufficient results in last 7 days, increasing lookback to 2 weeks...")
+		runs += job.PreviousRuns
+		passes += job.PreviousPasses
+	}
+
+	// If we have less than 14 runs, return the current set of results as-is
+	// because it doesn't meet promotion criteria.
+	//
+	// This saves us from unnecessarily making calls out to Sippy to perform a more nuanced
+	// failures analysis of the job runs to see if failed runs are true failures or known regressions.
+	if runs < requiredNumberOfTestRunsPerVariant {
+		return &TestResults{
+			TestName: job.Name,
+			TotalRuns: runs,
+			SuccessfulRuns: passes,
+			FailedRuns: runs - passes,
+		}, nil
+	}
+
+	// If we have greater than or equal to 14 runs AND they are passing at a rate of at least 95%,
+	// we can return early because this job has passed the promotion requirements.
+	//
+	// This saves us from unnecessarily making calls out to Sippy to perform a more nuanced
+	// failures analysis of the job runs to see if failed runs are true failures or known regressions.
+	if float32(passes) / float32(runs) >= requiredPassRateOfTestsPerVariant {
+		return &TestResults{
+			TestName: job.Name,
+			TotalRuns: runs,
+			SuccessfulRuns: passes,
+			FailedRuns: runs - passes,
+		}, nil
+	}
+	
+	// We haven't passed promotion requirements with this job, but jobs might be impacted
+	// by known regressed tests. While important to get fixed, many regressions are either
+	// release blockers or require an exception to not be a release blocker.
+	//
+	// We can be reasonably confident in promoting a feature if the tests that are failing
+	// on failed runs are only ones with known regressions for the platform being tested.
+	//
+	// From here on, we fetch up to the 100 most recent job runs for the job in question from Sippy,
+	// fetch the known regressions for the release + platform variant, and compare failing
+	// job runs failed tests with the known regressions - only counting failures that have
+	// unknown test failures as a true failure.
+
+	jobRuns, err := getJobRunsFromSippy(client, release, job.Name)
+	if err != nil {
+		return nil, fmt.Errorf("getting job %q results from sippy: %w", job.Name, err)
+	}
+
+	testResults := &TestResults{
+		TestName:  job.Name,
+		TotalRuns: len(jobRuns),
+	}
+
+	triagedTestFailures, err := getTriagedTestFailuresFromSippy(client, release, variant)
+	if err != nil {
+		return nil, fmt.Errorf("getting triaged test failures from sippy: %w", err)
+	}
+
+	for _, jobRun := range jobRuns {
+		if jobRun.OverallResult == "F" && !jobRun.KnownFailure {
+
+			untriagedTestFailures := []string{}
+			for _, failure := range jobRun.FailedTestNames {
+				if !triagedTestFailures.Has(failure) {
+					untriagedTestFailures = append(untriagedTestFailures, failure)
+				}
+			}
+
+			if len(untriagedTestFailures) > 0 {
+				var writer strings.Builder
+				writer.WriteString(fmt.Sprintf("job run %s has untriaged test failures:\n", jobRun.TestGridURL))
+				for _, testFailure := range untriagedTestFailures {
+					writer.WriteString(fmt.Sprintf("\t- %s\n", testFailure))
+				}
+
+				fmt.Println(writer.String())
+				testResults.FailedRuns++
+
+				continue
+			}
+		}
+
+		testResults.SuccessfulRuns++
+	}
+
+	return testResults, nil
+}
+
+func getJobsForFeatureGateFromSippy(client *http.Client, release, featureGate string, variant JobVariant) ([]sippy.SippyJob, error) {
+	resp, err := client.Get(sippy.BuildSippyJobsForFeatureGateURL(featureGate, release, variant.Topology, variant.Cloud, variant.Architecture, variant.NetworkStack, variant.OS))
+	if err != nil {
+		return nil, fmt.Errorf("getting job info: %w", err)
+	}
+	defer resp.Body.Close()
+
+	if resp.StatusCode != http.StatusOK {
+		return nil, fmt.Errorf("expected a 200 OK status code but got %s", resp.StatusCode)
+	}
+
+	body, err := io.ReadAll(resp.Body)
+	if err != nil {
+		return nil, fmt.Errorf("reading response body: %w", err)
+	}
+
+
+	jobs := []sippy.SippyJob{}
+	err = json.Unmarshal(body, &jobs)
+	if err != nil {
+		return nil, fmt.Errorf("unmarshalling response body: %w", err)
+	}
+
+	return jobs, nil
+}
+
+func getJobRunsFromSippy(client *http.Client, release, jobName string) ([]sippy.SippyJobRun, error) {
+	resp, err := client.Get(sippy.BuildSippyJobRunsForJobURL(release, jobName, time.Now().Add(-1 * 14 * 24 * time.Hour)))
+	if err != nil {
+		return nil, fmt.Errorf("getting job info: %w", err)
+	}
+	defer resp.Body.Close()
+
+	if resp.StatusCode != http.StatusOK {
+		return nil, fmt.Errorf("expected a 200 OK status code but got %s", resp.StatusCode)
+	}
+
+	body, err := io.ReadAll(resp.Body)
+	if err != nil {
+		return nil, fmt.Errorf("reading response body: %w", err)
+	}
+
+
+	runResults := &sippy.SippyJobRunsResult{}
+	err = json.Unmarshal(body, runResults)
+	if err != nil {
+		return nil, fmt.Errorf("unmarshalling response body: %w", err)
+	}
+
+	return runResults.Rows, nil
+}
+
+func getTriagedTestFailuresFromSippy(client *http.Client, release string, variant JobVariant) (sets.Set[string], error) {
+	reqURL, err := url.Parse("https://sippy.dptools.openshift.org/api/component_readiness/triages")
+	if err != nil {
+		panic(fmt.Sprintf("couldn't parse sippy triages url: %v", err))
+	}
+
+	resp, err := client.Get(reqURL.String())
+	if err != nil {
+		return nil, fmt.Errorf("getting sippy triages: %w", err)
+	}
+
+	if resp.StatusCode != http.StatusOK {
+		return nil, fmt.Errorf("expected a 200 OK status code but got %d", resp.StatusCode)
+	}
+
+	body, err := io.ReadAll(resp.Body)
+	if err != nil {
+		return nil, fmt.Errorf("reading response body: %w", err)
+	}
+
+	defer resp.Body.Close()
+
+	triageItems := []sippy.SippyTriageItem{}
+	err = json.Unmarshal(body, &triageItems)
+	if err != nil {
+		return nil, fmt.Errorf("unmarshalling response body: %w", err)
+	}
+
+	regressedTests := sets.New[string]()
+
+	for _, triageItem := range triageItems {
+		for _, regression := range triageItem.Regressions {
+			if regression.Release != release {
+				continue
+			}
+
+			regressionVariants := sets.New(regression.Variants...)
+
+			if !regressionVariants.Has(fmt.Sprintf("Platform:%s", variant.Cloud)) {
+				continue
+			}
+
+			if !regressionVariants.Has(fmt.Sprintf("Topology:%s", variant.Topology)) {
+				continue
+			}
+
+			if !regressionVariants.Has(fmt.Sprintf("Architecture:%s", variant.Architecture)) {
+				continue
+			}
+
+			if variant.NetworkStack != "" && !regressionVariants.Has(fmt.Sprintf("NetworkStack:%s", variant.NetworkStack)) {
+				continue
+			}
+
+			if variant.OS != "" && !regressionVariants.Has(fmt.Sprintf("OS:%s", variant.OS)) {
+				continue
+			}
+
+			regressedTests.Insert(regression.TestName)
+		}
+	}
+
+	return regressedTests, nil
 }

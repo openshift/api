@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"net/url"
 	"strings"
+	"time"
 
 	"k8s.io/apimachinery/pkg/util/sets"
 )
@@ -52,6 +53,38 @@ type SippyTestInfo struct {
 	Watchlist                 bool        `json:"watchlist"`
 	Tags                      interface{} `json:"tags"`
 	OpenBugs                  int         `json:"open_bugs"`
+}
+
+type SippyJob struct {
+	Name           string   `json:"name"`
+	Variants       []string `json:"variants"`
+	CurrentRuns    int      `json:"current_runs"`
+	CurrentPasses  int      `json:"current_passes"`
+	PreviousRuns   int      `json:"previous_runs"`
+	PreviousPasses int      `json:"previous_passes"`
+}
+
+type SippyJobRun struct {
+	Variants        []string `json:"variants"`
+	Failed          bool     `json:"failed"`
+	FailedTestNames []string `json:"failed_test_names"`
+	KnownFailure    bool     `json:"known_failure"`
+	OverallResult   string   `json:"overall_result"`
+	TestGridURL     string   `json:"test_grid_url"`
+}
+
+type SippyJobRunsResult struct {
+	Rows []SippyJobRun `json:"rows"`
+}
+
+type SippyTriageItem struct {
+	Regressions []SippyRegression `json:"regressions,omitempty"`
+}
+
+type SippyRegression struct {
+	Release  string   `json:"release,omitempty"`
+	TestName string   `json:"test_name,omitempty"`
+	Variants []string `json:"variants,omitempty"`
 }
 
 func QueriesFor(cloud, architecture, topology, networkStack, os, jobTiers, testPattern string) []*SippyQueryStruct {
@@ -219,3 +252,118 @@ func BuildSippyTestAnalysisURL(release, testName, topology, cloud, architecture,
 
 	return u.String()
 }
+
+func BuildSippyJobsForFeatureGateURL(featureGate, release, topology, cloud, architecture, networkStack, os string) string {
+	filterItems := []SippyQueryItem{
+		{
+			ColumnField:   "variants",
+			Not:           true,
+			OperatorValue: "has entry",
+			Value:         "never-stable",
+		},
+		{
+			ColumnField:   "variants",
+			Not:           true,
+			OperatorValue: "has entry",
+			Value:         "aggregated",
+		},
+		{
+			ColumnField:   "variants",
+			OperatorValue: "has entry",
+			Value:         fmt.Sprintf("Capability:%s", featureGate),
+		},
+		{
+			ColumnField:   "variants",
+			OperatorValue: "has entry",
+			Value:         fmt.Sprintf("Topology:%s", topology),
+		},
+		{
+			ColumnField:   "variants",
+			OperatorValue: "has entry",
+			Value:         fmt.Sprintf("Platform:%s", cloud),
+		},
+		{
+			ColumnField:   "variants",
+			OperatorValue: "has entry",
+			Value:         fmt.Sprintf("Architecture:%s", architecture),
+		},
+	}
+	if networkStack != "" {
+		filterItems = append(filterItems, SippyQueryItem{
+			ColumnField:   "variants",
+			OperatorValue: "has entry",
+			Value:         fmt.Sprintf("NetworkStack:%s", networkStack),
+		})
+	}
+	if os != "" {
+		filterItems = append(filterItems, SippyQueryItem{
+			ColumnField:   "variants",
+			OperatorValue: "has entry",
+			Value:         fmt.Sprintf("OS:%s", os),
+		})
+	}
+	// Note: We don't filter by JobTier in the URL so the link shows all tiers
+	// The actual queries filter by each tier separately and merge results
+
+	filterObj := SippyQueryStruct{
+		Items:        filterItems,
+		LinkOperator: "and",
+	}
+	filterJSON, err := json.Marshal(filterObj)
+	if err != nil {
+		return ""
+	}
+
+	u := &url.URL{
+		Scheme: "https",
+		Host:   "sippy.dptools.openshift.org",
+		Path:   "/api/jobs",
+	}
+	q := u.Query()
+	q.Set("filter", string(filterJSON))
+	q.Set("release", release)
+	u.RawQuery = q.Encode()
+
+	return u.String()
+}
+
+func BuildSippyJobRunsForJobURL(release, jobName string, timestamp time.Time) string {
+	filterItems := []SippyQueryItem{
+		{
+			ColumnField:   "name",
+			OperatorValue: "equals",
+			Value:         jobName,
+		},
+		{
+			ColumnField:   "timestamp",
+			OperatorValue: ">=",
+			Value:         fmt.Sprintf("%d", timestamp.Unix()),
+		},
+	}
+
+	filterObj := SippyQueryStruct{
+		Items:        filterItems,
+		LinkOperator: "and",
+	}
+	filterJSON, err := json.Marshal(filterObj)
+	if err != nil {
+		return ""
+	}
+
+	u := &url.URL{
+		Scheme: "https",
+		Host:   "sippy.dptools.openshift.org",
+		Path:   "/api/jobs/runs",
+	}
+	q := u.Query()
+	q.Set("filter", string(filterJSON))
+	q.Set("release", release)
+	q.Set("sortField", "timestamp")
+	q.Set("sort", "desc")
+	q.Set("perPage", "100") // hardcoded to 100 most recent job runs to fetch as many as we can. 100 should be sufficient for promotion calculations.
+	q.Set("page", "0")
+	u.RawQuery = q.Encode()
+
+	return u.String()
+}
+

@@ -17,6 +17,9 @@
             {
                 "disabled": [
                     {
+                        "name": "BGPBasedVIPManagement"
+                    },
+                    {
                         "name": "ClientsAllowCBOR"
                     },
                     {

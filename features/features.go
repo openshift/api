@@ -950,6 +950,14 @@ var (
 					enable(inTechPreviewNoUpgrade(), inDevPreviewNoUpgrade()).
 					mustRegister()
 
+	FeatureGateBGPBasedVIPManagement = newFeatureGate("BGPBasedVIPManagement").
+						reportProblemsToJiraComponent("Networking / On-Prem Networking").
+						contactPerson("mkowalski").
+						productScope(ocpSpecific).
+						enhancementPR("https://github.com/openshift/enhancements/pull/1982").
+						enable(inDevPreviewNoUpgrade()).
+						mustRegister()
+
 	FeatureGateProvisioningRequestAvailable = newFeatureGate("ProvisioningRequestAvailable").
 						reportProblemsToJiraComponent("Cluster Autoscaler").
 						contactPerson("elmiko").

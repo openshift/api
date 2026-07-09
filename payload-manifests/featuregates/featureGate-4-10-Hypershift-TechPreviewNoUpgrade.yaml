@@ -20,6 +20,9 @@
                         "name": "AuthenticationComponentProxy"
                     },
                     {
+                        "name": "BGPBasedVIPManagement"
+                    },
+                    {
                         "name": "ClientsAllowCBOR"
                     },
                     {

@@ -262,6 +262,9 @@
                         "name": "IngressControllerDynamicConfigurationManager"
                     },
                     {
+                        "name": "IngressControllerLBSecurityGroupsAWS"
+                    },
+                    {
                         "name": "IngressControllerMultipleHAProxyVersions"
                     },
                     {

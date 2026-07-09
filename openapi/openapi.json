@@ -39846,6 +39846,10 @@
           "type": "string",
           "default": ""
         },
+        "proxyTrustedCA": {
+          "description": "proxyTrustedCA is an optional path to a PEM-encoded CA bundle used to verify connections to an HTTPS proxy during outbound IdP requests. When omitted, proxy connections use the system trust roots only.",
+          "type": "string"
+        },
         "sessionConfig": {
           "description": "sessionConfig hold information about configuring sessions.",
           "$ref": "#/definitions/com.github.openshift.api.osin.v1.SessionConfig"

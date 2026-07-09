@@ -1786,6 +1786,9 @@ spec:
                         - Keepalived
                         - BGP
                         type: string
+                        x-kubernetes-validations:
+                        - message: vipManagement is immutable once set
+                          rule: oldSelf == '' || self == oldSelf
                     type: object
                     x-kubernetes-validations:
                     - message: dnsRecordsType may only be set to External when loadBalancer.type

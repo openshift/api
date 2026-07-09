@@ -191,7 +191,7 @@ tests:
               hostname: console.example.com
               labels:
                 "!!!bad": value
-      expectedError: "label keys must be valid qualified names"
+      expectedError: "label keys must be valid qualified names, consisting of an optional DNS subdomain prefix"
     - name: Should reject componentRoutes with reserved kubernetes.io/ label prefix
       initial: |
         apiVersion: config.openshift.io/v1
@@ -230,7 +230,7 @@ tests:
               hostname: console.example.com
               labels:
                 aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa: value
-      expectedError: "label keys must be valid qualified names"
+      expectedError: "label keys must be valid qualified names, consisting of an optional DNS subdomain prefix"
     - name: Should reject componentRoutes with label value starting with dash
       initial: |
         apiVersion: config.openshift.io/v1

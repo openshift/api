@@ -278,7 +278,7 @@ type ComponentRouteSpec struct {
 	// +mapType=granular
 	// +kubebuilder:validation:MinProperties=1
 	// +kubebuilder:validation:MaxProperties=8
-	// +kubebuilder:validation:XValidation:rule="self.all(key, !format.qualifiedName().validate(key).hasValue())",message="label keys must be valid qualified names"
+	// +kubebuilder:validation:XValidation:rule="self.all(key, !format.qualifiedName().validate(key).hasValue())",message="label keys must be valid qualified names, consisting of an optional DNS subdomain prefix of up to 253 characters followed by a slash and a name segment of 1-63 characters, that consists only of alphanumeric characters, dashes, underscores, and dots, and must start and end with an alphanumeric character"
 	// +kubebuilder:validation:XValidation:rule="self.all(key, !key.startsWith('kubernetes.io/') && !key.startsWith('k8s.io/') && !key.startsWith('openshift.io/'))",message="kubernetes.io/, k8s.io/, and openshift.io/ prefixed label keys are reserved and may not be used"
 	Labels map[string]LabelValue `json:"labels,omitempty"`
 }

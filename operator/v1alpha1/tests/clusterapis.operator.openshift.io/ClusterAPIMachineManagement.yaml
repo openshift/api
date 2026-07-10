@@ -1406,3 +1406,443 @@ tests:
                     ref: quay.io/openshift/cluster-api@sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
                     profile: default
       expectedStatusError: "observedRevisionGeneration may not be unset once set"
+
+    - name: Should accept image with single path segment
+      initial: |
+        apiVersion: operator.openshift.io/v1alpha1
+        kind: ClusterAPI
+        metadata:
+          name: cluster
+        spec: {}
+      updated: |
+        apiVersion: operator.openshift.io/v1alpha1
+        kind: ClusterAPI
+        metadata:
+          name: cluster
+        spec: {}
+        status:
+          desiredRevision: rev-1
+          revisions:
+            - name: rev-1
+              revision: 1
+              contentID: content-1
+              components:
+                - type: Image
+                  image:
+                    ref: quay.io/openshift@sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+                    profile: default
+      expected: |
+        apiVersion: operator.openshift.io/v1alpha1
+        kind: ClusterAPI
+        metadata:
+          name: cluster
+        spec: {}
+        status:
+          desiredRevision: rev-1
+          revisions:
+            - name: rev-1
+              revision: 1
+              contentID: content-1
+              components:
+                - type: Image
+                  image:
+                    ref: quay.io/openshift@sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+                    profile: default
+
+    - name: Should accept image with deep mirror path (5+ segments)
+      initial: |
+        apiVersion: operator.openshift.io/v1alpha1
+        kind: ClusterAPI
+        metadata:
+          name: cluster
+        spec: {}
+      updated: |
+        apiVersion: operator.openshift.io/v1alpha1
+        kind: ClusterAPI
+        metadata:
+          name: cluster
+        spec: {}
+        status:
+          desiredRevision: rev-1
+          revisions:
+            - name: rev-1
+              revision: 1
+              contentID: content-1
+              components:
+                - type: Image
+                  image:
+                    ref: registry.example.com/team/project/product/component/image@sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+                    profile: default
+      expected: |
+        apiVersion: operator.openshift.io/v1alpha1
+        kind: ClusterAPI
+        metadata:
+          name: cluster
+        spec: {}
+        status:
+          desiredRevision: rev-1
+          revisions:
+            - name: rev-1
+              revision: 1
+              contentID: content-1
+              components:
+                - type: Image
+                  image:
+                    ref: registry.example.com/team/project/product/component/image@sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+                    profile: default
+
+    - name: Should accept image with registry port and deep path
+      initial: |
+        apiVersion: operator.openshift.io/v1alpha1
+        kind: ClusterAPI
+        metadata:
+          name: cluster
+        spec: {}
+      updated: |
+        apiVersion: operator.openshift.io/v1alpha1
+        kind: ClusterAPI
+        metadata:
+          name: cluster
+        spec: {}
+        status:
+          desiredRevision: rev-1
+          revisions:
+            - name: rev-1
+              revision: 1
+              contentID: content-1
+              components:
+                - type: Image
+                  image:
+                    ref: registry.example.com:5000/org/team/project/image@sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+                    profile: default
+      expected: |
+        apiVersion: operator.openshift.io/v1alpha1
+        kind: ClusterAPI
+        metadata:
+          name: cluster
+        spec: {}
+        status:
+          desiredRevision: rev-1
+          revisions:
+            - name: rev-1
+              revision: 1
+              contentID: content-1
+              components:
+                - type: Image
+                  image:
+                    ref: registry.example.com:5000/org/team/project/image@sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+                    profile: default
+
+    - name: Should reject image with invalid digest format (too short)
+      initial: |
+        apiVersion: operator.openshift.io/v1alpha1
+        kind: ClusterAPI
+        metadata:
+          name: cluster
+        spec: {}
+      updated: |
+        apiVersion: operator.openshift.io/v1alpha1
+        kind: ClusterAPI
+        metadata:
+          name: cluster
+        spec: {}
+        status:
+          desiredRevision: rev-1
+          revisions:
+            - name: rev-1
+              revision: 1
+              contentID: content-1
+              components:
+                - type: Image
+                  image:
+                    ref: quay.io/openshift/cluster-api@sha256:invalid
+                    profile: default
+      expectedStatusError: "the OCI Image reference must end with a valid '@sha256:<digest>' suffix"
+
+    - name: Should reject image with uppercase in digest
+      initial: |
+        apiVersion: operator.openshift.io/v1alpha1
+        kind: ClusterAPI
+        metadata:
+          name: cluster
+        spec: {}
+      updated: |
+        apiVersion: operator.openshift.io/v1alpha1
+        kind: ClusterAPI
+        metadata:
+          name: cluster
+        spec: {}
+        status:
+          desiredRevision: rev-1
+          revisions:
+            - name: rev-1
+              revision: 1
+              contentID: content-1
+              components:
+                - type: Image
+                  image:
+                    ref: quay.io/openshift/cluster-api@sha256:AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+                    profile: default
+      expectedStatusError: "the OCI Image reference must end with a valid '@sha256:<digest>' suffix"
+
+    - name: Should reject image without path segments
+      initial: |
+        apiVersion: operator.openshift.io/v1alpha1
+        kind: ClusterAPI
+        metadata:
+          name: cluster
+        spec: {}
+      updated: |
+        apiVersion: operator.openshift.io/v1alpha1
+        kind: ClusterAPI
+        metadata:
+          name: cluster
+        spec: {}
+        status:
+          desiredRevision: rev-1
+          revisions:
+            - name: rev-1
+              revision: 1
+              contentID: content-1
+              components:
+                - type: Image
+                  image:
+                    ref: quay.io@sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+                    profile: default
+      expectedStatusError: "the OCI Image name should follow the host[:port][/namespace[/namespace...]]/name format, where host is a domain name, IPv4, or IPv6 address in brackets"
+
+    - name: Should reject image with uppercase in path component
+      initial: |
+        apiVersion: operator.openshift.io/v1alpha1
+        kind: ClusterAPI
+        metadata:
+          name: cluster
+        spec: {}
+      updated: |
+        apiVersion: operator.openshift.io/v1alpha1
+        kind: ClusterAPI
+        metadata:
+          name: cluster
+        spec: {}
+        status:
+          desiredRevision: rev-1
+          revisions:
+            - name: rev-1
+              revision: 1
+              contentID: content-1
+              components:
+                - type: Image
+                  image:
+                    ref: quay.io/openshift/Cluster-API@sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+                    profile: default
+      expectedStatusError: "the OCI Image name should follow the host[:port][/namespace[/namespace...]]/name format, where host is a domain name, IPv4, or IPv6 address in brackets"
+
+    - name: Should accept IPv4 address with port
+      initial: |
+        apiVersion: operator.openshift.io/v1alpha1
+        kind: ClusterAPI
+        metadata:
+          name: cluster
+        spec: {}
+      updated: |
+        apiVersion: operator.openshift.io/v1alpha1
+        kind: ClusterAPI
+        metadata:
+          name: cluster
+        spec: {}
+        status:
+          desiredRevision: rev-1
+          revisions:
+            - name: rev-1
+              revision: 1
+              contentID: content-1
+              components:
+                - type: Image
+                  image:
+                    ref: 192.168.1.1:5000/org/image@sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+                    profile: default
+      expected: |
+        apiVersion: operator.openshift.io/v1alpha1
+        kind: ClusterAPI
+        metadata:
+          name: cluster
+        spec: {}
+        status:
+          desiredRevision: rev-1
+          revisions:
+            - name: rev-1
+              revision: 1
+              contentID: content-1
+              components:
+                - type: Image
+                  image:
+                    ref: 192.168.1.1:5000/org/image@sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+                    profile: default
+
+    - name: Should accept IPv4 address without port
+      initial: |
+        apiVersion: operator.openshift.io/v1alpha1
+        kind: ClusterAPI
+        metadata:
+          name: cluster
+        spec: {}
+      updated: |
+        apiVersion: operator.openshift.io/v1alpha1
+        kind: ClusterAPI
+        metadata:
+          name: cluster
+        spec: {}
+        status:
+          desiredRevision: rev-1
+          revisions:
+            - name: rev-1
+              revision: 1
+              contentID: content-1
+              components:
+                - type: Image
+                  image:
+                    ref: 10.0.0.1/image@sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+                    profile: default
+      expected: |
+        apiVersion: operator.openshift.io/v1alpha1
+        kind: ClusterAPI
+        metadata:
+          name: cluster
+        spec: {}
+        status:
+          desiredRevision: rev-1
+          revisions:
+            - name: rev-1
+              revision: 1
+              contentID: content-1
+              components:
+                - type: Image
+                  image:
+                    ref: 10.0.0.1/image@sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+                    profile: default
+
+    - name: Should accept IPv6 address with port
+      initial: |
+        apiVersion: operator.openshift.io/v1alpha1
+        kind: ClusterAPI
+        metadata:
+          name: cluster
+        spec: {}
+      updated: |
+        apiVersion: operator.openshift.io/v1alpha1
+        kind: ClusterAPI
+        metadata:
+          name: cluster
+        spec: {}
+        status:
+          desiredRevision: rev-1
+          revisions:
+            - name: rev-1
+              revision: 1
+              contentID: content-1
+              components:
+                - type: Image
+                  image:
+                    ref: "[fd00::1]:5000/org/image@sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+                    profile: default
+      expected: |
+        apiVersion: operator.openshift.io/v1alpha1
+        kind: ClusterAPI
+        metadata:
+          name: cluster
+        spec: {}
+        status:
+          desiredRevision: rev-1
+          revisions:
+            - name: rev-1
+              revision: 1
+              contentID: content-1
+              components:
+                - type: Image
+                  image:
+                    ref: "[fd00::1]:5000/org/image@sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+                    profile: default
+
+    - name: Should accept IPv6 address without port
+      initial: |
+        apiVersion: operator.openshift.io/v1alpha1
+        kind: ClusterAPI
+        metadata:
+          name: cluster
+        spec: {}
+      updated: |
+        apiVersion: operator.openshift.io/v1alpha1
+        kind: ClusterAPI
+        metadata:
+          name: cluster
+        spec: {}
+        status:
+          desiredRevision: rev-1
+          revisions:
+            - name: rev-1
+              revision: 1
+              contentID: content-1
+              components:
+                - type: Image
+                  image:
+                    ref: "[2001:db8::1]/image@sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+                    profile: default
+      expected: |
+        apiVersion: operator.openshift.io/v1alpha1
+        kind: ClusterAPI
+        metadata:
+          name: cluster
+        spec: {}
+        status:
+          desiredRevision: rev-1
+          revisions:
+            - name: rev-1
+              revision: 1
+              contentID: content-1
+              components:
+                - type: Image
+                  image:
+                    ref: "[2001:db8::1]/image@sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+                    profile: default
+
+    - name: Should accept localhost
+      initial: |
+        apiVersion: operator.openshift.io/v1alpha1
+        kind: ClusterAPI
+        metadata:
+          name: cluster
+        spec: {}
+      updated: |
+        apiVersion: operator.openshift.io/v1alpha1
+        kind: ClusterAPI
+        metadata:
+          name: cluster
+        spec: {}
+        status:
+          desiredRevision: rev-1
+          revisions:
+            - name: rev-1
+              revision: 1
+              contentID: content-1
+              components:
+                - type: Image
+                  image:
+                    ref: localhost/image@sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+                    profile: default
+      expected: |
+        apiVersion: operator.openshift.io/v1alpha1
+        kind: ClusterAPI
+        metadata:
+          name: cluster
+        spec: {}
+        status:
+          desiredRevision: rev-1
+          revisions:
+            - name: rev-1
+              revision: 1
+              contentID: content-1
+              components:
+                - type: Image
+                  image:
+                    ref: localhost/image@sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+                    profile: default

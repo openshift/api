@@ -159,6 +159,9 @@
                         "name": "ImageModeStatusReporting"
                     },
                     {
+                        "name": "IngressComponentRouteLabels"
+                    },
+                    {
                         "name": "IngressControllerDynamicConfigurationManager"
                     },
                     {

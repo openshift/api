@@ -265,6 +265,9 @@
                         "name": "ImageStreamImportMode"
                     },
                     {
+                        "name": "IngressComponentRouteLabels"
+                    },
+                    {
                         "name": "IngressControllerDynamicConfigurationManager"
                     },
                     {

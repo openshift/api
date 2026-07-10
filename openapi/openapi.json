@@ -6117,6 +6117,15 @@
           "type": "string",
           "default": ""
         },
+        "labels": {
+          "description": "labels defines additional labels to be applied to the route created for the component. These labels are used by the IngressController to determine which routes it should manage. Changing labels may cause the route to be reassigned to a different IngressController. When omitted, no additional labels are applied to the component route. When specified, labels must contain at least one entry, up to a maximum of 8. Label keys must be valid qualified names, consisting of a name segment and an optional prefix separated by a slash (/). The name segment must be at most 63 characters in length and must consist only of alphanumeric characters, dashes (-), underscores (_), and dots (.), and must start and end with alphanumeric characters. The prefix, if specified, must be a DNS subdomain: at most 253 characters in length, consisting of dot-separated segments where each segment starts and ends with an alphanumeric character. Label values must be either empty or 1-63 characters, consisting of alphanumeric characters, dashes (-), underscores (_), or dots (.), starting and ending with an alphanumeric character. Keys with the \"kubernetes.io/\", \"k8s.io/\", and \"openshift.io/\" prefixes are reserved and may not be used.",
+          "type": "object",
+          "additionalProperties": {
+            "type": "string",
+            "default": ""
+          },
+          "x-kubernetes-map-type": "granular"
+        },
         "name": {
           "description": "name is the logical name of the route to customize.\n\nThe namespace and name of this componentRoute must match a corresponding entry in the list of status.componentRoutes if the route is to be customized.",
           "type": "string",
@@ -8669,7 +8678,7 @@
           "type": "string"
         },
         "componentRoutes": {
-          "description": "componentRoutes is an optional list of routes that are managed by OpenShift components that a cluster-admin is able to configure the hostname and serving certificate for. The namespace and name of each route in this list should match an existing entry in the status.componentRoutes list.\n\nTo determine the set of configurable Routes, look at namespace and name of entries in the .status.componentRoutes list, where participating operators write the status of configurable routes.",
+          "description": "componentRoutes is an optional list of routes that are managed by OpenShift components that a cluster-admin is able to configure the hostname and serving certificate for. The namespace and name of each route in this list should match an existing entry in the status.componentRoutes list.\n\nTo determine the set of configurable Routes, look at namespace and name of entries in the .status.componentRoutes list, where participating operators write the status of configurable routes. A maximum of 250 component routes may be configured.",
           "type": "array",
           "items": {
             "default": {},

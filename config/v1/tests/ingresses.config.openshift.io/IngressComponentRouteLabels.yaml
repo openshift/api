@@ -1,0 +1,364 @@
+apiVersion: apiextensions.k8s.io/v1 # Hack because controller-gen complains if we don't have this
+name: "Ingress"
+crdName: ingresses.config.openshift.io
+featureGates:
+- IngressComponentRouteLabels
+tests:
+  onCreate:
+    - name: Should be able to create an Ingress with componentRoutes containing labels
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: Ingress
+        spec:
+          domain: apps.example.com
+          componentRoutes:
+            - name: console
+              namespace: openshift-console
+              hostname: console.example.com
+              labels:
+                ingress: shard-console
+      expected: |
+        apiVersion: config.openshift.io/v1
+        kind: Ingress
+        spec:
+          domain: apps.example.com
+          componentRoutes:
+            - name: console
+              namespace: openshift-console
+              hostname: console.example.com
+              labels:
+                ingress: shard-console
+    - name: Should be able to create an Ingress with multiple componentRoutes with labels
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: Ingress
+        spec:
+          domain: apps.example.com
+          componentRoutes:
+            - name: console-2
+              namespace: openshift-console
+              hostname: console.internal.corp.example.com
+              labels:
+                ingress: shard-console2
+            - name: console-3
+              namespace: openshift-console
+              hostname: console.private.corp.example.com
+              labels:
+                ingress: shard-console3
+      expected: |
+        apiVersion: config.openshift.io/v1
+        kind: Ingress
+        spec:
+          domain: apps.example.com
+          componentRoutes:
+            - name: console-2
+              namespace: openshift-console
+              hostname: console.internal.corp.example.com
+              labels:
+                ingress: shard-console2
+            - name: console-3
+              namespace: openshift-console
+              hostname: console.private.corp.example.com
+              labels:
+                ingress: shard-console3
+    - name: Should be able to create componentRoutes with a DNS-prefixed label key
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: Ingress
+        spec:
+          domain: apps.example.com
+          componentRoutes:
+            - name: console
+              namespace: openshift-console
+              hostname: console.example.com
+              labels:
+                example.com/my-label: value
+      expected: |
+        apiVersion: config.openshift.io/v1
+        kind: Ingress
+        spec:
+          domain: apps.example.com
+          componentRoutes:
+            - name: console
+              namespace: openshift-console
+              hostname: console.example.com
+              labels:
+                example.com/my-label: value
+    - name: Should be able to create componentRoutes with max-length label value
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: Ingress
+        spec:
+          domain: apps.example.com
+          componentRoutes:
+            - name: console
+              namespace: openshift-console
+              hostname: console.example.com
+              labels:
+                my-label: abcdefghijklmnopqrstuvwxyz0123456789abcdefghijklmnopqrstuvwxyz0
+      expected: |
+        apiVersion: config.openshift.io/v1
+        kind: Ingress
+        spec:
+          domain: apps.example.com
+          componentRoutes:
+            - name: console
+              namespace: openshift-console
+              hostname: console.example.com
+              labels:
+                my-label: abcdefghijklmnopqrstuvwxyz0123456789abcdefghijklmnopqrstuvwxyz0
+    - name: Should reject componentRoutes with invalid label value
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: Ingress
+        spec:
+          domain: apps.example.com
+          componentRoutes:
+            - name: console
+              namespace: openshift-console
+              hostname: console.example.com
+              labels:
+                ingress: "invalid value with spaces!"
+      expectedError: "label values must be valid Kubernetes label values"
+    - name: Should accept componentRoutes with empty string label value
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: Ingress
+        spec:
+          domain: apps.example.com
+          componentRoutes:
+            - name: console
+              namespace: openshift-console
+              hostname: console.example.com
+              labels:
+                ingress: ""
+      expected: |
+        apiVersion: config.openshift.io/v1
+        kind: Ingress
+        spec:
+          domain: apps.example.com
+          componentRoutes:
+            - name: console
+              namespace: openshift-console
+              hostname: console.example.com
+              labels:
+                ingress: ""
+    - name: Should reject componentRoutes with reserved openshift.io/ label prefix
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: Ingress
+        spec:
+          domain: apps.example.com
+          componentRoutes:
+            - name: console
+              namespace: openshift-console
+              hostname: console.example.com
+              labels:
+                openshift.io/my-label: value
+      expectedError: "kubernetes.io/, k8s.io/, and openshift.io/ prefixed label keys are reserved and may not be used"
+    - name: Should accept componentRoutes with non-reserved prefix
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: Ingress
+        spec:
+          domain: apps.example.com
+          componentRoutes:
+            - name: console
+              namespace: openshift-console
+              hostname: console.example.com
+              labels:
+                custom.example.com/my-label: value
+      expected: |
+        apiVersion: config.openshift.io/v1
+        kind: Ingress
+        spec:
+          domain: apps.example.com
+          componentRoutes:
+            - name: console
+              namespace: openshift-console
+              hostname: console.example.com
+              labels:
+                custom.example.com/my-label: value
+    - name: Should reject componentRoutes with invalid label key
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: Ingress
+        spec:
+          domain: apps.example.com
+          componentRoutes:
+            - name: console
+              namespace: openshift-console
+              hostname: console.example.com
+              labels:
+                "!!!bad": value
+      expectedError: "label keys must be valid qualified names, consisting of an optional DNS subdomain prefix"
+    - name: Should reject componentRoutes with reserved kubernetes.io/ label prefix
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: Ingress
+        spec:
+          domain: apps.example.com
+          componentRoutes:
+            - name: console
+              namespace: openshift-console
+              hostname: console.example.com
+              labels:
+                kubernetes.io/name: value
+      expectedError: "kubernetes.io/, k8s.io/, and openshift.io/ prefixed label keys are reserved and may not be used"
+    - name: Should reject componentRoutes with reserved k8s.io/ label prefix
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: Ingress
+        spec:
+          domain: apps.example.com
+          componentRoutes:
+            - name: console
+              namespace: openshift-console
+              hostname: console.example.com
+              labels:
+                k8s.io/name: value
+      expectedError: "kubernetes.io/, k8s.io/, and openshift.io/ prefixed label keys are reserved and may not be used"
+    - name: Should reject componentRoutes with label key name over 63 characters
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: Ingress
+        spec:
+          domain: apps.example.com
+          componentRoutes:
+            - name: console
+              namespace: openshift-console
+              hostname: console.example.com
+              labels:
+                aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa: value
+      expectedError: "label keys must be valid qualified names, consisting of an optional DNS subdomain prefix"
+    - name: Should reject componentRoutes with label value starting with dash
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: Ingress
+        spec:
+          domain: apps.example.com
+          componentRoutes:
+            - name: console
+              namespace: openshift-console
+              hostname: console.example.com
+              labels:
+                ingress: "-starts-with-dash"
+      expectedError: "label values must be valid Kubernetes label values"
+    - name: Should reject componentRoutes with more than 8 labels
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: Ingress
+        spec:
+          domain: apps.example.com
+          componentRoutes:
+            - name: console
+              namespace: openshift-console
+              hostname: console.example.com
+              labels:
+                label1: value1
+                label2: value2
+                label3: value3
+                label4: value4
+                label5: value5
+                label6: value6
+                label7: value7
+                label8: value8
+                label9: value9
+      expectedError: "must have at most 8 items"
+  onUpdate:
+    - name: Should be able to add labels to componentRoutes on update
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: Ingress
+        spec:
+          domain: apps.example.com
+          componentRoutes:
+            - name: console
+              namespace: openshift-console
+              hostname: console.example.com
+      updated: |
+        apiVersion: config.openshift.io/v1
+        kind: Ingress
+        spec:
+          domain: apps.example.com
+          componentRoutes:
+            - name: console
+              namespace: openshift-console
+              hostname: console.example.com
+              labels:
+                ingress: shard-console
+      expected: |
+        apiVersion: config.openshift.io/v1
+        kind: Ingress
+        spec:
+          domain: apps.example.com
+          componentRoutes:
+            - name: console
+              namespace: openshift-console
+              hostname: console.example.com
+              labels:
+                ingress: shard-console
+    - name: Should be able to change an existing label value on update
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: Ingress
+        spec:
+          domain: apps.example.com
+          componentRoutes:
+            - name: console
+              namespace: openshift-console
+              hostname: console.example.com
+              labels:
+                ingress: shard-old
+      updated: |
+        apiVersion: config.openshift.io/v1
+        kind: Ingress
+        spec:
+          domain: apps.example.com
+          componentRoutes:
+            - name: console
+              namespace: openshift-console
+              hostname: console.example.com
+              labels:
+                ingress: shard-new
+      expected: |
+        apiVersion: config.openshift.io/v1
+        kind: Ingress
+        spec:
+          domain: apps.example.com
+          componentRoutes:
+            - name: console
+              namespace: openshift-console
+              hostname: console.example.com
+              labels:
+                ingress: shard-new
+    - name: Should be able to remove labels from componentRoutes on update
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: Ingress
+        spec:
+          domain: apps.example.com
+          componentRoutes:
+            - name: console
+              namespace: openshift-console
+              hostname: console.example.com
+              labels:
+                ingress: shard-console
+      updated: |
+        apiVersion: config.openshift.io/v1
+        kind: Ingress
+        spec:
+          domain: apps.example.com
+          componentRoutes:
+            - name: console
+              namespace: openshift-console
+              hostname: console.example.com
+      expected: |
+        apiVersion: config.openshift.io/v1
+        kind: Ingress
+        spec:
+          domain: apps.example.com
+          componentRoutes:
+            - name: console
+              namespace: openshift-console
+              hostname: console.example.com

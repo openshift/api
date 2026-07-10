@@ -165,9 +165,6 @@
                         "name": "IngressControllerMultipleHAProxyVersions"
                     },
                     {
-                        "name": "IrreconcilableMachineConfig"
-                    },
-                    {
                         "name": "KMSEncryption"
                     },
                     {
@@ -342,6 +339,9 @@
                     },
                     {
                         "name": "InsightsOnDemandDataGather"
+                    },
+                    {
+                        "name": "IrreconcilableMachineConfig"
                     },
                     {
                         "name": "KMSv1"

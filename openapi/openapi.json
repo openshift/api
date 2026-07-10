@@ -33975,6 +33975,11 @@
             "keyId"
           ],
           "x-kubernetes-list-type": "map"
+        },
+        "preflight": {
+          "description": "preflight contains the state of KMS preflight validation for this operator. The preflight validates the KMS provider configuration before it is used to create a new encryption key, catching configuration issues early such as incorrect login credentials or an unreachable Vault service. When omitted, no preflight validation is in progress.",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.operator.v1.KMSPreflightCheck"
         }
       }
     },
@@ -34010,6 +34015,47 @@
         },
         "status": {
           "description": "status contains a health indicator for the respective KMS plugin The field can have three states: healthy, unhealthy, error. With error and unhealthy containing additional information in Detail.",
+          "type": "string"
+        }
+      }
+    },
+    "com.github.openshift.api.operator.v1.KMSPreflightCheck": {
+      "description": "KMSPreflightCheck describes a preflight validation request and its result.",
+      "type": "object",
+      "required": [
+        "observedConfigHash"
+      ],
+      "properties": {
+        "observedConfigHash": {
+          "description": "observedConfigHash is a hash of the KMS provider configuration and its referenced resources that has been observed and requires preflight validation before a new encryption key can be created. The value must be exactly 8 characters.",
+          "type": "string"
+        },
+        "result": {
+          "description": "result contains the outcome of the most recent preflight check. Preflight is considered passed when result.status is Succeeded and result.configHash matches observedConfigHash. When omitted, no preflight check result has been reported yet.",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.operator.v1.KMSPreflightResult"
+        }
+      }
+    },
+    "com.github.openshift.api.operator.v1.KMSPreflightResult": {
+      "description": "KMSPreflightResult contains the outcome of a preflight validation.",
+      "type": "object",
+      "required": [
+        "status",
+        "configHash",
+        "remoteKeyID"
+      ],
+      "properties": {
+        "configHash": {
+          "description": "configHash is the hash of the configuration that was validated. This is compared against observedConfigHash to confirm the result corresponds to the current configuration. The value must be exactly 8 characters.",
+          "type": "string"
+        },
+        "remoteKeyID": {
+          "description": "remoteKeyID is the remote key encryption key identifier from KMS v2 StatusResponse.key_id. This is not a cryptographic key, but a unique representation of the remote key used to encrypt data. The value must be between 1 and 1024 characters.",
+          "type": "string"
+        },
+        "status": {
+          "description": "status indicates the outcome of the preflight check. Succeeded means the KMS plugin responded to Status, Encrypt, and Decrypt calls successfully. Failed means the validation did not pass.",
           "type": "string"
         }
       }

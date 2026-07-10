@@ -1390,6 +1390,7 @@ func (InsightsReport) SwaggerDoc() map[string]string {
 
 var map_KMSEncryptionStatus = map[string]string{
 	"healthReports": "healthReports contains all KMS plugin health reports. When omitted, no health reports are available. Each entry must have a unique combination of nodeName and keyId.",
+	"preflight":     "preflight contains the state of KMS preflight validation for this operator. The preflight validates the KMS provider configuration before it is used to create a new encryption key, catching configuration issues early such as incorrect login credentials or an unreachable Vault service. When omitted, no preflight validation is in progress.",
 }
 
 func (KMSEncryptionStatus) SwaggerDoc() map[string]string {
@@ -1407,6 +1408,27 @@ var map_KMSPluginHealthReport = map[string]string{
 
 func (KMSPluginHealthReport) SwaggerDoc() map[string]string {
 	return map_KMSPluginHealthReport
+}
+
+var map_KMSPreflightCheck = map[string]string{
+	"":                   "KMSPreflightCheck describes a preflight validation request and its result.",
+	"observedConfigHash": "observedConfigHash is a hash of the KMS provider configuration and its referenced resources that has been observed and requires preflight validation before a new encryption key can be created. The value must be exactly 8 characters.",
+	"result":             "result contains the outcome of the most recent preflight check. Preflight is considered passed when result.status is Succeeded and result.configHash matches observedConfigHash. When omitted, no preflight check result has been reported yet.",
+}
+
+func (KMSPreflightCheck) SwaggerDoc() map[string]string {
+	return map_KMSPreflightCheck
+}
+
+var map_KMSPreflightResult = map[string]string{
+	"":            "KMSPreflightResult contains the outcome of a preflight validation.",
+	"status":      "status indicates the outcome of the preflight check. Succeeded means the KMS plugin responded to Status, Encrypt, and Decrypt calls successfully. Failed means the validation did not pass.",
+	"configHash":  "configHash is the hash of the configuration that was validated. This is compared against observedConfigHash to confirm the result corresponds to the current configuration. The value must be exactly 8 characters.",
+	"remoteKeyID": "remoteKeyID is the remote key encryption key identifier from KMS v2 StatusResponse.key_id. This is not a cryptographic key, but a unique representation of the remote key used to encrypt data. The value must be between 1 and 1024 characters.",
+}
+
+func (KMSPreflightResult) SwaggerDoc() map[string]string {
+	return map_KMSPreflightResult
 }
 
 var map_KubeAPIServer = map[string]string{

@@ -305,9 +305,6 @@
                         "name": "AWSServiceLBNetworkSecurityGroup"
                     },
                     {
-                        "name": "AzureClusterHostedDNSInstall"
-                    },
-                    {
                         "name": "AzureWorkloadIdentity"
                     },
                     {

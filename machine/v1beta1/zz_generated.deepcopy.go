@@ -79,7 +79,7 @@ func (in *AWSMachineProviderConfig) DeepCopyInto(out *AWSMachineProviderConfig) 
 		*out = new(SpotMarketOptions)
 		(*in).DeepCopyInto(*out)
 	}
-	out.MetadataServiceOptions = in.MetadataServiceOptions
+	in.MetadataServiceOptions.DeepCopyInto(&out.MetadataServiceOptions)
 	if in.PlacementGroupPartition != nil {
 		in, out := &in.PlacementGroupPartition, &out.PlacementGroupPartition
 		*out = new(int32)

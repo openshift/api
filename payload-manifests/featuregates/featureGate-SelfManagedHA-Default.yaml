@@ -71,6 +71,9 @@
                         "name": "GCPCustomAPIEndpoints"
                     },
                     {
+                        "name": "GatewayAPIWithoutOLM"
+                    },
+                    {
                         "name": "HighlyAvailableArbiter"
                     },
                     {

@@ -620,6 +620,7 @@ spec:
                         description: |-
                           failureDomains contains the definition of region, zone and the vCenter topology.
                           If this is omitted failure domains (regions and zones) will not be used.
+                          Each failure domain's server must match the server field of an entry in the vcenters list.
                         items:
                           description: VSpherePlatformFailureDomainSpec holds the
                             region and zone failure domain and the vCenter topology
@@ -660,8 +661,11 @@ spec:
                               - type
                               type: object
                             server:
-                              description: server is the fully-qualified domain name
-                                or the IP address of the vCenter server.
+                              description: |-
+                                server is the fully-qualified domain name or the IP address of the vCenter server.
+                                This must match the server field of an entry in the vcenters list.
+                                The match is case-sensitive; the value must be specified exactly as it appears in the vcenters entry.
+                                The value must be between 1 and 255 characters long.
                               maxLength: 255
                               minLength: 1
                               type: string
@@ -1003,6 +1007,11 @@ spec:
                           rule: self.all(x, self.exists_one(y, y.server == x.server))
                     type: object
                     x-kubernetes-validations:
+                    - message: all failure domains must have a corresponding vCenter
+                        entry
+                      rule: '!has(self.failureDomains) || size(self.failureDomains)
+                        == 0 || (has(self.vcenters) && self.failureDomains.all(fd,
+                        self.vcenters.exists(vc, vc.server == fd.server)))'
                     - message: apiServerInternalIPs list is required once set
                       rule: '!has(oldSelf.apiServerInternalIPs) || has(self.apiServerInternalIPs)'
                     - message: ingressIPs list is required once set

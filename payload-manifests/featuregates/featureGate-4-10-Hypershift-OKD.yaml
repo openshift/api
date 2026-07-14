@@ -23,7 +23,13 @@
                         "name": "AWSDedicatedHosts"
                     },
                     {
+                        "name": "AWSDualStackInstall"
+                    },
+                    {
                         "name": "AWSEuropeanSovereignCloudInstall"
+                    },
+                    {
+                        "name": "AdditionalStorageConfig"
                     },
                     {
                         "name": "AuthenticationComponentProxy"
@@ -155,13 +161,13 @@
                         "name": "GCPSovereignCloudInstall"
                     },
                     {
-                        "name": "GatewayAPIManagementMode"
-                    },
-                    {
                         "name": "ImageModeStatusReporting"
                     },
                     {
-                        "name": "IngressComponentRouteLabels"
+                        "name": "IngressControllerMultipleHAProxyVersions"
+                    },
+                    {
+                        "name": "IrreconcilableMachineConfig"
                     },
                     {
                         "name": "KMSEncryption"
@@ -236,6 +242,9 @@
                         "name": "NewOLMOwnSingleNamespace"
                     },
                     {
+                        "name": "NewOLMPreflightPermissionChecks"
+                    },
+                    {
                         "name": "NewOLMWebhookProviderOpenshiftServiceCA"
                     },
                     {
@@ -295,13 +304,7 @@
                         "name": "AWSClusterHostedDNSInstall"
                     },
                     {
-                        "name": "AWSDualStackInstall"
-                    },
-                    {
                         "name": "AWSServiceLBNetworkSecurityGroup"
-                    },
-                    {
-                        "name": "AdditionalStorageConfig"
                     },
                     {
                         "name": "AzureWorkloadIdentity"
@@ -337,19 +340,16 @@
                         "name": "ImageStreamImportMode"
                     },
                     {
-                        "name": "IngressControllerDynamicConfigurationManager"
+                        "name": "IngressComponentRouteLabels"
                     },
                     {
-                        "name": "IngressControllerMultipleHAProxyVersions"
+                        "name": "IngressControllerDynamicConfigurationManager"
                     },
                     {
                         "name": "InsightsConfig"
                     },
                     {
                         "name": "InsightsOnDemandDataGather"
-                    },
-                    {
-                        "name": "IrreconcilableMachineConfig"
                     },
                     {
                         "name": "KMSv1"
@@ -368,6 +368,9 @@
                     },
                     {
                         "name": "OpenShiftPodSecurityAdmission"
+                    },
+                    {
+                        "name": "RouteExternalCertificate"
                     },
                     {
                         "name": "ServiceAccountTokenNodeBinding"

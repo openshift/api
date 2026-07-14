@@ -1885,6 +1885,7 @@ spec:
                                 - AzureChinaCloud
                                 - AzureGermanCloud
                                 - AzureStackCloud
+                                - AzureUSSecCloud
                                 type: string
                               ipFamily:
                                 default: IPv4

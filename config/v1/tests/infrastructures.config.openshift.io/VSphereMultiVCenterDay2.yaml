@@ -258,6 +258,324 @@ tests:
                   resourcePool: /DC1/host/cluster1/Resources
                 zone: zone1
       expectedError: "vcenters must have unique server values"
+    - name: Should accept Infrastructure with single failure domain matching a vCenter
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        spec:
+          platformSpec:
+            type: VSphere
+            vsphere:
+              vcenters:
+              - server: vcenter1.example.com
+                datacenters:
+                - datacenter1
+              failureDomains:
+              - name: fd1
+                region: region1
+                zone: zone1
+                server: vcenter1.example.com
+                topology:
+                  datacenter: datacenter1
+                  computeCluster: /datacenter1/host/cluster1
+                  networks:
+                  - /datacenter1/network/VM Network
+                  datastore: /datacenter1/datastore/datastore1
+      expected: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        spec:
+          platformSpec:
+            type: VSphere
+            vsphere:
+              vcenters:
+              - server: vcenter1.example.com
+                datacenters:
+                - datacenter1
+              failureDomains:
+              - name: fd1
+                region: region1
+                zone: zone1
+                server: vcenter1.example.com
+                topology:
+                  datacenter: datacenter1
+                  computeCluster: /datacenter1/host/cluster1
+                  networks:
+                  - /datacenter1/network/VM Network
+                  datastore: /datacenter1/datastore/datastore1
+
+    - name: Should accept Infrastructure with multiple failure domains matching vCenters
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        spec:
+          platformSpec:
+            type: VSphere
+            vsphere:
+              vcenters:
+              - server: vcenter1.example.com
+                datacenters:
+                - datacenter1
+              - server: vcenter2.example.com
+                datacenters:
+                - datacenter2
+              failureDomains:
+              - name: fd1
+                region: region1
+                zone: zone1
+                server: vcenter1.example.com
+                topology:
+                  datacenter: datacenter1
+                  computeCluster: /datacenter1/host/cluster1
+                  networks:
+                  - /datacenter1/network/VM Network
+                  datastore: /datacenter1/datastore/datastore1
+              - name: fd2
+                region: region2
+                zone: zone2
+                server: vcenter2.example.com
+                topology:
+                  datacenter: datacenter2
+                  computeCluster: /datacenter2/host/cluster2
+                  networks:
+                  - /datacenter2/network/VM Network
+                  datastore: /datacenter2/datastore/datastore2
+      expected: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        spec:
+          platformSpec:
+            type: VSphere
+            vsphere:
+              vcenters:
+              - server: vcenter1.example.com
+                datacenters:
+                - datacenter1
+              - server: vcenter2.example.com
+                datacenters:
+                - datacenter2
+              failureDomains:
+              - name: fd1
+                region: region1
+                zone: zone1
+                server: vcenter1.example.com
+                topology:
+                  datacenter: datacenter1
+                  computeCluster: /datacenter1/host/cluster1
+                  networks:
+                  - /datacenter1/network/VM Network
+                  datastore: /datacenter1/datastore/datastore1
+              - name: fd2
+                region: region2
+                zone: zone2
+                server: vcenter2.example.com
+                topology:
+                  datacenter: datacenter2
+                  computeCluster: /datacenter2/host/cluster2
+                  networks:
+                  - /datacenter2/network/VM Network
+                  datastore: /datacenter2/datastore/datastore2
+
+    - name: Should accept Infrastructure with multiple failure domains using same vCenter
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        spec:
+          platformSpec:
+            type: VSphere
+            vsphere:
+              vcenters:
+              - server: vcenter1.example.com
+                datacenters:
+                - datacenter1
+                - datacenter2
+              failureDomains:
+              - name: fd1
+                region: region1
+                zone: zone1
+                server: vcenter1.example.com
+                topology:
+                  datacenter: datacenter1
+                  computeCluster: /datacenter1/host/cluster1
+                  networks:
+                  - /datacenter1/network/VM Network
+                  datastore: /datacenter1/datastore/datastore1
+              - name: fd2
+                region: region2
+                zone: zone2
+                server: vcenter1.example.com
+                topology:
+                  datacenter: datacenter2
+                  computeCluster: /datacenter2/host/cluster2
+                  networks:
+                  - /datacenter2/network/VM Network
+                  datastore: /datacenter2/datastore/datastore2
+      expected: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        spec:
+          platformSpec:
+            type: VSphere
+            vsphere:
+              vcenters:
+              - server: vcenter1.example.com
+                datacenters:
+                - datacenter1
+                - datacenter2
+              failureDomains:
+              - name: fd1
+                region: region1
+                zone: zone1
+                server: vcenter1.example.com
+                topology:
+                  datacenter: datacenter1
+                  computeCluster: /datacenter1/host/cluster1
+                  networks:
+                  - /datacenter1/network/VM Network
+                  datastore: /datacenter1/datastore/datastore1
+              - name: fd2
+                region: region2
+                zone: zone2
+                server: vcenter1.example.com
+                topology:
+                  datacenter: datacenter2
+                  computeCluster: /datacenter2/host/cluster2
+                  networks:
+                  - /datacenter2/network/VM Network
+                  datastore: /datacenter2/datastore/datastore2
+
+    - name: Should accept Infrastructure with vCenters but no failure domains
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        spec:
+          platformSpec:
+            type: VSphere
+            vsphere:
+              vcenters:
+              - server: vcenter1.example.com
+                datacenters:
+                - datacenter1
+      expected: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        spec:
+          platformSpec:
+            type: VSphere
+            vsphere:
+              vcenters:
+              - server: vcenter1.example.com
+                datacenters:
+                - datacenter1
+
+    - name: Should reject Infrastructure with failure domain not matching any vCenter
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        spec:
+          platformSpec:
+            type: VSphere
+            vsphere:
+              vcenters:
+              - server: vcenter1.example.com
+                datacenters:
+                - datacenter1
+              failureDomains:
+              - name: fd1
+                region: region1
+                zone: zone1
+                server: vcenter-nonexistent.example.com
+                topology:
+                  datacenter: datacenter1
+                  computeCluster: /datacenter1/host/cluster1
+                  networks:
+                  - /datacenter1/network/VM Network
+                  datastore: /datacenter1/datastore/datastore1
+      expectedError: "all failure domains must have a corresponding vCenter entry"
+
+    - name: Should reject Infrastructure with some failure domains not matching vCenters
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        spec:
+          platformSpec:
+            type: VSphere
+            vsphere:
+              vcenters:
+              - server: vcenter1.example.com
+                datacenters:
+                - datacenter1
+              - server: vcenter2.example.com
+                datacenters:
+                - datacenter2
+              failureDomains:
+              - name: fd1
+                region: region1
+                zone: zone1
+                server: vcenter1.example.com
+                topology:
+                  datacenter: datacenter1
+                  computeCluster: /datacenter1/host/cluster1
+                  networks:
+                  - /datacenter1/network/VM Network
+                  datastore: /datacenter1/datastore/datastore1
+              - name: fd2
+                region: region2
+                zone: zone2
+                server: vcenter3.example.com
+                topology:
+                  datacenter: datacenter2
+                  computeCluster: /datacenter2/host/cluster2
+                  networks:
+                  - /datacenter2/network/VM Network
+                  datastore: /datacenter2/datastore/datastore2
+      expectedError: "all failure domains must have a corresponding vCenter entry"
+
+    - name: Should reject Infrastructure with failure domain server case mismatch
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        spec:
+          platformSpec:
+            type: VSphere
+            vsphere:
+              vcenters:
+              - server: vcenter1.example.com
+                datacenters:
+                - datacenter1
+              failureDomains:
+              - name: fd1
+                region: region1
+                zone: zone1
+                server: VCENTER1.EXAMPLE.COM
+                topology:
+                  datacenter: datacenter1
+                  computeCluster: /datacenter1/host/cluster1
+                  networks:
+                  - /datacenter1/network/VM Network
+                  datastore: /datacenter1/datastore/datastore1
+      expectedError: "all failure domains must have a corresponding vCenter entry"
+
+    - name: Should reject Infrastructure with failure domains set but vcenters omitted
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        spec:
+          platformSpec:
+            type: VSphere
+            vsphere:
+              failureDomains:
+              - name: fd1
+                region: region1
+                zone: zone1
+                server: vcenter1.example.com
+                topology:
+                  datacenter: datacenter1
+                  computeCluster: /datacenter1/host/cluster1
+                  networks:
+                  - /datacenter1/network/VM Network
+                  datastore: /datacenter1/datastore/datastore1
+      expectedError: "all failure domains must have a corresponding vCenter entry"
   onUpdate:
     - name: Should be able to add vsphere platform with 1 vcenter post-install
       initial: |
@@ -1065,3 +1383,373 @@ tests:
                   resourcePool: /DC1/host/cluster1/Resources
                 zone: zone1
       expectedError: "vcenters must have unique server values"
+    - name: Should allow adding a failure domain with matching vCenter
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        spec:
+          platformSpec:
+            type: VSphere
+            vsphere:
+              vcenters:
+              - server: vcenter1.example.com
+                datacenters:
+                - datacenter1
+              - server: vcenter2.example.com
+                datacenters:
+                - datacenter2
+              failureDomains:
+              - name: fd1
+                region: region1
+                zone: zone1
+                server: vcenter1.example.com
+                topology:
+                  datacenter: datacenter1
+                  computeCluster: /datacenter1/host/cluster1
+                  networks:
+                  - /datacenter1/network/VM Network
+                  datastore: /datacenter1/datastore/datastore1
+      updated: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        spec:
+          platformSpec:
+            type: VSphere
+            vsphere:
+              vcenters:
+              - server: vcenter1.example.com
+                datacenters:
+                - datacenter1
+              - server: vcenter2.example.com
+                datacenters:
+                - datacenter2
+              failureDomains:
+              - name: fd1
+                region: region1
+                zone: zone1
+                server: vcenter1.example.com
+                topology:
+                  datacenter: datacenter1
+                  computeCluster: /datacenter1/host/cluster1
+                  networks:
+                  - /datacenter1/network/VM Network
+                  datastore: /datacenter1/datastore/datastore1
+              - name: fd2
+                region: region2
+                zone: zone2
+                server: vcenter2.example.com
+                topology:
+                  datacenter: datacenter2
+                  computeCluster: /datacenter2/host/cluster2
+                  networks:
+                  - /datacenter2/network/VM Network
+                  datastore: /datacenter2/datastore/datastore2
+      expected: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        spec:
+          platformSpec:
+            type: VSphere
+            vsphere:
+              vcenters:
+              - server: vcenter1.example.com
+                datacenters:
+                - datacenter1
+              - server: vcenter2.example.com
+                datacenters:
+                - datacenter2
+              failureDomains:
+              - name: fd1
+                region: region1
+                zone: zone1
+                server: vcenter1.example.com
+                topology:
+                  datacenter: datacenter1
+                  computeCluster: /datacenter1/host/cluster1
+                  networks:
+                  - /datacenter1/network/VM Network
+                  datastore: /datacenter1/datastore/datastore1
+              - name: fd2
+                region: region2
+                zone: zone2
+                server: vcenter2.example.com
+                topology:
+                  datacenter: datacenter2
+                  computeCluster: /datacenter2/host/cluster2
+                  networks:
+                  - /datacenter2/network/VM Network
+                  datastore: /datacenter2/datastore/datastore2
+
+    - name: Should reject adding a failure domain without matching vCenter
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        spec:
+          platformSpec:
+            type: VSphere
+            vsphere:
+              vcenters:
+              - server: vcenter1.example.com
+                datacenters:
+                - datacenter1
+              failureDomains:
+              - name: fd1
+                region: region1
+                zone: zone1
+                server: vcenter1.example.com
+                topology:
+                  datacenter: datacenter1
+                  computeCluster: /datacenter1/host/cluster1
+                  networks:
+                  - /datacenter1/network/VM Network
+                  datastore: /datacenter1/datastore/datastore1
+      updated: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        spec:
+          platformSpec:
+            type: VSphere
+            vsphere:
+              vcenters:
+              - server: vcenter1.example.com
+                datacenters:
+                - datacenter1
+              failureDomains:
+              - name: fd1
+                region: region1
+                zone: zone1
+                server: vcenter1.example.com
+                topology:
+                  datacenter: datacenter1
+                  computeCluster: /datacenter1/host/cluster1
+                  networks:
+                  - /datacenter1/network/VM Network
+                  datastore: /datacenter1/datastore/datastore1
+              - name: fd2
+                region: region2
+                zone: zone2
+                server: vcenter3.example.com
+                topology:
+                  datacenter: datacenter2
+                  computeCluster: /datacenter2/host/cluster2
+                  networks:
+                  - /datacenter2/network/VM Network
+                  datastore: /datacenter2/datastore/datastore2
+      expectedError: "all failure domains must have a corresponding vCenter entry"
+
+    - name: Should allow removing a failure domain
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        spec:
+          platformSpec:
+            type: VSphere
+            vsphere:
+              vcenters:
+              - server: vcenter1.example.com
+                datacenters:
+                - datacenter1
+              - server: vcenter2.example.com
+                datacenters:
+                - datacenter2
+              failureDomains:
+              - name: fd1
+                region: region1
+                zone: zone1
+                server: vcenter1.example.com
+                topology:
+                  datacenter: datacenter1
+                  computeCluster: /datacenter1/host/cluster1
+                  networks:
+                  - /datacenter1/network/VM Network
+                  datastore: /datacenter1/datastore/datastore1
+              - name: fd2
+                region: region2
+                zone: zone2
+                server: vcenter2.example.com
+                topology:
+                  datacenter: datacenter2
+                  computeCluster: /datacenter2/host/cluster2
+                  networks:
+                  - /datacenter2/network/VM Network
+                  datastore: /datacenter2/datastore/datastore2
+      updated: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        spec:
+          platformSpec:
+            type: VSphere
+            vsphere:
+              vcenters:
+              - server: vcenter1.example.com
+                datacenters:
+                - datacenter1
+              - server: vcenter2.example.com
+                datacenters:
+                - datacenter2
+              failureDomains:
+              - name: fd1
+                region: region1
+                zone: zone1
+                server: vcenter1.example.com
+                topology:
+                  datacenter: datacenter1
+                  computeCluster: /datacenter1/host/cluster1
+                  networks:
+                  - /datacenter1/network/VM Network
+                  datastore: /datacenter1/datastore/datastore1
+      expected: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        spec:
+          platformSpec:
+            type: VSphere
+            vsphere:
+              vcenters:
+              - server: vcenter1.example.com
+                datacenters:
+                - datacenter1
+              - server: vcenter2.example.com
+                datacenters:
+                - datacenter2
+              failureDomains:
+              - name: fd1
+                region: region1
+                zone: zone1
+                server: vcenter1.example.com
+                topology:
+                  datacenter: datacenter1
+                  computeCluster: /datacenter1/host/cluster1
+                  networks:
+                  - /datacenter1/network/VM Network
+                  datastore: /datacenter1/datastore/datastore1
+
+    - name: Should allow removing all failure domains
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        spec:
+          platformSpec:
+            type: VSphere
+            vsphere:
+              vcenters:
+              - server: vcenter1.example.com
+                datacenters:
+                - datacenter1
+              failureDomains:
+              - name: fd1
+                region: region1
+                zone: zone1
+                server: vcenter1.example.com
+                topology:
+                  datacenter: datacenter1
+                  computeCluster: /datacenter1/host/cluster1
+                  networks:
+                  - /datacenter1/network/VM Network
+                  datastore: /datacenter1/datastore/datastore1
+      updated: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        spec:
+          platformSpec:
+            type: VSphere
+            vsphere:
+              vcenters:
+              - server: vcenter1.example.com
+                datacenters:
+                - datacenter1
+              failureDomains: []
+      expected: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        spec:
+          platformSpec:
+            type: VSphere
+            vsphere:
+              vcenters:
+              - server: vcenter1.example.com
+                datacenters:
+                - datacenter1
+              failureDomains: []
+    - name: Should not be able to remove a vCenter that is in use by a failure domain
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        spec:
+          cloudConfig:
+            key: config
+            name: cloud-provider-config
+          platformSpec:
+            type: VSphere
+            vsphere:
+              vcenters:
+              - datacenters:
+                - DC1
+                port: 443
+                server: vcenter1.example.com
+              - datacenters:
+                - DC2
+                port: 443
+                server: vcenter2.example.com
+              failureDomains:
+              - name: fd1
+                region: region1
+                server: vcenter1.example.com
+                topology:
+                  computeCluster: /DC1/host/cluster1
+                  datacenter: DC1
+                  datastore: /DC1/datastore/ds1
+                  networks:
+                  - network1
+                  resourcePool: /DC1/host/cluster1/Resources
+                zone: zone1
+              - name: fd2
+                region: region2
+                server: vcenter2.example.com
+                topology:
+                  computeCluster: /DC2/host/cluster2
+                  datacenter: DC2
+                  datastore: /DC2/datastore/ds2
+                  networks:
+                  - network2
+                  resourcePool: /DC2/host/cluster2/Resources
+                zone: zone2
+      updated: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        spec:
+          cloudConfig:
+            key: config
+            name: cloud-provider-config
+          platformSpec:
+            type: VSphere
+            vsphere:
+              vcenters:
+              - datacenters:
+                - DC1
+                port: 443
+                server: vcenter1.example.com
+              failureDomains:
+              - name: fd1
+                region: region1
+                server: vcenter1.example.com
+                topology:
+                  computeCluster: /DC1/host/cluster1
+                  datacenter: DC1
+                  datastore: /DC1/datastore/ds1
+                  networks:
+                  - network1
+                  resourcePool: /DC1/host/cluster1/Resources
+                zone: zone1
+              - name: fd2
+                region: region2
+                server: vcenter2.example.com
+                topology:
+                  computeCluster: /DC2/host/cluster2
+                  datacenter: DC2
+                  datastore: /DC2/datastore/ds2
+                  networks:
+                  - network2
+                  resourcePool: /DC2/host/cluster2/Resources
+                zone: zone2
+      expectedError: "all failure domains must have a corresponding vCenter entry"

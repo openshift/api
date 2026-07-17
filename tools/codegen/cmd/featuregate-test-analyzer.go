@@ -36,8 +36,12 @@ const (
 	// nearly all current tests pass 99% of the time, but in a two week window we lack enough data to say.
 	requiredPassRateOfTestsPerVariant = 0.95
 
+	// required pass rate for Install feature gates (non-install tests)
+	// Install features have a lower bar for e2e test pass percentage
+	requiredPassRateForInstallFeatures = 0.80
+
 	// required pass rate for "install should succeed" test
-	requiredPassRateForInstallTest = 1.0
+	requiredPassRateForInstallTest = requiredPassRateOfTestsPerVariant
 )
 
 type FeatureGateTestAnalyzerOptions struct {
@@ -189,7 +193,7 @@ func (o *FeatureGateTestAnalyzerOptions) Run(ctx context.Context) error {
 			return err
 		}
 
-		writeTestingMarkDown(testingResults, md)
+		writeTestingMarkDown(enabledFeatureGate, testingResults, md)
 
 		validationResults := checkIfTestingIsSufficient(enabledFeatureGate, testingResults)
 
@@ -206,6 +210,14 @@ func (o *FeatureGateTestAnalyzerOptions) Run(ctx context.Context) error {
 
 		// For Install feature gates, report "install should succeed: overall" test statistics first
 		if strings.Contains(enabledFeatureGate, "Install") {
+			md.Text("")
+			fmt.Fprintf(o.Out, "\n")
+			md.Textf("**ℹ️  Install Feature Gate Promotion Criteria:**\n")
+			fmt.Fprintf(o.Out, "ℹ️  Install Feature Gate Promotion Criteria:\n")
+			md.Textf("- E2E tests must pass at least **%.0f%%** of the time (at least %d runs per variant)\n", requiredPassRateForInstallFeatures*100, requiredNumberOfTestRunsPerVariant)
+			fmt.Fprintf(o.Out, "- E2E tests must pass at least %.0f%% of the time (at least %d runs per variant)\n", requiredPassRateForInstallFeatures*100, requiredNumberOfTestRunsPerVariant)
+			md.Textf("- \"install should succeed: overall\" test must pass **%.0f%%** of the time\n", requiredPassRateForInstallTest*100)
+			fmt.Fprintf(o.Out, "- \"install should succeed: overall\" test must pass %.0f%% of the time\n", requiredPassRateForInstallTest*100)
 			md.Text("")
 			fmt.Fprintf(o.Out, "\n")
 			md.Textf("**Install test statistics for \"install should succeed: overall\":**\n")
@@ -234,6 +246,42 @@ func (o *FeatureGateTestAnalyzerOptions) Run(ctx context.Context) error {
 			}
 			md.Text("")
 			fmt.Fprintf(o.Out, "\n")
+
+			// Report additional e2e tests if they exist for Install feature gates
+			additionalTests := []string{}
+			for _, variant := range testingResults {
+				for _, test := range variant.TestResults {
+					if test.TestName != "install should succeed: overall" {
+						// Add unique test names
+						found := false
+						for _, existing := range additionalTests {
+							if existing == test.TestName {
+								found = true
+								break
+							}
+						}
+						if !found {
+							additionalTests = append(additionalTests, test.TestName)
+						}
+					}
+				}
+			}
+
+			if len(additionalTests) > 0 {
+				md.Textf("**Additional E2E tests found: %d test(s)**\n", len(additionalTests))
+				fmt.Fprintf(o.Out, "Additional E2E tests found: %d test(s)\n", len(additionalTests))
+				for _, testName := range additionalTests {
+					md.Textf("  - %s\n", testName)
+					fmt.Fprintf(o.Out, "  - %s\n", testName)
+				}
+				md.Text("")
+				fmt.Fprintf(o.Out, "\n")
+			} else {
+				md.Textf("**Additional E2E tests: None found**\n")
+				fmt.Fprintf(o.Out, "Additional E2E tests: None found\n")
+				md.Text("")
+				fmt.Fprintf(o.Out, "\n")
+			}
 		}
 
 		if len(validationResults) == 0 {
@@ -252,11 +300,11 @@ func (o *FeatureGateTestAnalyzerOptions) Run(ctx context.Context) error {
 			}
 
 			if len(blockingErrors) > 0 || len(warnings) > 0 {
-				md.Textf("* At least five tests are expected for a feature\n")
+				md.Textf("* At least %d tests are expected for a feature\n", requiredNumberOfTests)
 				md.Textf("* Tests must be be run on every TechPreview platform (ask for an exception if your feature doesn't support a variant)")
-				md.Textf("* All tests must run at least 14 times on every platform")
-				md.Textf("* All tests must pass at least 95%% of the time")
-				md.Textf("* For Install feature gates, the \"install should succeed: overall\" test must pass at least 100%% of the time")
+				md.Textf("* All tests must run at least %d times on every platform", requiredNumberOfTestRunsPerVariant)
+				md.Textf("* All tests must pass at least %.0f%% of the time", requiredPassRateOfTestsPerVariant*100)
+				md.Textf("* For Install feature gates, the \"install should succeed: overall\" test must pass at least %.0f%% of the time", requiredPassRateForInstallTest*100)
 				md.Textf("* JobTier must be one of: standard, informing, blocking, candidate (candidate is allowed but produces a warning as it is not covered by Component Readiness)\n")
 				md.Text("")
 			}
@@ -366,7 +414,12 @@ func buildHTMLFeatureGateData(name string, testingResults map[JobVariant]*Testin
 				cell.SuccessfulRuns = testResults.SuccessfulRuns
 				cell.TotalRuns = testResults.TotalRuns
 				cell.FailedRuns = testResults.FailedRuns
-				if testResults.TotalRuns < requiredNumberOfTestRunsPerVariant || passPercent < requiredPassRateOfTestsPerVariant {
+				// Install features have a lower pass rate requirement for e2e tests
+				requiredPassRate := requiredPassRateOfTestsPerVariant
+				if strings.Contains(name, "Install") {
+					requiredPassRate = requiredPassRateForInstallFeatures
+				}
+				if testResults.TotalRuns < requiredNumberOfTestRunsPerVariant || passPercent < float32(requiredPassRate) {
 					cell.Failed = true
 				}
 			}
@@ -426,7 +479,8 @@ func checkIfTestingIsSufficient(featureGate string, testingResults map[JobVarian
 			})
 		}
 
-		if len(testedVariant.TestResults) < requiredNumberOfTests {
+		// For Install feature gates, additional tests are optional - only "install should succeed: overall" is required
+		if !strings.Contains(featureGate, "Install") && len(testedVariant.TestResults) < requiredNumberOfTests {
 			results = append(results, ValidationResult{
 				Error: fmt.Errorf("error: only %d tests found, need at least %d for %q on %v",
 					len(testedVariant.TestResults), requiredNumberOfTests, featureGate, jobVariant),
@@ -451,8 +505,13 @@ func checkIfTestingIsSufficient(featureGate string, testingResults map[JobVarian
 				continue
 			}
 			passPercent := float32(testResults.SuccessfulRuns) / float32(testResults.TotalRuns)
-			if passPercent < requiredPassRateOfTestsPerVariant {
-				displayExpected := int(requiredPassRateOfTestsPerVariant * 100)
+			// Install features have a lower pass rate requirement for e2e tests
+			requiredPassRate := requiredPassRateOfTestsPerVariant
+			if strings.Contains(featureGate, "Install") {
+				requiredPassRate = requiredPassRateForInstallFeatures
+			}
+			if passPercent < float32(requiredPassRate) {
+				displayExpected := int(requiredPassRate * 100)
 				displayActual := int(passPercent * 100)
 				results = append(results, ValidationResult{
 					Error: fmt.Errorf("error: %q only passed %d%%, need at least %d%% for %q on %v",
@@ -498,7 +557,7 @@ func checkIfTestingIsSufficient(featureGate string, testingResults map[JobVarian
 	return results
 }
 
-func writeTestingMarkDown(testingResults map[JobVariant]*TestingResults, md *utils.Markdown) {
+func writeTestingMarkDown(featureGate string, testingResults map[JobVariant]*TestingResults, md *utils.Markdown) {
 	jobVariantsSet := sets.KeySet(testingResults)
 	jobVariants := jobVariantsSet.UnsortedList()
 	sort.Sort(OrderedJobVariants(jobVariants))
@@ -549,10 +608,15 @@ func writeTestingMarkDown(testingResults map[JobVariant]*TestingResults, md *uti
 			}
 			failString := ""
 			passPercent := float32(testResults.SuccessfulRuns) / float32(testResults.TotalRuns)
+			// Install features have a lower pass rate requirement for e2e tests
+			requiredPassRate := requiredPassRateOfTestsPerVariant
+			if strings.Contains(featureGate, "Install") {
+				requiredPassRate = requiredPassRateForInstallFeatures
+			}
 			switch {
 			case testResults.TotalRuns < requiredNumberOfTestRunsPerVariant:
 				failString = "FAIL <br/> "
-			case passPercent < requiredPassRateOfTestsPerVariant:
+			case passPercent < float32(requiredPassRate):
 				failString = "FAIL <br/> "
 			}
 			cellString := fmt.Sprintf("%s%d%% ( %d / %d ) ", failString, int(passPercent*100), testResults.SuccessfulRuns, testResults.TotalRuns)
@@ -1218,7 +1282,7 @@ func verifyJobBasedFeatureGatePromotion(featureGate string, jobVariant JobVarian
 	testResults := []TestResults{}
 
 	for _, job := range jobs {
-		results, err := verifyJobPassRate(sippyClient, ocpRelease, job, jobVariant)
+		results, err := verifyJobPassRate(sippyClient, ocpRelease, job, jobVariant, featureGate)
 		if err != nil {
 			return nil, fmt.Errorf("verifying job pass rate for job %q: %w", job.Name, err)
 		}
@@ -1232,7 +1296,7 @@ func verifyJobBasedFeatureGatePromotion(featureGate string, jobVariant JobVarian
 	}, nil
 }
 
-func verifyJobPassRate(client *http.Client, release string, job sippy.SippyJob, variant JobVariant) (*TestResults, error) {
+func verifyJobPassRate(client *http.Client, release string, job sippy.SippyJob, variant JobVariant, featureGate string) (*TestResults, error) {
 	// Do an early check for 95% pass rate with at least 14 runs
 	runs := job.CurrentRuns
 	passes := job.CurrentPasses
@@ -1257,12 +1321,17 @@ func verifyJobPassRate(client *http.Client, release string, job sippy.SippyJob, 
 		}, nil
 	}
 
-	// If we have greater than or equal to 14 runs AND they are passing at a rate of at least 95%,
+	// If we have greater than or equal to 14 runs AND they are passing at a rate of at least the required pass rate,
 	// we can return early because this job has passed the promotion requirements.
 	//
 	// This saves us from unnecessarily making calls out to Sippy to perform a more nuanced
 	// failures analysis of the job runs to see if failed runs are true failures or known regressions.
-	if float32(passes) / float32(runs) >= requiredPassRateOfTestsPerVariant {
+	// Install features have a lower pass rate requirement (80%) for e2e tests
+	requiredPassRate := requiredPassRateOfTestsPerVariant
+	if strings.Contains(featureGate, "Install") {
+		requiredPassRate = requiredPassRateForInstallFeatures
+	}
+	if float32(passes) / float32(runs) >= float32(requiredPassRate) {
 		return &TestResults{
 			TestName: job.Name,
 			TotalRuns: runs,

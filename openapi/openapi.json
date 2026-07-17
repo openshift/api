@@ -13110,6 +13110,14 @@
           "default": {},
           "$ref": "#/definitions/com.github.openshift.api.config.v1alpha1.AlertmanagerConfig"
         },
+        "configurationSource": {
+          "description": "configurationSource is an optional field that selects whether the Cluster Monitoring Operator reads its configuration from the cluster-monitoring-config ConfigMap or from this ClusterMonitoring CRD. Valid values are \"ConfigMap\" and \"CRD\". When set to ConfigMap, the operator uses the cluster-monitoring-config ConfigMap in the openshift-monitoring namespace as the configuration source. When set to CRD, the operator uses this ClusterMonitoring custom resource as the configuration source. When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time. The current default value is CRD.\n\nPossible enum values:\n - `\"CRD\"` means the operator reads configuration from this ClusterMonitoring custom resource.\n - `\"ConfigMap\"` means the operator reads configuration from the cluster-monitoring-config ConfigMap in the openshift-monitoring namespace.",
+          "type": "string",
+          "enum": [
+            "CRD",
+            "ConfigMap"
+          ]
+        },
         "kubeStateMetricsConfig": {
           "description": "kubeStateMetricsConfig is an optional field that can be used to configure the kube-state-metrics agent that runs in the openshift-monitoring namespace. kube-state-metrics generates metrics about the state of Kubernetes objects such as Deployments, Nodes, and Pods. When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time.",
           "default": {},

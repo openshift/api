@@ -217,7 +217,13 @@ func (o *FeatureGateTestAnalyzerOptions) Run(ctx context.Context) error {
 			sort.Slice(jobVariants, func(i, j int) bool {
 				return jobVariants[i].String() < jobVariants[j].String()
 			})
+			prevCloud := ""
 			for _, jobVariant := range jobVariants {
+				if prevCloud != "" && jobVariant.Cloud != prevCloud {
+					md.Text("")
+					fmt.Fprintf(o.Out, "\n")
+				}
+				prevCloud = jobVariant.Cloud
 				installTest := installTestLevelData[jobVariant]
 				if installTest == nil {
 					md.Textf("  - %v: test not found\n", jobVariant)
@@ -677,6 +683,16 @@ var (
 			NetworkStack: "dual",
 			JobTiers:     "candidate,standard,informing,blocking",
 		},
+		{
+			Cloud:        "metal",
+			Architecture: "amd64",
+			Topology:     "single",
+		},
+		{
+			Cloud:        "metal",
+			Architecture: "amd64",
+			Topology:     "compact",
+		},
 	}
 
 	nonHypershiftPlatforms        = regexp.MustCompile("(?i)nutanix|metal|vsphere|openstack|azure|gcp")
@@ -849,6 +865,13 @@ func listTestResultFor(featureGate string, clusterProfiles sets.Set[string]) (ma
 		}
 
 		jobVariantsToCheck = append(jobVariantsToCheck, selfManagedPlatformVariants...)
+
+		// Always include metal single and compact variants as optional checks
+		for _, v := range optionalSelfManagedPlatformVariants {
+			if strings.ToLower(v.Cloud) == "metal" && (strings.ToLower(v.Topology) == "single" || strings.ToLower(v.Topology) == "compact") {
+				jobVariantsToCheck = append(jobVariantsToCheck, v)
+			}
+		}
 	}
 
 	// Validate all variants before making expensive API calls

@@ -86,7 +86,6 @@ type ClusterMonitoringSpec struct {
 	// which is subject to change over time.
 	// The current default value is CRD.
 	// +optional
-	// +kubebuilder:validation:Enum=ConfigMap;CRD
 	ConfigurationSource ConfigurationSource `json:"configurationSource,omitempty"`
 	// userDefined set the deployment mode for user-defined monitoring in addition to the default platform monitoring.
 	// userDefined is optional.

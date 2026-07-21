@@ -164,9 +164,6 @@
                         "name": "IngressComponentRouteLabels"
                     },
                     {
-                        "name": "IngressControllerDynamicConfigurationManager"
-                    },
-                    {
                         "name": "IngressControllerMultipleHAProxyVersions"
                     },
                     {
@@ -341,6 +338,9 @@
                     },
                     {
                         "name": "ImageStreamImportMode"
+                    },
+                    {
+                        "name": "IngressControllerDynamicConfigurationManager"
                     },
                     {
                         "name": "InsightsConfig"

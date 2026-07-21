@@ -37,8 +37,7 @@ const (
 	requiredPassRateOfTestsPerVariant = 0.95
 
 	// required pass rate for Install feature gates (non-install tests)
-	// Install features have a lower bar for e2e test pass percentage
-	requiredPassRateForInstallFeatures = 0.80
+	requiredPassRateForInstallFeatures = requiredPassRateOfTestsPerVariant
 
 	// required pass rate for "install should succeed" test
 	requiredPassRateForInstallTest = requiredPassRateOfTestsPerVariant
@@ -172,6 +171,18 @@ func (o *FeatureGateTestAnalyzerOptions) Run(ctx context.Context) error {
 		}
 	}
 
+	defaultEnabledFeatureGates := sets.New[string]()
+	for _, clusterProfile := range allCurrentClusterProfiles.List() {
+		currentByFeatureSet := currentByClusterProfileByFeatureSetTestAnalyzer[clusterProfile]
+		if defaultInfo, ok := currentByFeatureSet["Default"]; ok {
+			for fgName, enabled := range defaultInfo.allFeatureGates {
+				if enabled {
+					defaultEnabledFeatureGates.Insert(fgName)
+				}
+			}
+		}
+	}
+
 	if len(recentlyEnabledFeatureGatesToClusterProfiles) == 0 {
 		md.Textf("No new Default FeatureGates found.\n")
 		fmt.Fprintf(o.Out, "No new Default FeatureGates found.\n")
@@ -188,7 +199,7 @@ func (o *FeatureGateTestAnalyzerOptions) Run(ctx context.Context) error {
 		clusterProfiles := recentlyEnabledFeatureGatesToClusterProfiles[enabledFeatureGate]
 		md.Title(1, enabledFeatureGate)
 
-		testingResults, installTestLevelData, err := listTestResultFor(enabledFeatureGate, clusterProfiles)
+		testingResults, installTestLevelData, err := listTestResultFor(enabledFeatureGate, clusterProfiles, defaultEnabledFeatureGates)
 		if err != nil {
 			return err
 		}
@@ -909,7 +920,7 @@ func validateJobTiers(jobVariant JobVariant) error {
 	return nil
 }
 
-func listTestResultFor(featureGate string, clusterProfiles sets.Set[string]) (map[JobVariant]*TestingResults, map[JobVariant]*TestResults, error) {
+func listTestResultFor(featureGate string, clusterProfiles sets.Set[string], defaultEnabledFeatureGates sets.Set[string]) (map[JobVariant]*TestingResults, map[JobVariant]*TestResults, error) {
 	fmt.Printf("Query sippy for all test run results for feature gate %q on clusterProfile %q\n", featureGate, sets.List(clusterProfiles))
 
 	results := map[JobVariant]*TestingResults{}
@@ -946,7 +957,7 @@ func listTestResultFor(featureGate string, clusterProfiles sets.Set[string]) (ma
 	}
 
 	for _, jobVariant := range jobVariantsToCheck {
-		jobVariantResults, err := listTestResultForVariant(featureGate, jobVariant)
+		jobVariantResults, err := listTestResultForVariant(featureGate, jobVariant, defaultEnabledFeatureGates)
 		if err != nil {
 			return nil, nil, err
 		}
@@ -1144,10 +1155,10 @@ func getInstallTestLevelData(featureGate string, jobVariant JobVariant) (*TestRe
 	return installTestResult, nil
 }
 
-func listTestResultForVariant(featureGate string, jobVariant JobVariant) (*TestingResults, error) {
+func listTestResultForVariant(featureGate string, jobVariant JobVariant, defaultEnabledFeatureGates sets.Set[string]) (*TestingResults, error) {
 	// Feature gates used by the installer don't need separate tests, use the overall install tests
 	if strings.Contains(featureGate, "Install") {
-		return verifyJobBasedFeatureGatePromotion(featureGate, jobVariant)
+		return verifyJobBasedFeatureGatePromotion(featureGate, jobVariant, defaultEnabledFeatureGates)
 	}
 
 	var testPattern string
@@ -1266,6 +1277,20 @@ func listTestResultForVariant(featureGate string, jobVariant JobVariant) (*Testi
 	return jobVariantResults, nil
 }
 
+func extractOCPFeatureGateName(testName string) string {
+	const prefix = "[OCPFeatureGate:"
+	idx := strings.Index(testName, prefix)
+	if idx < 0 {
+		return ""
+	}
+	start := idx + len(prefix)
+	end := strings.Index(testName[start:], "]")
+	if end < 0 {
+		return ""
+	}
+	return testName[start : start+end]
+}
+
 // Check for Arbiter and DualReplica or Fencing featureGates as these have special topologies
 func matchTwoNodeFeatureGates(featureGate string, topology string) bool {
 	if (strings.Contains(featureGate, "dualreplica") || strings.Contains(featureGate, "fencing")) && strings.Contains(topology, "fencing") {
@@ -1274,7 +1299,7 @@ func matchTwoNodeFeatureGates(featureGate string, topology string) bool {
 	return false
 }
 
-func verifyJobBasedFeatureGatePromotion(featureGate string, jobVariant JobVariant) (*TestingResults, error) {
+func verifyJobBasedFeatureGatePromotion(featureGate string, jobVariant JobVariant, defaultEnabledFeatureGates sets.Set[string]) (*TestingResults, error) {
 	ocpRelease, err := getRelease()
 	if err != nil {
 		return nil, fmt.Errorf("getting release version: %w", err)
@@ -1305,7 +1330,7 @@ func verifyJobBasedFeatureGatePromotion(featureGate string, jobVariant JobVarian
 	testResults := []TestResults{}
 
 	for _, job := range jobs {
-		results, err := verifyJobPassRate(sippyClient, ocpRelease, job, jobVariant, featureGate)
+		results, err := verifyJobPassRate(sippyClient, ocpRelease, job, jobVariant, featureGate, defaultEnabledFeatureGates)
 		if err != nil {
 			return nil, fmt.Errorf("verifying job pass rate for job %q: %w", job.Name, err)
 		}
@@ -1319,7 +1344,7 @@ func verifyJobBasedFeatureGatePromotion(featureGate string, jobVariant JobVarian
 	}, nil
 }
 
-func verifyJobPassRate(client *http.Client, release string, job sippy.SippyJob, variant JobVariant, featureGate string) (*TestResults, error) {
+func verifyJobPassRate(client *http.Client, release string, job sippy.SippyJob, variant JobVariant, featureGate string, defaultEnabledFeatureGates sets.Set[string]) (*TestResults, error) {
 	// Do an early check for 95% pass rate with at least 14 runs
 	runs := job.CurrentRuns
 	passes := job.CurrentPasses
@@ -1390,12 +1415,22 @@ func verifyJobPassRate(client *http.Client, release string, job sippy.SippyJob, 
 		return nil, fmt.Errorf("getting triaged test failures from sippy: %w", err)
 	}
 
+	featureGateOwnedPattern := fmt.Sprintf("[OCPFeatureGate:%s]", featureGate)
+
 	for _, jobRun := range jobRuns {
 		if jobRun.OverallResult == "F" && !jobRun.KnownFailure {
 
 			untriagedTestFailures := []string{}
 			for _, failure := range jobRun.FailedTestNames {
 				if !triagedTestFailures.Has(failure) {
+					if strings.Contains(failure, "[OCPFeatureGate:") && !strings.Contains(failure, featureGateOwnedPattern) {
+						if otherGate := extractOCPFeatureGateName(failure); otherGate != "" && !defaultEnabledFeatureGates.Has(otherGate) {
+							continue
+						}
+					}
+					if strings.HasPrefix(failure, "Run multi-stage test ") {
+						continue
+					}
 					untriagedTestFailures = append(untriagedTestFailures, failure)
 				}
 			}

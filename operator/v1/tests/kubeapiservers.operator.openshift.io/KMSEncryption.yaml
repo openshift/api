@@ -141,3 +141,276 @@ tests:
               lastCheckedTime: "2026-01-01T00:00:00Z"
               kekId: kek-1
       expectedStatusError: "nodeName must be a lowercase RFC 1123 subdomain"
+    - name: Should accept preflight with only observedConfigHash and no result
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: KubeAPIServer
+        spec: {}
+      updated: |
+        apiVersion: operator.openshift.io/v1
+        kind: KubeAPIServer
+        spec: {}
+        status:
+          encryptionStatus:
+            preflight:
+              observedConfigHash: AQAAAA==
+      expected: |
+        apiVersion: operator.openshift.io/v1
+        kind: KubeAPIServer
+        spec:
+          logLevel: Normal
+          operatorLogLevel: Normal
+        status:
+          encryptionStatus:
+            preflight:
+              observedConfigHash: AQAAAA==
+    - name: Should accept preflight with a Succeeded result
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: KubeAPIServer
+        spec: {}
+      updated: |
+        apiVersion: operator.openshift.io/v1
+        kind: KubeAPIServer
+        spec: {}
+        status:
+          encryptionStatus:
+            preflight:
+              observedConfigHash: AQAAAA==
+              result:
+                status: Succeeded
+                configHash: AQAAAA==
+                remoteKeyID: vault-transit-key-v3
+      expected: |
+        apiVersion: operator.openshift.io/v1
+        kind: KubeAPIServer
+        spec:
+          logLevel: Normal
+          operatorLogLevel: Normal
+        status:
+          encryptionStatus:
+            preflight:
+              observedConfigHash: AQAAAA==
+              result:
+                status: Succeeded
+                configHash: AQAAAA==
+                remoteKeyID: vault-transit-key-v3
+    - name: Should accept preflight with a Failed result
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: KubeAPIServer
+        spec: {}
+      updated: |
+        apiVersion: operator.openshift.io/v1
+        kind: KubeAPIServer
+        spec: {}
+        status:
+          encryptionStatus:
+            preflight:
+              observedConfigHash: AQAAAA==
+              result:
+                status: Failed
+                configHash: AQAAAA==
+                remoteKeyID: vault-transit-key-v3
+      expected: |
+        apiVersion: operator.openshift.io/v1
+        kind: KubeAPIServer
+        spec:
+          logLevel: Normal
+          operatorLogLevel: Normal
+        status:
+          encryptionStatus:
+            preflight:
+              observedConfigHash: AQAAAA==
+              result:
+                status: Failed
+                configHash: AQAAAA==
+                remoteKeyID: vault-transit-key-v3
+    - name: Should accept preflight alongside healthReports
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: KubeAPIServer
+        spec: {}
+      updated: |
+        apiVersion: operator.openshift.io/v1
+        kind: KubeAPIServer
+        spec: {}
+        status:
+          encryptionStatus:
+            healthReports:
+            - nodeName: node-a
+              keyId: key-1
+              status: Healthy
+              lastCheckedTime: "2026-01-01T00:00:00Z"
+              kekId: kek-1
+            preflight:
+              observedConfigHash: AQAAAA==
+              result:
+                status: Succeeded
+                configHash: AQAAAA==
+                remoteKeyID: vault-transit-key-v3
+      expected: |
+        apiVersion: operator.openshift.io/v1
+        kind: KubeAPIServer
+        spec:
+          logLevel: Normal
+          operatorLogLevel: Normal
+        status:
+          encryptionStatus:
+            healthReports:
+            - nodeName: node-a
+              keyId: key-1
+              status: Healthy
+              lastCheckedTime: "2026-01-01T00:00:00Z"
+              kekId: kek-1
+            preflight:
+              observedConfigHash: AQAAAA==
+              result:
+                status: Succeeded
+                configHash: AQAAAA==
+                remoteKeyID: vault-transit-key-v3
+    - name: Should reject empty preflight
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: KubeAPIServer
+        spec: {}
+      updated: |
+        apiVersion: operator.openshift.io/v1
+        kind: KubeAPIServer
+        spec: {}
+        status:
+          encryptionStatus:
+            preflight: {}
+      expectedStatusError: "should have at least 1 properties"
+    - name: Should reject observedConfigHash shorter than 8 characters
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: KubeAPIServer
+        spec: {}
+      updated: |
+        apiVersion: operator.openshift.io/v1
+        kind: KubeAPIServer
+        spec: {}
+        status:
+          encryptionStatus:
+            preflight:
+              observedConfigHash: short
+      expectedStatusError: "should be at least 8"
+    - name: Should reject observedConfigHash longer than 8 characters
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: KubeAPIServer
+        spec: {}
+      updated: |
+        apiVersion: operator.openshift.io/v1
+        kind: KubeAPIServer
+        spec: {}
+        status:
+          encryptionStatus:
+            preflight:
+              observedConfigHash: TOOLONGXX
+      expectedStatusError: "may not be more than 8 bytes"
+    - name: Should reject observedConfigHash with invalid base64 characters
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: KubeAPIServer
+        spec: {}
+      updated: |
+        apiVersion: operator.openshift.io/v1
+        kind: KubeAPIServer
+        spec: {}
+        status:
+          encryptionStatus:
+            preflight:
+              observedConfigHash: "AA!@#$%^"
+      expectedStatusError: "must be a valid base64url encoded value"
+    - name: Should reject an invalid preflight result status
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: KubeAPIServer
+        spec: {}
+      updated: |
+        apiVersion: operator.openshift.io/v1
+        kind: KubeAPIServer
+        spec: {}
+        status:
+          encryptionStatus:
+            preflight:
+              observedConfigHash: AQAAAA==
+              result:
+                status: Unknown
+                configHash: AQAAAA==
+                remoteKeyID: vault-transit-key-v3
+      expectedStatusError: "Unsupported value"
+    - name: Should reject configHash shorter than 8 characters
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: KubeAPIServer
+        spec: {}
+      updated: |
+        apiVersion: operator.openshift.io/v1
+        kind: KubeAPIServer
+        spec: {}
+        status:
+          encryptionStatus:
+            preflight:
+              observedConfigHash: AQAAAA==
+              result:
+                status: Succeeded
+                configHash: short
+                remoteKeyID: vault-transit-key-v3
+      expectedStatusError: "should be at least 8"
+    - name: Should reject configHash longer than 8 characters
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: KubeAPIServer
+        spec: {}
+      updated: |
+        apiVersion: operator.openshift.io/v1
+        kind: KubeAPIServer
+        spec: {}
+        status:
+          encryptionStatus:
+            preflight:
+              observedConfigHash: AQAAAA==
+              result:
+                status: Succeeded
+                configHash: TOOLONGXX
+                remoteKeyID: vault-transit-key-v3
+      expectedStatusError: "may not be more than 8 bytes"
+    - name: Should reject configHash with invalid base64 characters
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: KubeAPIServer
+        spec: {}
+      updated: |
+        apiVersion: operator.openshift.io/v1
+        kind: KubeAPIServer
+        spec: {}
+        status:
+          encryptionStatus:
+            preflight:
+              observedConfigHash: AQAAAA==
+              result:
+                status: Succeeded
+                configHash: "AA!@#$%^"
+                remoteKeyID: vault-transit-key-v3
+      expectedStatusError: "must be a valid base64url encoded value"
+    - name: Should reject empty remoteKeyID
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: KubeAPIServer
+        spec: {}
+      updated: |
+        apiVersion: operator.openshift.io/v1
+        kind: KubeAPIServer
+        spec: {}
+        status:
+          encryptionStatus:
+            preflight:
+              observedConfigHash: AQAAAA==
+              result:
+                status: Succeeded
+                configHash: AQAAAA==
+                remoteKeyID: ""
+      expectedStatusError: "should be at least 1"

@@ -16,6 +16,7 @@ import (
 	"net/http"
 	"os"
 	"path/filepath"
+	"regexp"
 	"strings"
 
 	"cloud.google.com/go/storage"
@@ -26,7 +27,7 @@ func main() {
 	pullSecretFile := flag.String("pull-secret", "", "The pull secret to use for the kubebuilder tools")
 	version := flag.String("version", "", "The version of the kubebuilder tools to publish. This should be a Kubernetes version that the build is based upon.")
 	outputDir := flag.String("output-dir", "", "The output directory to write the kubebuilder tools to")
-	payload := flag.String("payload", "", "The payload to use for building the kubebuilder tools archives. This should be in the format registry.ci.openshift.org/ocp/release:<version>")
+	payload := flag.String("payload", "", "The payload to use for building the kubebuilder tools archives. This should be in the format registry.ci.openshift.org/ocp/release:<version> or registry.ci.openshift.org/ocp/release-<number>:<version>")
 	skipUpload := flag.Bool("skip-upload", false, "Skip uploading the artifacts created to the openshift-gce-devel/openshift-kubebuilder-tools bucket")
 	indexFile := flag.String("index-file", "envtest-releases.yaml", "The index file to use for the kubebuilder tools")
 
@@ -55,15 +56,19 @@ func main() {
 		panic(err)
 	}
 
-	// We only expect images from the internal releases
-	if *payload == "" || !strings.HasPrefix(*payload, "registry.ci.openshift.org/ocp/release:") {
-		panic("payload is required and must be a valid payload starting with \"registry.ci.openshift.org/ocp/release:\"")
+	// We only expect images from the internal releases.
+	// Accept both "registry.ci.openshift.org/ocp/release:" and
+	// "registry.ci.openshift.org/ocp/release-<number>:" formats.
+	matches := regexp.MustCompile(`^registry\.ci\.openshift\.org/ocp/release(-\d+)?:(.+)$`).FindStringSubmatch(*payload)
+	if *payload == "" || matches == nil {
+		panic("payload is required and must be a valid payload starting with \"registry.ci.openshift.org/ocp/release:\" or \"registry.ci.openshift.org/ocp/release-<number>:\"")
 	}
 
-	payloadVersion := strings.TrimPrefix(*payload, "registry.ci.openshift.org/ocp/release:")
+	releaseImage := "release" + matches[1]
+	payloadVersion := matches[2]
 
 	// Download the image-references and convert to a map of image name to digest
-	manifests, err := getReleaseImages(payloadVersion, registryAuthToken)
+	manifests, err := getReleaseImages(releaseImage, payloadVersion, registryAuthToken)
 	if err != nil {
 		panic(err)
 	}
@@ -134,8 +139,8 @@ func getRegistryAuthToken(pullSecretFile string) (string, error) {
 	return strings.Split(string(registryAuthToken), ":")[1], nil
 }
 
-func getReleaseImages(version string, registryToken string) (map[string]string, error) {
-	releaseManifestRaw, err := downloadJSON(getRegistryURL("release", "manifests", version), registryToken)
+func getReleaseImages(releaseImage string, version string, registryToken string) (map[string]string, error) {
+	releaseManifestRaw, err := downloadJSON(getRegistryURL(releaseImage, "manifests", version), registryToken)
 	if err != nil {
 		return nil, err
 	}
@@ -155,7 +160,7 @@ func getReleaseImages(version string, registryToken string) (map[string]string, 
 	}
 
 	// The first fsLayer is the release image manifests, which has the image digests for the release images
-	releaseImageLayer, close, err := downloadArchive(getRegistryURL("release", "blobs", manifest.FSLayers[0].BlobSum), registryToken)
+	releaseImageLayer, close, err := downloadArchive(getRegistryURL(releaseImage, "blobs", manifest.FSLayers[0].BlobSum), registryToken)
 	if err != nil {
 		return nil, err
 	}

@@ -1417,8 +1417,22 @@ func verifyJobPassRate(client *http.Client, release string, job sippy.SippyJob, 
 
 	featureGateOwnedPattern := fmt.Sprintf("[OCPFeatureGate:%s]", featureGate)
 
+	infraFailures := 0
 	for _, jobRun := range jobRuns {
 		if jobRun.OverallResult == "F" && !jobRun.KnownFailure {
+
+			isInfraFailure := false
+			for _, failure := range jobRun.FailedTestNames {
+				if strings.Contains(failure, "install should succeed: configuration") {
+					isInfraFailure = true
+					break
+				}
+			}
+			if isInfraFailure {
+				fmt.Printf("job run %s excluded from totals due to suspected infrastructure failure (\"install should succeed: configuration\")\n", jobRun.TestGridURL)
+				infraFailures++
+				continue
+			}
 
 			untriagedTestFailures := []string{}
 			for _, failure := range jobRun.FailedTestNames {
@@ -1451,6 +1465,7 @@ func verifyJobPassRate(client *http.Client, release string, job sippy.SippyJob, 
 
 		testResults.SuccessfulRuns++
 	}
+	testResults.TotalRuns -= infraFailures
 
 	return testResults, nil
 }

@@ -222,8 +222,8 @@ var (
 					reportProblemsToJiraComponent("etcd").
 					contactPerson("hasbro17").
 					productScope(ocpSpecific).
-					enhancementPR(legacyFeatureGateWithoutEnhancement).
-					enable(inTechPreviewNoUpgrade(), inDevPreviewNoUpgrade()).
+					enhancementPR("https://github.com/openshift/enhancements/pull/2031").
+					enable(inDefault(), inOKD(), inTechPreviewNoUpgrade(), inDevPreviewNoUpgrade()).
 					mustRegister()
 
 	FeatureGateAutomatedEtcdBackup = newFeatureGate("AutomatedEtcdBackup").
@@ -673,7 +673,7 @@ var (
 						enhancementPR("https://github.com/openshift/enhancements/pull/2033").
 						enable(inDevPreviewNoUpgrade(), inTechPreviewNoUpgrade()).
 						mustRegister()
-  
+
 	FeatureGateIngressControllerMultipleHAProxyVersions = newFeatureGate("IngressControllerMultipleHAProxyVersions").
 								reportProblemsToJiraComponent("Networking/router").
 								contactPerson("miciah").

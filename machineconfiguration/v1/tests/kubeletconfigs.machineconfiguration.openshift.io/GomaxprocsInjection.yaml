@@ -1,0 +1,48 @@
+apiVersion: apiextensions.k8s.io/v1 # Hack because controller-gen complains if we don't have this
+name: "KubeletConfig"
+crdName: kubeletconfigs.machineconfiguration.openshift.io
+featureGates:
+- GomaxprocsInjection
+tests:
+  onCreate:
+    - name: Should be able to create KubeletConfig with systemGomaxprocsBehavior set to Autosize
+      initial: |
+        apiVersion: machineconfiguration.openshift.io/v1
+        kind: KubeletConfig
+        spec:
+          systemGomaxprocsBehavior: Autosize
+      expected: |
+        apiVersion: machineconfiguration.openshift.io/v1
+        kind: KubeletConfig
+        spec:
+          systemGomaxprocsBehavior: Autosize
+
+    - name: Should be able to create KubeletConfig with systemGomaxprocsBehavior set to Disabled
+      initial: |
+        apiVersion: machineconfiguration.openshift.io/v1
+        kind: KubeletConfig
+        spec:
+          systemGomaxprocsBehavior: Disabled
+      expected: |
+        apiVersion: machineconfiguration.openshift.io/v1
+        kind: KubeletConfig
+        spec:
+          systemGomaxprocsBehavior: Disabled
+
+    - name: Should fail if systemGomaxprocsBehavior has an invalid value
+      initial: |
+        apiVersion: machineconfiguration.openshift.io/v1
+        kind: KubeletConfig
+        spec:
+          systemGomaxprocsBehavior: Enabled
+      expectedError: "spec.systemGomaxprocsBehavior: Unsupported value"
+
+    - name: Should be able to create KubeletConfig without systemGomaxprocsBehavior
+      initial: |
+        apiVersion: machineconfiguration.openshift.io/v1
+        kind: KubeletConfig
+        spec: {}
+      expected: |
+        apiVersion: machineconfiguration.openshift.io/v1
+        kind: KubeletConfig
+        spec: {}

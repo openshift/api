@@ -560,20 +560,23 @@ spec:
                                       When this field is omitted, the Cloud Controller Manager
                                       automatically creates and manages a security group for the NLB.
 
-                                      Each security group ID must be unique. At least 1 and at most 5
-                                      security groups can be specified.
+                                      Each security group ID must be unique and must begin with "sg-"
+                                      followed by 8 or 17 lowercase hexadecimal characters
+                                      (e.g. "sg-abcd1234" or "sg-abcd1234abcd12345"). At least 1 and
+                                      at most 5 security groups can be specified.
                                     items:
                                       description: |-
                                         SecurityGroupID is an AWS EC2 security group ID.
-                                        Values must begin with `sg-` followed by 8 or 17 hexadecimal
-                                        characters.
+                                        Values must begin with "sg-" followed by 8 or 17 lowercase
+                                        hexadecimal characters (e.g. "sg-abcd1234" or
+                                        "sg-abcd1234abcd12345").
                                       maxLength: 20
                                       minLength: 11
                                       type: string
                                       x-kubernetes-validations:
                                       - message: securityGroups must be 'sg-' followed
-                                          by 8 or 17 hexadecimal characters
-                                        rule: self.startsWith('sg-') && self.substring(3).matches('^[0-9a-fA-F]{8}$|^[0-9a-fA-F]{17}$')
+                                          by 8 or 17 lowercase hexadecimal characters
+                                        rule: self.startsWith('sg-') && self.substring(3).matches('^[0-9a-f]{8}$|^[0-9a-f]{17}$')
                                     maxItems: 5
                                     minItems: 1
                                     type: array
@@ -2995,20 +2998,23 @@ spec:
                                       When this field is omitted, the Cloud Controller Manager
                                       automatically creates and manages a security group for the NLB.
 
-                                      Each security group ID must be unique. At least 1 and at most 5
-                                      security groups can be specified.
+                                      Each security group ID must be unique and must begin with "sg-"
+                                      followed by 8 or 17 lowercase hexadecimal characters
+                                      (e.g. "sg-abcd1234" or "sg-abcd1234abcd12345"). At least 1 and
+                                      at most 5 security groups can be specified.
                                     items:
                                       description: |-
                                         SecurityGroupID is an AWS EC2 security group ID.
-                                        Values must begin with `sg-` followed by 8 or 17 hexadecimal
-                                        characters.
+                                        Values must begin with "sg-" followed by 8 or 17 lowercase
+                                        hexadecimal characters (e.g. "sg-abcd1234" or
+                                        "sg-abcd1234abcd12345").
                                       maxLength: 20
                                       minLength: 11
                                       type: string
                                       x-kubernetes-validations:
                                       - message: securityGroups must be 'sg-' followed
-                                          by 8 or 17 hexadecimal characters
-                                        rule: self.startsWith('sg-') && self.substring(3).matches('^[0-9a-fA-F]{8}$|^[0-9a-fA-F]{17}$')
+                                          by 8 or 17 lowercase hexadecimal characters
+                                        rule: self.startsWith('sg-') && self.substring(3).matches('^[0-9a-f]{8}$|^[0-9a-f]{17}$')
                                     maxItems: 5
                                     minItems: 1
                                     type: array

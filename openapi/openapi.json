@@ -30619,7 +30619,7 @@
           ]
         },
         "securityGroups": {
-          "description": "securityGroups is a list of security group IDs to attach to the Network Load Balancer. When specified, these security groups replace the managed security group that the Cloud Controller Manager would otherwise create automatically. The user is responsible for configuring the ingress and egress rules on the specified security groups.\n\nThe specified security groups must exist in the same VPC as the cluster and must allow the necessary traffic for the IngressController to function.\n\nWhen this field is omitted, the Cloud Controller Manager automatically creates and manages a security group for the NLB.\n\nEach security group ID must be unique. At least 1 and at most 5 security groups can be specified.",
+          "description": "securityGroups is a list of security group IDs to attach to the Network Load Balancer. When specified, these security groups replace the managed security group that the Cloud Controller Manager would otherwise create automatically. The user is responsible for configuring the ingress and egress rules on the specified security groups.\n\nThe specified security groups must exist in the same VPC as the cluster and must allow the necessary traffic for the IngressController to function.\n\nWhen this field is omitted, the Cloud Controller Manager automatically creates and manages a security group for the NLB.\n\nEach security group ID must be unique and must begin with \"sg-\" followed by 8 or 17 lowercase hexadecimal characters (e.g. \"sg-abcd1234\" or \"sg-abcd1234abcd12345\"). At least 1 and at most 5 security groups can be specified.",
           "type": "array",
           "items": {
             "type": "string",

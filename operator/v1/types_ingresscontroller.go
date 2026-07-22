@@ -938,8 +938,10 @@ type AWSNetworkLoadBalancerParameters struct {
 	// When this field is omitted, the Cloud Controller Manager
 	// automatically creates and manages a security group for the NLB.
 	//
-	// Each security group ID must be unique. At least 1 and at most 5
-	// security groups can be specified.
+	// Each security group ID must be unique and must begin with "sg-"
+	// followed by 8 or 17 lowercase hexadecimal characters
+	// (e.g. "sg-abcd1234" or "sg-abcd1234abcd12345"). At least 1 and
+	// at most 5 security groups can be specified.
 	//
 	// +optional
 	// +listType=atomic
@@ -981,12 +983,13 @@ type AWSNetworkLoadBalancerParameters struct {
 }
 
 // SecurityGroupID is an AWS EC2 security group ID.
-// Values must begin with `sg-` followed by 8 or 17 hexadecimal
-// characters.
+// Values must begin with "sg-" followed by 8 or 17 lowercase
+// hexadecimal characters (e.g. "sg-abcd1234" or
+// "sg-abcd1234abcd12345").
 //
 // +kubebuilder:validation:MinLength=11
 // +kubebuilder:validation:MaxLength=20
-// +kubebuilder:validation:XValidation:rule=`self.startsWith('sg-') && self.substring(3).matches('^[0-9a-fA-F]{8}$|^[0-9a-fA-F]{17}$')`,message="securityGroups must be 'sg-' followed by 8 or 17 hexadecimal characters"
+// +kubebuilder:validation:XValidation:rule=`self.startsWith('sg-') && self.substring(3).matches('^[0-9a-f]{8}$|^[0-9a-f]{17}$')`,message="securityGroups must be 'sg-' followed by 8 or 17 lowercase hexadecimal characters"
 type SecurityGroupID string
 
 // NLBProtocol specifies whether the AWS Network Load Balancer uses

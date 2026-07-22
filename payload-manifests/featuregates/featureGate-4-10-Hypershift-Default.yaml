@@ -24,9 +24,6 @@
                         "name": "AWSEuropeanSovereignCloudInstall"
                     },
                     {
-                        "name": "AdditionalStorageConfig"
-                    },
-                    {
                         "name": "AuthenticationComponentProxy"
                     },
                     {
@@ -156,6 +153,9 @@
                         "name": "GCPSovereignCloudInstall"
                     },
                     {
+                        "name": "GatewayAPIManagementMode"
+                    },
+                    {
                         "name": "ImageModeStatusReporting"
                     },
                     {
@@ -163,11 +163,6 @@
                     },
                     {
                         "name": "IngressControllerLBSecurityGroupsAWS"
-                    },
-                    {
-                    },
-                    {
-                        "name": "IrreconcilableMachineConfig"
                     },
                     {
                         "name": "KMSEncryption"
@@ -307,6 +302,9 @@
                         "name": "AWSServiceLBNetworkSecurityGroup"
                     },
                     {
+                        "name": "AdditionalStorageConfig"
+                    },
+                    {
                         "name": "AzureWorkloadIdentity"
                     },
                     {
@@ -352,6 +350,9 @@
                         "name": "InsightsOnDemandDataGather"
                     },
                     {
+                        "name": "IrreconcilableMachineConfig"
+                    },
+                    {
                         "name": "KMSv1"
                     },
                     {
@@ -368,9 +369,6 @@
                     },
                     {
                         "name": "OpenShiftPodSecurityAdmission"
-                    },
-                    {
-                        "name": "RouteExternalCertificate"
                     },
                     {
                         "name": "ServiceAccountTokenNodeBinding"

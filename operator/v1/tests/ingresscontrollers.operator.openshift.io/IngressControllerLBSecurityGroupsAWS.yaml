@@ -140,7 +140,7 @@ tests:
                     securityGroups:
                     - xx-1234567890abcdef0
             type: LoadBalancerService
-      expectedError: "securityGroups must be 'sg-' followed by 8 or 17 hexadecimal characters"
+      expectedError: "securityGroups must be 'sg-' followed by 8 or 17 lowercase hexadecimal characters"
     - name: Should not allow security group ID with non-hexadecimal characters.
       initial: |
         apiVersion: operator.openshift.io/v1
@@ -160,7 +160,7 @@ tests:
                     securityGroups:
                     - sg-1234567890abcdexz
             type: LoadBalancerService
-      expectedError: "securityGroups must be 'sg-' followed by 8 or 17 hexadecimal characters"
+      expectedError: "securityGroups must be 'sg-' followed by 8 or 17 lowercase hexadecimal characters"
     - name: Should not allow security group ID with wrong length hex part (not 8 or 17).
       initial: |
         apiVersion: operator.openshift.io/v1
@@ -180,7 +180,27 @@ tests:
                     securityGroups:
                     - sg-1234567890abc
             type: LoadBalancerService
-      expectedError: "securityGroups must be 'sg-' followed by 8 or 17 hexadecimal characters"
+      expectedError: "securityGroups must be 'sg-' followed by 8 or 17 lowercase hexadecimal characters"
+    - name: Should not allow security group ID with uppercase hexadecimal characters.
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: IngressController
+        metadata:
+          name: sgtestnlb
+          namespace: openshift-ingress-operator
+        spec:
+          endpointPublishingStrategy:
+            loadBalancer:
+              scope: External
+              providerParameters:
+                type: AWS
+                aws:
+                  type: NLB
+                  networkLoadBalancer:
+                    securityGroups:
+                    - sg-1234567890ABCDEF0
+            type: LoadBalancerService
+      expectedError: "securityGroups must be 'sg-' followed by 8 or 17 lowercase hexadecimal characters"
     - name: Should allow exactly 5 security groups.
       initial: |
         apiVersion: operator.openshift.io/v1

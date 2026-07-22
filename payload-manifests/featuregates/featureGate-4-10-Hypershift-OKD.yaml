@@ -269,6 +269,9 @@
                         "name": "OnPremDNSRecords"
                     },
                     {
+                        "name": "PodAndContainerStatsFromCRI"
+                    },
+                    {
                         "name": "ProvisioningRequestAvailable"
                     },
                     {

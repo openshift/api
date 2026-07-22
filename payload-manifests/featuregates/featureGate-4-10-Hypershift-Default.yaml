@@ -156,6 +156,9 @@
                         "name": "GCPSovereignCloudInstall"
                     },
                     {
+                        "name": "GomaxprocsInjection"
+                    },
+                    {
                         "name": "ImageModeStatusReporting"
                     },
                     {

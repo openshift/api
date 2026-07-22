@@ -256,6 +256,9 @@
                         "name": "GatewayAPIWithoutOLM"
                     },
                     {
+                        "name": "GomaxprocsInjection"
+                    },
+                    {
                         "name": "HyperShiftOnlyDynamicResourceAllocation"
                     },
                     {

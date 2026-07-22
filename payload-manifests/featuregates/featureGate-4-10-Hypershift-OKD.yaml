@@ -158,6 +158,9 @@
                         "name": "GatewayAPIManagementMode"
                     },
                     {
+                        "name": "GomaxprocsInjection"
+                    },
+                    {
                         "name": "ImageModeStatusReporting"
                     },
                     {

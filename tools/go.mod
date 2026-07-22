@@ -28,7 +28,7 @@ require (
 	k8s.io/utils v0.0.0-20260319190234-28399d86e0b5
 	sigs.k8s.io/controller-tools v0.18.0
 	sigs.k8s.io/crdify v0.5.0
-	sigs.k8s.io/kube-api-linter v0.0.0-20260114104534-18147eee9c49
+	sigs.k8s.io/kube-api-linter v0.0.0-20260716143926-092fe0c72997
 	sigs.k8s.io/yaml v1.6.0
 )
 

@@ -343,6 +343,9 @@
                         "name": "OpenShiftPodSecurityAdmission"
                     },
                     {
+                        "name": "PodAndContainerStatsFromCRI"
+                    },
+                    {
                         "name": "ProvisioningRequestAvailable"
                     },
                     {

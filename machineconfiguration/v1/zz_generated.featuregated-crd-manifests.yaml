@@ -90,6 +90,7 @@ kubeletconfigs.machineconfiguration.openshift.io:
   Capability: ""
   Category: ""
   FeatureGates:
+  - GomaxprocsInjection
   - TLSGroupPreferences
   FilenameOperatorName: machine-config
   FilenameOperatorOrdering: "01"

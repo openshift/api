@@ -110,7 +110,11 @@ func (g *generator) generateGroupVersion(groupName string, version generation.AP
 
 	docsForTypes := []kruntime.KubeTypes{}
 	for _, file := range files {
-		docsForTypes = append(docsForTypes, kruntime.ParseDocumentationFrom(file)...)
+		docs, err := kruntime.ParseDocumentationFrom(file)
+		if err != nil {
+			return fmt.Errorf("could not parse documentation from %s: %w", file, err)
+		}
+		docsForTypes = append(docsForTypes, docs...)
 	}
 
 	if g.verify {

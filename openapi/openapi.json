@@ -12585,8 +12585,7 @@
         "kmsPluginImage",
         "vaultAddress",
         "authentication",
-        "transitMount",
-        "transitKey"
+        "vaultKeyPath"
       ],
       "properties": {
         "authentication": {
@@ -12603,16 +12602,16 @@
           "default": {},
           "$ref": "#/definitions/com.github.openshift.api.config.v1.VaultTLSConfig"
         },
-        "transitKey": {
-          "description": "transitKey specifies the name of the encryption key in Vault's Transit engine. This key is used to encrypt and decrypt data.\n\nThe transit key must be between 1 and 512 characters, cannot contain forward slashes, and must only contain alphanumeric characters, hyphens, periods, and underscores.",
-          "type": "string"
-        },
-        "transitMount": {
-          "description": "transitMount specifies the mount path of the Vault Transit engine.\n\nThe transit mount must be between 1 and 1024 characters, cannot start or end with a forward slash, cannot contain consecutive forward slashes, and must only contain RFC 3986 unreserved characters (alphanumeric, hyphen, period, underscore, tilde) and forward slashes as path separators.",
-          "type": "string"
-        },
         "vaultAddress": {
           "description": "vaultAddress specifies the address of the HashiCorp Vault instance. The value must be a valid HTTPS URL containing only scheme, host, and optional port. Paths, user info, query parameters, and fragments are not allowed.\n\nFormat: https://hostname[:port] Example: https://vault.example.com:8200\n\nThe value must be between 1 and 512 characters.",
+          "type": "string"
+        },
+        "vaultAuthNamespace": {
+          "description": "vaultAuthNamespace specifies the Vault namespace to use for authentication. This is only applicable for Vault Enterprise installations where authentication and Transit operations may be in different namespaces. When this field is not set, the value of vaultNamespace is used for both authentication and Transit key operations.\n\nThe value must be between 1 and 4096 characters. The namespace cannot end with a forward slash, cannot contain spaces, and cannot be one of the reserved strings: root, sys, audit, auth, cubbyhole, or identity.",
+          "type": "string"
+        },
+        "vaultKeyPath": {
+          "description": "vaultKeyPath specifies the full path to the encryption key in Vault's Transit secrets engine, combining the Transit engine mount path and the key name separated by \"/keys/\". Format: <mount>/keys/<key-name> (e.g., transit/keys/my-key, myteam/transit/keys/production-key).\n\nThe total path length must be between 8 and 1542 characters. The path cannot start or end with a forward slash, cannot contain consecutive forward slashes, must only contain RFC 3986 unreserved characters (alphanumeric, hyphen, period, underscore, tilde) and forward slashes as path separators, and must not contain \".\" or \"..\" path segments. The key name must start and end with an alphanumeric character or underscore, and may contain alphanumeric characters, underscores, hyphens, and periods in the middle.",
           "type": "string"
         },
         "vaultNamespace": {

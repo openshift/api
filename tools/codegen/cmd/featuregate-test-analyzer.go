@@ -2,7 +2,6 @@ package main
 
 import (
 	"context"
-	"crypto/tls"
 	"encoding/json"
 	"errors"
 	"fmt"
@@ -173,7 +172,9 @@ func (o *FeatureGateTestAnalyzerOptions) Run(ctx context.Context) error {
 		fmt.Fprintf(o.Out, "No new Default FeatureGates found.\n")
 	}
 
-	release, err := getRelease()
+	sippyCtx := context.Background()
+
+	release, err := getRelease(sippyCtx)
 	if err != nil {
 		return fmt.Errorf("couldn't determine release version: %w", err)
 	}
@@ -184,7 +185,7 @@ func (o *FeatureGateTestAnalyzerOptions) Run(ctx context.Context) error {
 		clusterProfiles := recentlyEnabledFeatureGatesToClusterProfiles[enabledFeatureGate]
 		md.Title(1, enabledFeatureGate)
 
-		testingResults, installTestLevelData, err := listTestResultFor(enabledFeatureGate, clusterProfiles)
+		testingResults, installTestLevelData, err := listTestResultFor(sippyCtx, enabledFeatureGate, clusterProfiles)
 		if err != nil {
 			return err
 		}
@@ -271,7 +272,7 @@ func (o *FeatureGateTestAnalyzerOptions) Run(ctx context.Context) error {
 			}
 
 			if len(warnings) > 0 {
-				md.Textf("**Non-blocking warnings (optional variants):**\n")
+				md.Textf("**Non-blocking warnings and informational results:**\n")
 				writeGroupedValidationResults(warningResults, md)
 				md.Text("")
 			}
@@ -496,7 +497,7 @@ func checkIfTestingIsSufficient(featureGate string, testingResults map[JobVarian
 				results = append(results, ValidationResult{
 					Error: fmt.Errorf("error: \"install should succeed: overall\" test data not found for Install feature gate %q on %v",
 						featureGate, jobVariant),
-					IsWarning: false,
+					IsWarning: isOptional,
 					Category:  CategoryInstallTest,
 				})
 			} else {
@@ -748,11 +749,13 @@ var (
 			Cloud:        "metal",
 			Architecture: "amd64",
 			Topology:     "single",
+			Optional:     true,
 		},
 		{
 			Cloud:        "metal",
 			Architecture: "amd64",
 			Topology:     "compact",
+			Optional:     true,
 		},
 	}
 
@@ -917,7 +920,7 @@ func validateJobTiers(jobVariant JobVariant) error {
 	return nil
 }
 
-func listTestResultFor(featureGate string, clusterProfiles sets.Set[string]) (map[JobVariant]*TestingResults, map[JobVariant]*TestResults, error) {
+func listTestResultFor(ctx context.Context, featureGate string, clusterProfiles sets.Set[string]) (map[JobVariant]*TestingResults, map[JobVariant]*TestResults, error) {
 	fmt.Printf("Query sippy for all test run results for feature gate %q on clusterProfile %q\n", featureGate, sets.List(clusterProfiles))
 
 	results := map[JobVariant]*TestingResults{}
@@ -954,7 +957,7 @@ func listTestResultFor(featureGate string, clusterProfiles sets.Set[string]) (ma
 	}
 
 	for _, jobVariant := range jobVariantsToCheck {
-		jobVariantResults, err := listTestResultForVariant(featureGate, jobVariant)
+		jobVariantResults, err := listTestResultForVariant(ctx, featureGate, jobVariant)
 		if err != nil {
 			return nil, nil, err
 		}
@@ -963,7 +966,7 @@ func listTestResultFor(featureGate string, clusterProfiles sets.Set[string]) (ma
 		// For Install feature gates, count "install should succeed: overall" results
 		// directly from individual job runs, excluding infrastructure failures entirely.
 		if strings.Contains(featureGate, "Install") {
-			installTestData, err := getInstallTestResultsFromJobRuns(featureGate, jobVariant)
+			installTestData, err := getInstallTestResultsFromJobRuns(ctx, featureGate, jobVariant)
 			if err != nil {
 				return nil, nil, err
 			}
@@ -994,9 +997,13 @@ func filterVariants(featureGate string, variantsList ...[]JobVariant) []JobVaria
 }
 
 // getLatestRelease returns the latest release from Sippy.
-func getLatestRelease() (string, error) {
+func getLatestRelease(ctx context.Context) (string, error) {
 	releaseAPI := "https://sippy.dptools.openshift.org/api/releases"
-	resp, err := http.Get(releaseAPI)
+	req, err := http.NewRequestWithContext(ctx, http.MethodGet, releaseAPI, nil)
+	if err != nil {
+		return "", fmt.Errorf("creating release API request: %v", err)
+	}
+	resp, err := http.DefaultClient.Do(req)
 	if err != nil {
 		return "", fmt.Errorf("error fetching data from API: %v", err)
 	}
@@ -1050,7 +1057,7 @@ func getLatestRelease() (string, error) {
 	return latestRelease, nil
 }
 
-func getRelease() (string, error) {
+func getRelease(ctx context.Context) (string, error) {
 	// if its not main branch, then use the ENV var to determine the release version
 	currentRelease := os.Getenv("PULL_BASE_REF")
 	if strings.Contains(currentRelease, "release-") {
@@ -1058,32 +1065,32 @@ func getRelease() (string, error) {
 		return strings.TrimPrefix(currentRelease, "release-"), nil
 	}
 	// means its main branch
-	return getLatestRelease()
+	return getLatestRelease(ctx)
 }
 
-func getInstallTestResultsFromJobRuns(featureGate string, jobVariant JobVariant) (*TestResults, error) {
-	release, err := getRelease()
+func newSippyClient() *http.Client {
+	return &http.Client{
+		Timeout: 2 * time.Minute,
+		Transport: &http.Transport{
+			Proxy:                 http.ProxyFromEnvironment,
+			ForceAttemptHTTP2:     true,
+			MaxIdleConns:          100,
+			IdleConnTimeout:       90 * time.Second,
+			TLSHandshakeTimeout:   10 * time.Second,
+			ExpectContinueTimeout: 1 * time.Second,
+		},
+	}
+}
+
+func getInstallTestResultsFromJobRuns(ctx context.Context, featureGate string, jobVariant JobVariant) (*TestResults, error) {
+	release, err := getRelease(ctx)
 	if err != nil {
 		return nil, fmt.Errorf("couldn't determine release: %w", err)
 	}
 
-	defaultTransport := &http.Transport{
-		Proxy:                 http.ProxyFromEnvironment,
-		ForceAttemptHTTP2:     true,
-		MaxIdleConns:          100,
-		IdleConnTimeout:       90 * time.Second,
-		TLSHandshakeTimeout:   10 * time.Second,
-		ExpectContinueTimeout: 1 * time.Second,
-		TLSClientConfig: &tls.Config{
-			InsecureSkipVerify: true,
-		},
-	}
-	sippyClient := &http.Client{
-		Timeout:   2 * time.Minute,
-		Transport: defaultTransport,
-	}
+	sippyClient := newSippyClient()
 
-	jobs, err := getJobsForFeatureGateFromSippy(sippyClient, release, featureGate, jobVariant)
+	jobs, err := getJobsForFeatureGateFromSippy(ctx, sippyClient, release, featureGate, jobVariant)
 	if err != nil {
 		return nil, fmt.Errorf("getting jobs for install test results: %w", err)
 	}
@@ -1093,7 +1100,7 @@ func getInstallTestResultsFromJobRuns(featureGate string, jobVariant JobVariant)
 	}
 
 	for _, job := range jobs {
-		jobRuns, err := getJobRunsFromSippy(sippyClient, release, job.Name)
+		jobRuns, err := getJobRunsFromSippy(ctx, sippyClient, release, job.Name)
 		if err != nil {
 			return nil, fmt.Errorf("getting job runs for %q: %w", job.Name, err)
 		}
@@ -1124,29 +1131,14 @@ func getInstallTestResultsFromJobRuns(featureGate string, jobVariant JobVariant)
 	return testResults, nil
 }
 
-func getInstallTestLevelData(featureGate string, jobVariant JobVariant) (*TestResults, error) {
+func getInstallTestLevelData(ctx context.Context, featureGate string, jobVariant JobVariant) (*TestResults, error) {
 	testPattern := "install should succeed: overall"
 	queries := sippy.QueriesForWithCapability(jobVariant.Cloud, jobVariant.Architecture, jobVariant.Topology,
 		jobVariant.NetworkStack, jobVariant.OS, jobVariant.JobTiers, testPattern, featureGate)
 
-	defaultTransport := &http.Transport{
-		Proxy:                 http.ProxyFromEnvironment,
-		ForceAttemptHTTP2:     true,
-		MaxIdleConns:          100,
-		IdleConnTimeout:       90 * time.Second,
-		TLSHandshakeTimeout:   10 * time.Second,
-		ExpectContinueTimeout: 1 * time.Second,
-		TLSClientConfig: &tls.Config{
-			InsecureSkipVerify: true,
-		},
-	}
+	sippyClient := newSippyClient()
 
-	sippyClient := &http.Client{
-		Timeout:   2 * time.Minute,
-		Transport: defaultTransport,
-	}
-
-	release, err := getRelease()
+	release, err := getRelease(ctx)
 	if err != nil {
 		return nil, fmt.Errorf("couldn't fetch latest release version: %w", err)
 	}
@@ -1168,7 +1160,7 @@ func getInstallTestLevelData(featureGate string, jobVariant JobVariant) (*TestRe
 		queryParams.Add("filter", string(filterJSON))
 		currURL.RawQuery = queryParams.Encode()
 
-		req, err := http.NewRequest(http.MethodGet, currURL.String(), nil)
+		req, err := http.NewRequestWithContext(ctx, http.MethodGet, currURL.String(), nil)
 		if err != nil {
 			return nil, err
 		}
@@ -1177,6 +1169,7 @@ func getInstallTestLevelData(featureGate string, jobVariant JobVariant) (*TestRe
 		if err != nil {
 			return nil, err
 		}
+		defer response.Body.Close()
 		if response.StatusCode < 200 || response.StatusCode > 299 {
 			return nil, fmt.Errorf("error getting sippy results (status=%d) for: %v", response.StatusCode, currURL.String())
 		}
@@ -1184,7 +1177,6 @@ func getInstallTestLevelData(featureGate string, jobVariant JobVariant) (*TestRe
 		if err != nil {
 			return nil, err
 		}
-		response.Body.Close()
 
 		testInfos := []sippy.SippyTestInfo{}
 		if err := json.Unmarshal(queryResultBytes, &testInfos); err != nil {
@@ -1216,10 +1208,10 @@ func getInstallTestLevelData(featureGate string, jobVariant JobVariant) (*TestRe
 	return installTestResult, nil
 }
 
-func listTestResultForVariant(featureGate string, jobVariant JobVariant) (*TestingResults, error) {
+func listTestResultForVariant(ctx context.Context, featureGate string, jobVariant JobVariant) (*TestingResults, error) {
 	// Feature gates used by the installer don't need separate tests, use the overall install tests
 	if strings.Contains(featureGate, "Install") {
-		return verifyJobBasedFeatureGatePromotion(featureGate, jobVariant)
+		return verifyJobBasedFeatureGatePromotion(ctx, featureGate, jobVariant)
 	}
 
 	var testPattern string
@@ -1231,26 +1223,11 @@ func listTestResultForVariant(featureGate string, jobVariant JobVariant) (*Testi
 		jobVariant.NetworkStack, jobVariant.OS, jobVariant.JobTiers, testPattern)
 	fmt.Printf("Query sippy for all test run results for pattern %q on variant %#v\n", testPattern, jobVariant)
 
-	defaultTransport := &http.Transport{
-		Proxy:                 http.ProxyFromEnvironment,
-		ForceAttemptHTTP2:     true,
-		MaxIdleConns:          100,
-		IdleConnTimeout:       90 * time.Second,
-		TLSHandshakeTimeout:   10 * time.Second,
-		ExpectContinueTimeout: 1 * time.Second,
-		TLSClientConfig: &tls.Config{
-			InsecureSkipVerify: true,
-		},
-	}
-
-	sippyClient := &http.Client{
-		Timeout:   2 * time.Minute,
-		Transport: defaultTransport,
-	}
+	sippyClient := newSippyClient()
 
 	testNameToResults := map[string]*TestResults{}
 	hasCandidateTierResults := false
-	release, err := getRelease()
+	release, err := getRelease(ctx)
 	if err != nil {
 		return nil, fmt.Errorf("couldn't fetch latest release version: %w", err)
 	}
@@ -1271,7 +1248,7 @@ func listTestResultForVariant(featureGate string, jobVariant JobVariant) (*Testi
 		queryParams.Add("filter", string(filterJSON))
 		currURL.RawQuery = queryParams.Encode()
 
-		req, err := http.NewRequest(http.MethodGet, currURL.String(), nil)
+		req, err := http.NewRequestWithContext(ctx, http.MethodGet, currURL.String(), nil)
 		if err != nil {
 			return nil, err
 		}
@@ -1280,6 +1257,7 @@ func listTestResultForVariant(featureGate string, jobVariant JobVariant) (*Testi
 		if err != nil {
 			return nil, err
 		}
+		defer response.Body.Close()
 		if response.StatusCode < 200 || response.StatusCode > 299 {
 			return nil, fmt.Errorf("error getting sippy results (status=%d) for: %v", response.StatusCode, currURL.String())
 		}
@@ -1287,7 +1265,6 @@ func listTestResultForVariant(featureGate string, jobVariant JobVariant) (*Testi
 		if err != nil {
 			return nil, err
 		}
-		response.Body.Close()
 
 		testInfos := []sippy.SippyTestInfo{}
 		if err := json.Unmarshal(queryResultBytes, &testInfos); err != nil {
@@ -1346,30 +1323,15 @@ func matchTwoNodeFeatureGates(featureGate string, topology string) bool {
 	return false
 }
 
-func verifyJobBasedFeatureGatePromotion(featureGate string, jobVariant JobVariant) (*TestingResults, error) {
-	ocpRelease, err := getRelease()
+func verifyJobBasedFeatureGatePromotion(ctx context.Context, featureGate string, jobVariant JobVariant) (*TestingResults, error) {
+	ocpRelease, err := getRelease(ctx)
 	if err != nil {
 		return nil, fmt.Errorf("getting release version: %w", err)
 	}
 
-	defaultTransport := &http.Transport{
-		Proxy:                 http.ProxyFromEnvironment,
-		ForceAttemptHTTP2:     true,
-		MaxIdleConns:          100,
-		IdleConnTimeout:       90 * time.Second,
-		TLSHandshakeTimeout:   10 * time.Second,
-		ExpectContinueTimeout: 1 * time.Second,
-		TLSClientConfig: &tls.Config{
-			InsecureSkipVerify: true,
-		},
-	}
+	sippyClient := newSippyClient()
 
-	sippyClient := &http.Client{
-		Timeout:   2 * time.Minute,
-		Transport: defaultTransport,
-	}
-
-	jobs, err := getJobsForFeatureGateFromSippy(sippyClient, ocpRelease, featureGate, jobVariant)
+	jobs, err := getJobsForFeatureGateFromSippy(ctx, sippyClient, ocpRelease, featureGate, jobVariant)
 	if err != nil {
 		return nil, fmt.Errorf("getting jobs for feature-gate %q for variant %v : %w", featureGate, jobVariant, err)
 	}
@@ -1377,7 +1339,7 @@ func verifyJobBasedFeatureGatePromotion(featureGate string, jobVariant JobVarian
 	testResults := []TestResults{}
 
 	for _, job := range jobs {
-		results, err := verifyJobPassRate(sippyClient, ocpRelease, job, jobVariant)
+		results, err := verifyJobPassRate(ctx, sippyClient, ocpRelease, job, jobVariant)
 		if err != nil {
 			return nil, fmt.Errorf("verifying job pass rate for job %q: %w", job.Name, err)
 		}
@@ -1391,7 +1353,7 @@ func verifyJobBasedFeatureGatePromotion(featureGate string, jobVariant JobVarian
 	}, nil
 }
 
-func verifyJobPassRate(client *http.Client, release string, job sippy.SippyJob, variant JobVariant) (*TestResults, error) {
+func verifyJobPassRate(ctx context.Context, client *http.Client, release string, job sippy.SippyJob, variant JobVariant) (*TestResults, error) {
 	// Do an early check for 95% pass rate with at least 14 runs
 	runs := job.CurrentRuns
 	passes := job.CurrentPasses
@@ -1442,12 +1404,12 @@ func verifyJobPassRate(client *http.Client, release string, job sippy.SippyJob, 
 	// job runs failed tests with the known regressions - only counting failures that have
 	// unknown test failures as a true failure.
 
-	jobRuns, err := getJobRunsFromSippy(client, release, job.Name)
+	jobRuns, err := getJobRunsFromSippy(ctx, client, release, job.Name)
 	if err != nil {
 		return nil, fmt.Errorf("getting job %q results from sippy: %w", job.Name, err)
 	}
 
-	triagedTestFailures, err := getTriagedTestFailuresFromSippy(client, release, variant)
+	triagedTestFailures, err := getTriagedTestFailuresFromSippy(ctx, client, release, variant)
 	if err != nil {
 		return nil, fmt.Errorf("getting triaged test failures from sippy: %w", err)
 	}
@@ -1497,8 +1459,12 @@ func verifyJobPassRate(client *http.Client, release string, job sippy.SippyJob, 
 	return testResults, nil
 }
 
-func getJobsForFeatureGateFromSippy(client *http.Client, release, featureGate string, variant JobVariant) ([]sippy.SippyJob, error) {
-	resp, err := client.Get(sippy.BuildSippyJobsForFeatureGateURL(featureGate, release, variant.Topology, variant.Cloud, variant.Architecture, variant.NetworkStack, variant.OS))
+func getJobsForFeatureGateFromSippy(ctx context.Context, client *http.Client, release, featureGate string, variant JobVariant) ([]sippy.SippyJob, error) {
+	req, err := http.NewRequestWithContext(ctx, http.MethodGet, sippy.BuildSippyJobsForFeatureGateURL(featureGate, release, variant.Topology, variant.Cloud, variant.Architecture, variant.NetworkStack, variant.OS), nil)
+	if err != nil {
+		return nil, fmt.Errorf("creating request: %w", err)
+	}
+	resp, err := client.Do(req)
 	if err != nil {
 		return nil, fmt.Errorf("getting job info: %w", err)
 	}
@@ -1523,8 +1489,12 @@ func getJobsForFeatureGateFromSippy(client *http.Client, release, featureGate st
 	return jobs, nil
 }
 
-func getJobRunsFromSippy(client *http.Client, release, jobName string) ([]sippy.SippyJobRun, error) {
-	resp, err := client.Get(sippy.BuildSippyJobRunsForJobURL(release, jobName, time.Now().Add(-1 * 14 * 24 * time.Hour)))
+func getJobRunsFromSippy(ctx context.Context, client *http.Client, release, jobName string) ([]sippy.SippyJobRun, error) {
+	req, err := http.NewRequestWithContext(ctx, http.MethodGet, sippy.BuildSippyJobRunsForJobURL(release, jobName, time.Now().Add(-1*14*24*time.Hour)), nil)
+	if err != nil {
+		return nil, fmt.Errorf("creating request: %w", err)
+	}
+	resp, err := client.Do(req)
 	if err != nil {
 		return nil, fmt.Errorf("getting job info: %w", err)
 	}
@@ -1549,16 +1519,21 @@ func getJobRunsFromSippy(client *http.Client, release, jobName string) ([]sippy.
 	return runResults.Rows, nil
 }
 
-func getTriagedTestFailuresFromSippy(client *http.Client, release string, variant JobVariant) (sets.Set[string], error) {
+func getTriagedTestFailuresFromSippy(ctx context.Context, client *http.Client, release string, variant JobVariant) (sets.Set[string], error) {
 	reqURL, err := url.Parse("https://sippy.dptools.openshift.org/api/component_readiness/triages")
 	if err != nil {
 		panic(fmt.Sprintf("couldn't parse sippy triages url: %v", err))
 	}
 
-	resp, err := client.Get(reqURL.String())
+	req, err := http.NewRequestWithContext(ctx, http.MethodGet, reqURL.String(), nil)
+	if err != nil {
+		return nil, fmt.Errorf("creating request: %w", err)
+	}
+	resp, err := client.Do(req)
 	if err != nil {
 		return nil, fmt.Errorf("getting sippy triages: %w", err)
 	}
+	defer resp.Body.Close()
 
 	if resp.StatusCode != http.StatusOK {
 		return nil, fmt.Errorf("expected a 200 OK status code but got %d", resp.StatusCode)
@@ -1568,8 +1543,6 @@ func getTriagedTestFailuresFromSippy(client *http.Client, release string, varian
 	if err != nil {
 		return nil, fmt.Errorf("reading response body: %w", err)
 	}
-
-	defer resp.Body.Close()
 
 	triageItems := []sippy.SippyTriageItem{}
 	err = json.Unmarshal(body, &triageItems)

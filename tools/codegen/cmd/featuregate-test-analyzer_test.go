@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"encoding/json"
 	"fmt"
 	"reflect"
@@ -65,7 +66,7 @@ func Test_listTestResultFor(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			t.Skip("this is for ease of manual testing")
 
-			got, _, err := listTestResultFor(tt.args.featureGate, sets.New[string](tt.args.clusterProfile))
+			got, _, err := listTestResultFor(context.Background(), tt.args.featureGate, sets.New[string](tt.args.clusterProfile))
 			if (err != nil) != tt.wantErr {
 				t.Errorf("listTestResultFor() error = %v, wantErr %v", err, tt.wantErr)
 				return
@@ -241,7 +242,7 @@ func Test_checkIfTestingIsSufficient_CandidateVariants(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			results := checkIfTestingIsSufficient(tt.featureGate, tt.testingResults)
+			results := checkIfTestingIsSufficient(tt.featureGate, tt.testingResults, nil)
 
 			blockingErrors := 0
 			warnings := 0
@@ -449,7 +450,7 @@ func Test_checkIfTestingIsSufficient_OptionalVariants(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			results := checkIfTestingIsSufficient(tt.featureGate, tt.testingResults)
+			results := checkIfTestingIsSufficient(tt.featureGate, tt.testingResults, nil)
 
 			blockingErrors := 0
 			warnings := 0
@@ -486,6 +487,7 @@ func Test_checkIfTestingIsSufficient_InstallFeatureGates(t *testing.T) {
 		name               string
 		featureGate        string
 		testingResults     map[JobVariant]*TestingResults
+		installTestData    map[JobVariant]*TestResults
 		wantBlockingErrors int
 		wantWarnings       int
 	}{
@@ -506,6 +508,9 @@ func Test_checkIfTestingIsSufficient_InstallFeatureGates(t *testing.T) {
 						{TestName: "test4", TotalRuns: 15, SuccessfulRuns: 15},
 					},
 				},
+			},
+			installTestData: map[JobVariant]*TestResults{
+				{Cloud: "metal", Architecture: "amd64", Topology: "ha"}: {TestName: "install should succeed: overall", TotalRuns: 20, SuccessfulRuns: 19},
 			},
 			wantBlockingErrors: 1, // Blocking error: install should succeed: overall must pass at 100%
 			wantWarnings:       0,
@@ -528,8 +533,9 @@ func Test_checkIfTestingIsSufficient_InstallFeatureGates(t *testing.T) {
 					},
 				},
 			},
-			wantBlockingErrors: 0,
-			wantWarnings:       1, // Warning about missing "install should succeed: overall" test
+			installTestData:    map[JobVariant]*TestResults{},
+			wantBlockingErrors: 1, // Blocking error: install test data not found on required variant
+			wantWarnings:       0,
 		},
 		{
 			name:        "Non-Install feature gate with install should succeed: overall test - no special validation",
@@ -549,6 +555,7 @@ func Test_checkIfTestingIsSufficient_InstallFeatureGates(t *testing.T) {
 					},
 				},
 			},
+			installTestData:    nil,
 			wantBlockingErrors: 0,
 			wantWarnings:       0,
 		},
@@ -569,6 +576,9 @@ func Test_checkIfTestingIsSufficient_InstallFeatureGates(t *testing.T) {
 						{TestName: "test4", TotalRuns: 15, SuccessfulRuns: 15},
 					},
 				},
+			},
+			installTestData: map[JobVariant]*TestResults{
+				{Cloud: "aws", Architecture: "amd64", Topology: "ha"}: {TestName: "install should succeed: overall", TotalRuns: 20, SuccessfulRuns: 20},
 			},
 			wantBlockingErrors: 0,
 			wantWarnings:       0,
@@ -604,6 +614,10 @@ func Test_checkIfTestingIsSufficient_InstallFeatureGates(t *testing.T) {
 					},
 				},
 			},
+			installTestData: map[JobVariant]*TestResults{
+				{Cloud: "metal", Architecture: "amd64", Topology: "ha"}:     {TestName: "install should succeed: overall", TotalRuns: 20, SuccessfulRuns: 19},
+				{Cloud: "metal", Architecture: "amd64", Topology: "single"}: {TestName: "install should succeed: overall", TotalRuns: 18, SuccessfulRuns: 18},
+			},
 			wantBlockingErrors: 1, // One variant (ha) fails 100% requirement
 			wantWarnings:       0,
 		},
@@ -625,6 +639,9 @@ func Test_checkIfTestingIsSufficient_InstallFeatureGates(t *testing.T) {
 					},
 				},
 			},
+			installTestData: map[JobVariant]*TestResults{
+				{Cloud: "aws", Architecture: "amd64", Topology: "ha"}: {TestName: "install should succeed: overall", TotalRuns: 10, SuccessfulRuns: 10},
+			},
 			wantBlockingErrors: 1, // Blocking error for insufficient runs (< 14)
 			wantWarnings:       0,
 		},
@@ -632,7 +649,7 @@ func Test_checkIfTestingIsSufficient_InstallFeatureGates(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			results := checkIfTestingIsSufficient(tt.featureGate, tt.testingResults)
+			results := checkIfTestingIsSufficient(tt.featureGate, tt.testingResults, tt.installTestData)
 
 			blockingErrors := 0
 			warnings := 0

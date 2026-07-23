@@ -1735,6 +1735,7 @@ tests:
             aws:
               cloudLoadBalancerConfig:
                 dnsType: PlatformDefault
+              ipFamily: IPv4
               region: us-east-1
               resourceTags:
               - key: key with space
@@ -1783,6 +1784,7 @@ tests:
             aws:
               cloudLoadBalancerConfig:
                 dnsType: PlatformDefault
+              ipFamily: IPv4
               region: us-east-1
               resourceTags:
               - key: key:_./=+-@

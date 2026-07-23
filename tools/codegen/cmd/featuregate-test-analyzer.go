@@ -284,8 +284,9 @@ func (o *FeatureGateTestAnalyzerOptions) Run(ctx context.Context) error {
 			md.Text("")
 		}
 
-		// Only add blocking errors to the error list (warnings don't fail the job)
-		errs = append(errs, groupErrorsByCategory(blockingResults)...)
+		if len(blockingErrors) > 0 {
+			errs = append(errs, blockingErrors...)
+		}
 		featureGateHTMLData = append(featureGateHTMLData, buildHTMLFeatureGateData(enabledFeatureGate, testingResults, blockingErrors, release))
 
 	}
@@ -303,7 +304,10 @@ func (o *FeatureGateTestAnalyzerOptions) Run(ctx context.Context) error {
 		}
 	}
 
-	return errors.Join(errs...)
+	if len(errs) > 0 {
+		return fmt.Errorf("feature gate promotion validation errors:\n%w", errors.Join(errs...))
+	}
+	return nil
 }
 
 func topologyDisplayName(topology string) string {
@@ -437,12 +441,22 @@ func checkIfTestingIsSufficient(featureGate string, testingResults map[JobVarian
 		}
 
 		if len(testedVariant.TestResults) < requiredNumberOfTests {
-			results = append(results, ValidationResult{
-				Error: fmt.Errorf("error: only %d tests found, need at least %d for %q on %v",
-					len(testedVariant.TestResults), requiredNumberOfTests, featureGate, jobVariant),
-				IsWarning: isOptional,
-				Category:  CategoryInsufficientTests,
-			})
+			if strings.Contains(featureGate, "Install") {
+				results = append(results, ValidationResult{
+					Error: fmt.Errorf("info: %d tests found for %q on %v",
+						len(testedVariant.TestResults), featureGate, jobVariant),
+					IsWarning: true,
+					IsInfo:    true,
+					Category:  CategoryInsufficientTests,
+				})
+			} else {
+				results = append(results, ValidationResult{
+					Error: fmt.Errorf("error: only %d tests found, need at least %d for %q on %v",
+						len(testedVariant.TestResults), requiredNumberOfTests, featureGate, jobVariant),
+					IsWarning: isOptional,
+					Category:  CategoryInsufficientTests,
+				})
+			}
 		}
 
 		for _, testResults := range testedVariant.TestResults {

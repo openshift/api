@@ -33987,7 +33987,7 @@
       "type": "object",
       "properties": {
         "healthReports": {
-          "description": "healthReports contains all KMS plugin health reports. When omitted, no health reports are available. Each entry must have a unique combination of nodeName and keyId.",
+          "description": "healthReports contains all KMS plugin health reports. When omitted, no health reports are available. Each entry must have a unique combination of nodeName and keyID.",
           "type": "array",
           "items": {
             "default": {},
@@ -33995,7 +33995,7 @@
           },
           "x-kubernetes-list-map-keys": [
             "nodeName",
-            "keyId"
+            "keyID"
           ],
           "x-kubernetes-list-type": "map"
         },
@@ -34010,22 +34010,18 @@
       "type": "object",
       "required": [
         "nodeName",
-        "keyId",
+        "keyID",
         "status",
         "lastCheckedTime",
-        "kekId"
+        "remoteKeyID"
       ],
       "properties": {
         "detail": {
           "description": "detail contains additional error/health information for the respective KMS plugin. When omitted, no additional error or health information is provided. When set, the value must be between 1 and 1024 characters.",
           "type": "string"
         },
-        "kekId": {
-          "description": "kekId refers to the remote KEK id from KMS v2 StatusResponse.key_id. This is not a cryptographic key, but a unique representation of the KEK. The value must be between 1 and 1024 characters.",
-          "type": "string"
-        },
-        "keyId": {
-          "description": "keyId is the encryption-key-secret id (kms-{keyId}.sock), a unique identifier of the plugin on that node. This is not a cryptographic key used to encrypt/decrypt any resources. The value must be between 1 and 512 characters.",
+        "keyID": {
+          "description": "keyID is the encryption-key-secret id (kms-{keyID}.sock), a unique identifier of the plugin on that node. This is not a cryptographic key used to encrypt/decrypt any resources. The value must be between 1 and 512 characters.",
           "type": "string"
         },
         "lastCheckedTime": {
@@ -34033,7 +34029,11 @@
           "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Time"
         },
         "nodeName": {
-          "description": "nodeName is the name of the node this instance of the plugin runs on. The combination of nodeName and keyId makes this health report unique. The value must be a valid Kubernetes node name: a lowercase RFC 1123 subdomain consisting of lowercase alphanumeric characters, '-' or '.', starting and ending with an alphanumeric character, and be at most 253 characters in length.",
+          "description": "nodeName is the name of the node this instance of the plugin runs on. The combination of nodeName and keyID makes this health report unique. The value must be a valid Kubernetes node name: a lowercase RFC 1123 subdomain consisting of lowercase alphanumeric characters, '-' or '.', starting and ending with an alphanumeric character, and be at most 253 characters in length.",
+          "type": "string"
+        },
+        "remoteKeyID": {
+          "description": "remoteKeyID refers to the remote key identifier from KMS v2 StatusResponse.key_id. This is not a cryptographic key, but a unique representation of the KEK. The value must be between 1 and 1024 characters.",
           "type": "string"
         },
         "status": {

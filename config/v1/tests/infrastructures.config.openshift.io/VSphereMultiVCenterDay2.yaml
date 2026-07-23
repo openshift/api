@@ -1671,6 +1671,204 @@ tests:
                 datacenters:
                 - datacenter1
               failureDomains: []
+    - name: Should allow updating other fields when a previously stored failure domain does not match any vCenter (ratcheting)
+      initialCRDPatches:
+      - op: remove
+        path: /spec/versions/0/schema/openAPIV3Schema/properties/spec/properties/platformSpec/properties/vsphere/x-kubernetes-validations/0
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        spec:
+          platformSpec:
+            type: VSphere
+            vsphere:
+              vcenters:
+              - server: vcenter1.example.com
+                datacenters:
+                - datacenter1
+              failureDomains:
+              - name: fd1
+                region: region1
+                zone: zone1
+                server: vcenter-nonexistent.example.com
+                topology:
+                  datacenter: datacenter1
+                  computeCluster: /datacenter1/host/cluster1
+                  networks:
+                  - /datacenter1/network/VM Network
+                  datastore: /datacenter1/datastore/datastore1
+      updated: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        spec:
+          cloudConfig:
+            key: config
+            name: cloud-provider-config
+          platformSpec:
+            type: VSphere
+            vsphere:
+              vcenters:
+              - server: vcenter1.example.com
+                datacenters:
+                - datacenter1
+              failureDomains:
+              - name: fd1
+                region: region1
+                zone: zone1
+                server: vcenter-nonexistent.example.com
+                topology:
+                  datacenter: datacenter1
+                  computeCluster: /datacenter1/host/cluster1
+                  networks:
+                  - /datacenter1/network/VM Network
+                  datastore: /datacenter1/datastore/datastore1
+      expected: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        spec:
+          cloudConfig:
+            key: config
+            name: cloud-provider-config
+          platformSpec:
+            type: VSphere
+            vsphere:
+              vcenters:
+              - server: vcenter1.example.com
+                datacenters:
+                - datacenter1
+              failureDomains:
+              - name: fd1
+                region: region1
+                zone: zone1
+                server: vcenter-nonexistent.example.com
+                topology:
+                  datacenter: datacenter1
+                  computeCluster: /datacenter1/host/cluster1
+                  networks:
+                  - /datacenter1/network/VM Network
+                  datastore: /datacenter1/datastore/datastore1
+
+    - name: Should not allow changing a previously stored non-matching failure domain server to another non-matching server (ratcheting)
+      initialCRDPatches:
+      - op: remove
+        path: /spec/versions/0/schema/openAPIV3Schema/properties/spec/properties/platformSpec/properties/vsphere/x-kubernetes-validations/0
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        spec:
+          platformSpec:
+            type: VSphere
+            vsphere:
+              vcenters:
+              - server: vcenter1.example.com
+                datacenters:
+                - datacenter1
+              failureDomains:
+              - name: fd1
+                region: region1
+                zone: zone1
+                server: vcenter-nonexistent.example.com
+                topology:
+                  datacenter: datacenter1
+                  computeCluster: /datacenter1/host/cluster1
+                  networks:
+                  - /datacenter1/network/VM Network
+                  datastore: /datacenter1/datastore/datastore1
+      updated: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        spec:
+          platformSpec:
+            type: VSphere
+            vsphere:
+              vcenters:
+              - server: vcenter1.example.com
+                datacenters:
+                - datacenter1
+              failureDomains:
+              - name: fd1
+                region: region1
+                zone: zone1
+                server: vcenter-other.example.com
+                topology:
+                  datacenter: datacenter1
+                  computeCluster: /datacenter1/host/cluster1
+                  networks:
+                  - /datacenter1/network/VM Network
+                  datastore: /datacenter1/datastore/datastore1
+      expectedError: "all failure domains must have a corresponding vCenter entry"
+
+    - name: Should allow fixing a previously stored non-matching failure domain server to a valid matching server (ratcheting)
+      initialCRDPatches:
+      - op: remove
+        path: /spec/versions/0/schema/openAPIV3Schema/properties/spec/properties/platformSpec/properties/vsphere/x-kubernetes-validations/0
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        spec:
+          platformSpec:
+            type: VSphere
+            vsphere:
+              vcenters:
+              - server: vcenter1.example.com
+                datacenters:
+                - datacenter1
+              failureDomains:
+              - name: fd1
+                region: region1
+                zone: zone1
+                server: vcenter-nonexistent.example.com
+                topology:
+                  datacenter: datacenter1
+                  computeCluster: /datacenter1/host/cluster1
+                  networks:
+                  - /datacenter1/network/VM Network
+                  datastore: /datacenter1/datastore/datastore1
+      updated: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        spec:
+          platformSpec:
+            type: VSphere
+            vsphere:
+              vcenters:
+              - server: vcenter1.example.com
+                datacenters:
+                - datacenter1
+              failureDomains:
+              - name: fd1
+                region: region1
+                zone: zone1
+                server: vcenter1.example.com
+                topology:
+                  datacenter: datacenter1
+                  computeCluster: /datacenter1/host/cluster1
+                  networks:
+                  - /datacenter1/network/VM Network
+                  datastore: /datacenter1/datastore/datastore1
+      expected: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        spec:
+          platformSpec:
+            type: VSphere
+            vsphere:
+              vcenters:
+              - server: vcenter1.example.com
+                datacenters:
+                - datacenter1
+              failureDomains:
+              - name: fd1
+                region: region1
+                zone: zone1
+                server: vcenter1.example.com
+                topology:
+                  datacenter: datacenter1
+                  computeCluster: /datacenter1/host/cluster1
+                  networks:
+                  - /datacenter1/network/VM Network
+                  datastore: /datacenter1/datastore/datastore1
+
     - name: Should not be able to remove a vCenter that is in use by a failure domain
       initial: |
         apiVersion: config.openshift.io/v1

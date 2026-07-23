@@ -286,6 +286,11 @@ func (in NodeExporterCollectorTcpStatConfig) OpenAPIModelName() string {
 }
 
 // OpenAPIModelName returns the OpenAPI model name for this type.
+func (in NodeExporterCollectorZoneinfoConfig) OpenAPIModelName() string {
+	return "com.github.openshift.api.config.v1alpha1.NodeExporterCollectorZoneinfoConfig"
+}
+
+// OpenAPIModelName returns the OpenAPI model name for this type.
 func (in NodeExporterConfig) OpenAPIModelName() string {
 	return "com.github.openshift.api.config.v1alpha1.NodeExporterConfig"
 }

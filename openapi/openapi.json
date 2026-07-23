@@ -13785,6 +13785,11 @@
           "description": "tcpStat configures the tcpstat collector, which collects TCP connection statistics. tcpStat is optional. When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time. The current default is disabled. Enable when debugging TCP connection behavior or capacity at the node level.",
           "default": {},
           "$ref": "#/definitions/com.github.openshift.api.config.v1alpha1.NodeExporterCollectorTcpStatConfig"
+        },
+        "zoneinfo": {
+          "description": "zoneinfo configures the zoneinfo collector, which exposes per-zone memory page counts, watermarks, and protection thresholds from /proc/zoneinfo. zoneinfo is optional. When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time. The current default is disabled. Enable when you need visibility into kernel memory zone allocation and pressure.",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.config.v1alpha1.NodeExporterCollectorZoneinfoConfig"
         }
       }
     },
@@ -14005,6 +14010,23 @@
       "properties": {
         "collectionPolicy": {
           "description": "collectionPolicy declares whether the tcpstat collector collects metrics. This field is required. Valid values are \"Collect\" and \"DoNotCollect\". When set to \"Collect\", the tcpstat collector is active and TCP connection statistics are collected. When set to \"DoNotCollect\", the tcpstat collector is inactive.\n\nPossible enum values:\n - `\"Collect\"` means the collector is active and will produce metrics.\n - `\"DoNotCollect\"` means the collector is inactive and will not produce metrics.",
+          "type": "string",
+          "enum": [
+            "Collect",
+            "DoNotCollect"
+          ]
+        }
+      }
+    },
+    "com.github.openshift.api.config.v1alpha1.NodeExporterCollectorZoneinfoConfig": {
+      "description": "NodeExporterCollectorZoneinfoConfig provides configuration for the zoneinfo collector of the node-exporter agent. The zoneinfo collector exposes per-zone memory page counts, watermarks, and protection thresholds from /proc/zoneinfo. It is disabled by default.",
+      "type": "object",
+      "required": [
+        "collectionPolicy"
+      ],
+      "properties": {
+        "collectionPolicy": {
+          "description": "collectionPolicy declares whether the zoneinfo collector collects metrics. This field is required. Valid values are \"Collect\" and \"DoNotCollect\". When set to \"Collect\", the zoneinfo collector is active and zone memory statistics are collected. When set to \"DoNotCollect\", the zoneinfo collector is inactive.\n\nPossible enum values:\n - `\"Collect\"` means the collector is active and will produce metrics.\n - `\"DoNotCollect\"` means the collector is inactive and will not produce metrics.",
           "type": "string",
           "enum": [
             "Collect",

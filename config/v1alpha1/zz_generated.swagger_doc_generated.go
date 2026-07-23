@@ -356,6 +356,7 @@ var map_NodeExporterCollectorConfig = map[string]string{
 	"processes":  "processes configures the processes collector, which collects statistics from processes and threads running in the system. processes is optional. When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time. The current default is disabled. Enable for process/thread-level insight; can be expensive on busy nodes.",
 	"systemd":    "systemd configures the systemd collector, which collects statistics on the systemd daemon and its managed services. systemd is optional. When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time. The current default is disabled. Enabling this collector with a long list of selected units may produce metrics with high cardinality. If you enable this collector, closely monitor the prometheus-k8s deployment for excessive memory usage. Enable when you need metrics for specific units; scope units carefully.",
 	"softirqs":   "softirqs configures the softirqs collector, which exposes detailed softirq statistics from /proc/softirqs. softirqs is optional. When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time. The current default is disabled. Enable when you need visibility into kernel softirq processing across CPUs.",
+	"zoneinfo":   "zoneinfo configures the zoneinfo collector, which exposes per-zone memory page counts, watermarks, and protection thresholds from /proc/zoneinfo. zoneinfo is optional. When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time. The current default is disabled. Enable when you need visibility into kernel memory zone allocation and pressure.",
 }
 
 func (NodeExporterCollectorConfig) SwaggerDoc() map[string]string {
@@ -470,6 +471,15 @@ var map_NodeExporterCollectorTcpStatConfig = map[string]string{
 
 func (NodeExporterCollectorTcpStatConfig) SwaggerDoc() map[string]string {
 	return map_NodeExporterCollectorTcpStatConfig
+}
+
+var map_NodeExporterCollectorZoneinfoConfig = map[string]string{
+	"":                 "NodeExporterCollectorZoneinfoConfig provides configuration for the zoneinfo collector of the node-exporter agent. The zoneinfo collector exposes per-zone memory page counts, watermarks, and protection thresholds from /proc/zoneinfo. It is disabled by default.",
+	"collectionPolicy": "collectionPolicy declares whether the zoneinfo collector collects metrics. This field is required. Valid values are \"Collect\" and \"DoNotCollect\". When set to \"Collect\", the zoneinfo collector is active and zone memory statistics are collected. When set to \"DoNotCollect\", the zoneinfo collector is inactive.",
+}
+
+func (NodeExporterCollectorZoneinfoConfig) SwaggerDoc() map[string]string {
+	return map_NodeExporterCollectorZoneinfoConfig
 }
 
 var map_NodeExporterConfig = map[string]string{

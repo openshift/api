@@ -2436,6 +2436,29 @@ spec:
                         required:
                         - collectionPolicy
                         type: object
+                      zoneinfo:
+                        description: |-
+                          zoneinfo configures the zoneinfo collector, which exposes per-zone memory page counts,
+                          watermarks, and protection thresholds from /proc/zoneinfo.
+                          zoneinfo is optional.
+                          When omitted, this means no opinion and the platform is left to choose a reasonable default,
+                          which is subject to change over time. The current default is disabled.
+                          Enable when you need visibility into kernel memory zone allocation and pressure.
+                        properties:
+                          collectionPolicy:
+                            description: |-
+                              collectionPolicy declares whether the zoneinfo collector collects metrics.
+                              This field is required.
+                              Valid values are "Collect" and "DoNotCollect".
+                              When set to "Collect", the zoneinfo collector is active and zone memory statistics are collected.
+                              When set to "DoNotCollect", the zoneinfo collector is inactive.
+                            enum:
+                            - Collect
+                            - DoNotCollect
+                            type: string
+                        required:
+                        - collectionPolicy
+                        type: object
                     type: object
                   ignoredNetworkDevices:
                     description: |-

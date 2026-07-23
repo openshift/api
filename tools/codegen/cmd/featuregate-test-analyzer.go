@@ -949,6 +949,17 @@ func listTestResultFor(ctx context.Context, featureGate string, clusterProfiles 
 		}
 	}
 
+	// Deduplicate variants to avoid redundant Sippy calls
+	seen := map[JobVariant]struct{}{}
+	deduped := jobVariantsToCheck[:0]
+	for _, v := range jobVariantsToCheck {
+		if _, ok := seen[v]; !ok {
+			seen[v] = struct{}{}
+			deduped = append(deduped, v)
+		}
+	}
+	jobVariantsToCheck = deduped
+
 	// Validate all variants before making expensive API calls
 	for _, jobVariant := range jobVariantsToCheck {
 		if err := validateJobTiers(jobVariant); err != nil {

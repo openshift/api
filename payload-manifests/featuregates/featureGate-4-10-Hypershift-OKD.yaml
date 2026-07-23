@@ -248,9 +248,6 @@
                         "name": "OLMLifecycleAndCompatibility"
                     },
                     {
-                        "name": "OSStreams"
-                    },
-                    {
                         "name": "OVNObservability"
                     },
                     {
@@ -359,6 +356,9 @@
                     },
                     {
                         "name": "MutatingAdmissionPolicy"
+                    },
+                    {
+                        "name": "OSStreams"
                     },
                     {
                         "name": "OpenShiftPodSecurityAdmission"

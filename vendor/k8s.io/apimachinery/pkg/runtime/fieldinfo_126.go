@@ -1,5 +1,7 @@
+//go:build !go1.27
+
 /*
-Copyright 2024 The Kubernetes Authors.
+Copyright The Kubernetes Authors.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -14,15 +16,11 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-package validate
+package runtime
 
-import (
-	"context"
+import "reflect"
 
-	"k8s.io/apimachinery/pkg/api/operation"
-	"k8s.io/apimachinery/pkg/util/validation/field"
-)
-
-// ValidateFunc is a function that validates a value, possibly considering the
-// old value (if any).
-type ValidateFunc[T any] func(ctx context.Context, op operation.Operation, fldPath *field.Path, newValue, oldValue T) field.ErrorList
+func isInlinedFromTag(fieldType reflect.StructField, tagName string, tagDirectives []string) bool {
+	// go <1.27 doesn't honor ",inline"
+	return false
+}

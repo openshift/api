@@ -671,7 +671,7 @@ var (
 						contactPerson("leoli").
 						productScope(ocpSpecific).
 						enhancementPR("https://github.com/openshift/enhancements/pull/2033").
-						enable(inDevPreviewNoUpgrade(), inTechPreviewNoUpgrade()).
+						enable(inDevPreviewNoUpgrade(), inTechPreviewNoUpgrade(), inDefault(), inOKD()).
 						mustRegister()
   
 	FeatureGateIngressControllerMultipleHAProxyVersions = newFeatureGate("IngressControllerMultipleHAProxyVersions").

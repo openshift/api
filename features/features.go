@@ -381,7 +381,7 @@ var (
 							contactPerson("saldawam").
 							productScope(ocpSpecific).
 							enhancementPR("https://github.com/openshift/enhancements/pull/1763").
-							enable(inDevPreviewNoUpgrade(), inTechPreviewNoUpgrade()).
+							enable(inDefault(), inOKD(), inTechPreviewNoUpgrade(), inDevPreviewNoUpgrade()).
 							mustRegister()
 
 	FeatureGateExternalOIDCExternalClaimsSourcing = newFeatureGate("ExternalOIDCExternalClaimsSourcing").

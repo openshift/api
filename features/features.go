@@ -138,6 +138,14 @@ var (
 				enhancementPR("https://github.com/kubernetes/enhancements/issues/3386").
 				mustRegister()
 
+	FeatureGatePodAndContainerStatsFromCRI = newFeatureGate("PodAndContainerStatsFromCRI").
+						reportProblemsToJiraComponent("node").
+						contactPerson("dgrisonnet").
+						productScope(kubernetes).
+						enhancementPR("https://github.com/kubernetes/enhancements/issues/2371").
+						enable(inTechPreviewNoUpgrade(), inDevPreviewNoUpgrade()).
+						mustRegister()
+
 	FeatureGateSigstoreImageVerification = newFeatureGate("SigstoreImageVerification").
 						reportProblemsToJiraComponent("node").
 						contactPerson("sgrunert").

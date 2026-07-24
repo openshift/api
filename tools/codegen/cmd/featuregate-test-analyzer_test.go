@@ -65,7 +65,7 @@ func Test_listTestResultFor(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			t.Skip("this is for ease of manual testing")
 
-			got, err := listTestResultFor(tt.args.featureGate, sets.New[string](tt.args.clusterProfile))
+			got, _, err := listTestResultFor(tt.args.featureGate, sets.New[string](tt.args.clusterProfile))
 			if (err != nil) != tt.wantErr {
 				t.Errorf("listTestResultFor() error = %v, wantErr %v", err, tt.wantErr)
 				return
@@ -471,6 +471,189 @@ func Test_checkIfTestingIsSufficient_OptionalVariants(t *testing.T) {
 			}
 			if warnings != tt.wantWarnings {
 				t.Errorf("checkIfTestingIsSufficient() got %d warnings, want %d", warnings, tt.wantWarnings)
+				for _, result := range results {
+					if result.IsWarning {
+						t.Logf("  Warning: %v", result.Error)
+					}
+				}
+			}
+		})
+	}
+}
+
+func Test_checkIfTestingIsSufficient_InstallFeatureGates(t *testing.T) {
+	tests := []struct {
+		name               string
+		featureGate        string
+		testingResults     map[JobVariant]*TestingResults
+		wantBlockingErrors int
+		wantWarnings       int
+	}{
+		{
+			name:        "Install feature gate with install should succeed: overall test failing 100% requirement",
+			featureGate: "FakeInstallFeature",
+			testingResults: map[JobVariant]*TestingResults{
+				{
+					Cloud:        "metal",
+					Architecture: "amd64",
+					Topology:     "ha",
+				}: {
+					TestResults: []TestResults{
+						{TestName: "install should succeed: overall", TotalRuns: 20, SuccessfulRuns: 19},
+						{TestName: "test1", TotalRuns: 15, SuccessfulRuns: 15},
+						{TestName: "test2", TotalRuns: 15, SuccessfulRuns: 15},
+						{TestName: "test3", TotalRuns: 15, SuccessfulRuns: 15},
+						{TestName: "test4", TotalRuns: 15, SuccessfulRuns: 15},
+					},
+				},
+			},
+			wantBlockingErrors: 1, // Blocking error: install should succeed: overall must pass at 100%
+			wantWarnings:       0,
+		},
+		{
+			name:        "Install feature gate without install should succeed: overall test - warning reported",
+			featureGate: "MockInstallGate",
+			testingResults: map[JobVariant]*TestingResults{
+				{
+					Cloud:        "metal",
+					Architecture: "amd64",
+					Topology:     "ha",
+				}: {
+					TestResults: []TestResults{
+						{TestName: "test1", TotalRuns: 15, SuccessfulRuns: 15},
+						{TestName: "test2", TotalRuns: 15, SuccessfulRuns: 15},
+						{TestName: "test3", TotalRuns: 15, SuccessfulRuns: 15},
+						{TestName: "test4", TotalRuns: 15, SuccessfulRuns: 15},
+						{TestName: "test5", TotalRuns: 15, SuccessfulRuns: 15},
+					},
+				},
+			},
+			wantBlockingErrors: 0,
+			wantWarnings:       1, // Warning about missing "install should succeed: overall" test
+		},
+		{
+			name:        "Non-Install feature gate with install should succeed: overall test - no special validation",
+			featureGate: "SomeOtherFeature",
+			testingResults: map[JobVariant]*TestingResults{
+				{
+					Cloud:        "aws",
+					Architecture: "amd64",
+					Topology:     "ha",
+				}: {
+					TestResults: []TestResults{
+						{TestName: "install should succeed: overall", TotalRuns: 20, SuccessfulRuns: 19},
+						{TestName: "test1", TotalRuns: 15, SuccessfulRuns: 15},
+						{TestName: "test2", TotalRuns: 15, SuccessfulRuns: 15},
+						{TestName: "test3", TotalRuns: 15, SuccessfulRuns: 15},
+						{TestName: "test4", TotalRuns: 15, SuccessfulRuns: 15},
+					},
+				},
+			},
+			wantBlockingErrors: 0,
+			wantWarnings:       0,
+		},
+		{
+			name:        "Install feature gate with 100% pass rate - no errors",
+			featureGate: "FakeInstallFeature",
+			testingResults: map[JobVariant]*TestingResults{
+				{
+					Cloud:        "aws",
+					Architecture: "amd64",
+					Topology:     "ha",
+				}: {
+					TestResults: []TestResults{
+						{TestName: "install should succeed: overall", TotalRuns: 20, SuccessfulRuns: 20},
+						{TestName: "test1", TotalRuns: 15, SuccessfulRuns: 15},
+						{TestName: "test2", TotalRuns: 15, SuccessfulRuns: 15},
+						{TestName: "test3", TotalRuns: 15, SuccessfulRuns: 15},
+						{TestName: "test4", TotalRuns: 15, SuccessfulRuns: 15},
+					},
+				},
+			},
+			wantBlockingErrors: 0,
+			wantWarnings:       0,
+		},
+		{
+			name:        "Install feature gate with multiple variants - one fails 100% requirement",
+			featureGate: "FakeInstallFeature",
+			testingResults: map[JobVariant]*TestingResults{
+				{
+					Cloud:        "metal",
+					Architecture: "amd64",
+					Topology:     "ha",
+				}: {
+					TestResults: []TestResults{
+						{TestName: "install should succeed: overall", TotalRuns: 20, SuccessfulRuns: 19},
+						{TestName: "test1", TotalRuns: 15, SuccessfulRuns: 15},
+						{TestName: "test2", TotalRuns: 15, SuccessfulRuns: 15},
+						{TestName: "test3", TotalRuns: 15, SuccessfulRuns: 15},
+						{TestName: "test4", TotalRuns: 15, SuccessfulRuns: 15},
+					},
+				},
+				{
+					Cloud:        "metal",
+					Architecture: "amd64",
+					Topology:     "single",
+				}: {
+					TestResults: []TestResults{
+						{TestName: "install should succeed: overall", TotalRuns: 18, SuccessfulRuns: 18},
+						{TestName: "test1", TotalRuns: 15, SuccessfulRuns: 15},
+						{TestName: "test2", TotalRuns: 15, SuccessfulRuns: 15},
+						{TestName: "test3", TotalRuns: 15, SuccessfulRuns: 15},
+						{TestName: "test4", TotalRuns: 15, SuccessfulRuns: 15},
+					},
+				},
+			},
+			wantBlockingErrors: 1, // One variant (ha) fails 100% requirement
+			wantWarnings:       0,
+		},
+		{
+			name:        "Install feature gate with insufficient runs for install test - blocking error",
+			featureGate: "MockInstallGate",
+			testingResults: map[JobVariant]*TestingResults{
+				{
+					Cloud:        "aws",
+					Architecture: "amd64",
+					Topology:     "ha",
+				}: {
+					TestResults: []TestResults{
+						{TestName: "install should succeed: overall", TotalRuns: 10, SuccessfulRuns: 10},
+						{TestName: "test1", TotalRuns: 15, SuccessfulRuns: 15},
+						{TestName: "test2", TotalRuns: 15, SuccessfulRuns: 15},
+						{TestName: "test3", TotalRuns: 15, SuccessfulRuns: 15},
+						{TestName: "test4", TotalRuns: 15, SuccessfulRuns: 15},
+					},
+				},
+			},
+			wantBlockingErrors: 1, // Blocking error for insufficient runs (< 14)
+			wantWarnings:       0,
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			results := checkIfTestingIsSufficient(tt.featureGate, tt.testingResults)
+
+			blockingErrors := 0
+			warnings := 0
+			for _, result := range results {
+				if result.IsWarning {
+					warnings++
+				} else {
+					blockingErrors++
+				}
+			}
+
+			if blockingErrors != tt.wantBlockingErrors {
+				t.Errorf("got %d blocking errors, want %d", blockingErrors, tt.wantBlockingErrors)
+				for _, result := range results {
+					if !result.IsWarning {
+						t.Logf("  Blocking error: %v", result.Error)
+					}
+				}
+			}
+			if warnings != tt.wantWarnings {
+				t.Errorf("got %d warnings, want %d", warnings, tt.wantWarnings)
 				for _, result := range results {
 					if result.IsWarning {
 						t.Logf("  Warning: %v", result.Error)

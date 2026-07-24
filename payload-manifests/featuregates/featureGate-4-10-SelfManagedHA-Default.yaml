@@ -255,9 +255,6 @@
                         "name": "NutanixMultiSubnets"
                     },
                     {
-                        "name": "OLMLifecycleAndCompatibility"
-                    },
-                    {
                         "name": "OVNObservability"
                     },
                     {
@@ -360,6 +357,9 @@
                     },
                     {
                         "name": "NewOLMWebhookProviderOpenshiftServiceCA"
+                    },
+                    {
+                        "name": "OLMLifecycleAndCompatibility"
                     },
                     {
                         "name": "OSStreams"

@@ -168,9 +168,6 @@
                         "name": "IngressComponentRouteLabels"
                     },
                     {
-                        "name": "IngressControllerMultipleHAProxyVersions"
-                    },
-                    {
                         "name": "IrreconcilableMachineConfig"
                     },
                     {
@@ -333,6 +330,9 @@
                     },
                     {
                         "name": "IngressControllerDynamicConfigurationManager"
+                    },
+                    {
+                        "name": "IngressControllerMultipleHAProxyVersions"
                     },
                     {
                         "name": "InsightsConfig"

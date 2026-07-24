@@ -161,6 +161,9 @@
                         "name": "GCPSovereignCloudInstall"
                     },
                     {
+                        "name": "GomaxprocsInjection"
+                    },
+                    {
                         "name": "HyperShiftOnlyDynamicResourceAllocation"
                     },
                     {

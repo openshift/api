@@ -220,6 +220,9 @@
                         "name": "GatewayAPIWithoutOLM"
                     },
                     {
+                        "name": "GomaxprocsInjection"
+                    },
+                    {
                         "name": "ImageModeStatusReporting"
                     },
                     {

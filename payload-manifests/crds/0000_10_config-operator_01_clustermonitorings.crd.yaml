@@ -915,6 +915,21 @@ spec:
                     and forbidden otherwise
                   rule: 'self.deploymentMode == ''CustomConfig'' ? has(self.customConfig)
                     : !has(self.customConfig)'
+              configurationSource:
+                description: |-
+                  configurationSource is an optional field that selects whether the Cluster Monitoring Operator
+                  reads its configuration from the cluster-monitoring-config ConfigMap or from this ClusterMonitoring CRD.
+                  Valid values are "ConfigMap" and "CRD".
+                  When set to ConfigMap, the operator uses the cluster-monitoring-config ConfigMap in the
+                  openshift-monitoring namespace as the configuration source.
+                  When set to CRD, the operator uses this ClusterMonitoring custom resource as the configuration source.
+                  When omitted, this means no opinion and the platform is left to choose a reasonable default,
+                  which is subject to change over time.
+                  The current default value is CRD.
+                enum:
+                - ConfigMap
+                - CRD
+                type: string
               kubeStateMetricsConfig:
                 description: |-
                   kubeStateMetricsConfig is an optional field that can be used to configure the kube-state-metrics

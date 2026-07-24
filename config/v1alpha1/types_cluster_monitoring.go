@@ -76,6 +76,17 @@ type ClusterMonitoringList struct {
 // ClusterMonitoringSpec defines the desired state of Cluster Monitoring Operator
 // +kubebuilder:validation:MinProperties=1
 type ClusterMonitoringSpec struct {
+	// configurationSource is an optional field that selects whether the Cluster Monitoring Operator
+	// reads its configuration from the cluster-monitoring-config ConfigMap or from this ClusterMonitoring CRD.
+	// Valid values are "ConfigMap" and "CRD".
+	// When set to ConfigMap, the operator uses the cluster-monitoring-config ConfigMap in the
+	// openshift-monitoring namespace as the configuration source.
+	// When set to CRD, the operator uses this ClusterMonitoring custom resource as the configuration source.
+	// When omitted, this means no opinion and the platform is left to choose a reasonable default,
+	// which is subject to change over time.
+	// The current default value is CRD.
+	// +optional
+	ConfigurationSource ConfigurationSource `json:"configurationSource,omitempty"`
 	// userDefined set the deployment mode for user-defined monitoring in addition to the default platform monitoring.
 	// userDefined is optional.
 	// When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time.
@@ -756,6 +767,20 @@ type MonitoringPluginConfig struct {
 	// +optional
 	TopologySpreadConstraints []v1.TopologySpreadConstraint `json:"topologySpreadConstraints,omitempty"`
 }
+
+// ConfigurationSource selects the configuration source for the Cluster Monitoring Operator.
+// +kubebuilder:validation:Enum=ConfigMap;CRD
+// +enum
+type ConfigurationSource string
+
+const (
+	// ConfigurationSourceConfigMap means the operator reads configuration from the
+	// cluster-monitoring-config ConfigMap in the openshift-monitoring namespace.
+	ConfigurationSourceConfigMap ConfigurationSource = "ConfigMap"
+	// ConfigurationSourceCRD means the operator reads configuration from this
+	// ClusterMonitoring custom resource.
+	ConfigurationSourceCRD ConfigurationSource = "CRD"
+)
 
 // UserDefinedMonitoring config for user-defined projects.
 type UserDefinedMonitoring struct {

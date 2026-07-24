@@ -466,6 +466,14 @@ type NodeExporterCollectorConfig struct {
 	// Enable when you need visibility into kernel softirq processing across CPUs.
 	// +optional
 	Softirqs NodeExporterCollectorSoftirqsConfig `json:"softirqs,omitempty,omitzero"`
+	// zoneinfo configures the zoneinfo collector, which exposes per-zone memory page counts,
+	// watermarks, and protection thresholds from /proc/zoneinfo.
+	// zoneinfo is optional.
+	// When omitted, this means no opinion and the platform is left to choose a reasonable default,
+	// which is subject to change over time. The current default is disabled.
+	// Enable when you need visibility into kernel memory zone allocation and pressure.
+	// +optional
+	Zoneinfo NodeExporterCollectorZoneinfoConfig `json:"zoneinfo,omitempty,omitzero"`
 }
 
 // NodeExporterCollectorCpufreqConfig provides configuration for the cpufreq collector
@@ -685,6 +693,20 @@ type NodeExporterCollectorSoftirqsConfig struct {
 	// Valid values are "Collect" and "DoNotCollect".
 	// When set to "Collect", the softirqs collector is active and softirq statistics are collected.
 	// When set to "DoNotCollect", the softirqs collector is inactive.
+	// +required
+	CollectionPolicy NodeExporterCollectorCollectionPolicy `json:"collectionPolicy,omitempty"`
+}
+
+// NodeExporterCollectorZoneinfoConfig provides configuration for the zoneinfo collector
+// of the node-exporter agent. The zoneinfo collector exposes per-zone memory page counts,
+// watermarks, and protection thresholds from /proc/zoneinfo.
+// It is disabled by default.
+type NodeExporterCollectorZoneinfoConfig struct {
+	// collectionPolicy declares whether the zoneinfo collector collects metrics.
+	// This field is required.
+	// Valid values are "Collect" and "DoNotCollect".
+	// When set to "Collect", the zoneinfo collector is active and zone memory statistics are collected.
+	// When set to "DoNotCollect", the zoneinfo collector is inactive.
 	// +required
 	CollectionPolicy NodeExporterCollectorCollectionPolicy `json:"collectionPolicy,omitempty"`
 }

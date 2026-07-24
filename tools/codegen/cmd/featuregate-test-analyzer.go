@@ -35,6 +35,11 @@ const (
 	// required pass rate.
 	// nearly all current tests pass 99% of the time, but in a two week window we lack enough data to say.
 	requiredPassRateOfTestsPerVariant = 0.95
+
+	// required pass rate of tests per job for job-based promotion verification.
+	// Given a minimum sample size of 14 runs, we allow a single unique failure across job runs which equates to ~92%.
+	// This ensures that unique flukes don't cause a job to be considered a failed run.
+	requiredPassRateOfTestsPerJob = 0.92
 )
 
 type FeatureGateTestAnalyzerOptions struct {
@@ -131,6 +136,7 @@ func (o *FeatureGateTestAnalyzerOptions) Run(ctx context.Context) error {
 	md := utils.NewMarkdown("FeatureGate Promotion Summary")
 
 	recentlyEnabledFeatureGatesToClusterProfiles := map[string]sets.Set[string]{}
+	defaultCurrentlyEnabledFeatureGates := sets.Set[string]{}
 	errs := []error{}
 	for _, clusterProfile := range allCurrentClusterProfiles.List() {
 		// we only need to check test coverage for current cluster profiles
@@ -148,6 +154,8 @@ func (o *FeatureGateTestAnalyzerOptions) Run(ctx context.Context) error {
 			if !currentFeatureGateEnabled {
 				continue
 			}
+
+			defaultCurrentlyEnabledFeatureGates.Insert(featureGateName)
 
 			previousFeatureGateEnabled := false
 			if previousDefaultFeatureGateInfo != nil {
@@ -181,7 +189,7 @@ func (o *FeatureGateTestAnalyzerOptions) Run(ctx context.Context) error {
 		clusterProfiles := recentlyEnabledFeatureGatesToClusterProfiles[enabledFeatureGate]
 		md.Title(1, enabledFeatureGate)
 
-		testingResults, err := listTestResultFor(enabledFeatureGate, clusterProfiles)
+		testingResults, err := listTestResultFor(enabledFeatureGate, clusterProfiles, defaultCurrentlyEnabledFeatureGates)
 		if err != nil {
 			return err
 		}
@@ -736,7 +744,7 @@ func validateJobTiers(jobVariant JobVariant) error {
 	return nil
 }
 
-func listTestResultFor(featureGate string, clusterProfiles sets.Set[string]) (map[JobVariant]*TestingResults, error) {
+func listTestResultFor(featureGate string, clusterProfiles sets.Set[string], defaultEnabledFeatureGates sets.Set[string]) (map[JobVariant]*TestingResults, error) {
 	fmt.Printf("Query sippy for all test run results for feature gate %q on clusterProfile %q\n", featureGate, sets.List(clusterProfiles))
 
 	results := map[JobVariant]*TestingResults{}
@@ -765,7 +773,7 @@ func listTestResultFor(featureGate string, clusterProfiles sets.Set[string]) (ma
 	}
 
 	for _, jobVariant := range jobVariantsToCheck {
-		jobVariantResults, err := listTestResultForVariant(featureGate, jobVariant)
+		jobVariantResults, err := listTestResultForVariant(featureGate, jobVariant, defaultEnabledFeatureGates)
 		if err != nil {
 			return nil, err
 		}
@@ -862,13 +870,13 @@ func getRelease() (string, error) {
 	return getLatestRelease()
 }
 
-func listTestResultForVariant(featureGate string, jobVariant JobVariant) (*TestingResults, error) {
+func listTestResultForVariant(featureGate string, jobVariant JobVariant, defaultEnabledGates sets.Set[string]) (*TestingResults, error) {
 	// Substring here matches for both [OCPFeatureGate:...] and [FeatureGate:...]
 	testPattern := fmt.Sprintf("FeatureGate:%s]", featureGate)
 
 	// Feature gates used by the installer don't need separate tests, use the overall install tests
 	if strings.Contains(featureGate, "Install") {
-		return verifyJobBasedFeatureGatePromotion(featureGate, jobVariant)
+		return verifyJobBasedFeatureGatePromotion(featureGate, jobVariant, defaultEnabledGates)
 	}
 
 	fmt.Printf("Query sippy for all test run results for pattern %q on variant %#v\n", testPattern, jobVariant)
@@ -990,7 +998,7 @@ func matchTwoNodeFeatureGates(featureGate string, topology string) bool {
 	return false
 }
 
-func verifyJobBasedFeatureGatePromotion(featureGate string, jobVariant JobVariant) (*TestingResults, error) {
+func verifyJobBasedFeatureGatePromotion(featureGate string, jobVariant JobVariant, defaultEnabledGates sets.Set[string]) (*TestingResults, error) {
 	ocpRelease, err := getRelease()
 	if err != nil {
 		return nil, fmt.Errorf("getting release version: %w", err)
@@ -1021,7 +1029,7 @@ func verifyJobBasedFeatureGatePromotion(featureGate string, jobVariant JobVarian
 	testResults := []TestResults{}
 
 	for _, job := range jobs {
-		results, err := verifyJobPassRate(sippyClient, ocpRelease, job, jobVariant)
+		results, err := verifyJobPassRate(sippyClient, ocpRelease, job, jobVariant, defaultEnabledGates)
 		if err != nil {
 			return nil, fmt.Errorf("verifying job pass rate for job %q: %w", job.Name, err)
 		}
@@ -1035,7 +1043,7 @@ func verifyJobBasedFeatureGatePromotion(featureGate string, jobVariant JobVarian
 	}, nil
 }
 
-func verifyJobPassRate(client *http.Client, release string, job sippy.SippyJob, variant JobVariant) (*TestResults, error) {
+func verifyJobPassRate(client *http.Client, release string, job sippy.SippyJob, variant JobVariant, defaultEnabledGates sets.Set[string]) (*TestResults, error) {
 	// Do an early check for 95% pass rate with at least 14 runs
 	runs := job.CurrentRuns
 	passes := job.CurrentPasses
@@ -1053,10 +1061,10 @@ func verifyJobPassRate(client *http.Client, release string, job sippy.SippyJob, 
 	// failures analysis of the job runs to see if failed runs are true failures or known regressions.
 	if runs < requiredNumberOfTestRunsPerVariant {
 		return &TestResults{
-			TestName: job.Name,
-			TotalRuns: runs,
+			TestName:       job.Name,
+			TotalRuns:      runs,
 			SuccessfulRuns: passes,
-			FailedRuns: runs - passes,
+			FailedRuns:     runs - passes,
 		}, nil
 	}
 
@@ -1065,15 +1073,15 @@ func verifyJobPassRate(client *http.Client, release string, job sippy.SippyJob, 
 	//
 	// This saves us from unnecessarily making calls out to Sippy to perform a more nuanced
 	// failures analysis of the job runs to see if failed runs are true failures or known regressions.
-	if float32(passes) / float32(runs) >= requiredPassRateOfTestsPerVariant {
+	if float32(passes)/float32(runs) >= requiredPassRateOfTestsPerVariant {
 		return &TestResults{
-			TestName: job.Name,
-			TotalRuns: runs,
+			TestName:       job.Name,
+			TotalRuns:      runs,
 			SuccessfulRuns: passes,
-			FailedRuns: runs - passes,
+			FailedRuns:     runs - passes,
 		}, nil
 	}
-	
+
 	// We haven't passed promotion requirements with this job, but jobs might be impacted
 	// by known regressed tests. While important to get fixed, many regressions are either
 	// release blockers or require an exception to not be a release blocker.
@@ -1101,9 +1109,16 @@ func verifyJobPassRate(client *http.Client, release string, job sippy.SippyJob, 
 		return nil, fmt.Errorf("getting triaged test failures from sippy: %w", err)
 	}
 
-	for _, jobRun := range jobRuns {
-		if jobRun.OverallResult == "F" && !jobRun.KnownFailure {
+	seenFailures := map[string]int{}
 
+	for _, jobRun := range jobRuns {
+		// skip infrastructure related failures so they aren't included in the analysis results.
+		if jobRun.InfrastructureFailure {
+			fmt.Println("skipping job run %s due to infrastructure related failure", jobRun.TestGridURL)
+			continue
+		}
+
+		if jobRun.OverallResult == "F" && !jobRun.KnownFailure {
 			untriagedTestFailures := []string{}
 			for _, failure := range jobRun.FailedTestNames {
 				if !triagedTestFailures.Has(failure) {
@@ -1111,24 +1126,67 @@ func verifyJobPassRate(client *http.Client, release string, job sippy.SippyJob, 
 				}
 			}
 
-			if len(untriagedTestFailures) > 0 {
+			// filter out TPNU feature test failures
+			untriagedNonTechPreviewTestFailures := []string{}
+			for _, failure := range untriagedTestFailures {
+				featureGate := featureGateFromTestName(failure)
+				if len(featureGate) == 0 {
+					untriagedNonTechPreviewTestFailures = append(untriagedNonTechPreviewTestFailures, failure)
+					continue
+				}
+
+				// Skip this test failure if the gate is not enabled by default
+				if !defaultEnabledGates.Has(featureGate) {
+					fmt.Printf("test %q failed for job run %s but is being removed from analysis because the feature gate %q is not enabled by default\n", failure, jobRun.TestGridURL, featureGate)
+					continue
+				}
+				
+				untriagedNonTechPreviewTestFailures = append(untriagedNonTechPreviewTestFailures, failure)
+			}
+
+			if len(untriagedNonTechPreviewTestFailures) > 0 {
 				var writer strings.Builder
-				writer.WriteString(fmt.Sprintf("job run %s has untriaged test failures:\n", jobRun.TestGridURL))
-				for _, testFailure := range untriagedTestFailures {
+				writer.WriteString(fmt.Sprintf("job run %s has untriaged non-techpreview test failures:\n", jobRun.TestGridURL))
+				for _, testFailure := range untriagedNonTechPreviewTestFailures {
 					writer.WriteString(fmt.Sprintf("\t- %s\n", testFailure))
+					seenFailures[testFailure]++
 				}
 
 				fmt.Println(writer.String())
-				testResults.FailedRuns++
-
 				continue
 			}
 		}
-
-		testResults.SuccessfulRuns++
 	}
 
+	jobsFailed := 0
+
+	for test, failureCount := range seenFailures {
+		passRate := float32(testResults.TotalRuns - failureCount)/float32(testResults.TotalRuns)
+		if passRate < requiredPassRateOfTestsPerJob {
+			fmt.Printf("test %q passed at a rate of %f%% across all job runs, which is less than the required pass rate of %f%% percent.\n", test, passRate*100, requiredPassRateOfTestsPerJob*100)
+			
+			// Because a test can fail at most once per job run, use the highest failure count as the number of job runs that failed.
+			if jobsFailed < failureCount {
+				jobsFailed = failureCount
+			}
+		}
+	}
+
+	testResults.FailedRuns = jobsFailed
+	testResults.SuccessfulRuns = testResults.TotalRuns - jobsFailed
+
 	return testResults, nil
+}
+
+var featureGateRegex = regexp.MustCompile("(\\[OCPFeatureGate:.+\\])")
+
+func featureGateFromTestName(failure string) string {
+	gateAnnotation := featureGateRegex.FindString(failure)
+	if len(gateAnnotation) == 0 {
+		return ""
+	}
+
+	return strings.TrimRight(strings.TrimLeft(gateAnnotation, "[OCPFeatureGate:"), "]")
 }
 
 func getJobsForFeatureGateFromSippy(client *http.Client, release, featureGate string, variant JobVariant) ([]sippy.SippyJob, error) {
@@ -1147,7 +1205,6 @@ func getJobsForFeatureGateFromSippy(client *http.Client, release, featureGate st
 		return nil, fmt.Errorf("reading response body: %w", err)
 	}
 
-
 	jobs := []sippy.SippyJob{}
 	err = json.Unmarshal(body, &jobs)
 	if err != nil {
@@ -1158,7 +1215,7 @@ func getJobsForFeatureGateFromSippy(client *http.Client, release, featureGate st
 }
 
 func getJobRunsFromSippy(client *http.Client, release, jobName string) ([]sippy.SippyJobRun, error) {
-	resp, err := client.Get(sippy.BuildSippyJobRunsForJobURL(release, jobName, time.Now().Add(-1 * 14 * 24 * time.Hour)))
+	resp, err := client.Get(sippy.BuildSippyJobRunsForJobURL(release, jobName, time.Now().Add(-1*14*24*time.Hour)))
 	if err != nil {
 		return nil, fmt.Errorf("getting job info: %w", err)
 	}
@@ -1172,7 +1229,6 @@ func getJobRunsFromSippy(client *http.Client, release, jobName string) ([]sippy.
 	if err != nil {
 		return nil, fmt.Errorf("reading response body: %w", err)
 	}
-
 
 	runResults := &sippy.SippyJobRunsResult{}
 	err = json.Unmarshal(body, runResults)

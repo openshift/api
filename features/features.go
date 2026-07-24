@@ -862,7 +862,7 @@ var (
 						contactPerson("pabrodri").
 						productScope(ocpSpecific).
 						enhancementPR("https://github.com/openshift/enhancements/pull/1785").
-						enable(inTechPreviewNoUpgrade(), inDevPreviewNoUpgrade()).
+						enable(inDefault(), inOKD(), inTechPreviewNoUpgrade(), inDevPreviewNoUpgrade()).
 						mustRegister()
 	FeatureGateAWSDualStackInstall = newFeatureGate("AWSDualStackInstall").
 					reportProblemsToJiraComponent("Installer").

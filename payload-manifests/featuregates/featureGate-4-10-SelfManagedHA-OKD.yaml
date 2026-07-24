@@ -281,9 +281,6 @@
                         "name": "SignatureStores"
                     },
                     {
-                        "name": "TLSAdherence"
-                    },
-                    {
                         "name": "TLSGroupPreferences"
                     },
                     {
@@ -383,6 +380,9 @@
                     },
                     {
                         "name": "StoragePerformantSecurityPolicy"
+                    },
+                    {
+                        "name": "TLSAdherence"
                     },
                     {
                         "name": "UpgradeStatus"

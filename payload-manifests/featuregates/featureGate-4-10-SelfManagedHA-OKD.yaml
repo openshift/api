@@ -170,6 +170,9 @@
                         "name": "IngressComponentRouteLabels"
                     },
                     {
+                        "name": "IngressControllerLBSecurityGroupsAWS"
+                    },
+                    {
                         "name": "IngressControllerMultipleHAProxyVersions"
                     },
                     {

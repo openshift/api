@@ -128,9 +128,6 @@
                         "name": "DyanmicServiceEndpointIBMCloud"
                     },
                     {
-                        "name": "EtcdBackendQuota"
-                    },
-                    {
                         "name": "EventedPLEG"
                     },
                     {
@@ -314,6 +311,9 @@
                     },
                     {
                         "name": "EVPN"
+                    },
+                    {
+                        "name": "EtcdBackendQuota"
                     },
                     {
                         "name": "EventTTL"

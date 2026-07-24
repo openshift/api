@@ -559,6 +559,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		configv1alpha1.NodeExporterCollectorBuddyInfoConfig{}.OpenAPIModelName():               schema_openshift_api_config_v1alpha1_NodeExporterCollectorBuddyInfoConfig(ref),
 		configv1alpha1.NodeExporterCollectorConfig{}.OpenAPIModelName():                        schema_openshift_api_config_v1alpha1_NodeExporterCollectorConfig(ref),
 		configv1alpha1.NodeExporterCollectorCpufreqConfig{}.OpenAPIModelName():                 schema_openshift_api_config_v1alpha1_NodeExporterCollectorCpufreqConfig(ref),
+		configv1alpha1.NodeExporterCollectorDeviceMapperMultipathConfig{}.OpenAPIModelName():   schema_openshift_api_config_v1alpha1_NodeExporterCollectorDeviceMapperMultipathConfig(ref),
 		configv1alpha1.NodeExporterCollectorEthtoolConfig{}.OpenAPIModelName():                 schema_openshift_api_config_v1alpha1_NodeExporterCollectorEthtoolConfig(ref),
 		configv1alpha1.NodeExporterCollectorKSMDConfig{}.OpenAPIModelName():                    schema_openshift_api_config_v1alpha1_NodeExporterCollectorKSMDConfig(ref),
 		configv1alpha1.NodeExporterCollectorMountStatsConfig{}.OpenAPIModelName():              schema_openshift_api_config_v1alpha1_NodeExporterCollectorMountStatsConfig(ref),
@@ -25242,11 +25243,18 @@ func schema_openshift_api_config_v1alpha1_NodeExporterCollectorConfig(ref common
 							Ref:         ref(configv1alpha1.NodeExporterCollectorSoftirqsConfig{}.OpenAPIModelName()),
 						},
 					},
+					"deviceMapperMultipath": {
+						SchemaProps: spec.SchemaProps{
+							Description: "deviceMapperMultipath configures the dmmultipath collector, which collects statistics about DM-Multipath devices. deviceMapperMultipath is optional. When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time. The current default is enabled.",
+							Default:     map[string]interface{}{},
+							Ref:         ref(configv1alpha1.NodeExporterCollectorDeviceMapperMultipathConfig{}.OpenAPIModelName()),
+						},
+					},
 				},
 			},
 		},
 		Dependencies: []string{
-			configv1alpha1.NodeExporterCollectorBuddyInfoConfig{}.OpenAPIModelName(), configv1alpha1.NodeExporterCollectorCpufreqConfig{}.OpenAPIModelName(), configv1alpha1.NodeExporterCollectorEthtoolConfig{}.OpenAPIModelName(), configv1alpha1.NodeExporterCollectorKSMDConfig{}.OpenAPIModelName(), configv1alpha1.NodeExporterCollectorMountStatsConfig{}.OpenAPIModelName(), configv1alpha1.NodeExporterCollectorNetClassConfig{}.OpenAPIModelName(), configv1alpha1.NodeExporterCollectorNetDevConfig{}.OpenAPIModelName(), configv1alpha1.NodeExporterCollectorProcessesConfig{}.OpenAPIModelName(), configv1alpha1.NodeExporterCollectorSoftirqsConfig{}.OpenAPIModelName(), configv1alpha1.NodeExporterCollectorSystemdConfig{}.OpenAPIModelName(), configv1alpha1.NodeExporterCollectorTcpStatConfig{}.OpenAPIModelName()},
+			configv1alpha1.NodeExporterCollectorBuddyInfoConfig{}.OpenAPIModelName(), configv1alpha1.NodeExporterCollectorCpufreqConfig{}.OpenAPIModelName(), configv1alpha1.NodeExporterCollectorDeviceMapperMultipathConfig{}.OpenAPIModelName(), configv1alpha1.NodeExporterCollectorEthtoolConfig{}.OpenAPIModelName(), configv1alpha1.NodeExporterCollectorKSMDConfig{}.OpenAPIModelName(), configv1alpha1.NodeExporterCollectorMountStatsConfig{}.OpenAPIModelName(), configv1alpha1.NodeExporterCollectorNetClassConfig{}.OpenAPIModelName(), configv1alpha1.NodeExporterCollectorNetDevConfig{}.OpenAPIModelName(), configv1alpha1.NodeExporterCollectorProcessesConfig{}.OpenAPIModelName(), configv1alpha1.NodeExporterCollectorSoftirqsConfig{}.OpenAPIModelName(), configv1alpha1.NodeExporterCollectorSystemdConfig{}.OpenAPIModelName(), configv1alpha1.NodeExporterCollectorTcpStatConfig{}.OpenAPIModelName()},
 	}
 }
 
@@ -25260,6 +25268,28 @@ func schema_openshift_api_config_v1alpha1_NodeExporterCollectorCpufreqConfig(ref
 					"collectionPolicy": {
 						SchemaProps: spec.SchemaProps{
 							Description: "collectionPolicy declares whether the cpufreq collector collects metrics. This field is required. Valid values are \"Collect\" and \"DoNotCollect\". When set to \"Collect\", the cpufreq collector is active and CPU frequency statistics are collected. When set to \"DoNotCollect\", the cpufreq collector is inactive.\n\nPossible enum values:\n - `\"Collect\"` means the collector is active and will produce metrics.\n - `\"DoNotCollect\"` means the collector is inactive and will not produce metrics.",
+							Type:        []string{"string"},
+							Format:      "",
+							Enum:        []interface{}{"Collect", "DoNotCollect"},
+						},
+					},
+				},
+				Required: []string{"collectionPolicy"},
+			},
+		},
+	}
+}
+
+func schema_openshift_api_config_v1alpha1_NodeExporterCollectorDeviceMapperMultipathConfig(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "NodeExporterCollectorDeviceMapperMultipathConfig provides configuration for the dmmultipath collector of the node-exporter agent. The dmmultipath collector collects statistics about DM-Multipath devices. It is enabled by default.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"collectionPolicy": {
+						SchemaProps: spec.SchemaProps{
+							Description: "collectionPolicy declares whether the dmmultipath collector collects metrics. This field is required. Valid values are \"Collect\" and \"DoNotCollect\". When set to \"Collect\", the dmmultipath collector is active and DM-Multipath device statistics are collected. When set to \"DoNotCollect\", the dmmultipath collector is inactive and the corresponding metrics become unavailable.\n\nPossible enum values:\n - `\"Collect\"` means the collector is active and will produce metrics.\n - `\"DoNotCollect\"` means the collector is inactive and will not produce metrics.",
 							Type:        []string{"string"},
 							Format:      "",
 							Enum:        []interface{}{"Collect", "DoNotCollect"},

@@ -13748,6 +13748,11 @@
           "default": {},
           "$ref": "#/definitions/com.github.openshift.api.config.v1alpha1.NodeExporterCollectorCpufreqConfig"
         },
+        "deviceMapperMultipath": {
+          "description": "deviceMapperMultipath configures the dmmultipath collector, which collects statistics about DM-Multipath devices. deviceMapperMultipath is optional. When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time. The current default is enabled.",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.config.v1alpha1.NodeExporterCollectorDeviceMapperMultipathConfig"
+        },
         "ethtool": {
           "description": "ethtool configures the ethtool collector, which collects ethernet device statistics. ethtool is optional. When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time. The current default is disabled. Enable when you need NIC driver-level ethtool metrics beyond generic netdev counters.",
           "default": {},
@@ -13804,6 +13809,23 @@
       "properties": {
         "collectionPolicy": {
           "description": "collectionPolicy declares whether the cpufreq collector collects metrics. This field is required. Valid values are \"Collect\" and \"DoNotCollect\". When set to \"Collect\", the cpufreq collector is active and CPU frequency statistics are collected. When set to \"DoNotCollect\", the cpufreq collector is inactive.\n\nPossible enum values:\n - `\"Collect\"` means the collector is active and will produce metrics.\n - `\"DoNotCollect\"` means the collector is inactive and will not produce metrics.",
+          "type": "string",
+          "enum": [
+            "Collect",
+            "DoNotCollect"
+          ]
+        }
+      }
+    },
+    "com.github.openshift.api.config.v1alpha1.NodeExporterCollectorDeviceMapperMultipathConfig": {
+      "description": "NodeExporterCollectorDeviceMapperMultipathConfig provides configuration for the dmmultipath collector of the node-exporter agent. The dmmultipath collector collects statistics about DM-Multipath devices. It is enabled by default.",
+      "type": "object",
+      "required": [
+        "collectionPolicy"
+      ],
+      "properties": {
+        "collectionPolicy": {
+          "description": "collectionPolicy declares whether the dmmultipath collector collects metrics. This field is required. Valid values are \"Collect\" and \"DoNotCollect\". When set to \"Collect\", the dmmultipath collector is active and DM-Multipath device statistics are collected. When set to \"DoNotCollect\", the dmmultipath collector is inactive and the corresponding metrics become unavailable.\n\nPossible enum values:\n - `\"Collect\"` means the collector is active and will produce metrics.\n - `\"DoNotCollect\"` means the collector is inactive and will not produce metrics.",
           "type": "string",
           "enum": [
             "Collect",

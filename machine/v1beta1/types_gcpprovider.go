@@ -254,6 +254,30 @@ type GCPMetadata struct {
 	Value *string `json:"value"`
 }
 
+// StackType represents the type of network stack for the cluster.
+// +kubebuilder:validation:Enum=IPv4Only;DualStack
+type StackType string
+
+const (
+	// IPv4OnlyStackType indicates that the network can only accept and use IPv4 addresses.
+	IPv4OnlyStackType StackType = "IPv4Only"
+
+	// DualStackStackType indicates that the network can accept and use IPv4 and IPv6 addresses.
+	DualStackStackType StackType = "DualStack"
+)
+
+// IPv6AccessType represents the type of network access for the IPv6 capable network interface.
+// +kubebuilder:validation:Enum=External;Internal
+type IPv6AccessType string
+
+const (
+	// ExternalIPv6AccessType indicates that the network contains IPv6 addresses that can access the internet.
+	ExternalIPv6AccessType IPv6AccessType = "External"
+
+	// InternalIPv6AccessType indicates that the network contains IPv6 addresses that cannot access the internet.
+	InternalIPv6AccessType IPv6AccessType = "Internal"
+)
+
 // GCPNetworkInterface describes network interfaces for GCP
 type GCPNetworkInterface struct {
 	// publicIP indicates if true a public IP will be used
@@ -264,6 +288,28 @@ type GCPNetworkInterface struct {
 	ProjectID string `json:"projectID,omitempty"`
 	// subnetwork is the subnetwork name.
 	Subnetwork string `json:"subnetwork,omitempty"`
+
+	// stackType determines the IP stack configuration for the network interface.
+	// This field defaults to IPv4Only. Valid values are "IPv4Only" and "DualStack".
+	//
+	// +kubebuilder:default:="IPv4Only"
+	// +optional
+	// +default="IPv4Only"
+	StackType StackType `json:"stackType,omitempty"`
+
+	// ipv6Address is an IPv6 internal network address for this network interface.
+	// To use a static internal IP address, it must be unused and in the same region as the instance's zone.
+	// If not specified and stackType is "DualStack", Google Cloud can automatically assign an internal IPv6 address.
+	// +optional
+	IPv6Address string `json:"ipv6Address,omitempty"`
+
+	// ipv6AccessType indicates whether the IPv6 endpoint can be accessed from the Internet.
+	// Valid values are "External" or "Internal". Only valid when stackType is "DualStack".
+	//
+	// +kubebuilder:default:="External"
+	// +optional
+	// +default="External"
+	IPv6AccessType IPv6AccessType `json:"ipv6AccessType,omitempty"`
 }
 
 // GCPServiceAccount describes service accounts for GCP.

@@ -46296,6 +46296,29 @@ func schema_openshift_api_machine_v1beta1_GCPNetworkInterface(ref common.Referen
 							Format:      "",
 						},
 					},
+					"stackType": {
+						SchemaProps: spec.SchemaProps{
+							Description: "stackType determines the IP stack configuration for the network interface. This field defaults to IPv4Only. Valid values are \"IPv4Only\" and \"DualStack\".",
+							Default:     "IPv4Only",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"ipv6Address": {
+						SchemaProps: spec.SchemaProps{
+							Description: "ipv6Address is an IPv6 internal network address for this network interface. To use a static internal IP address, it must be unused and in the same region as the instance's zone. If not specified and stackType is \"DualStack\", Google Cloud can automatically assign an internal IPv6 address.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"ipv6AccessType": {
+						SchemaProps: spec.SchemaProps{
+							Description: "ipv6AccessType indicates whether the IPv6 endpoint can be accessed from the Internet. Valid values are \"External\" or \"Internal\". Only valid when stackType is \"DualStack\".",
+							Default:     "External",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
 				},
 			},
 		},

@@ -179,6 +179,104 @@ func QueriesFor(cloud, architecture, topology, networkStack, os, jobTiers, testP
 	return queries
 }
 
+func QueriesForWithCapability(cloud, architecture, topology, networkStack, os, jobTiers, testPattern, capability string) []*SippyQueryStruct {
+	// Build base query items that are common to all JobTier queries
+	baseItems := []SippyQueryItem{
+		{
+			ColumnField:   "variants",
+			Not:           false,
+			OperatorValue: "contains",
+			Value:         fmt.Sprintf("Platform:%s", cloud),
+		},
+		{
+			ColumnField:   "variants",
+			Not:           false,
+			OperatorValue: "contains",
+			Value:         fmt.Sprintf("Architecture:%s", architecture),
+		},
+		{
+			ColumnField:   "variants",
+			Not:           false,
+			OperatorValue: "contains",
+			Value:         fmt.Sprintf("Topology:%s", topology),
+		},
+		{
+			ColumnField:   "name",
+			Not:           false,
+			OperatorValue: "contains",
+			Value:         testPattern,
+		},
+		{
+			ColumnField:   "variants",
+			Not:           false,
+			OperatorValue: "contains",
+			Value:         fmt.Sprintf("Capability:%s", capability),
+		},
+	}
+
+	if networkStack != "" {
+		baseItems = append(baseItems, SippyQueryItem{
+			ColumnField:   "variants",
+			Not:           false,
+			OperatorValue: "contains",
+			Value:         fmt.Sprintf("NetworkStack:%s", networkStack),
+		})
+	}
+
+	if os != "" {
+		baseItems = append(baseItems, SippyQueryItem{
+			ColumnField:   "variants",
+			Not:           false,
+			OperatorValue: "contains",
+			Value:         fmt.Sprintf("OS:%s", os),
+		})
+	}
+
+	// Parse JobTiers - comma-separated string, default to standard/informing/blocking/candidate if empty
+	var jobTiersList []string
+	if jobTiers == "" {
+		jobTiersList = []string{"standard", "informing", "blocking", "candidate"}
+	} else {
+		// Split by comma, trim whitespace, and deduplicate using sets
+		tierSet := sets.New[string]()
+		for _, tier := range strings.Split(jobTiers, ",") {
+			if trimmed := strings.TrimSpace(tier); trimmed != "" {
+				tierSet.Insert(trimmed)
+			}
+		}
+		// If all tiers were whitespace/empty after trimming, use defaults
+		if tierSet.Len() == 0 {
+			jobTiersList = []string{"standard", "informing", "blocking", "candidate"}
+		} else {
+			jobTiersList = sets.List(tierSet)
+		}
+	}
+
+	// Generate one query per JobTier (to work around API's single LinkOperator limitation)
+	var queries []*SippyQueryStruct
+	for _, jobTier := range jobTiersList {
+		// Copy base items for this query
+		items := make([]SippyQueryItem, len(baseItems))
+		copy(items, baseItems)
+
+		// Add JobTier filter
+		items = append(items, SippyQueryItem{
+			ColumnField:   "variants",
+			Not:           false,
+			OperatorValue: "contains",
+			Value:         fmt.Sprintf("JobTier:%s", jobTier),
+		})
+
+		queries = append(queries, &SippyQueryStruct{
+			Items:        items,
+			LinkOperator: "and",
+			TierName:     jobTier,
+		})
+	}
+
+	return queries
+}
+
 func BuildSippyTestAnalysisURL(release, testName, topology, cloud, architecture, networkStack, os string) string {
 	filterItems := []SippyQueryItem{
 		{

@@ -61,7 +61,7 @@ var rootCmd = &cobra.Command{
 func main() {
 	err := rootCmd.Execute()
 	if err != nil {
-		klog.Fatalf("Error running codegen: %v", err)
+		klog.Fatalf("%v", err)
 	}
 }
 

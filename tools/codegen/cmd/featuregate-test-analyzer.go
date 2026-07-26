@@ -743,7 +743,14 @@ func listTestResultFor(featureGate string, clusterProfiles sets.Set[string]) (ma
 
 	var jobVariantsToCheck []JobVariant
 	if clusterProfiles.Has("Hypershift") && !nonHypershiftPlatforms.MatchString(featureGate) {
-		jobVariantsToCheck = append(jobVariantsToCheck, filterVariants(featureGate, requiredHypershiftJobVariants)...)
+		// See if the feature gate is specific to any platform
+		hypershiftPlatformVariants := filterVariants(featureGate, requiredHypershiftJobVariants)
+
+		if len(hypershiftPlatformVariants) == 0 {
+			hypershiftPlatformVariants = requiredHypershiftJobVariants
+		}
+
+		jobVariantsToCheck = append(jobVariantsToCheck, hypershiftPlatformVariants...)
 	}
 	if clusterProfiles.Has("SelfManagedHA") {
 		// See if the feature gate is specific to any platform
@@ -1053,10 +1060,10 @@ func verifyJobPassRate(client *http.Client, release string, job sippy.SippyJob, 
 	// failures analysis of the job runs to see if failed runs are true failures or known regressions.
 	if runs < requiredNumberOfTestRunsPerVariant {
 		return &TestResults{
-			TestName: job.Name,
-			TotalRuns: runs,
+			TestName:       job.Name,
+			TotalRuns:      runs,
 			SuccessfulRuns: passes,
-			FailedRuns: runs - passes,
+			FailedRuns:     runs - passes,
 		}, nil
 	}
 
@@ -1065,15 +1072,15 @@ func verifyJobPassRate(client *http.Client, release string, job sippy.SippyJob, 
 	//
 	// This saves us from unnecessarily making calls out to Sippy to perform a more nuanced
 	// failures analysis of the job runs to see if failed runs are true failures or known regressions.
-	if float32(passes) / float32(runs) >= requiredPassRateOfTestsPerVariant {
+	if float32(passes)/float32(runs) >= requiredPassRateOfTestsPerVariant {
 		return &TestResults{
-			TestName: job.Name,
-			TotalRuns: runs,
+			TestName:       job.Name,
+			TotalRuns:      runs,
 			SuccessfulRuns: passes,
-			FailedRuns: runs - passes,
+			FailedRuns:     runs - passes,
 		}, nil
 	}
-	
+
 	// We haven't passed promotion requirements with this job, but jobs might be impacted
 	// by known regressed tests. While important to get fixed, many regressions are either
 	// release blockers or require an exception to not be a release blocker.
@@ -1147,7 +1154,6 @@ func getJobsForFeatureGateFromSippy(client *http.Client, release, featureGate st
 		return nil, fmt.Errorf("reading response body: %w", err)
 	}
 
-
 	jobs := []sippy.SippyJob{}
 	err = json.Unmarshal(body, &jobs)
 	if err != nil {
@@ -1158,7 +1164,7 @@ func getJobsForFeatureGateFromSippy(client *http.Client, release, featureGate st
 }
 
 func getJobRunsFromSippy(client *http.Client, release, jobName string) ([]sippy.SippyJobRun, error) {
-	resp, err := client.Get(sippy.BuildSippyJobRunsForJobURL(release, jobName, time.Now().Add(-1 * 14 * 24 * time.Hour)))
+	resp, err := client.Get(sippy.BuildSippyJobRunsForJobURL(release, jobName, time.Now().Add(-1*14*24*time.Hour)))
 	if err != nil {
 		return nil, fmt.Errorf("getting job info: %w", err)
 	}
@@ -1172,7 +1178,6 @@ func getJobRunsFromSippy(client *http.Client, release, jobName string) ([]sippy.
 	if err != nil {
 		return nil, fmt.Errorf("reading response body: %w", err)
 	}
-
 
 	runResults := &sippy.SippyJobRunsResult{}
 	err = json.Unmarshal(body, runResults)

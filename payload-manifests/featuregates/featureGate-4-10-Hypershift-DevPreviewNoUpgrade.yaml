@@ -121,9 +121,6 @@
                         "name": "AzureWorkloadIdentity"
                     },
                     {
-                        "name": "BGPBasedVIPManagement"
-                    },
-                    {
                         "name": "BootImageSkewEnforcement"
                     },
                     {

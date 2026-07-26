@@ -35,6 +35,12 @@ const (
 	// required pass rate.
 	// nearly all current tests pass 99% of the time, but in a two week window we lack enough data to say.
 	requiredPassRateOfTestsPerVariant = 0.95
+
+	// required pass rate for Install feature gates (non-install tests)
+	requiredPassRateForInstallFeatures = requiredPassRateOfTestsPerVariant
+
+	// required pass rate for "install should succeed" test
+	requiredPassRateForInstallTest = requiredPassRateOfTestsPerVariant
 )
 
 type FeatureGateTestAnalyzerOptions struct {
@@ -165,6 +171,18 @@ func (o *FeatureGateTestAnalyzerOptions) Run(ctx context.Context) error {
 		}
 	}
 
+	defaultEnabledFeatureGates := sets.New[string]()
+	for _, clusterProfile := range allCurrentClusterProfiles.List() {
+		currentByFeatureSet := currentByClusterProfileByFeatureSetTestAnalyzer[clusterProfile]
+		if defaultInfo, ok := currentByFeatureSet["Default"]; ok {
+			for fgName, enabled := range defaultInfo.allFeatureGates {
+				if enabled {
+					defaultEnabledFeatureGates.Insert(fgName)
+				}
+			}
+		}
+	}
+
 	if len(recentlyEnabledFeatureGatesToClusterProfiles) == 0 {
 		md.Textf("No new Default FeatureGates found.\n")
 		fmt.Fprintf(o.Out, "No new Default FeatureGates found.\n")
@@ -181,16 +199,16 @@ func (o *FeatureGateTestAnalyzerOptions) Run(ctx context.Context) error {
 		clusterProfiles := recentlyEnabledFeatureGatesToClusterProfiles[enabledFeatureGate]
 		md.Title(1, enabledFeatureGate)
 
-		testingResults, err := listTestResultFor(enabledFeatureGate, clusterProfiles)
+		testingResults, installTestLevelData, err := listTestResultFor(enabledFeatureGate, clusterProfiles, defaultEnabledFeatureGates)
 		if err != nil {
 			return err
 		}
 
-		writeTestingMarkDown(testingResults, md)
+		writeTestingMarkDown(enabledFeatureGate, testingResults, md)
 
 		validationResults := checkIfTestingIsSufficient(enabledFeatureGate, testingResults)
 
-		// Separate warnings from blocking errors
+		// Separate warnings and blocking errors
 		blockingErrors := []error{}
 		warnings := []error{}
 		for _, vr := range validationResults {
@@ -201,6 +219,88 @@ func (o *FeatureGateTestAnalyzerOptions) Run(ctx context.Context) error {
 			}
 		}
 
+		// For Install feature gates, report "install should succeed: overall" test statistics first
+		if strings.Contains(enabledFeatureGate, "Install") {
+			md.Text("")
+			fmt.Fprintf(o.Out, "\n")
+			md.Textf("**ℹ️  Install Feature Gate Promotion Criteria:**\n")
+			fmt.Fprintf(o.Out, "ℹ️  Install Feature Gate Promotion Criteria:\n")
+			md.Textf("- E2E tests must pass at least **%.0f%%** of the time (at least %d runs per variant)\n", requiredPassRateForInstallFeatures*100, requiredNumberOfTestRunsPerVariant)
+			fmt.Fprintf(o.Out, "- E2E tests must pass at least %.0f%% of the time (at least %d runs per variant)\n", requiredPassRateForInstallFeatures*100, requiredNumberOfTestRunsPerVariant)
+			md.Textf("- \"install should succeed: overall\" test must pass **%.0f%%** of the time\n", requiredPassRateForInstallTest*100)
+			fmt.Fprintf(o.Out, "- \"install should succeed: overall\" test must pass %.0f%% of the time\n", requiredPassRateForInstallTest*100)
+			md.Text("")
+			fmt.Fprintf(o.Out, "\n")
+			md.Textf("**Install test statistics for \"install should succeed: overall\":**\n")
+			fmt.Fprintf(o.Out, "Install test statistics for \"install should succeed: overall\":\n")
+			jobVariants := make([]JobVariant, 0, len(testingResults))
+			for jobVariant := range testingResults {
+				jobVariants = append(jobVariants, jobVariant)
+			}
+			sort.Slice(jobVariants, func(i, j int) bool {
+				return jobVariants[i].String() < jobVariants[j].String()
+			})
+			prevCloud := ""
+			for _, jobVariant := range jobVariants {
+				if prevCloud != "" && jobVariant.Cloud != prevCloud {
+					md.Text("")
+					fmt.Fprintf(o.Out, "\n")
+				}
+				prevCloud = jobVariant.Cloud
+				installTest := installTestLevelData[jobVariant]
+				if installTest == nil {
+					md.Textf("  - %v: test not found\n", jobVariant)
+					fmt.Fprintf(o.Out, "  %v: test not found\n", jobVariant)
+				} else if installTest.TotalRuns > 0 {
+					passPercent := float32(installTest.SuccessfulRuns) / float32(installTest.TotalRuns)
+					displayActual := int(passPercent * 100)
+					md.Textf("  - %v: passed %d%% (%d/%d runs)\n", jobVariant, displayActual, installTest.SuccessfulRuns, installTest.TotalRuns)
+					fmt.Fprintf(o.Out, "  %v: passed %d%% (%d/%d runs)\n", jobVariant, displayActual, installTest.SuccessfulRuns, installTest.TotalRuns)
+				} else {
+					md.Textf("  - %v: 0 runs\n", jobVariant)
+					fmt.Fprintf(o.Out, "  %v: 0 runs\n", jobVariant)
+				}
+			}
+			md.Text("")
+			fmt.Fprintf(o.Out, "\n")
+
+			// Report additional e2e tests if they exist for Install feature gates
+			additionalTests := []string{}
+			for _, variant := range testingResults {
+				for _, test := range variant.TestResults {
+					if test.TestName != "install should succeed: overall" {
+						// Add unique test names
+						found := false
+						for _, existing := range additionalTests {
+							if existing == test.TestName {
+								found = true
+								break
+							}
+						}
+						if !found {
+							additionalTests = append(additionalTests, test.TestName)
+						}
+					}
+				}
+			}
+
+			if len(additionalTests) > 0 {
+				md.Textf("**Additional E2E tests found: %d test(s)**\n", len(additionalTests))
+				fmt.Fprintf(o.Out, "Additional E2E tests found: %d test(s)\n", len(additionalTests))
+				for _, testName := range additionalTests {
+					md.Textf("  - %s\n", testName)
+					fmt.Fprintf(o.Out, "  - %s\n", testName)
+				}
+				md.Text("")
+				fmt.Fprintf(o.Out, "\n")
+			} else {
+				md.Textf("**Additional E2E tests: None found**\n")
+				fmt.Fprintf(o.Out, "Additional E2E tests: None found\n")
+				md.Text("")
+				fmt.Fprintf(o.Out, "\n")
+			}
+		}
+
 		if len(validationResults) == 0 {
 			md.Textf("Sufficient CI testing for %q.\n", enabledFeatureGate)
 			fmt.Fprintf(o.Out, "Sufficient CI testing for %q.\n", enabledFeatureGate)
@@ -208,17 +308,23 @@ func (o *FeatureGateTestAnalyzerOptions) Run(ctx context.Context) error {
 			if len(blockingErrors) > 0 {
 				md.Textf("INSUFFICIENT CI testing for %q.\n", enabledFeatureGate)
 				fmt.Fprintf(o.Out, "INSUFFICIENT CI testing for %q.\n", enabledFeatureGate)
-			} else {
+			} else if len(warnings) > 0 {
 				md.Textf("CI testing issues found for %q (non-blocking warnings).\n", enabledFeatureGate)
 				fmt.Fprintf(o.Out, "CI testing issues found for %q (non-blocking warnings).\n", enabledFeatureGate)
+			} else {
+				md.Textf("Sufficient CI testing for %q.\n", enabledFeatureGate)
+				fmt.Fprintf(o.Out, "Sufficient CI testing for %q.\n", enabledFeatureGate)
 			}
 
-			md.Textf("* At least five tests are expected for a feature\n")
-			md.Textf("* Tests must be be run on every TechPreview platform (ask for an exception if your feature doesn't support a variant)")
-			md.Textf("* All tests must run at least 14 times on every platform")
-			md.Textf("* All tests must pass at least 95%% of the time")
-			md.Textf("* JobTier must be one of: standard, informing, blocking, candidate (candidate is allowed but produces a warning as it is not covered by Component Readiness)\n")
-			md.Text("")
+			if len(blockingErrors) > 0 || len(warnings) > 0 {
+				md.Textf("* At least %d tests are expected for a feature\n", requiredNumberOfTests)
+				md.Textf("* Tests must be be run on every TechPreview platform (ask for an exception if your feature doesn't support a variant)")
+				md.Textf("* All tests must run at least %d times on every platform", requiredNumberOfTestRunsPerVariant)
+				md.Textf("* All tests must pass at least %.0f%% of the time", requiredPassRateOfTestsPerVariant*100)
+				md.Textf("* For Install feature gates, the \"install should succeed: overall\" test must pass at least %.0f%% of the time", requiredPassRateForInstallTest*100)
+				md.Textf("* JobTier must be one of: standard, informing, blocking, candidate (candidate is allowed but produces a warning as it is not covered by Component Readiness)\n")
+				md.Text("")
+			}
 
 			if len(warnings) > 0 {
 				md.Textf("**Non-blocking warnings (optional variants):**\n")
@@ -325,7 +431,12 @@ func buildHTMLFeatureGateData(name string, testingResults map[JobVariant]*Testin
 				cell.SuccessfulRuns = testResults.SuccessfulRuns
 				cell.TotalRuns = testResults.TotalRuns
 				cell.FailedRuns = testResults.FailedRuns
-				if testResults.TotalRuns < requiredNumberOfTestRunsPerVariant || passPercent < requiredPassRateOfTestsPerVariant {
+				// Install features have a lower pass rate requirement for e2e tests
+				requiredPassRate := requiredPassRateOfTestsPerVariant
+				if strings.Contains(name, "Install") {
+					requiredPassRate = requiredPassRateForInstallFeatures
+				}
+				if testResults.TotalRuns < requiredNumberOfTestRunsPerVariant || passPercent < float32(requiredPassRate) {
 					cell.Failed = true
 				}
 			}
@@ -385,7 +496,8 @@ func checkIfTestingIsSufficient(featureGate string, testingResults map[JobVarian
 			})
 		}
 
-		if len(testedVariant.TestResults) < requiredNumberOfTests {
+		// For Install feature gates, additional tests are optional - only "install should succeed: overall" is required
+		if !strings.Contains(featureGate, "Install") && len(testedVariant.TestResults) < requiredNumberOfTests {
 			results = append(results, ValidationResult{
 				Error: fmt.Errorf("error: only %d tests found, need at least %d for %q on %v",
 					len(testedVariant.TestResults), requiredNumberOfTests, featureGate, jobVariant),
@@ -394,6 +506,11 @@ func checkIfTestingIsSufficient(featureGate string, testingResults map[JobVarian
 		}
 
 		for _, testResults := range testedVariant.TestResults {
+			// Skip "install should succeed: overall" for Install feature gates - it has special validation below
+			if strings.Contains(featureGate, "Install") && testResults.TestName == "install should succeed: overall" {
+				continue
+			}
+
 			if testResults.TotalRuns < requiredNumberOfTestRunsPerVariant {
 				results = append(results, ValidationResult{
 					Error: fmt.Errorf("error: %q only has %d runs, need at least %d runs for %q on %v",
@@ -405,8 +522,13 @@ func checkIfTestingIsSufficient(featureGate string, testingResults map[JobVarian
 				continue
 			}
 			passPercent := float32(testResults.SuccessfulRuns) / float32(testResults.TotalRuns)
-			if passPercent < requiredPassRateOfTestsPerVariant {
-				displayExpected := int(requiredPassRateOfTestsPerVariant * 100)
+			// Install features have a lower pass rate requirement for e2e tests
+			requiredPassRate := requiredPassRateOfTestsPerVariant
+			if strings.Contains(featureGate, "Install") {
+				requiredPassRate = requiredPassRateForInstallFeatures
+			}
+			if passPercent < float32(requiredPassRate) {
+				displayExpected := int(requiredPassRate * 100)
 				displayActual := int(passPercent * 100)
 				results = append(results, ValidationResult{
 					Error: fmt.Errorf("error: %q only passed %d%%, need at least %d%% for %q on %v",
@@ -415,12 +537,44 @@ func checkIfTestingIsSufficient(featureGate string, testingResults map[JobVarian
 				})
 			}
 		}
+
+		// For Install feature gates, validate "install should succeed: overall" test
+		if strings.Contains(featureGate, "Install") {
+			installTest := testResultByName(testedVariant.TestResults, "install should succeed: overall")
+			if installTest == nil {
+				results = append(results, ValidationResult{
+					Error: fmt.Errorf("warning: \"install should succeed: overall\" test not found for Install feature gate %q on %v",
+						featureGate, jobVariant),
+					IsWarning: true,
+				})
+			} else {
+				if installTest.TotalRuns < requiredNumberOfTestRunsPerVariant {
+					results = append(results, ValidationResult{
+						Error: fmt.Errorf("error: \"install should succeed: overall\" only has %d runs, need at least %d runs for %q on %v",
+							installTest.TotalRuns, requiredNumberOfTestRunsPerVariant, featureGate, jobVariant),
+						IsWarning: isOptional,
+					})
+				}
+				if installTest.TotalRuns > 0 {
+					passPercent := float32(installTest.SuccessfulRuns) / float32(installTest.TotalRuns)
+					if passPercent < requiredPassRateForInstallTest {
+						displayExpected := int(requiredPassRateForInstallTest * 100)
+						displayActual := int(passPercent * 100)
+						results = append(results, ValidationResult{
+							Error: fmt.Errorf("error: \"install should succeed: overall\" only passed %d%%, need at least %d%% for %q on %v",
+								displayActual, displayExpected, featureGate, jobVariant),
+							IsWarning: isOptional,
+						})
+					}
+				}
+			}
+		}
 	}
 
 	return results
 }
 
-func writeTestingMarkDown(testingResults map[JobVariant]*TestingResults, md *utils.Markdown) {
+func writeTestingMarkDown(featureGate string, testingResults map[JobVariant]*TestingResults, md *utils.Markdown) {
 	jobVariantsSet := sets.KeySet(testingResults)
 	jobVariants := jobVariantsSet.UnsortedList()
 	sort.Sort(OrderedJobVariants(jobVariants))
@@ -471,10 +625,15 @@ func writeTestingMarkDown(testingResults map[JobVariant]*TestingResults, md *uti
 			}
 			failString := ""
 			passPercent := float32(testResults.SuccessfulRuns) / float32(testResults.TotalRuns)
+			// Install features have a lower pass rate requirement for e2e tests
+			requiredPassRate := requiredPassRateOfTestsPerVariant
+			if strings.Contains(featureGate, "Install") {
+				requiredPassRate = requiredPassRateForInstallFeatures
+			}
 			switch {
 			case testResults.TotalRuns < requiredNumberOfTestRunsPerVariant:
 				failString = "FAIL <br/> "
-			case passPercent < requiredPassRateOfTestsPerVariant:
+			case passPercent < float32(requiredPassRate):
 				failString = "FAIL <br/> "
 			}
 			cellString := fmt.Sprintf("%s%d%% ( %d / %d ) ", failString, int(passPercent*100), testResults.SuccessfulRuns, testResults.TotalRuns)
@@ -599,6 +758,16 @@ var (
 			NetworkStack: "dual",
 			JobTiers:     "candidate,standard,informing,blocking",
 		},
+		{
+			Cloud:        "metal",
+			Architecture: "amd64",
+			Topology:     "single",
+		},
+		{
+			Cloud:        "metal",
+			Architecture: "amd64",
+			Topology:     "compact",
+		},
 	}
 
 	nonHypershiftPlatforms        = regexp.MustCompile("(?i)nutanix|metal|vsphere|openstack|azure|gcp")
@@ -620,6 +789,20 @@ type JobVariant struct {
 	OS           string
 	JobTiers     string // Comma-separated tiers (e.g., "standard,informing,blocking"). If empty, defaults to "standard,informing,blocking,candidate"
 	Optional     bool   // If true, validation failures for this variant are non-blocking warnings
+}
+
+func (jv JobVariant) String() string {
+	result := fmt.Sprintf("cloud=%s arch=%s topology=%s", jv.Cloud, jv.Architecture, jv.Topology)
+	if jv.NetworkStack != "" {
+		result += fmt.Sprintf(" network=%s", jv.NetworkStack)
+	}
+	if jv.OS != "" {
+		result += fmt.Sprintf(" os=%s", jv.OS)
+	}
+	if jv.Optional {
+		result += " optional=true"
+	}
+	return result
 }
 
 type OrderedJobVariants []JobVariant
@@ -694,6 +877,7 @@ type TestResults struct {
 type ValidationResult struct {
 	Error     error
 	IsWarning bool // if true, this is a non-blocking warning (for optional variants)
+	IsInfo    bool // if true, this is informational telemetry (e.g., install test pass percentage)
 }
 
 func testResultByName(results []TestResults, testName string) *TestResults {
@@ -736,10 +920,11 @@ func validateJobTiers(jobVariant JobVariant) error {
 	return nil
 }
 
-func listTestResultFor(featureGate string, clusterProfiles sets.Set[string]) (map[JobVariant]*TestingResults, error) {
+func listTestResultFor(featureGate string, clusterProfiles sets.Set[string], defaultEnabledFeatureGates sets.Set[string]) (map[JobVariant]*TestingResults, map[JobVariant]*TestResults, error) {
 	fmt.Printf("Query sippy for all test run results for feature gate %q on clusterProfile %q\n", featureGate, sets.List(clusterProfiles))
 
 	results := map[JobVariant]*TestingResults{}
+	installTestLevelData := map[JobVariant]*TestResults{}
 
 	var jobVariantsToCheck []JobVariant
 	if clusterProfiles.Has("Hypershift") && !nonHypershiftPlatforms.MatchString(featureGate) {
@@ -755,24 +940,40 @@ func listTestResultFor(featureGate string, clusterProfiles sets.Set[string]) (ma
 		}
 
 		jobVariantsToCheck = append(jobVariantsToCheck, selfManagedPlatformVariants...)
+
+		// Always include metal single and compact variants as optional checks
+		for _, v := range optionalSelfManagedPlatformVariants {
+			if strings.ToLower(v.Cloud) == "metal" && (strings.ToLower(v.Topology) == "single" || strings.ToLower(v.Topology) == "compact") {
+				jobVariantsToCheck = append(jobVariantsToCheck, v)
+			}
+		}
 	}
 
 	// Validate all variants before making expensive API calls
 	for _, jobVariant := range jobVariantsToCheck {
 		if err := validateJobTiers(jobVariant); err != nil {
-			return nil, err
+			return nil, nil, err
 		}
 	}
 
 	for _, jobVariant := range jobVariantsToCheck {
-		jobVariantResults, err := listTestResultForVariant(featureGate, jobVariant)
+		jobVariantResults, err := listTestResultForVariant(featureGate, jobVariant, defaultEnabledFeatureGates)
 		if err != nil {
-			return nil, err
+			return nil, nil, err
 		}
 		results[jobVariant] = jobVariantResults
+
+		// For Install feature gates, also get test-level data for "install should succeed: overall"
+		if strings.Contains(featureGate, "Install") {
+			installTestData, err := getInstallTestLevelData(featureGate, jobVariant)
+			if err != nil {
+				return nil, nil, err
+			}
+			installTestLevelData[jobVariant] = installTestData
+		}
 	}
 
-	return results, nil
+	return results, installTestLevelData, nil
 }
 
 func filterVariants(featureGate string, variantsList ...[]JobVariant) []JobVariant {
@@ -862,15 +1063,111 @@ func getRelease() (string, error) {
 	return getLatestRelease()
 }
 
-func listTestResultForVariant(featureGate string, jobVariant JobVariant) (*TestingResults, error) {
-	// Substring here matches for both [OCPFeatureGate:...] and [FeatureGate:...]
-	testPattern := fmt.Sprintf("FeatureGate:%s]", featureGate)
+func getInstallTestLevelData(featureGate string, jobVariant JobVariant) (*TestResults, error) {
+	testPattern := "install should succeed: overall"
+	queries := sippy.QueriesForWithCapability(jobVariant.Cloud, jobVariant.Architecture, jobVariant.Topology,
+		jobVariant.NetworkStack, jobVariant.OS, jobVariant.JobTiers, testPattern, featureGate)
 
-	// Feature gates used by the installer don't need separate tests, use the overall install tests
-	if strings.Contains(featureGate, "Install") {
-		return verifyJobBasedFeatureGatePromotion(featureGate, jobVariant)
+	defaultTransport := &http.Transport{
+		Proxy:                 http.ProxyFromEnvironment,
+		ForceAttemptHTTP2:     true,
+		MaxIdleConns:          100,
+		IdleConnTimeout:       90 * time.Second,
+		TLSHandshakeTimeout:   10 * time.Second,
+		ExpectContinueTimeout: 1 * time.Second,
+		TLSClientConfig: &tls.Config{
+			InsecureSkipVerify: true,
+		},
 	}
 
+	sippyClient := &http.Client{
+		Timeout:   2 * time.Minute,
+		Transport: defaultTransport,
+	}
+
+	release, err := getRelease()
+	if err != nil {
+		return nil, fmt.Errorf("couldn't fetch latest release version: %w", err)
+	}
+
+	var installTestResult *TestResults
+	for _, currQuery := range queries {
+		currURL := &url.URL{
+			Scheme: "https",
+			Host:   "sippy.dptools.openshift.org",
+			Path:   "api/tests",
+		}
+		queryParams := currURL.Query()
+		queryParams.Add("release", release)
+		queryParams.Add("period", "default")
+		filterJSON, err := json.Marshal(currQuery)
+		if err != nil {
+			return nil, err
+		}
+		queryParams.Add("filter", string(filterJSON))
+		currURL.RawQuery = queryParams.Encode()
+
+		req, err := http.NewRequest(http.MethodGet, currURL.String(), nil)
+		if err != nil {
+			return nil, err
+		}
+
+		response, err := sippyClient.Do(req)
+		if err != nil {
+			return nil, err
+		}
+		if response.StatusCode < 200 || response.StatusCode > 299 {
+			return nil, fmt.Errorf("error getting sippy results (status=%d) for: %v", response.StatusCode, currURL.String())
+		}
+		queryResultBytes, err := io.ReadAll(response.Body)
+		if err != nil {
+			return nil, err
+		}
+		response.Body.Close()
+
+		testInfos := []sippy.SippyTestInfo{}
+		if err := json.Unmarshal(queryResultBytes, &testInfos); err != nil {
+			return nil, err
+		}
+
+		for _, currTest := range testInfos {
+			if installTestResult == nil {
+				installTestResult = &TestResults{
+					TestName: currTest.Name,
+				}
+			}
+
+			// Accumulate results across multiple JobTier queries
+			if currTest.CurrentRuns >= requiredNumberOfTestRunsPerVariant {
+				installTestResult.TotalRuns += currTest.CurrentRuns
+				installTestResult.SuccessfulRuns += currTest.CurrentSuccesses
+				installTestResult.FailedRuns += currTest.CurrentFailures
+				installTestResult.FlakedRuns += currTest.CurrentFlakes
+			} else {
+				installTestResult.TotalRuns += currTest.CurrentRuns + currTest.PreviousRuns
+				installTestResult.SuccessfulRuns += currTest.CurrentSuccesses + currTest.PreviousSuccesses
+				installTestResult.FailedRuns += currTest.CurrentFailures + currTest.PreviousFailures
+				installTestResult.FlakedRuns += currTest.CurrentFlakes + currTest.PreviousFlakes
+			}
+		}
+	}
+
+	return installTestResult, nil
+}
+
+func listTestResultForVariant(featureGate string, jobVariant JobVariant, defaultEnabledFeatureGates sets.Set[string]) (*TestingResults, error) {
+	// Feature gates used by the installer don't need separate tests, use the overall install tests
+	if strings.Contains(featureGate, "Install") {
+		return verifyJobBasedFeatureGatePromotion(featureGate, jobVariant, defaultEnabledFeatureGates)
+	}
+
+	var testPattern string
+	var queries []*sippy.SippyQueryStruct
+
+	// Substring here matches for both [OCPFeatureGate:...] and [FeatureGate:...]
+	testPattern = fmt.Sprintf("FeatureGate:%s]", featureGate)
+	queries = sippy.QueriesFor(jobVariant.Cloud, jobVariant.Architecture, jobVariant.Topology,
+		jobVariant.NetworkStack, jobVariant.OS, jobVariant.JobTiers, testPattern)
 	fmt.Printf("Query sippy for all test run results for pattern %q on variant %#v\n", testPattern, jobVariant)
 
 	defaultTransport := &http.Transport{
@@ -892,12 +1189,10 @@ func listTestResultForVariant(featureGate string, jobVariant JobVariant) (*Testi
 
 	testNameToResults := map[string]*TestResults{}
 	hasCandidateTierResults := false
-	queries := sippy.QueriesFor(jobVariant.Cloud, jobVariant.Architecture, jobVariant.Topology, jobVariant.NetworkStack, jobVariant.OS, jobVariant.JobTiers, testPattern)
 	release, err := getRelease()
 	if err != nil {
 		return nil, fmt.Errorf("couldn't fetch latest release version: %w", err)
 	}
-	fmt.Printf("Querying sippy release %s for test run results\n", release)
 
 	for _, currQuery := range queries {
 		currURL := &url.URL{
@@ -982,6 +1277,20 @@ func listTestResultForVariant(featureGate string, jobVariant JobVariant) (*Testi
 	return jobVariantResults, nil
 }
 
+func extractOCPFeatureGateName(testName string) string {
+	const prefix = "[OCPFeatureGate:"
+	idx := strings.Index(testName, prefix)
+	if idx < 0 {
+		return ""
+	}
+	start := idx + len(prefix)
+	end := strings.Index(testName[start:], "]")
+	if end < 0 {
+		return ""
+	}
+	return testName[start : start+end]
+}
+
 // Check for Arbiter and DualReplica or Fencing featureGates as these have special topologies
 func matchTwoNodeFeatureGates(featureGate string, topology string) bool {
 	if (strings.Contains(featureGate, "dualreplica") || strings.Contains(featureGate, "fencing")) && strings.Contains(topology, "fencing") {
@@ -990,7 +1299,7 @@ func matchTwoNodeFeatureGates(featureGate string, topology string) bool {
 	return false
 }
 
-func verifyJobBasedFeatureGatePromotion(featureGate string, jobVariant JobVariant) (*TestingResults, error) {
+func verifyJobBasedFeatureGatePromotion(featureGate string, jobVariant JobVariant, defaultEnabledFeatureGates sets.Set[string]) (*TestingResults, error) {
 	ocpRelease, err := getRelease()
 	if err != nil {
 		return nil, fmt.Errorf("getting release version: %w", err)
@@ -1021,7 +1330,7 @@ func verifyJobBasedFeatureGatePromotion(featureGate string, jobVariant JobVarian
 	testResults := []TestResults{}
 
 	for _, job := range jobs {
-		results, err := verifyJobPassRate(sippyClient, ocpRelease, job, jobVariant)
+		results, err := verifyJobPassRate(sippyClient, ocpRelease, job, jobVariant, featureGate, defaultEnabledFeatureGates)
 		if err != nil {
 			return nil, fmt.Errorf("verifying job pass rate for job %q: %w", job.Name, err)
 		}
@@ -1035,7 +1344,7 @@ func verifyJobBasedFeatureGatePromotion(featureGate string, jobVariant JobVarian
 	}, nil
 }
 
-func verifyJobPassRate(client *http.Client, release string, job sippy.SippyJob, variant JobVariant) (*TestResults, error) {
+func verifyJobPassRate(client *http.Client, release string, job sippy.SippyJob, variant JobVariant, featureGate string, defaultEnabledFeatureGates sets.Set[string]) (*TestResults, error) {
 	// Do an early check for 95% pass rate with at least 14 runs
 	runs := job.CurrentRuns
 	passes := job.CurrentPasses
@@ -1060,12 +1369,17 @@ func verifyJobPassRate(client *http.Client, release string, job sippy.SippyJob, 
 		}, nil
 	}
 
-	// If we have greater than or equal to 14 runs AND they are passing at a rate of at least 95%,
+	// If we have greater than or equal to 14 runs AND they are passing at a rate of at least the required pass rate,
 	// we can return early because this job has passed the promotion requirements.
 	//
 	// This saves us from unnecessarily making calls out to Sippy to perform a more nuanced
 	// failures analysis of the job runs to see if failed runs are true failures or known regressions.
-	if float32(passes) / float32(runs) >= requiredPassRateOfTestsPerVariant {
+	// Install features have a lower pass rate requirement (80%) for e2e tests
+	requiredPassRate := requiredPassRateOfTestsPerVariant
+	if strings.Contains(featureGate, "Install") {
+		requiredPassRate = requiredPassRateForInstallFeatures
+	}
+	if float32(passes) / float32(runs) >= float32(requiredPassRate) {
 		return &TestResults{
 			TestName: job.Name,
 			TotalRuns: runs,
@@ -1101,12 +1415,36 @@ func verifyJobPassRate(client *http.Client, release string, job sippy.SippyJob, 
 		return nil, fmt.Errorf("getting triaged test failures from sippy: %w", err)
 	}
 
+	featureGateOwnedPattern := fmt.Sprintf("[OCPFeatureGate:%s]", featureGate)
+
+	infraFailures := 0
 	for _, jobRun := range jobRuns {
 		if jobRun.OverallResult == "F" && !jobRun.KnownFailure {
+
+			isInfraFailure := false
+			for _, failure := range jobRun.FailedTestNames {
+				if strings.Contains(failure, "install should succeed: configuration") {
+					isInfraFailure = true
+					break
+				}
+			}
+			if isInfraFailure {
+				fmt.Printf("job run %s excluded from totals due to suspected infrastructure failure (\"install should succeed: configuration\")\n", jobRun.TestGridURL)
+				infraFailures++
+				continue
+			}
 
 			untriagedTestFailures := []string{}
 			for _, failure := range jobRun.FailedTestNames {
 				if !triagedTestFailures.Has(failure) {
+					if strings.Contains(failure, "[OCPFeatureGate:") && !strings.Contains(failure, featureGateOwnedPattern) {
+						if otherGate := extractOCPFeatureGateName(failure); otherGate != "" && !defaultEnabledFeatureGates.Has(otherGate) {
+							continue
+						}
+					}
+					if strings.HasPrefix(failure, "Run multi-stage test ") {
+						continue
+					}
 					untriagedTestFailures = append(untriagedTestFailures, failure)
 				}
 			}
@@ -1127,6 +1465,7 @@ func verifyJobPassRate(client *http.Client, release string, job sippy.SippyJob, 
 
 		testResults.SuccessfulRuns++
 	}
+	testResults.TotalRuns -= infraFailures
 
 	return testResults, nil
 }
@@ -1139,7 +1478,7 @@ func getJobsForFeatureGateFromSippy(client *http.Client, release, featureGate st
 	defer resp.Body.Close()
 
 	if resp.StatusCode != http.StatusOK {
-		return nil, fmt.Errorf("expected a 200 OK status code but got %s", resp.StatusCode)
+		return nil, fmt.Errorf("expected a 200 OK status code but got %d", resp.StatusCode)
 	}
 
 	body, err := io.ReadAll(resp.Body)
@@ -1165,7 +1504,7 @@ func getJobRunsFromSippy(client *http.Client, release, jobName string) ([]sippy.
 	defer resp.Body.Close()
 
 	if resp.StatusCode != http.StatusOK {
-		return nil, fmt.Errorf("expected a 200 OK status code but got %s", resp.StatusCode)
+		return nil, fmt.Errorf("expected a 200 OK status code but got %d", resp.StatusCode)
 	}
 
 	body, err := io.ReadAll(resp.Body)

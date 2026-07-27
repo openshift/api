@@ -22583,7 +22583,7 @@ func schema_openshift_api_config_v1_VSpherePlatformFailureDomainSpec(ref common.
 					},
 					"server": {
 						SchemaProps: spec.SchemaProps{
-							Description: "server is the fully-qualified domain name or the IP address of the vCenter server.",
+							Description: "server is the fully-qualified domain name or the IP address of the vCenter server. This must match the server field of an entry in the vcenters list. The match is case-sensitive; the value must be specified exactly as it appears in the vcenters entry. The value must be between 1 and 255 characters long.",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -22761,7 +22761,7 @@ func schema_openshift_api_config_v1_VSpherePlatformSpec(ref common.ReferenceCall
 							},
 						},
 						SchemaProps: spec.SchemaProps{
-							Description: "failureDomains contains the definition of region, zone and the vCenter topology. If this is omitted failure domains (regions and zones) will not be used.",
+							Description: "failureDomains contains the definition of region, zone and the vCenter topology. If this is omitted failure domains (regions and zones) will not be used. Each failure domain's server must match the server field of an entry in the vcenters list.",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{

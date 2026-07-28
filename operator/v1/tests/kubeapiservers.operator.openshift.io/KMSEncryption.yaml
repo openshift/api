@@ -18,10 +18,10 @@ tests:
           encryptionStatus:
             healthReports:
             - nodeName: node-a
-              keyId: key-1
+              keyID: key-1
               status: Healthy
               lastCheckedTime: "2026-01-01T00:00:00Z"
-              kekId: kek-1
+              remoteKeyID: kek-1
       expected: |
         apiVersion: operator.openshift.io/v1
         kind: KubeAPIServer
@@ -32,11 +32,11 @@ tests:
           encryptionStatus:
             healthReports:
             - nodeName: node-a
-              keyId: key-1
+              keyID: key-1
               status: Healthy
               lastCheckedTime: "2026-01-01T00:00:00Z"
-              kekId: kek-1
-    - name: Should accept multiple health reports with unique nodeName/keyId combinations
+              remoteKeyID: kek-1
+    - name: Should accept multiple health reports with unique nodeName/keyID combinations
       initial: |
         apiVersion: operator.openshift.io/v1
         kind: KubeAPIServer
@@ -49,21 +49,21 @@ tests:
           encryptionStatus:
             healthReports:
             - nodeName: node-a
-              keyId: key-1
+              keyID: key-1
               status: Healthy
               lastCheckedTime: "2026-01-01T00:00:00Z"
-              kekId: kek-1
+              remoteKeyID: kek-1
             - nodeName: node-a
-              keyId: key-2
+              keyID: key-2
               status: Unhealthy
               lastCheckedTime: "2026-01-01T00:00:00Z"
-              kekId: kek-2
+              remoteKeyID: kek-2
               detail: plugin unreachable
             - nodeName: node-b
-              keyId: key-1
+              keyID: key-1
               status: Error
               lastCheckedTime: "2026-01-01T00:00:00Z"
-              kekId: arn:aws:kms:us-east-1:123456789012:key/abc
+              remoteKeyID: arn:aws:kms:us-east-1:123456789012:key/abc
               detail: authentication failed
       expected: |
         apiVersion: operator.openshift.io/v1
@@ -75,23 +75,23 @@ tests:
           encryptionStatus:
             healthReports:
             - nodeName: node-a
-              keyId: key-1
+              keyID: key-1
               status: Healthy
               lastCheckedTime: "2026-01-01T00:00:00Z"
-              kekId: kek-1
+              remoteKeyID: kek-1
             - nodeName: node-a
-              keyId: key-2
+              keyID: key-2
               status: Unhealthy
               lastCheckedTime: "2026-01-01T00:00:00Z"
-              kekId: kek-2
+              remoteKeyID: kek-2
               detail: plugin unreachable
             - nodeName: node-b
-              keyId: key-1
+              keyID: key-1
               status: Error
               lastCheckedTime: "2026-01-01T00:00:00Z"
-              kekId: arn:aws:kms:us-east-1:123456789012:key/abc
+              remoteKeyID: arn:aws:kms:us-east-1:123456789012:key/abc
               detail: authentication failed
-    - name: Should reject duplicate nodeName/keyId health reports
+    - name: Should reject duplicate nodeName/keyID health reports
       initial: |
         apiVersion: operator.openshift.io/v1
         kind: KubeAPIServer
@@ -100,10 +100,10 @@ tests:
           encryptionStatus:
             healthReports:
             - nodeName: node-a
-              keyId: key-1
+              keyID: key-1
               status: Healthy
               lastCheckedTime: "2026-01-01T00:00:00Z"
-              kekId: kek-1
+              remoteKeyID: kek-1
       updated: |
         apiVersion: operator.openshift.io/v1
         kind: KubeAPIServer
@@ -112,15 +112,15 @@ tests:
           encryptionStatus:
             healthReports:
             - nodeName: node-a
-              keyId: key-1
+              keyID: key-1
               status: Healthy
               lastCheckedTime: "2026-01-01T00:00:00Z"
-              kekId: kek-1
+              remoteKeyID: kek-1
             - nodeName: node-a
-              keyId: key-1
+              keyID: key-1
               status: Unhealthy
               lastCheckedTime: "2026-01-01T00:00:00Z"
-              kekId: kek-2
+              remoteKeyID: kek-2
               detail: plugin error
       expectedStatusError: "Duplicate value"
     - name: Should reject an invalid nodeName in health reports
@@ -136,10 +136,10 @@ tests:
           encryptionStatus:
             healthReports:
             - nodeName: INVALID
-              keyId: key-1
+              keyID: key-1
               status: Healthy
               lastCheckedTime: "2026-01-01T00:00:00Z"
-              kekId: kek-1
+              remoteKeyID: kek-1
       expectedStatusError: "nodeName must be a lowercase RFC 1123 subdomain"
     - name: Should accept preflight with only observedConfigHash and no result
       initial: |
@@ -239,10 +239,10 @@ tests:
           encryptionStatus:
             healthReports:
             - nodeName: node-a
-              keyId: key-1
+              keyID: key-1
               status: Healthy
               lastCheckedTime: "2026-01-01T00:00:00Z"
-              kekId: kek-1
+              remoteKeyID: kek-1
             preflight:
               observedConfigHash: AQAAAA==
               result:
@@ -259,10 +259,10 @@ tests:
           encryptionStatus:
             healthReports:
             - nodeName: node-a
-              keyId: key-1
+              keyID: key-1
               status: Healthy
               lastCheckedTime: "2026-01-01T00:00:00Z"
-              kekId: kek-1
+              remoteKeyID: kek-1
             preflight:
               observedConfigHash: AQAAAA==
               result:

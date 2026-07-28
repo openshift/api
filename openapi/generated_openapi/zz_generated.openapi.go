@@ -58595,13 +58595,13 @@ func schema_openshift_api_operator_v1_KMSEncryptionStatus(ref common.ReferenceCa
 							Extensions: spec.Extensions{
 								"x-kubernetes-list-map-keys": []interface{}{
 									"nodeName",
-									"keyId",
+									"keyID",
 								},
 								"x-kubernetes-list-type": "map",
 							},
 						},
 						SchemaProps: spec.SchemaProps{
-							Description: "healthReports contains all KMS plugin health reports. When omitted, no health reports are available. Each entry must have a unique combination of nodeName and keyId.",
+							Description: "healthReports contains all KMS plugin health reports. When omitted, no health reports are available. Each entry must have a unique combination of nodeName and keyID.",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -58636,14 +58636,14 @@ func schema_openshift_api_operator_v1_KMSPluginHealthReport(ref common.Reference
 				Properties: map[string]spec.Schema{
 					"nodeName": {
 						SchemaProps: spec.SchemaProps{
-							Description: "nodeName is the name of the node this instance of the plugin runs on. The combination of nodeName and keyId makes this health report unique. The value must be a valid Kubernetes node name: a lowercase RFC 1123 subdomain consisting of lowercase alphanumeric characters, '-' or '.', starting and ending with an alphanumeric character, and be at most 253 characters in length.",
+							Description: "nodeName is the name of the node this instance of the plugin runs on. The combination of nodeName and keyID makes this health report unique. The value must be a valid Kubernetes node name: a lowercase RFC 1123 subdomain consisting of lowercase alphanumeric characters, '-' or '.', starting and ending with an alphanumeric character, and be at most 253 characters in length.",
 							Type:        []string{"string"},
 							Format:      "",
 						},
 					},
-					"keyId": {
+					"keyID": {
 						SchemaProps: spec.SchemaProps{
-							Description: "keyId is the encryption-key-secret id (kms-{keyId}.sock), a unique identifier of the plugin on that node. This is not a cryptographic key used to encrypt/decrypt any resources. The value must be between 1 and 512 characters.",
+							Description: "keyID is the encryption-key-secret id (kms-{keyID}.sock), a unique identifier of the plugin on that node. This is not a cryptographic key used to encrypt/decrypt any resources. The value must be between 1 and 512 characters.",
 							Type:        []string{"string"},
 							Format:      "",
 						},
@@ -58661,9 +58661,9 @@ func schema_openshift_api_operator_v1_KMSPluginHealthReport(ref common.Reference
 							Ref:         ref(metav1.Time{}.OpenAPIModelName()),
 						},
 					},
-					"kekId": {
+					"remoteKeyID": {
 						SchemaProps: spec.SchemaProps{
-							Description: "kekId refers to the remote KEK id from KMS v2 StatusResponse.key_id. This is not a cryptographic key, but a unique representation of the KEK. The value must be between 1 and 1024 characters.",
+							Description: "remoteKeyID refers to the remote key identifier from KMS v2 StatusResponse.key_id. This is not a cryptographic key, but a unique representation of the KEK. The value must be between 1 and 1024 characters.",
 							Type:        []string{"string"},
 							Format:      "",
 						},
@@ -58676,7 +58676,7 @@ func schema_openshift_api_operator_v1_KMSPluginHealthReport(ref common.Reference
 						},
 					},
 				},
-				Required: []string{"nodeName", "keyId", "status", "lastCheckedTime", "kekId"},
+				Required: []string{"nodeName", "keyID", "status", "lastCheckedTime", "remoteKeyID"},
 			},
 		},
 		Dependencies: []string{

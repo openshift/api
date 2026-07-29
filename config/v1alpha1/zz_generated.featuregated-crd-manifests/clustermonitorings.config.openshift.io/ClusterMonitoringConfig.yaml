@@ -2326,6 +2326,28 @@ spec:
                         required:
                         - collectionPolicy
                         type: object
+                      nvmExpressSubsystem:
+                        description: |-
+                          nvmExpressSubsystem configures the nvmesubsystem collector, which
+                          collects statistics about NVM Express (NVMe) subsystem devices.
+                          nvmExpressSubsystem is optional.
+                          When omitted, this means no opinion and the platform is left to choose a reasonable default,
+                          which is subject to change over time. The current default is enabled.
+                        properties:
+                          collectionPolicy:
+                            description: |-
+                              collectionPolicy declares whether the nvmesubsystem collector collects metrics.
+                              This field is required.
+                              Valid values are "Collect" and "DoNotCollect".
+                              When set to "Collect", the nvmesubsystem collector is active and NVMe subsystem statistics are collected.
+                              When set to "DoNotCollect", the nvmesubsystem collector is inactive and the corresponding metrics become unavailable.
+                            enum:
+                            - Collect
+                            - DoNotCollect
+                            type: string
+                        required:
+                        - collectionPolicy
+                        type: object
                       processes:
                         description: |-
                           processes configures the processes collector, which collects statistics from processes and

@@ -9429,7 +9429,7 @@ func schema_openshift_api_config_v1_AWSPlatformStatus(ref common.ReferenceCallba
 					},
 					"ipFamily": {
 						SchemaProps: spec.SchemaProps{
-							Description: "ipFamily specifies the IP protocol family that should be used for AWS network resources. This controls whether AWS resources are created with IPv4-only, or dual-stack networking with IPv4 or IPv6 as the primary protocol family.",
+							Description: "ipFamily specifies the IP protocol family that should be used for AWS network resources. This controls whether AWS resources are created with IPv4-only, or dual-stack networking with IPv4 or IPv6 as the primary protocol family.\n\nValid values are: * \"IPv4\" (default): Cloud platform resources use IPv4 addressing only. * \"DualStackIPv6Primary\": Cloud platform resources use dual-stack networking with IPv6 as the primary protocol family. * \"DualStackIPv4Primary\": Cloud platform resources use dual-stack networking with IPv4 as the primary protocol family.\n\nWhen omitted, this field defaults to \"IPv4\".\n\nThis field is immutable and cannot be changed once set.",
 							Default:     "IPv4",
 							Type:        []string{"string"},
 							Format:      "",

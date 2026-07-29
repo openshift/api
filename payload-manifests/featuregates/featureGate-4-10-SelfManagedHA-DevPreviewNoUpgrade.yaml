@@ -217,6 +217,9 @@
                         "name": "GCPSovereignCloudInstall"
                     },
                     {
+                        "name": "GatewayAPIManagementMode"
+                    },
+                    {
                         "name": "GatewayAPIWithoutOLM"
                     },
                     {

@@ -1348,11 +1348,16 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		operatorv1alpha1.EtcdBackupList{}.OpenAPIModelName():                                   schema_openshift_api_operator_v1alpha1_EtcdBackupList(ref),
 		operatorv1alpha1.EtcdBackupSpec{}.OpenAPIModelName():                                   schema_openshift_api_operator_v1alpha1_EtcdBackupSpec(ref),
 		operatorv1alpha1.EtcdBackupStatus{}.OpenAPIModelName():                                 schema_openshift_api_operator_v1alpha1_EtcdBackupStatus(ref),
+		operatorv1alpha1.GatewayAPIIngressConfig{}.OpenAPIModelName():                          schema_openshift_api_operator_v1alpha1_GatewayAPIIngressConfig(ref),
 		operatorv1alpha1.GenerationHistory{}.OpenAPIModelName():                                schema_openshift_api_operator_v1alpha1_GenerationHistory(ref),
 		operatorv1alpha1.GenericOperatorConfig{}.OpenAPIModelName():                            schema_openshift_api_operator_v1alpha1_GenericOperatorConfig(ref),
 		operatorv1alpha1.ImageContentSourcePolicy{}.OpenAPIModelName():                         schema_openshift_api_operator_v1alpha1_ImageContentSourcePolicy(ref),
 		operatorv1alpha1.ImageContentSourcePolicyList{}.OpenAPIModelName():                     schema_openshift_api_operator_v1alpha1_ImageContentSourcePolicyList(ref),
 		operatorv1alpha1.ImageContentSourcePolicySpec{}.OpenAPIModelName():                     schema_openshift_api_operator_v1alpha1_ImageContentSourcePolicySpec(ref),
+		operatorv1alpha1.Ingress{}.OpenAPIModelName():                                          schema_openshift_api_operator_v1alpha1_Ingress(ref),
+		operatorv1alpha1.IngressList{}.OpenAPIModelName():                                      schema_openshift_api_operator_v1alpha1_IngressList(ref),
+		operatorv1alpha1.IngressSpec{}.OpenAPIModelName():                                      schema_openshift_api_operator_v1alpha1_IngressSpec(ref),
+		operatorv1alpha1.IngressStatus{}.OpenAPIModelName():                                    schema_openshift_api_operator_v1alpha1_IngressStatus(ref),
 		operatorv1alpha1.LoggingConfig{}.OpenAPIModelName():                                    schema_openshift_api_operator_v1alpha1_LoggingConfig(ref),
 		operatorv1alpha1.NodeStatus{}.OpenAPIModelName():                                       schema_openshift_api_operator_v1alpha1_NodeStatus(ref),
 		operatorv1alpha1.OLM{}.OpenAPIModelName():                                              schema_openshift_api_operator_v1alpha1_OLM(ref),
@@ -66221,6 +66226,26 @@ func schema_openshift_api_operator_v1alpha1_EtcdBackupStatus(ref common.Referenc
 	}
 }
 
+func schema_openshift_api_operator_v1alpha1_GatewayAPIIngressConfig(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "GatewayAPIIngressConfig holds configuration for Gateway API integration in the Cluster Ingress Operator.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"managementMode": {
+						SchemaProps: spec.SchemaProps{
+							Description: "managementMode specifies how the Cluster Ingress Operator manages Gateway API Custom Resource Definitions (CRDs), the OpenShift Gateway API implementation, and its Gateway API controllers.\n\nAllowed values are \"Managed\" and \"Unmanaged\".\n\nWhen omitted or set to \"Managed\", the ingress operator installs, owns, and upgrades the Gateway API CRDs, protects them with a Validating Admission Policy, and deploys the OpenShift Gateway API implementation and its Gateway API controllers.\n\nWhen set to \"Unmanaged\", the ingress operator does not install or manage Gateway API CRDs and does not deploy the OpenShift Gateway API implementation or its Gateway API controllers. The cluster administrator or a third-party product is responsible for providing their own CRDs and Gateway controller. The ingress operator reports observational status only.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+				},
+			},
+		},
+	}
+}
+
 func schema_openshift_api_operator_v1alpha1_GenerationHistory(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -66452,6 +66477,174 @@ func schema_openshift_api_operator_v1alpha1_ImageContentSourcePolicySpec(ref com
 		},
 		Dependencies: []string{
 			operatorv1alpha1.RepositoryDigestMirrors{}.OpenAPIModelName()},
+	}
+}
+
+func schema_openshift_api_operator_v1alpha1_Ingress(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "Ingress contains configuration options specific to the Ingress Operator itself, including how it manages Gateway API integration.\n\nCompatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"kind": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"apiVersion": {
+						SchemaProps: spec.SchemaProps{
+							Description: "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"metadata": {
+						SchemaProps: spec.SchemaProps{
+							Description: "metadata is the standard object's metadata. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata",
+							Default:     map[string]interface{}{},
+							Ref:         ref(metav1.ObjectMeta{}.OpenAPIModelName()),
+						},
+					},
+					"spec": {
+						SchemaProps: spec.SchemaProps{
+							Description: "spec holds user settable values for configuration.",
+							Default:     map[string]interface{}{},
+							Ref:         ref(operatorv1alpha1.IngressSpec{}.OpenAPIModelName()),
+						},
+					},
+					"status": {
+						SchemaProps: spec.SchemaProps{
+							Description: "status holds observed values from the cluster.",
+							Default:     map[string]interface{}{},
+							Ref:         ref(operatorv1alpha1.IngressStatus{}.OpenAPIModelName()),
+						},
+					},
+				},
+				Required: []string{"metadata", "spec"},
+			},
+		},
+		Dependencies: []string{
+			operatorv1alpha1.IngressSpec{}.OpenAPIModelName(), operatorv1alpha1.IngressStatus{}.OpenAPIModelName(), metav1.ObjectMeta{}.OpenAPIModelName()},
+	}
+}
+
+func schema_openshift_api_operator_v1alpha1_IngressList(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "IngressList is a collection of Ingresses.\n\nCompatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"kind": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"apiVersion": {
+						SchemaProps: spec.SchemaProps{
+							Description: "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"metadata": {
+						SchemaProps: spec.SchemaProps{
+							Description: "metadata is the standard list's metadata. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata",
+							Default:     map[string]interface{}{},
+							Ref:         ref(metav1.ListMeta{}.OpenAPIModelName()),
+						},
+					},
+					"items": {
+						SchemaProps: spec.SchemaProps{
+							Description: "items is a list of Ingresses.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref(operatorv1alpha1.Ingress{}.OpenAPIModelName()),
+									},
+								},
+							},
+						},
+					},
+				},
+				Required: []string{"metadata"},
+			},
+		},
+		Dependencies: []string{
+			operatorv1alpha1.Ingress{}.OpenAPIModelName(), metav1.ListMeta{}.OpenAPIModelName()},
+	}
+}
+
+func schema_openshift_api_operator_v1alpha1_IngressSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "IngressSpec is the specification of the desired behavior of the Ingress Operator.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"gatewayAPI": {
+						SchemaProps: spec.SchemaProps{
+							Description: "gatewayAPI holds configuration for Gateway API integration, including how the ingress operator manages Gateway API CRDs, the OpenShift Gateway API implementation, and its Gateway API controllers.",
+							Default:     map[string]interface{}{},
+							Ref:         ref(operatorv1alpha1.GatewayAPIIngressConfig{}.OpenAPIModelName()),
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			operatorv1alpha1.GatewayAPIIngressConfig{}.OpenAPIModelName()},
+	}
+}
+
+func schema_openshift_api_operator_v1alpha1_IngressStatus(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "IngressStatus defines the observed status of the Ingress Operator.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"conditions": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-map-keys": []interface{}{
+									"type",
+								},
+								"x-kubernetes-list-type": "map",
+							},
+						},
+						SchemaProps: spec.SchemaProps{
+							Description: "conditions is a list of conditions and their status.\n\nGateway API CRD management conditions are reported here with the \"GatewayAPI\" prefix:\n\n* \"GatewayAPICRDsManaged\" indicates whether the ingress operator is actively\n  managing Gateway API CRDs.\n* \"GatewayAPICRDsPresent\" indicates whether Gateway API CRDs exist on the\n  cluster.\n* \"GatewayAPICRDsCompliant\" indicates whether the installed CRDs match the\n  version expected by this ingress operator release.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref(metav1.Condition{}.OpenAPIModelName()),
+									},
+								},
+							},
+						},
+					},
+					"observedGeneration": {
+						SchemaProps: spec.SchemaProps{
+							Description: "observedGeneration represents the most recent generation observed by the operator and specifies the version of the spec field currently being synced.\n\nWhen omitted, the operator has not yet observed the resource.",
+							Type:        []string{"integer"},
+							Format:      "int64",
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			metav1.Condition{}.OpenAPIModelName()},
 	}
 }
 

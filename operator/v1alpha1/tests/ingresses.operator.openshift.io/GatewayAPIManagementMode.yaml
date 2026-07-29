@@ -1,0 +1,243 @@
+apiVersion: apiextensions.k8s.io/v1 # Hack because controller-gen complains if we don't have this
+name: "Ingress"
+crdName: ingresses.operator.openshift.io
+featureGate: GatewayAPIManagementMode
+tests:
+  onCreate:
+  - name: Should be able to create an Ingress with a minimal non-empty spec
+    initial: |
+      apiVersion: operator.openshift.io/v1alpha1
+      kind: Ingress
+      metadata:
+        name: cluster
+      spec:
+        gatewayAPI:
+          managementMode: Managed
+    expected: |
+      apiVersion: operator.openshift.io/v1alpha1
+      kind: Ingress
+      metadata:
+        name: cluster
+      spec:
+        gatewayAPI:
+          managementMode: Managed
+  - name: Should not be able to create an Ingress with an empty spec
+    initial: |
+      apiVersion: operator.openshift.io/v1alpha1
+      kind: Ingress
+      metadata:
+        name: cluster
+      spec: {}
+    expectedError: "spec: Invalid value: 0: spec in body should have at least 1 properties"
+  - name: Should not be able to create an Ingress with a custom name
+    initial: |
+      apiVersion: operator.openshift.io/v1alpha1
+      kind: Ingress
+      metadata:
+        name: custom-name
+      spec:
+        gatewayAPI:
+          managementMode: Managed
+    expectedError: "Invalid value: \"object\": Ingress is a singleton; the .metadata.name field must be 'cluster'"
+  - name: Should be able to create an Ingress with gatewayAPI managementMode Managed
+    initial: |
+      apiVersion: operator.openshift.io/v1alpha1
+      kind: Ingress
+      metadata:
+        name: cluster
+      spec:
+        gatewayAPI:
+          managementMode: Managed
+    expected: |
+      apiVersion: operator.openshift.io/v1alpha1
+      kind: Ingress
+      metadata:
+        name: cluster
+      spec:
+        gatewayAPI:
+          managementMode: Managed
+  - name: Should be able to create an Ingress with gatewayAPI managementMode Unmanaged
+    initial: |
+      apiVersion: operator.openshift.io/v1alpha1
+      kind: Ingress
+      metadata:
+        name: cluster
+      spec:
+        gatewayAPI:
+          managementMode: Unmanaged
+    expected: |
+      apiVersion: operator.openshift.io/v1alpha1
+      kind: Ingress
+      metadata:
+        name: cluster
+      spec:
+        gatewayAPI:
+          managementMode: Unmanaged
+  - name: Should not be able to create an Ingress with an unknown gatewayAPI managementMode
+    initial: |
+      apiVersion: operator.openshift.io/v1alpha1
+      kind: Ingress
+      metadata:
+        name: cluster
+      spec:
+        gatewayAPI:
+          managementMode: ThisManagementModeDoesNotExist
+    expectedError: "spec.gatewayAPI.managementMode: Unsupported value: \"ThisManagementModeDoesNotExist\": supported values: \"Managed\", \"Unmanaged\""
+  - name: Should not be able to create an Ingress with an empty gatewayAPI
+    initial: |
+      apiVersion: operator.openshift.io/v1alpha1
+      kind: Ingress
+      metadata:
+        name: cluster
+      spec:
+        gatewayAPI: {}
+    expectedError: "spec.gatewayAPI: Invalid value: 0: spec.gatewayAPI in body should have at least 1 properties"
+  onUpdate:
+  - name: Should be able to update the gatewayAPI managementMode of an Ingress
+    initial: |
+      apiVersion: operator.openshift.io/v1alpha1
+      kind: Ingress
+      metadata:
+        name: cluster
+      spec:
+        gatewayAPI:
+          managementMode: Managed
+    updated: |
+      apiVersion: operator.openshift.io/v1alpha1
+      kind: Ingress
+      metadata:
+        name: cluster
+      spec:
+        gatewayAPI:
+          managementMode: Unmanaged
+    expected: |
+      apiVersion: operator.openshift.io/v1alpha1
+      kind: Ingress
+      metadata:
+        name: cluster
+      spec:
+        gatewayAPI:
+          managementMode: Unmanaged
+  - name: Should be able to increase the ObservedGeneration of an Ingress
+    initial: |
+      apiVersion: operator.openshift.io/v1alpha1
+      kind: Ingress
+      metadata:
+        name: cluster
+      spec:
+        gatewayAPI:
+          managementMode: Managed
+      status:
+        observedGeneration: 1
+    updated: |
+      apiVersion: operator.openshift.io/v1alpha1
+      kind: Ingress
+      metadata:
+        name: cluster
+      spec:
+        gatewayAPI:
+          managementMode: Managed
+      status:
+        observedGeneration: 2
+    expected: |
+      apiVersion: operator.openshift.io/v1alpha1
+      kind: Ingress
+      metadata:
+        name: cluster
+      spec:
+        gatewayAPI:
+          managementMode: Managed
+      status:
+        observedGeneration: 2
+  - name: Should not be able to decrease the ObservedGeneration of an Ingress
+    initial: |
+      apiVersion: operator.openshift.io/v1alpha1
+      kind: Ingress
+      metadata:
+        name: cluster
+      spec:
+        gatewayAPI:
+          managementMode: Managed
+      status:
+        observedGeneration: 2
+    updated: |
+      apiVersion: operator.openshift.io/v1alpha1
+      kind: Ingress
+      metadata:
+        name: cluster
+      spec:
+        gatewayAPI:
+          managementMode: Managed
+      status:
+        observedGeneration: 1
+    expectedStatusError: "status: Invalid value: \"object\": observedGeneration must remain set and only increase once set"
+  - name: Should not be able to unset the ObservedGeneration of an Ingress once set
+    initial: |
+      apiVersion: operator.openshift.io/v1alpha1
+      kind: Ingress
+      metadata:
+        name: cluster
+      spec:
+        gatewayAPI:
+          managementMode: Managed
+      status:
+        observedGeneration: 2
+    updated: |
+      apiVersion: operator.openshift.io/v1alpha1
+      kind: Ingress
+      metadata:
+        name: cluster
+      spec:
+        gatewayAPI:
+          managementMode: Managed
+      status:
+        conditions:
+        - type: GatewayAPICRDsManaged
+          status: "True"
+          reason: ManagedByIngressOperator
+          message: The ingress operator is managing Gateway API CRDs.
+          lastTransitionTime: "2024-01-01T00:00:00Z"
+    expectedStatusError: "status: Invalid value: \"object\": observedGeneration must remain set and only increase once set"
+  - name: Should not be able to set the conditions of an Ingress to an empty list
+    initial: |
+      apiVersion: operator.openshift.io/v1alpha1
+      kind: Ingress
+      metadata:
+        name: cluster
+      spec:
+        gatewayAPI:
+          managementMode: Managed
+      status:
+        observedGeneration: 1
+    updated: |
+      apiVersion: operator.openshift.io/v1alpha1
+      kind: Ingress
+      metadata:
+        name: cluster
+      spec:
+        gatewayAPI:
+          managementMode: Managed
+      status:
+        observedGeneration: 1
+        conditions: []
+    expectedStatusError: "status.conditions: Invalid value: 0: conditions in body should have at least 1 items"
+  - name: Should not be able to set the ObservedGeneration of an Ingress to 0
+    initial: |
+      apiVersion: operator.openshift.io/v1alpha1
+      kind: Ingress
+      metadata:
+        name: cluster
+      spec:
+        gatewayAPI:
+          managementMode: Managed
+    updated: |
+      apiVersion: operator.openshift.io/v1alpha1
+      kind: Ingress
+      metadata:
+        name: cluster
+      spec:
+        gatewayAPI:
+          managementMode: Managed
+      status:
+        observedGeneration: 0
+    expectedStatusError: "status.observedGeneration: Invalid value: 0: observedGeneration in body should be greater than or equal to 1"

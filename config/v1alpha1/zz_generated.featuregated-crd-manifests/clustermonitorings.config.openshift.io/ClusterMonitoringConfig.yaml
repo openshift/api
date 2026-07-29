@@ -2162,6 +2162,28 @@ spec:
                         required:
                         - collectionPolicy
                         type: object
+                      deviceMapperMultipath:
+                        description: |-
+                          deviceMapperMultipath configures the dmmultipath collector, which collects statistics
+                          about DM-Multipath devices.
+                          deviceMapperMultipath is optional.
+                          When omitted, this means no opinion and the platform is left to choose a reasonable default,
+                          which is subject to change over time. The current default is enabled.
+                        properties:
+                          collectionPolicy:
+                            description: |-
+                              collectionPolicy declares whether the dmmultipath collector collects metrics.
+                              This field is required.
+                              Valid values are "Collect" and "DoNotCollect".
+                              When set to "Collect", the dmmultipath collector is active and DM-Multipath device statistics are collected.
+                              When set to "DoNotCollect", the dmmultipath collector is inactive and the corresponding metrics become unavailable.
+                            enum:
+                            - Collect
+                            - DoNotCollect
+                            type: string
+                        required:
+                        - collectionPolicy
+                        type: object
                       ethtool:
                         description: |-
                           ethtool configures the ethtool collector, which collects ethernet device statistics.

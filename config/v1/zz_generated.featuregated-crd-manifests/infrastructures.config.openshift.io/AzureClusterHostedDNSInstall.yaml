@@ -1801,8 +1801,9 @@ spec:
 
                           When omitted, standard public GCP (googleapis.com) is assumed.
 
-                          universeDomain must be a valid DNS subdomain: it must contain no more than 253 characters,
-                          contain only lowercase alphanumeric characters, '-' or '.', and start and end with an alphanumeric character.
+                          universeDomain is an optional field that, when specified, must be non-empty and at most
+                          253 characters. It must be a valid DNS subdomain: containing only lowercase alphanumeric
+                          characters, '-' or '.', and starting and ending with an alphanumeric character.
                         maxLength: 253
                         minLength: 1
                         type: string

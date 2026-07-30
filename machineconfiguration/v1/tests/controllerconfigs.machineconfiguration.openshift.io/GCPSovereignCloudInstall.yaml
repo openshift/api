@@ -102,3 +102,209 @@ tests:
             namespace: openshift-config
           releaseImage: ""
           rootCAData: Y2VydGlmaWNhdGUK
+  onUpdate:
+    - name: Should be able to set a valid GCP universeDomain in ControllerConfig
+      initial: |
+        apiVersion: machineconfiguration.openshift.io/v1
+        kind: ControllerConfig
+        spec:
+          additionalTrustBundle: Y2VydGlmaWNhdGUK
+          baseOSContainerImage: example.com/example/openshift-release-dev@sha256:d98795f7932441b30bb8bcfbbf05912875383fad1f2b3be08a22ec148d68607e
+          cloudProviderCAData: null
+          cloudProviderConfig: ""
+          clusterDNSIP: fd02::a
+          dns:
+            apiVersion: config.openshift.io/v1
+            kind: DNS
+            spec:
+              baseDomain: fake.redhat.com
+          images:
+            machineConfigOperator: rexample.com/example/openshift-release-dev@sha256:2c3ea52ac3a41c6d58e85977c3149413e3fa4b70eb2397426456863adbf43306
+          infra:
+            apiVersion: config.openshift.io/v1
+            kind: Infrastructure
+            spec:
+              platformSpec:
+                type: GCP
+                gcp: {}
+          ipFamilies: IPv6
+          kubeAPIServerServingCAData: Y2VydGlmaWNhdGUK
+          network: null
+          networkType: OVNKubernetes
+          osImageURL: example.com/example/openshift-release-dev@sha256:eacdc37aec78fdbf8caa9601e4012ab31453cf59b086474901900e853e803ea8
+          platform: gcp
+          proxy: null
+          pullSecret:
+            name: pull-secret
+            namespace: openshift-config
+          releaseImage: ""
+          rootCAData: Y2VydGlmaWNhdGUK
+      updated: |
+        apiVersion: machineconfiguration.openshift.io/v1
+        kind: ControllerConfig
+        spec:
+          additionalTrustBundle: Y2VydGlmaWNhdGUK
+          baseOSContainerImage: example.com/example/openshift-release-dev@sha256:d98795f7932441b30bb8bcfbbf05912875383fad1f2b3be08a22ec148d68607e
+          cloudProviderCAData: null
+          cloudProviderConfig: ""
+          clusterDNSIP: fd02::a
+          dns:
+            apiVersion: config.openshift.io/v1
+            kind: DNS
+            spec:
+              baseDomain: fake.redhat.com
+          images:
+            machineConfigOperator: rexample.com/example/openshift-release-dev@sha256:2c3ea52ac3a41c6d58e85977c3149413e3fa4b70eb2397426456863adbf43306
+          infra:
+            apiVersion: config.openshift.io/v1
+            kind: Infrastructure
+            spec:
+              platformSpec:
+                type: GCP
+                gcp: {}
+            status:
+              platform: GCP
+              platformStatus:
+                type: GCP
+                gcp:
+                  cloudLoadBalancerConfig:
+                    dnsType: PlatformDefault
+                  universeDomain: googleapis.com
+          ipFamilies: IPv6
+          kubeAPIServerServingCAData: Y2VydGlmaWNhdGUK
+          network: null
+          networkType: OVNKubernetes
+          osImageURL: example.com/example/openshift-release-dev@sha256:eacdc37aec78fdbf8caa9601e4012ab31453cf59b086474901900e853e803ea8
+          platform: gcp
+          proxy: null
+          pullSecret:
+            name: pull-secret
+            namespace: openshift-config
+          releaseImage: ""
+          rootCAData: Y2VydGlmaWNhdGUK
+      expected: |
+        apiVersion: machineconfiguration.openshift.io/v1
+        kind: ControllerConfig
+        spec:
+          additionalTrustBundle: Y2VydGlmaWNhdGUK
+          baseOSContainerImage: example.com/example/openshift-release-dev@sha256:d98795f7932441b30bb8bcfbbf05912875383fad1f2b3be08a22ec148d68607e
+          cloudProviderCAData: null
+          cloudProviderConfig: ""
+          clusterDNSIP: fd02::a
+          dns:
+            apiVersion: config.openshift.io/v1
+            kind: DNS
+            spec:
+              baseDomain: fake.redhat.com
+          images:
+            machineConfigOperator: rexample.com/example/openshift-release-dev@sha256:2c3ea52ac3a41c6d58e85977c3149413e3fa4b70eb2397426456863adbf43306
+          infra:
+            apiVersion: config.openshift.io/v1
+            kind: Infrastructure
+            spec:
+              platformSpec:
+                type: GCP
+                gcp: {}
+            status:
+              cpuPartitioning: "None"
+              controlPlaneTopology: HighlyAvailable
+              infrastructureTopology: HighlyAvailable
+              platform: GCP
+              platformStatus:
+                type: GCP
+                gcp:
+                  cloudLoadBalancerConfig:
+                    dnsType: PlatformDefault
+                  universeDomain: googleapis.com
+          ipFamilies: IPv6
+          kubeAPIServerServingCAData: Y2VydGlmaWNhdGUK
+          network: null
+          networkType: OVNKubernetes
+          osImageURL: example.com/example/openshift-release-dev@sha256:eacdc37aec78fdbf8caa9601e4012ab31453cf59b086474901900e853e803ea8
+          platform: gcp
+          proxy: null
+          pullSecret:
+            name: pull-secret
+            namespace: openshift-config
+          releaseImage: ""
+          rootCAData: Y2VydGlmaWNhdGUK
+    - name: Should not allow an invalid GCP universeDomain in ControllerConfig
+      initial: |
+        apiVersion: machineconfiguration.openshift.io/v1
+        kind: ControllerConfig
+        spec:
+          additionalTrustBundle: Y2VydGlmaWNhdGUK
+          baseOSContainerImage: example.com/example/openshift-release-dev@sha256:d98795f7932441b30bb8bcfbbf05912875383fad1f2b3be08a22ec148d68607e
+          cloudProviderCAData: null
+          cloudProviderConfig: ""
+          clusterDNSIP: fd02::a
+          dns:
+            apiVersion: config.openshift.io/v1
+            kind: DNS
+            spec:
+              baseDomain: fake.redhat.com
+          images:
+            machineConfigOperator: rexample.com/example/openshift-release-dev@sha256:2c3ea52ac3a41c6d58e85977c3149413e3fa4b70eb2397426456863adbf43306
+          infra:
+            apiVersion: config.openshift.io/v1
+            kind: Infrastructure
+            spec:
+              platformSpec:
+                type: GCP
+                gcp: {}
+          ipFamilies: IPv6
+          kubeAPIServerServingCAData: Y2VydGlmaWNhdGUK
+          network: null
+          networkType: OVNKubernetes
+          osImageURL: example.com/example/openshift-release-dev@sha256:eacdc37aec78fdbf8caa9601e4012ab31453cf59b086474901900e853e803ea8
+          platform: gcp
+          proxy: null
+          pullSecret:
+            name: pull-secret
+            namespace: openshift-config
+          releaseImage: ""
+          rootCAData: Y2VydGlmaWNhdGUK
+      updated: |
+        apiVersion: machineconfiguration.openshift.io/v1
+        kind: ControllerConfig
+        spec:
+          additionalTrustBundle: Y2VydGlmaWNhdGUK
+          baseOSContainerImage: example.com/example/openshift-release-dev@sha256:d98795f7932441b30bb8bcfbbf05912875383fad1f2b3be08a22ec148d68607e
+          cloudProviderCAData: null
+          cloudProviderConfig: ""
+          clusterDNSIP: fd02::a
+          dns:
+            apiVersion: config.openshift.io/v1
+            kind: DNS
+            spec:
+              baseDomain: fake.redhat.com
+          images:
+            machineConfigOperator: rexample.com/example/openshift-release-dev@sha256:2c3ea52ac3a41c6d58e85977c3149413e3fa4b70eb2397426456863adbf43306
+          infra:
+            apiVersion: config.openshift.io/v1
+            kind: Infrastructure
+            spec:
+              platformSpec:
+                type: GCP
+                gcp: {}
+            status:
+              platform: GCP
+              platformStatus:
+                type: GCP
+                gcp:
+                  cloudLoadBalancerConfig:
+                    dnsType: PlatformDefault
+                  universeDomain: "NOT VALID"
+          ipFamilies: IPv6
+          kubeAPIServerServingCAData: Y2VydGlmaWNhdGUK
+          network: null
+          networkType: OVNKubernetes
+          osImageURL: example.com/example/openshift-release-dev@sha256:eacdc37aec78fdbf8caa9601e4012ab31453cf59b086474901900e853e803ea8
+          platform: gcp
+          proxy: null
+          pullSecret:
+            name: pull-secret
+            namespace: openshift-config
+          releaseImage: ""
+          rootCAData: Y2VydGlmaWNhdGUK
+      expectedError: "universeDomain must be a valid DNS subdomain"

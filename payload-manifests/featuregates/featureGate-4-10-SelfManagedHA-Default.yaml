@@ -280,9 +280,6 @@
                     },
                     {
                         "name": "VSphereMultiVCenterDay2"
-                    },
-                    {
-                        "name": "VolumeGroupSnapshot"
                     }
                 ],
                 "enabled": [
@@ -393,6 +390,9 @@
                     },
                     {
                         "name": "VSphereMultiNetworks"
+                    },
+                    {
+                        "name": "VolumeGroupSnapshot"
                     }
                 ],
                 "version": ""

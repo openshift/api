@@ -1,0 +1,191 @@
+apiVersion: apiextensions.k8s.io/v1 # Hack because controller-gen complains if we don't have this
+name: "Infrastructure"
+crdName: infrastructures.config.openshift.io
+featureGates:
+- GCPSovereignCloudInstall
+tests:
+  onCreate:
+    - name: Should be able to create a minimal Infrastructure
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        spec: {} # No spec is required for a Infrastructure
+      expected: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        spec: {}
+  onUpdate:
+    - name: Should be able to set a valid GCP universeDomain
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        spec: {}
+        status:
+          controlPlaneTopology: "HighlyAvailable"
+          infrastructureTopology: "HighlyAvailable"
+          platform: GCP
+          platformStatus:
+            type: GCP
+            gcp:
+              cloudLoadBalancerConfig:
+                dnsType: PlatformDefault
+      updated: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        spec: {}
+        status:
+          controlPlaneTopology: "HighlyAvailable"
+          cpuPartitioning: "None"
+          infrastructureTopology: "HighlyAvailable"
+          platform: GCP
+          platformStatus:
+            type: GCP
+            gcp:
+              cloudLoadBalancerConfig:
+                dnsType: PlatformDefault
+              universeDomain: googleapis.com
+      expected: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        spec: {}
+        status:
+          controlPlaneTopology: "HighlyAvailable"
+          cpuPartitioning: "None"
+          infrastructureTopology: "HighlyAvailable"
+          platform: GCP
+          platformStatus:
+            type: GCP
+            gcp:
+              cloudLoadBalancerConfig:
+                dnsType: PlatformDefault
+              universeDomain: googleapis.com
+    - name: Should be able to set a sovereign cloud GCP universeDomain
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        spec: {}
+        status:
+          controlPlaneTopology: "HighlyAvailable"
+          infrastructureTopology: "HighlyAvailable"
+          platform: GCP
+          platformStatus:
+            type: GCP
+            gcp:
+              cloudLoadBalancerConfig:
+                dnsType: PlatformDefault
+      updated: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        spec: {}
+        status:
+          controlPlaneTopology: "HighlyAvailable"
+          infrastructureTopology: "HighlyAvailable"
+          platform: GCP
+          platformStatus:
+            type: GCP
+            gcp:
+              cloudLoadBalancerConfig:
+                dnsType: PlatformDefault
+              universeDomain: s3nsapis.fr
+      expected: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        spec: {}
+        status:
+          controlPlaneTopology: "HighlyAvailable"
+          cpuPartitioning: "None"
+          infrastructureTopology: "HighlyAvailable"
+          platform: GCP
+          platformStatus:
+            type: GCP
+            gcp:
+              cloudLoadBalancerConfig:
+                dnsType: PlatformDefault
+              universeDomain: s3nsapis.fr
+    - name: Should not allow an invalid GCP universeDomain with uppercase characters
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        spec: {}
+        status:
+          controlPlaneTopology: "HighlyAvailable"
+          infrastructureTopology: "HighlyAvailable"
+          platform: GCP
+          platformStatus:
+            type: GCP
+            gcp:
+              cloudLoadBalancerConfig:
+                dnsType: PlatformDefault
+      updated: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        spec: {}
+        status:
+          controlPlaneTopology: "HighlyAvailable"
+          infrastructureTopology: "HighlyAvailable"
+          platform: GCP
+          platformStatus:
+            type: GCP
+            gcp:
+              cloudLoadBalancerConfig:
+                dnsType: PlatformDefault
+              universeDomain: GoogleApis.Com
+      expectedStatusError: "universeDomain must be a valid DNS subdomain"
+    - name: Should not allow an invalid GCP universeDomain with spaces
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        spec: {}
+        status:
+          controlPlaneTopology: "HighlyAvailable"
+          infrastructureTopology: "HighlyAvailable"
+          platform: GCP
+          platformStatus:
+            type: GCP
+            gcp:
+              cloudLoadBalancerConfig:
+                dnsType: PlatformDefault
+      updated: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        spec: {}
+        status:
+          controlPlaneTopology: "HighlyAvailable"
+          infrastructureTopology: "HighlyAvailable"
+          platform: GCP
+          platformStatus:
+            type: GCP
+            gcp:
+              cloudLoadBalancerConfig:
+                dnsType: PlatformDefault
+              universeDomain: "not a domain"
+      expectedStatusError: "universeDomain must be a valid DNS subdomain"
+    - name: Should not allow a GCP universeDomain starting with a hyphen
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        spec: {}
+        status:
+          controlPlaneTopology: "HighlyAvailable"
+          infrastructureTopology: "HighlyAvailable"
+          platform: GCP
+          platformStatus:
+            type: GCP
+            gcp:
+              cloudLoadBalancerConfig:
+                dnsType: PlatformDefault
+      updated: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        spec: {}
+        status:
+          controlPlaneTopology: "HighlyAvailable"
+          infrastructureTopology: "HighlyAvailable"
+          platform: GCP
+          platformStatus:
+            type: GCP
+            gcp:
+              cloudLoadBalancerConfig:
+                dnsType: PlatformDefault
+              universeDomain: "-invalid.com"
+      expectedStatusError: "universeDomain must be a valid DNS subdomain"

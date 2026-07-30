@@ -189,3 +189,61 @@ tests:
                 dnsType: PlatformDefault
               universeDomain: "-invalid.com"
       expectedStatusError: "universeDomain must be a valid DNS subdomain"
+    - name: Should not allow an empty GCP universeDomain
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        spec: {}
+        status:
+          controlPlaneTopology: "HighlyAvailable"
+          infrastructureTopology: "HighlyAvailable"
+          platform: GCP
+          platformStatus:
+            type: GCP
+            gcp:
+              cloudLoadBalancerConfig:
+                dnsType: PlatformDefault
+      updated: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        spec: {}
+        status:
+          controlPlaneTopology: "HighlyAvailable"
+          infrastructureTopology: "HighlyAvailable"
+          platform: GCP
+          platformStatus:
+            type: GCP
+            gcp:
+              cloudLoadBalancerConfig:
+                dnsType: PlatformDefault
+              universeDomain: ""
+      expectedStatusError: "platformStatus.gcp.universeDomain in body should be at least 1 chars long"
+    - name: Should not allow a GCP universeDomain exceeding 253 characters
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        spec: {}
+        status:
+          controlPlaneTopology: "HighlyAvailable"
+          infrastructureTopology: "HighlyAvailable"
+          platform: GCP
+          platformStatus:
+            type: GCP
+            gcp:
+              cloudLoadBalancerConfig:
+                dnsType: PlatformDefault
+      updated: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        spec: {}
+        status:
+          controlPlaneTopology: "HighlyAvailable"
+          infrastructureTopology: "HighlyAvailable"
+          platform: GCP
+          platformStatus:
+            type: GCP
+            gcp:
+              cloudLoadBalancerConfig:
+                dnsType: PlatformDefault
+              universeDomain: "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa.aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa.aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa.aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa.com"
+      expectedStatusError: "platformStatus.gcp.universeDomain: Too long"

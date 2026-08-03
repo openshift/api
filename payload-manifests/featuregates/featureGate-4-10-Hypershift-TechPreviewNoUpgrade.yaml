@@ -23,6 +23,9 @@
                         "name": "BGPBasedVIPManagement"
                     },
                     {
+                        "name": "CRIOCredentialProviderConfig"
+                    },
+                    {
                         "name": "ClientsAllowCBOR"
                     },
                     {
@@ -161,9 +164,6 @@
                     },
                     {
                         "name": "CRDCompatibilityRequirementOperator"
-                    },
-                    {
-                        "name": "CRIOCredentialProviderConfig"
                     },
                     {
                         "name": "ClientsPreferCBOR"

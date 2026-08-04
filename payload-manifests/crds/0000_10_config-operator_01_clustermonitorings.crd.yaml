@@ -3871,6 +3871,17 @@ spec:
                           x-kubernetes-list-map-keys:
                           - name
                           x-kubernetes-list-type: map
+                        messageVersion:
+                          description: |-
+                            messageVersion defines the Remote Write message's version to use when writing to the endpoint.
+                            When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time.
+                            The default value is "V1.0".
+                            When set to "V1.0", Prometheus uses the `prometheus.WriteRequest` protobuf message introduced in Remote Write 1.0.
+                            When set to "V2.0", Prometheus uses the `io.prometheus.write.v2.Request` protobuf message introduced in Remote Write 2.0.
+                          enum:
+                          - V1.0
+                          - V2.0
+                          type: string
                         metadataConfig:
                           description: |-
                             metadataConfig configures the sending of series metadata to remote storage.

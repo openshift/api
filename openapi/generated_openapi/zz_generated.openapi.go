@@ -26855,6 +26855,13 @@ func schema_openshift_api_config_v1alpha1_RemoteWriteSpec(ref common.ReferenceCa
 							Format:      "",
 						},
 					},
+					"messageVersion": {
+						SchemaProps: spec.SchemaProps{
+							Description: "messageVersion defines the Remote Write message's version to use when writing to the endpoint. When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time. The default value is \"V1.0\". When set to \"V1.0\", Prometheus uses the `prometheus.WriteRequest` protobuf message introduced in Remote Write 1.0. When set to \"V2.0\", Prometheus uses the `io.prometheus.write.v2.Request` protobuf message introduced in Remote Write 2.0.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
 					"authorization": {
 						SchemaProps: spec.SchemaProps{
 							Description: "authorization defines the authorization method for the remote write endpoint. When omitted, no authorization is performed. When set, type must be one of Authorization, BasicAuth, OAuth2, SigV4, or ServiceAccount; the corresponding nested config must be set (ServiceAccount has no config).",

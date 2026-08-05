@@ -230,7 +230,7 @@ tests:
               hostname: console.example.com
               labels:
                 aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa: value
-      expectedError: "label keys must be valid qualified names, consisting of an optional DNS subdomain prefix"
+      expectedError: "label keys must be between 1 and 63 characters in length"
     - name: Should reject componentRoutes with label value starting with dash
       initial: |
         apiVersion: config.openshift.io/v1

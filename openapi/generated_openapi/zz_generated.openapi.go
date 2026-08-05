@@ -56184,6 +56184,13 @@ func schema_openshift_api_operator_v1_IngressControllerSpec(ref common.Reference
 							Format:      "",
 						},
 					},
+					"haproxyVersion": {
+						SchemaProps: spec.SchemaProps{
+							Description: "haproxyVersion specifies the HAProxy version to use for this IngressController.\n\nThis field is available in OpenShift 4.22 as an API-only backport with no operator implementation. Setting this field on OpenShift 4.22 allows administrators to pin HAProxy 2.8 before upgrading to OpenShift 5.0, where the operator will honor this setting.\n\nValid values for OpenShift 4.22: - Unset (default): Uses HAProxy 2.8 (the default for OpenShift 4.22) - \"2.8\": Explicitly pins HAProxy 2.8 for preservation during cluster\n  upgrade to OpenShift 5.0\n\nOn OpenShift 4.22, this field has no effect on the running IngressController. It only preserves the administrator's intent for the OpenShift 5.0 upgrade.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
 				},
 			},
 		},

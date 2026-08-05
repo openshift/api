@@ -17,7 +17,7 @@ import (
 // +kubebuilder:object:root=true
 // +kubebuilder:resource:path=ingresses,scope=Cluster
 // +kubebuilder:subresource:status
-// +openshift:api-approved.openshift.io=https://github.com/openshift/api/pull/TBD
+// +openshift:api-approved.openshift.io=https://github.com/openshift/api/pull/2890
 // +openshift:capability=Ingress
 // +openshift:enable:FeatureGate=GatewayAPIManagementMode
 // +kubebuilder:validation:XValidation:rule="self.metadata.name == 'cluster'",message="Ingress is a singleton; the .metadata.name field must be 'cluster'"

@@ -571,6 +571,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		configv1alpha1.NodeExporterCollectorSystemdCollectConfig{}.OpenAPIModelName():          schema_openshift_api_config_v1alpha1_NodeExporterCollectorSystemdCollectConfig(ref),
 		configv1alpha1.NodeExporterCollectorSystemdConfig{}.OpenAPIModelName():                 schema_openshift_api_config_v1alpha1_NodeExporterCollectorSystemdConfig(ref),
 		configv1alpha1.NodeExporterCollectorTcpStatConfig{}.OpenAPIModelName():                 schema_openshift_api_config_v1alpha1_NodeExporterCollectorTcpStatConfig(ref),
+		configv1alpha1.NodeExporterCollectorZoneinfoConfig{}.OpenAPIModelName():                schema_openshift_api_config_v1alpha1_NodeExporterCollectorZoneinfoConfig(ref),
 		configv1alpha1.NodeExporterConfig{}.OpenAPIModelName():                                 schema_openshift_api_config_v1alpha1_NodeExporterConfig(ref),
 		configv1alpha1.OAuth2{}.OpenAPIModelName():                                             schema_openshift_api_config_v1alpha1_OAuth2(ref),
 		configv1alpha1.OAuth2EndpointParam{}.OpenAPIModelName():                                schema_openshift_api_config_v1alpha1_OAuth2EndpointParam(ref),
@@ -25257,11 +25258,18 @@ func schema_openshift_api_config_v1alpha1_NodeExporterCollectorConfig(ref common
 							Ref:         ref(configv1alpha1.NodeExporterCollectorDeviceMapperMultipathConfig{}.OpenAPIModelName()),
 						},
 					},
+					"zoneinfo": {
+						SchemaProps: spec.SchemaProps{
+							Description: "zoneinfo configures the zoneinfo collector, which exposes per-zone memory page counts, watermarks, and protection thresholds from /proc/zoneinfo. zoneinfo is optional. When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time. The current default is to not collect zoneinfo metrics. Enable when you need visibility into kernel memory zone allocation and pressure.",
+							Default:     map[string]interface{}{},
+							Ref:         ref(configv1alpha1.NodeExporterCollectorZoneinfoConfig{}.OpenAPIModelName()),
+						},
+					},
 				},
 			},
 		},
 		Dependencies: []string{
-			configv1alpha1.NodeExporterCollectorBuddyInfoConfig{}.OpenAPIModelName(), configv1alpha1.NodeExporterCollectorCpufreqConfig{}.OpenAPIModelName(), configv1alpha1.NodeExporterCollectorDeviceMapperMultipathConfig{}.OpenAPIModelName(), configv1alpha1.NodeExporterCollectorEthtoolConfig{}.OpenAPIModelName(), configv1alpha1.NodeExporterCollectorKSMDConfig{}.OpenAPIModelName(), configv1alpha1.NodeExporterCollectorMountStatsConfig{}.OpenAPIModelName(), configv1alpha1.NodeExporterCollectorNetClassConfig{}.OpenAPIModelName(), configv1alpha1.NodeExporterCollectorNetDevConfig{}.OpenAPIModelName(), configv1alpha1.NodeExporterCollectorProcessesConfig{}.OpenAPIModelName(), configv1alpha1.NodeExporterCollectorSoftirqsConfig{}.OpenAPIModelName(), configv1alpha1.NodeExporterCollectorSystemdConfig{}.OpenAPIModelName(), configv1alpha1.NodeExporterCollectorTcpStatConfig{}.OpenAPIModelName()},
+			configv1alpha1.NodeExporterCollectorBuddyInfoConfig{}.OpenAPIModelName(), configv1alpha1.NodeExporterCollectorCpufreqConfig{}.OpenAPIModelName(), configv1alpha1.NodeExporterCollectorDeviceMapperMultipathConfig{}.OpenAPIModelName(), configv1alpha1.NodeExporterCollectorEthtoolConfig{}.OpenAPIModelName(), configv1alpha1.NodeExporterCollectorKSMDConfig{}.OpenAPIModelName(), configv1alpha1.NodeExporterCollectorMountStatsConfig{}.OpenAPIModelName(), configv1alpha1.NodeExporterCollectorNetClassConfig{}.OpenAPIModelName(), configv1alpha1.NodeExporterCollectorNetDevConfig{}.OpenAPIModelName(), configv1alpha1.NodeExporterCollectorProcessesConfig{}.OpenAPIModelName(), configv1alpha1.NodeExporterCollectorSoftirqsConfig{}.OpenAPIModelName(), configv1alpha1.NodeExporterCollectorSystemdConfig{}.OpenAPIModelName(), configv1alpha1.NodeExporterCollectorTcpStatConfig{}.OpenAPIModelName(), configv1alpha1.NodeExporterCollectorZoneinfoConfig{}.OpenAPIModelName()},
 	}
 }
 
@@ -25591,6 +25599,28 @@ func schema_openshift_api_config_v1alpha1_NodeExporterCollectorTcpStatConfig(ref
 					"collectionPolicy": {
 						SchemaProps: spec.SchemaProps{
 							Description: "collectionPolicy declares whether the tcpstat collector collects metrics. This field is required. Valid values are \"Collect\" and \"DoNotCollect\". When set to \"Collect\", the tcpstat collector is active and TCP connection statistics are collected. When set to \"DoNotCollect\", the tcpstat collector is inactive.\n\nPossible enum values:\n - `\"Collect\"` means the collector is active and will produce metrics.\n - `\"DoNotCollect\"` means the collector is inactive and will not produce metrics.",
+							Type:        []string{"string"},
+							Format:      "",
+							Enum:        []interface{}{"Collect", "DoNotCollect"},
+						},
+					},
+				},
+				Required: []string{"collectionPolicy"},
+			},
+		},
+	}
+}
+
+func schema_openshift_api_config_v1alpha1_NodeExporterCollectorZoneinfoConfig(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "NodeExporterCollectorZoneinfoConfig provides configuration for the zoneinfo collector of the node-exporter agent. The zoneinfo collector exposes per-zone memory page counts, watermarks, and protection thresholds from /proc/zoneinfo. By default, the zoneinfo collector does not collect metrics.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"collectionPolicy": {
+						SchemaProps: spec.SchemaProps{
+							Description: "collectionPolicy declares whether the zoneinfo collector collects metrics. This field is required. Valid values are \"Collect\" and \"DoNotCollect\". When set to \"Collect\", the zoneinfo collector is active and zone memory statistics are collected. When set to \"DoNotCollect\", the zoneinfo collector is inactive.\n\nPossible enum values:\n - `\"Collect\"` means the collector is active and will produce metrics.\n - `\"DoNotCollect\"` means the collector is inactive and will not produce metrics.",
 							Type:        []string{"string"},
 							Format:      "",
 							Enum:        []interface{}{"Collect", "DoNotCollect"},

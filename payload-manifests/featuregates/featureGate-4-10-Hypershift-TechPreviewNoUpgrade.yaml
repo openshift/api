@@ -50,9 +50,6 @@
                         "name": "Example2"
                     },
                     {
-                        "name": "GCPSovereignCloudInstall"
-                    },
-                    {
                         "name": "KarpenterOperator"
                     },
                     {
@@ -251,6 +248,9 @@
                     },
                     {
                         "name": "GCPDualStackInstall"
+                    },
+                    {
+                        "name": "GCPSovereignCloudInstall"
                     },
                     {
                         "name": "GatewayAPIManagementMode"

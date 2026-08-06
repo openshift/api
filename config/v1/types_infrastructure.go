@@ -1728,7 +1728,7 @@ type VSpherePlatformSpec struct {
 	// After installation, you can add or change vCenters, or remove some of them, but you must keep
 	// at least one and may not add and remove vCenters during the same update.  You may make modifications
 	// to the existing vCenters that are defined in the vcenters list in order to match with any added or
-	//modified failure domains.
+	// modified failure domains.
 	// ---
 	// + If VCenters is not defined use the existing cloud-config configmap defined
 	// + in openshift-config.

@@ -13,7 +13,6 @@
 | Example2| | | <span style="background-color: #519450">Enabled</span> | <span style="background-color: #519450">Enabled</span> | | | |  |
 | ExternalOIDCExternalClaimsSourcing| | | <span style="background-color: #519450">Enabled</span> | <span style="background-color: #519450">Enabled</span> | | | |  |
 | ExternalSnapshotMetadata| | | <span style="background-color: #519450">Enabled</span> | <span style="background-color: #519450">Enabled</span> | | | |  |
-| GCPSovereignCloudInstall| | | <span style="background-color: #519450">Enabled</span> | <span style="background-color: #519450">Enabled</span> | | | |  |
 | KMSEncryptionProvider| | | <span style="background-color: #519450">Enabled</span> | <span style="background-color: #519450">Enabled</span> | | | |  |
 | MachineAPIMigrationVSphere| | | <span style="background-color: #519450">Enabled</span> | <span style="background-color: #519450">Enabled</span> | | | |  |
 | NetworkConnect| | | <span style="background-color: #519450">Enabled</span> | <span style="background-color: #519450">Enabled</span> | | | |  |
@@ -61,6 +60,7 @@
 | GCPCustomAPIEndpoints| | | <span style="background-color: #519450">Enabled</span> | <span style="background-color: #519450">Enabled</span> | | | <span style="background-color: #519450">Enabled</span> | <span style="background-color: #519450">Enabled</span>  |
 | GCPCustomAPIEndpointsInstall| | | <span style="background-color: #519450">Enabled</span> | <span style="background-color: #519450">Enabled</span> | | | <span style="background-color: #519450">Enabled</span> | <span style="background-color: #519450">Enabled</span>  |
 | GCPDualStackInstall| | | <span style="background-color: #519450">Enabled</span> | <span style="background-color: #519450">Enabled</span> | | | <span style="background-color: #519450">Enabled</span> | <span style="background-color: #519450">Enabled</span>  |
+| GCPSovereignCloudInstall| | | <span style="background-color: #519450">Enabled</span> | <span style="background-color: #519450">Enabled</span> | | | <span style="background-color: #519450">Enabled</span> | <span style="background-color: #519450">Enabled</span>  |
 | HyperShiftOnlyDynamicResourceAllocation| <span style="background-color: #519450">Enabled</span> | | <span style="background-color: #519450">Enabled</span> | | <span style="background-color: #519450">Enabled</span> | | <span style="background-color: #519450">Enabled</span> |  |
 | ImageModeStatusReporting| | | <span style="background-color: #519450">Enabled</span> | <span style="background-color: #519450">Enabled</span> | | | <span style="background-color: #519450">Enabled</span> | <span style="background-color: #519450">Enabled</span>  |
 | IngressControllerDynamicConfigurationManager| | | <span style="background-color: #519450">Enabled</span> | <span style="background-color: #519450">Enabled</span> | | | <span style="background-color: #519450">Enabled</span> | <span style="background-color: #519450">Enabled</span>  |

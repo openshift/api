@@ -244,6 +244,15 @@
                         "name": "GCPDualStackInstall"
                     },
                     {
+<<<<<<< HEAD
+=======
+                        "name": "GCPSovereignCloudInstall"
+                    },
+                    {
+                        "name": "GatewayAPIManagementMode"
+                    },
+                    {
+>>>>>>> a07327108 (Move GCD to TechPreview)
                         "name": "GatewayAPIWithoutOLM"
                     },
                     {

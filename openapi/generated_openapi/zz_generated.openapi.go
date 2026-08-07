@@ -563,6 +563,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		configv1alpha1.NodeExporterCollectorEthtoolConfig{}.OpenAPIModelName():                 schema_openshift_api_config_v1alpha1_NodeExporterCollectorEthtoolConfig(ref),
 		configv1alpha1.NodeExporterCollectorKSMDConfig{}.OpenAPIModelName():                    schema_openshift_api_config_v1alpha1_NodeExporterCollectorKSMDConfig(ref),
 		configv1alpha1.NodeExporterCollectorMountStatsConfig{}.OpenAPIModelName():              schema_openshift_api_config_v1alpha1_NodeExporterCollectorMountStatsConfig(ref),
+		configv1alpha1.NodeExporterCollectorNVMExpressSubsystemConfig{}.OpenAPIModelName():     schema_openshift_api_config_v1alpha1_NodeExporterCollectorNVMExpressSubsystemConfig(ref),
 		configv1alpha1.NodeExporterCollectorNetClassCollectConfig{}.OpenAPIModelName():         schema_openshift_api_config_v1alpha1_NodeExporterCollectorNetClassCollectConfig(ref),
 		configv1alpha1.NodeExporterCollectorNetClassConfig{}.OpenAPIModelName():                schema_openshift_api_config_v1alpha1_NodeExporterCollectorNetClassConfig(ref),
 		configv1alpha1.NodeExporterCollectorNetDevConfig{}.OpenAPIModelName():                  schema_openshift_api_config_v1alpha1_NodeExporterCollectorNetDevConfig(ref),
@@ -25270,11 +25271,18 @@ func schema_openshift_api_config_v1alpha1_NodeExporterCollectorConfig(ref common
 							Ref:         ref(configv1alpha1.NodeExporterCollectorZoneinfoConfig{}.OpenAPIModelName()),
 						},
 					},
+					"nvmExpressSubsystem": {
+						SchemaProps: spec.SchemaProps{
+							Description: "nvmExpressSubsystem configures the nvmesubsystem collector, which collects statistics about NVM Express (NVMe) subsystem devices. nvmExpressSubsystem is optional. When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time. The current default is enabled.",
+							Default:     map[string]interface{}{},
+							Ref:         ref(configv1alpha1.NodeExporterCollectorNVMExpressSubsystemConfig{}.OpenAPIModelName()),
+						},
+					},
 				},
 			},
 		},
 		Dependencies: []string{
-			configv1alpha1.NodeExporterCollectorBuddyInfoConfig{}.OpenAPIModelName(), configv1alpha1.NodeExporterCollectorCpufreqConfig{}.OpenAPIModelName(), configv1alpha1.NodeExporterCollectorDeviceMapperMultipathConfig{}.OpenAPIModelName(), configv1alpha1.NodeExporterCollectorEthtoolConfig{}.OpenAPIModelName(), configv1alpha1.NodeExporterCollectorKSMDConfig{}.OpenAPIModelName(), configv1alpha1.NodeExporterCollectorMountStatsConfig{}.OpenAPIModelName(), configv1alpha1.NodeExporterCollectorNetClassConfig{}.OpenAPIModelName(), configv1alpha1.NodeExporterCollectorNetDevConfig{}.OpenAPIModelName(), configv1alpha1.NodeExporterCollectorProcessesConfig{}.OpenAPIModelName(), configv1alpha1.NodeExporterCollectorSoftirqsConfig{}.OpenAPIModelName(), configv1alpha1.NodeExporterCollectorSystemdConfig{}.OpenAPIModelName(), configv1alpha1.NodeExporterCollectorTcpStatConfig{}.OpenAPIModelName(), configv1alpha1.NodeExporterCollectorZoneinfoConfig{}.OpenAPIModelName()},
+			configv1alpha1.NodeExporterCollectorBuddyInfoConfig{}.OpenAPIModelName(), configv1alpha1.NodeExporterCollectorCpufreqConfig{}.OpenAPIModelName(), configv1alpha1.NodeExporterCollectorDeviceMapperMultipathConfig{}.OpenAPIModelName(), configv1alpha1.NodeExporterCollectorEthtoolConfig{}.OpenAPIModelName(), configv1alpha1.NodeExporterCollectorKSMDConfig{}.OpenAPIModelName(), configv1alpha1.NodeExporterCollectorMountStatsConfig{}.OpenAPIModelName(), configv1alpha1.NodeExporterCollectorNVMExpressSubsystemConfig{}.OpenAPIModelName(), configv1alpha1.NodeExporterCollectorNetClassConfig{}.OpenAPIModelName(), configv1alpha1.NodeExporterCollectorNetDevConfig{}.OpenAPIModelName(), configv1alpha1.NodeExporterCollectorProcessesConfig{}.OpenAPIModelName(), configv1alpha1.NodeExporterCollectorSoftirqsConfig{}.OpenAPIModelName(), configv1alpha1.NodeExporterCollectorSystemdConfig{}.OpenAPIModelName(), configv1alpha1.NodeExporterCollectorTcpStatConfig{}.OpenAPIModelName(), configv1alpha1.NodeExporterCollectorZoneinfoConfig{}.OpenAPIModelName()},
 	}
 }
 
@@ -25376,6 +25384,28 @@ func schema_openshift_api_config_v1alpha1_NodeExporterCollectorMountStatsConfig(
 					"collectionPolicy": {
 						SchemaProps: spec.SchemaProps{
 							Description: "collectionPolicy declares whether the mountstats collector collects metrics. This field is required. Valid values are \"Collect\" and \"DoNotCollect\". When set to \"Collect\", the mountstats collector is active and NFS volume I/O statistics are collected. When set to \"DoNotCollect\", the mountstats collector is inactive.\n\nPossible enum values:\n - `\"Collect\"` means the collector is active and will produce metrics.\n - `\"DoNotCollect\"` means the collector is inactive and will not produce metrics.",
+							Type:        []string{"string"},
+							Format:      "",
+							Enum:        []interface{}{"Collect", "DoNotCollect"},
+						},
+					},
+				},
+				Required: []string{"collectionPolicy"},
+			},
+		},
+	}
+}
+
+func schema_openshift_api_config_v1alpha1_NodeExporterCollectorNVMExpressSubsystemConfig(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "NodeExporterCollectorNVMExpressSubsystemConfig provides configuration for the nvmesubsystem collector of the node-exporter agent. The nvmesubsystem collector collects statistics about NVM Express (NVMe) subsystem devices. It is enabled by default.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"collectionPolicy": {
+						SchemaProps: spec.SchemaProps{
+							Description: "collectionPolicy declares whether the nvmesubsystem collector collects metrics. This field is required. Valid values are \"Collect\" and \"DoNotCollect\". When set to \"Collect\", the nvmesubsystem collector is active and NVMe subsystem statistics are collected. When set to \"DoNotCollect\", the nvmesubsystem collector is inactive and the corresponding metrics become unavailable.\n\nPossible enum values:\n - `\"Collect\"` means the collector is active and will produce metrics.\n - `\"DoNotCollect\"` means the collector is inactive and will not produce metrics.",
 							Type:        []string{"string"},
 							Format:      "",
 							Enum:        []interface{}{"Collect", "DoNotCollect"},

@@ -385,9 +385,6 @@
                         "name": "VSphereMixedNodeEnv"
                     },
                     {
-                        "name": "VSphereMultiDisk"
-                    },
-                    {
                         "name": "VSphereMultiNetworks"
                     },
                     {

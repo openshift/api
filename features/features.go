@@ -170,13 +170,6 @@ var (
 						enable(inDefault(), inOKD(), inTechPreviewNoUpgrade(), inDevPreviewNoUpgrade()).
 						mustRegister()
 
-	FeatureGateVSphereMultiDisk = newFeatureGate("VSphereMultiDisk").
-					reportProblemsToJiraComponent("splat").
-					contactPerson("vr4manta").
-					productScope(ocpSpecific).
-					enhancementPR("https://github.com/openshift/enhancements/pull/1709").
-					enable(inDefault(), inOKD(), inTechPreviewNoUpgrade(), inDevPreviewNoUpgrade()).
-					mustRegister()
 
 	FeatureGateRouteExternalCertificate = newFeatureGate("RouteExternalCertificate").
 						reportProblemsToJiraComponent("router").

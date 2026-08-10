@@ -24,9 +24,6 @@
                         "name": "AWSEuropeanSovereignCloudInstall"
                     },
                     {
-                        "name": "AdditionalStorageConfig"
-                    },
-                    {
                         "name": "AuthenticationComponentProxy"
                     },
                     {
@@ -300,6 +297,9 @@
                     },
                     {
                         "name": "AWSServiceLBNetworkSecurityGroup"
+                    },
+                    {
+                        "name": "AdditionalStorageConfig"
                     },
                     {
                         "name": "AzureWorkloadIdentity"

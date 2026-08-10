@@ -23,13 +23,7 @@
                         "name": "AWSDedicatedHosts"
                     },
                     {
-                        "name": "AWSDualStackInstall"
-                    },
-                    {
                         "name": "AWSEuropeanSovereignCloudInstall"
-                    },
-                    {
-                        "name": "AdditionalStorageConfig"
                     },
                     {
                         "name": "AuthenticationComponentProxy"
@@ -161,13 +155,10 @@
                         "name": "GCPSovereignCloudInstall"
                     },
                     {
+                        "name": "GatewayAPIManagementMode"
+                    },
+                    {
                         "name": "ImageModeStatusReporting"
-                    },
-                    {
-                        "name": "IngressControllerMultipleHAProxyVersions"
-                    },
-                    {
-                        "name": "IrreconcilableMachineConfig"
                     },
                     {
                         "name": "KMSEncryption"
@@ -242,9 +233,6 @@
                         "name": "NewOLMOwnSingleNamespace"
                     },
                     {
-                        "name": "NewOLMPreflightPermissionChecks"
-                    },
-                    {
                         "name": "NewOLMWebhookProviderOpenshiftServiceCA"
                     },
                     {
@@ -304,7 +292,13 @@
                         "name": "AWSClusterHostedDNSInstall"
                     },
                     {
+                        "name": "AWSDualStackInstall"
+                    },
+                    {
                         "name": "AWSServiceLBNetworkSecurityGroup"
+                    },
+                    {
+                        "name": "AdditionalStorageConfig"
                     },
                     {
                         "name": "AzureWorkloadIdentity"
@@ -346,10 +340,16 @@
                         "name": "IngressControllerDynamicConfigurationManager"
                     },
                     {
+                        "name": "IngressControllerMultipleHAProxyVersions"
+                    },
+                    {
                         "name": "InsightsConfig"
                     },
                     {
                         "name": "InsightsOnDemandDataGather"
+                    },
+                    {
+                        "name": "IrreconcilableMachineConfig"
                     },
                     {
                         "name": "KMSv1"
@@ -368,9 +368,6 @@
                     },
                     {
                         "name": "OpenShiftPodSecurityAdmission"
-                    },
-                    {
-                        "name": "RouteExternalCertificate"
                     },
                     {
                         "name": "ServiceAccountTokenNodeBinding"

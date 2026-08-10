@@ -23,13 +23,7 @@
                         "name": "AWSDedicatedHosts"
                     },
                     {
-                        "name": "AWSDualStackInstall"
-                    },
-                    {
                         "name": "AWSEuropeanSovereignCloudInstall"
-                    },
-                    {
-                        "name": "AdditionalStorageConfig"
                     },
                     {
                         "name": "AuthenticationComponentProxy"
@@ -57,9 +51,6 @@
                     },
                     {
                         "name": "CRDCompatibilityRequirementOperator"
-                    },
-                    {
-                        "name": "CRIOCredentialProviderConfig"
                     },
                     {
                         "name": "ClientsAllowCBOR"
@@ -161,16 +152,13 @@
                         "name": "GCPSovereignCloudInstall"
                     },
                     {
+                        "name": "GatewayAPIManagementMode"
+                    },
+                    {
                         "name": "HyperShiftOnlyDynamicResourceAllocation"
                     },
                     {
                         "name": "ImageModeStatusReporting"
-                    },
-                    {
-                        "name": "IngressControllerMultipleHAProxyVersions"
-                    },
-                    {
-                        "name": "IrreconcilableMachineConfig"
                     },
                     {
                         "name": "KMSEncryption"
@@ -242,13 +230,7 @@
                         "name": "NewOLMOwnSingleNamespace"
                     },
                     {
-                        "name": "NewOLMPreflightPermissionChecks"
-                    },
-                    {
                         "name": "NoOverlayMode"
-                    },
-                    {
-                        "name": "NoRegistryClusterInstall"
                     },
                     {
                         "name": "NutanixMultiSubnets"
@@ -295,7 +277,13 @@
                         "name": "AWSClusterHostedDNSInstall"
                     },
                     {
+                        "name": "AWSDualStackInstall"
+                    },
+                    {
                         "name": "AWSServiceLBNetworkSecurityGroup"
+                    },
+                    {
+                        "name": "AdditionalStorageConfig"
                     },
                     {
                         "name": "AzureWorkloadIdentity"
@@ -305,6 +293,9 @@
                     },
                     {
                         "name": "BuildCSIVolumes"
+                    },
+                    {
+                        "name": "CRIOCredentialProviderConfig"
                     },
                     {
                         "name": "DualReplica"
@@ -334,10 +325,16 @@
                         "name": "IngressControllerDynamicConfigurationManager"
                     },
                     {
+                        "name": "IngressControllerMultipleHAProxyVersions"
+                    },
+                    {
                         "name": "InsightsConfig"
                     },
                     {
                         "name": "InsightsOnDemandDataGather"
+                    },
+                    {
+                        "name": "IrreconcilableMachineConfig"
                     },
                     {
                         "name": "KMSv1"
@@ -361,6 +358,9 @@
                         "name": "NewOLMWebhookProviderOpenshiftServiceCA"
                     },
                     {
+                        "name": "NoRegistryClusterInstall"
+                    },
+                    {
                         "name": "OLMLifecycleAndCompatibility"
                     },
                     {
@@ -368,9 +368,6 @@
                     },
                     {
                         "name": "OpenShiftPodSecurityAdmission"
-                    },
-                    {
-                        "name": "RouteExternalCertificate"
                     },
                     {
                         "name": "ServiceAccountTokenNodeBinding"

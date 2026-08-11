@@ -333,7 +333,7 @@ var (
 					contactPerson("fbertina").
 					productScope(kubernetes).
 					enhancementPR("https://github.com/kubernetes/enhancements/issues/3476").
-					enable(inTechPreviewNoUpgrade(), inDevPreviewNoUpgrade()).
+					enable(inDefault(), inOKD(), inTechPreviewNoUpgrade(), inDevPreviewNoUpgrade()).
 					mustRegister()
 
 	FeatureGateExternalSnapshotMetadata = newFeatureGate("ExternalSnapshotMetadata").

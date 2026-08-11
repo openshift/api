@@ -1220,6 +1220,7 @@ type OpenStackPlatformSpec struct {
 	// only valid when loadBalancer.type is set to UserManaged.
 	//
 	// +kubebuilder:validation:MaxItems=10
+	// +kubebuilder:validation:MinItems=1
 	// +listType=atomic
 	// +optional
 	AdditionalAPIServerIPs []IP `json:"additionalAPIServerIPs,omitempty"`
@@ -1231,6 +1232,7 @@ type OpenStackPlatformSpec struct {
 	// field is only valid when loadBalancer.type is set to UserManaged.
 	//
 	// +kubebuilder:validation:MaxItems=10
+	// +kubebuilder:validation:MinItems=1
 	// +listType=atomic
 	// +optional
 	AdditionalIngressIPs []IP `json:"additionalIngressIPs,omitempty"`
@@ -1297,6 +1299,9 @@ type OpenStackPlatformStatus struct {
 	//
 	// +kubebuilder:validation:Format=ip
 	// +kubebuilder:validation:MaxItems=10
+	// +kubebuilder:validation:items:MaxLength=46
+	// +kubebuilder:validation:items:MinLength=1
+	// +kubebuilder:validation:MinItems=1
 	// +listType=atomic
 	// +optional
 	AdditionalAPIServerIPs []string `json:"additionalAPIServerIPs,omitempty"`
@@ -1309,6 +1314,9 @@ type OpenStackPlatformStatus struct {
 	//
 	// +kubebuilder:validation:Format=ip
 	// +kubebuilder:validation:MaxItems=10
+	// +kubebuilder:validation:items:MaxLength=46
+	// +kubebuilder:validation:items:MinLength=1
+	// +kubebuilder:validation:MinItems=1
 	// +listType=atomic
 	// +optional
 	AdditionalIngressIPs []string `json:"additionalIngressIPs,omitempty"`

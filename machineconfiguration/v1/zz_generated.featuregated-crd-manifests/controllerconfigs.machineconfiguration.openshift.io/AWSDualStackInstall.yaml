@@ -721,6 +721,7 @@ spec:
                                   - message: value must be a valid IP address
                                     rule: isIP(self)
                                 maxItems: 10
+                                minItems: 1
                                 type: array
                                 x-kubernetes-list-type: atomic
                               additionalIngressIPs:
@@ -740,6 +741,7 @@ spec:
                                   - message: value must be a valid IP address
                                     rule: isIP(self)
                                 maxItems: 10
+                                minItems: 1
                                 type: array
                                 x-kubernetes-list-type: atomic
                               apiServerInternalIPs:
@@ -2359,8 +2361,11 @@ spec:
                                   only valid when loadBalancer.type is set to UserManaged.
                                 format: ip
                                 items:
+                                  maxLength: 46
+                                  minLength: 1
                                   type: string
                                 maxItems: 10
+                                minItems: 1
                                 type: array
                                 x-kubernetes-list-type: atomic
                               additionalIngressIPs:
@@ -2372,8 +2377,11 @@ spec:
                                   field is only valid when loadBalancer.type is set to UserManaged.
                                 format: ip
                                 items:
+                                  maxLength: 46
+                                  minLength: 1
                                   type: string
                                 maxItems: 10
+                                minItems: 1
                                 type: array
                                 x-kubernetes-list-type: atomic
                               apiServerInternalIP:

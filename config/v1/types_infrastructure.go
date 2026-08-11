@@ -1213,6 +1213,28 @@ type OpenStackPlatformSpec struct {
 	// +optional
 	IngressIPs []IP `json:"ingressIPs"`
 
+	// additionalAPIServerIPs is a list of additional IP addresses to contact
+	// the Kubernetes API server on separate networks. These are used when a
+	// user-managed load balancer exposes the API server on multiple networks
+	// simultaneously. Each entry must be a valid IP address. This field is
+	// only valid when loadBalancer.type is set to UserManaged.
+	//
+	// +kubebuilder:validation:MaxItems=10
+	// +listType=atomic
+	// +optional
+	AdditionalAPIServerIPs []IP `json:"additionalAPIServerIPs,omitempty"`
+
+	// additionalIngressIPs is a list of additional IP addresses that route to
+	// the default ingress controller on separate networks. These are used when
+	// a user-managed load balancer exposes the ingress controller on multiple
+	// networks simultaneously. Each entry must be a valid IP address. This
+	// field is only valid when loadBalancer.type is set to UserManaged.
+	//
+	// +kubebuilder:validation:MaxItems=10
+	// +listType=atomic
+	// +optional
+	AdditionalIngressIPs []IP `json:"additionalIngressIPs,omitempty"`
+
 	// machineNetworks are IP networks used to connect all the OpenShift cluster
 	// nodes. Each network is provided in the CIDR format and should be IPv4 or IPv6,
 	// for example "10.0.0.0/8" or "fd00::/8".
@@ -1266,6 +1288,30 @@ type OpenStackPlatformStatus struct {
 	// +kubebuilder:validation:XValidation:rule="self == oldSelf || (size(self) == 2 && isIP(self[0]) && isIP(self[1]) ? ip(self[0]).family() != ip(self[1]).family() : true)",message="ingressIPs must contain at most one IPv4 address and at most one IPv6 address"
 	// +listType=atomic
 	IngressIPs []string `json:"ingressIPs"`
+
+	// additionalAPIServerIPs is a list of additional IP addresses to contact
+	// the Kubernetes API server on separate networks. These are used when a
+	// user-managed load balancer exposes the API server on multiple networks
+	// simultaneously. Each entry must be a valid IP address. This field is
+	// only valid when loadBalancer.type is set to UserManaged.
+	//
+	// +kubebuilder:validation:Format=ip
+	// +kubebuilder:validation:MaxItems=10
+	// +listType=atomic
+	// +optional
+	AdditionalAPIServerIPs []string `json:"additionalAPIServerIPs,omitempty"`
+
+	// additionalIngressIPs is a list of additional IP addresses that route to
+	// the default ingress controller on separate networks. These are used when
+	// a user-managed load balancer exposes the ingress controller on multiple
+	// networks simultaneously. Each entry must be a valid IP address. This
+	// field is only valid when loadBalancer.type is set to UserManaged.
+	//
+	// +kubebuilder:validation:Format=ip
+	// +kubebuilder:validation:MaxItems=10
+	// +listType=atomic
+	// +optional
+	AdditionalIngressIPs []string `json:"additionalIngressIPs,omitempty"`
 
 	// nodeDNSIP is the IP address for the internal DNS used by the
 	// nodes. Unlike the one managed by the DNS operator, `NodeDNSIP`

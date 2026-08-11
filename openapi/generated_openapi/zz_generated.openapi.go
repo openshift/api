@@ -19180,6 +19180,46 @@ func schema_openshift_api_config_v1_OpenStackPlatformSpec(ref common.ReferenceCa
 							},
 						},
 					},
+					"additionalAPIServerIPs": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-type": "atomic",
+							},
+						},
+						SchemaProps: spec.SchemaProps{
+							Description: "additionalAPIServerIPs is a list of additional IP addresses to contact the Kubernetes API server on separate networks. These are used when a user-managed load balancer exposes the API server on multiple networks simultaneously. Each entry must be a valid IP address. This field is only valid when loadBalancer.type is set to UserManaged.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: "",
+										Type:    []string{"string"},
+										Format:  "",
+									},
+								},
+							},
+						},
+					},
+					"additionalIngressIPs": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-type": "atomic",
+							},
+						},
+						SchemaProps: spec.SchemaProps{
+							Description: "additionalIngressIPs is a list of additional IP addresses that route to the default ingress controller on separate networks. These are used when a user-managed load balancer exposes the ingress controller on multiple networks simultaneously. Each entry must be a valid IP address. This field is only valid when loadBalancer.type is set to UserManaged.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: "",
+										Type:    []string{"string"},
+										Format:  "",
+									},
+								},
+							},
+						},
+					},
 					"machineNetworks": {
 						VendorExtensible: spec.VendorExtensible{
 							Extensions: spec.Extensions{
@@ -19262,6 +19302,46 @@ func schema_openshift_api_config_v1_OpenStackPlatformStatus(ref common.Reference
 						},
 						SchemaProps: spec.SchemaProps{
 							Description: "ingressIPs are the external IPs which route to the default ingress controller. The IPs are suitable targets of a wildcard DNS record used to resolve default route host names. In dual stack clusters this list contains two IPs otherwise only one.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: "",
+										Type:    []string{"string"},
+										Format:  "",
+									},
+								},
+							},
+						},
+					},
+					"additionalAPIServerIPs": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-type": "atomic",
+							},
+						},
+						SchemaProps: spec.SchemaProps{
+							Description: "additionalAPIServerIPs is a list of additional IP addresses to contact the Kubernetes API server on separate networks. These are used when a user-managed load balancer exposes the API server on multiple networks simultaneously. Each entry must be a valid IP address. This field is only valid when loadBalancer.type is set to UserManaged.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: "",
+										Type:    []string{"string"},
+										Format:  "",
+									},
+								},
+							},
+						},
+					},
+					"additionalIngressIPs": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-type": "atomic",
+							},
+						},
+						SchemaProps: spec.SchemaProps{
+							Description: "additionalIngressIPs is a list of additional IP addresses that route to the default ingress controller on separate networks. These are used when a user-managed load balancer exposes the ingress controller on multiple networks simultaneously. Each entry must be a valid IP address. This field is only valid when loadBalancer.type is set to UserManaged.",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{

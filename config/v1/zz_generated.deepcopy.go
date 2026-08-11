@@ -5241,6 +5241,16 @@ func (in *OpenStackPlatformSpec) DeepCopyInto(out *OpenStackPlatformSpec) {
 		*out = make([]IP, len(*in))
 		copy(*out, *in)
 	}
+	if in.AdditionalAPIServerIPs != nil {
+		in, out := &in.AdditionalAPIServerIPs, &out.AdditionalAPIServerIPs
+		*out = make([]IP, len(*in))
+		copy(*out, *in)
+	}
+	if in.AdditionalIngressIPs != nil {
+		in, out := &in.AdditionalIngressIPs, &out.AdditionalIngressIPs
+		*out = make([]IP, len(*in))
+		copy(*out, *in)
+	}
 	if in.MachineNetworks != nil {
 		in, out := &in.MachineNetworks, &out.MachineNetworks
 		*out = make([]CIDR, len(*in))
@@ -5269,6 +5279,16 @@ func (in *OpenStackPlatformStatus) DeepCopyInto(out *OpenStackPlatformStatus) {
 	}
 	if in.IngressIPs != nil {
 		in, out := &in.IngressIPs, &out.IngressIPs
+		*out = make([]string, len(*in))
+		copy(*out, *in)
+	}
+	if in.AdditionalAPIServerIPs != nil {
+		in, out := &in.AdditionalAPIServerIPs, &out.AdditionalAPIServerIPs
+		*out = make([]string, len(*in))
+		copy(*out, *in)
+	}
+	if in.AdditionalIngressIPs != nil {
+		in, out := &in.AdditionalIngressIPs, &out.AdditionalIngressIPs
 		*out = make([]string, len(*in))
 		copy(*out, *in)
 	}

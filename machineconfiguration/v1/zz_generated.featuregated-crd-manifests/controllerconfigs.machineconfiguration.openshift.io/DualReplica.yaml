@@ -704,6 +704,44 @@ spec:
                             description: openstack contains settings specific to the
                               OpenStack infrastructure provider.
                             properties:
+                              additionalAPIServerIPs:
+                                description: |-
+                                  additionalAPIServerIPs is a list of additional IP addresses to contact
+                                  the Kubernetes API server on separate networks. These are used when a
+                                  user-managed load balancer exposes the API server on multiple networks
+                                  simultaneously. Each entry must be a valid IP address. This field is
+                                  only valid when loadBalancer.type is set to UserManaged.
+                                items:
+                                  description: IP is an IP address (for example, "10.0.0.0"
+                                    or "fd00::").
+                                  maxLength: 39
+                                  minLength: 1
+                                  type: string
+                                  x-kubernetes-validations:
+                                  - message: value must be a valid IP address
+                                    rule: isIP(self)
+                                maxItems: 10
+                                type: array
+                                x-kubernetes-list-type: atomic
+                              additionalIngressIPs:
+                                description: |-
+                                  additionalIngressIPs is a list of additional IP addresses that route to
+                                  the default ingress controller on separate networks. These are used when
+                                  a user-managed load balancer exposes the ingress controller on multiple
+                                  networks simultaneously. Each entry must be a valid IP address. This
+                                  field is only valid when loadBalancer.type is set to UserManaged.
+                                items:
+                                  description: IP is an IP address (for example, "10.0.0.0"
+                                    or "fd00::").
+                                  maxLength: 39
+                                  minLength: 1
+                                  type: string
+                                  x-kubernetes-validations:
+                                  - message: value must be a valid IP address
+                                    rule: isIP(self)
+                                maxItems: 10
+                                type: array
+                                x-kubernetes-list-type: atomic
                               apiServerInternalIPs:
                                 description: |-
                                   apiServerInternalIPs are the IP addresses to contact the Kubernetes API
@@ -2294,6 +2332,32 @@ spec:
                             description: openstack contains settings specific to the
                               OpenStack infrastructure provider.
                             properties:
+                              additionalAPIServerIPs:
+                                description: |-
+                                  additionalAPIServerIPs is a list of additional IP addresses to contact
+                                  the Kubernetes API server on separate networks. These are used when a
+                                  user-managed load balancer exposes the API server on multiple networks
+                                  simultaneously. Each entry must be a valid IP address. This field is
+                                  only valid when loadBalancer.type is set to UserManaged.
+                                format: ip
+                                items:
+                                  type: string
+                                maxItems: 10
+                                type: array
+                                x-kubernetes-list-type: atomic
+                              additionalIngressIPs:
+                                description: |-
+                                  additionalIngressIPs is a list of additional IP addresses that route to
+                                  the default ingress controller on separate networks. These are used when
+                                  a user-managed load balancer exposes the ingress controller on multiple
+                                  networks simultaneously. Each entry must be a valid IP address. This
+                                  field is only valid when loadBalancer.type is set to UserManaged.
+                                format: ip
+                                items:
+                                  type: string
+                                maxItems: 10
+                                type: array
+                                x-kubernetes-list-type: atomic
                               apiServerInternalIP:
                                 description: |-
                                   apiServerInternalIP is an IP address to contact the Kubernetes API server that can be used

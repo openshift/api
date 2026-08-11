@@ -281,9 +281,6 @@
                         "name": "AWSDualStackInstall"
                     },
                     {
-                        "name": "AWSServiceLBNetworkSecurityGroup"
-                    },
-                    {
                         "name": "AdditionalStorageConfig"
                     },
                     {

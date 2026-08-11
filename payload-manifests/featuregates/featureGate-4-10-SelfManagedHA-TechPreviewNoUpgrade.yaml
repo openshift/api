@@ -44,9 +44,6 @@
                         "name": "Example2"
                     },
                     {
-                        "name": "GCPSovereignCloudInstall"
-                    },
-                    {
                         "name": "HyperShiftOnlyDynamicResourceAllocation"
                     },
                     {
@@ -230,6 +227,9 @@
                     },
                     {
                         "name": "GCPDualStackInstall"
+                    },
+                    {
+                        "name": "GCPSovereignCloudInstall"
                     },
                     {
                         "name": "GatewayAPIManagementMode"

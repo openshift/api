@@ -561,6 +561,8 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		configv1alpha1.NodeExporterCollectorCpufreqConfig{}.OpenAPIModelName():                 schema_openshift_api_config_v1alpha1_NodeExporterCollectorCpufreqConfig(ref),
 		configv1alpha1.NodeExporterCollectorDeviceMapperMultipathConfig{}.OpenAPIModelName():   schema_openshift_api_config_v1alpha1_NodeExporterCollectorDeviceMapperMultipathConfig(ref),
 		configv1alpha1.NodeExporterCollectorEthtoolConfig{}.OpenAPIModelName():                 schema_openshift_api_config_v1alpha1_NodeExporterCollectorEthtoolConfig(ref),
+		configv1alpha1.NodeExporterCollectorInterruptsCollectConfig{}.OpenAPIModelName():       schema_openshift_api_config_v1alpha1_NodeExporterCollectorInterruptsCollectConfig(ref),
+		configv1alpha1.NodeExporterCollectorInterruptsConfig{}.OpenAPIModelName():              schema_openshift_api_config_v1alpha1_NodeExporterCollectorInterruptsConfig(ref),
 		configv1alpha1.NodeExporterCollectorKSMDConfig{}.OpenAPIModelName():                    schema_openshift_api_config_v1alpha1_NodeExporterCollectorKSMDConfig(ref),
 		configv1alpha1.NodeExporterCollectorMountStatsConfig{}.OpenAPIModelName():              schema_openshift_api_config_v1alpha1_NodeExporterCollectorMountStatsConfig(ref),
 		configv1alpha1.NodeExporterCollectorNVMExpressSubsystemConfig{}.OpenAPIModelName():     schema_openshift_api_config_v1alpha1_NodeExporterCollectorNVMExpressSubsystemConfig(ref),
@@ -25278,11 +25280,18 @@ func schema_openshift_api_config_v1alpha1_NodeExporterCollectorConfig(ref common
 							Ref:         ref(configv1alpha1.NodeExporterCollectorNVMExpressSubsystemConfig{}.OpenAPIModelName()),
 						},
 					},
+					"interrupts": {
+						SchemaProps: spec.SchemaProps{
+							Description: "interrupts configures the interrupts collector, which exposes interrupt counts from /proc/interrupts. interrupts is optional. When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time. The current default is disabled. The interrupts collector can produce a large number of metrics depending on the hardware and interrupt sources present. When enabled, the collect field with at least one include pattern is required to explicitly select which interrupt lines are collected.",
+							Default:     map[string]interface{}{},
+							Ref:         ref(configv1alpha1.NodeExporterCollectorInterruptsConfig{}.OpenAPIModelName()),
+						},
+					},
 				},
 			},
 		},
 		Dependencies: []string{
-			configv1alpha1.NodeExporterCollectorBuddyInfoConfig{}.OpenAPIModelName(), configv1alpha1.NodeExporterCollectorCpufreqConfig{}.OpenAPIModelName(), configv1alpha1.NodeExporterCollectorDeviceMapperMultipathConfig{}.OpenAPIModelName(), configv1alpha1.NodeExporterCollectorEthtoolConfig{}.OpenAPIModelName(), configv1alpha1.NodeExporterCollectorKSMDConfig{}.OpenAPIModelName(), configv1alpha1.NodeExporterCollectorMountStatsConfig{}.OpenAPIModelName(), configv1alpha1.NodeExporterCollectorNVMExpressSubsystemConfig{}.OpenAPIModelName(), configv1alpha1.NodeExporterCollectorNetClassConfig{}.OpenAPIModelName(), configv1alpha1.NodeExporterCollectorNetDevConfig{}.OpenAPIModelName(), configv1alpha1.NodeExporterCollectorProcessesConfig{}.OpenAPIModelName(), configv1alpha1.NodeExporterCollectorSoftirqsConfig{}.OpenAPIModelName(), configv1alpha1.NodeExporterCollectorSystemdConfig{}.OpenAPIModelName(), configv1alpha1.NodeExporterCollectorTcpStatConfig{}.OpenAPIModelName(), configv1alpha1.NodeExporterCollectorZoneinfoConfig{}.OpenAPIModelName()},
+			configv1alpha1.NodeExporterCollectorBuddyInfoConfig{}.OpenAPIModelName(), configv1alpha1.NodeExporterCollectorCpufreqConfig{}.OpenAPIModelName(), configv1alpha1.NodeExporterCollectorDeviceMapperMultipathConfig{}.OpenAPIModelName(), configv1alpha1.NodeExporterCollectorEthtoolConfig{}.OpenAPIModelName(), configv1alpha1.NodeExporterCollectorInterruptsConfig{}.OpenAPIModelName(), configv1alpha1.NodeExporterCollectorKSMDConfig{}.OpenAPIModelName(), configv1alpha1.NodeExporterCollectorMountStatsConfig{}.OpenAPIModelName(), configv1alpha1.NodeExporterCollectorNVMExpressSubsystemConfig{}.OpenAPIModelName(), configv1alpha1.NodeExporterCollectorNetClassConfig{}.OpenAPIModelName(), configv1alpha1.NodeExporterCollectorNetDevConfig{}.OpenAPIModelName(), configv1alpha1.NodeExporterCollectorProcessesConfig{}.OpenAPIModelName(), configv1alpha1.NodeExporterCollectorSoftirqsConfig{}.OpenAPIModelName(), configv1alpha1.NodeExporterCollectorSystemdConfig{}.OpenAPIModelName(), configv1alpha1.NodeExporterCollectorTcpStatConfig{}.OpenAPIModelName(), configv1alpha1.NodeExporterCollectorZoneinfoConfig{}.OpenAPIModelName()},
 	}
 }
 
@@ -25349,6 +25358,83 @@ func schema_openshift_api_config_v1alpha1_NodeExporterCollectorEthtoolConfig(ref
 				Required: []string{"collectionPolicy"},
 			},
 		},
+	}
+}
+
+func schema_openshift_api_config_v1alpha1_NodeExporterCollectorInterruptsCollectConfig(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "NodeExporterCollectorInterruptsCollectConfig holds configuration options for the interrupts collector when it is actively collecting metrics. At least one field must be specified.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"include": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-type": "set",
+							},
+						},
+						SchemaProps: spec.SchemaProps{
+							Description: "include is a list of regular expression patterns that select which interrupt lines to collect. This field is required. Each line in /proc/interrupts is matched against the same string node-exporter uses: the IRQ name, info, and devices fields joined with \";\", for example \"LOC;77;IO-APIC 2-edge ...\". Patterns are combined with OR into a single expression anchored on both ends, so each pattern must match the entire string (use \".*\" where needed). Each entry must be at least 1 character, at most 1024 characters, and only contain printable ASCII characters. Maximum length for this list is 50. Minimum length for this list is 1. Entries in this list must be unique.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: "",
+										Type:    []string{"string"},
+										Format:  "",
+									},
+								},
+							},
+						},
+					},
+				},
+				Required: []string{"include"},
+			},
+		},
+	}
+}
+
+func schema_openshift_api_config_v1alpha1_NodeExporterCollectorInterruptsConfig(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "NodeExporterCollectorInterruptsConfig provides configuration for the interrupts collector of the node-exporter agent. The interrupts collector exposes interrupt counts from /proc/interrupts. It is disabled by default. The interrupts collector can produce a large number of metrics depending on the hardware and interrupt sources present. When enabled, the collect field with at least one include pattern is required to explicitly select which interrupt lines are collected. When collectionPolicy is Collect, the collect field must be set with at least one include pattern. When collectionPolicy is DoNotCollect, the collect field must not be set.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"collectionPolicy": {
+						SchemaProps: spec.SchemaProps{
+							Description: "collectionPolicy declares whether the interrupts collector collects metrics. This field is required. Valid values are \"Collect\" and \"DoNotCollect\". When set to \"Collect\", the interrupts collector is active and the collect field must be set with at least one include pattern to select which interrupt lines are collected. When set to \"DoNotCollect\", the interrupts collector is inactive and the collect field must not be set.\n\nPossible enum values:\n - `\"Collect\"` means the collector is active and will produce metrics.\n - `\"DoNotCollect\"` means the collector is inactive and will not produce metrics.",
+							Type:        []string{"string"},
+							Format:      "",
+							Enum:        []interface{}{"Collect", "DoNotCollect"},
+						},
+					},
+					"collect": {
+						SchemaProps: spec.SchemaProps{
+							Description: "collect contains configuration options that apply only when the interrupts collector is actively collecting metrics (i.e. when collectionPolicy is Collect). collect is required when collectionPolicy is Collect and must contain at least one include pattern to explicitly select which interrupt lines are collected. collect must not be set when collectionPolicy is DoNotCollect. When set, at least one field must be specified within collect.",
+							Default:     map[string]interface{}{},
+							Ref:         ref(configv1alpha1.NodeExporterCollectorInterruptsCollectConfig{}.OpenAPIModelName()),
+						},
+					},
+				},
+				Required: []string{"collectionPolicy"},
+			},
+			VendorExtensible: spec.VendorExtensible{
+				Extensions: spec.Extensions{
+					"x-kubernetes-unions": []interface{}{
+						map[string]interface{}{
+							"discriminator": "collectionPolicy",
+							"fields-to-discriminateBy": map[string]interface{}{
+								"collect": "Collect",
+							},
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			configv1alpha1.NodeExporterCollectorInterruptsCollectConfig{}.OpenAPIModelName()},
 	}
 }
 

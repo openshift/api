@@ -45885,6 +45885,26 @@ func schema_openshift_api_machine_v1beta1_GCPDisk(ref common.ReferenceCallback) 
 							Ref:         ref(machinev1beta1.GCPEncryptionKeyReference{}.OpenAPIModelName()),
 						},
 					},
+					"licenses": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-type": "atomic",
+							},
+						},
+						SchemaProps: spec.SchemaProps{
+							Description: "licenses is a list of relative references to license resources attached to this disk. Each reference must use the format projects/{project}/global/licenses/{license}. Full URLs are not accepted. Project components follow the licenses.get project parameter pattern in the Compute Engine v1 discovery document: https://www.googleapis.com/discovery/v1/apis/compute/v1/rest Project identifiers must contain 1 to 63 lowercase letters, digits, or hyphens, and begin and end with a lowercase letter or digit. An optional prefix followed by a colon is allowed, including domain-scoped project prefixes. Prefixes consist of dot-separated labels of 1 to 63 lowercase letters, digits, or hyphens; the final label must begin with a lowercase letter and end with a lowercase letter or digit. License names follow the License.name pattern in the same discovery document: RFC1035-style lowercase names that begin with a letter, end with a lowercase letter or digit, contain only lowercase letters, digits, and hyphens, and are at most 63 characters long. Each license reference must be at least 1 character and must not exceed 256 characters. When specified, at least 1 and a maximum of 8 licenses may be provided. When omitted, no additional licenses are applied.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: "",
+										Type:    []string{"string"},
+										Format:  "",
+									},
+								},
+							},
+						},
+					},
 				},
 				Required: []string{"autoDelete", "boot", "sizeGb", "type", "image", "labels"},
 			},

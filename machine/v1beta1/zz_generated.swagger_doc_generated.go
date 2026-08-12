@@ -436,6 +436,7 @@ var map_GCPDisk = map[string]string{
 	"image":         "image is the source image to create this disk.",
 	"labels":        "labels list of labels to apply to the disk.",
 	"encryptionKey": "encryptionKey is the customer-supplied encryption key of the disk.",
+	"licenses":      "licenses is a list of URLs of license resources attached to this disk. License URLs must match either the full URL format (https://www.googleapis.com/compute/v1/projects/{project}/global/licenses/{license}) or the short self-link format (projects/{project}/global/licenses/{license}). Each license URL must be at least 1 character and must not exceed 256 characters. When specified, at least 1 and a maximum of 8 licenses may be provided. When omitted, no additional licenses are applied.",
 }
 
 func (GCPDisk) SwaggerDoc() map[string]string {

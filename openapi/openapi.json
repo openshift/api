@@ -26466,6 +26466,15 @@
             "default": ""
           }
         },
+        "licenses": {
+          "description": "licenses is a list of URLs of license resources attached to this disk. License URLs must match either the full URL format (https://www.googleapis.com/compute/v1/projects/{project}/global/licenses/{license}) or the short self-link format (projects/{project}/global/licenses/{license}). Each license URL must be at least 1 character and must not exceed 256 characters. When specified, at least 1 and a maximum of 8 licenses may be provided. When omitted, no additional licenses are applied.",
+          "type": "array",
+          "items": {
+            "type": "string",
+            "default": ""
+          },
+          "x-kubernetes-list-type": "atomic"
+        },
         "sizeGb": {
           "description": "sizeGb is the size of the disk (in GB).",
           "type": "integer",

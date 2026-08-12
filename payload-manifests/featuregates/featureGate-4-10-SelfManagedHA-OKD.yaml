@@ -248,9 +248,6 @@
                         "name": "SELinuxMount"
                     },
                     {
-                        "name": "SELinuxMountGAReadiness"
-                    },
-                    {
                         "name": "ShortCertRotation"
                     },
                     {
@@ -365,6 +362,9 @@
                     },
                     {
                         "name": "OpenShiftPodSecurityAdmission"
+                    },
+                    {
+                        "name": "SELinuxMountGAReadiness"
                     },
                     {
                         "name": "ServiceAccountTokenNodeBinding"

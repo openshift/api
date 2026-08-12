@@ -389,9 +389,6 @@
                         "name": "VSphereMultiDisk"
                     },
                     {
-                        "name": "VSphereMultiNetworks"
-                    },
-                    {
                         "name": "VolumeGroupSnapshot"
                     }
                 ],

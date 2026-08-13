@@ -249,6 +249,9 @@
                         "name": "OnPremDNSRecords"
                     },
                     {
+                        "name": "PodCertificateRequest"
+                    },
+                    {
                         "name": "ProvisioningRequestAvailable"
                     },
                     {

@@ -156,9 +156,6 @@
                         "name": "ImageModeStatusReporting"
                     },
                     {
-                        "name": "IngressComponentRouteLabels"
-                    },
-                    {
                         "name": "KMSEncryption"
                     },
                     {
@@ -312,6 +309,9 @@
                     },
                     {
                         "name": "ImageStreamImportMode"
+                    },
+                    {
+                        "name": "IngressComponentRouteLabels"
                     },
                     {
                         "name": "IngressControllerDynamicConfigurationManager"

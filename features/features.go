@@ -138,6 +138,14 @@ var (
 				enhancementPR("https://github.com/kubernetes/enhancements/issues/3386").
 				mustRegister()
 
+	FeatureGateDRANodeAllocatableResources = newFeatureGate("DRANodeAllocatableResources").
+							reportProblemsToJiraComponent("node").
+							contactPerson("harche").
+							productScope(kubernetes).
+							enhancementPR("https://github.com/kubernetes/enhancements/issues/5517").
+							enable(inTechPreviewNoUpgrade(), inDevPreviewNoUpgrade()).
+							mustRegister()
+
 	FeatureGateSigstoreImageVerification = newFeatureGate("SigstoreImageVerification").
 						reportProblemsToJiraComponent("node").
 						contactPerson("sgrunert").

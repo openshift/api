@@ -187,6 +187,9 @@
                         "name": "DNSNameResolver"
                     },
                     {
+                        "name": "DRANodeAllocatableResources"
+                    },
+                    {
                         "name": "DualReplica"
                     },
                     {

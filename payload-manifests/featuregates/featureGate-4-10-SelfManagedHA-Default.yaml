@@ -114,6 +114,9 @@
                         "name": "DNSNameResolver"
                     },
                     {
+                        "name": "DRANodeAllocatableResources"
+                    },
+                    {
                         "name": "DyanmicServiceEndpointIBMCloud"
                     },
                     {

@@ -192,6 +192,9 @@
                         "name": "MachineAPIOperatorDisableMachineHealthCheckController"
                     },
                     {
+                        "name": "ManagedBootImagesAWSCAPI"
+                    },
+                    {
                         "name": "MaxUnavailableStatefulSet"
                     },
                     {

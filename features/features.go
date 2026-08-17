@@ -1075,4 +1075,12 @@ var (
 					enhancementPR("https://github.com/openshift/enhancements/pull/2047").
 					enable(inTechPreviewNoUpgrade(), inDevPreviewNoUpgrade()).
 					mustRegister()
+
+	FeatureGateVSpherePerComponentScopedCreds = newFeatureGate("VSpherePerComponentScopedCreds").
+							reportProblemsToJiraComponent("splat").
+							contactPerson("rvanderp3").
+							productScope(ocpSpecific).
+							enhancementPR("https://github.com/openshift/enhancements/pull/2081").
+							enable(inDevPreviewNoUpgrade()).
+							mustRegister()
 )

@@ -276,6 +276,9 @@
                     },
                     {
                         "name": "VSphereMultiVCenterDay2"
+                    },
+                    {
+                        "name": "VSpherePerComponentScopedCreds"
                     }
                 ],
                 "enabled": [

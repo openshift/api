@@ -29,7 +29,7 @@ func (m *Markdown) Bytes() []byte {
 	ret := &bytes.Buffer{}
 	fmt.Fprintf(ret, "# %s\n\n", m.title)
 	fmt.Fprintf(ret, "## Table of Contents\n")
-	fmt.Fprintf(ret, m.tableOfContents.String())
+	fmt.Fprint(ret, m.tableOfContents.String())
 	fmt.Fprintln(ret, "")
 	fmt.Fprintln(ret, "")
 	ret.WriteString(m.body.String())

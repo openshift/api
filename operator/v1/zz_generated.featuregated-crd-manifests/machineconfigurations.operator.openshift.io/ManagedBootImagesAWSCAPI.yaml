@@ -6,7 +6,7 @@ metadata:
     api.openshift.io/filename-cvo-runlevel: "0000_80"
     api.openshift.io/filename-operator: machine-config
     api.openshift.io/filename-ordering: "01"
-    feature-gate.release.openshift.io/: "true"
+    feature-gate.release.openshift.io/ManagedBootImagesAWSCAPI: "true"
   name: machineconfigurations.operator.openshift.io
 spec:
   group: operator.openshift.io
@@ -100,6 +100,7 @@ spec:
                             cluster.x-k8s.io means that the machine manager will only register resources that belong to the Cluster API group.
                           enum:
                           - machine.openshift.io
+                          - cluster.x-k8s.io
                           type: string
                         resource:
                           description: |-
@@ -110,6 +111,7 @@ spec:
                             machinedeployments means that the machine manager will only register resources of the kind MachineDeployment.
                           enum:
                           - machinesets
+                          - machinedeployments
                           type: string
                         selection:
                           description: selection allows granular control of the machine
@@ -199,6 +201,11 @@ spec:
                       - resource
                       - selection
                       type: object
+                      x-kubernetes-validations:
+                      - message: the machinedeployments resource is only supported
+                          in the cluster.x-k8s.io API group
+                        rule: 'self.resource == ''machinedeployments'' ? self.apiGroup
+                          == ''cluster.x-k8s.io'' : true'
                     maxItems: 5
                     type: array
                     x-kubernetes-list-map-keys:
@@ -735,6 +742,7 @@ spec:
                             cluster.x-k8s.io means that the machine manager will only register resources that belong to the Cluster API group.
                           enum:
                           - machine.openshift.io
+                          - cluster.x-k8s.io
                           type: string
                         resource:
                           description: |-
@@ -745,6 +753,7 @@ spec:
                             machinedeployments means that the machine manager will only register resources of the kind MachineDeployment.
                           enum:
                           - machinesets
+                          - machinedeployments
                           type: string
                         selection:
                           description: selection allows granular control of the machine
@@ -834,6 +843,11 @@ spec:
                       - resource
                       - selection
                       type: object
+                      x-kubernetes-validations:
+                      - message: the machinedeployments resource is only supported
+                          in the cluster.x-k8s.io API group
+                        rule: 'self.resource == ''machinedeployments'' ? self.apiGroup
+                          == ''cluster.x-k8s.io'' : true'
                     maxItems: 5
                     type: array
                     x-kubernetes-list-map-keys:

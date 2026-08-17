@@ -271,6 +271,9 @@
                         "name": "MachineAPIMigrationVSphere"
                     },
                     {
+                        "name": "ManagedBootImagesAWSCAPI"
+                    },
+                    {
                         "name": "ManagedBootImagesCPMS"
                     },
                     {

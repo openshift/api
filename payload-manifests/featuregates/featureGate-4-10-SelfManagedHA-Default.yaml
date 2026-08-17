@@ -150,6 +150,9 @@
                         "name": "GatewayAPIManagementMode"
                     },
                     {
+                        "name": "GomaxprocsInjection"
+                    },
+                    {
                         "name": "HyperShiftOnlyDynamicResourceAllocation"
                     },
                     {

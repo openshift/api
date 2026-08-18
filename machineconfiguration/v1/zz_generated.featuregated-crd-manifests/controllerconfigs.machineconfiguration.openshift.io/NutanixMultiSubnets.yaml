@@ -1657,6 +1657,7 @@ spec:
                                 - AzureChinaCloud
                                 - AzureGermanCloud
                                 - AzureStackCloud
+                                - AzureUSSecCloud
                                 type: string
                               networkResourceGroupName:
                                 description: |-

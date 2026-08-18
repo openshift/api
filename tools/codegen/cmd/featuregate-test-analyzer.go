@@ -35,6 +35,11 @@ const (
 	// required pass rate.
 	// nearly all current tests pass 99% of the time, but in a two week window we lack enough data to say.
 	requiredPassRateOfTestsPerVariant = 0.95
+
+	// required pass rate of tests per job for job-based promotion verification.
+	// Given a minimum sample size of 14 runs, we allow a single unique failure across job runs which equates to ~92%.
+	// This ensures that unique flukes don't cause a job to be considered a failed run.
+	requiredPassRateOfTestsPerJob = 0.92
 )
 
 type FeatureGateTestAnalyzerOptions struct {
@@ -131,6 +136,7 @@ func (o *FeatureGateTestAnalyzerOptions) Run(ctx context.Context) error {
 	md := utils.NewMarkdown("FeatureGate Promotion Summary")
 
 	recentlyEnabledFeatureGatesToClusterProfiles := map[string]sets.Set[string]{}
+	defaultCurrentlyEnabledFeatureGates := sets.Set[string]{}
 	errs := []error{}
 	for _, clusterProfile := range allCurrentClusterProfiles.List() {
 		// we only need to check test coverage for current cluster profiles
@@ -148,6 +154,8 @@ func (o *FeatureGateTestAnalyzerOptions) Run(ctx context.Context) error {
 			if !currentFeatureGateEnabled {
 				continue
 			}
+
+			defaultCurrentlyEnabledFeatureGates.Insert(featureGateName)
 
 			previousFeatureGateEnabled := false
 			if previousDefaultFeatureGateInfo != nil {
@@ -181,7 +189,7 @@ func (o *FeatureGateTestAnalyzerOptions) Run(ctx context.Context) error {
 		clusterProfiles := recentlyEnabledFeatureGatesToClusterProfiles[enabledFeatureGate]
 		md.Title(1, enabledFeatureGate)
 
-		testingResults, err := listTestResultFor(enabledFeatureGate, clusterProfiles)
+		testingResults, err := listTestResultFor(enabledFeatureGate, clusterProfiles, defaultCurrentlyEnabledFeatureGates)
 		if err != nil {
 			return err
 		}
@@ -546,6 +554,7 @@ var (
 		//	Architecture: "amd64",
 		//	Topology:     "single",
 		//},
+		//
 	}
 
 	// These are only checked if the feature gate is platform specific
@@ -736,7 +745,7 @@ func validateJobTiers(jobVariant JobVariant) error {
 	return nil
 }
 
-func listTestResultFor(featureGate string, clusterProfiles sets.Set[string]) (map[JobVariant]*TestingResults, error) {
+func listTestResultFor(featureGate string, clusterProfiles sets.Set[string], defaultEnabledFeatureGates sets.Set[string]) (map[JobVariant]*TestingResults, error) {
 	fmt.Printf("Query sippy for all test run results for feature gate %q on clusterProfile %q\n", featureGate, sets.List(clusterProfiles))
 
 	results := map[JobVariant]*TestingResults{}
@@ -772,7 +781,7 @@ func listTestResultFor(featureGate string, clusterProfiles sets.Set[string]) (ma
 	}
 
 	for _, jobVariant := range jobVariantsToCheck {
-		jobVariantResults, err := listTestResultForVariant(featureGate, jobVariant)
+		jobVariantResults, err := listTestResultForVariant(featureGate, jobVariant, defaultEnabledFeatureGates)
 		if err != nil {
 			return nil, err
 		}
@@ -869,13 +878,13 @@ func getRelease() (string, error) {
 	return getLatestRelease()
 }
 
-func listTestResultForVariant(featureGate string, jobVariant JobVariant) (*TestingResults, error) {
+func listTestResultForVariant(featureGate string, jobVariant JobVariant, defaultEnabledGates sets.Set[string]) (*TestingResults, error) {
 	// Substring here matches for both [OCPFeatureGate:...] and [FeatureGate:...]
 	testPattern := fmt.Sprintf("FeatureGate:%s]", featureGate)
 
 	// Feature gates used by the installer don't need separate tests, use the overall install tests
 	if strings.Contains(featureGate, "Install") {
-		return verifyJobBasedFeatureGatePromotion(featureGate, jobVariant)
+		return verifyJobBasedFeatureGatePromotion(featureGate, jobVariant, defaultEnabledGates)
 	}
 
 	fmt.Printf("Query sippy for all test run results for pattern %q on variant %#v\n", testPattern, jobVariant)
@@ -997,7 +1006,7 @@ func matchTwoNodeFeatureGates(featureGate string, topology string) bool {
 	return false
 }
 
-func verifyJobBasedFeatureGatePromotion(featureGate string, jobVariant JobVariant) (*TestingResults, error) {
+func verifyJobBasedFeatureGatePromotion(featureGate string, jobVariant JobVariant, defaultEnabledGates sets.Set[string]) (*TestingResults, error) {
 	ocpRelease, err := getRelease()
 	if err != nil {
 		return nil, fmt.Errorf("getting release version: %w", err)
@@ -1028,10 +1037,13 @@ func verifyJobBasedFeatureGatePromotion(featureGate string, jobVariant JobVarian
 	testResults := []TestResults{}
 
 	for _, job := range jobs {
-		results, err := verifyJobPassRate(sippyClient, ocpRelease, job, jobVariant)
+		fmt.Printf("\nverifying pass rate for job %s\n", job.Name)
+		fmt.Println(strings.Repeat("-", 10))
+		results, err := verifyJobPassRate(sippyClient, ocpRelease, job, jobVariant, defaultEnabledGates)
 		if err != nil {
 			return nil, fmt.Errorf("verifying job pass rate for job %q: %w", job.Name, err)
 		}
+		fmt.Println(strings.Repeat("-", 10))
 
 		testResults = append(testResults, *results)
 	}
@@ -1042,15 +1054,135 @@ func verifyJobBasedFeatureGatePromotion(featureGate string, jobVariant JobVarian
 	}, nil
 }
 
-func verifyJobPassRate(client *http.Client, release string, job sippy.SippyJob, variant JobVariant) (*TestResults, error) {
+var informingTests = []string{
+	"[Feature:NetworkSegmentation][ovn-kubernetes-ote][sig-network] Network Segmentation ClusterUserDefinedNetwork CRD Controller should create NAD according to spec in each target namespace and report active namespaces [Suite:openshift/conformance/parallel]",
+	"[Feature:NetworkSegmentation][ovn-kubernetes-ote][sig-network] Network Segmentation a user defined primary network created using NetworkAttachmentDefinitions creates a networkStatus Annotation with UDN interface L3 primary UDN [Suite:openshift/conformance/parallel]",
+	"[Feature:NetworkSegmentation][ovn-kubernetes-ote][sig-network] Network Segmentation a user defined primary network created using UserDefinedNetwork can perform east/west traffic between nodes two pods connected over a L2 primary UDN with custom network [Suite:openshift/conformance/parallel]",
+	"[Feature:NetworkSegmentation][ovn-kubernetes-ote][sig-network] Network Segmentation a user defined primary network created using ClusterUserDefinedNetwork creates a networkStatus Annotation with UDN interface L2 primary UDN with custom network [Suite:openshift/conformance/parallel]",
+	"[Feature:NetworkSegmentation][ovn-kubernetes-ote][sig-network] Network Segmentation: Preconfigured Layer2 UDN unmasked reserved / infrastructure subnets are not allowed Layer2 with unmasked IPv4 reserved subnets [Suite:openshift/conformance/parallel]",
+	"[Feature:NetworkSegmentation][ovn-kubernetes-ote][sig-network] Network Segmentation a user defined primary network doesn't cause network name conflict [Suite:openshift/conformance/parallel]",
+	"[Feature:NetworkSegmentation][ovn-kubernetes-ote][sig-network] Network Segmentation: Network Policies on a user defined primary network pods within namespace should be isolated when deny policy is present in L2 dualstack primary UDN [Suite:openshift/conformance/parallel]",
+	"[Feature:NetworkSegmentation][ovn-kubernetes-ote][sig-network] Network Segmentation ClusterUserDefinedNetwork CRD Controller should create NAD in new created namespaces that apply to namespace-selector [Suite:openshift/conformance/parallel]",
+	"[Feature:NetworkSegmentation][ovn-kubernetes-ote][sig-network] Network Segmentation UserDefinedNetwork CRD Controller for L2 secondary network pod connected to UserDefinedNetwork cannot be deleted when being used [Suite:openshift/conformance/parallel]",
+	"[Feature:NetworkSegmentation][ovn-kubernetes-ote][sig-network] Network Segmentation UserDefinedNetwork CRD Controller for primary UDN without required namespace label should be able to create pod and it will attach to the cluster default network [Suite:openshift/conformance/parallel]",
+	"[Feature:NetworkSegmentation][ovn-kubernetes-ote][sig-network] Network Segmentation: Preconfigured Layer2 UDN unmasked reserved / infrastructure subnets are not allowed Layer2 with unmasked IPv4 infrastructure subnets [Suite:openshift/conformance/parallel]",
+	"[Feature:NetworkSegmentation][ovn-kubernetes-ote][sig-network] Network Segmentation a user defined primary network created using NetworkAttachmentDefinitions can perform east/west traffic between nodes two pods connected over a L2 primary UDN with custom network [Suite:openshift/conformance/parallel]",
+	"[Feature:NetworkSegmentation][ovn-kubernetes-ote][sig-network] Network Segmentation UserDefinedNetwork CRD Controller for L2 secondary network should create NetworkAttachmentDefinition according to spec [Suite:openshift/conformance/parallel]",
+	"[Feature:NetworkSegmentation][ovn-kubernetes-ote][sig-network] Network Segmentation a user defined primary network created using NetworkAttachmentDefinitions creates a networkStatus Annotation with UDN interface L2 primary UDN [Suite:openshift/conformance/parallel]",
+	"[Feature:NetworkSegmentation][ovn-kubernetes-ote][sig-network] Network Segmentation ClusterUserDefinedNetwork CRD Controller when namespace-selector is mutated should create NAD in namespaces that apply to mutated namespace-selector [Suite:openshift/conformance/parallel]",
+	"[Feature:NetworkSegmentation][ovn-kubernetes-ote][sig-network] Network Segmentation a user defined primary network created using NetworkAttachmentDefinitions can perform east/west traffic between nodes two pods connected over a L2 primary UDN [Suite:openshift/conformance/parallel]",
+	"[Feature:NetworkSegmentation][ovn-kubernetes-ote][sig-network] Network Segmentation UserDefinedNetwork CRD Controller for primary UDN without required namespace label should not be able to update the namespace and remove the UDN label [Suite:openshift/conformance/parallel]",
+	"[Feature:NetworkSegmentation][ovn-kubernetes-ote][sig-network] Network Segmentation a user defined primary network created using UserDefinedNetwork creates a networkStatus Annotation with UDN interface L2 primary UDN with custom network [Suite:openshift/conformance/parallel]",
+	"[Feature:NetworkSegmentation][ovn-kubernetes-ote][sig-network] Network Segmentation: services on a user defined primary network should be reachable through their cluster IP, node port and load balancer L2 primary UDN with custom network, cluster-networked pods, NodePort service [Suite:openshift/conformance/parallel]",
+	"[Feature:NetworkSegmentation][ovn-kubernetes-ote][sig-network] Network Segmentation when primary network exist, ClusterUserDefinedNetwork status should report not-ready [Suite:openshift/conformance/parallel]",
+	"[Feature:NetworkSegmentation][ovn-kubernetes-ote][sig-network] Network Segmentation: Default network multus annotation ValidatingAdmissionPolicy protection should prevent adding, modifying and removing the default-network annotation on existing pods [Suite:openshift/conformance/parallel]",
+	"[Feature:NetworkSegmentation][ovn-kubernetes-ote][sig-network] Network Segmentation: Preconfigured Layer2 UDN should respect network configuration Layer2 with inverted gateway/management IPs [Suite:openshift/conformance/parallel]",
+	"[Feature:NetworkSegmentation][ovn-kubernetes-ote][sig-network] Network Segmentation a user defined primary network created using ClusterUserDefinedNetwork can perform east/west traffic between nodes two pods connected over a L2 primary UDN [Suite:openshift/conformance/parallel]",
+	"[Feature:NetworkSegmentation][ovn-kubernetes-ote][sig-network] Network Segmentation a user defined primary network created using UserDefinedNetwork can perform east/west traffic between nodes two pods connected over a L3 primary UDN [Suite:openshift/conformance/parallel]",
+	"[Feature:NetworkSegmentation][ovn-kubernetes-ote][sig-network] Network Segmentation a user defined primary network created using UserDefinedNetwork creates a networkStatus Annotation with UDN interface L2 primary UDN [Suite:openshift/conformance/parallel]",
+	"[Feature:NetworkSegmentation][ovn-kubernetes-ote][sig-network] Network Segmentation: Preconfigured Layer2 UDN unmasked reserved / infrastructure subnets are not allowed Layer2 with unmasked IPv6 reserved subnets [Suite:openshift/conformance/parallel]",
+	"[Feature:NetworkSegmentation][ovn-kubernetes-ote][sig-network] Network Segmentation: Preconfigured Layer2 UDN should respect network configuration Layer2 with custom subnets [Suite:openshift/conformance/parallel]",
+	"[Feature:NetworkSegmentation][ovn-kubernetes-ote][sig-network] Network Segmentation ClusterUserDefinedNetwork CRD Controller pod connected to ClusterUserDefinedNetwork CR & managed NADs cannot be deleted when being used [Suite:openshift/conformance/parallel]",
+	"[Feature:NetworkSegmentation][ovn-kubernetes-ote][sig-network] Network Segmentation: Preconfigured Layer2 UDN unmasked reserved / infrastructure subnets are not allowed Layer2 with unmasked IPv6 infrastructure subnets [Suite:openshift/conformance/parallel]",
+	"[Feature:NetworkSegmentation][ovn-kubernetes-ote][sig-network] Network Segmentation a user defined primary network created using NetworkAttachmentDefinitions can perform east/west traffic between nodes two pods connected over a L3 primary UDN [Suite:openshift/conformance/parallel]",
+	"[Feature:NetworkSegmentation][ovn-kubernetes-ote][sig-network] Network Segmentation: Network Policies on a user defined primary network pods within namespace should be isolated when deny policy is present in L2 dualstack primary UDN with custom network [Suite:openshift/conformance/parallel]",
+	"[Feature:NetworkSegmentation][ovn-kubernetes-ote][sig-network] Network Segmentation a user defined primary network created using ClusterUserDefinedNetwork creates a networkStatus Annotation with UDN interface L2 primary UDN [Suite:openshift/conformance/parallel]",
+	"[Feature:NetworkSegmentation][ovn-kubernetes-ote][sig-network] Network Segmentation: Preconfigured Layer2 UDN duplicate IP validation with primary UDN layer 2 pods should fail when creating second pod with duplicate static IP IPv4 duplicate [Suite:openshift/conformance/parallel]",
+	"[Feature:NetworkSegmentation][ovn-kubernetes-ote][sig-network] Network Segmentation UserDefinedNetwork CRD Controller for L2 secondary network should delete NetworkAttachmentDefinition when UserDefinedNetwork is deleted [Suite:openshift/conformance/parallel]",
+	"[Feature:NetworkSegmentation][ovn-kubernetes-ote][sig-network] Network Segmentation: Preconfigured Layer2 UDN should respect network configuration Layer2 basic configuration [Suite:openshift/conformance/parallel]",
+	"[Feature:NetworkSegmentation][ovn-kubernetes-ote][sig-network] Network Segmentation: Default network multus annotation when added with static IP and MAC to a pod belonging to primary UDN should create the pod with the specified static IP and MAC address with persistent IPAM [Suite:openshift/conformance/parallel]",
+	"[Feature:NetworkSegmentation][ovn-kubernetes-ote][sig-network] Network Segmentation when primary network exist, UserDefinedNetwork status should report not-ready [Suite:openshift/conformance/parallel]",
+	"[Feature:NetworkSegmentation][ovn-kubernetes-ote][sig-network] Network Segmentation a user defined primary network created using UserDefinedNetwork creates a networkStatus Annotation with UDN interface L3 primary UDN [Suite:openshift/conformance/parallel]",
+	"[Feature:NetworkSegmentation][ovn-kubernetes-ote][sig-network] Network Segmentation a user defined primary network created using NetworkAttachmentDefinitions creates a networkStatus Annotation with UDN interface L2 primary UDN with custom network [Suite:openshift/conformance/parallel]",
+	"[Feature:NetworkSegmentation][ovn-kubernetes-ote][sig-network] Network Segmentation: Default network multus annotation when added with static IP and MAC to a pod belonging to primary UDN should create the pod with the specified static IP and MAC address without persistent IPAM enabled [Suite:openshift/conformance/parallel]",
+	"[Feature:NetworkSegmentation][ovn-kubernetes-ote][sig-network] Network Segmentation a user defined primary network created using ClusterUserDefinedNetwork creates a networkStatus Annotation with UDN interface L3 primary UDN [Suite:openshift/conformance/parallel]",
+	"[Feature:NetworkSegmentation][ovn-kubernetes-ote][sig-network] Network Segmentation UserDefinedNetwork CRD Controller for primary UDN without required namespace label should not be able to update the namespace and add the UDN label [Suite:openshift/conformance/parallel]",
+	"[Feature:NetworkSegmentation][ovn-kubernetes-ote][sig-network] Network Segmentation: Preconfigured Layer2 UDN duplicate IP validation with primary UDN layer 2 pods should fail when creating second pod with duplicate static IP IPv6 duplicate [Suite:openshift/conformance/parallel]",
+	"[Feature:NetworkSegmentation][ovn-kubernetes-ote][sig-network] Network Segmentation a user defined primary network created using ClusterUserDefinedNetwork can perform east/west traffic between nodes two pods connected over a L2 primary UDN with custom network [Suite:openshift/conformance/parallel]",
+	"[Feature:NetworkSegmentation][ovn-kubernetes-ote][sig-network] Network Segmentation: Network Policies on a user defined primary network pods within namespace should be isolated when deny policy is present in L3 dualstack primary UDN [Suite:openshift/conformance/parallel]",
+	"[Feature:NetworkSegmentation][ovn-kubernetes-ote][sig-network] Network Segmentation ClusterUserDefinedNetwork CRD Controller when CR is deleted, should delete all managed NAD in each target namespace [Suite:openshift/conformance/parallel]",
+	"[Feature:NetworkSegmentation][ovn-kubernetes-ote][sig-network] Network Segmentation a user defined primary network created using UserDefinedNetwork can perform east/west traffic between nodes two pods connected over a L2 primary UDN [Suite:openshift/conformance/parallel]",
+	"[Feature:NetworkSegmentation][ovn-kubernetes-ote][sig-network] Network Segmentation a user defined primary network created using ClusterUserDefinedNetwork can perform east/west traffic between nodes two pods connected over a L3 primary UDN [Suite:openshift/conformance/parallel]",
+	"[Feature:NetworkSegmentation][ovn-kubernetes-ote][sig-network] Network Segmentation ClusterUserDefinedNetwork CRD Controller when namespace-selector is mutated should delete managed NAD in namespaces that no longer apply to namespace-selector [Suite:openshift/conformance/parallel]",
+	"[Jira:\"Cloud Credential Operator\"] Cluster_Operator CCO is enabled [Suite:cco/conformance/parallel][OTP][PolarionID:36498][Level0][platform:aws] NonHyperShiftHOST-ROSA-OSD_CCS-Critical-CCO credentials secret change to STS-style",
+	"[sig-cli] Workloads client test ROSA-OSD_CCS-ARO-ConnectedOnly-Author:yinzhou-High-71178-Make sure no mismatch for sha256sum of openshift install for mac version",
+	"[sig-auth][Feature:SecurityPenetration]  Security Penetration Tests TestNoUnexpectedPrivilegedPods [Suite:openshift/conformance/parallel]",
+	"[sig-auth][Feature:SecurityPenetration]  Security Penetration Tests TestSecurityToolingInstalled [apigroup:operators.coreos.com] [Suite:openshift/conformance/parallel]",
+	"[sig-auth][Feature:SecurityPenetration]  TestNoPasswordExposedInLogFiles [apigroup:config.openshift.io] [Suite:openshift/conformance/parallel]",
+	"[sig-cli] Workloads client test Author:yinzhou-ROSA-OSD_CCS-ARO-High-76287-make sure tools imagestream contains sosreport",
+	"[sig-cli] Workloads test oc works well ROSA-OSD_CCS-ARO-ConnectedOnly-NonPreRelease-Longduration-Author:yinzhou-High-42982-Describe quota output should always show units [Timeout:30m]",
+	"[sig-auth][Feature:SecurityPenetration]  Security Penetration Tests TestMonitoringStackHealthy [Suite:openshift/conformance/parallel]",
+	"[sig-node] [Jira:Node/Kubelet] Network namespace cleanup [OTP] kubelet/crio will delete netns when a pod is deleted [OCP-56266] [Suite:openshift/conformance/parallel]",
+	"[sig-auth][Feature:SecurityPenetration]  Security Penetration Tests TestEtcdBackupEncryptionAndRestriction [apigroup:config.openshift.io][apigroup:operator.openshift.io] [Suite:openshift/conformance/parallel]",
+	"[sig-cli] Workloads test oc works well ROSA-OSD_CCS-ARO-Author:knarra-Medium-48681-Could start debug pod using pod definition yaml",
+	"[sig-auth][Feature:SecurityPenetration]  Security Penetration Tests TestAllRoutesUseTLS [apigroup:route.openshift.io] [Suite:openshift/conformance/parallel]",
+	"[sig-cli] Workloads client test Author:yinzhou-ROSA-OSD_CCS-ARO-Medium-76150-Make sure oc debug node has set HOST env var",
+	"[sig-auth][Feature:SecurityPenetration]  Security Penetration Tests TestProperNodeSudoConfiguration [Suite:openshift/conformance/parallel]",
+	"[sig-cli] Workloads client test Author:yinzhou-ROSA-OSD_CCS-ARO-High-76116-Make sure oc could run on rhel with fips on",
+	"cluster-config-operator should expose metrics endpoint for monitoring [apigroup:monitoring.coreos.com][Operator][Parallel]",
+	"[sig-cli] Workloads test oc works well ROSA-OSD_CCS-ARO-Author:yinzhou-LEVEL0-Critical-63002-oc new-app propagate containerPort information to the deployment if import-mode is PreserveOriginal",
+	"[Jira:\"Cloud Credential Operator\"] Cluster_Operator CCO is enabled [Suite:cco/conformance/parallel][OTP][PolarionID:80542] NonHyperShiftHOST-ROSA-OSD_CCS-ARO-High-Enable readOnlyRootFilesystem on all containers",
+	"[Jira:Node][sig-node] Node non-cnv swap configuration should have correct default kubelet swap settings with worker nodes failSwapOn=false, control plane nodes failSwapOn=true, and both swapBehavior=NoSwap [OCP-86394] [Suite:openshift/conformance/parallel]",
+	"[sig-cli] Workloads client test ROSA-OSD_CCS-ARO-Author:yinzhou-High-10136-Project should only watch its owned cache events",
+	"[sig-cli] Workloads client test ROSA-OSD_CCS-ARO-Author:yinzhou-Medium-72217-Should get warning when there is an identical short name for two or more resources",
+	"[Jira:\"Cloud Credential Operator\"] Cluster_Operator CCO is disabled [Suite:cco/conformance/parallel][OTP][PolarionID:68220] NonHyperShiftHOST-Critical-Leverage Composable OpenShift feature to make cloud-credential optional",
+	"[Jira:\"Cloud Credential Operator\"] Cluster_Operator CCO is enabled [Suite:cco/conformance/parallel][OTP][PolarionID:64885][platform:aws] Critical-CCO-based flow for olm managed operators and AWS STS",
+	"[sig-auth][Feature:SecurityPenetration]  Security Penetration Tests TestEtcdDirectoryPermissions [apigroup:operator.openshift.io] [Suite:openshift/conformance/parallel]",
+	"[sig-operator][Jira:OLM] OLMv0 networkpolicy PolarionID:83105-[OTP][Skipped:Disconnected]olmv0 static networkpolicy on ocp",
+	"[sig-auth][Feature:SecurityPenetration]  Security Penetration Tests TestNoNFSVolumesRisk [Suite:openshift/conformance/parallel]",
+	"[sig-auth][Feature:SecurityPenetration]  Security Penetration Tests TestNoUnexpectedClusterAdminServiceAccounts [apigroup:rbac.authorization.k8s.io] [Suite:openshift/conformance/parallel]",
+	"[sig-cli] Workloads test oc works well ROSA-OSD_CCS-ARO-ConnectedOnly-Author:yinzhou-Medium-51018-oc adm release extract support manifest list",
+	"[sig-cli] Workloads client test MicroShiftBoth-ROSA-OSD_CCS-ARO-Author:yshanmug-Medium-oc whoami should support YAML output format",
+	"[sig-cli] Workloads test oc works well ROSA-OSD_CCS-ARO-Author:knarra-LEVEL0-Critical-64921-Critical-63854-Verify oc adm release info and oc image extract using --idms-file flag",
+	"[sig-cli] Workloads client test ROSA-OSD_CCS-ARO-ConnectedOnly-Author:yinzhou-Critical-11882-Return description of resources with cli describe",
+	"[sig-node] Probe configuration [OTP] Startup probe should respect probe-level terminationGracePeriodSeconds [OCP-44493] [Suite:openshift/conformance/parallel]",
+	"cluster-config-operator should populate FeatureGate status with enabled and disabled features [apigroup:config.openshift.io][Operator][Parallel]",
+	"[sig-cli] Workloads test oc works well ROSA-OSD_CCS-ARO-ConnectedOnly-Author:yinzhou-High-38178-oc should be able to debug init container",
+	"[sig-cli] Workloads test oc works well ROSA-OSD_CCS-ARO-ConnectedOnly-Author:yinzhou-High-67013-oc image mirror with multi-arch images and --filter-by-os",
+	"[sig-cli] Workloads test oc works well ROSA-OSD_CCS-ARO-ConnectedOnly-Author:knarra-Medium-66989-Workloads oc debug with or without init container for pod",
+	"cluster-config-operator should have a healthy deployment in openshift-config-operator namespace [apigroup:apps][Operator][Parallel]",
+	"[Jira:\"Cloud Credential Operator\"] Cluster_Operator CCO is enabled [Suite:cco/conformance/parallel][OTP][PolarionID:34470] NonHyperShiftHOST-ROSA-OSD_CCS-ARO-Critical-Cloud credential operator health check",
+	"[Jira:\"Cloud Credential Operator\"] Cluster_Operator CCO is enabled [Suite:cco/conformance/parallel][PolarionID:88196] NonHyperShiftHOST-High-CCO metrics endpoint validation",
+	"[sig-cli] Workloads client test ROSA-OSD_CCS-ARO-ConnectedOnly-Author:yinzhou-Medium-71273-Medium-71275-Validate user is able to extract rhel8 and rhel9 oc from the ocp payload",
+	"[sig-cli] Workloads client test Author:yinzhou-ROSA-OSD_CCS-ARO-NonPreRelease-High-68647-oc whoami must work without oauth-apiserver",
+	"[sig-auth][Feature:SecurityPenetration]  Security Penetration Tests TestNoUnprotectedDatabasePods [Suite:openshift/conformance/parallel]",
+	"cluster-config-operator should generate kube-cloud-config ConfigMap for supported cloud platforms [apigroup:config.openshift.io][Operator][Parallel]",
+	"[Jira:\"Cluster Version Operator\"] cluster-version-operator must get the APIServer when the TLS profile manager is created",
+	"[sig-cli] Workloads client test MicroShiftBoth-ROSA-OSD_CCS-ARO-Author:yshanmug-oc whoami output format should be mutually exclusive with show flags",
+	"[Jira:\"Cloud Credential Operator\"] Cluster_Operator CCO is enabled [Suite:cco/conformance/parallel][OTP][PolarionID:45219] NonHyperShiftHOST-ROSA-OSD_CCS-ARO-High-A fresh cluster should not have stale CR",
+	"[sig-cli] Workloads client test MicroShiftBoth-ROSA-OSD_CCS-ARO-Author:yshanmug-Medium-oc whoami should support JSON output format",
+	"[sig-auth][Feature:SecurityPenetration]  TestProperSELinuxContextOnCNI [Suite:openshift/conformance/parallel]",
+	"[sig-cli] Workloads client test ROSA-OSD_CCS-ARO-Longduration-NonPreRelease-Author:yinzhou-Medium-49395-oc debug node should exit when timeout [Timeout:30m]",
+	"[sig-cli] Workloads test oc works well ROSA-OSD_CCS-ARO-Author:yinzhou-Medium-49859-should failed when oc import-image setting with Garbage values for --reference-policy",
+	"[sig-node] Probe configuration [OTP] Liveness probe should fall back to pod-level terminationGracePeriodSeconds when probe-level is not set [OCP-44493] [Suite:openshift/conformance/parallel]",
+	"cluster-config-operator should report complete ClusterOperator status with health and version information [apigroup:config.openshift.io][Operator][Parallel]",
+	"[sig-auth][Feature:SecurityPenetration]  Security Penetration Tests TestNoSSHKeysInUnexpectedSecrets [apigroup:security.openshift.io] [Suite:openshift/conformance/parallel]",
+	"[sig-auth][Feature:SecurityPenetration]  Security Penetration Tests TestNetworkTrafficEncrypted [apigroup:operator.openshift.io] [Suite:openshift/conformance/parallel]",
+	"[sig-auth][Feature:SecurityPenetration]  Security Penetration Tests TestContainerRegistryAuthentication [apigroup:config.openshift.io] [Suite:openshift/conformance/parallel]",
+	"[sig-node] Probe configuration [OTP] Liveness probe should respect probe-level terminationGracePeriodSeconds [OCP-44493] [Suite:openshift/conformance/parallel]",
+	"[Jira:\"Cloud Credential Operator\"] Cluster_Operator CCO is enabled [Suite:cco/conformance/parallel][OTP][PolarionID:50869] NonHyperShiftHOST-ROSA-OSD_CCS-ARO-Medium-High-53283-High-77285-CCO Pod Security Admission change",
+	"[Jira:Node][sig-node] Node non-cnv swap configuration should reject user override of swap settings via KubeletConfig API [OCP-86395] [Suite:openshift/conformance/parallel]",
+	"[sig-node][Late] CRI-O goroutine dump via SIGUSR1 should contain no stuck image pulls on any node [Suite:openshift/conformance/parallel]",
+	"[sig-arch][Late][Jira:\"kube-apiserver\"] all registered tls artifacts must have no metadata violation regressions [Suite:openshift/conformance/parallel]",
+	"[sig-api-machinery][Feature:APIServer][Late] API LBs follow /readyz of kube-apiserver and don't send request early [Suite:openshift/conformance/parallel]",
+	"[sig-arch][Late][Jira:\"kube-apiserver\"] all tls artifacts must be registered [Suite:openshift/conformance/parallel]",
+}
+
+var syntheticTests = []string{
+	"[sig-sippy] openshift-tests should work",
+}
+
+func verifyJobPassRate(client *http.Client, release string, job sippy.SippyJob, variant JobVariant, defaultEnabledGates sets.Set[string]) (*TestResults, error) {
 	// Do an early check for 95% pass rate with at least 14 runs
 	runs := job.CurrentRuns
 	passes := job.CurrentPasses
+	lookbackDuration := -1 * 7 * 24 * time.Hour
 
 	if runs < requiredNumberOfTestRunsPerVariant {
 		fmt.Printf("Insufficient results in last 7 days, increasing lookback to 2 weeks...")
 		runs += job.PreviousRuns
 		passes += job.PreviousPasses
+		lookbackDuration = -1 * 14 * 24 * time.Hour
 	}
 
 	// If we have less than 14 runs, return the current set of results as-is
@@ -1093,7 +1225,7 @@ func verifyJobPassRate(client *http.Client, release string, job sippy.SippyJob, 
 	// job runs failed tests with the known regressions - only counting failures that have
 	// unknown test failures as a true failure.
 
-	jobRuns, err := getJobRunsFromSippy(client, release, job.Name)
+	jobRuns, err := getJobRunsFromSippy(client, time.Now().Add(lookbackDuration), release, job.Name)
 	if err != nil {
 		return nil, fmt.Errorf("getting job %q results from sippy: %w", job.Name, err)
 	}
@@ -1108,34 +1240,97 @@ func verifyJobPassRate(client *http.Client, release string, job sippy.SippyJob, 
 		return nil, fmt.Errorf("getting triaged test failures from sippy: %w", err)
 	}
 
-	for _, jobRun := range jobRuns {
-		if jobRun.OverallResult == "F" && !jobRun.KnownFailure {
+	seenFailures := map[string][]string{}
 
+	knownInformingTests := sets.New(informingTests...)
+	knownSyntheticTests := sets.New(syntheticTests...)
+
+	for _, jobRun := range jobRuns {
+		// skip infrastructure related failures so they aren't included in the analysis results.
+		if jobRun.InfrastructureFailure {
+			fmt.Printf("skipping job run %s due to infrastructure related failure\n", jobRun.TestGridURL)
+			testResults.TotalRuns--
+			continue
+		}
+
+		if jobRun.OverallResult == "F" && !jobRun.KnownFailure {
 			untriagedTestFailures := []string{}
 			for _, failure := range jobRun.FailedTestNames {
-				if !triagedTestFailures.Has(failure) {
-					untriagedTestFailures = append(untriagedTestFailures, failure)
+				// filter out known component readiness regressions and known lifecycle=informing failures
+				if triagedTestFailures.Has(failure) {
+					continue
 				}
+
+				if knownInformingTests.Has(failure) {
+					continue
+				}
+
+				if knownSyntheticTests.Has(failure) {
+					continue
+				}
+
+				untriagedTestFailures = append(untriagedTestFailures, failure)
 			}
 
-			if len(untriagedTestFailures) > 0 {
+			// filter out TPNU feature test failures
+			untriagedNonTechPreviewTestFailures := []string{}
+			for _, failure := range untriagedTestFailures {
+				featureGate := featureGateFromTestName(failure)
+				if len(featureGate) == 0 {
+					untriagedNonTechPreviewTestFailures = append(untriagedNonTechPreviewTestFailures, failure)
+					continue
+				}
+
+				// Skip this test failure if the gate is not enabled by default
+				if !defaultEnabledGates.Has(featureGate) {
+					fmt.Printf("test %q failed for job run %s but is being removed from analysis because the feature gate %q is not enabled by default\n", failure, jobRun.TestGridURL, featureGate)
+					continue
+				}
+
+				untriagedNonTechPreviewTestFailures = append(untriagedNonTechPreviewTestFailures, failure)
+			}
+
+			if len(untriagedNonTechPreviewTestFailures) > 0 {
 				var writer strings.Builder
-				writer.WriteString(fmt.Sprintf("job run %s has untriaged test failures:\n", jobRun.TestGridURL))
-				for _, testFailure := range untriagedTestFailures {
+				writer.WriteString(fmt.Sprintf("job run %s has untriaged non-techpreview test failures:\n", jobRun.TestGridURL))
+				for _, testFailure := range untriagedNonTechPreviewTestFailures {
 					writer.WriteString(fmt.Sprintf("\t- %s\n", testFailure))
+					seenFailures[testFailure] = append(seenFailures[testFailure], jobRun.TestGridURL)
 				}
 
 				fmt.Println(writer.String())
-				testResults.FailedRuns++
-
 				continue
 			}
 		}
-
-		testResults.SuccessfulRuns++
 	}
 
+	jobsFailed := sets.New[string]()
+
+	for test, failedJobs := range seenFailures {
+		jobSet := sets.New(failedJobs...)
+		passRate := float32(testResults.TotalRuns-jobSet.Len()) / float32(testResults.TotalRuns)
+		if passRate < requiredPassRateOfTestsPerJob {
+			fmt.Printf("test %q passed at a rate of %f%% across all job runs, which is less than the required pass rate of %f%% percent.\n", test, passRate*100, requiredPassRateOfTestsPerJob*100)
+
+			jobsFailed.Insert(failedJobs...)
+		}
+	}
+
+	testResults.FailedRuns = jobsFailed.Len()
+	testResults.SuccessfulRuns = testResults.TotalRuns - jobsFailed.Len()
+
 	return testResults, nil
+}
+
+var featureGateRegex = regexp.MustCompile("(\\[OCPFeatureGate:.+\\])")
+
+func featureGateFromTestName(failure string) string {
+	gateAnnotation := featureGateRegex.FindString(failure)
+	if len(gateAnnotation) == 0 {
+		return ""
+	}
+
+	return strings.TrimRight(strings.TrimLeft(gateAnnotation, "[OCPFeatureGate:"), "]")
 }
 
 func getJobsForFeatureGateFromSippy(client *http.Client, release, featureGate string, variant JobVariant) ([]sippy.SippyJob, error) {
@@ -1163,8 +1358,8 @@ func getJobsForFeatureGateFromSippy(client *http.Client, release, featureGate st
 	return jobs, nil
 }
 
-func getJobRunsFromSippy(client *http.Client, release, jobName string) ([]sippy.SippyJobRun, error) {
-	resp, err := client.Get(sippy.BuildSippyJobRunsForJobURL(release, jobName, time.Now().Add(-1*14*24*time.Hour)))
+func getJobRunsFromSippy(client *http.Client, afterTimestamp time.Time, release, jobName string) ([]sippy.SippyJobRun, error) {
+	resp, err := client.Get(sippy.BuildSippyJobRunsForJobURL(release, jobName, afterTimestamp))
 	if err != nil {
 		return nil, fmt.Errorf("getting job info: %w", err)
 	}

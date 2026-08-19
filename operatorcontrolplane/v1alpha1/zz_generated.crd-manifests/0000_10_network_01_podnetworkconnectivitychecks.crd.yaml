@@ -28,6 +28,9 @@ spec:
       jsonPath: .status.conditions[?(@.type=="Reachable")].lastTransitionTime
       name: Since
       type: date
+    - jsonPath: .metadata.creationTimestamp
+      name: Age
+      type: date
     name: v1alpha1
     schema:
       openAPIV3Schema:

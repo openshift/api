@@ -27,6 +27,9 @@ podnetworkconnectivitychecks.controlplane.operator.openshift.io:
     jsonPath: .status.conditions[?(@.type=="Reachable")].lastTransitionTime
     name: Since
     type: date
+  - jsonPath: .metadata.creationTimestamp
+    name: Age
+    type: date
   Scope: Namespaced
   ShortNames: null
   TopLevelFeatureGates: []

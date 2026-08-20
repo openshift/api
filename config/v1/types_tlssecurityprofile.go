@@ -15,8 +15,16 @@ type TLSSecurityProfile struct {
 	// Note that not all platform components honor the ordering: Go-based components use Go's
 	// internal preference order and treat this list as a filter of allowed groups rather than
 	// an ordered preference.
-	// Note that X25519MLKEM768 is a post-quantum hybrid group that is not
-	// FIPS-approved and should be ignored by components running in FIPS mode.
+	// Note on FIPS: the NIST P-curves (secp256r1, secp384r1, secp521r1) are
+	// FIPS-approved, as are the ML-KEM hybrid groups SecP256r1MLKEM768 and
+	// SecP384r1MLKEM1024 with a validated FIPS module (Go 1.26+). Plain X25519 is
+	// not FIPS-approved. X25519MLKEM768 is not usable under the OpenSSL-backed
+	// FIPS runtime OpenShift ships today, but is supported by Go's native FIPS
+	// module (planned as the FIPS backend from Go 1.27), so whether it is honored
+	// in FIPS mode depends on the component's crypto backend. Go-based components
+	// drop groups their FIPS runtime does not support; components that configure
+	// OpenSSL directly must omit unsupported groups or TLS configuration is
+	// rejected.
 	//
 	// The profiles are intent based, so they may change over time as new ciphers are
 	// developed and existing ciphers are found to be insecure. Depending on
@@ -168,8 +176,16 @@ const (
 // There is a one-to-one mapping between these names and the group IDs defined
 // in Go's crypto/tls package based on IANA's "TLS Supported Groups" registry:
 // https://www.iana.org/assignments/tls-parameters/tls-parameters.xhtml#tls-parameters-8
-// Note that X25519MLKEM768 is a post-quantum hybrid group that is not
-// FIPS-approved and should be ignored by components running in FIPS mode.
+// Note on FIPS: the NIST P-curves (secp256r1, secp384r1, secp521r1) are
+// FIPS-approved, as are the ML-KEM hybrid groups SecP256r1MLKEM768 and
+// SecP384r1MLKEM1024 with a validated FIPS module (Go 1.26+). Plain X25519 is
+// not FIPS-approved. X25519MLKEM768 is not usable under the OpenSSL-backed
+// FIPS runtime OpenShift ships today, but is supported by Go's native FIPS
+// module (planned as the FIPS backend from Go 1.27), so whether it is honored
+// in FIPS mode depends on the component's crypto backend. Go-based components
+// drop groups their FIPS runtime does not support; components that configure
+// OpenSSL directly must omit unsupported groups or TLS configuration is
+// rejected.
 //
 // +kubebuilder:validation:Enum=X25519;secp256r1;secp384r1;secp521r1;X25519MLKEM768;SecP256r1MLKEM768;SecP384r1MLKEM1024
 type TLSGroup string
@@ -274,8 +290,14 @@ const (
 // NOTE: The caller needs to make sure to check that these constants are valid
 // for their binary. Not all entries map to values for all binaries. In the case
 // of ties, the kube-apiserver wins. Do not fail, just be sure to include only
-// valid entries and everything will be ok. In particular, X25519MLKEM768 is
-// not FIPS-approved and must be omitted by components running in FIPS mode.
+// valid entries and everything will be ok. Regarding FIPS: the NIST P-curves
+// (secp256r1, secp384r1, secp521r1) are FIPS-approved, as are the ML-KEM hybrid
+// groups SecP256r1MLKEM768 and SecP384r1MLKEM1024 with a validated FIPS module
+// (Go 1.26+). Plain X25519 is not FIPS-approved, and X25519MLKEM768 is usable in
+// FIPS mode only with Go's native FIPS module (planned as the FIPS backend from
+// Go 1.27), not the OpenSSL-backed runtime OpenShift ships today; components
+// running in FIPS mode must omit whatever groups their crypto backend does not
+// support.
 var TLSProfiles = map[TLSProfileType]*TLSProfileSpec{
 	TLSProfileOldType: {
 		Ciphers: []string{

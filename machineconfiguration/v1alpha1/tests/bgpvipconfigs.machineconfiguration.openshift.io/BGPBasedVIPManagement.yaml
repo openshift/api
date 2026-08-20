@@ -1,0 +1,264 @@
+apiVersion: apiextensions.k8s.io/v1 # Hack because controller-gen complains if we don't have this
+name: "[TechPreview] BGPVIPConfig"
+crdName: bgpvipconfigs.machineconfiguration.openshift.io
+featureGate: BGPBasedVIPManagement
+tests:
+  onCreate:
+  - name: Should be able to create a minimal BGPVIPConfig
+    initial: |
+      apiVersion: machineconfiguration.openshift.io/v1alpha1
+      kind: BGPVIPConfig
+      metadata:
+        name: cluster
+      spec:
+        localASN: 64512
+        defaultPeers:
+        - peerAddress: 192.168.111.1
+          peerASN: 64513
+    expected: |
+      apiVersion: machineconfiguration.openshift.io/v1alpha1
+      kind: BGPVIPConfig
+      metadata:
+        name: cluster
+      spec:
+        localASN: 64512
+        defaultPeers:
+        - peerAddress: 192.168.111.1
+          peerASN: 64513
+  - name: Should reject a non-cluster name
+    initial: |
+      apiVersion: machineconfiguration.openshift.io/v1alpha1
+      kind: BGPVIPConfig
+      metadata:
+        name: not-cluster
+      spec:
+        localASN: 64512
+        defaultPeers:
+        - peerAddress: 192.168.111.1
+          peerASN: 64513
+    expectedError: "metadata.name must be 'cluster'"
+  - name: Should reject an invalid peer address
+    initial: |
+      apiVersion: machineconfiguration.openshift.io/v1alpha1
+      kind: BGPVIPConfig
+      metadata:
+        name: cluster
+      spec:
+        localASN: 64512
+        defaultPeers:
+        - peerAddress: not-an-ip
+          peerASN: 64513
+    expectedError: "peerAddress must be a valid IP address"
+  - name: Should reject an out-of-range ASN
+    initial: |
+      apiVersion: machineconfiguration.openshift.io/v1alpha1
+      kind: BGPVIPConfig
+      metadata:
+        name: cluster
+      spec:
+        localASN: 4294967296
+        defaultPeers:
+        - peerAddress: 192.168.111.1
+          peerASN: 64513
+    expectedError: "localASN"
+  - name: Should reject holdTime shorter than 3x keepalive
+    initial: |
+      apiVersion: machineconfiguration.openshift.io/v1alpha1
+      kind: BGPVIPConfig
+      metadata:
+        name: cluster
+      spec:
+        localASN: 64512
+        defaultPeers:
+        - peerAddress: 192.168.111.1
+          peerASN: 64513
+          holdTimeSeconds: 5
+          keepaliveTimeSeconds: 5
+    expectedError: "holdTimeSeconds must be at least 3 times keepaliveTimeSeconds"
+  - name: Should accept a dual-stack peer set with an IPv6 host override
+    initial: |
+      apiVersion: machineconfiguration.openshift.io/v1alpha1
+      kind: BGPVIPConfig
+      metadata:
+        name: cluster
+      spec:
+        localASN: 64512
+        defaultPeers:
+        - peerAddress: 192.168.111.1
+          peerASN: 64513
+        - peerAddress: fd2e:6f44:5dd8:c956::1
+          peerASN: 64513
+        hostOverrides:
+        - hostname: worker-0
+          peers:
+          - peerAddress: fd2e:6f44:5dd8:c956::2
+            peerASN: 64514
+            bfd: Enabled
+    expected: |
+      apiVersion: machineconfiguration.openshift.io/v1alpha1
+      kind: BGPVIPConfig
+      metadata:
+        name: cluster
+      spec:
+        localASN: 64512
+        defaultPeers:
+        - peerAddress: 192.168.111.1
+          peerASN: 64513
+        - peerAddress: fd2e:6f44:5dd8:c956::1
+          peerASN: 64513
+        hostOverrides:
+        - hostname: worker-0
+          peers:
+          - peerAddress: fd2e:6f44:5dd8:c956::2
+            peerASN: 64514
+            bfd: Enabled
+  - name: Should reject an invalid bfd mode
+    initial: |
+      apiVersion: machineconfiguration.openshift.io/v1alpha1
+      kind: BGPVIPConfig
+      metadata:
+        name: cluster
+      spec:
+        localASN: 64512
+        defaultPeers:
+        - peerAddress: 192.168.111.1
+          peerASN: 64513
+          bfd: maybe
+    expectedError: "Unsupported value"
+  - name: Should reject an invalid community
+    initial: |
+      apiVersion: machineconfiguration.openshift.io/v1alpha1
+      kind: BGPVIPConfig
+      metadata:
+        name: cluster
+      spec:
+        localASN: 64512
+        communities: ["banana"]
+        defaultPeers:
+        - peerAddress: 192.168.111.1
+          peerASN: 64513
+    expectedError: "communities"
+  - name: Should reject a classic community segment above 65535
+    initial: |
+      apiVersion: machineconfiguration.openshift.io/v1alpha1
+      kind: BGPVIPConfig
+      metadata:
+        name: cluster
+      spec:
+        localASN: 64512
+        communities: ["64512:65536"]
+        defaultPeers:
+        - peerAddress: 192.168.111.1
+          peerASN: 64513
+    expectedError: "classic community (n:n) segments must be between 0 and 65535"
+  - name: Should reject a 32-bit value in a classic community
+    initial: |
+      apiVersion: machineconfiguration.openshift.io/v1alpha1
+      kind: BGPVIPConfig
+      metadata:
+        name: cluster
+      spec:
+        localASN: 64512
+        communities: ["64512:4294967295"]
+        defaultPeers:
+        - peerAddress: 192.168.111.1
+          peerASN: 64513
+    expectedError: "classic community (n:n) segments must be between 0 and 65535"
+  - name: Should accept a classic community at the 16-bit boundary
+    initial: |
+      apiVersion: machineconfiguration.openshift.io/v1alpha1
+      kind: BGPVIPConfig
+      metadata:
+        name: cluster
+      spec:
+        localASN: 64512
+        communities: ["65535:65535"]
+        defaultPeers:
+        - peerAddress: 192.168.111.1
+          peerASN: 64513
+    expected: |
+      apiVersion: machineconfiguration.openshift.io/v1alpha1
+      kind: BGPVIPConfig
+      metadata:
+        name: cluster
+      spec:
+        localASN: 64512
+        communities: ["65535:65535"]
+        defaultPeers:
+        - peerAddress: 192.168.111.1
+          peerASN: 64513
+  - name: Should reject a large community segment above 4294967295
+    initial: |
+      apiVersion: machineconfiguration.openshift.io/v1alpha1
+      kind: BGPVIPConfig
+      metadata:
+        name: cluster
+      spec:
+        localASN: 64512
+        communities: ["64512:100:4294967296"]
+        defaultPeers:
+        - peerAddress: 192.168.111.1
+          peerASN: 64513
+    expectedError: "large community (n:n:n) segments must be between 0 and 4294967295"
+  - name: Should accept a large community at the 32-bit boundary
+    initial: |
+      apiVersion: machineconfiguration.openshift.io/v1alpha1
+      kind: BGPVIPConfig
+      metadata:
+        name: cluster
+      spec:
+        localASN: 64512
+        communities: ["4294967295:4294967295:4294967295"]
+        defaultPeers:
+        - peerAddress: 192.168.111.1
+          peerASN: 64513
+    expected: |
+      apiVersion: machineconfiguration.openshift.io/v1alpha1
+      kind: BGPVIPConfig
+      metadata:
+        name: cluster
+      spec:
+        localASN: 64512
+        communities: ["4294967295:4294967295:4294967295"]
+        defaultPeers:
+        - peerAddress: 192.168.111.1
+          peerASN: 64513
+  - name: Should accept a peer with a passwordSecret reference
+    initial: |
+      apiVersion: machineconfiguration.openshift.io/v1alpha1
+      kind: BGPVIPConfig
+      metadata:
+        name: cluster
+      spec:
+        localASN: 64512
+        defaultPeers:
+        - peerAddress: 192.168.111.1
+          peerASN: 64513
+          passwordSecret:
+            name: bgp-peer-tor
+    expected: |
+      apiVersion: machineconfiguration.openshift.io/v1alpha1
+      kind: BGPVIPConfig
+      metadata:
+        name: cluster
+      spec:
+        localASN: 64512
+        defaultPeers:
+        - peerAddress: 192.168.111.1
+          peerASN: 64513
+          passwordSecret:
+            name: bgp-peer-tor
+  - name: Should reject a passwordSecret name that is not an RFC 1123 subdomain
+    initial: |
+      apiVersion: machineconfiguration.openshift.io/v1alpha1
+      kind: BGPVIPConfig
+      metadata:
+        name: cluster
+      spec:
+        localASN: 64512
+        defaultPeers:
+        - peerAddress: 192.168.111.1
+          peerASN: 64513
+          passwordSecret:
+            name: "Not_Valid"
+    expectedError: "name must be an RFC 1123 subdomain"

@@ -251,6 +251,9 @@
                         "name": "OnPremDNSRecords"
                     },
                     {
+                        "name": "OpenShiftPodSecurityAdmission"
+                    },
+                    {
                         "name": "ProvisioningRequestAvailable"
                     },
                     {
@@ -359,9 +362,6 @@
                     },
                     {
                         "name": "OSStreams"
-                    },
-                    {
-                        "name": "OpenShiftPodSecurityAdmission"
                     },
                     {
                         "name": "SELinuxMountGAReadiness"

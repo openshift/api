@@ -280,7 +280,7 @@ type HealthCheck struct {
 	// +kubebuilder:validation:Minimum=1
 	// +kubebuilder:validation:Maximum=4
 	TotalRisk int32 `json:"totalRisk"`
-	// advisorURI is required field that provides the URL link to the Insights Advisor.
+	// advisorURI is a required field that provides the URL link to the Red Hat Lightspeed Advisor UI.
 	// The link must be a valid HTTPS URL and the maximum length is 2048 characters.
 	// +kubebuilder:validation:XValidation:rule=`isURL(self) && url(self).getScheme() == "https"`,message=`advisorURI must be a valid HTTPS URL (e.g., https://example.com)`
 	// +kubebuilder:validation:MaxLength=2048
@@ -288,7 +288,7 @@ type HealthCheck struct {
 	AdvisorURI string `json:"advisorURI"`
 	// state determines what the current state of the health check is.
 	// Health check is enabled by default and can be disabled
-	// by the user in the Insights advisor user interface.
+	// by the user in the Red Hat Lightspeed Advisor UI.
 	// +required
 	State HealthCheckState `json:"state"`
 }

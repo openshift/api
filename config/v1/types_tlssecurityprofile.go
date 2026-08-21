@@ -15,8 +15,10 @@ type TLSSecurityProfile struct {
 	// Note that not all platform components honor the ordering: Go-based components use Go's
 	// internal preference order and treat this list as a filter of allowed groups rather than
 	// an ordered preference.
-	// Note that X25519MLKEM768 is a post-quantum hybrid group that is not
-	// FIPS-approved and should be ignored by components running in FIPS mode.
+	// Note that only the NIST P-curves (secp256r1, secp384r1, secp521r1) are
+	// FIPS-approved. X25519 and the ML-KEM post-quantum hybrid groups
+	// (X25519MLKEM768, SecP256r1MLKEM768, SecP384r1MLKEM1024) are not
+	// FIPS-approved and are ignored by components running in FIPS mode.
 	//
 	// The profiles are intent based, so they may change over time as new ciphers are
 	// developed and existing ciphers are found to be insecure. Depending on
@@ -168,8 +170,10 @@ const (
 // There is a one-to-one mapping between these names and the group IDs defined
 // in Go's crypto/tls package based on IANA's "TLS Supported Groups" registry:
 // https://www.iana.org/assignments/tls-parameters/tls-parameters.xhtml#tls-parameters-8
-// Note that X25519MLKEM768 is a post-quantum hybrid group that is not
-// FIPS-approved and should be ignored by components running in FIPS mode.
+// Note that only the NIST P-curves (secp256r1, secp384r1, secp521r1) are
+// FIPS-approved. X25519 and the ML-KEM post-quantum hybrid groups
+// (X25519MLKEM768, SecP256r1MLKEM768, SecP384r1MLKEM1024) are not
+// FIPS-approved and are ignored by components running in FIPS mode.
 //
 // +kubebuilder:validation:Enum=X25519;secp256r1;secp384r1;secp521r1;X25519MLKEM768;SecP256r1MLKEM768;SecP384r1MLKEM1024
 type TLSGroup string
@@ -274,8 +278,10 @@ const (
 // NOTE: The caller needs to make sure to check that these constants are valid
 // for their binary. Not all entries map to values for all binaries. In the case
 // of ties, the kube-apiserver wins. Do not fail, just be sure to include only
-// valid entries and everything will be ok. In particular, X25519MLKEM768 is
-// not FIPS-approved and must be omitted by components running in FIPS mode.
+// valid entries and everything will be ok. In particular, only the NIST P-curves
+// (secp256r1, secp384r1, secp521r1) are FIPS-approved; X25519 and the ML-KEM
+// post-quantum hybrid groups (X25519MLKEM768, SecP256r1MLKEM768, SecP384r1MLKEM1024)
+// are not FIPS-approved and must be omitted by components running in FIPS mode.
 var TLSProfiles = map[TLSProfileType]*TLSProfileSpec{
 	TLSProfileOldType: {
 		Ciphers: []string{

@@ -13,6 +13,13 @@ type OpenShiftGateFields struct {
 	ContactPerson          string
 	JiraComponent          string
 	EnabledFeatureSets     []configv1.FeatureSet
+	GroupKindResources     []GroupKindResource
+}
+
+type GroupKindResource struct {
+	Group    string
+	Kind     string
+	Resource string
 }
 
 type UpstreamGateFieldOverridesRegistry map[featuregate.Feature]OpenShiftGateFields

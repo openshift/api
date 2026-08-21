@@ -117,6 +117,12 @@ func inOKD() featureGateEnableOption {
 	return withFeatureSet(configv1.OKD)
 }
 
+func withGroupKindResources(grs ...groupKindResource) featureGateEnableOption {
+	return func(s *featureGateStatus) {
+		s.groupKindResources = sets.New(grs...)
+	}
+}
+
 type featureGateBuilder struct {
 	name                string
 	owningJiraComponent string
@@ -127,9 +133,16 @@ type featureGateBuilder struct {
 	status []featureGateStatus
 }
 type featureGateStatus struct {
-	version        sets.Set[uint64]
-	clusterProfile sets.Set[ClusterProfileName]
-	featureSets    sets.Set[configv1.FeatureSet]
+	version            sets.Set[uint64]
+	clusterProfile     sets.Set[ClusterProfileName]
+	featureSets        sets.Set[configv1.FeatureSet]
+	groupKindResources sets.Set[groupKindResource]
+}
+
+type groupKindResource struct {
+	Group    string
+	Kind     string
+	Resource string
 }
 
 func (s *featureGateStatus) isEnabled(version uint64, clusterProfile ClusterProfileName, featureSet configv1.FeatureSet) bool {
@@ -175,9 +188,10 @@ func (b *featureGateBuilder) enhancementPR(url string) *featureGateBuilder {
 
 func (b *featureGateBuilder) enable(opts ...featureGateEnableOption) *featureGateBuilder {
 	status := featureGateStatus{
-		version:        sets.New[uint64](),
-		clusterProfile: sets.New[ClusterProfileName](),
-		featureSets:    sets.New[configv1.FeatureSet](),
+		version:            sets.New[uint64](),
+		clusterProfile:     sets.New[ClusterProfileName](),
+		featureSets:        sets.New[configv1.FeatureSet](),
+		groupKindResources: sets.New[groupKindResource](),
 	}
 
 	for _, opt := range opts {

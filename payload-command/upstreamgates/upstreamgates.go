@@ -149,6 +149,15 @@ func createOpenShiftFeatureGateBuilderDefinition(name featuregate.Feature, featu
 		enableStrings = append(enableStrings, "inDevPreviewNoUpgrade()")
 	}
 
+	if len(gateFields.GroupKindResources) > 0 {
+		template := "withGroupKindResources(%s)"
+		gkrStrings := []string{}
+		for _, gkr := range gateFields.GroupKindResources {
+			gkrStrings = append(gkrStrings, fmt.Sprintf("groupKindResource{Group: %q, Kind: %q, Resource: %q}", gkr.Group, gkr.Kind, gkr.Resource))
+		}
+		enableStrings = append(enableStrings, fmt.Sprintf(template, strings.Join(gkrStrings, ",")))
+	}
+
 	enhancement := gateFields.EnhancementPullRequest
 
 	if gateFields.EnhancementPullRequest != "legacyFeatureGateWithoutEnhancement" {

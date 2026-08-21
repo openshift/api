@@ -365,9 +365,6 @@
                         "name": "SELinuxMountGAReadiness"
                     },
                     {
-                        "name": "ServiceAccountTokenNodeBinding"
-                    },
-                    {
                         "name": "SigstoreImageVerification"
                     },
                     {

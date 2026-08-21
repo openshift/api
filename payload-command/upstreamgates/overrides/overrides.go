@@ -73,4 +73,32 @@ var overrides = map[featuregate.Feature]registry.OpenShiftGateFields{
 	featuregate.Feature("AllBeta"): {
 		EnabledFeatureSets: []configv1.FeatureSet{NoOpinion},
 	},
+
+	// TODO: these overrides are for example purposes. Remove or populate correctly before
+	// merging.
+	genericfeatures.DRADeviceTaintRules: {
+		EnhancementPullRequest: "https://github.com/openshift/enhancements/pull/2084",
+		JiraComponent:          "kube-apiserver",
+		ContactPerson:          "bpalmer",
+		GroupKindResources: []registry.GroupKindResource{
+			{
+				Group:    "resource.k8s.io",
+				Kind:     "DeviceTaintRule",
+				Resource: "devicetaintrules",
+			},
+		},
+	},
+
+	genericfeatures.PodCertificateRequest: {
+		EnhancementPullRequest: "https://github.com/openshift/enhancements/pull/2084",
+		JiraComponent:          "kube-apiserver",
+		ContactPerson:          "bpalmer",
+		GroupKindResources: []registry.GroupKindResource{
+			{
+				Group:    "certificates.k8s.io",
+				Kind:     "PodCertificateRequest",
+				Resource: "podcertificaterequests",
+			},
+		},
+	},
 }

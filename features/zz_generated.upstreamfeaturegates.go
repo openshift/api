@@ -322,7 +322,7 @@ var (
 						contactPerson("bpalmer").
 						productScope(kubernetes).
 						enhancementPR("https://github.com/openshift/enhancements/pull/2084").
-						enable(inTechPreviewNoUpgrade(),inDevPreviewNoUpgrade()).
+						enable(inTechPreviewNoUpgrade(),inDevPreviewNoUpgrade(),withGroupKindResources(groupKindResource{Group: "resource.k8s.io", Kind: "DeviceTaintRule", Resource: "devicetaintrules"})).
 						mustRegister()
 
 
@@ -826,7 +826,7 @@ var (
 						contactPerson("bpalmer").
 						productScope(kubernetes).
 						enhancementPR("https://github.com/openshift/enhancements/pull/2084").
-						enable(inTechPreviewNoUpgrade(),inDevPreviewNoUpgrade()).
+						enable(inTechPreviewNoUpgrade(),inDevPreviewNoUpgrade(),withGroupKindResources(groupKindResource{Group: "certificates.k8s.io", Kind: "PodCertificateRequest", Resource: "podcertificaterequests"})).
 						mustRegister()
 
 

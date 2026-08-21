@@ -18,6 +18,35 @@ tests:
         spec:
           userDefined:
             mode: "Disabled"
+    - name: Should accept configurationSource ConfigMap
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          configurationSource: ConfigMap
+      expected: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          configurationSource: ConfigMap
+    - name: Should accept configurationSource CRD
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          configurationSource: CRD
+      expected: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          configurationSource: CRD
+    - name: Should reject invalid configurationSource
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          configurationSource: Invalid
+      expectedError: 'spec.configurationSource: Unsupported value: "Invalid": supported values: "ConfigMap", "CRD"'
     - name: Should accept userAlertmanagerConfigSelection on alertmanagerConfig customConfig
       initial: |
         apiVersion: config.openshift.io/v1alpha1

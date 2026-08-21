@@ -335,9 +335,6 @@
                         "name": "CRIOCredentialProviderConfig"
                     },
                     {
-                        "name": "EVPN"
-                    },
-                    {
                         "name": "EtcdBackendQuota"
                     },
                     {

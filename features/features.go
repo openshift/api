@@ -634,14 +634,6 @@ var (
 						enable(inDefault(), inOKD(), inTechPreviewNoUpgrade(), inDevPreviewNoUpgrade()).
 						mustRegister()
 
-	FeatureGateVSphereMultiNetworks = newFeatureGate("VSphereMultiNetworks").
-					reportProblemsToJiraComponent("SPLAT").
-					contactPerson("rvanderp").
-					productScope(ocpSpecific).
-					enhancementPR(legacyFeatureGateWithoutEnhancement).
-					enable(inDefault(), inOKD(), inTechPreviewNoUpgrade(), inDevPreviewNoUpgrade()).
-					mustRegister()
-
 	FeatureGateIngressControllerDynamicConfigurationManager = newFeatureGate("IngressControllerDynamicConfigurationManager").
 								reportProblemsToJiraComponent("Networking/router").
 								contactPerson("miciah").

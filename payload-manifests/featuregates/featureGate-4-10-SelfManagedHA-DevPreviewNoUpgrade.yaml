@@ -388,9 +388,6 @@
                         "name": "VSphereMultiDisk"
                     },
                     {
-                        "name": "VSphereMultiNetworks"
-                    },
-                    {
                         "name": "VSphereMultiVCenterDay2"
                     },
                     {

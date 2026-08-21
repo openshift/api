@@ -89,7 +89,7 @@ tests:
             serviceEndpoints:
             - name: InvalidService
               url: https://dummy.vpc.com/v1
-    expectedError: "spec.platformSpec.ibmcloud.serviceEndpoints[0].name: Unsupported value: \"InvalidService\": supported values: \"CIS\", \"COS\", \"COSConfig\", \"DNSServices\", \"GlobalCatalog\", \"GlobalSearch\", \"GlobalTagging\", \"HyperProtect\", \"IAM\", \"KeyProtect\", \"ResourceController\", \"ResourceManager\", \"VPC\", <nil>: Invalid value: \"null\": some validation rules were not checked because the object was invalid; correct the existing errors to complete validation"
+    expectedError: "spec.platformSpec.ibmcloud.serviceEndpoints[0].name: Unsupported value: \"InvalidService\": supported values: \"CIS\", \"COS\", \"COSConfig\", \"DNSServices\", \"GlobalCatalog\", \"GlobalSearch\", \"GlobalTagging\", \"HyperProtect\", \"IAM\", \"KeyProtect\", \"ResourceController\", \"ResourceManager\", \"VPC\", \"TransitGateway\", \"PowerVS\", <nil>: Invalid value: \"null\": some validation rules were not checked because the object was invalid; correct the existing errors to complete validation"
   - name: Should be able to add valid ServiceEndpoints to IBMCloud PlatformSpec
     initial: |
       apiVersion: config.openshift.io/v1

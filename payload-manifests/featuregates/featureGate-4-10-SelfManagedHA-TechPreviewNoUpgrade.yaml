@@ -20,6 +20,9 @@
                         "name": "BGPBasedVIPManagement"
                     },
                     {
+                        "name": "CapacityBufferAvailable"
+                    },
+                    {
                         "name": "ClientsAllowCBOR"
                     },
                     {

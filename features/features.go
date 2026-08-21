@@ -1067,4 +1067,11 @@ var (
 					enhancementPR("https://github.com/openshift/enhancements/pull/2047").
 					enable(inTechPreviewNoUpgrade(), inDevPreviewNoUpgrade()).
 					mustRegister()
+
+	FeatureGateCapacityBufferAvailable = newFeatureGate("CapacityBufferAvailable").
+						reportProblemsToJiraComponent("Cluster Autoscaler").
+						contactPerson("elmiko").
+						productScope(ocpSpecific).
+						enable(inTechPreviewNoUpgrade(), inDevPreviewNoUpgrade()).
+						mustRegister()
 )

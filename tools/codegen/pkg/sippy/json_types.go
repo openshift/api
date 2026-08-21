@@ -337,7 +337,7 @@ func BuildSippyJobRunsForJobURL(release, jobName string, timestamp time.Time) st
 		{
 			ColumnField:   "timestamp",
 			OperatorValue: ">=",
-			Value:         fmt.Sprintf("%d", timestamp.UnixMilli()),
+			Value:         timestamp.UTC().Format(time.RFC3339),
 		},
 	}
 

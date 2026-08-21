@@ -38,6 +38,9 @@
                         "name": "ConfidentialCluster"
                     },
                     {
+                        "name": "DRADeviceTaintRules"
+                    },
+                    {
                         "name": "EventedPLEG"
                     },
                     {

@@ -161,6 +161,9 @@
                         "name": "IngressComponentRouteLabels"
                     },
                     {
+                        "name": "IngressControllerLBSecurityGroupsAWS"
+                    },
+                    {
                         "name": "KMSEncryption"
                     },
                     {

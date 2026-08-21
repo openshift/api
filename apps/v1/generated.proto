@@ -5,33 +5,43 @@ syntax = "proto2";
 
 package github.com.openshift.api.apps.v1;
 
+import "github.com/gogo/protobuf/gogoproto/gogo.proto";
 import "k8s.io/api/core/v1/generated.proto";
 import "k8s.io/apimachinery/pkg/apis/meta/v1/generated.proto";
 import "k8s.io/apimachinery/pkg/runtime/schema/generated.proto";
 import "k8s.io/apimachinery/pkg/util/intstr/generated.proto";
 
 // Package-wide variables from generator "generated".
+option (gogoproto.marshaler_all) = true;
+option (gogoproto.stable_marshaler_all) = true;
+option (gogoproto.sizer_all) = true;
+option (gogoproto.goproto_stringer_all) = false;
+option (gogoproto.stringer_all) = true;
+option (gogoproto.unmarshaler_all) = true;
+option (gogoproto.goproto_unrecognized_all) = false;
+option (gogoproto.goproto_enum_prefix_all) = false;
+option (gogoproto.goproto_getters_all) = false;
 option go_package = "github.com/openshift/api/apps/v1";
 
 // CustomDeploymentStrategyParams are the input to the Custom deployment strategy.
 message CustomDeploymentStrategyParams {
   // image specifies a container image which can carry out a deployment.
-  optional string image = 1;
+  optional string image = 1 [(gogoproto.customname) = "Image", (gogoproto.nullable) = false];
 
   // environment holds the environment which will be given to the container for Image.
-  repeated .k8s.io.api.core.v1.EnvVar environment = 2;
+  repeated .k8s.io.api.core.v1.EnvVar environment = 2 [(gogoproto.customname) = "Environment", (gogoproto.nullable) = false];
 
   // command is optional and overrides CMD in the container Image.
-  repeated string command = 3;
+  repeated string command = 3 [(gogoproto.customname) = "Command"];
 }
 
 // DeploymentCause captures information about a particular cause of a deployment.
 message DeploymentCause {
   // type of the trigger that resulted in the creation of a new deployment
-  optional string type = 1;
+  optional string type = 1 [(gogoproto.casttype) = "DeploymentTriggerType", (gogoproto.customname) = "Type", (gogoproto.nullable) = false];
 
   // imageTrigger contains the image trigger details, if this trigger was fired based on an image change
-  optional DeploymentCauseImageTrigger imageTrigger = 2;
+  optional DeploymentCauseImageTrigger imageTrigger = 2 [(gogoproto.customname) = "ImageTrigger"];
 }
 
 // DeploymentCauseImageTrigger represents details about the cause of a deployment originating
@@ -39,28 +49,28 @@ message DeploymentCause {
 message DeploymentCauseImageTrigger {
   // from is a reference to the changed object which triggered a deployment. The field may have
   // the kinds DockerImage, ImageStreamTag, or ImageStreamImage.
-  optional .k8s.io.api.core.v1.ObjectReference from = 1;
+  optional .k8s.io.api.core.v1.ObjectReference from = 1 [(gogoproto.customname) = "From", (gogoproto.nullable) = false];
 }
 
 // DeploymentCondition describes the state of a deployment config at a certain point.
 message DeploymentCondition {
   // type of deployment condition.
-  optional string type = 1;
+  optional string type = 1 [(gogoproto.casttype) = "DeploymentConditionType", (gogoproto.customname) = "Type", (gogoproto.nullable) = false];
 
   // status of the condition, one of True, False, Unknown.
-  optional string status = 2;
+  optional string status = 2 [(gogoproto.casttype) = "k8s.io/api/core/v1.ConditionStatus", (gogoproto.customname) = "Status", (gogoproto.nullable) = false];
 
   // The last time this condition was updated.
-  optional .k8s.io.apimachinery.pkg.apis.meta.v1.Time lastUpdateTime = 6;
+  optional .k8s.io.apimachinery.pkg.apis.meta.v1.Time lastUpdateTime = 6 [(gogoproto.customname) = "LastUpdateTime", (gogoproto.nullable) = false];
 
   // The last time the condition transitioned from one status to another.
-  optional .k8s.io.apimachinery.pkg.apis.meta.v1.Time lastTransitionTime = 3;
+  optional .k8s.io.apimachinery.pkg.apis.meta.v1.Time lastTransitionTime = 3 [(gogoproto.customname) = "LastTransitionTime", (gogoproto.nullable) = false];
 
   // The reason for the condition's last transition.
-  optional string reason = 4;
+  optional string reason = 4 [(gogoproto.customname) = "Reason", (gogoproto.nullable) = false];
 
   // A human readable message indicating details about the transition.
-  optional string message = 5;
+  optional string message = 5 [(gogoproto.customname) = "Message", (gogoproto.nullable) = false];
 }
 
 // Deployment Configs define the template for a pod and manages deploying new images or configuration changes.
@@ -79,14 +89,14 @@ message DeploymentCondition {
 message DeploymentConfig {
   // metadata is the standard object's metadata.
   // More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata
-  optional .k8s.io.apimachinery.pkg.apis.meta.v1.ObjectMeta metadata = 1;
+  optional .k8s.io.apimachinery.pkg.apis.meta.v1.ObjectMeta metadata = 1 [(gogoproto.customname) = "ObjectMeta", (gogoproto.nullable) = false];
 
   // spec represents a desired deployment state and how to deploy to it.
-  optional DeploymentConfigSpec spec = 2;
+  optional DeploymentConfigSpec spec = 2 [(gogoproto.customname) = "Spec", (gogoproto.nullable) = false];
 
   // status represents the current deployment state.
   // +optional
-  optional DeploymentConfigStatus status = 3;
+  optional DeploymentConfigStatus status = 3 [(gogoproto.customname) = "Status", (gogoproto.nullable) = false];
 }
 
 // DeploymentConfigList is a collection of deployment configs.
@@ -96,10 +106,10 @@ message DeploymentConfig {
 message DeploymentConfigList {
   // metadata is the standard list's metadata.
   // More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata
-  optional .k8s.io.apimachinery.pkg.apis.meta.v1.ListMeta metadata = 1;
+  optional .k8s.io.apimachinery.pkg.apis.meta.v1.ListMeta metadata = 1 [(gogoproto.customname) = "ListMeta", (gogoproto.nullable) = false];
 
   // items is a list of deployment configs
-  repeated DeploymentConfig items = 2;
+  repeated DeploymentConfig items = 2 [(gogoproto.customname) = "Items", (gogoproto.nullable) = false];
 }
 
 // DeploymentConfigRollback provides the input to rollback generation.
@@ -108,78 +118,78 @@ message DeploymentConfigList {
 // +openshift:compatibility-gen:level=1
 message DeploymentConfigRollback {
   // name of the deployment config that will be rolled back.
-  optional string name = 1;
+  optional string name = 1 [(gogoproto.customname) = "Name", (gogoproto.nullable) = false];
 
   // updatedAnnotations is a set of new annotations that will be added in the deployment config.
-  map<string, string> updatedAnnotations = 2;
+  map<string, string> updatedAnnotations = 2 [(gogoproto.customname) = "UpdatedAnnotations", (gogoproto.nullable) = false];
 
   // spec defines the options to rollback generation.
-  optional DeploymentConfigRollbackSpec spec = 3;
+  optional DeploymentConfigRollbackSpec spec = 3 [(gogoproto.customname) = "Spec", (gogoproto.nullable) = false];
 }
 
 // DeploymentConfigRollbackSpec represents the options for rollback generation.
 message DeploymentConfigRollbackSpec {
   // from points to a ReplicationController which is a deployment.
-  optional .k8s.io.api.core.v1.ObjectReference from = 1;
+  optional .k8s.io.api.core.v1.ObjectReference from = 1 [(gogoproto.customname) = "From", (gogoproto.nullable) = false];
 
   // revision to rollback to. If set to 0, rollback to the last revision.
-  optional int64 revision = 2;
+  optional int64 revision = 2 [(gogoproto.customname) = "Revision", (gogoproto.nullable) = false];
 
   // includeTriggers specifies whether to include config Triggers.
-  optional bool includeTriggers = 3;
+  optional bool includeTriggers = 3 [(gogoproto.customname) = "IncludeTriggers", (gogoproto.nullable) = false];
 
   // includeTemplate specifies whether to include the PodTemplateSpec.
-  optional bool includeTemplate = 4;
+  optional bool includeTemplate = 4 [(gogoproto.customname) = "IncludeTemplate", (gogoproto.nullable) = false];
 
   // includeReplicationMeta specifies whether to include the replica count and selector.
-  optional bool includeReplicationMeta = 5;
+  optional bool includeReplicationMeta = 5 [(gogoproto.customname) = "IncludeReplicationMeta", (gogoproto.nullable) = false];
 
   // includeStrategy specifies whether to include the deployment Strategy.
-  optional bool includeStrategy = 6;
+  optional bool includeStrategy = 6 [(gogoproto.customname) = "IncludeStrategy", (gogoproto.nullable) = false];
 }
 
 // DeploymentConfigSpec represents the desired state of the deployment.
 message DeploymentConfigSpec {
   // strategy describes how a deployment is executed.
   // +optional
-  optional DeploymentStrategy strategy = 1;
+  optional DeploymentStrategy strategy = 1 [(gogoproto.customname) = "Strategy", (gogoproto.nullable) = false];
 
   // minReadySeconds is the minimum number of seconds for which a newly created pod should
   // be ready without any of its container crashing, for it to be considered available.
   // Defaults to 0 (pod will be considered available as soon as it is ready)
-  optional int32 minReadySeconds = 9;
+  optional int32 minReadySeconds = 9 [(gogoproto.customname) = "MinReadySeconds", (gogoproto.nullable) = false];
 
   // triggers determine how updates to a DeploymentConfig result in new deployments. If no triggers
   // are defined, a new deployment can only occur as a result of an explicit client update to the
   // DeploymentConfig with a new LatestVersion. If null, defaults to having a config change trigger.
   // +optional
-  optional DeploymentTriggerPolicies triggers = 2;
+  optional DeploymentTriggerPolicies triggers = 2 [(gogoproto.customname) = "Triggers"];
 
   // replicas is the number of desired replicas.
   // +optional
-  optional int32 replicas = 3;
+  optional int32 replicas = 3 [(gogoproto.customname) = "Replicas", (gogoproto.nullable) = false];
 
   // revisionHistoryLimit is the number of old ReplicationControllers to retain to allow for rollbacks.
   // This field is a pointer to allow for differentiation between an explicit zero and not specified.
   // Defaults to 10. (This only applies to DeploymentConfigs created via the new group API resource, not the legacy resource.)
-  optional int32 revisionHistoryLimit = 4;
+  optional int32 revisionHistoryLimit = 4 [(gogoproto.customname) = "RevisionHistoryLimit"];
 
   // test ensures that this deployment config will have zero replicas except while a deployment is running. This allows the
   // deployment config to be used as a continuous deployment test - triggering on images, running the deployment, and then succeeding
   // or failing. Post strategy hooks and After actions can be used to integrate successful deployment with an action.
   // +optional
-  optional bool test = 5;
+  optional bool test = 5 [(gogoproto.customname) = "Test", (gogoproto.nullable) = false];
 
   // paused indicates that the deployment config is paused resulting in no new deployments on template
   // changes or changes in the template caused by other triggers.
-  optional bool paused = 6;
+  optional bool paused = 6 [(gogoproto.customname) = "Paused", (gogoproto.nullable) = false];
 
   // selector is a label query over pods that should match the Replicas count.
-  map<string, string> selector = 7;
+  map<string, string> selector = 7 [(gogoproto.customname) = "Selector", (gogoproto.nullable) = false];
 
   // template is the object that describes the pod that will be created if
   // insufficient replicas are detected.
-  optional .k8s.io.api.core.v1.PodTemplateSpec template = 8;
+  optional .k8s.io.api.core.v1.PodTemplateSpec template = 8 [(gogoproto.customname) = "Template"];
 }
 
 // DeploymentConfigStatus represents the current deployment state.
@@ -187,52 +197,52 @@ message DeploymentConfigStatus {
   // latestVersion is used to determine whether the current deployment associated with a deployment
   // config is out of sync.
   // +optional
-  optional int64 latestVersion = 1;
+  optional int64 latestVersion = 1 [(gogoproto.customname) = "LatestVersion", (gogoproto.nullable) = false];
 
   // observedGeneration is the most recent generation observed by the deployment config controller.
   // +optional
-  optional int64 observedGeneration = 2;
+  optional int64 observedGeneration = 2 [(gogoproto.customname) = "ObservedGeneration", (gogoproto.nullable) = false];
 
   // replicas is the total number of pods targeted by this deployment config.
   // +optional
-  optional int32 replicas = 3;
+  optional int32 replicas = 3 [(gogoproto.customname) = "Replicas", (gogoproto.nullable) = false];
 
   // updatedReplicas is the total number of non-terminated pods targeted by this deployment config
   // that have the desired template spec.
   // +optional
-  optional int32 updatedReplicas = 4;
+  optional int32 updatedReplicas = 4 [(gogoproto.customname) = "UpdatedReplicas", (gogoproto.nullable) = false];
 
   // availableReplicas is the total number of available pods targeted by this deployment config.
   // +optional
-  optional int32 availableReplicas = 5;
+  optional int32 availableReplicas = 5 [(gogoproto.customname) = "AvailableReplicas", (gogoproto.nullable) = false];
 
   // unavailableReplicas is the total number of unavailable pods targeted by this deployment config.
   // +optional
-  optional int32 unavailableReplicas = 6;
+  optional int32 unavailableReplicas = 6 [(gogoproto.customname) = "UnavailableReplicas", (gogoproto.nullable) = false];
 
   // details are the reasons for the update to this deployment config.
   // This could be based on a change made by the user or caused by an automatic trigger
   // +optional
-  optional DeploymentDetails details = 7;
+  optional DeploymentDetails details = 7 [(gogoproto.customname) = "Details"];
 
   // conditions represents the latest available observations of a deployment config's current state.
   // +patchMergeKey=type
   // +patchStrategy=merge
   // +optional
-  repeated DeploymentCondition conditions = 8;
+  repeated DeploymentCondition conditions = 8 [(gogoproto.customname) = "Conditions", (gogoproto.nullable) = false];
 
   // Total number of ready pods targeted by this deployment.
   // +optional
-  optional int32 readyReplicas = 9;
+  optional int32 readyReplicas = 9 [(gogoproto.customname) = "ReadyReplicas", (gogoproto.nullable) = false];
 }
 
 // DeploymentDetails captures information about the causes of a deployment.
 message DeploymentDetails {
   // message is the user specified change message, if this deployment was triggered manually by the user
-  optional string message = 1;
+  optional string message = 1 [(gogoproto.customname) = "Message", (gogoproto.nullable) = false];
 
   // causes are extended data associated with all the causes for creating a new deployment
-  repeated DeploymentCause causes = 2;
+  repeated DeploymentCause causes = 2 [(gogoproto.customname) = "Causes", (gogoproto.nullable) = false];
 }
 
 // DeploymentLog represents the logs for a deployment
@@ -248,47 +258,47 @@ message DeploymentLog {
 // +openshift:compatibility-gen:level=1
 message DeploymentLogOptions {
   // The container for which to stream logs. Defaults to only container if there is one container in the pod.
-  optional string container = 1;
+  optional string container = 1 [(gogoproto.customname) = "Container", (gogoproto.nullable) = false];
 
   // follow if true indicates that the build log should be streamed until
   // the build terminates.
-  optional bool follow = 2;
+  optional bool follow = 2 [(gogoproto.customname) = "Follow", (gogoproto.nullable) = false];
 
   // Return previous deployment logs. Defaults to false.
-  optional bool previous = 3;
+  optional bool previous = 3 [(gogoproto.customname) = "Previous", (gogoproto.nullable) = false];
 
   // A relative time in seconds before the current time from which to show logs. If this value
   // precedes the time a pod was started, only logs since the pod start will be returned.
   // If this value is in the future, no logs will be returned.
   // Only one of sinceSeconds or sinceTime may be specified.
-  optional int64 sinceSeconds = 4;
+  optional int64 sinceSeconds = 4 [(gogoproto.customname) = "SinceSeconds"];
 
   // An RFC3339 timestamp from which to show logs. If this value
   // precedes the time a pod was started, only logs since the pod start will be returned.
   // If this value is in the future, no logs will be returned.
   // Only one of sinceSeconds or sinceTime may be specified.
-  optional .k8s.io.apimachinery.pkg.apis.meta.v1.Time sinceTime = 5;
+  optional .k8s.io.apimachinery.pkg.apis.meta.v1.Time sinceTime = 5 [(gogoproto.customname) = "SinceTime"];
 
   // If true, add an RFC3339 or RFC3339Nano timestamp at the beginning of every line
   // of log output. Defaults to false.
-  optional bool timestamps = 6;
+  optional bool timestamps = 6 [(gogoproto.customname) = "Timestamps", (gogoproto.nullable) = false];
 
   // If set, the number of lines from the end of the logs to show. If not specified,
   // logs are shown from the creation of the container or sinceSeconds or sinceTime
-  optional int64 tailLines = 7;
+  optional int64 tailLines = 7 [(gogoproto.customname) = "TailLines"];
 
   // If set, the number of bytes to read from the server before terminating the
   // log output. This may not display a complete final line of logging, and may return
   // slightly more or slightly less than the specified limit.
-  optional int64 limitBytes = 8;
+  optional int64 limitBytes = 8 [(gogoproto.customname) = "LimitBytes"];
 
   // nowait if true causes the call to return immediately even if the deployment
   // is not available yet. Otherwise the server will wait until the deployment has started.
   // TODO: Fix the tag to 'noWait' in v2
-  optional bool nowait = 9;
+  optional bool nowait = 9 [(gogoproto.customname) = "NoWait", (gogoproto.nullable) = false];
 
   // version of the deployment for which to view logs.
-  optional int64 version = 10;
+  optional int64 version = 10 [(gogoproto.customname) = "Version"];
 }
 
 // DeploymentRequest is a request to a deployment config for a new deployment.
@@ -297,89 +307,92 @@ message DeploymentLogOptions {
 // +openshift:compatibility-gen:level=1
 message DeploymentRequest {
   // name of the deployment config for requesting a new deployment.
-  optional string name = 1;
+  optional string name = 1 [(gogoproto.customname) = "Name", (gogoproto.nullable) = false];
 
   // latest will update the deployment config with the latest state from all triggers.
-  optional bool latest = 2;
+  optional bool latest = 2 [(gogoproto.customname) = "Latest", (gogoproto.nullable) = false];
 
   // force will try to force a new deployment to run. If the deployment config is paused,
   // then setting this to true will return an Invalid error.
-  optional bool force = 3;
+  optional bool force = 3 [(gogoproto.customname) = "Force", (gogoproto.nullable) = false];
 
   // excludeTriggers instructs the instantiator to avoid processing the specified triggers.
   // This field overrides the triggers from latest and allows clients to control specific
   // logic. This field is ignored if not specified.
-  repeated string excludeTriggers = 4;
+  repeated string excludeTriggers = 4 [(gogoproto.casttype) = "DeploymentTriggerType", (gogoproto.customname) = "ExcludeTriggers"];
 }
 
 // DeploymentStrategy describes how to perform a deployment.
 message DeploymentStrategy {
   // type is the name of a deployment strategy.
   // +optional
-  optional string type = 1;
+  optional string type = 1 [(gogoproto.casttype) = "DeploymentStrategyType", (gogoproto.customname) = "Type", (gogoproto.nullable) = false];
 
   // customParams are the input to the Custom deployment strategy, and may also
   // be specified for the Recreate and Rolling strategies to customize the execution
   // process that runs the deployment.
-  optional CustomDeploymentStrategyParams customParams = 2;
+  optional CustomDeploymentStrategyParams customParams = 2 [(gogoproto.customname) = "CustomParams"];
 
   // recreateParams are the input to the Recreate deployment strategy.
-  optional RecreateDeploymentStrategyParams recreateParams = 3;
+  optional RecreateDeploymentStrategyParams recreateParams = 3 [(gogoproto.customname) = "RecreateParams"];
 
   // rollingParams are the input to the Rolling deployment strategy.
-  optional RollingDeploymentStrategyParams rollingParams = 4;
+  optional RollingDeploymentStrategyParams rollingParams = 4 [(gogoproto.customname) = "RollingParams"];
 
   // resources contains resource requirements to execute the deployment and any hooks.
-  optional .k8s.io.api.core.v1.ResourceRequirements resources = 5;
+  optional .k8s.io.api.core.v1.ResourceRequirements resources = 5 [(gogoproto.customname) = "Resources", (gogoproto.nullable) = false];
 
   // labels is a set of key, value pairs added to custom deployer and lifecycle pre/post hook pods.
-  map<string, string> labels = 6;
+  map<string, string> labels = 6 [(gogoproto.customname) = "Labels", (gogoproto.nullable) = false];
 
   // annotations is a set of key, value pairs added to custom deployer and lifecycle pre/post hook pods.
-  map<string, string> annotations = 7;
+  map<string, string> annotations = 7 [(gogoproto.customname) = "Annotations", (gogoproto.nullable) = false];
 
   // activeDeadlineSeconds is the duration in seconds that the deployer pods for this deployment
   // config may be active on a node before the system actively tries to terminate them.
-  optional int64 activeDeadlineSeconds = 8;
+  optional int64 activeDeadlineSeconds = 8 [(gogoproto.customname) = "ActiveDeadlineSeconds"];
 }
 
 // DeploymentTriggerImageChangeParams represents the parameters to the ImageChange trigger.
 message DeploymentTriggerImageChangeParams {
   // automatic means that the detection of a new tag value should result in an image update
   // inside the pod template.
-  optional bool automatic = 1;
+  optional bool automatic = 1 [(gogoproto.customname) = "Automatic", (gogoproto.nullable) = false];
 
   // containerNames is used to restrict tag updates to the specified set of container names in a pod.
   // If multiple triggers point to the same containers, the resulting behavior is undefined. Future
   // API versions will make this a validation error. If ContainerNames does not point to a valid container,
   // the trigger will be ignored. Future API versions will make this a validation error.
-  repeated string containerNames = 2;
+  repeated string containerNames = 2 [(gogoproto.customname) = "ContainerNames"];
 
   // from is a reference to an image stream tag to watch for changes. From.Name is the only
   // required subfield - if From.Namespace is blank, the namespace of the current deployment
   // trigger will be used.
-  optional .k8s.io.api.core.v1.ObjectReference from = 3;
+  optional .k8s.io.api.core.v1.ObjectReference from = 3 [(gogoproto.customname) = "From", (gogoproto.nullable) = false];
 
   // lastTriggeredImage is the last image to be triggered.
-  optional string lastTriggeredImage = 4;
+  optional string lastTriggeredImage = 4 [(gogoproto.customname) = "LastTriggeredImage", (gogoproto.nullable) = false];
 }
 
 // DeploymentTriggerPolicies is a list of policies where nil values and different from empty arrays.
 // +protobuf.nullable=true
 // +protobuf.options.(gogoproto.goproto_stringer)=false
 message DeploymentTriggerPolicies {
+  option (gogoproto.goproto_stringer) = false;
+  option (gogoproto.stringer) = false;
+
   // items, if empty, will result in an empty slice
 
-  repeated DeploymentTriggerPolicy items = 1;
+  repeated DeploymentTriggerPolicy items = 1 [(gogoproto.customname) = "Items", (gogoproto.nullable) = false];
 }
 
 // DeploymentTriggerPolicy describes a policy for a single trigger that results in a new deployment.
 message DeploymentTriggerPolicy {
   // type of the trigger
-  optional string type = 1;
+  optional string type = 1 [(gogoproto.casttype) = "DeploymentTriggerType", (gogoproto.customname) = "Type", (gogoproto.nullable) = false];
 
   // imageChangeParams represents the parameters for the ImageChange trigger.
-  optional DeploymentTriggerImageChangeParams imageChangeParams = 2;
+  optional DeploymentTriggerImageChangeParams imageChangeParams = 2 [(gogoproto.customname) = "ImageChangeParams"];
 }
 
 // ExecNewPodHook is a hook implementation which runs a command in a new pod
@@ -387,31 +400,31 @@ message DeploymentTriggerPolicy {
 // deployment template.
 message ExecNewPodHook {
   // command is the action command and its arguments.
-  repeated string command = 1;
+  repeated string command = 1 [(gogoproto.customname) = "Command"];
 
   // env is a set of environment variables to supply to the hook pod's container.
-  repeated .k8s.io.api.core.v1.EnvVar env = 2;
+  repeated .k8s.io.api.core.v1.EnvVar env = 2 [(gogoproto.customname) = "Env", (gogoproto.nullable) = false];
 
   // containerName is the name of a container in the deployment pod template
   // whose container image will be used for the hook pod's container.
-  optional string containerName = 3;
+  optional string containerName = 3 [(gogoproto.customname) = "ContainerName", (gogoproto.nullable) = false];
 
   // volumes is a list of named volumes from the pod template which should be
   // copied to the hook pod. Volumes names not found in pod spec are ignored.
   // An empty list means no volumes will be copied.
-  repeated string volumes = 4;
+  repeated string volumes = 4 [(gogoproto.customname) = "Volumes"];
 }
 
 // LifecycleHook defines a specific deployment lifecycle action. Only one type of action may be specified at any time.
 message LifecycleHook {
   // failurePolicy specifies what action to take if the hook fails.
-  optional string failurePolicy = 1;
+  optional string failurePolicy = 1 [(gogoproto.casttype) = "LifecycleHookFailurePolicy", (gogoproto.customname) = "FailurePolicy", (gogoproto.nullable) = false];
 
   // execNewPod specifies the options for a lifecycle hook backed by a pod.
-  optional ExecNewPodHook execNewPod = 2;
+  optional ExecNewPodHook execNewPod = 2 [(gogoproto.customname) = "ExecNewPod"];
 
   // tagImages instructs the deployer to tag the current image referenced under a container onto an image stream tag.
-  repeated TagImageHook tagImages = 3;
+  repeated TagImageHook tagImages = 3 [(gogoproto.customname) = "TagImages", (gogoproto.nullable) = false];
 }
 
 // RecreateDeploymentStrategyParams are the input to the Recreate deployment
@@ -419,19 +432,19 @@ message LifecycleHook {
 message RecreateDeploymentStrategyParams {
   // timeoutSeconds is the time to wait for updates before giving up. If the
   // value is nil, a default will be used.
-  optional int64 timeoutSeconds = 1;
+  optional int64 timeoutSeconds = 1 [(gogoproto.customname) = "TimeoutSeconds"];
 
   // pre is a lifecycle hook which is executed before the strategy manipulates
   // the deployment. All LifecycleHookFailurePolicy values are supported.
-  optional LifecycleHook pre = 2;
+  optional LifecycleHook pre = 2 [(gogoproto.customname) = "Pre"];
 
   // mid is a lifecycle hook which is executed while the deployment is scaled down to zero before the first new
   // pod is created. All LifecycleHookFailurePolicy values are supported.
-  optional LifecycleHook mid = 3;
+  optional LifecycleHook mid = 3 [(gogoproto.customname) = "Mid"];
 
   // post is a lifecycle hook which is executed after the strategy has
   // finished all deployment logic. All LifecycleHookFailurePolicy values are supported.
-  optional LifecycleHook post = 4;
+  optional LifecycleHook post = 4 [(gogoproto.customname) = "Post"];
 }
 
 // RollingDeploymentStrategyParams are the input to the Rolling deployment
@@ -439,15 +452,15 @@ message RecreateDeploymentStrategyParams {
 message RollingDeploymentStrategyParams {
   // updatePeriodSeconds is the time to wait between individual pod updates.
   // If the value is nil, a default will be used.
-  optional int64 updatePeriodSeconds = 1;
+  optional int64 updatePeriodSeconds = 1 [(gogoproto.customname) = "UpdatePeriodSeconds"];
 
   // intervalSeconds is the time to wait between polling deployment status
   // after update. If the value is nil, a default will be used.
-  optional int64 intervalSeconds = 2;
+  optional int64 intervalSeconds = 2 [(gogoproto.customname) = "IntervalSeconds"];
 
   // timeoutSeconds is the time to wait for updates before giving up. If the
   // value is nil, a default will be used.
-  optional int64 timeoutSeconds = 3;
+  optional int64 timeoutSeconds = 3 [(gogoproto.customname) = "TimeoutSeconds"];
 
   // maxUnavailable is the maximum number of pods that can be unavailable
   // during the update. Value can be an absolute number (ex: 5) or a
@@ -461,7 +474,7 @@ message RollingDeploymentStrategyParams {
   // RC can be scaled down further, followed by scaling up the new RC,
   // ensuring that at least 70% of original number of pods are available at
   // all times during the update.
-  optional .k8s.io.apimachinery.pkg.util.intstr.IntOrString maxUnavailable = 4;
+  optional .k8s.io.apimachinery.pkg.util.intstr.IntOrString maxUnavailable = 4 [(gogoproto.customname) = "MaxUnavailable"];
 
   // maxSurge is the maximum number of pods that can be scheduled above the
   // original number of pods. Value can be an absolute number (ex: 5) or a
@@ -475,25 +488,25 @@ message RollingDeploymentStrategyParams {
   // killed, new RC can be scaled up further, ensuring that total number of
   // pods running at any time during the update is atmost 130% of original
   // pods.
-  optional .k8s.io.apimachinery.pkg.util.intstr.IntOrString maxSurge = 5;
+  optional .k8s.io.apimachinery.pkg.util.intstr.IntOrString maxSurge = 5 [(gogoproto.customname) = "MaxSurge"];
 
   // pre is a lifecycle hook which is executed before the deployment process
   // begins. All LifecycleHookFailurePolicy values are supported.
-  optional LifecycleHook pre = 7;
+  optional LifecycleHook pre = 7 [(gogoproto.customname) = "Pre"];
 
   // post is a lifecycle hook which is executed after the strategy has
   // finished all deployment logic. All LifecycleHookFailurePolicy values
   // are supported.
-  optional LifecycleHook post = 8;
+  optional LifecycleHook post = 8 [(gogoproto.customname) = "Post"];
 }
 
 // TagImageHook is a request to tag the image in a particular container onto an ImageStreamTag.
 message TagImageHook {
   // containerName is the name of a container in the deployment config whose image value will be used as the source of the tag. If there is only a single
   // container this value will be defaulted to the name of that container.
-  optional string containerName = 1;
+  optional string containerName = 1 [(gogoproto.customname) = "ContainerName", (gogoproto.nullable) = false];
 
   // to is the target ImageStreamTag to set the container's image onto.
-  optional .k8s.io.api.core.v1.ObjectReference to = 2;
+  optional .k8s.io.api.core.v1.ObjectReference to = 2 [(gogoproto.customname) = "To", (gogoproto.nullable) = false];
 }
 

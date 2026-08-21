@@ -301,9 +301,6 @@
                         "name": "DualReplica"
                     },
                     {
-                        "name": "EVPN"
-                    },
-                    {
                         "name": "EtcdBackendQuota"
                     },
                     {

@@ -2,7 +2,7 @@ apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
 metadata:
   annotations:
-    api-approved.openshift.io: https://github.com/openshift/api/pull/1482
+    api-approved.openshift.io: https://github.com/openshift/api/pull/2952
     api.openshift.io/merged-by-featuregates: "true"
     include.release.openshift.io/ibm-cloud-managed: "true"
     include.release.openshift.io/self-managed-high-availability: "true"
@@ -17,7 +17,30 @@ spec:
     singular: etcdbackup
   scope: Cluster
   versions:
-  - name: v1alpha1
+  - additionalPrinterColumns:
+    - description: Type of storage used for the backup
+      jsonPath: .spec.storage.type
+      name: Storage Type
+      type: string
+    - description: Status of the EtcdBackup
+      jsonPath: .status.conditions[?(@.status=="True")].type
+      name: Status
+      type: string
+    - description: Age of the EtcdBackup
+      jsonPath: .metadata.creationTimestamp
+      name: Age
+      type: date
+    - description: Name of the node where the backup was executed
+      jsonPath: .status.nodeName
+      name: Node
+      priority: 1
+      type: string
+    - description: Name of the PVC where the backup is stored
+      jsonPath: .spec.storage.pvc.name
+      name: PVC
+      priority: 1
+      type: string
+    name: v1alpha1
     schema:
       openAPIV3Schema:
         description: |-
@@ -45,44 +68,81 @@ spec:
           spec:
             description: spec holds user settable values for configuration
             properties:
-              pvcName:
+              nodeName:
                 description: |-
-                  pvcName specifies the name of the PersistentVolumeClaim (PVC) which binds a PersistentVolume where the
-                  etcd backup file would be saved
-                  The PVC itself must always be created in the "openshift-etcd" namespace
-                  If the PVC is left unspecified "" then the platform will choose a reasonable default location to save the backup.
-                  In the future this would be backups saved across the control-plane master nodes.
+                  nodeName specifies the master node where an etcd backup should be taken.
+                  If not specified, a random master node will be selected.
                 type: string
                 x-kubernetes-validations:
-                - message: pvcName is immutable once set
+                - message: nodeName is immutable once set
                   rule: self == oldSelf
+              storage:
+                description: storage specifies the location where etcd backup files
+                  will be saved.
+                properties:
+                  local:
+                    description: |-
+                      local specifies a host path directory on the master node where the etcd backup file will be saved.
+                      This field is required when storage type is "Local"
+                    properties:
+                      hostPath:
+                        description: hostPath is a local directory on the master node
+                          where the etcd backup file will be saved.
+                        type: string
+                        x-kubernetes-validations:
+                        - message: hostPath is immutable once set
+                          rule: self == oldSelf
+                    required:
+                    - hostPath
+                    type: object
+                  pvc:
+                    description: |-
+                      pvc specifies the PersistentVolumeClaim (PVC) which binds a PersistentVolume where the etcd backup file will be saved.
+                      The PVC must always be created in the "openshift-etcd" namespace.
+                      This field is required when the storage type is "PVC"
+                    properties:
+                      name:
+                        description: name is a reference to a PVC in the "openshift-etcd"
+                          namespace where the etcd backup file will be saved.
+                        type: string
+                        x-kubernetes-validations:
+                        - message: name is immutable once set
+                          rule: self == oldSelf
+                      path:
+                        description: path is a directory on the volume where the etcd
+                          backup file will be saved.
+                        type: string
+                        x-kubernetes-validations:
+                        - message: path is immutable once set
+                          rule: self == oldSelf
+                    required:
+                    - name
+                    type: object
+                  type:
+                    description: EtcdBackupStorageType is an enum of the supported
+                      storage backends for backup files
+                    enum:
+                    - PVC
+                    - Local
+                    type: string
+                    x-kubernetes-validations:
+                    - message: type is immutable once set
+                      rule: self == oldSelf
+                required:
+                - type
+                type: object
+                x-kubernetes-validations:
+                - message: pvc is required when type is PVC, and forbidden otherwise
+                  rule: 'self.type == ''PVC'' ? has(self.pvc) : !has(self.pvc)'
+                - message: local is required when type is Local, and forbidden otherwise
+                  rule: 'self.type == ''Local'' ? has(self.local) : !has(self.local)'
+            required:
+            - storage
             type: object
           status:
             description: status holds observed values from the cluster. They may not
               be overridden.
             properties:
-              backupJob:
-                description: |-
-                  backupJob is the reference to the Job that executes the backup.
-                  Optional
-                properties:
-                  name:
-                    description: |-
-                      name is the name of the Job.
-                      Required
-                    type: string
-                  namespace:
-                    description: |-
-                      namespace is the namespace of the Job.
-                      this is always expected to be "openshift-etcd" since the user provided PVC
-                      is also required to be in "openshift-etcd"
-                      Required
-                    pattern: ^openshift-etcd$
-                    type: string
-                required:
-                - name
-                - namespace
-                type: object
               conditions:
                 description: conditions provide details on the status of the etcd
                   backup job.
@@ -144,6 +204,45 @@ spec:
                 x-kubernetes-list-map-keys:
                 - type
                 x-kubernetes-list-type: map
+              files:
+                description: |-
+                  files tracks the path and size of files generated by the etcd backup.
+                  Includes both etcd snapshots and static manifests.
+                items:
+                  properties:
+                    path:
+                      description: path to the backup file on the storage backend.
+                      type: string
+                    size:
+                      anyOf:
+                      - type: integer
+                      - type: string
+                      description: size of the backup file on the storage backend.
+                      pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
+                      x-kubernetes-int-or-string: true
+                  type: object
+                type: array
+              job:
+                description: job is a reference to the Job created for the backup.
+                properties:
+                  name:
+                    description: name of the backup job
+                    type: string
+                  namespace:
+                    description: namespace of the backup job
+                    type: string
+                  uid:
+                    description: uid of the backup job
+                    type: string
+                required:
+                - name
+                - namespace
+                - uid
+                type: object
+              nodeName:
+                description: nodeName is the master node where the backup snapshot
+                  was taken.
+                type: string
             type: object
         required:
         - spec

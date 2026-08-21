@@ -70,6 +70,7 @@ verify-non-codegen:
 	bash -x hack/verify-group-versions.sh
 	bash -x hack/verify-prerelease-lifecycle-gen.sh
 	hack/verify-payload-crds.sh
+	hack/verify-upstream-featuregates.sh
 	hack/verify-payload-featuregates.sh
 
 .PHONY: verify-scripts
@@ -118,7 +119,7 @@ update-scripts: update-compatibility update-openapi update-deepcopy update-proto
 .PHONY: update-codegen
 update-codegen:
 	hack/update-codegen.sh
-	make update-payload-crds update-payload-featuregates
+	make update-payload-crds update-upstream-featuregates update-payload-featuregates
 
 # Update non-codegen runs all generators that are not part of the codegen utility, or
 # are part of it, but are not run by default when invoking codegen without a specific generator.
@@ -157,6 +158,10 @@ update-payload-crds:
 .PHONY: update-payload-featuregates
 update-payload-featuregates:
 	hack/update-payload-featuregates.sh
+
+.PHONY: update-upstream-featuregates
+update-upstream-featuregates:
+	hack/update-upstream-featuregates.sh
 
 #####################
 #

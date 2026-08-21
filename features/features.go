@@ -75,14 +75,6 @@ func AllFeatureSets() map[uint64]map[ClusterProfileName]map[configv1.FeatureSet]
 var (
 	allFeatureGates = map[configv1.FeatureGateName][]featureGateStatus{}
 
-	FeatureGateServiceAccountTokenNodeBinding = newFeatureGate("ServiceAccountTokenNodeBinding").
-							reportProblemsToJiraComponent("apiserver-auth").
-							contactPerson("ibihim").
-							productScope(kubernetes).
-							enhancementPR("https://github.com/kubernetes/enhancements/issues/4193").
-							enable(inDefault(), inOKD(), inTechPreviewNoUpgrade(), inDevPreviewNoUpgrade()).
-							mustRegister()
-
 	FeatureGateMutatingAdmissionPolicy = newFeatureGate("MutatingAdmissionPolicy").
 						reportProblemsToJiraComponent("kube-apiserver").
 						contactPerson("benluddy").

@@ -1067,4 +1067,12 @@ var (
 					enhancementPR("https://github.com/openshift/enhancements/pull/2047").
 					enable(inTechPreviewNoUpgrade(), inDevPreviewNoUpgrade()).
 					mustRegister()
+
+	FeatureGatePodCertificateRequest = newFeatureGate("PodCertificateRequest").
+						reportProblemsToJiraComponent("kube-apiserver").
+						contactPerson("ibihim").
+						productScope(kubernetes).
+						enhancementPR("https://github.com/kubernetes/enhancements/issues/4317").
+						enable(inTechPreviewNoUpgrade(), inDevPreviewNoUpgrade()).
+						mustRegister()
 )

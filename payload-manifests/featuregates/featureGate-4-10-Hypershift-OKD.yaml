@@ -146,9 +146,6 @@
                         "name": "GCPDualStackInstall"
                     },
                     {
-                        "name": "GCPSovereignCloudInstall"
-                    },
-                    {
                         "name": "GatewayAPIManagementMode"
                     },
                     {
@@ -320,6 +317,9 @@
                     },
                     {
                         "name": "ExternalOIDCWithUpstreamParity"
+                    },
+                    {
+                        "name": "GCPSovereignCloudInstall"
                     },
                     {
                         "name": "GatewayAPIWithoutOLM"

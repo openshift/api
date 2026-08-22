@@ -394,6 +394,9 @@
                         "name": "VSphereMultiVCenterDay2"
                     },
                     {
+                        "name": "VSpherePerComponentScopedCreds"
+                    },
+                    {
                         "name": "VolumeGroupSnapshot"
                     }
                 ],

@@ -193,6 +193,9 @@
                         "name": "DNSNameResolver"
                     },
                     {
+                        "name": "DRADeviceTaintRules"
+                    },
+                    {
                         "name": "DualReplica"
                     },
                     {

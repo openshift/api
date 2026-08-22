@@ -75,22 +75,6 @@ func AllFeatureSets() map[uint64]map[ClusterProfileName]map[configv1.FeatureSet]
 var (
 	allFeatureGates = map[configv1.FeatureGateName][]featureGateStatus{}
 
-	FeatureGateServiceAccountTokenNodeBinding = newFeatureGate("ServiceAccountTokenNodeBinding").
-							reportProblemsToJiraComponent("apiserver-auth").
-							contactPerson("ibihim").
-							productScope(kubernetes).
-							enhancementPR("https://github.com/kubernetes/enhancements/issues/4193").
-							enable(inDefault(), inOKD(), inTechPreviewNoUpgrade(), inDevPreviewNoUpgrade()).
-							mustRegister()
-
-	FeatureGateMutatingAdmissionPolicy = newFeatureGate("MutatingAdmissionPolicy").
-						reportProblemsToJiraComponent("kube-apiserver").
-						contactPerson("benluddy").
-						productScope(kubernetes).
-						enhancementPR("https://github.com/kubernetes/enhancements/issues/3962").
-						enable(inDefault(), inOKD(), inTechPreviewNoUpgrade(), inDevPreviewNoUpgrade()).
-						mustRegister()
-
 	FeatureGateOpenShiftPodSecurityAdmission = newFeatureGate("OpenShiftPodSecurityAdmission").
 							reportProblemsToJiraComponent("auth").
 							contactPerson("ibihim").
@@ -122,21 +106,6 @@ var (
 					enhancementPR("https://github.com/openshift/enhancements/pull/1783").
 					enable(inTechPreviewNoUpgrade(), inDevPreviewNoUpgrade()).
 					mustRegister()
-
-	FeatureGateMaxUnavailableStatefulSet = newFeatureGate("MaxUnavailableStatefulSet").
-						reportProblemsToJiraComponent("apps").
-						contactPerson("atiratree").
-						productScope(kubernetes).
-						enhancementPR("https://github.com/kubernetes/enhancements/issues/961").
-						enable(inTechPreviewNoUpgrade(), inDevPreviewNoUpgrade()).
-						mustRegister()
-
-	FeatureGateEventedPLEG = newFeatureGate("EventedPLEG").
-				reportProblemsToJiraComponent("node").
-				contactPerson("sairameshv").
-				productScope(kubernetes).
-				enhancementPR("https://github.com/kubernetes/enhancements/issues/3386").
-				mustRegister()
 
 	FeatureGateSigstoreImageVerification = newFeatureGate("SigstoreImageVerification").
 						reportProblemsToJiraComponent("node").
@@ -296,14 +265,6 @@ var (
 					enhancementPR(legacyFeatureGateWithoutEnhancement).
 					enable(inTechPreviewNoUpgrade(), inDevPreviewNoUpgrade()).
 					mustRegister()
-
-	FeatureGateKMSv1 = newFeatureGate("KMSv1").
-				reportProblemsToJiraComponent("kube-apiserver").
-				contactPerson("dgrisonnet").
-				productScope(kubernetes).
-				enhancementPR(legacyFeatureGateWithoutEnhancement).
-				enable(inDefault(), inOKD(), inTechPreviewNoUpgrade(), inDevPreviewNoUpgrade()).
-				mustRegister()
 
 	FeatureGateAdditionalStorageConfig = newFeatureGate("AdditionalStorageConfig").
 						reportProblemsToJiraComponent("node").
@@ -723,13 +684,6 @@ var (
 							enable(inTechPreviewNoUpgrade(), inDevPreviewNoUpgrade()).
 							mustRegister()
 
-	FeatureGateSELinuxMount = newFeatureGate("SELinuxMount").
-				reportProblemsToJiraComponent("Storage / Kubernetes").
-				contactPerson("jsafrane").
-				productScope(kubernetes).
-				enhancementPR("https://github.com/kubernetes/enhancements/issues/1710").
-				enable(inTechPreviewNoUpgrade(), inDevPreviewNoUpgrade()).
-				mustRegister()
 
 	FeatureGateDualReplica = newFeatureGate("DualReplica").
 				reportProblemsToJiraComponent("Two Node Fencing").
@@ -896,13 +850,6 @@ var (
 			enable(inDefault(), inOKD(), inTechPreviewNoUpgrade(), inDevPreviewNoUpgrade()).
 			mustRegister()
 
-	FeatureGateMutableCSINodeAllocatableCount = newFeatureGate("MutableCSINodeAllocatableCount").
-							reportProblemsToJiraComponent("Storage / Kubernetes External Components").
-							contactPerson("jsafrane").
-							productScope(kubernetes).
-							enhancementPR("https://github.com/kubernetes/enhancements/issues/4876").
-							enable(inDevPreviewNoUpgrade(), inTechPreviewNoUpgrade(), inDefault(), inOKD()).
-							mustRegister()
 	FeatureGateOSStreams = newFeatureGate("OSStreams").
 				reportProblemsToJiraComponent("MachineConfigOperator").
 				contactPerson("pabrodri").

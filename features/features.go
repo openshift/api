@@ -187,14 +187,6 @@ var (
 					enable(inDevPreviewNoUpgrade(), inTechPreviewNoUpgrade()).
 					mustRegister()
 
-	FeatureGateEVPN = newFeatureGate("EVPN").
-			reportProblemsToJiraComponent("Networking/ovn-kubernetes").
-			contactPerson("jcaamano").
-			productScope(ocpSpecific).
-			enhancementPR("https://github.com/openshift/enhancements/pull/1862").
-			enable(inDefault(), inOKD(), inDevPreviewNoUpgrade(), inTechPreviewNoUpgrade()).
-			mustRegister()
-
 	FeatureGateOVNObservability = newFeatureGate("OVNObservability").
 					reportProblemsToJiraComponent("Networking").
 					contactPerson("npinaeva").

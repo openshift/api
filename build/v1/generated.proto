@@ -5,11 +5,21 @@ syntax = "proto2";
 
 package github.com.openshift.api.build.v1;
 
+import "github.com/gogo/protobuf/gogoproto/gogo.proto";
 import "k8s.io/api/core/v1/generated.proto";
 import "k8s.io/apimachinery/pkg/apis/meta/v1/generated.proto";
 import "k8s.io/apimachinery/pkg/runtime/schema/generated.proto";
 
 // Package-wide variables from generator "generated".
+option (gogoproto.marshaler_all) = true;
+option (gogoproto.stable_marshaler_all) = true;
+option (gogoproto.sizer_all) = true;
+option (gogoproto.goproto_stringer_all) = false;
+option (gogoproto.stringer_all) = true;
+option (gogoproto.unmarshaler_all) = true;
+option (gogoproto.goproto_unrecognized_all) = false;
+option (gogoproto.goproto_enum_prefix_all) = false;
+option (gogoproto.goproto_getters_all) = false;
 option go_package = "github.com/openshift/api/build/v1";
 
 // BinaryBuildRequestOptions are the options required to fully speficy a binary build request
@@ -19,28 +29,28 @@ option go_package = "github.com/openshift/api/build/v1";
 message BinaryBuildRequestOptions {
   // metadata is the standard object's metadata.
   // More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata
-  optional .k8s.io.apimachinery.pkg.apis.meta.v1.ObjectMeta metadata = 1;
+  optional .k8s.io.apimachinery.pkg.apis.meta.v1.ObjectMeta metadata = 1 [(gogoproto.customname) = "ObjectMeta", (gogoproto.nullable) = false];
 
   // asFile determines if the binary should be created as a file within the source rather than extracted as an archive
-  optional string asFile = 2;
+  optional string asFile = 2 [(gogoproto.customname) = "AsFile", (gogoproto.nullable) = false];
 
   // revision.commit is the value identifying a specific commit
-  optional string revisionCommit = 3;
+  optional string revisionCommit = 3 [(gogoproto.customname) = "Commit", (gogoproto.nullable) = false];
 
   // revision.message is the description of a specific commit
-  optional string revisionMessage = 4;
+  optional string revisionMessage = 4 [(gogoproto.customname) = "Message", (gogoproto.nullable) = false];
 
   // revision.authorName of the source control user
-  optional string revisionAuthorName = 5;
+  optional string revisionAuthorName = 5 [(gogoproto.customname) = "AuthorName", (gogoproto.nullable) = false];
 
   // revision.authorEmail of the source control user
-  optional string revisionAuthorEmail = 6;
+  optional string revisionAuthorEmail = 6 [(gogoproto.customname) = "AuthorEmail", (gogoproto.nullable) = false];
 
   // revision.committerName of the source control user
-  optional string revisionCommitterName = 7;
+  optional string revisionCommitterName = 7 [(gogoproto.customname) = "CommitterName", (gogoproto.nullable) = false];
 
   // revision.committerEmail of the source control user
-  optional string revisionCommitterEmail = 8;
+  optional string revisionCommitterEmail = 8 [(gogoproto.customname) = "CommitterEmail", (gogoproto.nullable) = false];
 }
 
 // BinaryBuildSource describes a binary file to be used for the Docker and Source build strategies,
@@ -52,13 +62,13 @@ message BinaryBuildSource {
   // strategies assume this file is a zip, tar, or tar.gz file and extract it as the source.
   // The custom strategy receives this binary as standard input. This filename may not
   // contain slashes or be '..' or '.'.
-  optional string asFile = 1;
+  optional string asFile = 1 [(gogoproto.customname) = "AsFile", (gogoproto.nullable) = false];
 }
 
 // BitbucketWebHookCause has information about a Bitbucket webhook that triggered a
 // build.
 message BitbucketWebHookCause {
-  optional CommonWebHookCause commonSpec = 1;
+  optional CommonWebHookCause commonSpec = 1 [(gogoproto.customname) = "CommonWebHookCause", (gogoproto.nullable) = false];
 }
 
 // Build encapsulates the inputs needed to produce a new deployable image, as well as
@@ -69,35 +79,35 @@ message BitbucketWebHookCause {
 message Build {
   // metadata is the standard object's metadata.
   // More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata
-  optional .k8s.io.apimachinery.pkg.apis.meta.v1.ObjectMeta metadata = 1;
+  optional .k8s.io.apimachinery.pkg.apis.meta.v1.ObjectMeta metadata = 1 [(gogoproto.customname) = "ObjectMeta", (gogoproto.nullable) = false];
 
   // spec is all the inputs used to execute the build.
-  optional BuildSpec spec = 2;
+  optional BuildSpec spec = 2 [(gogoproto.customname) = "Spec", (gogoproto.nullable) = false];
 
   // status is the current status of the build.
   // +optional
-  optional BuildStatus status = 3;
+  optional BuildStatus status = 3 [(gogoproto.customname) = "Status", (gogoproto.nullable) = false];
 }
 
 // BuildCondition describes the state of a build at a certain point.
 message BuildCondition {
   // type of build condition.
-  optional string type = 1;
+  optional string type = 1 [(gogoproto.casttype) = "BuildConditionType", (gogoproto.customname) = "Type", (gogoproto.nullable) = false];
 
   // status of the condition, one of True, False, Unknown.
-  optional string status = 2;
+  optional string status = 2 [(gogoproto.casttype) = "k8s.io/api/core/v1.ConditionStatus", (gogoproto.customname) = "Status", (gogoproto.nullable) = false];
 
   // The last time this condition was updated.
-  optional .k8s.io.apimachinery.pkg.apis.meta.v1.Time lastUpdateTime = 6;
+  optional .k8s.io.apimachinery.pkg.apis.meta.v1.Time lastUpdateTime = 6 [(gogoproto.customname) = "LastUpdateTime", (gogoproto.nullable) = false];
 
   // The last time the condition transitioned from one status to another.
-  optional .k8s.io.apimachinery.pkg.apis.meta.v1.Time lastTransitionTime = 3;
+  optional .k8s.io.apimachinery.pkg.apis.meta.v1.Time lastTransitionTime = 3 [(gogoproto.customname) = "LastTransitionTime", (gogoproto.nullable) = false];
 
   // The reason for the condition's last transition.
-  optional string reason = 4;
+  optional string reason = 4 [(gogoproto.customname) = "Reason", (gogoproto.nullable) = false];
 
   // A human readable message indicating details about the transition.
-  optional string message = 5;
+  optional string message = 5 [(gogoproto.customname) = "Message", (gogoproto.nullable) = false];
 }
 
 // Build configurations define a build process for new container images. There are three types of builds possible - a container image build using a Dockerfile, a Source-to-Image build that uses a specially prepared base image that accepts source code that it can make runnable, and a custom build that can run // arbitrary container images as a base and accept the build parameters. Builds run on the cluster and on completion are pushed to the container image registry specified in the "output" section. A build can be triggered via a webhook, when the base image changes, or when a user manually requests a new build be // created.
@@ -109,15 +119,15 @@ message BuildCondition {
 message BuildConfig {
   // metadata is the standard object's metadata.
   // More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata
-  optional .k8s.io.apimachinery.pkg.apis.meta.v1.ObjectMeta metadata = 1;
+  optional .k8s.io.apimachinery.pkg.apis.meta.v1.ObjectMeta metadata = 1 [(gogoproto.customname) = "ObjectMeta", (gogoproto.nullable) = false];
 
   // spec holds all the input necessary to produce a new build, and the conditions when
   // to trigger them.
-  optional BuildConfigSpec spec = 2;
+  optional BuildConfigSpec spec = 2 [(gogoproto.customname) = "Spec", (gogoproto.nullable) = false];
 
   // status holds any relevant information about a build config
   // +optional
-  optional BuildConfigStatus status = 3;
+  optional BuildConfigStatus status = 3 [(gogoproto.customname) = "Status", (gogoproto.nullable) = false];
 }
 
 // BuildConfigList is a collection of BuildConfigs.
@@ -127,10 +137,10 @@ message BuildConfig {
 message BuildConfigList {
   // metadata is the standard list's metadata.
   // More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata
-  optional .k8s.io.apimachinery.pkg.apis.meta.v1.ListMeta metadata = 1;
+  optional .k8s.io.apimachinery.pkg.apis.meta.v1.ListMeta metadata = 1 [(gogoproto.customname) = "ListMeta", (gogoproto.nullable) = false];
 
   // items is a list of build configs
-  repeated BuildConfig items = 2;
+  repeated BuildConfig items = 2 [(gogoproto.customname) = "Items", (gogoproto.nullable) = false];
 }
 
 // BuildConfigSpec describes when and how builds are created
@@ -139,38 +149,38 @@ message BuildConfigSpec {
   // no triggers are defined, a new build can only occur as a result of an
   // explicit client build creation.
   // +optional
-  repeated BuildTriggerPolicy triggers = 1;
+  repeated BuildTriggerPolicy triggers = 1 [(gogoproto.customname) = "Triggers", (gogoproto.nullable) = false];
 
   // runPolicy describes how the new build created from this build
   // configuration will be scheduled for execution.
   // This is optional, if not specified we default to "Serial".
-  optional string runPolicy = 2;
+  optional string runPolicy = 2 [(gogoproto.casttype) = "BuildRunPolicy", (gogoproto.customname) = "RunPolicy", (gogoproto.nullable) = false];
 
   // CommonSpec is the desired build specification
-  optional CommonSpec commonSpec = 3;
+  optional CommonSpec commonSpec = 3 [(gogoproto.customname) = "CommonSpec", (gogoproto.nullable) = false];
 
   // successfulBuildsHistoryLimit is the number of old successful builds to retain.
   // When a BuildConfig is created, the 5 most recent successful builds are retained unless this value is set.
   // If removed after the BuildConfig has been created, all successful builds are retained.
-  optional int32 successfulBuildsHistoryLimit = 4;
+  optional int32 successfulBuildsHistoryLimit = 4 [(gogoproto.customname) = "SuccessfulBuildsHistoryLimit"];
 
   // failedBuildsHistoryLimit is the number of old failed builds to retain.
   // When a BuildConfig is created, the 5 most recent failed builds are retained unless this value is set.
   // If removed after the BuildConfig has been created, all failed builds are retained.
-  optional int32 failedBuildsHistoryLimit = 5;
+  optional int32 failedBuildsHistoryLimit = 5 [(gogoproto.customname) = "FailedBuildsHistoryLimit"];
 }
 
 // BuildConfigStatus contains current state of the build config object.
 message BuildConfigStatus {
   // lastVersion is used to inform about number of last triggered build.
   // +optional
-  optional int64 lastVersion = 1;
+  optional int64 lastVersion = 1 [(gogoproto.customname) = "LastVersion", (gogoproto.nullable) = false];
 
   // imageChangeTriggers captures the runtime state of any ImageChangeTrigger specified in the BuildConfigSpec,
   // including the value reconciled by the OpenShift APIServer for the lastTriggeredImageID. There is a single entry
   // in this array for each image change trigger in spec. Each trigger status references the ImageStreamTag that acts as the source of the trigger.
   // +optional
-  repeated ImageChangeTriggerStatus imageChangeTriggers = 2;
+  repeated ImageChangeTriggerStatus imageChangeTriggers = 2 [(gogoproto.customname) = "ImageChangeTriggers", (gogoproto.nullable) = false];
 }
 
 // BuildList is a collection of Builds.
@@ -180,10 +190,10 @@ message BuildConfigStatus {
 message BuildList {
   // metadata is the standard list's metadata.
   // More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata
-  optional .k8s.io.apimachinery.pkg.apis.meta.v1.ListMeta metadata = 1;
+  optional .k8s.io.apimachinery.pkg.apis.meta.v1.ListMeta metadata = 1 [(gogoproto.customname) = "ListMeta", (gogoproto.nullable) = false];
 
   // items is a list of builds
-  repeated Build items = 2;
+  repeated Build items = 2 [(gogoproto.customname) = "Items", (gogoproto.nullable) = false];
 }
 
 // BuildLog is the (unused) resource associated with the build log redirector
@@ -199,47 +209,47 @@ message BuildLog {
 // +openshift:compatibility-gen:level=1
 message BuildLogOptions {
   // cointainer for which to stream logs. Defaults to only container if there is one container in the pod.
-  optional string container = 1;
+  optional string container = 1 [(gogoproto.customname) = "Container", (gogoproto.nullable) = false];
 
   // follow if true indicates that the build log should be streamed until
   // the build terminates.
-  optional bool follow = 2;
+  optional bool follow = 2 [(gogoproto.customname) = "Follow", (gogoproto.nullable) = false];
 
   // previous returns previous build logs. Defaults to false.
-  optional bool previous = 3;
+  optional bool previous = 3 [(gogoproto.customname) = "Previous", (gogoproto.nullable) = false];
 
   // sinceSeconds is a relative time in seconds before the current time from which to show logs. If this value
   // precedes the time a pod was started, only logs since the pod start will be returned.
   // If this value is in the future, no logs will be returned.
   // Only one of sinceSeconds or sinceTime may be specified.
-  optional int64 sinceSeconds = 4;
+  optional int64 sinceSeconds = 4 [(gogoproto.customname) = "SinceSeconds"];
 
   // sinceTime is an RFC3339 timestamp from which to show logs. If this value
   // precedes the time a pod was started, only logs since the pod start will be returned.
   // If this value is in the future, no logs will be returned.
   // Only one of sinceSeconds or sinceTime may be specified.
-  optional .k8s.io.apimachinery.pkg.apis.meta.v1.Time sinceTime = 5;
+  optional .k8s.io.apimachinery.pkg.apis.meta.v1.Time sinceTime = 5 [(gogoproto.customname) = "SinceTime"];
 
   // timestamps, If true, add an RFC3339 or RFC3339Nano timestamp at the beginning of every line
   // of log output. Defaults to false.
-  optional bool timestamps = 6;
+  optional bool timestamps = 6 [(gogoproto.customname) = "Timestamps", (gogoproto.nullable) = false];
 
   // tailLines, If set, is the number of lines from the end of the logs to show. If not specified,
   // logs are shown from the creation of the container or sinceSeconds or sinceTime
-  optional int64 tailLines = 7;
+  optional int64 tailLines = 7 [(gogoproto.customname) = "TailLines"];
 
   // limitBytes, If set, is the number of bytes to read from the server before terminating the
   // log output. This may not display a complete final line of logging, and may return
   // slightly more or slightly less than the specified limit.
-  optional int64 limitBytes = 8;
+  optional int64 limitBytes = 8 [(gogoproto.customname) = "LimitBytes"];
 
   // nowait if true causes the call to return immediately even if the build
   // is not available yet. Otherwise the server will wait until the build has started.
   // TODO: Fix the tag to 'noWait' in v2
-  optional bool nowait = 9;
+  optional bool nowait = 9 [(gogoproto.customname) = "NoWait", (gogoproto.nullable) = false];
 
   // version of the build for which to view logs.
-  optional int64 version = 10;
+  optional int64 version = 10 [(gogoproto.customname) = "Version"];
 
   // insecureSkipTLSVerifyBackend indicates that the apiserver should not confirm the validity of the
   // serving certificate of the backend it is connecting to.  This will make the HTTPS connection between the apiserver
@@ -248,7 +258,7 @@ message BuildLogOptions {
   // connection to the real kubelet is vulnerable to a man in the middle attack (e.g. an attacker could not intercept
   // the actual log data coming from the real kubelet).
   // +optional
-  optional bool insecureSkipTLSVerifyBackend = 11;
+  optional bool insecureSkipTLSVerifyBackend = 11 [(gogoproto.customname) = "InsecureSkipTLSVerifyBackend", (gogoproto.nullable) = false];
 }
 
 // BuildOutput is input to a build strategy and describes the container image that the strategy
@@ -259,16 +269,16 @@ message BuildOutput {
   // This value will be used to look up a container image repository to push to.
   // In the case of an ImageStreamTag, the ImageStreamTag will be looked for in the namespace of
   // the build unless Namespace is specified.
-  optional .k8s.io.api.core.v1.ObjectReference to = 1;
+  optional .k8s.io.api.core.v1.ObjectReference to = 1 [(gogoproto.customname) = "To"];
 
   // pushSecret is the name of a Secret that would be used for setting
   // up the authentication for executing the Docker push to authentication
   // enabled Docker Registry (or Docker Hub).
-  optional .k8s.io.api.core.v1.LocalObjectReference pushSecret = 2;
+  optional .k8s.io.api.core.v1.LocalObjectReference pushSecret = 2 [(gogoproto.customname) = "PushSecret"];
 
   // imageLabels define a list of labels that are applied to the resulting image. If there
   // are multiple labels with the same name then the last one in the list is used.
-  repeated ImageLabel imageLabels = 3;
+  repeated ImageLabel imageLabels = 3 [(gogoproto.customname) = "ImageLabels", (gogoproto.nullable) = false];
 }
 
 // A BuildPostCommitSpec holds a build post commit hook specification. The hook
@@ -341,12 +351,12 @@ message BuildPostCommitSpec {
   // This might be needed if the image doesn't have `/bin/sh`, or if you
   // do not want to use a shell. In all other cases, using Script might be
   // more convenient.
-  repeated string command = 1;
+  repeated string command = 1 [(gogoproto.customname) = "Command"];
 
   // args is a list of arguments that are provided to either Command,
   // Script or the container image's default entrypoint. The arguments are
   // placed immediately after the command to be run.
-  repeated string args = 2;
+  repeated string args = 2 [(gogoproto.customname) = "Args"];
 
   // script is a shell script to be run with `/bin/sh -ic`. It may not be
   // specified with Command. Use Script when a shell script is appropriate
@@ -358,7 +368,7 @@ message BuildPostCommitSpec {
   // collections enabled in the shell. E.g., in the Ruby image, this is
   // necessary to make `ruby`, `bundle` and other binaries available in
   // the PATH.
-  optional string script = 3;
+  optional string script = 3 [(gogoproto.customname) = "Script", (gogoproto.nullable) = false];
 }
 
 // BuildRequest is the resource used to pass parameters to build generator
@@ -368,37 +378,37 @@ message BuildPostCommitSpec {
 message BuildRequest {
   // metadata is the standard object's metadata.
   // More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata
-  optional .k8s.io.apimachinery.pkg.apis.meta.v1.ObjectMeta metadata = 1;
+  optional .k8s.io.apimachinery.pkg.apis.meta.v1.ObjectMeta metadata = 1 [(gogoproto.customname) = "ObjectMeta", (gogoproto.nullable) = false];
 
   // revision is the information from the source for a specific repo snapshot.
-  optional SourceRevision revision = 2;
+  optional SourceRevision revision = 2 [(gogoproto.customname) = "Revision"];
 
   // triggeredByImage is the Image that triggered this build.
-  optional .k8s.io.api.core.v1.ObjectReference triggeredByImage = 3;
+  optional .k8s.io.api.core.v1.ObjectReference triggeredByImage = 3 [(gogoproto.customname) = "TriggeredByImage"];
 
   // from is the reference to the ImageStreamTag that triggered the build.
-  optional .k8s.io.api.core.v1.ObjectReference from = 4;
+  optional .k8s.io.api.core.v1.ObjectReference from = 4 [(gogoproto.customname) = "From"];
 
   // binary indicates a request to build from a binary provided to the builder
-  optional BinaryBuildSource binary = 5;
+  optional BinaryBuildSource binary = 5 [(gogoproto.customname) = "Binary"];
 
   // lastVersion (optional) is the LastVersion of the BuildConfig that was used
   // to generate the build. If the BuildConfig in the generator doesn't match, a build will
   // not be generated.
-  optional int64 lastVersion = 6;
+  optional int64 lastVersion = 6 [(gogoproto.customname) = "LastVersion"];
 
   // env contains additional environment variables you want to pass into a builder container.
-  repeated .k8s.io.api.core.v1.EnvVar env = 7;
+  repeated .k8s.io.api.core.v1.EnvVar env = 7 [(gogoproto.customname) = "Env", (gogoproto.nullable) = false];
 
   // triggeredBy describes which triggers started the most recent update to the
   // build configuration and contains information about those triggers.
-  repeated BuildTriggerCause triggeredBy = 8;
+  repeated BuildTriggerCause triggeredBy = 8 [(gogoproto.customname) = "TriggeredBy", (gogoproto.nullable) = false];
 
   // dockerStrategyOptions contains additional docker-strategy specific options for the build
-  optional DockerStrategyOptions dockerStrategyOptions = 9;
+  optional DockerStrategyOptions dockerStrategyOptions = 9 [(gogoproto.customname) = "DockerStrategyOptions"];
 
   // sourceStrategyOptions contains additional source-strategy specific options for the build
-  optional SourceStrategyOptions sourceStrategyOptions = 10;
+  optional SourceStrategyOptions sourceStrategyOptions = 10 [(gogoproto.customname) = "SourceStrategyOptions"];
 }
 
 // BuildSource is the SCM used for the build.
@@ -406,7 +416,7 @@ message BuildSource {
   // type of build input to accept
   // +k8s:conversion-gen=false
   // +optional
-  optional string type = 1;
+  optional string type = 1 [(gogoproto.casttype) = "BuildSourceType", (gogoproto.customname) = "Type", (gogoproto.nullable) = false];
 
   // binary builds accept a binary as their input. The binary is generally assumed to be a tar,
   // gzipped tar, or zip file depending on the strategy. For container image builds, this is the build
@@ -415,7 +425,7 @@ message BuildSource {
   // Source and container image builds, if binary.asFile is set the build will receive a directory with
   // a single file. contextDir may be used when an archive is provided. Custom builds will
   // receive this binary as input on STDIN.
-  optional BinaryBuildSource binary = 2;
+  optional BinaryBuildSource binary = 2 [(gogoproto.customname) = "Binary"];
 
   // dockerfile is the raw contents of a Dockerfile which should be built. When this option is
   // specified, the FROM may be modified based on your strategy base image and additional ENV
@@ -423,44 +433,44 @@ message BuildSource {
   // of your Dockerfile stanzas. The Dockerfile source type may be used with other options like
   // git - in those cases the Git repo will have any innate Dockerfile replaced in the context
   // dir.
-  optional string dockerfile = 3;
+  optional string dockerfile = 3 [(gogoproto.customname) = "Dockerfile"];
 
   // git contains optional information about git build source
-  optional GitBuildSource git = 4;
+  optional GitBuildSource git = 4 [(gogoproto.customname) = "Git"];
 
   // images describes a set of images to be used to provide source for the build
-  repeated ImageSource images = 5;
+  repeated ImageSource images = 5 [(gogoproto.customname) = "Images", (gogoproto.nullable) = false];
 
   // contextDir specifies the sub-directory where the source code for the application exists.
   // This allows to have buildable sources in directory other than root of
   // repository.
-  optional string contextDir = 6;
+  optional string contextDir = 6 [(gogoproto.customname) = "ContextDir", (gogoproto.nullable) = false];
 
   // sourceSecret is the name of a Secret that would be used for setting
   // up the authentication for cloning private repository.
   // The secret contains valid credentials for remote repository, where the
   // data's key represent the authentication method to be used and value is
   // the base64 encoded credentials. Supported auth methods are: ssh-privatekey.
-  optional .k8s.io.api.core.v1.LocalObjectReference sourceSecret = 7;
+  optional .k8s.io.api.core.v1.LocalObjectReference sourceSecret = 7 [(gogoproto.customname) = "SourceSecret"];
 
   // secrets represents a list of secrets and their destinations that will
   // be used only for the build.
-  repeated SecretBuildSource secrets = 8;
+  repeated SecretBuildSource secrets = 8 [(gogoproto.customname) = "Secrets", (gogoproto.nullable) = false];
 
   // configMaps represents a list of configMaps and their destinations that will
   // be used for the build.
-  repeated ConfigMapBuildSource configMaps = 9;
+  repeated ConfigMapBuildSource configMaps = 9 [(gogoproto.customname) = "ConfigMaps", (gogoproto.nullable) = false];
 }
 
 // BuildSpec has the information to represent a build and also additional
 // information about a build
 message BuildSpec {
   // CommonSpec is the information that represents a build
-  optional CommonSpec commonSpec = 1;
+  optional CommonSpec commonSpec = 1 [(gogoproto.customname) = "CommonSpec", (gogoproto.nullable) = false];
 
   // triggeredBy describes which triggers started the most recent update to the
   // build configuration and contains information about those triggers.
-  repeated BuildTriggerCause triggeredBy = 2;
+  repeated BuildTriggerCause triggeredBy = 2 [(gogoproto.customname) = "TriggeredBy", (gogoproto.nullable) = false];
 }
 
 // BuildStatus contains the status of a build
@@ -468,73 +478,73 @@ message BuildStatus {
   // phase is the point in the build lifecycle. Possible values are
   // "New", "Pending", "Running", "Complete", "Failed", "Error", and "Cancelled".
   // +optional
-  optional string phase = 1;
+  optional string phase = 1 [(gogoproto.casttype) = "BuildPhase", (gogoproto.customname) = "Phase", (gogoproto.nullable) = false];
 
   // cancelled describes if a cancel event was triggered for the build.
   // +optional
-  optional bool cancelled = 2;
+  optional bool cancelled = 2 [(gogoproto.customname) = "Cancelled", (gogoproto.nullable) = false];
 
   // reason is a brief CamelCase string that describes any failure and is meant for machine parsing and tidy display in the CLI.
   // +optional
-  optional string reason = 3;
+  optional string reason = 3 [(gogoproto.casttype) = "StatusReason", (gogoproto.customname) = "Reason", (gogoproto.nullable) = false];
 
   // message is a human-readable message indicating details about why the build has this status.
   // +optional
-  optional string message = 4;
+  optional string message = 4 [(gogoproto.customname) = "Message", (gogoproto.nullable) = false];
 
   // startTimestamp is a timestamp representing the server time when this Build started
   // running in a Pod.
   // It is represented in RFC3339 form and is in UTC.
   // +optional
-  optional .k8s.io.apimachinery.pkg.apis.meta.v1.Time startTimestamp = 5;
+  optional .k8s.io.apimachinery.pkg.apis.meta.v1.Time startTimestamp = 5 [(gogoproto.customname) = "StartTimestamp"];
 
   // completionTimestamp is a timestamp representing the server time when this Build was
   // finished, whether that build failed or succeeded.  It reflects the time at which
   // the Pod running the Build terminated.
   // It is represented in RFC3339 form and is in UTC.
   // +optional
-  optional .k8s.io.apimachinery.pkg.apis.meta.v1.Time completionTimestamp = 6;
+  optional .k8s.io.apimachinery.pkg.apis.meta.v1.Time completionTimestamp = 6 [(gogoproto.customname) = "CompletionTimestamp"];
 
   // duration contains time.Duration object describing build time.
   // +optional
-  optional int64 duration = 7;
+  optional int64 duration = 7 [(gogoproto.casttype) = "time.Duration", (gogoproto.customname) = "Duration", (gogoproto.nullable) = false];
 
   // outputDockerImageReference contains a reference to the container image that
   // will be built by this build. Its value is computed from
   // Build.Spec.Output.To, and should include the registry address, so that
   // it can be used to push and pull the image.
   // +optional
-  optional string outputDockerImageReference = 8;
+  optional string outputDockerImageReference = 8 [(gogoproto.customname) = "OutputDockerImageReference", (gogoproto.nullable) = false];
 
   // config is an ObjectReference to the BuildConfig this Build is based on.
   // +optional
-  optional .k8s.io.api.core.v1.ObjectReference config = 9;
+  optional .k8s.io.api.core.v1.ObjectReference config = 9 [(gogoproto.customname) = "Config"];
 
   // output describes the container image the build has produced.
   // +optional
-  optional BuildStatusOutput output = 10;
+  optional BuildStatusOutput output = 10 [(gogoproto.customname) = "Output", (gogoproto.nullable) = false];
 
   // stages contains details about each stage that occurs during the build
   // including start time, duration (in milliseconds), and the steps that
   // occured within each stage.
   // +optional
-  repeated StageInfo stages = 11;
+  repeated StageInfo stages = 11 [(gogoproto.customname) = "Stages", (gogoproto.nullable) = false];
 
   // logSnippet is the last few lines of the build log.  This value is only set for builds that failed.
   // +optional
-  optional string logSnippet = 12;
+  optional string logSnippet = 12 [(gogoproto.customname) = "LogSnippet", (gogoproto.nullable) = false];
 
   // conditions represents the latest available observations of a build's current state.
   // +patchMergeKey=type
   // +patchStrategy=merge
   // +optional
-  repeated BuildCondition conditions = 13;
+  repeated BuildCondition conditions = 13 [(gogoproto.customname) = "Conditions", (gogoproto.nullable) = false];
 }
 
 // BuildStatusOutput contains the status of the built image.
 message BuildStatusOutput {
   // to describes the status of the built image being pushed to a registry.
-  optional BuildStatusOutputTo to = 1;
+  optional BuildStatusOutputTo to = 1 [(gogoproto.customname) = "To"];
 }
 
 // BuildStatusOutputTo describes the status of the built image with regards to
@@ -546,7 +556,7 @@ message BuildStatusOutputTo {
   // Please note that this field may not always be set even if the push
   // completes successfully - e.g. when the registry returns no digest or
   // returns it in a format that the builder doesn't understand.
-  optional string imageDigest = 1;
+  optional string imageDigest = 1 [(gogoproto.customname) = "ImageDigest", (gogoproto.nullable) = false];
 }
 
 // BuildStrategy contains the details of how to perform a build.
@@ -554,20 +564,20 @@ message BuildStrategy {
   // type is the kind of build strategy.
   // +k8s:conversion-gen=false
   // +optional
-  optional string type = 1;
+  optional string type = 1 [(gogoproto.casttype) = "BuildStrategyType", (gogoproto.customname) = "Type", (gogoproto.nullable) = false];
 
   // dockerStrategy holds the parameters to the container image build strategy.
-  optional DockerBuildStrategy dockerStrategy = 2;
+  optional DockerBuildStrategy dockerStrategy = 2 [(gogoproto.customname) = "DockerStrategy"];
 
   // sourceStrategy holds the parameters to the Source build strategy.
-  optional SourceBuildStrategy sourceStrategy = 3;
+  optional SourceBuildStrategy sourceStrategy = 3 [(gogoproto.customname) = "SourceStrategy"];
 
   // customStrategy holds the parameters to the Custom build strategy
-  optional CustomBuildStrategy customStrategy = 4;
+  optional CustomBuildStrategy customStrategy = 4 [(gogoproto.customname) = "CustomStrategy"];
 
   // jenkinsPipelineStrategy holds the parameters to the Jenkins Pipeline build strategy.
   // Deprecated: use OpenShift Pipelines
-  optional JenkinsPipelineBuildStrategy jenkinsPipelineStrategy = 5;
+  optional JenkinsPipelineBuildStrategy jenkinsPipelineStrategy = 5 [(gogoproto.customname) = "JenkinsPipelineStrategy"];
 }
 
 // BuildTriggerCause holds information about a triggered build. It is used for
@@ -577,26 +587,26 @@ message BuildStrategy {
 message BuildTriggerCause {
   // message is used to store a human readable message for why the build was
   // triggered. E.g.: "Manually triggered by user", "Configuration change",etc.
-  optional string message = 1;
+  optional string message = 1 [(gogoproto.customname) = "Message", (gogoproto.nullable) = false];
 
   // genericWebHook holds data about a builds generic webhook trigger.
-  optional GenericWebHookCause genericWebHook = 2;
+  optional GenericWebHookCause genericWebHook = 2 [(gogoproto.customname) = "GenericWebHook"];
 
   // githubWebHook represents data for a GitHub webhook that fired a
   // specific build.
-  optional GitHubWebHookCause githubWebHook = 3;
+  optional GitHubWebHookCause githubWebHook = 3 [(gogoproto.customname) = "GitHubWebHook"];
 
   // imageChangeBuild stores information about an imagechange event
   // that triggered a new build.
-  optional ImageChangeCause imageChangeBuild = 4;
+  optional ImageChangeCause imageChangeBuild = 4 [(gogoproto.customname) = "ImageChangeBuild"];
 
   // gitlabWebHook represents data for a GitLab webhook that fired a specific
   // build.
-  optional GitLabWebHookCause gitlabWebHook = 5;
+  optional GitLabWebHookCause gitlabWebHook = 5 [(gogoproto.customname) = "GitLabWebHook"];
 
   // bitbucketWebHook represents data for a Bitbucket webhook that fired a
   // specific build.
-  optional BitbucketWebHookCause bitbucketWebHook = 6;
+  optional BitbucketWebHookCause bitbucketWebHook = 6 [(gogoproto.customname) = "BitbucketWebHook"];
 }
 
 // BuildTriggerPolicy describes a policy for a single trigger that results in a new Build.
@@ -626,23 +636,23 @@ message BuildTriggerPolicy {
   // - ConfigChange
   // ConfigChangeBuildTriggerType will trigger a build on an initial build config creation
   // WARNING: In the future the behavior will change to trigger a build on any config change
-  optional string type = 1;
+  optional string type = 1 [(gogoproto.casttype) = "BuildTriggerType", (gogoproto.customname) = "Type", (gogoproto.nullable) = false];
 
   // github contains the parameters for a GitHub webhook type of trigger
-  optional WebHookTrigger github = 2;
+  optional WebHookTrigger github = 2 [(gogoproto.customname) = "GitHubWebHook"];
 
   // generic contains the parameters for a Generic webhook type of trigger
-  optional WebHookTrigger generic = 3;
+  optional WebHookTrigger generic = 3 [(gogoproto.customname) = "GenericWebHook"];
 
   // imageChange contains parameters for an ImageChange type of trigger
-  optional ImageChangeTrigger imageChange = 4;
+  optional ImageChangeTrigger imageChange = 4 [(gogoproto.customname) = "ImageChange"];
 
   // GitLabWebHook contains the parameters for a GitLab webhook type of trigger
-  optional WebHookTrigger gitlab = 5;
+  optional WebHookTrigger gitlab = 5 [(gogoproto.customname) = "GitLabWebHook"];
 
   // BitbucketWebHook contains the parameters for a Bitbucket webhook type of
   // trigger
-  optional WebHookTrigger bitbucket = 6;
+  optional WebHookTrigger bitbucket = 6 [(gogoproto.customname) = "BitbucketWebHook"];
 }
 
 // BuildVolume describes a volume that is made available to build pods,
@@ -655,11 +665,11 @@ message BuildVolume {
   // failed build with an error message detailing which name caused the error.
   // More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names
   // +required
-  optional string name = 1;
+  optional string name = 1 [(gogoproto.customname) = "Name", (gogoproto.nullable) = false];
 
   // source represents the location and type of the mounted volume.
   // +required
-  optional BuildVolumeSource source = 2;
+  optional BuildVolumeSource source = 2 [(gogoproto.customname) = "Source", (gogoproto.nullable) = false];
 
   // mounts represents the location of the volume in the image build container
   // +required
@@ -667,7 +677,7 @@ message BuildVolume {
   // +listMapKey=destinationPath
   // +patchMergeKey=destinationPath
   // +patchStrategy=merge
-  repeated BuildVolumeMount mounts = 3;
+  repeated BuildVolumeMount mounts = 3 [(gogoproto.customname) = "Mounts", (gogoproto.nullable) = false];
 }
 
 // BuildVolumeMount describes the mounting of a Volume within buildah's runtime environment.
@@ -678,7 +688,7 @@ message BuildVolumeMount {
   // by the builder process
   // Paths that collide with those added by the build controller will result in a
   // failed build with an error message detailing which path caused the error.
-  optional string destinationPath = 1;
+  optional string destinationPath = 1 [(gogoproto.customname) = "DestinationPath", (gogoproto.nullable) = false];
 }
 
 // BuildVolumeSource represents the source of a volume to mount
@@ -687,20 +697,20 @@ message BuildVolumeSource {
   // type is the BuildVolumeSourceType for the volume source.
   // Type must match the populated volume source.
   // Valid types are: Secret, ConfigMap
-  optional string type = 1;
+  optional string type = 1 [(gogoproto.casttype) = "BuildVolumeSourceType", (gogoproto.customname) = "Type", (gogoproto.nullable) = false];
 
   // secret represents a Secret that should populate this volume.
   // More info: https://kubernetes.io/docs/concepts/storage/volumes#secret
   // +optional
-  optional .k8s.io.api.core.v1.SecretVolumeSource secret = 2;
+  optional .k8s.io.api.core.v1.SecretVolumeSource secret = 2 [(gogoproto.customname) = "Secret"];
 
   // configMap represents a ConfigMap that should populate this volume
   // +optional
-  optional .k8s.io.api.core.v1.ConfigMapVolumeSource configMap = 3;
+  optional .k8s.io.api.core.v1.ConfigMapVolumeSource configMap = 3 [(gogoproto.customname) = "ConfigMap"];
 
   // csi represents ephemeral storage provided by external CSI drivers which support this capability
   // +optional
-  optional .k8s.io.api.core.v1.CSIVolumeSource csi = 4;
+  optional .k8s.io.api.core.v1.CSIVolumeSource csi = 4 [(gogoproto.customname) = "CSI"];
 }
 
 // CommonSpec encapsulates all the inputs necessary to represent a build.
@@ -708,40 +718,40 @@ message CommonSpec {
   // serviceAccount is the name of the ServiceAccount to use to run the pod
   // created by this build.
   // The pod will be allowed to use secrets referenced by the ServiceAccount
-  optional string serviceAccount = 1;
+  optional string serviceAccount = 1 [(gogoproto.customname) = "ServiceAccount", (gogoproto.nullable) = false];
 
   // source describes the SCM in use.
-  optional BuildSource source = 2;
+  optional BuildSource source = 2 [(gogoproto.customname) = "Source", (gogoproto.nullable) = false];
 
   // revision is the information from the source for a specific repo snapshot.
   // This is optional.
-  optional SourceRevision revision = 3;
+  optional SourceRevision revision = 3 [(gogoproto.customname) = "Revision"];
 
   // strategy defines how to perform a build.
-  optional BuildStrategy strategy = 4;
+  optional BuildStrategy strategy = 4 [(gogoproto.customname) = "Strategy", (gogoproto.nullable) = false];
 
   // output describes the container image the Strategy should produce.
-  optional BuildOutput output = 5;
+  optional BuildOutput output = 5 [(gogoproto.customname) = "Output", (gogoproto.nullable) = false];
 
   // resources computes resource requirements to execute the build.
-  optional .k8s.io.api.core.v1.ResourceRequirements resources = 6;
+  optional .k8s.io.api.core.v1.ResourceRequirements resources = 6 [(gogoproto.customname) = "Resources", (gogoproto.nullable) = false];
 
   // postCommit is a build hook executed after the build output image is
   // committed, before it is pushed to a registry.
-  optional BuildPostCommitSpec postCommit = 7;
+  optional BuildPostCommitSpec postCommit = 7 [(gogoproto.customname) = "PostCommit", (gogoproto.nullable) = false];
 
   // completionDeadlineSeconds is an optional duration in seconds, counted from
   // the time when a build pod gets scheduled in the system, that the build may
   // be active on a node before the system actively tries to terminate the
   // build; value must be positive integer
-  optional int64 completionDeadlineSeconds = 8;
+  optional int64 completionDeadlineSeconds = 8 [(gogoproto.customname) = "CompletionDeadlineSeconds"];
 
   // nodeSelector is a selector which must be true for the build pod to fit on a node
   // If nil, it can be overridden by default build nodeselector values for the cluster.
   // If set to an empty map or a map with any values, default build nodeselector values
   // are ignored.
   // +optional
-  optional OptionalNodeSelector nodeSelector = 9;
+  optional OptionalNodeSelector nodeSelector = 9 [(gogoproto.customname) = "NodeSelector"];
 
   // mountTrustedCA bind mounts the cluster's trusted certificate authorities, as defined in
   // the cluster's proxy configuration, into the build. This lets processes within a build trust
@@ -751,7 +761,7 @@ message CommonSpec {
   // When this field is set to true, the contents of `/etc/pki/ca-trust` within the build are
   // managed by the build container, and any changes to this directory or its subdirectories (for
   // example - within a Dockerfile `RUN` instruction) are not persisted in the build's output image.
-  optional bool mountTrustedCA = 10;
+  optional bool mountTrustedCA = 10 [(gogoproto.customname) = "MountTrustedCA"];
 }
 
 // CommonWebHookCause factors out the identical format of these webhook
@@ -759,10 +769,10 @@ message CommonSpec {
 // GitHub and Generic but we can leverage this pattern with GitLab and Bitbucket.
 message CommonWebHookCause {
   // revision is the git source revision information of the trigger.
-  optional SourceRevision revision = 1;
+  optional SourceRevision revision = 1 [(gogoproto.customname) = "Revision"];
 
   // secret is the obfuscated webhook secret that triggered a build.
-  optional string secret = 2;
+  optional string secret = 2 [(gogoproto.customname) = "Secret", (gogoproto.nullable) = false];
 }
 
 // ConfigMapBuildSource describes a configmap and its destination directory that will be
@@ -771,7 +781,7 @@ message CommonWebHookCause {
 message ConfigMapBuildSource {
   // configMap is a reference to an existing configmap that you want to use in your
   // build.
-  optional .k8s.io.api.core.v1.LocalObjectReference configMap = 1;
+  optional .k8s.io.api.core.v1.LocalObjectReference configMap = 1 [(gogoproto.customname) = "ConfigMap", (gogoproto.nullable) = false];
 
   // destinationDir is the directory where the files from the configmap should be
   // available for the build time.
@@ -780,37 +790,37 @@ message ConfigMapBuildSource {
   // For the container image build strategy, these will be copied into the build
   // directory, where the Dockerfile is located, so users can ADD or COPY them
   // during container image build.
-  optional string destinationDir = 2;
+  optional string destinationDir = 2 [(gogoproto.customname) = "DestinationDir", (gogoproto.nullable) = false];
 }
 
 // CustomBuildStrategy defines input parameters specific to Custom build.
 message CustomBuildStrategy {
   // from is reference to an DockerImage, ImageStreamTag, or ImageStreamImage from which
   // the container image should be pulled
-  optional .k8s.io.api.core.v1.ObjectReference from = 1;
+  optional .k8s.io.api.core.v1.ObjectReference from = 1 [(gogoproto.customname) = "From", (gogoproto.nullable) = false];
 
   // pullSecret is the name of a Secret that would be used for setting up
   // the authentication for pulling the container images from the private Docker
   // registries
-  optional .k8s.io.api.core.v1.LocalObjectReference pullSecret = 2;
+  optional .k8s.io.api.core.v1.LocalObjectReference pullSecret = 2 [(gogoproto.customname) = "PullSecret"];
 
   // env contains additional environment variables you want to pass into a builder container.
-  repeated .k8s.io.api.core.v1.EnvVar env = 3;
+  repeated .k8s.io.api.core.v1.EnvVar env = 3 [(gogoproto.customname) = "Env", (gogoproto.nullable) = false];
 
   // exposeDockerSocket will allow running Docker commands (and build container images) from
   // inside the container.
   // TODO: Allow admins to enforce 'false' for this option
-  optional bool exposeDockerSocket = 4;
+  optional bool exposeDockerSocket = 4 [(gogoproto.customname) = "ExposeDockerSocket", (gogoproto.nullable) = false];
 
   // forcePull describes if the controller should configure the build pod to always pull the images
   // for the builder or only pull if it is not present locally
-  optional bool forcePull = 5;
+  optional bool forcePull = 5 [(gogoproto.customname) = "ForcePull", (gogoproto.nullable) = false];
 
   // secrets is a list of additional secrets that will be included in the build pod
-  repeated SecretSpec secrets = 6;
+  repeated SecretSpec secrets = 6 [(gogoproto.customname) = "Secrets", (gogoproto.nullable) = false];
 
   // buildAPIVersion is the requested API version for the Build object serialized and passed to the custom builder
-  optional string buildAPIVersion = 7;
+  optional string buildAPIVersion = 7 [(gogoproto.customname) = "BuildAPIVersion", (gogoproto.nullable) = false];
 }
 
 // DockerBuildStrategy defines input parameters specific to container image build.
@@ -818,33 +828,33 @@ message DockerBuildStrategy {
   // from is a reference to an DockerImage, ImageStreamTag, or ImageStreamImage which overrides
   // the FROM image in the Dockerfile for the build. If the Dockerfile uses multi-stage builds,
   // this will replace the image in the last FROM directive of the file.
-  optional .k8s.io.api.core.v1.ObjectReference from = 1;
+  optional .k8s.io.api.core.v1.ObjectReference from = 1 [(gogoproto.customname) = "From"];
 
   // pullSecret is the name of a Secret that would be used for setting up
   // the authentication for pulling the container images from the private Docker
   // registries
-  optional .k8s.io.api.core.v1.LocalObjectReference pullSecret = 2;
+  optional .k8s.io.api.core.v1.LocalObjectReference pullSecret = 2 [(gogoproto.customname) = "PullSecret"];
 
   // noCache if set to true indicates that the container image build must be executed with the
   // --no-cache=true flag
-  optional bool noCache = 3;
+  optional bool noCache = 3 [(gogoproto.customname) = "NoCache", (gogoproto.nullable) = false];
 
   // env contains additional environment variables you want to pass into a builder container.
-  repeated .k8s.io.api.core.v1.EnvVar env = 4;
+  repeated .k8s.io.api.core.v1.EnvVar env = 4 [(gogoproto.customname) = "Env", (gogoproto.nullable) = false];
 
   // forcePull describes if the builder should pull the images from registry prior to building.
-  optional bool forcePull = 5;
+  optional bool forcePull = 5 [(gogoproto.customname) = "ForcePull", (gogoproto.nullable) = false];
 
   // dockerfilePath is the path of the Dockerfile that will be used to build the container image,
   // relative to the root of the context (contextDir).
   // Defaults to `Dockerfile` if unset.
-  optional string dockerfilePath = 6;
+  optional string dockerfilePath = 6 [(gogoproto.customname) = "DockerfilePath", (gogoproto.nullable) = false];
 
   // buildArgs contains build arguments that will be resolved in the Dockerfile.  See
   // https://docs.docker.com/engine/reference/builder/#/arg for more details.
   // NOTE: Only the 'name' and 'value' fields are supported. Any settings on the 'valueFrom' field
   // are ignored.
-  repeated .k8s.io.api.core.v1.EnvVar buildArgs = 7;
+  repeated .k8s.io.api.core.v1.EnvVar buildArgs = 7 [(gogoproto.customname) = "BuildArgs", (gogoproto.nullable) = false];
 
   // imageOptimizationPolicy describes what optimizations the system can use when building images
   // to reduce the final size or time spent building the image. The default policy is 'None' which
@@ -853,7 +863,7 @@ message DockerBuildStrategy {
   // image step, and will fail if the Dockerfile cannot provide compatibility with the 'None'
   // policy. An additional experimental policy 'SkipLayersAndWarn' is the same as
   // 'SkipLayers' but simply warns if compatibility cannot be preserved.
-  optional string imageOptimizationPolicy = 8;
+  optional string imageOptimizationPolicy = 8 [(gogoproto.casttype) = "ImageOptimizationPolicy", (gogoproto.customname) = "ImageOptimizationPolicy"];
 
   // volumes is a list of input volumes that can be mounted into the builds runtime environment.
   // Only a subset of Kubernetes Volume sources are supported by builds.
@@ -862,17 +872,17 @@ message DockerBuildStrategy {
   // +listMapKey=name
   // +patchMergeKey=name
   // +patchStrategy=merge
-  repeated BuildVolume volumes = 9;
+  repeated BuildVolume volumes = 9 [(gogoproto.customname) = "Volumes", (gogoproto.nullable) = false];
 }
 
 // DockerStrategyOptions contains extra strategy options for container image builds
 message DockerStrategyOptions {
   // Args contains any build arguments that are to be passed to Docker.  See
   // https://docs.docker.com/engine/reference/builder/#/arg for more details
-  repeated .k8s.io.api.core.v1.EnvVar buildArgs = 1;
+  repeated .k8s.io.api.core.v1.EnvVar buildArgs = 1 [(gogoproto.customname) = "BuildArgs", (gogoproto.nullable) = false];
 
   // noCache overrides the docker-strategy noCache option in the build config
-  optional bool noCache = 2;
+  optional bool noCache = 2 [(gogoproto.customname) = "NoCache"];
 }
 
 // GenericWebHookCause holds information about a generic WebHook that
@@ -880,102 +890,102 @@ message DockerStrategyOptions {
 message GenericWebHookCause {
   // revision is an optional field that stores the git source revision
   // information of the generic webhook trigger when it is available.
-  optional SourceRevision revision = 1;
+  optional SourceRevision revision = 1 [(gogoproto.customname) = "Revision"];
 
   // secret is the obfuscated webhook secret that triggered a build.
-  optional string secret = 2;
+  optional string secret = 2 [(gogoproto.customname) = "Secret", (gogoproto.nullable) = false];
 }
 
 // GenericWebHookEvent is the payload expected for a generic webhook post
 message GenericWebHookEvent {
   // type is the type of source repository
   // +k8s:conversion-gen=false
-  optional string type = 1;
+  optional string type = 1 [(gogoproto.casttype) = "BuildSourceType", (gogoproto.customname) = "Type", (gogoproto.nullable) = false];
 
   // git is the git information if the Type is BuildSourceGit
-  optional GitInfo git = 2;
+  optional GitInfo git = 2 [(gogoproto.customname) = "Git"];
 
   // env contains additional environment variables you want to pass into a builder container.
   // ValueFrom is not supported.
-  repeated .k8s.io.api.core.v1.EnvVar env = 3;
+  repeated .k8s.io.api.core.v1.EnvVar env = 3 [(gogoproto.customname) = "Env", (gogoproto.nullable) = false];
 
   // dockerStrategyOptions contains additional docker-strategy specific options for the build
-  optional DockerStrategyOptions dockerStrategyOptions = 4;
+  optional DockerStrategyOptions dockerStrategyOptions = 4 [(gogoproto.customname) = "DockerStrategyOptions"];
 }
 
 // GitBuildSource defines the parameters of a Git SCM
 message GitBuildSource {
   // uri points to the source that will be built. The structure of the source
   // will depend on the type of build to run
-  optional string uri = 1;
+  optional string uri = 1 [(gogoproto.customname) = "URI", (gogoproto.nullable) = false];
 
   // ref is the branch/tag/ref to build.
-  optional string ref = 2;
+  optional string ref = 2 [(gogoproto.customname) = "Ref", (gogoproto.nullable) = false];
 
   // proxyConfig defines the proxies to use for the git clone operation. Values
   // not set here are inherited from cluster-wide build git proxy settings.
-  optional ProxyConfig proxyConfig = 3;
+  optional ProxyConfig proxyConfig = 3 [(gogoproto.customname) = "ProxyConfig", (gogoproto.nullable) = false];
 }
 
 // GitHubWebHookCause has information about a GitHub webhook that triggered a
 // build.
 message GitHubWebHookCause {
   // revision is the git revision information of the trigger.
-  optional SourceRevision revision = 1;
+  optional SourceRevision revision = 1 [(gogoproto.customname) = "Revision"];
 
   // secret is the obfuscated webhook secret that triggered a build.
-  optional string secret = 2;
+  optional string secret = 2 [(gogoproto.customname) = "Secret", (gogoproto.nullable) = false];
 }
 
 // GitInfo is the aggregated git information for a generic webhook post
 message GitInfo {
-  optional GitBuildSource gitBuildSource = 1;
+  optional GitBuildSource gitBuildSource = 1 [(gogoproto.customname) = "GitBuildSource", (gogoproto.nullable) = false];
 
-  optional GitSourceRevision gitSourceRevision = 2;
+  optional GitSourceRevision gitSourceRevision = 2 [(gogoproto.customname) = "GitSourceRevision", (gogoproto.nullable) = false];
 
   // refs is a list of GitRefs for the provided repo - generally sent
   // when used from a post-receive hook. This field is optional and is
   // used when sending multiple refs
-  repeated GitRefInfo refs = 3;
+  repeated GitRefInfo refs = 3 [(gogoproto.customname) = "Refs", (gogoproto.nullable) = false];
 }
 
 // GitLabWebHookCause has information about a GitLab webhook that triggered a
 // build.
 message GitLabWebHookCause {
-  optional CommonWebHookCause commonSpec = 1;
+  optional CommonWebHookCause commonSpec = 1 [(gogoproto.customname) = "CommonWebHookCause", (gogoproto.nullable) = false];
 }
 
 // GitRefInfo is a single ref
 message GitRefInfo {
-  optional GitBuildSource gitBuildSource = 1;
+  optional GitBuildSource gitBuildSource = 1 [(gogoproto.customname) = "GitBuildSource", (gogoproto.nullable) = false];
 
-  optional GitSourceRevision gitSourceRevision = 2;
+  optional GitSourceRevision gitSourceRevision = 2 [(gogoproto.customname) = "GitSourceRevision", (gogoproto.nullable) = false];
 }
 
 // GitSourceRevision is the commit information from a git source for a build
 message GitSourceRevision {
   // commit is the commit hash identifying a specific commit
-  optional string commit = 1;
+  optional string commit = 1 [(gogoproto.customname) = "Commit", (gogoproto.nullable) = false];
 
   // author is the author of a specific commit
-  optional SourceControlUser author = 2;
+  optional SourceControlUser author = 2 [(gogoproto.customname) = "Author", (gogoproto.nullable) = false];
 
   // committer is the committer of a specific commit
-  optional SourceControlUser committer = 3;
+  optional SourceControlUser committer = 3 [(gogoproto.customname) = "Committer", (gogoproto.nullable) = false];
 
   // message is the description of a specific commit
-  optional string message = 4;
+  optional string message = 4 [(gogoproto.customname) = "Message", (gogoproto.nullable) = false];
 }
 
 // ImageChangeCause contains information about the image that triggered a
 // build
 message ImageChangeCause {
   // imageID is the ID of the image that triggered a new build.
-  optional string imageID = 1;
+  optional string imageID = 1 [(gogoproto.customname) = "ImageID", (gogoproto.nullable) = false];
 
   // fromRef contains detailed information about an image that triggered a
   // build.
-  optional .k8s.io.api.core.v1.ObjectReference fromRef = 2;
+  optional .k8s.io.api.core.v1.ObjectReference fromRef = 2 [(gogoproto.customname) = "FromRef"];
 }
 
 // ImageChangeTrigger allows builds to be triggered when an ImageStream changes
@@ -984,16 +994,16 @@ message ImageChangeTrigger {
   // used image ID for build
   // This field is deprecated and will be removed in a future release.
   // Deprecated
-  optional string lastTriggeredImageID = 1;
+  optional string lastTriggeredImageID = 1 [(gogoproto.customname) = "LastTriggeredImageID", (gogoproto.nullable) = false];
 
   // from is a reference to an ImageStreamTag that will trigger a build when updated
   // It is optional. If no From is specified, the From image from the build strategy
   // will be used. Only one ImageChangeTrigger with an empty From reference is allowed in
   // a build configuration.
-  optional .k8s.io.api.core.v1.ObjectReference from = 2;
+  optional .k8s.io.api.core.v1.ObjectReference from = 2 [(gogoproto.customname) = "From"];
 
   // paused is true if this trigger is temporarily disabled. Optional.
-  optional bool paused = 3;
+  optional bool paused = 3 [(gogoproto.customname) = "Paused", (gogoproto.nullable) = false];
 }
 
 // ImageChangeTriggerStatus tracks the latest resolved status of the associated ImageChangeTrigger policy
@@ -1001,23 +1011,23 @@ message ImageChangeTrigger {
 message ImageChangeTriggerStatus {
   // lastTriggeredImageID represents the sha/id of the ImageStreamTag when a Build for this BuildConfig was started.
   // The lastTriggeredImageID is updated each time a Build for this BuildConfig is started, even if this ImageStreamTag is not the reason the Build is started.
-  optional string lastTriggeredImageID = 1;
+  optional string lastTriggeredImageID = 1 [(gogoproto.customname) = "LastTriggeredImageID", (gogoproto.nullable) = false];
 
   // from is the ImageStreamTag that is the source of the trigger.
-  optional ImageStreamTagReference from = 2;
+  optional ImageStreamTagReference from = 2 [(gogoproto.customname) = "From", (gogoproto.nullable) = false];
 
   // lastTriggerTime is the last time this particular ImageStreamTag triggered a Build to start.
   // This field is only updated when this trigger specifically started a Build.
-  optional .k8s.io.apimachinery.pkg.apis.meta.v1.Time lastTriggerTime = 3;
+  optional .k8s.io.apimachinery.pkg.apis.meta.v1.Time lastTriggerTime = 3 [(gogoproto.customname) = "LastTriggerTime", (gogoproto.nullable) = false];
 }
 
 // ImageLabel represents a label applied to the resulting image.
 message ImageLabel {
   // name defines the name of the label. It must have non-zero length.
-  optional string name = 1;
+  optional string name = 1 [(gogoproto.customname) = "Name", (gogoproto.nullable) = false];
 
   // value defines the literal value of the label.
-  optional string value = 2;
+  optional string value = 2 [(gogoproto.customname) = "Value", (gogoproto.nullable) = false];
 }
 
 // ImageSource is used to describe build source that will be extracted from an image or used during a
@@ -1030,7 +1040,7 @@ message ImageLabel {
 message ImageSource {
   // from is a reference to an ImageStreamTag, ImageStreamImage, or DockerImage to
   // copy source from.
-  optional .k8s.io.api.core.v1.ObjectReference from = 1;
+  optional .k8s.io.api.core.v1.ObjectReference from = 1 [(gogoproto.customname) = "From", (gogoproto.nullable) = false];
 
   // A list of image names that this source will be used in place of during a multi-stage container image
   // build. For instance, a Dockerfile that uses "COPY --from=nginx:latest" will first check for an image
@@ -1038,17 +1048,17 @@ message ImageSource {
   // does not reference an image source it is ignored. This field and paths may both be set, in which case
   // the contents will be used twice.
   // +optional
-  repeated string as = 4;
+  repeated string as = 4 [(gogoproto.customname) = "As"];
 
   // paths is a list of source and destination paths to copy from the image. This content will be copied
   // into the build context prior to starting the build. If no paths are set, the build context will
   // not be altered.
   // +optional
-  repeated ImageSourcePath paths = 2;
+  repeated ImageSourcePath paths = 2 [(gogoproto.customname) = "Paths", (gogoproto.nullable) = false];
 
   // pullSecret is a reference to a secret to be used to pull the image from a registry
   // If the image is pulled from the OpenShift registry, this field does not need to be set.
-  optional .k8s.io.api.core.v1.LocalObjectReference pullSecret = 3;
+  optional .k8s.io.api.core.v1.LocalObjectReference pullSecret = 3 [(gogoproto.customname) = "PullSecret"];
 }
 
 // ImageSourcePath describes a path to be copied from a source image and its destination within the build directory.
@@ -1057,20 +1067,20 @@ message ImageSourcePath {
   // copy to the build directory.  If the source path ends in /. then the content of
   // the directory will be copied, but the directory itself will not be created at the
   // destination.
-  optional string sourcePath = 1;
+  optional string sourcePath = 1 [(gogoproto.customname) = "SourcePath", (gogoproto.nullable) = false];
 
   // destinationDir is the relative directory within the build directory
   // where files copied from the image are placed.
-  optional string destinationDir = 2;
+  optional string destinationDir = 2 [(gogoproto.customname) = "DestinationDir", (gogoproto.nullable) = false];
 }
 
 // ImageStreamTagReference references the ImageStreamTag in an image change trigger by namespace and name.
 message ImageStreamTagReference {
   // namespace is the namespace where the ImageStreamTag for an ImageChangeTrigger is located
-  optional string namespace = 1;
+  optional string namespace = 1 [(gogoproto.customname) = "Namespace", (gogoproto.nullable) = false];
 
   // name is the name of the ImageStreamTag for an ImageChangeTrigger
-  optional string name = 2;
+  optional string name = 2 [(gogoproto.customname) = "Name", (gogoproto.nullable) = false];
 }
 
 // JenkinsPipelineBuildStrategy holds parameters specific to a Jenkins Pipeline build.
@@ -1079,34 +1089,37 @@ message JenkinsPipelineBuildStrategy {
   // jenkinsfilePath is the optional path of the Jenkinsfile that will be used to configure the pipeline
   // relative to the root of the context (contextDir). If both JenkinsfilePath & Jenkinsfile are
   // both not specified, this defaults to Jenkinsfile in the root of the specified contextDir.
-  optional string jenkinsfilePath = 1;
+  optional string jenkinsfilePath = 1 [(gogoproto.customname) = "JenkinsfilePath", (gogoproto.nullable) = false];
 
   // jenkinsfile defines the optional raw contents of a Jenkinsfile which defines a Jenkins pipeline build.
-  optional string jenkinsfile = 2;
+  optional string jenkinsfile = 2 [(gogoproto.customname) = "Jenkinsfile", (gogoproto.nullable) = false];
 
   // env contains additional environment variables you want to pass into a build pipeline.
-  repeated .k8s.io.api.core.v1.EnvVar env = 3;
+  repeated .k8s.io.api.core.v1.EnvVar env = 3 [(gogoproto.customname) = "Env", (gogoproto.nullable) = false];
 }
 
 // OptionalNodeSelector is a map that may also be left nil to distinguish between set and unset.
 // +protobuf.nullable=true
 // +protobuf.options.(gogoproto.goproto_stringer)=false
 message OptionalNodeSelector {
+  option (gogoproto.goproto_stringer) = false;
+  option (gogoproto.stringer) = false;
+
   // items, if empty, will result in an empty map
 
-  map<string, string> items = 1;
+  map<string, string> items = 1 [(gogoproto.customname) = "Items", (gogoproto.nullable) = false];
 }
 
 // ProxyConfig defines what proxies to use for an operation
 message ProxyConfig {
   // httpProxy is a proxy used to reach the git repository over http
-  optional string httpProxy = 3;
+  optional string httpProxy = 3 [(gogoproto.customname) = "HTTPProxy"];
 
   // httpsProxy is a proxy used to reach the git repository over https
-  optional string httpsProxy = 4;
+  optional string httpsProxy = 4 [(gogoproto.customname) = "HTTPSProxy"];
 
   // noProxy is the list of domains for which the proxy should not be used
-  optional string noProxy = 5;
+  optional string noProxy = 5 [(gogoproto.customname) = "NoProxy"];
 }
 
 // SecretBuildSource describes a secret and its destination directory that will be
@@ -1115,7 +1128,7 @@ message ProxyConfig {
 message SecretBuildSource {
   // secret is a reference to an existing secret that you want to use in your
   // build.
-  optional .k8s.io.api.core.v1.LocalObjectReference secret = 1;
+  optional .k8s.io.api.core.v1.LocalObjectReference secret = 1 [(gogoproto.customname) = "Secret", (gogoproto.nullable) = false];
 
   // destinationDir is the directory where the files from the secret should be
   // available for the build time.
@@ -1125,46 +1138,46 @@ message SecretBuildSource {
   // For the container image build strategy, these will be copied into the build
   // directory, where the Dockerfile is located, so users can ADD or COPY them
   // during container image build.
-  optional string destinationDir = 2;
+  optional string destinationDir = 2 [(gogoproto.customname) = "DestinationDir", (gogoproto.nullable) = false];
 }
 
 // SecretLocalReference contains information that points to the local secret being used
 message SecretLocalReference {
   // name is the name of the resource in the same namespace being referenced
-  optional string name = 1;
+  optional string name = 1 [(gogoproto.customname) = "Name", (gogoproto.nullable) = false];
 }
 
 // SecretSpec specifies a secret to be included in a build pod and its corresponding mount point
 message SecretSpec {
   // secretSource is a reference to the secret
-  optional .k8s.io.api.core.v1.LocalObjectReference secretSource = 1;
+  optional .k8s.io.api.core.v1.LocalObjectReference secretSource = 1 [(gogoproto.customname) = "SecretSource", (gogoproto.nullable) = false];
 
   // mountPath is the path at which to mount the secret
-  optional string mountPath = 2;
+  optional string mountPath = 2 [(gogoproto.customname) = "MountPath", (gogoproto.nullable) = false];
 }
 
 // SourceBuildStrategy defines input parameters specific to an Source build.
 message SourceBuildStrategy {
   // from is reference to an DockerImage, ImageStreamTag, or ImageStreamImage from which
   // the container image should be pulled
-  optional .k8s.io.api.core.v1.ObjectReference from = 1;
+  optional .k8s.io.api.core.v1.ObjectReference from = 1 [(gogoproto.customname) = "From", (gogoproto.nullable) = false];
 
   // pullSecret is the name of a Secret that would be used for setting up
   // the authentication for pulling the container images from the private Docker
   // registries
-  optional .k8s.io.api.core.v1.LocalObjectReference pullSecret = 2;
+  optional .k8s.io.api.core.v1.LocalObjectReference pullSecret = 2 [(gogoproto.customname) = "PullSecret"];
 
   // env contains additional environment variables you want to pass into a builder container.
-  repeated .k8s.io.api.core.v1.EnvVar env = 3;
+  repeated .k8s.io.api.core.v1.EnvVar env = 3 [(gogoproto.customname) = "Env", (gogoproto.nullable) = false];
 
   // scripts is the location of Source scripts
-  optional string scripts = 4;
+  optional string scripts = 4 [(gogoproto.customname) = "Scripts", (gogoproto.nullable) = false];
 
   // incremental flag forces the Source build to do incremental builds if true.
-  optional bool incremental = 5;
+  optional bool incremental = 5 [(gogoproto.customname) = "Incremental"];
 
   // forcePull describes if the builder should pull the images from registry prior to building.
-  optional bool forcePull = 6;
+  optional bool forcePull = 6 [(gogoproto.customname) = "ForcePull", (gogoproto.nullable) = false];
 
   // volumes is a list of input volumes that can be mounted into the builds runtime environment.
   // Only a subset of Kubernetes Volume sources are supported by builds.
@@ -1173,82 +1186,82 @@ message SourceBuildStrategy {
   // +listMapKey=name
   // +patchMergeKey=name
   // +patchStrategy=merge
-  repeated BuildVolume volumes = 9;
+  repeated BuildVolume volumes = 9 [(gogoproto.customname) = "Volumes", (gogoproto.nullable) = false];
 }
 
 // SourceControlUser defines the identity of a user of source control
 message SourceControlUser {
   // name of the source control user
-  optional string name = 1;
+  optional string name = 1 [(gogoproto.customname) = "Name", (gogoproto.nullable) = false];
 
   // email of the source control user
-  optional string email = 2;
+  optional string email = 2 [(gogoproto.customname) = "Email", (gogoproto.nullable) = false];
 }
 
 // SourceRevision is the revision or commit information from the source for the build
 message SourceRevision {
   // type of the build source, may be one of 'Source', 'Dockerfile', 'Binary', or 'Images'
   // +k8s:conversion-gen=false
-  optional string type = 1;
+  optional string type = 1 [(gogoproto.casttype) = "BuildSourceType", (gogoproto.customname) = "Type", (gogoproto.nullable) = false];
 
   // git contains information about git-based build source
-  optional GitSourceRevision git = 2;
+  optional GitSourceRevision git = 2 [(gogoproto.customname) = "Git"];
 }
 
 // SourceStrategyOptions contains extra strategy options for Source builds
 message SourceStrategyOptions {
   // incremental overrides the source-strategy incremental option in the build config
-  optional bool incremental = 1;
+  optional bool incremental = 1 [(gogoproto.customname) = "Incremental"];
 }
 
 // StageInfo contains details about a build stage.
 message StageInfo {
   // name is a unique identifier for each build stage that occurs.
-  optional string name = 1;
+  optional string name = 1 [(gogoproto.casttype) = "StageName", (gogoproto.customname) = "Name", (gogoproto.nullable) = false];
 
   // startTime is a timestamp representing the server time when this Stage started.
   // It is represented in RFC3339 form and is in UTC.
-  optional .k8s.io.apimachinery.pkg.apis.meta.v1.Time startTime = 2;
+  optional .k8s.io.apimachinery.pkg.apis.meta.v1.Time startTime = 2 [(gogoproto.customname) = "StartTime", (gogoproto.nullable) = false];
 
   // durationMilliseconds identifies how long the stage took
   // to complete in milliseconds.
   // Note: the duration of a stage can exceed the sum of the duration of the steps within
   // the stage as not all actions are accounted for in explicit build steps.
-  optional int64 durationMilliseconds = 3;
+  optional int64 durationMilliseconds = 3 [(gogoproto.customname) = "DurationMilliseconds", (gogoproto.nullable) = false];
 
   // steps contains details about each step that occurs during a build stage
   // including start time and duration in milliseconds.
-  repeated StepInfo steps = 4;
+  repeated StepInfo steps = 4 [(gogoproto.customname) = "Steps", (gogoproto.nullable) = false];
 }
 
 // StepInfo contains details about a build step.
 message StepInfo {
   // name is a unique identifier for each build step.
-  optional string name = 1;
+  optional string name = 1 [(gogoproto.casttype) = "StepName", (gogoproto.customname) = "Name", (gogoproto.nullable) = false];
 
   // startTime is a timestamp representing the server time when this Step started.
   // it is represented in RFC3339 form and is in UTC.
-  optional .k8s.io.apimachinery.pkg.apis.meta.v1.Time startTime = 2;
+  optional .k8s.io.apimachinery.pkg.apis.meta.v1.Time startTime = 2 [(gogoproto.customname) = "StartTime", (gogoproto.nullable) = false];
 
   // durationMilliseconds identifies how long the step took
   // to complete in milliseconds.
-  optional int64 durationMilliseconds = 3;
+  optional int64 durationMilliseconds = 3 [(gogoproto.customname) = "DurationMilliseconds", (gogoproto.nullable) = false];
 }
 
 // WebHookTrigger is a trigger that gets invoked using a webhook type of post
 message WebHookTrigger {
   // secret used to validate requests.
   // Deprecated: use SecretReference instead.
-  optional string secret = 1;
+  optional string secret = 1 [(gogoproto.customname) = "Secret", (gogoproto.nullable) = false];
 
   // allowEnv determines whether the webhook can set environment variables; can only
   // be set to true for GenericWebHook.
-  optional bool allowEnv = 2;
+  optional bool allowEnv = 2 [(gogoproto.customname) = "AllowEnv", (gogoproto.nullable) = false];
 
   // secretReference is a reference to a secret in the same namespace,
   // containing the value to be validated when the webhook is invoked.
   // The secret being referenced must contain a key named "WebHookSecretKey", the value
   // of which will be checked against the value supplied in the webhook invocation.
-  optional SecretLocalReference secretReference = 3;
+  optional SecretLocalReference secretReference = 3 [(gogoproto.customname) = "SecretReference"];
 }
 

@@ -121,29 +121,14 @@ type VaultAppRoleAuthentication struct {
 }
 
 // VaultKMSPluginConfig defines the KMS plugin configuration specific to Vault KMS
+// +kubebuilder:validation:XValidation:rule="!has(self.kmsPluginImage)",message="kmsPluginImage is managed by the platform and may not be set"
 type VaultKMSPluginConfig struct {
-	// kmsPluginImage specifies the container image for the HashiCorp Vault KMS plugin.
+	// kmsPluginImage must not be set. The container image for the HashiCorp Vault
+	// KMS plugin is sourced by the platform from the KMS plugin provider ConfigMap.
+	// The field exists so the controller can carry that value in memory; it is
+	// never persisted on this resource and any value provided here is rejected.
 	//
-	// The image must be a fully qualified OCI image pull spec with a SHA256 digest.
-	// The format is: host[:port][/namespace]/name@sha256:<digest>
-	// where the digest must be 64 characters long and consist only of lowercase hexadecimal characters, a-f and 0-9.
-	// The total length must be between 75 and 447 characters.
-	//
-	// Short names (e.g., "vault-plugin" or "hashicorp/vault-plugin") are not allowed.
-	// The registry hostname must be included and must contain at least one dot.
-	// Image tags (e.g., ":latest", ":v1.0.0") are not allowed.
-	//
-	// Consult the OpenShift documentation for compatible plugin versions with your cluster version,
-	// then obtain the image digest for that version from HashiCorp's container registry.
-	//
-	// For disconnected environments, mirror the plugin image to an accessible registry
-	// and reference the mirrored location with its digest.
-	//
-	// +kubebuilder:validation:MinLength=75
-	// +kubebuilder:validation:MaxLength=447
-	// +kubebuilder:validation:XValidation:rule=`(self.split('@').size() == 2 && self.split('@')[1].matches('^sha256:[a-f0-9]{64}$'))`,message="the OCI Image reference must end with a valid '@sha256:<digest>' suffix, where '<digest>' is 64 characters long"
-	// +kubebuilder:validation:XValidation:rule=`(self.split('@')[0].matches('^([a-zA-Z0-9-]+\\.)+[a-zA-Z0-9-]+(:[0-9]{2,5})?(/[a-zA-Z0-9-_.]+)+$'))`,message="the OCI Image name should follow the host[:port][/namespace]/name format, resembling a valid URL without the scheme. Short names are not allowed, the registry hostname must be included."
-	// +required
+	// +optional
 	KMSPluginImage string `json:"kmsPluginImage,omitempty"`
 
 	// vaultAddress specifies the address of the HashiCorp Vault instance.

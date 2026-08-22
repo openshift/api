@@ -105,7 +105,6 @@ status:
     - name: MaxUnavailableStatefulSet
     - name: MetricsServer
     - name: RouteExternalCertificate
-    - name: SigstoreImageVerification
     - name: ValidatingAdmissionPolicy
     enabled:
     - name: AlibabaPlatform

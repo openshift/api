@@ -361,12 +361,6 @@
                         "name": "SignatureStores"
                     },
                     {
-                        "name": "SigstoreImageVerification"
-                    },
-                    {
-                        "name": "SigstoreImageVerificationPKI"
-                    },
-                    {
                         "name": "StoragePerformantSecurityPolicy"
                     },
                     {

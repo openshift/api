@@ -277,7 +277,7 @@ var (
 						contactPerson("bpalmer").
 						productScope(kubernetes).
 						enhancementPR("https://github.com/openshift/enhancements/pull/2084").
-						enable(inTechPreviewNoUpgrade(),inDevPreviewNoUpgrade()).
+						enable(inTechPreviewNoUpgrade(),inDevPreviewNoUpgrade(),withGroupKindResources(groupKindResource{Group: "coordination.k8s.io", Kind: "LeaseCandidate", Resource: "leasecandidates"})).
 						mustRegister()
 
 

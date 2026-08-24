@@ -101,4 +101,17 @@ var overrides = map[featuregate.Feature]registry.OpenShiftGateFields{
 			},
 		},
 	},
+
+	genericfeatures.CoordinatedLeaderElection: {
+		EnhancementPullRequest: "https://github.com/openshift/enhancements/pull/2084",
+		JiraComponent:          "kube-apiserver",
+		ContactPerson:          "bpalmer",
+		GroupKindResources: []registry.GroupKindResource{
+			{
+				Group:    "coordination.k8s.io",
+				Kind:     "LeaseCandidate",
+				Resource: "leasecandidates",
+			},
+		},
+	},
 }

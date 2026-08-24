@@ -56933,6 +56933,13 @@ func schema_openshift_api_operator_v1_GatewayConfig(ref common.ReferenceCallback
 							Format:      "",
 						},
 					},
+					"uplinkMode": {
+						SchemaProps: spec.SchemaProps{
+							Description: "uplinkMode controls whether the external gateway bridge (br-ex) requires a physical uplink port. Allowed values are \"Required\" and \"Optional\". When set to \"Required\", ovn-kubernetes requires an uplink on the gateway bridge. When set to \"Optional\", ovn-kubernetes allows the gateway bridge to start without an uplink. When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time. The current default is \"Required\". This setting only takes effect when routingViaHost is true (local gateway mode).",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
 					"ipForwarding": {
 						SchemaProps: spec.SchemaProps{
 							Description: "ipForwarding controls IP forwarding for all traffic on OVN-Kubernetes managed interfaces (such as br-ex). By default this is set to Restricted, and Kubernetes related traffic is still forwarded appropriately, but other IP traffic will not be routed by the OCP node. If there is a desire to allow the host to forward traffic across OVN-Kubernetes managed interfaces, then set this field to \"Global\". The supported values are \"Restricted\" and \"Global\".",

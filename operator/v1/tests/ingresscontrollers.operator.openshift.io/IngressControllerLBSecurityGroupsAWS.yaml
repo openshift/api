@@ -1,0 +1,523 @@
+apiVersion: apiextensions.k8s.io/v1 # Hack because controller-gen complains if we don't have this
+name: "IngressController"
+crdName: ingresscontrollers.operator.openshift.io
+featureGates:
+- IngressControllerLBSecurityGroupsAWS
+tests:
+  onCreate:
+    - name: Should be able to create a minimal IngressController
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: IngressController
+        spec: {} # No spec is required for a IngressController
+      expected: |
+        apiVersion: operator.openshift.io/v1
+        kind: IngressController
+        spec:
+          httpEmptyRequestsPolicy: Respond
+          idleConnectionTerminationPolicy: Immediate
+          closedClientConnectionPolicy: Continue
+    - name: Should be able to set security groups on NLB.
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: IngressController
+        metadata:
+          name: sgtestnlb
+          namespace: openshift-ingress-operator
+        spec:
+          endpointPublishingStrategy:
+            loadBalancer:
+              scope: External
+              providerParameters:
+                type: AWS
+                aws:
+                  type: NLB
+                  networkLoadBalancer:
+                    securityGroups:
+                    - sg-1234567890abcdef0
+                    - sg-abcdef01
+            type: LoadBalancerService
+      expected: |
+        apiVersion: operator.openshift.io/v1
+        kind: IngressController
+        metadata:
+          name: sgtestnlb
+          namespace: openshift-ingress-operator
+        spec:
+          httpEmptyRequestsPolicy: Respond
+          idleConnectionTerminationPolicy: Immediate
+          closedClientConnectionPolicy: Continue
+          endpointPublishingStrategy:
+            loadBalancer:
+              dnsManagementPolicy: Managed
+              scope: External
+              providerParameters:
+                type: AWS
+                aws:
+                  type: NLB
+                  networkLoadBalancer:
+                    securityGroups:
+                    - sg-1234567890abcdef0
+                    - sg-abcdef01
+            type: LoadBalancerService
+    - name: Should be able to set a single security group with 8-char hex.
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: IngressController
+        metadata:
+          name: sgtestnlb
+          namespace: openshift-ingress-operator
+        spec:
+          endpointPublishingStrategy:
+            loadBalancer:
+              scope: External
+              providerParameters:
+                type: AWS
+                aws:
+                  type: NLB
+                  networkLoadBalancer:
+                    securityGroups:
+                    - sg-abcdef01
+            type: LoadBalancerService
+      expected: |
+        apiVersion: operator.openshift.io/v1
+        kind: IngressController
+        metadata:
+          name: sgtestnlb
+          namespace: openshift-ingress-operator
+        spec:
+          httpEmptyRequestsPolicy: Respond
+          idleConnectionTerminationPolicy: Immediate
+          closedClientConnectionPolicy: Continue
+          endpointPublishingStrategy:
+            loadBalancer:
+              dnsManagementPolicy: Managed
+              scope: External
+              providerParameters:
+                type: AWS
+                aws:
+                  type: NLB
+                  networkLoadBalancer:
+                    securityGroups:
+                    - sg-abcdef01
+            type: LoadBalancerService
+    - name: Should not allow empty security group value.
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: IngressController
+        metadata:
+          name: sgtestnlb
+          namespace: openshift-ingress-operator
+        spec:
+          endpointPublishingStrategy:
+            loadBalancer:
+              scope: External
+              providerParameters:
+                type: AWS
+                aws:
+                  type: NLB
+                  networkLoadBalancer:
+                    securityGroups:
+                    - ''
+            type: LoadBalancerService
+      expectedError: "spec.endpointPublishingStrategy.loadBalancer.providerParameters.aws.networkLoadBalancer.securityGroups[0] in body should be at least 11 chars long"
+    - name: Should not allow security group ID that does not start with sg-.
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: IngressController
+        metadata:
+          name: sgtestnlb
+          namespace: openshift-ingress-operator
+        spec:
+          endpointPublishingStrategy:
+            loadBalancer:
+              scope: External
+              providerParameters:
+                type: AWS
+                aws:
+                  type: NLB
+                  networkLoadBalancer:
+                    securityGroups:
+                    - xx-1234567890abcdef0
+            type: LoadBalancerService
+      expectedError: "securityGroups must be 'sg-' followed by 8 or 17 lowercase hexadecimal characters"
+    - name: Should not allow security group ID with non-hexadecimal characters.
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: IngressController
+        metadata:
+          name: sgtestnlb
+          namespace: openshift-ingress-operator
+        spec:
+          endpointPublishingStrategy:
+            loadBalancer:
+              scope: External
+              providerParameters:
+                type: AWS
+                aws:
+                  type: NLB
+                  networkLoadBalancer:
+                    securityGroups:
+                    - sg-1234567890abcdexz
+            type: LoadBalancerService
+      expectedError: "securityGroups must be 'sg-' followed by 8 or 17 lowercase hexadecimal characters"
+    - name: Should not allow security group ID with wrong length hex part (not 8 or 17).
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: IngressController
+        metadata:
+          name: sgtestnlb
+          namespace: openshift-ingress-operator
+        spec:
+          endpointPublishingStrategy:
+            loadBalancer:
+              scope: External
+              providerParameters:
+                type: AWS
+                aws:
+                  type: NLB
+                  networkLoadBalancer:
+                    securityGroups:
+                    - sg-1234567890abc
+            type: LoadBalancerService
+      expectedError: "securityGroups must be 'sg-' followed by 8 or 17 lowercase hexadecimal characters"
+    - name: Should not allow security group ID with uppercase hexadecimal characters.
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: IngressController
+        metadata:
+          name: sgtestnlb
+          namespace: openshift-ingress-operator
+        spec:
+          endpointPublishingStrategy:
+            loadBalancer:
+              scope: External
+              providerParameters:
+                type: AWS
+                aws:
+                  type: NLB
+                  networkLoadBalancer:
+                    securityGroups:
+                    - sg-1234567890ABCDEF0
+            type: LoadBalancerService
+      expectedError: "securityGroups must be 'sg-' followed by 8 or 17 lowercase hexadecimal characters"
+    - name: Should allow exactly 5 security groups.
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: IngressController
+        metadata:
+          name: sgtestnlb
+          namespace: openshift-ingress-operator
+        spec:
+          endpointPublishingStrategy:
+            loadBalancer:
+              scope: External
+              providerParameters:
+                type: AWS
+                aws:
+                  type: NLB
+                  networkLoadBalancer:
+                    securityGroups:
+                    - sg-1234567890abcdef0
+                    - sg-1234567890abcdef1
+                    - sg-1234567890abcdef2
+                    - sg-1234567890abcdef3
+                    - sg-1234567890abcdef4
+            type: LoadBalancerService
+      expected: |
+        apiVersion: operator.openshift.io/v1
+        kind: IngressController
+        metadata:
+          name: sgtestnlb
+          namespace: openshift-ingress-operator
+        spec:
+          httpEmptyRequestsPolicy: Respond
+          idleConnectionTerminationPolicy: Immediate
+          closedClientConnectionPolicy: Continue
+          endpointPublishingStrategy:
+            loadBalancer:
+              dnsManagementPolicy: Managed
+              scope: External
+              providerParameters:
+                type: AWS
+                aws:
+                  type: NLB
+                  networkLoadBalancer:
+                    securityGroups:
+                    - sg-1234567890abcdef0
+                    - sg-1234567890abcdef1
+                    - sg-1234567890abcdef2
+                    - sg-1234567890abcdef3
+                    - sg-1234567890abcdef4
+            type: LoadBalancerService
+    - name: Should not allow an empty security groups list.
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: IngressController
+        metadata:
+          name: sgtestnlb
+          namespace: openshift-ingress-operator
+        spec:
+          endpointPublishingStrategy:
+            loadBalancer:
+              scope: External
+              providerParameters:
+                type: AWS
+                aws:
+                  type: NLB
+                  networkLoadBalancer:
+                    securityGroups: []
+            type: LoadBalancerService
+      expectedError: "spec.endpointPublishingStrategy.loadBalancer.providerParameters.aws.networkLoadBalancer.securityGroups in body should have at least 1 items"
+    - name: Should not allow more than 5 security groups.
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: IngressController
+        metadata:
+          name: sgtestnlb
+          namespace: openshift-ingress-operator
+        spec:
+          endpointPublishingStrategy:
+            loadBalancer:
+              scope: External
+              providerParameters:
+                type: AWS
+                aws:
+                  type: NLB
+                  networkLoadBalancer:
+                    securityGroups:
+                    - sg-1234567890abcdef0
+                    - sg-1234567890abcdef1
+                    - sg-1234567890abcdef2
+                    - sg-1234567890abcdef3
+                    - sg-1234567890abcdef4
+                    - sg-1234567890abcdef5
+            type: LoadBalancerService
+      expectedError: "spec.endpointPublishingStrategy.loadBalancer.providerParameters.aws.networkLoadBalancer.securityGroups: Too many: 6: must have at most 5 items"
+    - name: Should not allow duplicate security groups.
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: IngressController
+        metadata:
+          name: sgtestnlb
+          namespace: openshift-ingress-operator
+        spec:
+          endpointPublishingStrategy:
+            loadBalancer:
+              scope: External
+              providerParameters:
+                type: AWS
+                aws:
+                  type: NLB
+                  networkLoadBalancer:
+                    securityGroups:
+                    - sg-1234567890abcdef0
+                    - sg-1234567890abcdef0
+            type: LoadBalancerService
+      expectedError: "securityGroups cannot contain duplicates"
+    - name: Should not allow security group ID that is too long.
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: IngressController
+        metadata:
+          name: sgtestnlb
+          namespace: openshift-ingress-operator
+        spec:
+          endpointPublishingStrategy:
+            loadBalancer:
+              scope: External
+              providerParameters:
+                type: AWS
+                aws:
+                  type: NLB
+                  networkLoadBalancer:
+                    securityGroups:
+                    - sg-1234567890abcdef01
+            type: LoadBalancerService
+      expectedError: "spec.endpointPublishingStrategy.loadBalancer.providerParameters.aws.networkLoadBalancer.securityGroups[0]: Too long: may not be more than 20 bytes"
+  onUpdate:
+    - name: SecurityGroups should be mutable.
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: IngressController
+        metadata:
+          name: sgtestnlb
+          namespace: openshift-ingress-operator
+        spec:
+          endpointPublishingStrategy:
+            loadBalancer:
+              scope: External
+              providerParameters:
+                type: AWS
+                aws:
+                  type: NLB
+                  networkLoadBalancer:
+                    securityGroups:
+                    - sg-1234567890abcdef0
+                    - sg-1234567890abcdef1
+            type: LoadBalancerService
+      updated: |
+        apiVersion: operator.openshift.io/v1
+        kind: IngressController
+        metadata:
+          name: sgtestnlb
+          namespace: openshift-ingress-operator
+        spec:
+          httpEmptyRequestsPolicy: Respond
+          idleConnectionTerminationPolicy: Immediate
+          closedClientConnectionPolicy: Continue
+          endpointPublishingStrategy:
+            loadBalancer:
+              dnsManagementPolicy: Managed
+              scope: External
+              providerParameters:
+                type: AWS
+                aws:
+                  type: NLB
+                  networkLoadBalancer:
+                    securityGroups:
+                    - sg-1234567890abcdefa
+                    - sg-1234567890abcdefb
+            type: LoadBalancerService
+      expected: |
+        apiVersion: operator.openshift.io/v1
+        kind: IngressController
+        metadata:
+          name: sgtestnlb
+          namespace: openshift-ingress-operator
+        spec:
+          httpEmptyRequestsPolicy: Respond
+          idleConnectionTerminationPolicy: Immediate
+          closedClientConnectionPolicy: Continue
+          endpointPublishingStrategy:
+            loadBalancer:
+              dnsManagementPolicy: Managed
+              scope: External
+              providerParameters:
+                type: AWS
+                aws:
+                  type: NLB
+                  networkLoadBalancer:
+                    securityGroups:
+                    - sg-1234567890abcdefa
+                    - sg-1234567890abcdefb
+            type: LoadBalancerService
+    - name: Should be able to remove security groups after creation.
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: IngressController
+        metadata:
+          name: sgtestnlb
+          namespace: openshift-ingress-operator
+        spec:
+          endpointPublishingStrategy:
+            loadBalancer:
+              scope: External
+              providerParameters:
+                type: AWS
+                aws:
+                  type: NLB
+                  networkLoadBalancer:
+                    securityGroups:
+                    - sg-1234567890abcdef0
+            type: LoadBalancerService
+      updated: |
+        apiVersion: operator.openshift.io/v1
+        kind: IngressController
+        metadata:
+          name: sgtestnlb
+          namespace: openshift-ingress-operator
+        spec:
+          httpEmptyRequestsPolicy: Respond
+          idleConnectionTerminationPolicy: Immediate
+          closedClientConnectionPolicy: Continue
+          endpointPublishingStrategy:
+            loadBalancer:
+              dnsManagementPolicy: Managed
+              scope: External
+              providerParameters:
+                type: AWS
+                aws:
+                  type: NLB
+            type: LoadBalancerService
+      expected: |
+        apiVersion: operator.openshift.io/v1
+        kind: IngressController
+        metadata:
+          name: sgtestnlb
+          namespace: openshift-ingress-operator
+        spec:
+          httpEmptyRequestsPolicy: Respond
+          idleConnectionTerminationPolicy: Immediate
+          closedClientConnectionPolicy: Continue
+          endpointPublishingStrategy:
+            loadBalancer:
+              dnsManagementPolicy: Managed
+              scope: External
+              providerParameters:
+                type: AWS
+                aws:
+                  type: NLB
+            type: LoadBalancerService
+    - name: Should be able to add security groups after creation.
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: IngressController
+        metadata:
+          name: sgtestnlb
+          namespace: openshift-ingress-operator
+        spec:
+          endpointPublishingStrategy:
+            loadBalancer:
+              scope: External
+              providerParameters:
+                type: AWS
+                aws:
+                  type: NLB
+            type: LoadBalancerService
+      updated: |
+        apiVersion: operator.openshift.io/v1
+        kind: IngressController
+        metadata:
+          name: sgtestnlb
+          namespace: openshift-ingress-operator
+        spec:
+          httpEmptyRequestsPolicy: Respond
+          idleConnectionTerminationPolicy: Immediate
+          closedClientConnectionPolicy: Continue
+          endpointPublishingStrategy:
+            loadBalancer:
+              dnsManagementPolicy: Managed
+              scope: External
+              providerParameters:
+                type: AWS
+                aws:
+                  type: NLB
+                  networkLoadBalancer:
+                    securityGroups:
+                    - sg-1234567890abcdef0
+                    - sg-1234567890abcdef1
+            type: LoadBalancerService
+      expected: |
+        apiVersion: operator.openshift.io/v1
+        kind: IngressController
+        metadata:
+          name: sgtestnlb
+          namespace: openshift-ingress-operator
+        spec:
+          httpEmptyRequestsPolicy: Respond
+          idleConnectionTerminationPolicy: Immediate
+          closedClientConnectionPolicy: Continue
+          endpointPublishingStrategy:
+            loadBalancer:
+              dnsManagementPolicy: Managed
+              scope: External
+              providerParameters:
+                type: AWS
+                aws:
+                  type: NLB
+                  networkLoadBalancer:
+                    securityGroups:
+                    - sg-1234567890abcdef0
+                    - sg-1234567890abcdef1
+            type: LoadBalancerService

@@ -159,6 +159,9 @@
                         "name": "IngressComponentRouteLabels"
                     },
                     {
+                        "name": "IngressControllerLBSecurityGroupsAWS"
+                    },
+                    {
                         "name": "KMSEncryption"
                     },
                     {
@@ -381,9 +384,6 @@
                     },
                     {
                         "name": "VSphereMixedNodeEnv"
-                    },
-                    {
-                        "name": "VSphereMultiDisk"
                     },
                     {
                         "name": "VSphereMultiNetworks"

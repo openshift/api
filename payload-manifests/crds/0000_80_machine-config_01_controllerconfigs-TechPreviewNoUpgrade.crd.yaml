@@ -519,7 +519,7 @@ spec:
                                   overridden. The CCCMO reads in the IBMCloudPlatformSpec and validates each
                                   endpoint is resolvable. Once validated, the cloud config and IBMCloudPlatformStatus
                                   are updated to reflect the same custom endpoints.
-                                  A maximum of 13 service endpoints overrides are supported.
+                                  A maximum of 15 service endpoints overrides are supported.
                                 items:
                                   description: |-
                                     IBMCloudServiceEndpoint stores the configuration of a custom url to
@@ -528,7 +528,7 @@ spec:
                                     name:
                                       description: |-
                                         name is the name of the IBM Cloud service.
-                                        Possible values are: CIS, COS, COSConfig, DNSServices, GlobalCatalog, GlobalSearch, GlobalTagging, HyperProtect, IAM, KeyProtect, ResourceController, ResourceManager, or VPC.
+                                        Possible values are: CIS, COS, COSConfig, DNSServices, GlobalCatalog, GlobalSearch, GlobalTagging, HyperProtect, IAM, KeyProtect, ResourceController, ResourceManager, VPC, TransitGateway, or PowerVS.
                                         For example, the IBM Cloud Private IAM service could be configured with the
                                         service `name` of `IAM` and `url` of `https://private.iam.cloud.ibm.com`
                                         Whereas the IBM Cloud Private VPC service for US South (Dallas) could be configured
@@ -547,6 +547,8 @@ spec:
                                       - ResourceController
                                       - ResourceManager
                                       - VPC
+                                      - TransitGateway
+                                      - PowerVS
                                       type: string
                                     url:
                                       description: |-
@@ -568,7 +570,7 @@ spec:
                                   - name
                                   - url
                                   type: object
-                                maxItems: 13
+                                maxItems: 15
                                 type: array
                                 x-kubernetes-list-map-keys:
                                 - name
@@ -899,6 +901,7 @@ spec:
                                       - ResourceController
                                       - ResourceManager
                                       - VPC
+                                      - TransitGateway
                                       type: string
                                     url:
                                       description: |-
@@ -2443,7 +2446,7 @@ spec:
                                     name:
                                       description: |-
                                         name is the name of the IBM Cloud service.
-                                        Possible values are: CIS, COS, COSConfig, DNSServices, GlobalCatalog, GlobalSearch, GlobalTagging, HyperProtect, IAM, KeyProtect, ResourceController, ResourceManager, or VPC.
+                                        Possible values are: CIS, COS, COSConfig, DNSServices, GlobalCatalog, GlobalSearch, GlobalTagging, HyperProtect, IAM, KeyProtect, ResourceController, ResourceManager, VPC, TransitGateway, or PowerVS.
                                         For example, the IBM Cloud Private IAM service could be configured with the
                                         service `name` of `IAM` and `url` of `https://private.iam.cloud.ibm.com`
                                         Whereas the IBM Cloud Private VPC service for US South (Dallas) could be configured
@@ -2462,6 +2465,8 @@ spec:
                                       - ResourceController
                                       - ResourceManager
                                       - VPC
+                                      - TransitGateway
+                                      - PowerVS
                                       type: string
                                     url:
                                       description: |-
@@ -2478,7 +2483,7 @@ spec:
                                   - name
                                   - url
                                   type: object
-                                maxItems: 13
+                                maxItems: 15
                                 type: array
                                 x-kubernetes-list-map-keys:
                                 - name
@@ -2923,6 +2928,7 @@ spec:
                                       - ResourceController
                                       - ResourceManager
                                       - VPC
+                                      - TransitGateway
                                       type: string
                                     url:
                                       description: |-

@@ -1,9 +1,12 @@
 package features
 
 import (
+	"slices"
+
 	configv1 "github.com/openshift/api/config/v1"
 	"k8s.io/apimachinery/pkg/runtime/schema"
 	"k8s.io/apimachinery/pkg/util/sets"
+	"k8s.io/apimachinery/pkg/version"
 	"k8s.io/client-go/kubernetes/scheme"
 )
 
@@ -31,6 +34,11 @@ func GroupVersionResourcesForFeatureGate(featureGate configv1.FeatureGateName) [
 
 	for _, gkr := range groupKindResources.UnsortedList() {
 		versions := scheme.Scheme.VersionsForGroupKind(schema.GroupKind{Group: gkr.Group, Kind: gkr.Kind})
+
+		// ensure that we are always sorting in descending order of version priority
+		slices.SortFunc(versions, func(a, b schema.GroupVersion) int {
+			return version.CompareKubeAwareVersionStrings(b.Version, a.Version)
+		})
 
 		if len(versions) == 0 {
 			continue

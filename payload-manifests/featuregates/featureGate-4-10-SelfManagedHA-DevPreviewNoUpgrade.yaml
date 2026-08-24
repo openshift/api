@@ -388,9 +388,6 @@
                         "name": "VSphereMixedNodeEnv"
                     },
                     {
-                        "name": "VSphereMultiNetworks"
-                    },
-                    {
                         "name": "VSphereMultiVCenterDay2"
                     },
                     {

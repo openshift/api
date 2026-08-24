@@ -389,9 +389,6 @@
                         "name": "VSphereMixedNodeEnv"
                     },
                     {
-                        "name": "VSphereMultiNetworks"
-                    },
-                    {
                         "name": "VolumeGroupSnapshot"
                     }
                 ],

@@ -789,6 +789,38 @@ func filterVariants(featureGate string, variantsList ...[]JobVariant) []JobVaria
 	return filteredVariants
 }
 
+// flexibleDateTime wraps time.Time so that JSON values can be decoded from
+// either an RFC 3339 timestamp (e.g. "2018-07-11T00:00:00Z") or a bare
+// date-only string (e.g. "2018-07-11"). The Sippy /api/releases endpoint
+// switched the development_start and ga fields from RFC 3339 timestamps to
+// bare dates; supporting both keeps this tool compatible with old and new
+// responses.
+type flexibleDateTime struct {
+	time.Time
+}
+
+// UnmarshalJSON decodes the JSON value into the wrapped time.Time, trying the
+// RFC 3339 layout first and falling back to the date-only layout ("2006-01-02").
+func (f *flexibleDateTime) UnmarshalJSON(data []byte) error {
+	s := strings.Trim(string(data), `"`)
+	if s == "" || s == "null" {
+		return nil
+	}
+
+	if t, err := time.Parse(time.RFC3339, s); err == nil {
+		f.Time = t
+		return nil
+	}
+
+	t, err := time.Parse("2006-01-02", s)
+	if err != nil {
+		return fmt.Errorf("cannot parse %q as RFC 3339 or date-only (2006-01-02): %w", s, err)
+	}
+
+	f.Time = t
+	return nil
+}
+
 // getLatestRelease returns the latest release from Sippy.
 func getLatestRelease() (string, error) {
 	releaseAPI := "https://sippy.dptools.openshift.org/api/releases"
@@ -810,8 +842,8 @@ func getLatestRelease() (string, error) {
 	var result struct {
 		Releases []string `json:"releases"`
 		Dates    map[string]struct {
-			GA               *time.Time `json:"ga,omitempty"`
-			DevelopmentStart *time.Time `json:"development_start,omitempty"`
+			GA               *flexibleDateTime `json:"ga,omitempty"`
+			DevelopmentStart *flexibleDateTime `json:"development_start,omitempty"`
 		} `json:"dates"`
 	}
 	err = json.Unmarshal(body, &result)
@@ -825,7 +857,7 @@ func getLatestRelease() (string, error) {
 
 	for _, release := range result.Releases {
 		if dates, ok := result.Dates[release]; ok {
-			if dates.DevelopmentStart != nil && !dates.DevelopmentStart.IsZero() && time.Now().After(*dates.DevelopmentStart) {
+			if dates.DevelopmentStart != nil && !dates.DevelopmentStart.Time.IsZero() && time.Now().After(dates.DevelopmentStart.Time) {
 				return release, nil
 			}
 		}

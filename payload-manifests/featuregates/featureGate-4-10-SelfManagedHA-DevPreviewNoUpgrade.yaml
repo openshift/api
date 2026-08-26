@@ -355,9 +355,6 @@
                         "name": "SELinuxMountGAReadiness"
                     },
                     {
-                        "name": "ServiceAccountTokenNodeBinding"
-                    },
-                    {
                         "name": "SignatureStores"
                     },
                     {

@@ -1,0 +1,23 @@
+kmsplugins.kms.openshift.io:
+  Annotations: {}
+  ApprovedPRNumber: https://github.com/openshift/api/pull/TBD
+  CRDName: kmsplugins.kms.openshift.io
+  Capability: ""
+  Category: ""
+  FeatureGates:
+  - KMSEncryption
+  FilenameOperatorName: kube-apiserver
+  FilenameOperatorOrdering: "02"
+  FilenameRunLevel: "0000_20"
+  GroupName: kms.openshift.io
+  HasStatus: true
+  KindName: KMSPlugin
+  Labels: {}
+  PluralName: kmsplugins
+  PrinterColumns: []
+  Scope: Namespaced
+  ShortNames: null
+  TopLevelFeatureGates:
+  - KMSEncryption
+  Version: v1alpha1
+

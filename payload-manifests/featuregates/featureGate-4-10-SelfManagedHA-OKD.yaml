@@ -261,9 +261,6 @@
                     },
                     {
                         "name": "VSphereConfigurableMaxAllowedBlockVolumesPerNode"
-                    },
-                    {
-                        "name": "VSphereMultiVCenterDay2"
                     }
                 ],
                 "enabled": [
@@ -389,6 +386,9 @@
                     },
                     {
                         "name": "VSphereMixedNodeEnv"
+                    },
+                    {
+                        "name": "VSphereMultiVCenterDay2"
                     },
                     {
                         "name": "VolumeGroupSnapshot"

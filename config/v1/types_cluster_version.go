@@ -742,8 +742,8 @@ type Update struct {
 	// architecture means either a single architecture or a multi
 	// architecture. architecture can only be set to Multi thereby
 	// only allowing updates from single to multi architecture. If
-	// architecture is set, image cannot be set and version must be
-	// set.
+	// architecture is set, version must be set. image can be set only
+	// when architecture is Multi.
 	// Valid values are 'Multi' and empty.
 	//
 	// +optional
@@ -758,7 +758,7 @@ type Update struct {
 
 	// image is a container image location that contains the update.
 	// image should be used when the desired version does not exist in availableUpdates or history.
-	// When image is set, architecture cannot be specified.
+	// When image is set, architecture can be specified only as Multi.
 	// If both version and image are set, the version extracted from the referenced image must match the specified version.
 	//
 	// +optional

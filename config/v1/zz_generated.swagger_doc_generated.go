@@ -2464,10 +2464,20 @@ func (Storage) SwaggerDoc() map[string]string {
 	return map_Storage
 }
 
+var map_GenericKMSv2PluginConfig = map[string]string{
+	"":                  "GenericKMSv2PluginConfig references a KMS provider operator installed via OLM.",
+	"operatorNamespace": "operatorNamespace is the namespace where the KMS provider operator is installed. The platform reads the KMSPlugin resource named \"cluster\" from this namespace to determine the container image and arguments for the KMS plugin sidecar.\n\nSecrets and ConfigMaps referenced by the plugin arguments are expected to exist in this namespace. The platform mounts them at well-known injection points during sidecar lifecycle management.\n\nThe namespace must be a valid DNS-1123 label and must not be an openshift-* or kube-* system namespace.",
+}
+
+func (GenericKMSv2PluginConfig) SwaggerDoc() map[string]string {
+	return map_GenericKMSv2PluginConfig
+}
+
 var map_KMSPluginConfig = map[string]string{
-	"":      "KMSPluginConfig defines the configuration for the KMS instance that will be used with KMS encryption",
-	"type":  "type defines the kind of platform for the KMS provider. Allowed values are Vault. When set to Vault, the plugin connects to a HashiCorp Vault server for key management.",
-	"vault": "vault defines the configuration for the Vault KMS plugin. The plugin connects to a Vault Enterprise server that is managed by the user outside the purview of the control plane. This field must be set when type is Vault, and must be unset otherwise.",
+	"":             "KMSPluginConfig defines the configuration for the KMS instance that will be used with KMS encryption",
+	"type":         "type defines the kind of platform for the KMS provider. Allowed values are Vault and GenericKMSv2. When set to Vault, the plugin connects to a HashiCorp Vault server for key management. When set to GenericKMSv2, the platform reads runtime configuration from a KMS provider operator installed in the referenced namespace.",
+	"vault":        "vault defines the configuration for the Vault KMS plugin. The plugin connects to a Vault Enterprise server that is managed by the user outside the purview of the control plane. This field must be set when type is Vault, and must be unset otherwise.",
+	"genericKMSv2": "genericKMSv2 references an OLM-managed KMS provider operator. The operator publishes how to run the KMS plugin sidecar (container image and arguments). The platform handles deployment, lifecycle, and mounting credentials from Secrets and ConfigMaps in the operator namespace at well-known injection points referenced by the plugin arguments. This field must be set when type is GenericKMSv2, and must be unset otherwise.",
 }
 
 func (KMSPluginConfig) SwaggerDoc() map[string]string {

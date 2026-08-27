@@ -168,13 +168,50 @@ spec:
                       managing the lifecyle of the encryption keys outside of the control plane.
                       This allows integration with an external provider to manage the data encryption keys securely.
                     properties:
+                      genericKMSv2:
+                        description: |-
+                          genericKMSv2 references an OLM-managed KMS provider operator.
+                          The operator publishes how to run the KMS plugin sidecar (container image and arguments).
+                          The platform handles deployment, lifecycle, and mounting credentials from Secrets and
+                          ConfigMaps in the operator namespace at well-known injection points referenced by the
+                          plugin arguments.
+                          This field must be set when type is GenericKMSv2, and must be unset otherwise.
+                        properties:
+                          operatorNamespace:
+                            description: |-
+                              operatorNamespace is the namespace where the KMS provider operator is installed.
+                              The platform reads the KMSPlugin resource named "cluster" from this namespace
+                              to determine the container image and arguments for the KMS plugin sidecar.
+
+                              Secrets and ConfigMaps referenced by the plugin arguments are expected to exist
+                              in this namespace. The platform mounts them at well-known injection points
+                              during sidecar lifecycle management.
+
+                              The namespace must be a valid DNS-1123 label and must not be an openshift-* or
+                              kube-* system namespace.
+                            maxLength: 63
+                            minLength: 1
+                            type: string
+                            x-kubernetes-validations:
+                            - message: operatorNamespace must be a valid DNS-1123
+                                label
+                              rule: '!format.dns1123Label().validate(self).hasValue()'
+                            - message: operatorNamespace must not be an openshift-*
+                                or kube-* system namespace
+                              rule: '!self.startsWith(''openshift-'') && !self.startsWith(''kube-'')'
+                        required:
+                        - operatorNamespace
+                        type: object
                       type:
                         description: |-
                           type defines the kind of platform for the KMS provider.
-                          Allowed values are Vault.
+                          Allowed values are Vault and GenericKMSv2.
                           When set to Vault, the plugin connects to a HashiCorp Vault server for key management.
+                          When set to GenericKMSv2, the platform reads runtime configuration from a KMS provider
+                          operator installed in the referenced namespace.
                         enum:
                         - Vault
+                        - GenericKMSv2
                         type: string
                       vault:
                         description: |-
@@ -448,6 +485,10 @@ spec:
                     - message: vault config is required when kms provider type is
                         Vault, and forbidden otherwise
                       rule: 'self.type == ''Vault'' ? has(self.vault) : !has(self.vault)'
+                    - message: genericKMSv2 config is required when kms provider type
+                        is GenericKMSv2, and forbidden otherwise
+                      rule: 'self.type == ''GenericKMSv2'' ? has(self.genericKMSv2)
+                        : !has(self.genericKMSv2)'
                   type:
                     description: |-
                       type defines what encryption type should be used to encrypt resources at the datastore layer.

@@ -25,6 +25,7 @@ import (
 	insightsv1 "github.com/openshift/api/insights/v1"
 	insightsv1alpha1 "github.com/openshift/api/insights/v1alpha1"
 	insightsv1alpha2 "github.com/openshift/api/insights/v1alpha2"
+	kmsv1alpha1 "github.com/openshift/api/kms/v1alpha1"
 	kubecontrolplanev1 "github.com/openshift/api/kubecontrolplane/v1"
 	legacyconfigv1 "github.com/openshift/api/legacyconfig/v1"
 	machinev1 "github.com/openshift/api/machine/v1"
@@ -323,6 +324,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		configv1.Gatherers{}.OpenAPIModelName():                                                schema_openshift_api_config_v1_Gatherers(ref),
 		configv1.GenericAPIServerConfig{}.OpenAPIModelName():                                   schema_openshift_api_config_v1_GenericAPIServerConfig(ref),
 		configv1.GenericControllerConfig{}.OpenAPIModelName():                                  schema_openshift_api_config_v1_GenericControllerConfig(ref),
+		configv1.GenericKMSv2PluginConfig{}.OpenAPIModelName():                                 schema_openshift_api_config_v1_GenericKMSv2PluginConfig(ref),
 		configv1.GitHubIdentityProvider{}.OpenAPIModelName():                                   schema_openshift_api_config_v1_GitHubIdentityProvider(ref),
 		configv1.GitLabIdentityProvider{}.OpenAPIModelName():                                   schema_openshift_api_config_v1_GitLabIdentityProvider(ref),
 		configv1.GoogleIdentityProvider{}.OpenAPIModelName():                                   schema_openshift_api_config_v1_GoogleIdentityProvider(ref),
@@ -778,6 +780,13 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		insightsv1alpha2.PersistentVolumeClaimReference{}.OpenAPIModelName():                   schema_openshift_api_insights_v1alpha2_PersistentVolumeClaimReference(ref),
 		insightsv1alpha2.PersistentVolumeConfig{}.OpenAPIModelName():                           schema_openshift_api_insights_v1alpha2_PersistentVolumeConfig(ref),
 		insightsv1alpha2.Storage{}.OpenAPIModelName():                                          schema_openshift_api_insights_v1alpha2_Storage(ref),
+		kmsv1alpha1.KMSPlugin{}.OpenAPIModelName():                                             schema_openshift_api_kms_v1alpha1_KMSPlugin(ref),
+		kmsv1alpha1.KMSPluginConfigMapReference{}.OpenAPIModelName():                           schema_openshift_api_kms_v1alpha1_KMSPluginConfigMapReference(ref),
+		kmsv1alpha1.KMSPluginList{}.OpenAPIModelName():                                         schema_openshift_api_kms_v1alpha1_KMSPluginList(ref),
+		kmsv1alpha1.KMSPluginRuntime{}.OpenAPIModelName():                                      schema_openshift_api_kms_v1alpha1_KMSPluginRuntime(ref),
+		kmsv1alpha1.KMSPluginSecretReference{}.OpenAPIModelName():                              schema_openshift_api_kms_v1alpha1_KMSPluginSecretReference(ref),
+		kmsv1alpha1.KMSPluginSpec{}.OpenAPIModelName():                                         schema_openshift_api_kms_v1alpha1_KMSPluginSpec(ref),
+		kmsv1alpha1.KMSPluginStatus{}.OpenAPIModelName():                                       schema_openshift_api_kms_v1alpha1_KMSPluginStatus(ref),
 		kubecontrolplanev1.AggregatorConfig{}.OpenAPIModelName():                               schema_openshift_api_kubecontrolplane_v1_AggregatorConfig(ref),
 		kubecontrolplanev1.KubeAPIServerConfig{}.OpenAPIModelName():                            schema_openshift_api_kubecontrolplane_v1_KubeAPIServerConfig(ref),
 		kubecontrolplanev1.KubeAPIServerImagePolicyConfig{}.OpenAPIModelName():                 schema_openshift_api_kubecontrolplane_v1_KubeAPIServerImagePolicyConfig(ref),
@@ -14439,6 +14448,27 @@ func schema_openshift_api_config_v1_GenericControllerConfig(ref common.Reference
 	}
 }
 
+func schema_openshift_api_config_v1_GenericKMSv2PluginConfig(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "GenericKMSv2PluginConfig references a KMS provider operator installed via OLM.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"operatorNamespace": {
+						SchemaProps: spec.SchemaProps{
+							Description: "operatorNamespace is the namespace where the KMS provider operator is installed. The platform reads the KMSPlugin resource named \"cluster\" from this namespace to determine the container image and arguments for the KMS plugin sidecar.\n\nSecrets and ConfigMaps referenced by the plugin arguments are expected to exist in this namespace. The platform mounts them at well-known injection points during sidecar lifecycle management.\n\nThe namespace must be a valid DNS-1123 label and must not be an openshift-* or kube-* system namespace.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+				},
+				Required: []string{"operatorNamespace"},
+			},
+		},
+	}
+}
+
 func schema_openshift_api_config_v1_GitHubIdentityProvider(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -16817,7 +16847,7 @@ func schema_openshift_api_config_v1_KMSPluginConfig(ref common.ReferenceCallback
 				Properties: map[string]spec.Schema{
 					"type": {
 						SchemaProps: spec.SchemaProps{
-							Description: "type defines the kind of platform for the KMS provider. Allowed values are Vault. When set to Vault, the plugin connects to a HashiCorp Vault server for key management.",
+							Description: "type defines the kind of platform for the KMS provider. Allowed values are Vault and GenericKMSv2. When set to Vault, the plugin connects to a HashiCorp Vault server for key management. When set to GenericKMSv2, the platform reads runtime configuration from a KMS provider operator installed in the referenced namespace.",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -16830,6 +16860,13 @@ func schema_openshift_api_config_v1_KMSPluginConfig(ref common.ReferenceCallback
 							Ref:         ref(configv1.VaultKMSPluginConfig{}.OpenAPIModelName()),
 						},
 					},
+					"genericKMSv2": {
+						SchemaProps: spec.SchemaProps{
+							Description: "genericKMSv2 references an OLM-managed KMS provider operator. The operator publishes how to run the KMS plugin sidecar (container image and arguments). The platform handles deployment, lifecycle, and mounting credentials from Secrets and ConfigMaps in the operator namespace at well-known injection points referenced by the plugin arguments. This field must be set when type is GenericKMSv2, and must be unset otherwise.",
+							Default:     map[string]interface{}{},
+							Ref:         ref(configv1.GenericKMSv2PluginConfig{}.OpenAPIModelName()),
+						},
+					},
 				},
 				Required: []string{"type"},
 			},
@@ -16839,7 +16876,8 @@ func schema_openshift_api_config_v1_KMSPluginConfig(ref common.ReferenceCallback
 						map[string]interface{}{
 							"discriminator": "type",
 							"fields-to-discriminateBy": map[string]interface{}{
-								"vault": "Vault",
+								"genericKMSv2": "GenericKMSv2",
+								"vault":        "Vault",
 							},
 						},
 					},
@@ -16847,7 +16885,7 @@ func schema_openshift_api_config_v1_KMSPluginConfig(ref common.ReferenceCallback
 			},
 		},
 		Dependencies: []string{
-			configv1.VaultKMSPluginConfig{}.OpenAPIModelName()},
+			configv1.GenericKMSv2PluginConfig{}.OpenAPIModelName(), configv1.VaultKMSPluginConfig{}.OpenAPIModelName()},
 	}
 }
 
@@ -35789,6 +35827,262 @@ func schema_openshift_api_insights_v1alpha2_Storage(ref common.ReferenceCallback
 		},
 		Dependencies: []string{
 			insightsv1alpha2.PersistentVolumeConfig{}.OpenAPIModelName()},
+	}
+}
+
+func schema_openshift_api_kms_v1alpha1_KMSPlugin(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "KMSPlugin defines how the platform runs a KMS encryption provider plugin sidecar. A KMS provider operator installed via OLM reconciles provider-specific configuration and publishes the container runtime configuration in status.runtime.\n\nCompatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"kind": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"apiVersion": {
+						SchemaProps: spec.SchemaProps{
+							Description: "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"metadata": {
+						SchemaProps: spec.SchemaProps{
+							Description: "metadata is the standard object's metadata. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata",
+							Default:     map[string]interface{}{},
+							Ref:         ref(metav1.ObjectMeta{}.OpenAPIModelName()),
+						},
+					},
+					"spec": {
+						SchemaProps: spec.SchemaProps{
+							Description: "spec is reserved for future use. Operators publish runtime configuration in status.runtime.",
+							Ref:         ref(kmsv1alpha1.KMSPluginSpec{}.OpenAPIModelName()),
+						},
+					},
+					"status": {
+						SchemaProps: spec.SchemaProps{
+							Description: "status is the most recently observed status of the KMSPlugin.",
+							Ref:         ref(kmsv1alpha1.KMSPluginStatus{}.OpenAPIModelName()),
+						},
+					},
+				},
+				Required: []string{"metadata"},
+			},
+		},
+		Dependencies: []string{
+			kmsv1alpha1.KMSPluginSpec{}.OpenAPIModelName(), kmsv1alpha1.KMSPluginStatus{}.OpenAPIModelName(), metav1.ObjectMeta{}.OpenAPIModelName()},
+	}
+}
+
+func schema_openshift_api_kms_v1alpha1_KMSPluginConfigMapReference(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "KMSPluginConfigMapReference references a ConfigMap in the same namespace as the KMSPlugin.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"name": {
+						SchemaProps: spec.SchemaProps{
+							Description: "name is the metadata.name of the referenced ConfigMap. The name must be a valid DNS subdomain name: it must contain no more than 253 characters, contain only lowercase alphanumeric characters, '-' or '.', and start and end with an alphanumeric character.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+				},
+				Required: []string{"name"},
+			},
+		},
+	}
+}
+
+func schema_openshift_api_kms_v1alpha1_KMSPluginList(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "KMSPluginList contains a list of KMSPlugins.\n\nCompatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"kind": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"apiVersion": {
+						SchemaProps: spec.SchemaProps{
+							Description: "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"metadata": {
+						SchemaProps: spec.SchemaProps{
+							Description: "metadata is the standard list's metadata. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata",
+							Default:     map[string]interface{}{},
+							Ref:         ref(metav1.ListMeta{}.OpenAPIModelName()),
+						},
+					},
+					"items": {
+						SchemaProps: spec.SchemaProps{
+							Description: "items is the list of KMSPlugins.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref(kmsv1alpha1.KMSPlugin{}.OpenAPIModelName()),
+									},
+								},
+							},
+						},
+					},
+				},
+				Required: []string{"items"},
+			},
+		},
+		Dependencies: []string{
+			kmsv1alpha1.KMSPlugin{}.OpenAPIModelName(), metav1.ListMeta{}.OpenAPIModelName()},
+	}
+}
+
+func schema_openshift_api_kms_v1alpha1_KMSPluginRuntime(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "KMSPluginRuntime describes the container configuration for a KMS plugin sidecar. The platform injects -listen-address and manages lifecycle, resources, security context, and mounting Secrets and ConfigMaps from the operator namespace at well-known injection points. Operators must not set -listen-address in args, either as -listen-address=<path> or as a separate -listen-address flag.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"image": {
+						SchemaProps: spec.SchemaProps{
+							Description: "image is the digest-pinned OCI image for the KMS plugin.\n\nThe image must be a fully qualified OCI image pull spec with a SHA256 digest. The format is: host[:port][/namespace]/name@sha256:<digest> where the digest must be 64 characters long and consist only of lowercase hexadecimal characters, a-f and 0-9. The total length must be between 75 and 447 characters.\n\nShort names (e.g., \"vault-plugin\" or \"hashicorp/vault-plugin\") are not allowed. The registry hostname must be included and must contain at least one dot. Image tags (e.g., \":latest\", \":v1.0.0\") are not allowed.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"args": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-type": "atomic",
+							},
+						},
+						SchemaProps: spec.SchemaProps{
+							Description: "args are the command-line arguments passed to the KMS plugin container. The platform prepends -listen-address=<uds-path> before these arguments. Arguments may reference credential files mounted by the platform at well-known injection points under /var/run/kms/ from Secrets and ConfigMaps in the operator namespace.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: "",
+										Type:    []string{"string"},
+										Format:  "",
+									},
+								},
+							},
+						},
+					},
+					"secrets": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-type": "atomic",
+							},
+						},
+						SchemaProps: spec.SchemaProps{
+							Description: "secrets lists Secrets in the same namespace as the KMSPlugin that the platform mounts at well-known injection points under /var/run/kms/secrets/. Plugin arguments may reference files from these mounted Secrets. When omitted, no Secrets are mounted.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref(kmsv1alpha1.KMSPluginSecretReference{}.OpenAPIModelName()),
+									},
+								},
+							},
+						},
+					},
+					"configMaps": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-type": "atomic",
+							},
+						},
+						SchemaProps: spec.SchemaProps{
+							Description: "configMaps lists ConfigMaps in the same namespace as the KMSPlugin that the platform mounts at well-known injection points under /var/run/kms/config/. Plugin arguments may reference files from these mounted ConfigMaps. When omitted, no ConfigMaps are mounted.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref(kmsv1alpha1.KMSPluginConfigMapReference{}.OpenAPIModelName()),
+									},
+								},
+							},
+						},
+					},
+				},
+				Required: []string{"image", "args"},
+			},
+		},
+		Dependencies: []string{
+			kmsv1alpha1.KMSPluginConfigMapReference{}.OpenAPIModelName(), kmsv1alpha1.KMSPluginSecretReference{}.OpenAPIModelName()},
+	}
+}
+
+func schema_openshift_api_kms_v1alpha1_KMSPluginSecretReference(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "KMSPluginSecretReference references a Secret in the same namespace as the KMSPlugin.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"name": {
+						SchemaProps: spec.SchemaProps{
+							Description: "name is the metadata.name of the referenced Secret. The name must be a valid DNS subdomain name: it must contain no more than 253 characters, contain only lowercase alphanumeric characters, '-' or '.', and start and end with an alphanumeric character.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+				},
+				Required: []string{"name"},
+			},
+		},
+	}
+}
+
+func schema_openshift_api_kms_v1alpha1_KMSPluginSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "KMSPluginSpec is reserved for future use.",
+				Type:        []string{"object"},
+			},
+		},
+	}
+}
+
+func schema_openshift_api_kms_v1alpha1_KMSPluginStatus(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "KMSPluginStatus defines the observed status of KMSPlugin.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"runtime": {
+						SchemaProps: spec.SchemaProps{
+							Description: "runtime describes how the platform should run the KMS plugin sidecar. The KMS provider operator must populate this before the platform can deploy the plugin. When omitted, the platform cannot proceed with KMS encryption.",
+							Default:     map[string]interface{}{},
+							Ref:         ref(kmsv1alpha1.KMSPluginRuntime{}.OpenAPIModelName()),
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			kmsv1alpha1.KMSPluginRuntime{}.OpenAPIModelName()},
 	}
 }
 

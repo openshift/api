@@ -1,0 +1,102 @@
+apiVersion: apiextensions.k8s.io/v1 # Hack because controller-gen complains if we don't have this
+name: "APIServer GenericKMSv2 Validation"
+crdName: apiservers.config.openshift.io
+featureGates:
+- KMSEncryption
+tests:
+  onCreate:
+    - name: Should be able to create with valid GenericKMSv2 config
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: APIServer
+        spec:
+          encryption:
+            type: KMS
+            kms:
+              type: GenericKMSv2
+              genericKMSv2:
+                operatorNamespace: vault-kms-operator
+      expected: |
+        apiVersion: config.openshift.io/v1
+        kind: APIServer
+        spec:
+          audit:
+            profile: Default
+          encryption:
+            type: KMS
+            kms:
+              type: GenericKMSv2
+              genericKMSv2:
+                operatorNamespace: vault-kms-operator
+
+    - name: Should reject GenericKMSv2 type without genericKMSv2 config
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: APIServer
+        spec:
+          encryption:
+            type: KMS
+            kms:
+              type: GenericKMSv2
+      expectedError: "genericKMSv2 config is required when kms provider type is GenericKMSv2"
+
+    - name: Should reject genericKMSv2 config when type is Vault
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: APIServer
+        spec:
+          encryption:
+            type: KMS
+            kms:
+              type: Vault
+              genericKMSv2:
+                operatorNamespace: vault-kms-operator
+              vault:
+                kmsPluginImage: registry.example.com/vault-plugin@sha256:0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef
+                vaultAddress: https://vault.example.com:8200
+                authentication:
+                  type: AppRole
+                  appRole:
+                    secret:
+                      name: vault-approle
+                vaultKeyPath: transit/keys/my-key
+      expectedError: "genericKMSv2 config is required when kms provider type is GenericKMSv2, and forbidden otherwise"
+
+    - name: Should reject openshift-* operator namespace
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: APIServer
+        spec:
+          encryption:
+            type: KMS
+            kms:
+              type: GenericKMSv2
+              genericKMSv2:
+                operatorNamespace: openshift-config
+      expectedError: "operatorNamespace must not be an openshift-* or kube-* system namespace"
+
+    - name: Should reject kube-* operator namespace
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: APIServer
+        spec:
+          encryption:
+            type: KMS
+            kms:
+              type: GenericKMSv2
+              genericKMSv2:
+                operatorNamespace: kube-system
+      expectedError: "operatorNamespace must not be an openshift-* or kube-* system namespace"
+
+    - name: Should reject invalid operator namespace
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: APIServer
+        spec:
+          encryption:
+            type: KMS
+            kms:
+              type: GenericKMSv2
+              genericKMSv2:
+                operatorNamespace: invalid_namespace!
+      expectedError: "operatorNamespace must be a valid DNS-1123 label"

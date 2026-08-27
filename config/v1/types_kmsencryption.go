@@ -3,11 +3,14 @@ package v1
 // KMSPluginConfig defines the configuration for the KMS instance
 // that will be used with KMS encryption
 // +kubebuilder:validation:XValidation:rule="self.type == 'Vault' ? has(self.vault) : !has(self.vault)",message="vault config is required when kms provider type is Vault, and forbidden otherwise"
+// +kubebuilder:validation:XValidation:rule="self.type == 'GenericKMSv2' ? has(self.genericKMSv2) : !has(self.genericKMSv2)",message="genericKMSv2 config is required when kms provider type is GenericKMSv2, and forbidden otherwise"
 // +union
 type KMSPluginConfig struct {
 	// type defines the kind of platform for the KMS provider.
-	// Allowed values are Vault.
+	// Allowed values are Vault and GenericKMSv2.
 	// When set to Vault, the plugin connects to a HashiCorp Vault server for key management.
+	// When set to GenericKMSv2, the platform reads runtime configuration from a KMS provider
+	// operator installed in the referenced namespace.
 	//
 	// +unionDiscriminator
 	// +required
@@ -21,6 +24,17 @@ type KMSPluginConfig struct {
 	// +unionMember
 	// +optional
 	Vault VaultKMSPluginConfig `json:"vault,omitempty,omitzero"`
+
+	// genericKMSv2 references an OLM-managed KMS provider operator.
+	// The operator publishes how to run the KMS plugin sidecar (container image and arguments).
+	// The platform handles deployment, lifecycle, and mounting credentials from Secrets and
+	// ConfigMaps in the operator namespace at well-known injection points referenced by the
+	// plugin arguments.
+	// This field must be set when type is GenericKMSv2, and must be unset otherwise.
+	//
+	// +unionMember
+	// +optional
+	GenericKMSv2 GenericKMSv2PluginConfig `json:"genericKMSv2,omitempty,omitzero"`
 
 	// --- TOMBSTONE ---
 	// aws was a field that allowed configuring AWS KMS.
@@ -41,12 +55,16 @@ type KMSPluginConfig struct {
 // }
 
 // KMSProviderType is a specific supported KMS provider
-// +kubebuilder:validation:Enum=Vault
+// +kubebuilder:validation:Enum=Vault;GenericKMSv2
 type KMSProviderType string
 
 const (
 	// VaultKMSProvider represents a supported KMS provider for use with HashiCorp Vault
 	VaultKMSProvider KMSProviderType = "Vault"
+
+	// GenericKMSv2KMSProvider represents a KMS provider whose runtime configuration
+	// is supplied by an OLM-managed operator.
+	GenericKMSv2KMSProvider KMSProviderType = "GenericKMSv2"
 
 	// --- TOMBSTONE ---
 	// AWSKMSProvider was a constant for AWS KMS support that was never implemented.
@@ -54,6 +72,27 @@ const (
 	//
 	// AWSKMSProvider KMSProviderType = "AWS"
 )
+
+// GenericKMSv2PluginConfig references a KMS provider operator installed via OLM.
+type GenericKMSv2PluginConfig struct {
+	// operatorNamespace is the namespace where the KMS provider operator is installed.
+	// The platform reads the KMSPlugin resource named "cluster" from this namespace
+	// to determine the container image and arguments for the KMS plugin sidecar.
+	//
+	// Secrets and ConfigMaps referenced by the plugin arguments are expected to exist
+	// in this namespace. The platform mounts them at well-known injection points
+	// during sidecar lifecycle management.
+	//
+	// The namespace must be a valid DNS-1123 label and must not be an openshift-* or
+	// kube-* system namespace.
+	//
+	// +kubebuilder:validation:MinLength=1
+	// +kubebuilder:validation:MaxLength=63
+	// +kubebuilder:validation:XValidation:rule="!format.dns1123Label().validate(self).hasValue()",message="operatorNamespace must be a valid DNS-1123 label"
+	// +kubebuilder:validation:XValidation:rule="!self.startsWith('openshift-') && !self.startsWith('kube-')",message="operatorNamespace must not be an openshift-* or kube-* system namespace"
+	// +required
+	OperatorNamespace string `json:"operatorNamespace,omitempty"`
+}
 
 // VaultSecretReference references a secret in the openshift-config namespace.
 type VaultSecretReference struct {

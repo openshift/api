@@ -7427,6 +7427,19 @@
         }
       }
     },
+    "com.github.openshift.api.config.v1.GenericKMSv2PluginConfig": {
+      "description": "GenericKMSv2PluginConfig references a KMS provider operator installed via OLM.",
+      "type": "object",
+      "required": [
+        "operatorNamespace"
+      ],
+      "properties": {
+        "operatorNamespace": {
+          "description": "operatorNamespace is the namespace where the KMS provider operator is installed. The platform reads the KMSPlugin resource named \"cluster\" from this namespace to determine the container image and arguments for the KMS plugin sidecar.\n\nSecrets and ConfigMaps referenced by the plugin arguments are expected to exist in this namespace. The platform mounts them at well-known injection points during sidecar lifecycle management.\n\nThe namespace must be a valid DNS-1123 label and must not be an openshift-* or kube-* system namespace.",
+          "type": "string"
+        }
+      }
+    },
     "com.github.openshift.api.config.v1.GitHubIdentityProvider": {
       "description": "GitHubIdentityProvider provides identities for users authenticating using GitHub credentials",
       "type": "object",
@@ -8842,8 +8855,13 @@
         "type"
       ],
       "properties": {
+        "genericKMSv2": {
+          "description": "genericKMSv2 references an OLM-managed KMS provider operator. The operator publishes how to run the KMS plugin sidecar (container image and arguments). The platform handles deployment, lifecycle, and mounting credentials from Secrets and ConfigMaps in the operator namespace at well-known injection points referenced by the plugin arguments. This field must be set when type is GenericKMSv2, and must be unset otherwise.",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.config.v1.GenericKMSv2PluginConfig"
+        },
         "type": {
-          "description": "type defines the kind of platform for the KMS provider. Allowed values are Vault. When set to Vault, the plugin connects to a HashiCorp Vault server for key management.",
+          "description": "type defines the kind of platform for the KMS provider. Allowed values are Vault and GenericKMSv2. When set to Vault, the plugin connects to a HashiCorp Vault server for key management. When set to GenericKMSv2, the platform reads runtime configuration from a KMS provider operator installed in the referenced namespace.",
           "type": "string",
           "default": ""
         },
@@ -8857,6 +8875,7 @@
         {
           "discriminator": "type",
           "fields-to-discriminateBy": {
+            "genericKMSv2": "GenericKMSv2",
             "vault": "Vault"
           }
         }
@@ -20157,6 +20176,148 @@
           }
         }
       ]
+    },
+    "com.github.openshift.api.kms.v1alpha1.KMSPlugin": {
+      "description": "KMSPlugin defines how the platform runs a KMS encryption provider plugin sidecar. A KMS provider operator installed via OLM reconciles provider-specific configuration and publishes the container runtime configuration in status.runtime.\n\nCompatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.",
+      "type": "object",
+      "required": [
+        "metadata"
+      ],
+      "properties": {
+        "apiVersion": {
+          "description": "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+          "type": "string"
+        },
+        "kind": {
+          "description": "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+          "type": "string"
+        },
+        "metadata": {
+          "description": "metadata is the standard object's metadata. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata",
+          "default": {},
+          "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.ObjectMeta"
+        },
+        "spec": {
+          "description": "spec is reserved for future use. Operators publish runtime configuration in status.runtime.",
+          "$ref": "#/definitions/com.github.openshift.api.kms.v1alpha1.KMSPluginSpec"
+        },
+        "status": {
+          "description": "status is the most recently observed status of the KMSPlugin.",
+          "$ref": "#/definitions/com.github.openshift.api.kms.v1alpha1.KMSPluginStatus"
+        }
+      }
+    },
+    "com.github.openshift.api.kms.v1alpha1.KMSPluginConfigMapReference": {
+      "description": "KMSPluginConfigMapReference references a ConfigMap in the same namespace as the KMSPlugin.",
+      "type": "object",
+      "required": [
+        "name"
+      ],
+      "properties": {
+        "name": {
+          "description": "name is the metadata.name of the referenced ConfigMap. The name must be a valid DNS subdomain name: it must contain no more than 253 characters, contain only lowercase alphanumeric characters, '-' or '.', and start and end with an alphanumeric character.",
+          "type": "string"
+        }
+      }
+    },
+    "com.github.openshift.api.kms.v1alpha1.KMSPluginList": {
+      "description": "KMSPluginList contains a list of KMSPlugins.\n\nCompatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.",
+      "type": "object",
+      "required": [
+        "items"
+      ],
+      "properties": {
+        "apiVersion": {
+          "description": "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+          "type": "string"
+        },
+        "items": {
+          "description": "items is the list of KMSPlugins.",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/com.github.openshift.api.kms.v1alpha1.KMSPlugin"
+          }
+        },
+        "kind": {
+          "description": "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+          "type": "string"
+        },
+        "metadata": {
+          "description": "metadata is the standard list's metadata. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata",
+          "default": {},
+          "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.ListMeta"
+        }
+      }
+    },
+    "com.github.openshift.api.kms.v1alpha1.KMSPluginRuntime": {
+      "description": "KMSPluginRuntime describes the container configuration for a KMS plugin sidecar. The platform injects -listen-address and manages lifecycle, resources, security context, and mounting Secrets and ConfigMaps from the operator namespace at well-known injection points. Operators must not set -listen-address in args, either as -listen-address=<path> or as a separate -listen-address flag.",
+      "type": "object",
+      "required": [
+        "image",
+        "args"
+      ],
+      "properties": {
+        "args": {
+          "description": "args are the command-line arguments passed to the KMS plugin container. The platform prepends -listen-address=<uds-path> before these arguments. Arguments may reference credential files mounted by the platform at well-known injection points under /var/run/kms/ from Secrets and ConfigMaps in the operator namespace.",
+          "type": "array",
+          "items": {
+            "type": "string",
+            "default": ""
+          },
+          "x-kubernetes-list-type": "atomic"
+        },
+        "configMaps": {
+          "description": "configMaps lists ConfigMaps in the same namespace as the KMSPlugin that the platform mounts at well-known injection points under /var/run/kms/config/. Plugin arguments may reference files from these mounted ConfigMaps. When omitted, no ConfigMaps are mounted.",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/com.github.openshift.api.kms.v1alpha1.KMSPluginConfigMapReference"
+          },
+          "x-kubernetes-list-type": "atomic"
+        },
+        "image": {
+          "description": "image is the digest-pinned OCI image for the KMS plugin.\n\nThe image must be a fully qualified OCI image pull spec with a SHA256 digest. The format is: host[:port][/namespace]/name@sha256:<digest> where the digest must be 64 characters long and consist only of lowercase hexadecimal characters, a-f and 0-9. The total length must be between 75 and 447 characters.\n\nShort names (e.g., \"vault-plugin\" or \"hashicorp/vault-plugin\") are not allowed. The registry hostname must be included and must contain at least one dot. Image tags (e.g., \":latest\", \":v1.0.0\") are not allowed.",
+          "type": "string"
+        },
+        "secrets": {
+          "description": "secrets lists Secrets in the same namespace as the KMSPlugin that the platform mounts at well-known injection points under /var/run/kms/secrets/. Plugin arguments may reference files from these mounted Secrets. When omitted, no Secrets are mounted.",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/com.github.openshift.api.kms.v1alpha1.KMSPluginSecretReference"
+          },
+          "x-kubernetes-list-type": "atomic"
+        }
+      }
+    },
+    "com.github.openshift.api.kms.v1alpha1.KMSPluginSecretReference": {
+      "description": "KMSPluginSecretReference references a Secret in the same namespace as the KMSPlugin.",
+      "type": "object",
+      "required": [
+        "name"
+      ],
+      "properties": {
+        "name": {
+          "description": "name is the metadata.name of the referenced Secret. The name must be a valid DNS subdomain name: it must contain no more than 253 characters, contain only lowercase alphanumeric characters, '-' or '.', and start and end with an alphanumeric character.",
+          "type": "string"
+        }
+      }
+    },
+    "com.github.openshift.api.kms.v1alpha1.KMSPluginSpec": {
+      "description": "KMSPluginSpec is reserved for future use.",
+      "type": "object"
+    },
+    "com.github.openshift.api.kms.v1alpha1.KMSPluginStatus": {
+      "description": "KMSPluginStatus defines the observed status of KMSPlugin.",
+      "type": "object",
+      "properties": {
+        "runtime": {
+          "description": "runtime describes how the platform should run the KMS plugin sidecar. The KMS provider operator must populate this before the platform can deploy the plugin. When omitted, the platform cannot proceed with KMS encryption.",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.kms.v1alpha1.KMSPluginRuntime"
+        }
+      }
     },
     "com.github.openshift.api.kubecontrolplane.v1.AggregatorConfig": {
       "description": "AggregatorConfig holds information required to make the aggregator function.",

@@ -1,0 +1,182 @@
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    api-approved.openshift.io: https://github.com/openshift/api/pull/TBD
+    api.openshift.io/filename-cvo-runlevel: "0000_20"
+    api.openshift.io/filename-operator: kube-apiserver
+    api.openshift.io/filename-ordering: "02"
+    feature-gate.release.openshift.io/KMSEncryption: "true"
+  name: kmsplugins.kms.openshift.io
+spec:
+  group: kms.openshift.io
+  names:
+    kind: KMSPlugin
+    listKind: KMSPluginList
+    plural: kmsplugins
+    singular: kmsplugin
+  scope: Namespaced
+  versions:
+  - name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        description: |-
+          KMSPlugin defines how the platform runs a KMS encryption provider plugin sidecar.
+          A KMS provider operator installed via OLM reconciles provider-specific configuration
+          and publishes the container runtime configuration in status.runtime.
+
+          Compatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.
+        properties:
+          apiVersion:
+            description: |-
+              APIVersion defines the versioned schema of this representation of an object.
+              Servers should convert recognized schemas to the latest internal value, and
+              may reject unrecognized values.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
+            type: string
+          kind:
+            description: |-
+              Kind is a string value representing the REST resource this object represents.
+              Servers may infer this from the endpoint the client submits requests to.
+              Cannot be updated.
+              In CamelCase.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: |-
+              spec is reserved for future use.
+              Operators publish runtime configuration in status.runtime.
+            minProperties: 0
+            type: object
+          status:
+            description: status is the most recently observed status of the KMSPlugin.
+            minProperties: 0
+            properties:
+              runtime:
+                description: |-
+                  runtime describes how the platform should run the KMS plugin sidecar.
+                  The KMS provider operator must populate this before the platform can deploy
+                  the plugin. When omitted, the platform cannot proceed with KMS encryption.
+                properties:
+                  args:
+                    description: |-
+                      args are the command-line arguments passed to the KMS plugin container.
+                      The platform prepends -listen-address=<uds-path> before these arguments.
+                      Arguments may reference credential files mounted by the platform at well-known
+                      injection points under /var/run/kms/ from Secrets and ConfigMaps in the
+                      operator namespace.
+                    items:
+                      maxLength: 4096
+                      minLength: 1
+                      type: string
+                    maxItems: 64
+                    minItems: 1
+                    type: array
+                    x-kubernetes-list-type: atomic
+                  configMaps:
+                    description: |-
+                      configMaps lists ConfigMaps in the same namespace as the KMSPlugin that the platform
+                      mounts at well-known injection points under /var/run/kms/config/.
+                      Plugin arguments may reference files from these mounted ConfigMaps.
+                      When omitted, no ConfigMaps are mounted.
+                    items:
+                      description: KMSPluginConfigMapReference references a ConfigMap
+                        in the same namespace as the KMSPlugin.
+                      properties:
+                        name:
+                          description: |-
+                            name is the metadata.name of the referenced ConfigMap.
+                            The name must be a valid DNS subdomain name: it must contain no more than 253 characters,
+                            contain only lowercase alphanumeric characters, '-' or '.', and start and end with an alphanumeric character.
+                          maxLength: 253
+                          minLength: 1
+                          type: string
+                          x-kubernetes-validations:
+                          - message: 'name must be a valid DNS subdomain name: contain
+                              no more than 253 characters, contain only lowercase
+                              alphanumeric characters, ''-'' or ''.'', and start and
+                              end with an alphanumeric character'
+                            rule: self.matches('^[a-z0-9]([a-z0-9\\-]*[a-z0-9])?(\\.[a-z0-9]([a-z0-9\\-]*[a-z0-9])?)*$')
+                      required:
+                      - name
+                      type: object
+                    maxItems: 16
+                    minItems: 1
+                    type: array
+                    x-kubernetes-list-type: atomic
+                  image:
+                    description: |-
+                      image is the digest-pinned OCI image for the KMS plugin.
+
+                      The image must be a fully qualified OCI image pull spec with a SHA256 digest.
+                      The format is: host[:port][/namespace]/name@sha256:<digest>
+                      where the digest must be 64 characters long and consist only of lowercase hexadecimal characters, a-f and 0-9.
+                      The total length must be between 75 and 447 characters.
+
+                      Short names (e.g., "vault-plugin" or "hashicorp/vault-plugin") are not allowed.
+                      The registry hostname must be included and must contain at least one dot.
+                      Image tags (e.g., ":latest", ":v1.0.0") are not allowed.
+                    maxLength: 447
+                    minLength: 75
+                    type: string
+                    x-kubernetes-validations:
+                    - message: the OCI Image reference must end with a valid '@sha256:<digest>'
+                        suffix, where '<digest>' is 64 characters long
+                      rule: (self.split('@').size() == 2 && self.split('@')[1].matches('^sha256:[a-f0-9]{64}$'))
+                    - message: the OCI Image name should follow the host[:port][/namespace]/name
+                        format, resembling a valid URL without the scheme. Short names
+                        are not allowed, the registry hostname must be included.
+                      rule: (self.split('@')[0].matches('^([a-zA-Z0-9-]+\\.)+[a-zA-Z0-9-]+(:[0-9]{2,5})?(/[a-zA-Z0-9-_.]+)+$'))
+                  secrets:
+                    description: |-
+                      secrets lists Secrets in the same namespace as the KMSPlugin that the platform
+                      mounts at well-known injection points under /var/run/kms/secrets/.
+                      Plugin arguments may reference files from these mounted Secrets.
+                      When omitted, no Secrets are mounted.
+                    items:
+                      description: KMSPluginSecretReference references a Secret in
+                        the same namespace as the KMSPlugin.
+                      properties:
+                        name:
+                          description: |-
+                            name is the metadata.name of the referenced Secret.
+                            The name must be a valid DNS subdomain name: it must contain no more than 253 characters,
+                            contain only lowercase alphanumeric characters, '-' or '.', and start and end with an alphanumeric character.
+                          maxLength: 253
+                          minLength: 1
+                          type: string
+                          x-kubernetes-validations:
+                          - message: 'name must be a valid DNS subdomain name: contain
+                              no more than 253 characters, contain only lowercase
+                              alphanumeric characters, ''-'' or ''.'', and start and
+                              end with an alphanumeric character'
+                            rule: self.matches('^[a-z0-9]([a-z0-9\\-]*[a-z0-9])?(\\.[a-z0-9]([a-z0-9\\-]*[a-z0-9])?)*$')
+                      required:
+                      - name
+                      type: object
+                    maxItems: 16
+                    minItems: 1
+                    type: array
+                    x-kubernetes-list-type: atomic
+                required:
+                - args
+                - image
+                type: object
+                x-kubernetes-validations:
+                - message: args must not include -listen-address; the platform injects
+                    this argument
+                  rule: self.args.all(a, a != '-listen-address' && !a.startsWith('-listen-address='))
+            type: object
+        required:
+        - metadata
+        type: object
+        x-kubernetes-validations:
+        - message: kmsplugin is a singleton per namespace, .metadata.name must be
+            'cluster'
+          rule: self.metadata.name == 'cluster'
+    served: true
+    storage: true
+    subresources:
+      status: {}

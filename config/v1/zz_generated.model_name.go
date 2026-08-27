@@ -611,6 +611,11 @@ func (in GenericControllerConfig) OpenAPIModelName() string {
 }
 
 // OpenAPIModelName returns the OpenAPI model name for this type.
+func (in GenericKMSv2PluginConfig) OpenAPIModelName() string {
+	return "com.github.openshift.api.config.v1.GenericKMSv2PluginConfig"
+}
+
+// OpenAPIModelName returns the OpenAPI model name for this type.
 func (in GitHubIdentityProvider) OpenAPIModelName() string {
 	return "com.github.openshift.api.config.v1.GitHubIdentityProvider"
 }

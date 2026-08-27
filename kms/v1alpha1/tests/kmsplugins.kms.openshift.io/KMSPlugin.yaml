@@ -1,0 +1,197 @@
+apiVersion: apiextensions.k8s.io/v1 # Hack because controller-gen complains if we don't have this
+name: "KMSPlugin"
+crdName: kmsplugins.kms.openshift.io
+featureGates:
+- KMSEncryption
+tests:
+  onCreate:
+    - name: Should be able to create a minimal KMSPlugin named cluster
+      initial: |
+        apiVersion: kms.openshift.io/v1alpha1
+        kind: KMSPlugin
+        metadata:
+          name: cluster
+          namespace: vault-kms-operator
+      expected: |
+        apiVersion: kms.openshift.io/v1alpha1
+        kind: KMSPlugin
+        metadata:
+          name: cluster
+          namespace: vault-kms-operator
+
+    - name: Should reject KMSPlugin without cluster name
+      initial: |
+        apiVersion: kms.openshift.io/v1alpha1
+        kind: KMSPlugin
+        metadata:
+          name: not-cluster
+          namespace: vault-kms-operator
+      expectedError: "kmsplugin is a singleton per namespace, .metadata.name must be 'cluster'"
+
+  onUpdate:
+    - name: Should accept valid runtime configuration in status
+      initial: |
+        apiVersion: kms.openshift.io/v1alpha1
+        kind: KMSPlugin
+        metadata:
+          name: cluster
+          namespace: vault-kms-operator
+      updated: |
+        apiVersion: kms.openshift.io/v1alpha1
+        kind: KMSPlugin
+        metadata:
+          name: cluster
+          namespace: vault-kms-operator
+        status:
+          runtime:
+            image: registry.example.com/vault-plugin@sha256:0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef
+            args:
+              - "-vault-address=https://vault.example.com:8200"
+              - "-vault-key-path=transit/keys/my-key"
+              - "-approle-secret-id-path=/var/run/kms/secrets/vault-approle/secret-id"
+              - "-tls-ca-file=/var/run/kms/config/vault-ca-bundle/ca-bundle.crt"
+            secrets:
+              - name: vault-approle
+            configMaps:
+              - name: vault-ca-bundle
+      expected: |
+        apiVersion: kms.openshift.io/v1alpha1
+        kind: KMSPlugin
+        metadata:
+          name: cluster
+          namespace: vault-kms-operator
+        status:
+          runtime:
+            image: registry.example.com/vault-plugin@sha256:0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef
+            args:
+              - "-vault-address=https://vault.example.com:8200"
+              - "-vault-key-path=transit/keys/my-key"
+              - "-approle-secret-id-path=/var/run/kms/secrets/vault-approle/secret-id"
+              - "-tls-ca-file=/var/run/kms/config/vault-ca-bundle/ca-bundle.crt"
+            secrets:
+              - name: vault-approle
+            configMaps:
+              - name: vault-ca-bundle
+
+    - name: Should reject runtime image with tag instead of digest
+      initial: |
+        apiVersion: kms.openshift.io/v1alpha1
+        kind: KMSPlugin
+        metadata:
+          name: cluster
+          namespace: vault-kms-operator
+      updated: |
+        apiVersion: kms.openshift.io/v1alpha1
+        kind: KMSPlugin
+        metadata:
+          name: cluster
+          namespace: vault-kms-operator
+        status:
+          runtime:
+            image: registry.example.com/vault-plugin:latest
+            args:
+              - "-vault-address=https://vault.example.com:8200"
+      expectedStatusError: "the OCI Image reference must end with a valid '@sha256:<digest>' suffix"
+
+    - name: Should reject runtime args containing combined listen-address flag
+      initial: |
+        apiVersion: kms.openshift.io/v1alpha1
+        kind: KMSPlugin
+        metadata:
+          name: cluster
+          namespace: vault-kms-operator
+      updated: |
+        apiVersion: kms.openshift.io/v1alpha1
+        kind: KMSPlugin
+        metadata:
+          name: cluster
+          namespace: vault-kms-operator
+        status:
+          runtime:
+            image: registry.example.com/vault-plugin@sha256:0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef
+            args:
+              - "-listen-address=unix:///tmp/kms.sock"
+      expectedStatusError: "args must not include -listen-address; the platform injects this argument"
+
+    - name: Should reject runtime args containing split listen-address flag
+      initial: |
+        apiVersion: kms.openshift.io/v1alpha1
+        kind: KMSPlugin
+        metadata:
+          name: cluster
+          namespace: vault-kms-operator
+      updated: |
+        apiVersion: kms.openshift.io/v1alpha1
+        kind: KMSPlugin
+        metadata:
+          name: cluster
+          namespace: vault-kms-operator
+        status:
+          runtime:
+            image: registry.example.com/vault-plugin@sha256:0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef
+            args:
+              - "-listen-address"
+              - "unix:///tmp/kms.sock"
+      expectedStatusError: "args must not include -listen-address; the platform injects this argument"
+
+    - name: Should reject runtime without args
+      initial: |
+        apiVersion: kms.openshift.io/v1alpha1
+        kind: KMSPlugin
+        metadata:
+          name: cluster
+          namespace: vault-kms-operator
+      updated: |
+        apiVersion: kms.openshift.io/v1alpha1
+        kind: KMSPlugin
+        metadata:
+          name: cluster
+          namespace: vault-kms-operator
+        status:
+          runtime:
+            image: registry.example.com/vault-plugin@sha256:0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef
+      expectedStatusError: "Required value"
+
+    - name: Should reject invalid secret name in runtime
+      initial: |
+        apiVersion: kms.openshift.io/v1alpha1
+        kind: KMSPlugin
+        metadata:
+          name: cluster
+          namespace: vault-kms-operator
+      updated: |
+        apiVersion: kms.openshift.io/v1alpha1
+        kind: KMSPlugin
+        metadata:
+          name: cluster
+          namespace: vault-kms-operator
+        status:
+          runtime:
+            image: registry.example.com/vault-plugin@sha256:0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef
+            args:
+              - "-vault-address=https://vault.example.com:8200"
+            secrets:
+              - name: invalid_secret_name!
+      expectedStatusError: "name must be a valid DNS subdomain name"
+
+    - name: Should reject invalid configMap name in runtime
+      initial: |
+        apiVersion: kms.openshift.io/v1alpha1
+        kind: KMSPlugin
+        metadata:
+          name: cluster
+          namespace: vault-kms-operator
+      updated: |
+        apiVersion: kms.openshift.io/v1alpha1
+        kind: KMSPlugin
+        metadata:
+          name: cluster
+          namespace: vault-kms-operator
+        status:
+          runtime:
+            image: registry.example.com/vault-plugin@sha256:0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef
+            args:
+              - "-vault-address=https://vault.example.com:8200"
+            configMaps:
+              - name: invalid_configmap!
+      expectedStatusError: "name must be a valid DNS subdomain name"

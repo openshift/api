@@ -203,9 +203,10 @@ spec:
                     type: string
                 type: object
                 x-kubernetes-validations:
-                - message: cannot set both Architecture and Image
+                - message: cannot set both Architecture and Image unless Architecture
+                    is Multi
                   rule: 'has(self.architecture) && has(self.image) ? (self.architecture
-                    == "" || self.image == "") : true'
+                    == "" || self.image == "" || self.architecture == "Multi") : true'
                 - message: Version must be set if Architecture is set
                   rule: 'has(self.architecture) && self.architecture != "" ? self.version
                     != "" : true'

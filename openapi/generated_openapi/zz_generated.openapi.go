@@ -47640,9 +47640,37 @@ func schema_openshift_api_machine_v1beta1_MetadataServiceOptions(ref common.Refe
 				Description: "MetadataServiceOptions defines the options available to a user when configuring Instance Metadata Service (IMDS) Options.",
 				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
+					"httpEndpoint": {
+						SchemaProps: spec.SchemaProps{
+							Description: "httpEndpoint enables or disables the HTTP metadata endpoint on your instances. Valid values are \"Enabled\" and \"Disabled\". When set to Enabled, the HTTP metadata endpoint is accessible. When set to Disabled, you cannot access your instance metadata. When omitted, the value is determined by account-level settings in the AWS Region, or the AWS service default if not configured at the account level. The typical AWS service default is Enabled.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"httpProtocolIPv6": {
+						SchemaProps: spec.SchemaProps{
+							Description: "httpProtocolIPv6 enables or disables the IPv6 endpoint for the instance metadata service. Valid values are \"Enabled\" and \"Disabled\". When set to Enabled, the IPv6 endpoint for the instance metadata service is accessible. When set to Disabled, the IPv6 endpoint for the instance metadata service is not accessible. When omitted, the AWS default is used and the IPv6 endpoint is disabled.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"httpPutResponseHopLimit": {
+						SchemaProps: spec.SchemaProps{
+							Description: "httpPutResponseHopLimit is the maximum number of hops that the metadata token can travel. Valid values range from 1 to 64. When omitted, the value is determined by AWS in the following order of precedence: 1) Account-level settings in the AWS Region (if configured) 2) AMI configuration: 1 when ImdsSupport is v1.0, 2 when ImdsSupport is v2.0",
+							Type:        []string{"integer"},
+							Format:      "int64",
+						},
+					},
 					"authentication": {
 						SchemaProps: spec.SchemaProps{
-							Description: "authentication determines whether or not the host requires the use of authentication when interacting with the metadata service. When using authentication, this enforces v2 interaction method (IMDSv2) with the metadata service. When omitted, this means the user has no opinion and the value is left to the platform to choose a good default, which is subject to change over time. The current default is optional. At this point this field represents `HttpTokens` parameter from `InstanceMetadataOptionsRequest` structure in AWS EC2 API https://docs.aws.amazon.com/AWSEC2/latest/APIReference/API_InstanceMetadataOptionsRequest.html",
+							Description: "authentication determines whether or not the host requires the use of authentication when interacting with the metadata service. When set to Required, this enforces v2 interaction method (IMDSv2) with the metadata service. When set to Optional, both IMDSv1 and IMDSv2 are allowed. When omitted, the value is determined by AWS in the following order of precedence: 1) Account-level settings in the AWS Region (if configured) 2) AMI configuration: Required when ImdsSupport is v2.0, Optional when ImdsSupport is v1.0 At this point this field represents `HttpTokens` parameter from `InstanceMetadataOptionsRequest` structure in AWS EC2 API https://docs.aws.amazon.com/AWSEC2/latest/APIReference/API_InstanceMetadataOptionsRequest.html",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"instanceMetadataTags": {
+						SchemaProps: spec.SchemaProps{
+							Description: "instanceMetadataTags enables or disables access to instance tags from the instance metadata. Valid values are \"Enabled\" and \"Disabled\". When set to Enabled, you can retrieve your instance tags from the instance metadata. When set to Disabled, instance tags are not accessible from the instance metadata. When omitted, the value is determined by account-level settings in the AWS Region, or the AWS service default if not configured at the account level. The typical AWS service default is Disabled. For more information, see the AWS documentation: https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/Using_Tags.html#work-with-tags-in-IMDS",
 							Type:        []string{"string"},
 							Format:      "",
 						},

@@ -368,12 +368,6 @@
                         "name": "ServiceAccountTokenNodeBinding"
                     },
                     {
-                        "name": "SigstoreImageVerification"
-                    },
-                    {
-                        "name": "SigstoreImageVerificationPKI"
-                    },
-                    {
                         "name": "StoragePerformantSecurityPolicy"
                     },
                     {

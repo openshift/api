@@ -6,22 +6,22 @@ metadata:
     api.openshift.io/filename-cvo-runlevel: "0000_10"
     api.openshift.io/filename-operator: config-operator
     api.openshift.io/filename-ordering: "01"
-    feature-gate.release.openshift.io/SigstoreImageVerification: "true"
-  name: imagepolicies.config.openshift.io
+    feature-gate.release.openshift.io/: "true"
+  name: clusterimagepolicies.config.openshift.io
 spec:
   group: config.openshift.io
   names:
-    kind: ImagePolicy
-    listKind: ImagePolicyList
-    plural: imagepolicies
-    singular: imagepolicy
-  scope: Namespaced
+    kind: ClusterImagePolicy
+    listKind: ClusterImagePolicyList
+    plural: clusterimagepolicies
+    singular: clusterimagepolicy
+  scope: Cluster
   versions:
   - name: v1
     schema:
       openAPIV3Schema:
         description: |-
-          ImagePolicy holds namespace-wide configuration for image signature verification
+          ClusterImagePolicy holds cluster-wide configuration for image signature verification
 
           Compatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).
         properties:
@@ -43,7 +43,7 @@ spec:
           metadata:
             type: object
           spec:
-            description: spec holds user settable values for configuration
+            description: spec contains the configuration for the cluster image policy.
             properties:
               policy:
                 description: |-
@@ -127,6 +127,93 @@ spec:
                         - fulcioSubject
                         - rekorKeyData
                         type: object
+                      pki:
+                        description: |-
+                          pki defines the root of trust configuration based on Bring Your Own Public Key Infrastructure (BYOPKI) Root CA(s) and corresponding intermediate certificates.
+                          pki is required when policyType is PKI, and forbidden otherwise.
+                        properties:
+                          caIntermediatesData:
+                            description: |-
+                              caIntermediatesData contains base64-encoded data of a certificate bundle PEM file, which contains one or more intermediate certificates in the PEM format. The total length of the data must not exceed 8192 characters.
+                              caIntermediatesData requires caRootsData to be set.
+                            format: byte
+                            maxLength: 8192
+                            minLength: 72
+                            type: string
+                            x-kubernetes-validations:
+                            - message: the caIntermediatesData must start with base64
+                                encoding of '-----BEGIN CERTIFICATE-----'.
+                              rule: string(self).startsWith('-----BEGIN CERTIFICATE-----')
+                            - message: the caIntermediatesData must end with base64
+                                encoding of '-----END CERTIFICATE-----'.
+                              rule: string(self).endsWith('-----END CERTIFICATE-----\n')
+                                || string(self).endsWith('-----END CERTIFICATE-----')
+                            - message: caIntermediatesData must be base64 encoding
+                                of valid PEM format data contain the same number of
+                                '-----BEGIN CERTIFICATE-----' and '-----END CERTIFICATE-----'
+                                markers.
+                              rule: string(self).findAll('-----BEGIN CERTIFICATE-----').size()
+                                == string(self).findAll('-----END CERTIFICATE-----').size()
+                          caRootsData:
+                            description: caRootsData contains base64-encoded data
+                              of a certificate bundle PEM file, which contains one
+                              or more CA roots in the PEM format. The total length
+                              of the data must not exceed 8192 characters.
+                            format: byte
+                            maxLength: 8192
+                            minLength: 72
+                            type: string
+                            x-kubernetes-validations:
+                            - message: the caRootsData must start with base64 encoding
+                                of '-----BEGIN CERTIFICATE-----'.
+                              rule: string(self).startsWith('-----BEGIN CERTIFICATE-----')
+                            - message: the caRootsData must end with base64 encoding
+                                of '-----END CERTIFICATE-----'.
+                              rule: string(self).endsWith('-----END CERTIFICATE-----\n')
+                                || string(self).endsWith('-----END CERTIFICATE-----')
+                            - message: caRootsData must be base64 encoding of valid
+                                PEM format data contain the same number of '-----BEGIN
+                                CERTIFICATE-----' and '-----END CERTIFICATE-----'
+                                markers.
+                              rule: string(self).findAll('-----BEGIN CERTIFICATE-----').size()
+                                == string(self).findAll('-----END CERTIFICATE-----').size()
+                          pkiCertificateSubject:
+                            description: pkiCertificateSubject defines the requirements
+                              imposed on the subject to which the certificate was
+                              issued.
+                            properties:
+                              email:
+                                description: |-
+                                  email specifies the expected email address imposed on the subject to which the certificate was issued, and must match the email address listed in the Subject Alternative Name (SAN) field of the certificate.
+                                  The email must be a valid email address and at most 320 characters in length.
+                                maxLength: 320
+                                type: string
+                                x-kubernetes-validations:
+                                - message: invalid email address
+                                  rule: self.matches('^\\S+@\\S+$')
+                              hostname:
+                                description: |-
+                                  hostname specifies the expected hostname imposed on the subject to which the certificate was issued, and it must match the hostname listed in the Subject Alternative Name (SAN) DNS field of the certificate.
+                                  The hostname must be a valid dns 1123 subdomain name, optionally prefixed by '*.', and at most 253 characters in length.
+                                  It must consist only of lowercase alphanumeric characters, hyphens, periods and the optional preceding asterisk.
+                                maxLength: 253
+                                type: string
+                                x-kubernetes-validations:
+                                - message: hostname must be a valid dns 1123 subdomain
+                                    name, optionally prefixed by '*.'. It must consist
+                                    only of lowercase alphanumeric characters, hyphens,
+                                    periods and the optional preceding asterisk.
+                                  rule: 'self.startsWith(''*.'') ? !format.dns1123Subdomain().validate(self.replace(''*.'',
+                                    '''', 1)).hasValue() : !format.dns1123Subdomain().validate(self).hasValue()'
+                            type: object
+                            x-kubernetes-validations:
+                            - message: at least one of email or hostname must be set
+                                in pkiCertificateSubject
+                              rule: has(self.email) || has(self.hostname)
+                        required:
+                        - caRootsData
+                        - pkiCertificateSubject
+                        type: object
                       policyType:
                         description: |-
                           policyType is a required field specifies the type of the policy for verification. This field must correspond to how the policy was generated.
@@ -134,6 +221,10 @@ spec:
                           When set to "PublicKey", the policy relies on a sigstore publicKey and may optionally use a Rekor verification.
                           When set to "FulcioCAWithRekor", the policy is based on the Fulcio certification and incorporates a Rekor verification.
                           When set to "PKI", the policy is based on the certificates from Bring Your Own Public Key Infrastructure (BYOPKI).
+                        enum:
+                        - PublicKey
+                        - FulcioCAWithRekor
+                        - PKI
                         type: string
                       publicKey:
                         description: |-
@@ -186,6 +277,10 @@ spec:
                         and forbidden otherwise
                       rule: 'has(self.policyType) && self.policyType == ''FulcioCAWithRekor''
                         ? has(self.fulcioCAWithRekor) : !has(self.fulcioCAWithRekor)'
+                    - message: pki is required when policyType is PKI, and forbidden
+                        otherwise
+                      rule: 'has(self.policyType) && self.policyType == ''PKI'' ?
+                        has(self.pki) : !has(self.pki)'
                   signedIdentity:
                     description: |-
                       signedIdentity is an optional field specifies what image identity the signature claims about the image. This is useful when the image identity in the signature differs from the original image spec, such as when mirror registry is configured for the image scope, the signature from the mirror registry contains the image identity of the mirror instead of the original scope.
@@ -343,9 +438,8 @@ spec:
             description: status contains the observed state of the resource.
             properties:
               conditions:
-                description: |-
-                  conditions provide details on the status of this API Resource.
-                  condition type 'Pending' indicates that the customer resource contains a policy that cannot take effect. It is either overwritten by a global policy or the image scope is not valid.
+                description: conditions provide details on the status of this API
+                  Resource.
                 items:
                   description: Condition contains details for one aspect of the current
                     state of this API Resource.

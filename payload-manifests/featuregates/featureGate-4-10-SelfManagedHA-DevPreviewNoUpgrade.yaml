@@ -349,6 +349,9 @@
                         "name": "OpenShiftPodSecurityAdmission"
                     },
                     {
+                        "name": "PodCertificateRequest"
+                    },
+                    {
                         "name": "ProvisioningRequestAvailable"
                     },
                     {

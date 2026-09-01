@@ -16,7 +16,6 @@ tests:
             kms:
               type: Vault
               vault:
-                kmsPluginImage: registry.example.com/vault-plugin@sha256:0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef
                 vaultAddress: https://vault.example.com:8200
                 authentication:
                   type: AppRole
@@ -35,45 +34,6 @@ tests:
             kms:
               type: Vault
               vault:
-                kmsPluginImage: registry.example.com/vault-plugin@sha256:0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef
-                vaultAddress: https://vault.example.com:8200
-                authentication:
-                  type: AppRole
-                  appRole:
-                    secret:
-                      name: vault-approle
-                vaultKeyPath: transit/keys/my-encryption-key
-
-    - name: Should accept kmsPluginImage with simple two-level path like quay.io/vault/kms-plugin
-      initial: |
-        apiVersion: config.openshift.io/v1
-        kind: APIServer
-        spec:
-          encryption:
-            type: KMS
-            kms:
-              type: Vault
-              vault:
-                kmsPluginImage: quay.io/vault/kms-plugin@sha256:abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789
-                vaultAddress: https://vault.example.com:8200
-                authentication:
-                  type: AppRole
-                  appRole:
-                    secret:
-                      name: vault-approle
-                vaultKeyPath: transit/keys/my-encryption-key
-      expected: |
-        apiVersion: config.openshift.io/v1
-        kind: APIServer
-        spec:
-          audit:
-            profile: Default
-          encryption:
-            type: KMS
-            kms:
-              type: Vault
-              vault:
-                kmsPluginImage: quay.io/vault/kms-plugin@sha256:abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789
                 vaultAddress: https://vault.example.com:8200
                 authentication:
                   type: AppRole
@@ -92,7 +52,6 @@ tests:
             kms:
               type: Vault
               vault:
-                kmsPluginImage: registry.example.com/hashicorp/vault-plugin@sha256:abcdef1234567890abcdef1234567890abcdef1234567890abcdef1234567890
                 vaultAddress: https://vault.prod.example.com:8200
                 vaultNamespace: my-team
                 vaultAuthNamespace: central-auth
@@ -117,7 +76,6 @@ tests:
             kms:
               type: Vault
               vault:
-                kmsPluginImage: registry.example.com/hashicorp/vault-plugin@sha256:abcdef1234567890abcdef1234567890abcdef1234567890abcdef1234567890
                 vaultAddress: https://vault.prod.example.com:8200
                 vaultNamespace: my-team
                 vaultAuthNamespace: central-auth
@@ -131,83 +89,6 @@ tests:
                     secret:
                       name: vault-approle-credentials
                 vaultKeyPath: custom/transit/path/keys/production-encryption-key
-
-    # Multi-level namespace path tests
-    - name: Should accept kmsPluginImage with multi-level namespace path
-      initial: |
-        apiVersion: config.openshift.io/v1
-        kind: APIServer
-        spec:
-          encryption:
-            type: KMS
-            kms:
-              type: Vault
-              vault:
-                kmsPluginImage: registry.example.com/org/team/vault-plugin@sha256:0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef
-                vaultAddress: https://vault.example.com:8200
-                authentication:
-                  type: AppRole
-                  appRole:
-                    secret:
-                      name: vault-approle
-                vaultKeyPath: transit/keys/my-encryption-key
-      expected: |
-        apiVersion: config.openshift.io/v1
-        kind: APIServer
-        spec:
-          audit:
-            profile: Default
-          encryption:
-            type: KMS
-            kms:
-              type: Vault
-              vault:
-                kmsPluginImage: registry.example.com/org/team/vault-plugin@sha256:0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef
-                vaultAddress: https://vault.example.com:8200
-                authentication:
-                  type: AppRole
-                  appRole:
-                    secret:
-                      name: vault-approle
-                vaultKeyPath: transit/keys/my-encryption-key
-
-    - name: Should accept kmsPluginImage with deep multi-level namespace path
-      initial: |
-        apiVersion: config.openshift.io/v1
-        kind: APIServer
-        spec:
-          encryption:
-            type: KMS
-            kms:
-              type: Vault
-              vault:
-                kmsPluginImage: registry.io/org_name/team.name/project/subproject/vault_plugin@sha256:abcd1234abcd1234abcd1234abcd1234abcd1234abcd1234abcd1234abcd1234
-                vaultAddress: https://vault.example.com:8200
-                authentication:
-                  type: AppRole
-                  appRole:
-                    secret:
-                      name: vault-approle
-                vaultKeyPath: transit/keys/my-encryption-key
-      expected: |
-        apiVersion: config.openshift.io/v1
-        kind: APIServer
-        spec:
-          audit:
-            profile: Default
-          encryption:
-            type: KMS
-            kms:
-              type: Vault
-              vault:
-                kmsPluginImage: registry.io/org_name/team.name/project/subproject/vault_plugin@sha256:abcd1234abcd1234abcd1234abcd1234abcd1234abcd1234abcd1234abcd1234
-                vaultAddress: https://vault.example.com:8200
-                authentication:
-                  type: AppRole
-                  appRole:
-                    secret:
-                      name: vault-approle
-                vaultKeyPath: transit/keys/my-encryption-key
 
     # vaultKeyPath valid tests
     - name: Should accept vaultKeyPath with multi-segment mount
@@ -220,7 +101,6 @@ tests:
             kms:
               type: Vault
               vault:
-                kmsPluginImage: registry.example.com/vault-plugin@sha256:0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef
                 vaultAddress: https://vault.example.com:8200
                 authentication:
                   type: AppRole
@@ -239,7 +119,6 @@ tests:
             kms:
               type: Vault
               vault:
-                kmsPluginImage: registry.example.com/vault-plugin@sha256:0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef
                 vaultAddress: https://vault.example.com:8200
                 authentication:
                   type: AppRole
@@ -258,7 +137,6 @@ tests:
             kms:
               type: Vault
               vault:
-                kmsPluginImage: registry.example.com/vault-plugin@sha256:0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef
                 vaultAddress: https://vault.example.com:8200
                 authentication:
                   type: AppRole
@@ -277,7 +155,6 @@ tests:
             kms:
               type: Vault
               vault:
-                kmsPluginImage: registry.example.com/vault-plugin@sha256:0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef
                 vaultAddress: https://vault.example.com:8200
                 authentication:
                   type: AppRole
@@ -296,7 +173,6 @@ tests:
             kms:
               type: Vault
               vault:
-                kmsPluginImage: registry.example.com/vault-plugin@sha256:0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef
                 vaultAddress: https://vault.example.com:8200
                 authentication:
                   type: AppRole
@@ -315,7 +191,6 @@ tests:
             kms:
               type: Vault
               vault:
-                kmsPluginImage: registry.example.com/vault-plugin@sha256:0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef
                 vaultAddress: https://vault.example.com:8200
                 authentication:
                   type: AppRole
@@ -334,7 +209,6 @@ tests:
             kms:
               type: Vault
               vault:
-                kmsPluginImage: registry.example.com/vault-plugin@sha256:0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef
                 vaultAddress: https://vault.example.com:8200
                 authentication:
                   type: AppRole
@@ -353,7 +227,6 @@ tests:
             kms:
               type: Vault
               vault:
-                kmsPluginImage: registry.example.com/vault-plugin@sha256:0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef
                 vaultAddress: https://vault.example.com:8200
                 authentication:
                   type: AppRole
@@ -373,7 +246,6 @@ tests:
             kms:
               type: Vault
               vault:
-                kmsPluginImage: registry.example.com/vault-plugin@sha256:0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef
                 vaultAddress: https://vault.example.com:8200
                 authentication:
                   type: AppRole
@@ -393,7 +265,6 @@ tests:
             kms:
               type: Vault
               vault:
-                kmsPluginImage: registry.example.com/vault-plugin@sha256:0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef
                 vaultAddress: https://vault.example.com:8200
                 authentication:
                   type: AppRole
@@ -413,7 +284,6 @@ tests:
             kms:
               type: Vault
               vault:
-                kmsPluginImage: registry.example.com/vault-plugin@sha256:0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef
                 vaultAddress: https://vault.example.com:8200
                 authentication:
                   type: AppRole
@@ -433,7 +303,6 @@ tests:
             kms:
               type: Vault
               vault:
-                kmsPluginImage: registry.example.com/vault-plugin@sha256:0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef
                 vaultAddress: https://vault.example.com:8200
                 authentication:
                   type: AppRole
@@ -453,7 +322,6 @@ tests:
             kms:
               type: Vault
               vault:
-                kmsPluginImage: registry.example.com/vault-plugin@sha256:0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef
                 vaultAddress: https://vault.example.com:8200
                 authentication:
                   type: AppRole
@@ -473,7 +341,6 @@ tests:
             kms:
               type: Vault
               vault:
-                kmsPluginImage: registry.example.com/vault-plugin@sha256:0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef
                 vaultAddress: https://vault.example.com:8200
                 authentication:
                   type: AppRole
@@ -493,7 +360,6 @@ tests:
             kms:
               type: Vault
               vault:
-                kmsPluginImage: registry.example.com/vault-plugin@sha256:0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef
                 vaultAddress: https://vault.example.com:8200
                 authentication:
                   type: AppRole
@@ -513,7 +379,6 @@ tests:
             kms:
               type: Vault
               vault:
-                kmsPluginImage: registry.example.com/vault-plugin@sha256:0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef
                 vaultAddress: https://vault.example.com:8200
                 authentication:
                   type: AppRole
@@ -533,7 +398,6 @@ tests:
             kms:
               type: Vault
               vault:
-                kmsPluginImage: registry.example.com/vault-plugin@sha256:0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef
                 vaultAddress: https://vault.example.com:8200
                 authentication:
                   type: AppRole
@@ -553,7 +417,6 @@ tests:
             kms:
               type: Vault
               vault:
-                kmsPluginImage: registry.example.com/vault-plugin@sha256:0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef
                 vaultAddress: https://vault.example.com:8200
                 authentication:
                   type: AppRole
@@ -574,7 +437,6 @@ tests:
             kms:
               type: Vault
               vault:
-                kmsPluginImage: registry.example.com/vault-plugin@sha256:0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef
                 vaultAddress: https://vault.example.com:8200
                 authentication:
                   type: AppRole
@@ -606,73 +468,11 @@ tests:
             kms:
               type: Vault
               vault:
-                kmsPluginImage: registry.example.com/vault-plugin@sha256:0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef
                 vaultAddress: https://vault.example.com:8200
                 authentication:
                   type: AppRole
                 vaultKeyPath: transit/keys/my-key
       expectedError: "appRole config is required when authentication type is AppRole"
-
-    # kmsPluginImage validation tests
-    - name: Should reject kmsPluginImage with tag instead of digest
-      initial: |
-        apiVersion: config.openshift.io/v1
-        kind: APIServer
-        spec:
-          encryption:
-            type: KMS
-            kms:
-              type: Vault
-              vault:
-                kmsPluginImage: registry.example.com/vault-plugin:latest
-                vaultAddress: https://vault.example.com:8200
-                authentication:
-                  type: AppRole
-                  appRole:
-                    secret:
-                      name: vault-approle
-                vaultKeyPath: transit/keys/my-key
-      expectedError: "the OCI Image reference must end with a valid '@sha256:<digest>' suffix"
-
-    - name: Should reject kmsPluginImage without registry hostname
-      initial: |
-        apiVersion: config.openshift.io/v1
-        kind: APIServer
-        spec:
-          encryption:
-            type: KMS
-            kms:
-              type: Vault
-              vault:
-                kmsPluginImage: vault-plugin@sha256:0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef
-                vaultAddress: https://vault.example.com:8200
-                authentication:
-                  type: AppRole
-                  appRole:
-                    secret:
-                      name: vault-approle
-                vaultKeyPath: transit/keys/my-key
-      expectedError: "the OCI Image name should follow the host[:port][/namespace]/name format"
-
-    - name: Should reject kmsPluginImage with invalid digest length
-      initial: |
-        apiVersion: config.openshift.io/v1
-        kind: APIServer
-        spec:
-          encryption:
-            type: KMS
-            kms:
-              type: Vault
-              vault:
-                kmsPluginImage: registry.example.com/vault@sha256:abc123
-                vaultAddress: https://vault.example.com:8200
-                authentication:
-                  type: AppRole
-                  appRole:
-                    secret:
-                      name: vault-approle
-                vaultKeyPath: transit/keys/my-key
-      expectedError: "the OCI Image reference must end with a valid '@sha256:<digest>' suffix, where '<digest>' is 64 characters long"
 
     # vaultAddress validation tests
     - name: Should reject vaultAddress with http scheme
@@ -685,7 +485,6 @@ tests:
             kms:
               type: Vault
               vault:
-                kmsPluginImage: registry.example.com/vault-plugin@sha256:0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef
                 vaultAddress: http://vault.example.com:8200
                 authentication:
                   type: AppRole
@@ -705,7 +504,6 @@ tests:
             kms:
               type: Vault
               vault:
-                kmsPluginImage: registry.example.com/vault-plugin@sha256:0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef
                 vaultAddress: https://vault.example.com:8200/v1
                 authentication:
                   type: AppRole
@@ -725,7 +523,6 @@ tests:
             kms:
               type: Vault
               vault:
-                kmsPluginImage: registry.example.com/vault-plugin@sha256:0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef
                 vaultAddress: https://vault.example.com:8200?key=value
                 authentication:
                   type: AppRole
@@ -745,7 +542,6 @@ tests:
             kms:
               type: Vault
               vault:
-                kmsPluginImage: registry.example.com/vault-plugin@sha256:0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef
                 vaultAddress: https://vault.example.com:8200#fragment
                 authentication:
                   type: AppRole
@@ -765,7 +561,6 @@ tests:
             kms:
               type: Vault
               vault:
-                kmsPluginImage: registry.example.com/vault-plugin@sha256:0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef
                 vaultAddress: https://user:password@vault.example.com:8200
                 authentication:
                   type: AppRole
@@ -786,7 +581,6 @@ tests:
             kms:
               type: Vault
               vault:
-                kmsPluginImage: registry.example.com/vault-plugin@sha256:0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef
                 vaultAddress: https://vault.example.com:8200
                 vaultNamespace: my-namespace/
                 authentication:
@@ -807,7 +601,6 @@ tests:
             kms:
               type: Vault
               vault:
-                kmsPluginImage: registry.example.com/vault-plugin@sha256:0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef
                 vaultAddress: https://vault.example.com:8200
                 vaultNamespace: my namespace
                 authentication:
@@ -828,7 +621,6 @@ tests:
             kms:
               type: Vault
               vault:
-                kmsPluginImage: registry.example.com/vault-plugin@sha256:0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef
                 vaultAddress: https://vault.example.com:8200
                 vaultNamespace: root
                 authentication:
@@ -849,7 +641,6 @@ tests:
             kms:
               type: Vault
               vault:
-                kmsPluginImage: registry.example.com/vault-plugin@sha256:0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef
                 vaultAddress: https://vault.example.com:8200
                 vaultNamespace: sys
                 authentication:
@@ -870,7 +661,6 @@ tests:
             kms:
               type: Vault
               vault:
-                kmsPluginImage: registry.example.com/vault-plugin@sha256:0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef
                 vaultAddress: https://vault.example.com:8200
                 vaultNamespace: audit
                 authentication:
@@ -891,7 +681,6 @@ tests:
             kms:
               type: Vault
               vault:
-                kmsPluginImage: registry.example.com/vault-plugin@sha256:0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef
                 vaultAddress: https://vault.example.com:8200
                 vaultNamespace: auth
                 authentication:
@@ -912,7 +701,6 @@ tests:
             kms:
               type: Vault
               vault:
-                kmsPluginImage: registry.example.com/vault-plugin@sha256:0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef
                 vaultAddress: https://vault.example.com:8200
                 vaultNamespace: cubbyhole
                 authentication:
@@ -933,7 +721,6 @@ tests:
             kms:
               type: Vault
               vault:
-                kmsPluginImage: registry.example.com/vault-plugin@sha256:0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef
                 vaultAddress: https://vault.example.com:8200
                 vaultNamespace: identity
                 authentication:
@@ -955,7 +742,6 @@ tests:
             kms:
               type: Vault
               vault:
-                kmsPluginImage: registry.example.com/vault-plugin@sha256:0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef
                 vaultAddress: https://vault.example.com:8200
                 vaultNamespace: transit-ns
                 vaultAuthNamespace: auth-ns
@@ -976,7 +762,6 @@ tests:
             kms:
               type: Vault
               vault:
-                kmsPluginImage: registry.example.com/vault-plugin@sha256:0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef
                 vaultAddress: https://vault.example.com:8200
                 vaultNamespace: transit-ns
                 vaultAuthNamespace: auth-ns
@@ -997,7 +782,6 @@ tests:
             kms:
               type: Vault
               vault:
-                kmsPluginImage: registry.example.com/vault-plugin@sha256:0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef
                 vaultAddress: https://vault.example.com:8200
                 vaultAuthNamespace: my-auth-ns/
                 authentication:
@@ -1018,7 +802,6 @@ tests:
             kms:
               type: Vault
               vault:
-                kmsPluginImage: registry.example.com/vault-plugin@sha256:0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef
                 vaultAddress: https://vault.example.com:8200
                 vaultAuthNamespace: my auth ns
                 authentication:
@@ -1039,7 +822,6 @@ tests:
             kms:
               type: Vault
               vault:
-                kmsPluginImage: registry.example.com/vault-plugin@sha256:0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef
                 vaultAddress: https://vault.example.com:8200
                 vaultAuthNamespace: root
                 authentication:
@@ -1060,7 +842,6 @@ tests:
             kms:
               type: Vault
               vault:
-                kmsPluginImage: registry.example.com/vault-plugin@sha256:0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef
                 vaultAddress: https://vault.example.com:8200
                 vaultAuthNamespace: identity
                 authentication:
@@ -1082,7 +863,6 @@ tests:
             kms:
               type: Vault
               vault:
-                kmsPluginImage: registry.example.com/vault-plugin@sha256:0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef
                 vaultAddress: https://vault.example.com:8200
                 tls:
                   serverName: invalid_hostname!
@@ -1105,7 +885,6 @@ tests:
             kms:
               type: Vault
               vault:
-                kmsPluginImage: registry.example.com/vault-plugin@sha256:0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef
                 vaultAddress: https://vault.example.com:8200
                 authentication:
                   type: AppRole
@@ -1125,7 +904,6 @@ tests:
             kms:
               type: Vault
               vault:
-                kmsPluginImage: registry.example.com/vault-plugin@sha256:0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef
                 vaultAddress: https://vault.example.com:8200
                 tls:
                   caBundle:

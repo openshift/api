@@ -23198,13 +23198,6 @@ func schema_openshift_api_config_v1_VaultKMSPluginConfig(ref common.ReferenceCal
 				Description: "VaultKMSPluginConfig defines the KMS plugin configuration specific to Vault KMS",
 				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
-					"kmsPluginImage": {
-						SchemaProps: spec.SchemaProps{
-							Description: "kmsPluginImage specifies the container image for the HashiCorp Vault KMS plugin.\n\nThe image must be a fully qualified OCI image pull spec with a SHA256 digest. The format is: host[:port][/namespace]/name@sha256:<digest> where the digest must be 64 characters long and consist only of lowercase hexadecimal characters, a-f and 0-9. The total length must be between 75 and 447 characters.\n\nShort names (e.g., \"vault-plugin\" or \"hashicorp/vault-plugin\") are not allowed. The registry hostname must be included and must contain at least one dot. Image tags (e.g., \":latest\", \":v1.0.0\") are not allowed.\n\nConsult the OpenShift documentation for compatible plugin versions with your cluster version, then obtain the image digest for that version from HashiCorp's container registry.\n\nFor disconnected environments, mirror the plugin image to an accessible registry and reference the mirrored location with its digest.",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
 					"vaultAddress": {
 						SchemaProps: spec.SchemaProps{
 							Description: "vaultAddress specifies the address of the HashiCorp Vault instance. The value must be a valid HTTPS URL containing only scheme, host, and optional port. Paths, user info, query parameters, and fragments are not allowed.\n\nFormat: https://hostname[:port] Example: https://vault.example.com:8200\n\nThe value must be between 1 and 512 characters.",
@@ -23248,7 +23241,7 @@ func schema_openshift_api_config_v1_VaultKMSPluginConfig(ref common.ReferenceCal
 						},
 					},
 				},
-				Required: []string{"kmsPluginImage", "vaultAddress", "authentication", "vaultKeyPath"},
+				Required: []string{"vaultAddress", "authentication", "vaultKeyPath"},
 			},
 		},
 		Dependencies: []string{

@@ -280,6 +280,9 @@
                         "name": "MachineAPIMigrationOpenStack"
                     },
                     {
+                        "name": "ManagedBootImagesAWSCAPI"
+                    },
+                    {
                         "name": "ManagedBootImagesCPMS"
                     },
                     {

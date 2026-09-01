@@ -60603,7 +60603,7 @@ func schema_openshift_api_operator_v1_MachineManager(ref common.ReferenceCallbac
 				Properties: map[string]spec.Schema{
 					"resource": {
 						SchemaProps: spec.SchemaProps{
-							Description: "resource is the machine management resource's type. Valid values are machinesets and controlplanemachinesets. machinesets means that the machine manager will only register resources of the kind MachineSet. controlplanemachinesets means that the machine manager will only register resources of the kind ControlPlaneMachineSet.",
+							Description: "resource is the machine management resource's type. Valid values are machinesets, controlplanemachinesets and machinedeployments. machinesets means that the machine manager will only register resources of the kind MachineSet. controlplanemachinesets means that the machine manager will only register resources of the kind ControlPlaneMachineSet. machinedeployments means that the machine manager will only register resources of the kind MachineDeployment.",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -60611,7 +60611,7 @@ func schema_openshift_api_operator_v1_MachineManager(ref common.ReferenceCallbac
 					},
 					"apiGroup": {
 						SchemaProps: spec.SchemaProps{
-							Description: "apiGroup is name of the APIGroup that the machine management resource belongs to. The only current valid value is machine.openshift.io. machine.openshift.io means that the machine manager will only register resources that belong to OpenShift machine API group.",
+							Description: "apiGroup is name of the APIGroup that the machine management resource belongs to. Valid values are machine.openshift.io and cluster.x-k8s.io. machine.openshift.io means that the machine manager will only register resources that belong to OpenShift machine API group. cluster.x-k8s.io means that the machine manager will only register resources that belong to the Cluster API group.",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",

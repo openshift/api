@@ -168,8 +168,8 @@ spec:
                       architecture means either a single architecture or a multi
                       architecture. architecture can only be set to Multi thereby
                       only allowing updates from single to multi architecture. If
-                      architecture is set, image cannot be set and version must be
-                      set.
+                      architecture is set, version must be set. image can be set only
+                      when architecture is Multi.
                       Valid values are 'Multi' and empty.
                     enum:
                     - Multi
@@ -192,7 +192,7 @@ spec:
                     description: |-
                       image is a container image location that contains the update.
                       image should be used when the desired version does not exist in availableUpdates or history.
-                      When image is set, architecture cannot be specified.
+                      When image is set, architecture can be specified only as Multi.
                       If both version and image are set, the version extracted from the referenced image must match the specified version.
                     type: string
                   version:
@@ -203,9 +203,10 @@ spec:
                     type: string
                 type: object
                 x-kubernetes-validations:
-                - message: cannot set both Architecture and Image
+                - message: cannot set both Architecture and Image unless Architecture
+                    is Multi
                   rule: 'has(self.architecture) && has(self.image) ? (self.architecture
-                    == "" || self.image == "") : true'
+                    == "" || self.image == "" || self.architecture == "Multi") : true'
                 - message: Version must be set if Architecture is set
                   rule: 'has(self.architecture) && self.architecture != "" ? self.version
                     != "" : true'

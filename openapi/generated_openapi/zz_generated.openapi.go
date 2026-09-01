@@ -22227,7 +22227,7 @@ func schema_openshift_api_config_v1_Update(ref common.ReferenceCallback) common.
 				Properties: map[string]spec.Schema{
 					"architecture": {
 						SchemaProps: spec.SchemaProps{
-							Description: "architecture is an optional field that indicates the desired value of the cluster architecture. In this context cluster architecture means either a single architecture or a multi architecture. architecture can only be set to Multi thereby only allowing updates from single to multi architecture. If architecture is set, image cannot be set and version must be set. Valid values are 'Multi' and empty.",
+							Description: "architecture is an optional field that indicates the desired value of the cluster architecture. In this context cluster architecture means either a single architecture or a multi architecture. architecture can only be set to Multi thereby only allowing updates from single to multi architecture. If architecture is set, version must be set. image can be set only when architecture is Multi. Valid values are 'Multi' and empty.",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -22243,7 +22243,7 @@ func schema_openshift_api_config_v1_Update(ref common.ReferenceCallback) common.
 					},
 					"image": {
 						SchemaProps: spec.SchemaProps{
-							Description: "image is a container image location that contains the update. image should be used when the desired version does not exist in availableUpdates or history. When image is set, architecture cannot be specified. If both version and image are set, the version extracted from the referenced image must match the specified version.",
+							Description: "image is a container image location that contains the update. image should be used when the desired version does not exist in availableUpdates or history. When image is set, architecture can be specified only as Multi. If both version and image are set, the version extracted from the referenced image must match the specified version.",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",

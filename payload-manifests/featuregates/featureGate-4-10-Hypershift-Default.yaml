@@ -287,9 +287,6 @@
                         "name": "AdditionalStorageConfig"
                     },
                     {
-                        "name": "AzureWorkloadIdentity"
-                    },
-                    {
                         "name": "BootImageSkewEnforcement"
                     },
                     {

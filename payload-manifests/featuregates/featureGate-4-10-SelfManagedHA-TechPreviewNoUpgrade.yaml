@@ -118,9 +118,6 @@
                         "name": "AzureMultiDisk"
                     },
                     {
-                        "name": "AzureWorkloadIdentity"
-                    },
-                    {
                         "name": "BootImageSkewEnforcement"
                     },
                     {

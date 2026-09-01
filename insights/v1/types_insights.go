@@ -369,7 +369,7 @@ type HealthCheck struct {
 	// The value represents the severity of the issue.
 	// +required
 	TotalRisk TotalRisk `json:"totalRisk,omitempty"`
-	// advisorURI is required field that provides the URL link to the Insights Advisor.
+	// advisorURI is a required field that provides the URL link to the Red Hat Lightspeed Advisor UI.
 	// The link must be a valid HTTPS URL and the maximum length is 2048 characters.
 	// +kubebuilder:validation:XValidation:rule=`isURL(self) && url(self).getScheme() == "https"`,message=`advisorURI must be a valid HTTPS URL (e.g., https://example.com)`
 	// +kubebuilder:validation:MinLength=1

@@ -172,9 +172,6 @@
                         "name": "DyanmicServiceEndpointIBMCloud"
                     },
                     {
-                        "name": "EVPN"
-                    },
-                    {
                         "name": "EtcdBackendQuota"
                     },
                     {

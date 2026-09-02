@@ -55077,6 +55077,77 @@
       "description": "IntOrString is a type that can hold an int32 or a string.  When used in JSON or YAML marshalling and unmarshalling, it produces or consumes the inner type.  This allows you to have, for example, a JSON field that can accept a name or number.",
       "type": "string",
       "format": "int-or-string"
+    },
+    "io.k8s.apimachinery.pkg.version.Info": {
+      "description": "Info contains versioning information. how we'll want to distribute that information.",
+      "type": "object",
+      "required": [
+        "major",
+        "minor",
+        "gitVersion",
+        "gitCommit",
+        "gitTreeState",
+        "buildDate",
+        "goVersion",
+        "compiler",
+        "platform"
+      ],
+      "properties": {
+        "buildDate": {
+          "type": "string",
+          "default": ""
+        },
+        "compiler": {
+          "type": "string",
+          "default": ""
+        },
+        "emulationMajor": {
+          "description": "EmulationMajor is the major version of the emulation version",
+          "type": "string"
+        },
+        "emulationMinor": {
+          "description": "EmulationMinor is the minor version of the emulation version",
+          "type": "string"
+        },
+        "gitCommit": {
+          "type": "string",
+          "default": ""
+        },
+        "gitTreeState": {
+          "type": "string",
+          "default": ""
+        },
+        "gitVersion": {
+          "type": "string",
+          "default": ""
+        },
+        "goVersion": {
+          "type": "string",
+          "default": ""
+        },
+        "major": {
+          "description": "Major is the major version of the binary version",
+          "type": "string",
+          "default": ""
+        },
+        "minCompatibilityMajor": {
+          "description": "MinCompatibilityMajor is the major version of the minimum compatibility version",
+          "type": "string"
+        },
+        "minCompatibilityMinor": {
+          "description": "MinCompatibilityMinor is the minor version of the minimum compatibility version",
+          "type": "string"
+        },
+        "minor": {
+          "description": "Minor is the minor version of the binary version",
+          "type": "string",
+          "default": ""
+        },
+        "platform": {
+          "type": "string",
+          "default": ""
+        }
+      }
     }
   }
 }

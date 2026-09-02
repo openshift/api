@@ -114,4 +114,12 @@ var overrides = map[featuregate.Feature]registry.OpenShiftGateFields{
 			},
 		},
 	},
+
+	// Kubelet bootstrapping is failing due to our usage of the serverTLSBootstrap field in the Kubelet config
+	// when we disable the RotateKubeletServerCertificate feature-gate in the default feature-set due.
+	// It is enabled by default and beta upstream, so since we have built an explicit dependency on it when we
+	// had no opinion, let's go back to that.
+	genericfeatures.RotateKubeletServerCertificate: {
+		EnabledFeatureSets: []configv1.FeatureSet{NoOpinion},
+	},
 }

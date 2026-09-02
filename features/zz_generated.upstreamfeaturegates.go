@@ -992,15 +992,6 @@ var (
 						mustRegister()
 
 
-	FeatureGateRotateKubeletServerCertificate = newFeatureGate("RotateKubeletServerCertificate").
-						reportProblemsToJiraComponent("kube-apiserver").
-						contactPerson("bpalmer").
-						productScope(kubernetes).
-						enhancementPR("https://github.com/openshift/enhancements/pull/2084").
-						enable(inTechPreviewNoUpgrade(),inDevPreviewNoUpgrade()).
-						mustRegister()
-
-
 	FeatureGateRuntimeClassInImageCriApi = newFeatureGate("RuntimeClassInImageCriApi").
 						reportProblemsToJiraComponent("kube-apiserver").
 						contactPerson("bpalmer").

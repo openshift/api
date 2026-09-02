@@ -17,6 +17,15 @@
             {
                 "disabled": [
                     {
+                        "name": "APIResponseCompression"
+                    },
+                    {
+                        "name": "APIServerIdentity"
+                    },
+                    {
+                        "name": "APIServingWithRoutine"
+                    },
+                    {
                         "name": "AWSClusterHostedDNS"
                     },
                     {
@@ -26,7 +35,19 @@
                         "name": "AWSEuropeanSovereignCloudInstall"
                     },
                     {
+                        "name": "AllowParsingUserUIDFromCertAuth"
+                    },
+                    {
+                        "name": "AllowUnsafeMalformedObjectDeletion"
+                    },
+                    {
+                        "name": "AtomicFIFO"
+                    },
+                    {
                         "name": "AuthenticationComponentProxy"
+                    },
+                    {
+                        "name": "AuthorizePodWebsocketUpgradeCreatePermission"
                     },
                     {
                         "name": "AutomatedEtcdBackup"
@@ -50,16 +71,46 @@
                         "name": "CBORServingAndStorage"
                     },
                     {
+                        "name": "CPUManagerPolicyAlphaOptions"
+                    },
+                    {
+                        "name": "CPUManagerPolicyBetaOptions"
+                    },
+                    {
                         "name": "CRDCompatibilityRequirementOperator"
+                    },
+                    {
+                        "name": "CRDObservedGenerationTracking"
+                    },
+                    {
+                        "name": "CRIListStreaming"
                     },
                     {
                         "name": "CRIOCredentialProviderConfig"
                     },
                     {
+                        "name": "CSIVolumeHealth"
+                    },
+                    {
+                        "name": "ClearingNominatedNodeNameAfterBinding"
+                    },
+                    {
+                        "name": "ClientsAllowCARotation"
+                    },
+                    {
                         "name": "ClientsAllowCBOR"
                     },
                     {
+                        "name": "ClientsAllowTLSCacheGC"
+                    },
+                    {
                         "name": "ClientsPreferCBOR"
+                    },
+                    {
+                        "name": "CloudControllerManagerWatchBasedRoutesReconciliation"
+                    },
+                    {
+                        "name": "CloudControllerManagerWebhook"
                     },
                     {
                         "name": "ClusterAPIComputeInstall"
@@ -101,6 +152,12 @@
                         "name": "ClusterMonitoringConfig"
                     },
                     {
+                        "name": "ClusterTrustBundle"
+                    },
+                    {
+                        "name": "ClusterTrustBundleProjection"
+                    },
+                    {
                         "name": "ClusterUpdateAcceptRisks"
                     },
                     {
@@ -110,16 +167,94 @@
                         "name": "ClusterVersionOperatorConfiguration"
                     },
                     {
+                        "name": "ComponentFlagz"
+                    },
+                    {
+                        "name": "ComponentStatusz"
+                    },
+                    {
+                        "name": "ConcurrentWatchObjectDecode"
+                    },
+                    {
                         "name": "ConfidentialCluster"
                     },
                     {
                         "name": "ConfigurablePKI"
                     },
                     {
+                        "name": "ConstrainedImpersonation"
+                    },
+                    {
+                        "name": "ContainerCheckpoint"
+                    },
+                    {
+                        "name": "ContainerRestartRules"
+                    },
+                    {
+                        "name": "ContainerStopSignals"
+                    },
+                    {
+                        "name": "CoordinatedLeaderElection"
+                    },
+                    {
+                        "name": "CrossNamespaceVolumeDataSource"
+                    },
+                    {
                         "name": "DNSNameResolver"
                     },
                     {
+                        "name": "DRAConsumableCapacity"
+                    },
+                    {
+                        "name": "DRADeviceBindingConditions"
+                    },
+                    {
+                        "name": "DRADeviceTaintRules"
+                    },
+                    {
+                        "name": "DRADeviceTaints"
+                    },
+                    {
+                        "name": "DRAExtendedResource"
+                    },
+                    {
+                        "name": "DRAListTypeAttributes"
+                    },
+                    {
+                        "name": "DRANodeAllocatableResources"
+                    },
+                    {
+                        "name": "DRAPartitionableDevices"
+                    },
+                    {
+                        "name": "DRAResourceClaimDeviceStatus"
+                    },
+                    {
+                        "name": "DRAResourceClaimGranularStatusAuthorization"
+                    },
+                    {
+                        "name": "DRAResourcePoolStatus"
+                    },
+                    {
+                        "name": "DRASchedulerFilterTimeout"
+                    },
+                    {
+                        "name": "DRAWorkloadResourceClaims"
+                    },
+                    {
+                        "name": "DeclarativeValidationBeta"
+                    },
+                    {
+                        "name": "DeploymentReplicaSetTerminatingReplicas"
+                    },
+                    {
+                        "name": "DetectCacheInconsistency"
+                    },
+                    {
                         "name": "DyanmicServiceEndpointIBMCloud"
+                    },
+                    {
+                        "name": "EnvFiles"
                     },
                     {
                         "name": "EventedPLEG"
@@ -129,6 +264,9 @@
                     },
                     {
                         "name": "Example2"
+                    },
+                    {
+                        "name": "ExtendWebSocketsToKubelet"
                     },
                     {
                         "name": "ExternalOIDCExternalClaimsSourcing"
@@ -146,13 +284,52 @@
                         "name": "GCPDualStackInstall"
                     },
                     {
+                        "name": "GangScheduling"
+                    },
+                    {
                         "name": "GatewayAPIManagementMode"
+                    },
+                    {
+                        "name": "GenericWorkload"
                     },
                     {
                         "name": "GomaxprocsInjection"
                     },
                     {
+                        "name": "GracefulNodeShutdown"
+                    },
+                    {
+                        "name": "GracefulNodeShutdownBasedOnPodPriority"
+                    },
+                    {
+                        "name": "HPAConfigurableTolerance"
+                    },
+                    {
+                        "name": "HPAScaleToZero"
+                    },
+                    {
+                        "name": "HostnameOverride"
+                    },
+                    {
                         "name": "ImageModeStatusReporting"
+                    },
+                    {
+                        "name": "ImageVolumeWithDigest"
+                    },
+                    {
+                        "name": "InOrderInformersBatchProcess"
+                    },
+                    {
+                        "name": "InPlacePodLevelResourcesVerticalScaling"
+                    },
+                    {
+                        "name": "InPlacePodVerticalScalingExclusiveCPUs"
+                    },
+                    {
+                        "name": "InPlacePodVerticalScalingExclusiveMemory"
+                    },
+                    {
+                        "name": "InPlacePodVerticalScalingInitContainers"
                     },
                     {
                         "name": "IngressComponentRouteLabels"
@@ -165,6 +342,27 @@
                     },
                     {
                         "name": "KarpenterOperator"
+                    },
+                    {
+                        "name": "KubeletCrashLoopBackOffMax"
+                    },
+                    {
+                        "name": "KubeletEnsureSecretPulledImages"
+                    },
+                    {
+                        "name": "KubeletInUserNamespace"
+                    },
+                    {
+                        "name": "KubeletSeparateDiskGC"
+                    },
+                    {
+                        "name": "KubeletServiceAccountTokenForCredentialProviders"
+                    },
+                    {
+                        "name": "ListFromCacheSnapshot"
+                    },
+                    {
+                        "name": "LocalStorageCapacityIsolationFSQuotaMonitoring"
                     },
                     {
                         "name": "MachineAPIMigration"
@@ -197,7 +395,19 @@
                         "name": "ManagedBootImagesAWSCAPI"
                     },
                     {
+                        "name": "ManifestBasedAdmissionControlConfig"
+                    },
+                    {
+                        "name": "MatchLabelKeysInPodTopologySpread"
+                    },
+                    {
+                        "name": "MatchLabelKeysInPodTopologySpreadSelectorMerge"
+                    },
+                    {
                         "name": "MaxUnavailableStatefulSet"
+                    },
+                    {
+                        "name": "MemoryQoS"
                     },
                     {
                         "name": "MinimumKubeletVersion"
@@ -210,6 +420,15 @@
                     },
                     {
                         "name": "MultiDiskSetup"
+                    },
+                    {
+                        "name": "MutablePVNodeAffinity"
+                    },
+                    {
+                        "name": "MutablePodResourcesForSuspendedJobs"
+                    },
+                    {
+                        "name": "MutableSchedulingDirectivesForSuspendedJobs"
                     },
                     {
                         "name": "MutableTopology"
@@ -245,6 +464,12 @@
                         "name": "NoRegistryClusterInstall"
                     },
                     {
+                        "name": "NodeDeclaredFeatures"
+                    },
+                    {
+                        "name": "NominatedNodeNameForExpectation"
+                    },
+                    {
                         "name": "NutanixMultiSubnets"
                     },
                     {
@@ -257,10 +482,100 @@
                         "name": "OnPremDNSRecords"
                     },
                     {
+                        "name": "OpenAPIEnums"
+                    },
+                    {
+                        "name": "OpportunisticBatching"
+                    },
+                    {
+                        "name": "PLEGOnDemandRelist"
+                    },
+                    {
+                        "name": "PersistentVolumeClaimUnusedSinceTime"
+                    },
+                    {
+                        "name": "PodAndContainerStatsFromCRI"
+                    },
+                    {
+                        "name": "PodCertificateRequest"
+                    },
+                    {
+                        "name": "PodDeletionCost"
+                    },
+                    {
+                        "name": "PodLevelResourceManagers"
+                    },
+                    {
+                        "name": "PodLevelResources"
+                    },
+                    {
+                        "name": "PodLogsQuerySplitStreams"
+                    },
+                    {
+                        "name": "PodReadyToStartContainersCondition"
+                    },
+                    {
+                        "name": "PodTopologyLabelsAdmission"
+                    },
+                    {
+                        "name": "PodsAPI"
+                    },
+                    {
+                        "name": "PortForwardWebsockets"
+                    },
+                    {
+                        "name": "PreventStaticPodAPIReferences"
+                    },
+                    {
                         "name": "ProvisioningRequestAvailable"
                     },
                     {
+                        "name": "QOSReserved"
+                    },
+                    {
+                        "name": "ReduceDefaultCrashLoopBackOffDecay"
+                    },
+                    {
+                        "name": "RelaxedServiceNameValidation"
+                    },
+                    {
+                        "name": "ReloadKubeletClientCAFile"
+                    },
+                    {
+                        "name": "ReloadKubeletServerCertificateFile"
+                    },
+                    {
+                        "name": "RemoteRequestHeaderUID"
+                    },
+                    {
+                        "name": "ResourceHealthStatus"
+                    },
+                    {
+                        "name": "ResourceHealthStatusMessage"
+                    },
+                    {
+                        "name": "RestartAllContainersOnContainerExits"
+                    },
+                    {
+                        "name": "RuntimeClassInImageCriApi"
+                    },
+                    {
                         "name": "SELinuxMount"
+                    },
+                    {
+                        "name": "SchedulerAsyncAPICalls"
+                    },
+                    {
+                        "name": "SchedulerAsyncPreemption"
+                    },
+                    {
+                        "name": "SchedulerPopFromBackoffQ"
+                    },
+                    {
+                        "name": "ServiceAccountNodeAudienceRestriction"
+                    },
+                    {
+                        "name": "ShardedListAndWatch"
                     },
                     {
                         "name": "ShortCertRotation"
@@ -269,13 +584,106 @@
                         "name": "SignatureStores"
                     },
                     {
+                        "name": "SizeBasedListCostEstimate"
+                    },
+                    {
+                        "name": "StaleControllerConsistencyDaemonSet"
+                    },
+                    {
+                        "name": "StaleControllerConsistencyJob"
+                    },
+                    {
+                        "name": "StaleControllerConsistencyReplicaSet"
+                    },
+                    {
+                        "name": "StaleControllerConsistencyStatefulSet"
+                    },
+                    {
+                        "name": "StatefulSetSemanticRevisionComparison"
+                    },
+                    {
+                        "name": "StorageCapacityScoring"
+                    },
+                    {
+                        "name": "StorageVersionAPI"
+                    },
+                    {
+                        "name": "StorageVersionHash"
+                    },
+                    {
+                        "name": "StorageVersionMigrator"
+                    },
+                    {
+                        "name": "StrictIPCIDRValidation"
+                    },
+                    {
+                        "name": "StructuredAuthenticationConfigurationEgressSelector"
+                    },
+                    {
+                        "name": "StructuredAuthenticationConfigurationJWKSMetrics"
+                    },
+                    {
                         "name": "TLSAdherence"
                     },
                     {
                         "name": "TLSGroupPreferences"
                     },
                     {
+                        "name": "TaintTolerationComparisonOperators"
+                    },
+                    {
+                        "name": "TokenRequestServiceAccountUIDValidation"
+                    },
+                    {
+                        "name": "TopologyAwareWorkloadScheduling"
+                    },
+                    {
+                        "name": "TopologyManagerPolicyAlphaOptions"
+                    },
+                    {
+                        "name": "TopologyManagerPolicyBetaOptions"
+                    },
+                    {
+                        "name": "TranslateStreamCloseWebsocketRequests"
+                    },
+                    {
+                        "name": "UnauthenticatedHTTP2DOSMitigation"
+                    },
+                    {
+                        "name": "UnknownVersionInteroperabilityProxy"
+                    },
+                    {
+                        "name": "UnlockWhileProcessingFIFO"
+                    },
+                    {
+                        "name": "UserNamespacesHostNetworkSupport"
+                    },
+                    {
                         "name": "VSphereConfigurableMaxAllowedBlockVolumesPerNode"
+                    },
+                    {
+                        "name": "VolumeLimitScaling"
+                    },
+                    {
+                        "name": "WatchCacheInitializationPostStartHook"
+                    },
+                    {
+                        "name": "WatchList"
+                    },
+                    {
+                        "name": "WatchListClient"
+                    },
+                    {
+                        "name": "WindowsCPUAndMemoryAffinity"
+                    },
+                    {
+                        "name": "WindowsGracefulNodeShutdown"
+                    },
+                    {
+                        "name": "WorkloadAwarePreemption"
+                    },
+                    {
+                        "name": "WorkloadWithJob"
                     }
                 ],
                 "enabled": [
@@ -289,6 +697,9 @@
                         "name": "AdditionalStorageConfig"
                     },
                     {
+                        "name": "AllowServiceExternalIPs"
+                    },
+                    {
                         "name": "AzureWorkloadIdentity"
                     },
                     {
@@ -296,6 +707,12 @@
                     },
                     {
                         "name": "BuildCSIVolumes"
+                    },
+                    {
+                        "name": "CustomCPUCFSQuotaPeriod"
+                    },
+                    {
+                        "name": "DRAPrioritizedList"
                     },
                     {
                         "name": "DualReplica"
@@ -331,6 +748,9 @@
                         "name": "ImageStreamImportMode"
                     },
                     {
+                        "name": "InformerResourceVersion"
+                    },
+                    {
                         "name": "IngressControllerDynamicConfigurationManager"
                     },
                     {
@@ -355,9 +775,6 @@
                         "name": "MetricsCollectionProfiles"
                     },
                     {
-                        "name": "MutableCSINodeAllocatableCount"
-                    },
-                    {
                         "name": "MutatingAdmissionPolicy"
                     },
                     {
@@ -368,9 +785,6 @@
                     },
                     {
                         "name": "SELinuxMountGAReadiness"
-                    },
-                    {
-                        "name": "ServiceAccountTokenNodeBinding"
                     },
                     {
                         "name": "StoragePerformantSecurityPolicy"

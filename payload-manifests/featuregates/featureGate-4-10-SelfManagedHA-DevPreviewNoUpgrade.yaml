@@ -109,6 +109,9 @@
                         "name": "CRIOCredentialProviderConfig"
                     },
                     {
+                        "name": "CapacityBufferAvailable"
+                    },
+                    {
                         "name": "ClientsPreferCBOR"
                     },
                     {

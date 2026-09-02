@@ -136,6 +136,9 @@
                         "name": "CRDCompatibilityRequirementOperator"
                     },
                     {
+                        "name": "CapacityBufferAvailable"
+                    },
+                    {
                         "name": "ClientsPreferCBOR"
                     },
                     {

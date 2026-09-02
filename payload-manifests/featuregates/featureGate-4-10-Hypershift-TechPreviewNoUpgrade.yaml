@@ -26,6 +26,9 @@
                         "name": "CRIOCredentialProviderConfig"
                     },
                     {
+                        "name": "CapacityBufferAvailable"
+                    },
+                    {
                         "name": "ClientsAllowCBOR"
                     },
                     {

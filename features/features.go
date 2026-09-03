@@ -735,7 +735,7 @@ var (
 				contactPerson("jsafrane").
 				productScope(kubernetes).
 				enhancementPR("https://github.com/kubernetes/enhancements/issues/1710").
-				enable(inTechPreviewNoUpgrade(), inDevPreviewNoUpgrade()).
+				enable(inDefault(), inOKD(), inTechPreviewNoUpgrade(), inDevPreviewNoUpgrade()).
 				mustRegister()
 
 	FeatureGateDualReplica = newFeatureGate("DualReplica").

@@ -254,9 +254,6 @@
                         "name": "ProvisioningRequestAvailable"
                     },
                     {
-                        "name": "SELinuxMount"
-                    },
-                    {
                         "name": "ShortCertRotation"
                     },
                     {
@@ -362,6 +359,9 @@
                     },
                     {
                         "name": "OSStreams"
+                    },
+                    {
+                        "name": "SELinuxMount"
                     },
                     {
                         "name": "SELinuxMountGAReadiness"

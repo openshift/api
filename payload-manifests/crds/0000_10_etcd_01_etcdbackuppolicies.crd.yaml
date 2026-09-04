@@ -7,14 +7,14 @@ metadata:
     include.release.openshift.io/ibm-cloud-managed: "true"
     include.release.openshift.io/self-managed-high-availability: "true"
     release.openshift.io/feature-set: CustomNoUpgrade,DevPreviewNoUpgrade,TechPreviewNoUpgrade
-  name: etcdbackups.operator.openshift.io
+  name: etcdbackuppolicies.operator.openshift.io
 spec:
   group: operator.openshift.io
   names:
-    kind: EtcdBackup
-    listKind: EtcdBackupList
-    plural: etcdbackups
-    singular: etcdbackup
+    kind: EtcdBackupPolicy
+    listKind: EtcdBackupPolicyList
+    plural: etcdbackuppolicies
+    singular: etcdbackuppolicy
   scope: Cluster
   versions:
   - additionalPrinterColumns:
@@ -22,29 +22,27 @@ spec:
       jsonPath: .spec.storage.type
       name: Storage Type
       type: string
-    - description: Status of the EtcdBackup
-      jsonPath: .status.conditions[?(@.status=="True")].type
-      name: Status
+    - description: Cron schedule for executing backups
+      jsonPath: .spec.schedule
+      name: Schedule
       type: string
-    - description: Age of the EtcdBackup
+    - description: Time zone in which the schedule is evaluated
+      jsonPath: .spec.timeZone
+      name: Time Zone
+      type: string
+    - description: Last time the schedule was executed
+      jsonPath: .status.lastScheduleTime
+      name: Last Schedule
+      type: date
+    - description: Age of the EtcdBackupPolicy
       jsonPath: .metadata.creationTimestamp
       name: Age
       type: date
-    - description: Name of the node where the backup was executed
-      jsonPath: .status.nodeName
-      name: Node
-      priority: 1
-      type: string
-    - description: Name of the PVC where the backup is stored
-      jsonPath: .spec.storage.pvc.name
-      name: PVC
-      priority: 1
-      type: string
     name: v1alpha1
     schema:
       openAPIV3Schema:
         description: |-
-          # EtcdBackup provides configuration options and status for a one-time backup attempt of the etcd cluster
+          # EtcdBackupPolicy sets an automated schedule for taking backups of the etcd cluster
 
           Compatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.
         properties:
@@ -68,14 +66,63 @@ spec:
           spec:
             description: spec holds user settable values for configuration
             properties:
-              nodeName:
+              failedBackupsHistoryLimit:
+                description: failedBackupsHistoryLimit defined the number of failed
+                  etcdbackups to retain. Value must be non-negative integer. Defaults
+                  to 1.
+                minimum: 0
+                type: integer
+              nodeSelector:
+                additionalProperties:
+                  type: string
                 description: |-
-                  nodeName specifies the master node where an etcd backup should be taken.
-                  If not specified, a random master node will be selected.
+                  nodeSelector specifies which master node(s) to run backup jobs on.
+                  If no selector is specified, the default node-role.kubernetes.io/master label will be used.
+                  If no nodes are matched, then no backups will run.
+                type: object
+              retentionRules:
+                description: |-
+                  retentionRules defines the policy for retaining and deleting existing backups.
+                  Backups are deleted from the oldest first until all rules are satisfied.
+                  If no rules are specified then backups created by this policy will not be automatically deleted.
+                items:
+                  properties:
+                    maxQuantity:
+                      description: maxQuantity enforces the deletion of backups that
+                        exceed the given count.
+                      minimum: 0
+                      type: integer
+                    maxSize:
+                      anyOf:
+                      - type: integer
+                      - type: string
+                      description: |-
+                        maxSize enforces the deletion of backups by the total size of backups on the storage backend.
+                        This is a soft threshold. The total size of backups may temporarily exceed the limit when new backups are created.
+                      pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
+                      x-kubernetes-int-or-string: true
+                    type:
+                      description: type defined which rule field is set
+                      enum:
+                      - MaxQuantity
+                      - MaxSize
+                      type: string
+                  required:
+                  - type
+                  type: object
+                  x-kubernetes-validations:
+                  - message: maxQuantity is required when type is MaxQuantity, and
+                      forbidden otherwise
+                    rule: '(self.type == ''MaxQuantity'') ? has(self.maxQuantity)
+                      : !has(self.maxQuantity)'
+                  - message: maxSize is required when type is MaxSize, and forbidden
+                      otherwise
+                    rule: '(self.type == ''MaxSize'') ? has(self.maxSize) : !has(self.maxSize)'
+                type: array
+              schedule:
+                description: schedule sets the backup schedule in Cron format, see
+                  https://en.wikipedia.org/wiki/Cron.
                 type: string
-                x-kubernetes-validations:
-                - message: nodeName is immutable once set
-                  rule: self == oldSelf
               storage:
                 description: storage specifies the location where etcd backup files
                   will be saved.
@@ -136,112 +183,41 @@ spec:
                   rule: 'self.type == ''PVC'' ? has(self.pvc) : !has(self.pvc)'
                 - message: local is required when type is Local, and forbidden otherwise
                   rule: 'self.type == ''Local'' ? has(self.local) : !has(self.local)'
+              timeZone:
+                description: |-
+                  timeZone name for the given schedule, see https://en.wikipedia.org/wiki/List_of_tz_database_time_zones.
+                  If not specified, this will default to the time zone of the cluster-etcd-operator process.
+                type: string
             required:
+            - schedule
             - storage
             type: object
           status:
             description: status holds observed values from the cluster. They may not
               be overridden.
             properties:
-              conditions:
-                description: conditions provide details on the status of the etcd
-                  backup job.
+              active:
+                description: active is a list of references to in progress backups
+                  controlled by this policy
                 items:
-                  description: Condition contains details for one aspect of the current
-                    state of this API Resource.
                   properties:
-                    lastTransitionTime:
-                      description: |-
-                        lastTransitionTime is the last time the condition transitioned from one status to another.
-                        This should be when the underlying condition changed.  If that is not known, then using the time when the API field changed is acceptable.
-                      format: date-time
+                    name:
+                      description: name of the backup
                       type: string
-                    message:
-                      description: |-
-                        message is a human readable message indicating details about the transition.
-                        This may be an empty string.
-                      maxLength: 32768
-                      type: string
-                    observedGeneration:
-                      description: |-
-                        observedGeneration represents the .metadata.generation that the condition was set based upon.
-                        For instance, if .metadata.generation is currently 12, but the .status.conditions[x].observedGeneration is 9, the condition is out of date
-                        with respect to the current state of the instance.
-                      format: int64
-                      minimum: 0
-                      type: integer
-                    reason:
-                      description: |-
-                        reason contains a programmatic identifier indicating the reason for the condition's last transition.
-                        Producers of specific condition types may define expected values and meanings for this field,
-                        and whether the values are considered a guaranteed API.
-                        The value should be a CamelCase string.
-                        This field may not be empty.
-                      maxLength: 1024
-                      minLength: 1
-                      pattern: ^[A-Za-z]([A-Za-z0-9_,:]*[A-Za-z0-9_])?$
-                      type: string
-                    status:
-                      description: status of the condition, one of True, False, Unknown.
-                      enum:
-                      - "True"
-                      - "False"
-                      - Unknown
-                      type: string
-                    type:
-                      description: type of condition in CamelCase or in foo.example.com/CamelCase.
-                      maxLength: 316
-                      pattern: ^([a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*/)?(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])$
+                    uid:
+                      description: uid of the backup
                       type: string
                   required:
-                  - lastTransitionTime
-                  - message
-                  - reason
-                  - status
-                  - type
+                  - name
+                  - uid
                   type: object
                 type: array
-                x-kubernetes-list-map-keys:
-                - type
-                x-kubernetes-list-type: map
-              files:
+              lastScheduleTime:
                 description: |-
-                  files tracks the path and size of files generated by the etcd backup.
-                  Includes both etcd snapshots and static manifests.
-                items:
-                  properties:
-                    path:
-                      description: path to the backup file on the storage backend.
-                      type: string
-                    size:
-                      anyOf:
-                      - type: integer
-                      - type: string
-                      description: size of the backup file on the storage backend.
-                      pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
-                      x-kubernetes-int-or-string: true
-                  type: object
-                type: array
-              job:
-                description: job is a reference to the Job created for the backup.
-                properties:
-                  name:
-                    description: name of the backup job
-                    type: string
-                  namespace:
-                    description: namespace of the backup job
-                    type: string
-                  uid:
-                    description: uid of the backup job
-                    type: string
-                required:
-                - name
-                - namespace
-                - uid
-                type: object
-              nodeName:
-                description: nodeName is the master node where the backup snapshot
-                  was taken.
+                  lastScheduleTime is the time when the last scheduled backup was triggered.
+                  This is used by the controller to track when backups have been executed
+                  and to prevent duplicate executions on controller restart.
+                format: date-time
                 type: string
             type: object
         required:

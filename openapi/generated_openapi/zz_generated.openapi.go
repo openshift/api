@@ -519,10 +519,6 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		configv1alpha1.AlertmanagerCustomConfig{}.OpenAPIModelName():                           schema_openshift_api_config_v1alpha1_AlertmanagerCustomConfig(ref),
 		configv1alpha1.Audit{}.OpenAPIModelName():                                              schema_openshift_api_config_v1alpha1_Audit(ref),
 		configv1alpha1.AuthorizationConfig{}.OpenAPIModelName():                                schema_openshift_api_config_v1alpha1_AuthorizationConfig(ref),
-		configv1alpha1.Backup{}.OpenAPIModelName():                                             schema_openshift_api_config_v1alpha1_Backup(ref),
-		configv1alpha1.BackupList{}.OpenAPIModelName():                                         schema_openshift_api_config_v1alpha1_BackupList(ref),
-		configv1alpha1.BackupSpec{}.OpenAPIModelName():                                         schema_openshift_api_config_v1alpha1_BackupSpec(ref),
-		configv1alpha1.BackupStatus{}.OpenAPIModelName():                                       schema_openshift_api_config_v1alpha1_BackupStatus(ref),
 		configv1alpha1.BasicAuth{}.OpenAPIModelName():                                          schema_openshift_api_config_v1alpha1_BasicAuth(ref),
 		configv1alpha1.CRIOCredentialProviderConfig{}.OpenAPIModelName():                       schema_openshift_api_config_v1alpha1_CRIOCredentialProviderConfig(ref),
 		configv1alpha1.CRIOCredentialProviderConfigList{}.OpenAPIModelName():                   schema_openshift_api_config_v1alpha1_CRIOCredentialProviderConfigList(ref),
@@ -538,7 +534,6 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		configv1alpha1.DefaultCertificateConfig{}.OpenAPIModelName():                           schema_openshift_api_config_v1alpha1_DefaultCertificateConfig(ref),
 		configv1alpha1.DropEqualActionConfig{}.OpenAPIModelName():                              schema_openshift_api_config_v1alpha1_DropEqualActionConfig(ref),
 		configv1alpha1.ECDSAKeyConfig{}.OpenAPIModelName():                                     schema_openshift_api_config_v1alpha1_ECDSAKeyConfig(ref),
-		configv1alpha1.EtcdBackupSpec{}.OpenAPIModelName():                                     schema_openshift_api_config_v1alpha1_EtcdBackupSpec(ref),
 		configv1alpha1.GatherConfig{}.OpenAPIModelName():                                       schema_openshift_api_config_v1alpha1_GatherConfig(ref),
 		configv1alpha1.HashModActionConfig{}.OpenAPIModelName():                                schema_openshift_api_config_v1alpha1_HashModActionConfig(ref),
 		configv1alpha1.InsightsDataGather{}.OpenAPIModelName():                                 schema_openshift_api_config_v1alpha1_InsightsDataGather(ref),
@@ -598,9 +593,6 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		configv1alpha1.RemoteWriteSpec{}.OpenAPIModelName():                                    schema_openshift_api_config_v1alpha1_RemoteWriteSpec(ref),
 		configv1alpha1.ReplaceActionConfig{}.OpenAPIModelName():                                schema_openshift_api_config_v1alpha1_ReplaceActionConfig(ref),
 		configv1alpha1.Retention{}.OpenAPIModelName():                                          schema_openshift_api_config_v1alpha1_Retention(ref),
-		configv1alpha1.RetentionNumberConfig{}.OpenAPIModelName():                              schema_openshift_api_config_v1alpha1_RetentionNumberConfig(ref),
-		configv1alpha1.RetentionPolicy{}.OpenAPIModelName():                                    schema_openshift_api_config_v1alpha1_RetentionPolicy(ref),
-		configv1alpha1.RetentionSizeConfig{}.OpenAPIModelName():                                schema_openshift_api_config_v1alpha1_RetentionSizeConfig(ref),
 		configv1alpha1.SecretKeySelector{}.OpenAPIModelName():                                  schema_openshift_api_config_v1alpha1_SecretKeySelector(ref),
 		configv1alpha1.Sigv4{}.OpenAPIModelName():                                              schema_openshift_api_config_v1alpha1_Sigv4(ref),
 		configv1alpha1.Storage{}.OpenAPIModelName():                                            schema_openshift_api_config_v1alpha1_Storage(ref),
@@ -1331,7 +1323,6 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		operatorv1.Upstream{}.OpenAPIModelName():                                               schema_openshift_api_operator_v1_Upstream(ref),
 		operatorv1.UpstreamResolvers{}.OpenAPIModelName():                                      schema_openshift_api_operator_v1_UpstreamResolvers(ref),
 		operatorv1.VSphereCSIDriverConfigSpec{}.OpenAPIModelName():                             schema_openshift_api_operator_v1_VSphereCSIDriverConfigSpec(ref),
-		operatorv1alpha1.BackupJobReference{}.OpenAPIModelName():                               schema_openshift_api_operator_v1alpha1_BackupJobReference(ref),
 		operatorv1alpha1.ClusterAPI{}.OpenAPIModelName():                                       schema_openshift_api_operator_v1alpha1_ClusterAPI(ref),
 		operatorv1alpha1.ClusterAPIInstallerComponent{}.OpenAPIModelName():                     schema_openshift_api_operator_v1alpha1_ClusterAPIInstallerComponent(ref),
 		operatorv1alpha1.ClusterAPIInstallerComponentImage{}.OpenAPIModelName():                schema_openshift_api_operator_v1alpha1_ClusterAPIInstallerComponentImage(ref),
@@ -1348,9 +1339,20 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		operatorv1alpha1.DelegatedAuthentication{}.OpenAPIModelName():                          schema_openshift_api_operator_v1alpha1_DelegatedAuthentication(ref),
 		operatorv1alpha1.DelegatedAuthorization{}.OpenAPIModelName():                           schema_openshift_api_operator_v1alpha1_DelegatedAuthorization(ref),
 		operatorv1alpha1.EtcdBackup{}.OpenAPIModelName():                                       schema_openshift_api_operator_v1alpha1_EtcdBackup(ref),
+		operatorv1alpha1.EtcdBackupFile{}.OpenAPIModelName():                                   schema_openshift_api_operator_v1alpha1_EtcdBackupFile(ref),
+		operatorv1alpha1.EtcdBackupJobReference{}.OpenAPIModelName():                           schema_openshift_api_operator_v1alpha1_EtcdBackupJobReference(ref),
 		operatorv1alpha1.EtcdBackupList{}.OpenAPIModelName():                                   schema_openshift_api_operator_v1alpha1_EtcdBackupList(ref),
+		operatorv1alpha1.EtcdBackupPolicy{}.OpenAPIModelName():                                 schema_openshift_api_operator_v1alpha1_EtcdBackupPolicy(ref),
+		operatorv1alpha1.EtcdBackupPolicyList{}.OpenAPIModelName():                             schema_openshift_api_operator_v1alpha1_EtcdBackupPolicyList(ref),
+		operatorv1alpha1.EtcdBackupPolicyRetentionRule{}.OpenAPIModelName():                    schema_openshift_api_operator_v1alpha1_EtcdBackupPolicyRetentionRule(ref),
+		operatorv1alpha1.EtcdBackupPolicySpec{}.OpenAPIModelName():                             schema_openshift_api_operator_v1alpha1_EtcdBackupPolicySpec(ref),
+		operatorv1alpha1.EtcdBackupPolicyStatus{}.OpenAPIModelName():                           schema_openshift_api_operator_v1alpha1_EtcdBackupPolicyStatus(ref),
+		operatorv1alpha1.EtcdBackupReference{}.OpenAPIModelName():                              schema_openshift_api_operator_v1alpha1_EtcdBackupReference(ref),
 		operatorv1alpha1.EtcdBackupSpec{}.OpenAPIModelName():                                   schema_openshift_api_operator_v1alpha1_EtcdBackupSpec(ref),
 		operatorv1alpha1.EtcdBackupStatus{}.OpenAPIModelName():                                 schema_openshift_api_operator_v1alpha1_EtcdBackupStatus(ref),
+		operatorv1alpha1.EtcdBackupStorage{}.OpenAPIModelName():                                schema_openshift_api_operator_v1alpha1_EtcdBackupStorage(ref),
+		operatorv1alpha1.EtcdBackupStorageLocal{}.OpenAPIModelName():                           schema_openshift_api_operator_v1alpha1_EtcdBackupStorageLocal(ref),
+		operatorv1alpha1.EtcdBackupStoragePvc{}.OpenAPIModelName():                             schema_openshift_api_operator_v1alpha1_EtcdBackupStoragePvc(ref),
 		operatorv1alpha1.GatewayAPIIngressConfig{}.OpenAPIModelName():                          schema_openshift_api_operator_v1alpha1_GatewayAPIIngressConfig(ref),
 		operatorv1alpha1.GenerationHistory{}.OpenAPIModelName():                                schema_openshift_api_operator_v1alpha1_GenerationHistory(ref),
 		operatorv1alpha1.GenericOperatorConfig{}.OpenAPIModelName():                            schema_openshift_api_operator_v1alpha1_GenericOperatorConfig(ref),
@@ -23636,139 +23638,6 @@ func schema_openshift_api_config_v1alpha1_AuthorizationConfig(ref common.Referen
 	}
 }
 
-func schema_openshift_api_config_v1alpha1_Backup(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Description: "Backup provides configuration for performing backups of the openshift cluster.\n\nCompatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.",
-				Type:        []string{"object"},
-				Properties: map[string]spec.Schema{
-					"kind": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"apiVersion": {
-						SchemaProps: spec.SchemaProps{
-							Description: "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"metadata": {
-						SchemaProps: spec.SchemaProps{
-							Description: "metadata is the standard object's metadata. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata",
-							Default:     map[string]interface{}{},
-							Ref:         ref(metav1.ObjectMeta{}.OpenAPIModelName()),
-						},
-					},
-					"spec": {
-						SchemaProps: spec.SchemaProps{
-							Description: "spec holds user settable values for configuration",
-							Default:     map[string]interface{}{},
-							Ref:         ref(configv1alpha1.BackupSpec{}.OpenAPIModelName()),
-						},
-					},
-					"status": {
-						SchemaProps: spec.SchemaProps{
-							Description: "status holds observed values from the cluster. They may not be overridden.",
-							Default:     map[string]interface{}{},
-							Ref:         ref(configv1alpha1.BackupStatus{}.OpenAPIModelName()),
-						},
-					},
-				},
-				Required: []string{"spec"},
-			},
-		},
-		Dependencies: []string{
-			configv1alpha1.BackupSpec{}.OpenAPIModelName(), configv1alpha1.BackupStatus{}.OpenAPIModelName(), metav1.ObjectMeta{}.OpenAPIModelName()},
-	}
-}
-
-func schema_openshift_api_config_v1alpha1_BackupList(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Description: "BackupList is a collection of items\n\nCompatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.",
-				Type:        []string{"object"},
-				Properties: map[string]spec.Schema{
-					"kind": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"apiVersion": {
-						SchemaProps: spec.SchemaProps{
-							Description: "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"metadata": {
-						SchemaProps: spec.SchemaProps{
-							Description: "metadata is the standard list's metadata. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata",
-							Default:     map[string]interface{}{},
-							Ref:         ref(metav1.ListMeta{}.OpenAPIModelName()),
-						},
-					},
-					"items": {
-						SchemaProps: spec.SchemaProps{
-							Type: []string{"array"},
-							Items: &spec.SchemaOrArray{
-								Schema: &spec.Schema{
-									SchemaProps: spec.SchemaProps{
-										Default: map[string]interface{}{},
-										Ref:     ref(configv1alpha1.Backup{}.OpenAPIModelName()),
-									},
-								},
-							},
-						},
-					},
-				},
-				Required: []string{"metadata", "items"},
-			},
-		},
-		Dependencies: []string{
-			configv1alpha1.Backup{}.OpenAPIModelName(), metav1.ListMeta{}.OpenAPIModelName()},
-	}
-}
-
-func schema_openshift_api_config_v1alpha1_BackupSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Type: []string{"object"},
-				Properties: map[string]spec.Schema{
-					"etcd": {
-						SchemaProps: spec.SchemaProps{
-							Description: "etcd specifies the configuration for periodic backups of the etcd cluster",
-							Default:     map[string]interface{}{},
-							Ref:         ref(configv1alpha1.EtcdBackupSpec{}.OpenAPIModelName()),
-						},
-					},
-				},
-				Required: []string{"etcd"},
-			},
-		},
-		Dependencies: []string{
-			configv1alpha1.EtcdBackupSpec{}.OpenAPIModelName()},
-	}
-}
-
-func schema_openshift_api_config_v1alpha1_BackupStatus(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Type: []string{"object"},
-			},
-		},
-	}
-}
-
 func schema_openshift_api_config_v1alpha1_BasicAuth(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -24343,52 +24212,6 @@ func schema_openshift_api_config_v1alpha1_ECDSAKeyConfig(ref common.ReferenceCal
 				Required: []string{"curve"},
 			},
 		},
-	}
-}
-
-func schema_openshift_api_config_v1alpha1_EtcdBackupSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Description: "EtcdBackupSpec provides configuration for automated etcd backups to the cluster-etcd-operator",
-				Type:        []string{"object"},
-				Properties: map[string]spec.Schema{
-					"schedule": {
-						SchemaProps: spec.SchemaProps{
-							Description: "schedule defines the recurring backup schedule in Cron format every 2 hours: 0 */2 * * * every day at 3am: 0 3 * * * Empty string means no opinion and the platform is left to choose a reasonable default which is subject to change without notice. The current default is \"no backups\", but will change in the future.",
-							Default:     "",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"timeZone": {
-						SchemaProps: spec.SchemaProps{
-							Description: "The time zone name for the given schedule, see https://en.wikipedia.org/wiki/List_of_tz_database_time_zones. If not specified, this will default to the time zone of the kube-controller-manager process. See https://kubernetes.io/docs/concepts/workloads/controllers/cron-jobs/#time-zones",
-							Default:     "",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"retentionPolicy": {
-						SchemaProps: spec.SchemaProps{
-							Description: "retentionPolicy defines the retention policy for retaining and deleting existing backups.",
-							Default:     map[string]interface{}{},
-							Ref:         ref(configv1alpha1.RetentionPolicy{}.OpenAPIModelName()),
-						},
-					},
-					"pvcName": {
-						SchemaProps: spec.SchemaProps{
-							Description: "pvcName specifies the name of the PersistentVolumeClaim (PVC) which binds a PersistentVolume where the etcd backup files would be saved The PVC itself must always be created in the \"openshift-etcd\" namespace If the PVC is left unspecified \"\" then the platform will choose a reasonable default location to save the backup. In the future this would be backups saved across the control-plane master nodes.",
-							Default:     "",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-				},
-			},
-		},
-		Dependencies: []string{
-			configv1alpha1.RetentionPolicy{}.OpenAPIModelName()},
 	}
 }
 
@@ -27165,100 +26988,6 @@ func schema_openshift_api_config_v1alpha1_Retention(ref common.ReferenceCallback
 						},
 					},
 				},
-			},
-		},
-	}
-}
-
-func schema_openshift_api_config_v1alpha1_RetentionNumberConfig(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Description: "RetentionNumberConfig specifies the configuration of the retention policy on the number of backups",
-				Type:        []string{"object"},
-				Properties: map[string]spec.Schema{
-					"maxNumberOfBackups": {
-						SchemaProps: spec.SchemaProps{
-							Description: "maxNumberOfBackups defines the maximum number of backups to retain. If the existing number of backups saved is equal to MaxNumberOfBackups then the oldest backup will be removed before a new backup is initiated.",
-							Default:     0,
-							Type:        []string{"integer"},
-							Format:      "int32",
-						},
-					},
-				},
-				Required: []string{"maxNumberOfBackups"},
-			},
-		},
-	}
-}
-
-func schema_openshift_api_config_v1alpha1_RetentionPolicy(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Description: "RetentionPolicy defines the retention policy for retaining and deleting existing backups. This struct is a discriminated union that allows users to select the type of retention policy from the supported types.",
-				Type:        []string{"object"},
-				Properties: map[string]spec.Schema{
-					"retentionType": {
-						SchemaProps: spec.SchemaProps{
-							Description: "retentionType sets the type of retention policy. Currently, the only valid policies are retention by number of backups (RetentionNumber), by the size of backups (RetentionSize). More policies or types may be added in the future. Empty string means no opinion and the platform is left to choose a reasonable default which is subject to change without notice. The current default is RetentionNumber with 15 backups kept.\n\nPossible enum values:\n - `\"RetentionNumber\"` sets the retention policy based on the number of backup files saved\n - `\"RetentionSize\"` sets the retention policy based on the total size of the backup files saved",
-							Default:     "",
-							Type:        []string{"string"},
-							Format:      "",
-							Enum:        []interface{}{"RetentionNumber", "RetentionSize"},
-						},
-					},
-					"retentionNumber": {
-						SchemaProps: spec.SchemaProps{
-							Description: "retentionNumber configures the retention policy based on the number of backups",
-							Ref:         ref(configv1alpha1.RetentionNumberConfig{}.OpenAPIModelName()),
-						},
-					},
-					"retentionSize": {
-						SchemaProps: spec.SchemaProps{
-							Description: "retentionSize configures the retention policy based on the size of backups",
-							Ref:         ref(configv1alpha1.RetentionSizeConfig{}.OpenAPIModelName()),
-						},
-					},
-				},
-				Required: []string{"retentionType"},
-			},
-			VendorExtensible: spec.VendorExtensible{
-				Extensions: spec.Extensions{
-					"x-kubernetes-unions": []interface{}{
-						map[string]interface{}{
-							"discriminator": "retentionType",
-							"fields-to-discriminateBy": map[string]interface{}{
-								"retentionNumber": "RetentionNumber",
-								"retentionSize":   "RetentionSize",
-							},
-						},
-					},
-				},
-			},
-		},
-		Dependencies: []string{
-			configv1alpha1.RetentionNumberConfig{}.OpenAPIModelName(), configv1alpha1.RetentionSizeConfig{}.OpenAPIModelName()},
-	}
-}
-
-func schema_openshift_api_config_v1alpha1_RetentionSizeConfig(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Description: "RetentionSizeConfig specifies the configuration of the retention policy on the total size of backups",
-				Type:        []string{"object"},
-				Properties: map[string]spec.Schema{
-					"maxSizeOfBackupsGb": {
-						SchemaProps: spec.SchemaProps{
-							Description: "maxSizeOfBackupsGb defines the total size in GB of backups to retain. If the current total size backups exceeds MaxSizeOfBackupsGb then the oldest backup will be removed before a new backup is initiated.",
-							Default:     0,
-							Type:        []string{"integer"},
-							Format:      "int32",
-						},
-					},
-				},
-				Required: []string{"maxSizeOfBackupsGb"},
 			},
 		},
 	}
@@ -65548,36 +65277,6 @@ func schema_openshift_api_operator_v1_VSphereCSIDriverConfigSpec(ref common.Refe
 	}
 }
 
-func schema_openshift_api_operator_v1alpha1_BackupJobReference(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Description: "BackupJobReference holds a reference to the batch/v1 Job created to run the etcd backup",
-				Type:        []string{"object"},
-				Properties: map[string]spec.Schema{
-					"namespace": {
-						SchemaProps: spec.SchemaProps{
-							Description: "namespace is the namespace of the Job. this is always expected to be \"openshift-etcd\" since the user provided PVC is also required to be in \"openshift-etcd\" Required",
-							Default:     "",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"name": {
-						SchemaProps: spec.SchemaProps{
-							Description: "name is the name of the Job. Required",
-							Default:     "",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-				},
-				Required: []string{"namespace", "name"},
-			},
-		},
-	}
-}
-
 func schema_openshift_api_operator_v1alpha1_ClusterAPI(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -66251,6 +65950,70 @@ func schema_openshift_api_operator_v1alpha1_EtcdBackup(ref common.ReferenceCallb
 	}
 }
 
+func schema_openshift_api_operator_v1alpha1_EtcdBackupFile(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"path": {
+						SchemaProps: spec.SchemaProps{
+							Description: "path to the backup file on the storage backend.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"size": {
+						SchemaProps: spec.SchemaProps{
+							Description: "size of the backup file on the storage backend.",
+							Ref:         ref(resource.Quantity{}.OpenAPIModelName()),
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			resource.Quantity{}.OpenAPIModelName()},
+	}
+}
+
+func schema_openshift_api_operator_v1alpha1_EtcdBackupJobReference(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"name": {
+						SchemaProps: spec.SchemaProps{
+							Description: "name of the backup job",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"namespace": {
+						SchemaProps: spec.SchemaProps{
+							Description: "namespace of the backup job",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"uid": {
+						SchemaProps: spec.SchemaProps{
+							Description: "uid of the backup job",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+				},
+				Required: []string{"name", "namespace", "uid"},
+			},
+		},
+	}
+}
+
 func schema_openshift_api_operator_v1alpha1_EtcdBackupList(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -66300,23 +66063,319 @@ func schema_openshift_api_operator_v1alpha1_EtcdBackupList(ref common.ReferenceC
 	}
 }
 
-func schema_openshift_api_operator_v1alpha1_EtcdBackupSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
+func schema_openshift_api_operator_v1alpha1_EtcdBackupPolicy(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "# EtcdBackupPolicy sets an automated schedule for taking backups of the etcd cluster\n\nCompatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"kind": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"apiVersion": {
+						SchemaProps: spec.SchemaProps{
+							Description: "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"metadata": {
+						SchemaProps: spec.SchemaProps{
+							Default: map[string]interface{}{},
+							Ref:     ref(metav1.ObjectMeta{}.OpenAPIModelName()),
+						},
+					},
+					"spec": {
+						SchemaProps: spec.SchemaProps{
+							Description: "spec holds user settable values for configuration",
+							Default:     map[string]interface{}{},
+							Ref:         ref(operatorv1alpha1.EtcdBackupPolicySpec{}.OpenAPIModelName()),
+						},
+					},
+					"status": {
+						SchemaProps: spec.SchemaProps{
+							Description: "status holds observed values from the cluster. They may not be overridden.",
+							Default:     map[string]interface{}{},
+							Ref:         ref(operatorv1alpha1.EtcdBackupPolicyStatus{}.OpenAPIModelName()),
+						},
+					},
+				},
+				Required: []string{"spec"},
+			},
+		},
+		Dependencies: []string{
+			operatorv1alpha1.EtcdBackupPolicySpec{}.OpenAPIModelName(), operatorv1alpha1.EtcdBackupPolicyStatus{}.OpenAPIModelName(), metav1.ObjectMeta{}.OpenAPIModelName()},
+	}
+}
+
+func schema_openshift_api_operator_v1alpha1_EtcdBackupPolicyList(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "EtcdBackupPolicyList is a collection of items\n\nCompatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"kind": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"apiVersion": {
+						SchemaProps: spec.SchemaProps{
+							Description: "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"metadata": {
+						SchemaProps: spec.SchemaProps{
+							Default: map[string]interface{}{},
+							Ref:     ref(metav1.ListMeta{}.OpenAPIModelName()),
+						},
+					},
+					"items": {
+						SchemaProps: spec.SchemaProps{
+							Type: []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref(operatorv1alpha1.EtcdBackupPolicy{}.OpenAPIModelName()),
+									},
+								},
+							},
+						},
+					},
+				},
+				Required: []string{"metadata", "items"},
+			},
+		},
+		Dependencies: []string{
+			operatorv1alpha1.EtcdBackupPolicy{}.OpenAPIModelName(), metav1.ListMeta{}.OpenAPIModelName()},
+	}
+}
+
+func schema_openshift_api_operator_v1alpha1_EtcdBackupPolicyRetentionRule(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
 				Type: []string{"object"},
 				Properties: map[string]spec.Schema{
-					"pvcName": {
+					"type": {
 						SchemaProps: spec.SchemaProps{
-							Description: "pvcName specifies the name of the PersistentVolumeClaim (PVC) which binds a PersistentVolume where the etcd backup file would be saved The PVC itself must always be created in the \"openshift-etcd\" namespace If the PVC is left unspecified \"\" then the platform will choose a reasonable default location to save the backup. In the future this would be backups saved across the control-plane master nodes.",
+							Description: "type defined which rule field is set",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"maxQuantity": {
+						SchemaProps: spec.SchemaProps{
+							Description: "maxQuantity enforces the deletion of backups that exceed the given count.",
+							Default:     0,
+							Type:        []string{"integer"},
+							Format:      "int32",
+						},
+					},
+					"maxSize": {
+						SchemaProps: spec.SchemaProps{
+							Description: "maxSize enforces the deletion of backups by the total size of backups on the storage backend. This is a soft threshold. The total size of backups may temporarily exceed the limit when new backups are created.",
+							Ref:         ref(resource.Quantity{}.OpenAPIModelName()),
+						},
+					},
+				},
+				Required: []string{"type"},
+			},
+			VendorExtensible: spec.VendorExtensible{
+				Extensions: spec.Extensions{
+					"x-kubernetes-unions": []interface{}{
+						map[string]interface{}{
+							"discriminator": "type",
+							"fields-to-discriminateBy": map[string]interface{}{
+								"maxQuantity": "MaxQuantity",
+								"maxSize":     "MaxSize",
+							},
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			resource.Quantity{}.OpenAPIModelName()},
+	}
+}
+
+func schema_openshift_api_operator_v1alpha1_EtcdBackupPolicySpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"schedule": {
+						SchemaProps: spec.SchemaProps{
+							Description: "schedule sets the backup schedule in Cron format, see https://en.wikipedia.org/wiki/Cron.",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"timeZone": {
+						SchemaProps: spec.SchemaProps{
+							Description: "timeZone name for the given schedule, see https://en.wikipedia.org/wiki/List_of_tz_database_time_zones. If not specified, this will default to the time zone of the cluster-etcd-operator process.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"nodeSelector": {
+						SchemaProps: spec.SchemaProps{
+							Description: "nodeSelector specifies which master node(s) to run backup jobs on. If no selector is specified, the default node-role.kubernetes.io/master label will be used. If no nodes are matched, then no backups will run.",
+							Type:        []string{"object"},
+							AdditionalProperties: &spec.SchemaOrBool{
+								Allows: true,
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: "",
+										Type:    []string{"string"},
+										Format:  "",
+									},
+								},
+							},
+						},
+					},
+					"storage": {
+						SchemaProps: spec.SchemaProps{
+							Description: "storage specifies the location where etcd backup files will be saved.",
+							Default:     map[string]interface{}{},
+							Ref:         ref(operatorv1alpha1.EtcdBackupStorage{}.OpenAPIModelName()),
+						},
+					},
+					"retentionRules": {
+						SchemaProps: spec.SchemaProps{
+							Description: "retentionRules defines the policy for retaining and deleting existing backups. Backups are deleted from the oldest first until all rules are satisfied. If no rules are specified then backups created by this policy will not be automatically deleted.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref(operatorv1alpha1.EtcdBackupPolicyRetentionRule{}.OpenAPIModelName()),
+									},
+								},
+							},
+						},
+					},
+					"failedBackupsHistoryLimit": {
+						SchemaProps: spec.SchemaProps{
+							Description: "failedBackupsHistoryLimit defined the number of failed etcdbackups to retain. Value must be non-negative integer. Defaults to 1.",
+							Default:     0,
+							Type:        []string{"integer"},
+							Format:      "int32",
+						},
+					},
+				},
+				Required: []string{"schedule", "storage"},
+			},
+		},
+		Dependencies: []string{
+			operatorv1alpha1.EtcdBackupPolicyRetentionRule{}.OpenAPIModelName(), operatorv1alpha1.EtcdBackupStorage{}.OpenAPIModelName()},
+	}
+}
+
+func schema_openshift_api_operator_v1alpha1_EtcdBackupPolicyStatus(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"active": {
+						SchemaProps: spec.SchemaProps{
+							Description: "active is a list of references to in progress backups controlled by this policy",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref(operatorv1alpha1.EtcdBackupReference{}.OpenAPIModelName()),
+									},
+								},
+							},
+						},
+					},
+					"lastScheduleTime": {
+						SchemaProps: spec.SchemaProps{
+							Description: "lastScheduleTime is the time when the last scheduled backup was triggered. This is used by the controller to track when backups have been executed and to prevent duplicate executions on controller restart.",
+							Ref:         ref(metav1.Time{}.OpenAPIModelName()),
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			operatorv1alpha1.EtcdBackupReference{}.OpenAPIModelName(), metav1.Time{}.OpenAPIModelName()},
+	}
+}
+
+func schema_openshift_api_operator_v1alpha1_EtcdBackupReference(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"name": {
+						SchemaProps: spec.SchemaProps{
+							Description: "name of the backup",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"uid": {
+						SchemaProps: spec.SchemaProps{
+							Description: "uid of the backup",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
 						},
 					},
 				},
+				Required: []string{"name", "uid"},
 			},
 		},
+	}
+}
+
+func schema_openshift_api_operator_v1alpha1_EtcdBackupSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"nodeName": {
+						SchemaProps: spec.SchemaProps{
+							Description: "nodeName specifies the master node where an etcd backup should be taken. If not specified, a random master node will be selected.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"storage": {
+						SchemaProps: spec.SchemaProps{
+							Description: "storage specifies the location where etcd backup files will be saved.",
+							Default:     map[string]interface{}{},
+							Ref:         ref(operatorv1alpha1.EtcdBackupStorage{}.OpenAPIModelName()),
+						},
+					},
+				},
+				Required: []string{"storage"},
+			},
+		},
+		Dependencies: []string{
+			operatorv1alpha1.EtcdBackupStorage{}.OpenAPIModelName()},
 	}
 }
 
@@ -66348,17 +66407,135 @@ func schema_openshift_api_operator_v1alpha1_EtcdBackupStatus(ref common.Referenc
 							},
 						},
 					},
-					"backupJob": {
+					"job": {
 						SchemaProps: spec.SchemaProps{
-							Description: "backupJob is the reference to the Job that executes the backup. Optional",
-							Ref:         ref(operatorv1alpha1.BackupJobReference{}.OpenAPIModelName()),
+							Description: "job is a reference to the Job created for the backup.",
+							Ref:         ref(operatorv1alpha1.EtcdBackupJobReference{}.OpenAPIModelName()),
+						},
+					},
+					"nodeName": {
+						SchemaProps: spec.SchemaProps{
+							Description: "nodeName is the master node where the backup snapshot was taken.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"files": {
+						SchemaProps: spec.SchemaProps{
+							Description: "files tracks the path and size of files generated by the etcd backup. Includes both etcd snapshots and static manifests.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref(operatorv1alpha1.EtcdBackupFile{}.OpenAPIModelName()),
+									},
+								},
+							},
 						},
 					},
 				},
 			},
 		},
 		Dependencies: []string{
-			operatorv1alpha1.BackupJobReference{}.OpenAPIModelName(), metav1.Condition{}.OpenAPIModelName()},
+			operatorv1alpha1.EtcdBackupFile{}.OpenAPIModelName(), operatorv1alpha1.EtcdBackupJobReference{}.OpenAPIModelName(), metav1.Condition{}.OpenAPIModelName()},
+	}
+}
+
+func schema_openshift_api_operator_v1alpha1_EtcdBackupStorage(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"type": {
+						SchemaProps: spec.SchemaProps{
+							Default: "",
+							Type:    []string{"string"},
+							Format:  "",
+						},
+					},
+					"pvc": {
+						SchemaProps: spec.SchemaProps{
+							Description: "pvc specifies the PersistentVolumeClaim (PVC) which binds a PersistentVolume where the etcd backup file will be saved. The PVC must always be created in the \"openshift-etcd\" namespace. This field is required when the storage type is \"PVC\"",
+							Ref:         ref(operatorv1alpha1.EtcdBackupStoragePvc{}.OpenAPIModelName()),
+						},
+					},
+					"local": {
+						SchemaProps: spec.SchemaProps{
+							Description: "local specifies a host path directory on the master node where the etcd backup file will be saved. This field is required when storage type is \"Local\"",
+							Ref:         ref(operatorv1alpha1.EtcdBackupStorageLocal{}.OpenAPIModelName()),
+						},
+					},
+				},
+				Required: []string{"type"},
+			},
+			VendorExtensible: spec.VendorExtensible{
+				Extensions: spec.Extensions{
+					"x-kubernetes-unions": []interface{}{
+						map[string]interface{}{
+							"discriminator": "type",
+							"fields-to-discriminateBy": map[string]interface{}{
+								"local": "Local",
+								"pvc":   "PVC",
+							},
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			operatorv1alpha1.EtcdBackupStorageLocal{}.OpenAPIModelName(), operatorv1alpha1.EtcdBackupStoragePvc{}.OpenAPIModelName()},
+	}
+}
+
+func schema_openshift_api_operator_v1alpha1_EtcdBackupStorageLocal(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"hostPath": {
+						SchemaProps: spec.SchemaProps{
+							Description: "hostPath is a local directory on the master node where the etcd backup file will be saved.",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+				},
+				Required: []string{"hostPath"},
+			},
+		},
+	}
+}
+
+func schema_openshift_api_operator_v1alpha1_EtcdBackupStoragePvc(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"name": {
+						SchemaProps: spec.SchemaProps{
+							Description: "name is a reference to a PVC in the \"openshift-etcd\" namespace where the etcd backup file will be saved.",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"path": {
+						SchemaProps: spec.SchemaProps{
+							Description: "path is a directory on the volume where the etcd backup file will be saved.",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+				},
+				Required: []string{"name"},
+			},
+		},
 	}
 }
 

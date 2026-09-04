@@ -761,6 +761,107 @@ tests:
        disableNetworkDiagnostics: false
        logLevel: "Normal"
        operatorLogLevel: "Normal"
+  - name: "Should omit uplinkMode when not specified"
+    initial: |
+      apiVersion: operator.openshift.io/v1
+      kind: Network
+      spec:
+       defaultNetwork:
+          ovnKubernetesConfig:
+            gatewayConfig:
+              routingViaHost: true
+    expected: |
+      apiVersion: operator.openshift.io/v1
+      kind: Network
+      spec:
+       defaultNetwork:
+          ovnKubernetesConfig:
+            gatewayConfig:
+              routingViaHost: true
+            ipsecConfig:
+              mode: Disabled
+       disableNetworkDiagnostics: false
+       logLevel: "Normal"
+       operatorLogLevel: "Normal"
+  - name: "Should be able to set uplinkMode to Optional"
+    initial: |
+      apiVersion: operator.openshift.io/v1
+      kind: Network
+      spec:
+       defaultNetwork:
+          ovnKubernetesConfig:
+            gatewayConfig:
+              routingViaHost: true
+              uplinkMode: Optional
+    expected: |
+      apiVersion: operator.openshift.io/v1
+      kind: Network
+      spec:
+       defaultNetwork:
+          ovnKubernetesConfig:
+            gatewayConfig:
+              uplinkMode: Optional
+              routingViaHost: true
+            ipsecConfig:
+              mode: Disabled
+       disableNetworkDiagnostics: false
+       logLevel: "Normal"
+       operatorLogLevel: "Normal"
+  - name: "Should be able to set uplinkMode to Required"
+    initial: |
+      apiVersion: operator.openshift.io/v1
+      kind: Network
+      spec:
+       defaultNetwork:
+          ovnKubernetesConfig:
+            gatewayConfig:
+              routingViaHost: true
+              uplinkMode: Required
+    expected: |
+      apiVersion: operator.openshift.io/v1
+      kind: Network
+      spec:
+       defaultNetwork:
+          ovnKubernetesConfig:
+            gatewayConfig:
+              uplinkMode: Required
+              routingViaHost: true
+            ipsecConfig:
+              mode: Disabled
+       disableNetworkDiagnostics: false
+       logLevel: "Normal"
+       operatorLogLevel: "Normal"
+  - name: "Should not be able to set uplinkMode to an invalid value"
+    initial: |
+      apiVersion: operator.openshift.io/v1
+      kind: Network
+      spec:
+       defaultNetwork:
+          ovnKubernetesConfig:
+            gatewayConfig:
+              uplinkMode: Invalid
+    expectedError: "spec.defaultNetwork.ovnKubernetesConfig.gatewayConfig.uplinkMode: Unsupported value: \"Invalid\": supported values: \"Required\", \"Optional\""
+  - name: "Should not be able to set uplinkMode when routingViaHost is omitted"
+    initial: |
+      apiVersion: operator.openshift.io/v1
+      kind: Network
+      spec:
+       defaultNetwork:
+          ovnKubernetesConfig:
+            gatewayConfig:
+              uplinkMode: Optional
+    expectedError: "spec.defaultNetwork.ovnKubernetesConfig.gatewayConfig: Invalid value: \"object\": uplinkMode can only be set when routingViaHost is true"
+  - name: "Should not be able to set uplinkMode when routingViaHost is false"
+    initial: |
+      apiVersion: operator.openshift.io/v1
+      kind: Network
+      spec:
+       defaultNetwork:
+          ovnKubernetesConfig:
+            gatewayConfig:
+              routingViaHost: false
+              uplinkMode: Optional
+    expectedError: "spec.defaultNetwork.ovnKubernetesConfig.gatewayConfig: Invalid value: \"object\": uplinkMode can only be set when routingViaHost is true"
   onUpdate:
   - name: "IPsec - Removing ipsecConfig.mode is not allowed"
     initial: |

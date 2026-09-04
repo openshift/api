@@ -338,6 +338,7 @@ networks.operator.openshift.io:
   Category: ""
   FeatureGates:
   - NoOverlayMode
+  - OVNKubernetesUplinkMode
   FilenameOperatorName: network
   FilenameOperatorOrdering: "01"
   FilenameRunLevel: "0000_70"

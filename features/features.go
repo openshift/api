@@ -1051,4 +1051,11 @@ var (
 					enhancementPR("https://github.com/openshift/enhancements/pull/2047").
 					enable(inTechPreviewNoUpgrade(), inDevPreviewNoUpgrade()).
 					mustRegister()
+
+	FeatureGateDRADeviceTaintRules = newFeatureGate("DRADeviceTaintRules").
+					reportProblemsToJiraComponent("node").
+					contactPerson("haircommander").
+					productScope(kubernetes).
+					enhancementPR("https://github.com/kubernetes/enhancements/issues/5055").
+					mustRegister()
 )

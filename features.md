@@ -2,6 +2,7 @@
 | ------ | --- | --- | --- | --- | --- | --- | --- | ---  |
 | ClientsAllowCBOR| | | | | | | |  |
 | ClusterAPIInstall| | | | | | | |  |
+| DRADeviceTaintRules| | | | | | | |  |
 | EventedPLEG| | | | | | | |  |
 | MachineAPIMigrationAzure| | | | | | | |  |
 | MachineAPIMigrationBareMetal| | | | | | | |  |

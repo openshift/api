@@ -23,6 +23,9 @@
                         "name": "ClusterAPIInstall"
                     },
                     {
+                        "name": "DRADeviceTaintRules"
+                    },
+                    {
                         "name": "EventedPLEG"
                     },
                     {

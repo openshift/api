@@ -114,6 +114,9 @@
                         "name": "DNSNameResolver"
                     },
                     {
+                        "name": "DRADeviceTaintRules"
+                    },
+                    {
                         "name": "DyanmicServiceEndpointIBMCloud"
                     },
                     {

@@ -242,6 +242,9 @@
                         "name": "NutanixMultiSubnets"
                     },
                     {
+                        "name": "OVNKubernetesUplinkMode"
+                    },
+                    {
                         "name": "OVNObservability"
                     },
                     {

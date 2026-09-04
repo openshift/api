@@ -248,6 +248,9 @@
                         "name": "OLMLifecycleAndCompatibility"
                     },
                     {
+                        "name": "OVNKubernetesUplinkMode"
+                    },
+                    {
                         "name": "OVNObservability"
                     },
                     {

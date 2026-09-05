@@ -2778,7 +2778,7 @@ func (HTPasswdIdentityProvider) SwaggerDoc() map[string]string {
 
 var map_IdentityProvider = map[string]string{
 	"":              "IdentityProvider provides identities for users authenticating using credentials",
-	"name":          "name is used to qualify the identities returned by this provider. - It MUST be unique and not shared by any other identity provider used - It MUST be a valid path segment: name cannot equal \".\" or \"..\" or contain \"/\" or \"%\" or \":\"\n  Ref: https://godoc.org/github.com/openshift/origin/pkg/user/apis/user/validation#ValidateIdentityProviderName",
+	"name":          "name is used to qualify the identities returned by this provider. - It MUST be unique and not shared by any other identity provider used - It MUST be a valid path segment: name cannot equal \".\" or \"..\" or contain \"/\" or \"%\" or \":\"\n  Ref: https://godoc.org/github.com/openshift/origin/pkg/user/apis/user/validation#ValidateIdentityProviderName\n- It MUST also be a valid Kubernetes annotation name-part (alphanumeric characters,\n  '-', '_' or '.', starting and ending with an alphanumeric character, at most 59 characters)\n  because oauth-server writes oauth.openshift.io/idp.<name> onto Group objects during group sync.",
 	"mappingMethod": "mappingMethod determines how identities from this provider are mapped to users Defaults to \"claim\"",
 }
 
@@ -2873,7 +2873,7 @@ func (OAuthRemoteConnectionInfo) SwaggerDoc() map[string]string {
 
 var map_OAuthSpec = map[string]string{
 	"":                  "OAuthSpec contains desired cluster auth configuration",
-	"identityProviders": "identityProviders is an ordered list of ways for a user to identify themselves. When this list is empty, no identities are provisioned for users.",
+	"identityProviders": "identityProviders is an ordered list of ways for a user to identify themselves. When this list is empty, no identities are provisioned for users.\n\nname is also used as the name-part of the Group annotation oauth.openshift.io/idp.<name> during OpenID group sync, so it must be a valid Kubernetes annotation name (alphanumeric, '-', '_', '.', at most 59 characters). Existing names that predate this restriction are grandfathered until changed.",
 	"tokenConfig":       "tokenConfig contains options for authorization and access tokens",
 	"templates":         "templates allow you to customize pages like the login page.",
 }

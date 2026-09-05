@@ -12,3 +12,182 @@ tests:
         apiVersion: config.openshift.io/v1
         kind: OAuth
         spec: {}
+    - name: Should be able to create an identity provider with a valid annotation-key name
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: OAuth
+        spec:
+          identityProviders:
+          - name: Microsoft-Entra-ID
+            mappingMethod: claim
+            type: HTPasswd
+            htpasswd:
+              fileData:
+                name: htpass-secret
+      expected: |
+        apiVersion: config.openshift.io/v1
+        kind: OAuth
+        spec:
+          identityProviders:
+          - name: Microsoft-Entra-ID
+            mappingMethod: claim
+            type: HTPasswd
+            htpasswd:
+              fileData:
+                name: htpass-secret
+    - name: Should be able to create an identity provider named AIF-Keycloak
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: OAuth
+        spec:
+          identityProviders:
+          - name: AIF-Keycloak
+            mappingMethod: claim
+            type: HTPasswd
+            htpasswd:
+              fileData:
+                name: htpass-secret
+      expected: |
+        apiVersion: config.openshift.io/v1
+        kind: OAuth
+        spec:
+          identityProviders:
+          - name: AIF-Keycloak
+            mappingMethod: claim
+            type: HTPasswd
+            htpasswd:
+              fileData:
+                name: htpass-secret
+    - name: Should not be able to create an identity provider whose name contains spaces
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: OAuth
+        metadata:
+          name: cluster
+        spec:
+          identityProviders:
+          - name: Microsoft Entra ID
+            mappingMethod: claim
+            type: OpenID
+            openID:
+              clientID: example
+              clientSecret:
+                name: microsoft-entra-id-secret
+              issuer: https://login.microsoftonline.com/example/v2.0
+      expectedError: "identity provider name must consist of alphanumeric characters"
+    - name: Should not be able to create an identity provider named AIF - Keycloak
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: OAuth
+        metadata:
+          name: cluster
+        spec:
+          identityProviders:
+          - name: AIF - Keycloak
+            mappingMethod: claim
+            type: OpenID
+            openID:
+              clientID: example
+              clientSecret:
+                name: aif-keycloak-secret
+              issuer: https://keycloak.example.com/realms/example
+      expectedError: "identity provider name must consist of alphanumeric characters"
+  onUpdate:
+    - name: Should allow updating other fields of a valid identity provider
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: OAuth
+        spec:
+          identityProviders:
+          - name: Microsoft-Entra-ID
+            mappingMethod: claim
+            type: HTPasswd
+            htpasswd:
+              fileData:
+                name: htpass-secret
+      updated: |
+        apiVersion: config.openshift.io/v1
+        kind: OAuth
+        spec:
+          identityProviders:
+          - name: Microsoft-Entra-ID
+            mappingMethod: claim
+            type: HTPasswd
+            htpasswd:
+              fileData:
+                name: htpass-secret-updated
+      expected: |
+        apiVersion: config.openshift.io/v1
+        kind: OAuth
+        spec:
+          identityProviders:
+          - name: Microsoft-Entra-ID
+            mappingMethod: claim
+            type: HTPasswd
+            htpasswd:
+              fileData:
+                name: htpass-secret-updated
+    - name: Should not be able to add a new identity provider whose name contains spaces
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: OAuth
+        spec:
+          identityProviders:
+          - name: htpasswd
+            mappingMethod: claim
+            type: HTPasswd
+            htpasswd:
+              fileData:
+                name: htpass-secret
+      updated: |
+        apiVersion: config.openshift.io/v1
+        kind: OAuth
+        spec:
+          identityProviders:
+          - name: htpasswd
+            mappingMethod: claim
+            type: HTPasswd
+            htpasswd:
+              fileData:
+                name: htpass-secret
+          - name: AIF - Keycloak
+            mappingMethod: claim
+            type: HTPasswd
+            htpasswd:
+              fileData:
+                name: htpass-secret
+      expectedError: "identity provider name must consist of alphanumeric characters"
+    - name: Should allow renaming an identity provider to another valid annotation-key name
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: OAuth
+        spec:
+          identityProviders:
+          - name: MicrosoftEntraID
+            mappingMethod: claim
+            type: HTPasswd
+            htpasswd:
+              fileData:
+                name: htpass-secret
+      updated: |
+        apiVersion: config.openshift.io/v1
+        kind: OAuth
+        spec:
+          identityProviders:
+          - name: Microsoft-Entra-ID
+            mappingMethod: claim
+            type: HTPasswd
+            htpasswd:
+              fileData:
+                name: htpass-secret
+      expected: |
+        apiVersion: config.openshift.io/v1
+        kind: OAuth
+        spec:
+          identityProviders:
+          - name: Microsoft-Entra-ID
+            mappingMethod: claim
+            type: HTPasswd
+            htpasswd:
+              fileData:
+                name: htpass-secret

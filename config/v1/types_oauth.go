@@ -38,6 +38,13 @@ type OAuth struct {
 type OAuthSpec struct {
 	// identityProviders is an ordered list of ways for a user to identify themselves.
 	// When this list is empty, no identities are provisioned for users.
+	//
+	// name is also used as the name-part of the Group annotation
+	// oauth.openshift.io/idp.<name> during OpenID group sync, so it must be a valid
+	// Kubernetes annotation name (alphanumeric, '-', '_', '.', at most 59 characters).
+	// Existing names that predate this restriction are grandfathered until changed.
+	//
+	// +kubebuilder:validation:XValidation:rule="self.all(idp, (idp.name.matches('^[A-Za-z0-9]([-A-Za-z0-9_.]*[A-Za-z0-9])?$') && size(idp.name) <= 59) || (oldSelf.hasValue() && oldSelf.value().exists(old, old.name == idp.name)))",message="identity provider name must consist of alphanumeric characters, '-', '_' or '.', start and end with an alphanumeric character, and be at most 59 characters because it is used as a Kubernetes annotation key during group sync",optionalOldSelf=true
 	// +optional
 	// +listType=atomic
 	IdentityProviders []IdentityProvider `json:"identityProviders,omitempty"`
@@ -139,6 +146,9 @@ type IdentityProvider struct {
 	// - It MUST be unique and not shared by any other identity provider used
 	// - It MUST be a valid path segment: name cannot equal "." or ".." or contain "/" or "%" or ":"
 	//   Ref: https://godoc.org/github.com/openshift/origin/pkg/user/apis/user/validation#ValidateIdentityProviderName
+	// - It MUST also be a valid Kubernetes annotation name-part (alphanumeric characters,
+	//   '-', '_' or '.', starting and ending with an alphanumeric character, at most 59 characters)
+	//   because oauth-server writes oauth.openshift.io/idp.<name> onto Group objects during group sync.
 	Name string `json:"name"`
 
 	// mappingMethod determines how identities from this provider are mapped to users

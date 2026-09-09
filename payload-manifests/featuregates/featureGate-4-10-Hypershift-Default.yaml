@@ -168,9 +168,6 @@
                         "name": "GCPDualStackInstall"
                     },
                     {
-                        "name": "GatewayAPIManagementMode"
-                    },
-                    {
                         "name": "GenericWorkload"
                     },
                     {
@@ -360,6 +357,9 @@
                     },
                     {
                         "name": "GCPSovereignCloudInstall"
+                    },
+                    {
+                        "name": "GatewayAPIManagementMode"
                     },
                     {
                         "name": "GatewayAPIWithoutOLM"

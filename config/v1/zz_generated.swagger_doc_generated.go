@@ -1882,16 +1882,17 @@ func (InfrastructureSpec) SwaggerDoc() map[string]string {
 }
 
 var map_InfrastructureStatus = map[string]string{
-	"":                       "InfrastructureStatus describes the infrastructure the cluster is leveraging.",
-	"infrastructureName":     "infrastructureName uniquely identifies a cluster with a human friendly name. Once set it should not be changed. Must be of max length 27 and must have only alphanumeric or hyphen characters.",
-	"platform":               "platform is the underlying infrastructure provider for the cluster.\n\nDeprecated: Use platformStatus.type instead.",
-	"platformStatus":         "platformStatus holds status information specific to the underlying infrastructure provider.",
-	"etcdDiscoveryDomain":    "etcdDiscoveryDomain is the domain used to fetch the SRV records for discovering etcd servers and clients. For more info: https://github.com/etcd-io/etcd/blob/329be66e8b3f9e2e6af83c123ff89297e49ebd15/Documentation/op-guide/clustering.md#dns-discovery deprecated: as of 4.7, this field is no longer set or honored.  It will be removed in a future release.",
-	"apiServerURL":           "apiServerURL is a valid URI with scheme 'https', address and optionally a port (defaulting to 443).  apiServerURL can be used by components like the web console to tell users where to find the Kubernetes API.",
-	"apiServerInternalURI":   "apiServerInternalURL is a valid URI with scheme 'https', address and optionally a port (defaulting to 443).  apiServerInternalURL can be used by components like kubelets, to contact the Kubernetes API server using the infrastructure provider rather than Kubernetes networking.",
-	"controlPlaneTopology":   "controlPlaneTopology expresses the expectations for operands that normally run on control nodes. The default is 'HighlyAvailable', which represents the behavior operators have in a \"normal\" cluster. The 'SingleReplica' mode will be used in single-node deployments and the operators should not configure the operand for highly-available operation The 'External' mode indicates that the control plane is hosted externally to the cluster and that its components are not visible within the cluster. The 'HighlyAvailableArbiter' mode indicates that the control plane will consist of 2 control-plane nodes that run conventional services and 1 smaller sized arbiter node that runs a bare minimum of services to maintain quorum.",
-	"infrastructureTopology": "infrastructureTopology expresses the expectations for infrastructure services that do not run on control plane nodes, usually indicated by a node selector for a `role` value other than `master`. The default is 'HighlyAvailable', which represents the behavior operators have in a \"normal\" cluster. The 'SingleReplica' mode will be used in single-node deployments and the operators should not configure the operand for highly-available operation NOTE: External topology mode is not applicable for this field.",
-	"cpuPartitioning":        "cpuPartitioning expresses if CPU partitioning is a currently enabled feature in the cluster. CPU Partitioning means that this cluster can support partitioning workloads to specific CPU Sets. Valid values are \"None\" and \"AllNodes\". When omitted, the default value is \"None\". The default value of \"None\" indicates that no nodes will be setup with CPU partitioning. The \"AllNodes\" value indicates that all nodes have been setup with CPU partitioning, and can then be further configured via the PerformanceProfile API.",
+	"":                         "InfrastructureStatus describes the infrastructure the cluster is leveraging.",
+	"infrastructureName":       "infrastructureName uniquely identifies a cluster with a human friendly name. Once set it should not be changed. Must be of max length 27 and must have only alphanumeric or hyphen characters.",
+	"platform":                 "platform is the underlying infrastructure provider for the cluster.\n\nDeprecated: Use platformStatus.type instead.",
+	"platformStatus":           "platformStatus holds status information specific to the underlying infrastructure provider.",
+	"etcdDiscoveryDomain":      "etcdDiscoveryDomain is the domain used to fetch the SRV records for discovering etcd servers and clients. For more info: https://github.com/etcd-io/etcd/blob/329be66e8b3f9e2e6af83c123ff89297e49ebd15/Documentation/op-guide/clustering.md#dns-discovery deprecated: as of 4.7, this field is no longer set or honored.  It will be removed in a future release.",
+	"apiServerURL":             "apiServerURL is a valid URI with scheme 'https', address and optionally a port (defaulting to 443).  apiServerURL can be used by components like the web console to tell users where to find the Kubernetes API.",
+	"apiServerInternalURI":     "apiServerInternalURL is a valid URI with scheme 'https', address and optionally a port (defaulting to 443).  apiServerInternalURL can be used by components like kubelets, to contact the Kubernetes API server using the infrastructure provider rather than Kubernetes networking.",
+	"controlPlaneTopology":     "controlPlaneTopology expresses the expectations for operands that normally run on control nodes. The default is 'HighlyAvailable', which represents the behavior operators have in a \"normal\" cluster. The 'SingleReplica' mode will be used in single-node deployments and the operators should not configure the operand for highly-available operation The 'External' mode indicates that the control plane is hosted externally to the cluster and that its components are not visible within the cluster. The 'HighlyAvailableArbiter' mode indicates that the control plane will consist of 2 control-plane nodes that run conventional services and 1 smaller sized arbiter node that runs a bare minimum of services to maintain quorum.",
+	"infrastructureTopology":   "infrastructureTopology expresses the expectations for infrastructure services that do not run on control plane nodes, usually indicated by a node selector for a `role` value other than `master`. The default is 'HighlyAvailable', which represents the behavior operators have in a \"normal\" cluster. The 'SingleReplica' mode will be used in single-node deployments and the operators should not configure the operand for highly-available operation NOTE: External topology mode is not applicable for this field.",
+	"topologyTransitionStatus": "topologyTransitionStatus reports evaluations of supported topology transitions and the status of a requested transition, if any. It is optional and is omitted until the topology controller reports transition status. A transition is requested through spec.controlPlaneTopology. The controller reports completion only after both topologies reach that transition's target and post-transition checks pass; reaching the target topology alone is not completion.",
+	"cpuPartitioning":          "cpuPartitioning expresses if CPU partitioning is a currently enabled feature in the cluster. CPU Partitioning means that this cluster can support partitioning workloads to specific CPU Sets. Valid values are \"None\" and \"AllNodes\". When omitted, the default value is \"None\". The default value of \"None\" indicates that no nodes will be setup with CPU partitioning. The \"AllNodes\" value indicates that all nodes have been setup with CPU partitioning, and can then be further configured via the PerformanceProfile API.",
 }
 
 func (InfrastructureStatus) SwaggerDoc() map[string]string {
@@ -2269,6 +2270,36 @@ var map_VSpherePlatformVCenterSpec = map[string]string{
 
 func (VSpherePlatformVCenterSpec) SwaggerDoc() map[string]string {
 	return map_VSpherePlatformVCenterSpec
+}
+
+var map_TopologyState = map[string]string{
+	"":                       "TopologyState describes the control-plane and infrastructure topology at one end of a topology transition. The topology controller determines which transitions are supported. Currently, it supports only transitions that change both topologies from SingleReplica to HighlyAvailable. Representing a topology here does not enable a transition to it.",
+	"controlPlaneTopology":   "controlPlaneTopology is the topology of the control-plane nodes. Valid values are HighlyAvailable, HighlyAvailableArbiter, and SingleReplica. External is not valid: transitions cannot involve an externally hosted control plane. SingleReplica means a single instance of control-plane services is expected to meet cluster needs. HighlyAvailable means multiple instances are expected to provide redundancy. HighlyAvailableArbiter means two control-plane nodes and a smaller arbiter node maintain quorum. See https://pkg.go.dev/github.com/openshift/api/config/v1#TopologyMode for topology definitions. controlPlaneTopology is required and must be between 1 and 22 characters.",
+	"infrastructureTopology": "infrastructureTopology is the topology of infrastructure services. Valid values are SingleReplica and HighlyAvailable. When set to SingleReplica, operators expect a single instance of infrastructure services to meet cluster needs. When set to HighlyAvailable, operators expect multiple instances of infrastructure services to provide redundancy. infrastructureTopology is required.",
+}
+
+func (TopologyState) SwaggerDoc() map[string]string {
+	return map_TopologyState
+}
+
+var map_TopologyTransition = map[string]string{
+	"source":      "source is the control-plane and infrastructure topology this transition was evaluated from. It may differ from the current topology while status is being refreshed. Valid controlPlaneTopology values are HighlyAvailable, HighlyAvailableArbiter, and SingleReplica. Valid infrastructureTopology values are SingleReplica and HighlyAvailable. Their meanings are described in TopologyState. External control planes cannot be a transition source. source is required.",
+	"target":      "target is the control-plane and infrastructure topology this transition would move to. Valid controlPlaneTopology values are HighlyAvailable, HighlyAvailableArbiter, and SingleReplica. Valid infrastructureTopology values are SingleReplica and HighlyAvailable. Their meanings are described in TopologyState. External control planes cannot be a transition target. target is required.",
+	"evaluations": "evaluations contains the availability condition for this transition and conditions for the checks run against the cluster to determine availability.\n\nTopologyTransitionAvailable is required; other condition types report individual checks. Between one and 32 conditions must be present, allowing at most 31 individual checks in addition to the availability condition. The controller defines individual check types, reasons, and messages. Results may be retained during reevaluation or an evaluation failure; clients must not use them unless the top-level TopologyTransitionsEvaluated condition is True.",
+}
+
+func (TopologyTransition) SwaggerDoc() map[string]string {
+	return map_TopologyTransition
+}
+
+var map_TopologyTransitionStatus = map[string]string{
+	"":            "TopologyTransitionStatus reports availability of each type of topology transition and contains the status of any initiated transition. When present, it must include conditions or transitions. Each list must be non-empty when present.",
+	"conditions":  "conditions provides information on topology transition progress and the evaluation of supported transition types. It is optional. When omitted, or when TopologyTransitionsEvaluated is absent or not True, retained transition evaluations are stale and must not be used to determine current availability.\n\nValid condition types are TopologyTransitionsEvaluated and TopologyTransitionCompleted. Between one and two conditions must be present when the list is set. Use Unknown when a condition's state is not yet known.",
+	"transitions": "transitions contains each supported transition type and its availability. It is optional. When omitted and TopologyTransitionsEvaluated is True, no supported transition options were found. Otherwise, omission means no transition options have been reported. The controller can retain entries during reevaluation or an evaluation failure. Clients must not use their availability results unless TopologyTransitionsEvaluated is True. The controller manages freshness; the API allows retained results independently of the evaluation condition's current status.\n\nBetween one and eight transition options must be present when the list is set. This list reports transition options, not concurrent transitions. The topology controller determines which transition options are supported.",
+}
+
+func (TopologyTransitionStatus) SwaggerDoc() map[string]string {
+	return map_TopologyTransitionStatus
 }
 
 var map_AWSIngressSpec = map[string]string{

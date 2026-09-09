@@ -8576,6 +8576,10 @@
         "platformStatus": {
           "description": "platformStatus holds status information specific to the underlying infrastructure provider.",
           "$ref": "#/definitions/com.github.openshift.api.config.v1.PlatformStatus"
+        },
+        "topologyTransitionStatus": {
+          "type": "string",
+          "default": ""
         }
       }
     },

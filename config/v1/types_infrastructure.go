@@ -138,6 +138,11 @@ type InfrastructureStatus struct {
 	// +optional
 	InfrastructureTopology TopologyMode `json:"infrastructureTopology,omitempty"`
 
+	// +kubebuilder:default=HighlyAvailable
+	// +kubebuilder:validation:Enum=HighlyAvailable;SingleReplica
+	// +optional
+	TopologyTransitionStatus TopologyTransitionStatus `json:"topologyTransitionStatus"`
+
 	// cpuPartitioning expresses if CPU partitioning is a currently enabled feature in the cluster.
 	// CPU Partitioning means that this cluster can support partitioning workloads to specific CPU Sets.
 	// Valid values are "None" and "AllNodes". When omitted, the default value is "None".
@@ -175,6 +180,20 @@ const (
 	// that any of the control plane components such as kubernetes API server or etcd are visible within
 	// the cluster.
 	ExternalTopologyMode TopologyMode = "External"
+)
+
+// TopologyTransitionStatus tracks the current state of topology transitions of a cluster.
+type TopologyTransitionStatus string
+
+const (
+	// TopologyTransitionStatusAvailable indicates that the transition possible but not been triggered
+	TopologyTransitionStatusAvailable = "Available"
+	// TopologyTransitionStatusPending indicates that the transition was triggered
+	TopologyTransitionStatusPending = "Pending"
+	// TopologyTransitionStatusError reports an error occured. The error will be reported as an event on the infra API instance
+	TopologyTransitionStatusError = "Error"
+	// TopologyTransitionStatusTransitioned reports that the topology transition completed without errors
+	TopologyTransitionStatusTransitioned = "Transitioned"
 )
 
 // CPUPartitioningMode defines the mode for CPU partitioning

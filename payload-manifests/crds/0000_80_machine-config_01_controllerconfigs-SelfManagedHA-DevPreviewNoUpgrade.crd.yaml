@@ -3089,6 +3089,14 @@ spec:
                                 == ''Internal'' || (has(self.loadBalancer) && self.loadBalancer.type
                                 == ''UserManaged'')'
                         type: object
+                      topologyTransitionStatus:
+                        default: HighlyAvailable
+                        description: TopologyTransitionStatus tracks the current state
+                          of topology transitions of a cluster.
+                        enum:
+                        - HighlyAvailable
+                        - SingleReplica
+                        type: string
                     type: object
                 required:
                 - spec

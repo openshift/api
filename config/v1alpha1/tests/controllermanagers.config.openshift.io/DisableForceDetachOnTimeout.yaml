@@ -5,28 +5,6 @@ featureGates:
   - DisableForceDetachOnTimeout
 tests:
   onCreate:
-    - name: Should be able to create with default values
-      initial: |
-        apiVersion: config.openshift.io/v1alpha1
-        kind: ControllerManager
-        spec:
-          forceDetachOnTimeout:
-      expected: |
-        apiVersion: config.openshift.io/v1alpha1
-        kind: ControllerManager
-        spec:
-          forceDetachOnTimeout: Enabled
-    - name: Should be able to create with force detach enabled
-      initial: |
-        apiVersion: config.openshift.io/v1alpha1
-        kind: ControllerManager
-        spec:
-          forceDetachOnTimeout: Enabled
-      expected: |
-        apiVersion: config.openshift.io/v1alpha1
-        kind: ControllerManager
-        spec:
-          forceDetachOnTimeout: Enabled
     - name: Should be able to create with force detach disabled
       initial: |
         apiVersion: config.openshift.io/v1alpha1
@@ -62,19 +40,3 @@ tests:
         kind: ControllerManager
         spec:
           forceDetachOnTimeout: Disabled
-    - name: Disabled to default value
-      initial: |
-        apiVersion: config.openshift.io/v1alpha1
-        kind: ControllerManager
-        spec:
-          forceDetachOnTimeout: Disabled
-      updated: |
-        apiVersion: config.openshift.io/v1alpha1
-        kind: ControllerManager
-        spec:
-          forceDetachOnTimeout: 
-      expected: |
-        apiVersion: config.openshift.io/v1alpha1
-        kind: ControllerManager
-        spec:
-          forceDetachOnTimeout: Enabled

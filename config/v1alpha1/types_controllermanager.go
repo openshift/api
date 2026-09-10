@@ -6,8 +6,8 @@ import metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 // +genclient:nonNamespaced
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 
-// ControllerManager holds cluster-wide config information to run the Kubernetes controller manager
-// and influence its placement decisions. The canonical name for this config is `cluster`.
+// ControllerManager holds cluster-wide configuration for the Kubernetes controller manager.
+// The canonical name for this config is `cluster`.
 //
 // Compatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.
 // +openshift:compatibility-gen:level=4
@@ -37,13 +37,19 @@ type ControllerManager struct {
 // +kubebuilder:validation:MinProperties=1
 type ControllerManagerSpec struct {
 	// forceDetachOnTimeout expresses whether to allow kube-controller-manager
-	// to force detach volumes when unmount takes longer than the timeout.
-	// Valid values are Enabled and Disabled. If omitted, the default is Enabled.
-	// +default="Enabled"
+	// to force detach volumes when the maximum unmount time is exceeded or when
+	// a node is not healthy.
+	// Valid values are "Enabled" and "Disabled".
+	// When omitted, this means the user has no opinion and the platform is left
+	// to choose a reasonable default, which is subject to change over time.
+	// The current default is "Enabled".
 	// +optional
 	ForceDetachOnTimeout ForceDetachOnTimeoutPolicy `json:"forceDetachOnTimeout,omitempty"`
 }
 
+// ForceDetachOnTimeoutPolicy describes the policy for force detaching volumes
+// when the maximum unmount time is exceeded.
+// Valid values are "Enabled" and "Disabled".
 // +kubebuilder:validation:Enum=Enabled;Disabled
 type ForceDetachOnTimeoutPolicy string
 

@@ -121,6 +121,9 @@
                         "name": "AuthenticationComponentProxy"
                     },
                     {
+                        "name": "AuthenticationComponentProxyExternalOIDC"
+                    },
+                    {
                         "name": "AutomatedEtcdBackup"
                     },
                     {

@@ -841,7 +841,8 @@ func (ControllerManagerSpec) SwaggerDoc() map[string]string {
 }
 
 var map_ControllerManagerStatus = map[string]string{
-	"": "ControllerManagerStatus defines the observed state of the Kubernetes controller manager",
+	"":           "ControllerManagerStatus defines the observed state of the Kubernetes controller manager",
+	"conditions": "conditions represent the latest available observations of the configuration state. When omitted, it indicates that no conditions have been reported yet. The maximum number of conditions is 16. When set, at least one condition must be present. Conditions are stored as a map keyed by condition type, ensuring uniqueness.",
 }
 
 func (ControllerManagerStatus) SwaggerDoc() map[string]string {

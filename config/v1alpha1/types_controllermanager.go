@@ -65,6 +65,17 @@ const (
 // ControllerManagerStatus defines the observed state of the Kubernetes controller manager
 // +kubebuilder:validation:MinProperties=1
 type ControllerManagerStatus struct {
+	// conditions represent the latest available observations of the configuration state.
+	// When omitted, it indicates that no conditions have been reported yet.
+	// The maximum number of conditions is 16.
+	// When set, at least one condition must be present.
+	// Conditions are stored as a map keyed by condition type, ensuring uniqueness.
+	// +optional
+	// +kubebuilder:validation:MaxItems=16
+	// +kubebuilder:validation:MinItems=1
+	// +listType=map
+	// +listMapKey=type
+	Conditions []metav1.Condition `json:"conditions,omitempty"`
 }
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object

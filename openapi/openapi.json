@@ -13277,7 +13277,21 @@
     },
     "com.github.openshift.api.config.v1alpha1.ControllerManagerStatus": {
       "description": "ControllerManagerStatus defines the observed state of the Kubernetes controller manager",
-      "type": "object"
+      "type": "object",
+      "properties": {
+        "conditions": {
+          "description": "conditions represent the latest available observations of the configuration state. When omitted, it indicates that no conditions have been reported yet. The maximum number of conditions is 16. When set, at least one condition must be present. Conditions are stored as a map keyed by condition type, ensuring uniqueness.",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Condition"
+          },
+          "x-kubernetes-list-map-keys": [
+            "type"
+          ],
+          "x-kubernetes-list-type": "map"
+        }
+      }
     },
     "com.github.openshift.api.config.v1alpha1.CustomPKIPolicy": {
       "description": "CustomPKIPolicy contains administrator-specified cryptographic configuration. Administrators must specify defaults for all certificates and may optionally override specific categories of certificates.",

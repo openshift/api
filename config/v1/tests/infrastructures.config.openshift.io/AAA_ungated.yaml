@@ -3,6 +3,7 @@ name: "Infrastructure"
 crdName: infrastructures.config.openshift.io
 featureGates:
 - -AWSClusterHostedDNSInstall
+- -VSphereMultiVCenterDay2
 tests:
   onCreate:
     - name: Should be able to create a minimal Infrastructure
@@ -1839,3 +1840,137 @@ tests:
                 value: value*
             type: AWS
       expectedStatusError: "invalid AWS resource tag value. The string can contain only the set of alphanumeric characters, space (' '), '_', '.', '/', '=', '+', '-', ':', '@'"
+    - name: Should allow updating other fields with an invalid persisted vcenters array (empty) in spec
+      initialCRDPatches:
+      - op: remove
+        path: /spec/versions/0/schema/openAPIV3Schema/properties/spec/properties/platformSpec/properties/vsphere/properties/vcenters/minItems
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        spec:
+          platformSpec:
+            type: VSphere
+            vsphere:
+              vcenters: []
+      updated: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        spec:
+          cloudConfig:
+            key: config
+            name: cloud-provider-config
+          platformSpec:
+            type: VSphere
+            vsphere:
+              vcenters: []
+      expected: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        spec:
+          cloudConfig:
+            key: config
+            name: cloud-provider-config
+          platformSpec:
+            type: VSphere
+            vsphere:
+              vcenters: []
+    - name: Should allow keeping an invalid persisted vcenters array (empty) in spec unchanged
+      initialCRDPatches:
+      - op: remove
+        path: /spec/versions/0/schema/openAPIV3Schema/properties/spec/properties/platformSpec/properties/vsphere/properties/vcenters/minItems
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        spec:
+          platformSpec:
+            type: VSphere
+            vsphere:
+              vcenters: []
+              failureDomains:
+              - name: fd1
+                region: region1
+                server: vcenter1.example.com
+                topology:
+                  computeCluster: /DC1/host/cluster1
+                  datacenter: DC1
+                  datastore: /DC1/datastore/ds1
+                  networks:
+                  - network1
+                  resourcePool: /DC1/host/cluster1/Resources
+                zone: zone1
+      updated: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        spec:
+          platformSpec:
+            type: VSphere
+            vsphere:
+              vcenters: []
+              failureDomains:
+              - name: fd1
+                region: region1
+                server: vcenter1.example.com
+                topology:
+                  computeCluster: /DC1/host/cluster1
+                  datacenter: DC1
+                  datastore: /DC1/datastore/ds1
+                  networks:
+                  - network1
+                  resourcePool: /DC1/host/cluster1/Resources
+                zone: zone1
+      expected: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        spec:
+          platformSpec:
+            type: VSphere
+            vsphere:
+              vcenters: []
+              failureDomains:
+              - name: fd1
+                region: region1
+                server: vcenter1.example.com
+                topology:
+                  computeCluster: /DC1/host/cluster1
+                  datacenter: DC1
+                  datastore: /DC1/datastore/ds1
+                  networks:
+                  - network1
+                  resourcePool: /DC1/host/cluster1/Resources
+                zone: zone1
+    - name: Should allow updating an invalid persisted vcenters array (empty) to a valid value (1 vcenter) in spec
+      initialCRDPatches:
+      - op: remove
+        path: /spec/versions/0/schema/openAPIV3Schema/properties/spec/properties/platformSpec/properties/vsphere/properties/vcenters/minItems
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        spec:
+          platformSpec:
+            type: VSphere
+            vsphere:
+              vcenters: []
+      updated: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        spec:
+          platformSpec:
+            type: VSphere
+            vsphere:
+              vcenters:
+              - server: vcenter1.example.com
+                port: 443
+                datacenters:
+                - DC1
+      expected: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        spec:
+          platformSpec:
+            type: VSphere
+            vsphere:
+              vcenters:
+              - server: vcenter1.example.com
+                port: 443
+                datacenters:
+                - DC1

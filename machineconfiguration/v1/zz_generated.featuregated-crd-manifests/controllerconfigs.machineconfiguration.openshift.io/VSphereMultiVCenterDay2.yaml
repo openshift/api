@@ -6,7 +6,7 @@ metadata:
     api.openshift.io/filename-cvo-runlevel: "0000_80"
     api.openshift.io/filename-operator: machine-config
     api.openshift.io/filename-ordering: "01"
-    feature-gate.release.openshift.io/AWSDualStackInstall: "true"
+    feature-gate.release.openshift.io/VSphereMultiVCenterDay2: "true"
   labels:
     openshift.io/operator-managed: ""
   name: controllerconfigs.machineconfiguration.openshift.io
@@ -1290,17 +1290,34 @@ spec:
                                 type: array
                                 x-kubernetes-list-type: atomic
                                 x-kubernetes-validations:
+                                - message: Cannot add and remove vCenters at the same
+                                    time
+                                  rule: 'size(self) >= size(oldSelf) ? oldSelf.all(x,
+                                    self.exists(y, y.server == x.server)) : true'
+                                - message: Cannot add and remove vCenters at the same
+                                    time
+                                  rule: 'size(self) < size(oldSelf) ? self.all(x,
+                                    oldSelf.exists(y, y.server == x.server)) : true'
                                 - message: vcenters must have unique server values
                                   rule: self.all(x, self.exists_one(y, y.server ==
                                     x.server))
                             type: object
                             x-kubernetes-validations:
+                            - message: all failure domains must have a corresponding
+                                vCenter entry
+                              rule: '!has(self.failureDomains) || size(self.failureDomains)
+                                == 0 || (has(self.vcenters) && self.failureDomains.all(fd,
+                                self.vcenters.exists(vc, vc.server == fd.server)))'
                             - message: apiServerInternalIPs list is required once
                                 set
                               rule: '!has(oldSelf.apiServerInternalIPs) || has(self.apiServerInternalIPs)'
                             - message: ingressIPs list is required once set
                               rule: '!has(oldSelf.ingressIPs) || has(self.ingressIPs)'
                         type: object
+                        x-kubernetes-validations:
+                        - message: vcenters is required once set and cannot be removed
+                          rule: 'oldSelf.?vsphere.vcenters.hasValue() ? self.?vsphere.vcenters.hasValue()
+                            : true'
                     type: object
                   status:
                     description: status holds observed values from the cluster. They
@@ -1448,21 +1465,6 @@ spec:
                             description: aws contains settings specific to the Amazon
                               Web Services infrastructure provider.
                             properties:
-                              ipFamily:
-                                default: IPv4
-                                description: |-
-                                  ipFamily specifies the IP protocol family that should be used for AWS
-                                  network resources. This controls whether AWS resources are created with
-                                  IPv4-only, or dual-stack networking with IPv4 or IPv6 as the primary
-                                  protocol family.
-                                enum:
-                                - IPv4
-                                - DualStackIPv6Primary
-                                - DualStackIPv4Primary
-                                type: string
-                                x-kubernetes-validations:
-                                - message: ipFamily is immutable once set
-                                  rule: oldSelf == '' || self == oldSelf
                               region:
                                 description: region holds the default AWS region for
                                   new AWS resources created by the cluster.

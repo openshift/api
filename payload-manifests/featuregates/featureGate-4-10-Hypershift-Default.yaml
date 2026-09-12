@@ -159,9 +159,6 @@
                         "name": "GCPDualStackInstall"
                     },
                     {
-                        "name": "GCPSovereignCloudInstall"
-                    },
-                    {
                         "name": "ImageModeStatusReporting"
                     },
                     {
@@ -309,6 +306,9 @@
                     },
                     {
                         "name": "ExternalOIDCWithUIDAndExtraClaimMappings"
+                    },
+                    {
+                        "name": "GCPSovereignCloudInstall"
                     },
                     {
                         "name": "GatewayAPIWithoutOLM"

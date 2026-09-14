@@ -375,6 +375,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		configv1.InsightsDataGatherSpec{}.OpenAPIModelName():                                   schema_openshift_api_config_v1_InsightsDataGatherSpec(ref),
 		configv1.IntermediateTLSProfile{}.OpenAPIModelName():                                   schema_openshift_api_config_v1_IntermediateTLSProfile(ref),
 		configv1.KMSPluginConfig{}.OpenAPIModelName():                                          schema_openshift_api_config_v1_KMSPluginConfig(ref),
+		configv1.KMSPluginConfigReference{}.OpenAPIModelName():                                 schema_openshift_api_config_v1_KMSPluginConfigReference(ref),
 		configv1.KeystoneIdentityProvider{}.OpenAPIModelName():                                 schema_openshift_api_config_v1_KeystoneIdentityProvider(ref),
 		configv1.KubeClientConfig{}.OpenAPIModelName():                                         schema_openshift_api_config_v1_KubeClientConfig(ref),
 		configv1.KubevirtPlatformSpec{}.OpenAPIModelName():                                     schema_openshift_api_config_v1_KubevirtPlatformSpec(ref),
@@ -16817,37 +16818,60 @@ func schema_openshift_api_config_v1_KMSPluginConfig(ref common.ReferenceCallback
 				Properties: map[string]spec.Schema{
 					"type": {
 						SchemaProps: spec.SchemaProps{
-							Description: "type defines the kind of platform for the KMS provider. Allowed values are Vault. When set to Vault, the plugin connects to a HashiCorp Vault server for key management.",
+							Description: "type defines the kind of platform for the KMS provider. Allowed values are Vault. The encryption controllers read the resolved plugin configuration from the status of the custom resource referenced in pluginConfig.",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
 						},
 					},
-					"vault": {
+					"pluginConfig": {
 						SchemaProps: spec.SchemaProps{
-							Description: "vault defines the configuration for the Vault KMS plugin. The plugin connects to a Vault Enterprise server that is managed by the user outside the purview of the control plane. This field must be set when type is Vault, and must be unset otherwise.",
+							Description: "pluginConfig references a cluster-scoped KMS plugin configuration custom resource. The referenced resource is reconciled by an OLM operator that publishes the resolved plugin configuration, including the container image, in the resource status. It references a provider-specific cluster-scoped custom resource.",
 							Default:     map[string]interface{}{},
-							Ref:         ref(configv1.VaultKMSPluginConfig{}.OpenAPIModelName()),
+							Ref:         ref(configv1.KMSPluginConfigReference{}.OpenAPIModelName()),
 						},
 					},
 				},
-				Required: []string{"type"},
-			},
-			VendorExtensible: spec.VendorExtensible{
-				Extensions: spec.Extensions{
-					"x-kubernetes-unions": []interface{}{
-						map[string]interface{}{
-							"discriminator": "type",
-							"fields-to-discriminateBy": map[string]interface{}{
-								"vault": "Vault",
-							},
-						},
-					},
-				},
+				Required: []string{"type", "pluginConfig"},
 			},
 		},
 		Dependencies: []string{
-			configv1.VaultKMSPluginConfig{}.OpenAPIModelName()},
+			configv1.KMSPluginConfigReference{}.OpenAPIModelName()},
+	}
+}
+
+func schema_openshift_api_config_v1_KMSPluginConfigReference(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "KMSPluginConfigReference identifies a cluster-scoped KMS plugin configuration custom resource.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"apiVersion": {
+						SchemaProps: spec.SchemaProps{
+							Description: "apiVersion is the API version of the referenced KMS plugin configuration resource. The value must be in the format <group>/<version>, where group is a DNS subdomain and version is a Kubernetes API version (for example, v1 or v1alpha1).",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"resource": {
+						SchemaProps: spec.SchemaProps{
+							Description: "resource is the resource name of the referenced KMS plugin configuration custom resource. This is the plural name used in the Kubernetes API (for example, vaultkmsconfigs), not the Kind (for example, VaultKMSConfig). The value must be between 1 and 63 characters, contain only lowercase alphanumeric characters or '-', and start and end with an alphanumeric character.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"name": {
+						SchemaProps: spec.SchemaProps{
+							Description: "name is the metadata.name of the referenced KMS plugin configuration resource. The referenced resource must be cluster-scoped. The name must be a valid DNS subdomain name: it must contain no more than 253 characters, contain only lowercase alphanumeric characters, '-' or '.', and start and end with an alphanumeric character.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+				},
+				Required: []string{"apiVersion", "resource", "name"},
+			},
+		},
 	}
 }
 

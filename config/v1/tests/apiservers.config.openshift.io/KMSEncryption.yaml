@@ -68,13 +68,8 @@ tests:
             type: aescbc
             kms:
               type: Vault
-              vault:
-                kmsPluginImage: registry.example.com/vault-plugin@sha256:0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef
-                vaultAddress: https://vault.example.com:8200
-                authentication:
-                  type: AppRole
-                  appRole:
-                    secret:
-                      name: vault-approle
-                vaultKeyPath: transit/keys/my-key
+              pluginConfig:
+                apiVersion: vault.hashicorp.io/v1
+                resource: vaultkmsconfigs
+                name: my-vault-kms
       expectedError: "kms config is required when encryption type is KMS, and forbidden otherwise"

@@ -5,8 +5,7 @@ featureGates:
 - KMSEncryption
 tests:
   onCreate:
-    # Valid Vault configuration tests
-    - name: Should be able to create with valid minimal Vault KMS Plugin config
+    - name: Should be able to create with valid Vault KMS pluginConfig reference
       initial: |
         apiVersion: config.openshift.io/v1
         kind: APIServer
@@ -15,15 +14,10 @@ tests:
             type: KMS
             kms:
               type: Vault
-              vault:
-                kmsPluginImage: registry.example.com/vault-plugin@sha256:0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef
-                vaultAddress: https://vault.example.com:8200
-                authentication:
-                  type: AppRole
-                  appRole:
-                    secret:
-                      name: vault-approle
-                vaultKeyPath: transit/keys/my-encryption-key
+              pluginConfig:
+                apiVersion: vault.hashicorp.io/v1
+                resource: vaultkmsconfigs
+                name: my-vault-kms
       expected: |
         apiVersion: config.openshift.io/v1
         kind: APIServer
@@ -34,17 +28,12 @@ tests:
             type: KMS
             kms:
               type: Vault
-              vault:
-                kmsPluginImage: registry.example.com/vault-plugin@sha256:0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef
-                vaultAddress: https://vault.example.com:8200
-                authentication:
-                  type: AppRole
-                  appRole:
-                    secret:
-                      name: vault-approle
-                vaultKeyPath: transit/keys/my-encryption-key
+              pluginConfig:
+                apiVersion: vault.hashicorp.io/v1
+                resource: vaultkmsconfigs
+                name: my-vault-kms
 
-    - name: Should accept kmsPluginImage with simple two-level path like quay.io/vault/kms-plugin
+    - name: Should reject Vault KMS config without pluginConfig
       initial: |
         apiVersion: config.openshift.io/v1
         kind: APIServer
@@ -53,15 +42,21 @@ tests:
             type: KMS
             kms:
               type: Vault
-              vault:
-                kmsPluginImage: quay.io/vault/kms-plugin@sha256:abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789
-                vaultAddress: https://vault.example.com:8200
-                authentication:
-                  type: AppRole
-                  appRole:
-                    secret:
-                      name: vault-approle
-                vaultKeyPath: transit/keys/my-encryption-key
+      expectedError: "pluginConfig"
+
+    - name: Should be able to create with arbitrary provider pluginConfig reference GVR
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: APIServer
+        spec:
+          encryption:
+            type: KMS
+            kms:
+              type: Vault
+              pluginConfig:
+                apiVersion: example.com/v1
+                resource: examplekmsconfigs
+                name: my-kms-config
       expected: |
         apiVersion: config.openshift.io/v1
         kind: APIServer
@@ -72,17 +67,12 @@ tests:
             type: KMS
             kms:
               type: Vault
-              vault:
-                kmsPluginImage: quay.io/vault/kms-plugin@sha256:abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789
-                vaultAddress: https://vault.example.com:8200
-                authentication:
-                  type: AppRole
-                  appRole:
-                    secret:
-                      name: vault-approle
-                vaultKeyPath: transit/keys/my-encryption-key
+              pluginConfig:
+                apiVersion: example.com/v1
+                resource: examplekmsconfigs
+                name: my-kms-config
 
-    - name: Should be able to create with full Vault KMS Plugin config including all optional fields
+    - name: Should reject invalid pluginConfig apiVersion format
       initial: |
         apiVersion: config.openshift.io/v1
         kind: APIServer
@@ -91,49 +81,13 @@ tests:
             type: KMS
             kms:
               type: Vault
-              vault:
-                kmsPluginImage: registry.example.com/hashicorp/vault-plugin@sha256:abcdef1234567890abcdef1234567890abcdef1234567890abcdef1234567890
-                vaultAddress: https://vault.prod.example.com:8200
-                vaultNamespace: my-team
-                vaultAuthNamespace: central-auth
-                tls:
-                  caBundle:
-                    name: vault-ca-bundle
-                  serverName: vault.example.com
-                authentication:
-                  type: AppRole
-                  appRole:
-                    secret:
-                      name: vault-approle-credentials
-                vaultKeyPath: custom/transit/path/keys/production-encryption-key
-      expected: |
-        apiVersion: config.openshift.io/v1
-        kind: APIServer
-        spec:
-          audit:
-            profile: Default
-          encryption:
-            type: KMS
-            kms:
-              type: Vault
-              vault:
-                kmsPluginImage: registry.example.com/hashicorp/vault-plugin@sha256:abcdef1234567890abcdef1234567890abcdef1234567890abcdef1234567890
-                vaultAddress: https://vault.prod.example.com:8200
-                vaultNamespace: my-team
-                vaultAuthNamespace: central-auth
-                tls:
-                  caBundle:
-                    name: vault-ca-bundle
-                  serverName: vault.example.com
-                authentication:
-                  type: AppRole
-                  appRole:
-                    secret:
-                      name: vault-approle-credentials
-                vaultKeyPath: custom/transit/path/keys/production-encryption-key
+              pluginConfig:
+                apiVersion: not-a-valid-api-version
+                resource: vaultkmsconfigs
+                name: my-vault-kms
+      expectedError: "apiVersion must be in the format <group>/<version>"
 
-    # Multi-level namespace path tests
-    - name: Should accept kmsPluginImage with multi-level namespace path
+    - name: Should reject invalid pluginConfig resource format
       initial: |
         apiVersion: config.openshift.io/v1
         kind: APIServer
@@ -142,36 +96,13 @@ tests:
             type: KMS
             kms:
               type: Vault
-              vault:
-                kmsPluginImage: registry.example.com/org/team/vault-plugin@sha256:0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef
-                vaultAddress: https://vault.example.com:8200
-                authentication:
-                  type: AppRole
-                  appRole:
-                    secret:
-                      name: vault-approle
-                vaultKeyPath: transit/keys/my-encryption-key
-      expected: |
-        apiVersion: config.openshift.io/v1
-        kind: APIServer
-        spec:
-          audit:
-            profile: Default
-          encryption:
-            type: KMS
-            kms:
-              type: Vault
-              vault:
-                kmsPluginImage: registry.example.com/org/team/vault-plugin@sha256:0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef
-                vaultAddress: https://vault.example.com:8200
-                authentication:
-                  type: AppRole
-                  appRole:
-                    secret:
-                      name: vault-approle
-                vaultKeyPath: transit/keys/my-encryption-key
+              pluginConfig:
+                apiVersion: vault.hashicorp.io/v1
+                resource: VaultKMSConfig
+                name: my-vault-kms
+      expectedError: "resource must be a valid Kubernetes resource name"
 
-    - name: Should accept kmsPluginImage with deep multi-level namespace path
+    - name: Should reject invalid pluginConfig name
       initial: |
         apiVersion: config.openshift.io/v1
         kind: APIServer
@@ -180,942 +111,13 @@ tests:
             type: KMS
             kms:
               type: Vault
-              vault:
-                kmsPluginImage: registry.io/org_name/team.name/project/subproject/vault_plugin@sha256:abcd1234abcd1234abcd1234abcd1234abcd1234abcd1234abcd1234abcd1234
-                vaultAddress: https://vault.example.com:8200
-                authentication:
-                  type: AppRole
-                  appRole:
-                    secret:
-                      name: vault-approle
-                vaultKeyPath: transit/keys/my-encryption-key
-      expected: |
-        apiVersion: config.openshift.io/v1
-        kind: APIServer
-        spec:
-          audit:
-            profile: Default
-          encryption:
-            type: KMS
-            kms:
-              type: Vault
-              vault:
-                kmsPluginImage: registry.io/org_name/team.name/project/subproject/vault_plugin@sha256:abcd1234abcd1234abcd1234abcd1234abcd1234abcd1234abcd1234abcd1234
-                vaultAddress: https://vault.example.com:8200
-                authentication:
-                  type: AppRole
-                  appRole:
-                    secret:
-                      name: vault-approle
-                vaultKeyPath: transit/keys/my-encryption-key
-
-    # vaultKeyPath valid tests
-    - name: Should accept vaultKeyPath with multi-segment mount
-      initial: |
-        apiVersion: config.openshift.io/v1
-        kind: APIServer
-        spec:
-          encryption:
-            type: KMS
-            kms:
-              type: Vault
-              vault:
-                kmsPluginImage: registry.example.com/vault-plugin@sha256:0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef
-                vaultAddress: https://vault.example.com:8200
-                authentication:
-                  type: AppRole
-                  appRole:
-                    secret:
-                      name: vault-approle
-                vaultKeyPath: transit/test/keys/my-key
-      expected: |
-        apiVersion: config.openshift.io/v1
-        kind: APIServer
-        spec:
-          audit:
-            profile: Default
-          encryption:
-            type: KMS
-            kms:
-              type: Vault
-              vault:
-                kmsPluginImage: registry.example.com/vault-plugin@sha256:0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef
-                vaultAddress: https://vault.example.com:8200
-                authentication:
-                  type: AppRole
-                  appRole:
-                    secret:
-                      name: vault-approle
-                vaultKeyPath: transit/test/keys/my-key
-
-    - name: Should accept vaultKeyPath with mount containing period
-      initial: |
-        apiVersion: config.openshift.io/v1
-        kind: APIServer
-        spec:
-          encryption:
-            type: KMS
-            kms:
-              type: Vault
-              vault:
-                kmsPluginImage: registry.example.com/vault-plugin@sha256:0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef
-                vaultAddress: https://vault.example.com:8200
-                authentication:
-                  type: AppRole
-                  appRole:
-                    secret:
-                      name: vault-approle
-                vaultKeyPath: transit.v1/keys/my-key
-      expected: |
-        apiVersion: config.openshift.io/v1
-        kind: APIServer
-        spec:
-          audit:
-            profile: Default
-          encryption:
-            type: KMS
-            kms:
-              type: Vault
-              vault:
-                kmsPluginImage: registry.example.com/vault-plugin@sha256:0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef
-                vaultAddress: https://vault.example.com:8200
-                authentication:
-                  type: AppRole
-                  appRole:
-                    secret:
-                      name: vault-approle
-                vaultKeyPath: transit.v1/keys/my-key
-
-    - name: Should accept vaultKeyPath with mount containing tilde
-      initial: |
-        apiVersion: config.openshift.io/v1
-        kind: APIServer
-        spec:
-          encryption:
-            type: KMS
-            kms:
-              type: Vault
-              vault:
-                kmsPluginImage: registry.example.com/vault-plugin@sha256:0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef
-                vaultAddress: https://vault.example.com:8200
-                authentication:
-                  type: AppRole
-                  appRole:
-                    secret:
-                      name: vault-approle
-                vaultKeyPath: transit~backup/keys/my-key
-      expected: |
-        apiVersion: config.openshift.io/v1
-        kind: APIServer
-        spec:
-          audit:
-            profile: Default
-          encryption:
-            type: KMS
-            kms:
-              type: Vault
-              vault:
-                kmsPluginImage: registry.example.com/vault-plugin@sha256:0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef
-                vaultAddress: https://vault.example.com:8200
-                authentication:
-                  type: AppRole
-                  appRole:
-                    secret:
-                      name: vault-approle
-                vaultKeyPath: transit~backup/keys/my-key
-
-    - name: Should accept vaultKeyPath with key containing period
-      initial: |
-        apiVersion: config.openshift.io/v1
-        kind: APIServer
-        spec:
-          encryption:
-            type: KMS
-            kms:
-              type: Vault
-              vault:
-                kmsPluginImage: registry.example.com/vault-plugin@sha256:0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef
-                vaultAddress: https://vault.example.com:8200
-                authentication:
-                  type: AppRole
-                  appRole:
-                    secret:
-                      name: vault-approle
-                vaultKeyPath: transit/keys/encryption.key.v1
-      expected: |
-        apiVersion: config.openshift.io/v1
-        kind: APIServer
-        spec:
-          audit:
-            profile: Default
-          encryption:
-            type: KMS
-            kms:
-              type: Vault
-              vault:
-                kmsPluginImage: registry.example.com/vault-plugin@sha256:0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef
-                vaultAddress: https://vault.example.com:8200
-                authentication:
-                  type: AppRole
-                  appRole:
-                    secret:
-                      name: vault-approle
-                vaultKeyPath: transit/keys/encryption.key.v1
-
-    # vaultKeyPath invalid tests
-    - name: Should reject vaultKeyPath without /keys/ separator
-      initial: |
-        apiVersion: config.openshift.io/v1
-        kind: APIServer
-        spec:
-          encryption:
-            type: KMS
-            kms:
-              type: Vault
-              vault:
-                kmsPluginImage: registry.example.com/vault-plugin@sha256:0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef
-                vaultAddress: https://vault.example.com:8200
-                authentication:
-                  type: AppRole
-                  appRole:
-                    secret:
-                      name: vault-approle
-                vaultKeyPath: transit/my-key
-      expectedError: "vaultKeyPath must follow the format <mount>/keys/<key-name>"
-
-    - name: Should reject vaultKeyPath starting with forward slash
-      initial: |
-        apiVersion: config.openshift.io/v1
-        kind: APIServer
-        spec:
-          encryption:
-            type: KMS
-            kms:
-              type: Vault
-              vault:
-                kmsPluginImage: registry.example.com/vault-plugin@sha256:0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef
-                vaultAddress: https://vault.example.com:8200
-                authentication:
-                  type: AppRole
-                  appRole:
-                    secret:
-                      name: vault-approle
-                vaultKeyPath: /transit/keys/my-key
-      expectedError: "vaultKeyPath cannot start with a forward slash"
-
-    - name: Should reject vaultKeyPath ending with forward slash
-      initial: |
-        apiVersion: config.openshift.io/v1
-        kind: APIServer
-        spec:
-          encryption:
-            type: KMS
-            kms:
-              type: Vault
-              vault:
-                kmsPluginImage: registry.example.com/vault-plugin@sha256:0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef
-                vaultAddress: https://vault.example.com:8200
-                authentication:
-                  type: AppRole
-                  appRole:
-                    secret:
-                      name: vault-approle
-                vaultKeyPath: transit/keys/my-key/
-      expectedError: "vaultKeyPath cannot end with a forward slash"
-
-    - name: Should reject vaultKeyPath with consecutive forward slashes
-      initial: |
-        apiVersion: config.openshift.io/v1
-        kind: APIServer
-        spec:
-          encryption:
-            type: KMS
-            kms:
-              type: Vault
-              vault:
-                kmsPluginImage: registry.example.com/vault-plugin@sha256:0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef
-                vaultAddress: https://vault.example.com:8200
-                authentication:
-                  type: AppRole
-                  appRole:
-                    secret:
-                      name: vault-approle
-                vaultKeyPath: transit//keys/my-key
-      expectedError: "vaultKeyPath cannot contain consecutive forward slashes"
-
-    - name: Should reject vaultKeyPath with dot path segment
-      initial: |
-        apiVersion: config.openshift.io/v1
-        kind: APIServer
-        spec:
-          encryption:
-            type: KMS
-            kms:
-              type: Vault
-              vault:
-                kmsPluginImage: registry.example.com/vault-plugin@sha256:0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef
-                vaultAddress: https://vault.example.com:8200
-                authentication:
-                  type: AppRole
-                  appRole:
-                    secret:
-                      name: vault-approle
-                vaultKeyPath: transit/./keys/my-key
-      expectedError: "vaultKeyPath must not contain '.' or '..' path segments"
-
-    - name: Should reject vaultKeyPath with double-dot path segment
-      initial: |
-        apiVersion: config.openshift.io/v1
-        kind: APIServer
-        spec:
-          encryption:
-            type: KMS
-            kms:
-              type: Vault
-              vault:
-                kmsPluginImage: registry.example.com/vault-plugin@sha256:0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef
-                vaultAddress: https://vault.example.com:8200
-                authentication:
-                  type: AppRole
-                  appRole:
-                    secret:
-                      name: vault-approle
-                vaultKeyPath: transit/../keys/my-key
-      expectedError: "vaultKeyPath must not contain '.' or '..' path segments"
-
-    - name: Should reject vaultKeyPath with special characters in mount
-      initial: |
-        apiVersion: config.openshift.io/v1
-        kind: APIServer
-        spec:
-          encryption:
-            type: KMS
-            kms:
-              type: Vault
-              vault:
-                kmsPluginImage: registry.example.com/vault-plugin@sha256:0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef
-                vaultAddress: https://vault.example.com:8200
-                authentication:
-                  type: AppRole
-                  appRole:
-                    secret:
-                      name: vault-approle
-                vaultKeyPath: transit@test/keys/my-key
-      expectedError: "vaultKeyPath must only contain RFC 3986 unreserved characters"
-
-    - name: Should reject vaultKeyPath with key name starting with hyphen
-      initial: |
-        apiVersion: config.openshift.io/v1
-        kind: APIServer
-        spec:
-          encryption:
-            type: KMS
-            kms:
-              type: Vault
-              vault:
-                kmsPluginImage: registry.example.com/vault-plugin@sha256:0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef
-                vaultAddress: https://vault.example.com:8200
-                authentication:
-                  type: AppRole
-                  appRole:
-                    secret:
-                      name: vault-approle
-                vaultKeyPath: transit/keys/-bad
-      expectedError: "vaultKeyPath must follow the format <mount>/keys/<key-name>"
-
-    - name: Should reject vaultKeyPath with key name ending with hyphen
-      initial: |
-        apiVersion: config.openshift.io/v1
-        kind: APIServer
-        spec:
-          encryption:
-            type: KMS
-            kms:
-              type: Vault
-              vault:
-                kmsPluginImage: registry.example.com/vault-plugin@sha256:0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef
-                vaultAddress: https://vault.example.com:8200
-                authentication:
-                  type: AppRole
-                  appRole:
-                    secret:
-                      name: vault-approle
-                vaultKeyPath: transit/keys/bad-
-      expectedError: "vaultKeyPath must follow the format <mount>/keys/<key-name>"
-
-    - name: Should reject vaultKeyPath with key containing tilde
-      initial: |
-        apiVersion: config.openshift.io/v1
-        kind: APIServer
-        spec:
-          encryption:
-            type: KMS
-            kms:
-              type: Vault
-              vault:
-                kmsPluginImage: registry.example.com/vault-plugin@sha256:0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef
-                vaultAddress: https://vault.example.com:8200
-                authentication:
-                  type: AppRole
-                  appRole:
-                    secret:
-                      name: vault-approle
-                vaultKeyPath: transit/keys/key~backup
-      expectedError: "vaultKeyPath must follow the format <mount>/keys/<key-name>"
-
-    # vaultKeyPath required field validation
-    - name: Should reject Vault KMS config without vaultKeyPath
-      initial: |
-        apiVersion: config.openshift.io/v1
-        kind: APIServer
-        spec:
-          encryption:
-            type: KMS
-            kms:
-              type: Vault
-              vault:
-                kmsPluginImage: registry.example.com/vault-plugin@sha256:0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef
-                vaultAddress: https://vault.example.com:8200
-                authentication:
-                  type: AppRole
-                  appRole:
-                    secret:
-                      name: vault-approle
-      expectedError: "Required value"
-
-    # Type validation - vault field must be set when type is Vault
-    - name: Should reject KMS type Vault without vault config
-      initial: |
-        apiVersion: config.openshift.io/v1
-        kind: APIServer
-        spec:
-          encryption:
-            type: KMS
-            kms:
-              type: Vault
-      expectedError: "vault config is required when kms provider type is Vault"
-
-    # authentication type validation - appRole field must be set when type is AppRole
-    - name: Should reject authentication type AppRole without appRole config
-      initial: |
-        apiVersion: config.openshift.io/v1
-        kind: APIServer
-        spec:
-          encryption:
-            type: KMS
-            kms:
-              type: Vault
-              vault:
-                kmsPluginImage: registry.example.com/vault-plugin@sha256:0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef
-                vaultAddress: https://vault.example.com:8200
-                authentication:
-                  type: AppRole
-                vaultKeyPath: transit/keys/my-key
-      expectedError: "appRole config is required when authentication type is AppRole"
-
-    # kmsPluginImage validation tests
-    - name: Should reject kmsPluginImage with tag instead of digest
-      initial: |
-        apiVersion: config.openshift.io/v1
-        kind: APIServer
-        spec:
-          encryption:
-            type: KMS
-            kms:
-              type: Vault
-              vault:
-                kmsPluginImage: registry.example.com/vault-plugin:latest
-                vaultAddress: https://vault.example.com:8200
-                authentication:
-                  type: AppRole
-                  appRole:
-                    secret:
-                      name: vault-approle
-                vaultKeyPath: transit/keys/my-key
-      expectedError: "the OCI Image reference must end with a valid '@sha256:<digest>' suffix"
-
-    - name: Should reject kmsPluginImage without registry hostname
-      initial: |
-        apiVersion: config.openshift.io/v1
-        kind: APIServer
-        spec:
-          encryption:
-            type: KMS
-            kms:
-              type: Vault
-              vault:
-                kmsPluginImage: vault-plugin@sha256:0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef
-                vaultAddress: https://vault.example.com:8200
-                authentication:
-                  type: AppRole
-                  appRole:
-                    secret:
-                      name: vault-approle
-                vaultKeyPath: transit/keys/my-key
-      expectedError: "the OCI Image name should follow the host[:port][/namespace]/name format"
-
-    - name: Should reject kmsPluginImage with invalid digest length
-      initial: |
-        apiVersion: config.openshift.io/v1
-        kind: APIServer
-        spec:
-          encryption:
-            type: KMS
-            kms:
-              type: Vault
-              vault:
-                kmsPluginImage: registry.example.com/vault@sha256:abc123
-                vaultAddress: https://vault.example.com:8200
-                authentication:
-                  type: AppRole
-                  appRole:
-                    secret:
-                      name: vault-approle
-                vaultKeyPath: transit/keys/my-key
-      expectedError: "the OCI Image reference must end with a valid '@sha256:<digest>' suffix, where '<digest>' is 64 characters long"
-
-    # vaultAddress validation tests
-    - name: Should reject vaultAddress with http scheme
-      initial: |
-        apiVersion: config.openshift.io/v1
-        kind: APIServer
-        spec:
-          encryption:
-            type: KMS
-            kms:
-              type: Vault
-              vault:
-                kmsPluginImage: registry.example.com/vault-plugin@sha256:0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef
-                vaultAddress: http://vault.example.com:8200
-                authentication:
-                  type: AppRole
-                  appRole:
-                    secret:
-                      name: vault-approle
-                vaultKeyPath: transit/keys/my-key
-      expectedError: "must use the 'https' scheme"
-
-    - name: Should reject vaultAddress with path
-      initial: |
-        apiVersion: config.openshift.io/v1
-        kind: APIServer
-        spec:
-          encryption:
-            type: KMS
-            kms:
-              type: Vault
-              vault:
-                kmsPluginImage: registry.example.com/vault-plugin@sha256:0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef
-                vaultAddress: https://vault.example.com:8200/v1
-                authentication:
-                  type: AppRole
-                  appRole:
-                    secret:
-                      name: vault-approle
-                vaultKeyPath: transit/keys/my-key
-      expectedError: "must not contain a path"
-
-    - name: Should reject vaultAddress with query parameters
-      initial: |
-        apiVersion: config.openshift.io/v1
-        kind: APIServer
-        spec:
-          encryption:
-            type: KMS
-            kms:
-              type: Vault
-              vault:
-                kmsPluginImage: registry.example.com/vault-plugin@sha256:0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef
-                vaultAddress: https://vault.example.com:8200?key=value
-                authentication:
-                  type: AppRole
-                  appRole:
-                    secret:
-                      name: vault-approle
-                vaultKeyPath: transit/keys/my-key
-      expectedError: "must not have a query"
-
-    - name: Should reject vaultAddress with fragment
-      initial: |
-        apiVersion: config.openshift.io/v1
-        kind: APIServer
-        spec:
-          encryption:
-            type: KMS
-            kms:
-              type: Vault
-              vault:
-                kmsPluginImage: registry.example.com/vault-plugin@sha256:0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef
-                vaultAddress: https://vault.example.com:8200#fragment
-                authentication:
-                  type: AppRole
-                  appRole:
-                    secret:
-                      name: vault-approle
-                vaultKeyPath: transit/keys/my-key
-      expectedError: "must not have a fragment"
-
-    - name: Should reject vaultAddress with user info
-      initial: |
-        apiVersion: config.openshift.io/v1
-        kind: APIServer
-        spec:
-          encryption:
-            type: KMS
-            kms:
-              type: Vault
-              vault:
-                kmsPluginImage: registry.example.com/vault-plugin@sha256:0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef
-                vaultAddress: https://user:password@vault.example.com:8200
-                authentication:
-                  type: AppRole
-                  appRole:
-                    secret:
-                      name: vault-approle
-                vaultKeyPath: transit/keys/my-key
-      expectedError: "must not have user info"
-
-    # vaultNamespace validation tests
-    - name: Should reject vaultNamespace ending with forward slash
-      initial: |
-        apiVersion: config.openshift.io/v1
-        kind: APIServer
-        spec:
-          encryption:
-            type: KMS
-            kms:
-              type: Vault
-              vault:
-                kmsPluginImage: registry.example.com/vault-plugin@sha256:0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef
-                vaultAddress: https://vault.example.com:8200
-                vaultNamespace: my-namespace/
-                authentication:
-                  type: AppRole
-                  appRole:
-                    secret:
-                      name: vault-approle
-                vaultKeyPath: transit/keys/my-key
-      expectedError: "vaultNamespace cannot end with a forward slash"
-
-    - name: Should reject vaultNamespace containing spaces
-      initial: |
-        apiVersion: config.openshift.io/v1
-        kind: APIServer
-        spec:
-          encryption:
-            type: KMS
-            kms:
-              type: Vault
-              vault:
-                kmsPluginImage: registry.example.com/vault-plugin@sha256:0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef
-                vaultAddress: https://vault.example.com:8200
-                vaultNamespace: my namespace
-                authentication:
-                  type: AppRole
-                  appRole:
-                    secret:
-                      name: vault-approle
-                vaultKeyPath: transit/keys/my-key
-      expectedError: "vaultNamespace cannot contain spaces"
-
-    - name: Should reject vaultNamespace with reserved name root
-      initial: |
-        apiVersion: config.openshift.io/v1
-        kind: APIServer
-        spec:
-          encryption:
-            type: KMS
-            kms:
-              type: Vault
-              vault:
-                kmsPluginImage: registry.example.com/vault-plugin@sha256:0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef
-                vaultAddress: https://vault.example.com:8200
-                vaultNamespace: root
-                authentication:
-                  type: AppRole
-                  appRole:
-                    secret:
-                      name: vault-approle
-                vaultKeyPath: transit/keys/my-key
-      expectedError: "vaultNamespace cannot be a reserved string"
-
-    - name: Should reject vaultNamespace with reserved name sys
-      initial: |
-        apiVersion: config.openshift.io/v1
-        kind: APIServer
-        spec:
-          encryption:
-            type: KMS
-            kms:
-              type: Vault
-              vault:
-                kmsPluginImage: registry.example.com/vault-plugin@sha256:0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef
-                vaultAddress: https://vault.example.com:8200
-                vaultNamespace: sys
-                authentication:
-                  type: AppRole
-                  appRole:
-                    secret:
-                      name: vault-approle
-                vaultKeyPath: transit/keys/my-key
-      expectedError: "vaultNamespace cannot be a reserved string"
-
-    - name: Should reject vaultNamespace with reserved name audit
-      initial: |
-        apiVersion: config.openshift.io/v1
-        kind: APIServer
-        spec:
-          encryption:
-            type: KMS
-            kms:
-              type: Vault
-              vault:
-                kmsPluginImage: registry.example.com/vault-plugin@sha256:0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef
-                vaultAddress: https://vault.example.com:8200
-                vaultNamespace: audit
-                authentication:
-                  type: AppRole
-                  appRole:
-                    secret:
-                      name: vault-approle
-                vaultKeyPath: transit/keys/my-key
-      expectedError: "vaultNamespace cannot be a reserved string"
-
-    - name: Should reject vaultNamespace with reserved name auth
-      initial: |
-        apiVersion: config.openshift.io/v1
-        kind: APIServer
-        spec:
-          encryption:
-            type: KMS
-            kms:
-              type: Vault
-              vault:
-                kmsPluginImage: registry.example.com/vault-plugin@sha256:0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef
-                vaultAddress: https://vault.example.com:8200
-                vaultNamespace: auth
-                authentication:
-                  type: AppRole
-                  appRole:
-                    secret:
-                      name: vault-approle
-                vaultKeyPath: transit/keys/my-key
-      expectedError: "vaultNamespace cannot be a reserved string"
-
-    - name: Should reject vaultNamespace with reserved name cubbyhole
-      initial: |
-        apiVersion: config.openshift.io/v1
-        kind: APIServer
-        spec:
-          encryption:
-            type: KMS
-            kms:
-              type: Vault
-              vault:
-                kmsPluginImage: registry.example.com/vault-plugin@sha256:0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef
-                vaultAddress: https://vault.example.com:8200
-                vaultNamespace: cubbyhole
-                authentication:
-                  type: AppRole
-                  appRole:
-                    secret:
-                      name: vault-approle
-                vaultKeyPath: transit/keys/my-key
-      expectedError: "vaultNamespace cannot be a reserved string"
-
-    - name: Should reject vaultNamespace with reserved name identity
-      initial: |
-        apiVersion: config.openshift.io/v1
-        kind: APIServer
-        spec:
-          encryption:
-            type: KMS
-            kms:
-              type: Vault
-              vault:
-                kmsPluginImage: registry.example.com/vault-plugin@sha256:0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef
-                vaultAddress: https://vault.example.com:8200
-                vaultNamespace: identity
-                authentication:
-                  type: AppRole
-                  appRole:
-                    secret:
-                      name: vault-approle
-                vaultKeyPath: transit/keys/my-key
-      expectedError: "vaultNamespace cannot be a reserved string"
-
-    # vaultAuthNamespace validation tests
-    - name: Should accept vaultAuthNamespace with both namespace fields set
-      initial: |
-        apiVersion: config.openshift.io/v1
-        kind: APIServer
-        spec:
-          encryption:
-            type: KMS
-            kms:
-              type: Vault
-              vault:
-                kmsPluginImage: registry.example.com/vault-plugin@sha256:0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef
-                vaultAddress: https://vault.example.com:8200
-                vaultNamespace: transit-ns
-                vaultAuthNamespace: auth-ns
-                authentication:
-                  type: AppRole
-                  appRole:
-                    secret:
-                      name: vault-approle
-                vaultKeyPath: transit/keys/my-key
-      expected: |
-        apiVersion: config.openshift.io/v1
-        kind: APIServer
-        spec:
-          audit:
-            profile: Default
-          encryption:
-            type: KMS
-            kms:
-              type: Vault
-              vault:
-                kmsPluginImage: registry.example.com/vault-plugin@sha256:0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef
-                vaultAddress: https://vault.example.com:8200
-                vaultNamespace: transit-ns
-                vaultAuthNamespace: auth-ns
-                authentication:
-                  type: AppRole
-                  appRole:
-                    secret:
-                      name: vault-approle
-                vaultKeyPath: transit/keys/my-key
-
-    - name: Should reject vaultAuthNamespace ending with forward slash
-      initial: |
-        apiVersion: config.openshift.io/v1
-        kind: APIServer
-        spec:
-          encryption:
-            type: KMS
-            kms:
-              type: Vault
-              vault:
-                kmsPluginImage: registry.example.com/vault-plugin@sha256:0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef
-                vaultAddress: https://vault.example.com:8200
-                vaultAuthNamespace: my-auth-ns/
-                authentication:
-                  type: AppRole
-                  appRole:
-                    secret:
-                      name: vault-approle
-                vaultKeyPath: transit/keys/my-key
-      expectedError: "vaultAuthNamespace cannot end with a forward slash"
-
-    - name: Should reject vaultAuthNamespace containing spaces
-      initial: |
-        apiVersion: config.openshift.io/v1
-        kind: APIServer
-        spec:
-          encryption:
-            type: KMS
-            kms:
-              type: Vault
-              vault:
-                kmsPluginImage: registry.example.com/vault-plugin@sha256:0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef
-                vaultAddress: https://vault.example.com:8200
-                vaultAuthNamespace: my auth ns
-                authentication:
-                  type: AppRole
-                  appRole:
-                    secret:
-                      name: vault-approle
-                vaultKeyPath: transit/keys/my-key
-      expectedError: "vaultAuthNamespace cannot contain spaces"
-
-    - name: Should reject vaultAuthNamespace with reserved name root
-      initial: |
-        apiVersion: config.openshift.io/v1
-        kind: APIServer
-        spec:
-          encryption:
-            type: KMS
-            kms:
-              type: Vault
-              vault:
-                kmsPluginImage: registry.example.com/vault-plugin@sha256:0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef
-                vaultAddress: https://vault.example.com:8200
-                vaultAuthNamespace: root
-                authentication:
-                  type: AppRole
-                  appRole:
-                    secret:
-                      name: vault-approle
-                vaultKeyPath: transit/keys/my-key
-      expectedError: "vaultAuthNamespace cannot be a reserved string"
-
-    - name: Should reject vaultAuthNamespace with reserved name identity
-      initial: |
-        apiVersion: config.openshift.io/v1
-        kind: APIServer
-        spec:
-          encryption:
-            type: KMS
-            kms:
-              type: Vault
-              vault:
-                kmsPluginImage: registry.example.com/vault-plugin@sha256:0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef
-                vaultAddress: https://vault.example.com:8200
-                vaultAuthNamespace: identity
-                authentication:
-                  type: AppRole
-                  appRole:
-                    secret:
-                      name: vault-approle
-                vaultKeyPath: transit/keys/my-key
-      expectedError: "vaultAuthNamespace cannot be a reserved string"
-
-    # serverName validation tests
-    - name: Should reject invalid serverName
-      initial: |
-        apiVersion: config.openshift.io/v1
-        kind: APIServer
-        spec:
-          encryption:
-            type: KMS
-            kms:
-              type: Vault
-              vault:
-                kmsPluginImage: registry.example.com/vault-plugin@sha256:0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef
-                vaultAddress: https://vault.example.com:8200
-                tls:
-                  serverName: invalid_hostname!
-                authentication:
-                  type: AppRole
-                  appRole:
-                    secret:
-                      name: vault-approle
-                vaultKeyPath: transit/keys/my-key
-      expectedError: "serverName must be a valid DNS hostname"
-
-    # authentication secret and caBundle name validation tests
-    - name: Should reject invalid authentication secret name
-      initial: |
-        apiVersion: config.openshift.io/v1
-        kind: APIServer
-        spec:
-          encryption:
-            type: KMS
-            kms:
-              type: Vault
-              vault:
-                kmsPluginImage: registry.example.com/vault-plugin@sha256:0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef
-                vaultAddress: https://vault.example.com:8200
-                authentication:
-                  type: AppRole
-                  appRole:
-                    secret:
-                      name: invalid_secret_name!
-                vaultKeyPath: transit/keys/my-key
+              pluginConfig:
+                apiVersion: vault.hashicorp.io/v1
+                resource: vaultkmsconfigs
+                name: invalid_name!
       expectedError: "name must be a valid DNS subdomain name"
 
-    - name: Should reject invalid caBundle name
+    - name: Should reject pluginConfig with empty apiVersion
       initial: |
         apiVersion: config.openshift.io/v1
         kind: APIServer
@@ -1124,16 +126,38 @@ tests:
             type: KMS
             kms:
               type: Vault
-              vault:
-                kmsPluginImage: registry.example.com/vault-plugin@sha256:0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef
-                vaultAddress: https://vault.example.com:8200
-                tls:
-                  caBundle:
-                    name: invalid_configmap!
-                authentication:
-                  type: AppRole
-                  appRole:
-                    secret:
-                      name: vault-approle
-                vaultKeyPath: transit/keys/my-key
-      expectedError: "name must be a valid DNS subdomain name"
+              pluginConfig:
+                apiVersion: ""
+                resource: vaultkmsconfigs
+                name: my-vault-kms
+      expectedError: "apiVersion"
+
+    - name: Should reject pluginConfig with empty resource
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: APIServer
+        spec:
+          encryption:
+            type: KMS
+            kms:
+              type: Vault
+              pluginConfig:
+                apiVersion: vault.hashicorp.io/v1
+                resource: ""
+                name: my-vault-kms
+      expectedError: "resource"
+
+    - name: Should reject pluginConfig with empty name
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: APIServer
+        spec:
+          encryption:
+            type: KMS
+            kms:
+              type: Vault
+              pluginConfig:
+                apiVersion: vault.hashicorp.io/v1
+                resource: vaultkmsconfigs
+                name: ""
+      expectedError: "name"

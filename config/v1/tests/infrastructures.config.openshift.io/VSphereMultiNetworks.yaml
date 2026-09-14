@@ -233,7 +233,7 @@ tests:
                 - datacenters:
                     - IBMCloud
                   port: 443
-                  server: vcs8e-vc.ocp2.dev.cluster.com
+                  server: server1.dev.cluster.com
               failureDomains:
               - name: generated-failure-domain
                 region: generated-region
@@ -261,7 +261,7 @@ tests:
                 - datacenters:
                     - IBMCloud
                   port: 443
-                  server: vcs8e-vc.ocp2.dev.cluster.com
+                  server: server1.dev.cluster.com
               failureDomains:
               - name: generated-failure-domain
                 region: generated-region
@@ -290,7 +290,7 @@ tests:
                 - datacenters:
                     - IBMCloud
                   port: 443
-                  server: vcs8e-vc.ocp2.dev.cluster.com
+                  server: server1.dev.cluster.com
               failureDomains:
               - name: generated-failure-domain
                 region: generated-region
@@ -321,7 +321,7 @@ tests:
                 - datacenters:
                     - IBMCloud
                   port: 443
-                  server: vcs8e-vc.ocp2.dev.cluster.com
+                  server: server1.dev.cluster.com
               failureDomains:
               - name: generated-failure-domain
                 region: generated-region
@@ -349,7 +349,7 @@ tests:
                 - datacenters:
                     - IBMCloud
                   port: 443
-                  server: vcs8e-vc.ocp2.dev.cluster.com
+                  server: server1.dev.cluster.com
               failureDomains:
               - name: generated-failure-domain
                 region: generated-region
@@ -389,7 +389,7 @@ tests:
                 - datacenters:
                     - IBMCloud
                   port: 443
-                  server: vcs8e-vc.ocp2.dev.cluster.com
+                  server: server1.dev.cluster.com
               failureDomains:
               - name: generated-failure-domain
                 region: generated-region
@@ -417,7 +417,7 @@ tests:
                 - datacenters:
                     - IBMCloud
                   port: 443
-                  server: vcs8e-vc.ocp2.dev.cluster.com
+                  server: server1.dev.cluster.com
               failureDomains:
               - name: generated-failure-domain
                 region: generated-region

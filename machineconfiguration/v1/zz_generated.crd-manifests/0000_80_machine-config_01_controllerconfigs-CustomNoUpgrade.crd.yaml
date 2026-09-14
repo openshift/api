@@ -1368,6 +1368,11 @@ spec:
                                     x.server))
                             type: object
                             x-kubernetes-validations:
+                            - message: all failure domains must have a corresponding
+                                vCenter entry
+                              rule: '!has(self.failureDomains) || size(self.failureDomains)
+                                == 0 || (has(self.vcenters) && self.failureDomains.all(fd,
+                                self.vcenters.exists(vc, vc.server == fd.server)))'
                             - message: apiServerInternalIPs list is required once
                                 set
                               rule: '!has(oldSelf.apiServerInternalIPs) || has(self.apiServerInternalIPs)'

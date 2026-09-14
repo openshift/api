@@ -24099,6 +24099,14 @@ func schema_openshift_api_config_v1alpha1_ClusterMonitoringSpec(ref common.Refer
 				Description: "ClusterMonitoringSpec defines the desired state of Cluster Monitoring Operator",
 				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
+					"configurationSource": {
+						SchemaProps: spec.SchemaProps{
+							Description: "configurationSource is an optional field that selects whether the Cluster Monitoring Operator reads its configuration from the cluster-monitoring-config ConfigMap or from this ClusterMonitoring CRD. Valid values are \"ConfigMap\" and \"CRD\". When set to ConfigMap, the operator uses the cluster-monitoring-config ConfigMap in the openshift-monitoring namespace as the configuration source. When set to CRD, the operator uses this ClusterMonitoring custom resource as the configuration source. When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time. The current default value is CRD.\n\nPossible enum values:\n - `\"CRD\"` means the operator reads configuration from this ClusterMonitoring custom resource.\n - `\"ConfigMap\"` means the operator reads configuration from the cluster-monitoring-config ConfigMap in the openshift-monitoring namespace.",
+							Type:        []string{"string"},
+							Format:      "",
+							Enum:        []interface{}{"CRD", "ConfigMap"},
+						},
+					},
 					"userDefined": {
 						SchemaProps: spec.SchemaProps{
 							Description: "userDefined set the deployment mode for user-defined monitoring in addition to the default platform monitoring. userDefined is optional. When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time. The current default value is `Disabled`.",

@@ -148,9 +148,6 @@
                         "name": "AzureWorkloadIdentity"
                     },
                     {
-                        "name": "BootImageSkewEnforcement"
-                    },
-                    {
                         "name": "BootcNodeManagement"
                     },
                     {

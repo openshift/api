@@ -200,6 +200,9 @@
                         "name": "VSphereMixedNodeEnv"
                     },
                     {
+                        "name": "VSphereMultiVCenterDay2"
+                    },
+                    {
                         "name": "VolumeAttributesClass"
                     },
                     {

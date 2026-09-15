@@ -7,7 +7,7 @@ import metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 
 // ControllerManager holds cluster-wide configuration for the Kubernetes controller manager.
-// The canonical name for this config is `cluster`.
+// The resource is a singleton named "cluster".
 //
 // Compatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.
 // +openshift:compatibility-gen:level=4
@@ -16,7 +16,6 @@ import metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 // +kubebuilder:object:root=true
 // +kubebuilder:resource:path=controllermanagers,scope=Cluster
 // +kubebuilder:subresource:status
-// +kubebuilder:metadata:annotations=release.openshift.io/bootstrap-required=true
 // +openshift:enable:FeatureGate=DisableForceDetachOnTimeout
 // +kubebuilder:validation:XValidation:rule="self.metadata.name == 'cluster'",message="controllermanager is a singleton, .metadata.name must be 'cluster'"
 type ControllerManager struct {

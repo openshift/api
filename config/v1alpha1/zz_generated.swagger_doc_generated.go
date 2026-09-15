@@ -812,7 +812,7 @@ func (UserDefinedMonitoring) SwaggerDoc() map[string]string {
 }
 
 var map_ControllerManager = map[string]string{
-	"":         "ControllerManager holds cluster-wide configuration for the Kubernetes controller manager. The canonical name for this config is `cluster`.\n\nCompatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.",
+	"":         "ControllerManager holds cluster-wide configuration for the Kubernetes controller manager. The resource is a singleton named \"cluster\".\n\nCompatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.",
 	"metadata": "metadata is the standard object's metadata. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata",
 	"spec":     "spec holds user settable values for configuration",
 	"status":   "status holds observed values from the cluster. They may not be overridden.",
@@ -823,7 +823,7 @@ func (ControllerManager) SwaggerDoc() map[string]string {
 }
 
 var map_ControllerManagerList = map[string]string{
-	"":         "Compatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.",
+	"":         "ControllerManagerList is a collection of ControllerManager resources.\n\nCompatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.",
 	"metadata": "metadata is the standard list's metadata. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata",
 }
 
@@ -833,7 +833,7 @@ func (ControllerManagerList) SwaggerDoc() map[string]string {
 
 var map_ControllerManagerSpec = map[string]string{
 	"":                     "ControllerManagerSpec defines the desired state of the Kubernetes controller manager",
-	"forceDetachOnTimeout": "forceDetachOnTimeout expresses whether to allow kube-controller-manager to force detach volumes when the maximum unmount time is exceeded or when a node is not healthy. Valid values are \"Enabled\" and \"Disabled\". When omitted, this means the user has no opinion and the platform is left to choose a reasonable default, which is subject to change over time. The current default is \"Enabled\".",
+	"forceDetachOnTimeout": "forceDetachOnTimeout controls whether kube-controller-manager force detaches volumes from a node that is not healthy once the volumes have not been unmounted within the maximum unmount time (6 minutes). Valid values are \"Enabled\" and \"Disabled\". When set to \"Enabled\", volumes are force detached from unhealthy nodes after the maximum unmount time, so that workloads using them can start on other nodes. Force detaching a volume that is still in use by the node can corrupt its data. When set to \"Disabled\", volumes are not force detached based on the maximum unmount time. Volumes remain attached to an unhealthy node until it recovers, or until the node is tainted with \"node.kubernetes.io/out-of-service\" as part of the non-graceful node shutdown procedure. When omitted, this means the user has no opinion and the platform is left to choose a reasonable default, which is subject to change over time. The current default is \"Enabled\".",
 }
 
 func (ControllerManagerSpec) SwaggerDoc() map[string]string {

@@ -7,7 +7,6 @@ metadata:
     api.openshift.io/filename-operator: config-operator
     api.openshift.io/filename-ordering: "01"
     feature-gate.release.openshift.io/DisableForceDetachOnTimeout: "true"
-    release.openshift.io/bootstrap-required: "true"
   name: controllermanagers.config.openshift.io
 spec:
   group: config.openshift.io
@@ -23,7 +22,7 @@ spec:
       openAPIV3Schema:
         description: |-
           ControllerManager holds cluster-wide configuration for the Kubernetes controller manager.
-          The canonical name for this config is `cluster`.
+          The resource is a singleton named "cluster".
 
           Compatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.
         properties:
@@ -50,10 +49,17 @@ spec:
             properties:
               forceDetachOnTimeout:
                 description: |-
-                  forceDetachOnTimeout expresses whether to allow kube-controller-manager
-                  to force detach volumes when the maximum unmount time is exceeded or when
-                  a node is not healthy.
+                  forceDetachOnTimeout controls whether kube-controller-manager force detaches
+                  volumes from a node that is not healthy once the volumes have not been
+                  unmounted within the maximum unmount time (6 minutes).
                   Valid values are "Enabled" and "Disabled".
+                  When set to "Enabled", volumes are force detached from unhealthy nodes after
+                  the maximum unmount time, so that workloads using them can start on other nodes.
+                  Force detaching a volume that is still in use by the node can corrupt its data.
+                  When set to "Disabled", volumes are not force detached based on the maximum
+                  unmount time. Volumes remain attached to an unhealthy node until it recovers,
+                  or until the node is tainted with "node.kubernetes.io/out-of-service"
+                  as part of the non-graceful node shutdown procedure.
                   When omitted, this means the user has no opinion and the platform is left
                   to choose a reasonable default, which is subject to change over time.
                   The current default is "Enabled".
@@ -138,6 +144,9 @@ spec:
         required:
         - spec
         type: object
+        x-kubernetes-validations:
+        - message: controllermanager is a singleton, .metadata.name must be 'cluster'
+          rule: self.metadata.name == 'cluster'
     served: true
     storage: true
     subresources:

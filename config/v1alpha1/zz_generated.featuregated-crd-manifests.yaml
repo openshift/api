@@ -69,8 +69,7 @@ clustermonitorings.config.openshift.io:
   Version: v1alpha1
 
 controllermanagers.config.openshift.io:
-  Annotations:
-    release.openshift.io/bootstrap-required: "true"
+  Annotations: {}
   ApprovedPRNumber: https://github.com/openshift/api/pull/2668
   CRDName: controllermanagers.config.openshift.io
   Capability: ""

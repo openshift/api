@@ -264,9 +264,6 @@
                         "name": "ProvisioningRequestAvailable"
                     },
                     {
-                        "name": "SELinuxMount"
-                    },
-                    {
                         "name": "ShortCertRotation"
                     },
                     {
@@ -372,6 +369,9 @@
                     },
                     {
                         "name": "OpenShiftPodSecurityAdmission"
+                    },
+                    {
+                        "name": "SELinuxMount"
                     },
                     {
                         "name": "SELinuxMountGAReadiness"

@@ -20,7 +20,7 @@ import (
 // +kubebuilder:subresource:status
 // +kubebuilder:metadata:annotations=release.openshift.io/bootstrap-required=true
 // +openshift:validation:FeatureGateAwareXValidation:featureGate=MutableTopology,rule="!has(self.spec.controlPlaneTopology) || (has(oldSelf.spec.controlPlaneTopology) && self.spec.controlPlaneTopology == oldSelf.spec.controlPlaneTopology) || (has(self.status.controlPlaneTopology) && self.spec.controlPlaneTopology == self.status.controlPlaneTopology) || (has(self.status.controlPlaneTopology) && self.status.controlPlaneTopology == 'SingleReplica' && self.spec.controlPlaneTopology == 'HighlyAvailable')",message="spec.controlPlaneTopology must match status.controlPlaneTopology or be set to HighlyAvailable when status.controlPlaneTopology is SingleReplica"
-// +openshift:validation:FeatureGateAwareXValidation:featureGate=MutableTopology,rule="!has(self.status.controlPlaneTopologyTransitions) || self.status.controlPlaneTopologyTransitions.all(t, t.source == self.status.controlPlaneTopology)",message="transition sources must match status.controlPlaneTopology"
+// +openshift:validation:FeatureGateAwareXValidation:featureGate=MutableTopology,rule="!has(self.status) || !has(self.status.controlPlaneTopologyTransitions) || self.status.controlPlaneTopologyTransitions.all(t, has(self.status.controlPlaneTopology) && t.source == self.status.controlPlaneTopology)",message="transition sources must match status.controlPlaneTopology"
 type Infrastructure struct {
 	metav1.TypeMeta `json:",inline"`
 
@@ -152,19 +152,19 @@ type InfrastructureStatus struct {
 	// transitions". source and target below only cover the topologies that support a
 	// transition today; when status.controlPlaneTopology is a topology outside that set,
 	// this field is expected to remain omitted or empty. Entries are keyed by the
-	// (source, target) topology pair and list order is not significant. At most 4
-	// entries are permitted, matching the full cardinality of the 2-value source/target
-	// enum below. If source/target are ever widened to cover additional
+	// (source, target) topology pair and list order is not significant. At most 2
+	// entries are permitted, matching the cardinality of the target enum for the
+	// single current source. If target is ever widened to cover additional
 	// transition-eligible topologies (HighlyAvailableArbiter, DualReplica; External is
 	// not expected to participate in a transition and should not be added here),
-	// MaxItems must be increased to match the new cardinality, up to 16 for all four
+	// MaxItems must be increased to match the new cardinality, up to 4 for all four
 	// non-External TopologyMode values.
 	// +openshift:enable:FeatureGate=MutableTopology
 	// +listType=map
 	// +listMapKey=source
 	// +listMapKey=target
 	// +kubebuilder:validation:MinItems=0
-	// +kubebuilder:validation:MaxItems=4
+	// +kubebuilder:validation:MaxItems=2
 	// +optional
 	ControlPlaneTopologyTransitions []ControlPlaneTopologyTransition `json:"controlPlaneTopologyTransitions,omitempty"`
 

@@ -419,7 +419,7 @@ tests:
             target: HighlyAvailable
             availability: Unknown
             reason: EvaluationPending
-    - name: Should allow setting every schema-permitted source/target pair in controlPlaneTopologyTransitions (a MaxItems boundary test spanning the full source x target enum cardinality; includes source==target pairs the controller itself would never emit, but which the schema permits)
+    - name: Should allow setting every schema-permitted target for the current source in controlPlaneTopologyTransitions as a MaxItems boundary test
       initial: |
         apiVersion: config.openshift.io/v1
         kind: Infrastructure
@@ -439,12 +439,6 @@ tests:
           - source: SingleReplica
             target: HighlyAvailable
             availability: Available
-          - source: HighlyAvailable
-            target: SingleReplica
-            availability: Available
-          - source: HighlyAvailable
-            target: HighlyAvailable
-            availability: Available
       expected: |
         apiVersion: config.openshift.io/v1
         kind: Infrastructure
@@ -460,12 +454,24 @@ tests:
           - source: SingleReplica
             target: HighlyAvailable
             availability: Available
+    - name: Should not allow a controlPlaneTopologyTransitions entry whose source differs from status controlPlaneTopology
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        spec: {}
+        status:
+          controlPlaneTopology: SingleReplica
+      updated: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        spec: {}
+        status:
+          controlPlaneTopology: SingleReplica
+          controlPlaneTopologyTransitions:
           - source: HighlyAvailable
             target: SingleReplica
             availability: Available
-          - source: HighlyAvailable
-            target: HighlyAvailable
-            availability: Available
+      expectedStatusError: "transition sources must match status.controlPlaneTopology"
     - name: Should not allow a controlPlaneTopologyTransitions entry with an invalid source
       initial: |
         apiVersion: config.openshift.io/v1

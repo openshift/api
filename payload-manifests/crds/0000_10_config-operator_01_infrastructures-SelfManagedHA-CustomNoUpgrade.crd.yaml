@@ -1178,12 +1178,12 @@ spec:
                   transitions". source and target below only cover the topologies that support a
                   transition today; when status.controlPlaneTopology is a topology outside that set,
                   this field is expected to remain omitted or empty. Entries are keyed by the
-                  (source, target) topology pair and list order is not significant. At most 4
-                  entries are permitted, matching the full cardinality of the 2-value source/target
-                  enum below. If source/target are ever widened to cover additional
+                  (source, target) topology pair and list order is not significant. At most 2
+                  entries are permitted, matching the cardinality of the target enum for the
+                  single current source. If target is ever widened to cover additional
                   transition-eligible topologies (HighlyAvailableArbiter, DualReplica; External is
                   not expected to participate in a transition and should not be added here),
-                  MaxItems must be increased to match the new cardinality, up to 16 for all four
+                  MaxItems must be increased to match the new cardinality, up to 4 for all four
                   non-External TopologyMode values.
                 items:
                   description: |-
@@ -1256,7 +1256,7 @@ spec:
                   x-kubernetes-validations:
                   - message: reason is required when availability is not Available
                     rule: self.availability == 'Available' || has(self.reason)
-                maxItems: 4
+                maxItems: 2
                 minItems: 0
                 type: array
                 x-kubernetes-list-map-keys:
@@ -2957,8 +2957,9 @@ spec:
             && self.status.controlPlaneTopology == ''SingleReplica'' && self.spec.controlPlaneTopology
             == ''HighlyAvailable'')'
         - message: transition sources must match status.controlPlaneTopology
-          rule: '!has(self.status.controlPlaneTopologyTransitions) || self.status.controlPlaneTopologyTransitions.all(t,
-            t.source == self.status.controlPlaneTopology)'
+          rule: '!has(self.status) || !has(self.status.controlPlaneTopologyTransitions)
+            || self.status.controlPlaneTopologyTransitions.all(t, has(self.status.controlPlaneTopology)
+            && t.source == self.status.controlPlaneTopology)'
     served: true
     storage: true
     subresources:

@@ -395,9 +395,6 @@
                     },
                     {
                         "name": "VSphereMultiVCenterDay2"
-                    },
-                    {
-                        "name": "VolumeGroupSnapshot"
                     }
                 ],
                 "version": ""

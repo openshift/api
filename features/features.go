@@ -320,14 +320,6 @@ var (
 					enable(inDefault(), inOKD(), inTechPreviewNoUpgrade(), inDevPreviewNoUpgrade()).
 					mustRegister()
 
-	FeatureGateVolumeGroupSnapshot = newFeatureGate("VolumeGroupSnapshot").
-					reportProblemsToJiraComponent("Storage / Kubernetes External Components").
-					contactPerson("fbertina").
-					productScope(kubernetes).
-					enhancementPR("https://github.com/kubernetes/enhancements/issues/3476").
-					enable(inDefault(), inOKD(), inTechPreviewNoUpgrade(), inDevPreviewNoUpgrade()).
-					mustRegister()
-
 	FeatureGateExternalSnapshotMetadata = newFeatureGate("ExternalSnapshotMetadata").
 						reportProblemsToJiraComponent("Storage / Kubernetes External Components").
 						contactPerson("rbednar").

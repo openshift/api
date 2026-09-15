@@ -1067,4 +1067,52 @@ var (
 							enhancementPR("https://github.com/openshift/enhancements/pull/2081").
 							enable(inDevPreviewNoUpgrade()).
 							mustRegister()
+
+	FeatureGateGenericWorkload = newFeatureGate("GenericWorkload").
+					reportProblemsToJiraComponent("node").
+					contactPerson("sairameshv").
+					productScope(kubernetes).
+					enhancementPR("https://github.com/kubernetes/enhancements/issues/4671").
+					enable(inTechPreviewNoUpgrade(), inDevPreviewNoUpgrade()).
+					mustRegister()
+
+	FeatureGateGangScheduling = newFeatureGate("GangScheduling").
+					reportProblemsToJiraComponent("node").
+					contactPerson("sairameshv").
+					productScope(kubernetes).
+					enhancementPR("https://github.com/kubernetes/enhancements/issues/4671").
+					enable(inTechPreviewNoUpgrade(), inDevPreviewNoUpgrade()).
+					mustRegister()
+
+	FeatureGateWorkloadWithJob = newFeatureGate("WorkloadWithJob").
+					reportProblemsToJiraComponent("node").
+					contactPerson("sairameshv").
+					productScope(kubernetes).
+					enhancementPR("https://github.com/kubernetes/enhancements/issues/5547").
+					enable(inTechPreviewNoUpgrade(), inDevPreviewNoUpgrade()).
+					mustRegister()
+
+	FeatureGateWorkloadAwarePreemption = newFeatureGate("WorkloadAwarePreemption").
+						reportProblemsToJiraComponent("node").
+						contactPerson("sairameshv").
+						productScope(kubernetes).
+						enhancementPR("https://github.com/kubernetes/enhancements/issues/5710").
+						enable(inTechPreviewNoUpgrade(), inDevPreviewNoUpgrade()).
+						mustRegister()
+
+	FeatureGateTopologyAwareWorkloadScheduling = newFeatureGate("TopologyAwareWorkloadScheduling").
+							reportProblemsToJiraComponent("node").
+							contactPerson("sairameshv").
+							productScope(kubernetes).
+							enhancementPR("https://github.com/kubernetes/enhancements/issues/5732").
+							enable(inTechPreviewNoUpgrade(), inDevPreviewNoUpgrade()).
+							mustRegister()
+
+	FeatureGateDRAWorkloadResourceClaims = newFeatureGate("DRAWorkloadResourceClaims").
+						reportProblemsToJiraComponent("node").
+						contactPerson("sairameshv").
+						productScope(kubernetes).
+						enhancementPR("https://github.com/kubernetes/enhancements/issues/5729").
+						enable(inTechPreviewNoUpgrade(), inDevPreviewNoUpgrade()).
+						mustRegister()
 )

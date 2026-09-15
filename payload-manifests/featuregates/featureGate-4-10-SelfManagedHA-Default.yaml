@@ -114,6 +114,9 @@
                         "name": "DNSNameResolver"
                     },
                     {
+                        "name": "DRAWorkloadResourceClaims"
+                    },
+                    {
                         "name": "DyanmicServiceEndpointIBMCloud"
                     },
                     {
@@ -144,7 +147,13 @@
                         "name": "GCPDualStackInstall"
                     },
                     {
+                        "name": "GangScheduling"
+                    },
+                    {
                         "name": "GatewayAPIManagementMode"
+                    },
+                    {
+                        "name": "GenericWorkload"
                     },
                     {
                         "name": "GomaxprocsInjection"
@@ -264,10 +273,19 @@
                         "name": "TLSGroupPreferences"
                     },
                     {
+                        "name": "TopologyAwareWorkloadScheduling"
+                    },
+                    {
                         "name": "VSphereConfigurableMaxAllowedBlockVolumesPerNode"
                     },
                     {
                         "name": "VSpherePerComponentScopedCreds"
+                    },
+                    {
+                        "name": "WorkloadAwarePreemption"
+                    },
+                    {
+                        "name": "WorkloadWithJob"
                     }
                 ],
                 "enabled": [

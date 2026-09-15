@@ -9,17 +9,32 @@ tests:
       initial: |
         apiVersion: config.openshift.io/v1alpha1
         kind: ControllerManager
+        metadata:
+          name: cluster
         spec:
           forceDetachOnTimeout: Disabled
       expected: |
         apiVersion: config.openshift.io/v1alpha1
         kind: ControllerManager
+        metadata:
+          name: cluster
         spec:
           forceDetachOnTimeout: Disabled
+    - name: Should reject a ControllerManager not named cluster
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ControllerManager
+        metadata:
+          name: foo
+        spec:
+          forceDetachOnTimeout: Disabled
+      expectedError: "Invalid value: \"object\": controllermanager is a singleton, .metadata.name must be 'cluster'"
     - name: Should reject unsupported value of forceDetachOnTimeout
       initial: |
         apiVersion: config.openshift.io/v1alpha1
         kind: ControllerManager
+        metadata:
+          name: cluster
         spec:
           forceDetachOnTimeout: INVALID
       expectedError: "spec.forceDetachOnTimeout: Unsupported value: \"INVALID\": supported values: \"Enabled\", \"Disabled\""
@@ -28,15 +43,21 @@ tests:
       initial: |
         apiVersion: config.openshift.io/v1alpha1
         kind: ControllerManager
+        metadata:
+          name: cluster
         spec:
           forceDetachOnTimeout: Enabled
       updated: |
         apiVersion: config.openshift.io/v1alpha1
         kind: ControllerManager
+        metadata:
+          name: cluster
         spec:
           forceDetachOnTimeout: Disabled
       expected: |
         apiVersion: config.openshift.io/v1alpha1
         kind: ControllerManager
+        metadata:
+          name: cluster
         spec:
           forceDetachOnTimeout: Disabled

@@ -18,6 +18,7 @@ import metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 // +kubebuilder:subresource:status
 // +kubebuilder:metadata:annotations=release.openshift.io/bootstrap-required=true
 // +openshift:enable:FeatureGate=DisableForceDetachOnTimeout
+// +kubebuilder:validation:XValidation:rule="self.metadata.name == 'cluster'",message="controllermanager is a singleton, .metadata.name must be 'cluster'"
 type ControllerManager struct {
 	metav1.TypeMeta `json:",inline"`
 
@@ -36,10 +37,17 @@ type ControllerManager struct {
 // ControllerManagerSpec defines the desired state of the Kubernetes controller manager
 // +kubebuilder:validation:MinProperties=1
 type ControllerManagerSpec struct {
-	// forceDetachOnTimeout expresses whether to allow kube-controller-manager
-	// to force detach volumes when the maximum unmount time is exceeded or when
-	// a node is not healthy.
+	// forceDetachOnTimeout controls whether kube-controller-manager force detaches
+	// volumes from a node that is not healthy once the volumes have not been
+	// unmounted within the maximum unmount time (6 minutes).
 	// Valid values are "Enabled" and "Disabled".
+	// When set to "Enabled", volumes are force detached from unhealthy nodes after
+	// the maximum unmount time, so that workloads using them can start on other nodes.
+	// Force detaching a volume that is still in use by the node can corrupt its data.
+	// When set to "Disabled", volumes are not force detached based on the maximum
+	// unmount time. Volumes remain attached to an unhealthy node until it recovers,
+	// or until the node is tainted with "node.kubernetes.io/out-of-service"
+	// as part of the non-graceful node shutdown procedure.
 	// When omitted, this means the user has no opinion and the platform is left
 	// to choose a reasonable default, which is subject to change over time.
 	// The current default is "Enabled".
@@ -50,15 +58,16 @@ type ControllerManagerSpec struct {
 // ForceDetachOnTimeoutPolicy describes the policy for force detaching volumes
 // when the maximum unmount time is exceeded.
 // Valid values are "Enabled" and "Disabled".
+// +enum
 // +kubebuilder:validation:Enum=Enabled;Disabled
 type ForceDetachOnTimeoutPolicy string
 
 const (
-	// ForceDetachOnTimeoutEnabled will allow kube-controller-manager to
-	// force detach volumes based on maximum unmount time and node status.
-	ForceDetachOnTimeoutEnabled  ForceDetachOnTimeoutPolicy = "Enabled"
-	// ForceDetachOnTimeoutDisabled will prevent kube-controller-manager
-	// from force detaching volumes.
+	// ForceDetachOnTimeoutEnabled allows kube-controller-manager to force detach
+	// volumes from unhealthy nodes once the maximum unmount time is exceeded.
+	ForceDetachOnTimeoutEnabled ForceDetachOnTimeoutPolicy = "Enabled"
+	// ForceDetachOnTimeoutDisabled prevents kube-controller-manager from force
+	// detaching volumes based on the maximum unmount time.
 	ForceDetachOnTimeoutDisabled ForceDetachOnTimeoutPolicy = "Disabled"
 )
 
@@ -80,6 +89,8 @@ type ControllerManagerStatus struct {
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 
+// ControllerManagerList is a collection of ControllerManager resources.
+//
 // Compatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.
 // +openshift:compatibility-gen:level=4
 type ControllerManagerList struct {

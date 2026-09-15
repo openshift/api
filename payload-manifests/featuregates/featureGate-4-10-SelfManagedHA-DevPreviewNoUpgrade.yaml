@@ -346,6 +346,9 @@
                         "name": "OSStreams"
                     },
                     {
+                        "name": "OVNKubernetesUplinkMode"
+                    },
+                    {
                         "name": "OVNObservability"
                     },
                     {

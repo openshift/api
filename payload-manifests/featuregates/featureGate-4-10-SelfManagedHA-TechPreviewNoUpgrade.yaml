@@ -41,6 +41,9 @@
                         "name": "DRADeviceTaintRules"
                     },
                     {
+                        "name": "DisableForceDetachOnTimeout"
+                    },
+                    {
                         "name": "EventedPLEG"
                     },
                     {

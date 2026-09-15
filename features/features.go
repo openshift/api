@@ -1074,4 +1074,12 @@ var (
 					productScope(kubernetes).
 					enhancementPR("https://github.com/kubernetes/enhancements/issues/5055").
 					mustRegister()
+
+	FeatureGateDisableForceDetachOnTimeout = newFeatureGate("DisableForceDetachOnTimeout").
+						reportProblemsToJiraComponent("Storage").
+						contactPerson("jdobson").
+						productScope(ocpSpecific).
+						enhancementPR("https://github.com/openshift/enhancements/pull/2095").
+						enable(inDevPreviewNoUpgrade()).
+						mustRegister()
 )

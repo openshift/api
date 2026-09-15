@@ -1,0 +1,157 @@
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    api-approved.openshift.io: https://github.com/openshift/api/pull/2668
+    api.openshift.io/merged-by-featuregates: "true"
+    include.release.openshift.io/ibm-cloud-managed: "true"
+    include.release.openshift.io/self-managed-high-availability: "true"
+    release.openshift.io/feature-set: CustomNoUpgrade,DevPreviewNoUpgrade
+  name: controllermanagers.config.openshift.io
+spec:
+  group: config.openshift.io
+  names:
+    kind: ControllerManager
+    listKind: ControllerManagerList
+    plural: controllermanagers
+    singular: controllermanager
+  scope: Cluster
+  versions:
+  - name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        description: |-
+          ControllerManager holds cluster-wide configuration for the Kubernetes controller manager.
+          The resource is a singleton named "cluster".
+
+          Compatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.
+        properties:
+          apiVersion:
+            description: |-
+              APIVersion defines the versioned schema of this representation of an object.
+              Servers should convert recognized schemas to the latest internal value, and
+              may reject unrecognized values.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
+            type: string
+          kind:
+            description: |-
+              Kind is a string value representing the REST resource this object represents.
+              Servers may infer this from the endpoint the client submits requests to.
+              Cannot be updated.
+              In CamelCase.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: spec holds user settable values for configuration
+            minProperties: 1
+            properties:
+              forceDetachOnTimeout:
+                description: |-
+                  forceDetachOnTimeout controls whether kube-controller-manager force detaches
+                  volumes from a node that is not healthy once the volumes have not been
+                  unmounted within the maximum unmount time (6 minutes).
+                  Valid values are "Enabled" and "Disabled".
+                  When set to "Enabled", volumes are force detached from unhealthy nodes after
+                  the maximum unmount time, so that workloads using them can start on other nodes.
+                  Force detaching a volume that is still in use by the node can corrupt its data.
+                  When set to "Disabled", volumes are not force detached based on the maximum
+                  unmount time. Volumes remain attached to an unhealthy node until it recovers,
+                  or until the node is tainted with "node.kubernetes.io/out-of-service"
+                  as part of the non-graceful node shutdown procedure.
+                  When omitted, this means the user has no opinion and the platform is left
+                  to choose a reasonable default, which is subject to change over time.
+                  The current default is "Enabled".
+                enum:
+                - Enabled
+                - Disabled
+                type: string
+            type: object
+          status:
+            description: |-
+              status holds observed values from the cluster. They may not be overridden.
+              When omitted, the status has not yet been reported by the cluster-kube-controller-manager-operator.
+            minProperties: 1
+            properties:
+              conditions:
+                description: |-
+                  conditions represent the latest available observations of the configuration state.
+                  When omitted, it indicates that no conditions have been reported yet.
+                  The maximum number of conditions is 16.
+                  When set, at least one condition must be present.
+                  Conditions are stored as a map keyed by condition type, ensuring uniqueness.
+
+                  Expected condition types include:
+                  "Progressing": indicates whether the current spec is in the process of rolling out to kube-controller-manager.
+                items:
+                  description: Condition contains details for one aspect of the current
+                    state of this API Resource.
+                  properties:
+                    lastTransitionTime:
+                      description: |-
+                        lastTransitionTime is the last time the condition transitioned from one status to another.
+                        This should be when the underlying condition changed.  If that is not known, then using the time when the API field changed is acceptable.
+                      format: date-time
+                      type: string
+                    message:
+                      description: |-
+                        message is a human readable message indicating details about the transition.
+                        This may be an empty string.
+                      maxLength: 32768
+                      type: string
+                    observedGeneration:
+                      description: |-
+                        observedGeneration represents the .metadata.generation that the condition was set based upon.
+                        For instance, if .metadata.generation is currently 12, but the .status.conditions[x].observedGeneration is 9, the condition is out of date
+                        with respect to the current state of the instance.
+                      format: int64
+                      minimum: 0
+                      type: integer
+                    reason:
+                      description: |-
+                        reason contains a programmatic identifier indicating the reason for the condition's last transition.
+                        Producers of specific condition types may define expected values and meanings for this field,
+                        and whether the values are considered a guaranteed API.
+                        The value should be a CamelCase string.
+                        This field may not be empty.
+                      maxLength: 1024
+                      minLength: 1
+                      pattern: ^[A-Za-z]([A-Za-z0-9_,:]*[A-Za-z0-9_])?$
+                      type: string
+                    status:
+                      description: status of the condition, one of True, False, Unknown.
+                      enum:
+                      - "True"
+                      - "False"
+                      - Unknown
+                      type: string
+                    type:
+                      description: type of condition in CamelCase or in foo.example.com/CamelCase.
+                      maxLength: 316
+                      pattern: ^([a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*/)?(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])$
+                      type: string
+                  required:
+                  - lastTransitionTime
+                  - message
+                  - reason
+                  - status
+                  - type
+                  type: object
+                maxItems: 16
+                minItems: 1
+                type: array
+                x-kubernetes-list-map-keys:
+                - type
+                x-kubernetes-list-type: map
+            type: object
+        required:
+        - spec
+        type: object
+        x-kubernetes-validations:
+        - message: controllermanager is a singleton, .metadata.name must be 'cluster'
+          rule: self.metadata.name == 'cluster'
+    served: true
+    storage: true
+    subresources:
+      status: {}

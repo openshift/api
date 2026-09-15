@@ -534,6 +534,10 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		configv1alpha1.ClusterMonitoringSpec{}.OpenAPIModelName():                              schema_openshift_api_config_v1alpha1_ClusterMonitoringSpec(ref),
 		configv1alpha1.ClusterMonitoringStatus{}.OpenAPIModelName():                            schema_openshift_api_config_v1alpha1_ClusterMonitoringStatus(ref),
 		configv1alpha1.ContainerResource{}.OpenAPIModelName():                                  schema_openshift_api_config_v1alpha1_ContainerResource(ref),
+		configv1alpha1.ControllerManager{}.OpenAPIModelName():                                  schema_openshift_api_config_v1alpha1_ControllerManager(ref),
+		configv1alpha1.ControllerManagerList{}.OpenAPIModelName():                              schema_openshift_api_config_v1alpha1_ControllerManagerList(ref),
+		configv1alpha1.ControllerManagerSpec{}.OpenAPIModelName():                              schema_openshift_api_config_v1alpha1_ControllerManagerSpec(ref),
+		configv1alpha1.ControllerManagerStatus{}.OpenAPIModelName():                            schema_openshift_api_config_v1alpha1_ControllerManagerStatus(ref),
 		configv1alpha1.CustomPKIPolicy{}.OpenAPIModelName():                                    schema_openshift_api_config_v1alpha1_CustomPKIPolicy(ref),
 		configv1alpha1.DefaultCertificateConfig{}.OpenAPIModelName():                           schema_openshift_api_config_v1alpha1_DefaultCertificateConfig(ref),
 		configv1alpha1.DropEqualActionConfig{}.OpenAPIModelName():                              schema_openshift_api_config_v1alpha1_DropEqualActionConfig(ref),
@@ -24234,6 +24238,165 @@ func schema_openshift_api_config_v1alpha1_ContainerResource(ref common.Reference
 		},
 		Dependencies: []string{
 			resource.Quantity{}.OpenAPIModelName()},
+	}
+}
+
+func schema_openshift_api_config_v1alpha1_ControllerManager(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "ControllerManager holds cluster-wide configuration for the Kubernetes controller manager. The resource is a singleton named \"cluster\".\n\nCompatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"kind": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"apiVersion": {
+						SchemaProps: spec.SchemaProps{
+							Description: "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"metadata": {
+						SchemaProps: spec.SchemaProps{
+							Description: "metadata is the standard object's metadata. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata",
+							Default:     map[string]interface{}{},
+							Ref:         ref(metav1.ObjectMeta{}.OpenAPIModelName()),
+						},
+					},
+					"spec": {
+						SchemaProps: spec.SchemaProps{
+							Description: "spec holds user settable values for configuration",
+							Default:     map[string]interface{}{},
+							Ref:         ref(configv1alpha1.ControllerManagerSpec{}.OpenAPIModelName()),
+						},
+					},
+					"status": {
+						SchemaProps: spec.SchemaProps{
+							Description: "status holds observed values from the cluster. They may not be overridden. When omitted, the status has not yet been reported by the cluster-kube-controller-manager-operator.",
+							Default:     map[string]interface{}{},
+							Ref:         ref(configv1alpha1.ControllerManagerStatus{}.OpenAPIModelName()),
+						},
+					},
+				},
+				Required: []string{"spec"},
+			},
+		},
+		Dependencies: []string{
+			configv1alpha1.ControllerManagerSpec{}.OpenAPIModelName(), configv1alpha1.ControllerManagerStatus{}.OpenAPIModelName(), metav1.ObjectMeta{}.OpenAPIModelName()},
+	}
+}
+
+func schema_openshift_api_config_v1alpha1_ControllerManagerList(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "ControllerManagerList is a collection of ControllerManager resources.\n\nCompatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"kind": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"apiVersion": {
+						SchemaProps: spec.SchemaProps{
+							Description: "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"metadata": {
+						SchemaProps: spec.SchemaProps{
+							Description: "metadata is the standard list's metadata. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata",
+							Default:     map[string]interface{}{},
+							Ref:         ref(metav1.ListMeta{}.OpenAPIModelName()),
+						},
+					},
+					"items": {
+						SchemaProps: spec.SchemaProps{
+							Type: []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref(configv1alpha1.ControllerManager{}.OpenAPIModelName()),
+									},
+								},
+							},
+						},
+					},
+				},
+				Required: []string{"metadata", "items"},
+			},
+		},
+		Dependencies: []string{
+			configv1alpha1.ControllerManager{}.OpenAPIModelName(), metav1.ListMeta{}.OpenAPIModelName()},
+	}
+}
+
+func schema_openshift_api_config_v1alpha1_ControllerManagerSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "ControllerManagerSpec defines the desired state of the Kubernetes controller manager",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"forceDetachOnTimeout": {
+						SchemaProps: spec.SchemaProps{
+							Description: "forceDetachOnTimeout controls whether kube-controller-manager force detaches volumes from a node that is not healthy once the volumes have not been unmounted within the maximum unmount time (6 minutes). Valid values are \"Enabled\" and \"Disabled\". When set to \"Enabled\", volumes are force detached from unhealthy nodes after the maximum unmount time, so that workloads using them can start on other nodes. Force detaching a volume that is still in use by the node can corrupt its data. When set to \"Disabled\", volumes are not force detached based on the maximum unmount time. Volumes remain attached to an unhealthy node until it recovers, or until the node is tainted with \"node.kubernetes.io/out-of-service\" as part of the non-graceful node shutdown procedure. When omitted, this means the user has no opinion and the platform is left to choose a reasonable default, which is subject to change over time. The current default is \"Enabled\".\n\nPossible enum values:\n - `\"Disabled\"` prevents kube-controller-manager from force detaching volumes based on the maximum unmount time.\n - `\"Enabled\"` allows kube-controller-manager to force detach volumes from unhealthy nodes once the maximum unmount time is exceeded.",
+							Type:        []string{"string"},
+							Format:      "",
+							Enum:        []interface{}{"Disabled", "Enabled"},
+						},
+					},
+				},
+			},
+		},
+	}
+}
+
+func schema_openshift_api_config_v1alpha1_ControllerManagerStatus(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "ControllerManagerStatus defines the observed state of the Kubernetes controller manager",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"conditions": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-map-keys": []interface{}{
+									"type",
+								},
+								"x-kubernetes-list-type": "map",
+							},
+						},
+						SchemaProps: spec.SchemaProps{
+							Description: "conditions represent the latest available observations of the configuration state. When omitted, it indicates that no conditions have been reported yet. The maximum number of conditions is 16. When set, at least one condition must be present. Conditions are stored as a map keyed by condition type, ensuring uniqueness.\n\nExpected condition types include: \"Progressing\": indicates whether the current spec is in the process of rolling out to kube-controller-manager.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref(metav1.Condition{}.OpenAPIModelName()),
+									},
+								},
+							},
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			metav1.Condition{}.OpenAPIModelName()},
 	}
 }
 

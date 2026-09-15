@@ -396,6 +396,11 @@ func (in ConsoleStatus) OpenAPIModelName() string {
 }
 
 // OpenAPIModelName returns the OpenAPI model name for this type.
+func (in ControlPlaneTopologyTransition) OpenAPIModelName() string {
+	return "com.github.openshift.api.config.v1.ControlPlaneTopologyTransition"
+}
+
+// OpenAPIModelName returns the OpenAPI model name for this type.
 func (in Custom) OpenAPIModelName() string {
 	return "com.github.openshift.api.config.v1.Custom"
 }

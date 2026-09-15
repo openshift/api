@@ -280,6 +280,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		configv1.ConsoleList{}.OpenAPIModelName():                                              schema_openshift_api_config_v1_ConsoleList(ref),
 		configv1.ConsoleSpec{}.OpenAPIModelName():                                              schema_openshift_api_config_v1_ConsoleSpec(ref),
 		configv1.ConsoleStatus{}.OpenAPIModelName():                                            schema_openshift_api_config_v1_ConsoleStatus(ref),
+		configv1.ControlPlaneTopologyTransition{}.OpenAPIModelName():                           schema_openshift_api_config_v1_ControlPlaneTopologyTransition(ref),
 		configv1.Custom{}.OpenAPIModelName():                                                   schema_openshift_api_config_v1_Custom(ref),
 		configv1.CustomFeatureGates{}.OpenAPIModelName():                                       schema_openshift_api_config_v1_CustomFeatureGates(ref),
 		configv1.CustomTLSProfile{}.OpenAPIModelName():                                         schema_openshift_api_config_v1_CustomTLSProfile(ref),
@@ -12750,6 +12751,55 @@ func schema_openshift_api_config_v1_ConsoleStatus(ref common.ReferenceCallback) 
 	}
 }
 
+func schema_openshift_api_config_v1_ControlPlaneTopologyTransition(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "ControlPlaneTopologyTransition describes one control-plane topology transition available from the cluster's current topology and whether it can currently be initiated. reason must be set whenever availability is Unavailable or Unknown; this is enforced by a validation rule on the entry as a whole.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"source": {
+						SchemaProps: spec.SchemaProps{
+							Description: "source is the topology this transition starts from. It equals the current status.controlPlaneTopology. Valid values are SingleReplica and HighlyAvailable. When set to SingleReplica, the transition originates from a single-replica topology. When set to HighlyAvailable, the transition originates from a highly available topology.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"target": {
+						SchemaProps: spec.SchemaProps{
+							Description: "target is the topology this transition would move the control plane to. Valid values are SingleReplica and HighlyAvailable. When set to SingleReplica, the transition moves to a single-replica topology. When set to HighlyAvailable, the transition moves to a highly available topology.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"availability": {
+						SchemaProps: spec.SchemaProps{
+							Description: "availability indicates whether this transition can currently be initiated. Valid values are Available, Unavailable, and Unknown. Available means the controller evaluated the transition and its preconditions pass. Unavailable means the transition is defined but cannot be initiated now; see reason and message. Unknown means the controller has not completed evaluation.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"reason": {
+						SchemaProps: spec.SchemaProps{
+							Description: "reason is a CamelCase machine-readable explanation of the availability, e.g. PreflightCheckFailed or SourceTopologyMismatch. It is required when availability is Unavailable or Unknown and is normally omitted when Available. The set of reasons is diagnostic and not exhaustive. Must start with an uppercase letter and contain only alphanumeric characters, and must be between 1 and 128 characters long.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"message": {
+						SchemaProps: spec.SchemaProps{
+							Description: "message is a human-readable explanation, primarily for Unavailable transitions (e.g. a concise summary of the failing preconditions). It is for humans only and must not be parsed. It may be truncated by the controller. When omitted, no human-readable explanation is available for the transition. When set, it must be between 1 and 2048 characters long.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+				},
+				Required: []string{"source", "target", "availability"},
+			},
+		},
+	}
+}
+
 func schema_openshift_api_config_v1_Custom(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -16401,6 +16451,29 @@ func schema_openshift_api_config_v1_InfrastructureStatus(ref common.ReferenceCal
 							Format:      "",
 						},
 					},
+					"controlPlaneTopologyTransitions": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-map-keys": []interface{}{
+									"source",
+									"target",
+								},
+								"x-kubernetes-list-type": "map",
+							},
+						},
+						SchemaProps: spec.SchemaProps{
+							Description: "controlPlaneTopologyTransitions reports, as controller-computed observed state, the control-plane topology transitions that originate at the current status.controlPlaneTopology and whether each can currently be initiated. It is advisory: the cluster may change between a status read and a spec write, so the cluster-config-operator revalidates any requested transition; consumers such as the CLI must not treat Available as an admission guarantee. Transitions are requested via spec.controlPlaneTopology, not through this field. When omitted, the controller has not yet completed its first evaluation; an empty list is also valid and intentionally carries the same meaning as omitted, since this field does not currently distinguish \"not yet evaluated\" from \"evaluated with no applicable transitions\". source and target below only cover the topologies that support a transition today; when status.controlPlaneTopology is a topology outside that set, this field is expected to remain omitted or empty. Entries are keyed by the (source, target) topology pair and list order is not significant. At most 2 entries are permitted, matching the cardinality of the target enum for the single current source. If target is ever widened to cover additional transition-eligible topologies (HighlyAvailableArbiter, DualReplica; External is not expected to participate in a transition and should not be added here), MaxItems must be increased to match the new cardinality, up to 4 for all four non-External TopologyMode values.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref(configv1.ControlPlaneTopologyTransition{}.OpenAPIModelName()),
+									},
+								},
+							},
+						},
+					},
 					"cpuPartitioning": {
 						SchemaProps: spec.SchemaProps{
 							Description: "cpuPartitioning expresses if CPU partitioning is a currently enabled feature in the cluster. CPU Partitioning means that this cluster can support partitioning workloads to specific CPU Sets. Valid values are \"None\" and \"AllNodes\". When omitted, the default value is \"None\". The default value of \"None\" indicates that no nodes will be setup with CPU partitioning. The \"AllNodes\" value indicates that all nodes have been setup with CPU partitioning, and can then be further configured via the PerformanceProfile API.",
@@ -16413,7 +16486,7 @@ func schema_openshift_api_config_v1_InfrastructureStatus(ref common.ReferenceCal
 			},
 		},
 		Dependencies: []string{
-			configv1.PlatformStatus{}.OpenAPIModelName()},
+			configv1.ControlPlaneTopologyTransition{}.OpenAPIModelName(), configv1.PlatformStatus{}.OpenAPIModelName()},
 	}
 }
 

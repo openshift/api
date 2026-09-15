@@ -20,6 +20,7 @@ import (
 // +kubebuilder:subresource:status
 // +kubebuilder:metadata:annotations=release.openshift.io/bootstrap-required=true
 // +openshift:validation:FeatureGateAwareXValidation:featureGate=MutableTopology,rule="!has(self.spec.controlPlaneTopology) || (has(oldSelf.spec.controlPlaneTopology) && self.spec.controlPlaneTopology == oldSelf.spec.controlPlaneTopology) || (has(self.status.controlPlaneTopology) && self.spec.controlPlaneTopology == self.status.controlPlaneTopology) || (has(self.status.controlPlaneTopology) && self.status.controlPlaneTopology == 'SingleReplica' && self.spec.controlPlaneTopology == 'HighlyAvailable')",message="spec.controlPlaneTopology must match status.controlPlaneTopology or be set to HighlyAvailable when status.controlPlaneTopology is SingleReplica"
+// +openshift:validation:FeatureGateAwareXValidation:featureGate=MutableTopology,rule="!has(self.status.controlPlaneTopologyTransitions) || self.status.controlPlaneTopologyTransitions.all(t, t.source == self.status.controlPlaneTopology)",message="transition sources must match status.controlPlaneTopology"
 type Infrastructure struct {
 	metav1.TypeMeta `json:",inline"`
 
@@ -214,12 +215,16 @@ const (
 type ControlPlaneTopologyTransition struct {
 	// source is the topology this transition starts from. It equals the current
 	// status.controlPlaneTopology. Valid values are SingleReplica and HighlyAvailable.
+	// When set to SingleReplica, the transition originates from a single-replica topology.
+	// When set to HighlyAvailable, the transition originates from a highly available topology.
 	// +kubebuilder:validation:Enum=SingleReplica;HighlyAvailable
 	// +required
 	Source TopologyMode `json:"source,omitempty"`
 
 	// target is the topology this transition would move the control plane to.
 	// Valid values are SingleReplica and HighlyAvailable.
+	// When set to SingleReplica, the transition moves to a single-replica topology.
+	// When set to HighlyAvailable, the transition moves to a highly available topology.
 	// +kubebuilder:validation:Enum=SingleReplica;HighlyAvailable
 	// +required
 	Target TopologyMode `json:"target,omitempty"`
@@ -247,6 +252,7 @@ type ControlPlaneTopologyTransition struct {
 	// message is a human-readable explanation, primarily for Unavailable
 	// transitions (e.g. a concise summary of the failing preconditions). It is for
 	// humans only and must not be parsed. It may be truncated by the controller.
+	// When omitted, no human-readable explanation is available for the transition.
 	// When set, it must be between 1 and 2048 characters long.
 	// +kubebuilder:validation:MinLength=1
 	// +kubebuilder:validation:MaxLength=2048

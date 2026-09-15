@@ -12760,14 +12760,14 @@ func schema_openshift_api_config_v1_ControlPlaneTopologyTransition(ref common.Re
 				Properties: map[string]spec.Schema{
 					"source": {
 						SchemaProps: spec.SchemaProps{
-							Description: "source is the topology this transition starts from. It equals the current status.controlPlaneTopology. Valid values are SingleReplica and HighlyAvailable.",
+							Description: "source is the topology this transition starts from. It equals the current status.controlPlaneTopology. Valid values are SingleReplica and HighlyAvailable. When set to SingleReplica, the transition originates from a single-replica topology. When set to HighlyAvailable, the transition originates from a highly available topology.",
 							Type:        []string{"string"},
 							Format:      "",
 						},
 					},
 					"target": {
 						SchemaProps: spec.SchemaProps{
-							Description: "target is the topology this transition would move the control plane to. Valid values are SingleReplica and HighlyAvailable.",
+							Description: "target is the topology this transition would move the control plane to. Valid values are SingleReplica and HighlyAvailable. When set to SingleReplica, the transition moves to a single-replica topology. When set to HighlyAvailable, the transition moves to a highly available topology.",
 							Type:        []string{"string"},
 							Format:      "",
 						},
@@ -12788,7 +12788,7 @@ func schema_openshift_api_config_v1_ControlPlaneTopologyTransition(ref common.Re
 					},
 					"message": {
 						SchemaProps: spec.SchemaProps{
-							Description: "message is a human-readable explanation, primarily for Unavailable transitions (e.g. a concise summary of the failing preconditions). It is for humans only and must not be parsed. It may be truncated by the controller. When set, it must be between 1 and 2048 characters long.",
+							Description: "message is a human-readable explanation, primarily for Unavailable transitions (e.g. a concise summary of the failing preconditions). It is for humans only and must not be parsed. It may be truncated by the controller. When omitted, no human-readable explanation is available for the transition. When set, it must be between 1 and 2048 characters long.",
 							Type:        []string{"string"},
 							Format:      "",
 						},

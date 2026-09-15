@@ -6450,7 +6450,7 @@
           "type": "string"
         },
         "message": {
-          "description": "message is a human-readable explanation, primarily for Unavailable transitions (e.g. a concise summary of the failing preconditions). It is for humans only and must not be parsed. It may be truncated by the controller. When set, it must be between 1 and 2048 characters long.",
+          "description": "message is a human-readable explanation, primarily for Unavailable transitions (e.g. a concise summary of the failing preconditions). It is for humans only and must not be parsed. It may be truncated by the controller. When omitted, no human-readable explanation is available for the transition. When set, it must be between 1 and 2048 characters long.",
           "type": "string"
         },
         "reason": {
@@ -6458,11 +6458,11 @@
           "type": "string"
         },
         "source": {
-          "description": "source is the topology this transition starts from. It equals the current status.controlPlaneTopology. Valid values are SingleReplica and HighlyAvailable.",
+          "description": "source is the topology this transition starts from. It equals the current status.controlPlaneTopology. Valid values are SingleReplica and HighlyAvailable. When set to SingleReplica, the transition originates from a single-replica topology. When set to HighlyAvailable, the transition originates from a highly available topology.",
           "type": "string"
         },
         "target": {
-          "description": "target is the topology this transition would move the control plane to. Valid values are SingleReplica and HighlyAvailable.",
+          "description": "target is the topology this transition would move the control plane to. Valid values are SingleReplica and HighlyAvailable. When set to SingleReplica, the transition moves to a single-replica topology. When set to HighlyAvailable, the transition moves to a highly available topology.",
           "type": "string"
         }
       }

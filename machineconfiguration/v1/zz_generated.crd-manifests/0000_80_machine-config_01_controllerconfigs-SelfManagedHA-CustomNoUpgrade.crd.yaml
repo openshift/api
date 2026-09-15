@@ -1514,6 +1514,7 @@ spec:
                                 message is a human-readable explanation, primarily for Unavailable
                                 transitions (e.g. a concise summary of the failing preconditions). It is for
                                 humans only and must not be parsed. It may be truncated by the controller.
+                                When omitted, no human-readable explanation is available for the transition.
                                 When set, it must be between 1 and 2048 characters long.
                               maxLength: 2048
                               minLength: 1
@@ -1536,6 +1537,8 @@ spec:
                               description: |-
                                 source is the topology this transition starts from. It equals the current
                                 status.controlPlaneTopology. Valid values are SingleReplica and HighlyAvailable.
+                                When set to SingleReplica, the transition originates from a single-replica topology.
+                                When set to HighlyAvailable, the transition originates from a highly available topology.
                               enum:
                               - SingleReplica
                               - HighlyAvailable
@@ -1544,6 +1547,8 @@ spec:
                               description: |-
                                 target is the topology this transition would move the control plane to.
                                 Valid values are SingleReplica and HighlyAvailable.
+                                When set to SingleReplica, the transition moves to a single-replica topology.
+                                When set to HighlyAvailable, the transition moves to a highly available topology.
                               enum:
                               - SingleReplica
                               - HighlyAvailable
@@ -3275,6 +3280,9 @@ spec:
                     == self.status.controlPlaneTopology) || (has(self.status.controlPlaneTopology)
                     && self.status.controlPlaneTopology == ''SingleReplica'' && self.spec.controlPlaneTopology
                     == ''HighlyAvailable'')'
+                - message: transition sources must match status.controlPlaneTopology
+                  rule: '!has(self.status.controlPlaneTopologyTransitions) || self.status.controlPlaneTopologyTransitions.all(t,
+                    t.source == self.status.controlPlaneTopology)'
               internalRegistryPullSecret:
                 description: |-
                   internalRegistryPullSecret is the pull secret for the internal registry, used by

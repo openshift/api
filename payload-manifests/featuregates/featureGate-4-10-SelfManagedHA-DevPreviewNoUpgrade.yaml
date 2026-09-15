@@ -88,9 +88,6 @@
                         "name": "AzureMultiDisk"
                     },
                     {
-                        "name": "AzureWorkloadIdentity"
-                    },
-                    {
                         "name": "BGPBasedVIPManagement"
                     },
                     {

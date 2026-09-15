@@ -1074,4 +1074,12 @@ var (
 					productScope(kubernetes).
 					enhancementPR("https://github.com/kubernetes/enhancements/issues/5055").
 					mustRegister()
+
+	FeatureGatePodCertificateRequest = newFeatureGate("PodCertificateRequest").
+						reportProblemsToJiraComponent("kube-apiserver").
+						contactPerson("ibihim").
+						productScope(kubernetes).
+						enhancementPR("https://github.com/kubernetes/enhancements/issues/4317").
+						enable(inTechPreviewNoUpgrade(), inDevPreviewNoUpgrade()).
+						mustRegister()
 )

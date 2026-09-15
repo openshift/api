@@ -361,6 +361,9 @@
                         "name": "OpenShiftPodSecurityAdmission"
                     },
                     {
+                        "name": "PodCertificateRequest"
+                    },
+                    {
                         "name": "SELinuxMount"
                     },
                     {

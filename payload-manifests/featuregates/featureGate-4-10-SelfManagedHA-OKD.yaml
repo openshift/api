@@ -155,9 +155,6 @@
                         "name": "HyperShiftOnlyDynamicResourceAllocation"
                     },
                     {
-                        "name": "ImageModeStatusReporting"
-                    },
-                    {
                         "name": "IngressComponentRouteLabels"
                     },
                     {
@@ -317,6 +314,9 @@
                     },
                     {
                         "name": "GatewayAPIWithoutOLM"
+                    },
+                    {
+                        "name": "ImageModeStatusReporting"
                     },
                     {
                         "name": "ImageStreamImportMode"

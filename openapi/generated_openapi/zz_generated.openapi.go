@@ -24278,7 +24278,7 @@ func schema_openshift_api_config_v1alpha1_ControllerManager(ref common.Reference
 					},
 					"status": {
 						SchemaProps: spec.SchemaProps{
-							Description: "status holds observed values from the cluster. They may not be overridden.",
+							Description: "status holds observed values from the cluster. They may not be overridden. When omitted, the status has not yet been reported by the cluster-kube-controller-manager-operator.",
 							Default:     map[string]interface{}{},
 							Ref:         ref(configv1alpha1.ControllerManagerStatus{}.OpenAPIModelName()),
 						},
@@ -24380,7 +24380,7 @@ func schema_openshift_api_config_v1alpha1_ControllerManagerStatus(ref common.Ref
 							},
 						},
 						SchemaProps: spec.SchemaProps{
-							Description: "conditions represent the latest available observations of the configuration state. When omitted, it indicates that no conditions have been reported yet. The maximum number of conditions is 16. When set, at least one condition must be present. Conditions are stored as a map keyed by condition type, ensuring uniqueness.",
+							Description: "conditions represent the latest available observations of the configuration state. When omitted, it indicates that no conditions have been reported yet. The maximum number of conditions is 16. When set, at least one condition must be present. Conditions are stored as a map keyed by condition type, ensuring uniqueness.\n\nExpected condition types include: \"Progressing\": indicates whether the current spec is in the process of rolling out to kube-controller-manager.",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{

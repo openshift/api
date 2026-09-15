@@ -69,8 +69,9 @@ spec:
                 type: string
             type: object
           status:
-            description: status holds observed values from the cluster. They may not
-              be overridden.
+            description: |-
+              status holds observed values from the cluster. They may not be overridden.
+              When omitted, the status has not yet been reported by the cluster-kube-controller-manager-operator.
             minProperties: 1
             properties:
               conditions:
@@ -80,6 +81,9 @@ spec:
                   The maximum number of conditions is 16.
                   When set, at least one condition must be present.
                   Conditions are stored as a map keyed by condition type, ensuring uniqueness.
+
+                  Expected condition types include:
+                  "Progressing": indicates whether the current spec is in the process of rolling out to kube-controller-manager.
                 items:
                   description: Condition contains details for one aspect of the current
                     state of this API Resource.

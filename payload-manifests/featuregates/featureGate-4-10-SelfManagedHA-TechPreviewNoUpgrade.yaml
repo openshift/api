@@ -187,6 +187,9 @@
                         "name": "DNSNameResolver"
                     },
                     {
+                        "name": "DRAWorkloadResourceClaims"
+                    },
+                    {
                         "name": "DualReplica"
                     },
                     {
@@ -235,10 +238,16 @@
                         "name": "GCPSovereignCloudInstall"
                     },
                     {
+                        "name": "GangScheduling"
+                    },
+                    {
                         "name": "GatewayAPIManagementMode"
                     },
                     {
                         "name": "GatewayAPIWithoutOLM"
+                    },
+                    {
+                        "name": "GenericWorkload"
                     },
                     {
                         "name": "GomaxprocsInjection"
@@ -379,6 +388,9 @@
                         "name": "TLSGroupPreferences"
                     },
                     {
+                        "name": "TopologyAwareWorkloadScheduling"
+                    },
+                    {
                         "name": "UpgradeStatus"
                     },
                     {
@@ -395,6 +407,12 @@
                     },
                     {
                         "name": "VolumeGroupSnapshot"
+                    },
+                    {
+                        "name": "WorkloadAwarePreemption"
+                    },
+                    {
+                        "name": "WorkloadWithJob"
                     }
                 ],
                 "version": ""

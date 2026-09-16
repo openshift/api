@@ -395,9 +395,6 @@
                     },
                     {
                         "name": "VSpherePerComponentScopedCreds"
-                    },
-                    {
-                        "name": "VolumeGroupSnapshot"
                     }
                 ],
                 "version": ""

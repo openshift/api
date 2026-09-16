@@ -7582,6 +7582,16 @@
           "description": "clientCA is the certificate bundle for all the signers that you'll recognize for incoming client certificates",
           "type": "string"
         },
+        "curvePreferences": {
+          "description": "curvePreferences contains the allowed TLS key-exchange groups for the server. Values must match curve IDs from https://golang.org/pkg/crypto/tls/#pkg-constants. When omitted, the Go TLS implementation uses its default curve set.",
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "format": "int32",
+            "default": 0
+          },
+          "x-kubernetes-list-type": "atomic"
+        },
         "keyFile": {
           "description": "keyFile is a file containing a PEM-encoded private key for the certificate specified by CertFile",
           "type": "string",
@@ -11500,6 +11510,16 @@
         "clientCA": {
           "description": "clientCA is the certificate bundle for all the signers that you'll recognize for incoming client certificates",
           "type": "string"
+        },
+        "curvePreferences": {
+          "description": "curvePreferences contains the allowed TLS key-exchange groups for the server. Values must match curve IDs from https://golang.org/pkg/crypto/tls/#pkg-constants. When omitted, the Go TLS implementation uses its default curve set.",
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "format": "int32",
+            "default": 0
+          },
+          "x-kubernetes-list-type": "atomic"
         },
         "keyFile": {
           "description": "keyFile is a file containing a PEM-encoded private key for the certificate specified by CertFile",

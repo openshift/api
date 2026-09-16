@@ -6437,7 +6437,7 @@
       }
     },
     "com.github.openshift.api.config.v1.ControlPlaneTopologyTransition": {
-      "description": "ControlPlaneTopologyTransition describes one control-plane topology transition available from the cluster's current topology and whether it can currently be initiated. reason must be set whenever availability is Unavailable or Unknown; this is enforced by a validation rule on the entry as a whole.",
+      "description": "ControlPlaneTopologyTransition describes one control-plane topology transition available from the cluster's current topology and whether it can currently be initiated. source and target must differ. reason must be set whenever availability is Unavailable or Unknown; both constraints are enforced by validation rules on the entry as a whole.",
       "type": "object",
       "required": [
         "source",

@@ -1494,8 +1494,9 @@ spec:
                           description: |-
                             ControlPlaneTopologyTransition describes one control-plane topology transition
                             available from the cluster's current topology and whether it can currently be
-                            initiated. reason must be set whenever availability is Unavailable or Unknown;
-                            this is enforced by a validation rule on the entry as a whole.
+                            initiated. source and target must differ. reason must be set whenever
+                            availability is Unavailable or Unknown; both constraints are enforced by
+                            validation rules on the entry as a whole.
                           properties:
                             availability:
                               description: |-
@@ -1559,6 +1560,8 @@ spec:
                           - target
                           type: object
                           x-kubernetes-validations:
+                          - message: source and target must differ
+                            rule: self.source != self.target
                           - message: reason is required when availability is not Available
                             rule: self.availability == 'Available' || has(self.reason)
                         maxItems: 2

@@ -326,6 +326,29 @@ tests:
           controlPlaneTopology: HighlyAvailableArbiter
           infrastructureTopology: HighlyAvailable
           cpuPartitioning: None
+    - name: Should allow setting controlPlaneTopologyTransitions to an empty list when status.controlPlaneTopology is outside the source/target enum (e.g. HighlyAvailableArbiter)
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        spec: {}
+        status:
+          controlPlaneTopology: HighlyAvailableArbiter
+      updated: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        spec: {}
+        status:
+          controlPlaneTopology: HighlyAvailableArbiter
+          controlPlaneTopologyTransitions: []
+      expected: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        spec: {}
+        status:
+          controlPlaneTopology: HighlyAvailableArbiter
+          infrastructureTopology: HighlyAvailable
+          cpuPartitioning: None
+          controlPlaneTopologyTransitions: []
     - name: Should allow setting controlPlaneTopologyTransitions to an Available entry with no reason
       initial: |
         apiVersion: config.openshift.io/v1
@@ -419,7 +442,36 @@ tests:
             target: HighlyAvailable
             availability: Unknown
             reason: EvaluationPending
-    - name: Should allow setting every schema-permitted target for the current source in controlPlaneTopologyTransitions as a MaxItems boundary test
+    - name: Should allow a valid controlPlaneTopologyTransitions entry for the current source
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        spec: {}
+        status:
+          controlPlaneTopology: SingleReplica
+      updated: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        spec: {}
+        status:
+          controlPlaneTopology: SingleReplica
+          controlPlaneTopologyTransitions:
+          - source: SingleReplica
+            target: HighlyAvailable
+            availability: Available
+      expected: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        spec: {}
+        status:
+          controlPlaneTopology: SingleReplica
+          infrastructureTopology: HighlyAvailable
+          cpuPartitioning: None
+          controlPlaneTopologyTransitions:
+          - source: SingleReplica
+            target: HighlyAvailable
+            availability: Available
+    - name: Should not allow a self-transition in controlPlaneTopologyTransitions
       initial: |
         apiVersion: config.openshift.io/v1
         kind: Infrastructure
@@ -436,24 +488,7 @@ tests:
           - source: SingleReplica
             target: SingleReplica
             availability: Available
-          - source: SingleReplica
-            target: HighlyAvailable
-            availability: Available
-      expected: |
-        apiVersion: config.openshift.io/v1
-        kind: Infrastructure
-        spec: {}
-        status:
-          controlPlaneTopology: SingleReplica
-          infrastructureTopology: HighlyAvailable
-          cpuPartitioning: None
-          controlPlaneTopologyTransitions:
-          - source: SingleReplica
-            target: SingleReplica
-            availability: Available
-          - source: SingleReplica
-            target: HighlyAvailable
-            availability: Available
+      expectedStatusError: "source and target must differ"
     - name: Should not allow a controlPlaneTopologyTransitions entry whose source differs from status controlPlaneTopology
       initial: |
         apiVersion: config.openshift.io/v1
@@ -526,6 +561,81 @@ tests:
             target: HighlyAvailable
             availability: Pending
       expectedStatusError: 'status.controlPlaneTopologyTransitions[0].availability: Unsupported value: "Pending": supported values: "Available", "Unavailable", "Unknown"'
+    - name: Should not allow a controlPlaneTopologyTransitions entry without source
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        spec: {}
+        status:
+          controlPlaneTopology: SingleReplica
+      updated: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        spec: {}
+        status:
+          controlPlaneTopology: SingleReplica
+          controlPlaneTopologyTransitions:
+          - target: HighlyAvailable
+            availability: Available
+      expectedStatusError: "Required value"
+    - name: Should not allow a controlPlaneTopologyTransitions entry without target
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        spec: {}
+        status:
+          controlPlaneTopology: SingleReplica
+      updated: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        spec: {}
+        status:
+          controlPlaneTopology: SingleReplica
+          controlPlaneTopologyTransitions:
+          - source: SingleReplica
+            availability: Available
+      expectedStatusError: "Required value"
+    - name: Should not allow a controlPlaneTopologyTransitions entry without availability
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        spec: {}
+        status:
+          controlPlaneTopology: SingleReplica
+      updated: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        spec: {}
+        status:
+          controlPlaneTopology: SingleReplica
+          controlPlaneTopologyTransitions:
+          - source: SingleReplica
+            target: HighlyAvailable
+      expectedStatusError: "Required value"
+    - name: Should not allow more than two controlPlaneTopologyTransitions entries
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        spec: {}
+        status:
+          controlPlaneTopology: SingleReplica
+      updated: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        spec: {}
+        status:
+          controlPlaneTopology: SingleReplica
+          controlPlaneTopologyTransitions:
+          - source: SingleReplica
+            target: HighlyAvailable
+            availability: Available
+          - source: HighlyAvailable
+            target: SingleReplica
+            availability: Available
+          - source: HighlyAvailable
+            target: HighlyAvailable
+            availability: Available
+      expectedStatusError: "Too many: 3: must have at most 2 items"
     - name: Should not allow an Unavailable controlPlaneTopologyTransitions entry without a reason
       initial: |
         apiVersion: config.openshift.io/v1

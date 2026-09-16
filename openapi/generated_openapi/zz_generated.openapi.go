@@ -12755,7 +12755,7 @@ func schema_openshift_api_config_v1_ControlPlaneTopologyTransition(ref common.Re
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
-				Description: "ControlPlaneTopologyTransition describes one control-plane topology transition available from the cluster's current topology and whether it can currently be initiated. reason must be set whenever availability is Unavailable or Unknown; this is enforced by a validation rule on the entry as a whole.",
+				Description: "ControlPlaneTopologyTransition describes one control-plane topology transition available from the cluster's current topology and whether it can currently be initiated. source and target must differ. reason must be set whenever availability is Unavailable or Unknown; both constraints are enforced by validation rules on the entry as a whole.",
 				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
 					"source": {

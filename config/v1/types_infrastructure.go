@@ -209,8 +209,10 @@ const (
 
 // ControlPlaneTopologyTransition describes one control-plane topology transition
 // available from the cluster's current topology and whether it can currently be
-// initiated. reason must be set whenever availability is Unavailable or Unknown;
-// this is enforced by a validation rule on the entry as a whole.
+// initiated. source and target must differ. reason must be set whenever
+// availability is Unavailable or Unknown; both constraints are enforced by
+// validation rules on the entry as a whole.
+// +kubebuilder:validation:XValidation:rule="self.source != self.target",message="source and target must differ"
 // +kubebuilder:validation:XValidation:rule="self.availability == 'Available' || has(self.reason)",message="reason is required when availability is not Available"
 type ControlPlaneTopologyTransition struct {
 	// source is the topology this transition starts from. It equals the current

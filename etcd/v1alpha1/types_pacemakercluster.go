@@ -716,6 +716,33 @@ type PacemakerClusterResourceStatus struct {
 	// Fencing agents are tracked separately in the node's fencingAgents field.
 	// +required
 	Name PacemakerClusterResourceName `json:"name,omitempty"`
+
+	// failCount is the current failure count Pacemaker records for this resource on
+	// this node, as reported by the CIB. Pacemaker increments this count each time an
+	// operation for this resource fails, and resets it to zero when a `pcs resource
+	// cleanup` is performed. The value must be zero or greater. This field is optional
+	// and is omitted when the status collector has not yet observed a fail count for
+	// this resource, for example on a freshly bootstrapped cluster or for a resource
+	// that has never failed.
+	// +kubebuilder:validation:Minimum=0
+	// +optional
+	FailCount *int32 `json:"failCount,omitempty"`
+
+	// lastStopTime is the timestamp of the most recent stop operation observed for
+	// this resource on this node, as reported by the CIB. This field is optional and
+	// is omitted when no stop operation has been observed for this resource on this
+	// node.
+	// +kubebuilder:validation:Format=date-time
+	// +optional
+	LastStopTime *metav1.Time `json:"lastStopTime,omitempty"`
+
+	// lastStartTime is the timestamp of the most recent start operation observed for
+	// this resource on this node, as reported by the CIB. This field is optional and
+	// is omitted when no start operation has been observed for this resource on this
+	// node.
+	// +kubebuilder:validation:Format=date-time
+	// +optional
+	LastStartTime *metav1.Time `json:"lastStartTime,omitempty"`
 }
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object

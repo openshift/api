@@ -30383,12 +30383,31 @@ func schema_openshift_api_etcd_v1_PacemakerClusterResourceStatus(ref common.Refe
 							Enum:        []interface{}{"Etcd", "Kubelet"},
 						},
 					},
+					"failCount": {
+						SchemaProps: spec.SchemaProps{
+							Description: "failCount is the current failure count Pacemaker records for this resource on this node, as reported by the CIB. Pacemaker increments this count each time an operation for this resource fails, and resets it to zero when a `pcs resource cleanup` is performed. The value must be zero or greater. This field is optional and is omitted when the status collector has not yet observed a fail count for this resource, for example on a freshly bootstrapped cluster or for a resource that has never failed.",
+							Type:        []string{"integer"},
+							Format:      "int32",
+						},
+					},
+					"lastStopTime": {
+						SchemaProps: spec.SchemaProps{
+							Description: "lastStopTime is the timestamp of the most recent stop operation observed for this resource on this node, as reported by the CIB. This field is optional and is omitted when no stop operation has been observed for this resource on this node.",
+							Ref:         ref(metav1.Time{}.OpenAPIModelName()),
+						},
+					},
+					"lastStartTime": {
+						SchemaProps: spec.SchemaProps{
+							Description: "lastStartTime is the timestamp of the most recent start operation observed for this resource on this node, as reported by the CIB. This field is optional and is omitted when no start operation has been observed for this resource on this node.",
+							Ref:         ref(metav1.Time{}.OpenAPIModelName()),
+						},
+					},
 				},
 				Required: []string{"conditions", "name"},
 			},
 		},
 		Dependencies: []string{
-			metav1.Condition{}.OpenAPIModelName()},
+			metav1.Condition{}.OpenAPIModelName(), metav1.Time{}.OpenAPIModelName()},
 	}
 }
 
@@ -30780,12 +30799,31 @@ func schema_openshift_api_etcd_v1alpha1_PacemakerClusterResourceStatus(ref commo
 							Enum:        []interface{}{"Etcd", "Kubelet"},
 						},
 					},
+					"failCount": {
+						SchemaProps: spec.SchemaProps{
+							Description: "failCount is the current failure count Pacemaker records for this resource on this node, as reported by the CIB. Pacemaker increments this count each time an operation for this resource fails, and resets it to zero when a `pcs resource cleanup` is performed. The value must be zero or greater. This field is optional and is omitted when the status collector has not yet observed a fail count for this resource, for example on a freshly bootstrapped cluster or for a resource that has never failed.",
+							Type:        []string{"integer"},
+							Format:      "int32",
+						},
+					},
+					"lastStopTime": {
+						SchemaProps: spec.SchemaProps{
+							Description: "lastStopTime is the timestamp of the most recent stop operation observed for this resource on this node, as reported by the CIB. This field is optional and is omitted when no stop operation has been observed for this resource on this node.",
+							Ref:         ref(metav1.Time{}.OpenAPIModelName()),
+						},
+					},
+					"lastStartTime": {
+						SchemaProps: spec.SchemaProps{
+							Description: "lastStartTime is the timestamp of the most recent start operation observed for this resource on this node, as reported by the CIB. This field is optional and is omitted when no start operation has been observed for this resource on this node.",
+							Ref:         ref(metav1.Time{}.OpenAPIModelName()),
+						},
+					},
 				},
 				Required: []string{"conditions", "name"},
 			},
 		},
 		Dependencies: []string{
-			metav1.Condition{}.OpenAPIModelName()},
+			metav1.Condition{}.OpenAPIModelName(), metav1.Time{}.OpenAPIModelName()},
 	}
 }
 

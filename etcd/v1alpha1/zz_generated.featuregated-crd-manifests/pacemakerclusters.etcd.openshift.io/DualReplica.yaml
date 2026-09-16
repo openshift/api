@@ -52,6 +52,115 @@ spec:
               This field is optional on creation - the status collector populates it immediately after creating
               the resource via the status subresource.
             properties:
+              alertAgents:
+                description: |-
+                  alertAgents contains the cluster-wide registration status of pacemaker alert
+                  agents used for auto-tainting nodes after fencing events.
+                  This field is optional and is omitted when alert agent status has not yet been
+                  collected by the status collector (including by a collector version that
+                  predates this field) or when no alert agents are configured.
+                  Names must be unique within this array.
+                items:
+                  description: |-
+                    PacemakerClusterAlertAgentStatus represents the cluster-wide registration status
+                    of a pacemaker alert agent.
+                  properties:
+                    conditions:
+                      description: |-
+                        conditions represent the observations of the alert agent's current state.
+                        Known condition types are "Healthy" (aggregate) and "Configured" (registered
+                        in the CIB with the expected script path and event filter).
+                        If this alert agent's state has not yet been observed by the status collector,
+                        publish these conditions with status "Unknown" and reason "Pending".
+                        Reserve "False" for an observed failure.
+                        Each of these conditions is required, so the array must contain at least 2 items.
+                      items:
+                        description: Condition contains details for one aspect of
+                          the current state of this API Resource.
+                        properties:
+                          lastTransitionTime:
+                            description: |-
+                              lastTransitionTime is the last time the condition transitioned from one status to another.
+                              This should be when the underlying condition changed.  If that is not known, then using the time when the API field changed is acceptable.
+                            format: date-time
+                            type: string
+                          message:
+                            description: |-
+                              message is a human readable message indicating details about the transition.
+                              This may be an empty string.
+                            maxLength: 32768
+                            type: string
+                          observedGeneration:
+                            description: |-
+                              observedGeneration represents the .metadata.generation that the condition was set based upon.
+                              For instance, if .metadata.generation is currently 12, but the .status.conditions[x].observedGeneration is 9, the condition is out of date
+                              with respect to the current state of the instance.
+                            format: int64
+                            minimum: 0
+                            type: integer
+                          reason:
+                            description: |-
+                              reason contains a programmatic identifier indicating the reason for the condition's last transition.
+                              Producers of specific condition types may define expected values and meanings for this field,
+                              and whether the values are considered a guaranteed API.
+                              The value should be a CamelCase string.
+                              This field may not be empty.
+                            maxLength: 1024
+                            minLength: 1
+                            pattern: ^[A-Za-z]([A-Za-z0-9_,:]*[A-Za-z0-9_])?$
+                            type: string
+                          status:
+                            description: status of the condition, one of True, False,
+                              Unknown.
+                            enum:
+                            - "True"
+                            - "False"
+                            - Unknown
+                            type: string
+                          type:
+                            description: type of condition in CamelCase or in foo.example.com/CamelCase.
+                            maxLength: 316
+                            pattern: ^([a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*/)?(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])$
+                            type: string
+                        required:
+                        - lastTransitionTime
+                        - message
+                        - reason
+                        - status
+                        - type
+                        type: object
+                      maxItems: 8
+                      minItems: 2
+                      type: array
+                      x-kubernetes-list-map-keys:
+                      - type
+                      x-kubernetes-list-type: map
+                      x-kubernetes-validations:
+                      - message: conditions must contain a condition of type Healthy
+                        rule: self.exists(c, c.type == 'Healthy')
+                      - message: conditions must contain a condition of type Configured
+                        rule: self.exists(c, c.type == 'Configured')
+                    name:
+                      description: |-
+                        name is the name of the pacemaker alert agent.
+                        Valid values are "Taint Alert Agent" and "Untaint Alert Agent".
+                      enum:
+                      - Taint Alert Agent
+                      - Untaint Alert Agent
+                      type: string
+                  required:
+                  - conditions
+                  - name
+                  type: object
+                maxItems: 8
+                minItems: 0
+                type: array
+                x-kubernetes-list-map-keys:
+                - name
+                x-kubernetes-list-type: map
+                x-kubernetes-validations:
+                - message: alert agent names must be unique
+                  rule: self.all(x, self.exists_one(y, x.name == y.name))
               conditions:
                 description: |-
                   conditions represent the observations of the pacemaker cluster's current state.
@@ -187,6 +296,121 @@ spec:
                       minItems: 1
                       type: array
                       x-kubernetes-list-type: atomic
+                    alertAgentScripts:
+                      description: |-
+                        alertAgentScripts contains the presence status of each alert agent's script on
+                        this node. Alert agents are registered cluster-wide in the CIB,
+                        but their scripts are delivered independently to each node by MCO, so presence
+                        is tracked per node to catch delivery gaps between nodes.
+                        This field is optional and is omitted when script-presence status has not yet
+                        been collected by the status collector (including by a collector version that
+                        predates this field). Names must be unique within this array.
+                      items:
+                        description: |-
+                          PacemakerClusterAlertAgentScriptStatus represents the presence of an alert
+                          agent's script on a specific node. Alert agent registration is cluster-wide,
+                          but the script it invokes must exist locally on whichever node the triggering
+                          event occurs on, since Pacemaker executes it there — this is tracked per node
+                        properties:
+                          conditions:
+                            description: |-
+                              conditions represent the observations of the alert agent script's state on this node.
+                              Known condition types are "Healthy" (aggregate) and "ScriptPresent" (the script
+                              file exists and is executable on this node).
+                              If this script's presence has not yet been observed by the status collector, publish
+                              these conditions with status "Unknown" and reason "Pending".
+                              Reserve "False" for an observed failure.
+                              Each of these conditions is required, so the array must contain at least 2 items.
+                            items:
+                              description: Condition contains details for one aspect
+                                of the current state of this API Resource.
+                              properties:
+                                lastTransitionTime:
+                                  description: |-
+                                    lastTransitionTime is the last time the condition transitioned from one status to another.
+                                    This should be when the underlying condition changed.  If that is not known, then using the time when the API field changed is acceptable.
+                                  format: date-time
+                                  type: string
+                                message:
+                                  description: |-
+                                    message is a human readable message indicating details about the transition.
+                                    This may be an empty string.
+                                  maxLength: 32768
+                                  type: string
+                                observedGeneration:
+                                  description: |-
+                                    observedGeneration represents the .metadata.generation that the condition was set based upon.
+                                    For instance, if .metadata.generation is currently 12, but the .status.conditions[x].observedGeneration is 9, the condition is out of date
+                                    with respect to the current state of the instance.
+                                  format: int64
+                                  minimum: 0
+                                  type: integer
+                                reason:
+                                  description: |-
+                                    reason contains a programmatic identifier indicating the reason for the condition's last transition.
+                                    Producers of specific condition types may define expected values and meanings for this field,
+                                    and whether the values are considered a guaranteed API.
+                                    The value should be a CamelCase string.
+                                    This field may not be empty.
+                                  maxLength: 1024
+                                  minLength: 1
+                                  pattern: ^[A-Za-z]([A-Za-z0-9_,:]*[A-Za-z0-9_])?$
+                                  type: string
+                                status:
+                                  description: status of the condition, one of True,
+                                    False, Unknown.
+                                  enum:
+                                  - "True"
+                                  - "False"
+                                  - Unknown
+                                  type: string
+                                type:
+                                  description: type of condition in CamelCase or in
+                                    foo.example.com/CamelCase.
+                                  maxLength: 316
+                                  pattern: ^([a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*/)?(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])$
+                                  type: string
+                              required:
+                              - lastTransitionTime
+                              - message
+                              - reason
+                              - status
+                              - type
+                              type: object
+                            maxItems: 8
+                            minItems: 2
+                            type: array
+                            x-kubernetes-list-map-keys:
+                            - type
+                            x-kubernetes-list-type: map
+                            x-kubernetes-validations:
+                            - message: conditions must contain a condition of type
+                                Healthy
+                              rule: self.exists(c, c.type == 'Healthy')
+                            - message: conditions must contain a condition of type
+                                ScriptPresent
+                              rule: self.exists(c, c.type == 'ScriptPresent')
+                          name:
+                            description: |-
+                              name is the name of the pacemaker alert agent this script belongs to.
+                              Valid values are "Taint Alert Agent" and "Untaint Alert Agent".
+                            enum:
+                            - Taint Alert Agent
+                            - Untaint Alert Agent
+                            type: string
+                        required:
+                        - conditions
+                        - name
+                        type: object
+                      maxItems: 8
+                      minItems: 0
+                      type: array
+                      x-kubernetes-list-map-keys:
+                      - name
+                      x-kubernetes-list-type: map
+                      x-kubernetes-validations:
+                      - message: alert agent names must be unique
+                        rule: self.all(x, self.exists_one(y, x.name == y.name))
                     conditions:
                       description: |-
                         conditions represent the observations of the node's current state.

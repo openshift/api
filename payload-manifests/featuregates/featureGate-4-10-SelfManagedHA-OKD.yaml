@@ -131,6 +131,9 @@
                         "name": "Example2"
                     },
                     {
+                        "name": "ExternalOIDCAsWebhook"
+                    },
+                    {
                         "name": "ExternalOIDCExternalClaimsSourcing"
                     },
                     {

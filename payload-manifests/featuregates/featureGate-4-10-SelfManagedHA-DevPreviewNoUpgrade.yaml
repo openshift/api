@@ -193,6 +193,9 @@
                         "name": "ExternalOIDC"
                     },
                     {
+                        "name": "ExternalOIDCAsWebhook"
+                    },
+                    {
                         "name": "ExternalOIDCExternalClaimsSourcing"
                     },
                     {

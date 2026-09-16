@@ -69,7 +69,6 @@ tests:
             kms:
               type: Vault
               vault:
-                kmsPluginImage: registry.example.com/vault-plugin@sha256:0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef
                 vaultAddress: https://vault.example.com:8200
                 authentication:
                   type: AppRole

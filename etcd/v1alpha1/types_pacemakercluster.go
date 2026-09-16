@@ -659,6 +659,7 @@ type PacemakerClusterStatus struct {
 	// This field is optional and is omitted when alert agent status has not yet been
 	// collected by the status collector (including by a collector version that
 	// predates this field) or when no alert agents are configured.
+	// When present, this array contains at most 8 entries.
 	// Names must be unique within this array.
 	// +listType=map
 	// +listMapKey=name
@@ -759,7 +760,8 @@ type PacemakerClusterNodeStatus struct {
 	// is tracked per node to catch delivery gaps between nodes.
 	// This field is optional and is omitted when script-presence status has not yet
 	// been collected by the status collector (including by a collector version that
-	// predates this field). Names must be unique within this array.
+	// predates this field). When present, this array contains at most 8 entries.
+	// Names must be unique within this array.
 	// +listType=map
 	// +listMapKey=name
 	// +kubebuilder:validation:MinItems=0
@@ -875,7 +877,7 @@ type PacemakerClusterAlertAgentStatus struct {
 	// If this alert agent's state has not yet been observed by the status collector,
 	// publish these conditions with status "Unknown" and reason "Pending".
 	// Reserve "False" for an observed failure.
-	// Each of these conditions is required, so the array must contain at least 2 items.
+	// Each of these conditions is required, so the array must contain at least 2 and at most 8 items.
 	// +listType=map
 	// +listMapKey=type
 	// +kubebuilder:validation:MinItems=2
@@ -885,7 +887,7 @@ type PacemakerClusterAlertAgentStatus struct {
 	// +required
 	Conditions []metav1.Condition `json:"conditions,omitempty"`
 
-	// name is the name of the pacemaker alert agent.
+	// name is the name of the pacemaker alert agent. This field is required.
 	// Valid values are "Taint Alert Agent" and "Untaint Alert Agent".
 	// +required
 	Name PacemakerClusterAlertAgentName `json:"name,omitempty"`
@@ -902,7 +904,7 @@ type PacemakerClusterAlertAgentScriptStatus struct {
 	// If this script's presence has not yet been observed by the status collector, publish
 	// these conditions with status "Unknown" and reason "Pending".
 	// Reserve "False" for an observed failure.
-	// Each of these conditions is required, so the array must contain at least 2 items.
+	// Each of these conditions is required, so the array must contain at least 2 and at most 8 items.
 	// +listType=map
 	// +listMapKey=type
 	// +kubebuilder:validation:MinItems=2
@@ -912,7 +914,7 @@ type PacemakerClusterAlertAgentScriptStatus struct {
 	// +required
 	Conditions []metav1.Condition `json:"conditions,omitempty"`
 
-	// name is the name of the pacemaker alert agent this script belongs to.
+	// name is the name of the pacemaker alert agent this script belongs to. This field is required.
 	// Valid values are "Taint Alert Agent" and "Untaint Alert Agent".
 	// +required
 	Name PacemakerClusterAlertAgentName `json:"name,omitempty"`

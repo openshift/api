@@ -30115,7 +30115,7 @@ func schema_openshift_api_etcd_v1_PacemakerClusterAlertAgentScriptStatus(ref com
 							},
 						},
 						SchemaProps: spec.SchemaProps{
-							Description: "conditions represent the observations of the alert agent script's state on this node. Known condition types are \"Healthy\" (aggregate) and \"ScriptPresent\" (the script file exists and is executable on this node). If this script's presence has not yet been observed by the status collector, publish these conditions with status \"Unknown\" and reason \"Pending\". Reserve \"False\" for an observed failure. Each of these conditions is required, so the array must contain at least 2 items.",
+							Description: "conditions represent the observations of the alert agent script's state on this node. Known condition types are \"Healthy\" (aggregate) and \"ScriptPresent\" (the script file exists and is executable on this node). If this script's presence has not yet been observed by the status collector, publish these conditions with status \"Unknown\" and reason \"Pending\". Reserve \"False\" for an observed failure. Each of these conditions is required, so the array must contain at least 2 and at most 8 items.",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -30129,7 +30129,7 @@ func schema_openshift_api_etcd_v1_PacemakerClusterAlertAgentScriptStatus(ref com
 					},
 					"name": {
 						SchemaProps: spec.SchemaProps{
-							Description: "name is the name of the pacemaker alert agent this script belongs to. Valid values are \"Taint Alert Agent\" and \"Untaint Alert Agent\".\n\nPossible enum values:\n - `\"Taint Alert Agent\"` is the alert agent that taints a node after it is fenced.\n - `\"Untaint Alert Agent\"` is the alert agent that removes a node's taint once it rejoins the cluster.",
+							Description: "name is the name of the pacemaker alert agent this script belongs to. This field is required. Valid values are \"Taint Alert Agent\" and \"Untaint Alert Agent\".\n\nPossible enum values:\n - `\"Taint Alert Agent\"` is the alert agent that taints a node after it is fenced.\n - `\"Untaint Alert Agent\"` is the alert agent that removes a node's taint once it rejoins the cluster.",
 							Type:        []string{"string"},
 							Format:      "",
 							Enum:        []interface{}{"Taint Alert Agent", "Untaint Alert Agent"},
@@ -30161,7 +30161,7 @@ func schema_openshift_api_etcd_v1_PacemakerClusterAlertAgentStatus(ref common.Re
 							},
 						},
 						SchemaProps: spec.SchemaProps{
-							Description: "conditions represent the observations of the alert agent's current state. Known condition types are \"Healthy\" (aggregate) and \"Configured\" (registered in the CIB with the expected script path and event filter). If this alert agent's state has not yet been observed by the status collector, publish these conditions with status \"Unknown\" and reason \"Pending\". Reserve \"False\" for an observed failure. Each of these conditions is required, so the array must contain at least 2 items.",
+							Description: "conditions represent the observations of the alert agent's current state. Known condition types are \"Healthy\" (aggregate) and \"Configured\" (registered in the CIB with the expected script path and event filter). If this alert agent's state has not yet been observed by the status collector, publish these conditions with status \"Unknown\" and reason \"Pending\". Reserve \"False\" for an observed failure. Each of these conditions is required, so the array must contain at least 2 and at most 8 items.",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -30175,7 +30175,7 @@ func schema_openshift_api_etcd_v1_PacemakerClusterAlertAgentStatus(ref common.Re
 					},
 					"name": {
 						SchemaProps: spec.SchemaProps{
-							Description: "name is the name of the pacemaker alert agent. Valid values are \"Taint Alert Agent\" and \"Untaint Alert Agent\".\n\nPossible enum values:\n - `\"Taint Alert Agent\"` is the alert agent that taints a node after it is fenced.\n - `\"Untaint Alert Agent\"` is the alert agent that removes a node's taint once it rejoins the cluster.",
+							Description: "name is the name of the pacemaker alert agent. This field is required. Valid values are \"Taint Alert Agent\" and \"Untaint Alert Agent\".\n\nPossible enum values:\n - `\"Taint Alert Agent\"` is the alert agent that taints a node after it is fenced.\n - `\"Untaint Alert Agent\"` is the alert agent that removes a node's taint once it rejoins the cluster.",
 							Type:        []string{"string"},
 							Format:      "",
 							Enum:        []interface{}{"Taint Alert Agent", "Untaint Alert Agent"},
@@ -30403,7 +30403,7 @@ func schema_openshift_api_etcd_v1_PacemakerClusterNodeStatus(ref common.Referenc
 							},
 						},
 						SchemaProps: spec.SchemaProps{
-							Description: "alertAgentScripts contains the presence status of each alert agent's script on this node. Alert agents are registered cluster-wide in the CIB, but their scripts are delivered independently to each node by MCO, so presence is tracked per node to catch delivery gaps between nodes. This field is optional and is omitted when script-presence status has not yet been collected by the status collector (including by a collector version that predates this field). Names must be unique within this array.",
+							Description: "alertAgentScripts contains the presence status of each alert agent's script on this node. Alert agents are registered cluster-wide in the CIB, but their scripts are delivered independently to each node by MCO, so presence is tracked per node to catch delivery gaps between nodes. This field is optional and is omitted when script-presence status has not yet been collected by the status collector (including by a collector version that predates this field). When present, this array contains at most 8 entries. Names must be unique within this array.",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -30537,7 +30537,7 @@ func schema_openshift_api_etcd_v1_PacemakerClusterStatus(ref common.ReferenceCal
 							},
 						},
 						SchemaProps: spec.SchemaProps{
-							Description: "alertAgents contains the cluster-wide registration status of pacemaker alert agents used for auto-tainting nodes after fencing events. This field is optional and is omitted when alert agent status has not yet been collected by the status collector (including by a collector version that predates this field) or when no alert agents are configured. Names must be unique within this array.",
+							Description: "alertAgents contains the cluster-wide registration status of pacemaker alert agents used for auto-tainting nodes after fencing events. This field is optional and is omitted when alert agent status has not yet been collected by the status collector (including by a collector version that predates this field) or when no alert agents are configured. When present, this array contains at most 8 entries. Names must be unique within this array.",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -30648,7 +30648,7 @@ func schema_openshift_api_etcd_v1alpha1_PacemakerClusterAlertAgentScriptStatus(r
 							},
 						},
 						SchemaProps: spec.SchemaProps{
-							Description: "conditions represent the observations of the alert agent script's state on this node. Known condition types are \"Healthy\" (aggregate) and \"ScriptPresent\" (the script file exists and is executable on this node). If this script's presence has not yet been observed by the status collector, publish these conditions with status \"Unknown\" and reason \"Pending\". Reserve \"False\" for an observed failure. Each of these conditions is required, so the array must contain at least 2 items.",
+							Description: "conditions represent the observations of the alert agent script's state on this node. Known condition types are \"Healthy\" (aggregate) and \"ScriptPresent\" (the script file exists and is executable on this node). If this script's presence has not yet been observed by the status collector, publish these conditions with status \"Unknown\" and reason \"Pending\". Reserve \"False\" for an observed failure. Each of these conditions is required, so the array must contain at least 2 and at most 8 items.",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -30662,7 +30662,7 @@ func schema_openshift_api_etcd_v1alpha1_PacemakerClusterAlertAgentScriptStatus(r
 					},
 					"name": {
 						SchemaProps: spec.SchemaProps{
-							Description: "name is the name of the pacemaker alert agent this script belongs to. Valid values are \"Taint Alert Agent\" and \"Untaint Alert Agent\".\n\nPossible enum values:\n - `\"Taint Alert Agent\"` is the alert agent that taints a node after it is fenced.\n - `\"Untaint Alert Agent\"` is the alert agent that removes a node's taint once it rejoins the cluster.",
+							Description: "name is the name of the pacemaker alert agent this script belongs to. This field is required. Valid values are \"Taint Alert Agent\" and \"Untaint Alert Agent\".\n\nPossible enum values:\n - `\"Taint Alert Agent\"` is the alert agent that taints a node after it is fenced.\n - `\"Untaint Alert Agent\"` is the alert agent that removes a node's taint once it rejoins the cluster.",
 							Type:        []string{"string"},
 							Format:      "",
 							Enum:        []interface{}{"Taint Alert Agent", "Untaint Alert Agent"},
@@ -30694,7 +30694,7 @@ func schema_openshift_api_etcd_v1alpha1_PacemakerClusterAlertAgentStatus(ref com
 							},
 						},
 						SchemaProps: spec.SchemaProps{
-							Description: "conditions represent the observations of the alert agent's current state. Known condition types are \"Healthy\" (aggregate) and \"Configured\" (registered in the CIB with the expected script path and event filter). If this alert agent's state has not yet been observed by the status collector, publish these conditions with status \"Unknown\" and reason \"Pending\". Reserve \"False\" for an observed failure. Each of these conditions is required, so the array must contain at least 2 items.",
+							Description: "conditions represent the observations of the alert agent's current state. Known condition types are \"Healthy\" (aggregate) and \"Configured\" (registered in the CIB with the expected script path and event filter). If this alert agent's state has not yet been observed by the status collector, publish these conditions with status \"Unknown\" and reason \"Pending\". Reserve \"False\" for an observed failure. Each of these conditions is required, so the array must contain at least 2 and at most 8 items.",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -30708,7 +30708,7 @@ func schema_openshift_api_etcd_v1alpha1_PacemakerClusterAlertAgentStatus(ref com
 					},
 					"name": {
 						SchemaProps: spec.SchemaProps{
-							Description: "name is the name of the pacemaker alert agent. Valid values are \"Taint Alert Agent\" and \"Untaint Alert Agent\".\n\nPossible enum values:\n - `\"Taint Alert Agent\"` is the alert agent that taints a node after it is fenced.\n - `\"Untaint Alert Agent\"` is the alert agent that removes a node's taint once it rejoins the cluster.",
+							Description: "name is the name of the pacemaker alert agent. This field is required. Valid values are \"Taint Alert Agent\" and \"Untaint Alert Agent\".\n\nPossible enum values:\n - `\"Taint Alert Agent\"` is the alert agent that taints a node after it is fenced.\n - `\"Untaint Alert Agent\"` is the alert agent that removes a node's taint once it rejoins the cluster.",
 							Type:        []string{"string"},
 							Format:      "",
 							Enum:        []interface{}{"Taint Alert Agent", "Untaint Alert Agent"},
@@ -30936,7 +30936,7 @@ func schema_openshift_api_etcd_v1alpha1_PacemakerClusterNodeStatus(ref common.Re
 							},
 						},
 						SchemaProps: spec.SchemaProps{
-							Description: "alertAgentScripts contains the presence status of each alert agent's script on this node. Alert agents are registered cluster-wide in the CIB, but their scripts are delivered independently to each node by MCO, so presence is tracked per node to catch delivery gaps between nodes. This field is optional and is omitted when script-presence status has not yet been collected by the status collector (including by a collector version that predates this field). Names must be unique within this array.",
+							Description: "alertAgentScripts contains the presence status of each alert agent's script on this node. Alert agents are registered cluster-wide in the CIB, but their scripts are delivered independently to each node by MCO, so presence is tracked per node to catch delivery gaps between nodes. This field is optional and is omitted when script-presence status has not yet been collected by the status collector (including by a collector version that predates this field). When present, this array contains at most 8 entries. Names must be unique within this array.",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -31070,7 +31070,7 @@ func schema_openshift_api_etcd_v1alpha1_PacemakerClusterStatus(ref common.Refere
 							},
 						},
 						SchemaProps: spec.SchemaProps{
-							Description: "alertAgents contains the cluster-wide registration status of pacemaker alert agents used for auto-tainting nodes after fencing events. This field is optional and is omitted when alert agent status has not yet been collected by the status collector (including by a collector version that predates this field) or when no alert agents are configured. Names must be unique within this array.",
+							Description: "alertAgents contains the cluster-wide registration status of pacemaker alert agents used for auto-tainting nodes after fencing events. This field is optional and is omitted when alert agent status has not yet been collected by the status collector (including by a collector version that predates this field) or when no alert agents are configured. When present, this array contains at most 8 entries. Names must be unique within this array.",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{

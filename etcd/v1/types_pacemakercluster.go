@@ -15,7 +15,7 @@ const (
 	// - ClusterInServiceConditionType
 	// - ClusterNodeCountAsExpectedConditionType
 	// - NodeHealthyConditionType (for each node)
-	// - AlertAgentHealthyConditionType (for each alert agent in status.alertAgents, when populated)
+	// - ClusterAlertAgentsConfiguredConditionType (when populated)
 	// When True, the cluster is healthy with reason "ClusterHealthy".
 	// When False, the cluster is unhealthy with reason "ClusterUnhealthy".
 	ClusterHealthyConditionType = "Healthy"
@@ -31,6 +31,42 @@ const (
 	// When True, the expected number of nodes are present with reason "AsExpected".
 	// When False, the node count is incorrect with reason "InsufficientNodes" or "ExcessiveNodes".
 	ClusterNodeCountAsExpectedConditionType = "NodeCountAsExpected"
+
+	// ClusterAlertAgentsConfiguredConditionType tracks whether all known pacemaker alert agents
+	// (tnf-taint-alert, tnf-untaint-alert) are registered in the CIB with the expected script path
+	// and event filter. Alert agents are cluster-wide CIB objects: a single registration is shared
+	// by all nodes via Pacemaker's CIB replication, unlike fencing agents and resources which are
+	// node-scoped, so this is a single aggregate condition.
+	// When True, all known alert agents are registered as expected with reason "Configured".
+	// When False, at least one alert agent is not registered with reason "Missing", or all are
+	// registered but at least one has an unexpected script path or event filter with reason
+	// "Misconfigured" (Missing takes priority over Misconfigured when both problems exist across
+	// different agents). The message names the specific agent(s) affected.
+	// When Unknown, alert agent registration has not yet been observed this run by the status
+	// collector with reason "Pending". This is expected to be temporary, e.g. immediately after
+	// upgrade or before the first successful CIB collection completes.
+	ClusterAlertAgentsConfiguredConditionType = "AlertAgentsConfigured"
+)
+
+// ClusterAlertAgentsConfigured condition reasons
+const (
+	// ClusterAlertAgentsConfiguredReasonConfigured means all known alert agents are registered in
+	// the CIB with the expected script path and event filter. This is the normal operating state.
+	ClusterAlertAgentsConfiguredReasonConfigured = "Configured"
+
+	// ClusterAlertAgentsConfiguredReasonMissing means at least one known alert agent is not
+	// registered in the CIB at all. This is an unexpected state and takes priority over
+	// Misconfigured when both problems exist across different agents.
+	ClusterAlertAgentsConfiguredReasonMissing = "Missing"
+
+	// ClusterAlertAgentsConfiguredReasonMisconfigured means every known alert agent is registered,
+	// but at least one has an unexpected script path or event filter. This is an unexpected state.
+	ClusterAlertAgentsConfiguredReasonMisconfigured = "Misconfigured"
+
+	// ClusterAlertAgentsConfiguredReasonPending means alert agent registration has not yet been
+	// observed this run by the status collector. Used only with status "Unknown". This is expected
+	// to be temporary, e.g. immediately after upgrade or before the first successful CIB collection.
+	ClusterAlertAgentsConfiguredReasonPending = "Pending"
 )
 
 // ClusterHealthy condition reasons
@@ -400,60 +436,6 @@ const (
 	ResourceSchedulableReasonUnschedulable = "Unschedulable"
 )
 
-// Cluster-level condition types for PacemakerCluster.status.alertAgents[].conditions
-const (
-	// AlertAgentHealthyConditionType tracks the overall health of a pacemaker alert agent.
-	// This is an aggregate condition that reflects the health of all alert agent-level conditions.
-	// Specifically, it aggregates the following conditions:
-	// - AlertAgentConfiguredConditionType
-	// When True, the alert agent is healthy with reason "AlertAgentHealthy".
-	// When False, the alert agent is unhealthy with reason "AlertAgentUnhealthy".
-	// When Unknown, the alert agent's health has not yet been observed by the status collector
-	// with reason "Pending". This is expected to be temporary.
-	AlertAgentHealthyConditionType = "Healthy"
-
-	// AlertAgentConfiguredConditionType tracks whether the alert agent is registered in the CIB
-	// with the expected script path and event filter.
-	// When True, the alert agent is registered as expected with reason "Configured".
-	// When False, the alert agent is not registered with reason "Missing", or is registered with
-	// an unexpected path or filter with reason "Misconfigured". This is an unexpected state.
-	// When Unknown, the CIB registration has not yet been observed by the status collector with
-	// reason "Pending". This is expected to be temporary.
-	AlertAgentConfiguredConditionType = "Configured"
-)
-
-// AlertAgentHealthy condition reasons
-const (
-	// AlertAgentHealthyReasonHealthy means the alert agent is healthy and operating normally.
-	AlertAgentHealthyReasonHealthy = "AlertAgentHealthy"
-
-	// AlertAgentHealthyReasonUnhealthy means the alert agent has issues that need investigation.
-	AlertAgentHealthyReasonUnhealthy = "AlertAgentUnhealthy"
-
-	// AlertAgentHealthyReasonPending means the alert agent's health has not yet been observed by
-	// the status collector. This is expected to be temporary.
-	AlertAgentHealthyReasonPending = "Pending"
-)
-
-// AlertAgentConfigured condition reasons
-const (
-	// AlertAgentConfiguredReasonConfigured means the alert agent is registered in the CIB with the
-	// expected script path and event filter. This is the normal operating state.
-	AlertAgentConfiguredReasonConfigured = "Configured"
-
-	// AlertAgentConfiguredReasonMissing means the alert agent is not registered in the CIB.
-	// This is an unexpected state.
-	AlertAgentConfiguredReasonMissing = "Missing"
-
-	// AlertAgentConfiguredReasonMisconfigured means the alert agent is registered in the CIB with
-	// an unexpected script path or event filter. This is an unexpected state.
-	AlertAgentConfiguredReasonMisconfigured = "Misconfigured"
-
-	// AlertAgentConfiguredReasonPending means the alert agent's CIB registration has not yet been
-	// observed by the status collector. This is expected to be temporary.
-	AlertAgentConfiguredReasonPending = "Pending"
-)
-
 // Node-level condition types for PacemakerCluster.status.nodes[].alertAgentScripts[].conditions
 const (
 	// AlertAgentScriptHealthyConditionType tracks the overall health of an alert agent's script on this node.
@@ -625,7 +607,11 @@ type PacemakerClusterStatus struct {
 	// The "Healthy" condition is an aggregate that tracks the overall health of the cluster.
 	// The "InService" condition tracks whether the cluster is in service (not in maintenance mode).
 	// The "NodeCountAsExpected" condition tracks whether the expected number of nodes are present.
-	// Each of these conditions is required, so the array must contain at least 3 items.
+	// Each of these three conditions is required, so the array must contain at least 3 items.
+	// A fourth, optional condition type, "AlertAgentsConfigured", may also be present once a status
+	// collector that supports it has completed a successful collection; its absence is not a
+	// validation error and does not indicate a failure. This preserves compatibility with an older
+	// status collector that didn't support alert agents.
 	// +listType=map
 	// +listMapKey=type
 	// +kubebuilder:validation:MinItems=3
@@ -653,21 +639,6 @@ type PacemakerClusterStatus struct {
 	// +kubebuilder:validation:MaxItems=5
 	// +required
 	Nodes *[]PacemakerClusterNodeStatus `json:"nodes,omitempty"`
-
-	// alertAgents contains the cluster-wide registration status of pacemaker alert
-	// agents used for auto-tainting nodes after fencing events.
-	// This field is optional and is omitted when alert agent status has not yet been
-	// collected by the status collector (including by a collector version that
-	// predates this field) or when no alert agents are configured.
-	// When present, this array contains at most 8 entries.
-	// Names must be unique within this array.
-	// +listType=map
-	// +listMapKey=name
-	// +kubebuilder:validation:MinItems=0
-	// +kubebuilder:validation:MaxItems=8
-	// +kubebuilder:validation:XValidation:rule="self.all(x, self.exists_one(y, x.name == y.name))",message="alert agent names must be unique"
-	// +optional
-	AlertAgents []PacemakerClusterAlertAgentStatus `json:"alertAgents,omitempty"`
 }
 
 // PacemakerClusterNodeStatus represents the status of a single node in the pacemaker cluster including
@@ -866,31 +837,6 @@ type PacemakerClusterResourceStatus struct {
 	// Fencing agents are tracked separately in the node's fencingAgents field.
 	// +required
 	Name PacemakerClusterResourceName `json:"name,omitempty"`
-}
-
-// PacemakerClusterAlertAgentStatus represents the cluster-wide registration status
-// of a pacemaker alert agent.
-type PacemakerClusterAlertAgentStatus struct {
-	// conditions represent the observations of the alert agent's current state.
-	// Known condition types are "Healthy" (aggregate) and "Configured" (registered
-	// in the CIB with the expected script path and event filter).
-	// If this alert agent's state has not yet been observed by the status collector,
-	// publish these conditions with status "Unknown" and reason "Pending".
-	// Reserve "False" for an observed failure.
-	// Each of these conditions is required, so the array must contain at least 2 and at most 8 items.
-	// +listType=map
-	// +listMapKey=type
-	// +kubebuilder:validation:MinItems=2
-	// +kubebuilder:validation:MaxItems=8
-	// +kubebuilder:validation:XValidation:rule="self.exists(c, c.type == 'Healthy')",message="conditions must contain a condition of type Healthy"
-	// +kubebuilder:validation:XValidation:rule="self.exists(c, c.type == 'Configured')",message="conditions must contain a condition of type Configured"
-	// +required
-	Conditions []metav1.Condition `json:"conditions,omitempty"`
-
-	// name is the name of the pacemaker alert agent. This field is required.
-	// Valid values are "Taint Alert Agent" and "Untaint Alert Agent".
-	// +required
-	Name PacemakerClusterAlertAgentName `json:"name,omitempty"`
 }
 
 // PacemakerClusterAlertAgentScriptStatus represents the presence of an alert

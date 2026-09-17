@@ -31,16 +31,6 @@ func (PacemakerClusterAlertAgentScriptStatus) SwaggerDoc() map[string]string {
 	return map_PacemakerClusterAlertAgentScriptStatus
 }
 
-var map_PacemakerClusterAlertAgentStatus = map[string]string{
-	"":           "PacemakerClusterAlertAgentStatus represents the cluster-wide registration status of a pacemaker alert agent.",
-	"conditions": "conditions represent the observations of the alert agent's current state. Known condition types are \"Healthy\" (aggregate) and \"Configured\" (registered in the CIB with the expected script path and event filter). If this alert agent's state has not yet been observed by the status collector, publish these conditions with status \"Unknown\" and reason \"Pending\". Reserve \"False\" for an observed failure. Each of these conditions is required, so the array must contain at least 2 and at most 8 items.",
-	"name":       "name is the name of the pacemaker alert agent. This field is required. Valid values are \"Taint Alert Agent\" and \"Untaint Alert Agent\".",
-}
-
-func (PacemakerClusterAlertAgentStatus) SwaggerDoc() map[string]string {
-	return map_PacemakerClusterAlertAgentStatus
-}
-
 var map_PacemakerClusterFencingAgentStatus = map[string]string{
 	"":           "PacemakerClusterFencingAgentStatus represents the status of a fencing agent that can fence a node. Fencing agents are STONITH (Shoot The Other Node In The Head) devices used to isolate failed nodes. Unlike regular pacemaker resources, fencing agents are mapped to their target node (the node they can fence), not the node where their monitoring operations are scheduled.",
 	"conditions": "conditions represent the observations of the fencing agent's current state. Known condition types are: \"Healthy\", \"InService\", \"Managed\", \"Enabled\", \"Operational\", \"Active\", \"Started\", \"Schedulable\". The \"Healthy\" condition is an aggregate that tracks the overall health of the fencing agent. The \"InService\" condition tracks whether the fencing agent is in service (not in maintenance mode). The \"Managed\" condition tracks whether the fencing agent is managed by pacemaker. The \"Enabled\" condition tracks whether the fencing agent is enabled. The \"Operational\" condition tracks whether the fencing agent is operational (not failed). The \"Active\" condition tracks whether the fencing agent is active (available to be used). The \"Started\" condition tracks whether the fencing agent is started. The \"Schedulable\" condition tracks whether the fencing agent is schedulable (not blocked). Each of these conditions is required, so the array must contain at least 8 items.",
@@ -88,10 +78,9 @@ func (PacemakerClusterResourceStatus) SwaggerDoc() map[string]string {
 
 var map_PacemakerClusterStatus = map[string]string{
 	"":            "PacemakerClusterStatus contains the actual pacemaker cluster status information. As part of validating the status object, we need to ensure that the lastUpdated timestamp may not be set to an earlier timestamp than the current value. The validation rule checks if oldSelf has lastUpdated before comparing, to handle the initial status creation case.",
-	"conditions":  "conditions represent the observations of the pacemaker cluster's current state. Known condition types are: \"Healthy\", \"InService\", \"NodeCountAsExpected\". The \"Healthy\" condition is an aggregate that tracks the overall health of the cluster. The \"InService\" condition tracks whether the cluster is in service (not in maintenance mode). The \"NodeCountAsExpected\" condition tracks whether the expected number of nodes are present. Each of these conditions is required, so the array must contain at least 3 items.",
+	"conditions":  "conditions represent the observations of the pacemaker cluster's current state. Known condition types are: \"Healthy\", \"InService\", \"NodeCountAsExpected\". The \"Healthy\" condition is an aggregate that tracks the overall health of the cluster. The \"InService\" condition tracks whether the cluster is in service (not in maintenance mode). The \"NodeCountAsExpected\" condition tracks whether the expected number of nodes are present. Each of these three conditions is required, so the array must contain at least 3 items. A fourth, optional condition type, \"AlertAgentsConfigured\", may also be present once a status collector that supports it has completed a successful collection; its absence is not a validation error and does not indicate a failure. This preserves compatibility with an older status collector that didn't support alert agents.",
 	"lastUpdated": "lastUpdated is the timestamp when this status was last updated. This is useful for identifying stale status reports. It must be a valid timestamp in RFC3339 format. Once set, this field cannot be removed and cannot be set to an earlier timestamp than the current value.",
 	"nodes":       "nodes provides detailed status for each control-plane node in the Pacemaker cluster. While Pacemaker supports up to 32 nodes, the limit is set to 5 (max OpenShift control-plane nodes). For Two Node OpenShift with Fencing, exactly 2 nodes are expected in a healthy cluster. An empty list indicates a catastrophic failure where Pacemaker reports no nodes.",
-	"alertAgents": "alertAgents contains the cluster-wide registration status of pacemaker alert agents used for auto-tainting nodes after fencing events. This field is optional and is omitted when alert agent status has not yet been collected by the status collector (including by a collector version that predates this field) or when no alert agents are configured. When present, this array contains at most 8 entries. Names must be unique within this array.",
 }
 
 func (PacemakerClusterStatus) SwaggerDoc() map[string]string {

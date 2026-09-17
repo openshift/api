@@ -164,9 +164,6 @@
                         "name": "IngressComponentRouteLabels"
                     },
                     {
-                        "name": "IngressControllerLBSecurityGroupsAWS"
-                    },
-                    {
                         "name": "KMSEncryption"
                     },
                     {
@@ -335,6 +332,9 @@
                     },
                     {
                         "name": "IngressControllerDynamicConfigurationManager"
+                    },
+                    {
+                        "name": "IngressControllerLBSecurityGroupsAWS"
                     },
                     {
                         "name": "IngressControllerMultipleHAProxyVersions"

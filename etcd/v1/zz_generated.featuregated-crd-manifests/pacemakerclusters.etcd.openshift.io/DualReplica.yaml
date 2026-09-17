@@ -808,6 +808,15 @@ spec:
                             format: int32
                             minimum: 0
                             type: integer
+                          lastFailureTime:
+                            description: |-
+                              lastFailureTime is the timestamp of the most recent failure observed for this
+                              resource on this node, as reported by the CIB. Semantically distinct from
+                              lastStopTime — a stop can be deliberate (planned migration, admin action),
+                              while a failure is always an error condition. This field is optional and is
+                              omitted when no failure has been observed for this resource on this node.
+                            format: date-time
+                            type: string
                           lastStartTime:
                             description: |-
                               lastStartTime is the timestamp of the most recent start operation observed for
@@ -824,6 +833,18 @@ spec:
                               node.
                             format: date-time
                             type: string
+                          migrationThreshold:
+                            description: |-
+                              migrationThreshold is the configured number of failures after which Pacemaker
+                              will no longer attempt to run this resource on this node, as reported by the
+                              CIB. Without this value, failCount alone is uninterpretable — whether
+                              failCount 3 is alarming depends on whether the threshold is 5 or 1000000
+                              (Pacemaker's default INFINITY). The value must be zero or greater. This field
+                              is optional and is omitted when the status collector has not yet observed a
+                              migration threshold for this resource.
+                            format: int32
+                            minimum: 0
+                            type: integer
                           name:
                             description: |-
                               name is the name of the pacemaker resource.

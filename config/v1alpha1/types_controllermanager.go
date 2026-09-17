@@ -29,7 +29,7 @@ type ControllerManager struct {
 	// +required
 	Spec ControllerManagerSpec `json:"spec,omitzero"`
 	// status holds observed values from the cluster. They may not be overridden.
-	// When omitted, the status has not yet been reported by the cluster-kube-controller-manager-operator.
+	// When omitted, the status has not yet been reported by the cluster.
 	// +optional
 	Status ControllerManagerStatus `json:"status,omitzero"`
 }
@@ -107,9 +107,10 @@ type ControllerManagerList struct {
 }
 
 const (
-	// ConditionTypeProgressing is a condition type that indicates whether the current spec
+	// ControllerManagerProgressing is a condition type that indicates whether the current spec
 	// is in the process of rolling out to kube-controller-manager.
-	// When True, not all nodes have the current revision.
-	// When False, all nodes have the current revision.
-	ConditionTypeProgressing = "Progressing"
+	// When True, not all kube-controller-manager instances are running the current configuration.
+	// When False, all kube-controller-manager instances are running the current configuration.
+	// observedGeneration is set to the .metadata.generation that the condition was computed from.
+	ControllerManagerProgressing = "Progressing"
 )

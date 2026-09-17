@@ -15,7 +15,6 @@ import metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 // +openshift:file-pattern=cvoRunLevel=0000_10,operatorName=config-operator,operatorOrdering=01
 // +kubebuilder:object:root=true
 // +kubebuilder:resource:path=controllermanagers,scope=Cluster
-// +kubebuilder:subresource:status
 // +openshift:enable:FeatureGate=ControllerManagerConfig
 // +kubebuilder:validation:XValidation:rule="self.metadata.name == 'cluster'",message="controllermanager is a singleton, .metadata.name must be 'cluster'"
 type ControllerManager struct {
@@ -29,10 +28,6 @@ type ControllerManager struct {
 	// The only way to express no opinion in the spec is to not create the ControllerManager object at all.
 	// +required
 	Spec ControllerManagerSpec `json:"spec,omitzero"`
-	// status holds observed values from the cluster. They may not be overridden.
-	// When omitted, the status has not yet been reported by the cluster.
-	// +optional
-	Status ControllerManagerStatus `json:"status,omitzero"`
 }
 
 // ControllerManagerSpec defines the desired state of the Kubernetes controller manager
@@ -73,25 +68,6 @@ const (
 	ForceDetachOnTimeoutDisabled ForceDetachOnTimeoutPolicy = "Disabled"
 )
 
-// ControllerManagerStatus defines the observed state of the Kubernetes controller manager
-// +kubebuilder:validation:MinProperties=1
-type ControllerManagerStatus struct {
-	// conditions represent the latest available observations of the configuration state.
-	// When omitted, it indicates that no conditions have been reported yet.
-	// The maximum number of conditions is 16.
-	// When set, at least one condition must be present.
-	// Conditions are stored as a map keyed by condition type, ensuring uniqueness.
-	//
-	// Expected condition types include:
-	// "Progressing": indicates whether the current spec is in the process of rolling out to kube-controller-manager.
-	// +optional
-	// +kubebuilder:validation:MaxItems=16
-	// +kubebuilder:validation:MinItems=1
-	// +listType=map
-	// +listMapKey=type
-	Conditions []metav1.Condition `json:"conditions,omitempty"`
-}
-
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 
 // ControllerManagerList is a collection of ControllerManager resources.
@@ -107,12 +83,3 @@ type ControllerManagerList struct {
 
 	Items []ControllerManager `json:"items"`
 }
-
-const (
-	// ControllerManagerProgressing is a condition type that indicates whether the current spec
-	// is in the process of rolling out to kube-controller-manager.
-	// When True, not all kube-controller-manager instances are running the current configuration.
-	// When False, all kube-controller-manager instances are running the current configuration.
-	// observedGeneration is set to the .metadata.generation that the condition was computed from.
-	ControllerManagerProgressing = "Progressing"
-)

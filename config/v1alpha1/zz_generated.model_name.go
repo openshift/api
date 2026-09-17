@@ -121,11 +121,6 @@ func (in ControllerManagerSpec) OpenAPIModelName() string {
 }
 
 // OpenAPIModelName returns the OpenAPI model name for this type.
-func (in ControllerManagerStatus) OpenAPIModelName() string {
-	return "com.github.openshift.api.config.v1alpha1.ControllerManagerStatus"
-}
-
-// OpenAPIModelName returns the OpenAPI model name for this type.
 func (in CustomPKIPolicy) OpenAPIModelName() string {
 	return "com.github.openshift.api.config.v1alpha1.CustomPKIPolicy"
 }

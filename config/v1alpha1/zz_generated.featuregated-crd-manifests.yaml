@@ -81,7 +81,7 @@ controllermanagers.config.openshift.io:
   FilenameOperatorOrdering: "01"
   FilenameRunLevel: "0000_10"
   GroupName: config.openshift.io
-  HasStatus: true
+  HasStatus: false
   KindName: ControllerManager
   Labels: {}
   PluralName: controllermanagers

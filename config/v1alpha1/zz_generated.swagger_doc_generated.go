@@ -815,7 +815,6 @@ var map_ControllerManager = map[string]string{
 	"":         "ControllerManager holds cluster-wide configuration for the Kubernetes controller manager. The resource is a singleton named \"cluster\".\n\nCompatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.",
 	"metadata": "metadata is the standard object's metadata. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata",
 	"spec":     "spec holds user settable values for configuration. The only way to express no opinion in the spec is to not create the ControllerManager object at all.",
-	"status":   "status holds observed values from the cluster. They may not be overridden. When omitted, the status has not yet been reported by the cluster.",
 }
 
 func (ControllerManager) SwaggerDoc() map[string]string {
@@ -838,15 +837,6 @@ var map_ControllerManagerSpec = map[string]string{
 
 func (ControllerManagerSpec) SwaggerDoc() map[string]string {
 	return map_ControllerManagerSpec
-}
-
-var map_ControllerManagerStatus = map[string]string{
-	"":           "ControllerManagerStatus defines the observed state of the Kubernetes controller manager",
-	"conditions": "conditions represent the latest available observations of the configuration state. When omitted, it indicates that no conditions have been reported yet. The maximum number of conditions is 16. When set, at least one condition must be present. Conditions are stored as a map keyed by condition type, ensuring uniqueness.\n\nExpected condition types include: \"Progressing\": indicates whether the current spec is in the process of rolling out to kube-controller-manager.",
-}
-
-func (ControllerManagerStatus) SwaggerDoc() map[string]string {
-	return map_ControllerManagerStatus
 }
 
 var map_CRIOCredentialProviderConfig = map[string]string{

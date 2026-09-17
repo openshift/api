@@ -537,7 +537,6 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		configv1alpha1.ControllerManager{}.OpenAPIModelName():                                  schema_openshift_api_config_v1alpha1_ControllerManager(ref),
 		configv1alpha1.ControllerManagerList{}.OpenAPIModelName():                              schema_openshift_api_config_v1alpha1_ControllerManagerList(ref),
 		configv1alpha1.ControllerManagerSpec{}.OpenAPIModelName():                              schema_openshift_api_config_v1alpha1_ControllerManagerSpec(ref),
-		configv1alpha1.ControllerManagerStatus{}.OpenAPIModelName():                            schema_openshift_api_config_v1alpha1_ControllerManagerStatus(ref),
 		configv1alpha1.CustomPKIPolicy{}.OpenAPIModelName():                                    schema_openshift_api_config_v1alpha1_CustomPKIPolicy(ref),
 		configv1alpha1.DefaultCertificateConfig{}.OpenAPIModelName():                           schema_openshift_api_config_v1alpha1_DefaultCertificateConfig(ref),
 		configv1alpha1.DropEqualActionConfig{}.OpenAPIModelName():                              schema_openshift_api_config_v1alpha1_DropEqualActionConfig(ref),
@@ -24276,19 +24275,12 @@ func schema_openshift_api_config_v1alpha1_ControllerManager(ref common.Reference
 							Ref:         ref(configv1alpha1.ControllerManagerSpec{}.OpenAPIModelName()),
 						},
 					},
-					"status": {
-						SchemaProps: spec.SchemaProps{
-							Description: "status holds observed values from the cluster. They may not be overridden. When omitted, the status has not yet been reported by the cluster.",
-							Default:     map[string]interface{}{},
-							Ref:         ref(configv1alpha1.ControllerManagerStatus{}.OpenAPIModelName()),
-						},
-					},
 				},
 				Required: []string{"spec"},
 			},
 		},
 		Dependencies: []string{
-			configv1alpha1.ControllerManagerSpec{}.OpenAPIModelName(), configv1alpha1.ControllerManagerStatus{}.OpenAPIModelName(), metav1.ObjectMeta{}.OpenAPIModelName()},
+			configv1alpha1.ControllerManagerSpec{}.OpenAPIModelName(), metav1.ObjectMeta{}.OpenAPIModelName()},
 	}
 }
 
@@ -24360,43 +24352,6 @@ func schema_openshift_api_config_v1alpha1_ControllerManagerSpec(ref common.Refer
 				},
 			},
 		},
-	}
-}
-
-func schema_openshift_api_config_v1alpha1_ControllerManagerStatus(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Description: "ControllerManagerStatus defines the observed state of the Kubernetes controller manager",
-				Type:        []string{"object"},
-				Properties: map[string]spec.Schema{
-					"conditions": {
-						VendorExtensible: spec.VendorExtensible{
-							Extensions: spec.Extensions{
-								"x-kubernetes-list-map-keys": []interface{}{
-									"type",
-								},
-								"x-kubernetes-list-type": "map",
-							},
-						},
-						SchemaProps: spec.SchemaProps{
-							Description: "conditions represent the latest available observations of the configuration state. When omitted, it indicates that no conditions have been reported yet. The maximum number of conditions is 16. When set, at least one condition must be present. Conditions are stored as a map keyed by condition type, ensuring uniqueness.\n\nExpected condition types include: \"Progressing\": indicates whether the current spec is in the process of rolling out to kube-controller-manager.",
-							Type:        []string{"array"},
-							Items: &spec.SchemaOrArray{
-								Schema: &spec.Schema{
-									SchemaProps: spec.SchemaProps{
-										Default: map[string]interface{}{},
-										Ref:     ref(metav1.Condition{}.OpenAPIModelName()),
-									},
-								},
-							},
-						},
-					},
-				},
-			},
-		},
-		Dependencies: []string{
-			metav1.Condition{}.OpenAPIModelName()},
 	}
 }
 

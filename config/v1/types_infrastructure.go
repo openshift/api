@@ -149,22 +149,18 @@ type InfrastructureStatus struct {
 	// the controller has not yet completed its first evaluation; an empty list is also
 	// valid and intentionally carries the same meaning as omitted, since this field does
 	// not currently distinguish "not yet evaluated" from "evaluated with no applicable
-	// transitions". source and target below only cover the topologies that support a
-	// transition today; when status.controlPlaneTopology is a topology outside that set,
-	// this field is expected to remain omitted or empty. Entries are keyed by the
-	// (source, target) topology pair and list order is not significant. At most 2
-	// entries are permitted, matching the cardinality of the target enum for the
-	// single current source. If target is ever widened to cover additional
-	// transition-eligible topologies (HighlyAvailableArbiter, DualReplica; External is
-	// not expected to participate in a transition and should not be added here),
-	// MaxItems must be increased to match the new cardinality, up to 4 for all four
-	// non-External TopologyMode values.
+	// transitions". The only supported transition is from SingleReplica to
+	// HighlyAvailable. When status.controlPlaneTopology has any other value, this
+	// field is expected to remain omitted or empty. Entries are keyed by the
+	// (source, target) topology pair and list order is not significant. At most 1
+	// entry is permitted because only one transition direction is currently supported.
 	// +openshift:enable:FeatureGate=MutableTopology
 	// +listType=map
 	// +listMapKey=source
 	// +listMapKey=target
 	// +kubebuilder:validation:MinItems=0
-	// +kubebuilder:validation:MaxItems=2
+	// +kubebuilder:validation:MaxItems=1
+	// +kubebuilder:validation:XValidation:rule="self.all(t, t.source == 'SingleReplica' && t.target == 'HighlyAvailable')",message="only SingleReplica to HighlyAvailable control-plane topology transitions are supported"
 	// +optional
 	ControlPlaneTopologyTransitions []TopologyTransition `json:"controlPlaneTopologyTransitions,omitempty"`
 

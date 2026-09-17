@@ -507,6 +507,24 @@ tests:
             target: SingleReplica
             availability: Available
       expectedStatusError: "transition sources must match status.controlPlaneTopology"
+    - name: Should not allow a reverse controlPlaneTopologyTransitions entry
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        spec: {}
+        status:
+          controlPlaneTopology: HighlyAvailable
+      updated: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        spec: {}
+        status:
+          controlPlaneTopology: HighlyAvailable
+          controlPlaneTopologyTransitions:
+          - source: HighlyAvailable
+            target: SingleReplica
+            availability: Available
+      expectedStatusError: "only SingleReplica to HighlyAvailable control-plane topology transitions are supported"
     - name: Should not allow a controlPlaneTopologyTransitions entry with an invalid source
       initial: |
         apiVersion: config.openshift.io/v1
@@ -612,30 +630,6 @@ tests:
           - source: SingleReplica
             target: HighlyAvailable
       expectedStatusError: "Required value"
-    - name: Should not allow more than two controlPlaneTopologyTransitions entries
-      initial: |
-        apiVersion: config.openshift.io/v1
-        kind: Infrastructure
-        spec: {}
-        status:
-          controlPlaneTopology: SingleReplica
-      updated: |
-        apiVersion: config.openshift.io/v1
-        kind: Infrastructure
-        spec: {}
-        status:
-          controlPlaneTopology: SingleReplica
-          controlPlaneTopologyTransitions:
-          - source: SingleReplica
-            target: HighlyAvailable
-            availability: Available
-          - source: HighlyAvailable
-            target: SingleReplica
-            availability: Available
-          - source: HighlyAvailable
-            target: HighlyAvailable
-            availability: Available
-      expectedStatusError: "Too many: 3: must have at most 2 items"
     - name: Should not allow an Unavailable controlPlaneTopologyTransitions entry without a reason
       initial: |
         apiVersion: config.openshift.io/v1

@@ -1480,16 +1480,11 @@ spec:
                           the controller has not yet completed its first evaluation; an empty list is also
                           valid and intentionally carries the same meaning as omitted, since this field does
                           not currently distinguish "not yet evaluated" from "evaluated with no applicable
-                          transitions". source and target below only cover the topologies that support a
-                          transition today; when status.controlPlaneTopology is a topology outside that set,
-                          this field is expected to remain omitted or empty. Entries are keyed by the
-                          (source, target) topology pair and list order is not significant. At most 2
-                          entries are permitted, matching the cardinality of the target enum for the
-                          single current source. If target is ever widened to cover additional
-                          transition-eligible topologies (HighlyAvailableArbiter, DualReplica; External is
-                          not expected to participate in a transition and should not be added here),
-                          MaxItems must be increased to match the new cardinality, up to 4 for all four
-                          non-External TopologyMode values.
+                          transitions". The only supported transition is from SingleReplica to
+                          HighlyAvailable. When status.controlPlaneTopology has any other value, this
+                          field is expected to remain omitted or empty. Entries are keyed by the
+                          (source, target) topology pair and list order is not significant. At most 1
+                          entry is permitted because only one transition direction is currently supported.
                         items:
                           description: |-
                             TopologyTransition describes one topology transition available from the
@@ -1565,13 +1560,18 @@ spec:
                             rule: self.source != self.target
                           - message: reason is required when availability is not Available
                             rule: self.availability == 'Available' || has(self.reason)
-                        maxItems: 2
+                        maxItems: 1
                         minItems: 0
                         type: array
                         x-kubernetes-list-map-keys:
                         - source
                         - target
                         x-kubernetes-list-type: map
+                        x-kubernetes-validations:
+                        - message: only SingleReplica to HighlyAvailable control-plane
+                            topology transitions are supported
+                          rule: self.all(t, t.source == 'SingleReplica' && t.target
+                            == 'HighlyAvailable')
                       cpuPartitioning:
                         default: None
                         description: |-

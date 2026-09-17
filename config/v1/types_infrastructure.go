@@ -166,7 +166,7 @@ type InfrastructureStatus struct {
 	// +kubebuilder:validation:MinItems=0
 	// +kubebuilder:validation:MaxItems=2
 	// +optional
-	ControlPlaneTopologyTransitions []ControlPlaneTopologyTransition `json:"controlPlaneTopologyTransitions,omitempty"`
+	ControlPlaneTopologyTransitions []TopologyTransition `json:"controlPlaneTopologyTransitions,omitempty"`
 
 	// cpuPartitioning expresses if CPU partitioning is a currently enabled feature in the cluster.
 	// CPU Partitioning means that this cluster can support partitioning workloads to specific CPU Sets.
@@ -207,23 +207,24 @@ const (
 	ExternalTopologyMode TopologyMode = "External"
 )
 
-// ControlPlaneTopologyTransition describes one control-plane topology transition
-// available from the cluster's current topology and whether it can currently be
-// initiated. source and target must differ. reason must be set whenever
-// availability is Unavailable or Unknown; both constraints are enforced by
-// validation rules on the entry as a whole.
+// TopologyTransition describes one topology transition available from the
+// cluster's current topology and whether it can currently be initiated. source
+// and target must differ. reason must be set whenever availability is
+// Unavailable or Unknown; both constraints are enforced by validation rules on
+// the entry as a whole.
 // +kubebuilder:validation:XValidation:rule="self.source != self.target",message="source and target must differ"
 // +kubebuilder:validation:XValidation:rule="self.availability == 'Available' || has(self.reason)",message="reason is required when availability is not Available"
-type ControlPlaneTopologyTransition struct {
+type TopologyTransition struct {
 	// source is the topology this transition starts from. It equals the current
-	// status.controlPlaneTopology. Valid values are SingleReplica and HighlyAvailable.
+	// topology in the corresponding status field. Valid values are SingleReplica
+	// and HighlyAvailable.
 	// When set to SingleReplica, the transition originates from a single-replica topology.
 	// When set to HighlyAvailable, the transition originates from a highly available topology.
 	// +kubebuilder:validation:Enum=SingleReplica;HighlyAvailable
 	// +required
 	Source TopologyMode `json:"source,omitempty"`
 
-	// target is the topology this transition would move the control plane to.
+	// target is the topology this transition would move to.
 	// Valid values are SingleReplica and HighlyAvailable.
 	// When set to SingleReplica, the transition moves to a single-replica topology.
 	// When set to HighlyAvailable, the transition moves to a highly available topology.

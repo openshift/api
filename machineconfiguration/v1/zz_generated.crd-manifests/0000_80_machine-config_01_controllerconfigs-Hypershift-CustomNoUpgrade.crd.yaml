@@ -1492,11 +1492,11 @@ spec:
                           non-External TopologyMode values.
                         items:
                           description: |-
-                            ControlPlaneTopologyTransition describes one control-plane topology transition
-                            available from the cluster's current topology and whether it can currently be
-                            initiated. source and target must differ. reason must be set whenever
-                            availability is Unavailable or Unknown; both constraints are enforced by
-                            validation rules on the entry as a whole.
+                            TopologyTransition describes one topology transition available from the
+                            cluster's current topology and whether it can currently be initiated. source
+                            and target must differ. reason must be set whenever availability is
+                            Unavailable or Unknown; both constraints are enforced by validation rules on
+                            the entry as a whole.
                           properties:
                             availability:
                               description: |-
@@ -1537,7 +1537,8 @@ spec:
                             source:
                               description: |-
                                 source is the topology this transition starts from. It equals the current
-                                status.controlPlaneTopology. Valid values are SingleReplica and HighlyAvailable.
+                                topology in the corresponding status field. Valid values are SingleReplica
+                                and HighlyAvailable.
                                 When set to SingleReplica, the transition originates from a single-replica topology.
                                 When set to HighlyAvailable, the transition originates from a highly available topology.
                               enum:
@@ -1546,7 +1547,7 @@ spec:
                               type: string
                             target:
                               description: |-
-                                target is the topology this transition would move the control plane to.
+                                target is the topology this transition would move to.
                                 Valid values are SingleReplica and HighlyAvailable.
                                 When set to SingleReplica, the transition moves to a single-replica topology.
                                 When set to HighlyAvailable, the transition moves to a highly available topology.

@@ -396,11 +396,6 @@ func (in ConsoleStatus) OpenAPIModelName() string {
 }
 
 // OpenAPIModelName returns the OpenAPI model name for this type.
-func (in ControlPlaneTopologyTransition) OpenAPIModelName() string {
-	return "com.github.openshift.api.config.v1.ControlPlaneTopologyTransition"
-}
-
-// OpenAPIModelName returns the OpenAPI model name for this type.
 func (in Custom) OpenAPIModelName() string {
 	return "com.github.openshift.api.config.v1.Custom"
 }
@@ -1458,6 +1453,11 @@ func (in TokenRequiredClaim) OpenAPIModelName() string {
 // OpenAPIModelName returns the OpenAPI model name for this type.
 func (in TokenUserValidationRule) OpenAPIModelName() string {
 	return "com.github.openshift.api.config.v1.TokenUserValidationRule"
+}
+
+// OpenAPIModelName returns the OpenAPI model name for this type.
+func (in TopologyTransition) OpenAPIModelName() string {
+	return "com.github.openshift.api.config.v1.TopologyTransition"
 }
 
 // OpenAPIModelName returns the OpenAPI model name for this type.

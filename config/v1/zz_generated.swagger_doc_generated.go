@@ -1737,19 +1737,6 @@ func (CloudLoadBalancerIPs) SwaggerDoc() map[string]string {
 	return map_CloudLoadBalancerIPs
 }
 
-var map_ControlPlaneTopologyTransition = map[string]string{
-	"":             "ControlPlaneTopologyTransition describes one control-plane topology transition available from the cluster's current topology and whether it can currently be initiated. source and target must differ. reason must be set whenever availability is Unavailable or Unknown; both constraints are enforced by validation rules on the entry as a whole.",
-	"source":       "source is the topology this transition starts from. It equals the current status.controlPlaneTopology. Valid values are SingleReplica and HighlyAvailable. When set to SingleReplica, the transition originates from a single-replica topology. When set to HighlyAvailable, the transition originates from a highly available topology.",
-	"target":       "target is the topology this transition would move the control plane to. Valid values are SingleReplica and HighlyAvailable. When set to SingleReplica, the transition moves to a single-replica topology. When set to HighlyAvailable, the transition moves to a highly available topology.",
-	"availability": "availability indicates whether this transition can currently be initiated. Valid values are Available, Unavailable, and Unknown. Available means the controller evaluated the transition and its preconditions pass. Unavailable means the transition is defined but cannot be initiated now; see reason and message. Unknown means the controller has not completed evaluation.",
-	"reason":       "reason is a CamelCase machine-readable explanation of the availability, e.g. PreflightCheckFailed or SourceTopologyMismatch. It is required when availability is Unavailable or Unknown and is normally omitted when Available. The set of reasons is diagnostic and not exhaustive. Must start with an uppercase letter and contain only alphanumeric characters, and must be between 1 and 128 characters long.",
-	"message":      "message is a human-readable explanation, primarily for Unavailable transitions (e.g. a concise summary of the failing preconditions). It is for humans only and must not be parsed. It may be truncated by the controller. When omitted, no human-readable explanation is available for the transition. When set, it must be between 1 and 2048 characters long.",
-}
-
-func (ControlPlaneTopologyTransition) SwaggerDoc() map[string]string {
-	return map_ControlPlaneTopologyTransition
-}
-
 var map_EquinixMetalPlatformSpec = map[string]string{
 	"": "EquinixMetalPlatformSpec holds the desired state of the Equinix Metal infrastructure provider. This only includes fields that can be modified in the cluster.",
 }
@@ -2151,6 +2138,19 @@ var map_PowerVSServiceEndpoint = map[string]string{
 
 func (PowerVSServiceEndpoint) SwaggerDoc() map[string]string {
 	return map_PowerVSServiceEndpoint
+}
+
+var map_TopologyTransition = map[string]string{
+	"":             "TopologyTransition describes one topology transition available from the cluster's current topology and whether it can currently be initiated. source and target must differ. reason must be set whenever availability is Unavailable or Unknown; both constraints are enforced by validation rules on the entry as a whole.",
+	"source":       "source is the topology this transition starts from. It equals the current topology in the corresponding status field. Valid values are SingleReplica and HighlyAvailable. When set to SingleReplica, the transition originates from a single-replica topology. When set to HighlyAvailable, the transition originates from a highly available topology.",
+	"target":       "target is the topology this transition would move to. Valid values are SingleReplica and HighlyAvailable. When set to SingleReplica, the transition moves to a single-replica topology. When set to HighlyAvailable, the transition moves to a highly available topology.",
+	"availability": "availability indicates whether this transition can currently be initiated. Valid values are Available, Unavailable, and Unknown. Available means the controller evaluated the transition and its preconditions pass. Unavailable means the transition is defined but cannot be initiated now; see reason and message. Unknown means the controller has not completed evaluation.",
+	"reason":       "reason is a CamelCase machine-readable explanation of the availability, e.g. PreflightCheckFailed or SourceTopologyMismatch. It is required when availability is Unavailable or Unknown and is normally omitted when Available. The set of reasons is diagnostic and not exhaustive. Must start with an uppercase letter and contain only alphanumeric characters, and must be between 1 and 128 characters long.",
+	"message":      "message is a human-readable explanation, primarily for Unavailable transitions (e.g. a concise summary of the failing preconditions). It is for humans only and must not be parsed. It may be truncated by the controller. When omitted, no human-readable explanation is available for the transition. When set, it must be between 1 and 2048 characters long.",
+}
+
+func (TopologyTransition) SwaggerDoc() map[string]string {
+	return map_TopologyTransition
 }
 
 var map_VSphereFailureDomainHostGroup = map[string]string{

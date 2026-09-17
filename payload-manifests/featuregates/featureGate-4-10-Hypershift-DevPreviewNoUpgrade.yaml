@@ -187,6 +187,9 @@
                         "name": "ClusterVersionOperatorConfiguration"
                     },
                     {
+                        "name": "CompositePodGroup"
+                    },
+                    {
                         "name": "ConfidentialCluster"
                     },
                     {
@@ -194,6 +197,9 @@
                     },
                     {
                         "name": "DNSNameResolver"
+                    },
+                    {
+                        "name": "DRAWorkloadResourceClaims"
                     },
                     {
                         "name": "DualReplica"
@@ -251,6 +257,9 @@
                     },
                     {
                         "name": "GatewayAPIWithoutOLM"
+                    },
+                    {
+                        "name": "GenericWorkload"
                     },
                     {
                         "name": "GomaxprocsInjection"
@@ -355,6 +364,9 @@
                         "name": "OpenShiftPodSecurityAdmission"
                     },
                     {
+                        "name": "PodGroupPreemptionPolicy"
+                    },
+                    {
                         "name": "ProvisioningRequestAvailable"
                     },
                     {
@@ -379,6 +391,9 @@
                         "name": "TLSGroupPreferences"
                     },
                     {
+                        "name": "TopologyAwareWorkloadScheduling"
+                    },
+                    {
                         "name": "UpgradeStatus"
                     },
                     {
@@ -395,6 +410,9 @@
                     },
                     {
                         "name": "VSpherePerComponentScopedCreds"
+                    },
+                    {
+                        "name": "WorkloadWithJob"
                     }
                 ],
                 "version": ""

@@ -13224,12 +13224,12 @@
           "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.ObjectMeta"
         },
         "spec": {
-          "description": "spec holds user settable values for configuration",
+          "description": "spec holds user settable values for configuration. The only way to express no opinion in the spec is to not create the ControllerManager object at all.",
           "default": {},
           "$ref": "#/definitions/com.github.openshift.api.config.v1alpha1.ControllerManagerSpec"
         },
         "status": {
-          "description": "status holds observed values from the cluster. They may not be overridden. When omitted, the status has not yet been reported by the cluster-kube-controller-manager-operator.",
+          "description": "status holds observed values from the cluster. They may not be overridden. When omitted, the status has not yet been reported by the cluster.",
           "default": {},
           "$ref": "#/definitions/com.github.openshift.api.config.v1alpha1.ControllerManagerStatus"
         }

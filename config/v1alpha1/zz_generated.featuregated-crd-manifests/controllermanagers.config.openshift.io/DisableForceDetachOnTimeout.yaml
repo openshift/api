@@ -44,7 +44,9 @@ spec:
           metadata:
             type: object
           spec:
-            description: spec holds user settable values for configuration
+            description: |-
+              spec holds user settable values for configuration.
+              The only way to express no opinion in the spec is to not create the ControllerManager object at all.
             minProperties: 1
             properties:
               forceDetachOnTimeout:
@@ -71,7 +73,7 @@ spec:
           status:
             description: |-
               status holds observed values from the cluster. They may not be overridden.
-              When omitted, the status has not yet been reported by the cluster-kube-controller-manager-operator.
+              When omitted, the status has not yet been reported by the cluster.
             minProperties: 1
             properties:
               conditions:

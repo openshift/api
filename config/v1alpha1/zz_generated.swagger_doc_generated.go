@@ -814,8 +814,8 @@ func (UserDefinedMonitoring) SwaggerDoc() map[string]string {
 var map_ControllerManager = map[string]string{
 	"":         "ControllerManager holds cluster-wide configuration for the Kubernetes controller manager. The resource is a singleton named \"cluster\".\n\nCompatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.",
 	"metadata": "metadata is the standard object's metadata. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata",
-	"spec":     "spec holds user settable values for configuration",
-	"status":   "status holds observed values from the cluster. They may not be overridden. When omitted, the status has not yet been reported by the cluster-kube-controller-manager-operator.",
+	"spec":     "spec holds user settable values for configuration. The only way to express no opinion in the spec is to not create the ControllerManager object at all.",
+	"status":   "status holds observed values from the cluster. They may not be overridden. When omitted, the status has not yet been reported by the cluster.",
 }
 
 func (ControllerManager) SwaggerDoc() map[string]string {

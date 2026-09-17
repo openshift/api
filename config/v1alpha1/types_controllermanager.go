@@ -16,7 +16,7 @@ import metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 // +kubebuilder:object:root=true
 // +kubebuilder:resource:path=controllermanagers,scope=Cluster
 // +kubebuilder:subresource:status
-// +openshift:enable:FeatureGate=DisableForceDetachOnTimeout
+// +openshift:enable:FeatureGate=ControllerManagerConfig
 // +kubebuilder:validation:XValidation:rule="self.metadata.name == 'cluster'",message="controllermanager is a singleton, .metadata.name must be 'cluster'"
 type ControllerManager struct {
 	metav1.TypeMeta `json:",inline"`
@@ -25,7 +25,8 @@ type ControllerManager struct {
 	// More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata
 	// +optional
 	metav1.ObjectMeta `json:"metadata,omitzero"`
-	// spec holds user settable values for configuration
+	// spec holds user settable values for configuration.
+	// The only way to express no opinion in the spec is to not create the ControllerManager object at all.
 	// +required
 	Spec ControllerManagerSpec `json:"spec,omitzero"`
 	// status holds observed values from the cluster. They may not be overridden.
@@ -52,6 +53,7 @@ type ControllerManagerSpec struct {
 	// to choose a reasonable default, which is subject to change over time.
 	// The current default is "Enabled".
 	// +optional
+	// +openshift:enable:FeatureGate=DisableForceDetachOnTimeout
 	ForceDetachOnTimeout ForceDetachOnTimeoutPolicy `json:"forceDetachOnTimeout,omitempty"`
 }
 

@@ -24271,14 +24271,14 @@ func schema_openshift_api_config_v1alpha1_ControllerManager(ref common.Reference
 					},
 					"spec": {
 						SchemaProps: spec.SchemaProps{
-							Description: "spec holds user settable values for configuration",
+							Description: "spec holds user settable values for configuration. The only way to express no opinion in the spec is to not create the ControllerManager object at all.",
 							Default:     map[string]interface{}{},
 							Ref:         ref(configv1alpha1.ControllerManagerSpec{}.OpenAPIModelName()),
 						},
 					},
 					"status": {
 						SchemaProps: spec.SchemaProps{
-							Description: "status holds observed values from the cluster. They may not be overridden. When omitted, the status has not yet been reported by the cluster-kube-controller-manager-operator.",
+							Description: "status holds observed values from the cluster. They may not be overridden. When omitted, the status has not yet been reported by the cluster.",
 							Default:     map[string]interface{}{},
 							Ref:         ref(configv1alpha1.ControllerManagerStatus{}.OpenAPIModelName()),
 						},

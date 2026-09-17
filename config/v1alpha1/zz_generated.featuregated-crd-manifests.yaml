@@ -75,6 +75,7 @@ controllermanagers.config.openshift.io:
   Capability: ""
   Category: ""
   FeatureGates:
+  - ControllerManagerConfig
   - DisableForceDetachOnTimeout
   FilenameOperatorName: config-operator
   FilenameOperatorOrdering: "01"
@@ -88,7 +89,7 @@ controllermanagers.config.openshift.io:
   Scope: Cluster
   ShortNames: null
   TopLevelFeatureGates:
-  - DisableForceDetachOnTimeout
+  - ControllerManagerConfig
   Version: v1alpha1
 
 insightsdatagathers.config.openshift.io:

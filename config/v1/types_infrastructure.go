@@ -20,6 +20,7 @@ import (
 // +kubebuilder:subresource:status
 // +kubebuilder:metadata:annotations=release.openshift.io/bootstrap-required=true
 // +openshift:validation:FeatureGateAwareXValidation:featureGate=MutableTopology,rule="!has(self.spec.controlPlaneTopology) || (has(oldSelf.spec.controlPlaneTopology) && self.spec.controlPlaneTopology == oldSelf.spec.controlPlaneTopology) || (has(self.status.controlPlaneTopology) && self.spec.controlPlaneTopology == self.status.controlPlaneTopology) || (has(self.status.controlPlaneTopology) && self.status.controlPlaneTopology == 'SingleReplica' && self.spec.controlPlaneTopology == 'HighlyAvailable')",message="spec.controlPlaneTopology must match status.controlPlaneTopology or be set to HighlyAvailable when status.controlPlaneTopology is SingleReplica"
+// +openshift:validation:FeatureGateAwareXValidation:featureGate=MutableTopology,rule="!has(self.status) || !has(self.status.controlPlaneTopologyTransitions) || self.status.controlPlaneTopologyTransitions.all(t, has(self.status.controlPlaneTopology) && t.source == self.status.controlPlaneTopology)",message="transition sources must match status.controlPlaneTopology"
 type Infrastructure struct {
 	metav1.TypeMeta `json:",inline"`
 
@@ -138,6 +139,31 @@ type InfrastructureStatus struct {
 	// +optional
 	InfrastructureTopology TopologyMode `json:"infrastructureTopology,omitempty"`
 
+	// controlPlaneTopologyTransitions reports, as controller-computed observed state,
+	// the control-plane topology transitions that originate at the current
+	// status.controlPlaneTopology and whether each can currently be initiated. It is
+	// advisory: the cluster may change between a status read and a spec write, so the
+	// cluster-config-operator revalidates any requested transition; consumers such as
+	// the CLI must not treat Available as an admission guarantee. Transitions are
+	// requested via spec.controlPlaneTopology, not through this field. When omitted,
+	// the controller has not yet completed its first evaluation; an empty list is also
+	// valid and intentionally carries the same meaning as omitted, since this field does
+	// not currently distinguish "not yet evaluated" from "evaluated with no applicable
+	// transitions". The only supported transition is from SingleReplica to
+	// HighlyAvailable. When status.controlPlaneTopology has any other value, this
+	// field is expected to remain omitted or empty. Entries are keyed by the
+	// (source, target) topology pair and list order is not significant. At most 1
+	// entry is permitted because only one transition direction is currently supported.
+	// +openshift:enable:FeatureGate=MutableTopology
+	// +listType=map
+	// +listMapKey=source
+	// +listMapKey=target
+	// +kubebuilder:validation:MinItems=0
+	// +kubebuilder:validation:MaxItems=1
+	// +kubebuilder:validation:XValidation:rule="self.all(t, t.source == 'SingleReplica' && t.target == 'HighlyAvailable')",message="only SingleReplica to HighlyAvailable control-plane topology transitions are supported"
+	// +optional
+	ControlPlaneTopologyTransitions []TopologyTransition `json:"controlPlaneTopologyTransitions,omitempty"`
+
 	// cpuPartitioning expresses if CPU partitioning is a currently enabled feature in the cluster.
 	// CPU Partitioning means that this cluster can support partitioning workloads to specific CPU Sets.
 	// Valid values are "None" and "AllNodes". When omitted, the default value is "None".
@@ -175,6 +201,78 @@ const (
 	// that any of the control plane components such as kubernetes API server or etcd are visible within
 	// the cluster.
 	ExternalTopologyMode TopologyMode = "External"
+)
+
+// TopologyTransition describes one topology transition available from the
+// cluster's current topology and whether it can currently be initiated. source
+// and target must differ. reason must be set whenever availability is
+// Unavailable or Unknown; both constraints are enforced by validation rules on
+// the entry as a whole.
+// +kubebuilder:validation:XValidation:rule="self.source != self.target",message="source and target must differ"
+// +kubebuilder:validation:XValidation:rule="self.availability == 'Available' || has(self.reason)",message="reason is required when availability is not Available"
+type TopologyTransition struct {
+	// source is the topology this transition starts from. It equals the current
+	// topology in the corresponding status field. Valid values are SingleReplica
+	// and HighlyAvailable.
+	// When set to SingleReplica, the transition originates from a single-replica topology.
+	// When set to HighlyAvailable, the transition originates from a highly available topology.
+	// +kubebuilder:validation:Enum=SingleReplica;HighlyAvailable
+	// +required
+	Source TopologyMode `json:"source,omitempty"`
+
+	// target is the topology this transition would move to.
+	// Valid values are SingleReplica and HighlyAvailable.
+	// When set to SingleReplica, the transition moves to a single-replica topology.
+	// When set to HighlyAvailable, the transition moves to a highly available topology.
+	// +kubebuilder:validation:Enum=SingleReplica;HighlyAvailable
+	// +required
+	Target TopologyMode `json:"target,omitempty"`
+
+	// availability indicates whether this transition can currently be initiated.
+	// Valid values are Available, Unavailable, and Unknown. Available means the
+	// controller evaluated the transition and its preconditions pass. Unavailable
+	// means the transition is defined but cannot be initiated now; see reason and
+	// message. Unknown means the controller has not completed evaluation.
+	// +required
+	Availability TransitionAvailability `json:"availability,omitempty"`
+
+	// reason is a CamelCase machine-readable explanation of the availability, e.g.
+	// PreflightCheckFailed or SourceTopologyMismatch. It is required when
+	// availability is Unavailable or Unknown and is normally omitted when Available.
+	// The set of reasons is diagnostic and not exhaustive. Must start with an
+	// uppercase letter and contain only alphanumeric characters, and must be
+	// between 1 and 128 characters long.
+	// +kubebuilder:validation:MinLength=1
+	// +kubebuilder:validation:MaxLength=128
+	// +kubebuilder:validation:XValidation:rule=`self.matches('^[A-Z][A-Za-z0-9]*$')`,message="reason must be CamelCase, matching ^[A-Z][A-Za-z0-9]*$"
+	// +optional
+	Reason string `json:"reason,omitempty"`
+
+	// message is a human-readable explanation, primarily for Unavailable
+	// transitions (e.g. a concise summary of the failing preconditions). It is for
+	// humans only and must not be parsed. It may be truncated by the controller.
+	// When omitted, no human-readable explanation is available for the transition.
+	// When set, it must be between 1 and 2048 characters long.
+	// +kubebuilder:validation:MinLength=1
+	// +kubebuilder:validation:MaxLength=2048
+	// +optional
+	Message string `json:"message,omitempty"`
+}
+
+// TransitionAvailability indicates whether a topology transition can currently be
+// initiated.
+// +kubebuilder:validation:Enum=Available;Unavailable;Unknown
+type TransitionAvailability string
+
+const (
+	// TransitionAvailable means the transition can be initiated now.
+	TransitionAvailable TransitionAvailability = "Available"
+
+	// TransitionUnavailable means the transition is defined but cannot be initiated now.
+	TransitionUnavailable TransitionAvailability = "Unavailable"
+
+	// TransitionUnknown means the controller has not completed evaluation.
+	TransitionUnknown TransitionAvailability = "Unknown"
 )
 
 // CPUPartitioningMode defines the mode for CPU partitioning

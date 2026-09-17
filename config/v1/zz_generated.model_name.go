@@ -1456,6 +1456,11 @@ func (in TokenUserValidationRule) OpenAPIModelName() string {
 }
 
 // OpenAPIModelName returns the OpenAPI model name for this type.
+func (in TopologyTransition) OpenAPIModelName() string {
+	return "com.github.openshift.api.config.v1.TopologyTransition"
+}
+
+// OpenAPIModelName returns the OpenAPI model name for this type.
 func (in Update) OpenAPIModelName() string {
 	return "com.github.openshift.api.config.v1.Update"
 }

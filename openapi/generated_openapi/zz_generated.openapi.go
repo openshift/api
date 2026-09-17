@@ -30402,6 +30402,19 @@ func schema_openshift_api_etcd_v1_PacemakerClusterResourceStatus(ref common.Refe
 							Ref:         ref(metav1.Time{}.OpenAPIModelName()),
 						},
 					},
+					"migrationThreshold": {
+						SchemaProps: spec.SchemaProps{
+							Description: "migrationThreshold is the configured number of failures after which Pacemaker will no longer attempt to run this resource on this node, as reported by the CIB. Without this value, failCount alone is uninterpretable — whether failCount 3 is alarming depends on whether the threshold is 5 or 1000000 (Pacemaker's default INFINITY). The value must be zero or greater. This field is optional and is omitted when the status collector has not yet observed a migration threshold for this resource.",
+							Type:        []string{"integer"},
+							Format:      "int32",
+						},
+					},
+					"lastFailureTime": {
+						SchemaProps: spec.SchemaProps{
+							Description: "lastFailureTime is the timestamp of the most recent failure observed for this resource on this node, as reported by the CIB. Semantically distinct from lastStopTime — a stop can be deliberate (planned migration, admin action), while a failure is always an error condition. This field is optional and is omitted when no failure has been observed for this resource on this node.",
+							Ref:         ref(metav1.Time{}.OpenAPIModelName()),
+						},
+					},
 				},
 				Required: []string{"conditions", "name"},
 			},
@@ -30815,6 +30828,19 @@ func schema_openshift_api_etcd_v1alpha1_PacemakerClusterResourceStatus(ref commo
 					"lastStartTime": {
 						SchemaProps: spec.SchemaProps{
 							Description: "lastStartTime is the timestamp of the most recent start operation observed for this resource on this node, as reported by the CIB. This field is optional and is omitted when no start operation has been observed for this resource on this node.",
+							Ref:         ref(metav1.Time{}.OpenAPIModelName()),
+						},
+					},
+					"migrationThreshold": {
+						SchemaProps: spec.SchemaProps{
+							Description: "migrationThreshold is the configured number of failures after which Pacemaker will no longer attempt to run this resource on this node, as reported by the CIB. Without this value, failCount alone is uninterpretable — whether failCount 3 is alarming depends on whether the threshold is 5 or 1000000 (Pacemaker's default INFINITY). The value must be zero or greater. This field is optional and is omitted when the status collector has not yet observed a migration threshold for this resource.",
+							Type:        []string{"integer"},
+							Format:      "int32",
+						},
+					},
+					"lastFailureTime": {
+						SchemaProps: spec.SchemaProps{
+							Description: "lastFailureTime is the timestamp of the most recent failure observed for this resource on this node, as reported by the CIB. Semantically distinct from lastStopTime — a stop can be deliberate (planned migration, admin action), while a failure is always an error condition. This field is optional and is omitted when no failure has been observed for this resource on this node.",
 							Ref:         ref(metav1.Time{}.OpenAPIModelName()),
 						},
 					},

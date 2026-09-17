@@ -743,6 +743,26 @@ type PacemakerClusterResourceStatus struct {
 	// +kubebuilder:validation:Format=date-time
 	// +optional
 	LastStartTime *metav1.Time `json:"lastStartTime,omitempty"`
+
+	// migrationThreshold is the configured number of failures after which Pacemaker
+	// will no longer attempt to run this resource on this node, as reported by the
+	// CIB. Without this value, failCount alone is uninterpretable — whether
+	// failCount 3 is alarming depends on whether the threshold is 5 or 1000000
+	// (Pacemaker's default INFINITY). The value must be zero or greater. This field
+	// is optional and is omitted when the status collector has not yet observed a
+	// migration threshold for this resource.
+	// +kubebuilder:validation:Minimum=0
+	// +optional
+	MigrationThreshold *int32 `json:"migrationThreshold,omitempty"`
+
+	// lastFailureTime is the timestamp of the most recent failure observed for this
+	// resource on this node, as reported by the CIB. Semantically distinct from
+	// lastStopTime — a stop can be deliberate (planned migration, admin action),
+	// while a failure is always an error condition. This field is optional and is
+	// omitted when no failure has been observed for this resource on this node.
+	// +kubebuilder:validation:Format=date-time
+	// +optional
+	LastFailureTime *metav1.Time `json:"lastFailureTime,omitempty"`
 }
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object

@@ -239,6 +239,7 @@ var map_ServingInfo = map[string]string{
 	"namedCertificates": "namedCertificates is a list of certificates to use to secure requests to specific hostnames",
 	"minTLSVersion":     "minTLSVersion is the minimum TLS version supported. Values must match version names from https://golang.org/pkg/crypto/tls/#pkg-constants",
 	"cipherSuites":      "cipherSuites contains an overridden list of ciphers for the server to support. Values must match cipher suite IDs from https://golang.org/pkg/crypto/tls/#pkg-constants",
+	"curvePreferences":  "curvePreferences contains the allowed TLS key-exchange groups for the server. Values must match curve IDs from https://golang.org/pkg/crypto/tls/#pkg-constants. When omitted, the Go TLS implementation uses its default curve set.",
 }
 
 func (ServingInfo) SwaggerDoc() map[string]string {

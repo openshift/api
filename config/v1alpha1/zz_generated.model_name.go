@@ -31,26 +31,6 @@ func (in AuthorizationConfig) OpenAPIModelName() string {
 }
 
 // OpenAPIModelName returns the OpenAPI model name for this type.
-func (in Backup) OpenAPIModelName() string {
-	return "com.github.openshift.api.config.v1alpha1.Backup"
-}
-
-// OpenAPIModelName returns the OpenAPI model name for this type.
-func (in BackupList) OpenAPIModelName() string {
-	return "com.github.openshift.api.config.v1alpha1.BackupList"
-}
-
-// OpenAPIModelName returns the OpenAPI model name for this type.
-func (in BackupSpec) OpenAPIModelName() string {
-	return "com.github.openshift.api.config.v1alpha1.BackupSpec"
-}
-
-// OpenAPIModelName returns the OpenAPI model name for this type.
-func (in BackupStatus) OpenAPIModelName() string {
-	return "com.github.openshift.api.config.v1alpha1.BackupStatus"
-}
-
-// OpenAPIModelName returns the OpenAPI model name for this type.
 func (in BasicAuth) OpenAPIModelName() string {
 	return "com.github.openshift.api.config.v1alpha1.BasicAuth"
 }
@@ -123,11 +103,6 @@ func (in DropEqualActionConfig) OpenAPIModelName() string {
 // OpenAPIModelName returns the OpenAPI model name for this type.
 func (in ECDSAKeyConfig) OpenAPIModelName() string {
 	return "com.github.openshift.api.config.v1alpha1.ECDSAKeyConfig"
-}
-
-// OpenAPIModelName returns the OpenAPI model name for this type.
-func (in EtcdBackupSpec) OpenAPIModelName() string {
-	return "com.github.openshift.api.config.v1alpha1.EtcdBackupSpec"
 }
 
 // OpenAPIModelName returns the OpenAPI model name for this type.
@@ -423,21 +398,6 @@ func (in ReplaceActionConfig) OpenAPIModelName() string {
 // OpenAPIModelName returns the OpenAPI model name for this type.
 func (in Retention) OpenAPIModelName() string {
 	return "com.github.openshift.api.config.v1alpha1.Retention"
-}
-
-// OpenAPIModelName returns the OpenAPI model name for this type.
-func (in RetentionNumberConfig) OpenAPIModelName() string {
-	return "com.github.openshift.api.config.v1alpha1.RetentionNumberConfig"
-}
-
-// OpenAPIModelName returns the OpenAPI model name for this type.
-func (in RetentionPolicy) OpenAPIModelName() string {
-	return "com.github.openshift.api.config.v1alpha1.RetentionPolicy"
-}
-
-// OpenAPIModelName returns the OpenAPI model name for this type.
-func (in RetentionSizeConfig) OpenAPIModelName() string {
-	return "com.github.openshift.api.config.v1alpha1.RetentionSizeConfig"
 }
 
 // OpenAPIModelName returns the OpenAPI model name for this type.

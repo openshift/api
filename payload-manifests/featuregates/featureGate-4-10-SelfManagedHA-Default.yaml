@@ -156,9 +156,6 @@
                         "name": "GCPDualStackInstall"
                     },
                     {
-                        "name": "GCPSovereignCloudInstall"
-                    },
-                    {
                         "name": "HyperShiftOnlyDynamicResourceAllocation"
                     },
                     {
@@ -303,6 +300,9 @@
                     },
                     {
                         "name": "ExternalOIDCWithUIDAndExtraClaimMappings"
+                    },
+                    {
+                        "name": "GCPSovereignCloudInstall"
                     },
                     {
                         "name": "GatewayAPIWithoutOLM"

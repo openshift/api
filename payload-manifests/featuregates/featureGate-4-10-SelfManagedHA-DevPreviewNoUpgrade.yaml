@@ -94,9 +94,6 @@
                         "name": "BGPBasedVIPManagement"
                     },
                     {
-                        "name": "BootImageSkewEnforcement"
-                    },
-                    {
                         "name": "BootcNodeManagement"
                     },
                     {

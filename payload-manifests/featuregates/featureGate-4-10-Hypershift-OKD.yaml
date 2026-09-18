@@ -295,9 +295,6 @@
                         "name": "AzureWorkloadIdentity"
                     },
                     {
-                        "name": "BootImageSkewEnforcement"
-                    },
-                    {
                         "name": "BuildCSIVolumes"
                     },
                     {

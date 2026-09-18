@@ -811,6 +811,35 @@ func (UserDefinedMonitoring) SwaggerDoc() map[string]string {
 	return map_UserDefinedMonitoring
 }
 
+var map_ControllerManager = map[string]string{
+	"":         "ControllerManager holds cluster-wide configuration shared by the controller managers in the system, among them especially kube-controller-manager. The resource is a singleton named \"cluster\".\n\nCompatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.",
+	"metadata": "metadata is the standard object's metadata. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata",
+	"spec":     "spec holds user settable values for configuration. The only way to express no opinion in the spec is to not create the ControllerManager object at all.",
+}
+
+func (ControllerManager) SwaggerDoc() map[string]string {
+	return map_ControllerManager
+}
+
+var map_ControllerManagerList = map[string]string{
+	"":         "ControllerManagerList is a collection of ControllerManager resources.\n\nCompatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.",
+	"metadata": "metadata is the standard list's metadata. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata",
+	"items":    "items is a list of ControllerManager resources",
+}
+
+func (ControllerManagerList) SwaggerDoc() map[string]string {
+	return map_ControllerManagerList
+}
+
+var map_ControllerManagerSpec = map[string]string{
+	"":                     "ControllerManagerSpec defines the desired state of the controller managers",
+	"forceDetachOnTimeout": "forceDetachOnTimeout controls whether kube-controller-manager force detaches volumes from a node that is not healthy once the volumes have not been unmounted within the maximum unmount time (6 minutes). Valid values are \"Enabled\" and \"Disabled\". When set to \"Enabled\", volumes are force detached from unhealthy nodes after the maximum unmount time, so that workloads using them can start on other nodes. Force detaching a volume that is still in use by the node can corrupt its data. When set to \"Disabled\", volumes are not force detached based on the maximum unmount time. Volumes remain attached to an unhealthy node until it recovers, or until the node is tainted with \"node.kubernetes.io/out-of-service\" as part of the non-graceful node shutdown procedure. When omitted, this means the user has no opinion and the platform is left to choose a reasonable default, which is subject to change over time. The current default is \"Enabled\". While this is the only field in spec, it must be set, because spec cannot be empty.",
+}
+
+func (ControllerManagerSpec) SwaggerDoc() map[string]string {
+	return map_ControllerManagerSpec
+}
+
 var map_CRIOCredentialProviderConfig = map[string]string{
 	"":         "CRIOCredentialProviderConfig holds cluster-wide singleton resource configurations for CRI-O credential provider, the name of this instance is \"cluster\". CRI-O credential provider is a binary shipped with CRI-O that provides a way to obtain container image pull credentials from external sources. For example, it can be used to fetch mirror registry credentials from secrets resources in the cluster within the same namespace the pod will be running in. CRIOCredentialProviderConfig configuration specifies the pod image sources registries that should trigger the CRI-O credential provider execution, which will resolve the CRI-O mirror configurations and obtain the necessary credentials for pod creation. Note: Configuration changes will only take effect after the kubelet restarts, which is automatically managed by the cluster during rollout.\n\nThe resource is a singleton named \"cluster\".\n\nCompatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.",
 	"metadata": "metadata is the standard object's metadata. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata",

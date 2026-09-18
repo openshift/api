@@ -47,6 +47,7 @@ type ControllerManagerSpec struct {
 	// When omitted, this means the user has no opinion and the platform is left
 	// to choose a reasonable default, which is subject to change over time.
 	// The current default is "Enabled".
+	// While this is the only field in spec, it must be set, because spec cannot be empty.
 	// +optional
 	// +openshift:enable:FeatureGate=DisableForceDetachOnTimeout
 	ForceDetachOnTimeout ForceDetachOnTimeoutPolicy `json:"forceDetachOnTimeout,omitempty"`
@@ -81,5 +82,6 @@ type ControllerManagerList struct {
 	// More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata
 	metav1.ListMeta `json:"metadata"`
 
+	// items is a list of ControllerManager resources
 	Items []ControllerManager `json:"items"`
 }

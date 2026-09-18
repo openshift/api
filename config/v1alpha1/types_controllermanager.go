@@ -6,7 +6,8 @@ import metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 // +genclient:nonNamespaced
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 
-// ControllerManager holds cluster-wide configuration for the Kubernetes controller manager.
+// ControllerManager holds cluster-wide configuration shared by the controller managers
+// in the system, among them especially kube-controller-manager.
 // The resource is a singleton named "cluster".
 //
 // Compatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.
@@ -30,7 +31,7 @@ type ControllerManager struct {
 	Spec ControllerManagerSpec `json:"spec,omitzero"`
 }
 
-// ControllerManagerSpec defines the desired state of the Kubernetes controller manager
+// ControllerManagerSpec defines the desired state of the controller managers
 // +kubebuilder:validation:MinProperties=1
 type ControllerManagerSpec struct {
 	// forceDetachOnTimeout controls whether kube-controller-manager force detaches

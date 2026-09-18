@@ -21,7 +21,8 @@ spec:
     schema:
       openAPIV3Schema:
         description: |-
-          ControllerManager holds cluster-wide configuration for the Kubernetes controller manager.
+          ControllerManager holds cluster-wide configuration shared by the controller managers
+          in the system, among them especially kube-controller-manager.
           The resource is a singleton named "cluster".
 
           Compatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.

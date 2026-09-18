@@ -24244,7 +24244,7 @@ func schema_openshift_api_config_v1alpha1_ControllerManager(ref common.Reference
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
-				Description: "ControllerManager holds cluster-wide configuration for the Kubernetes controller manager. The resource is a singleton named \"cluster\".\n\nCompatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.",
+				Description: "ControllerManager holds cluster-wide configuration shared by the controller managers in the system, among them especially kube-controller-manager. The resource is a singleton named \"cluster\".\n\nCompatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.",
 				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
 					"kind": {
@@ -24314,7 +24314,8 @@ func schema_openshift_api_config_v1alpha1_ControllerManagerList(ref common.Refer
 					},
 					"items": {
 						SchemaProps: spec.SchemaProps{
-							Type: []string{"array"},
+							Description: "items is a list of ControllerManager resources",
+							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
 									SchemaProps: spec.SchemaProps{
@@ -24338,12 +24339,12 @@ func schema_openshift_api_config_v1alpha1_ControllerManagerSpec(ref common.Refer
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
-				Description: "ControllerManagerSpec defines the desired state of the Kubernetes controller manager",
+				Description: "ControllerManagerSpec defines the desired state of the controller managers",
 				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
 					"forceDetachOnTimeout": {
 						SchemaProps: spec.SchemaProps{
-							Description: "forceDetachOnTimeout controls whether kube-controller-manager force detaches volumes from a node that is not healthy once the volumes have not been unmounted within the maximum unmount time (6 minutes). Valid values are \"Enabled\" and \"Disabled\". When set to \"Enabled\", volumes are force detached from unhealthy nodes after the maximum unmount time, so that workloads using them can start on other nodes. Force detaching a volume that is still in use by the node can corrupt its data. When set to \"Disabled\", volumes are not force detached based on the maximum unmount time. Volumes remain attached to an unhealthy node until it recovers, or until the node is tainted with \"node.kubernetes.io/out-of-service\" as part of the non-graceful node shutdown procedure. When omitted, this means the user has no opinion and the platform is left to choose a reasonable default, which is subject to change over time. The current default is \"Enabled\".\n\nPossible enum values:\n - `\"Disabled\"` prevents kube-controller-manager from force detaching volumes based on the maximum unmount time.\n - `\"Enabled\"` allows kube-controller-manager to force detach volumes from unhealthy nodes once the maximum unmount time is exceeded.",
+							Description: "forceDetachOnTimeout controls whether kube-controller-manager force detaches volumes from a node that is not healthy once the volumes have not been unmounted within the maximum unmount time (6 minutes). Valid values are \"Enabled\" and \"Disabled\". When set to \"Enabled\", volumes are force detached from unhealthy nodes after the maximum unmount time, so that workloads using them can start on other nodes. Force detaching a volume that is still in use by the node can corrupt its data. When set to \"Disabled\", volumes are not force detached based on the maximum unmount time. Volumes remain attached to an unhealthy node until it recovers, or until the node is tainted with \"node.kubernetes.io/out-of-service\" as part of the non-graceful node shutdown procedure. When omitted, this means the user has no opinion and the platform is left to choose a reasonable default, which is subject to change over time. The current default is \"Enabled\". While this is the only field in spec, it must be set, because spec cannot be empty.\n\nPossible enum values:\n - `\"Disabled\"` prevents kube-controller-manager from force detaching volumes based on the maximum unmount time.\n - `\"Enabled\"` allows kube-controller-manager to force detach volumes from unhealthy nodes once the maximum unmount time is exceeded.",
 							Type:        []string{"string"},
 							Format:      "",
 							Enum:        []interface{}{"Disabled", "Enabled"},

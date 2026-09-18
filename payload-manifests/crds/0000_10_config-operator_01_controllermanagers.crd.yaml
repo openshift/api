@@ -21,7 +21,8 @@ spec:
     schema:
       openAPIV3Schema:
         description: |-
-          ControllerManager holds cluster-wide configuration for the Kubernetes controller manager.
+          ControllerManager holds cluster-wide configuration shared by the controller managers
+          in the system, among them especially kube-controller-manager.
           The resource is a singleton named "cluster".
 
           Compatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.
@@ -65,6 +66,7 @@ spec:
                   When omitted, this means the user has no opinion and the platform is left
                   to choose a reasonable default, which is subject to change over time.
                   The current default is "Enabled".
+                  While this is the only field in spec, it must be set, because spec cannot be empty.
                 enum:
                 - Enabled
                 - Disabled

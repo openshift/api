@@ -80,6 +80,9 @@
                         "name": "NetworkConnect"
                     },
                     {
+                        "name": "OVNKubernetesUplinkMode"
+                    },
+                    {
                         "name": "ProvisioningRequestAvailable"
                     },
                     {

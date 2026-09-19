@@ -107,6 +107,9 @@
                         "name": "OLMLifecycleAndCompatibility"
                     },
                     {
+                        "name": "OVNKubernetesUplinkMode"
+                    },
+                    {
                         "name": "ProvisioningRequestAvailable"
                     },
                     {

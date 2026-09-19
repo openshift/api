@@ -181,10 +181,16 @@
                         "name": "ClusterVersionOperatorConfiguration"
                     },
                     {
+                        "name": "CompositePodGroup"
+                    },
+                    {
                         "name": "ConfigurablePKI"
                     },
                     {
                         "name": "DNSNameResolver"
+                    },
+                    {
+                        "name": "DRAWorkloadResourceClaims"
                     },
                     {
                         "name": "DualReplica"
@@ -239,6 +245,9 @@
                     },
                     {
                         "name": "GatewayAPIWithoutOLM"
+                    },
+                    {
+                        "name": "GenericWorkload"
                     },
                     {
                         "name": "GomaxprocsInjection"
@@ -358,6 +367,9 @@
                         "name": "OpenShiftPodSecurityAdmission"
                     },
                     {
+                        "name": "PodGroupPreemptionPolicy"
+                    },
+                    {
                         "name": "SELinuxMount"
                     },
                     {
@@ -379,6 +391,9 @@
                         "name": "TLSGroupPreferences"
                     },
                     {
+                        "name": "TopologyAwareWorkloadScheduling"
+                    },
+                    {
                         "name": "UpgradeStatus"
                     },
                     {
@@ -392,6 +407,9 @@
                     },
                     {
                         "name": "VSphereMultiVCenterDay2"
+                    },
+                    {
+                        "name": "WorkloadWithJob"
                     }
                 ],
                 "version": ""

@@ -108,6 +108,9 @@
                         "name": "ClusterVersionOperatorConfiguration"
                     },
                     {
+                        "name": "CompositePodGroup"
+                    },
+                    {
                         "name": "ConfidentialCluster"
                     },
                     {
@@ -118,6 +121,9 @@
                     },
                     {
                         "name": "DRADeviceTaintRules"
+                    },
+                    {
+                        "name": "DRAWorkloadResourceClaims"
                     },
                     {
                         "name": "DyanmicServiceEndpointIBMCloud"
@@ -151,6 +157,9 @@
                     },
                     {
                         "name": "GatewayAPIManagementMode"
+                    },
+                    {
+                        "name": "GenericWorkload"
                     },
                     {
                         "name": "GomaxprocsInjection"
@@ -261,6 +270,9 @@
                         "name": "OnPremDNSRecords"
                     },
                     {
+                        "name": "PodGroupPreemptionPolicy"
+                    },
+                    {
                         "name": "ProvisioningRequestAvailable"
                     },
                     {
@@ -276,10 +288,16 @@
                         "name": "TLSGroupPreferences"
                     },
                     {
+                        "name": "TopologyAwareWorkloadScheduling"
+                    },
+                    {
                         "name": "VSphereConfigurableMaxAllowedBlockVolumesPerNode"
                     },
                     {
                         "name": "VSpherePerComponentScopedCreds"
+                    },
+                    {
+                        "name": "WorkloadWithJob"
                     }
                 ],
                 "enabled": [

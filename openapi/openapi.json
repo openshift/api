@@ -16778,6 +16778,66 @@
         }
       }
     },
+    "com.github.openshift.api.etcd.v1.PacemakerClusterAlertAgentScriptStatus": {
+      "description": "PacemakerClusterAlertAgentScriptStatus represents the presence of an alert agent's script on a specific node. Alert agent registration is cluster-wide, but the script it invokes must exist locally on whichever node the triggering event occurs on, since Pacemaker executes it there — this is tracked per node",
+      "type": "object",
+      "required": [
+        "conditions",
+        "name"
+      ],
+      "properties": {
+        "conditions": {
+          "description": "conditions represent the observations of the alert agent script's state on this node. Known condition types are \"Healthy\" (aggregate) and \"ScriptPresent\" (the script file exists and is executable on this node). If this script's presence has not yet been observed by the status collector, publish these conditions with status \"Unknown\" and reason \"Pending\". Reserve \"False\" for an observed failure. Each of these conditions is required, so the array must contain at least 2 items.",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Condition"
+          },
+          "x-kubernetes-list-map-keys": [
+            "type"
+          ],
+          "x-kubernetes-list-type": "map"
+        },
+        "name": {
+          "description": "name is the name of the pacemaker alert agent this script belongs to. Valid values are \"Taint Alert Agent\" and \"Untaint Alert Agent\".\n\nPossible enum values:\n - `\"Taint Alert Agent\"` is the alert agent that taints a node after it is fenced.\n - `\"Untaint Alert Agent\"` is the alert agent that removes a node's taint once it rejoins the cluster.",
+          "type": "string",
+          "enum": [
+            "Taint Alert Agent",
+            "Untaint Alert Agent"
+          ]
+        }
+      }
+    },
+    "com.github.openshift.api.etcd.v1.PacemakerClusterAlertAgentStatus": {
+      "description": "PacemakerClusterAlertAgentStatus represents the cluster-wide registration status of a pacemaker alert agent.",
+      "type": "object",
+      "required": [
+        "conditions",
+        "name"
+      ],
+      "properties": {
+        "conditions": {
+          "description": "conditions represent the observations of the alert agent's current state. Known condition types are \"Healthy\" (aggregate) and \"Configured\" (registered in the CIB with the expected script path and event filter). If this alert agent's state has not yet been observed by the status collector, publish these conditions with status \"Unknown\" and reason \"Pending\". Reserve \"False\" for an observed failure. Each of these conditions is required, so the array must contain at least 2 items.",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Condition"
+          },
+          "x-kubernetes-list-map-keys": [
+            "type"
+          ],
+          "x-kubernetes-list-type": "map"
+        },
+        "name": {
+          "description": "name is the name of the pacemaker alert agent. Valid values are \"Taint Alert Agent\" and \"Untaint Alert Agent\".\n\nPossible enum values:\n - `\"Taint Alert Agent\"` is the alert agent that taints a node after it is fenced.\n - `\"Untaint Alert Agent\"` is the alert agent that removes a node's taint once it rejoins the cluster.",
+          "type": "string",
+          "enum": [
+            "Taint Alert Agent",
+            "Untaint Alert Agent"
+          ]
+        }
+      }
+    },
     "com.github.openshift.api.etcd.v1.PacemakerClusterFencingAgentStatus": {
       "description": "PacemakerClusterFencingAgentStatus represents the status of a fencing agent that can fence a node. Fencing agents are STONITH (Shoot The Other Node In The Head) devices used to isolate failed nodes. Unlike regular pacemaker resources, fencing agents are mapped to their target node (the node they can fence), not the node where their monitoring operations are scheduled.",
       "type": "object",
@@ -16863,6 +16923,18 @@
           },
           "x-kubernetes-list-type": "atomic"
         },
+        "alertAgentScripts": {
+          "description": "alertAgentScripts contains the presence status of each alert agent's script on this node. Alert agents are registered cluster-wide in the CIB, but their scripts are delivered independently to each node by MCO, so presence is tracked per node to catch delivery gaps between nodes. This field is optional and is omitted when script-presence status has not yet been collected by the status collector (including by a collector version that predates this field). Names must be unique within this array.",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/com.github.openshift.api.etcd.v1.PacemakerClusterAlertAgentScriptStatus"
+          },
+          "x-kubernetes-list-map-keys": [
+            "name"
+          ],
+          "x-kubernetes-list-type": "map"
+        },
         "conditions": {
           "description": "conditions represent the observations of the node's current state. Known condition types are: \"Healthy\", \"Online\", \"InService\", \"Active\", \"Ready\", \"Clean\", \"Member\", \"FencingAvailable\", \"FencingHealthy\". The \"Healthy\" condition is an aggregate that tracks the overall health of the node. The \"Online\" condition tracks whether the node is online. The \"InService\" condition tracks whether the node is in service (not in maintenance mode). The \"Active\" condition tracks whether the node is active (not in standby mode). The \"Ready\" condition tracks whether the node is ready (not in a pending state). The \"Clean\" condition tracks whether the node is in a clean (status known) state. The \"Member\" condition tracks whether the node is a member of the cluster. The \"FencingAvailable\" condition tracks whether this node can be fenced by at least one healthy agent. The \"FencingHealthy\" condition tracks whether all fencing agents for this node are healthy. Each of these conditions is required, so the array must contain at least 9 items.",
           "type": "array",
@@ -16925,6 +16997,28 @@
           ],
           "x-kubernetes-list-type": "map"
         },
+        "failCount": {
+          "description": "failCount is the current failure count Pacemaker records for this resource on this node, as reported by the CIB. Pacemaker increments this count each time an operation for this resource fails, and resets it to zero when a `pcs resource cleanup` is performed. The value must be zero or greater. This field is optional and is omitted when the status collector has not yet observed a fail count for this resource, for example on a freshly bootstrapped cluster or for a resource that has never failed.",
+          "type": "integer",
+          "format": "int32"
+        },
+        "lastFailureTime": {
+          "description": "lastFailureTime is the timestamp of the most recent failure observed for this resource on this node, as reported by the CIB. Semantically distinct from lastStopTime — a stop can be deliberate (planned migration, admin action), while a failure is always an error condition. This field is optional and is omitted when no failure has been observed for this resource on this node.",
+          "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Time"
+        },
+        "lastStartTime": {
+          "description": "lastStartTime is the timestamp of the most recent start operation observed for this resource on this node, as reported by the CIB. This field is optional and is omitted when no start operation has been observed for this resource on this node.",
+          "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Time"
+        },
+        "lastStopTime": {
+          "description": "lastStopTime is the timestamp of the most recent stop operation observed for this resource on this node, as reported by the CIB. This field is optional and is omitted when no stop operation has been observed for this resource on this node.",
+          "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Time"
+        },
+        "migrationThreshold": {
+          "description": "migrationThreshold is the configured number of failures after which Pacemaker will no longer attempt to run this resource on this node, as reported by the CIB. Without this value, failCount alone is uninterpretable — whether failCount 3 is alarming depends on whether the threshold is 5 or 1000000 (Pacemaker's default INFINITY). The value must be zero or greater. This field is optional and is omitted when the status collector has not yet observed a migration threshold for this resource.",
+          "type": "integer",
+          "format": "int32"
+        },
         "name": {
           "description": "name is the name of the pacemaker resource. Valid values are \"Kubelet\" and \"Etcd\". The Kubelet resource is a prerequisite for etcd in Two Node OpenShift with Fencing deployments. The Etcd resource may temporarily transition to stopped during pacemaker quorum-recovery operations. Fencing agents are tracked separately in the node's fencingAgents field.\n\nPossible enum values:\n - `\"Etcd\"` is the etcd pacemaker resource. The etcd resource may temporarily transition to stopped during pacemaker quorum-recovery operations.\n - `\"Kubelet\"` is the kubelet pacemaker resource. The kubelet resource is a prerequisite for etcd in Two Node OpenShift with Fencing deployments.",
           "type": "string",
@@ -16944,6 +17038,18 @@
         "nodes"
       ],
       "properties": {
+        "alertAgents": {
+          "description": "alertAgents contains the cluster-wide registration status of pacemaker alert agents used for auto-tainting nodes after fencing events. This field is optional and is omitted when alert agent status has not yet been collected by the status collector (including by a collector version that predates this field) or when no alert agents are configured. Names must be unique within this array.",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/com.github.openshift.api.etcd.v1.PacemakerClusterAlertAgentStatus"
+          },
+          "x-kubernetes-list-map-keys": [
+            "name"
+          ],
+          "x-kubernetes-list-type": "map"
+        },
         "conditions": {
           "description": "conditions represent the observations of the pacemaker cluster's current state. Known condition types are: \"Healthy\", \"InService\", \"NodeCountAsExpected\". The \"Healthy\" condition is an aggregate that tracks the overall health of the cluster. The \"InService\" condition tracks whether the cluster is in service (not in maintenance mode). The \"NodeCountAsExpected\" condition tracks whether the expected number of nodes are present. Each of these conditions is required, so the array must contain at least 3 items.",
           "type": "array",
@@ -17019,6 +17125,66 @@
           "description": "status contains the actual pacemaker cluster status information collected from the cluster. The goal of this status is to be able to quickly identify if pacemaker is in a healthy state. In Two Node OpenShift with Fencing, a healthy pacemaker cluster has 2 nodes, both of which have healthy kubelet, etcd, and fencing resources. This field is optional on creation - the status collector populates it immediately after creating the resource via the status subresource.",
           "default": {},
           "$ref": "#/definitions/com.github.openshift.api.etcd.v1alpha1.PacemakerClusterStatus"
+        }
+      }
+    },
+    "com.github.openshift.api.etcd.v1alpha1.PacemakerClusterAlertAgentScriptStatus": {
+      "description": "PacemakerClusterAlertAgentScriptStatus represents the presence of an alert agent's script on a specific node. Alert agent registration is cluster-wide, but the script it invokes must exist locally on whichever node the triggering event occurs on, since Pacemaker executes it there — this is tracked per node",
+      "type": "object",
+      "required": [
+        "conditions",
+        "name"
+      ],
+      "properties": {
+        "conditions": {
+          "description": "conditions represent the observations of the alert agent script's state on this node. Known condition types are \"Healthy\" (aggregate) and \"ScriptPresent\" (the script file exists and is executable on this node). If this script's presence has not yet been observed by the status collector, publish these conditions with status \"Unknown\" and reason \"Pending\". Reserve \"False\" for an observed failure. Each of these conditions is required, so the array must contain at least 2 items.",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Condition"
+          },
+          "x-kubernetes-list-map-keys": [
+            "type"
+          ],
+          "x-kubernetes-list-type": "map"
+        },
+        "name": {
+          "description": "name is the name of the pacemaker alert agent this script belongs to. Valid values are \"Taint Alert Agent\" and \"Untaint Alert Agent\".\n\nPossible enum values:\n - `\"Taint Alert Agent\"` is the alert agent that taints a node after it is fenced.\n - `\"Untaint Alert Agent\"` is the alert agent that removes a node's taint once it rejoins the cluster.",
+          "type": "string",
+          "enum": [
+            "Taint Alert Agent",
+            "Untaint Alert Agent"
+          ]
+        }
+      }
+    },
+    "com.github.openshift.api.etcd.v1alpha1.PacemakerClusterAlertAgentStatus": {
+      "description": "PacemakerClusterAlertAgentStatus represents the cluster-wide registration status of a pacemaker alert agent.",
+      "type": "object",
+      "required": [
+        "conditions",
+        "name"
+      ],
+      "properties": {
+        "conditions": {
+          "description": "conditions represent the observations of the alert agent's current state. Known condition types are \"Healthy\" (aggregate) and \"Configured\" (registered in the CIB with the expected script path and event filter). If this alert agent's state has not yet been observed by the status collector, publish these conditions with status \"Unknown\" and reason \"Pending\". Reserve \"False\" for an observed failure. Each of these conditions is required, so the array must contain at least 2 items.",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Condition"
+          },
+          "x-kubernetes-list-map-keys": [
+            "type"
+          ],
+          "x-kubernetes-list-type": "map"
+        },
+        "name": {
+          "description": "name is the name of the pacemaker alert agent. Valid values are \"Taint Alert Agent\" and \"Untaint Alert Agent\".\n\nPossible enum values:\n - `\"Taint Alert Agent\"` is the alert agent that taints a node after it is fenced.\n - `\"Untaint Alert Agent\"` is the alert agent that removes a node's taint once it rejoins the cluster.",
+          "type": "string",
+          "enum": [
+            "Taint Alert Agent",
+            "Untaint Alert Agent"
+          ]
         }
       }
     },
@@ -17107,6 +17273,18 @@
           },
           "x-kubernetes-list-type": "atomic"
         },
+        "alertAgentScripts": {
+          "description": "alertAgentScripts contains the presence status of each alert agent's script on this node. Alert agents are registered cluster-wide in the CIB, but their scripts are delivered independently to each node by MCO, so presence is tracked per node to catch delivery gaps between nodes. This field is optional and is omitted when script-presence status has not yet been collected by the status collector (including by a collector version that predates this field). Names must be unique within this array.",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/com.github.openshift.api.etcd.v1alpha1.PacemakerClusterAlertAgentScriptStatus"
+          },
+          "x-kubernetes-list-map-keys": [
+            "name"
+          ],
+          "x-kubernetes-list-type": "map"
+        },
         "conditions": {
           "description": "conditions represent the observations of the node's current state. Known condition types are: \"Healthy\", \"Online\", \"InService\", \"Active\", \"Ready\", \"Clean\", \"Member\", \"FencingAvailable\", \"FencingHealthy\". The \"Healthy\" condition is an aggregate that tracks the overall health of the node. The \"Online\" condition tracks whether the node is online. The \"InService\" condition tracks whether the node is in service (not in maintenance mode). The \"Active\" condition tracks whether the node is active (not in standby mode). The \"Ready\" condition tracks whether the node is ready (not in a pending state). The \"Clean\" condition tracks whether the node is in a clean (status known) state. The \"Member\" condition tracks whether the node is a member of the cluster. The \"FencingAvailable\" condition tracks whether this node can be fenced by at least one healthy agent. The \"FencingHealthy\" condition tracks whether all fencing agents for this node are healthy. Each of these conditions is required, so the array must contain at least 9 items.",
           "type": "array",
@@ -17169,6 +17347,28 @@
           ],
           "x-kubernetes-list-type": "map"
         },
+        "failCount": {
+          "description": "failCount is the current failure count Pacemaker records for this resource on this node, as reported by the CIB. Pacemaker increments this count each time an operation for this resource fails, and resets it to zero when a `pcs resource cleanup` is performed. The value must be zero or greater. This field is optional and is omitted when the status collector has not yet observed a fail count for this resource, for example on a freshly bootstrapped cluster or for a resource that has never failed.",
+          "type": "integer",
+          "format": "int32"
+        },
+        "lastFailureTime": {
+          "description": "lastFailureTime is the timestamp of the most recent failure observed for this resource on this node, as reported by the CIB. Semantically distinct from lastStopTime — a stop can be deliberate (planned migration, admin action), while a failure is always an error condition. This field is optional and is omitted when no failure has been observed for this resource on this node.",
+          "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Time"
+        },
+        "lastStartTime": {
+          "description": "lastStartTime is the timestamp of the most recent start operation observed for this resource on this node, as reported by the CIB. This field is optional and is omitted when no start operation has been observed for this resource on this node.",
+          "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Time"
+        },
+        "lastStopTime": {
+          "description": "lastStopTime is the timestamp of the most recent stop operation observed for this resource on this node, as reported by the CIB. This field is optional and is omitted when no stop operation has been observed for this resource on this node.",
+          "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Time"
+        },
+        "migrationThreshold": {
+          "description": "migrationThreshold is the configured number of failures after which Pacemaker will no longer attempt to run this resource on this node, as reported by the CIB. Without this value, failCount alone is uninterpretable — whether failCount 3 is alarming depends on whether the threshold is 5 or 1000000 (Pacemaker's default INFINITY). The value must be zero or greater. This field is optional and is omitted when the status collector has not yet observed a migration threshold for this resource.",
+          "type": "integer",
+          "format": "int32"
+        },
         "name": {
           "description": "name is the name of the pacemaker resource. Valid values are \"Kubelet\" and \"Etcd\". The Kubelet resource is a prerequisite for etcd in Two Node OpenShift with Fencing deployments. The Etcd resource may temporarily transition to stopped during pacemaker quorum-recovery operations. Fencing agents are tracked separately in the node's fencingAgents field.\n\nPossible enum values:\n - `\"Etcd\"` is the etcd pacemaker resource. The etcd resource may temporarily transition to stopped during pacemaker quorum-recovery operations.\n - `\"Kubelet\"` is the kubelet pacemaker resource. The kubelet resource is a prerequisite for etcd in Two Node OpenShift with Fencing deployments.",
           "type": "string",
@@ -17188,6 +17388,18 @@
         "nodes"
       ],
       "properties": {
+        "alertAgents": {
+          "description": "alertAgents contains the cluster-wide registration status of pacemaker alert agents used for auto-tainting nodes after fencing events. This field is optional and is omitted when alert agent status has not yet been collected by the status collector (including by a collector version that predates this field) or when no alert agents are configured. Names must be unique within this array.",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/com.github.openshift.api.etcd.v1alpha1.PacemakerClusterAlertAgentStatus"
+          },
+          "x-kubernetes-list-map-keys": [
+            "name"
+          ],
+          "x-kubernetes-list-type": "map"
+        },
         "conditions": {
           "description": "conditions represent the observations of the pacemaker cluster's current state. Known condition types are: \"Healthy\", \"InService\", \"NodeCountAsExpected\". The \"Healthy\" condition is an aggregate that tracks the overall health of the cluster. The \"InService\" condition tracks whether the cluster is in service (not in maintenance mode). The \"NodeCountAsExpected\" condition tracks whether the expected number of nodes are present. Each of these conditions is required, so the array must contain at least 3 items.",
           "type": "array",

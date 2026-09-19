@@ -666,6 +666,8 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		consolev1.Link{}.OpenAPIModelName():                                                    schema_openshift_api_console_v1_Link(ref),
 		consolev1.NamespaceDashboardSpec{}.OpenAPIModelName():                                  schema_openshift_api_console_v1_NamespaceDashboardSpec(ref),
 		etcdv1.PacemakerCluster{}.OpenAPIModelName():                                           schema_openshift_api_etcd_v1_PacemakerCluster(ref),
+		etcdv1.PacemakerClusterAlertAgentScriptStatus{}.OpenAPIModelName():                     schema_openshift_api_etcd_v1_PacemakerClusterAlertAgentScriptStatus(ref),
+		etcdv1.PacemakerClusterAlertAgentStatus{}.OpenAPIModelName():                           schema_openshift_api_etcd_v1_PacemakerClusterAlertAgentStatus(ref),
 		etcdv1.PacemakerClusterFencingAgentStatus{}.OpenAPIModelName():                         schema_openshift_api_etcd_v1_PacemakerClusterFencingAgentStatus(ref),
 		etcdv1.PacemakerClusterList{}.OpenAPIModelName():                                       schema_openshift_api_etcd_v1_PacemakerClusterList(ref),
 		etcdv1.PacemakerClusterNodeStatus{}.OpenAPIModelName():                                 schema_openshift_api_etcd_v1_PacemakerClusterNodeStatus(ref),
@@ -673,6 +675,8 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		etcdv1.PacemakerClusterStatus{}.OpenAPIModelName():                                     schema_openshift_api_etcd_v1_PacemakerClusterStatus(ref),
 		etcdv1.PacemakerNodeAddress{}.OpenAPIModelName():                                       schema_openshift_api_etcd_v1_PacemakerNodeAddress(ref),
 		etcdv1alpha1.PacemakerCluster{}.OpenAPIModelName():                                     schema_openshift_api_etcd_v1alpha1_PacemakerCluster(ref),
+		etcdv1alpha1.PacemakerClusterAlertAgentScriptStatus{}.OpenAPIModelName():               schema_openshift_api_etcd_v1alpha1_PacemakerClusterAlertAgentScriptStatus(ref),
+		etcdv1alpha1.PacemakerClusterAlertAgentStatus{}.OpenAPIModelName():                     schema_openshift_api_etcd_v1alpha1_PacemakerClusterAlertAgentStatus(ref),
 		etcdv1alpha1.PacemakerClusterFencingAgentStatus{}.OpenAPIModelName():                   schema_openshift_api_etcd_v1alpha1_PacemakerClusterFencingAgentStatus(ref),
 		etcdv1alpha1.PacemakerClusterList{}.OpenAPIModelName():                                 schema_openshift_api_etcd_v1alpha1_PacemakerClusterList(ref),
 		etcdv1alpha1.PacemakerClusterNodeStatus{}.OpenAPIModelName():                           schema_openshift_api_etcd_v1alpha1_PacemakerClusterNodeStatus(ref),
@@ -30134,6 +30138,98 @@ func schema_openshift_api_etcd_v1_PacemakerCluster(ref common.ReferenceCallback)
 	}
 }
 
+func schema_openshift_api_etcd_v1_PacemakerClusterAlertAgentScriptStatus(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "PacemakerClusterAlertAgentScriptStatus represents the presence of an alert agent's script on a specific node. Alert agent registration is cluster-wide, but the script it invokes must exist locally on whichever node the triggering event occurs on, since Pacemaker executes it there — this is tracked per node",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"conditions": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-map-keys": []interface{}{
+									"type",
+								},
+								"x-kubernetes-list-type": "map",
+							},
+						},
+						SchemaProps: spec.SchemaProps{
+							Description: "conditions represent the observations of the alert agent script's state on this node. Known condition types are \"Healthy\" (aggregate) and \"ScriptPresent\" (the script file exists and is executable on this node). If this script's presence has not yet been observed by the status collector, publish these conditions with status \"Unknown\" and reason \"Pending\". Reserve \"False\" for an observed failure. Each of these conditions is required, so the array must contain at least 2 items.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref(metav1.Condition{}.OpenAPIModelName()),
+									},
+								},
+							},
+						},
+					},
+					"name": {
+						SchemaProps: spec.SchemaProps{
+							Description: "name is the name of the pacemaker alert agent this script belongs to. Valid values are \"Taint Alert Agent\" and \"Untaint Alert Agent\".\n\nPossible enum values:\n - `\"Taint Alert Agent\"` is the alert agent that taints a node after it is fenced.\n - `\"Untaint Alert Agent\"` is the alert agent that removes a node's taint once it rejoins the cluster.",
+							Type:        []string{"string"},
+							Format:      "",
+							Enum:        []interface{}{"Taint Alert Agent", "Untaint Alert Agent"},
+						},
+					},
+				},
+				Required: []string{"conditions", "name"},
+			},
+		},
+		Dependencies: []string{
+			metav1.Condition{}.OpenAPIModelName()},
+	}
+}
+
+func schema_openshift_api_etcd_v1_PacemakerClusterAlertAgentStatus(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "PacemakerClusterAlertAgentStatus represents the cluster-wide registration status of a pacemaker alert agent.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"conditions": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-map-keys": []interface{}{
+									"type",
+								},
+								"x-kubernetes-list-type": "map",
+							},
+						},
+						SchemaProps: spec.SchemaProps{
+							Description: "conditions represent the observations of the alert agent's current state. Known condition types are \"Healthy\" (aggregate) and \"Configured\" (registered in the CIB with the expected script path and event filter). If this alert agent's state has not yet been observed by the status collector, publish these conditions with status \"Unknown\" and reason \"Pending\". Reserve \"False\" for an observed failure. Each of these conditions is required, so the array must contain at least 2 items.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref(metav1.Condition{}.OpenAPIModelName()),
+									},
+								},
+							},
+						},
+					},
+					"name": {
+						SchemaProps: spec.SchemaProps{
+							Description: "name is the name of the pacemaker alert agent. Valid values are \"Taint Alert Agent\" and \"Untaint Alert Agent\".\n\nPossible enum values:\n - `\"Taint Alert Agent\"` is the alert agent that taints a node after it is fenced.\n - `\"Untaint Alert Agent\"` is the alert agent that removes a node's taint once it rejoins the cluster.",
+							Type:        []string{"string"},
+							Format:      "",
+							Enum:        []interface{}{"Taint Alert Agent", "Untaint Alert Agent"},
+						},
+					},
+				},
+				Required: []string{"conditions", "name"},
+			},
+		},
+		Dependencies: []string{
+			metav1.Condition{}.OpenAPIModelName()},
+	}
+}
+
 func schema_openshift_api_etcd_v1_PacemakerClusterFencingAgentStatus(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -30337,12 +30433,34 @@ func schema_openshift_api_etcd_v1_PacemakerClusterNodeStatus(ref common.Referenc
 							},
 						},
 					},
+					"alertAgentScripts": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-map-keys": []interface{}{
+									"name",
+								},
+								"x-kubernetes-list-type": "map",
+							},
+						},
+						SchemaProps: spec.SchemaProps{
+							Description: "alertAgentScripts contains the presence status of each alert agent's script on this node. Alert agents are registered cluster-wide in the CIB, but their scripts are delivered independently to each node by MCO, so presence is tracked per node to catch delivery gaps between nodes. This field is optional and is omitted when script-presence status has not yet been collected by the status collector (including by a collector version that predates this field). Names must be unique within this array.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref(etcdv1.PacemakerClusterAlertAgentScriptStatus{}.OpenAPIModelName()),
+									},
+								},
+							},
+						},
+					},
 				},
 				Required: []string{"conditions", "nodeName", "addresses", "resources", "fencingAgents"},
 			},
 		},
 		Dependencies: []string{
-			etcdv1.PacemakerClusterFencingAgentStatus{}.OpenAPIModelName(), etcdv1.PacemakerClusterResourceStatus{}.OpenAPIModelName(), etcdv1.PacemakerNodeAddress{}.OpenAPIModelName(), metav1.Condition{}.OpenAPIModelName()},
+			etcdv1.PacemakerClusterAlertAgentScriptStatus{}.OpenAPIModelName(), etcdv1.PacemakerClusterFencingAgentStatus{}.OpenAPIModelName(), etcdv1.PacemakerClusterResourceStatus{}.OpenAPIModelName(), etcdv1.PacemakerNodeAddress{}.OpenAPIModelName(), metav1.Condition{}.OpenAPIModelName()},
 	}
 }
 
@@ -30383,12 +30501,44 @@ func schema_openshift_api_etcd_v1_PacemakerClusterResourceStatus(ref common.Refe
 							Enum:        []interface{}{"Etcd", "Kubelet"},
 						},
 					},
+					"failCount": {
+						SchemaProps: spec.SchemaProps{
+							Description: "failCount is the current failure count Pacemaker records for this resource on this node, as reported by the CIB. Pacemaker increments this count each time an operation for this resource fails, and resets it to zero when a `pcs resource cleanup` is performed. The value must be zero or greater. This field is optional and is omitted when the status collector has not yet observed a fail count for this resource, for example on a freshly bootstrapped cluster or for a resource that has never failed.",
+							Type:        []string{"integer"},
+							Format:      "int32",
+						},
+					},
+					"lastStopTime": {
+						SchemaProps: spec.SchemaProps{
+							Description: "lastStopTime is the timestamp of the most recent stop operation observed for this resource on this node, as reported by the CIB. This field is optional and is omitted when no stop operation has been observed for this resource on this node.",
+							Ref:         ref(metav1.Time{}.OpenAPIModelName()),
+						},
+					},
+					"lastStartTime": {
+						SchemaProps: spec.SchemaProps{
+							Description: "lastStartTime is the timestamp of the most recent start operation observed for this resource on this node, as reported by the CIB. This field is optional and is omitted when no start operation has been observed for this resource on this node.",
+							Ref:         ref(metav1.Time{}.OpenAPIModelName()),
+						},
+					},
+					"migrationThreshold": {
+						SchemaProps: spec.SchemaProps{
+							Description: "migrationThreshold is the configured number of failures after which Pacemaker will no longer attempt to run this resource on this node, as reported by the CIB. Without this value, failCount alone is uninterpretable — whether failCount 3 is alarming depends on whether the threshold is 5 or 1000000 (Pacemaker's default INFINITY). The value must be zero or greater. This field is optional and is omitted when the status collector has not yet observed a migration threshold for this resource.",
+							Type:        []string{"integer"},
+							Format:      "int32",
+						},
+					},
+					"lastFailureTime": {
+						SchemaProps: spec.SchemaProps{
+							Description: "lastFailureTime is the timestamp of the most recent failure observed for this resource on this node, as reported by the CIB. Semantically distinct from lastStopTime — a stop can be deliberate (planned migration, admin action), while a failure is always an error condition. This field is optional and is omitted when no failure has been observed for this resource on this node.",
+							Ref:         ref(metav1.Time{}.OpenAPIModelName()),
+						},
+					},
 				},
 				Required: []string{"conditions", "name"},
 			},
 		},
 		Dependencies: []string{
-			metav1.Condition{}.OpenAPIModelName()},
+			metav1.Condition{}.OpenAPIModelName(), metav1.Time{}.OpenAPIModelName()},
 	}
 }
 
@@ -30449,12 +30599,34 @@ func schema_openshift_api_etcd_v1_PacemakerClusterStatus(ref common.ReferenceCal
 							},
 						},
 					},
+					"alertAgents": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-map-keys": []interface{}{
+									"name",
+								},
+								"x-kubernetes-list-type": "map",
+							},
+						},
+						SchemaProps: spec.SchemaProps{
+							Description: "alertAgents contains the cluster-wide registration status of pacemaker alert agents used for auto-tainting nodes after fencing events. This field is optional and is omitted when alert agent status has not yet been collected by the status collector (including by a collector version that predates this field) or when no alert agents are configured. Names must be unique within this array.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref(etcdv1.PacemakerClusterAlertAgentStatus{}.OpenAPIModelName()),
+									},
+								},
+							},
+						},
+					},
 				},
 				Required: []string{"conditions", "lastUpdated", "nodes"},
 			},
 		},
 		Dependencies: []string{
-			etcdv1.PacemakerClusterNodeStatus{}.OpenAPIModelName(), metav1.Condition{}.OpenAPIModelName(), metav1.Time{}.OpenAPIModelName()},
+			etcdv1.PacemakerClusterAlertAgentStatus{}.OpenAPIModelName(), etcdv1.PacemakerClusterNodeStatus{}.OpenAPIModelName(), metav1.Condition{}.OpenAPIModelName(), metav1.Time{}.OpenAPIModelName()},
 	}
 }
 
@@ -30528,6 +30700,98 @@ func schema_openshift_api_etcd_v1alpha1_PacemakerCluster(ref common.ReferenceCal
 		},
 		Dependencies: []string{
 			etcdv1alpha1.PacemakerClusterStatus{}.OpenAPIModelName(), metav1.ObjectMeta{}.OpenAPIModelName()},
+	}
+}
+
+func schema_openshift_api_etcd_v1alpha1_PacemakerClusterAlertAgentScriptStatus(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "PacemakerClusterAlertAgentScriptStatus represents the presence of an alert agent's script on a specific node. Alert agent registration is cluster-wide, but the script it invokes must exist locally on whichever node the triggering event occurs on, since Pacemaker executes it there — this is tracked per node",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"conditions": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-map-keys": []interface{}{
+									"type",
+								},
+								"x-kubernetes-list-type": "map",
+							},
+						},
+						SchemaProps: spec.SchemaProps{
+							Description: "conditions represent the observations of the alert agent script's state on this node. Known condition types are \"Healthy\" (aggregate) and \"ScriptPresent\" (the script file exists and is executable on this node). If this script's presence has not yet been observed by the status collector, publish these conditions with status \"Unknown\" and reason \"Pending\". Reserve \"False\" for an observed failure. Each of these conditions is required, so the array must contain at least 2 items.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref(metav1.Condition{}.OpenAPIModelName()),
+									},
+								},
+							},
+						},
+					},
+					"name": {
+						SchemaProps: spec.SchemaProps{
+							Description: "name is the name of the pacemaker alert agent this script belongs to. Valid values are \"Taint Alert Agent\" and \"Untaint Alert Agent\".\n\nPossible enum values:\n - `\"Taint Alert Agent\"` is the alert agent that taints a node after it is fenced.\n - `\"Untaint Alert Agent\"` is the alert agent that removes a node's taint once it rejoins the cluster.",
+							Type:        []string{"string"},
+							Format:      "",
+							Enum:        []interface{}{"Taint Alert Agent", "Untaint Alert Agent"},
+						},
+					},
+				},
+				Required: []string{"conditions", "name"},
+			},
+		},
+		Dependencies: []string{
+			metav1.Condition{}.OpenAPIModelName()},
+	}
+}
+
+func schema_openshift_api_etcd_v1alpha1_PacemakerClusterAlertAgentStatus(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "PacemakerClusterAlertAgentStatus represents the cluster-wide registration status of a pacemaker alert agent.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"conditions": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-map-keys": []interface{}{
+									"type",
+								},
+								"x-kubernetes-list-type": "map",
+							},
+						},
+						SchemaProps: spec.SchemaProps{
+							Description: "conditions represent the observations of the alert agent's current state. Known condition types are \"Healthy\" (aggregate) and \"Configured\" (registered in the CIB with the expected script path and event filter). If this alert agent's state has not yet been observed by the status collector, publish these conditions with status \"Unknown\" and reason \"Pending\". Reserve \"False\" for an observed failure. Each of these conditions is required, so the array must contain at least 2 items.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref(metav1.Condition{}.OpenAPIModelName()),
+									},
+								},
+							},
+						},
+					},
+					"name": {
+						SchemaProps: spec.SchemaProps{
+							Description: "name is the name of the pacemaker alert agent. Valid values are \"Taint Alert Agent\" and \"Untaint Alert Agent\".\n\nPossible enum values:\n - `\"Taint Alert Agent\"` is the alert agent that taints a node after it is fenced.\n - `\"Untaint Alert Agent\"` is the alert agent that removes a node's taint once it rejoins the cluster.",
+							Type:        []string{"string"},
+							Format:      "",
+							Enum:        []interface{}{"Taint Alert Agent", "Untaint Alert Agent"},
+						},
+					},
+				},
+				Required: []string{"conditions", "name"},
+			},
+		},
+		Dependencies: []string{
+			metav1.Condition{}.OpenAPIModelName()},
 	}
 }
 
@@ -30734,12 +30998,34 @@ func schema_openshift_api_etcd_v1alpha1_PacemakerClusterNodeStatus(ref common.Re
 							},
 						},
 					},
+					"alertAgentScripts": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-map-keys": []interface{}{
+									"name",
+								},
+								"x-kubernetes-list-type": "map",
+							},
+						},
+						SchemaProps: spec.SchemaProps{
+							Description: "alertAgentScripts contains the presence status of each alert agent's script on this node. Alert agents are registered cluster-wide in the CIB, but their scripts are delivered independently to each node by MCO, so presence is tracked per node to catch delivery gaps between nodes. This field is optional and is omitted when script-presence status has not yet been collected by the status collector (including by a collector version that predates this field). Names must be unique within this array.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref(etcdv1alpha1.PacemakerClusterAlertAgentScriptStatus{}.OpenAPIModelName()),
+									},
+								},
+							},
+						},
+					},
 				},
 				Required: []string{"conditions", "nodeName", "addresses", "resources", "fencingAgents"},
 			},
 		},
 		Dependencies: []string{
-			etcdv1alpha1.PacemakerClusterFencingAgentStatus{}.OpenAPIModelName(), etcdv1alpha1.PacemakerClusterResourceStatus{}.OpenAPIModelName(), etcdv1alpha1.PacemakerNodeAddress{}.OpenAPIModelName(), metav1.Condition{}.OpenAPIModelName()},
+			etcdv1alpha1.PacemakerClusterAlertAgentScriptStatus{}.OpenAPIModelName(), etcdv1alpha1.PacemakerClusterFencingAgentStatus{}.OpenAPIModelName(), etcdv1alpha1.PacemakerClusterResourceStatus{}.OpenAPIModelName(), etcdv1alpha1.PacemakerNodeAddress{}.OpenAPIModelName(), metav1.Condition{}.OpenAPIModelName()},
 	}
 }
 
@@ -30780,12 +31066,44 @@ func schema_openshift_api_etcd_v1alpha1_PacemakerClusterResourceStatus(ref commo
 							Enum:        []interface{}{"Etcd", "Kubelet"},
 						},
 					},
+					"failCount": {
+						SchemaProps: spec.SchemaProps{
+							Description: "failCount is the current failure count Pacemaker records for this resource on this node, as reported by the CIB. Pacemaker increments this count each time an operation for this resource fails, and resets it to zero when a `pcs resource cleanup` is performed. The value must be zero or greater. This field is optional and is omitted when the status collector has not yet observed a fail count for this resource, for example on a freshly bootstrapped cluster or for a resource that has never failed.",
+							Type:        []string{"integer"},
+							Format:      "int32",
+						},
+					},
+					"lastStopTime": {
+						SchemaProps: spec.SchemaProps{
+							Description: "lastStopTime is the timestamp of the most recent stop operation observed for this resource on this node, as reported by the CIB. This field is optional and is omitted when no stop operation has been observed for this resource on this node.",
+							Ref:         ref(metav1.Time{}.OpenAPIModelName()),
+						},
+					},
+					"lastStartTime": {
+						SchemaProps: spec.SchemaProps{
+							Description: "lastStartTime is the timestamp of the most recent start operation observed for this resource on this node, as reported by the CIB. This field is optional and is omitted when no start operation has been observed for this resource on this node.",
+							Ref:         ref(metav1.Time{}.OpenAPIModelName()),
+						},
+					},
+					"migrationThreshold": {
+						SchemaProps: spec.SchemaProps{
+							Description: "migrationThreshold is the configured number of failures after which Pacemaker will no longer attempt to run this resource on this node, as reported by the CIB. Without this value, failCount alone is uninterpretable — whether failCount 3 is alarming depends on whether the threshold is 5 or 1000000 (Pacemaker's default INFINITY). The value must be zero or greater. This field is optional and is omitted when the status collector has not yet observed a migration threshold for this resource.",
+							Type:        []string{"integer"},
+							Format:      "int32",
+						},
+					},
+					"lastFailureTime": {
+						SchemaProps: spec.SchemaProps{
+							Description: "lastFailureTime is the timestamp of the most recent failure observed for this resource on this node, as reported by the CIB. Semantically distinct from lastStopTime — a stop can be deliberate (planned migration, admin action), while a failure is always an error condition. This field is optional and is omitted when no failure has been observed for this resource on this node.",
+							Ref:         ref(metav1.Time{}.OpenAPIModelName()),
+						},
+					},
 				},
 				Required: []string{"conditions", "name"},
 			},
 		},
 		Dependencies: []string{
-			metav1.Condition{}.OpenAPIModelName()},
+			metav1.Condition{}.OpenAPIModelName(), metav1.Time{}.OpenAPIModelName()},
 	}
 }
 
@@ -30846,12 +31164,34 @@ func schema_openshift_api_etcd_v1alpha1_PacemakerClusterStatus(ref common.Refere
 							},
 						},
 					},
+					"alertAgents": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-map-keys": []interface{}{
+									"name",
+								},
+								"x-kubernetes-list-type": "map",
+							},
+						},
+						SchemaProps: spec.SchemaProps{
+							Description: "alertAgents contains the cluster-wide registration status of pacemaker alert agents used for auto-tainting nodes after fencing events. This field is optional and is omitted when alert agent status has not yet been collected by the status collector (including by a collector version that predates this field) or when no alert agents are configured. Names must be unique within this array.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref(etcdv1alpha1.PacemakerClusterAlertAgentStatus{}.OpenAPIModelName()),
+									},
+								},
+							},
+						},
+					},
 				},
 				Required: []string{"conditions", "lastUpdated", "nodes"},
 			},
 		},
 		Dependencies: []string{
-			etcdv1alpha1.PacemakerClusterNodeStatus{}.OpenAPIModelName(), metav1.Condition{}.OpenAPIModelName(), metav1.Time{}.OpenAPIModelName()},
+			etcdv1alpha1.PacemakerClusterAlertAgentStatus{}.OpenAPIModelName(), etcdv1alpha1.PacemakerClusterNodeStatus{}.OpenAPIModelName(), metav1.Condition{}.OpenAPIModelName(), metav1.Time{}.OpenAPIModelName()},
 	}
 }
 

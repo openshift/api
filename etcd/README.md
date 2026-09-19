@@ -53,6 +53,7 @@ status:                    # Optional on creation, populated via status subresou
     - type: Healthy
     - type: InService
     - type: NodeCountAsExpected
+    - type: AlertAgentsConfigured  # Optional 4th condition: cluster-wide alert agent CIB registration
   lastUpdated: <timestamp> # Required when status present, cannot decrease
   nodes:                   # Control-plane nodes (0-5, expects 2 for TNF)
     - nodeName: <hostname> # RFC 1123 subdomain name
@@ -86,6 +87,11 @@ status:                    # Optional on creation, populated via status subresou
         - name: <unique_id>  # e.g., "master-0_redfish" (unique, max 300 chars)
           method: <method>   # Fencing method: "Redfish" or "IPMI"
           conditions: [...]  # Same 8 conditions as resources (abbreviated)
+      alertAgentScripts:   # Optional: per-node alert agent script presence (0-8 items)
+        - name: <agent_name>  # "Taint Alert Agent" or "Untaint Alert Agent"
+          conditions:      # Required: Alert agent script-level conditions (min 2 items)
+            - type: Healthy
+            - type: ScriptPresent
 ```
 
 ### Fencing Agents
@@ -104,13 +110,30 @@ Unlike regular pacemaker resources (Kubelet, Etcd), fencing agents are tracked s
    - **FencingAvailable**: True if at least one agent is healthy (fencing works), False if all agents unhealthy (degrades operator)
    - **FencingHealthy**: True if all agents are healthy (ideal state), False if any agent is unhealthy (emits warning events)
 
+### Alert Agents
+
+Alert agents are pacemaker alert handlers used to automatically taint a node after it is fenced, and remove
+that taint once the node rejoins the cluster. There are two known alert agents: "Taint Alert Agent" and
+"Untaint Alert Agent". Unlike resources and fencing agents, alert agents are registered cluster-wide (a single
+CIB object shared by all nodes via Pacemaker's CIB replication), so their registration status is tracked once,
+as the aggregate `AlertAgentsConfigured` condition on `status.conditions`.
+
+The script each alert agent invokes, however, must exist locally on whichever node the triggering event
+occurs on, since Pacemaker executes it there. Script delivery is handled independently per node by MCO, so
+presence is tracked per node in `status.nodes[].alertAgentScripts` to catch delivery gaps between nodes.
+
+The `AlertAgentsConfigured` condition and `alertAgentScripts` are both optional. They are omitted, or reported
+`Unknown`/`Pending`, when this status has not yet been collected by the status collector, including by a
+collector version that predates them.
+
 ### Cluster-Level Conditions
 
-| Condition | True | False |
-|-----------|------|-------|
-| `Healthy` | Cluster is healthy (`ClusterHealthy`) | Cluster has issues (`ClusterUnhealthy`) |
-| `InService` | In service (`InService`) | In maintenance (`InMaintenance`) |
-| `NodeCountAsExpected` | Node count is as expected (`AsExpected`) | Wrong count (`InsufficientNodes`, `ExcessiveNodes`) |
+| Condition | True | False | Unknown |
+|-----------|------|-------|---------|
+| `Healthy` | Cluster is healthy (`ClusterHealthy`) | Cluster has issues (`ClusterUnhealthy`) | n/a |
+| `InService` | In service (`InService`) | In maintenance (`InMaintenance`) | n/a |
+| `NodeCountAsExpected` | Node count is as expected (`AsExpected`) | Wrong count (`InsufficientNodes`, `ExcessiveNodes`) | n/a |
+| `AlertAgentsConfigured` (optional) | All known alert agents registered in the CIB as expected (`Configured`) | At least one agent not registered (`Missing`) or misconfigured (`Misconfigured`) | Not yet observed this run (`Pending`) |
 
 ### Node-Level Conditions
 
@@ -141,6 +164,15 @@ Each resource in the `resources` array and each fencing agent in the `fencingAge
 | `Started` | Resource is started (`Started`) | Resource is stopped (`Stopped`) |
 | `Schedulable` | Resource is schedulable (`Schedulable`) | Resource is not schedulable (`Unschedulable`) |
 
+### Alert Agent Script Conditions
+
+Each entry in a node's `alertAgentScripts` array has its own conditions.
+
+| Condition | True | False | Unknown |
+|-----------|------|-------|---------|
+| `Healthy` | Alert agent script is healthy (`AlertAgentScriptHealthy`) | Alert agent script has issues (`AlertAgentScriptUnhealthy`) | Not yet observed (`Pending`) |
+| `ScriptPresent` | Script is present and executable on this node (`Present`) | Script is missing from this node (`Missing`) | Not yet observed (`Pending`) |
+
 ### Validation Rules
 
 **Resource naming:**
@@ -170,8 +202,8 @@ Each resource in the `resources` array and each fencing agent in the `fencingAge
 
 **Status fields:**
 - `status` - Optional on creation (pointer type), populated via status subresource
-- When status is present, all fields within are required:
-  - `conditions` - Required array of cluster conditions (min 3 items)
+- When status is present, `conditions`, `lastUpdated`, and `nodes` are required:
+  - `conditions` - Required array of cluster conditions (min 3 items: Healthy, InService, NodeCountAsExpected); the optional 4th `AlertAgentsConfigured` condition may also be present
   - `lastUpdated` - Required timestamp for staleness detection
   - `nodes` - Required array of control-plane node statuses (min 0, max 5; empty allowed for catastrophic failures)
 
@@ -181,14 +213,20 @@ Each resource in the `resources` array and each fencing agent in the `fencingAge
 - `conditions` - Required (min 9 items with specific types enforced via XValidation)
 - `resources` - Required (min 2 items: Kubelet and Etcd)
 - `fencingAgents` - Required (min 1, max 8 items)
+- `alertAgentScripts` - Optional (min 0, max 8 items); omitted when not yet collected by the status collector
 
 **Conditions validation:**
-- Cluster-level: MinItems=3 (Healthy, InService, NodeCountAsExpected)
+- Cluster-level: MinItems=3 (Healthy, InService, NodeCountAsExpected); the optional `AlertAgentsConfigured` condition is not required by XValidation
 - Node-level: MinItems=9 (Healthy, Online, InService, Active, Ready, Clean, Member, FencingAvailable, FencingHealthy)
 - Resource-level: MinItems=8 (Healthy, InService, Managed, Enabled, Operational, Active, Started, Schedulable)
 - Fencing agent-level: MinItems=8 (same conditions as resources)
+- Alert agent script-level: MinItems=2, MaxItems=8 (Healthy, ScriptPresent)
 
 All condition arrays have XValidation rules to ensure specific condition types are present.
+
+**Alert agent names:**
+- Valid values are: `Taint Alert Agent`, `Untaint Alert Agent`
+- Names must be unique within the `alertAgentScripts` array (enforced via XValidation); the array does not require both names to be present
 
 **Resource names:**
 - Valid values are: `Kubelet`, `Etcd`

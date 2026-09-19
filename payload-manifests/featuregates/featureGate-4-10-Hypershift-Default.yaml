@@ -150,9 +150,6 @@
                         "name": "GCPDualStackInstall"
                     },
                     {
-                        "name": "GatewayAPIManagementMode"
-                    },
-                    {
                         "name": "GomaxprocsInjection"
                     },
                     {
@@ -321,6 +318,9 @@
                     },
                     {
                         "name": "GCPSovereignCloudInstall"
+                    },
+                    {
+                        "name": "GatewayAPIManagementMode"
                     },
                     {
                         "name": "GatewayAPIWithoutOLM"

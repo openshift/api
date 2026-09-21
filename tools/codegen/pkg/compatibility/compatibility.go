@@ -280,7 +280,7 @@ func extractIsInternal(spec *dst.GenDecl) bool {
 	}
 	internal, err := strconv.ParseBool(value[0])
 	if err != nil {
-		klog.Fatalf("%s: error parsing %s tag: %v", typeName(spec), err)
+		klog.Fatalf("%s: error parsing %s tag: %v", typeName(spec), internalTagName, err)
 	}
 	return internal
 }

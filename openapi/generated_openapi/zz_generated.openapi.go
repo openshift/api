@@ -23392,7 +23392,7 @@ func schema_openshift_api_config_v1alpha1_AdditionalAlertmanagerConfig(ref commo
 					},
 					"pathPrefix": {
 						SchemaProps: spec.SchemaProps{
-							Description: "pathPrefix defines an optional URL path prefix to prepend to the Alertmanager API endpoints. For example, if your Alertmanager is behind a reverse proxy at \"/alertmanager/\", set this to \"/alertmanager\" so requests go to \"/alertmanager/api/v1/alerts\" instead of \"/api/v1/alerts\". This is commonly needed when Alertmanager is deployed behind ingress controllers or load balancers. When no prefix is needed, omit this field; do not set it to \"/\" as that would produce paths with double slashes (e.g. \"//api/v1/alerts\"). Must start with \"/\", must not end with \"/\", and must not be exactly \"/\". Must not contain query strings (\"?\") or fragments (\"#\").",
+							Description: "pathPrefix defines an optional URL path prefix to prepend to the Alertmanager API endpoints. For example, if your Alertmanager is behind a reverse proxy at \"/alertmanager\", set this to \"/alertmanager\" so requests go to \"/alertmanager/api/v1/alerts\" instead of \"/api/v1/alerts\". This is commonly needed when Alertmanager is deployed behind ingress controllers or load balancers. Both absolute paths (starting with \"/\") and relative paths are accepted. Trailing slashes are permitted. When omitted, this means the user has no opinion and the platform is left to choose a reasonable default, which is subject to change over time. The current default is \"/\". Must be between 1 and 255 characters in length when specified. Must not contain query strings (\"?\") or fragments (\"#\").",
 							Type:        []string{"string"},
 							Format:      "",
 						},

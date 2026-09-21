@@ -231,6 +231,95 @@ tests:
                   request: "500m"
                   limit: "200m"
       expectedError: 'spec.alertmanagerConfig.customConfig.resources[0]: Invalid value: "object": limit must be greater than or equal to request'
+    - name: Should accept additionalAlertmanagerConfigs with pathPrefix bare slash
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: "Disabled"
+          prometheusConfig:
+            additionalAlertmanagerConfigs:
+              - name: external
+                pathPrefix: /
+                staticConfigs:
+                  - alertmanager.example.com:9093
+      expected: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: "Disabled"
+          prometheusConfig:
+            additionalAlertmanagerConfigs:
+              - name: external
+                pathPrefix: /
+                staticConfigs:
+                  - alertmanager.example.com:9093
+    - name: Should accept additionalAlertmanagerConfigs with pathPrefix relative path
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: "Disabled"
+          prometheusConfig:
+            additionalAlertmanagerConfigs:
+              - name: external
+                pathPrefix: alertmanager
+                staticConfigs:
+                  - alertmanager.example.com:9093
+      expected: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: "Disabled"
+          prometheusConfig:
+            additionalAlertmanagerConfigs:
+              - name: external
+                pathPrefix: alertmanager
+                staticConfigs:
+                  - alertmanager.example.com:9093
+    - name: Should accept additionalAlertmanagerConfigs with pathPrefix trailing slash
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: "Disabled"
+          prometheusConfig:
+            additionalAlertmanagerConfigs:
+              - name: external
+                pathPrefix: /alertmanager/
+                staticConfigs:
+                  - alertmanager.example.com:9093
+      expected: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: "Disabled"
+          prometheusConfig:
+            additionalAlertmanagerConfigs:
+              - name: external
+                pathPrefix: /alertmanager/
+                staticConfigs:
+                  - alertmanager.example.com:9093
+    - name: Should reject additionalAlertmanagerConfigs with pathPrefix containing query string
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: "Disabled"
+          prometheusConfig:
+            additionalAlertmanagerConfigs:
+              - name: external
+                pathPrefix: /alertmanager?foo=bar
+                staticConfigs:
+                  - alertmanager.example.com:9093
+      expectedError: "spec.prometheusConfig.additionalAlertmanagerConfigs[0].pathPrefix: Invalid value:"
     - name: Should be able to create a minimal MetricsServerConfig
       initial: |
         apiVersion: config.openshift.io/v1alpha1

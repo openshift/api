@@ -1296,11 +1296,6 @@ spec:
                             - message: ingressIPs list is required once set
                               rule: '!has(oldSelf.ingressIPs) || has(self.ingressIPs)'
                         type: object
-                        x-kubernetes-validations:
-                        - message: vcenters can have at most 1 item when configured
-                            post-install
-                          rule: '!has(oldSelf.vsphere) && has(self.vsphere) ? (has(self.vsphere.vcenters)
-                            && size(self.vsphere.vcenters) < 2) : true'
                     type: object
                   status:
                     description: status holds observed values from the cluster. They

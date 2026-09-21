@@ -141,10 +141,10 @@ type InfrastructureStatus struct {
 	// ControlPlaneTopologyTransitionStatus reports the current state of a
 	// control plane topology transition requested via spec.controlPlaneTopology.
 	//
-	// "Idle" means no transition has ever been requested:
+	// "NotTransitioned" means no transition has ever been requested:
 	// spec.controlPlaneTopology is empty. This is the default state prior to
 	// the cluster's first transition; once a transition completes, this
-	// field moves to "Transitioned" and does not return to "Idle".
+	// field moves to "Transitioned" and does not return to "NotTransitioned".
 	//
 	// "Pending" means a transition has been requested and admitted by the
 	// topology transition controller, and the controller is actively
@@ -158,8 +158,8 @@ type InfrastructureStatus struct {
 	// "Transitioned" means the most recently requested transition completed
 	// successfully; spec.controlPlaneTopology matches status.controlPlaneTopology.
 	//
-	// +kubebuilder:default=Idle
-	// +kubebuilder:validation:Enum=Idle;Pending;Error;RetryWithBackoff;Transitioned
+	// +kubebuilder:default=NotTransitioned
+	// +kubebuilder:validation:Enum=NotTransitioned;Pending;Error;RetryWithBackoff;Transitioned
 	// +openshift:enable:FeatureGate=MutableTopology
 	// +optional
 	ControlPlaneTopologyTransitionStatus TopologyTransitionStatus `json:"controlPlaneTopologyTransitionStatus,omitempty"`
@@ -169,8 +169,8 @@ type InfrastructureStatus struct {
 	//
 	// See ControlPlaneTopologyTransitionStatus for enum definitinos and meanings.
 	//
-	// +kubebuilder:default=Idle
-	// +kubebuilder:validation:Enum=Idle;Pending;Error;RetryWithBackoff;Transitioned
+	// +kubebuilder:default=NotTransitioned
+	// +kubebuilder:validation:Enum=NotTransitioned;Pending;Error;RetryWithBackoff;Transitioned
 	// +openshift:enable:FeatureGate=MutableTopology
 	// +optional
 	InfrastructureTopologyTransitionStatus TopologyTransitionStatus `json:"infrastructureTopologyTransitionStatus,omitempty"`
@@ -219,7 +219,7 @@ const (
 // distinct (Progressing, Upgradeable) condition-reason pair reported by the
 // topology transition controller on the cluster-config-operator ClusterOperator:
 //
-//   - Idle              -> Progressing=False/AsExpected,                                    Upgradeable=True/AsExpected
+//   - NotTransitioned              -> Progressing=False/AsExpected,                                    Upgradeable=True/AsExpected
 //   - Pending       	 -> Progressing=True/TopologyTransitionInProgress,                   Upgradeable=False/TopologyTransitionInProgress
 //   - RetryWithBackoff	 -> Progressing=True/TopologyTransitionInProgress,                   Upgradeable=False/TopologyTransitionInProgress
 //   - Error             ->	Progressing=False/{UnsupportedTransition|PreflightCheckFailed},  Upgradeable=False/{same}
@@ -227,12 +227,12 @@ const (
 type TopologyTransitionStatus string
 
 const (
-	// TopologyTransitionStatusIdle indicates that no topology transition has
+	// TopologyTransitionStatusNotTransitioned indicates that no topology transition has
 	// ever been requested: spec.controlPlaneTopology is empty. This is the
 	// default state prior to the cluster's first transition. Once a
 	// transition completes, the field moves to TopologyTransitionStatusTransitioned
-	// and does not return to Idle.
-	TopologyTransitionStatusIdle TopologyTransitionStatus = "Idle"
+	// and does not return to NotTransitioned.
+	TopologyTransitionStatusNotTransitioned TopologyTransitionStatus = "NotTransitioned"
 
 	// TopologyTransitionStatusPending indicates that a topology transition
 	// has been requested and admitted, and the controller is actively

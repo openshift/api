@@ -89,6 +89,9 @@
                         "name": "ShortCertRotation"
                     },
                     {
+                        "name": "UnifiedClusterManagedDNSAndLB"
+                    },
+                    {
                         "name": "VSpherePerComponentScopedCreds"
                     }
                 ],

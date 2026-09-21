@@ -379,6 +379,9 @@
                         "name": "TLSGroupPreferences"
                     },
                     {
+                        "name": "UnifiedClusterManagedDNSAndLB"
+                    },
+                    {
                         "name": "UpgradeStatus"
                     },
                     {

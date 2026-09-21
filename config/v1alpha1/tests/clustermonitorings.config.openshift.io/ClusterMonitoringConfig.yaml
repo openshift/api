@@ -3122,6 +3122,45 @@ tests:
                 authorization:
                   type: BearerToken
       expectedError: 'spec.prometheusConfig.remoteWrite[0].authorization.type: Unsupported value: "BearerToken": supported values: "Authorization", "BasicAuth", "OAuth2", "SigV4", "ServiceAccount"'
+    - name: Should accept writeRelabelConfigs with __name__ in sourceLabels
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: "Disabled"
+          prometheusConfig:
+            remoteWrite:
+              - name: primary
+                url: https://example.com/api/v1/write
+                authorization:
+                  type: ServiceAccount
+                writeRelabelConfigs:
+                  - name: keep-by-name
+                    sourceLabels:
+                      - __name__
+                    regex: "my_metric_.+"
+                    action:
+                      type: Keep
+      expected: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: "Disabled"
+          prometheusConfig:
+            remoteWrite:
+              - name: primary
+                url: https://example.com/api/v1/write
+                authorization:
+                  type: ServiceAccount
+                writeRelabelConfigs:
+                  - name: keep-by-name
+                    sourceLabels:
+                      - __name__
+                    regex: "my_metric_.+"
+                    action:
+                      type: Keep
     - name: Should accept prometheusConfig retention duration
       initial: |
         apiVersion: config.openshift.io/v1alpha1

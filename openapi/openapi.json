@@ -13223,6 +13223,77 @@
         }
       }
     },
+    "com.github.openshift.api.config.v1alpha1.ControllerManager": {
+      "description": "ControllerManager holds cluster-wide configuration shared by the controller managers in the system, among them especially kube-controller-manager. The resource is a singleton named \"cluster\".\n\nCompatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.",
+      "type": "object",
+      "required": [
+        "spec"
+      ],
+      "properties": {
+        "apiVersion": {
+          "description": "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+          "type": "string"
+        },
+        "kind": {
+          "description": "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+          "type": "string"
+        },
+        "metadata": {
+          "description": "metadata is the standard object's metadata. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata",
+          "default": {},
+          "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.ObjectMeta"
+        },
+        "spec": {
+          "description": "spec holds user settable values for configuration. This field is required but the spec may be empty to express no opinion.",
+          "$ref": "#/definitions/com.github.openshift.api.config.v1alpha1.ControllerManagerSpec"
+        }
+      }
+    },
+    "com.github.openshift.api.config.v1alpha1.ControllerManagerList": {
+      "description": "ControllerManagerList is a collection of ControllerManager resources.\n\nCompatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.",
+      "type": "object",
+      "required": [
+        "metadata",
+        "items"
+      ],
+      "properties": {
+        "apiVersion": {
+          "description": "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+          "type": "string"
+        },
+        "items": {
+          "description": "items is a list of ControllerManager resources",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/com.github.openshift.api.config.v1alpha1.ControllerManager"
+          }
+        },
+        "kind": {
+          "description": "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+          "type": "string"
+        },
+        "metadata": {
+          "description": "metadata is the standard list's metadata. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata",
+          "default": {},
+          "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.ListMeta"
+        }
+      }
+    },
+    "com.github.openshift.api.config.v1alpha1.ControllerManagerSpec": {
+      "description": "ControllerManagerSpec defines the desired state of the controller managers",
+      "type": "object",
+      "properties": {
+        "forceDetachOnTimeout": {
+          "description": "forceDetachOnTimeout controls whether kube-controller-manager force detaches volumes from a node that is not healthy once the volumes have not been unmounted within the maximum unmount time (6 minutes). Valid values are \"Enabled\" and \"Disabled\". When set to \"Enabled\", volumes are force detached from unhealthy nodes after the maximum unmount time, so that workloads using them can start on other nodes. Force detaching a volume that is still in use by the node can corrupt its data. When set to \"Disabled\", volumes are not force detached based on the maximum unmount time. Volumes remain attached to an unhealthy node until it recovers, or until the node is tainted with \"node.kubernetes.io/out-of-service\" as part of the non-graceful node shutdown procedure. When omitted, this means the user has no opinion and the platform is left to choose a reasonable default, which is subject to change over time. The current default is \"Enabled\".\n\nPossible enum values:\n - `\"Disabled\"` prevents kube-controller-manager from force detaching volumes based on the maximum unmount time.\n - `\"Enabled\"` allows kube-controller-manager to force detach volumes from unhealthy nodes once the maximum unmount time is exceeded.",
+          "type": "string",
+          "enum": [
+            "Disabled",
+            "Enabled"
+          ]
+        }
+      }
+    },
     "com.github.openshift.api.config.v1alpha1.CustomPKIPolicy": {
       "description": "CustomPKIPolicy contains administrator-specified cryptographic configuration. Administrators must specify defaults for all certificates and may optionally override specific categories of certificates.",
       "type": "object",

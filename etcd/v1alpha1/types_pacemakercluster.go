@@ -15,7 +15,6 @@ const (
 	// - ClusterInServiceConditionType
 	// - ClusterNodeCountAsExpectedConditionType
 	// - NodeHealthyConditionType (for each node)
-	// - ClusterAlertAgentsConfiguredConditionType (when populated)
 	// When True, the cluster is healthy with reason "ClusterHealthy".
 	// When False, the cluster is unhealthy with reason "ClusterUnhealthy".
 	ClusterHealthyConditionType = "Healthy"
@@ -31,42 +30,6 @@ const (
 	// When True, the expected number of nodes are present with reason "AsExpected".
 	// When False, the node count is incorrect with reason "InsufficientNodes" or "ExcessiveNodes".
 	ClusterNodeCountAsExpectedConditionType = "NodeCountAsExpected"
-
-	// ClusterAlertAgentsConfiguredConditionType tracks whether all known pacemaker alert agents
-	// (tnf-taint-alert, tnf-untaint-alert) are registered in the CIB with the expected script path
-	// and event filter. Alert agents are cluster-wide CIB objects: a single registration is shared
-	// by all nodes via Pacemaker's CIB replication, unlike fencing agents and resources which are
-	// node-scoped, so this is a single aggregate condition.
-	// When True, all known alert agents are registered as expected with reason "Configured".
-	// When False, at least one alert agent is not registered with reason "Missing", or all are
-	// registered but at least one has an unexpected script path or event filter with reason
-	// "Misconfigured" (Missing takes priority over Misconfigured when both problems exist across
-	// different agents). The message names the specific agent(s) affected.
-	// When Unknown, alert agent registration has not yet been observed this run by the status
-	// collector with reason "Pending". This is expected to be temporary, e.g. immediately after
-	// upgrade or before the first successful CIB collection completes.
-	ClusterAlertAgentsConfiguredConditionType = "AlertAgentsConfigured"
-)
-
-// ClusterAlertAgentsConfigured condition reasons
-const (
-	// ClusterAlertAgentsConfiguredReasonConfigured means all known alert agents are registered in
-	// the CIB with the expected script path and event filter. This is the normal operating state.
-	ClusterAlertAgentsConfiguredReasonConfigured = "Configured"
-
-	// ClusterAlertAgentsConfiguredReasonMissing means at least one known alert agent is not
-	// registered in the CIB at all. This is an unexpected state and takes priority over
-	// Misconfigured when both problems exist across different agents.
-	ClusterAlertAgentsConfiguredReasonMissing = "Missing"
-
-	// ClusterAlertAgentsConfiguredReasonMisconfigured means every known alert agent is registered,
-	// but at least one has an unexpected script path or event filter. This is an unexpected state.
-	ClusterAlertAgentsConfiguredReasonMisconfigured = "Misconfigured"
-
-	// ClusterAlertAgentsConfiguredReasonPending means alert agent registration has not yet been
-	// observed this run by the status collector. Used only with status "Unknown". This is expected
-	// to be temporary, e.g. immediately after upgrade or before the first successful CIB collection.
-	ClusterAlertAgentsConfiguredReasonPending = "Pending"
 )
 
 // ClusterHealthy condition reasons
@@ -123,7 +86,6 @@ const (
 	// - NodeFencingAvailableConditionType
 	// - NodeFencingHealthyConditionType
 	// - ResourceHealthyConditionType (for each resource in the node's resources list)
-	// - AlertAgentScriptHealthyConditionType (for each entry in the node's alertAgentScripts list)
 	// When True, the node is healthy with reason "NodeHealthy".
 	// When False, the node is unhealthy with reason "NodeUnhealthy".
 	NodeHealthyConditionType = "Healthy"
@@ -315,12 +277,22 @@ const (
 	// In Two Node OpenShift with Fencing, we do not expect any resources to be disabled.
 	// When True, the resource is enabled with reason "Enabled". This is the normal operating state.
 	// When False, the resource is disabled with reason "Disabled". This is an unexpected state.
+	// For alert-agent script resources (TaintAlertAgent, UntaintAlertAgent), an alert agent cannot be
+	// disabled, so this condition instead tracks whether the alert agent is registered in the CIB with
+	// the expected script path and event filter. When True, the agent is configured with reason
+	// "ScriptConfigured". When False, the agent is not registered or is misconfigured. When Unknown,
+	// registration has not yet been observed this run with reason "Pending"; this is expected to be temporary.
 	ResourceEnabledConditionType = "Enabled"
 
 	// ResourceOperationalConditionType tracks whether a resource is operational (not failed).
 	// A failed resource is one that is not able to start or is in an error state.
 	// When True, the resource is operational with reason "Operational". This is the normal operating state.
 	// When False, the resource has failed with reason "Failed". This is an unexpected state.
+	// For alert-agent script resources (TaintAlertAgent, UntaintAlertAgent), this condition instead
+	// tracks whether the alert agent's script file is present and executable on this node, since the
+	// script is delivered independently to each node by MCO. When True, the script is present with
+	// reason "ScriptPresent". When False, the script is missing from this node. When Unknown, presence
+	// has not yet been observed this run with reason "Pending"; this is expected to be temporary.
 	ResourceOperationalConditionType = "Operational"
 
 	// ResourceActiveConditionType tracks whether a resource is active.
@@ -388,6 +360,16 @@ const (
 	// Resources that are disabled are stopped and not automatically managed or started by the cluster.
 	// This is an unexpected state.
 	ResourceEnabledReasonDisabled = "Disabled"
+
+	// ResourceEnabledReasonScriptConfigured means an alert-agent script resource is registered in the
+	// CIB with the expected script path and event filter. This is the normal operating state for an
+	// alert-agent resource and is used in place of "Enabled".
+	ResourceEnabledReasonScriptConfigured = "ScriptConfigured"
+
+	// ResourceEnabledReasonPending means an alert-agent script resource's CIB registration has not yet
+	// been observed this run by the status collector. Used only with status "Unknown". This is expected
+	// to be temporary, e.g. immediately after upgrade or before the first successful CIB collection.
+	ResourceEnabledReasonPending = "Pending"
 )
 
 // ResourceOperational condition reasons
@@ -399,6 +381,16 @@ const (
 	// ResourceOperationalReasonFailed means the resource has failed.
 	// A failed resource is one that is not able to start or is in an error state. This is an unexpected state.
 	ResourceOperationalReasonFailed = "Failed"
+
+	// ResourceOperationalReasonScriptPresent means an alert-agent script resource's script file is
+	// present and executable on this node. This is the normal operating state for an alert-agent
+	// resource and is used in place of "Operational".
+	ResourceOperationalReasonScriptPresent = "ScriptPresent"
+
+	// ResourceOperationalReasonPending means an alert-agent script resource's presence on this node has
+	// not yet been observed this run by the status collector. Used only with status "Unknown". This is
+	// expected to be temporary, e.g. before MCO has delivered the script or before the first collection.
+	ResourceOperationalReasonPending = "Pending"
 )
 
 // ResourceActive condition reasons
@@ -436,55 +428,6 @@ const (
 	ResourceSchedulableReasonUnschedulable = "Unschedulable"
 )
 
-// Node-level condition types for PacemakerCluster.status.nodes[].alertAgentScripts[].conditions
-const (
-	// AlertAgentScriptHealthyConditionType tracks the overall health of an alert agent's script on this node.
-	// This is an aggregate condition that reflects the health of all alert agent script-level conditions.
-	// Specifically, it aggregates the following conditions:
-	// - AlertAgentScriptPresentConditionType
-	// When True, the alert agent script is healthy with reason "AlertAgentScriptHealthy".
-	// When False, the alert agent script is unhealthy with reason "AlertAgentScriptUnhealthy".
-	// When Unknown, the script's presence has not yet been observed by the status collector with
-	// reason "Pending". This is expected to be temporary.
-	AlertAgentScriptHealthyConditionType = "Healthy"
-
-	// AlertAgentScriptPresentConditionType tracks whether the alert agent's script file is present
-	// and executable on this node.
-	// When True, the script is present and executable with reason "Present".
-	// When False, the script is missing from this node with reason "Missing". This is an unexpected state.
-	// When Unknown, presence has not yet been observed by the status collector with reason "Pending".
-	// This is expected to be temporary.
-	AlertAgentScriptPresentConditionType = "ScriptPresent"
-)
-
-// AlertAgentScriptHealthy condition reasons
-const (
-	// AlertAgentScriptHealthyReasonHealthy means the alert agent script is healthy and operating normally.
-	AlertAgentScriptHealthyReasonHealthy = "AlertAgentScriptHealthy"
-
-	// AlertAgentScriptHealthyReasonUnhealthy means the alert agent script has issues that need investigation.
-	AlertAgentScriptHealthyReasonUnhealthy = "AlertAgentScriptUnhealthy"
-
-	// AlertAgentScriptHealthyReasonPending means the alert agent script's health has not yet been
-	// observed by the status collector. This is expected to be temporary.
-	AlertAgentScriptHealthyReasonPending = "Pending"
-)
-
-// AlertAgentScriptPresent condition reasons
-const (
-	// AlertAgentScriptPresentReasonPresent means the alert agent script is present and executable on this node.
-	// This is the normal operating state.
-	AlertAgentScriptPresentReasonPresent = "Present"
-
-	// AlertAgentScriptPresentReasonMissing means the alert agent script is missing from this node.
-	// This is an unexpected state that can occur when MCO has not yet delivered the script to this node.
-	AlertAgentScriptPresentReasonMissing = "Missing"
-
-	// AlertAgentScriptPresentReasonPending means the script's presence on this node has not yet been
-	// observed by the status collector. This is expected to be temporary.
-	AlertAgentScriptPresentReasonPending = "Pending"
-)
-
 // PacemakerNodeAddressType represents the type of a node address.
 // Currently only InternalIP is supported.
 // +kubebuilder:validation:Enum=InternalIP
@@ -518,8 +461,10 @@ type PacemakerNodeAddress struct {
 }
 
 // PacemakerClusterResourceName represents the name of a pacemaker resource.
+// This includes both pacemaker-managed resources (Kubelet, Etcd) and pacemaker
+// alert agents whose scripts are tracked per node (e.g. TaintAlertAgent, UntaintAlertAgent).
 // Fencing agents are tracked separately in the fencingAgents field.
-// +kubebuilder:validation:Enum=Kubelet;Etcd
+// +kubebuilder:validation:Enum=Kubelet;Etcd;TaintAlertAgent;UntaintAlertAgent
 // +enum
 type PacemakerClusterResourceName string
 
@@ -532,20 +477,16 @@ const (
 	// PacemakerClusterResourceNameEtcd is the etcd pacemaker resource.
 	// The etcd resource may temporarily transition to stopped during pacemaker quorum-recovery operations.
 	PacemakerClusterResourceNameEtcd PacemakerClusterResourceName = "Etcd"
-)
 
-// PacemakerClusterAlertAgentName represents the name of a pacemaker alert agent.
-// +kubebuilder:validation:Enum=Taint Alert Agent;Untaint Alert Agent
-// +enum
-type PacemakerClusterAlertAgentName string
+	// PacemakerClusterResourceNameTaintAlertAgent is the alert agent that taints a node after it is fenced.
+	// Its entry tracks the alert agent's configuration in the CIB
+	// and the presence of its script on this node.
+	PacemakerClusterResourceNameTaintAlertAgent PacemakerClusterResourceName = "TaintAlertAgent"
 
-// PacemakerClusterAlertAgentName values
-const (
-	// PacemakerClusterAlertAgentNameTaint is the alert agent that taints a node after it is fenced.
-	PacemakerClusterAlertAgentNameTaint PacemakerClusterAlertAgentName = "Taint Alert Agent"
-
-	// PacemakerClusterAlertAgentNameUntaint is the alert agent that removes a node's taint once it rejoins the cluster.
-	PacemakerClusterAlertAgentNameUntaint PacemakerClusterAlertAgentName = "Untaint Alert Agent"
+	// PacemakerClusterResourceNameUntaintAlertAgent is the alert agent that removes a node's taint once
+	// it rejoins the cluster. Its entry tracks the alert agent's
+	// configuration in the CIB and the presence of its script on this node.
+	PacemakerClusterResourceNameUntaintAlertAgent PacemakerClusterResourceName = "UntaintAlertAgent"
 )
 
 // FencingMethod represents the method used by a fencing agent to isolate failed nodes.
@@ -608,10 +549,6 @@ type PacemakerClusterStatus struct {
 	// The "InService" condition tracks whether the cluster is in service (not in maintenance mode).
 	// The "NodeCountAsExpected" condition tracks whether the expected number of nodes are present.
 	// Each of these three conditions is required, so the array must contain at least 3 items.
-	// A fourth, optional condition type, "AlertAgentsConfigured", may also be present once a status
-	// collector that supports it has completed a successful collection; its absence is not a
-	// validation error and does not indicate a failure. This preserves compatibility with an older
-	// status collector that didn't support alert agents.
 	// +listType=map
 	// +listMapKey=type
 	// +kubebuilder:validation:MinItems=3
@@ -694,11 +631,15 @@ type PacemakerClusterNodeStatus struct {
 	// +required
 	Addresses []PacemakerNodeAddress `json:"addresses,omitempty"`
 
-	// resources contains the status of pacemaker resources scheduled on this node.
+	// resources contains the status of pacemaker resources tracked on this node.
 	// Each resource entry includes the resource name and its health conditions.
-	// For Two Node OpenShift with Fencing, we track Kubelet and Etcd resources per node.
-	// Both resources are required to be present, so the array must contain at least 2 items.
-	// Valid resource names are "Kubelet" and "Etcd".
+	// For Two Node OpenShift with Fencing, we track the Kubelet and Etcd pacemaker-managed resources
+	// per node. Both are required to be present, so the array must contain at least 2 items.
+	// The array may also contain optional alert-agent script entries named "TaintAlertAgent" and
+	// "UntaintAlertAgent". Their entries track whether the alert agent is configured in the CIB
+	// and whether its script is present on this node. Alert-agent entries are
+	// optional and are omitted when a status collector version that predates them has not reported them.
+	// Valid resource names are "Kubelet", "Etcd", "TaintAlertAgent", and "UntaintAlertAgent".
 	// Fencing agents are tracked separately in the fencingAgents field.
 	// +listType=map
 	// +listMapKey=name
@@ -724,22 +665,6 @@ type PacemakerClusterNodeStatus struct {
 	// +kubebuilder:validation:XValidation:rule="self.all(x, self.exists_one(y, x.name == y.name))",message="fencing agent names must be unique"
 	// +required
 	FencingAgents []PacemakerClusterFencingAgentStatus `json:"fencingAgents,omitempty"`
-
-	// alertAgentScripts contains the presence status of each alert agent's script on
-	// this node. Alert agents are registered cluster-wide in the CIB,
-	// but their scripts are delivered independently to each node by MCO, so presence
-	// is tracked per node to catch delivery gaps between nodes.
-	// This field is optional and is omitted when script-presence status has not yet
-	// been collected by the status collector (including by a collector version that
-	// predates this field). When present, this array contains at most 8 entries.
-	// Names must be unique within this array.
-	// +listType=map
-	// +listMapKey=name
-	// +kubebuilder:validation:MinItems=0
-	// +kubebuilder:validation:MaxItems=8
-	// +kubebuilder:validation:XValidation:rule="self.all(x, self.exists_one(y, x.name == y.name))",message="alert agent names must be unique"
-	// +optional
-	AlertAgentScripts []PacemakerClusterAlertAgentScriptStatus `json:"alertAgentScripts,omitempty"`
 }
 
 // PacemakerClusterFencingAgentStatus represents the status of a fencing agent that can fence a node.
@@ -793,15 +718,20 @@ type PacemakerClusterFencingAgentStatus struct {
 	Method FencingMethod `json:"method,omitempty"`
 }
 
-// PacemakerClusterResourceStatus represents the status of a pacemaker resource scheduled on a node.
+// PacemakerClusterResourceStatus represents the status of a resource tracked on a node.
 // A pacemaker resource is a unit of work managed by pacemaker. In pacemaker terminology, resources are services or
 // applications that pacemaker monitors, starts, stops, and moves between nodes to maintain high availability.
-// For Two Node OpenShift with Fencing, we track two resources per node:
+// For Two Node OpenShift with Fencing, we track the following pacemaker-managed resources per node:
 //   - Kubelet (the Kubernetes node agent and a prerequisite for etcd)
 //   - Etcd (the distributed key-value store)
 //
+// The same type is reused to track alert-agent scripts (TaintAlertAgent, UntaintAlertAgent). An alert
+// agent is not a pacemaker-managed resource, so only a subset of the pacemaker condition types applies
+// to it: the required conditions are enforced conditionally based on the resource name.
+//
 // Fencing agents are tracked separately in the fencingAgents field because they are mapped to
 // their target node (the node they can fence), not the node where monitoring operations are scheduled.
+// +kubebuilder:validation:XValidation:rule="!(self.name == 'Kubelet' || self.name == 'Etcd') || ['InService','Managed','Active','Started','Schedulable'].all(t, self.conditions.exists(c, c.type == t))",message="conditions must contain InService, Managed, Active, Started, and Schedulable for Kubelet and Etcd resources"
 type PacemakerClusterResourceStatus struct {
 	// conditions represent the observations of the resource's current state.
 	// Known condition types are: "Healthy", "InService", "Managed", "Enabled", "Operational",
@@ -814,56 +744,34 @@ type PacemakerClusterResourceStatus struct {
 	// The "Active" condition tracks whether the resource is active (available to be used).
 	// The "Started" condition tracks whether the resource is started.
 	// The "Schedulable" condition tracks whether the resource is schedulable (not blocked).
-	// Each of these conditions is required, so the array must contain at least 8 items.
+	// Which conditions are required depends on the resource name:
+	//   - For the pacemaker-managed resources "Kubelet" and "Etcd", all eight condition types listed
+	//     above are required, so the array must contain at least 8 items.
+	//   - For the alert-agent resources "TaintAlertAgent" and "UntaintAlertAgent", only "Healthy",
+	//     "Enabled" (reason "ScriptConfigured"), and "Operational" (reason "ScriptPresent") are
+	//     required, so the array must contain at least 3 items. The remaining condition types do not
+	//     apply to an alert agent and may be omitted.
+	// The array must contain at least 3 items in all cases; the additional Kubelet/Etcd requirements
+	// are enforced by name-gated validation rules on this type.
 	// +listType=map
 	// +listMapKey=type
-	// +kubebuilder:validation:MinItems=8
+	// +kubebuilder:validation:MinItems=3
 	// +kubebuilder:validation:MaxItems=16
 	// +kubebuilder:validation:XValidation:rule="self.exists(c, c.type == 'Healthy')",message="conditions must contain a condition of type Healthy"
-	// +kubebuilder:validation:XValidation:rule="self.exists(c, c.type == 'InService')",message="conditions must contain a condition of type InService"
-	// +kubebuilder:validation:XValidation:rule="self.exists(c, c.type == 'Managed')",message="conditions must contain a condition of type Managed"
 	// +kubebuilder:validation:XValidation:rule="self.exists(c, c.type == 'Enabled')",message="conditions must contain a condition of type Enabled"
 	// +kubebuilder:validation:XValidation:rule="self.exists(c, c.type == 'Operational')",message="conditions must contain a condition of type Operational"
-	// +kubebuilder:validation:XValidation:rule="self.exists(c, c.type == 'Active')",message="conditions must contain a condition of type Active"
-	// +kubebuilder:validation:XValidation:rule="self.exists(c, c.type == 'Started')",message="conditions must contain a condition of type Started"
-	// +kubebuilder:validation:XValidation:rule="self.exists(c, c.type == 'Schedulable')",message="conditions must contain a condition of type Schedulable"
 	// +required
 	Conditions []metav1.Condition `json:"conditions,omitempty"`
 
-	// name is the name of the pacemaker resource.
-	// Valid values are "Kubelet" and "Etcd".
+	// name is the name of the resource.
+	// Valid values are "Kubelet", "Etcd", "TaintAlertAgent", and "UntaintAlertAgent".
 	// The Kubelet resource is a prerequisite for etcd in Two Node OpenShift with Fencing deployments.
 	// The Etcd resource may temporarily transition to stopped during pacemaker quorum-recovery operations.
+	// The TaintAlertAgent and UntaintAlertAgent entries track alert-agent configuration and per-node
+	// script presence rather than a pacemaker-managed resource.
 	// Fencing agents are tracked separately in the node's fencingAgents field.
 	// +required
 	Name PacemakerClusterResourceName `json:"name,omitempty"`
-}
-
-// PacemakerClusterAlertAgentScriptStatus represents the presence of an alert
-// agent's script on a specific node. Alert agent registration is cluster-wide,
-// but the script it invokes must exist locally on whichever node the triggering
-// event occurs on, since Pacemaker executes it there — this is tracked per node
-type PacemakerClusterAlertAgentScriptStatus struct {
-	// conditions represent the observations of the alert agent script's state on this node.
-	// Known condition types are "Healthy" (aggregate) and "ScriptPresent" (the script
-	// file exists and is executable on this node).
-	// If this script's presence has not yet been observed by the status collector, publish
-	// these conditions with status "Unknown" and reason "Pending".
-	// Reserve "False" for an observed failure.
-	// Each of these conditions is required, so the array must contain at least 2 and at most 8 items.
-	// +listType=map
-	// +listMapKey=type
-	// +kubebuilder:validation:MinItems=2
-	// +kubebuilder:validation:MaxItems=8
-	// +kubebuilder:validation:XValidation:rule="self.exists(c, c.type == 'Healthy')",message="conditions must contain a condition of type Healthy"
-	// +kubebuilder:validation:XValidation:rule="self.exists(c, c.type == 'ScriptPresent')",message="conditions must contain a condition of type ScriptPresent"
-	// +required
-	Conditions []metav1.Condition `json:"conditions,omitempty"`
-
-	// name is the name of the pacemaker alert agent this script belongs to. This field is required.
-	// Valid values are "Taint Alert Agent" and "Untaint Alert Agent".
-	// +required
-	Name PacemakerClusterAlertAgentName `json:"name,omitempty"`
 }
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object

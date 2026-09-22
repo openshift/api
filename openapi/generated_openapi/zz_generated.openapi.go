@@ -666,7 +666,6 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		consolev1.Link{}.OpenAPIModelName():                                                    schema_openshift_api_console_v1_Link(ref),
 		consolev1.NamespaceDashboardSpec{}.OpenAPIModelName():                                  schema_openshift_api_console_v1_NamespaceDashboardSpec(ref),
 		etcdv1.PacemakerCluster{}.OpenAPIModelName():                                           schema_openshift_api_etcd_v1_PacemakerCluster(ref),
-		etcdv1.PacemakerClusterAlertAgentScriptStatus{}.OpenAPIModelName():                     schema_openshift_api_etcd_v1_PacemakerClusterAlertAgentScriptStatus(ref),
 		etcdv1.PacemakerClusterFencingAgentStatus{}.OpenAPIModelName():                         schema_openshift_api_etcd_v1_PacemakerClusterFencingAgentStatus(ref),
 		etcdv1.PacemakerClusterList{}.OpenAPIModelName():                                       schema_openshift_api_etcd_v1_PacemakerClusterList(ref),
 		etcdv1.PacemakerClusterNodeStatus{}.OpenAPIModelName():                                 schema_openshift_api_etcd_v1_PacemakerClusterNodeStatus(ref),
@@ -674,7 +673,6 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		etcdv1.PacemakerClusterStatus{}.OpenAPIModelName():                                     schema_openshift_api_etcd_v1_PacemakerClusterStatus(ref),
 		etcdv1.PacemakerNodeAddress{}.OpenAPIModelName():                                       schema_openshift_api_etcd_v1_PacemakerNodeAddress(ref),
 		etcdv1alpha1.PacemakerCluster{}.OpenAPIModelName():                                     schema_openshift_api_etcd_v1alpha1_PacemakerCluster(ref),
-		etcdv1alpha1.PacemakerClusterAlertAgentScriptStatus{}.OpenAPIModelName():               schema_openshift_api_etcd_v1alpha1_PacemakerClusterAlertAgentScriptStatus(ref),
 		etcdv1alpha1.PacemakerClusterFencingAgentStatus{}.OpenAPIModelName():                   schema_openshift_api_etcd_v1alpha1_PacemakerClusterFencingAgentStatus(ref),
 		etcdv1alpha1.PacemakerClusterList{}.OpenAPIModelName():                                 schema_openshift_api_etcd_v1alpha1_PacemakerClusterList(ref),
 		etcdv1alpha1.PacemakerClusterNodeStatus{}.OpenAPIModelName():                           schema_openshift_api_etcd_v1alpha1_PacemakerClusterNodeStatus(ref),
@@ -30096,52 +30094,6 @@ func schema_openshift_api_etcd_v1_PacemakerCluster(ref common.ReferenceCallback)
 	}
 }
 
-func schema_openshift_api_etcd_v1_PacemakerClusterAlertAgentScriptStatus(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Description: "PacemakerClusterAlertAgentScriptStatus represents the presence of an alert agent's script on a specific node. Alert agent registration is cluster-wide, but the script it invokes must exist locally on whichever node the triggering event occurs on, since Pacemaker executes it there — this is tracked per node",
-				Type:        []string{"object"},
-				Properties: map[string]spec.Schema{
-					"conditions": {
-						VendorExtensible: spec.VendorExtensible{
-							Extensions: spec.Extensions{
-								"x-kubernetes-list-map-keys": []interface{}{
-									"type",
-								},
-								"x-kubernetes-list-type": "map",
-							},
-						},
-						SchemaProps: spec.SchemaProps{
-							Description: "conditions represent the observations of the alert agent script's state on this node. Known condition types are \"Healthy\" (aggregate) and \"ScriptPresent\" (the script file exists and is executable on this node). If this script's presence has not yet been observed by the status collector, publish these conditions with status \"Unknown\" and reason \"Pending\". Reserve \"False\" for an observed failure. Each of these conditions is required, so the array must contain at least 2 and at most 8 items.",
-							Type:        []string{"array"},
-							Items: &spec.SchemaOrArray{
-								Schema: &spec.Schema{
-									SchemaProps: spec.SchemaProps{
-										Default: map[string]interface{}{},
-										Ref:     ref(metav1.Condition{}.OpenAPIModelName()),
-									},
-								},
-							},
-						},
-					},
-					"name": {
-						SchemaProps: spec.SchemaProps{
-							Description: "name is the name of the pacemaker alert agent this script belongs to. This field is required. Valid values are \"Taint Alert Agent\" and \"Untaint Alert Agent\".\n\nPossible enum values:\n - `\"Taint Alert Agent\"` is the alert agent that taints a node after it is fenced.\n - `\"Untaint Alert Agent\"` is the alert agent that removes a node's taint once it rejoins the cluster.",
-							Type:        []string{"string"},
-							Format:      "",
-							Enum:        []interface{}{"Taint Alert Agent", "Untaint Alert Agent"},
-						},
-					},
-				},
-				Required: []string{"conditions", "name"},
-			},
-		},
-		Dependencies: []string{
-			metav1.Condition{}.OpenAPIModelName()},
-	}
-}
-
 func schema_openshift_api_etcd_v1_PacemakerClusterFencingAgentStatus(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -30311,7 +30263,7 @@ func schema_openshift_api_etcd_v1_PacemakerClusterNodeStatus(ref common.Referenc
 							},
 						},
 						SchemaProps: spec.SchemaProps{
-							Description: "resources contains the status of pacemaker resources scheduled on this node. Each resource entry includes the resource name and its health conditions. For Two Node OpenShift with Fencing, we track Kubelet and Etcd resources per node. Both resources are required to be present, so the array must contain at least 2 items. Valid resource names are \"Kubelet\" and \"Etcd\". Fencing agents are tracked separately in the fencingAgents field.",
+							Description: "resources contains the status of pacemaker resources tracked on this node. Each resource entry includes the resource name and its health conditions. For Two Node OpenShift with Fencing, we track the Kubelet and Etcd pacemaker-managed resources per node. Both are required to be present, so the array must contain at least 2 items. The array may also contain optional alert-agent script entries named \"TaintAlertAgent\" and \"UntaintAlertAgent\". Their entries track whether the alert agent is configured in the CIB and whether its script is present on this node. Alert-agent entries are optional and are omitted when a status collector version that predates them has not reported them. Valid resource names are \"Kubelet\", \"Etcd\", \"TaintAlertAgent\", and \"UntaintAlertAgent\". Fencing agents are tracked separately in the fencingAgents field.",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -30345,34 +30297,12 @@ func schema_openshift_api_etcd_v1_PacemakerClusterNodeStatus(ref common.Referenc
 							},
 						},
 					},
-					"alertAgentScripts": {
-						VendorExtensible: spec.VendorExtensible{
-							Extensions: spec.Extensions{
-								"x-kubernetes-list-map-keys": []interface{}{
-									"name",
-								},
-								"x-kubernetes-list-type": "map",
-							},
-						},
-						SchemaProps: spec.SchemaProps{
-							Description: "alertAgentScripts contains the presence status of each alert agent's script on this node. Alert agents are registered cluster-wide in the CIB, but their scripts are delivered independently to each node by MCO, so presence is tracked per node to catch delivery gaps between nodes. This field is optional and is omitted when script-presence status has not yet been collected by the status collector (including by a collector version that predates this field). When present, this array contains at most 8 entries. Names must be unique within this array.",
-							Type:        []string{"array"},
-							Items: &spec.SchemaOrArray{
-								Schema: &spec.Schema{
-									SchemaProps: spec.SchemaProps{
-										Default: map[string]interface{}{},
-										Ref:     ref(etcdv1.PacemakerClusterAlertAgentScriptStatus{}.OpenAPIModelName()),
-									},
-								},
-							},
-						},
-					},
 				},
 				Required: []string{"conditions", "nodeName", "addresses", "resources", "fencingAgents"},
 			},
 		},
 		Dependencies: []string{
-			etcdv1.PacemakerClusterAlertAgentScriptStatus{}.OpenAPIModelName(), etcdv1.PacemakerClusterFencingAgentStatus{}.OpenAPIModelName(), etcdv1.PacemakerClusterResourceStatus{}.OpenAPIModelName(), etcdv1.PacemakerNodeAddress{}.OpenAPIModelName(), metav1.Condition{}.OpenAPIModelName()},
+			etcdv1.PacemakerClusterFencingAgentStatus{}.OpenAPIModelName(), etcdv1.PacemakerClusterResourceStatus{}.OpenAPIModelName(), etcdv1.PacemakerNodeAddress{}.OpenAPIModelName(), metav1.Condition{}.OpenAPIModelName()},
 	}
 }
 
@@ -30380,7 +30310,7 @@ func schema_openshift_api_etcd_v1_PacemakerClusterResourceStatus(ref common.Refe
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
-				Description: "PacemakerClusterResourceStatus represents the status of a pacemaker resource scheduled on a node. A pacemaker resource is a unit of work managed by pacemaker. In pacemaker terminology, resources are services or applications that pacemaker monitors, starts, stops, and moves between nodes to maintain high availability. For Two Node OpenShift with Fencing, we track two resources per node:\n  - Kubelet (the Kubernetes node agent and a prerequisite for etcd)\n  - Etcd (the distributed key-value store)\n\nFencing agents are tracked separately in the fencingAgents field because they are mapped to their target node (the node they can fence), not the node where monitoring operations are scheduled.",
+				Description: "PacemakerClusterResourceStatus represents the status of a resource tracked on a node. A pacemaker resource is a unit of work managed by pacemaker. In pacemaker terminology, resources are services or applications that pacemaker monitors, starts, stops, and moves between nodes to maintain high availability. For Two Node OpenShift with Fencing, we track the following pacemaker-managed resources per node:\n  - Kubelet (the Kubernetes node agent and a prerequisite for etcd)\n  - Etcd (the distributed key-value store)\n\nThe same type is reused to track alert-agent scripts (TaintAlertAgent, UntaintAlertAgent). An alert agent is not a pacemaker-managed resource, so only a subset of the pacemaker condition types applies to it: the required conditions are enforced conditionally based on the resource name.\n\nFencing agents are tracked separately in the fencingAgents field because they are mapped to their target node (the node they can fence), not the node where monitoring operations are scheduled.",
 				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
 					"conditions": {
@@ -30393,7 +30323,7 @@ func schema_openshift_api_etcd_v1_PacemakerClusterResourceStatus(ref common.Refe
 							},
 						},
 						SchemaProps: spec.SchemaProps{
-							Description: "conditions represent the observations of the resource's current state. Known condition types are: \"Healthy\", \"InService\", \"Managed\", \"Enabled\", \"Operational\", \"Active\", \"Started\", \"Schedulable\". The \"Healthy\" condition is an aggregate that tracks the overall health of the resource. The \"InService\" condition tracks whether the resource is in service (not in maintenance mode). The \"Managed\" condition tracks whether the resource is managed by pacemaker. The \"Enabled\" condition tracks whether the resource is enabled. The \"Operational\" condition tracks whether the resource is operational (not failed). The \"Active\" condition tracks whether the resource is active (available to be used). The \"Started\" condition tracks whether the resource is started. The \"Schedulable\" condition tracks whether the resource is schedulable (not blocked). Each of these conditions is required, so the array must contain at least 8 items.",
+							Description: "conditions represent the observations of the resource's current state. Known condition types are: \"Healthy\", \"InService\", \"Managed\", \"Enabled\", \"Operational\", \"Active\", \"Started\", \"Schedulable\". The \"Healthy\" condition is an aggregate that tracks the overall health of the resource. The \"InService\" condition tracks whether the resource is in service (not in maintenance mode). The \"Managed\" condition tracks whether the resource is managed by pacemaker. The \"Enabled\" condition tracks whether the resource is enabled. The \"Operational\" condition tracks whether the resource is operational (not failed). The \"Active\" condition tracks whether the resource is active (available to be used). The \"Started\" condition tracks whether the resource is started. The \"Schedulable\" condition tracks whether the resource is schedulable (not blocked). Which conditions are required depends on the resource name:\n  - For the pacemaker-managed resources \"Kubelet\" and \"Etcd\", all eight condition types listed\n    above are required, so the array must contain at least 8 items.\n  - For the alert-agent resources \"TaintAlertAgent\" and \"UntaintAlertAgent\", only \"Healthy\",\n    \"Enabled\" (reason \"ScriptConfigured\"), and \"Operational\" (reason \"ScriptPresent\") are\n    required, so the array must contain at least 3 items. The remaining condition types do not\n    apply to an alert agent and may be omitted.\nThe array must contain at least 3 items in all cases; the additional Kubelet/Etcd requirements are enforced by name-gated validation rules on this type.",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -30407,10 +30337,10 @@ func schema_openshift_api_etcd_v1_PacemakerClusterResourceStatus(ref common.Refe
 					},
 					"name": {
 						SchemaProps: spec.SchemaProps{
-							Description: "name is the name of the pacemaker resource. Valid values are \"Kubelet\" and \"Etcd\". The Kubelet resource is a prerequisite for etcd in Two Node OpenShift with Fencing deployments. The Etcd resource may temporarily transition to stopped during pacemaker quorum-recovery operations. Fencing agents are tracked separately in the node's fencingAgents field.\n\nPossible enum values:\n - `\"Etcd\"` is the etcd pacemaker resource. The etcd resource may temporarily transition to stopped during pacemaker quorum-recovery operations.\n - `\"Kubelet\"` is the kubelet pacemaker resource. The kubelet resource is a prerequisite for etcd in Two Node OpenShift with Fencing deployments.",
+							Description: "name is the name of the resource. Valid values are \"Kubelet\", \"Etcd\", \"TaintAlertAgent\", and \"UntaintAlertAgent\". The Kubelet resource is a prerequisite for etcd in Two Node OpenShift with Fencing deployments. The Etcd resource may temporarily transition to stopped during pacemaker quorum-recovery operations. The TaintAlertAgent and UntaintAlertAgent entries track alert-agent configuration and per-node script presence rather than a pacemaker-managed resource. Fencing agents are tracked separately in the node's fencingAgents field.\n\nPossible enum values:\n - `\"Etcd\"` is the etcd pacemaker resource. The etcd resource may temporarily transition to stopped during pacemaker quorum-recovery operations.\n - `\"Kubelet\"` is the kubelet pacemaker resource. The kubelet resource is a prerequisite for etcd in Two Node OpenShift with Fencing deployments.\n - `\"TaintAlertAgent\"` is the alert agent that taints a node after it is fenced. Its entry tracks the alert agent's configuration in the CIB and the presence of its script on this node.\n - `\"UntaintAlertAgent\"` is the alert agent that removes a node's taint once it rejoins the cluster. Its entry tracks the alert agent's configuration in the CIB and the presence of its script on this node.",
 							Type:        []string{"string"},
 							Format:      "",
-							Enum:        []interface{}{"Etcd", "Kubelet"},
+							Enum:        []interface{}{"Etcd", "Kubelet", "TaintAlertAgent", "UntaintAlertAgent"},
 						},
 					},
 				},
@@ -30439,7 +30369,7 @@ func schema_openshift_api_etcd_v1_PacemakerClusterStatus(ref common.ReferenceCal
 							},
 						},
 						SchemaProps: spec.SchemaProps{
-							Description: "conditions represent the observations of the pacemaker cluster's current state. Known condition types are: \"Healthy\", \"InService\", \"NodeCountAsExpected\". The \"Healthy\" condition is an aggregate that tracks the overall health of the cluster. The \"InService\" condition tracks whether the cluster is in service (not in maintenance mode). The \"NodeCountAsExpected\" condition tracks whether the expected number of nodes are present. Each of these three conditions is required, so the array must contain at least 3 items. A fourth, optional condition type, \"AlertAgentsConfigured\", may also be present once a status collector that supports it has completed a successful collection; its absence is not a validation error and does not indicate a failure. This preserves compatibility with an older status collector that didn't support alert agents.",
+							Description: "conditions represent the observations of the pacemaker cluster's current state. Known condition types are: \"Healthy\", \"InService\", \"NodeCountAsExpected\". The \"Healthy\" condition is an aggregate that tracks the overall health of the cluster. The \"InService\" condition tracks whether the cluster is in service (not in maintenance mode). The \"NodeCountAsExpected\" condition tracks whether the expected number of nodes are present. Each of these three conditions is required, so the array must contain at least 3 items.",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -30558,52 +30488,6 @@ func schema_openshift_api_etcd_v1alpha1_PacemakerCluster(ref common.ReferenceCal
 		},
 		Dependencies: []string{
 			etcdv1alpha1.PacemakerClusterStatus{}.OpenAPIModelName(), metav1.ObjectMeta{}.OpenAPIModelName()},
-	}
-}
-
-func schema_openshift_api_etcd_v1alpha1_PacemakerClusterAlertAgentScriptStatus(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Description: "PacemakerClusterAlertAgentScriptStatus represents the presence of an alert agent's script on a specific node. Alert agent registration is cluster-wide, but the script it invokes must exist locally on whichever node the triggering event occurs on, since Pacemaker executes it there — this is tracked per node",
-				Type:        []string{"object"},
-				Properties: map[string]spec.Schema{
-					"conditions": {
-						VendorExtensible: spec.VendorExtensible{
-							Extensions: spec.Extensions{
-								"x-kubernetes-list-map-keys": []interface{}{
-									"type",
-								},
-								"x-kubernetes-list-type": "map",
-							},
-						},
-						SchemaProps: spec.SchemaProps{
-							Description: "conditions represent the observations of the alert agent script's state on this node. Known condition types are \"Healthy\" (aggregate) and \"ScriptPresent\" (the script file exists and is executable on this node). If this script's presence has not yet been observed by the status collector, publish these conditions with status \"Unknown\" and reason \"Pending\". Reserve \"False\" for an observed failure. Each of these conditions is required, so the array must contain at least 2 and at most 8 items.",
-							Type:        []string{"array"},
-							Items: &spec.SchemaOrArray{
-								Schema: &spec.Schema{
-									SchemaProps: spec.SchemaProps{
-										Default: map[string]interface{}{},
-										Ref:     ref(metav1.Condition{}.OpenAPIModelName()),
-									},
-								},
-							},
-						},
-					},
-					"name": {
-						SchemaProps: spec.SchemaProps{
-							Description: "name is the name of the pacemaker alert agent this script belongs to. This field is required. Valid values are \"Taint Alert Agent\" and \"Untaint Alert Agent\".\n\nPossible enum values:\n - `\"Taint Alert Agent\"` is the alert agent that taints a node after it is fenced.\n - `\"Untaint Alert Agent\"` is the alert agent that removes a node's taint once it rejoins the cluster.",
-							Type:        []string{"string"},
-							Format:      "",
-							Enum:        []interface{}{"Taint Alert Agent", "Untaint Alert Agent"},
-						},
-					},
-				},
-				Required: []string{"conditions", "name"},
-			},
-		},
-		Dependencies: []string{
-			metav1.Condition{}.OpenAPIModelName()},
 	}
 }
 
@@ -30776,7 +30660,7 @@ func schema_openshift_api_etcd_v1alpha1_PacemakerClusterNodeStatus(ref common.Re
 							},
 						},
 						SchemaProps: spec.SchemaProps{
-							Description: "resources contains the status of pacemaker resources scheduled on this node. Each resource entry includes the resource name and its health conditions. For Two Node OpenShift with Fencing, we track Kubelet and Etcd resources per node. Both resources are required to be present, so the array must contain at least 2 items. Valid resource names are \"Kubelet\" and \"Etcd\". Fencing agents are tracked separately in the fencingAgents field.",
+							Description: "resources contains the status of pacemaker resources tracked on this node. Each resource entry includes the resource name and its health conditions. For Two Node OpenShift with Fencing, we track the Kubelet and Etcd pacemaker-managed resources per node. Both are required to be present, so the array must contain at least 2 items. The array may also contain optional alert-agent script entries named \"TaintAlertAgent\" and \"UntaintAlertAgent\". Their entries track whether the alert agent is configured in the CIB and whether its script is present on this node. Alert-agent entries are optional and are omitted when a status collector version that predates them has not reported them. Valid resource names are \"Kubelet\", \"Etcd\", \"TaintAlertAgent\", and \"UntaintAlertAgent\". Fencing agents are tracked separately in the fencingAgents field.",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -30810,34 +30694,12 @@ func schema_openshift_api_etcd_v1alpha1_PacemakerClusterNodeStatus(ref common.Re
 							},
 						},
 					},
-					"alertAgentScripts": {
-						VendorExtensible: spec.VendorExtensible{
-							Extensions: spec.Extensions{
-								"x-kubernetes-list-map-keys": []interface{}{
-									"name",
-								},
-								"x-kubernetes-list-type": "map",
-							},
-						},
-						SchemaProps: spec.SchemaProps{
-							Description: "alertAgentScripts contains the presence status of each alert agent's script on this node. Alert agents are registered cluster-wide in the CIB, but their scripts are delivered independently to each node by MCO, so presence is tracked per node to catch delivery gaps between nodes. This field is optional and is omitted when script-presence status has not yet been collected by the status collector (including by a collector version that predates this field). When present, this array contains at most 8 entries. Names must be unique within this array.",
-							Type:        []string{"array"},
-							Items: &spec.SchemaOrArray{
-								Schema: &spec.Schema{
-									SchemaProps: spec.SchemaProps{
-										Default: map[string]interface{}{},
-										Ref:     ref(etcdv1alpha1.PacemakerClusterAlertAgentScriptStatus{}.OpenAPIModelName()),
-									},
-								},
-							},
-						},
-					},
 				},
 				Required: []string{"conditions", "nodeName", "addresses", "resources", "fencingAgents"},
 			},
 		},
 		Dependencies: []string{
-			etcdv1alpha1.PacemakerClusterAlertAgentScriptStatus{}.OpenAPIModelName(), etcdv1alpha1.PacemakerClusterFencingAgentStatus{}.OpenAPIModelName(), etcdv1alpha1.PacemakerClusterResourceStatus{}.OpenAPIModelName(), etcdv1alpha1.PacemakerNodeAddress{}.OpenAPIModelName(), metav1.Condition{}.OpenAPIModelName()},
+			etcdv1alpha1.PacemakerClusterFencingAgentStatus{}.OpenAPIModelName(), etcdv1alpha1.PacemakerClusterResourceStatus{}.OpenAPIModelName(), etcdv1alpha1.PacemakerNodeAddress{}.OpenAPIModelName(), metav1.Condition{}.OpenAPIModelName()},
 	}
 }
 
@@ -30845,7 +30707,7 @@ func schema_openshift_api_etcd_v1alpha1_PacemakerClusterResourceStatus(ref commo
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
-				Description: "PacemakerClusterResourceStatus represents the status of a pacemaker resource scheduled on a node. A pacemaker resource is a unit of work managed by pacemaker. In pacemaker terminology, resources are services or applications that pacemaker monitors, starts, stops, and moves between nodes to maintain high availability. For Two Node OpenShift with Fencing, we track two resources per node:\n  - Kubelet (the Kubernetes node agent and a prerequisite for etcd)\n  - Etcd (the distributed key-value store)\n\nFencing agents are tracked separately in the fencingAgents field because they are mapped to their target node (the node they can fence), not the node where monitoring operations are scheduled.",
+				Description: "PacemakerClusterResourceStatus represents the status of a resource tracked on a node. A pacemaker resource is a unit of work managed by pacemaker. In pacemaker terminology, resources are services or applications that pacemaker monitors, starts, stops, and moves between nodes to maintain high availability. For Two Node OpenShift with Fencing, we track the following pacemaker-managed resources per node:\n  - Kubelet (the Kubernetes node agent and a prerequisite for etcd)\n  - Etcd (the distributed key-value store)\n\nThe same type is reused to track alert-agent scripts (TaintAlertAgent, UntaintAlertAgent). An alert agent is not a pacemaker-managed resource, so only a subset of the pacemaker condition types applies to it: the required conditions are enforced conditionally based on the resource name.\n\nFencing agents are tracked separately in the fencingAgents field because they are mapped to their target node (the node they can fence), not the node where monitoring operations are scheduled.",
 				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
 					"conditions": {
@@ -30858,7 +30720,7 @@ func schema_openshift_api_etcd_v1alpha1_PacemakerClusterResourceStatus(ref commo
 							},
 						},
 						SchemaProps: spec.SchemaProps{
-							Description: "conditions represent the observations of the resource's current state. Known condition types are: \"Healthy\", \"InService\", \"Managed\", \"Enabled\", \"Operational\", \"Active\", \"Started\", \"Schedulable\". The \"Healthy\" condition is an aggregate that tracks the overall health of the resource. The \"InService\" condition tracks whether the resource is in service (not in maintenance mode). The \"Managed\" condition tracks whether the resource is managed by pacemaker. The \"Enabled\" condition tracks whether the resource is enabled. The \"Operational\" condition tracks whether the resource is operational (not failed). The \"Active\" condition tracks whether the resource is active (available to be used). The \"Started\" condition tracks whether the resource is started. The \"Schedulable\" condition tracks whether the resource is schedulable (not blocked). Each of these conditions is required, so the array must contain at least 8 items.",
+							Description: "conditions represent the observations of the resource's current state. Known condition types are: \"Healthy\", \"InService\", \"Managed\", \"Enabled\", \"Operational\", \"Active\", \"Started\", \"Schedulable\". The \"Healthy\" condition is an aggregate that tracks the overall health of the resource. The \"InService\" condition tracks whether the resource is in service (not in maintenance mode). The \"Managed\" condition tracks whether the resource is managed by pacemaker. The \"Enabled\" condition tracks whether the resource is enabled. The \"Operational\" condition tracks whether the resource is operational (not failed). The \"Active\" condition tracks whether the resource is active (available to be used). The \"Started\" condition tracks whether the resource is started. The \"Schedulable\" condition tracks whether the resource is schedulable (not blocked). Which conditions are required depends on the resource name:\n  - For the pacemaker-managed resources \"Kubelet\" and \"Etcd\", all eight condition types listed\n    above are required, so the array must contain at least 8 items.\n  - For the alert-agent resources \"TaintAlertAgent\" and \"UntaintAlertAgent\", only \"Healthy\",\n    \"Enabled\" (reason \"ScriptConfigured\"), and \"Operational\" (reason \"ScriptPresent\") are\n    required, so the array must contain at least 3 items. The remaining condition types do not\n    apply to an alert agent and may be omitted.\nThe array must contain at least 3 items in all cases; the additional Kubelet/Etcd requirements are enforced by name-gated validation rules on this type.",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -30872,10 +30734,10 @@ func schema_openshift_api_etcd_v1alpha1_PacemakerClusterResourceStatus(ref commo
 					},
 					"name": {
 						SchemaProps: spec.SchemaProps{
-							Description: "name is the name of the pacemaker resource. Valid values are \"Kubelet\" and \"Etcd\". The Kubelet resource is a prerequisite for etcd in Two Node OpenShift with Fencing deployments. The Etcd resource may temporarily transition to stopped during pacemaker quorum-recovery operations. Fencing agents are tracked separately in the node's fencingAgents field.\n\nPossible enum values:\n - `\"Etcd\"` is the etcd pacemaker resource. The etcd resource may temporarily transition to stopped during pacemaker quorum-recovery operations.\n - `\"Kubelet\"` is the kubelet pacemaker resource. The kubelet resource is a prerequisite for etcd in Two Node OpenShift with Fencing deployments.",
+							Description: "name is the name of the resource. Valid values are \"Kubelet\", \"Etcd\", \"TaintAlertAgent\", and \"UntaintAlertAgent\". The Kubelet resource is a prerequisite for etcd in Two Node OpenShift with Fencing deployments. The Etcd resource may temporarily transition to stopped during pacemaker quorum-recovery operations. The TaintAlertAgent and UntaintAlertAgent entries track alert-agent configuration and per-node script presence rather than a pacemaker-managed resource. Fencing agents are tracked separately in the node's fencingAgents field.\n\nPossible enum values:\n - `\"Etcd\"` is the etcd pacemaker resource. The etcd resource may temporarily transition to stopped during pacemaker quorum-recovery operations.\n - `\"Kubelet\"` is the kubelet pacemaker resource. The kubelet resource is a prerequisite for etcd in Two Node OpenShift with Fencing deployments.\n - `\"TaintAlertAgent\"` is the alert agent that taints a node after it is fenced. Its entry tracks the alert agent's configuration in the CIB and the presence of its script on this node.\n - `\"UntaintAlertAgent\"` is the alert agent that removes a node's taint once it rejoins the cluster. Its entry tracks the alert agent's configuration in the CIB and the presence of its script on this node.",
 							Type:        []string{"string"},
 							Format:      "",
-							Enum:        []interface{}{"Etcd", "Kubelet"},
+							Enum:        []interface{}{"Etcd", "Kubelet", "TaintAlertAgent", "UntaintAlertAgent"},
 						},
 					},
 				},
@@ -30904,7 +30766,7 @@ func schema_openshift_api_etcd_v1alpha1_PacemakerClusterStatus(ref common.Refere
 							},
 						},
 						SchemaProps: spec.SchemaProps{
-							Description: "conditions represent the observations of the pacemaker cluster's current state. Known condition types are: \"Healthy\", \"InService\", \"NodeCountAsExpected\". The \"Healthy\" condition is an aggregate that tracks the overall health of the cluster. The \"InService\" condition tracks whether the cluster is in service (not in maintenance mode). The \"NodeCountAsExpected\" condition tracks whether the expected number of nodes are present. Each of these three conditions is required, so the array must contain at least 3 items. A fourth, optional condition type, \"AlertAgentsConfigured\", may also be present once a status collector that supports it has completed a successful collection; its absence is not a validation error and does not indicate a failure. This preserves compatibility with an older status collector that didn't support alert agents.",
+							Description: "conditions represent the observations of the pacemaker cluster's current state. Known condition types are: \"Healthy\", \"InService\", \"NodeCountAsExpected\". The \"Healthy\" condition is an aggregate that tracks the overall health of the cluster. The \"InService\" condition tracks whether the cluster is in service (not in maintenance mode). The \"NodeCountAsExpected\" condition tracks whether the expected number of nodes are present. Each of these three conditions is required, so the array must contain at least 3 items.",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{

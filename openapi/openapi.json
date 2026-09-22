@@ -27083,6 +27083,41 @@
         }
       }
     },
+    "com.github.openshift.api.machine.v1beta1.MachineDeletionSpec": {
+      "description": "MachineDeletionSpec contains configuration options for draining the node backed by a Machine and removing both the node and the Machine.",
+      "type": "object",
+      "properties": {
+        "nodeDeletionTimeoutSeconds": {
+          "description": "nodeDeletionTimeoutSeconds is the total amount of time in seconds that the controller will spend attempting to delete the node backed by this Machine after the Machine is marked for deletion. A value of 0 means that the controller will retry deleting the node indefinitely. Cluster API behaves the same for a value of 0. When not set, the controller makes a single best-effort attempt to delete the node before removing the Machine. This preserves the default Machine API behaviour, and differs from Cluster API, where an unset value causes the controller to attempt node deletion for 10 seconds before continuing.",
+          "type": "integer",
+          "format": "int32"
+        },
+        "nodeDrainTimeoutSeconds": {
+          "description": "nodeDrainTimeoutSeconds is the total amount of time in seconds that the controller will spend draining the node backed by this Machine before the Machine is removed. This is different from `kubectl drain --timeout`, which only bounds a single drain attempt; nodeDrainTimeoutSeconds bounds the total time spent draining across all attempts. A value of 0 means that draining is not bound by a time limit and the controller will keep attempting to drain the node until it succeeds. Cluster API behaves the same for a value of 0. When not set, the behaviour is the same as a value of 0. This preserves the default Machine API drain behaviour and matches Cluster API.",
+          "type": "integer",
+          "format": "int32"
+        },
+        "nodeVolumeDetachTimeoutSeconds": {
+          "description": "nodeVolumeDetachTimeoutSeconds is the total amount of time in seconds that the controller will spend waiting for all volumes to be detached from the node backed by this Machine before the Machine is removed. A value of 0 means that the controller will wait indefinitely for all volumes to be detached. Cluster API behaves the same for a value of 0. When not set, the controller does not wait for volumes to be detached before removing the Machine. This preserves the default Machine API behaviour, and differs from Cluster API, where an unset value causes the controller to wait indefinitely for all volumes to be detached.",
+          "type": "integer",
+          "format": "int32"
+        }
+      }
+    },
+    "com.github.openshift.api.machine.v1beta1.MachineDeletionStatus": {
+      "description": "MachineDeletionStatus is the deletion state of the Machine.",
+      "type": "object",
+      "properties": {
+        "nodeDrainStartTime": {
+          "description": "nodeDrainStartTime is the time when the drain of the node backed by this Machine started, and is used to determine whether nodeDrainTimeoutSeconds is exceeded. Only present when the Machine has a deletionTimestamp and draining the node has started.",
+          "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Time"
+        },
+        "waitForNodeVolumeDetachStartTime": {
+          "description": "waitForNodeVolumeDetachStartTime is the time when waiting for volume detachment from the node backed by this Machine started, and is used to determine whether nodeVolumeDetachTimeoutSeconds is exceeded. Detaching volumes from nodes is usually done by CSI implementations and the current state is observed from the node's `.status.volumesAttached` field. Only present when the Machine has a deletionTimestamp and waiting for volume detachment has started.",
+          "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Time"
+        }
+      }
+    },
     "com.github.openshift.api.machine.v1beta1.MachineHealthCheck": {
       "description": "MachineHealthCheck is the Schema for the machinehealthchecks API Compatibility level 2: Stable within a major release for a minimum of 9 months or 3 minor releases (whichever is longer).",
       "type": "object",
@@ -27410,6 +27445,11 @@
           "type": "string",
           "default": "MachineAPI"
         },
+        "deletion": {
+          "description": "deletion contains configuration options for draining the node backed by this Machine and removing both the node and the Machine.",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.machine.v1beta1.MachineDeletionSpec"
+        },
         "lifecycleHooks": {
           "description": "lifecycleHooks allow users to pause operations on the machine at certain predefined points within the machine lifecycle.",
           "default": {},
@@ -27468,6 +27508,11 @@
             "type"
           ],
           "x-kubernetes-list-type": "map"
+        },
+        "deletion": {
+          "description": "deletion contains information relating to the removal of the Machine. Only present when the Machine has a deletionTimestamp and the removal process has started.",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.machine.v1beta1.MachineDeletionStatus"
         },
         "errorMessage": {
           "description": "errorMessage will be set in the event that there is a terminal problem reconciling the Machine and will contain a more verbose string suitable for logging and human consumption.\n\nThis field should not be set for transitive errors that a controller faces that are expected to be fixed automatically over time (like service outages), but instead indicate that something is fundamentally wrong with the Machine's spec or the configuration of the controller, and that manual intervention is required. Examples of terminal errors would be invalid combinations of settings in the spec, values that are unsupported by the controller, or the responsible controller itself being critically misconfigured.\n\nAny transient errors that occur during the reconciliation of Machines can be added as events to the Machine object and/or logged in the controller's output.",

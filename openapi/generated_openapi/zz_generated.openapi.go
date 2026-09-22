@@ -492,6 +492,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		configv1.TokenIssuer{}.OpenAPIModelName():                                              schema_openshift_api_config_v1_TokenIssuer(ref),
 		configv1.TokenRequiredClaim{}.OpenAPIModelName():                                       schema_openshift_api_config_v1_TokenRequiredClaim(ref),
 		configv1.TokenUserValidationRule{}.OpenAPIModelName():                                  schema_openshift_api_config_v1_TokenUserValidationRule(ref),
+		configv1.TopologyState{}.OpenAPIModelName():                                            schema_openshift_api_config_v1_TopologyState(ref),
 		configv1.TopologyTransition{}.OpenAPIModelName():                                       schema_openshift_api_config_v1_TopologyTransition(ref),
 		configv1.Update{}.OpenAPIModelName():                                                   schema_openshift_api_config_v1_Update(ref),
 		configv1.UpdateHistory{}.OpenAPIModelName():                                            schema_openshift_api_config_v1_UpdateHistory(ref),
@@ -16402,18 +16403,14 @@ func schema_openshift_api_config_v1_InfrastructureStatus(ref common.ReferenceCal
 							Format:      "",
 						},
 					},
-					"controlPlaneTopologyTransitions": {
+					"topologyTransitions": {
 						VendorExtensible: spec.VendorExtensible{
 							Extensions: spec.Extensions{
-								"x-kubernetes-list-map-keys": []interface{}{
-									"source",
-									"target",
-								},
-								"x-kubernetes-list-type": "map",
+								"x-kubernetes-list-type": "atomic",
 							},
 						},
 						SchemaProps: spec.SchemaProps{
-							Description: "controlPlaneTopologyTransitions reports, as controller-computed observed state, the control-plane topology transitions that originate at the current status.controlPlaneTopology and whether each can currently be initiated. It is advisory: the cluster may change between a status read and a spec write, so the cluster-config-operator revalidates any requested transition; consumers such as the CLI must not treat Available as an admission guarantee. Transitions are requested via spec.controlPlaneTopology, not through this field. When omitted, the controller has not yet completed its first evaluation; an empty list is also valid and intentionally carries the same meaning as omitted, since this field does not currently distinguish \"not yet evaluated\" from \"evaluated with no applicable transitions\". The only supported transition is from SingleReplica to HighlyAvailable. When status.controlPlaneTopology has any other value, this field is expected to remain omitted or empty. Entries are keyed by the (source, target) topology pair and list order is not significant. At most 1 entry is permitted because only one transition direction is currently supported.",
+							Description: "topologyTransitions reports, as controller-computed observed state, the topology transitions that originate at the current status.controlPlaneTopology and status.infrastructureTopology and whether each can currently be initiated. It is advisory: the cluster may change between a status read and a spec write, so the cluster-config-operator revalidates any requested transition; consumers such as the CLI must not treat Available as an admission guarantee. Transitions are requested via spec.controlPlaneTopology, not through this field. When omitted, the controller has not yet completed its first evaluation; an empty list is also valid and intentionally carries the same meaning as omitted, since this field does not currently distinguish \"not yet evaluated\" from \"evaluated with no applicable transitions\". The only supported transition is from a state where both topology values are SingleReplica to a state where both are HighlyAvailable. When the current topology does not match the supported source state, this field is expected to remain omitted or empty. At most 1 entry is permitted because only one transition direction is currently supported.",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -22242,6 +22239,34 @@ func schema_openshift_api_config_v1_TokenUserValidationRule(ref common.Reference
 	}
 }
 
+func schema_openshift_api_config_v1_TopologyState(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "TopologyState describes the control-plane and infrastructure topology at one end of a topology transition.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"controlPlaneTopology": {
+						SchemaProps: spec.SchemaProps{
+							Description: "controlPlaneTopology is the topology of the control-plane nodes. Valid values are SingleReplica and HighlyAvailable. When set to SingleReplica, operators avoid spending resources for high availability. When set to HighlyAvailable, operators configure high availability as much as possible. controlPlaneTopology is required.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"infrastructureTopology": {
+						SchemaProps: spec.SchemaProps{
+							Description: "infrastructureTopology is the topology of infrastructure services. Valid values are SingleReplica and HighlyAvailable. When set to SingleReplica, operators avoid spending resources for high availability. When set to HighlyAvailable, operators configure high availability as much as possible. infrastructureTopology is required.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+				},
+				Required: []string{"controlPlaneTopology", "infrastructureTopology"},
+			},
+		},
+	}
+}
+
 func schema_openshift_api_config_v1_TopologyTransition(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -22251,16 +22276,16 @@ func schema_openshift_api_config_v1_TopologyTransition(ref common.ReferenceCallb
 				Properties: map[string]spec.Schema{
 					"source": {
 						SchemaProps: spec.SchemaProps{
-							Description: "source is the topology this transition starts from. It equals the current topology in the corresponding status field. Valid values are SingleReplica and HighlyAvailable. When set to SingleReplica, the transition originates from a single-replica topology. When set to HighlyAvailable, the transition originates from a highly available topology.",
-							Type:        []string{"string"},
-							Format:      "",
+							Description: "source is the control-plane and infrastructure topology this transition starts from. It must equal the current topology in the corresponding status fields. source is required.",
+							Default:     map[string]interface{}{},
+							Ref:         ref(configv1.TopologyState{}.OpenAPIModelName()),
 						},
 					},
 					"target": {
 						SchemaProps: spec.SchemaProps{
-							Description: "target is the topology this transition would move to. Valid values are SingleReplica and HighlyAvailable. When set to SingleReplica, the transition moves to a single-replica topology. When set to HighlyAvailable, the transition moves to a highly available topology.",
-							Type:        []string{"string"},
-							Format:      "",
+							Description: "target is the control-plane and infrastructure topology this transition would move to. target is required.",
+							Default:     map[string]interface{}{},
+							Ref:         ref(configv1.TopologyState{}.OpenAPIModelName()),
 						},
 					},
 					"availability": {
@@ -22288,6 +22313,8 @@ func schema_openshift_api_config_v1_TopologyTransition(ref common.ReferenceCallb
 				Required: []string{"source", "target", "availability"},
 			},
 		},
+		Dependencies: []string{
+			configv1.TopologyState{}.OpenAPIModelName()},
 	}
 }
 

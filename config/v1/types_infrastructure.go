@@ -20,7 +20,7 @@ import (
 // +kubebuilder:subresource:status
 // +kubebuilder:metadata:annotations=release.openshift.io/bootstrap-required=true
 // +openshift:validation:FeatureGateAwareXValidation:featureGate=MutableTopology,rule="!has(self.spec.controlPlaneTopology) || (has(oldSelf.spec.controlPlaneTopology) && self.spec.controlPlaneTopology == oldSelf.spec.controlPlaneTopology) || (has(self.status.controlPlaneTopology) && self.spec.controlPlaneTopology == self.status.controlPlaneTopology) || (has(self.status.controlPlaneTopology) && self.status.controlPlaneTopology == 'SingleReplica' && self.spec.controlPlaneTopology == 'HighlyAvailable')",message="spec.controlPlaneTopology must match status.controlPlaneTopology or be set to HighlyAvailable when status.controlPlaneTopology is SingleReplica"
-// +openshift:validation:FeatureGateAwareXValidation:featureGate=MutableTopology,rule="!has(self.status) || !has(self.status.controlPlaneTopologyTransitions) || self.status.controlPlaneTopologyTransitions.all(t, has(self.status.controlPlaneTopology) && t.source == self.status.controlPlaneTopology)",message="transition sources must match status.controlPlaneTopology"
+// +openshift:validation:FeatureGateAwareXValidation:featureGate=MutableTopology,rule="!has(self.status) || !has(self.status.topologyTransitions) || self.status.topologyTransitions.all(t, has(self.status.controlPlaneTopology) && has(self.status.infrastructureTopology) && t.source.controlPlaneTopology == self.status.controlPlaneTopology && t.source.infrastructureTopology == self.status.infrastructureTopology)",message="transition sources must match the current status topology"
 type Infrastructure struct {
 	metav1.TypeMeta `json:",inline"`
 
@@ -139,9 +139,9 @@ type InfrastructureStatus struct {
 	// +optional
 	InfrastructureTopology TopologyMode `json:"infrastructureTopology,omitempty"`
 
-	// controlPlaneTopologyTransitions reports, as controller-computed observed state,
-	// the control-plane topology transitions that originate at the current
-	// status.controlPlaneTopology and whether each can currently be initiated. It is
+	// topologyTransitions reports, as controller-computed observed state, the
+	// topology transitions that originate at the current status.controlPlaneTopology
+	// and status.infrastructureTopology and whether each can currently be initiated. It is
 	// advisory: the cluster may change between a status read and a spec write, so the
 	// cluster-config-operator revalidates any requested transition; consumers such as
 	// the CLI must not treat Available as an admission guarantee. Transitions are
@@ -149,20 +149,18 @@ type InfrastructureStatus struct {
 	// the controller has not yet completed its first evaluation; an empty list is also
 	// valid and intentionally carries the same meaning as omitted, since this field does
 	// not currently distinguish "not yet evaluated" from "evaluated with no applicable
-	// transitions". The only supported transition is from SingleReplica to
-	// HighlyAvailable. When status.controlPlaneTopology has any other value, this
-	// field is expected to remain omitted or empty. Entries are keyed by the
-	// (source, target) topology pair and list order is not significant. At most 1
-	// entry is permitted because only one transition direction is currently supported.
+	// transitions". The only supported transition is from a state where both topology
+	// values are SingleReplica to a state where both are HighlyAvailable. When the
+	// current topology does not match the supported source state, this field is expected
+	// to remain omitted or empty. At most 1 entry is permitted because only one
+	// transition direction is currently supported.
 	// +openshift:enable:FeatureGate=MutableTopology
-	// +listType=map
-	// +listMapKey=source
-	// +listMapKey=target
+	// +listType=atomic
 	// +kubebuilder:validation:MinItems=0
 	// +kubebuilder:validation:MaxItems=1
-	// +kubebuilder:validation:XValidation:rule="self.all(t, t.source == 'SingleReplica' && t.target == 'HighlyAvailable')",message="only SingleReplica to HighlyAvailable control-plane topology transitions are supported"
+	// +kubebuilder:validation:XValidation:rule="self.all(t, t.source.controlPlaneTopology == 'SingleReplica' && t.source.infrastructureTopology == 'SingleReplica' && t.target.controlPlaneTopology == 'HighlyAvailable' && t.target.infrastructureTopology == 'HighlyAvailable')",message="only SingleReplica to HighlyAvailable topology transitions are supported"
 	// +optional
-	ControlPlaneTopologyTransitions []TopologyTransition `json:"controlPlaneTopologyTransitions,omitempty"`
+	TopologyTransitions []TopologyTransition `json:"topologyTransitions,omitempty"`
 
 	// cpuPartitioning expresses if CPU partitioning is a currently enabled feature in the cluster.
 	// CPU Partitioning means that this cluster can support partitioning workloads to specific CPU Sets.
@@ -208,25 +206,19 @@ const (
 // and target must differ. reason must be set whenever availability is
 // Unavailable or Unknown; both constraints are enforced by validation rules on
 // the entry as a whole.
-// +kubebuilder:validation:XValidation:rule="self.source != self.target",message="source and target must differ"
+// +kubebuilder:validation:XValidation:rule="self.source.controlPlaneTopology != self.target.controlPlaneTopology || self.source.infrastructureTopology != self.target.infrastructureTopology",message="source and target must differ"
 // +kubebuilder:validation:XValidation:rule="self.availability == 'Available' || has(self.reason)",message="reason is required when availability is not Available"
 type TopologyTransition struct {
-	// source is the topology this transition starts from. It equals the current
-	// topology in the corresponding status field. Valid values are SingleReplica
-	// and HighlyAvailable.
-	// When set to SingleReplica, the transition originates from a single-replica topology.
-	// When set to HighlyAvailable, the transition originates from a highly available topology.
-	// +kubebuilder:validation:Enum=SingleReplica;HighlyAvailable
+	// source is the control-plane and infrastructure topology this transition starts
+	// from. It must equal the current topology in the corresponding status fields.
+	// source is required.
 	// +required
-	Source TopologyMode `json:"source,omitempty"`
+	Source TopologyState `json:"source,omitempty,omitzero"`
 
-	// target is the topology this transition would move to.
-	// Valid values are SingleReplica and HighlyAvailable.
-	// When set to SingleReplica, the transition moves to a single-replica topology.
-	// When set to HighlyAvailable, the transition moves to a highly available topology.
-	// +kubebuilder:validation:Enum=SingleReplica;HighlyAvailable
+	// target is the control-plane and infrastructure topology this transition would
+	// move to. target is required.
 	// +required
-	Target TopologyMode `json:"target,omitempty"`
+	Target TopologyState `json:"target,omitempty,omitzero"`
 
 	// availability indicates whether this transition can currently be initiated.
 	// Valid values are Available, Unavailable, and Unknown. Available means the
@@ -257,6 +249,28 @@ type TopologyTransition struct {
 	// +kubebuilder:validation:MaxLength=2048
 	// +optional
 	Message string `json:"message,omitempty"`
+}
+
+// TopologyState describes the control-plane and infrastructure topology at one
+// end of a topology transition.
+type TopologyState struct {
+	// controlPlaneTopology is the topology of the control-plane nodes. Valid values
+	// are SingleReplica and HighlyAvailable. When set to SingleReplica, operators
+	// avoid spending resources for high availability. When set to HighlyAvailable,
+	// operators configure high availability as much as possible.
+	// controlPlaneTopology is required.
+	// +kubebuilder:validation:Enum=SingleReplica;HighlyAvailable
+	// +required
+	ControlPlaneTopology TopologyMode `json:"controlPlaneTopology,omitempty"`
+
+	// infrastructureTopology is the topology of infrastructure services. Valid
+	// values are SingleReplica and HighlyAvailable. When set to SingleReplica,
+	// operators avoid spending resources for high availability. When set to
+	// HighlyAvailable, operators configure high availability as much as possible.
+	// infrastructureTopology is required.
+	// +kubebuilder:validation:Enum=SingleReplica;HighlyAvailable
+	// +required
+	InfrastructureTopology TopologyMode `json:"infrastructureTopology,omitempty"`
 }
 
 // TransitionAvailability indicates whether a topology transition can currently be

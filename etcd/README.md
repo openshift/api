@@ -43,8 +43,9 @@ or applications that pacemaker monitors, starts, stops, and moves between nodes 
 For Two Node OpenShift with Fencing, the node's `resources` array tracks:
 - **Kubelet**: The Kubernetes node agent and a prerequisite for etcd
 - **Etcd**: The distributed key-value store
-- **FencingAgent**: Used to isolate failed nodes during a quorum loss event (tracked separately)
 - **TaintAlertAgent** / **UntaintAlertAgent**: Alert agents whose CIB configuration and per-node script presence are tracked as optional entries
+
+Fencing agents are tracked separately in each node's `fencingAgents` array, not in `resources`.
 
 ### Status Structure
 
@@ -176,7 +177,7 @@ Alert-agent entries (`TaintAlertAgent`, `UntaintAlertAgent`) reuse this type but
 
 | Condition | True | False | Unknown |
 |-----------|------|-------|---------|
-| `Healthy` | Alert agent entry is healthy (`ResourceHealthy`) | Alert agent entry has issues (`ResourceUnhealthy`) | Not yet observed (`Pending`) |
+| `Healthy` | Alert agent entry is healthy (`ResourceHealthy`) | Alert agent entry has issues (`ResourceUnhealthy`) | Not yet observed |
 | `Enabled` | Alert agent registered in the CIB as expected (`ScriptConfigured`) | Not registered or misconfigured (descriptive reason) | Not yet observed (`Pending`) |
 | `Operational` | Alert agent script present on this node (`ScriptPresent`) | Script missing from this node (descriptive reason) | Not yet observed (`Pending`) |
 

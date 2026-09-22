@@ -280,7 +280,8 @@ const (
 	// For alert-agent script resources (TaintAlertAgent, UntaintAlertAgent), an alert agent cannot be
 	// disabled, so this condition instead tracks whether the alert agent is registered in the CIB with
 	// the expected script path and event filter. When True, the agent is configured with reason
-	// "ScriptConfigured". When False, the agent is not registered or is misconfigured. When Unknown,
+	// "ScriptConfigured". When False, the agent is not registered with reason "AlertAgentNotRegistered", or is
+	// registered but misconfigured with reason "ScriptMisconfigured". When Unknown,
 	// registration has not yet been observed this run with reason "Pending"; this is expected to be temporary.
 	ResourceEnabledConditionType = "Enabled"
 
@@ -291,8 +292,9 @@ const (
 	// For alert-agent script resources (TaintAlertAgent, UntaintAlertAgent), this condition instead
 	// tracks whether the alert agent's script file is present and executable on this node, since the
 	// script is delivered independently to each node by MCO. When True, the script is present with
-	// reason "ScriptPresent". When False, the script is missing from this node. When Unknown, presence
-	// has not yet been observed this run with reason "Pending"; this is expected to be temporary.
+	// reason "ScriptPresent". When False, the script is missing from this node with reason
+	// "ScriptMissing". When Unknown, presence has not yet been observed this run with reason
+	// "Pending"; this is expected to be temporary.
 	ResourceOperationalConditionType = "Operational"
 
 	// ResourceActiveConditionType tracks whether a resource is active.
@@ -366,6 +368,14 @@ const (
 	// alert-agent resource and is used in place of "Enabled".
 	ResourceEnabledReasonScriptConfigured = "ScriptConfigured"
 
+	// ResourceEnabledReasonAlertAgentNotRegistered means an alert-agent script resource is not registered in
+	// the CIB at all. This is an unexpected state.
+	ResourceEnabledReasonAlertAgentNotRegistered = "AlertAgentNotRegistered"
+
+	// ResourceEnabledReasonScriptMisconfigured means an alert-agent script resource is registered in
+	// the CIB but with an unexpected script path or event filter. This is an unexpected state.
+	ResourceEnabledReasonScriptMisconfigured = "ScriptMisconfigured"
+
 	// ResourceEnabledReasonPending means an alert-agent script resource's CIB registration has not yet
 	// been observed this run by the status collector. Used only with status "Unknown". This is expected
 	// to be temporary, e.g. immediately after upgrade or before the first successful CIB collection.
@@ -386,6 +396,10 @@ const (
 	// present and executable on this node. This is the normal operating state for an alert-agent
 	// resource and is used in place of "Operational".
 	ResourceOperationalReasonScriptPresent = "ScriptPresent"
+
+	// ResourceOperationalReasonScriptMissing means an alert-agent script resource's script file is
+	// missing or not executable on this node. This is an unexpected state.
+	ResourceOperationalReasonScriptMissing = "ScriptMissing"
 
 	// ResourceOperationalReasonPending means an alert-agent script resource's presence on this node has
 	// not yet been observed this run by the status collector. Used only with status "Unknown". This is

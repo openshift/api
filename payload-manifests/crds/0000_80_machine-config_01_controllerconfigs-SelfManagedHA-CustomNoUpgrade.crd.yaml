@@ -3165,6 +3165,27 @@ spec:
                                 == ''Internal'' || (has(self.loadBalancer) && self.loadBalancer.type
                                 == ''UserManaged'')'
                         type: object
+                      topologyTransitionStatus:
+                        description: |-
+                          TopologyTransitionStatus reports the current status of the topology transition.
+                          When omitted, no topology transition status is reported.
+                        properties:
+                          message:
+                            description: Message is human readable information with
+                              a brief statement of the reason for the current status.
+                            type: string
+                          topologyTransitionStatusFlag:
+                            description: |-
+                              Status is one of UnsupportedTransition, PreflightCheckFailed,
+                              TopologyTransitionInProgress, TopologyTransitionComplete, or AsExpected.
+                            enum:
+                            - UnsupportedTransition
+                            - PreflightCheckFailed
+                            - TopologyTransitionInProgress
+                            - TopologyTransitionComplete
+                            - AsExpected
+                            type: string
+                        type: object
                     type: object
                 required:
                 - spec

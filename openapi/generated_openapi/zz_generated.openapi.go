@@ -492,6 +492,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		configv1.TokenIssuer{}.OpenAPIModelName():                                              schema_openshift_api_config_v1_TokenIssuer(ref),
 		configv1.TokenRequiredClaim{}.OpenAPIModelName():                                       schema_openshift_api_config_v1_TokenRequiredClaim(ref),
 		configv1.TokenUserValidationRule{}.OpenAPIModelName():                                  schema_openshift_api_config_v1_TokenUserValidationRule(ref),
+		configv1.TopologyTransitionStatus{}.OpenAPIModelName():                                 schema_openshift_api_config_v1_TopologyTransitionStatus(ref),
 		configv1.Update{}.OpenAPIModelName():                                                   schema_openshift_api_config_v1_Update(ref),
 		configv1.UpdateHistory{}.OpenAPIModelName():                                            schema_openshift_api_config_v1_UpdateHistory(ref),
 		configv1.UsernameClaimMapping{}.OpenAPIModelName():                                     schema_openshift_api_config_v1_UsernameClaimMapping(ref),
@@ -16421,6 +16422,12 @@ func schema_openshift_api_config_v1_InfrastructureStatus(ref common.ReferenceCal
 							Format:      "",
 						},
 					},
+					"topologyTransitionStatus": {
+						SchemaProps: spec.SchemaProps{
+							Description: "TopologyTransitionStatus reports the current status of the topology transition. When omitted, no topology transition status is reported.",
+							Ref:         ref(configv1.TopologyTransitionStatus{}.OpenAPIModelName()),
+						},
+					},
 					"cpuPartitioning": {
 						SchemaProps: spec.SchemaProps{
 							Description: "cpuPartitioning expresses if CPU partitioning is a currently enabled feature in the cluster. CPU Partitioning means that this cluster can support partitioning workloads to specific CPU Sets. Valid values are \"None\" and \"AllNodes\". When omitted, the default value is \"None\". The default value of \"None\" indicates that no nodes will be setup with CPU partitioning. The \"AllNodes\" value indicates that all nodes have been setup with CPU partitioning, and can then be further configured via the PerformanceProfile API.",
@@ -16433,7 +16440,7 @@ func schema_openshift_api_config_v1_InfrastructureStatus(ref common.ReferenceCal
 			},
 		},
 		Dependencies: []string{
-			configv1.PlatformStatus{}.OpenAPIModelName()},
+			configv1.PlatformStatus{}.OpenAPIModelName(), configv1.TopologyTransitionStatus{}.OpenAPIModelName()},
 	}
 }
 
@@ -22253,6 +22260,32 @@ func schema_openshift_api_config_v1_TokenUserValidationRule(ref common.Reference
 					},
 				},
 				Required: []string{"expression", "message"},
+			},
+		},
+	}
+}
+
+func schema_openshift_api_config_v1_TopologyTransitionStatus(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"topologyTransitionStatusFlag": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Status is one of UnsupportedTransition, PreflightCheckFailed, TopologyTransitionInProgress, TopologyTransitionComplete, or AsExpected.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"message": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Message is human readable information with a brief statement of the reason for the current status.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+				},
 			},
 		},
 	}

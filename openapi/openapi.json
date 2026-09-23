@@ -8612,6 +8612,10 @@
         "platformStatus": {
           "description": "platformStatus holds status information specific to the underlying infrastructure provider.",
           "$ref": "#/definitions/com.github.openshift.api.config.v1.PlatformStatus"
+        },
+        "topologyTransitionStatus": {
+          "description": "TopologyTransitionStatus reports the current status of the topology transition. When omitted, no topology transition status is reported.",
+          "$ref": "#/definitions/com.github.openshift.api.config.v1.TopologyTransitionStatus"
         }
       }
     },
@@ -12025,6 +12029,19 @@
         },
         "message": {
           "description": "message is a required human-readable message to be logged by the Kubernetes API server if the CEL expression defined in 'expression' fails. message must be at least 1 character in length and must not exceed 256 characters.",
+          "type": "string"
+        }
+      }
+    },
+    "com.github.openshift.api.config.v1.TopologyTransitionStatus": {
+      "type": "object",
+      "properties": {
+        "message": {
+          "description": "Message is human readable information with a brief statement of the reason for the current status.",
+          "type": "string"
+        },
+        "topologyTransitionStatusFlag": {
+          "description": "Status is one of UnsupportedTransition, PreflightCheckFailed, TopologyTransitionInProgress, TopologyTransitionComplete, or AsExpected.",
           "type": "string"
         }
       }

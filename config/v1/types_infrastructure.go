@@ -138,42 +138,11 @@ type InfrastructureStatus struct {
 	// +optional
 	InfrastructureTopology TopologyMode `json:"infrastructureTopology,omitempty"`
 
-	// ControlPlaneTopologyTransitionStatus reports the current state of a
-	// control plane topology transition requested via spec.controlPlaneTopology.
-	//
-	// "NotTransitioned" means no transition has ever been requested:
-	// spec.controlPlaneTopology is empty. This is the default state prior to
-	// the cluster's first transition; once a transition completes, this
-	// field moves to "Transitioned" and does not return to "NotTransitioned".
-	//
-	// "Pending" means a transition has been requested and admitted by the
-	// topology transition controller, and the controller is actively
-	// reconciling the cluster to the new topology.
-	//
-	// "Error" means a requested transition could not be admitted, either
-	// because the requested topology change is not a supported transition or
-	// because a precondition was not met. The specific reason is reported as
-	// an Event on this Infrastructure object rather than in this field.
-	//
-	// "Transitioned" means the most recently requested transition completed
-	// successfully; spec.controlPlaneTopology matches status.controlPlaneTopology.
-	//
-	// +kubebuilder:default=NotTransitioned
-	// +kubebuilder:validation:Enum=NotTransitioned;Pending;Error;RetryWithBackoff;Transitioned
+	// TopologyTransitionStatus reports the current status of the topology transition.
+	// When omitted, no topology transition status is reported.
 	// +openshift:enable:FeatureGate=MutableTopology
 	// +optional
-	ControlPlaneTopologyTransitionStatus TopologyTransitionStatus `json:"controlPlaneTopologyTransitionStatus,omitempty"`
-
-	// InfrastrutureTopologyTransitionStatus reports the current state of a
-	// infrastructure topology transition requested via spec.controlPlaneTopology.
-	//
-	// See ControlPlaneTopologyTransitionStatus for enum definitinos and meanings.
-	//
-	// +kubebuilder:default=NotTransitioned
-	// +kubebuilder:validation:Enum=NotTransitioned;Pending;Error;RetryWithBackoff;Transitioned
-	// +openshift:enable:FeatureGate=MutableTopology
-	// +optional
-	InfrastructureTopologyTransitionStatus TopologyTransitionStatus `json:"infrastructureTopologyTransitionStatus,omitempty"`
+	TopologyTransitionStatus *TopologyTransitionStatus `json:"topologyTransitionStatus,omitempty"`
 
 	// cpuPartitioning expresses if CPU partitioning is a currently enabled feature in the cluster.
 	// CPU Partitioning means that this cluster can support partitioning workloads to specific CPU Sets.
@@ -214,51 +183,39 @@ const (
 	ExternalTopologyMode TopologyMode = "External"
 )
 
-// TopologyTransitionStatus tracks the current state of a topology transition
-// requested via spec.controlPlaneTopology. Each value corresponds 1:1 to a
-// distinct (Progressing, Upgradeable) condition-reason pair reported by the
-// topology transition controller on the cluster-config-operator ClusterOperator:
-//
-//   - NotTransitioned              -> Progressing=False/AsExpected,                                    Upgradeable=True/AsExpected
-//   - Pending       	 -> Progressing=True/TopologyTransitionInProgress,                   Upgradeable=False/TopologyTransitionInProgress
-//   - RetryWithBackoff	 -> Progressing=True/TopologyTransitionInProgress,                   Upgradeable=False/TopologyTransitionInProgress
-//   - Error             ->	Progressing=False/{UnsupportedTransition|PreflightCheckFailed},  Upgradeable=False/{same}
-//   - Transitioned      -> Progressing=False/TopologyTransitionComplete,                    Upgradeable=True/TopologyTransitionComplete
-type TopologyTransitionStatus string
+type TopologyTransitionStatus struct {
+	// Status is one of UnsupportedTransition, PreflightCheckFailed,
+	// TopologyTransitionInProgress, TopologyTransitionComplete, or AsExpected.
+	// +kubebuilder:validation:Enum=UnsupportedTransition;PreflightCheckFailed;TopologyTransitionInProgress;TopologyTransitionComplete;AsExpected
+	Status TopologyTransitionStatusFlag `json:"topologyTransitionStatusFlag,omitempty"`
+
+	// Message is human readable information with a brief statement of the reason for the current status.
+	Message string `json:"message,omitempty"`
+}
+
+// TopologyTransitionStatusFlag tracks the last observed state of a topology transition
+// requested via spec.controlPlaneTopology.
+type TopologyTransitionStatusFlag string
 
 const (
-	// TopologyTransitionStatusNotTransitioned indicates that no topology transition has
-	// ever been requested: spec.controlPlaneTopology is empty. This is the
-	// default state prior to the cluster's first transition. Once a
-	// transition completes, the field moves to TopologyTransitionStatusTransitioned
-	// and does not return to NotTransitioned.
-	TopologyTransitionStatusNotTransitioned TopologyTransitionStatus = "NotTransitioned"
+	// TopologyTransitionStatusUnsupportedTransition indicates that the requested
+	// topology is not supported.
+	TopologyTransitionStatusUnsupportedTransition TopologyTransitionStatusFlag = "UnsupportedTransition"
 
-	// TopologyTransitionStatusPending indicates that a topology transition
-	// has been requested and admitted, and the controller is actively
-	// reconciling the cluster to the new topology.
-	TopologyTransitionStatusPending TopologyTransitionStatus = "Pending"
+	// TopologyTransitionStatusPreflightCheckFailed indicates that a preflight
+	// check for the requested topology transition failed.
+	TopologyTransitionStatusPreflightCheckFailed TopologyTransitionStatusFlag = "PreflightCheckFailed"
 
-	// TopologyTransitionStatusRetryWithBackoff indicates that the controller
-	// encountered a synchronization or API error while reconciling the
-	// transition. The error is returned to the rate-limited workqueue so the
-	// transition is retried with backoff. This state is distinct from Error,
-	// which indicates that admission failed because a transition is unsupported
-	// or a precondition was not met.
-	TopologyTransitionStatusRetryWithBackoff TopologyTransitionStatus = "RetryWithBackoff"
+	// TopologyTransitionStatusInProgress indicates that a topology transition is
+	// currently in progress.
+	TopologyTransitionStatusInProgress TopologyTransitionStatusFlag = "TopologyTransitionInProgress"
 
-	// TopologyTransitionStatusError indicates that a requested topology
-	// transition could not be admitted, either because the requested
-	// topology change is not a supported transition or because a
-	// precondition was not met. The specific reason is reported as an Event
-	// on this Infrastructure object rather than in this field.
-	TopologyTransitionStatusError TopologyTransitionStatus = "Error"
+	// TopologyTransitionStatusComplete indicates that a topology transition has
+	// completed successfully.
+	TopologyTransitionStatusComplete TopologyTransitionStatusFlag = "TopologyTransitionComplete"
 
-	// TopologyTransitionStatusTransitioned indicates that a topology
-	// transition completed successfully. This is a terminal state: since
-	// only one-directional transitions are currently supported, the field
-	// remains Transitioned for the lifetime of the cluster once reached.
-	TopologyTransitionStatusTransitioned TopologyTransitionStatus = "Transitioned"
+	// TopologyTransitionStatusAsExpected indicates that no topology transition is in progress
+	TopologyTransitionStatusAsExpected TopologyTransitionStatusFlag = "AsExpected"
 )
 
 // CPUPartitioningMode defines the mode for CPU partitioning

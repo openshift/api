@@ -16421,20 +16421,6 @@ func schema_openshift_api_config_v1_InfrastructureStatus(ref common.ReferenceCal
 							Format:      "",
 						},
 					},
-					"controlPlaneTopologyTransitionStatus": {
-						SchemaProps: spec.SchemaProps{
-							Description: "ControlPlaneTopologyTransitionStatus reports the current state of a control plane topology transition requested via spec.controlPlaneTopology.\n\n\"NotTransitioned\" means no transition has ever been requested: spec.controlPlaneTopology is empty. This is the default state prior to the cluster's first transition; once a transition completes, this field moves to \"Transitioned\" and does not return to \"NotTransitioned\".\n\n\"Pending\" means a transition has been requested and admitted by the topology transition controller, and the controller is actively reconciling the cluster to the new topology.\n\n\"Error\" means a requested transition could not be admitted, either because the requested topology change is not a supported transition or because a precondition was not met. The specific reason is reported as an Event on this Infrastructure object rather than in this field.\n\n\"Transitioned\" means the most recently requested transition completed successfully; spec.controlPlaneTopology matches status.controlPlaneTopology.",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"infrastructureTopologyTransitionStatus": {
-						SchemaProps: spec.SchemaProps{
-							Description: "InfrastrutureTopologyTransitionStatus reports the current state of a infrastructure topology transition requested via spec.controlPlaneTopology.\n\nSee ControlPlaneTopologyTransitionStatus for enum definitinos and meanings.",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
 					"cpuPartitioning": {
 						SchemaProps: spec.SchemaProps{
 							Description: "cpuPartitioning expresses if CPU partitioning is a currently enabled feature in the cluster. CPU Partitioning means that this cluster can support partitioning workloads to specific CPU Sets. Valid values are \"None\" and \"AllNodes\". When omitted, the default value is \"None\". The default value of \"None\" indicates that no nodes will be setup with CPU partitioning. The \"AllNodes\" value indicates that all nodes have been setup with CPU partitioning, and can then be further configured via the PerformanceProfile API.",

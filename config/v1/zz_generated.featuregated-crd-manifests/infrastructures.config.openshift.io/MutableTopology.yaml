@@ -1051,35 +1051,6 @@ spec:
                   The 'HighlyAvailableArbiter' mode indicates that the control plane will consist of 2 control-plane nodes
                   that run conventional services and 1 smaller sized arbiter node that runs a bare minimum of services to maintain quorum.
                 type: string
-              controlPlaneTopologyTransitionStatus:
-                default: NotTransitioned
-                description: |-
-                  ControlPlaneTopologyTransitionStatus reports the current state of a
-                  control plane topology transition requested via spec.controlPlaneTopology.
-
-                  "NotTransitioned" means no transition has ever been requested:
-                  spec.controlPlaneTopology is empty. This is the default state prior to
-                  the cluster's first transition; once a transition completes, this
-                  field moves to "Transitioned" and does not return to "NotTransitioned".
-
-                  "Pending" means a transition has been requested and admitted by the
-                  topology transition controller, and the controller is actively
-                  reconciling the cluster to the new topology.
-
-                  "Error" means a requested transition could not be admitted, either
-                  because the requested topology change is not a supported transition or
-                  because a precondition was not met. The specific reason is reported as
-                  an Event on this Infrastructure object rather than in this field.
-
-                  "Transitioned" means the most recently requested transition completed
-                  successfully; spec.controlPlaneTopology matches status.controlPlaneTopology.
-                enum:
-                - NotTransitioned
-                - Pending
-                - Error
-                - RetryWithBackoff
-                - Transitioned
-                type: string
               cpuPartitioning:
                 default: None
                 description: |-
@@ -1119,20 +1090,6 @@ spec:
                 enum:
                 - HighlyAvailable
                 - SingleReplica
-                type: string
-              infrastructureTopologyTransitionStatus:
-                default: NotTransitioned
-                description: |-
-                  InfrastrutureTopologyTransitionStatus reports the current state of a
-                  infrastructure topology transition requested via spec.controlPlaneTopology.
-
-                  See ControlPlaneTopologyTransitionStatus for enum definitinos and meanings.
-                enum:
-                - NotTransitioned
-                - Pending
-                - Error
-                - RetryWithBackoff
-                - Transitioned
                 type: string
               platform:
                 description: |-

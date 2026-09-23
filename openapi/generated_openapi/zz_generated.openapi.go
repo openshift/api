@@ -58312,7 +58312,7 @@ func schema_openshift_api_operator_v1_IngressControllerSpec(ref common.Reference
 					},
 					"haproxyVersion": {
 						SchemaProps: spec.SchemaProps{
-							Description: "haproxyVersion specifies the HAProxy version to use for this IngressController.\n\nOpenShift 5.0 introduces HAProxy 3.2 as its default version and supports HAProxy 2.8 from OpenShift 4.22 for migration purposes. When an OpenShift release introduces a new default HAProxy version, that HAProxy version becomes available as a pinnable value in subsequent OpenShift releases, providing a smooth migration path for administrators who want to defer HAProxy upgrades.\n\nValid values for OpenShift 5.0: - Unset (default): Uses HAProxy 3.2 (the default for OpenShift 5.0) - \"3.2\": Explicitly pins HAProxy 3.2 for preservation during cluster\n  upgrades to future OpenShift releases\n- \"2.8\": Uses HAProxy 2.8 from OpenShift 4.22 (migration support, will\n  be dropped in the next OpenShift release)\n\nIf a specific HAProxy version is set and would become unsupported in a target cluster upgrade, a preflight check will block the cluster upgrade until this field is updated to unset or a supported version.",
+							Description: "haproxyVersion specifies the HAProxy version to use for this IngressController.\n\nOpenShift 5.1 continues with HAProxy 3.2 (same minor version introduced in OpenShift 5.0) and does not introduce a new HAProxy version.\n\nValid values for OpenShift 5.1: - Unset (default): Uses HAProxy 3.2 (the default for OpenShift 5.1) - \"3.2\": Uses the latest HAProxy 3.2.z available for this OpenShift release and pins the minor version.\n\nNote: HAProxy 2.8 support has been dropped in OpenShift 5.1. Upgrading from OpenShift 5.0 with haproxyVersion set to \"2.8\" is blocked.\n\nIf a specific HAProxy version is set and would become unsupported in a target cluster upgrade, a preflight check will block the cluster upgrade until this field is updated to unset or a supported version.",
 							Type:        []string{"string"},
 							Format:      "",
 						},
@@ -58411,7 +58411,7 @@ func schema_openshift_api_operator_v1_IngressControllerStatus(ref common.Referen
 					},
 					"effectiveHAProxyVersion": {
 						SchemaProps: spec.SchemaProps{
-							Description: "effectiveHAProxyVersion reports the HAProxy version currently in use by this IngressController. This reflects the resolved value of the spec.haproxyVersion field. When omitted, the effective value has not yet been resolved by the operator or the feature is not enabled for this cluster.\n\nExamples for OpenShift 5.0: - \"3.2\": Using HAProxy 3.2 - \"2.8\": Using HAProxy 2.8",
+							Description: "effectiveHAProxyVersion reports the HAProxy version currently in use by this IngressController. This reflects the resolved value of the spec.haproxyVersion field. When omitted, the effective value has not yet been resolved by the operator or the feature is not enabled for this cluster.\n\nExamples for OpenShift 5.1: - \"3.2\": Using HAProxy 3.2",
 							Type:        []string{"string"},
 							Format:      "",
 						},

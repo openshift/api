@@ -187,35 +187,35 @@ type TopologyTransitionStatus struct {
 	// Status is one of UnsupportedTransition, PreflightCheckFailed,
 	// TopologyTransitionInProgress, TopologyTransitionComplete, or AsExpected.
 	// +kubebuilder:validation:Enum=UnsupportedTransition;PreflightCheckFailed;TopologyTransitionInProgress;TopologyTransitionComplete;AsExpected
-	Status TopologyTransitionStatusFlag `json:"topologyTransitionStatusFlag,omitempty"`
+	State TopologyTransitionState `json:"state,omitempty"`
 
 	// Message is human readable information about the reason for the current status.
 	Message string `json:"message,omitempty"`
 }
 
-// TopologyTransitionStatusFlag tracks the last observed state of a topology transition
+// TopologyTransitionState tracks the last observed state of a topology transition
 // requested via spec.controlPlaneTopology.
-type TopologyTransitionStatusFlag string
+type TopologyTransitionState string
 
 const (
 	// TopologyTransitionStatusUnsupportedTransition indicates that the requested
 	// topology transition is not supported.
-	TopologyTransitionStatusUnsupportedTransition TopologyTransitionStatusFlag = "UnsupportedTransition"
+	TopologyTransitionStatusUnsupportedTransition TopologyTransitionState = "UnsupportedTransition"
 
 	// TopologyTransitionStatusPreflightCheckFailed indicates that a preflight
 	// check for the requested topology transition failed.
-	TopologyTransitionStatusPreflightCheckFailed TopologyTransitionStatusFlag = "PreflightCheckFailed"
+	TopologyTransitionStatusPreflightCheckFailed TopologyTransitionState = "PreflightCheckFailed"
 
 	// TopologyTransitionStatusInProgress indicates that a topology transition is
 	// currently in progress.
-	TopologyTransitionStatusInProgress TopologyTransitionStatusFlag = "TopologyTransitionInProgress"
+	TopologyTransitionStatusInProgress TopologyTransitionState = "TopologyTransitionInProgress"
 
 	// TopologyTransitionStatusComplete indicates that a topology transition has
 	// completed successfully.
-	TopologyTransitionStatusComplete TopologyTransitionStatusFlag = "TopologyTransitionComplete"
+	TopologyTransitionStatusComplete TopologyTransitionState = "TopologyTransitionComplete"
 
 	// TopologyTransitionStatusAsExpected indicates that no topology transition is in progress
-	TopologyTransitionStatusAsExpected TopologyTransitionStatusFlag = "AsExpected"
+	TopologyTransitionStatusAsExpected TopologyTransitionState = "AsExpected"
 )
 
 // CPUPartitioningMode defines the mode for CPU partitioning

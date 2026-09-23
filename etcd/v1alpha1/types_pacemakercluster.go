@@ -731,7 +731,7 @@ type PacemakerClusterResourceStatus struct {
 	// lastStopTime is the timestamp of the most recent stop operation observed for
 	// this resource on this node, as reported by the CIB. This field is optional and
 	// is omitted when no stop operation has been observed for this resource on this
-	// node.
+	// node, or when Pacemaker has pruned the operation history entry.
 	// +kubebuilder:validation:Format=date-time
 	// +optional
 	LastStopTime *metav1.Time `json:"lastStopTime,omitempty"`
@@ -739,7 +739,7 @@ type PacemakerClusterResourceStatus struct {
 	// lastStartTime is the timestamp of the most recent start operation observed for
 	// this resource on this node, as reported by the CIB. This field is optional and
 	// is omitted when no start operation has been observed for this resource on this
-	// node.
+	// node, or when Pacemaker has pruned the operation history entry.
 	// +kubebuilder:validation:Format=date-time
 	// +optional
 	LastStartTime *metav1.Time `json:"lastStartTime,omitempty"`

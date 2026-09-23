@@ -16935,11 +16935,11 @@
           "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Time"
         },
         "lastStartTime": {
-          "description": "lastStartTime is the timestamp of the most recent start operation observed for this resource on this node, as reported by the CIB. This field is optional and is omitted when no start operation has been observed for this resource on this node.",
+          "description": "lastStartTime is the timestamp of the most recent start operation observed for this resource on this node, as reported by the CIB. This field is optional and is omitted when no start operation has been observed for this resource on this node, or when Pacemaker has pruned the operation history entry.",
           "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Time"
         },
         "lastStopTime": {
-          "description": "lastStopTime is the timestamp of the most recent stop operation observed for this resource on this node, as reported by the CIB. This field is optional and is omitted when no stop operation has been observed for this resource on this node.",
+          "description": "lastStopTime is the timestamp of the most recent stop operation observed for this resource on this node, as reported by the CIB. This field is optional and is omitted when no stop operation has been observed for this resource on this node, or when Pacemaker has pruned the operation history entry.",
           "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Time"
         },
         "migrationThreshold": {
@@ -17201,11 +17201,11 @@
           "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Time"
         },
         "lastStartTime": {
-          "description": "lastStartTime is the timestamp of the most recent start operation observed for this resource on this node, as reported by the CIB. This field is optional and is omitted when no start operation has been observed for this resource on this node.",
+          "description": "lastStartTime is the timestamp of the most recent start operation observed for this resource on this node, as reported by the CIB. This field is optional and is omitted when no start operation has been observed for this resource on this node, or when Pacemaker has pruned the operation history entry.",
           "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Time"
         },
         "lastStopTime": {
-          "description": "lastStopTime is the timestamp of the most recent stop operation observed for this resource on this node, as reported by the CIB. This field is optional and is omitted when no stop operation has been observed for this resource on this node.",
+          "description": "lastStopTime is the timestamp of the most recent stop operation observed for this resource on this node, as reported by the CIB. This field is optional and is omitted when no stop operation has been observed for this resource on this node, or when Pacemaker has pruned the operation history entry.",
           "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Time"
         },
         "migrationThreshold": {

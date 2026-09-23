@@ -30392,13 +30392,13 @@ func schema_openshift_api_etcd_v1_PacemakerClusterResourceStatus(ref common.Refe
 					},
 					"lastStopTime": {
 						SchemaProps: spec.SchemaProps{
-							Description: "lastStopTime is the timestamp of the most recent stop operation observed for this resource on this node, as reported by the CIB. This field is optional and is omitted when no stop operation has been observed for this resource on this node.",
+							Description: "lastStopTime is the timestamp of the most recent stop operation observed for this resource on this node, as reported by the CIB. This field is optional and is omitted when no stop operation has been observed for this resource on this node, or when Pacemaker has pruned the operation history entry.",
 							Ref:         ref(metav1.Time{}.OpenAPIModelName()),
 						},
 					},
 					"lastStartTime": {
 						SchemaProps: spec.SchemaProps{
-							Description: "lastStartTime is the timestamp of the most recent start operation observed for this resource on this node, as reported by the CIB. This field is optional and is omitted when no start operation has been observed for this resource on this node.",
+							Description: "lastStartTime is the timestamp of the most recent start operation observed for this resource on this node, as reported by the CIB. This field is optional and is omitted when no start operation has been observed for this resource on this node, or when Pacemaker has pruned the operation history entry.",
 							Ref:         ref(metav1.Time{}.OpenAPIModelName()),
 						},
 					},
@@ -30821,13 +30821,13 @@ func schema_openshift_api_etcd_v1alpha1_PacemakerClusterResourceStatus(ref commo
 					},
 					"lastStopTime": {
 						SchemaProps: spec.SchemaProps{
-							Description: "lastStopTime is the timestamp of the most recent stop operation observed for this resource on this node, as reported by the CIB. This field is optional and is omitted when no stop operation has been observed for this resource on this node.",
+							Description: "lastStopTime is the timestamp of the most recent stop operation observed for this resource on this node, as reported by the CIB. This field is optional and is omitted when no stop operation has been observed for this resource on this node, or when Pacemaker has pruned the operation history entry.",
 							Ref:         ref(metav1.Time{}.OpenAPIModelName()),
 						},
 					},
 					"lastStartTime": {
 						SchemaProps: spec.SchemaProps{
-							Description: "lastStartTime is the timestamp of the most recent start operation observed for this resource on this node, as reported by the CIB. This field is optional and is omitted when no start operation has been observed for this resource on this node.",
+							Description: "lastStartTime is the timestamp of the most recent start operation observed for this resource on this node, as reported by the CIB. This field is optional and is omitted when no start operation has been observed for this resource on this node, or when Pacemaker has pruned the operation history entry.",
 							Ref:         ref(metav1.Time{}.OpenAPIModelName()),
 						},
 					},

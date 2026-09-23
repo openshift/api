@@ -547,7 +547,7 @@ tests:
         defaultPeers:
         - peerAddress: 192.168.111.1
           peerASN: 64513
-    expectedError: "should match"
+    expectedError: "must be a classic (n:n) or large (n:n:n) BGP community"
   - name: Should accept zero-valued communities
     initial: |
       apiVersion: machineconfiguration.openshift.io/v1alpha1
@@ -588,7 +588,7 @@ tests:
         defaultPeers:
         - peerAddress: 192.168.111.1
           peerASN: 64513
-    expectedError: "should match"
+    expectedError: "must be a classic (n:n) or large (n:n:n) BGP community"
   - name: Should reject more than 8 communities
     initial: |
       apiVersion: machineconfiguration.openshift.io/v1alpha1
@@ -711,6 +711,21 @@ tests:
           passwordSecret:
             name: llllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll.example.com
     expectedError: "name must be an RFC 1123 subdomain with labels of at most 63 characters"
+  - name: Should reject duplicate communities
+    initial: |
+      apiVersion: machineconfiguration.openshift.io/v1alpha1
+      kind: BGPVIPConfig
+      metadata:
+        name: cluster
+      spec:
+        localASN: 64512
+        communities:
+        - "64512:100"
+        - "64512:100"
+        defaultPeers:
+        - peerAddress: 192.168.111.1
+          peerASN: 64513
+    expectedError: "Duplicate value"
   onUpdate:
   - name: Should allow day-2 edits to the peer set
     initial: |

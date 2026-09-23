@@ -57,25 +57,33 @@ spec:
                   advertisements: "n:n" classic communities (RFC 1997) where each
                   segment is a 16-bit value between 0 and 65535, or "n:n:n" large
                   communities (RFC 8092) where each segment is a 32-bit value between
-                  0 and 4294967295. When omitted, no communities are attached. Each
-                  entry must be colon-separated decimal numbers without leading zeros,
-                  between 3 and 32 characters long; when set, between 1 and 8 entries.
+                  0 and 4294967295. When omitted, no communities are attached. Entries
+                  are unique; when set, between 1 and 8 entries.
                 items:
+                  description: |-
+                    BGPCommunity is a BGP community string: colon-separated decimal
+                    numbers without leading zeros - "n:n" for a classic community
+                    (RFC 1997, 16-bit segments between 0 and 65535) or "n:n:n" for a
+                    large community (RFC 8092, 32-bit segments between 0 and 4294967295).
+                    Between 3 and 32 characters.
                   maxLength: 32
                   minLength: 3
-                  pattern: ^(0|[1-9]\d*)(:(0|[1-9]\d*)){1,2}$
                   type: string
                   x-kubernetes-validations:
+                  - message: 'must be a classic (n:n) or large (n:n:n) BGP community:
+                      colon-separated decimal numbers without leading zeros'
+                    rule: self.matches('^(0|[1-9][0-9]*)(:(0|[1-9][0-9]*)){1,2}$')
                   - message: classic community (n:n) segments must be between 0 and
                       65535; large community (n:n:n) segments must be between 0 and
                       4294967295
-                    rule: 'self.split('':'').size() == 2 ? self.split('':'').all(s,
+                    rule: '!self.matches(''^(0|[1-9][0-9]*)(:(0|[1-9][0-9]*)){1,2}$'')
+                      || (self.split('':'').size() == 2 ? self.split('':'').all(s,
                       s.size() <= 5 && int(s) <= 65535) : self.split('':'').all(s,
-                      s.size() <= 10 && int(s) <= 4294967295)'
+                      s.size() <= 10 && int(s) <= 4294967295))'
                 maxItems: 8
                 minItems: 1
                 type: array
-                x-kubernetes-list-type: atomic
+                x-kubernetes-list-type: set
               defaultPeers:
                 description: |-
                   defaultPeers are the BGP peers every node establishes sessions with,

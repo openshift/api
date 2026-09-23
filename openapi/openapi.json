@@ -28088,13 +28088,13 @@
       ],
       "properties": {
         "communities": {
-          "description": "communities are BGP community strings attached to the VIP advertisements: \"n:n\" classic communities (RFC 1997) where each segment is a 16-bit value between 0 and 65535, or \"n:n:n\" large communities (RFC 8092) where each segment is a 32-bit value between 0 and 4294967295. When omitted, no communities are attached. Each entry must be colon-separated decimal numbers without leading zeros, between 3 and 32 characters long; when set, between 1 and 8 entries.",
+          "description": "communities are BGP community strings attached to the VIP advertisements: \"n:n\" classic communities (RFC 1997) where each segment is a 16-bit value between 0 and 65535, or \"n:n:n\" large communities (RFC 8092) where each segment is a 32-bit value between 0 and 4294967295. When omitted, no communities are attached. Entries are unique; when set, between 1 and 8 entries.",
           "type": "array",
           "items": {
             "type": "string",
             "default": ""
           },
-          "x-kubernetes-list-type": "atomic"
+          "x-kubernetes-list-type": "set"
         },
         "defaultPeers": {
           "description": "defaultPeers are the BGP peers every node establishes sessions with, unless the node is named in hostOverrides. Must contain between 1 and 16 peers, unique by peerAddress.",

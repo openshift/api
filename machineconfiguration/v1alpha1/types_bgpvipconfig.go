@@ -66,18 +66,13 @@ type BGPVIPConfigSpec struct {
 	// advertisements: "n:n" classic communities (RFC 1997) where each
 	// segment is a 16-bit value between 0 and 65535, or "n:n:n" large
 	// communities (RFC 8092) where each segment is a 32-bit value between
-	// 0 and 4294967295. When omitted, no communities are attached. Each
-	// entry must be colon-separated decimal numbers without leading zeros,
-	// between 3 and 32 characters long; when set, between 1 and 8 entries.
-	// +listType=atomic
+	// 0 and 4294967295. When omitted, no communities are attached. Entries
+	// are unique; when set, between 1 and 8 entries.
+	// +listType=set
 	// +kubebuilder:validation:MinItems=1
 	// +kubebuilder:validation:MaxItems=8
-	// +kubebuilder:validation:items:MinLength=3
-	// +kubebuilder:validation:items:MaxLength=32
-	// +kubebuilder:validation:items:Pattern=`^(0|[1-9]\d*)(:(0|[1-9]\d*)){1,2}$`
-	// +kubebuilder:validation:items:XValidation:rule="self.split(':').size() == 2 ? self.split(':').all(s, s.size() <= 5 && int(s) <= 65535) : self.split(':').all(s, s.size() <= 10 && int(s) <= 4294967295)",message="classic community (n:n) segments must be between 0 and 65535; large community (n:n:n) segments must be between 0 and 4294967295"
 	// +optional
-	Communities []string `json:"communities,omitempty"`
+	Communities []BGPCommunity `json:"communities,omitempty"`
 
 	// hostOverrides replaces (does not merge with) defaultPeers for the
 	// named nodes. Only the per-node peer file rendered by the
@@ -92,6 +87,17 @@ type BGPVIPConfigSpec struct {
 	// +optional
 	HostOverrides []BGPVIPHostPeers `json:"hostOverrides,omitempty"`
 }
+
+// BGPCommunity is a BGP community string: colon-separated decimal
+// numbers without leading zeros - "n:n" for a classic community
+// (RFC 1997, 16-bit segments between 0 and 65535) or "n:n:n" for a
+// large community (RFC 8092, 32-bit segments between 0 and 4294967295).
+// Between 3 and 32 characters.
+// +kubebuilder:validation:MinLength=3
+// +kubebuilder:validation:MaxLength=32
+// +kubebuilder:validation:XValidation:rule="self.matches('^(0|[1-9][0-9]*)(:(0|[1-9][0-9]*)){1,2}$')",message="must be a classic (n:n) or large (n:n:n) BGP community: colon-separated decimal numbers without leading zeros"
+// +kubebuilder:validation:XValidation:rule="!self.matches('^(0|[1-9][0-9]*)(:(0|[1-9][0-9]*)){1,2}$') || (self.split(':').size() == 2 ? self.split(':').all(s, s.size() <= 5 && int(s) <= 65535) : self.split(':').all(s, s.size() <= 10 && int(s) <= 4294967295))",message="classic community (n:n) segments must be between 0 and 65535; large community (n:n:n) segments must be between 0 and 4294967295"
+type BGPCommunity string
 
 // BGPVIPHostPeers is a per-node replacement peer list.
 type BGPVIPHostPeers struct {

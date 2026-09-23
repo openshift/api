@@ -83,7 +83,7 @@ func (in *BGPVIPConfigSpec) DeepCopyInto(out *BGPVIPConfigSpec) {
 	}
 	if in.Communities != nil {
 		in, out := &in.Communities, &out.Communities
-		*out = make([]string, len(*in))
+		*out = make([]BGPCommunity, len(*in))
 		copy(*out, *in)
 	}
 	if in.HostOverrides != nil {

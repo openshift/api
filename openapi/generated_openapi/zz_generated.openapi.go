@@ -48675,11 +48675,11 @@ func schema_openshift_api_machineconfiguration_v1alpha1_BGPVIPConfigSpec(ref com
 					"communities": {
 						VendorExtensible: spec.VendorExtensible{
 							Extensions: spec.Extensions{
-								"x-kubernetes-list-type": "atomic",
+								"x-kubernetes-list-type": "set",
 							},
 						},
 						SchemaProps: spec.SchemaProps{
-							Description: "communities are BGP community strings attached to the VIP advertisements: \"n:n\" classic communities (RFC 1997) where each segment is a 16-bit value between 0 and 65535, or \"n:n:n\" large communities (RFC 8092) where each segment is a 32-bit value between 0 and 4294967295. When omitted, no communities are attached. Each entry must be colon-separated decimal numbers without leading zeros, between 3 and 32 characters long; when set, between 1 and 8 entries.",
+							Description: "communities are BGP community strings attached to the VIP advertisements: \"n:n\" classic communities (RFC 1997) where each segment is a 16-bit value between 0 and 65535, or \"n:n:n\" large communities (RFC 8092) where each segment is a 32-bit value between 0 and 4294967295. When omitted, no communities are attached. Entries are unique; when set, between 1 and 8 entries.",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{

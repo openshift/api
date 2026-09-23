@@ -48645,7 +48645,7 @@ func schema_openshift_api_machineconfiguration_v1alpha1_BGPVIPConfigSpec(ref com
 				Properties: map[string]spec.Schema{
 					"localASN": {
 						SchemaProps: spec.SchemaProps{
-							Description: "localASN is the autonomous system number the cluster's FRR instances run under. Must be between 1 and 4294967295 (int64 because valid ASNs exceed int32 range).",
+							Description: "localASN is the BGP autonomous system number (ASN) the cluster's BGP speakers present to the configured peers. Use the ASN your network administrator assigned to the cluster - the peer routers must expect it or no session establishes; private-range ASNs (e.g. 64512-65534) are typical for datacenter fabrics. Must be between 1 and 4294967295.",
 							Type:        []string{"integer"},
 							Format:      "int64",
 						},

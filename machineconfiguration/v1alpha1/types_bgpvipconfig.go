@@ -42,8 +42,11 @@ type BGPVIPConfig struct {
 // BGPVIPConfigSpec describes the BGP peering used to advertise the API and
 // Ingress VIPs.
 type BGPVIPConfigSpec struct {
-	// localASN is the autonomous system number the cluster's FRR instances
-	// run under. Must be between 1 and 4294967295.
+	// localASN is the BGP autonomous system number (ASN) the cluster's BGP
+	// speakers present to the configured peers. Use the ASN your network
+	// administrator assigned to the cluster - the peer routers must expect
+	// it or no session establishes; private-range ASNs (e.g. 64512-65534)
+	// are typical for datacenter fabrics. Must be between 1 and 4294967295.
 	// +kubebuilder:validation:Minimum=1
 	// +kubebuilder:validation:Maximum=4294967295
 	// +required

@@ -189,7 +189,7 @@ type TopologyTransitionStatus struct {
 	// +kubebuilder:validation:Enum=UnsupportedTransition;PreflightCheckFailed;TopologyTransitionInProgress;TopologyTransitionComplete;AsExpected
 	Status TopologyTransitionStatusFlag `json:"topologyTransitionStatusFlag,omitempty"`
 
-	// Message is human readable information with a brief statement of the reason for the current status.
+	// Message is human readable information about the reason for the current status.
 	Message string `json:"message,omitempty"`
 }
 
@@ -199,7 +199,7 @@ type TopologyTransitionStatusFlag string
 
 const (
 	// TopologyTransitionStatusUnsupportedTransition indicates that the requested
-	// topology is not supported.
+	// topology transition is not supported.
 	TopologyTransitionStatusUnsupportedTransition TopologyTransitionStatusFlag = "UnsupportedTransition"
 
 	// TopologyTransitionStatusPreflightCheckFailed indicates that a preflight

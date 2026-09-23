@@ -43,8 +43,7 @@ type BGPVIPConfig struct {
 // Ingress VIPs.
 type BGPVIPConfigSpec struct {
 	// localASN is the autonomous system number the cluster's FRR instances
-	// run under. Must be between 1 and 4294967295 (int64 because valid ASNs
-	// exceed int32 range).
+	// run under. Must be between 1 and 4294967295.
 	// +kubebuilder:validation:Minimum=1
 	// +kubebuilder:validation:Maximum=4294967295
 	// +required

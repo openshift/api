@@ -726,6 +726,37 @@ tests:
         - peerAddress: 192.168.111.1
           peerASN: 64513
     expectedError: "Duplicate value"
+  - name: Should accept a fully qualified hostname override
+    initial: |
+      apiVersion: machineconfiguration.openshift.io/v1alpha1
+      kind: BGPVIPConfig
+      metadata:
+        name: cluster
+      spec:
+        localASN: 64512
+        defaultPeers:
+        - peerAddress: 192.168.111.1
+          peerASN: 64513
+        hostOverrides:
+        - hostname: worker-0.ostest.test.metalkube.org
+          peers:
+          - peerAddress: 192.168.1.1
+            peerASN: 64513
+    expected: |
+      apiVersion: machineconfiguration.openshift.io/v1alpha1
+      kind: BGPVIPConfig
+      metadata:
+        name: cluster
+      spec:
+        localASN: 64512
+        defaultPeers:
+        - peerAddress: 192.168.111.1
+          peerASN: 64513
+        hostOverrides:
+        - hostname: worker-0.ostest.test.metalkube.org
+          peers:
+          - peerAddress: 192.168.1.1
+            peerASN: 64513
   onUpdate:
   - name: Should allow day-2 edits to the peer set
     initial: |

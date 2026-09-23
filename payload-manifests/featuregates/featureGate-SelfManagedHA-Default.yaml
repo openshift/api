@@ -223,6 +223,9 @@
                         "name": "VSphereMixedNodeEnv"
                     },
                     {
+                        "name": "VSphereMultiVCenterDay2"
+                    },
+                    {
                         "name": "VolumeGroupSnapshot"
                     }
                 ],

@@ -293,9 +293,6 @@
                         "name": "AdditionalStorageConfig"
                     },
                     {
-                        "name": "BootImageSkewEnforcement"
-                    },
-                    {
                         "name": "BuildCSIVolumes"
                     },
                     {

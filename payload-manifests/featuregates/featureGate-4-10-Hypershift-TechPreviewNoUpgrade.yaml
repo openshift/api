@@ -151,9 +151,6 @@
                         "name": "AzureMultiDisk"
                     },
                     {
-                        "name": "BootImageSkewEnforcement"
-                    },
-                    {
                         "name": "BootcNodeManagement"
                     },
                     {

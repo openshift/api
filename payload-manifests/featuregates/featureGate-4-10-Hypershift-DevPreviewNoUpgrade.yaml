@@ -109,6 +109,9 @@
                         "name": "AdditionalStorageConfig"
                     },
                     {
+                        "name": "AuthenticationComponentProxyExternalOIDC"
+                    },
+                    {
                         "name": "AutomatedEtcdBackup"
                     },
                     {

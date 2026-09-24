@@ -1,0 +1,136 @@
+package v1
+
+import (
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+)
+
+type TopologyTransitionStatus struct {
+	// conditions reports whether available transitions have been evaluated.
+	// TopologyTransitionsEvaluated is Unknown before evaluation, True when evaluation
+	// succeeds (even if no transitions are available), and False when evaluation fails.
+	// An absent condition means evaluation has not completed.
+	// At most one condition is present.
+	// +kubebuilder:validation:MaxItems=1
+	// +optional
+	// +listType=map
+	// +listMapKey=type
+	Conditions []metav1.Condition `json:"conditions,omitempty"`
+
+	// availableTransitions represents the transitions that are currently valid for this cluster.
+	// An empty list means that no transitions are currently available.
+	// At most one transition is supported currently (SNO to HA Compact)
+	// +kubebuilder:validation:MaxItems=1
+	// +required
+	// +listType=atomic
+	AvailableTransitions []TopologyTransition `json:"availableTransitions"`
+
+	// currentTransition is omitted until a topology transition starts.
+	// +optional
+	CurrentTransition *TopologyTransitionProgress `json:"currentTransition,omitempty"`
+}
+
+const (
+	// TopologyTransitionsEvaluatedConditionType indicates whether available transitions have been evaluated.
+	TopologyTransitionsEvaluatedConditionType = "TopologyTransitionsEvaluated"
+)
+
+// TopologyTransitionProgress describes a topology transition that has started.
+type TopologyTransitionProgress struct {
+	// status indicates the current state of a triggered transition.
+	// It must be between 1 and 128 characters long.
+	// +kubebuilder:validation:MinLength=1
+	// +kubebuilder:validation:MaxLength=128
+	// +required
+	Status TransitionState `json:"status,omitempty"`
+
+	// reason indicates why the Status is in the current state.
+	// It must be between 1 and 128 characters long.
+	// +kubebuilder:validation:MinLength=1
+	// +kubebuilder:validation:MaxLength=128
+	// +required
+	Reason TransitionStateReason `json:"reason,omitempty"`
+
+	// message is human-readable information about the reason for the current status.
+	// It must be between 1 and 2048 characters long.
+	// +kubebuilder:validation:MinLength=1
+	// +kubebuilder:validation:MaxLength=2048
+	// +required
+	Message string `json:"message,omitempty"`
+
+	// startedTime is the time at which the transition was started. When omitted, the start time is not available.
+	// +optional
+	StartedTime *metav1.Time `json:"startedTime,omitempty"`
+
+	// completionTime is when the transition was fully applied. It is omitted while a transition is being applied.
+	// +optional
+	CompletionTime *metav1.Time `json:"completionTime,omitempty"`
+}
+
+// TransitionState tracks the last observed state of a requested transition.
+type TransitionState string
+
+const (
+	// CompletedTransition indicates an transition was successfully
+	// completed on the cluster.
+	CompletedTransition TransitionState = "Completed"
+	// PartialTransition indicates a transition was never completely applied
+	// or is currently being applied.
+	PartialTransition TransitionState = "Partial"
+	// FailedTransition indicates a transition failed to be applied.
+	FailedTransition TransitionState = "Failed"
+)
+
+// TransitionStateReason indicates why the transition is in a given state.
+type TransitionStateReason string
+
+const (
+	// UnsupportedTransition indicates that the requested
+	// transition is not supported.
+	UnsupportedTransition TransitionStateReason = "UnsupportedTransition"
+
+	// PreflightCheckFailed indicates that a preflight
+	// check for the requested transition failed.
+	PreflightCheckFailed TransitionStateReason = "PreflightCheckFailed"
+
+	// Initiated indicates that a transition is
+	// currently in progress.
+	InProgress TransitionStateReason = "TransitionInProgress"
+
+	// Complete indicates that a transition has
+	// completed successfully.
+	Complete TransitionStateReason = "TransitionComplete"
+)
+
+type TopologyTransition struct {
+	// source is the control-plane and infrastructure topology this transition starts
+	// from. It must equal the current topology in the corresponding status fields.
+	// source is required.
+	// +required
+	Source TopologyState `json:"source,omitempty,omitzero"`
+
+	// target is the control-plane and infrastructure topology this transition would
+	// move to. target is required.
+	// +required
+	Target TopologyState `json:"target,omitempty,omitzero"`
+
+	// reason is a CamelCase machine-readable explanation of the availability, e.g.
+	// PreflightCheckFailed. The set of reasons is diagnostic and not exhaustive.
+	// When omitted, no machine-readable explanation is available.
+	// Must start with an uppercase letter and contain only alphanumeric characters,
+	// and must be between 1 and 128 characters long.
+	// +kubebuilder:validation:MinLength=1
+	// +kubebuilder:validation:MaxLength=128
+	// +kubebuilder:validation:XValidation:rule=`self.matches('^[A-Z][A-Za-z0-9]*$')`,message="reason must be CamelCase, matching ^[A-Z][A-Za-z0-9]*$"
+	// +optional
+	Reason string `json:"reason,omitempty"`
+
+	// message is a human-readable explanation, primarily for Unavailable
+	// transitions (e.g. a concise summary of the failing preconditions). It is for
+	// humans only and must not be parsed. It may be truncated by the controller.
+	// When omitted, no human-readable explanation is available for the transition.
+	// When set, it must be between 1 and 2048 characters long.
+	// +kubebuilder:validation:MinLength=1
+	// +kubebuilder:validation:MaxLength=2048
+	// +optional
+	Message string `json:"message,omitempty"`
+}

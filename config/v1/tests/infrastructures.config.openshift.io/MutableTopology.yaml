@@ -259,7 +259,7 @@ tests:
         spec:
           controlPlaneTopology: InvalidValue
       expectedError: 'spec.controlPlaneTopology: Unsupported value: "InvalidValue": supported values: "HighlyAvailable", "SingleReplica"'
-    - name: Should allow topologyTransitions to remain omitted, representing that the controller has not yet completed its first evaluation
+    - name: Should allow updating Infrastructure status without topologyTransitionStatus
       initial: |
         apiVersion: config.openshift.io/v1
         kind: Infrastructure
@@ -269,33 +269,10 @@ tests:
       updated: |
         apiVersion: config.openshift.io/v1
         kind: Infrastructure
-        spec:
-          controlPlaneTopology: HighlyAvailable
-        status:
-          controlPlaneTopology: SingleReplica
-      expected: |
-        apiVersion: config.openshift.io/v1
-        kind: Infrastructure
-        spec:
-          controlPlaneTopology: HighlyAvailable
+        spec: {}
         status:
           controlPlaneTopology: SingleReplica
           infrastructureTopology: HighlyAvailable
-          cpuPartitioning: None
-    - name: Should allow explicitly setting topologyTransitions to an empty list, carrying the same meaning as omitting it
-      initial: |
-        apiVersion: config.openshift.io/v1
-        kind: Infrastructure
-        spec: {}
-        status:
-          controlPlaneTopology: SingleReplica
-      updated: |
-        apiVersion: config.openshift.io/v1
-        kind: Infrastructure
-        spec: {}
-        status:
-          controlPlaneTopology: SingleReplica
-          topologyTransitions: []
       expected: |
         apiVersion: config.openshift.io/v1
         kind: Infrastructure
@@ -304,52 +281,44 @@ tests:
           controlPlaneTopology: SingleReplica
           infrastructureTopology: HighlyAvailable
           cpuPartitioning: None
-          topologyTransitions: []
-    - name: Should allow topologyTransitions to remain omitted when status.controlPlaneTopology is outside the source/target enum (e.g. HighlyAvailableArbiter)
+    - name: Should allow an empty availableTransitions list after successful evaluation
       initial: |
         apiVersion: config.openshift.io/v1
         kind: Infrastructure
         spec: {}
         status:
-          controlPlaneTopology: HighlyAvailableArbiter
+          controlPlaneTopology: SingleReplica
       updated: |
         apiVersion: config.openshift.io/v1
         kind: Infrastructure
         spec: {}
         status:
-          controlPlaneTopology: HighlyAvailableArbiter
+          controlPlaneTopology: SingleReplica
+          topologyTransitionStatus:
+            availableTransitions: []
+            conditions:
+            - type: TopologyTransitionsEvaluated
+              status: "True"
+              lastTransitionTime: "2025-01-01T00:00:00Z"
+              reason: EvaluationComplete
+              message: No transitions are available
       expected: |
         apiVersion: config.openshift.io/v1
         kind: Infrastructure
         spec: {}
         status:
-          controlPlaneTopology: HighlyAvailableArbiter
+          controlPlaneTopology: SingleReplica
           infrastructureTopology: HighlyAvailable
           cpuPartitioning: None
-    - name: Should allow setting topologyTransitions to an empty list when status.controlPlaneTopology is outside the source/target enum (e.g. HighlyAvailableArbiter)
-      initial: |
-        apiVersion: config.openshift.io/v1
-        kind: Infrastructure
-        spec: {}
-        status:
-          controlPlaneTopology: HighlyAvailableArbiter
-      updated: |
-        apiVersion: config.openshift.io/v1
-        kind: Infrastructure
-        spec: {}
-        status:
-          controlPlaneTopology: HighlyAvailableArbiter
-          topologyTransitions: []
-      expected: |
-        apiVersion: config.openshift.io/v1
-        kind: Infrastructure
-        spec: {}
-        status:
-          controlPlaneTopology: HighlyAvailableArbiter
-          infrastructureTopology: HighlyAvailable
-          cpuPartitioning: None
-          topologyTransitions: []
-    - name: Should allow setting topologyTransitions to an Available entry with no reason
+          topologyTransitionStatus:
+            availableTransitions: []
+            conditions:
+            - type: TopologyTransitionsEvaluated
+              status: "True"
+              lastTransitionTime: "2025-01-01T00:00:00Z"
+              reason: EvaluationComplete
+              message: No transitions are available
+    - name: Should allow reporting current transition progress
       initial: |
         apiVersion: config.openshift.io/v1
         kind: Infrastructure
@@ -364,14 +333,20 @@ tests:
         status:
           controlPlaneTopology: SingleReplica
           infrastructureTopology: SingleReplica
-          topologyTransitions:
-          - source:
-              controlPlaneTopology: SingleReplica
-              infrastructureTopology: SingleReplica
-            target:
-              controlPlaneTopology: HighlyAvailable
-              infrastructureTopology: HighlyAvailable
-            availability: Available
+          topologyTransitionStatus:
+            availableTransitions:
+            - source:
+                controlPlaneTopology: SingleReplica
+                infrastructureTopology: SingleReplica
+              target:
+                controlPlaneTopology: HighlyAvailable
+                infrastructureTopology: HighlyAvailable
+              reason: PreflightCheckFailed
+            currentTransition:
+              status: Partial
+              reason: TransitionInProgress
+              message: Applying topology changes
+              startedTime: "2025-01-01T00:00:00Z"
       expected: |
         apiVersion: config.openshift.io/v1
         kind: Infrastructure
@@ -380,15 +355,21 @@ tests:
           controlPlaneTopology: SingleReplica
           infrastructureTopology: SingleReplica
           cpuPartitioning: None
-          topologyTransitions:
-          - source:
-              controlPlaneTopology: SingleReplica
-              infrastructureTopology: SingleReplica
-            target:
-              controlPlaneTopology: HighlyAvailable
-              infrastructureTopology: HighlyAvailable
-            availability: Available
-    - name: Should allow setting topologyTransitions to an Unavailable entry including reason and message
+          topologyTransitionStatus:
+            availableTransitions:
+            - source:
+                controlPlaneTopology: SingleReplica
+                infrastructureTopology: SingleReplica
+              target:
+                controlPlaneTopology: HighlyAvailable
+                infrastructureTopology: HighlyAvailable
+              reason: PreflightCheckFailed
+            currentTransition:
+              status: Partial
+              reason: TransitionInProgress
+              message: Applying topology changes
+              startedTime: "2025-01-01T00:00:00Z"
+    - name: Should reject a topology transition reason that is not CamelCase
       initial: |
         apiVersion: config.openshift.io/v1
         kind: Infrastructure
@@ -403,397 +384,17 @@ tests:
         status:
           controlPlaneTopology: SingleReplica
           infrastructureTopology: SingleReplica
-          topologyTransitions:
-          - source:
-              controlPlaneTopology: SingleReplica
-              infrastructureTopology: SingleReplica
-            target:
-              controlPlaneTopology: HighlyAvailable
-              infrastructureTopology: HighlyAvailable
-            availability: Unavailable
-            reason: PreflightCheckFailed
-            message: "etcd does not have quorum: need 3 voting members, have 1"
-      expected: |
-        apiVersion: config.openshift.io/v1
-        kind: Infrastructure
-        spec: {}
-        status:
-          controlPlaneTopology: SingleReplica
-          infrastructureTopology: SingleReplica
-          cpuPartitioning: None
-          topologyTransitions:
-          - source:
-              controlPlaneTopology: SingleReplica
-              infrastructureTopology: SingleReplica
-            target:
-              controlPlaneTopology: HighlyAvailable
-              infrastructureTopology: HighlyAvailable
-            availability: Unavailable
-            reason: PreflightCheckFailed
-            message: "etcd does not have quorum: need 3 voting members, have 1"
-    - name: Should allow setting topologyTransitions to an Unknown entry with a reason
-      initial: |
-        apiVersion: config.openshift.io/v1
-        kind: Infrastructure
-        spec: {}
-        status:
-          controlPlaneTopology: SingleReplica
-          infrastructureTopology: SingleReplica
-      updated: |
-        apiVersion: config.openshift.io/v1
-        kind: Infrastructure
-        spec: {}
-        status:
-          controlPlaneTopology: SingleReplica
-          infrastructureTopology: SingleReplica
-          topologyTransitions:
-          - source:
-              controlPlaneTopology: SingleReplica
-              infrastructureTopology: SingleReplica
-            target:
-              controlPlaneTopology: HighlyAvailable
-              infrastructureTopology: HighlyAvailable
-            availability: Unknown
-            reason: EvaluationPending
-      expected: |
-        apiVersion: config.openshift.io/v1
-        kind: Infrastructure
-        spec: {}
-        status:
-          controlPlaneTopology: SingleReplica
-          infrastructureTopology: SingleReplica
-          cpuPartitioning: None
-          topologyTransitions:
-          - source:
-              controlPlaneTopology: SingleReplica
-              infrastructureTopology: SingleReplica
-            target:
-              controlPlaneTopology: HighlyAvailable
-              infrastructureTopology: HighlyAvailable
-            availability: Unknown
-            reason: EvaluationPending
-    - name: Should allow a valid topologyTransitions entry for the current source
-      initial: |
-        apiVersion: config.openshift.io/v1
-        kind: Infrastructure
-        spec: {}
-        status:
-          controlPlaneTopology: SingleReplica
-          infrastructureTopology: SingleReplica
-      updated: |
-        apiVersion: config.openshift.io/v1
-        kind: Infrastructure
-        spec: {}
-        status:
-          controlPlaneTopology: SingleReplica
-          infrastructureTopology: SingleReplica
-          topologyTransitions:
-          - source:
-              controlPlaneTopology: SingleReplica
-              infrastructureTopology: SingleReplica
-            target:
-              controlPlaneTopology: HighlyAvailable
-              infrastructureTopology: HighlyAvailable
-            availability: Available
-      expected: |
-        apiVersion: config.openshift.io/v1
-        kind: Infrastructure
-        spec: {}
-        status:
-          controlPlaneTopology: SingleReplica
-          infrastructureTopology: SingleReplica
-          cpuPartitioning: None
-          topologyTransitions:
-          - source:
-              controlPlaneTopology: SingleReplica
-              infrastructureTopology: SingleReplica
-            target:
-              controlPlaneTopology: HighlyAvailable
-              infrastructureTopology: HighlyAvailable
-            availability: Available
-    - name: Should not allow a self-transition in topologyTransitions
-      initial: |
-        apiVersion: config.openshift.io/v1
-        kind: Infrastructure
-        spec: {}
-        status:
-          controlPlaneTopology: SingleReplica
-          infrastructureTopology: SingleReplica
-      updated: |
-        apiVersion: config.openshift.io/v1
-        kind: Infrastructure
-        spec: {}
-        status:
-          controlPlaneTopology: SingleReplica
-          infrastructureTopology: SingleReplica
-          topologyTransitions:
-          - source:
-              controlPlaneTopology: SingleReplica
-              infrastructureTopology: SingleReplica
-            target:
-              controlPlaneTopology: SingleReplica
-              infrastructureTopology: SingleReplica
-            availability: Available
-      expectedStatusError: "source and target must differ"
-    - name: Should not allow a topologyTransitions entry whose source differs from the current status topology
-      initial: |
-        apiVersion: config.openshift.io/v1
-        kind: Infrastructure
-        spec: {}
-        status:
-          controlPlaneTopology: SingleReplica
-          infrastructureTopology: SingleReplica
-      updated: |
-        apiVersion: config.openshift.io/v1
-        kind: Infrastructure
-        spec: {}
-        status:
-          controlPlaneTopology: SingleReplica
-          infrastructureTopology: SingleReplica
-          topologyTransitions:
-          - source:
-              controlPlaneTopology: HighlyAvailable
-              infrastructureTopology: HighlyAvailable
-            target:
-              controlPlaneTopology: SingleReplica
-              infrastructureTopology: SingleReplica
-            availability: Available
-      expectedStatusError: "transition sources must match the current status topology"
-    - name: Should not allow a reverse topologyTransitions entry
-      initial: |
-        apiVersion: config.openshift.io/v1
-        kind: Infrastructure
-        spec: {}
-        status:
-          controlPlaneTopology: HighlyAvailable
-          infrastructureTopology: HighlyAvailable
-      updated: |
-        apiVersion: config.openshift.io/v1
-        kind: Infrastructure
-        spec: {}
-        status:
-          controlPlaneTopology: HighlyAvailable
-          infrastructureTopology: HighlyAvailable
-          topologyTransitions:
-          - source:
-              controlPlaneTopology: HighlyAvailable
-              infrastructureTopology: HighlyAvailable
-            target:
-              controlPlaneTopology: SingleReplica
-              infrastructureTopology: SingleReplica
-            availability: Available
-      expectedStatusError: "only SingleReplica to HighlyAvailable topology transitions are supported"
-    - name: Should not allow a topologyTransitions entry with an invalid source controlPlaneTopology
-      initial: |
-        apiVersion: config.openshift.io/v1
-        kind: Infrastructure
-        spec: {}
-        status:
-          controlPlaneTopology: SingleReplica
-          infrastructureTopology: SingleReplica
-      updated: |
-        apiVersion: config.openshift.io/v1
-        kind: Infrastructure
-        spec: {}
-        status:
-          controlPlaneTopology: SingleReplica
-          infrastructureTopology: SingleReplica
-          topologyTransitions:
-          - source:
-              controlPlaneTopology: External
-              infrastructureTopology: SingleReplica
-            target:
-              controlPlaneTopology: HighlyAvailable
-              infrastructureTopology: HighlyAvailable
-            availability: Available
-      expectedStatusError: 'status.topologyTransitions[0].source.controlPlaneTopology: Unsupported value: "External": supported values: "SingleReplica", "HighlyAvailable"'
-    - name: Should not allow a topologyTransitions entry with an invalid target infrastructureTopology
-      initial: |
-        apiVersion: config.openshift.io/v1
-        kind: Infrastructure
-        spec: {}
-        status:
-          controlPlaneTopology: SingleReplica
-          infrastructureTopology: SingleReplica
-      updated: |
-        apiVersion: config.openshift.io/v1
-        kind: Infrastructure
-        spec: {}
-        status:
-          controlPlaneTopology: SingleReplica
-          infrastructureTopology: SingleReplica
-          topologyTransitions:
-          - source:
-              controlPlaneTopology: SingleReplica
-              infrastructureTopology: SingleReplica
-            target:
-              controlPlaneTopology: HighlyAvailable
-              infrastructureTopology: DualReplica
-            availability: Available
-      expectedStatusError: 'status.topologyTransitions[0].target.infrastructureTopology: Unsupported value: "DualReplica": supported values: "SingleReplica", "HighlyAvailable"'
-    - name: Should not allow a topologyTransitions entry with an invalid availability
-      initial: |
-        apiVersion: config.openshift.io/v1
-        kind: Infrastructure
-        spec: {}
-        status:
-          controlPlaneTopology: SingleReplica
-          infrastructureTopology: SingleReplica
-      updated: |
-        apiVersion: config.openshift.io/v1
-        kind: Infrastructure
-        spec: {}
-        status:
-          controlPlaneTopology: SingleReplica
-          infrastructureTopology: SingleReplica
-          topologyTransitions:
-          - source:
-              controlPlaneTopology: SingleReplica
-              infrastructureTopology: SingleReplica
-            target:
-              controlPlaneTopology: HighlyAvailable
-              infrastructureTopology: HighlyAvailable
-            availability: Pending
-      expectedStatusError: 'status.topologyTransitions[0].availability: Unsupported value: "Pending": supported values: "Available", "Unavailable", "Unknown"'
-    - name: Should not allow a topologyTransitions entry without source
-      initial: |
-        apiVersion: config.openshift.io/v1
-        kind: Infrastructure
-        spec: {}
-        status:
-          controlPlaneTopology: SingleReplica
-          infrastructureTopology: SingleReplica
-      updated: |
-        apiVersion: config.openshift.io/v1
-        kind: Infrastructure
-        spec: {}
-        status:
-          controlPlaneTopology: SingleReplica
-          infrastructureTopology: SingleReplica
-          topologyTransitions:
-          - target:
-              controlPlaneTopology: HighlyAvailable
-              infrastructureTopology: HighlyAvailable
-            availability: Available
-      expectedStatusError: "Required value"
-    - name: Should not allow a topologyTransitions entry without target
-      initial: |
-        apiVersion: config.openshift.io/v1
-        kind: Infrastructure
-        spec: {}
-        status:
-          controlPlaneTopology: SingleReplica
-          infrastructureTopology: SingleReplica
-      updated: |
-        apiVersion: config.openshift.io/v1
-        kind: Infrastructure
-        spec: {}
-        status:
-          controlPlaneTopology: SingleReplica
-          infrastructureTopology: SingleReplica
-          topologyTransitions:
-          - source:
-              controlPlaneTopology: SingleReplica
-              infrastructureTopology: SingleReplica
-            availability: Available
-      expectedStatusError: "Required value"
-    - name: Should not allow a topologyTransitions entry without availability
-      initial: |
-        apiVersion: config.openshift.io/v1
-        kind: Infrastructure
-        spec: {}
-        status:
-          controlPlaneTopology: SingleReplica
-          infrastructureTopology: SingleReplica
-      updated: |
-        apiVersion: config.openshift.io/v1
-        kind: Infrastructure
-        spec: {}
-        status:
-          controlPlaneTopology: SingleReplica
-          infrastructureTopology: SingleReplica
-          topologyTransitions:
-          - source:
-              controlPlaneTopology: SingleReplica
-              infrastructureTopology: SingleReplica
-            target:
-              controlPlaneTopology: HighlyAvailable
-              infrastructureTopology: HighlyAvailable
-      expectedStatusError: "Required value"
-    - name: Should not allow an Unavailable topologyTransitions entry without a reason
-      initial: |
-        apiVersion: config.openshift.io/v1
-        kind: Infrastructure
-        spec: {}
-        status:
-          controlPlaneTopology: SingleReplica
-          infrastructureTopology: SingleReplica
-      updated: |
-        apiVersion: config.openshift.io/v1
-        kind: Infrastructure
-        spec: {}
-        status:
-          controlPlaneTopology: SingleReplica
-          infrastructureTopology: SingleReplica
-          topologyTransitions:
-          - source:
-              controlPlaneTopology: SingleReplica
-              infrastructureTopology: SingleReplica
-            target:
-              controlPlaneTopology: HighlyAvailable
-              infrastructureTopology: HighlyAvailable
-            availability: Unavailable
-      expectedStatusError: "reason is required when availability is not Available"
-    - name: Should not allow an Unknown topologyTransitions entry without a reason
-      initial: |
-        apiVersion: config.openshift.io/v1
-        kind: Infrastructure
-        spec: {}
-        status:
-          controlPlaneTopology: SingleReplica
-          infrastructureTopology: SingleReplica
-      updated: |
-        apiVersion: config.openshift.io/v1
-        kind: Infrastructure
-        spec: {}
-        status:
-          controlPlaneTopology: SingleReplica
-          infrastructureTopology: SingleReplica
-          topologyTransitions:
-          - source:
-              controlPlaneTopology: SingleReplica
-              infrastructureTopology: SingleReplica
-            target:
-              controlPlaneTopology: HighlyAvailable
-              infrastructureTopology: HighlyAvailable
-            availability: Unknown
-      expectedStatusError: "reason is required when availability is not Available"
-    - name: Should not allow a topologyTransitions entry with a lowercase reason
-      initial: |
-        apiVersion: config.openshift.io/v1
-        kind: Infrastructure
-        spec: {}
-        status:
-          controlPlaneTopology: SingleReplica
-          infrastructureTopology: SingleReplica
-      updated: |
-        apiVersion: config.openshift.io/v1
-        kind: Infrastructure
-        spec: {}
-        status:
-          controlPlaneTopology: SingleReplica
-          infrastructureTopology: SingleReplica
-          topologyTransitions:
-          - source:
-              controlPlaneTopology: SingleReplica
-              infrastructureTopology: SingleReplica
-            target:
-              controlPlaneTopology: HighlyAvailable
-              infrastructureTopology: HighlyAvailable
-            availability: Unavailable
-            reason: preflightCheckFailed
+          topologyTransitionStatus:
+            availableTransitions:
+            - source:
+                controlPlaneTopology: SingleReplica
+                infrastructureTopology: SingleReplica
+              target:
+                controlPlaneTopology: HighlyAvailable
+                infrastructureTopology: HighlyAvailable
+              reason: preflightCheckFailed
       expectedStatusError: "reason must be CamelCase, matching ^[A-Z][A-Za-z0-9]*$"
-    - name: Should not allow a topologyTransitions entry with an empty reason
+    - name: Should reject an available transition whose source does not match status topology
       initial: |
         apiVersion: config.openshift.io/v1
         kind: Infrastructure
@@ -808,17 +409,16 @@ tests:
         status:
           controlPlaneTopology: SingleReplica
           infrastructureTopology: SingleReplica
-          topologyTransitions:
-          - source:
-              controlPlaneTopology: SingleReplica
-              infrastructureTopology: SingleReplica
-            target:
-              controlPlaneTopology: HighlyAvailable
-              infrastructureTopology: HighlyAvailable
-            availability: Unavailable
-            reason: ""
-      expectedStatusError: "should be at least 1 chars long"
-    - name: Should not allow a topologyTransitions entry with a reason exceeding max length
+          topologyTransitionStatus:
+            availableTransitions:
+            - source:
+                controlPlaneTopology: HighlyAvailable
+                infrastructureTopology: HighlyAvailable
+              target:
+                controlPlaneTopology: SingleReplica
+                infrastructureTopology: SingleReplica
+      expectedStatusError: "transition sources must match the current status topology"
+    - name: Should enforce the supported maximum available transition count
       initial: |
         apiVersion: config.openshift.io/v1
         kind: Infrastructure
@@ -833,97 +433,53 @@ tests:
         status:
           controlPlaneTopology: SingleReplica
           infrastructureTopology: SingleReplica
-          topologyTransitions:
-          - source:
-              controlPlaneTopology: SingleReplica
-              infrastructureTopology: SingleReplica
-            target:
-              controlPlaneTopology: HighlyAvailable
-              infrastructureTopology: HighlyAvailable
-            availability: Unavailable
-            reason: "Preflight012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789"
-      expectedStatusError: "Too long: may not be more than 128 bytes"
-    - name: Should not allow a topologyTransitions entry with an empty message
-      initial: |
-        apiVersion: config.openshift.io/v1
-        kind: Infrastructure
-        spec: {}
-        status:
-          controlPlaneTopology: SingleReplica
-          infrastructureTopology: SingleReplica
-      updated: |
-        apiVersion: config.openshift.io/v1
-        kind: Infrastructure
-        spec: {}
-        status:
-          controlPlaneTopology: SingleReplica
-          infrastructureTopology: SingleReplica
-          topologyTransitions:
-          - source:
-              controlPlaneTopology: SingleReplica
-              infrastructureTopology: SingleReplica
-            target:
-              controlPlaneTopology: HighlyAvailable
-              infrastructureTopology: HighlyAvailable
-            availability: Unavailable
-            reason: PreflightCheckFailed
-            message: ""
-      expectedStatusError: "should be at least 1 chars long"
-    - name: Should not allow a topologyTransitions entry with a message exceeding max length
-      initial: |
-        apiVersion: config.openshift.io/v1
-        kind: Infrastructure
-        spec: {}
-        status:
-          controlPlaneTopology: SingleReplica
-          infrastructureTopology: SingleReplica
-      updated: |
-        apiVersion: config.openshift.io/v1
-        kind: Infrastructure
-        spec: {}
-        status:
-          controlPlaneTopology: SingleReplica
-          infrastructureTopology: SingleReplica
-          topologyTransitions:
-          - source:
-              controlPlaneTopology: SingleReplica
-              infrastructureTopology: SingleReplica
-            target:
-              controlPlaneTopology: HighlyAvailable
-              infrastructureTopology: HighlyAvailable
-            availability: Unavailable
-            reason: PreflightCheckFailed
-            message: "012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678"
-      expectedStatusError: "Too long: may not be more than 2048 bytes"
-    - name: Should not allow more than one topologyTransitions entry
-      initial: |
-        apiVersion: config.openshift.io/v1
-        kind: Infrastructure
-        spec: {}
-        status:
-          controlPlaneTopology: SingleReplica
-          infrastructureTopology: SingleReplica
-      updated: |
-        apiVersion: config.openshift.io/v1
-        kind: Infrastructure
-        spec: {}
-        status:
-          controlPlaneTopology: SingleReplica
-          infrastructureTopology: SingleReplica
-          topologyTransitions:
-          - source:
-              controlPlaneTopology: SingleReplica
-              infrastructureTopology: SingleReplica
-            target:
-              controlPlaneTopology: HighlyAvailable
-              infrastructureTopology: HighlyAvailable
-            availability: Available
-          - source:
-              controlPlaneTopology: SingleReplica
-              infrastructureTopology: SingleReplica
-            target:
-              controlPlaneTopology: HighlyAvailable
-              infrastructureTopology: HighlyAvailable
-            availability: Unavailable
-            reason: PreflightCheckFailed
+          topologyTransitionStatus:
+            availableTransitions:
+            - source:
+                controlPlaneTopology: SingleReplica
+                infrastructureTopology: SingleReplica
+              target:
+                controlPlaneTopology: HighlyAvailable
+                infrastructureTopology: HighlyAvailable
+            - source:
+                controlPlaneTopology: SingleReplica
+                infrastructureTopology: SingleReplica
+              target:
+                controlPlaneTopology: HighlyAvailable
+                infrastructureTopology: HighlyAvailable
       expectedStatusError: "Too many: 2: must have at most 1 items"
+    - name: Should require availableTransitions when topologyTransitionStatus is set
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        spec: {}
+        status:
+          controlPlaneTopology: SingleReplica
+      updated: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        spec: {}
+        status:
+          controlPlaneTopology: SingleReplica
+          topologyTransitionStatus:
+            conditions: []
+      expectedStatusError: "Required value"
+    - name: Should require status on currentTransition
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        spec: {}
+        status:
+          controlPlaneTopology: SingleReplica
+      updated: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        spec: {}
+        status:
+          controlPlaneTopology: SingleReplica
+          topologyTransitionStatus:
+            availableTransitions: []
+            currentTransition:
+              reason: TransitionInProgress
+              message: Applying topology changes
+      expectedStatusError: "Required value"

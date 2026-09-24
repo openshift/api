@@ -8603,14 +8603,9 @@
           "description": "platformStatus holds status information specific to the underlying infrastructure provider.",
           "$ref": "#/definitions/com.github.openshift.api.config.v1.PlatformStatus"
         },
-        "topologyTransitions": {
-          "description": "topologyTransitions reports, as controller-computed observed state, the topology transitions that originate at the current status.controlPlaneTopology and status.infrastructureTopology and whether each can currently be initiated. It is advisory: the cluster may change between a status read and a spec write, so the cluster-config-operator revalidates any requested transition; consumers such as the CLI must not treat Available as an admission guarantee. Transitions are requested via spec.controlPlaneTopology, not through this field. When omitted, the controller has not yet completed its first evaluation; an empty list is also valid and intentionally carries the same meaning as omitted, since this field does not currently distinguish \"not yet evaluated\" from \"evaluated with no applicable transitions\". The only supported transition is from a state where both topology values are SingleReplica to a state where both are HighlyAvailable. When the current topology does not match the supported source state, this field is expected to remain omitted or empty. At most 1 entry is permitted because only one transition direction is currently supported.",
-          "type": "array",
-          "items": {
-            "default": {},
-            "$ref": "#/definitions/com.github.openshift.api.config.v1.TopologyTransition"
-          },
-          "x-kubernetes-list-type": "atomic"
+        "topologyTransitionStatus": {
+          "description": "topologyTransitionStatus reports available topology transitions and current progress, if any. It is omitted until the topology controller evaluates transitions.",
+          "$ref": "#/definitions/com.github.openshift.api.config.v1.TopologyTransitionStatus"
         }
       }
     },
@@ -12037,24 +12032,18 @@
       }
     },
     "com.github.openshift.api.config.v1.TopologyTransition": {
-      "description": "TopologyTransition describes one topology transition available from the cluster's current topology and whether it can currently be initiated. source and target must differ. reason must be set whenever availability is Unavailable or Unknown; both constraints are enforced by validation rules on the entry as a whole.",
       "type": "object",
       "required": [
         "source",
-        "target",
-        "availability"
+        "target"
       ],
       "properties": {
-        "availability": {
-          "description": "availability indicates whether this transition can currently be initiated. Valid values are Available, Unavailable, and Unknown. Available means the controller evaluated the transition and its preconditions pass. Unavailable means the transition is defined but cannot be initiated now; see reason and message. Unknown means the controller has not completed evaluation.",
-          "type": "string"
-        },
         "message": {
           "description": "message is a human-readable explanation, primarily for Unavailable transitions (e.g. a concise summary of the failing preconditions). It is for humans only and must not be parsed. It may be truncated by the controller. When omitted, no human-readable explanation is available for the transition. When set, it must be between 1 and 2048 characters long.",
           "type": "string"
         },
         "reason": {
-          "description": "reason is a CamelCase machine-readable explanation of the availability, e.g. PreflightCheckFailed or SourceTopologyMismatch. It is required when availability is Unavailable or Unknown and is normally omitted when Available. The set of reasons is diagnostic and not exhaustive. Must start with an uppercase letter and contain only alphanumeric characters, and must be between 1 and 128 characters long.",
+          "description": "reason is a CamelCase machine-readable explanation of the availability, e.g. PreflightCheckFailed. The set of reasons is diagnostic and not exhaustive. When omitted, no machine-readable explanation is available. Must start with an uppercase letter and contain only alphanumeric characters, and must be between 1 and 128 characters long.",
           "type": "string"
         },
         "source": {
@@ -12066,6 +12055,70 @@
           "description": "target is the control-plane and infrastructure topology this transition would move to. target is required.",
           "default": {},
           "$ref": "#/definitions/com.github.openshift.api.config.v1.TopologyState"
+        }
+      }
+    },
+    "com.github.openshift.api.config.v1.TopologyTransitionProgress": {
+      "description": "TopologyTransitionProgress describes a topology transition that has started.",
+      "type": "object",
+      "required": [
+        "status",
+        "reason",
+        "message"
+      ],
+      "properties": {
+        "completionTime": {
+          "description": "completionTime is when the transition was fully applied. It is omitted while a transition is being applied.",
+          "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Time"
+        },
+        "message": {
+          "description": "message is human-readable information about the reason for the current status. It must be between 1 and 2048 characters long.",
+          "type": "string"
+        },
+        "reason": {
+          "description": "reason indicates why the Status is in the current state. It must be between 1 and 128 characters long.",
+          "type": "string"
+        },
+        "startedTime": {
+          "description": "startedTime is the time at which the transition was started. When omitted, the start time is not available.",
+          "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Time"
+        },
+        "status": {
+          "description": "status indicates the current state of a triggered transition. It must be between 1 and 128 characters long.",
+          "type": "string"
+        }
+      }
+    },
+    "com.github.openshift.api.config.v1.TopologyTransitionStatus": {
+      "type": "object",
+      "required": [
+        "availableTransitions"
+      ],
+      "properties": {
+        "availableTransitions": {
+          "description": "availableTransitions represents the transitions that are currently valid for this cluster. An empty list means that no transitions are currently available. At most one transition is supported currently (SNO to HA Compact)",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/com.github.openshift.api.config.v1.TopologyTransition"
+          },
+          "x-kubernetes-list-type": "atomic"
+        },
+        "conditions": {
+          "description": "conditions reports whether available transitions have been evaluated. TopologyTransitionsEvaluated is Unknown before evaluation, True when evaluation succeeds (even if no transitions are available), and False when evaluation fails. An absent condition means evaluation has not completed. At most one condition is present.",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Condition"
+          },
+          "x-kubernetes-list-map-keys": [
+            "type"
+          ],
+          "x-kubernetes-list-type": "map"
+        },
+        "currentTransition": {
+          "description": "currentTransition is omitted until a topology transition starts.",
+          "$ref": "#/definitions/com.github.openshift.api.config.v1.TopologyTransitionProgress"
         }
       }
     },

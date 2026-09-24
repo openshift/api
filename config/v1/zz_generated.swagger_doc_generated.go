@@ -1881,17 +1881,17 @@ func (InfrastructureSpec) SwaggerDoc() map[string]string {
 }
 
 var map_InfrastructureStatus = map[string]string{
-	"":                       "InfrastructureStatus describes the infrastructure the cluster is leveraging.",
-	"infrastructureName":     "infrastructureName uniquely identifies a cluster with a human friendly name. Once set it should not be changed. Must be of max length 27 and must have only alphanumeric or hyphen characters.",
-	"platform":               "platform is the underlying infrastructure provider for the cluster.\n\nDeprecated: Use platformStatus.type instead.",
-	"platformStatus":         "platformStatus holds status information specific to the underlying infrastructure provider.",
-	"etcdDiscoveryDomain":    "etcdDiscoveryDomain is the domain used to fetch the SRV records for discovering etcd servers and clients. For more info: https://github.com/etcd-io/etcd/blob/329be66e8b3f9e2e6af83c123ff89297e49ebd15/Documentation/op-guide/clustering.md#dns-discovery deprecated: as of 4.7, this field is no longer set or honored.  It will be removed in a future release.",
-	"apiServerURL":           "apiServerURL is a valid URI with scheme 'https', address and optionally a port (defaulting to 443).  apiServerURL can be used by components like the web console to tell users where to find the Kubernetes API.",
-	"apiServerInternalURI":   "apiServerInternalURL is a valid URI with scheme 'https', address and optionally a port (defaulting to 443).  apiServerInternalURL can be used by components like kubelets, to contact the Kubernetes API server using the infrastructure provider rather than Kubernetes networking.",
-	"controlPlaneTopology":   "controlPlaneTopology expresses the expectations for operands that normally run on control nodes. The default is 'HighlyAvailable', which represents the behavior operators have in a \"normal\" cluster. The 'SingleReplica' mode will be used in single-node deployments and the operators should not configure the operand for highly-available operation The 'External' mode indicates that the control plane is hosted externally to the cluster and that its components are not visible within the cluster. The 'HighlyAvailableArbiter' mode indicates that the control plane will consist of 2 control-plane nodes that run conventional services and 1 smaller sized arbiter node that runs a bare minimum of services to maintain quorum.",
-	"infrastructureTopology": "infrastructureTopology expresses the expectations for infrastructure services that do not run on control plane nodes, usually indicated by a node selector for a `role` value other than `master`. The default is 'HighlyAvailable', which represents the behavior operators have in a \"normal\" cluster. The 'SingleReplica' mode will be used in single-node deployments and the operators should not configure the operand for highly-available operation NOTE: External topology mode is not applicable for this field.",
-	"topologyTransitions":    "topologyTransitions reports, as controller-computed observed state, the topology transitions that originate at the current status.controlPlaneTopology and status.infrastructureTopology and whether each can currently be initiated. It is advisory: the cluster may change between a status read and a spec write, so the cluster-config-operator revalidates any requested transition; consumers such as the CLI must not treat Available as an admission guarantee. Transitions are requested via spec.controlPlaneTopology, not through this field. When omitted, the controller has not yet completed its first evaluation; an empty list is also valid and intentionally carries the same meaning as omitted, since this field does not currently distinguish \"not yet evaluated\" from \"evaluated with no applicable transitions\". The only supported transition is from a state where both topology values are SingleReplica to a state where both are HighlyAvailable. When the current topology does not match the supported source state, this field is expected to remain omitted or empty. At most 1 entry is permitted because only one transition direction is currently supported.",
-	"cpuPartitioning":        "cpuPartitioning expresses if CPU partitioning is a currently enabled feature in the cluster. CPU Partitioning means that this cluster can support partitioning workloads to specific CPU Sets. Valid values are \"None\" and \"AllNodes\". When omitted, the default value is \"None\". The default value of \"None\" indicates that no nodes will be setup with CPU partitioning. The \"AllNodes\" value indicates that all nodes have been setup with CPU partitioning, and can then be further configured via the PerformanceProfile API.",
+	"":                         "InfrastructureStatus describes the infrastructure the cluster is leveraging.",
+	"infrastructureName":       "infrastructureName uniquely identifies a cluster with a human friendly name. Once set it should not be changed. Must be of max length 27 and must have only alphanumeric or hyphen characters.",
+	"platform":                 "platform is the underlying infrastructure provider for the cluster.\n\nDeprecated: Use platformStatus.type instead.",
+	"platformStatus":           "platformStatus holds status information specific to the underlying infrastructure provider.",
+	"etcdDiscoveryDomain":      "etcdDiscoveryDomain is the domain used to fetch the SRV records for discovering etcd servers and clients. For more info: https://github.com/etcd-io/etcd/blob/329be66e8b3f9e2e6af83c123ff89297e49ebd15/Documentation/op-guide/clustering.md#dns-discovery deprecated: as of 4.7, this field is no longer set or honored.  It will be removed in a future release.",
+	"apiServerURL":             "apiServerURL is a valid URI with scheme 'https', address and optionally a port (defaulting to 443).  apiServerURL can be used by components like the web console to tell users where to find the Kubernetes API.",
+	"apiServerInternalURI":     "apiServerInternalURL is a valid URI with scheme 'https', address and optionally a port (defaulting to 443).  apiServerInternalURL can be used by components like kubelets, to contact the Kubernetes API server using the infrastructure provider rather than Kubernetes networking.",
+	"controlPlaneTopology":     "controlPlaneTopology expresses the expectations for operands that normally run on control nodes. The default is 'HighlyAvailable', which represents the behavior operators have in a \"normal\" cluster. The 'SingleReplica' mode will be used in single-node deployments and the operators should not configure the operand for highly-available operation The 'External' mode indicates that the control plane is hosted externally to the cluster and that its components are not visible within the cluster. The 'HighlyAvailableArbiter' mode indicates that the control plane will consist of 2 control-plane nodes that run conventional services and 1 smaller sized arbiter node that runs a bare minimum of services to maintain quorum.",
+	"infrastructureTopology":   "infrastructureTopology expresses the expectations for infrastructure services that do not run on control plane nodes, usually indicated by a node selector for a `role` value other than `master`. The default is 'HighlyAvailable', which represents the behavior operators have in a \"normal\" cluster. The 'SingleReplica' mode will be used in single-node deployments and the operators should not configure the operand for highly-available operation NOTE: External topology mode is not applicable for this field.",
+	"topologyTransitionStatus": "topologyTransitionStatus reports available topology transitions and current progress, if any. It is omitted until the topology controller evaluates transitions.",
+	"cpuPartitioning":          "cpuPartitioning expresses if CPU partitioning is a currently enabled feature in the cluster. CPU Partitioning means that this cluster can support partitioning workloads to specific CPU Sets. Valid values are \"None\" and \"AllNodes\". When omitted, the default value is \"None\". The default value of \"None\" indicates that no nodes will be setup with CPU partitioning. The \"AllNodes\" value indicates that all nodes have been setup with CPU partitioning, and can then be further configured via the PerformanceProfile API.",
 }
 
 func (InfrastructureStatus) SwaggerDoc() map[string]string {
@@ -2150,19 +2150,6 @@ func (TopologyState) SwaggerDoc() map[string]string {
 	return map_TopologyState
 }
 
-var map_TopologyTransition = map[string]string{
-	"":             "TopologyTransition describes one topology transition available from the cluster's current topology and whether it can currently be initiated. source and target must differ. reason must be set whenever availability is Unavailable or Unknown; both constraints are enforced by validation rules on the entry as a whole.",
-	"source":       "source is the control-plane and infrastructure topology this transition starts from. It must equal the current topology in the corresponding status fields. source is required.",
-	"target":       "target is the control-plane and infrastructure topology this transition would move to. target is required.",
-	"availability": "availability indicates whether this transition can currently be initiated. Valid values are Available, Unavailable, and Unknown. Available means the controller evaluated the transition and its preconditions pass. Unavailable means the transition is defined but cannot be initiated now; see reason and message. Unknown means the controller has not completed evaluation.",
-	"reason":       "reason is a CamelCase machine-readable explanation of the availability, e.g. PreflightCheckFailed or SourceTopologyMismatch. It is required when availability is Unavailable or Unknown and is normally omitted when Available. The set of reasons is diagnostic and not exhaustive. Must start with an uppercase letter and contain only alphanumeric characters, and must be between 1 and 128 characters long.",
-	"message":      "message is a human-readable explanation, primarily for Unavailable transitions (e.g. a concise summary of the failing preconditions). It is for humans only and must not be parsed. It may be truncated by the controller. When omitted, no human-readable explanation is available for the transition. When set, it must be between 1 and 2048 characters long.",
-}
-
-func (TopologyTransition) SwaggerDoc() map[string]string {
-	return map_TopologyTransition
-}
-
 var map_VSphereFailureDomainHostGroup = map[string]string{
 	"":           "VSphereFailureDomainHostGroup holds the vmGroup and the hostGroup names in vCenter corresponds to a vm-host group of type Virtual Machine and Host respectively. Is also contains the vmHostRule which is an affinity vm-host rule in vCenter.",
 	"vmGroup":    "vmGroup is the name of the vm-host group of type virtual machine within vCenter for this failure domain. vmGroup is limited to 80 characters. This field is required when the VSphereFailureDomain ZoneType is HostGroup",
@@ -2292,6 +2279,40 @@ var map_VSpherePlatformVCenterSpec = map[string]string{
 
 func (VSpherePlatformVCenterSpec) SwaggerDoc() map[string]string {
 	return map_VSpherePlatformVCenterSpec
+}
+
+var map_TopologyTransition = map[string]string{
+	"source":  "source is the control-plane and infrastructure topology this transition starts from. It must equal the current topology in the corresponding status fields. source is required.",
+	"target":  "target is the control-plane and infrastructure topology this transition would move to. target is required.",
+	"reason":  "reason is a CamelCase machine-readable explanation of the availability, e.g. PreflightCheckFailed. The set of reasons is diagnostic and not exhaustive. When omitted, no machine-readable explanation is available. Must start with an uppercase letter and contain only alphanumeric characters, and must be between 1 and 128 characters long.",
+	"message": "message is a human-readable explanation, primarily for Unavailable transitions (e.g. a concise summary of the failing preconditions). It is for humans only and must not be parsed. It may be truncated by the controller. When omitted, no human-readable explanation is available for the transition. When set, it must be between 1 and 2048 characters long.",
+}
+
+func (TopologyTransition) SwaggerDoc() map[string]string {
+	return map_TopologyTransition
+}
+
+var map_TopologyTransitionProgress = map[string]string{
+	"":               "TopologyTransitionProgress describes a topology transition that has started.",
+	"status":         "status indicates the current state of a triggered transition. It must be between 1 and 128 characters long.",
+	"reason":         "reason indicates why the Status is in the current state. It must be between 1 and 128 characters long.",
+	"message":        "message is human-readable information about the reason for the current status. It must be between 1 and 2048 characters long.",
+	"startedTime":    "startedTime is the time at which the transition was started. When omitted, the start time is not available.",
+	"completionTime": "completionTime is when the transition was fully applied. It is omitted while a transition is being applied.",
+}
+
+func (TopologyTransitionProgress) SwaggerDoc() map[string]string {
+	return map_TopologyTransitionProgress
+}
+
+var map_TopologyTransitionStatus = map[string]string{
+	"conditions":           "conditions reports whether available transitions have been evaluated. TopologyTransitionsEvaluated is Unknown before evaluation, True when evaluation succeeds (even if no transitions are available), and False when evaluation fails. An absent condition means evaluation has not completed. At most one condition is present.",
+	"availableTransitions": "availableTransitions represents the transitions that are currently valid for this cluster. An empty list means that no transitions are currently available. At most one transition is supported currently (SNO to HA Compact)",
+	"currentTransition":    "currentTransition is omitted until a topology transition starts.",
+}
+
+func (TopologyTransitionStatus) SwaggerDoc() map[string]string {
+	return map_TopologyTransitionStatus
 }
 
 var map_AWSIngressSpec = map[string]string{

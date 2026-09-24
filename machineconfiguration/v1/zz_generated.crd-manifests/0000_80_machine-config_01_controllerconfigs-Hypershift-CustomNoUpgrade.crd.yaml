@@ -3165,152 +3165,224 @@ spec:
                                 == ''Internal'' || (has(self.loadBalancer) && self.loadBalancer.type
                                 == ''UserManaged'')'
                         type: object
-                      topologyTransitions:
+                      topologyTransitionStatus:
                         description: |-
-                          topologyTransitions reports, as controller-computed observed state, the
-                          topology transitions that originate at the current status.controlPlaneTopology
-                          and status.infrastructureTopology and whether each can currently be initiated. It is
-                          advisory: the cluster may change between a status read and a spec write, so the
-                          cluster-config-operator revalidates any requested transition; consumers such as
-                          the CLI must not treat Available as an admission guarantee. Transitions are
-                          requested via spec.controlPlaneTopology, not through this field. When omitted,
-                          the controller has not yet completed its first evaluation; an empty list is also
-                          valid and intentionally carries the same meaning as omitted, since this field does
-                          not currently distinguish "not yet evaluated" from "evaluated with no applicable
-                          transitions". The only supported transition is from a state where both topology
-                          values are SingleReplica to a state where both are HighlyAvailable. When the
-                          current topology does not match the supported source state, this field is expected
-                          to remain omitted or empty. At most 1 entry is permitted because only one
-                          transition direction is currently supported.
-                        items:
-                          description: |-
-                            TopologyTransition describes one topology transition available from the
-                            cluster's current topology and whether it can currently be initiated. source
-                            and target must differ. reason must be set whenever availability is
-                            Unavailable or Unknown; both constraints are enforced by validation rules on
-                            the entry as a whole.
-                          properties:
-                            availability:
-                              description: |-
-                                availability indicates whether this transition can currently be initiated.
-                                Valid values are Available, Unavailable, and Unknown. Available means the
-                                controller evaluated the transition and its preconditions pass. Unavailable
-                                means the transition is defined but cannot be initiated now; see reason and
-                                message. Unknown means the controller has not completed evaluation.
-                              enum:
-                              - Available
-                              - Unavailable
-                              - Unknown
-                              type: string
-                            message:
-                              description: |-
-                                message is a human-readable explanation, primarily for Unavailable
-                                transitions (e.g. a concise summary of the failing preconditions). It is for
-                                humans only and must not be parsed. It may be truncated by the controller.
-                                When omitted, no human-readable explanation is available for the transition.
-                                When set, it must be between 1 and 2048 characters long.
-                              maxLength: 2048
-                              minLength: 1
-                              type: string
-                            reason:
-                              description: |-
-                                reason is a CamelCase machine-readable explanation of the availability, e.g.
-                                PreflightCheckFailed or SourceTopologyMismatch. It is required when
-                                availability is Unavailable or Unknown and is normally omitted when Available.
-                                The set of reasons is diagnostic and not exhaustive. Must start with an
-                                uppercase letter and contain only alphanumeric characters, and must be
-                                between 1 and 128 characters long.
-                              maxLength: 128
-                              minLength: 1
-                              type: string
-                              x-kubernetes-validations:
-                              - message: reason must be CamelCase, matching ^[A-Z][A-Za-z0-9]*$
-                                rule: self.matches('^[A-Z][A-Za-z0-9]*$')
-                            source:
-                              description: |-
-                                source is the control-plane and infrastructure topology this transition starts
-                                from. It must equal the current topology in the corresponding status fields.
-                                source is required.
+                          topologyTransitionStatus reports available topology transitions and current progress, if any.
+                          It is omitted until the topology controller evaluates transitions.
+                        properties:
+                          availableTransitions:
+                            description: |-
+                              availableTransitions represents the transitions that are currently valid for this cluster.
+                              An empty list means that no transitions are currently available.
+                              At most one transition is supported currently (SNO to HA Compact)
+                            items:
                               properties:
-                                controlPlaneTopology:
+                                message:
                                   description: |-
-                                    controlPlaneTopology is the topology of the control-plane nodes. Valid values
-                                    are SingleReplica and HighlyAvailable. When set to SingleReplica, operators
-                                    avoid spending resources for high availability. When set to HighlyAvailable,
-                                    operators configure high availability as much as possible.
-                                    controlPlaneTopology is required.
-                                  enum:
-                                  - SingleReplica
-                                  - HighlyAvailable
+                                    message is a human-readable explanation, primarily for Unavailable
+                                    transitions (e.g. a concise summary of the failing preconditions). It is for
+                                    humans only and must not be parsed. It may be truncated by the controller.
+                                    When omitted, no human-readable explanation is available for the transition.
+                                    When set, it must be between 1 and 2048 characters long.
+                                  maxLength: 2048
+                                  minLength: 1
                                   type: string
-                                infrastructureTopology:
+                                reason:
                                   description: |-
-                                    infrastructureTopology is the topology of infrastructure services. Valid
-                                    values are SingleReplica and HighlyAvailable. When set to SingleReplica,
-                                    operators avoid spending resources for high availability. When set to
-                                    HighlyAvailable, operators configure high availability as much as possible.
-                                    infrastructureTopology is required.
+                                    reason is a CamelCase machine-readable explanation of the availability, e.g.
+                                    PreflightCheckFailed. The set of reasons is diagnostic and not exhaustive.
+                                    When omitted, no machine-readable explanation is available.
+                                    Must start with an uppercase letter and contain only alphanumeric characters,
+                                    and must be between 1 and 128 characters long.
+                                  maxLength: 128
+                                  minLength: 1
+                                  type: string
+                                  x-kubernetes-validations:
+                                  - message: reason must be CamelCase, matching ^[A-Z][A-Za-z0-9]*$
+                                    rule: self.matches('^[A-Z][A-Za-z0-9]*$')
+                                source:
+                                  description: |-
+                                    source is the control-plane and infrastructure topology this transition starts
+                                    from. It must equal the current topology in the corresponding status fields.
+                                    source is required.
+                                  properties:
+                                    controlPlaneTopology:
+                                      description: |-
+                                        controlPlaneTopology is the topology of the control-plane nodes. Valid values
+                                        are SingleReplica and HighlyAvailable. When set to SingleReplica, operators
+                                        avoid spending resources for high availability. When set to HighlyAvailable,
+                                        operators configure high availability as much as possible.
+                                        controlPlaneTopology is required.
+                                      enum:
+                                      - SingleReplica
+                                      - HighlyAvailable
+                                      type: string
+                                    infrastructureTopology:
+                                      description: |-
+                                        infrastructureTopology is the topology of infrastructure services. Valid
+                                        values are SingleReplica and HighlyAvailable. When set to SingleReplica,
+                                        operators avoid spending resources for high availability. When set to
+                                        HighlyAvailable, operators configure high availability as much as possible.
+                                        infrastructureTopology is required.
+                                      enum:
+                                      - SingleReplica
+                                      - HighlyAvailable
+                                      type: string
+                                  required:
+                                  - controlPlaneTopology
+                                  - infrastructureTopology
+                                  type: object
+                                target:
+                                  description: |-
+                                    target is the control-plane and infrastructure topology this transition would
+                                    move to. target is required.
+                                  properties:
+                                    controlPlaneTopology:
+                                      description: |-
+                                        controlPlaneTopology is the topology of the control-plane nodes. Valid values
+                                        are SingleReplica and HighlyAvailable. When set to SingleReplica, operators
+                                        avoid spending resources for high availability. When set to HighlyAvailable,
+                                        operators configure high availability as much as possible.
+                                        controlPlaneTopology is required.
+                                      enum:
+                                      - SingleReplica
+                                      - HighlyAvailable
+                                      type: string
+                                    infrastructureTopology:
+                                      description: |-
+                                        infrastructureTopology is the topology of infrastructure services. Valid
+                                        values are SingleReplica and HighlyAvailable. When set to SingleReplica,
+                                        operators avoid spending resources for high availability. When set to
+                                        HighlyAvailable, operators configure high availability as much as possible.
+                                        infrastructureTopology is required.
+                                      enum:
+                                      - SingleReplica
+                                      - HighlyAvailable
+                                      type: string
+                                  required:
+                                  - controlPlaneTopology
+                                  - infrastructureTopology
+                                  type: object
+                              required:
+                              - source
+                              - target
+                              type: object
+                            maxItems: 1
+                            type: array
+                            x-kubernetes-list-type: atomic
+                          conditions:
+                            description: |-
+                              conditions reports whether available transitions have been evaluated.
+                              TopologyTransitionsEvaluated is Unknown before evaluation, True when evaluation
+                              succeeds (even if no transitions are available), and False when evaluation fails.
+                              An absent condition means evaluation has not completed.
+                              At most one condition is present.
+                            items:
+                              description: Condition contains details for one aspect
+                                of the current state of this API Resource.
+                              properties:
+                                lastTransitionTime:
+                                  description: |-
+                                    lastTransitionTime is the last time the condition transitioned from one status to another.
+                                    This should be when the underlying condition changed.  If that is not known, then using the time when the API field changed is acceptable.
+                                  format: date-time
+                                  type: string
+                                message:
+                                  description: |-
+                                    message is a human readable message indicating details about the transition.
+                                    This may be an empty string.
+                                  maxLength: 32768
+                                  type: string
+                                observedGeneration:
+                                  description: |-
+                                    observedGeneration represents the .metadata.generation that the condition was set based upon.
+                                    For instance, if .metadata.generation is currently 12, but the .status.conditions[x].observedGeneration is 9, the condition is out of date
+                                    with respect to the current state of the instance.
+                                  format: int64
+                                  minimum: 0
+                                  type: integer
+                                reason:
+                                  description: |-
+                                    reason contains a programmatic identifier indicating the reason for the condition's last transition.
+                                    Producers of specific condition types may define expected values and meanings for this field,
+                                    and whether the values are considered a guaranteed API.
+                                    The value should be a CamelCase string.
+                                    This field may not be empty.
+                                  maxLength: 1024
+                                  minLength: 1
+                                  pattern: ^[A-Za-z]([A-Za-z0-9_,:]*[A-Za-z0-9_])?$
+                                  type: string
+                                status:
+                                  description: status of the condition, one of True,
+                                    False, Unknown.
                                   enum:
-                                  - SingleReplica
-                                  - HighlyAvailable
+                                  - "True"
+                                  - "False"
+                                  - Unknown
+                                  type: string
+                                type:
+                                  description: type of condition in CamelCase or in
+                                    foo.example.com/CamelCase.
+                                  maxLength: 316
+                                  pattern: ^([a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*/)?(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])$
                                   type: string
                               required:
-                              - controlPlaneTopology
-                              - infrastructureTopology
+                              - lastTransitionTime
+                              - message
+                              - reason
+                              - status
+                              - type
                               type: object
-                            target:
-                              description: |-
-                                target is the control-plane and infrastructure topology this transition would
-                                move to. target is required.
-                              properties:
-                                controlPlaneTopology:
-                                  description: |-
-                                    controlPlaneTopology is the topology of the control-plane nodes. Valid values
-                                    are SingleReplica and HighlyAvailable. When set to SingleReplica, operators
-                                    avoid spending resources for high availability. When set to HighlyAvailable,
-                                    operators configure high availability as much as possible.
-                                    controlPlaneTopology is required.
-                                  enum:
-                                  - SingleReplica
-                                  - HighlyAvailable
-                                  type: string
-                                infrastructureTopology:
-                                  description: |-
-                                    infrastructureTopology is the topology of infrastructure services. Valid
-                                    values are SingleReplica and HighlyAvailable. When set to SingleReplica,
-                                    operators avoid spending resources for high availability. When set to
-                                    HighlyAvailable, operators configure high availability as much as possible.
-                                    infrastructureTopology is required.
-                                  enum:
-                                  - SingleReplica
-                                  - HighlyAvailable
-                                  type: string
-                              required:
-                              - controlPlaneTopology
-                              - infrastructureTopology
-                              type: object
-                          required:
-                          - availability
-                          - source
-                          - target
-                          type: object
-                          x-kubernetes-validations:
-                          - message: source and target must differ
-                            rule: self.source.controlPlaneTopology != self.target.controlPlaneTopology
-                              || self.source.infrastructureTopology != self.target.infrastructureTopology
-                          - message: reason is required when availability is not Available
-                            rule: self.availability == 'Available' || has(self.reason)
-                        maxItems: 1
-                        minItems: 0
-                        type: array
-                        x-kubernetes-list-type: atomic
-                        x-kubernetes-validations:
-                        - message: only SingleReplica to HighlyAvailable topology
-                            transitions are supported
-                          rule: self.all(t, t.source.controlPlaneTopology == 'SingleReplica'
-                            && t.source.infrastructureTopology == 'SingleReplica'
-                            && t.target.controlPlaneTopology == 'HighlyAvailable'
-                            && t.target.infrastructureTopology == 'HighlyAvailable')
+                            maxItems: 1
+                            type: array
+                            x-kubernetes-list-map-keys:
+                            - type
+                            x-kubernetes-list-type: map
+                          currentTransition:
+                            description: currentTransition is omitted until a topology
+                              transition starts.
+                            properties:
+                              completionTime:
+                                description: completionTime is when the transition
+                                  was fully applied. It is omitted while a transition
+                                  is being applied.
+                                format: date-time
+                                type: string
+                              message:
+                                description: |-
+                                  message is human-readable information about the reason for the current status.
+                                  It must be between 1 and 2048 characters long.
+                                maxLength: 2048
+                                minLength: 1
+                                type: string
+                              reason:
+                                description: |-
+                                  reason indicates why the Status is in the current state.
+                                  It must be between 1 and 128 characters long.
+                                maxLength: 128
+                                minLength: 1
+                                type: string
+                              startedTime:
+                                description: startedTime is the time at which the
+                                  transition was started. When omitted, the start
+                                  time is not available.
+                                format: date-time
+                                type: string
+                              status:
+                                description: |-
+                                  status indicates the current state of a triggered transition.
+                                  It must be between 1 and 128 characters long.
+                                maxLength: 128
+                                minLength: 1
+                                type: string
+                            required:
+                            - message
+                            - reason
+                            - status
+                            type: object
+                        required:
+                        - availableTransitions
+                        type: object
                     type: object
                 required:
                 - spec
@@ -3327,11 +3399,11 @@ spec:
                     && self.status.controlPlaneTopology == ''SingleReplica'' && self.spec.controlPlaneTopology
                     == ''HighlyAvailable'')'
                 - message: transition sources must match the current status topology
-                  rule: '!has(self.status) || !has(self.status.topologyTransitions)
-                    || self.status.topologyTransitions.all(t, has(self.status.controlPlaneTopology)
-                    && has(self.status.infrastructureTopology) && t.source.controlPlaneTopology
-                    == self.status.controlPlaneTopology && t.source.infrastructureTopology
-                    == self.status.infrastructureTopology)'
+                  rule: '!has(self.status) || !has(self.status.topologyTransitionStatus)
+                    || self.status.topologyTransitionStatus.availableTransitions.all(t,
+                    has(self.status.controlPlaneTopology) && has(self.status.infrastructureTopology)
+                    && t.source.controlPlaneTopology == self.status.controlPlaneTopology
+                    && t.source.infrastructureTopology == self.status.infrastructureTopology)'
               internalRegistryPullSecret:
                 description: |-
                   internalRegistryPullSecret is the pull secret for the internal registry, used by

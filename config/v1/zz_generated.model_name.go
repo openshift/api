@@ -1466,6 +1466,16 @@ func (in TopologyTransition) OpenAPIModelName() string {
 }
 
 // OpenAPIModelName returns the OpenAPI model name for this type.
+func (in TopologyTransitionProgress) OpenAPIModelName() string {
+	return "com.github.openshift.api.config.v1.TopologyTransitionProgress"
+}
+
+// OpenAPIModelName returns the OpenAPI model name for this type.
+func (in TopologyTransitionStatus) OpenAPIModelName() string {
+	return "com.github.openshift.api.config.v1.TopologyTransitionStatus"
+}
+
+// OpenAPIModelName returns the OpenAPI model name for this type.
 func (in Update) OpenAPIModelName() string {
 	return "com.github.openshift.api.config.v1.Update"
 }

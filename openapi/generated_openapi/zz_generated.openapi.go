@@ -34418,7 +34418,7 @@ func schema_openshift_api_insights_v1_HealthCheck(ref common.ReferenceCallback) 
 					},
 					"advisorURI": {
 						SchemaProps: spec.SchemaProps{
-							Description: "advisorURI is required field that provides the URL link to the Insights Advisor. The link must be a valid HTTPS URL and the maximum length is 2048 characters.",
+							Description: "advisorURI is a required field that provides the URL link to the Red\u00a0Hat Lightspeed Advisor UI. The link must be a valid HTTPS URL and the maximum length is 2048 characters.",
 							Type:        []string{"string"},
 							Format:      "",
 						},
@@ -34997,7 +34997,7 @@ func schema_openshift_api_insights_v1alpha1_HealthCheck(ref common.ReferenceCall
 					},
 					"advisorURI": {
 						SchemaProps: spec.SchemaProps{
-							Description: "advisorURI is required field that provides the URL link to the Insights Advisor. The link must be a valid HTTPS URL and the maximum length is 2048 characters.",
+							Description: "advisorURI is a required field that provides the URL link to the Red\u00a0Hat Lightspeed Advisor UI. The link must be a valid HTTPS URL and the maximum length is 2048 characters.",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -35005,7 +35005,7 @@ func schema_openshift_api_insights_v1alpha1_HealthCheck(ref common.ReferenceCall
 					},
 					"state": {
 						SchemaProps: spec.SchemaProps{
-							Description: "state determines what the current state of the health check is. Health check is enabled by default and can be disabled by the user in the Insights advisor user interface.",
+							Description: "state determines what the current state of the health check is. Health check is enabled by default and can be disabled by the user in the Red\u00a0Hat Lightspeed Advisor UI.",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -35643,7 +35643,7 @@ func schema_openshift_api_insights_v1alpha2_HealthCheck(ref common.ReferenceCall
 					},
 					"advisorURI": {
 						SchemaProps: spec.SchemaProps{
-							Description: "advisorURI is required field that provides the URL link to the Insights Advisor. The link must be a valid HTTPS URL and the maximum length is 2048 characters.",
+							Description: "advisorURI is a required field that provides the URL link to the Red\u00a0Hat Lightspeed Advisor UI. The link must be a valid HTTPS URL and the maximum length is 2048 characters.",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -57240,7 +57240,7 @@ func schema_openshift_api_operator_v1_HealthCheck(ref common.ReferenceCallback) 
 					},
 					"advisorURI": {
 						SchemaProps: spec.SchemaProps{
-							Description: "advisorURI provides the URL link to the Insights Advisor.",
+							Description: "advisorURI provides the URL link to the Red\u00a0Hat Lightspeed Advisor UI.",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -57248,7 +57248,7 @@ func schema_openshift_api_operator_v1_HealthCheck(ref common.ReferenceCallback) 
 					},
 					"state": {
 						SchemaProps: spec.SchemaProps{
-							Description: "state determines what the current state of the health check is. Health check is enabled by default and can be disabled by the user in the Insights advisor user interface.",
+							Description: "state determines what the current state of the health check is. Health check is enabled by default and can be disabled by the user in the Red\u00a0Hat Lightspeed Advisor UI.",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",

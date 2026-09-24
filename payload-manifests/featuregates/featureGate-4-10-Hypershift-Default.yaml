@@ -276,6 +276,9 @@
                         "name": "TLSGroupPreferences"
                     },
                     {
+                        "name": "UnifiedClusterManagedDNSAndLB"
+                    },
+                    {
                         "name": "VSphereConfigurableMaxAllowedBlockVolumesPerNode"
                     },
                     {

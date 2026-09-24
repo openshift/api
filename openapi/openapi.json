@@ -27430,6 +27430,21 @@
           "default": {},
           "$ref": "#/definitions/com.github.openshift.api.machine.v1beta1.ObjectMeta"
         },
+        "nodeDeletionTimeoutSeconds": {
+          "description": "nodeDeletionTimeoutSeconds is the total amount of time in seconds that the controller will spend attempting to delete the node backed by this Machine after the Machine is marked for deletion. A value of 0 means that the controller will retry deleting the node indefinitely. When not set, the controller makes a single best-effort attempt to delete the node before removing the Machine. This preserves the default Machine API behaviour, and differs from Cluster API, where an unset value causes the controller to attempt node deletion for 10 seconds before continuing.",
+          "type": "integer",
+          "format": "int32"
+        },
+        "nodeDrainTimeoutSeconds": {
+          "description": "nodeDrainTimeoutSeconds is the total amount of time in seconds that the controller will spend draining the node backed by this Machine before the Machine is removed. This is different from `kubectl drain --timeout`, which only bounds a single drain attempt; nodeDrainTimeoutSeconds bounds the total time spent draining across all attempts. A value of 0 means that draining is not bound by a time limit and the controller will keep attempting to drain the node until it succeeds. When not set, the behaviour is the same as a value of 0. This preserves the default Machine API drain behaviour and matches Cluster API.",
+          "type": "integer",
+          "format": "int32"
+        },
+        "nodeVolumeDetachTimeoutSeconds": {
+          "description": "nodeVolumeDetachTimeoutSeconds is the total amount of time in seconds that the controller will spend waiting for all volumes to be detached from the node backed by this Machine before the Machine is removed. A value of 0 means that the controller will wait indefinitely for all volumes to be detached. When not set, the controller does not wait for volumes to be detached before removing the Machine. This preserves the default Machine API behaviour, and differs from Cluster API, where an unset value causes the controller to wait indefinitely for all volumes to be detached.",
+          "type": "integer",
+          "format": "int32"
+        },
         "providerID": {
           "description": "providerID is the identification ID of the machine provided by the provider. This field must match the provider ID as seen on the node object corresponding to this machine. This field is required by higher level consumers of cluster-api. Example use case is cluster autoscaler with cluster-api as provider. Clean-up logic in the autoscaler compares machines to nodes to find out machines at provider which could not get registered as Kubernetes nodes. With cluster-api as a generic out-of-tree provider for autoscaler, this field is required by autoscaler to be able to have a provider view of the list of machines. Another list of nodes is queried from the k8s apiserver and then a comparison is done to find out unregistered machines and are marked for delete. This field will be set by the actuators and consumed by higher level entities like autoscaler that will be interfacing with cluster-api as generic provider.",
           "type": "string"

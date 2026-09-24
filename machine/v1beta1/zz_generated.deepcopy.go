@@ -1442,6 +1442,21 @@ func (in *MachineSpec) DeepCopyInto(out *MachineSpec) {
 		*out = new(string)
 		**out = **in
 	}
+	if in.NodeDrainTimeoutSeconds != nil {
+		in, out := &in.NodeDrainTimeoutSeconds, &out.NodeDrainTimeoutSeconds
+		*out = new(int32)
+		**out = **in
+	}
+	if in.NodeVolumeDetachTimeoutSeconds != nil {
+		in, out := &in.NodeVolumeDetachTimeoutSeconds, &out.NodeVolumeDetachTimeoutSeconds
+		*out = new(int32)
+		**out = **in
+	}
+	if in.NodeDeletionTimeoutSeconds != nil {
+		in, out := &in.NodeDeletionTimeoutSeconds, &out.NodeDeletionTimeoutSeconds
+		*out = new(int32)
+		**out = **in
+	}
 	return
 }
 

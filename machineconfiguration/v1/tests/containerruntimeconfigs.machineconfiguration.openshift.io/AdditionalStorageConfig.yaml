@@ -246,6 +246,65 @@ tests:
               - path: /mnt/ssd-artifacts
       expectedError: "additionalArtifactStores must not contain duplicate paths"
 
+    # Path traversal tests
+    - name: Should fail if additionalLayerStores path contains dot-dot traversal
+      initial: |
+        apiVersion: machineconfiguration.openshift.io/v1
+        kind: ContainerRuntimeConfig
+        spec:
+          containerRuntimeConfig:
+            additionalLayerStores:
+              - path: /var/lib/../../etc
+      expectedError: "path must not contain '..' components"
+
+    - name: Should fail if additionalImageStores path contains dot-dot traversal
+      initial: |
+        apiVersion: machineconfiguration.openshift.io/v1
+        kind: ContainerRuntimeConfig
+        spec:
+          containerRuntimeConfig:
+            additionalImageStores:
+              - path: /var/lib/../secrets
+      expectedError: "path must not contain '..' components"
+
+    - name: Should fail if additionalArtifactStores path contains dot-dot traversal
+      initial: |
+        apiVersion: machineconfiguration.openshift.io/v1
+        kind: ContainerRuntimeConfig
+        spec:
+          containerRuntimeConfig:
+            additionalArtifactStores:
+              - path: /mnt/store/..
+      expectedError: "path must not contain '..' components"
+
+    # Regression: double dots within a filename are valid (not a traversal component)
+    - name: Should succeed if path contains double dots within a filename
+      initial: |
+        apiVersion: machineconfiguration.openshift.io/v1
+        kind: ContainerRuntimeConfig
+        spec:
+          containerRuntimeConfig:
+            additionalLayerStores:
+              - path: /var/lib/foo..bar
+      expected: |
+        apiVersion: machineconfiguration.openshift.io/v1
+        kind: ContainerRuntimeConfig
+        spec:
+          containerRuntimeConfig:
+            additionalLayerStores:
+              - path: /var/lib/foo..bar
+
+    # Colon in path tests (prevented by regex)
+    - name: Should fail if additionalLayerStores path contains a colon
+      initial: |
+        apiVersion: machineconfiguration.openshift.io/v1
+        kind: ContainerRuntimeConfig
+        spec:
+          containerRuntimeConfig:
+            additionalLayerStores:
+              - path: /var/lib/store:ref
+      expectedError: "path must be absolute and contain only alphanumeric characters, '/', '.', '_', and '-'"
+
     # Combined test - all storage types together with other fields
     - name: Should be able to create ContainerRuntimeConfig with all storage types and existing fields
       initial: |
@@ -276,3 +335,89 @@ tests:
               - path: /mnt/ssd-images
             additionalArtifactStores:
               - path: /mnt/ssd-artifacts
+  onUpdate:
+    # Ratcheting tests: existing instances with '..' traversal paths must not block updates to adjacent fields
+    - name: Should be able to update logLevel when additionalLayerStores has an existing path with dot-dot traversal
+      initialCRDPatches:
+        - op: remove
+          path: /spec/versions/0/schema/openAPIV3Schema/properties/spec/properties/containerRuntimeConfig/properties/additionalLayerStores/items/properties/path/x-kubernetes-validations/2
+      initial: |
+        apiVersion: machineconfiguration.openshift.io/v1
+        kind: ContainerRuntimeConfig
+        spec:
+          containerRuntimeConfig:
+            logLevel: info
+            additionalLayerStores:
+              - path: /var/lib/../../etc
+      updated: |
+        apiVersion: machineconfiguration.openshift.io/v1
+        kind: ContainerRuntimeConfig
+        spec:
+          containerRuntimeConfig:
+            logLevel: debug
+            additionalLayerStores:
+              - path: /var/lib/../../etc
+      expected: |
+        apiVersion: machineconfiguration.openshift.io/v1
+        kind: ContainerRuntimeConfig
+        spec:
+          containerRuntimeConfig:
+            logLevel: debug
+            additionalLayerStores:
+              - path: /var/lib/../../etc
+    - name: Should be able to update logLevel when additionalImageStores has an existing path with dot-dot traversal
+      initialCRDPatches:
+        - op: remove
+          path: /spec/versions/0/schema/openAPIV3Schema/properties/spec/properties/containerRuntimeConfig/properties/additionalImageStores/items/properties/path/x-kubernetes-validations/2
+      initial: |
+        apiVersion: machineconfiguration.openshift.io/v1
+        kind: ContainerRuntimeConfig
+        spec:
+          containerRuntimeConfig:
+            logLevel: info
+            additionalImageStores:
+              - path: /var/lib/../secrets
+      updated: |
+        apiVersion: machineconfiguration.openshift.io/v1
+        kind: ContainerRuntimeConfig
+        spec:
+          containerRuntimeConfig:
+            logLevel: debug
+            additionalImageStores:
+              - path: /var/lib/../secrets
+      expected: |
+        apiVersion: machineconfiguration.openshift.io/v1
+        kind: ContainerRuntimeConfig
+        spec:
+          containerRuntimeConfig:
+            logLevel: debug
+            additionalImageStores:
+              - path: /var/lib/../secrets
+    - name: Should be able to update logLevel when additionalArtifactStores has an existing path with dot-dot traversal
+      initialCRDPatches:
+        - op: remove
+          path: /spec/versions/0/schema/openAPIV3Schema/properties/spec/properties/containerRuntimeConfig/properties/additionalArtifactStores/items/properties/path/x-kubernetes-validations/2
+      initial: |
+        apiVersion: machineconfiguration.openshift.io/v1
+        kind: ContainerRuntimeConfig
+        spec:
+          containerRuntimeConfig:
+            logLevel: info
+            additionalArtifactStores:
+              - path: /mnt/store/..
+      updated: |
+        apiVersion: machineconfiguration.openshift.io/v1
+        kind: ContainerRuntimeConfig
+        spec:
+          containerRuntimeConfig:
+            logLevel: debug
+            additionalArtifactStores:
+              - path: /mnt/store/..
+      expected: |
+        apiVersion: machineconfiguration.openshift.io/v1
+        kind: ContainerRuntimeConfig
+        spec:
+          containerRuntimeConfig:
+            logLevel: debug
+            additionalArtifactStores:
+              - path: /mnt/store/..

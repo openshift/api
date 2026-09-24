@@ -3,6 +3,7 @@ name: "MachineConfiguration"
 crdName: machineconfigurations.operator.openshift.io
 featureGates:
 - ManagedBootImagesCPMS
+- -ManagedBootImagesAWSCAPI
 tests:
   onUpdate:
     - name: Should permit an "All" CPMS boot image configuration when bootImageSkewEnforcementStatus.mode is Automatic

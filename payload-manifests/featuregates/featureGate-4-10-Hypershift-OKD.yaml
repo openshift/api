@@ -161,9 +161,6 @@
                         "name": "GomaxprocsInjection"
                     },
                     {
-                        "name": "ImageModeStatusReporting"
-                    },
-                    {
                         "name": "IngressComponentRouteLabels"
                     },
                     {
@@ -332,6 +329,9 @@
                     },
                     {
                         "name": "HyperShiftOnlyDynamicResourceAllocation"
+                    },
+                    {
+                        "name": "ImageModeStatusReporting"
                     },
                     {
                         "name": "ImageStreamImportMode"

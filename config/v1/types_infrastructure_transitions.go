@@ -4,6 +4,28 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
+// TopologyState describes the control-plane and infrastructure topology at one
+// end of a topology transition.
+type TopologyState struct {
+	// controlPlaneTopology is the topology of the control-plane nodes. Valid values
+	// are SingleReplica and HighlyAvailable. When set to SingleReplica, operators
+	// avoid spending resources for high availability. When set to HighlyAvailable,
+	// operators configure high availability as much as possible.
+	// controlPlaneTopology is required.
+	// +kubebuilder:validation:Enum=SingleReplica;HighlyAvailable
+	// +required
+	ControlPlaneTopology TopologyMode `json:"controlPlaneTopology,omitempty"`
+
+	// infrastructureTopology is the topology of infrastructure services. Valid
+	// values are SingleReplica and HighlyAvailable. When set to SingleReplica,
+	// operators avoid spending resources for high availability. When set to
+	// HighlyAvailable, operators configure high availability as much as possible.
+	// infrastructureTopology is required.
+	// +kubebuilder:validation:Enum=SingleReplica;HighlyAvailable
+	// +required
+	InfrastructureTopology TopologyMode `json:"infrastructureTopology,omitempty"`
+}
+
 type TopologyTransitionStatus struct {
 	// conditions reports whether available transitions have been evaluated.
 	// TopologyTransitionsEvaluated is Unknown before evaluation, True when evaluation

@@ -2140,16 +2140,6 @@ func (PowerVSServiceEndpoint) SwaggerDoc() map[string]string {
 	return map_PowerVSServiceEndpoint
 }
 
-var map_TopologyState = map[string]string{
-	"":                       "TopologyState describes the control-plane and infrastructure topology at one end of a topology transition.",
-	"controlPlaneTopology":   "controlPlaneTopology is the topology of the control-plane nodes. Valid values are SingleReplica and HighlyAvailable. When set to SingleReplica, operators avoid spending resources for high availability. When set to HighlyAvailable, operators configure high availability as much as possible. controlPlaneTopology is required.",
-	"infrastructureTopology": "infrastructureTopology is the topology of infrastructure services. Valid values are SingleReplica and HighlyAvailable. When set to SingleReplica, operators avoid spending resources for high availability. When set to HighlyAvailable, operators configure high availability as much as possible. infrastructureTopology is required.",
-}
-
-func (TopologyState) SwaggerDoc() map[string]string {
-	return map_TopologyState
-}
-
 var map_VSphereFailureDomainHostGroup = map[string]string{
 	"":           "VSphereFailureDomainHostGroup holds the vmGroup and the hostGroup names in vCenter corresponds to a vm-host group of type Virtual Machine and Host respectively. Is also contains the vmHostRule which is an affinity vm-host rule in vCenter.",
 	"vmGroup":    "vmGroup is the name of the vm-host group of type virtual machine within vCenter for this failure domain. vmGroup is limited to 80 characters. This field is required when the VSphereFailureDomain ZoneType is HostGroup",
@@ -2279,6 +2269,16 @@ var map_VSpherePlatformVCenterSpec = map[string]string{
 
 func (VSpherePlatformVCenterSpec) SwaggerDoc() map[string]string {
 	return map_VSpherePlatformVCenterSpec
+}
+
+var map_TopologyState = map[string]string{
+	"":                       "TopologyState describes the control-plane and infrastructure topology at one end of a topology transition.",
+	"controlPlaneTopology":   "controlPlaneTopology is the topology of the control-plane nodes. Valid values are SingleReplica and HighlyAvailable. When set to SingleReplica, operators avoid spending resources for high availability. When set to HighlyAvailable, operators configure high availability as much as possible. controlPlaneTopology is required.",
+	"infrastructureTopology": "infrastructureTopology is the topology of infrastructure services. Valid values are SingleReplica and HighlyAvailable. When set to SingleReplica, operators avoid spending resources for high availability. When set to HighlyAvailable, operators configure high availability as much as possible. infrastructureTopology is required.",
+}
+
+func (TopologyState) SwaggerDoc() map[string]string {
+	return map_TopologyState
 }
 
 var map_TopologyTransition = map[string]string{

@@ -210,3 +210,482 @@ tests:
                 selection:
                   mode: None
       expectedError: "spec.managedBootImages.machineManagers[1]: Duplicate value: map[string]interface {}{\"apiGroup\":\"cluster.x-k8s.io\", \"resource\":\"machinesets\"}"
+  onUpdate:
+    - name: Should permit an "All" CAPI MachineSet boot image configuration when bootImageSkewEnforcementStatus.mode is Automatic
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: MachineConfiguration
+        spec: {}
+        status:
+          managedBootImagesStatus:
+            machineManagers:
+              - resource: machinesets
+                apiGroup: machine.openshift.io
+                selection:
+                  mode: All
+              - resource: machinesets
+                apiGroup: cluster.x-k8s.io
+                selection:
+                  mode: All
+              - resource: machinedeployments
+                apiGroup: cluster.x-k8s.io
+                selection:
+                  mode: All
+          bootImageSkewEnforcementStatus:
+            mode: Automatic
+            automatic:
+              ocpVersion: "4.18.2"
+              rhcosVersion: "416.94.202411201433-0"
+      updated: |
+        apiVersion: operator.openshift.io/v1
+        kind: MachineConfiguration
+        spec:
+          managedBootImages:
+            machineManagers:
+              - resource: machinesets
+                apiGroup: cluster.x-k8s.io
+                selection:
+                  mode: All
+        status:
+          managedBootImagesStatus:
+            machineManagers:
+              - resource: machinesets
+                apiGroup: machine.openshift.io
+                selection:
+                  mode: All
+              - resource: machinesets
+                apiGroup: cluster.x-k8s.io
+                selection:
+                  mode: All
+              - resource: machinedeployments
+                apiGroup: cluster.x-k8s.io
+                selection:
+                  mode: All
+          bootImageSkewEnforcementStatus:
+            mode: Automatic
+            automatic:
+              ocpVersion: "4.18.2"
+              rhcosVersion: "416.94.202411201433-0"
+      expected: |
+        apiVersion: operator.openshift.io/v1
+        kind: MachineConfiguration
+        spec:
+          logLevel: Normal
+          operatorLogLevel: Normal
+          managedBootImages:
+            machineManagers:
+              - resource: machinesets
+                apiGroup: cluster.x-k8s.io
+                selection:
+                  mode: All
+        status:
+          managedBootImagesStatus:
+            machineManagers:
+              - resource: machinesets
+                apiGroup: machine.openshift.io
+                selection:
+                  mode: All
+              - resource: machinesets
+                apiGroup: cluster.x-k8s.io
+                selection:
+                  mode: All
+              - resource: machinedeployments
+                apiGroup: cluster.x-k8s.io
+                selection:
+                  mode: All
+          bootImageSkewEnforcementStatus:
+            mode: Automatic
+            automatic:
+              ocpVersion: "4.18.2"
+              rhcosVersion: "416.94.202411201433-0"
+    - name: Should not permit a "None" CAPI MachineSet boot image configuration when bootImageSkewEnforcementStatus.mode is Automatic
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: MachineConfiguration
+        spec: {}
+        status:
+          managedBootImagesStatus:
+            machineManagers:
+              - resource: machinesets
+                apiGroup: machine.openshift.io
+                selection:
+                  mode: All
+              - resource: machinesets
+                apiGroup: cluster.x-k8s.io
+                selection:
+                  mode: All
+              - resource: machinedeployments
+                apiGroup: cluster.x-k8s.io
+                selection:
+                  mode: All
+          bootImageSkewEnforcementStatus:
+            mode: Automatic
+            automatic:
+              ocpVersion: "4.18.2"
+              rhcosVersion: "416.94.202411201433-0"
+      updated: |
+        apiVersion: operator.openshift.io/v1
+        kind: MachineConfiguration
+        spec:
+          managedBootImages:
+            machineManagers:
+              - resource: machinesets
+                apiGroup: cluster.x-k8s.io
+                selection:
+                  mode: None
+        status:
+          managedBootImagesStatus:
+            machineManagers:
+              - resource: machinesets
+                apiGroup: machine.openshift.io
+                selection:
+                  mode: All
+              - resource: machinesets
+                apiGroup: cluster.x-k8s.io
+                selection:
+                  mode: All
+              - resource: machinedeployments
+                apiGroup: cluster.x-k8s.io
+                selection:
+                  mode: All
+          bootImageSkewEnforcementStatus:
+            mode: Automatic
+            automatic:
+              ocpVersion: "4.18.2"
+              rhcosVersion: "416.94.202411201433-0"
+      expectedError: "when skew enforcement is in Automatic mode, any CAPI MachineSet MachineManager must use selection mode 'All'"
+    - name: Should require managedBootImagesStatus to contain a CAPI MachineSet MachineManager with All mode when bootImageSkewEnforcementStatus.mode is Automatic
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: MachineConfiguration
+        spec: {}
+        status:
+          managedBootImagesStatus:
+            machineManagers:
+              - resource: machinesets
+                apiGroup: machine.openshift.io
+                selection:
+                  mode: All
+              - resource: machinesets
+                apiGroup: cluster.x-k8s.io
+                selection:
+                  mode: All
+              - resource: machinedeployments
+                apiGroup: cluster.x-k8s.io
+                selection:
+                  mode: All
+          bootImageSkewEnforcementStatus:
+            mode: Automatic
+            automatic:
+              ocpVersion: "4.18.2"
+              rhcosVersion: "416.94.202411201433-0"
+      updated: |
+        apiVersion: operator.openshift.io/v1
+        kind: MachineConfiguration
+        spec: {}
+        status:
+          managedBootImagesStatus:
+            machineManagers:
+              - resource: machinesets
+                apiGroup: machine.openshift.io
+                selection:
+                  mode: All
+              - resource: machinesets
+                apiGroup: cluster.x-k8s.io
+                selection:
+                  mode: None
+              - resource: machinedeployments
+                apiGroup: cluster.x-k8s.io
+                selection:
+                  mode: All
+          bootImageSkewEnforcementStatus:
+            mode: Automatic
+            automatic:
+              ocpVersion: "4.18.2"
+              rhcosVersion: "416.94.202411201433-0"
+      expectedStatusError: "when skew enforcement is in Automatic mode, managedBootImagesStatus must contain a MachineManager opting in all CAPI MachineSets"
+    - name: Should require managedBootImagesStatus to contain a CAPI MachineSet MachineManager when bootImageSkewEnforcementStatus.mode is Automatic
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: MachineConfiguration
+        spec: {}
+        status:
+          managedBootImagesStatus:
+            machineManagers:
+              - resource: machinesets
+                apiGroup: machine.openshift.io
+                selection:
+                  mode: All
+              - resource: machinesets
+                apiGroup: cluster.x-k8s.io
+                selection:
+                  mode: All
+              - resource: machinedeployments
+                apiGroup: cluster.x-k8s.io
+                selection:
+                  mode: All
+          bootImageSkewEnforcementStatus:
+            mode: Automatic
+            automatic:
+              ocpVersion: "4.18.2"
+              rhcosVersion: "416.94.202411201433-0"
+      updated: |
+        apiVersion: operator.openshift.io/v1
+        kind: MachineConfiguration
+        spec: {}
+        status:
+          managedBootImagesStatus:
+            machineManagers:
+              - resource: machinesets
+                apiGroup: machine.openshift.io
+                selection:
+                  mode: All
+              - resource: machinedeployments
+                apiGroup: cluster.x-k8s.io
+                selection:
+                  mode: All
+          bootImageSkewEnforcementStatus:
+            mode: Automatic
+            automatic:
+              ocpVersion: "4.18.2"
+              rhcosVersion: "416.94.202411201433-0"
+      expectedStatusError: "when skew enforcement is in Automatic mode, managedBootImagesStatus must contain a MachineManager opting in all CAPI MachineSets"
+    - name: Should permit an "All" CAPI MachineDeployment boot image configuration when bootImageSkewEnforcementStatus.mode is Automatic
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: MachineConfiguration
+        spec: {}
+        status:
+          managedBootImagesStatus:
+            machineManagers:
+              - resource: machinesets
+                apiGroup: machine.openshift.io
+                selection:
+                  mode: All
+              - resource: machinesets
+                apiGroup: cluster.x-k8s.io
+                selection:
+                  mode: All
+              - resource: machinedeployments
+                apiGroup: cluster.x-k8s.io
+                selection:
+                  mode: All
+          bootImageSkewEnforcementStatus:
+            mode: Automatic
+            automatic:
+              ocpVersion: "4.18.2"
+              rhcosVersion: "416.94.202411201433-0"
+      updated: |
+        apiVersion: operator.openshift.io/v1
+        kind: MachineConfiguration
+        spec:
+          managedBootImages:
+            machineManagers:
+              - resource: machinedeployments
+                apiGroup: cluster.x-k8s.io
+                selection:
+                  mode: All
+        status:
+          managedBootImagesStatus:
+            machineManagers:
+              - resource: machinesets
+                apiGroup: machine.openshift.io
+                selection:
+                  mode: All
+              - resource: machinesets
+                apiGroup: cluster.x-k8s.io
+                selection:
+                  mode: All
+              - resource: machinedeployments
+                apiGroup: cluster.x-k8s.io
+                selection:
+                  mode: All
+          bootImageSkewEnforcementStatus:
+            mode: Automatic
+            automatic:
+              ocpVersion: "4.18.2"
+              rhcosVersion: "416.94.202411201433-0"
+      expected: |
+        apiVersion: operator.openshift.io/v1
+        kind: MachineConfiguration
+        spec:
+          logLevel: Normal
+          operatorLogLevel: Normal
+          managedBootImages:
+            machineManagers:
+              - resource: machinedeployments
+                apiGroup: cluster.x-k8s.io
+                selection:
+                  mode: All
+        status:
+          managedBootImagesStatus:
+            machineManagers:
+              - resource: machinesets
+                apiGroup: machine.openshift.io
+                selection:
+                  mode: All
+              - resource: machinesets
+                apiGroup: cluster.x-k8s.io
+                selection:
+                  mode: All
+              - resource: machinedeployments
+                apiGroup: cluster.x-k8s.io
+                selection:
+                  mode: All
+          bootImageSkewEnforcementStatus:
+            mode: Automatic
+            automatic:
+              ocpVersion: "4.18.2"
+              rhcosVersion: "416.94.202411201433-0"
+    - name: Should not permit a "None" CAPI MachineDeployment boot image configuration when bootImageSkewEnforcementStatus.mode is Automatic
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: MachineConfiguration
+        spec: {}
+        status:
+          managedBootImagesStatus:
+            machineManagers:
+              - resource: machinesets
+                apiGroup: machine.openshift.io
+                selection:
+                  mode: All
+              - resource: machinesets
+                apiGroup: cluster.x-k8s.io
+                selection:
+                  mode: All
+              - resource: machinedeployments
+                apiGroup: cluster.x-k8s.io
+                selection:
+                  mode: All
+          bootImageSkewEnforcementStatus:
+            mode: Automatic
+            automatic:
+              ocpVersion: "4.18.2"
+              rhcosVersion: "416.94.202411201433-0"
+      updated: |
+        apiVersion: operator.openshift.io/v1
+        kind: MachineConfiguration
+        spec:
+          managedBootImages:
+            machineManagers:
+              - resource: machinedeployments
+                apiGroup: cluster.x-k8s.io
+                selection:
+                  mode: None
+        status:
+          managedBootImagesStatus:
+            machineManagers:
+              - resource: machinesets
+                apiGroup: machine.openshift.io
+                selection:
+                  mode: All
+              - resource: machinesets
+                apiGroup: cluster.x-k8s.io
+                selection:
+                  mode: All
+              - resource: machinedeployments
+                apiGroup: cluster.x-k8s.io
+                selection:
+                  mode: All
+          bootImageSkewEnforcementStatus:
+            mode: Automatic
+            automatic:
+              ocpVersion: "4.18.2"
+              rhcosVersion: "416.94.202411201433-0"
+      expectedError: "when skew enforcement is in Automatic mode, any CAPI MachineDeployment MachineManager must use selection mode 'All'"
+    - name: Should require managedBootImagesStatus to contain a CAPI MachineDeployment MachineManager with All mode when bootImageSkewEnforcementStatus.mode is Automatic
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: MachineConfiguration
+        spec: {}
+        status:
+          managedBootImagesStatus:
+            machineManagers:
+              - resource: machinesets
+                apiGroup: machine.openshift.io
+                selection:
+                  mode: All
+              - resource: machinesets
+                apiGroup: cluster.x-k8s.io
+                selection:
+                  mode: All
+              - resource: machinedeployments
+                apiGroup: cluster.x-k8s.io
+                selection:
+                  mode: All
+          bootImageSkewEnforcementStatus:
+            mode: Automatic
+            automatic:
+              ocpVersion: "4.18.2"
+              rhcosVersion: "416.94.202411201433-0"
+      updated: |
+        apiVersion: operator.openshift.io/v1
+        kind: MachineConfiguration
+        spec: {}
+        status:
+          managedBootImagesStatus:
+            machineManagers:
+              - resource: machinesets
+                apiGroup: machine.openshift.io
+                selection:
+                  mode: All
+              - resource: machinesets
+                apiGroup: cluster.x-k8s.io
+                selection:
+                  mode: All
+              - resource: machinedeployments
+                apiGroup: cluster.x-k8s.io
+                selection:
+                  mode: None
+          bootImageSkewEnforcementStatus:
+            mode: Automatic
+            automatic:
+              ocpVersion: "4.18.2"
+              rhcosVersion: "416.94.202411201433-0"
+      expectedStatusError: "when skew enforcement is in Automatic mode, managedBootImagesStatus must contain a MachineManager opting in all CAPI MachineDeployments"
+    - name: Should require managedBootImagesStatus to contain a CAPI MachineDeployment MachineManager when bootImageSkewEnforcementStatus.mode is Automatic
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: MachineConfiguration
+        spec: {}
+        status:
+          managedBootImagesStatus:
+            machineManagers:
+              - resource: machinesets
+                apiGroup: machine.openshift.io
+                selection:
+                  mode: All
+              - resource: machinesets
+                apiGroup: cluster.x-k8s.io
+                selection:
+                  mode: All
+              - resource: machinedeployments
+                apiGroup: cluster.x-k8s.io
+                selection:
+                  mode: All
+          bootImageSkewEnforcementStatus:
+            mode: Automatic
+            automatic:
+              ocpVersion: "4.18.2"
+              rhcosVersion: "416.94.202411201433-0"
+      updated: |
+        apiVersion: operator.openshift.io/v1
+        kind: MachineConfiguration
+        spec: {}
+        status:
+          managedBootImagesStatus:
+            machineManagers:
+              - resource: machinesets
+                apiGroup: machine.openshift.io
+                selection:
+                  mode: All
+              - resource: machinesets
+                apiGroup: cluster.x-k8s.io
+                selection:
+                  mode: All
+          bootImageSkewEnforcementStatus:
+            mode: Automatic
+            automatic:
+              ocpVersion: "4.18.2"
+              rhcosVersion: "416.94.202411201433-0"
+      expectedStatusError: "when skew enforcement is in Automatic mode, managedBootImagesStatus must contain a MachineManager opting in all CAPI MachineDeployments"

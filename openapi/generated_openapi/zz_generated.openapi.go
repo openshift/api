@@ -70851,7 +70851,7 @@ func schema_openshift_api_route_v1_TLSConfig(ref common.ReferenceCallback) commo
 					},
 					"caCertificate": {
 						SchemaProps: spec.SchemaProps{
-							Description: "caCertificate provides the cert authority certificate contents",
+							Description: "caCertificate provides the cert authority certificate contents. Any needed intermediate certificates should be provided here.",
 							Type:        []string{"string"},
 							Format:      "",
 						},
@@ -70872,7 +70872,7 @@ func schema_openshift_api_route_v1_TLSConfig(ref common.ReferenceCallback) commo
 					},
 					"externalCertificate": {
 						SchemaProps: spec.SchemaProps{
-							Description: "externalCertificate provides certificate contents as a secret reference. This should be a single serving certificate, not a certificate chain. Do not include a CA certificate. The secret referenced should be present in the same namespace as that of the Route. Forbidden when `certificate` is set. The router service account needs to be granted with read-only access to this secret, please refer to openshift docs for additional details.",
+							Description: "externalCertificate provides certificate contents as a secret reference. This should be the serving certificate, and may optionally include the full certificate chain, including any needed intermediate certificates. There is no separate field to provide a CA certificate when using externalCertificate, so any CA certificate needed must be included as part of this chain. The secret referenced should be present in the same namespace as that of the Route. Forbidden when `certificate` is set. The router service account needs to be granted with read-only access to this secret, please refer to openshift docs for additional details.",
 							Ref:         ref(routev1.LocalObjectReference{}.OpenAPIModelName()),
 						},
 					},

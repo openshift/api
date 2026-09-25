@@ -374,7 +374,7 @@ tests:
         - peerAddress: 192.168.111.1
           peerASN: 64513
           holdTimeSeconds: 2
-    expectedError: "holdTimeSeconds must be 0 or at least 3"
+    expectedError: "spec.defaultPeers[0].holdTimeSeconds in body should be greater than or equal to 3"
   - name: Should accept hold time exactly 3x keepalive
     initial: |
       apiVersion: machineconfiguration.openshift.io/v1alpha1
@@ -400,7 +400,7 @@ tests:
           peerASN: 64513
           holdTimeSeconds: 15
           keepaliveTimeSeconds: 5
-  - name: Should accept explicit hold time 0 with a keepalive
+  - name: Should reject an explicit zero hold time
     initial: |
       apiVersion: machineconfiguration.openshift.io/v1alpha1
       kind: BGPVIPConfig
@@ -413,19 +413,8 @@ tests:
           peerASN: 64513
           holdTimeSeconds: 0
           keepaliveTimeSeconds: 5
-    expected: |
-      apiVersion: machineconfiguration.openshift.io/v1alpha1
-      kind: BGPVIPConfig
-      metadata:
-        name: cluster
-      spec:
-        localASN: 64512
-        defaultPeers:
-        - peerAddress: 192.168.111.1
-          peerASN: 64513
-          holdTimeSeconds: 0
-          keepaliveTimeSeconds: 5
-  - name: Should accept a keepalive with an explicit zero hold time escape hatch reversed
+    expectedError: "spec.defaultPeers[0].holdTimeSeconds in body should be greater than or equal to 3"
+  - name: Should reject an explicit zero keepalive interval
     initial: |
       apiVersion: machineconfiguration.openshift.io/v1alpha1
       kind: BGPVIPConfig
@@ -438,6 +427,19 @@ tests:
           peerASN: 64513
           holdTimeSeconds: 9
           keepaliveTimeSeconds: 0
+    expectedError: "spec.defaultPeers[0].keepaliveTimeSeconds in body should be greater than or equal to 1"
+  - name: Should accept a hold time without a keepalive interval
+    initial: |
+      apiVersion: machineconfiguration.openshift.io/v1alpha1
+      kind: BGPVIPConfig
+      metadata:
+        name: cluster
+      spec:
+        localASN: 64512
+        defaultPeers:
+        - peerAddress: 192.168.111.1
+          peerASN: 64513
+          holdTimeSeconds: 9
     expected: |
       apiVersion: machineconfiguration.openshift.io/v1alpha1
       kind: BGPVIPConfig
@@ -449,7 +451,6 @@ tests:
         - peerAddress: 192.168.111.1
           peerASN: 64513
           holdTimeSeconds: 9
-          keepaliveTimeSeconds: 0
   - name: Should reject an empty defaultPeers list
     initial: |
       apiVersion: machineconfiguration.openshift.io/v1alpha1

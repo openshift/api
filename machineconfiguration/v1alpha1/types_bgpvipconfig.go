@@ -163,7 +163,7 @@ type BGPVIPPasswordSecret struct {
 }
 
 // BGPVIPPeer describes one BGP peer.
-// +kubebuilder:validation:XValidation:rule="!(has(self.holdTimeSeconds) && has(self.keepaliveTimeSeconds)) || self.holdTimeSeconds == 0 || self.keepaliveTimeSeconds == 0 || self.holdTimeSeconds >= 3 * self.keepaliveTimeSeconds",message="holdTimeSeconds must be at least 3 times keepaliveTimeSeconds"
+// +kubebuilder:validation:XValidation:rule="!(has(self.holdTimeSeconds) && has(self.keepaliveTimeSeconds)) || self.holdTimeSeconds >= 3 * self.keepaliveTimeSeconds",message="holdTimeSeconds must be at least 3 times keepaliveTimeSeconds"
 type BGPVIPPeer struct {
 	// peerAddress is the IP address of the BGP peer (IPv4 or IPv6) in
 	// canonical form (lowercase, no leading zeros, IPv6 zero-compressed),
@@ -219,27 +219,25 @@ type BGPVIPPeer struct {
 	// +optional
 	EBGPMultiHop EBGPMultiHopMode `json:"ebgpMultiHop,omitempty"`
 
-	// holdTimeSeconds is the BGP hold time in seconds, either 0 or between
-	// 3 and 65535 (RFC 4271 requires a hold time of 0 or at least 3
-	// seconds). When omitted or 0, the FRR default is used; this is subject
-	// to change over time. When both holdTimeSeconds and
-	// keepaliveTimeSeconds are set and non-zero, holdTimeSeconds must be at
-	// least 3 times keepaliveTimeSeconds.
-	// +kubebuilder:validation:Minimum=0
+	// holdTimeSeconds is the BGP hold time in seconds, between 3 (the RFC
+	// 4271 minimum for a non-zero hold time) and 65535. When omitted, no
+	// hold time is configured and the FRR default (180 seconds) applies.
+	// When both holdTimeSeconds and keepaliveTimeSeconds are set,
+	// holdTimeSeconds must be at least 3 times keepaliveTimeSeconds.
+	// +kubebuilder:validation:Minimum=3
 	// +kubebuilder:validation:Maximum=65535
-	// +kubebuilder:validation:XValidation:rule="self == 0 || self >= 3",message="holdTimeSeconds must be 0 or at least 3"
 	// +optional
-	HoldTimeSeconds *int32 `json:"holdTimeSeconds,omitempty"`
+	HoldTimeSeconds int32 `json:"holdTimeSeconds,omitempty"`
 
 	// keepaliveTimeSeconds is the BGP keepalive interval in seconds,
-	// between 0 and 65535. When omitted or 0, the FRR default is used; this
-	// is subject to change over time. When both holdTimeSeconds and
-	// keepaliveTimeSeconds are set and non-zero, holdTimeSeconds must be at
-	// least 3 times keepaliveTimeSeconds.
-	// +kubebuilder:validation:Minimum=0
+	// between 1 and 65535. When omitted, no keepalive interval is
+	// configured and the FRR default (60 seconds) applies. When both
+	// holdTimeSeconds and keepaliveTimeSeconds are set, holdTimeSeconds
+	// must be at least 3 times keepaliveTimeSeconds.
+	// +kubebuilder:validation:Minimum=1
 	// +kubebuilder:validation:Maximum=65535
 	// +optional
-	KeepaliveTimeSeconds *int32 `json:"keepaliveTimeSeconds,omitempty"`
+	KeepaliveTimeSeconds int32 `json:"keepaliveTimeSeconds,omitempty"`
 }
 
 // BGPVIPConfigStatus reports the consumers' progress applying the spec.

@@ -77,9 +77,7 @@ func (in *BGPVIPConfigSpec) DeepCopyInto(out *BGPVIPConfigSpec) {
 	if in.DefaultPeers != nil {
 		in, out := &in.DefaultPeers, &out.DefaultPeers
 		*out = make([]BGPVIPPeer, len(*in))
-		for i := range *in {
-			(*in)[i].DeepCopyInto(&(*out)[i])
-		}
+		copy(*out, *in)
 	}
 	if in.Communities != nil {
 		in, out := &in.Communities, &out.Communities
@@ -135,9 +133,7 @@ func (in *BGPVIPHostPeers) DeepCopyInto(out *BGPVIPHostPeers) {
 	if in.Peers != nil {
 		in, out := &in.Peers, &out.Peers
 		*out = make([]BGPVIPPeer, len(*in))
-		for i := range *in {
-			(*in)[i].DeepCopyInto(&(*out)[i])
-		}
+		copy(*out, *in)
 	}
 	return
 }
@@ -172,16 +168,6 @@ func (in *BGPVIPPasswordSecret) DeepCopy() *BGPVIPPasswordSecret {
 func (in *BGPVIPPeer) DeepCopyInto(out *BGPVIPPeer) {
 	*out = *in
 	out.PasswordSecret = in.PasswordSecret
-	if in.HoldTimeSeconds != nil {
-		in, out := &in.HoldTimeSeconds, &out.HoldTimeSeconds
-		*out = new(int32)
-		**out = **in
-	}
-	if in.KeepaliveTimeSeconds != nil {
-		in, out := &in.KeepaliveTimeSeconds, &out.KeepaliveTimeSeconds
-		*out = new(int32)
-		**out = **in
-	}
 	return
 }
 

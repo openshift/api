@@ -48884,14 +48884,14 @@ func schema_openshift_api_machineconfiguration_v1alpha1_BGPVIPPeer(ref common.Re
 					},
 					"holdTimeSeconds": {
 						SchemaProps: spec.SchemaProps{
-							Description: "holdTimeSeconds is the BGP hold time in seconds, either 0 or between 3 and 65535 (RFC 4271 requires a hold time of 0 or at least 3 seconds). When omitted or 0, the FRR default is used; this is subject to change over time. When both holdTimeSeconds and keepaliveTimeSeconds are set and non-zero, holdTimeSeconds must be at least 3 times keepaliveTimeSeconds.",
+							Description: "holdTimeSeconds is the BGP hold time in seconds, between 3 (the RFC 4271 minimum for a non-zero hold time) and 65535. When omitted, no hold time is configured and the FRR default (180 seconds) applies. When both holdTimeSeconds and keepaliveTimeSeconds are set, holdTimeSeconds must be at least 3 times keepaliveTimeSeconds.",
 							Type:        []string{"integer"},
 							Format:      "int32",
 						},
 					},
 					"keepaliveTimeSeconds": {
 						SchemaProps: spec.SchemaProps{
-							Description: "keepaliveTimeSeconds is the BGP keepalive interval in seconds, between 0 and 65535. When omitted or 0, the FRR default is used; this is subject to change over time. When both holdTimeSeconds and keepaliveTimeSeconds are set and non-zero, holdTimeSeconds must be at least 3 times keepaliveTimeSeconds.",
+							Description: "keepaliveTimeSeconds is the BGP keepalive interval in seconds, between 1 and 65535. When omitted, no keepalive interval is configured and the FRR default (60 seconds) applies. When both holdTimeSeconds and keepaliveTimeSeconds are set, holdTimeSeconds must be at least 3 times keepaliveTimeSeconds.",
 							Type:        []string{"integer"},
 							Format:      "int32",
 						},

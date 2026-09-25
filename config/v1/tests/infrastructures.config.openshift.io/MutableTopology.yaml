@@ -369,6 +369,28 @@ tests:
               reason: TransitionInProgress
               message: Applying topology changes
               startedTime: "2025-01-01T00:00:00Z"
+    - name: Should reject an unsupported current transition state
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        spec: {}
+        status:
+          controlPlaneTopology: SingleReplica
+          infrastructureTopology: SingleReplica
+      updated: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        spec: {}
+        status:
+          controlPlaneTopology: SingleReplica
+          infrastructureTopology: SingleReplica
+          topologyTransitionStatus:
+            supportedTransitions: []
+            currentTransition:
+              state: InProgress
+              reason: TransitionInProgress
+              message: Applying topology changes
+      expectedStatusError: 'status.topologyTransitionStatus.currentTransition.state: Unsupported value: "InProgress": supported values: "Completed", "Partial", "Failed"'
     - name: Should reject a topology transition reason that is not CamelCase
       initial: |
         apiVersion: config.openshift.io/v1

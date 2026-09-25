@@ -2844,9 +2844,13 @@ spec:
                               state:
                                 description: |-
                                   state indicates the current state of a triggered transition.
-                                  It must be between 1 and 128 characters long.
-                                maxLength: 128
-                                minLength: 1
+                                  Valid values are "Completed" when the transition was successfully applied,
+                                  "Partial" when it was not completely applied or is still in progress, and
+                                  "Failed" when it failed to apply.
+                                enum:
+                                - Completed
+                                - Partial
+                                - Failed
                                 type: string
                             required:
                             - message

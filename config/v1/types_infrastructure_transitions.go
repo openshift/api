@@ -59,9 +59,10 @@ const (
 // TopologyTransitionProgress describes a topology transition that has started.
 type TopologyTransitionProgress struct {
 	// state indicates the current state of a triggered transition.
-	// It must be between 1 and 128 characters long.
-	// +kubebuilder:validation:MinLength=1
-	// +kubebuilder:validation:MaxLength=128
+	// Valid values are "Completed" when the transition was successfully applied,
+	// "Partial" when it was not completely applied or is still in progress, and
+	// "Failed" when it failed to apply.
+	// +kubebuilder:validation:Enum=Completed;Partial;Failed
 	// +required
 	State TransitionState `json:"state,omitempty"`
 

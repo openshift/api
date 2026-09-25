@@ -22308,7 +22308,7 @@ func schema_openshift_api_config_v1_TopologyTransitionProgress(ref common.Refere
 				Properties: map[string]spec.Schema{
 					"state": {
 						SchemaProps: spec.SchemaProps{
-							Description: "state indicates the current state of a triggered transition. It must be between 1 and 128 characters long.",
+							Description: "state indicates the current state of a triggered transition. Valid values are \"Completed\" when the transition was successfully applied, \"Partial\" when it was not completely applied or is still in progress, and \"Failed\" when it failed to apply.",
 							Type:        []string{"string"},
 							Format:      "",
 						},

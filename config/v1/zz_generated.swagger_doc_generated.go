@@ -2294,7 +2294,7 @@ func (TopologyTransition) SwaggerDoc() map[string]string {
 
 var map_TopologyTransitionProgress = map[string]string{
 	"":               "TopologyTransitionProgress describes a topology transition that has started.",
-	"state":          "state indicates the current state of a triggered transition. It must be between 1 and 128 characters long.",
+	"state":          "state indicates the current state of a triggered transition. Valid values are \"Completed\" when the transition was successfully applied, \"Partial\" when it was not completely applied or is still in progress, and \"Failed\" when it failed to apply.",
 	"reason":         "reason indicates why current state is as reported. It must be between 1 and 128 characters long.",
 	"message":        "message is human-readable information about the reason for the current state. It must be between 1 and 2048 characters long.",
 	"startedTime":    "startedTime is the time at which the transition was started. When omitted, the start time is not available.",

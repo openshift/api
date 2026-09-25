@@ -58,7 +58,7 @@ spec:
                   The "Healthy" condition is an aggregate that tracks the overall health of the cluster.
                   The "InService" condition tracks whether the cluster is in service (not in maintenance mode).
                   The "NodeCountAsExpected" condition tracks whether the expected number of nodes are present.
-                  Each of these conditions is required, so the array must contain at least 3 items.
+                  Each of these three conditions is required, so the array must contain at least 3 items.
                 items:
                   description: Condition contains details for one aspect of the current
                     state of this API Resource.
@@ -452,20 +452,28 @@ spec:
                         rule: '!format.dns1123Subdomain().validate(self).hasValue()'
                     resources:
                       description: |-
-                        resources contains the status of pacemaker resources scheduled on this node.
+                        resources contains the status of pacemaker resources tracked on this node.
                         Each resource entry includes the resource name and its health conditions.
-                        For Two Node OpenShift with Fencing, we track Kubelet and Etcd resources per node.
-                        Both resources are required to be present, so the array must contain at least 2 items.
-                        Valid resource names are "Kubelet" and "Etcd".
+                        For Two Node OpenShift with Fencing, we track the Kubelet and Etcd pacemaker-managed resources
+                        per node. Both are required to be present, so the array must contain at least 2 items.
+                        The array may also contain optional alert-agent script entries named "TaintAlertAgent" and
+                        "UntaintAlertAgent". Their entries track whether the alert agent is configured in the CIB
+                        and whether its script is present on this node. Alert-agent entries are
+                        optional and are omitted when a status collector version that predates them has not reported them.
+                        Valid resource names are "Kubelet", "Etcd", "TaintAlertAgent", and "UntaintAlertAgent".
                         Fencing agents are tracked separately in the fencingAgents field.
                       items:
                         description: |-
-                          PacemakerClusterResourceStatus represents the status of a pacemaker resource scheduled on a node.
+                          PacemakerClusterResourceStatus represents the status of a resource tracked on a node.
                           A pacemaker resource is a unit of work managed by pacemaker. In pacemaker terminology, resources are services or
                           applications that pacemaker monitors, starts, stops, and moves between nodes to maintain high availability.
-                          For Two Node OpenShift with Fencing, we track two resources per node:
+                          For Two Node OpenShift with Fencing, we track the following pacemaker-managed resources per node:
                             - Kubelet (the Kubernetes node agent and a prerequisite for etcd)
                             - Etcd (the distributed key-value store)
+
+                          The same type is reused to track alert-agent scripts (TaintAlertAgent, UntaintAlertAgent). An alert
+                          agent is not a pacemaker-managed resource, so only a subset of the pacemaker condition types applies
+                          to it: the required conditions are enforced conditionally based on the resource name.
 
                           Fencing agents are tracked separately in the fencingAgents field because they are mapped to
                           their target node (the node they can fence), not the node where monitoring operations are scheduled.
@@ -483,7 +491,15 @@ spec:
                               The "Active" condition tracks whether the resource is active (available to be used).
                               The "Started" condition tracks whether the resource is started.
                               The "Schedulable" condition tracks whether the resource is schedulable (not blocked).
-                              Each of these conditions is required, so the array must contain at least 8 items.
+                              Which conditions are required depends on the resource name:
+                                - For the pacemaker-managed resources "Kubelet" and "Etcd", all eight condition types listed
+                                  above are required, so the array must contain at least 8 items.
+                                - For the alert-agent resources "TaintAlertAgent" and "UntaintAlertAgent", only "Healthy",
+                                  "Enabled" (reason "ScriptConfigured"), and "Operational" (reason "ScriptPresent") are
+                                  required, so the array must contain at least 3 items. The remaining condition types do not
+                                  apply to an alert agent and may be omitted.
+                              The array must contain at least 3 items in all cases; the exact set of required conditions for
+                              each resource name is enforced by name-gated validation rules on this type.
                             items:
                               description: Condition contains details for one aspect
                                 of the current state of this API Resource.
@@ -541,51 +557,42 @@ spec:
                               - type
                               type: object
                             maxItems: 16
-                            minItems: 8
+                            minItems: 3
                             type: array
                             x-kubernetes-list-map-keys:
                             - type
                             x-kubernetes-list-type: map
-                            x-kubernetes-validations:
-                            - message: conditions must contain a condition of type
-                                Healthy
-                              rule: self.exists(c, c.type == 'Healthy')
-                            - message: conditions must contain a condition of type
-                                InService
-                              rule: self.exists(c, c.type == 'InService')
-                            - message: conditions must contain a condition of type
-                                Managed
-                              rule: self.exists(c, c.type == 'Managed')
-                            - message: conditions must contain a condition of type
-                                Enabled
-                              rule: self.exists(c, c.type == 'Enabled')
-                            - message: conditions must contain a condition of type
-                                Operational
-                              rule: self.exists(c, c.type == 'Operational')
-                            - message: conditions must contain a condition of type
-                                Active
-                              rule: self.exists(c, c.type == 'Active')
-                            - message: conditions must contain a condition of type
-                                Started
-                              rule: self.exists(c, c.type == 'Started')
-                            - message: conditions must contain a condition of type
-                                Schedulable
-                              rule: self.exists(c, c.type == 'Schedulable')
                           name:
                             description: |-
-                              name is the name of the pacemaker resource.
-                              Valid values are "Kubelet" and "Etcd".
+                              name is the name of the resource.
+                              Valid values are "Kubelet", "Etcd", "TaintAlertAgent", and "UntaintAlertAgent".
                               The Kubelet resource is a prerequisite for etcd in Two Node OpenShift with Fencing deployments.
                               The Etcd resource may temporarily transition to stopped during pacemaker quorum-recovery operations.
+                              The TaintAlertAgent and UntaintAlertAgent entries track alert-agent configuration and per-node
+                              script presence rather than a pacemaker-managed resource.
                               Fencing agents are tracked separately in the node's fencingAgents field.
                             enum:
                             - Kubelet
                             - Etcd
+                            - TaintAlertAgent
+                            - UntaintAlertAgent
                             type: string
                         required:
                         - conditions
                         - name
                         type: object
+                        x-kubernetes-validations:
+                        - message: conditions must contain Healthy, InService, Managed,
+                            Enabled, Operational, Active, Started, and Schedulable
+                            for Kubelet and Etcd resources
+                          rule: '!(self.name == ''Kubelet'' || self.name == ''Etcd'')
+                            || [''Healthy'',''InService'',''Managed'',''Enabled'',''Operational'',''Active'',''Started'',''Schedulable''].all(t,
+                            self.conditions.exists(c, c.type == t))'
+                        - message: conditions must contain Healthy, Enabled, and Operational
+                            for TaintAlertAgent and UntaintAlertAgent resources
+                          rule: '!(self.name == ''TaintAlertAgent'' || self.name ==
+                            ''UntaintAlertAgent'') || [''Healthy'',''Enabled'',''Operational''].all(t,
+                            self.conditions.exists(c, c.type == t))'
                       maxItems: 8
                       minItems: 2
                       type: array

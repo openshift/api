@@ -46027,6 +46027,26 @@ func schema_openshift_api_machine_v1beta1_GCPDisk(ref common.ReferenceCallback) 
 							Ref:         ref(machinev1beta1.GCPEncryptionKeyReference{}.OpenAPIModelName()),
 						},
 					},
+					"licenses": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-type": "atomic",
+							},
+						},
+						SchemaProps: spec.SchemaProps{
+							Description: "licenses is a list of URLs of license resources attached to this disk. License URLs must match exactly either the full HTTPS URI format (https://www.googleapis.com/compute/v1/projects/{project}/global/licenses/{license}) or the short self-link format (projects/{project}/global/licenses/{license}). Project IDs must use lowercase letters, digits, and hyphens, begin with a letter, end with a lowercase letter or digit, and be 6 to 30 characters long. License names must be RFC1035-style lowercase names that begin with a letter, end with a lowercase letter or digit, contain only lowercase letters, digits, and hyphens, and are at most 63 characters long. Each license URL must be at least 1 character and must not exceed 256 characters. When specified, at least 1 and a maximum of 8 licenses may be provided. When omitted, no additional licenses are applied.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: "",
+										Type:    []string{"string"},
+										Format:  "",
+									},
+								},
+							},
+						},
+					},
 				},
 				Required: []string{"autoDelete", "boot", "sizeGb", "type", "image", "labels"},
 			},

@@ -1,0 +1,265 @@
+apiVersion: apiextensions.k8s.io/v1 # Hack because controller-gen complains if we don't have this
+name: "[TechPreview] EtcdBackupPolicy"
+crdName: backups.operator.openshift.io
+featureGates:
+- AutomatedEtcdBackup
+tests:
+  onCreate:
+    - name: Should be able to create an EtcdBackup with a valid spec
+      initial: |
+        apiVersion: operator.openshift.io/v1alpha1
+        kind: EtcdBackupPolicy
+        spec:
+          schedule: "* 2 * * *"
+          storage:
+            type: PVC
+            pvc:
+              name: etcdbackup-pvc
+      expected: |
+        apiVersion: operator.openshift.io/v1alpha1
+        kind: EtcdBackupPolicy
+        spec:
+          schedule: "* 2 * * *"
+          storage:
+            type: PVC
+            pvc:
+              name: etcdbackup-pvc
+    - name: Should be able to create an EtcdBackup with local storage
+      initial: |
+        apiVersion: operator.openshift.io/v1alpha1
+        kind: EtcdBackupPolicy
+        spec:
+          schedule: "* 2 * * *"
+          storage:
+            type: Local
+            local:
+              path: /data/etcdbackups
+      expected: |
+        apiVersion: operator.openshift.io/v1alpha1
+        kind: EtcdBackupPolicy
+        spec:
+          schedule: "* 2 * * *"
+          storage:
+            type: Local
+            local:
+    - name: Should be able to create an EtcdBackup with a valid schedule - At 22:00 on every day-of-week from Monday through Friday
+      initial: |
+        apiVersion: operator.openshift.io/v1alpha1
+        kind: EtcdBackupPolicy
+        spec:
+          schedule: "0 22 * * 1-5"
+          storage:
+            type: PVC
+            pvc:
+              name: etcdbackup-pvc
+      expected: |
+        apiVersion: operator.openshift.io/v1alpha1
+        kind: EtcdBackupPolicy
+        spec:
+          schedule: "0 22 * * 1-5"
+          storage:
+            type: PVC
+            pvc:
+              name: etcdbackup-pvc
+    - name: Should be able to create an EtcdBackup with a valid schedule - At 04:05 on Sunday.
+      initial: |
+        apiVersion: operator.openshift.io/v1alpha1
+        kind: EtcdBackupPolicy
+        spec:
+          schedule: "5 4 * * SUN"
+          storage:
+            type: PVC
+            pvc:
+              name: etcdbackup-pvc
+      expected: |
+        apiVersion: operator.openshift.io/v1alpha1
+        kind: EtcdBackupPolicy
+        spec:
+          schedule: "5 4 * * SUN"
+          storage:
+            type: PVC
+            pvc:
+              name: etcdbackup-pvc
+    - name: Should be able to create an EtcdBackup with a valid schedule - Predefined hourly
+      initial: |
+        apiVersion: operator.openshift.io/v1alpha1
+        kind: EtcdBackupPolicy
+        spec:
+          schedule: "@hourly"
+          storage:
+            type: PVC
+            pvc:
+              name: etcdbackup-pvc
+      expected: |
+        apiVersion: operator.openshift.io/v1alpha1
+        kind: EtcdBackupPolicy
+        spec:
+          schedule: "@hourly"
+          storage:
+            type: PVC
+            pvc:
+              name: etcdbackup-pvc
+    - name: Should fail to create an EtcdBackup with an invalid schedule - At 04:05 on invalid day FOO.
+      initial: |
+        apiVersion: operator.openshift.io/v1alpha1
+        kind: EtcdBackupPolicy
+        spec:
+          schedule: "5 4 * * FOO"
+          storage:
+            type: PVC
+            pvc:
+              name: etcdbackup-pvc
+      expectedError: "spec.schedule in body should match"
+    - name: Should fail to create an EtcdBackup with an invalid schedule - Predefined typo @hourli instead of @hourly.
+      initial: |
+        apiVersion: operator.openshift.io/v1alpha1
+        kind: EtcdBackupPolicy
+        spec:
+          schedule: "@hourli"
+          storage:
+            type: PVC
+            pvc:
+              name: etcdbackup-pvc
+      expectedError: "spec.schedule in body should match"
+    - name: Should fail to create an EtcdBackup with an invalid schedule - Non standard L last Friday in month
+      initial: |
+        apiVersion: operator.openshift.io/v1alpha1
+        kind: EtcdBackupPolicy
+        spec:
+          schedule: "* * * * 5L"
+          storage:
+            type: PVC
+            pvc:
+              name: etcdbackup-pvc
+      expectedError: "spec.schedule in body should match"
+    - name: Should fail to create an EtcdBackup with an invalid schedule - Non standard L 5th day before last day of month
+      initial: |
+        apiVersion: operator.openshift.io/v1alpha1
+        kind: EtcdBackupPolicy
+        spec:
+          schedule: "* * L-5 * *"
+          storage:
+            type: PVC
+            pvc:
+              name: etcdbackup-pvc
+      expectedError: "spec.schedule in body should match"
+    - name: Should fail to create an EtcdBackup with an invalid schedule - Non standard W closest weekday to 15th of month
+      initial: |
+        apiVersion: operator.openshift.io/v1alpha1
+        kind: EtcdBackupPolicy
+        spec:
+          schedule: "* * 15W * *"
+          storage:
+            type: PVC
+            pvc:
+              name: etcdbackup-pvc
+      expectedError: "spec.schedule in body should match"
+    - name: Should be able to create an EtcdBackup with a valid time zone - Africa/Banjul
+      initial: |
+        apiVersion: operator.openshift.io/v1alpha1
+        kind: EtcdBackupPolicy
+        spec:
+          schedule: "* 2 * * *"
+          timeZone: Africa/Banjul
+          storage:
+            type: PVC
+            pvc:
+              name: etcdbackup-pvc
+      expected: |
+        apiVersion: operator.openshift.io/v1alpha1
+        kind: EtcdBackupPolicy
+        spec:
+          schedule: "* 2 * * *"
+          timeZone: Africa/Banjul
+          storage:
+            type: PVC
+            pvc:
+              name: etcdbackup-pvc
+    - name: Should be able to create an EtcdBackup with a valid time zone - Etc/GMT-8
+      initial: |
+        apiVersion: operator.openshift.io/v1alpha1
+        kind: EtcdBackupPolicy
+        spec:
+          schedule: "* 2 * * *"
+          timeZone: Etc/GMT-8
+          storage:
+            type: PVC
+            pvc:
+              name: etcdbackup-pvc
+      expected: |
+        apiVersion: operator.openshift.io/v1alpha1
+        kind: EtcdBackupPolicy
+        spec:
+          schedule: "* 2 * * *"
+          timeZone: Etc/GMT-8
+          storage:
+            type: PVC
+            pvc:
+              name: etcdbackup-pvc
+    - name: Should be able to create aan EtcdBackup with a valid time zone - Etc/UTC
+      initial: |
+        apiVersion: operator.openshift.io/v1alpha1
+        kind: EtcdBackupPolicy
+        spec:
+          schedule: "* 2 * * *"
+          timeZone: Etc/UTC
+          storage:
+            type: PVC
+            pvc:
+              name: etcdbackup-pvc
+      expected: |
+        apiVersion: operator.openshift.io/v1alpha1
+        kind: EtcdBackupPolicy
+        spec:
+          schedule: "* 2 * * *"
+          timeZone: Etc/UTC
+          storage:
+            type: PVC
+            pvc:
+              name: etcdbackup-pvc
+    - name: Should be able to create an EtcdBackup with a valid time zone - America/Argentina/Catamarca
+      initial: |
+        apiVersion: operator.openshift.io/v1alpha1
+        kind: EtcdBackupPolicy
+        spec:
+          schedule: "* 2 * * *"
+          timeZone: America/Argentina/Catamarca
+          storage:
+            type: PVC
+            pvc:
+              name: etcdbackup-pvc
+      expected: |
+        apiVersion: operator.openshift.io/v1alpha1
+        kind: EtcdBackupPolicy
+        spec:
+          schedule: "* 2 * * *"
+          timeZone: America/Argentina/Catamarca
+          storage:
+            type: PVC
+            pvc:
+              name: etcdbackup-pvc
+    - name: Should fail to create an EtcdBackup with an invalid time zone - GMT2
+      initial: |
+        apiVersion: operator.openshift.io/v1alpha1
+        kind: EtcdBackupPolicy
+        spec:
+          schedule: "* 2 * * *"
+          timeZone: GMT2
+          storage:
+            type: PVC
+            pvc:
+              name: etcdbackup-pvc
+      expectedError: "spec.timeZone in body should match"
+    - name: Should fail to create an EtcdBackup with an invalid time zone - GMT+3
+      initial: |
+        apiVersion: operator.openshift.io/v1alpha1
+        kind: EtcdBackupPolicy
+        spec:
+          schedule: "* 2 * * *"
+          timeZone: GMT+3
+          storage:
+            type: PVC
+            pvc:
+              name: etcdbackup-pvc
+      expectedError: "spec.timeZone in body should match"
+

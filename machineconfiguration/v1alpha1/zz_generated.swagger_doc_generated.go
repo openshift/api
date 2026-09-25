@@ -43,9 +43,8 @@ func (BGPVIPConfigSpec) SwaggerDoc() map[string]string {
 }
 
 var map_BGPVIPConfigStatus = map[string]string{
-	"":                   "BGPVIPConfigStatus reports the consumers' progress applying the spec.",
-	"conditions":         "conditions reports the state of processing the configuration; when set, between 1 and 8 entries. Known condition types are \"Rendered\" (the machine-config-operator has rendered the per-node peer configuration) and \"SessionsConfigured\" (the cluster-network-operator has rendered the FRR session configuration for application). SessionsConfigured does not assert that the generated FRRConfiguration was accepted by the frr-k8s admission webhook or applied on the nodes.",
-	"observedGeneration": "observedGeneration is the generation most recently processed by the machine-config-operator, at least 1 when set. The cluster-network-operator's progress is reported by the observedGeneration of the \"SessionsConfigured\" condition instead; it does not write this field.",
+	"":           "BGPVIPConfigStatus reports the consumers' progress applying the spec.",
+	"conditions": "conditions reports the state of processing the configuration; when set, between 1 and 8 entries. Known condition types are \"Rendered\" (the machine-config-operator has rendered the per-node peer configuration) and \"SessionsConfigured\" (the cluster-network-operator has rendered the FRR session configuration for application). SessionsConfigured does not assert that the generated FRRConfiguration was accepted by the frr-k8s admission webhook or applied on the nodes. Each condition's observedGeneration reports the generation of the spec most recently processed by the operator that writes it.",
 }
 
 func (BGPVIPConfigStatus) SwaggerDoc() map[string]string {

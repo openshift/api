@@ -812,17 +812,18 @@ tests:
         - peerAddress: 192.168.111.1
           peerASN: 64513
       status:
-        observedGeneration: 1
         conditions:
         - type: Rendered
           status: "True"
           reason: RenderComplete
           message: per-node peer configuration rendered
+          observedGeneration: 1
           lastTransitionTime: "2026-01-01T00:00:00Z"
         - type: SessionsConfigured
           status: "True"
           reason: SessionsRendered
           message: FRR session configuration rendered
+          observedGeneration: 1
           lastTransitionTime: "2026-01-01T00:00:00Z"
     expected: |
       apiVersion: machineconfiguration.openshift.io/v1alpha1
@@ -835,15 +836,16 @@ tests:
         - peerAddress: 192.168.111.1
           peerASN: 64513
       status:
-        observedGeneration: 1
         conditions:
         - type: Rendered
           status: "True"
           reason: RenderComplete
           message: per-node peer configuration rendered
+          observedGeneration: 1
           lastTransitionTime: "2026-01-01T00:00:00Z"
         - type: SessionsConfigured
           status: "True"
           reason: SessionsRendered
           message: FRR session configuration rendered
+          observedGeneration: 1
           lastTransitionTime: "2026-01-01T00:00:00Z"

@@ -400,7 +400,9 @@ spec:
                   (the cluster-network-operator has rendered the FRR session
                   configuration for application). SessionsConfigured does not assert
                   that the generated FRRConfiguration was accepted by the frr-k8s
-                  admission webhook or applied on the nodes.
+                  admission webhook or applied on the nodes. Each condition's
+                  observedGeneration reports the generation of the spec most recently
+                  processed by the operator that writes it.
                 items:
                   description: Condition contains details for one aspect of the current
                     state of this API Resource.
@@ -461,16 +463,6 @@ spec:
                 x-kubernetes-list-map-keys:
                 - type
                 x-kubernetes-list-type: map
-              observedGeneration:
-                description: |-
-                  observedGeneration is the generation most recently processed by the
-                  machine-config-operator, at least 1 when set. The
-                  cluster-network-operator's progress is reported by the
-                  observedGeneration of the "SessionsConfigured" condition instead; it
-                  does not write this field.
-                format: int64
-                minimum: 1
-                type: integer
             type: object
         required:
         - metadata

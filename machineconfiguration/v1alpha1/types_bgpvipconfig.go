@@ -250,22 +250,15 @@ type BGPVIPConfigStatus struct {
 	// (the cluster-network-operator has rendered the FRR session
 	// configuration for application). SessionsConfigured does not assert
 	// that the generated FRRConfiguration was accepted by the frr-k8s
-	// admission webhook or applied on the nodes.
+	// admission webhook or applied on the nodes. Each condition's
+	// observedGeneration reports the generation of the spec most recently
+	// processed by the operator that writes it.
 	// +listType=map
 	// +listMapKey=type
 	// +kubebuilder:validation:MinItems=1
 	// +kubebuilder:validation:MaxItems=8
 	// +optional
 	Conditions []metav1.Condition `json:"conditions,omitempty"`
-
-	// observedGeneration is the generation most recently processed by the
-	// machine-config-operator, at least 1 when set. The
-	// cluster-network-operator's progress is reported by the
-	// observedGeneration of the "SessionsConfigured" condition instead; it
-	// does not write this field.
-	// +kubebuilder:validation:Minimum=1
-	// +optional
-	ObservedGeneration int64 `json:"observedGeneration,omitempty"`
 }
 
 const (

@@ -197,8 +197,7 @@ spec:
                     port:
                       description: |-
                         port is the TCP port of the BGP session, between 1 and 65535. When
-                        omitted, port 179 is used; this default is applied by the consumers
-                        and is subject to change over time.
+                        omitted, port 179 is used.
                       format: int32
                       maximum: 65535
                       minimum: 1
@@ -353,8 +352,7 @@ spec:
                           port:
                             description: |-
                               port is the TCP port of the BGP session, between 1 and 65535. When
-                              omitted, port 179 is used; this default is applied by the consumers
-                              and is subject to change over time.
+                              omitted, port 179 is used.
                             format: int32
                             maximum: 65535
                             minimum: 1

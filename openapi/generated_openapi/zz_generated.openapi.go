@@ -48863,7 +48863,7 @@ func schema_openshift_api_machineconfiguration_v1alpha1_BGPVIPPeer(ref common.Re
 					},
 					"port": {
 						SchemaProps: spec.SchemaProps{
-							Description: "port is the TCP port of the BGP session, between 1 and 65535. When omitted, port 179 is used; this default is applied by the consumers and is subject to change over time.",
+							Description: "port is the TCP port of the BGP session, between 1 and 65535. When omitted, port 179 is used.",
 							Type:        []string{"integer"},
 							Format:      "int32",
 						},

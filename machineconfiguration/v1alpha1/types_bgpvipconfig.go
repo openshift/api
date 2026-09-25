@@ -196,8 +196,7 @@ type BGPVIPPeer struct {
 	PasswordSecret BGPVIPPasswordSecret `json:"passwordSecret,omitempty,omitzero"`
 
 	// port is the TCP port of the BGP session, between 1 and 65535. When
-	// omitted, port 179 is used; this default is applied by the consumers
-	// and is subject to change over time.
+	// omitted, port 179 is used.
 	// +kubebuilder:validation:Minimum=1
 	// +kubebuilder:validation:Maximum=65535
 	// +optional

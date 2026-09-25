@@ -28230,7 +28230,7 @@
           "type": "string"
         },
         "port": {
-          "description": "port is the TCP port of the BGP session, between 1 and 65535. When omitted, port 179 is used; this default is applied by the consumers and is subject to change over time.",
+          "description": "port is the TCP port of the BGP session, between 1 and 65535. When omitted, port 179 is used.",
           "type": "integer",
           "format": "int32"
         }

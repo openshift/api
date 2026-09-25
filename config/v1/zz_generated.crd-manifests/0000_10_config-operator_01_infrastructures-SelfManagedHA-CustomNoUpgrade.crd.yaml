@@ -2848,10 +2848,117 @@ spec:
                   topologyTransitionStatus reports available topology transitions and current progress, if any.
                   It is omitted until the topology controller evaluates transitions.
                 properties:
-                  availableTransitions:
+                  conditions:
                     description: |-
-                      availableTransitions represents the transitions that are currently valid for this cluster.
-                      An empty list means that no transitions are currently available.
+                      conditions reports whether supported transitions have been evaluated.
+                      TopologyTransitionsEvaluated is Unknown before evaluation, True when evaluation
+                      succeeds (even if no transitions are supported), and False when evaluation fails.
+                      An absent condition means evaluation has not completed.
+                      At most one condition is present.
+                    items:
+                      description: Condition contains details for one aspect of the
+                        current state of this API Resource.
+                      properties:
+                        lastTransitionTime:
+                          description: |-
+                            lastTransitionTime is the last time the condition transitioned from one status to another.
+                            This should be when the underlying condition changed.  If that is not known, then using the time when the API field changed is acceptable.
+                          format: date-time
+                          type: string
+                        message:
+                          description: |-
+                            message is a human readable message indicating details about the transition.
+                            This may be an empty string.
+                          maxLength: 32768
+                          type: string
+                        observedGeneration:
+                          description: |-
+                            observedGeneration represents the .metadata.generation that the condition was set based upon.
+                            For instance, if .metadata.generation is currently 12, but the .status.conditions[x].observedGeneration is 9, the condition is out of date
+                            with respect to the current state of the instance.
+                          format: int64
+                          minimum: 0
+                          type: integer
+                        reason:
+                          description: |-
+                            reason contains a programmatic identifier indicating the reason for the condition's last transition.
+                            Producers of specific condition types may define expected values and meanings for this field,
+                            and whether the values are considered a guaranteed API.
+                            The value should be a CamelCase string.
+                            This field may not be empty.
+                          maxLength: 1024
+                          minLength: 1
+                          pattern: ^[A-Za-z]([A-Za-z0-9_,:]*[A-Za-z0-9_])?$
+                          type: string
+                        status:
+                          description: status of the condition, one of True, False,
+                            Unknown.
+                          enum:
+                          - "True"
+                          - "False"
+                          - Unknown
+                          type: string
+                        type:
+                          description: type of condition in CamelCase or in foo.example.com/CamelCase.
+                          maxLength: 316
+                          pattern: ^([a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*/)?(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])$
+                          type: string
+                      required:
+                      - lastTransitionTime
+                      - message
+                      - reason
+                      - status
+                      - type
+                      type: object
+                    maxItems: 1
+                    type: array
+                    x-kubernetes-list-map-keys:
+                    - type
+                    x-kubernetes-list-type: map
+                  currentTransition:
+                    description: currentTransition is omitted until a topology transition
+                      starts.
+                    properties:
+                      completionTime:
+                        description: completionTime is when the transition was fully
+                          applied. It is omitted while a transition is being applied.
+                        format: date-time
+                        type: string
+                      message:
+                        description: |-
+                          message is human-readable information about the reason for the current state.
+                          It must be between 1 and 2048 characters long.
+                        maxLength: 2048
+                        minLength: 1
+                        type: string
+                      reason:
+                        description: |-
+                          reason indicates why current state is as reported.
+                          It must be between 1 and 128 characters long.
+                        maxLength: 128
+                        minLength: 1
+                        type: string
+                      startedTime:
+                        description: startedTime is the time at which the transition
+                          was started. When omitted, the start time is not available.
+                        format: date-time
+                        type: string
+                      state:
+                        description: |-
+                          state indicates the current state of a triggered transition.
+                          It must be between 1 and 128 characters long.
+                        maxLength: 128
+                        minLength: 1
+                        type: string
+                    required:
+                    - message
+                    - reason
+                    - state
+                    type: object
+                  supportedTransitions:
+                    description: |-
+                      supportedTransitions represents the transitions that are valid for this cluster.
+                      An empty list means that no transitions are currently supported from the current topology.
                       At most one transition is supported currently (SNO to HA Compact)
                     items:
                       properties:
@@ -2948,115 +3055,8 @@ spec:
                     maxItems: 1
                     type: array
                     x-kubernetes-list-type: atomic
-                  conditions:
-                    description: |-
-                      conditions reports whether available transitions have been evaluated.
-                      TopologyTransitionsEvaluated is Unknown before evaluation, True when evaluation
-                      succeeds (even if no transitions are available), and False when evaluation fails.
-                      An absent condition means evaluation has not completed.
-                      At most one condition is present.
-                    items:
-                      description: Condition contains details for one aspect of the
-                        current state of this API Resource.
-                      properties:
-                        lastTransitionTime:
-                          description: |-
-                            lastTransitionTime is the last time the condition transitioned from one status to another.
-                            This should be when the underlying condition changed.  If that is not known, then using the time when the API field changed is acceptable.
-                          format: date-time
-                          type: string
-                        message:
-                          description: |-
-                            message is a human readable message indicating details about the transition.
-                            This may be an empty string.
-                          maxLength: 32768
-                          type: string
-                        observedGeneration:
-                          description: |-
-                            observedGeneration represents the .metadata.generation that the condition was set based upon.
-                            For instance, if .metadata.generation is currently 12, but the .status.conditions[x].observedGeneration is 9, the condition is out of date
-                            with respect to the current state of the instance.
-                          format: int64
-                          minimum: 0
-                          type: integer
-                        reason:
-                          description: |-
-                            reason contains a programmatic identifier indicating the reason for the condition's last transition.
-                            Producers of specific condition types may define expected values and meanings for this field,
-                            and whether the values are considered a guaranteed API.
-                            The value should be a CamelCase string.
-                            This field may not be empty.
-                          maxLength: 1024
-                          minLength: 1
-                          pattern: ^[A-Za-z]([A-Za-z0-9_,:]*[A-Za-z0-9_])?$
-                          type: string
-                        status:
-                          description: status of the condition, one of True, False,
-                            Unknown.
-                          enum:
-                          - "True"
-                          - "False"
-                          - Unknown
-                          type: string
-                        type:
-                          description: type of condition in CamelCase or in foo.example.com/CamelCase.
-                          maxLength: 316
-                          pattern: ^([a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*/)?(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])$
-                          type: string
-                      required:
-                      - lastTransitionTime
-                      - message
-                      - reason
-                      - status
-                      - type
-                      type: object
-                    maxItems: 1
-                    type: array
-                    x-kubernetes-list-map-keys:
-                    - type
-                    x-kubernetes-list-type: map
-                  currentTransition:
-                    description: currentTransition is omitted until a topology transition
-                      starts.
-                    properties:
-                      completionTime:
-                        description: completionTime is when the transition was fully
-                          applied. It is omitted while a transition is being applied.
-                        format: date-time
-                        type: string
-                      message:
-                        description: |-
-                          message is human-readable information about the reason for the current status.
-                          It must be between 1 and 2048 characters long.
-                        maxLength: 2048
-                        minLength: 1
-                        type: string
-                      reason:
-                        description: |-
-                          reason indicates why the Status is in the current state.
-                          It must be between 1 and 128 characters long.
-                        maxLength: 128
-                        minLength: 1
-                        type: string
-                      startedTime:
-                        description: startedTime is the time at which the transition
-                          was started. When omitted, the start time is not available.
-                        format: date-time
-                        type: string
-                      status:
-                        description: |-
-                          status indicates the current state of a triggered transition.
-                          It must be between 1 and 128 characters long.
-                        maxLength: 128
-                        minLength: 1
-                        type: string
-                    required:
-                    - message
-                    - reason
-                    - status
-                    type: object
                 required:
-                - availableTransitions
+                - supportedTransitions
                 type: object
             type: object
         required:
@@ -3073,7 +3073,7 @@ spec:
             == ''HighlyAvailable'')'
         - message: transition sources must match the current status topology
           rule: '!has(self.status) || !has(self.status.topologyTransitionStatus) ||
-            self.status.topologyTransitionStatus.availableTransitions.all(t, has(self.status.controlPlaneTopology)
+            self.status.topologyTransitionStatus.supportedTransitions.all(t, has(self.status.controlPlaneTopology)
             && has(self.status.infrastructureTopology) && t.source.controlPlaneTopology
             == self.status.controlPlaneTopology && t.source.infrastructureTopology
             == self.status.infrastructureTopology)'

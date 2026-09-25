@@ -6921,8 +6921,8 @@ func (in *TopologyTransitionStatus) DeepCopyInto(out *TopologyTransitionStatus) 
 			(*in)[i].DeepCopyInto(&(*out)[i])
 		}
 	}
-	if in.AvailableTransitions != nil {
-		in, out := &in.AvailableTransitions, &out.AvailableTransitions
+	if in.SupportedTransitions != nil {
+		in, out := &in.SupportedTransitions, &out.SupportedTransitions
 		*out = make([]TopologyTransition, len(*in))
 		copy(*out, *in)
 	}

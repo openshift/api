@@ -22306,23 +22306,23 @@ func schema_openshift_api_config_v1_TopologyTransitionProgress(ref common.Refere
 				Description: "TopologyTransitionProgress describes a topology transition that has started.",
 				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
-					"status": {
+					"state": {
 						SchemaProps: spec.SchemaProps{
-							Description: "status indicates the current state of a triggered transition. It must be between 1 and 128 characters long.",
+							Description: "state indicates the current state of a triggered transition. It must be between 1 and 128 characters long.",
 							Type:        []string{"string"},
 							Format:      "",
 						},
 					},
 					"reason": {
 						SchemaProps: spec.SchemaProps{
-							Description: "reason indicates why the Status is in the current state. It must be between 1 and 128 characters long.",
+							Description: "reason indicates why current state is as reported. It must be between 1 and 128 characters long.",
 							Type:        []string{"string"},
 							Format:      "",
 						},
 					},
 					"message": {
 						SchemaProps: spec.SchemaProps{
-							Description: "message is human-readable information about the reason for the current status. It must be between 1 and 2048 characters long.",
+							Description: "message is human-readable information about the reason for the current state. It must be between 1 and 2048 characters long.",
 							Type:        []string{"string"},
 							Format:      "",
 						},
@@ -22340,7 +22340,7 @@ func schema_openshift_api_config_v1_TopologyTransitionProgress(ref common.Refere
 						},
 					},
 				},
-				Required: []string{"status", "reason", "message"},
+				Required: []string{"state", "reason", "message"},
 			},
 		},
 		Dependencies: []string{
@@ -22364,7 +22364,7 @@ func schema_openshift_api_config_v1_TopologyTransitionStatus(ref common.Referenc
 							},
 						},
 						SchemaProps: spec.SchemaProps{
-							Description: "conditions reports whether available transitions have been evaluated. TopologyTransitionsEvaluated is Unknown before evaluation, True when evaluation succeeds (even if no transitions are available), and False when evaluation fails. An absent condition means evaluation has not completed. At most one condition is present.",
+							Description: "conditions reports whether supported transitions have been evaluated. TopologyTransitionsEvaluated is Unknown before evaluation, True when evaluation succeeds (even if no transitions are supported), and False when evaluation fails. An absent condition means evaluation has not completed. At most one condition is present.",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -22376,14 +22376,14 @@ func schema_openshift_api_config_v1_TopologyTransitionStatus(ref common.Referenc
 							},
 						},
 					},
-					"availableTransitions": {
+					"supportedTransitions": {
 						VendorExtensible: spec.VendorExtensible{
 							Extensions: spec.Extensions{
 								"x-kubernetes-list-type": "atomic",
 							},
 						},
 						SchemaProps: spec.SchemaProps{
-							Description: "availableTransitions represents the transitions that are currently valid for this cluster. An empty list means that no transitions are currently available. At most one transition is supported currently (SNO to HA Compact)",
+							Description: "supportedTransitions represents the transitions that are valid for this cluster. An empty list means that no transitions are currently supported from the current topology. At most one transition is supported currently (SNO to HA Compact)",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -22402,7 +22402,7 @@ func schema_openshift_api_config_v1_TopologyTransitionStatus(ref common.Referenc
 						},
 					},
 				},
-				Required: []string{"availableTransitions"},
+				Required: []string{"supportedTransitions"},
 			},
 		},
 		Dependencies: []string{

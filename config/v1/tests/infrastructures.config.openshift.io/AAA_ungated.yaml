@@ -649,7 +649,7 @@ tests:
         status:
           controlPlaneTopology: SingleReplica
           topologyTransitionStatus:
-            availableTransitions: []
+            supportedTransitions: []
       expected: |
         apiVersion: config.openshift.io/v1
         kind: Infrastructure

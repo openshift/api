@@ -214,7 +214,7 @@
                         "name": "DualReplica"
                     },
                     {
-                        "name": "DyanmicServiceEndpointIBMCloud"
+                        "name": "DynamicServiceEndpointIBMCloud"
                     },
                     {
                         "name": "EVPN"

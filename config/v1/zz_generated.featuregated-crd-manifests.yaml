@@ -393,7 +393,7 @@ infrastructures.config.openshift.io:
   - AzureDualStackInstall
   - BGPBasedVIPManagement
   - DualReplica
-  - DyanmicServiceEndpointIBMCloud
+  - DynamicServiceEndpointIBMCloud
   - GCPSovereignCloudInstall
   - MutableTopology
   - NutanixMultiSubnets

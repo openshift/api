@@ -23427,7 +23427,7 @@ func schema_openshift_api_config_v1alpha1_AdditionalAlertmanagerConfig(ref commo
 							},
 						},
 						SchemaProps: spec.SchemaProps{
-							Description: "staticConfigs is a list of statically configured Alertmanager endpoints in the form of `<host>:<port>`. Each entry must be a valid hostname, IPv4 address, or IPv6 address (in brackets) followed by a colon and a valid port number (1-65535). Examples: \"alertmanager.example.com:9093\", \"192.168.1.100:9093\", \"[::1]:9093\" At least one endpoint must be specified (minimum 1, maximum 10 endpoints). Each entry must be unique and non-empty (empty string is invalid).",
+							Description: "staticConfigs is a list of statically configured Alertmanager endpoints. Each entry must be a valid hostname, IPv4 address, or IPv6 address (in brackets), optionally followed by a colon and a port number (1-65535). When the port is omitted, Prometheus uses the default port for the configured scheme (80 for HTTP, 443 for HTTPS). Examples: \"alertmanager.example.com\", \"alertmanager.example.com:9093\", \"192.168.1.100:9093\", \"[::1]:9093\" At least one endpoint must be specified (minimum 1, maximum 10 endpoints). Each entry must be unique and non-empty (empty string is invalid).",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{

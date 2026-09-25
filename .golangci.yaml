@@ -125,7 +125,7 @@ linters:
         - kubeapilinter
         # Empty lists are meaningful: no available transitions, or no completed evaluation condition yet.
         path: config/v1/types_infrastructure_transitions.go
-        text: 'minlength: field TopologyTransitionStatus\.(AvailableTransitions|Conditions) must have a minimum items'
+        text: 'minlength: field TopologyTransitionStatus\.(SupportedTransitions|Conditions) must have a minimum items'
       - linters:
         - kubeapilinter
         # Keep the pointer so nil means no topology transition has started; omitempty omits nil.
@@ -135,7 +135,7 @@ linters:
         - kubeapilinter
         # Keep an evaluated empty list serialized as [] rather than omitting this required field.
         path: config/v1/types_infrastructure_transitions.go
-        text: 'requiredfields: field TopologyTransitionStatus\.AvailableTransitions should have the omitempty tag'
+        text: 'requiredfields: field TopologyTransitionStatus\.SupportedTransitions should have the omitempty tag'
       - linters:
         - kubeapilinter
         path: features|payload-command/

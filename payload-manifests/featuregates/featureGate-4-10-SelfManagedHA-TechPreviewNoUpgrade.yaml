@@ -38,7 +38,13 @@
                         "name": "ConfidentialCluster"
                     },
                     {
+                        "name": "ControllerManagerConfig"
+                    },
+                    {
                         "name": "DRADeviceTaintRules"
+                    },
+                    {
+                        "name": "DisableForceDetachOnTimeout"
                     },
                     {
                         "name": "EventedPLEG"

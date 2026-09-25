@@ -1074,4 +1074,20 @@ var (
 					productScope(kubernetes).
 					enhancementPR("https://github.com/kubernetes/enhancements/issues/5055").
 					mustRegister()
+
+	FeatureGateControllerManagerConfig = newFeatureGate("ControllerManagerConfig").
+						reportProblemsToJiraComponent("kube-controller-manager").
+						contactPerson("jdobson").
+						productScope(ocpSpecific).
+						enhancementPR("https://github.com/openshift/enhancements/pull/2095").
+						enable(inDevPreviewNoUpgrade()).
+						mustRegister()
+
+	FeatureGateDisableForceDetachOnTimeout = newFeatureGate("DisableForceDetachOnTimeout").
+						reportProblemsToJiraComponent("Storage / Kubernetes").
+						contactPerson("jdobson").
+						productScope(ocpSpecific).
+						enhancementPR("https://github.com/openshift/enhancements/pull/2095").
+						enable(inDevPreviewNoUpgrade()).
+						mustRegister()
 )

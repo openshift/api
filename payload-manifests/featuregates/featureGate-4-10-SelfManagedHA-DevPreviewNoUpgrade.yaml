@@ -160,7 +160,13 @@
                         "name": "ConfigurablePKI"
                     },
                     {
+                        "name": "ControllerManagerConfig"
+                    },
+                    {
                         "name": "DNSNameResolver"
+                    },
+                    {
+                        "name": "DisableForceDetachOnTimeout"
                     },
                     {
                         "name": "DualReplica"

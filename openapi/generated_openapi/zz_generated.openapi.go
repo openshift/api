@@ -16347,6 +16347,13 @@ func schema_openshift_api_config_v1_InfrastructureSpec(ref common.ReferenceCallb
 							Format:      "",
 						},
 					},
+					"infrastructureTopology": {
+						SchemaProps: spec.SchemaProps{
+							Description: "infrastructureTopology expresses the desired topology for infrastructure services that do not run on control plane nodes, indicating how infrastructure workloads are distributed across nodes.\n\nWhen omitted, no topology transition override has been expressed. When the MutableTopology feature gate is enabled, the cluster-config-operator populates this field to match status.infrastructureTopology if it is omitted. Once set, the field represents the desired topology state.\n\nWhen the value differs from status.infrastructureTopology, the topology transition controller in cluster-config-operator evaluates whether the transition is allowed based on the available transitions list. Transition eligibility is enforced by the cluster-config-operator, not by API-level validation rules.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
 				},
 			},
 		},

@@ -499,8 +499,8 @@ spec:
                                   "Enabled" (reason "ScriptConfigured"), and "Operational" (reason "ScriptPresent") are
                                   required, so the array must contain at least 3 items. The remaining condition types do not
                                   apply to an alert agent and may be omitted.
-                              The array must contain at least 3 items in all cases; the additional Kubelet/Etcd requirements
-                              are enforced by name-gated validation rules on this type.
+                              The array must contain at least 3 items in all cases; the exact set of required conditions for
+                              each resource name is enforced by name-gated validation rules on this type.
                             items:
                               description: Condition contains details for one aspect
                                 of the current state of this API Resource.
@@ -563,16 +563,6 @@ spec:
                             x-kubernetes-list-map-keys:
                             - type
                             x-kubernetes-list-type: map
-                            x-kubernetes-validations:
-                            - message: conditions must contain a condition of type
-                                Healthy
-                              rule: self.exists(c, c.type == 'Healthy')
-                            - message: conditions must contain a condition of type
-                                Enabled
-                              rule: self.exists(c, c.type == 'Enabled')
-                            - message: conditions must contain a condition of type
-                                Operational
-                              rule: self.exists(c, c.type == 'Operational')
                           name:
                             description: |-
                               name is the name of the resource.
@@ -593,10 +583,16 @@ spec:
                         - name
                         type: object
                         x-kubernetes-validations:
-                        - message: conditions must contain InService, Managed, Active,
-                            Started, and Schedulable for Kubelet and Etcd resources
+                        - message: conditions must contain Healthy, InService, Managed,
+                            Enabled, Operational, Active, Started, and Schedulable
+                            for Kubelet and Etcd resources
                           rule: '!(self.name == ''Kubelet'' || self.name == ''Etcd'')
-                            || [''InService'',''Managed'',''Active'',''Started'',''Schedulable''].all(t,
+                            || [''Healthy'',''InService'',''Managed'',''Enabled'',''Operational'',''Active'',''Started'',''Schedulable''].all(t,
+                            self.conditions.exists(c, c.type == t))'
+                        - message: conditions must contain Healthy, Enabled, and Operational
+                            for TaintAlertAgent and UntaintAlertAgent resources
+                          rule: '!(self.name == ''TaintAlertAgent'' || self.name ==
+                            ''UntaintAlertAgent'') || [''Healthy'',''Enabled'',''Operational''].all(t,
                             self.conditions.exists(c, c.type == t))'
                       maxItems: 8
                       minItems: 2

@@ -2640,7 +2640,7 @@ tests:
                       lastTransitionTime: "2024-01-01T00:00:00Z"
                       reason: Schedulable
                       message: "Schedulable"
-      expectedStatusError: "conditions must contain a condition of type Operational"
+      expectedStatusError: "conditions must contain Healthy, Enabled, and Operational for TaintAlertAgent and UntaintAlertAgent resources"
     - name: Should reject a Kubelet resource missing the conditions required for pacemaker-managed resources
       initial: |
         apiVersion: etcd.openshift.io/v1
@@ -2825,4 +2825,4 @@ tests:
                       lastTransitionTime: "2024-01-01T00:00:00Z"
                       reason: Schedulable
                       message: "Schedulable"
-      expectedStatusError: "conditions must contain InService, Managed, Active, Started, and Schedulable for Kubelet and Etcd resources"
+      expectedStatusError: "conditions must contain Healthy, InService, Managed, Enabled, Operational, Active, Started, and Schedulable for Kubelet and Etcd resources"

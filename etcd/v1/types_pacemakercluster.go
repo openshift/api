@@ -745,7 +745,8 @@ type PacemakerClusterFencingAgentStatus struct {
 //
 // Fencing agents are tracked separately in the fencingAgents field because they are mapped to
 // their target node (the node they can fence), not the node where monitoring operations are scheduled.
-// +kubebuilder:validation:XValidation:rule="!(self.name == 'Kubelet' || self.name == 'Etcd') || ['InService','Managed','Active','Started','Schedulable'].all(t, self.conditions.exists(c, c.type == t))",message="conditions must contain InService, Managed, Active, Started, and Schedulable for Kubelet and Etcd resources"
+// +kubebuilder:validation:XValidation:rule="!(self.name == 'Kubelet' || self.name == 'Etcd') || ['Healthy','InService','Managed','Enabled','Operational','Active','Started','Schedulable'].all(t, self.conditions.exists(c, c.type == t))",message="conditions must contain Healthy, InService, Managed, Enabled, Operational, Active, Started, and Schedulable for Kubelet and Etcd resources"
+// +kubebuilder:validation:XValidation:rule="!(self.name == 'TaintAlertAgent' || self.name == 'UntaintAlertAgent') || ['Healthy','Enabled','Operational'].all(t, self.conditions.exists(c, c.type == t))",message="conditions must contain Healthy, Enabled, and Operational for TaintAlertAgent and UntaintAlertAgent resources"
 type PacemakerClusterResourceStatus struct {
 	// conditions represent the observations of the resource's current state.
 	// Known condition types are: "Healthy", "InService", "Managed", "Enabled", "Operational",
@@ -765,15 +766,12 @@ type PacemakerClusterResourceStatus struct {
 	//     "Enabled" (reason "ScriptConfigured"), and "Operational" (reason "ScriptPresent") are
 	//     required, so the array must contain at least 3 items. The remaining condition types do not
 	//     apply to an alert agent and may be omitted.
-	// The array must contain at least 3 items in all cases; the additional Kubelet/Etcd requirements
-	// are enforced by name-gated validation rules on this type.
+	// The array must contain at least 3 items in all cases; the exact set of required conditions for
+	// each resource name is enforced by name-gated validation rules on this type.
 	// +listType=map
 	// +listMapKey=type
 	// +kubebuilder:validation:MinItems=3
 	// +kubebuilder:validation:MaxItems=16
-	// +kubebuilder:validation:XValidation:rule="self.exists(c, c.type == 'Healthy')",message="conditions must contain a condition of type Healthy"
-	// +kubebuilder:validation:XValidation:rule="self.exists(c, c.type == 'Enabled')",message="conditions must contain a condition of type Enabled"
-	// +kubebuilder:validation:XValidation:rule="self.exists(c, c.type == 'Operational')",message="conditions must contain a condition of type Operational"
 	// +required
 	Conditions []metav1.Condition `json:"conditions,omitempty"`
 

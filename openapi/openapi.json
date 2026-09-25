@@ -16935,6 +16935,28 @@
           ],
           "x-kubernetes-list-type": "map"
         },
+        "failCount": {
+          "description": "failCount is the current failure count Pacemaker records for this resource on this node, as reported by the CIB. Pacemaker increments this count each time an operation for this resource fails, and resets it to zero when a `pcs resource cleanup` is performed. The value must be zero or greater. This field is optional and is omitted when the status collector has not yet observed a fail count for this resource, for example on a freshly bootstrapped cluster or for a resource that has never failed.",
+          "type": "integer",
+          "format": "int32"
+        },
+        "lastFailureTime": {
+          "description": "lastFailureTime is the timestamp of the most recent failure observed for this resource on this node, as reported by the CIB. Semantically distinct from lastStopTime — a stop can be deliberate (planned migration, admin action), while a failure is always an error condition. This field is optional and is omitted when no failure has been observed for this resource on this node.",
+          "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Time"
+        },
+        "lastStartTime": {
+          "description": "lastStartTime is the timestamp of the most recent start operation observed for this resource on this node, as reported by the CIB. This field is optional and is omitted when no start operation has been observed for this resource on this node, or when Pacemaker has pruned the operation history entry.",
+          "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Time"
+        },
+        "lastStopTime": {
+          "description": "lastStopTime is the timestamp of the most recent stop operation observed for this resource on this node, as reported by the CIB. This field is optional and is omitted when no stop operation has been observed for this resource on this node, or when Pacemaker has pruned the operation history entry.",
+          "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Time"
+        },
+        "migrationThreshold": {
+          "description": "migrationThreshold is the configured number of failures after which Pacemaker will no longer attempt to run this resource on this node, as reported by the CIB. Without this value, failCount alone is uninterpretable — whether failCount 3 is alarming depends on whether the threshold is 5 or 1000000 (Pacemaker's default INFINITY). The value must be zero or greater. This field is optional and is omitted when the status collector has not yet observed a migration threshold for this resource.",
+          "type": "integer",
+          "format": "int32"
+        },
         "name": {
           "description": "name is the name of the pacemaker resource. Valid values are \"Kubelet\" and \"Etcd\". The Kubelet resource is a prerequisite for etcd in Two Node OpenShift with Fencing deployments. The Etcd resource may temporarily transition to stopped during pacemaker quorum-recovery operations. Fencing agents are tracked separately in the node's fencingAgents field.\n\nPossible enum values:\n - `\"Etcd\"` is the etcd pacemaker resource. The etcd resource may temporarily transition to stopped during pacemaker quorum-recovery operations.\n - `\"Kubelet\"` is the kubelet pacemaker resource. The kubelet resource is a prerequisite for etcd in Two Node OpenShift with Fencing deployments.",
           "type": "string",
@@ -17178,6 +17200,28 @@
             "type"
           ],
           "x-kubernetes-list-type": "map"
+        },
+        "failCount": {
+          "description": "failCount is the current failure count Pacemaker records for this resource on this node, as reported by the CIB. Pacemaker increments this count each time an operation for this resource fails, and resets it to zero when a `pcs resource cleanup` is performed. The value must be zero or greater. This field is optional and is omitted when the status collector has not yet observed a fail count for this resource, for example on a freshly bootstrapped cluster or for a resource that has never failed.",
+          "type": "integer",
+          "format": "int32"
+        },
+        "lastFailureTime": {
+          "description": "lastFailureTime is the timestamp of the most recent failure observed for this resource on this node, as reported by the CIB. Semantically distinct from lastStopTime — a stop can be deliberate (planned migration, admin action), while a failure is always an error condition. This field is optional and is omitted when no failure has been observed for this resource on this node.",
+          "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Time"
+        },
+        "lastStartTime": {
+          "description": "lastStartTime is the timestamp of the most recent start operation observed for this resource on this node, as reported by the CIB. This field is optional and is omitted when no start operation has been observed for this resource on this node, or when Pacemaker has pruned the operation history entry.",
+          "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Time"
+        },
+        "lastStopTime": {
+          "description": "lastStopTime is the timestamp of the most recent stop operation observed for this resource on this node, as reported by the CIB. This field is optional and is omitted when no stop operation has been observed for this resource on this node, or when Pacemaker has pruned the operation history entry.",
+          "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Time"
+        },
+        "migrationThreshold": {
+          "description": "migrationThreshold is the configured number of failures after which Pacemaker will no longer attempt to run this resource on this node, as reported by the CIB. Without this value, failCount alone is uninterpretable — whether failCount 3 is alarming depends on whether the threshold is 5 or 1000000 (Pacemaker's default INFINITY). The value must be zero or greater. This field is optional and is omitted when the status collector has not yet observed a migration threshold for this resource.",
+          "type": "integer",
+          "format": "int32"
         },
         "name": {
           "description": "name is the name of the pacemaker resource. Valid values are \"Kubelet\" and \"Etcd\". The Kubelet resource is a prerequisite for etcd in Two Node OpenShift with Fencing deployments. The Etcd resource may temporarily transition to stopped during pacemaker quorum-recovery operations. Fencing agents are tracked separately in the node's fencingAgents field.\n\nPossible enum values:\n - `\"Etcd\"` is the etcd pacemaker resource. The etcd resource may temporarily transition to stopped during pacemaker quorum-recovery operations.\n - `\"Kubelet\"` is the kubelet pacemaker resource. The kubelet resource is a prerequisite for etcd in Two Node OpenShift with Fencing deployments.",

@@ -145,6 +145,28 @@ func (in *PacemakerClusterResourceStatus) DeepCopyInto(out *PacemakerClusterReso
 			(*in)[i].DeepCopyInto(&(*out)[i])
 		}
 	}
+	if in.FailCount != nil {
+		in, out := &in.FailCount, &out.FailCount
+		*out = new(int32)
+		**out = **in
+	}
+	if in.LastStopTime != nil {
+		in, out := &in.LastStopTime, &out.LastStopTime
+		*out = (*in).DeepCopy()
+	}
+	if in.LastStartTime != nil {
+		in, out := &in.LastStartTime, &out.LastStartTime
+		*out = (*in).DeepCopy()
+	}
+	if in.MigrationThreshold != nil {
+		in, out := &in.MigrationThreshold, &out.MigrationThreshold
+		*out = new(int32)
+		**out = **in
+	}
+	if in.LastFailureTime != nil {
+		in, out := &in.LastFailureTime, &out.LastFailureTime
+		*out = (*in).DeepCopy()
+	}
 	return
 }
 

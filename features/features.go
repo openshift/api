@@ -706,7 +706,7 @@ var (
 						enable(inTechPreviewNoUpgrade(), inDevPreviewNoUpgrade()).
 						mustRegister()
 
-	FeatureGateDyanmicServiceEndpointIBMCloud = newFeatureGate("DyanmicServiceEndpointIBMCloud").
+	FeatureGateDynamicServiceEndpointIBMCloud = newFeatureGate("DynamicServiceEndpointIBMCloud").
 							reportProblemsToJiraComponent("Cloud Compute / IBM Provider").
 							contactPerson("jared-hayes-dev").
 							productScope(ocpSpecific).

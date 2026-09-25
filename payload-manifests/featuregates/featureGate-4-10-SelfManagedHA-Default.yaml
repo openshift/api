@@ -117,7 +117,7 @@
                         "name": "DRADeviceTaintRules"
                     },
                     {
-                        "name": "DyanmicServiceEndpointIBMCloud"
+                        "name": "DynamicServiceEndpointIBMCloud"
                     },
                     {
                         "name": "EgressIPNodeSelector"

@@ -635,6 +635,29 @@ tests:
                 type: UserManaged
             type: BareMetal
       expectedStatusError: 'status.platformStatus.baremetal.loadBalancer.type: Invalid value: "string": type is immutable once set'
+    - name: Should prune topologyTransitionStatus when MutableTopology is disabled
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        spec: {}
+        status:
+          controlPlaneTopology: SingleReplica
+      updated: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        spec: {}
+        status:
+          controlPlaneTopology: SingleReplica
+          topologyTransitionStatus:
+            supportedTransitions: []
+      expected: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        spec: {}
+        status:
+          controlPlaneTopology: SingleReplica
+          infrastructureTopology: HighlyAvailable
+          cpuPartitioning: None
     - name: Should not allow changing the immutable OpenStack load balancer type field
       initial: |
         apiVersion: config.openshift.io/v1

@@ -106,11 +106,6 @@ func (in ContainerResource) OpenAPIModelName() string {
 }
 
 // OpenAPIModelName returns the OpenAPI model name for this type.
-func (in CustomPKIPolicy) OpenAPIModelName() string {
-	return "com.github.openshift.api.config.v1alpha1.CustomPKIPolicy"
-}
-
-// OpenAPIModelName returns the OpenAPI model name for this type.
 func (in DefaultCertificateConfig) OpenAPIModelName() string {
 	return "com.github.openshift.api.config.v1alpha1.DefaultCertificateConfig"
 }

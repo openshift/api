@@ -14,6 +14,7 @@ const (
 	// Specifically, it aggregates the following conditions:
 	// - ClusterInServiceConditionType
 	// - ClusterNodeCountAsExpectedConditionType
+	// - ClusterFencingEnabledConditionType
 	// - NodeHealthyConditionType (for each node)
 	// When True, the cluster is healthy with reason "ClusterHealthy".
 	// When False, the cluster is unhealthy with reason "ClusterUnhealthy".
@@ -30,6 +31,16 @@ const (
 	// When True, the expected number of nodes are present with reason "AsExpected".
 	// When False, the node count is incorrect with reason "InsufficientNodes" or "ExcessiveNodes".
 	ClusterNodeCountAsExpectedConditionType = "NodeCountAsExpected"
+
+	// ClusterFencingEnabledConditionType tracks whether STONITH (fencing) is enabled in the cluster.
+	// Fencing is the mechanism that isolates failed nodes by powering them off via BMC. In Two Node
+	// OpenShift with Fencing, fencing is mandatory — without it, a network partition leaves both nodes
+	// running and data diverges. If someone runs `pcs property set stonith-enabled=false`, fencing is
+	// globally disabled and the cluster cannot recover from node failures.
+	// When True, fencing is enabled with reason "FencingEnabled". This is the normal operating state.
+	// When False, fencing is globally disabled with reason "FencingDisabled". This is a critical state.
+	// When Unknown, the fencing-enabled property has not yet been observed with reason "Pending".
+	ClusterFencingEnabledConditionType = "FencingEnabled"
 )
 
 // ClusterHealthy condition reasons
@@ -70,6 +81,23 @@ const (
 	// never happen during normal cluster operation. It is possible to enter this state with manual user intervention,
 	// but will also require user intervention to restore normal functionality.
 	ClusterNodeCountAsExpectedReasonExcessiveNodes = "ExcessiveNodes"
+)
+
+// ClusterFencingEnabled condition reasons
+const (
+	// ClusterFencingEnabledReasonEnabled means fencing (STONITH) is enabled in the cluster.
+	// This is the normal and expected operating state for Two Node OpenShift with Fencing.
+	ClusterFencingEnabledReasonEnabled = "FencingEnabled"
+
+	// ClusterFencingEnabledReasonDisabled means fencing (STONITH) is globally disabled in the cluster.
+	// Without fencing, the cluster cannot isolate failed nodes and etcd quorum recovery cannot happen.
+	// This is a critical state that should be investigated immediately.
+	ClusterFencingEnabledReasonDisabled = "FencingDisabled"
+
+	// ClusterFencingEnabledReasonPending means the fencing-enabled property has not yet been observed
+	// by the status collector. This is expected to be temporary, for example immediately after upgrade
+	// or before the first successful status collection.
+	ClusterFencingEnabledReasonPending = "Pending"
 )
 
 // Node-level condition types for PacemakerCluster.status.nodes[].conditions
@@ -462,6 +490,98 @@ const (
 	FencingMethodIPMI FencingMethod = "IPMI"
 )
 
+// PacemakerFenceEventAction represents the type of fencing action performed.
+// Values are lowercase per Pacemaker's fence-event XML schema (fence-event-2.15.rng).
+// +kubebuilder:validation:Enum=reboot;power-off;power-on
+// +enum
+type PacemakerFenceEventAction string
+
+const (
+	// PacemakerFenceEventActionReboot is a fence action that power-cycles the target node.
+	PacemakerFenceEventActionReboot PacemakerFenceEventAction = "reboot"
+
+	// PacemakerFenceEventActionPowerOff is a fence action that powers off the target node.
+	PacemakerFenceEventActionPowerOff PacemakerFenceEventAction = "power-off"
+
+	// PacemakerFenceEventActionPowerOn is a fence action that powers on the target node.
+	PacemakerFenceEventActionPowerOn PacemakerFenceEventAction = "power-on"
+)
+
+// PacemakerFenceEventStatus represents the outcome of a fencing operation.
+// Values are lowercase per Pacemaker's fence-event XML schema (fence-event-2.15.rng).
+// +kubebuilder:validation:Enum=success;failed;pending
+// +enum
+type PacemakerFenceEventStatus string
+
+const (
+	// PacemakerFenceEventStatusSuccess means the fencing operation completed successfully.
+	PacemakerFenceEventStatusSuccess PacemakerFenceEventStatus = "success"
+
+	// PacemakerFenceEventStatusFailed means the fencing operation failed.
+	PacemakerFenceEventStatusFailed PacemakerFenceEventStatus = "failed"
+
+	// PacemakerFenceEventStatusPending means the fencing operation is currently in progress.
+	PacemakerFenceEventStatusPending PacemakerFenceEventStatus = "pending"
+)
+
+// PacemakerFenceEvent represents the most recent fencing event observed for a node. Fencing events
+// are recorded by Pacemaker in the CIB when STONITH operations occur — either automatically during
+// split-brain recovery or manually via stonith_admin. This struct captures the last fence event
+// targeting a given node, providing visibility into what happened, who initiated it, and which node
+// executed it.
+type PacemakerFenceEvent struct {
+	// action is the type of fencing action that was performed or is in progress.
+	// Valid values are "reboot" (power-cycle the node), "power-off" (power off the node),
+	// and "power-on" (power on the node).
+	// +required
+	Action PacemakerFenceEventAction `json:"action,omitempty"`
+
+	// status is the outcome of the fencing operation.
+	// Valid values are "success" (the operation completed successfully), "failed" (the operation
+	// failed), and "pending" (the operation is currently in progress).
+	// +required
+	Status PacemakerFenceEventStatus `json:"status,omitempty"`
+
+	// delegate is the name of the node that executed the fencing operation. In a two-node cluster,
+	// this is typically the surviving node that fenced its peer. This field is optional and is
+	// omitted when the delegate is not reported by Pacemaker, which can occur for pending
+	// operations. The value must not exceed 253 characters.
+	// +kubebuilder:validation:MaxLength=253
+	// +optional
+	Delegate string `json:"delegate,omitempty"`
+
+	// client identifies the daemon or tool that requested the fencing operation. Typical values
+	// are "crmd" for automatic recovery initiated by the cluster resource manager, or
+	// "stonith_admin" for manual fencing initiated by an operator. This is useful for
+	// distinguishing "the cluster fenced itself for cause" from "someone fenced a node manually"
+	// during incident review. This field is optional and is omitted when the client is not
+	// reported by Pacemaker.
+	// +kubebuilder:validation:MaxLength=256
+	// +optional
+	Client string `json:"client,omitempty"`
+
+	// origin is the name of the node from which the fencing request originated. This field is
+	// optional and is omitted when the origin is not reported by Pacemaker. The value must not
+	// exceed 253 characters.
+	// +kubebuilder:validation:MaxLength=253
+	// +optional
+	Origin string `json:"origin,omitempty"`
+
+	// lastUpdated is the timestamp when Pacemaker last updated this fence event record in the CIB.
+	// This timestamp is always present in the CIB fence history, including for pending operations
+	// where completedTime is not yet set. It must be a valid timestamp in RFC3339 format.
+	// +kubebuilder:validation:Format=date-time
+	// +required
+	LastUpdated metav1.Time `json:"lastUpdated,omitempty,omitzero"`
+
+	// completedTime is the timestamp when the fencing operation completed. This field is optional
+	// and is omitted when the fencing operation is still in progress (status "pending") or when
+	// Pacemaker has not recorded a completion time.
+	// +kubebuilder:validation:Format=date-time
+	// +optional
+	CompletedTime *metav1.Time `json:"completedTime,omitempty"`
+}
+
 // +genclient
 // +genclient:nonNamespaced
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
@@ -502,18 +622,20 @@ type PacemakerCluster struct {
 // +kubebuilder:validation:XValidation:rule="!has(oldSelf.lastUpdated) || self.lastUpdated >= oldSelf.lastUpdated",message="lastUpdated may not be set to an earlier timestamp"
 type PacemakerClusterStatus struct {
 	// conditions represent the observations of the pacemaker cluster's current state.
-	// Known condition types are: "Healthy", "InService", "NodeCountAsExpected".
+	// Known condition types are: "Healthy", "InService", "NodeCountAsExpected", "FencingEnabled".
 	// The "Healthy" condition is an aggregate that tracks the overall health of the cluster.
 	// The "InService" condition tracks whether the cluster is in service (not in maintenance mode).
 	// The "NodeCountAsExpected" condition tracks whether the expected number of nodes are present.
-	// Each of these conditions is required, so the array must contain at least 3 items.
+	// The "FencingEnabled" condition tracks whether STONITH (fencing) is enabled in the cluster.
+	// Each of these conditions is required, so the array must contain at least 4 items.
 	// +listType=map
 	// +listMapKey=type
-	// +kubebuilder:validation:MinItems=3
+	// +kubebuilder:validation:MinItems=4
 	// +kubebuilder:validation:MaxItems=8
 	// +kubebuilder:validation:XValidation:rule="self.exists(c, c.type == 'Healthy')",message="conditions must contain a condition of type Healthy"
 	// +kubebuilder:validation:XValidation:rule="self.exists(c, c.type == 'InService')",message="conditions must contain a condition of type InService"
 	// +kubebuilder:validation:XValidation:rule="self.exists(c, c.type == 'NodeCountAsExpected')",message="conditions must contain a condition of type NodeCountAsExpected"
+	// +kubebuilder:validation:XValidation:rule="self.exists(c, c.type == 'FencingEnabled')",message="conditions must contain a condition of type FencingEnabled"
 	// +required
 	Conditions []metav1.Condition `json:"conditions,omitempty"`
 
@@ -619,6 +741,15 @@ type PacemakerClusterNodeStatus struct {
 	// +kubebuilder:validation:XValidation:rule="self.all(x, self.exists_one(y, x.name == y.name))",message="fencing agent names must be unique"
 	// +required
 	FencingAgents []PacemakerClusterFencingAgentStatus `json:"fencingAgents,omitempty"`
+
+	// lastFenceEvent is the most recent fencing event targeting this node, as recorded in
+	// Pacemaker's fence history in the CIB. This captures the last time this node was fenced
+	// (or a fence attempt was made), including the action taken, the outcome, and which node
+	// executed the fence operation. When the Clean condition is False, this field provides the
+	// concrete fencing context behind the unclean state. This field is optional and is omitted
+	// when no fencing event has been observed for this node.
+	// +optional
+	LastFenceEvent *PacemakerFenceEvent `json:"lastFenceEvent,omitempty"`
 }
 
 // PacemakerClusterFencingAgentStatus represents the status of a fencing agent that can fence a node.
@@ -670,6 +801,36 @@ type PacemakerClusterFencingAgentStatus struct {
 	// IPMI (Intelligent Platform Management Interface) is a hardware management interface.
 	// +required
 	Method FencingMethod `json:"method,omitempty"`
+
+	// failCount is the current failure count Pacemaker records for this fencing agent on
+	// this node, as reported by the CIB. Pacemaker increments this count each time an
+	// operation for this fencing agent fails, and resets it to zero when a `pcs resource
+	// cleanup` is performed. A flapping fencing agent is exactly what the FencingHealthy
+	// condition should be catching early. The value must be zero or greater. This field is
+	// optional and is omitted when the status collector has not yet observed a fail count for
+	// this fencing agent, for example on a freshly bootstrapped cluster or for an agent that
+	// has never failed.
+	// +kubebuilder:validation:Minimum=0
+	// +optional
+	FailCount *int32 `json:"failCount,omitempty"`
+
+	// migrationThreshold is the configured number of failures after which Pacemaker will
+	// no longer attempt to use this fencing agent on this node, as reported by the CIB.
+	// Without this value, failCount alone is uninterpretable — whether failCount 3 is
+	// alarming depends on whether the threshold is 5 or 1000000 (Pacemaker's default
+	// INFINITY). The value must be zero or greater. This field is optional and is omitted
+	// when the status collector has not yet observed a migration threshold for this fencing
+	// agent.
+	// +kubebuilder:validation:Minimum=0
+	// +optional
+	MigrationThreshold *int32 `json:"migrationThreshold,omitempty"`
+
+	// lastFailureTime is the timestamp of the most recent failure observed for this fencing
+	// agent on this node, as reported by the CIB. This field is optional and is omitted when
+	// no failure has been observed for this fencing agent on this node.
+	// +kubebuilder:validation:Format=date-time
+	// +optional
+	LastFailureTime *metav1.Time `json:"lastFailureTime,omitempty"`
 }
 
 // PacemakerClusterResourceStatus represents the status of a pacemaker resource scheduled on a node.

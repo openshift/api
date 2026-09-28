@@ -53,6 +53,11 @@ tests:
               lastTransitionTime: "2024-01-01T00:00:00Z"
               reason: AsExpected
               message: "Expected nodes present"
+            - type: FencingEnabled
+              status: "True"
+              lastTransitionTime: "2024-01-01T00:00:00Z"
+              reason: FencingEnabled
+              message: "Fencing enabled"
           lastUpdated: "2024-01-01T00:00:01Z"
           nodes:
             - nodeName: master-0.example.com
@@ -256,6 +261,11 @@ tests:
               lastTransitionTime: "2024-01-01T00:00:00Z"
               reason: AsExpected
               message: "Expected nodes present"
+            - type: FencingEnabled
+              status: "True"
+              lastTransitionTime: "2024-01-01T00:00:00Z"
+              reason: FencingEnabled
+              message: "Fencing enabled"
           lastUpdated: "2024-01-01T00:00:01Z"
           nodes:
             - nodeName: master-0.example.com
@@ -461,6 +471,11 @@ tests:
               lastTransitionTime: "2024-01-01T00:00:00Z"
               reason: AsExpected
               message: "Expected"
+            - type: FencingEnabled
+              status: "True"
+              lastTransitionTime: "2024-01-01T00:00:00Z"
+              reason: FencingEnabled
+              message: "Fencing enabled"
             - type: Extra
               status: "True"
               lastTransitionTime: "2024-01-01T00:00:00Z"
@@ -498,6 +513,11 @@ tests:
               lastTransitionTime: "2024-01-01T00:00:00Z"
               reason: AsExpected
               message: "Expected"
+            - type: FencingEnabled
+              status: "True"
+              lastTransitionTime: "2024-01-01T00:00:00Z"
+              reason: FencingEnabled
+              message: "Fencing enabled"
           lastUpdated: "2024-01-01T00:00:01Z"
           nodes:
             - nodeName: master-0.example.com
@@ -709,6 +729,11 @@ tests:
               lastTransitionTime: "2024-01-01T00:00:00Z"
               reason: AsExpected
               message: "Expected"
+            - type: FencingEnabled
+              status: "True"
+              lastTransitionTime: "2024-01-01T00:00:00Z"
+              reason: FencingEnabled
+              message: "Fencing enabled"
           lastUpdated: "2024-01-01T00:00:01Z"
           nodes:
             - nodeName: master-0.example.com
@@ -919,6 +944,11 @@ tests:
               lastTransitionTime: "2024-01-01T00:00:00Z"
               reason: AsExpected
               message: "Expected"
+            - type: FencingEnabled
+              status: "True"
+              lastTransitionTime: "2024-01-01T00:00:00Z"
+              reason: FencingEnabled
+              message: "Fencing enabled"
           lastUpdated: "2024-01-01T00:00:01Z"
           nodes:
             - nodeName: master-0.example.com
@@ -1129,6 +1159,11 @@ tests:
               lastTransitionTime: "2024-01-01T00:00:00Z"
               reason: AsExpected
               message: "Expected"
+            - type: FencingEnabled
+              status: "True"
+              lastTransitionTime: "2024-01-01T00:00:00Z"
+              reason: FencingEnabled
+              message: "Fencing enabled"
           lastUpdated: "2024-01-01T00:00:01Z"
           nodes:
             - nodeName: master-0.example.com
@@ -1332,6 +1367,11 @@ tests:
               lastTransitionTime: "2024-01-01T00:00:00Z"
               reason: AsExpected
               message: "Expected"
+            - type: FencingEnabled
+              status: "True"
+              lastTransitionTime: "2024-01-01T00:00:00Z"
+              reason: FencingEnabled
+              message: "Fencing enabled"
           lastUpdated: "2024-01-01T00:00:01Z"
           nodes:
             - nodeName: master-0.example.com
@@ -1541,6 +1581,11 @@ tests:
               lastTransitionTime: "2024-01-01T00:00:00Z"
               reason: AsExpected
               message: "Expected"
+            - type: FencingEnabled
+              status: "True"
+              lastTransitionTime: "2024-01-01T00:00:00Z"
+              reason: FencingEnabled
+              message: "Fencing enabled"
           lastUpdated: "2024-01-01T00:00:01Z"
           nodes:
             - nodeName: master-0.example.com
@@ -1751,6 +1796,11 @@ tests:
               lastTransitionTime: "2024-01-01T00:00:00Z"
               reason: AsExpected
               message: "Expected"
+            - type: FencingEnabled
+              status: "True"
+              lastTransitionTime: "2024-01-01T00:00:00Z"
+              reason: FencingEnabled
+              message: "Fencing enabled"
           lastUpdated: "2024-01-01T00:00:01Z"
           nodes:
             - nodeName: master-0.example.com
@@ -1933,3 +1983,1556 @@ tests:
                       reason: Schedulable
                       message: "Schedulable"
       expectedStatusError: "must be a valid global unicast IPv4 or IPv6 address in canonical form"
+    - name: Should reject cluster status missing FencingEnabled condition
+      initial: |
+        apiVersion: etcd.openshift.io/v1
+        kind: PacemakerCluster
+        metadata:
+          name: cluster
+      updated: |
+        apiVersion: etcd.openshift.io/v1
+        kind: PacemakerCluster
+        metadata:
+          name: cluster
+        status:
+          conditions:
+            - type: Healthy
+              status: "True"
+              lastTransitionTime: "2024-01-01T00:00:00Z"
+              reason: ClusterHealthy
+              message: "Cluster is healthy"
+            - type: InService
+              status: "True"
+              lastTransitionTime: "2024-01-01T00:00:00Z"
+              reason: InService
+              message: "In service"
+            - type: NodeCountAsExpected
+              status: "True"
+              lastTransitionTime: "2024-01-01T00:00:00Z"
+              reason: AsExpected
+              message: "Expected"
+            - type: Extra
+              status: "True"
+              lastTransitionTime: "2024-01-01T00:00:00Z"
+              reason: Extra
+              message: "Extra"
+          lastUpdated: "2024-01-01T00:00:01Z"
+          nodes: []
+      expectedStatusError: "conditions must contain a condition of type FencingEnabled"
+    - name: Should accept node with lastFenceEvent for a completed fence operation
+      initial: |
+        apiVersion: etcd.openshift.io/v1
+        kind: PacemakerCluster
+        metadata:
+          name: cluster
+      updated: |
+        apiVersion: etcd.openshift.io/v1
+        kind: PacemakerCluster
+        metadata:
+          name: cluster
+        status:
+          conditions:
+            - type: Healthy
+              status: "True"
+              lastTransitionTime: "2024-01-01T00:00:00Z"
+              reason: ClusterHealthy
+              message: "Cluster is healthy"
+            - type: InService
+              status: "True"
+              lastTransitionTime: "2024-01-01T00:00:00Z"
+              reason: InService
+              message: "In service"
+            - type: NodeCountAsExpected
+              status: "True"
+              lastTransitionTime: "2024-01-01T00:00:00Z"
+              reason: AsExpected
+              message: "Expected"
+            - type: FencingEnabled
+              status: "True"
+              lastTransitionTime: "2024-01-01T00:00:00Z"
+              reason: FencingEnabled
+              message: "Fencing enabled"
+          lastUpdated: "2024-01-01T00:00:01Z"
+          nodes:
+            - nodeName: master-0.example.com
+              addresses:
+                - type: InternalIP
+                  address: "192.168.1.1"
+              conditions:
+                - type: Healthy
+                  status: "True"
+                  lastTransitionTime: "2024-01-01T00:00:00Z"
+                  reason: NodeHealthy
+                  message: "Node healthy"
+                - type: Online
+                  status: "True"
+                  lastTransitionTime: "2024-01-01T00:00:00Z"
+                  reason: Online
+                  message: "Online"
+                - type: InService
+                  status: "True"
+                  lastTransitionTime: "2024-01-01T00:00:00Z"
+                  reason: InService
+                  message: "In service"
+                - type: Active
+                  status: "True"
+                  lastTransitionTime: "2024-01-01T00:00:00Z"
+                  reason: Active
+                  message: "Active"
+                - type: Ready
+                  status: "True"
+                  lastTransitionTime: "2024-01-01T00:00:00Z"
+                  reason: Ready
+                  message: "Ready"
+                - type: Clean
+                  status: "False"
+                  lastTransitionTime: "2024-01-01T00:00:00Z"
+                  reason: Unclean
+                  message: "Node was fenced"
+                - type: Member
+                  status: "True"
+                  lastTransitionTime: "2024-01-01T00:00:00Z"
+                  reason: Member
+                  message: "Member"
+                - type: FencingAvailable
+                  status: "True"
+                  lastTransitionTime: "2024-01-01T00:00:00Z"
+                  reason: FencingAvailable
+                  message: "Fencing available"
+                - type: FencingHealthy
+                  status: "True"
+                  lastTransitionTime: "2024-01-01T00:00:00Z"
+                  reason: FencingHealthy
+                  message: "Fencing healthy"
+              lastFenceEvent:
+                action: reboot
+                status: success
+                delegate: master-1.example.com
+                client: crmd
+                origin: master-1.example.com
+                lastUpdated: "2024-01-01T00:00:00Z"
+                completedTime: "2024-01-01T00:00:05Z"
+              resources:
+                - name: Kubelet
+                  conditions:
+                    - type: Healthy
+                      status: "True"
+                      lastTransitionTime: "2024-01-01T00:00:00Z"
+                      reason: ResourceHealthy
+                      message: "Healthy"
+                    - type: InService
+                      status: "True"
+                      lastTransitionTime: "2024-01-01T00:00:00Z"
+                      reason: InService
+                      message: "In service"
+                    - type: Managed
+                      status: "True"
+                      lastTransitionTime: "2024-01-01T00:00:00Z"
+                      reason: Managed
+                      message: "Managed"
+                    - type: Enabled
+                      status: "True"
+                      lastTransitionTime: "2024-01-01T00:00:00Z"
+                      reason: Enabled
+                      message: "Enabled"
+                    - type: Operational
+                      status: "True"
+                      lastTransitionTime: "2024-01-01T00:00:00Z"
+                      reason: Operational
+                      message: "Operational"
+                    - type: Active
+                      status: "True"
+                      lastTransitionTime: "2024-01-01T00:00:00Z"
+                      reason: Active
+                      message: "Active"
+                    - type: Started
+                      status: "True"
+                      lastTransitionTime: "2024-01-01T00:00:00Z"
+                      reason: Started
+                      message: "Started"
+                    - type: Schedulable
+                      status: "True"
+                      lastTransitionTime: "2024-01-01T00:00:00Z"
+                      reason: Schedulable
+                      message: "Schedulable"
+                - name: Etcd
+                  conditions:
+                    - type: Healthy
+                      status: "True"
+                      lastTransitionTime: "2024-01-01T00:00:00Z"
+                      reason: ResourceHealthy
+                      message: "Healthy"
+                    - type: InService
+                      status: "True"
+                      lastTransitionTime: "2024-01-01T00:00:00Z"
+                      reason: InService
+                      message: "In service"
+                    - type: Managed
+                      status: "True"
+                      lastTransitionTime: "2024-01-01T00:00:00Z"
+                      reason: Managed
+                      message: "Managed"
+                    - type: Enabled
+                      status: "True"
+                      lastTransitionTime: "2024-01-01T00:00:00Z"
+                      reason: Enabled
+                      message: "Enabled"
+                    - type: Operational
+                      status: "True"
+                      lastTransitionTime: "2024-01-01T00:00:00Z"
+                      reason: Operational
+                      message: "Operational"
+                    - type: Active
+                      status: "True"
+                      lastTransitionTime: "2024-01-01T00:00:00Z"
+                      reason: Active
+                      message: "Active"
+                    - type: Started
+                      status: "True"
+                      lastTransitionTime: "2024-01-01T00:00:00Z"
+                      reason: Started
+                      message: "Started"
+                    - type: Schedulable
+                      status: "True"
+                      lastTransitionTime: "2024-01-01T00:00:00Z"
+                      reason: Schedulable
+                      message: "Schedulable"
+              fencingAgents:
+                - name: master-0.example.com_redfish
+                  method: Redfish
+                  conditions:
+                    - type: Healthy
+                      status: "True"
+                      lastTransitionTime: "2024-01-01T00:00:00Z"
+                      reason: ResourceHealthy
+                      message: "Healthy"
+                    - type: InService
+                      status: "True"
+                      lastTransitionTime: "2024-01-01T00:00:00Z"
+                      reason: InService
+                      message: "In service"
+                    - type: Managed
+                      status: "True"
+                      lastTransitionTime: "2024-01-01T00:00:00Z"
+                      reason: Managed
+                      message: "Managed"
+                    - type: Enabled
+                      status: "True"
+                      lastTransitionTime: "2024-01-01T00:00:00Z"
+                      reason: Enabled
+                      message: "Enabled"
+                    - type: Operational
+                      status: "True"
+                      lastTransitionTime: "2024-01-01T00:00:00Z"
+                      reason: Operational
+                      message: "Operational"
+                    - type: Active
+                      status: "True"
+                      lastTransitionTime: "2024-01-01T00:00:00Z"
+                      reason: Active
+                      message: "Active"
+                    - type: Started
+                      status: "True"
+                      lastTransitionTime: "2024-01-01T00:00:00Z"
+                      reason: Started
+                      message: "Started"
+                    - type: Schedulable
+                      status: "True"
+                      lastTransitionTime: "2024-01-01T00:00:00Z"
+                      reason: Schedulable
+                      message: "Schedulable"
+      expected: |
+        apiVersion: etcd.openshift.io/v1
+        kind: PacemakerCluster
+        metadata:
+          name: cluster
+        status:
+          conditions:
+            - type: Healthy
+              status: "True"
+              lastTransitionTime: "2024-01-01T00:00:00Z"
+              reason: ClusterHealthy
+              message: "Cluster is healthy"
+            - type: InService
+              status: "True"
+              lastTransitionTime: "2024-01-01T00:00:00Z"
+              reason: InService
+              message: "In service"
+            - type: NodeCountAsExpected
+              status: "True"
+              lastTransitionTime: "2024-01-01T00:00:00Z"
+              reason: AsExpected
+              message: "Expected"
+            - type: FencingEnabled
+              status: "True"
+              lastTransitionTime: "2024-01-01T00:00:00Z"
+              reason: FencingEnabled
+              message: "Fencing enabled"
+          lastUpdated: "2024-01-01T00:00:01Z"
+          nodes:
+            - nodeName: master-0.example.com
+              addresses:
+                - type: InternalIP
+                  address: "192.168.1.1"
+              conditions:
+                - type: Healthy
+                  status: "True"
+                  lastTransitionTime: "2024-01-01T00:00:00Z"
+                  reason: NodeHealthy
+                  message: "Node healthy"
+                - type: Online
+                  status: "True"
+                  lastTransitionTime: "2024-01-01T00:00:00Z"
+                  reason: Online
+                  message: "Online"
+                - type: InService
+                  status: "True"
+                  lastTransitionTime: "2024-01-01T00:00:00Z"
+                  reason: InService
+                  message: "In service"
+                - type: Active
+                  status: "True"
+                  lastTransitionTime: "2024-01-01T00:00:00Z"
+                  reason: Active
+                  message: "Active"
+                - type: Ready
+                  status: "True"
+                  lastTransitionTime: "2024-01-01T00:00:00Z"
+                  reason: Ready
+                  message: "Ready"
+                - type: Clean
+                  status: "False"
+                  lastTransitionTime: "2024-01-01T00:00:00Z"
+                  reason: Unclean
+                  message: "Node was fenced"
+                - type: Member
+                  status: "True"
+                  lastTransitionTime: "2024-01-01T00:00:00Z"
+                  reason: Member
+                  message: "Member"
+                - type: FencingAvailable
+                  status: "True"
+                  lastTransitionTime: "2024-01-01T00:00:00Z"
+                  reason: FencingAvailable
+                  message: "Fencing available"
+                - type: FencingHealthy
+                  status: "True"
+                  lastTransitionTime: "2024-01-01T00:00:00Z"
+                  reason: FencingHealthy
+                  message: "Fencing healthy"
+              lastFenceEvent:
+                action: reboot
+                status: success
+                delegate: master-1.example.com
+                client: crmd
+                origin: master-1.example.com
+                lastUpdated: "2024-01-01T00:00:00Z"
+                completedTime: "2024-01-01T00:00:05Z"
+              resources:
+                - name: Kubelet
+                  conditions:
+                    - type: Healthy
+                      status: "True"
+                      lastTransitionTime: "2024-01-01T00:00:00Z"
+                      reason: ResourceHealthy
+                      message: "Healthy"
+                    - type: InService
+                      status: "True"
+                      lastTransitionTime: "2024-01-01T00:00:00Z"
+                      reason: InService
+                      message: "In service"
+                    - type: Managed
+                      status: "True"
+                      lastTransitionTime: "2024-01-01T00:00:00Z"
+                      reason: Managed
+                      message: "Managed"
+                    - type: Enabled
+                      status: "True"
+                      lastTransitionTime: "2024-01-01T00:00:00Z"
+                      reason: Enabled
+                      message: "Enabled"
+                    - type: Operational
+                      status: "True"
+                      lastTransitionTime: "2024-01-01T00:00:00Z"
+                      reason: Operational
+                      message: "Operational"
+                    - type: Active
+                      status: "True"
+                      lastTransitionTime: "2024-01-01T00:00:00Z"
+                      reason: Active
+                      message: "Active"
+                    - type: Started
+                      status: "True"
+                      lastTransitionTime: "2024-01-01T00:00:00Z"
+                      reason: Started
+                      message: "Started"
+                    - type: Schedulable
+                      status: "True"
+                      lastTransitionTime: "2024-01-01T00:00:00Z"
+                      reason: Schedulable
+                      message: "Schedulable"
+                - name: Etcd
+                  conditions:
+                    - type: Healthy
+                      status: "True"
+                      lastTransitionTime: "2024-01-01T00:00:00Z"
+                      reason: ResourceHealthy
+                      message: "Healthy"
+                    - type: InService
+                      status: "True"
+                      lastTransitionTime: "2024-01-01T00:00:00Z"
+                      reason: InService
+                      message: "In service"
+                    - type: Managed
+                      status: "True"
+                      lastTransitionTime: "2024-01-01T00:00:00Z"
+                      reason: Managed
+                      message: "Managed"
+                    - type: Enabled
+                      status: "True"
+                      lastTransitionTime: "2024-01-01T00:00:00Z"
+                      reason: Enabled
+                      message: "Enabled"
+                    - type: Operational
+                      status: "True"
+                      lastTransitionTime: "2024-01-01T00:00:00Z"
+                      reason: Operational
+                      message: "Operational"
+                    - type: Active
+                      status: "True"
+                      lastTransitionTime: "2024-01-01T00:00:00Z"
+                      reason: Active
+                      message: "Active"
+                    - type: Started
+                      status: "True"
+                      lastTransitionTime: "2024-01-01T00:00:00Z"
+                      reason: Started
+                      message: "Started"
+                    - type: Schedulable
+                      status: "True"
+                      lastTransitionTime: "2024-01-01T00:00:00Z"
+                      reason: Schedulable
+                      message: "Schedulable"
+              fencingAgents:
+                - name: master-0.example.com_redfish
+                  method: Redfish
+                  conditions:
+                    - type: Healthy
+                      status: "True"
+                      lastTransitionTime: "2024-01-01T00:00:00Z"
+                      reason: ResourceHealthy
+                      message: "Healthy"
+                    - type: InService
+                      status: "True"
+                      lastTransitionTime: "2024-01-01T00:00:00Z"
+                      reason: InService
+                      message: "In service"
+                    - type: Managed
+                      status: "True"
+                      lastTransitionTime: "2024-01-01T00:00:00Z"
+                      reason: Managed
+                      message: "Managed"
+                    - type: Enabled
+                      status: "True"
+                      lastTransitionTime: "2024-01-01T00:00:00Z"
+                      reason: Enabled
+                      message: "Enabled"
+                    - type: Operational
+                      status: "True"
+                      lastTransitionTime: "2024-01-01T00:00:00Z"
+                      reason: Operational
+                      message: "Operational"
+                    - type: Active
+                      status: "True"
+                      lastTransitionTime: "2024-01-01T00:00:00Z"
+                      reason: Active
+                      message: "Active"
+                    - type: Started
+                      status: "True"
+                      lastTransitionTime: "2024-01-01T00:00:00Z"
+                      reason: Started
+                      message: "Started"
+                    - type: Schedulable
+                      status: "True"
+                      lastTransitionTime: "2024-01-01T00:00:00Z"
+                      reason: Schedulable
+                      message: "Schedulable"
+    - name: Should accept lastFenceEvent with pending status and no completedTime
+      initial: |
+        apiVersion: etcd.openshift.io/v1
+        kind: PacemakerCluster
+        metadata:
+          name: cluster
+      updated: |
+        apiVersion: etcd.openshift.io/v1
+        kind: PacemakerCluster
+        metadata:
+          name: cluster
+        status:
+          conditions:
+            - type: Healthy
+              status: "True"
+              lastTransitionTime: "2024-01-01T00:00:00Z"
+              reason: ClusterHealthy
+              message: "Cluster is healthy"
+            - type: InService
+              status: "True"
+              lastTransitionTime: "2024-01-01T00:00:00Z"
+              reason: InService
+              message: "In service"
+            - type: NodeCountAsExpected
+              status: "True"
+              lastTransitionTime: "2024-01-01T00:00:00Z"
+              reason: AsExpected
+              message: "Expected"
+            - type: FencingEnabled
+              status: "True"
+              lastTransitionTime: "2024-01-01T00:00:00Z"
+              reason: FencingEnabled
+              message: "Fencing enabled"
+          lastUpdated: "2024-01-01T00:00:01Z"
+          nodes:
+            - nodeName: master-0.example.com
+              addresses:
+                - type: InternalIP
+                  address: "192.168.1.1"
+              conditions:
+                - type: Healthy
+                  status: "True"
+                  lastTransitionTime: "2024-01-01T00:00:00Z"
+                  reason: NodeHealthy
+                  message: "Node healthy"
+                - type: Online
+                  status: "True"
+                  lastTransitionTime: "2024-01-01T00:00:00Z"
+                  reason: Online
+                  message: "Online"
+                - type: InService
+                  status: "True"
+                  lastTransitionTime: "2024-01-01T00:00:00Z"
+                  reason: InService
+                  message: "In service"
+                - type: Active
+                  status: "True"
+                  lastTransitionTime: "2024-01-01T00:00:00Z"
+                  reason: Active
+                  message: "Active"
+                - type: Ready
+                  status: "True"
+                  lastTransitionTime: "2024-01-01T00:00:00Z"
+                  reason: Ready
+                  message: "Ready"
+                - type: Clean
+                  status: "True"
+                  lastTransitionTime: "2024-01-01T00:00:00Z"
+                  reason: Clean
+                  message: "Clean"
+                - type: Member
+                  status: "True"
+                  lastTransitionTime: "2024-01-01T00:00:00Z"
+                  reason: Member
+                  message: "Member"
+                - type: FencingAvailable
+                  status: "True"
+                  lastTransitionTime: "2024-01-01T00:00:00Z"
+                  reason: FencingAvailable
+                  message: "Fencing available"
+                - type: FencingHealthy
+                  status: "True"
+                  lastTransitionTime: "2024-01-01T00:00:00Z"
+                  reason: FencingHealthy
+                  message: "Fencing healthy"
+              lastFenceEvent:
+                action: reboot
+                status: pending
+                lastUpdated: "2024-01-01T00:00:00Z"
+              resources:
+                - name: Kubelet
+                  conditions:
+                    - type: Healthy
+                      status: "True"
+                      lastTransitionTime: "2024-01-01T00:00:00Z"
+                      reason: ResourceHealthy
+                      message: "Healthy"
+                    - type: InService
+                      status: "True"
+                      lastTransitionTime: "2024-01-01T00:00:00Z"
+                      reason: InService
+                      message: "In service"
+                    - type: Managed
+                      status: "True"
+                      lastTransitionTime: "2024-01-01T00:00:00Z"
+                      reason: Managed
+                      message: "Managed"
+                    - type: Enabled
+                      status: "True"
+                      lastTransitionTime: "2024-01-01T00:00:00Z"
+                      reason: Enabled
+                      message: "Enabled"
+                    - type: Operational
+                      status: "True"
+                      lastTransitionTime: "2024-01-01T00:00:00Z"
+                      reason: Operational
+                      message: "Operational"
+                    - type: Active
+                      status: "True"
+                      lastTransitionTime: "2024-01-01T00:00:00Z"
+                      reason: Active
+                      message: "Active"
+                    - type: Started
+                      status: "True"
+                      lastTransitionTime: "2024-01-01T00:00:00Z"
+                      reason: Started
+                      message: "Started"
+                    - type: Schedulable
+                      status: "True"
+                      lastTransitionTime: "2024-01-01T00:00:00Z"
+                      reason: Schedulable
+                      message: "Schedulable"
+                - name: Etcd
+                  conditions:
+                    - type: Healthy
+                      status: "True"
+                      lastTransitionTime: "2024-01-01T00:00:00Z"
+                      reason: ResourceHealthy
+                      message: "Healthy"
+                    - type: InService
+                      status: "True"
+                      lastTransitionTime: "2024-01-01T00:00:00Z"
+                      reason: InService
+                      message: "In service"
+                    - type: Managed
+                      status: "True"
+                      lastTransitionTime: "2024-01-01T00:00:00Z"
+                      reason: Managed
+                      message: "Managed"
+                    - type: Enabled
+                      status: "True"
+                      lastTransitionTime: "2024-01-01T00:00:00Z"
+                      reason: Enabled
+                      message: "Enabled"
+                    - type: Operational
+                      status: "True"
+                      lastTransitionTime: "2024-01-01T00:00:00Z"
+                      reason: Operational
+                      message: "Operational"
+                    - type: Active
+                      status: "True"
+                      lastTransitionTime: "2024-01-01T00:00:00Z"
+                      reason: Active
+                      message: "Active"
+                    - type: Started
+                      status: "True"
+                      lastTransitionTime: "2024-01-01T00:00:00Z"
+                      reason: Started
+                      message: "Started"
+                    - type: Schedulable
+                      status: "True"
+                      lastTransitionTime: "2024-01-01T00:00:00Z"
+                      reason: Schedulable
+                      message: "Schedulable"
+              fencingAgents:
+                - name: master-0.example.com_redfish
+                  method: Redfish
+                  conditions:
+                    - type: Healthy
+                      status: "True"
+                      lastTransitionTime: "2024-01-01T00:00:00Z"
+                      reason: ResourceHealthy
+                      message: "Healthy"
+                    - type: InService
+                      status: "True"
+                      lastTransitionTime: "2024-01-01T00:00:00Z"
+                      reason: InService
+                      message: "In service"
+                    - type: Managed
+                      status: "True"
+                      lastTransitionTime: "2024-01-01T00:00:00Z"
+                      reason: Managed
+                      message: "Managed"
+                    - type: Enabled
+                      status: "True"
+                      lastTransitionTime: "2024-01-01T00:00:00Z"
+                      reason: Enabled
+                      message: "Enabled"
+                    - type: Operational
+                      status: "True"
+                      lastTransitionTime: "2024-01-01T00:00:00Z"
+                      reason: Operational
+                      message: "Operational"
+                    - type: Active
+                      status: "True"
+                      lastTransitionTime: "2024-01-01T00:00:00Z"
+                      reason: Active
+                      message: "Active"
+                    - type: Started
+                      status: "True"
+                      lastTransitionTime: "2024-01-01T00:00:00Z"
+                      reason: Started
+                      message: "Started"
+                    - type: Schedulable
+                      status: "True"
+                      lastTransitionTime: "2024-01-01T00:00:00Z"
+                      reason: Schedulable
+                      message: "Schedulable"
+      expected: |
+        apiVersion: etcd.openshift.io/v1
+        kind: PacemakerCluster
+        metadata:
+          name: cluster
+        status:
+          conditions:
+            - type: Healthy
+              status: "True"
+              lastTransitionTime: "2024-01-01T00:00:00Z"
+              reason: ClusterHealthy
+              message: "Cluster is healthy"
+            - type: InService
+              status: "True"
+              lastTransitionTime: "2024-01-01T00:00:00Z"
+              reason: InService
+              message: "In service"
+            - type: NodeCountAsExpected
+              status: "True"
+              lastTransitionTime: "2024-01-01T00:00:00Z"
+              reason: AsExpected
+              message: "Expected"
+            - type: FencingEnabled
+              status: "True"
+              lastTransitionTime: "2024-01-01T00:00:00Z"
+              reason: FencingEnabled
+              message: "Fencing enabled"
+          lastUpdated: "2024-01-01T00:00:01Z"
+          nodes:
+            - nodeName: master-0.example.com
+              addresses:
+                - type: InternalIP
+                  address: "192.168.1.1"
+              conditions:
+                - type: Healthy
+                  status: "True"
+                  lastTransitionTime: "2024-01-01T00:00:00Z"
+                  reason: NodeHealthy
+                  message: "Node healthy"
+                - type: Online
+                  status: "True"
+                  lastTransitionTime: "2024-01-01T00:00:00Z"
+                  reason: Online
+                  message: "Online"
+                - type: InService
+                  status: "True"
+                  lastTransitionTime: "2024-01-01T00:00:00Z"
+                  reason: InService
+                  message: "In service"
+                - type: Active
+                  status: "True"
+                  lastTransitionTime: "2024-01-01T00:00:00Z"
+                  reason: Active
+                  message: "Active"
+                - type: Ready
+                  status: "True"
+                  lastTransitionTime: "2024-01-01T00:00:00Z"
+                  reason: Ready
+                  message: "Ready"
+                - type: Clean
+                  status: "True"
+                  lastTransitionTime: "2024-01-01T00:00:00Z"
+                  reason: Clean
+                  message: "Clean"
+                - type: Member
+                  status: "True"
+                  lastTransitionTime: "2024-01-01T00:00:00Z"
+                  reason: Member
+                  message: "Member"
+                - type: FencingAvailable
+                  status: "True"
+                  lastTransitionTime: "2024-01-01T00:00:00Z"
+                  reason: FencingAvailable
+                  message: "Fencing available"
+                - type: FencingHealthy
+                  status: "True"
+                  lastTransitionTime: "2024-01-01T00:00:00Z"
+                  reason: FencingHealthy
+                  message: "Fencing healthy"
+              lastFenceEvent:
+                action: reboot
+                status: pending
+                lastUpdated: "2024-01-01T00:00:00Z"
+              resources:
+                - name: Kubelet
+                  conditions:
+                    - type: Healthy
+                      status: "True"
+                      lastTransitionTime: "2024-01-01T00:00:00Z"
+                      reason: ResourceHealthy
+                      message: "Healthy"
+                    - type: InService
+                      status: "True"
+                      lastTransitionTime: "2024-01-01T00:00:00Z"
+                      reason: InService
+                      message: "In service"
+                    - type: Managed
+                      status: "True"
+                      lastTransitionTime: "2024-01-01T00:00:00Z"
+                      reason: Managed
+                      message: "Managed"
+                    - type: Enabled
+                      status: "True"
+                      lastTransitionTime: "2024-01-01T00:00:00Z"
+                      reason: Enabled
+                      message: "Enabled"
+                    - type: Operational
+                      status: "True"
+                      lastTransitionTime: "2024-01-01T00:00:00Z"
+                      reason: Operational
+                      message: "Operational"
+                    - type: Active
+                      status: "True"
+                      lastTransitionTime: "2024-01-01T00:00:00Z"
+                      reason: Active
+                      message: "Active"
+                    - type: Started
+                      status: "True"
+                      lastTransitionTime: "2024-01-01T00:00:00Z"
+                      reason: Started
+                      message: "Started"
+                    - type: Schedulable
+                      status: "True"
+                      lastTransitionTime: "2024-01-01T00:00:00Z"
+                      reason: Schedulable
+                      message: "Schedulable"
+                - name: Etcd
+                  conditions:
+                    - type: Healthy
+                      status: "True"
+                      lastTransitionTime: "2024-01-01T00:00:00Z"
+                      reason: ResourceHealthy
+                      message: "Healthy"
+                    - type: InService
+                      status: "True"
+                      lastTransitionTime: "2024-01-01T00:00:00Z"
+                      reason: InService
+                      message: "In service"
+                    - type: Managed
+                      status: "True"
+                      lastTransitionTime: "2024-01-01T00:00:00Z"
+                      reason: Managed
+                      message: "Managed"
+                    - type: Enabled
+                      status: "True"
+                      lastTransitionTime: "2024-01-01T00:00:00Z"
+                      reason: Enabled
+                      message: "Enabled"
+                    - type: Operational
+                      status: "True"
+                      lastTransitionTime: "2024-01-01T00:00:00Z"
+                      reason: Operational
+                      message: "Operational"
+                    - type: Active
+                      status: "True"
+                      lastTransitionTime: "2024-01-01T00:00:00Z"
+                      reason: Active
+                      message: "Active"
+                    - type: Started
+                      status: "True"
+                      lastTransitionTime: "2024-01-01T00:00:00Z"
+                      reason: Started
+                      message: "Started"
+                    - type: Schedulable
+                      status: "True"
+                      lastTransitionTime: "2024-01-01T00:00:00Z"
+                      reason: Schedulable
+                      message: "Schedulable"
+              fencingAgents:
+                - name: master-0.example.com_redfish
+                  method: Redfish
+                  conditions:
+                    - type: Healthy
+                      status: "True"
+                      lastTransitionTime: "2024-01-01T00:00:00Z"
+                      reason: ResourceHealthy
+                      message: "Healthy"
+                    - type: InService
+                      status: "True"
+                      lastTransitionTime: "2024-01-01T00:00:00Z"
+                      reason: InService
+                      message: "In service"
+                    - type: Managed
+                      status: "True"
+                      lastTransitionTime: "2024-01-01T00:00:00Z"
+                      reason: Managed
+                      message: "Managed"
+                    - type: Enabled
+                      status: "True"
+                      lastTransitionTime: "2024-01-01T00:00:00Z"
+                      reason: Enabled
+                      message: "Enabled"
+                    - type: Operational
+                      status: "True"
+                      lastTransitionTime: "2024-01-01T00:00:00Z"
+                      reason: Operational
+                      message: "Operational"
+                    - type: Active
+                      status: "True"
+                      lastTransitionTime: "2024-01-01T00:00:00Z"
+                      reason: Active
+                      message: "Active"
+                    - type: Started
+                      status: "True"
+                      lastTransitionTime: "2024-01-01T00:00:00Z"
+                      reason: Started
+                      message: "Started"
+                    - type: Schedulable
+                      status: "True"
+                      lastTransitionTime: "2024-01-01T00:00:00Z"
+                      reason: Schedulable
+                      message: "Schedulable"
+    - name: Should reject lastFenceEvent with invalid action
+      initial: |
+        apiVersion: etcd.openshift.io/v1
+        kind: PacemakerCluster
+        metadata:
+          name: cluster
+      updated: |
+        apiVersion: etcd.openshift.io/v1
+        kind: PacemakerCluster
+        metadata:
+          name: cluster
+        status:
+          conditions:
+            - type: Healthy
+              status: "True"
+              lastTransitionTime: "2024-01-01T00:00:00Z"
+              reason: ClusterHealthy
+              message: "Cluster is healthy"
+            - type: InService
+              status: "True"
+              lastTransitionTime: "2024-01-01T00:00:00Z"
+              reason: InService
+              message: "In service"
+            - type: NodeCountAsExpected
+              status: "True"
+              lastTransitionTime: "2024-01-01T00:00:00Z"
+              reason: AsExpected
+              message: "Expected"
+            - type: FencingEnabled
+              status: "True"
+              lastTransitionTime: "2024-01-01T00:00:00Z"
+              reason: FencingEnabled
+              message: "Fencing enabled"
+          lastUpdated: "2024-01-01T00:00:01Z"
+          nodes:
+            - nodeName: master-0.example.com
+              addresses:
+                - type: InternalIP
+                  address: "192.168.1.1"
+              conditions:
+                - type: Healthy
+                  status: "True"
+                  lastTransitionTime: "2024-01-01T00:00:00Z"
+                  reason: NodeHealthy
+                  message: "Node healthy"
+                - type: Online
+                  status: "True"
+                  lastTransitionTime: "2024-01-01T00:00:00Z"
+                  reason: Online
+                  message: "Online"
+                - type: InService
+                  status: "True"
+                  lastTransitionTime: "2024-01-01T00:00:00Z"
+                  reason: InService
+                  message: "In service"
+                - type: Active
+                  status: "True"
+                  lastTransitionTime: "2024-01-01T00:00:00Z"
+                  reason: Active
+                  message: "Active"
+                - type: Ready
+                  status: "True"
+                  lastTransitionTime: "2024-01-01T00:00:00Z"
+                  reason: Ready
+                  message: "Ready"
+                - type: Clean
+                  status: "True"
+                  lastTransitionTime: "2024-01-01T00:00:00Z"
+                  reason: Clean
+                  message: "Clean"
+                - type: Member
+                  status: "True"
+                  lastTransitionTime: "2024-01-01T00:00:00Z"
+                  reason: Member
+                  message: "Member"
+                - type: FencingAvailable
+                  status: "True"
+                  lastTransitionTime: "2024-01-01T00:00:00Z"
+                  reason: FencingAvailable
+                  message: "Fencing available"
+                - type: FencingHealthy
+                  status: "True"
+                  lastTransitionTime: "2024-01-01T00:00:00Z"
+                  reason: FencingHealthy
+                  message: "Fencing healthy"
+              lastFenceEvent:
+                action: poweroff
+                status: success
+                lastUpdated: "2024-01-01T00:00:00Z"
+                completedTime: "2024-01-01T00:00:05Z"
+              resources:
+                - name: Kubelet
+                  conditions:
+                    - type: Healthy
+                      status: "True"
+                      lastTransitionTime: "2024-01-01T00:00:00Z"
+                      reason: ResourceHealthy
+                      message: "Healthy"
+                    - type: InService
+                      status: "True"
+                      lastTransitionTime: "2024-01-01T00:00:00Z"
+                      reason: InService
+                      message: "In service"
+                    - type: Managed
+                      status: "True"
+                      lastTransitionTime: "2024-01-01T00:00:00Z"
+                      reason: Managed
+                      message: "Managed"
+                    - type: Enabled
+                      status: "True"
+                      lastTransitionTime: "2024-01-01T00:00:00Z"
+                      reason: Enabled
+                      message: "Enabled"
+                    - type: Operational
+                      status: "True"
+                      lastTransitionTime: "2024-01-01T00:00:00Z"
+                      reason: Operational
+                      message: "Operational"
+                    - type: Active
+                      status: "True"
+                      lastTransitionTime: "2024-01-01T00:00:00Z"
+                      reason: Active
+                      message: "Active"
+                    - type: Started
+                      status: "True"
+                      lastTransitionTime: "2024-01-01T00:00:00Z"
+                      reason: Started
+                      message: "Started"
+                    - type: Schedulable
+                      status: "True"
+                      lastTransitionTime: "2024-01-01T00:00:00Z"
+                      reason: Schedulable
+                      message: "Schedulable"
+                - name: Etcd
+                  conditions:
+                    - type: Healthy
+                      status: "True"
+                      lastTransitionTime: "2024-01-01T00:00:00Z"
+                      reason: ResourceHealthy
+                      message: "Healthy"
+                    - type: InService
+                      status: "True"
+                      lastTransitionTime: "2024-01-01T00:00:00Z"
+                      reason: InService
+                      message: "In service"
+                    - type: Managed
+                      status: "True"
+                      lastTransitionTime: "2024-01-01T00:00:00Z"
+                      reason: Managed
+                      message: "Managed"
+                    - type: Enabled
+                      status: "True"
+                      lastTransitionTime: "2024-01-01T00:00:00Z"
+                      reason: Enabled
+                      message: "Enabled"
+                    - type: Operational
+                      status: "True"
+                      lastTransitionTime: "2024-01-01T00:00:00Z"
+                      reason: Operational
+                      message: "Operational"
+                    - type: Active
+                      status: "True"
+                      lastTransitionTime: "2024-01-01T00:00:00Z"
+                      reason: Active
+                      message: "Active"
+                    - type: Started
+                      status: "True"
+                      lastTransitionTime: "2024-01-01T00:00:00Z"
+                      reason: Started
+                      message: "Started"
+                    - type: Schedulable
+                      status: "True"
+                      lastTransitionTime: "2024-01-01T00:00:00Z"
+                      reason: Schedulable
+                      message: "Schedulable"
+              fencingAgents:
+                - name: master-0.example.com_redfish
+                  method: Redfish
+                  conditions:
+                    - type: Healthy
+                      status: "True"
+                      lastTransitionTime: "2024-01-01T00:00:00Z"
+                      reason: ResourceHealthy
+                      message: "Healthy"
+                    - type: InService
+                      status: "True"
+                      lastTransitionTime: "2024-01-01T00:00:00Z"
+                      reason: InService
+                      message: "In service"
+                    - type: Managed
+                      status: "True"
+                      lastTransitionTime: "2024-01-01T00:00:00Z"
+                      reason: Managed
+                      message: "Managed"
+                    - type: Enabled
+                      status: "True"
+                      lastTransitionTime: "2024-01-01T00:00:00Z"
+                      reason: Enabled
+                      message: "Enabled"
+                    - type: Operational
+                      status: "True"
+                      lastTransitionTime: "2024-01-01T00:00:00Z"
+                      reason: Operational
+                      message: "Operational"
+                    - type: Active
+                      status: "True"
+                      lastTransitionTime: "2024-01-01T00:00:00Z"
+                      reason: Active
+                      message: "Active"
+                    - type: Started
+                      status: "True"
+                      lastTransitionTime: "2024-01-01T00:00:00Z"
+                      reason: Started
+                      message: "Started"
+                    - type: Schedulable
+                      status: "True"
+                      lastTransitionTime: "2024-01-01T00:00:00Z"
+                      reason: Schedulable
+                      message: "Schedulable"
+      expectedStatusError: "Unsupported value"
+    - name: Should accept fencing agent with failCount and migrationThreshold
+      initial: |
+        apiVersion: etcd.openshift.io/v1
+        kind: PacemakerCluster
+        metadata:
+          name: cluster
+      updated: |
+        apiVersion: etcd.openshift.io/v1
+        kind: PacemakerCluster
+        metadata:
+          name: cluster
+        status:
+          conditions:
+            - type: Healthy
+              status: "True"
+              lastTransitionTime: "2024-01-01T00:00:00Z"
+              reason: ClusterHealthy
+              message: "Cluster is healthy"
+            - type: InService
+              status: "True"
+              lastTransitionTime: "2024-01-01T00:00:00Z"
+              reason: InService
+              message: "In service"
+            - type: NodeCountAsExpected
+              status: "True"
+              lastTransitionTime: "2024-01-01T00:00:00Z"
+              reason: AsExpected
+              message: "Expected"
+            - type: FencingEnabled
+              status: "True"
+              lastTransitionTime: "2024-01-01T00:00:00Z"
+              reason: FencingEnabled
+              message: "Fencing enabled"
+          lastUpdated: "2024-01-01T00:00:01Z"
+          nodes:
+            - nodeName: master-0.example.com
+              addresses:
+                - type: InternalIP
+                  address: "192.168.1.1"
+              conditions:
+                - type: Healthy
+                  status: "True"
+                  lastTransitionTime: "2024-01-01T00:00:00Z"
+                  reason: NodeHealthy
+                  message: "Node healthy"
+                - type: Online
+                  status: "True"
+                  lastTransitionTime: "2024-01-01T00:00:00Z"
+                  reason: Online
+                  message: "Online"
+                - type: InService
+                  status: "True"
+                  lastTransitionTime: "2024-01-01T00:00:00Z"
+                  reason: InService
+                  message: "In service"
+                - type: Active
+                  status: "True"
+                  lastTransitionTime: "2024-01-01T00:00:00Z"
+                  reason: Active
+                  message: "Active"
+                - type: Ready
+                  status: "True"
+                  lastTransitionTime: "2024-01-01T00:00:00Z"
+                  reason: Ready
+                  message: "Ready"
+                - type: Clean
+                  status: "True"
+                  lastTransitionTime: "2024-01-01T00:00:00Z"
+                  reason: Clean
+                  message: "Clean"
+                - type: Member
+                  status: "True"
+                  lastTransitionTime: "2024-01-01T00:00:00Z"
+                  reason: Member
+                  message: "Member"
+                - type: FencingAvailable
+                  status: "True"
+                  lastTransitionTime: "2024-01-01T00:00:00Z"
+                  reason: FencingAvailable
+                  message: "Fencing available"
+                - type: FencingHealthy
+                  status: "True"
+                  lastTransitionTime: "2024-01-01T00:00:00Z"
+                  reason: FencingHealthy
+                  message: "Fencing healthy"
+              resources:
+                - name: Kubelet
+                  conditions:
+                    - type: Healthy
+                      status: "True"
+                      lastTransitionTime: "2024-01-01T00:00:00Z"
+                      reason: ResourceHealthy
+                      message: "Healthy"
+                    - type: InService
+                      status: "True"
+                      lastTransitionTime: "2024-01-01T00:00:00Z"
+                      reason: InService
+                      message: "In service"
+                    - type: Managed
+                      status: "True"
+                      lastTransitionTime: "2024-01-01T00:00:00Z"
+                      reason: Managed
+                      message: "Managed"
+                    - type: Enabled
+                      status: "True"
+                      lastTransitionTime: "2024-01-01T00:00:00Z"
+                      reason: Enabled
+                      message: "Enabled"
+                    - type: Operational
+                      status: "True"
+                      lastTransitionTime: "2024-01-01T00:00:00Z"
+                      reason: Operational
+                      message: "Operational"
+                    - type: Active
+                      status: "True"
+                      lastTransitionTime: "2024-01-01T00:00:00Z"
+                      reason: Active
+                      message: "Active"
+                    - type: Started
+                      status: "True"
+                      lastTransitionTime: "2024-01-01T00:00:00Z"
+                      reason: Started
+                      message: "Started"
+                    - type: Schedulable
+                      status: "True"
+                      lastTransitionTime: "2024-01-01T00:00:00Z"
+                      reason: Schedulable
+                      message: "Schedulable"
+                - name: Etcd
+                  conditions:
+                    - type: Healthy
+                      status: "True"
+                      lastTransitionTime: "2024-01-01T00:00:00Z"
+                      reason: ResourceHealthy
+                      message: "Healthy"
+                    - type: InService
+                      status: "True"
+                      lastTransitionTime: "2024-01-01T00:00:00Z"
+                      reason: InService
+                      message: "In service"
+                    - type: Managed
+                      status: "True"
+                      lastTransitionTime: "2024-01-01T00:00:00Z"
+                      reason: Managed
+                      message: "Managed"
+                    - type: Enabled
+                      status: "True"
+                      lastTransitionTime: "2024-01-01T00:00:00Z"
+                      reason: Enabled
+                      message: "Enabled"
+                    - type: Operational
+                      status: "True"
+                      lastTransitionTime: "2024-01-01T00:00:00Z"
+                      reason: Operational
+                      message: "Operational"
+                    - type: Active
+                      status: "True"
+                      lastTransitionTime: "2024-01-01T00:00:00Z"
+                      reason: Active
+                      message: "Active"
+                    - type: Started
+                      status: "True"
+                      lastTransitionTime: "2024-01-01T00:00:00Z"
+                      reason: Started
+                      message: "Started"
+                    - type: Schedulable
+                      status: "True"
+                      lastTransitionTime: "2024-01-01T00:00:00Z"
+                      reason: Schedulable
+                      message: "Schedulable"
+              fencingAgents:
+                - name: master-0.example.com_redfish
+                  method: Redfish
+                  failCount: 2
+                  migrationThreshold: 1000000
+                  lastFailureTime: "2024-01-01T00:00:00Z"
+                  conditions:
+                    - type: Healthy
+                      status: "True"
+                      lastTransitionTime: "2024-01-01T00:00:00Z"
+                      reason: ResourceHealthy
+                      message: "Healthy"
+                    - type: InService
+                      status: "True"
+                      lastTransitionTime: "2024-01-01T00:00:00Z"
+                      reason: InService
+                      message: "In service"
+                    - type: Managed
+                      status: "True"
+                      lastTransitionTime: "2024-01-01T00:00:00Z"
+                      reason: Managed
+                      message: "Managed"
+                    - type: Enabled
+                      status: "True"
+                      lastTransitionTime: "2024-01-01T00:00:00Z"
+                      reason: Enabled
+                      message: "Enabled"
+                    - type: Operational
+                      status: "True"
+                      lastTransitionTime: "2024-01-01T00:00:00Z"
+                      reason: Operational
+                      message: "Operational"
+                    - type: Active
+                      status: "True"
+                      lastTransitionTime: "2024-01-01T00:00:00Z"
+                      reason: Active
+                      message: "Active"
+                    - type: Started
+                      status: "True"
+                      lastTransitionTime: "2024-01-01T00:00:00Z"
+                      reason: Started
+                      message: "Started"
+                    - type: Schedulable
+                      status: "True"
+                      lastTransitionTime: "2024-01-01T00:00:00Z"
+                      reason: Schedulable
+                      message: "Schedulable"
+
+      expected: |
+        apiVersion: etcd.openshift.io/v1
+        kind: PacemakerCluster
+        metadata:
+          name: cluster
+        status:
+          conditions:
+            - type: Healthy
+              status: "True"
+              lastTransitionTime: "2024-01-01T00:00:00Z"
+              reason: ClusterHealthy
+              message: "Cluster is healthy"
+            - type: InService
+              status: "True"
+              lastTransitionTime: "2024-01-01T00:00:00Z"
+              reason: InService
+              message: "In service"
+            - type: NodeCountAsExpected
+              status: "True"
+              lastTransitionTime: "2024-01-01T00:00:00Z"
+              reason: AsExpected
+              message: "Expected"
+            - type: FencingEnabled
+              status: "True"
+              lastTransitionTime: "2024-01-01T00:00:00Z"
+              reason: FencingEnabled
+              message: "Fencing enabled"
+          lastUpdated: "2024-01-01T00:00:01Z"
+          nodes:
+            - nodeName: master-0.example.com
+              addresses:
+                - type: InternalIP
+                  address: "192.168.1.1"
+              conditions:
+                - type: Healthy
+                  status: "True"
+                  lastTransitionTime: "2024-01-01T00:00:00Z"
+                  reason: NodeHealthy
+                  message: "Node healthy"
+                - type: Online
+                  status: "True"
+                  lastTransitionTime: "2024-01-01T00:00:00Z"
+                  reason: Online
+                  message: "Online"
+                - type: InService
+                  status: "True"
+                  lastTransitionTime: "2024-01-01T00:00:00Z"
+                  reason: InService
+                  message: "In service"
+                - type: Active
+                  status: "True"
+                  lastTransitionTime: "2024-01-01T00:00:00Z"
+                  reason: Active
+                  message: "Active"
+                - type: Ready
+                  status: "True"
+                  lastTransitionTime: "2024-01-01T00:00:00Z"
+                  reason: Ready
+                  message: "Ready"
+                - type: Clean
+                  status: "True"
+                  lastTransitionTime: "2024-01-01T00:00:00Z"
+                  reason: Clean
+                  message: "Clean"
+                - type: Member
+                  status: "True"
+                  lastTransitionTime: "2024-01-01T00:00:00Z"
+                  reason: Member
+                  message: "Member"
+                - type: FencingAvailable
+                  status: "True"
+                  lastTransitionTime: "2024-01-01T00:00:00Z"
+                  reason: FencingAvailable
+                  message: "Fencing available"
+                - type: FencingHealthy
+                  status: "True"
+                  lastTransitionTime: "2024-01-01T00:00:00Z"
+                  reason: FencingHealthy
+                  message: "Fencing healthy"
+              resources:
+                - name: Kubelet
+                  conditions:
+                    - type: Healthy
+                      status: "True"
+                      lastTransitionTime: "2024-01-01T00:00:00Z"
+                      reason: ResourceHealthy
+                      message: "Healthy"
+                    - type: InService
+                      status: "True"
+                      lastTransitionTime: "2024-01-01T00:00:00Z"
+                      reason: InService
+                      message: "In service"
+                    - type: Managed
+                      status: "True"
+                      lastTransitionTime: "2024-01-01T00:00:00Z"
+                      reason: Managed
+                      message: "Managed"
+                    - type: Enabled
+                      status: "True"
+                      lastTransitionTime: "2024-01-01T00:00:00Z"
+                      reason: Enabled
+                      message: "Enabled"
+                    - type: Operational
+                      status: "True"
+                      lastTransitionTime: "2024-01-01T00:00:00Z"
+                      reason: Operational
+                      message: "Operational"
+                    - type: Active
+                      status: "True"
+                      lastTransitionTime: "2024-01-01T00:00:00Z"
+                      reason: Active
+                      message: "Active"
+                    - type: Started
+                      status: "True"
+                      lastTransitionTime: "2024-01-01T00:00:00Z"
+                      reason: Started
+                      message: "Started"
+                    - type: Schedulable
+                      status: "True"
+                      lastTransitionTime: "2024-01-01T00:00:00Z"
+                      reason: Schedulable
+                      message: "Schedulable"
+                - name: Etcd
+                  conditions:
+                    - type: Healthy
+                      status: "True"
+                      lastTransitionTime: "2024-01-01T00:00:00Z"
+                      reason: ResourceHealthy
+                      message: "Healthy"
+                    - type: InService
+                      status: "True"
+                      lastTransitionTime: "2024-01-01T00:00:00Z"
+                      reason: InService
+                      message: "In service"
+                    - type: Managed
+                      status: "True"
+                      lastTransitionTime: "2024-01-01T00:00:00Z"
+                      reason: Managed
+                      message: "Managed"
+                    - type: Enabled
+                      status: "True"
+                      lastTransitionTime: "2024-01-01T00:00:00Z"
+                      reason: Enabled
+                      message: "Enabled"
+                    - type: Operational
+                      status: "True"
+                      lastTransitionTime: "2024-01-01T00:00:00Z"
+                      reason: Operational
+                      message: "Operational"
+                    - type: Active
+                      status: "True"
+                      lastTransitionTime: "2024-01-01T00:00:00Z"
+                      reason: Active
+                      message: "Active"
+                    - type: Started
+                      status: "True"
+                      lastTransitionTime: "2024-01-01T00:00:00Z"
+                      reason: Started
+                      message: "Started"
+                    - type: Schedulable
+                      status: "True"
+                      lastTransitionTime: "2024-01-01T00:00:00Z"
+                      reason: Schedulable
+                      message: "Schedulable"
+              fencingAgents:
+                - name: master-0.example.com_redfish
+                  method: Redfish
+                  failCount: 2
+                  migrationThreshold: 1000000
+                  lastFailureTime: "2024-01-01T00:00:00Z"
+                  conditions:
+                    - type: Healthy
+                      status: "True"
+                      lastTransitionTime: "2024-01-01T00:00:00Z"
+                      reason: ResourceHealthy
+                      message: "Healthy"
+                    - type: InService
+                      status: "True"
+                      lastTransitionTime: "2024-01-01T00:00:00Z"
+                      reason: InService
+                      message: "In service"
+                    - type: Managed
+                      status: "True"
+                      lastTransitionTime: "2024-01-01T00:00:00Z"
+                      reason: Managed
+                      message: "Managed"
+                    - type: Enabled
+                      status: "True"
+                      lastTransitionTime: "2024-01-01T00:00:00Z"
+                      reason: Enabled
+                      message: "Enabled"
+                    - type: Operational
+                      status: "True"
+                      lastTransitionTime: "2024-01-01T00:00:00Z"
+                      reason: Operational
+                      message: "Operational"
+                    - type: Active
+                      status: "True"
+                      lastTransitionTime: "2024-01-01T00:00:00Z"
+                      reason: Active
+                      message: "Active"
+                    - type: Started
+                      status: "True"
+                      lastTransitionTime: "2024-01-01T00:00:00Z"
+                      reason: Started
+                      message: "Started"
+                    - type: Schedulable
+                      status: "True"
+                      lastTransitionTime: "2024-01-01T00:00:00Z"
+                      reason: Schedulable
+                      message: "Schedulable"

@@ -16799,6 +16799,15 @@
           ],
           "x-kubernetes-list-type": "map"
         },
+        "failCount": {
+          "description": "failCount is the current failure count Pacemaker records for this fencing agent on this node, as reported by the CIB. Pacemaker increments this count each time an operation for this fencing agent fails, and resets it to zero when a `pcs resource cleanup` is performed. A flapping fencing agent is exactly what the FencingHealthy condition should be catching early. The value must be zero or greater. This field is optional and is omitted when the status collector has not yet observed a fail count for this fencing agent, for example on a freshly bootstrapped cluster or for an agent that has never failed.",
+          "type": "integer",
+          "format": "int32"
+        },
+        "lastFailureTime": {
+          "description": "lastFailureTime is the timestamp of the most recent failure observed for this fencing agent on this node, as reported by the CIB. This field is optional and is omitted when no failure has been observed for this fencing agent on this node.",
+          "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Time"
+        },
         "method": {
           "description": "method is the fencing method used by this agent. Valid values are \"Redfish\" and \"IPMI\". Redfish is a standard RESTful API for server management. IPMI (Intelligent Platform Management Interface) is a hardware management interface.\n\nPossible enum values:\n - `\"IPMI\"` uses IPMI (Intelligent Platform Management Interface), a hardware management interface.\n - `\"Redfish\"` uses Redfish, a standard RESTful API for server management.",
           "type": "string",
@@ -16806,6 +16815,11 @@
             "IPMI",
             "Redfish"
           ]
+        },
+        "migrationThreshold": {
+          "description": "migrationThreshold is the configured number of failures after which Pacemaker will no longer attempt to use this fencing agent on this node, as reported by the CIB. Without this value, failCount alone is uninterpretable — whether failCount 3 is alarming depends on whether the threshold is 5 or 1000000 (Pacemaker's default INFINITY). The value must be zero or greater. This field is optional and is omitted when the status collector has not yet observed a migration threshold for this fencing agent.",
+          "type": "integer",
+          "format": "int32"
         },
         "name": {
           "description": "name is the unique identifier for this fencing agent (e.g., \"master-0_redfish\"). The name must be unique within the fencingAgents array for this node. It may contain alphanumeric characters, dots, hyphens, and underscores. Maximum length is 300 characters, providing headroom beyond the typical format of <node_name>_<type> (253 for RFC 1123 node name + 1 underscore + type).",
@@ -16887,6 +16901,10 @@
           ],
           "x-kubernetes-list-type": "map"
         },
+        "lastFenceEvent": {
+          "description": "lastFenceEvent is the most recent fencing event targeting this node, as recorded in Pacemaker's fence history in the CIB. This captures the last time this node was fenced (or a fence attempt was made), including the action taken, the outcome, and which node executed the fence operation. When the Clean condition is False, this field provides the concrete fencing context behind the unclean state. This field is optional and is omitted when no fencing event has been observed for this node.",
+          "$ref": "#/definitions/com.github.openshift.api.etcd.v1.PacemakerFenceEvent"
+        },
         "nodeName": {
           "description": "nodeName is the name of the node. This is expected to match the Kubernetes node's name, which must be a lowercase RFC 1123 subdomain consisting of lowercase alphanumeric characters, '-' or '.', starting and ending with an alphanumeric character, and be at most 253 characters in length.",
           "type": "string"
@@ -16967,7 +16985,7 @@
       ],
       "properties": {
         "conditions": {
-          "description": "conditions represent the observations of the pacemaker cluster's current state. Known condition types are: \"Healthy\", \"InService\", \"NodeCountAsExpected\". The \"Healthy\" condition is an aggregate that tracks the overall health of the cluster. The \"InService\" condition tracks whether the cluster is in service (not in maintenance mode). The \"NodeCountAsExpected\" condition tracks whether the expected number of nodes are present. Each of these conditions is required, so the array must contain at least 3 items.",
+          "description": "conditions represent the observations of the pacemaker cluster's current state. Known condition types are: \"Healthy\", \"InService\", \"NodeCountAsExpected\", \"FencingEnabled\". The \"Healthy\" condition is an aggregate that tracks the overall health of the cluster. The \"InService\" condition tracks whether the cluster is in service (not in maintenance mode). The \"NodeCountAsExpected\" condition tracks whether the expected number of nodes are present. The \"FencingEnabled\" condition tracks whether STONITH (fencing) is enabled in the cluster. Each of these conditions is required, so the array must contain at least 4 items.",
           "type": "array",
           "items": {
             "default": {},
@@ -16993,6 +17011,55 @@
             "nodeName"
           ],
           "x-kubernetes-list-type": "map"
+        }
+      }
+    },
+    "com.github.openshift.api.etcd.v1.PacemakerFenceEvent": {
+      "description": "PacemakerFenceEvent represents the most recent fencing event observed for a node. Fencing events are recorded by Pacemaker in the CIB when STONITH operations occur — either automatically during split-brain recovery or manually via stonith_admin. This struct captures the last fence event targeting a given node, providing visibility into what happened, who initiated it, and which node executed it.",
+      "type": "object",
+      "required": [
+        "action",
+        "status",
+        "lastUpdated"
+      ],
+      "properties": {
+        "action": {
+          "description": "action is the type of fencing action that was performed or is in progress. Valid values are \"reboot\" (power-cycle the node), \"power-off\" (power off the node), and \"power-on\" (power on the node).\n\nPossible enum values:\n - `\"power-off\"` is a fence action that powers off the target node.\n - `\"power-on\"` is a fence action that powers on the target node.\n - `\"reboot\"` is a fence action that power-cycles the target node.",
+          "type": "string",
+          "enum": [
+            "power-off",
+            "power-on",
+            "reboot"
+          ]
+        },
+        "client": {
+          "description": "client identifies the daemon or tool that requested the fencing operation. Typical values are \"crmd\" for automatic recovery initiated by the cluster resource manager, or \"stonith_admin\" for manual fencing initiated by an operator. This is useful for distinguishing \"the cluster fenced itself for cause\" from \"someone fenced a node manually\" during incident review. This field is optional and is omitted when the client is not reported by Pacemaker.",
+          "type": "string"
+        },
+        "completedTime": {
+          "description": "completedTime is the timestamp when the fencing operation completed. This field is optional and is omitted when the fencing operation is still in progress (status \"pending\") or when Pacemaker has not recorded a completion time.",
+          "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Time"
+        },
+        "delegate": {
+          "description": "delegate is the name of the node that executed the fencing operation. In a two-node cluster, this is typically the surviving node that fenced its peer. This field is optional and is omitted when the delegate is not reported by Pacemaker, which can occur for pending operations. The value must not exceed 253 characters.",
+          "type": "string"
+        },
+        "lastUpdated": {
+          "description": "lastUpdated is the timestamp when Pacemaker last updated this fence event record in the CIB. This timestamp is always present in the CIB fence history, including for pending operations where completedTime is not yet set. It must be a valid timestamp in RFC3339 format.",
+          "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Time"
+        },
+        "origin": {
+          "description": "origin is the name of the node from which the fencing request originated. This field is optional and is omitted when the origin is not reported by Pacemaker. The value must not exceed 253 characters.",
+          "type": "string"
+        },
+        "status": {
+          "description": "status is the outcome of the fencing operation. Valid values are \"success\" (the operation completed successfully), \"failed\" (the operation failed), and \"pending\" (the operation is currently in progress).\n\nPossible enum values:\n - `\"failed\"` means the fencing operation failed.\n - `\"pending\"` means the fencing operation is currently in progress.\n - `\"success\"` means the fencing operation completed successfully.",
+          "type": "string",
+          "enum": [
+            "failed",
+            "pending",
+            "success"
+          ]
         }
       }
     },
@@ -17065,6 +17132,15 @@
           ],
           "x-kubernetes-list-type": "map"
         },
+        "failCount": {
+          "description": "failCount is the current failure count Pacemaker records for this fencing agent on this node, as reported by the CIB. Pacemaker increments this count each time an operation for this fencing agent fails, and resets it to zero when a `pcs resource cleanup` is performed. A flapping fencing agent is exactly what the FencingHealthy condition should be catching early. The value must be zero or greater. This field is optional and is omitted when the status collector has not yet observed a fail count for this fencing agent, for example on a freshly bootstrapped cluster or for an agent that has never failed.",
+          "type": "integer",
+          "format": "int32"
+        },
+        "lastFailureTime": {
+          "description": "lastFailureTime is the timestamp of the most recent failure observed for this fencing agent on this node, as reported by the CIB. This field is optional and is omitted when no failure has been observed for this fencing agent on this node.",
+          "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Time"
+        },
         "method": {
           "description": "method is the fencing method used by this agent. Valid values are \"Redfish\" and \"IPMI\". Redfish is a standard RESTful API for server management. IPMI (Intelligent Platform Management Interface) is a hardware management interface.\n\nPossible enum values:\n - `\"IPMI\"` uses IPMI (Intelligent Platform Management Interface), a hardware management interface.\n - `\"Redfish\"` uses Redfish, a standard RESTful API for server management.",
           "type": "string",
@@ -17072,6 +17148,11 @@
             "IPMI",
             "Redfish"
           ]
+        },
+        "migrationThreshold": {
+          "description": "migrationThreshold is the configured number of failures after which Pacemaker will no longer attempt to use this fencing agent on this node, as reported by the CIB. Without this value, failCount alone is uninterpretable — whether failCount 3 is alarming depends on whether the threshold is 5 or 1000000 (Pacemaker's default INFINITY). The value must be zero or greater. This field is optional and is omitted when the status collector has not yet observed a migration threshold for this fencing agent.",
+          "type": "integer",
+          "format": "int32"
         },
         "name": {
           "description": "name is the unique identifier for this fencing agent (e.g., \"master-0_redfish\"). The name must be unique within the fencingAgents array for this node. It may contain alphanumeric characters, dots, hyphens, and underscores. Maximum length is 300 characters, providing headroom beyond the typical format of <node_name>_<type> (253 for RFC 1123 node name + 1 underscore + type).",
@@ -17153,6 +17234,10 @@
           ],
           "x-kubernetes-list-type": "map"
         },
+        "lastFenceEvent": {
+          "description": "lastFenceEvent is the most recent fencing event targeting this node, as recorded in Pacemaker's fence history in the CIB. This captures the last time this node was fenced (or a fence attempt was made), including the action taken, the outcome, and which node executed the fence operation. When the Clean condition is False, this field provides the concrete fencing context behind the unclean state. This field is optional and is omitted when no fencing event has been observed for this node.",
+          "$ref": "#/definitions/com.github.openshift.api.etcd.v1alpha1.PacemakerFenceEvent"
+        },
         "nodeName": {
           "description": "nodeName is the name of the node. This is expected to match the Kubernetes node's name, which must be a lowercase RFC 1123 subdomain consisting of lowercase alphanumeric characters, '-' or '.', starting and ending with an alphanumeric character, and be at most 253 characters in length.",
           "type": "string"
@@ -17233,7 +17318,7 @@
       ],
       "properties": {
         "conditions": {
-          "description": "conditions represent the observations of the pacemaker cluster's current state. Known condition types are: \"Healthy\", \"InService\", \"NodeCountAsExpected\". The \"Healthy\" condition is an aggregate that tracks the overall health of the cluster. The \"InService\" condition tracks whether the cluster is in service (not in maintenance mode). The \"NodeCountAsExpected\" condition tracks whether the expected number of nodes are present. Each of these conditions is required, so the array must contain at least 3 items.",
+          "description": "conditions represent the observations of the pacemaker cluster's current state. Known condition types are: \"Healthy\", \"InService\", \"NodeCountAsExpected\", \"FencingEnabled\". The \"Healthy\" condition is an aggregate that tracks the overall health of the cluster. The \"InService\" condition tracks whether the cluster is in service (not in maintenance mode). The \"NodeCountAsExpected\" condition tracks whether the expected number of nodes are present. The \"FencingEnabled\" condition tracks whether STONITH (fencing) is enabled in the cluster. Each of these conditions is required, so the array must contain at least 4 items.",
           "type": "array",
           "items": {
             "default": {},
@@ -17259,6 +17344,55 @@
             "nodeName"
           ],
           "x-kubernetes-list-type": "map"
+        }
+      }
+    },
+    "com.github.openshift.api.etcd.v1alpha1.PacemakerFenceEvent": {
+      "description": "PacemakerFenceEvent represents the most recent fencing event observed for a node. Fencing events are recorded by Pacemaker in the CIB when STONITH operations occur — either automatically during split-brain recovery or manually via stonith_admin. This struct captures the last fence event targeting a given node, providing visibility into what happened, who initiated it, and which node executed it.",
+      "type": "object",
+      "required": [
+        "action",
+        "status",
+        "lastUpdated"
+      ],
+      "properties": {
+        "action": {
+          "description": "action is the type of fencing action that was performed or is in progress. Valid values are \"reboot\" (power-cycle the node), \"power-off\" (power off the node), and \"power-on\" (power on the node).\n\nPossible enum values:\n - `\"power-off\"` is a fence action that powers off the target node.\n - `\"power-on\"` is a fence action that powers on the target node.\n - `\"reboot\"` is a fence action that power-cycles the target node.",
+          "type": "string",
+          "enum": [
+            "power-off",
+            "power-on",
+            "reboot"
+          ]
+        },
+        "client": {
+          "description": "client identifies the daemon or tool that requested the fencing operation. Typical values are \"crmd\" for automatic recovery initiated by the cluster resource manager, or \"stonith_admin\" for manual fencing initiated by an operator. This is useful for distinguishing \"the cluster fenced itself for cause\" from \"someone fenced a node manually\" during incident review. This field is optional and is omitted when the client is not reported by Pacemaker.",
+          "type": "string"
+        },
+        "completedTime": {
+          "description": "completedTime is the timestamp when the fencing operation completed. This field is optional and is omitted when the fencing operation is still in progress (status \"pending\") or when Pacemaker has not recorded a completion time.",
+          "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Time"
+        },
+        "delegate": {
+          "description": "delegate is the name of the node that executed the fencing operation. In a two-node cluster, this is typically the surviving node that fenced its peer. This field is optional and is omitted when the delegate is not reported by Pacemaker, which can occur for pending operations. The value must not exceed 253 characters.",
+          "type": "string"
+        },
+        "lastUpdated": {
+          "description": "lastUpdated is the timestamp when Pacemaker last updated this fence event record in the CIB. This timestamp is always present in the CIB fence history, including for pending operations where completedTime is not yet set. It must be a valid timestamp in RFC3339 format.",
+          "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Time"
+        },
+        "origin": {
+          "description": "origin is the name of the node from which the fencing request originated. This field is optional and is omitted when the origin is not reported by Pacemaker. The value must not exceed 253 characters.",
+          "type": "string"
+        },
+        "status": {
+          "description": "status is the outcome of the fencing operation. Valid values are \"success\" (the operation completed successfully), \"failed\" (the operation failed), and \"pending\" (the operation is currently in progress).\n\nPossible enum values:\n - `\"failed\"` means the fencing operation failed.\n - `\"pending\"` means the fencing operation is currently in progress.\n - `\"success\"` means the fencing operation completed successfully.",
+          "type": "string",
+          "enum": [
+            "failed",
+            "pending",
+            "success"
+          ]
         }
       }
     },

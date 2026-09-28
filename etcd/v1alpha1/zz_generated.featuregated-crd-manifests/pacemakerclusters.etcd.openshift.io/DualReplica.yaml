@@ -55,11 +55,12 @@ spec:
               conditions:
                 description: |-
                   conditions represent the observations of the pacemaker cluster's current state.
-                  Known condition types are: "Healthy", "InService", "NodeCountAsExpected".
+                  Known condition types are: "Healthy", "InService", "NodeCountAsExpected", "FencingEnabled".
                   The "Healthy" condition is an aggregate that tracks the overall health of the cluster.
                   The "InService" condition tracks whether the cluster is in service (not in maintenance mode).
                   The "NodeCountAsExpected" condition tracks whether the expected number of nodes are present.
-                  Each of these conditions is required, so the array must contain at least 3 items.
+                  The "FencingEnabled" condition tracks whether STONITH (fencing) is enabled in the cluster.
+                  Each of these conditions is required, so the array must contain at least 4 items.
                 items:
                   description: Condition contains details for one aspect of the current
                     state of this API Resource.
@@ -115,7 +116,7 @@ spec:
                   - type
                   type: object
                 maxItems: 8
-                minItems: 3
+                minItems: 4
                 type: array
                 x-kubernetes-list-map-keys:
                 - type
@@ -127,6 +128,8 @@ spec:
                   rule: self.exists(c, c.type == 'InService')
                 - message: conditions must contain a condition of type NodeCountAsExpected
                   rule: self.exists(c, c.type == 'NodeCountAsExpected')
+                - message: conditions must contain a condition of type FencingEnabled
+                  rule: self.exists(c, c.type == 'FencingEnabled')
               lastUpdated:
                 description: |-
                   lastUpdated is the timestamp when this status was last updated. This is useful for identifying
@@ -400,6 +403,26 @@ spec:
                             - message: conditions must contain a condition of type
                                 Schedulable
                               rule: self.exists(c, c.type == 'Schedulable')
+                          failCount:
+                            description: |-
+                              failCount is the current failure count Pacemaker records for this fencing agent on
+                              this node, as reported by the CIB. Pacemaker increments this count each time an
+                              operation for this fencing agent fails, and resets it to zero when a `pcs resource
+                              cleanup` is performed. A flapping fencing agent is exactly what the FencingHealthy
+                              condition should be catching early. The value must be zero or greater. This field is
+                              optional and is omitted when the status collector has not yet observed a fail count for
+                              this fencing agent, for example on a freshly bootstrapped cluster or for an agent that
+                              has never failed.
+                            format: int32
+                            minimum: 0
+                            type: integer
+                          lastFailureTime:
+                            description: |-
+                              lastFailureTime is the timestamp of the most recent failure observed for this fencing
+                              agent on this node, as reported by the CIB. This field is optional and is omitted when
+                              no failure has been observed for this fencing agent on this node.
+                            format: date-time
+                            type: string
                           method:
                             description: |-
                               method is the fencing method used by this agent.
@@ -410,6 +433,18 @@ spec:
                             - Redfish
                             - IPMI
                             type: string
+                          migrationThreshold:
+                            description: |-
+                              migrationThreshold is the configured number of failures after which Pacemaker will
+                              no longer attempt to use this fencing agent on this node, as reported by the CIB.
+                              Without this value, failCount alone is uninterpretable — whether failCount 3 is
+                              alarming depends on whether the threshold is 5 or 1000000 (Pacemaker's default
+                              INFINITY). The value must be zero or greater. This field is optional and is omitted
+                              when the status collector has not yet observed a migration threshold for this fencing
+                              agent.
+                            format: int32
+                            minimum: 0
+                            type: integer
                           name:
                             description: |-
                               name is the unique identifier for this fencing agent (e.g., "master-0_redfish").
@@ -438,6 +473,79 @@ spec:
                       x-kubernetes-validations:
                       - message: fencing agent names must be unique
                         rule: self.all(x, self.exists_one(y, x.name == y.name))
+                    lastFenceEvent:
+                      description: |-
+                        lastFenceEvent is the most recent fencing event targeting this node, as recorded in
+                        Pacemaker's fence history in the CIB. This captures the last time this node was fenced
+                        (or a fence attempt was made), including the action taken, the outcome, and which node
+                        executed the fence operation. When the Clean condition is False, this field provides the
+                        concrete fencing context behind the unclean state. This field is optional and is omitted
+                        when no fencing event has been observed for this node.
+                      properties:
+                        action:
+                          description: |-
+                            action is the type of fencing action that was performed or is in progress.
+                            Valid values are "reboot" (power-cycle the node), "power-off" (power off the node),
+                            and "power-on" (power on the node).
+                          enum:
+                          - reboot
+                          - power-off
+                          - power-on
+                          type: string
+                        client:
+                          description: |-
+                            client identifies the daemon or tool that requested the fencing operation. Typical values
+                            are "crmd" for automatic recovery initiated by the cluster resource manager, or
+                            "stonith_admin" for manual fencing initiated by an operator. This is useful for
+                            distinguishing "the cluster fenced itself for cause" from "someone fenced a node manually"
+                            during incident review. This field is optional and is omitted when the client is not
+                            reported by Pacemaker.
+                          maxLength: 256
+                          type: string
+                        completedTime:
+                          description: |-
+                            completedTime is the timestamp when the fencing operation completed. This field is optional
+                            and is omitted when the fencing operation is still in progress (status "pending") or when
+                            Pacemaker has not recorded a completion time.
+                          format: date-time
+                          type: string
+                        delegate:
+                          description: |-
+                            delegate is the name of the node that executed the fencing operation. In a two-node cluster,
+                            this is typically the surviving node that fenced its peer. This field is optional and is
+                            omitted when the delegate is not reported by Pacemaker, which can occur for pending
+                            operations. The value must not exceed 253 characters.
+                          maxLength: 253
+                          type: string
+                        lastUpdated:
+                          description: |-
+                            lastUpdated is the timestamp when Pacemaker last updated this fence event record in the CIB.
+                            This timestamp is always present in the CIB fence history, including for pending operations
+                            where completedTime is not yet set. It must be a valid timestamp in RFC3339 format.
+                          format: date-time
+                          type: string
+                        origin:
+                          description: |-
+                            origin is the name of the node from which the fencing request originated. This field is
+                            optional and is omitted when the origin is not reported by Pacemaker. The value must not
+                            exceed 253 characters.
+                          maxLength: 253
+                          type: string
+                        status:
+                          description: |-
+                            status is the outcome of the fencing operation.
+                            Valid values are "success" (the operation completed successfully), "failed" (the operation
+                            failed), and "pending" (the operation is currently in progress).
+                          enum:
+                          - success
+                          - failed
+                          - pending
+                          type: string
+                      required:
+                      - action
+                      - lastUpdated
+                      - status
+                      type: object
                     nodeName:
                       description: |-
                         nodeName is the name of the node. This is expected to match the Kubernetes node's name, which must be a lowercase

@@ -2037,6 +2037,11 @@ tests:
                 collectionPolicy: Collect
               buddyInfo:
                 collectionPolicy: DoNotCollect
+              interrupts:
+                collectionPolicy: Collect
+                collect:
+                  include:
+                    - "LOC.*"
             maxProcs: 4
             ignoredNetworkDevices:
               - "^veth.*$"
@@ -2055,6 +2060,11 @@ tests:
                 collectionPolicy: Collect
               buddyInfo:
                 collectionPolicy: DoNotCollect
+              interrupts:
+                collectionPolicy: Collect
+                collect:
+                  include:
+                    - "LOC.*"
             maxProcs: 4
             ignoredNetworkDevices:
               - "^veth.*$"
@@ -2165,7 +2175,7 @@ tests:
                 collectionPolicy: DoNotCollect
                 collect:
                   statsGatherer: Netlink
-      expectedError: 'collect is forbidden when collectionPolicy is not Collect'
+      expectedError: 'collect may be set when collectionPolicy is Collect, and forbidden otherwise'
     - name: Should accept netClass DoNotCollect without collect
       initial: |
         apiVersion: config.openshift.io/v1alpha1
@@ -2195,7 +2205,7 @@ tests:
                 collect:
                   units:
                     - "kubelet.service"
-      expectedError: 'collect is forbidden when collectionPolicy is not Collect'
+      expectedError: 'collect may be set when collectionPolicy is Collect, and forbidden otherwise'
     - name: Should accept systemd DoNotCollect without collect
       initial: |
         apiVersion: config.openshift.io/v1alpha1
@@ -2288,6 +2298,137 @@ tests:
             collectors:
               softirqs: {}
       expectedError: 'spec.nodeExporterConfig.collectors.softirqs.collectionPolicy: Required value'
+    - name: Should reject interrupts Collect without collect field
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          nodeExporterConfig:
+            collectors:
+              interrupts:
+                collectionPolicy: Collect
+      expectedError: 'collect is required when collectionPolicy is Collect, and forbidden otherwise'
+    - name: Should accept interrupts collector with DoNotCollect
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          nodeExporterConfig:
+            collectors:
+              interrupts:
+                collectionPolicy: DoNotCollect
+      expected: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          nodeExporterConfig:
+            collectors:
+              interrupts:
+                collectionPolicy: DoNotCollect
+    - name: Should reject interrupts collector with invalid collectionPolicy
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          nodeExporterConfig:
+            collectors:
+              interrupts:
+                collectionPolicy: Invalid
+      expectedError: 'spec.nodeExporterConfig.collectors.interrupts.collectionPolicy: Unsupported value: "Invalid"'
+    - name: Should reject interrupts collector with empty collectionPolicy
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          nodeExporterConfig:
+            collectors:
+              interrupts: {}
+      expectedError: 'spec.nodeExporterConfig.collectors.interrupts.collectionPolicy: Required value'
+    - name: Should accept interrupts Collect with include list
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          nodeExporterConfig:
+            collectors:
+              interrupts:
+                collectionPolicy: Collect
+                collect:
+                  include:
+                    - "LOC.*"
+                    - "NMI.*"
+      expected: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          nodeExporterConfig:
+            collectors:
+              interrupts:
+                collectionPolicy: Collect
+                collect:
+                  include:
+                    - "LOC.*"
+                    - "NMI.*"
+    - name: Should accept interrupts Collect with wildcard include
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          nodeExporterConfig:
+            collectors:
+              interrupts:
+                collectionPolicy: Collect
+                collect:
+                  include:
+                    - ".*"
+      expected: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          nodeExporterConfig:
+            collectors:
+              interrupts:
+                collectionPolicy: Collect
+                collect:
+                  include:
+                    - ".*"
+    - name: Should reject interrupts with collect set when collector is DoNotCollect
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          nodeExporterConfig:
+            collectors:
+              interrupts:
+                collectionPolicy: DoNotCollect
+                collect:
+                  include:
+                    - "LOC.*"
+      expectedError: 'collect is required when collectionPolicy is Collect, and forbidden otherwise'
+    - name: Should reject interrupts collect with empty object
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          nodeExporterConfig:
+            collectors:
+              interrupts:
+                collectionPolicy: Collect
+                collect: {}
+      expectedError: 'spec.nodeExporterConfig.collectors.interrupts.collect.include: Required value'
+    - name: Should reject interrupts include with control characters
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          nodeExporterConfig:
+            collectors:
+              interrupts:
+                collectionPolicy: Collect
+                collect:
+                  include:
+                    - "LOC\ttab"
+      expectedError: 'must contain only printable ASCII characters (no control characters)'
     - name: Should reject NodeExporterConfig with zero request
       initial: |
         apiVersion: config.openshift.io/v1alpha1

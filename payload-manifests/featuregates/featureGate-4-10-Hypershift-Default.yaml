@@ -117,10 +117,13 @@
                         "name": "DNSNameResolver"
                     },
                     {
+                        "name": "DRADeviceTaintRules"
+                    },
+                    {
                         "name": "DyanmicServiceEndpointIBMCloud"
                     },
                     {
-                        "name": "EtcdBackendQuota"
+                        "name": "EgressIPNodeSelector"
                     },
                     {
                         "name": "EventedPLEG"
@@ -132,10 +135,10 @@
                         "name": "Example2"
                     },
                     {
-                        "name": "ExternalOIDCExternalClaimsSourcing"
+                        "name": "ExternalOIDCAsWebhook"
                     },
                     {
-                        "name": "ExternalOIDCWithUpstreamParity"
+                        "name": "ExternalOIDCExternalClaimsSourcing"
                     },
                     {
                         "name": "ExternalSnapshotMetadata"
@@ -150,13 +153,16 @@
                         "name": "GCPDualStackInstall"
                     },
                     {
-                        "name": "GCPSovereignCloudInstall"
-                    },
-                    {
                         "name": "GatewayAPIManagementMode"
                     },
                     {
+                        "name": "GomaxprocsInjection"
+                    },
+                    {
                         "name": "ImageModeStatusReporting"
+                    },
+                    {
+                        "name": "IngressControllerLBSecurityGroupsAWS"
                     },
                     {
                         "name": "KMSEncryption"
@@ -190,6 +196,9 @@
                     },
                     {
                         "name": "MachineAPIOperatorDisableMachineHealthCheckController"
+                    },
+                    {
+                        "name": "ManagedBootImagesAWSCAPI"
                     },
                     {
                         "name": "MaxUnavailableStatefulSet"
@@ -246,7 +255,7 @@
                         "name": "OLMLifecycleAndCompatibility"
                     },
                     {
-                        "name": "OSStreams"
+                        "name": "OVNKubernetesUplinkMode"
                     },
                     {
                         "name": "OVNObservability"
@@ -258,31 +267,22 @@
                         "name": "ProvisioningRequestAvailable"
                     },
                     {
-                        "name": "SELinuxMount"
-                    },
-                    {
-                        "name": "SELinuxMountGAReadiness"
-                    },
-                    {
                         "name": "ShortCertRotation"
                     },
                     {
                         "name": "SignatureStores"
                     },
                     {
-                        "name": "TLSAdherence"
+                        "name": "TLSGroupPreferences"
                     },
                     {
-                        "name": "TLSGroupPreferences"
+                        "name": "UnifiedClusterManagedDNSAndLB"
                     },
                     {
                         "name": "VSphereConfigurableMaxAllowedBlockVolumesPerNode"
                     },
                     {
-                        "name": "VSphereMultiVCenterDay2"
-                    },
-                    {
-                        "name": "VolumeGroupSnapshot"
+                        "name": "VSpherePerComponentScopedCreds"
                     }
                 ],
                 "enabled": [
@@ -293,16 +293,7 @@
                         "name": "AWSDualStackInstall"
                     },
                     {
-                        "name": "AWSServiceLBNetworkSecurityGroup"
-                    },
-                    {
                         "name": "AdditionalStorageConfig"
-                    },
-                    {
-                        "name": "AzureWorkloadIdentity"
-                    },
-                    {
-                        "name": "BootImageSkewEnforcement"
                     },
                     {
                         "name": "BuildCSIVolumes"
@@ -314,6 +305,9 @@
                         "name": "EVPN"
                     },
                     {
+                        "name": "EtcdBackendQuota"
+                    },
+                    {
                         "name": "EventTTL"
                     },
                     {
@@ -321,6 +315,12 @@
                     },
                     {
                         "name": "ExternalOIDCWithUIDAndExtraClaimMappings"
+                    },
+                    {
+                        "name": "ExternalOIDCWithUpstreamParity"
+                    },
+                    {
+                        "name": "GCPSovereignCloudInstall"
                     },
                     {
                         "name": "GatewayAPIWithoutOLM"
@@ -365,19 +365,25 @@
                         "name": "MutatingAdmissionPolicy"
                     },
                     {
+                        "name": "OSStreams"
+                    },
+                    {
                         "name": "OpenShiftPodSecurityAdmission"
+                    },
+                    {
+                        "name": "SELinuxMount"
+                    },
+                    {
+                        "name": "SELinuxMountGAReadiness"
                     },
                     {
                         "name": "ServiceAccountTokenNodeBinding"
                     },
                     {
-                        "name": "SigstoreImageVerification"
-                    },
-                    {
-                        "name": "SigstoreImageVerificationPKI"
-                    },
-                    {
                         "name": "StoragePerformantSecurityPolicy"
+                    },
+                    {
+                        "name": "TLSAdherence"
                     },
                     {
                         "name": "UpgradeStatus"
@@ -389,10 +395,7 @@
                         "name": "VSphereMixedNodeEnv"
                     },
                     {
-                        "name": "VSphereMultiDisk"
-                    },
-                    {
-                        "name": "VSphereMultiNetworks"
+                        "name": "VSphereMultiVCenterDay2"
                     }
                 ],
                 "version": ""

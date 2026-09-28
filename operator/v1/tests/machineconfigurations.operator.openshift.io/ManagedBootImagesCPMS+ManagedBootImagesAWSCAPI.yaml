@@ -1,0 +1,98 @@
+apiVersion: apiextensions.k8s.io/v1 # Hack because controller-gen complains if we don't have this
+name: "MachineConfiguration"
+crdName: machineconfigurations.operator.openshift.io
+featureGates:
+- ManagedBootImagesCPMS
+- ManagedBootImagesAWSCAPI
+tests:
+  onCreate:
+    - name: Should be able to use all resource types when both feature gates are enabled
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: MachineConfiguration
+        spec:
+          managedBootImages:
+            machineManagers:
+              - resource: machinesets
+                apiGroup: machine.openshift.io
+                selection:
+                  mode: All
+              - resource: controlplanemachinesets
+                apiGroup: machine.openshift.io
+                selection:
+                  mode: All
+              - resource: machinesets
+                apiGroup: cluster.x-k8s.io
+                selection:
+                  mode: All
+              - resource: machinedeployments
+                apiGroup: cluster.x-k8s.io
+                selection:
+                  mode: All
+      expected: |
+        apiVersion: operator.openshift.io/v1
+        kind: MachineConfiguration
+        spec:
+          logLevel: Normal
+          operatorLogLevel: Normal
+          managedBootImages:
+            machineManagers:
+              - resource: machinesets
+                apiGroup: machine.openshift.io
+                selection:
+                  mode: All
+              - resource: controlplanemachinesets
+                apiGroup: machine.openshift.io
+                selection:
+                  mode: All
+              - resource: machinesets
+                apiGroup: cluster.x-k8s.io
+                selection:
+                  mode: All
+              - resource: machinedeployments
+                apiGroup: cluster.x-k8s.io
+                selection:
+                  mode: All
+    - name: Should not permit ControlPlaneMachineSets in Partial mode even when ManagedBootImagesAWSCAPI is also enabled
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: MachineConfiguration
+        spec:
+          managedBootImages:
+            machineManagers:
+              - resource: controlplanemachinesets
+                apiGroup: machine.openshift.io
+                selection:
+                  mode: Partial
+                  partial:
+                    machineResourceSelector:
+                      matchLabels: {}
+      expectedError: "Only All or None selection mode is permitted for ControlPlaneMachineSets"
+    - name: Should not permit controlplanemachinesets with cluster.x-k8s.io API group
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: MachineConfiguration
+        spec:
+          managedBootImages:
+            machineManagers:
+              - resource: controlplanemachinesets
+                apiGroup: cluster.x-k8s.io
+                selection:
+                  mode: All
+      expectedError: "the controlplanemachinesets resource is only supported in the machine.openshift.io API group"
+    - name: Only one unique pair of resource/apiGroup is allowed across all resource types
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: MachineConfiguration
+        spec:
+          managedBootImages:
+            machineManagers:
+              - resource: machinedeployments
+                apiGroup: cluster.x-k8s.io
+                selection:
+                  mode: All
+              - resource: machinedeployments
+                apiGroup: cluster.x-k8s.io
+                selection:
+                  mode: None
+      expectedError: "spec.managedBootImages.machineManagers[1]: Duplicate value: map[string]interface {}{\"apiGroup\":\"cluster.x-k8s.io\", \"resource\":\"machinedeployments\"}"

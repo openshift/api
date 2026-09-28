@@ -3,7 +3,6 @@ name: "Infrastructure"
 crdName: infrastructures.config.openshift.io
 featureGates:
   - -AWSClusterHostedDNS
-  - -VSphereMultiVCenterDay2
 tests:
   onCreate:
     - name: Should be able to create a minimal Infrastructure
@@ -1369,7 +1368,7 @@ tests:
                 url: https://dummy.vpc.com
               - name: BadService
                 url: https://bad-service.com
-      expectedStatusError: 'platformStatus.ibmcloud.serviceEndpoints[1].name: Unsupported value: "BadService": supported values: "CIS", "COS", "COSConfig", "DNSServices", "GlobalCatalog", "GlobalSearch", "GlobalTagging", "HyperProtect", "IAM", "KeyProtect", "ResourceController", "ResourceManager", "VPC"'
+      expectedStatusError: 'platformStatus.ibmcloud.serviceEndpoints[1].name: Unsupported value: "BadService": supported values: "CIS", "COS", "COSConfig", "DNSServices", "GlobalCatalog", "GlobalSearch", "GlobalTagging", "HyperProtect", "IAM", "KeyProtect", "ResourceController", "ResourceManager", "VPC", "TransitGateway", "PowerVS"'
     - name: Should allow updating other fields with an invalid persisted PowerVS service endpoint name in spec
       initialCRDPatches:
         - op: replace
@@ -1477,7 +1476,7 @@ tests:
               serviceEndpoints:
               - name: dnsservices2
                 url: https://abc
-      expectedError: 'spec.platformSpec.powervs.serviceEndpoints[0].name: Unsupported value: "dnsservices2": supported values: "CIS", "COS", "COSConfig", "DNSServices", "GlobalCatalog", "GlobalSearch", "GlobalTagging", "HyperProtect", "IAM", "KeyProtect", "Power", "ResourceController", "ResourceManager", "VPC"'
+      expectedError: 'spec.platformSpec.powervs.serviceEndpoints[0].name: Unsupported value: "dnsservices2": supported values: "CIS", "COS", "COSConfig", "DNSServices", "GlobalCatalog", "GlobalSearch", "GlobalTagging", "HyperProtect", "IAM", "KeyProtect", "Power", "ResourceController", "ResourceManager", "VPC", "TransitGateway"'
     - name: Should allow updating adding updating an invalid value to a valid value for PowerVS service endpoint name in spec
       initialCRDPatches:
         - op: replace
@@ -1636,7 +1635,7 @@ tests:
               serviceEndpoints:
               - name: dnsservices2
                 url: https://abc
-      expectedStatusError: 'status.platformStatus.powervs.serviceEndpoints[0].name: Unsupported value: "dnsservices2": supported values: "CIS", "COS", "COSConfig", "DNSServices", "GlobalCatalog", "GlobalSearch", "GlobalTagging", "HyperProtect", "IAM", "KeyProtect", "Power", "ResourceController", "ResourceManager", "VPC"'
+      expectedStatusError: 'status.platformStatus.powervs.serviceEndpoints[0].name: Unsupported value: "dnsservices2": supported values: "CIS", "COS", "COSConfig", "DNSServices", "GlobalCatalog", "GlobalSearch", "GlobalTagging", "HyperProtect", "IAM", "KeyProtect", "Power", "ResourceController", "ResourceManager", "VPC", "TransitGateway"'
     - name: Should allow updating adding updating an invalid value to a valid value for PowerVS service endpoint name in status
       initialCRDPatches:
         - op: replace
@@ -1884,6 +1883,8 @@ tests:
       initialCRDPatches:
         - op: remove
           path: /spec/versions/0/schema/openAPIV3Schema/properties/spec/properties/platformSpec/properties/vsphere/properties/vcenters/minItems
+        - op: remove
+          path: /spec/versions/0/schema/openAPIV3Schema/properties/spec/properties/platformSpec/properties/vsphere/x-kubernetes-validations/0
       initial: |
         apiVersion: config.openshift.io/v1
         kind: Infrastructure

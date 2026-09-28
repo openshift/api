@@ -801,6 +801,38 @@ func filterVariants(featureGate string, variantsList ...[]JobVariant) []JobVaria
 	return filteredVariants
 }
 
+// flexibleDateTime wraps time.Time so that JSON values can be decoded from
+// either an RFC 3339 timestamp (e.g. "2018-07-11T00:00:00Z") or a bare
+// date-only string (e.g. "2018-07-11"). The Sippy /api/releases endpoint
+// switched the development_start and ga fields from RFC 3339 timestamps to
+// bare dates; supporting both keeps this tool compatible with old and new
+// responses.
+type flexibleDateTime struct {
+	time.Time
+}
+
+// UnmarshalJSON decodes the JSON value into the wrapped time.Time, trying the
+// RFC 3339 layout first and falling back to the date-only layout ("2006-01-02").
+func (f *flexibleDateTime) UnmarshalJSON(data []byte) error {
+	s := strings.Trim(string(data), `"`)
+	if s == "" || s == "null" {
+		return nil
+	}
+
+	if t, err := time.Parse(time.RFC3339, s); err == nil {
+		f.Time = t
+		return nil
+	}
+
+	t, err := time.Parse("2006-01-02", s)
+	if err != nil {
+		return fmt.Errorf("cannot parse %q as RFC 3339 or date-only (2006-01-02): %w", s, err)
+	}
+
+	f.Time = t
+	return nil
+}
+
 // getLatestRelease returns the latest release from Sippy.
 func getLatestRelease() (string, error) {
 	releaseAPI := "https://sippy.dptools.openshift.org/api/releases"
@@ -821,8 +853,8 @@ func getLatestRelease() (string, error) {
 
 	var result struct {
 		ReleaseAttrs map[string]struct {
-			DevelopmentStart *time.Time `json:"development_start,omitempty"`
-			Product          string     `json:"product,omitempty"`
+			DevelopmentStart *flexibleDateTime `json:"development_start,omitempty"`
+			Product          string            `json:"product,omitempty"`
 		} `json:"release_attrs,omitempty"`
 	}
 
@@ -840,14 +872,14 @@ func getLatestRelease() (string, error) {
 			continue
 		}
 
-		if releaseAttrs.DevelopmentStart != nil && !releaseAttrs.DevelopmentStart.IsZero() && time.Now().Before(*releaseAttrs.DevelopmentStart) {
+		if releaseAttrs.DevelopmentStart != nil && !releaseAttrs.DevelopmentStart.Time.IsZero() && time.Now().Before(releaseAttrs.DevelopmentStart.Time) {
 			// We only want to consider releases that have started development.
 			continue
 		}
 
-		if releaseAttrs.DevelopmentStart != nil && !releaseAttrs.DevelopmentStart.IsZero() && releaseAttrs.DevelopmentStart.After(latestReleaseStart) {
+		if releaseAttrs.DevelopmentStart != nil && !releaseAttrs.DevelopmentStart.Time.IsZero() && releaseAttrs.DevelopmentStart.Time.After(latestReleaseStart) {
 			latestRelease = release
-			latestReleaseStart = *releaseAttrs.DevelopmentStart
+			latestReleaseStart = releaseAttrs.DevelopmentStart.Time
 		}
 	}
 

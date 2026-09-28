@@ -138,7 +138,7 @@ func getInputPaths(groupCtxs []generation.APIGroupContext) []string {
 
 	for _, groupCtx := range groupCtxs {
 		if groupCtx.Config != nil && groupCtx.Config.OpenAPI != nil && groupCtx.Config.OpenAPI.Disabled {
-			klog.V(2).Info("Excluding API group %q from openapi generation", groupCtx.Name)
+			klog.V(2).Infof("Excluding API group %q from openapi generation", groupCtx.Name)
 			continue
 		}
 

@@ -1,0 +1,212 @@
+apiVersion: apiextensions.k8s.io/v1 # Hack because controller-gen complains if we don't have this
+name: "MachineConfiguration"
+crdName: machineconfigurations.operator.openshift.io
+featureGates:
+- ManagedBootImagesAWSCAPI
+tests:
+  onCreate:
+    - name: Should be able to create a minimal MachineConfiguration
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: MachineConfiguration
+        spec: {} # No spec is required for a MachineConfiguration
+      expected: |
+        apiVersion: operator.openshift.io/v1
+        kind: MachineConfiguration
+        spec:
+          logLevel: Normal
+          operatorLogLevel: Normal
+    - name: Should be able to create a ManagedBootImages configuration knob that opts in all CAPI MachineSets
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: MachineConfiguration
+        spec:
+          managedBootImages:
+            machineManagers:
+              - resource: machinesets
+                apiGroup: cluster.x-k8s.io
+                selection:
+                  mode: All
+      expected: |
+        apiVersion: operator.openshift.io/v1
+        kind: MachineConfiguration
+        spec:
+          logLevel: Normal
+          operatorLogLevel: Normal
+          managedBootImages:
+            machineManagers:
+              - resource: machinesets
+                apiGroup: cluster.x-k8s.io
+                selection:
+                  mode: All
+    - name: Should be able to create a ManagedBootImages configuration knob that opts in CAPI MachineSets in partial mode
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: MachineConfiguration
+        spec:
+          managedBootImages:
+            machineManagers:
+              - resource: machinesets
+                apiGroup: cluster.x-k8s.io
+                selection:
+                  mode: Partial
+                  partial:
+                    machineResourceSelector:
+                      matchLabels: {}
+      expected: |
+        apiVersion: operator.openshift.io/v1
+        kind: MachineConfiguration
+        spec:
+          logLevel: Normal
+          operatorLogLevel: Normal
+          managedBootImages:
+            machineManagers:
+              - resource: machinesets
+                apiGroup: cluster.x-k8s.io
+                selection:
+                  mode: Partial
+                  partial:
+                    machineResourceSelector:
+                      matchLabels: {}
+    - name: Should be able to create a ManagedBootImages configuration knob that opts in all CAPI MachineDeployments
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: MachineConfiguration
+        spec:
+          managedBootImages:
+            machineManagers:
+              - resource: machinedeployments
+                apiGroup: cluster.x-k8s.io
+                selection:
+                  mode: All
+      expected: |
+        apiVersion: operator.openshift.io/v1
+        kind: MachineConfiguration
+        spec:
+          logLevel: Normal
+          operatorLogLevel: Normal
+          managedBootImages:
+            machineManagers:
+              - resource: machinedeployments
+                apiGroup: cluster.x-k8s.io
+                selection:
+                  mode: All
+    - name: Should be able to create a ManagedBootImages configuration knob that opts in CAPI MachineDeployments in partial mode
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: MachineConfiguration
+        spec:
+          managedBootImages:
+            machineManagers:
+              - resource: machinedeployments
+                apiGroup: cluster.x-k8s.io
+                selection:
+                  mode: Partial
+                  partial:
+                    machineResourceSelector:
+                      matchLabels: {}
+      expected: |
+        apiVersion: operator.openshift.io/v1
+        kind: MachineConfiguration
+        spec:
+          logLevel: Normal
+          operatorLogLevel: Normal
+          managedBootImages:
+            machineManagers:
+              - resource: machinedeployments
+                apiGroup: cluster.x-k8s.io
+                selection:
+                  mode: Partial
+                  partial:
+                    machineResourceSelector:
+                      matchLabels: {}
+    - name: Should be able to mix MAPI MachineSets and CAPI MachineSets in machineManagers
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: MachineConfiguration
+        spec:
+          managedBootImages:
+            machineManagers:
+              - resource: machinesets
+                apiGroup: machine.openshift.io
+                selection:
+                  mode: All
+              - resource: machinesets
+                apiGroup: cluster.x-k8s.io
+                selection:
+                  mode: All
+      expected: |
+        apiVersion: operator.openshift.io/v1
+        kind: MachineConfiguration
+        spec:
+          logLevel: Normal
+          operatorLogLevel: Normal
+          managedBootImages:
+            machineManagers:
+              - resource: machinesets
+                apiGroup: machine.openshift.io
+                selection:
+                  mode: All
+              - resource: machinesets
+                apiGroup: cluster.x-k8s.io
+                selection:
+                  mode: All
+    - name: Should be able to mix CAPI MachineSets and CAPI MachineDeployments in machineManagers
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: MachineConfiguration
+        spec:
+          managedBootImages:
+            machineManagers:
+              - resource: machinesets
+                apiGroup: cluster.x-k8s.io
+                selection:
+                  mode: All
+              - resource: machinedeployments
+                apiGroup: cluster.x-k8s.io
+                selection:
+                  mode: All
+      expected: |
+        apiVersion: operator.openshift.io/v1
+        kind: MachineConfiguration
+        spec:
+          logLevel: Normal
+          operatorLogLevel: Normal
+          managedBootImages:
+            machineManagers:
+              - resource: machinesets
+                apiGroup: cluster.x-k8s.io
+                selection:
+                  mode: All
+              - resource: machinedeployments
+                apiGroup: cluster.x-k8s.io
+                selection:
+                  mode: All
+    - name: Should not permit machinedeployments with machine.openshift.io API group
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: MachineConfiguration
+        spec:
+          managedBootImages:
+            machineManagers:
+              - resource: machinedeployments
+                apiGroup: machine.openshift.io
+                selection:
+                  mode: All
+      expectedError: "the machinedeployments resource is only supported in the cluster.x-k8s.io API group"
+    - name: Only one unique pair of resource/apiGroup is allowed in machineManagers
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: MachineConfiguration
+        spec:
+          managedBootImages:
+            machineManagers:
+              - resource: machinesets
+                apiGroup: cluster.x-k8s.io
+                selection:
+                  mode: All
+              - resource: machinesets
+                apiGroup: cluster.x-k8s.io
+                selection:
+                  mode: None
+      expectedError: "spec.managedBootImages.machineManagers[1]: Duplicate value: map[string]interface {}{\"apiGroup\":\"cluster.x-k8s.io\", \"resource\":\"machinesets\"}"

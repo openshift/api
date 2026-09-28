@@ -20,7 +20,7 @@ files=$(echo "${files}" | tr "," "\n")
 # by the crd_globs into the payload CRDs folder.
 for f in "${SCRIPT_ROOT}/payload-manifests/crds/"*; do
     basename=$(basename "${f}")
-    if ! echo "${files}" | grep -F -q -x "${basename}"; then
+    if ! grep -F -q -x "${basename}" <<< "${files}"; then
         echo "Found untracked file ${basename} in payload CRD manifests.  Please add the file to crd_globs in hack/update-payload-crds.sh."
         exit 1
     fi

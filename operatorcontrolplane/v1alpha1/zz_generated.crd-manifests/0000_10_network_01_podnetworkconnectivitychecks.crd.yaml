@@ -15,7 +15,23 @@ spec:
     singular: podnetworkconnectivitycheck
   scope: Namespaced
   versions:
-  - name: v1alpha1
+  - additionalPrinterColumns:
+    - description: The endpoint being checked
+      jsonPath: .spec.targetEndpoint
+      name: Target Endpoint
+      type: string
+    - description: Whether the target endpoint is reachable
+      jsonPath: .status.conditions[?(@.type=="Reachable")].status
+      name: Reachable
+      type: string
+    - description: The time the reachability status last changed
+      jsonPath: .status.conditions[?(@.type=="Reachable")].lastTransitionTime
+      name: Since
+      type: date
+    - jsonPath: .metadata.creationTimestamp
+      name: Age
+      type: date
+    name: v1alpha1
     schema:
       openAPIV3Schema:
         description: |-

@@ -44,13 +44,13 @@
                         "name": "ConfidentialCluster"
                     },
                     {
+                        "name": "DRADeviceTaintRules"
+                    },
+                    {
                         "name": "EventedPLEG"
                     },
                     {
                         "name": "Example2"
-                    },
-                    {
-                        "name": "GCPSovereignCloudInstall"
                     },
                     {
                         "name": "KarpenterOperator"
@@ -107,10 +107,19 @@
                         "name": "OLMLifecycleAndCompatibility"
                     },
                     {
+                        "name": "OVNKubernetesUplinkMode"
+                    },
+                    {
                         "name": "ProvisioningRequestAvailable"
                     },
                     {
                         "name": "ShortCertRotation"
+                    },
+                    {
+                        "name": "UnifiedClusterManagedDNSAndLB"
+                    },
+                    {
+                        "name": "VSpherePerComponentScopedCreds"
                     }
                 ],
                 "enabled": [
@@ -130,9 +139,6 @@
                         "name": "AWSEuropeanSovereignCloudInstall"
                     },
                     {
-                        "name": "AWSServiceLBNetworkSecurityGroup"
-                    },
-                    {
                         "name": "AdditionalStorageConfig"
                     },
                     {
@@ -146,12 +152,6 @@
                     },
                     {
                         "name": "AzureMultiDisk"
-                    },
-                    {
-                        "name": "AzureWorkloadIdentity"
-                    },
-                    {
-                        "name": "BootImageSkewEnforcement"
                     },
                     {
                         "name": "BootcNodeManagement"
@@ -220,6 +220,9 @@
                         "name": "EVPN"
                     },
                     {
+                        "name": "EgressIPNodeSelector"
+                    },
+                    {
                         "name": "EtcdBackendQuota"
                     },
                     {
@@ -230,6 +233,9 @@
                     },
                     {
                         "name": "ExternalOIDC"
+                    },
+                    {
+                        "name": "ExternalOIDCAsWebhook"
                     },
                     {
                         "name": "ExternalOIDCExternalClaimsSourcing"
@@ -253,10 +259,16 @@
                         "name": "GCPDualStackInstall"
                     },
                     {
+                        "name": "GCPSovereignCloudInstall"
+                    },
+                    {
                         "name": "GatewayAPIManagementMode"
                     },
                     {
                         "name": "GatewayAPIWithoutOLM"
+                    },
+                    {
+                        "name": "GomaxprocsInjection"
                     },
                     {
                         "name": "HyperShiftOnlyDynamicResourceAllocation"
@@ -272,6 +284,9 @@
                     },
                     {
                         "name": "IngressControllerDynamicConfigurationManager"
+                    },
+                    {
+                        "name": "IngressControllerLBSecurityGroupsAWS"
                     },
                     {
                         "name": "IngressControllerMultipleHAProxyVersions"
@@ -299,6 +314,9 @@
                     },
                     {
                         "name": "MachineAPIMigrationOpenStack"
+                    },
+                    {
+                        "name": "ManagedBootImagesAWSCAPI"
                     },
                     {
                         "name": "ManagedBootImagesCPMS"
@@ -358,12 +376,6 @@
                         "name": "SignatureStores"
                     },
                     {
-                        "name": "SigstoreImageVerification"
-                    },
-                    {
-                        "name": "SigstoreImageVerificationPKI"
-                    },
-                    {
                         "name": "StoragePerformantSecurityPolicy"
                     },
                     {
@@ -385,16 +397,7 @@
                         "name": "VSphereMixedNodeEnv"
                     },
                     {
-                        "name": "VSphereMultiDisk"
-                    },
-                    {
-                        "name": "VSphereMultiNetworks"
-                    },
-                    {
                         "name": "VSphereMultiVCenterDay2"
-                    },
-                    {
-                        "name": "VolumeGroupSnapshot"
                     }
                 ],
                 "version": ""

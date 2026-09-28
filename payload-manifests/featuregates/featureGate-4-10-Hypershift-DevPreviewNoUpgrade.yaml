@@ -29,6 +29,9 @@
                         "name": "ClusterAPIInstall"
                     },
                     {
+                        "name": "DRADeviceTaintRules"
+                    },
+                    {
                         "name": "EventedPLEG"
                     },
                     {
@@ -81,6 +84,9 @@
                     },
                     {
                         "name": "ShortCertRotation"
+                    },
+                    {
+                        "name": "UnifiedClusterManagedDNSAndLB"
                     }
                 ],
                 "enabled": [
@@ -100,9 +106,6 @@
                         "name": "AWSEuropeanSovereignCloudInstall"
                     },
                     {
-                        "name": "AWSServiceLBNetworkSecurityGroup"
-                    },
-                    {
                         "name": "AdditionalStorageConfig"
                     },
                     {
@@ -118,13 +121,7 @@
                         "name": "AzureMultiDisk"
                     },
                     {
-                        "name": "AzureWorkloadIdentity"
-                    },
-                    {
                         "name": "BGPBasedVIPManagement"
-                    },
-                    {
-                        "name": "BootImageSkewEnforcement"
                     },
                     {
                         "name": "BootcNodeManagement"
@@ -205,6 +202,9 @@
                         "name": "EVPN"
                     },
                     {
+                        "name": "EgressIPNodeSelector"
+                    },
+                    {
                         "name": "EtcdBackendQuota"
                     },
                     {
@@ -218,6 +218,9 @@
                     },
                     {
                         "name": "ExternalOIDC"
+                    },
+                    {
+                        "name": "ExternalOIDCAsWebhook"
                     },
                     {
                         "name": "ExternalOIDCExternalClaimsSourcing"
@@ -250,6 +253,9 @@
                         "name": "GatewayAPIWithoutOLM"
                     },
                     {
+                        "name": "GomaxprocsInjection"
+                    },
+                    {
                         "name": "HyperShiftOnlyDynamicResourceAllocation"
                     },
                     {
@@ -263,6 +269,9 @@
                     },
                     {
                         "name": "IngressControllerDynamicConfigurationManager"
+                    },
+                    {
+                        "name": "IngressControllerLBSecurityGroupsAWS"
                     },
                     {
                         "name": "IngressControllerMultipleHAProxyVersions"
@@ -293,6 +302,9 @@
                     },
                     {
                         "name": "MachineAPIMigrationVSphere"
+                    },
+                    {
+                        "name": "ManagedBootImagesAWSCAPI"
                     },
                     {
                         "name": "ManagedBootImagesCPMS"
@@ -334,6 +346,9 @@
                         "name": "OSStreams"
                     },
                     {
+                        "name": "OVNKubernetesUplinkMode"
+                    },
+                    {
                         "name": "OVNObservability"
                     },
                     {
@@ -358,12 +373,6 @@
                         "name": "SignatureStores"
                     },
                     {
-                        "name": "SigstoreImageVerification"
-                    },
-                    {
-                        "name": "SigstoreImageVerificationPKI"
-                    },
-                    {
                         "name": "StoragePerformantSecurityPolicy"
                     },
                     {
@@ -385,16 +394,10 @@
                         "name": "VSphereMixedNodeEnv"
                     },
                     {
-                        "name": "VSphereMultiDisk"
-                    },
-                    {
-                        "name": "VSphereMultiNetworks"
-                    },
-                    {
                         "name": "VSphereMultiVCenterDay2"
                     },
                     {
-                        "name": "VolumeGroupSnapshot"
+                        "name": "VSpherePerComponentScopedCreds"
                     }
                 ],
                 "version": ""

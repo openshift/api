@@ -39,75 +39,13 @@ type PKISpec struct {
 	CertificateManagement PKICertificateManagement `json:"certificateManagement,omitzero"`
 }
 
-// PKICertificateManagement determines whether components use hardcoded defaults (Unmanaged), follow
-// OpenShift best practices (Default), or use administrator-specified cryptographic parameters (Custom).
-// This provides flexibility for organizations with specific compliance requirements or security policies
-// while maintaining backwards compatibility for existing clusters.
-//
-// +kubebuilder:validation:XValidation:rule="self.mode == 'Custom' ? has(self.custom) : !has(self.custom)",message="custom is required when mode is Custom, and forbidden otherwise"
-// +union
+// PKICertificateManagement contains administrator-specified cryptographic
+// configuration for internally-generated certificates, including certificate
+// authorities, serving certificates, and client certificates. Specify defaults
+// that apply to all certificates and optionally override specific categories.
 type PKICertificateManagement struct {
-	// mode determines how PKI configuration is managed.
-	// Valid values are "Unmanaged", "Default", and "Custom".
-	//
-	// When set to Unmanaged, components use their existing hardcoded certificate
-	// generation behavior, exactly as if this feature did not exist. Each component
-	// generates certificates using whatever parameters it was using before this
-	// feature. While most components use RSA 2048, some may use different
-	// parameters. Use of this mode might prevent upgrading to the next major
-	// OpenShift release.
-	//
-	// When set to Default, OpenShift-recommended best practices for certificate
-	// generation are applied. The specific parameters may evolve across OpenShift
-	// releases to adopt improved cryptographic standards. In the initial release,
-	// this matches Unmanaged behavior for each component. In future releases, this
-	// may adopt ECDSA or larger RSA keys based on industry best practices.
-	// Recommended for most customers who want to benefit from security improvements
-	// automatically.
-	//
-	// When set to Custom, the certificate management parameters can be set
-	// explicitly. Use the custom field to specify certificate generation parameters.
-	//
-	// +required
-	// +unionDiscriminator
-	Mode PKICertificateManagementMode `json:"mode,omitempty"`
-
-	// custom contains administrator-specified cryptographic configuration.
-	// Use the defaults and category override fields
-	// to specify certificate generation parameters.
-	// Required when mode is Custom, and forbidden otherwise.
-	//
-	// +optional
-	// +unionMember
-	Custom CustomPKIPolicy `json:"custom,omitzero"`
-}
-
-// CustomPKIPolicy contains administrator-specified cryptographic configuration.
-// Administrators must specify defaults for all certificates and may optionally
-// override specific categories of certificates.
-//
-// +kubebuilder:validation:MinProperties=1
-type CustomPKIPolicy struct {
 	PKIProfile `json:",inline"`
 }
-
-// PKICertificateManagementMode specifies the mode for PKI certificate management.
-//
-// +kubebuilder:validation:Enum=Unmanaged;Default;Custom
-type PKICertificateManagementMode string
-
-const (
-	// PKICertificateManagementModeUnmanaged uses each component's existing hardcoded defaults.
-	// Most components currently use RSA 2048, but parameters may differ by component.
-	PKICertificateManagementModeUnmanaged PKICertificateManagementMode = "Unmanaged"
-
-	// PKICertificateManagementModeDefault uses OpenShift-recommended best practices.
-	// Specific parameters may evolve across OpenShift releases.
-	PKICertificateManagementModeDefault PKICertificateManagementMode = "Default"
-
-	// PKICertificateManagementModeCustom uses administrator-specified configuration.
-	PKICertificateManagementModeCustom PKICertificateManagementMode = "Custom"
-)
 
 // PKIProfile defines the certificate generation parameters that OpenShift
 // components use to create certificates. Category overrides take precedence

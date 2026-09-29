@@ -10475,21 +10475,21 @@ func schema_openshift_api_config_v1_BasicAuthIdentityProvider(ref common.Referen
 					},
 					"ca": {
 						SchemaProps: spec.SchemaProps{
-							Description: "ca is an optional reference to a config map by name containing the PEM-encoded CA bundle. It is used as a trust anchor to validate the TLS certificate presented by the remote server. The key \"ca.crt\" is used to locate the data. If specified and the config map or expected key is not found, the identity provider is not honored. If the specified ca data is not valid, the identity provider is not honored. If empty, the default system roots are used. The namespace for this config map is openshift-config.",
+							Description: "ca is an optional reference to a config map by name containing the PEM-encoded CA bundle. It is used as a trust anchor to validate the TLS certificate presented by the remote server. The key \"ca.crt\" is used to locate the data. If specified and the config map or expected key is not found, the identity provider is not honored. If the specified ca data is not valid, the identity provider is not honored. If empty, the default system roots are used. The namespace for this config map is openshift-config. For a HostedCluster, the namespace for this config map is the HostedCluster's namespace.",
 							Default:     map[string]interface{}{},
 							Ref:         ref(configv1.ConfigMapNameReference{}.OpenAPIModelName()),
 						},
 					},
 					"tlsClientCert": {
 						SchemaProps: spec.SchemaProps{
-							Description: "tlsClientCert is an optional reference to a secret by name that contains the PEM-encoded TLS client certificate to present when connecting to the server. The key \"tls.crt\" is used to locate the data. If specified and the secret or expected key is not found, the identity provider is not honored. If the specified certificate data is not valid, the identity provider is not honored. The namespace for this secret is openshift-config.",
+							Description: "tlsClientCert is an optional reference to a secret by name that contains the PEM-encoded TLS client certificate to present when connecting to the server. The key \"tls.crt\" is used to locate the data. If specified and the secret or expected key is not found, the identity provider is not honored. If the specified certificate data is not valid, the identity provider is not honored. The namespace for this secret is openshift-config. For a HostedCluster, the namespace for this secret is the HostedCluster's namespace.",
 							Default:     map[string]interface{}{},
 							Ref:         ref(configv1.SecretNameReference{}.OpenAPIModelName()),
 						},
 					},
 					"tlsClientKey": {
 						SchemaProps: spec.SchemaProps{
-							Description: "tlsClientKey is an optional reference to a secret by name that contains the PEM-encoded TLS private key for the client certificate referenced in tlsClientCert. The key \"tls.key\" is used to locate the data. If specified and the secret or expected key is not found, the identity provider is not honored. If the specified certificate data is not valid, the identity provider is not honored. The namespace for this secret is openshift-config.",
+							Description: "tlsClientKey is an optional reference to a secret by name that contains the PEM-encoded TLS private key for the client certificate referenced in tlsClientCert. The key \"tls.key\" is used to locate the data. If specified and the secret or expected key is not found, the identity provider is not honored. If the specified certificate data is not valid, the identity provider is not honored. The namespace for this secret is openshift-config. For a HostedCluster, the namespace for this secret is the HostedCluster's namespace.",
 							Default:     map[string]interface{}{},
 							Ref:         ref(configv1.SecretNameReference{}.OpenAPIModelName()),
 						},
@@ -14457,7 +14457,7 @@ func schema_openshift_api_config_v1_GitHubIdentityProvider(ref common.ReferenceC
 					},
 					"clientSecret": {
 						SchemaProps: spec.SchemaProps{
-							Description: "clientSecret is a required reference to the secret by name containing the oauth client secret. The key \"clientSecret\" is used to locate the data. If the secret or expected key is not found, the identity provider is not honored. The namespace for this secret is openshift-config.",
+							Description: "clientSecret is a required reference to the secret by name containing the oauth client secret. The key \"clientSecret\" is used to locate the data. If the secret or expected key is not found, the identity provider is not honored. The namespace for this secret is openshift-config. For a HostedCluster, the namespace for this secret is the HostedCluster's namespace.",
 							Default:     map[string]interface{}{},
 							Ref:         ref(configv1.SecretNameReference{}.OpenAPIModelName()),
 						},
@@ -14502,7 +14502,7 @@ func schema_openshift_api_config_v1_GitHubIdentityProvider(ref common.ReferenceC
 					},
 					"ca": {
 						SchemaProps: spec.SchemaProps{
-							Description: "ca is an optional reference to a config map by name containing the PEM-encoded CA bundle. It is used as a trust anchor to validate the TLS certificate presented by the remote server. The key \"ca.crt\" is used to locate the data. If specified and the config map or expected key is not found, the identity provider is not honored. If the specified ca data is not valid, the identity provider is not honored. If empty, the default system roots are used. This can only be configured when hostname is set to a non-empty value. The namespace for this config map is openshift-config.",
+							Description: "ca is an optional reference to a config map by name containing the PEM-encoded CA bundle. It is used as a trust anchor to validate the TLS certificate presented by the remote server. The key \"ca.crt\" is used to locate the data. If specified and the config map or expected key is not found, the identity provider is not honored. If the specified ca data is not valid, the identity provider is not honored. If empty, the default system roots are used. This can only be configured when hostname is set to a non-empty value. The namespace for this config map is openshift-config. For a HostedCluster, the namespace for this config map is the HostedCluster's namespace.",
 							Default:     map[string]interface{}{},
 							Ref:         ref(configv1.ConfigMapNameReference{}.OpenAPIModelName()),
 						},
@@ -14533,7 +14533,7 @@ func schema_openshift_api_config_v1_GitLabIdentityProvider(ref common.ReferenceC
 					},
 					"clientSecret": {
 						SchemaProps: spec.SchemaProps{
-							Description: "clientSecret is a required reference to the secret by name containing the oauth client secret. The key \"clientSecret\" is used to locate the data. If the secret or expected key is not found, the identity provider is not honored. The namespace for this secret is openshift-config.",
+							Description: "clientSecret is a required reference to the secret by name containing the oauth client secret. The key \"clientSecret\" is used to locate the data. If the secret or expected key is not found, the identity provider is not honored. The namespace for this secret is openshift-config. For a HostedCluster, the namespace for this secret is the HostedCluster's namespace.",
 							Default:     map[string]interface{}{},
 							Ref:         ref(configv1.SecretNameReference{}.OpenAPIModelName()),
 						},
@@ -14548,7 +14548,7 @@ func schema_openshift_api_config_v1_GitLabIdentityProvider(ref common.ReferenceC
 					},
 					"ca": {
 						SchemaProps: spec.SchemaProps{
-							Description: "ca is an optional reference to a config map by name containing the PEM-encoded CA bundle. It is used as a trust anchor to validate the TLS certificate presented by the remote server. The key \"ca.crt\" is used to locate the data. If specified and the config map or expected key is not found, the identity provider is not honored. If the specified ca data is not valid, the identity provider is not honored. If empty, the default system roots are used. The namespace for this config map is openshift-config.",
+							Description: "ca is an optional reference to a config map by name containing the PEM-encoded CA bundle. It is used as a trust anchor to validate the TLS certificate presented by the remote server. The key \"ca.crt\" is used to locate the data. If specified and the config map or expected key is not found, the identity provider is not honored. If the specified ca data is not valid, the identity provider is not honored. If empty, the default system roots are used. The namespace for this config map is openshift-config. For a HostedCluster, the namespace for this config map is the HostedCluster's namespace.",
 							Default:     map[string]interface{}{},
 							Ref:         ref(configv1.ConfigMapNameReference{}.OpenAPIModelName()),
 						},
@@ -14579,7 +14579,7 @@ func schema_openshift_api_config_v1_GoogleIdentityProvider(ref common.ReferenceC
 					},
 					"clientSecret": {
 						SchemaProps: spec.SchemaProps{
-							Description: "clientSecret is a required reference to the secret by name containing the oauth client secret. The key \"clientSecret\" is used to locate the data. If the secret or expected key is not found, the identity provider is not honored. The namespace for this secret is openshift-config.",
+							Description: "clientSecret is a required reference to the secret by name containing the oauth client secret. The key \"clientSecret\" is used to locate the data. If the secret or expected key is not found, the identity provider is not honored. The namespace for this secret is openshift-config. For a HostedCluster, the namespace for this secret is the HostedCluster's namespace.",
 							Default:     map[string]interface{}{},
 							Ref:         ref(configv1.SecretNameReference{}.OpenAPIModelName()),
 						},
@@ -14610,7 +14610,7 @@ func schema_openshift_api_config_v1_HTPasswdIdentityProvider(ref common.Referenc
 				Properties: map[string]spec.Schema{
 					"fileData": {
 						SchemaProps: spec.SchemaProps{
-							Description: "fileData is a required reference to a secret by name containing the data to use as the htpasswd file. The key \"htpasswd\" is used to locate the data. If the secret or expected key is not found, the identity provider is not honored. If the specified htpasswd data is not valid, the identity provider is not honored. The namespace for this secret is openshift-config.",
+							Description: "fileData is a required reference to a secret by name containing the data to use as the htpasswd file. The key \"htpasswd\" is used to locate the data. If the secret or expected key is not found, the identity provider is not honored. If the specified htpasswd data is not valid, the identity provider is not honored. The namespace for this secret is openshift-config. For a HostedCluster, the namespace for this secret is the HostedCluster's namespace.",
 							Default:     map[string]interface{}{},
 							Ref:         ref(configv1.SecretNameReference{}.OpenAPIModelName()),
 						},
@@ -16904,21 +16904,21 @@ func schema_openshift_api_config_v1_KeystoneIdentityProvider(ref common.Referenc
 					},
 					"ca": {
 						SchemaProps: spec.SchemaProps{
-							Description: "ca is an optional reference to a config map by name containing the PEM-encoded CA bundle. It is used as a trust anchor to validate the TLS certificate presented by the remote server. The key \"ca.crt\" is used to locate the data. If specified and the config map or expected key is not found, the identity provider is not honored. If the specified ca data is not valid, the identity provider is not honored. If empty, the default system roots are used. The namespace for this config map is openshift-config.",
+							Description: "ca is an optional reference to a config map by name containing the PEM-encoded CA bundle. It is used as a trust anchor to validate the TLS certificate presented by the remote server. The key \"ca.crt\" is used to locate the data. If specified and the config map or expected key is not found, the identity provider is not honored. If the specified ca data is not valid, the identity provider is not honored. If empty, the default system roots are used. The namespace for this config map is openshift-config. For a HostedCluster, the namespace for this config map is the HostedCluster's namespace.",
 							Default:     map[string]interface{}{},
 							Ref:         ref(configv1.ConfigMapNameReference{}.OpenAPIModelName()),
 						},
 					},
 					"tlsClientCert": {
 						SchemaProps: spec.SchemaProps{
-							Description: "tlsClientCert is an optional reference to a secret by name that contains the PEM-encoded TLS client certificate to present when connecting to the server. The key \"tls.crt\" is used to locate the data. If specified and the secret or expected key is not found, the identity provider is not honored. If the specified certificate data is not valid, the identity provider is not honored. The namespace for this secret is openshift-config.",
+							Description: "tlsClientCert is an optional reference to a secret by name that contains the PEM-encoded TLS client certificate to present when connecting to the server. The key \"tls.crt\" is used to locate the data. If specified and the secret or expected key is not found, the identity provider is not honored. If the specified certificate data is not valid, the identity provider is not honored. The namespace for this secret is openshift-config. For a HostedCluster, the namespace for this secret is the HostedCluster's namespace.",
 							Default:     map[string]interface{}{},
 							Ref:         ref(configv1.SecretNameReference{}.OpenAPIModelName()),
 						},
 					},
 					"tlsClientKey": {
 						SchemaProps: spec.SchemaProps{
-							Description: "tlsClientKey is an optional reference to a secret by name that contains the PEM-encoded TLS private key for the client certificate referenced in tlsClientCert. The key \"tls.key\" is used to locate the data. If specified and the secret or expected key is not found, the identity provider is not honored. If the specified certificate data is not valid, the identity provider is not honored. The namespace for this secret is openshift-config.",
+							Description: "tlsClientKey is an optional reference to a secret by name that contains the PEM-encoded TLS private key for the client certificate referenced in tlsClientCert. The key \"tls.key\" is used to locate the data. If specified and the secret or expected key is not found, the identity provider is not honored. If the specified certificate data is not valid, the identity provider is not honored. The namespace for this secret is openshift-config. For a HostedCluster, the namespace for this secret is the HostedCluster's namespace.",
 							Default:     map[string]interface{}{},
 							Ref:         ref(configv1.SecretNameReference{}.OpenAPIModelName()),
 						},
@@ -17107,7 +17107,7 @@ func schema_openshift_api_config_v1_LDAPIdentityProvider(ref common.ReferenceCal
 					},
 					"bindPassword": {
 						SchemaProps: spec.SchemaProps{
-							Description: "bindPassword is an optional reference to a secret by name containing a password to bind with during the search phase. The key \"bindPassword\" is used to locate the data. If specified and the secret or expected key is not found, the identity provider is not honored. The namespace for this secret is openshift-config.",
+							Description: "bindPassword is an optional reference to a secret by name containing a password to bind with during the search phase. The key \"bindPassword\" is used to locate the data. If specified and the secret or expected key is not found, the identity provider is not honored. The namespace for this secret is openshift-config. For a HostedCluster, the namespace for this secret is the HostedCluster's namespace.",
 							Default:     map[string]interface{}{},
 							Ref:         ref(configv1.SecretNameReference{}.OpenAPIModelName()),
 						},
@@ -17122,7 +17122,7 @@ func schema_openshift_api_config_v1_LDAPIdentityProvider(ref common.ReferenceCal
 					},
 					"ca": {
 						SchemaProps: spec.SchemaProps{
-							Description: "ca is an optional reference to a config map by name containing the PEM-encoded CA bundle. It is used as a trust anchor to validate the TLS certificate presented by the remote server. The key \"ca.crt\" is used to locate the data. If specified and the config map or expected key is not found, the identity provider is not honored. If the specified ca data is not valid, the identity provider is not honored. If empty, the default system roots are used. The namespace for this config map is openshift-config.",
+							Description: "ca is an optional reference to a config map by name containing the PEM-encoded CA bundle. It is used as a trust anchor to validate the TLS certificate presented by the remote server. The key \"ca.crt\" is used to locate the data. If specified and the config map or expected key is not found, the identity provider is not honored. If the specified ca data is not valid, the identity provider is not honored. If empty, the default system roots are used. The namespace for this config map is openshift-config. For a HostedCluster, the namespace for this config map is the HostedCluster's namespace.",
 							Default:     map[string]interface{}{},
 							Ref:         ref(configv1.ConfigMapNameReference{}.OpenAPIModelName()),
 						},
@@ -18461,21 +18461,21 @@ func schema_openshift_api_config_v1_OAuthRemoteConnectionInfo(ref common.Referen
 					},
 					"ca": {
 						SchemaProps: spec.SchemaProps{
-							Description: "ca is an optional reference to a config map by name containing the PEM-encoded CA bundle. It is used as a trust anchor to validate the TLS certificate presented by the remote server. The key \"ca.crt\" is used to locate the data. If specified and the config map or expected key is not found, the identity provider is not honored. If the specified ca data is not valid, the identity provider is not honored. If empty, the default system roots are used. The namespace for this config map is openshift-config.",
+							Description: "ca is an optional reference to a config map by name containing the PEM-encoded CA bundle. It is used as a trust anchor to validate the TLS certificate presented by the remote server. The key \"ca.crt\" is used to locate the data. If specified and the config map or expected key is not found, the identity provider is not honored. If the specified ca data is not valid, the identity provider is not honored. If empty, the default system roots are used. The namespace for this config map is openshift-config. For a HostedCluster, the namespace for this config map is the HostedCluster's namespace.",
 							Default:     map[string]interface{}{},
 							Ref:         ref(configv1.ConfigMapNameReference{}.OpenAPIModelName()),
 						},
 					},
 					"tlsClientCert": {
 						SchemaProps: spec.SchemaProps{
-							Description: "tlsClientCert is an optional reference to a secret by name that contains the PEM-encoded TLS client certificate to present when connecting to the server. The key \"tls.crt\" is used to locate the data. If specified and the secret or expected key is not found, the identity provider is not honored. If the specified certificate data is not valid, the identity provider is not honored. The namespace for this secret is openshift-config.",
+							Description: "tlsClientCert is an optional reference to a secret by name that contains the PEM-encoded TLS client certificate to present when connecting to the server. The key \"tls.crt\" is used to locate the data. If specified and the secret or expected key is not found, the identity provider is not honored. If the specified certificate data is not valid, the identity provider is not honored. The namespace for this secret is openshift-config. For a HostedCluster, the namespace for this secret is the HostedCluster's namespace.",
 							Default:     map[string]interface{}{},
 							Ref:         ref(configv1.SecretNameReference{}.OpenAPIModelName()),
 						},
 					},
 					"tlsClientKey": {
 						SchemaProps: spec.SchemaProps{
-							Description: "tlsClientKey is an optional reference to a secret by name that contains the PEM-encoded TLS private key for the client certificate referenced in tlsClientCert. The key \"tls.key\" is used to locate the data. If specified and the secret or expected key is not found, the identity provider is not honored. If the specified certificate data is not valid, the identity provider is not honored. The namespace for this secret is openshift-config.",
+							Description: "tlsClientKey is an optional reference to a secret by name that contains the PEM-encoded TLS private key for the client certificate referenced in tlsClientCert. The key \"tls.key\" is used to locate the data. If specified and the secret or expected key is not found, the identity provider is not honored. If the specified certificate data is not valid, the identity provider is not honored. The namespace for this secret is openshift-config. For a HostedCluster, the namespace for this secret is the HostedCluster's namespace.",
 							Default:     map[string]interface{}{},
 							Ref:         ref(configv1.SecretNameReference{}.OpenAPIModelName()),
 						},
@@ -18558,21 +18558,21 @@ func schema_openshift_api_config_v1_OAuthTemplates(ref common.ReferenceCallback)
 				Properties: map[string]spec.Schema{
 					"login": {
 						SchemaProps: spec.SchemaProps{
-							Description: "login is the name of a secret that specifies a go template to use to render the login page. The key \"login.html\" is used to locate the template data. If specified and the secret or expected key is not found, the default login page is used. If the specified template is not valid, the default login page is used. If unspecified, the default login page is used. The namespace for this secret is openshift-config.",
+							Description: "login is the name of a secret that specifies a go template to use to render the login page. The key \"login.html\" is used to locate the template data. If specified and the secret or expected key is not found, the default login page is used. If the specified template is not valid, the default login page is used. If unspecified, the default login page is used. The namespace for this secret is openshift-config. For a HostedCluster, the namespace for this secret is the HostedCluster's namespace.",
 							Default:     map[string]interface{}{},
 							Ref:         ref(configv1.SecretNameReference{}.OpenAPIModelName()),
 						},
 					},
 					"providerSelection": {
 						SchemaProps: spec.SchemaProps{
-							Description: "providerSelection is the name of a secret that specifies a go template to use to render the provider selection page. The key \"providers.html\" is used to locate the template data. If specified and the secret or expected key is not found, the default provider selection page is used. If the specified template is not valid, the default provider selection page is used. If unspecified, the default provider selection page is used. The namespace for this secret is openshift-config.",
+							Description: "providerSelection is the name of a secret that specifies a go template to use to render the provider selection page. The key \"providers.html\" is used to locate the template data. If specified and the secret or expected key is not found, the default provider selection page is used. If the specified template is not valid, the default provider selection page is used. If unspecified, the default provider selection page is used. The namespace for this secret is openshift-config. For a HostedCluster, the namespace for this secret is the HostedCluster's namespace.",
 							Default:     map[string]interface{}{},
 							Ref:         ref(configv1.SecretNameReference{}.OpenAPIModelName()),
 						},
 					},
 					"error": {
 						SchemaProps: spec.SchemaProps{
-							Description: "error is the name of a secret that specifies a go template to use to render error pages during the authentication or grant flow. The key \"errors.html\" is used to locate the template data. If specified and the secret or expected key is not found, the default error page is used. If the specified template is not valid, the default error page is used. If unspecified, the default error page is used. The namespace for this secret is openshift-config.",
+							Description: "error is the name of a secret that specifies a go template to use to render error pages during the authentication or grant flow. The key \"errors.html\" is used to locate the template data. If specified and the secret or expected key is not found, the default error page is used. If the specified template is not valid, the default error page is used. If unspecified, the default error page is used. The namespace for this secret is openshift-config. For a HostedCluster, the namespace for this secret is the HostedCluster's namespace.",
 							Default:     map[string]interface{}{},
 							Ref:         ref(configv1.SecretNameReference{}.OpenAPIModelName()),
 						},
@@ -19073,14 +19073,14 @@ func schema_openshift_api_config_v1_OpenIDIdentityProvider(ref common.ReferenceC
 					},
 					"clientSecret": {
 						SchemaProps: spec.SchemaProps{
-							Description: "clientSecret is a required reference to the secret by name containing the oauth client secret. The key \"clientSecret\" is used to locate the data. If the secret or expected key is not found, the identity provider is not honored. The namespace for this secret is openshift-config.",
+							Description: "clientSecret is a required reference to the secret by name containing the oauth client secret. The key \"clientSecret\" is used to locate the data. If the secret or expected key is not found, the identity provider is not honored. The namespace for this secret is openshift-config. For a HostedCluster, the namespace for this secret is the HostedCluster's namespace.",
 							Default:     map[string]interface{}{},
 							Ref:         ref(configv1.SecretNameReference{}.OpenAPIModelName()),
 						},
 					},
 					"ca": {
 						SchemaProps: spec.SchemaProps{
-							Description: "ca is an optional reference to a config map by name containing the PEM-encoded CA bundle. It is used as a trust anchor to validate the TLS certificate presented by the remote server. The key \"ca.crt\" is used to locate the data. If specified and the config map or expected key is not found, the identity provider is not honored. If the specified ca data is not valid, the identity provider is not honored. If empty, the default system roots are used. The namespace for this config map is openshift-config.",
+							Description: "ca is an optional reference to a config map by name containing the PEM-encoded CA bundle. It is used as a trust anchor to validate the TLS certificate presented by the remote server. The key \"ca.crt\" is used to locate the data. If specified and the config map or expected key is not found, the identity provider is not honored. If the specified ca data is not valid, the identity provider is not honored. If empty, the default system roots are used. The namespace for this config map is openshift-config. For a HostedCluster, the namespace for this config map is the HostedCluster's namespace.",
 							Default:     map[string]interface{}{},
 							Ref:         ref(configv1.ConfigMapNameReference{}.OpenAPIModelName()),
 						},
@@ -21031,7 +21031,7 @@ func schema_openshift_api_config_v1_RequestHeaderIdentityProvider(ref common.Ref
 					},
 					"ca": {
 						SchemaProps: spec.SchemaProps{
-							Description: "ca is a required reference to a config map by name containing the PEM-encoded CA bundle. It is used as a trust anchor to validate the TLS certificate presented by the remote server. Specifically, it allows verification of incoming requests to prevent header spoofing. The key \"ca.crt\" is used to locate the data. If the config map or expected key is not found, the identity provider is not honored. If the specified ca data is not valid, the identity provider is not honored. The namespace for this config map is openshift-config.",
+							Description: "ca is a required reference to a config map by name containing the PEM-encoded CA bundle. It is used as a trust anchor to validate the TLS certificate presented by the remote server. Specifically, it allows verification of incoming requests to prevent header spoofing. The key \"ca.crt\" is used to locate the data. If the config map or expected key is not found, the identity provider is not honored. If the specified ca data is not valid, the identity provider is not honored. The namespace for this config map is openshift-config. For a HostedCluster, the namespace for this config map is the HostedCluster's namespace.",
 							Default:     map[string]interface{}{},
 							Ref:         ref(configv1.ConfigMapNameReference{}.OpenAPIModelName()),
 						},

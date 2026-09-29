@@ -109,6 +109,7 @@ type OAuthTemplates struct {
 	// If the specified template is not valid, the default login page is used.
 	// If unspecified, the default login page is used.
 	// The namespace for this secret is openshift-config.
+	// For a HostedCluster, the namespace for this secret is the HostedCluster's namespace.
 	// +optional
 	Login SecretNameReference `json:"login"`
 
@@ -119,6 +120,7 @@ type OAuthTemplates struct {
 	// If the specified template is not valid, the default provider selection page is used.
 	// If unspecified, the default provider selection page is used.
 	// The namespace for this secret is openshift-config.
+	// For a HostedCluster, the namespace for this secret is the HostedCluster's namespace.
 	// +optional
 	ProviderSelection SecretNameReference `json:"providerSelection"`
 
@@ -129,6 +131,7 @@ type OAuthTemplates struct {
 	// If the specified template is not valid, the default error page is used.
 	// If unspecified, the default error page is used.
 	// The namespace for this secret is openshift-config.
+	// For a HostedCluster, the namespace for this secret is the HostedCluster's namespace.
 	// +optional
 	Error SecretNameReference `json:"error"`
 }
@@ -264,6 +267,7 @@ type OAuthRemoteConnectionInfo struct {
 	// If the specified ca data is not valid, the identity provider is not honored.
 	// If empty, the default system roots are used.
 	// The namespace for this config map is openshift-config.
+	// For a HostedCluster, the namespace for this config map is the HostedCluster's namespace.
 	// +optional
 	CA ConfigMapNameReference `json:"ca"`
 
@@ -273,6 +277,7 @@ type OAuthRemoteConnectionInfo struct {
 	// If specified and the secret or expected key is not found, the identity provider is not honored.
 	// If the specified certificate data is not valid, the identity provider is not honored.
 	// The namespace for this secret is openshift-config.
+	// For a HostedCluster, the namespace for this secret is the HostedCluster's namespace.
 	// +optional
 	TLSClientCert SecretNameReference `json:"tlsClientCert"`
 
@@ -282,6 +287,7 @@ type OAuthRemoteConnectionInfo struct {
 	// If specified and the secret or expected key is not found, the identity provider is not honored.
 	// If the specified certificate data is not valid, the identity provider is not honored.
 	// The namespace for this secret is openshift-config.
+	// For a HostedCluster, the namespace for this secret is the HostedCluster's namespace.
 	// +optional
 	TLSClientKey SecretNameReference `json:"tlsClientKey"`
 }
@@ -293,6 +299,7 @@ type HTPasswdIdentityProvider struct {
 	// If the secret or expected key is not found, the identity provider is not honored.
 	// If the specified htpasswd data is not valid, the identity provider is not honored.
 	// The namespace for this secret is openshift-config.
+	// For a HostedCluster, the namespace for this secret is the HostedCluster's namespace.
 	FileData SecretNameReference `json:"fileData"`
 }
 
@@ -312,6 +319,7 @@ type LDAPIdentityProvider struct {
 	// The key "bindPassword" is used to locate the data.
 	// If specified and the secret or expected key is not found, the identity provider is not honored.
 	// The namespace for this secret is openshift-config.
+	// For a HostedCluster, the namespace for this secret is the HostedCluster's namespace.
 	// +optional
 	BindPassword SecretNameReference `json:"bindPassword"`
 
@@ -329,6 +337,7 @@ type LDAPIdentityProvider struct {
 	// If the specified ca data is not valid, the identity provider is not honored.
 	// If empty, the default system roots are used.
 	// The namespace for this config map is openshift-config.
+	// For a HostedCluster, the namespace for this config map is the HostedCluster's namespace.
 	// +optional
 	CA ConfigMapNameReference `json:"ca"`
 
@@ -404,6 +413,7 @@ type RequestHeaderIdentityProvider struct {
 	// If the config map or expected key is not found, the identity provider is not honored.
 	// If the specified ca data is not valid, the identity provider is not honored.
 	// The namespace for this config map is openshift-config.
+	// For a HostedCluster, the namespace for this config map is the HostedCluster's namespace.
 	ClientCA ConfigMapNameReference `json:"ca"`
 
 	// clientCommonNames is an optional list of common names to require a match from. If empty, any
@@ -433,6 +443,7 @@ type GitHubIdentityProvider struct {
 	// The key "clientSecret" is used to locate the data.
 	// If the secret or expected key is not found, the identity provider is not honored.
 	// The namespace for this secret is openshift-config.
+	// For a HostedCluster, the namespace for this secret is the HostedCluster's namespace.
 	ClientSecret SecretNameReference `json:"clientSecret"`
 
 	// organizations optionally restricts which organizations are allowed to log in
@@ -457,6 +468,7 @@ type GitHubIdentityProvider struct {
 	// If empty, the default system roots are used.
 	// This can only be configured when hostname is set to a non-empty value.
 	// The namespace for this config map is openshift-config.
+	// For a HostedCluster, the namespace for this config map is the HostedCluster's namespace.
 	// +optional
 	CA ConfigMapNameReference `json:"ca"`
 }
@@ -470,6 +482,7 @@ type GitLabIdentityProvider struct {
 	// The key "clientSecret" is used to locate the data.
 	// If the secret or expected key is not found, the identity provider is not honored.
 	// The namespace for this secret is openshift-config.
+	// For a HostedCluster, the namespace for this secret is the HostedCluster's namespace.
 	ClientSecret SecretNameReference `json:"clientSecret"`
 
 	// url is the oauth server base URL
@@ -482,6 +495,7 @@ type GitLabIdentityProvider struct {
 	// If the specified ca data is not valid, the identity provider is not honored.
 	// If empty, the default system roots are used.
 	// The namespace for this config map is openshift-config.
+	// For a HostedCluster, the namespace for this config map is the HostedCluster's namespace.
 	// +optional
 	CA ConfigMapNameReference `json:"ca"`
 }
@@ -495,6 +509,7 @@ type GoogleIdentityProvider struct {
 	// The key "clientSecret" is used to locate the data.
 	// If the secret or expected key is not found, the identity provider is not honored.
 	// The namespace for this secret is openshift-config.
+	// For a HostedCluster, the namespace for this secret is the HostedCluster's namespace.
 	ClientSecret SecretNameReference `json:"clientSecret"`
 
 	// hostedDomain is the optional Google App domain (e.g. "mycompany.com") to restrict logins to
@@ -511,6 +526,7 @@ type OpenIDIdentityProvider struct {
 	// The key "clientSecret" is used to locate the data.
 	// If the secret or expected key is not found, the identity provider is not honored.
 	// The namespace for this secret is openshift-config.
+	// For a HostedCluster, the namespace for this secret is the HostedCluster's namespace.
 	ClientSecret SecretNameReference `json:"clientSecret"`
 
 	// ca is an optional reference to a config map by name containing the PEM-encoded CA bundle.
@@ -520,6 +536,7 @@ type OpenIDIdentityProvider struct {
 	// If the specified ca data is not valid, the identity provider is not honored.
 	// If empty, the default system roots are used.
 	// The namespace for this config map is openshift-config.
+	// For a HostedCluster, the namespace for this config map is the HostedCluster's namespace.
 	// +optional
 	CA ConfigMapNameReference `json:"ca"`
 

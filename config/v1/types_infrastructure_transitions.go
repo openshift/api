@@ -104,9 +104,9 @@ const (
 )
 
 type TopologyTransition struct {
-	// source is the control-plane and infrastructure topology this transition starts
-	// from. It must equal the current topology in the corresponding status fields.
-	// source is required.
+	// source is the control-plane and infrastructure topology this transition was
+	// evaluated from. It may differ from the current topology while status is
+	// being refreshed. source is required.
 	// +required
 	Source TopologyState `json:"source,omitempty,omitzero"`
 

@@ -416,15 +416,8 @@ tests:
                 infrastructureTopology: HighlyAvailable
               reason: preflightCheckFailed
       expectedStatusError: "reason must be CamelCase, matching ^[A-Z][A-Za-z0-9]*$"
-    - name: Should reject a supported transition whose source does not match status topology
+    - name: Should allow topology status to change before supported transitions are refreshed
       initial: |
-        apiVersion: config.openshift.io/v1
-        kind: Infrastructure
-        spec: {}
-        status:
-          controlPlaneTopology: SingleReplica
-          infrastructureTopology: SingleReplica
-      updated: |
         apiVersion: config.openshift.io/v1
         kind: Infrastructure
         spec: {}
@@ -434,12 +427,42 @@ tests:
           topologyTransitionStatus:
             supportedTransitions:
             - source:
-                controlPlaneTopology: HighlyAvailable
-                infrastructureTopology: HighlyAvailable
-              target:
                 controlPlaneTopology: SingleReplica
                 infrastructureTopology: SingleReplica
-      expectedStatusError: "transition sources must match the current status topology"
+              target:
+                controlPlaneTopology: HighlyAvailable
+                infrastructureTopology: HighlyAvailable
+      updated: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        spec: {}
+        status:
+          controlPlaneTopology: HighlyAvailable
+          infrastructureTopology: HighlyAvailable
+          topologyTransitionStatus:
+            supportedTransitions:
+            - source:
+                controlPlaneTopology: SingleReplica
+                infrastructureTopology: SingleReplica
+              target:
+                controlPlaneTopology: HighlyAvailable
+                infrastructureTopology: HighlyAvailable
+      expected: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        spec: {}
+        status:
+          controlPlaneTopology: HighlyAvailable
+          infrastructureTopology: HighlyAvailable
+          cpuPartitioning: None
+          topologyTransitionStatus:
+            supportedTransitions:
+            - source:
+                controlPlaneTopology: SingleReplica
+                infrastructureTopology: SingleReplica
+              target:
+                controlPlaneTopology: HighlyAvailable
+                infrastructureTopology: HighlyAvailable
     - name: Should enforce the maximum supported transition count
       initial: |
         apiVersion: config.openshift.io/v1

@@ -3316,9 +3316,9 @@ spec:
                                     rule: self.matches('^[A-Z][A-Za-z0-9]*$')
                                 source:
                                   description: |-
-                                    source is the control-plane and infrastructure topology this transition starts
-                                    from. It must equal the current topology in the corresponding status fields.
-                                    source is required.
+                                    source is the control-plane and infrastructure topology this transition was
+                                    evaluated from. It may differ from the current topology while status is
+                                    being refreshed. source is required.
                                   properties:
                                     controlPlaneTopology:
                                       description: |-
@@ -3402,12 +3402,6 @@ spec:
                     == self.status.controlPlaneTopology) || (has(self.status.controlPlaneTopology)
                     && self.status.controlPlaneTopology == ''SingleReplica'' && self.spec.controlPlaneTopology
                     == ''HighlyAvailable'')'
-                - message: transition sources must match the current status topology
-                  rule: '!has(self.status) || !has(self.status.topologyTransitionStatus)
-                    || self.status.topologyTransitionStatus.supportedTransitions.all(t,
-                    has(self.status.controlPlaneTopology) && has(self.status.infrastructureTopology)
-                    && t.source.controlPlaneTopology == self.status.controlPlaneTopology
-                    && t.source.infrastructureTopology == self.status.infrastructureTopology)'
               internalRegistryPullSecret:
                 description: |-
                   internalRegistryPullSecret is the pull secret for the internal registry, used by

@@ -22264,7 +22264,7 @@ func schema_openshift_api_config_v1_TopologyTransition(ref common.ReferenceCallb
 				Properties: map[string]spec.Schema{
 					"source": {
 						SchemaProps: spec.SchemaProps{
-							Description: "source is the control-plane and infrastructure topology this transition starts from. It must equal the current topology in the corresponding status fields. source is required.",
+							Description: "source is the control-plane and infrastructure topology this transition was evaluated from. It may differ from the current topology while status is being refreshed. source is required.",
 							Default:     map[string]interface{}{},
 							Ref:         ref(configv1.TopologyState{}.OpenAPIModelName()),
 						},

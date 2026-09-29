@@ -2282,7 +2282,7 @@ func (TopologyState) SwaggerDoc() map[string]string {
 }
 
 var map_TopologyTransition = map[string]string{
-	"source":  "source is the control-plane and infrastructure topology this transition starts from. It must equal the current topology in the corresponding status fields. source is required.",
+	"source":  "source is the control-plane and infrastructure topology this transition was evaluated from. It may differ from the current topology while status is being refreshed. source is required.",
 	"target":  "target is the control-plane and infrastructure topology this transition would move to. target is required.",
 	"reason":  "reason is a CamelCase machine-readable explanation of the availability, e.g. PreflightCheckFailed. The set of reasons is diagnostic and not exhaustive. When omitted, no machine-readable explanation is available. Must start with an uppercase letter and contain only alphanumeric characters, and must be between 1 and 128 characters long.",
 	"message": "message is a human-readable explanation, primarily for Unavailable transitions (e.g. a concise summary of the failing preconditions). It is for humans only and must not be parsed. It may be truncated by the controller. When omitted, no human-readable explanation is available for the transition. When set, it must be between 1 and 2048 characters long.",

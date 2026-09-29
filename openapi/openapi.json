@@ -12047,7 +12047,7 @@
           "type": "string"
         },
         "source": {
-          "description": "source is the control-plane and infrastructure topology this transition starts from. It must equal the current topology in the corresponding status fields. source is required.",
+          "description": "source is the control-plane and infrastructure topology this transition was evaluated from. It may differ from the current topology while status is being refreshed. source is required.",
           "default": {},
           "$ref": "#/definitions/com.github.openshift.api.config.v1.TopologyState"
         },

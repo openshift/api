@@ -281,7 +281,7 @@ tests:
           controlPlaneTopology: SingleReplica
           infrastructureTopology: HighlyAvailable
           cpuPartitioning: None
-    - name: Should allow an empty supportedTransitions list after successful evaluation
+    - name: Should allow empty transition status before evaluation
       initial: |
         apiVersion: config.openshift.io/v1
         kind: Infrastructure
@@ -295,13 +295,8 @@ tests:
         status:
           controlPlaneTopology: SingleReplica
           topologyTransitionStatus:
-            supportedTransitions: []
-            conditions:
-            - type: TopologyTransitionsEvaluated
-              status: "True"
-              lastTransitionTime: "2025-01-01T00:00:00Z"
-              reason: EvaluationComplete
-              message: No transitions are available
+            transitions: []
+            conditions: []
       expected: |
         apiVersion: config.openshift.io/v1
         kind: Infrastructure
@@ -311,14 +306,9 @@ tests:
           infrastructureTopology: HighlyAvailable
           cpuPartitioning: None
           topologyTransitionStatus:
-            supportedTransitions: []
-            conditions:
-            - type: TopologyTransitionsEvaluated
-              status: "True"
-              lastTransitionTime: "2025-01-01T00:00:00Z"
-              reason: EvaluationComplete
-              message: No transitions are available
-    - name: Should allow reporting current transition progress
+            transitions: []
+            conditions: []
+    - name: Should allow reporting a transition in progress with failing evaluations
       initial: |
         apiVersion: config.openshift.io/v1
         kind: Infrastructure
@@ -334,19 +324,30 @@ tests:
           controlPlaneTopology: SingleReplica
           infrastructureTopology: SingleReplica
           topologyTransitionStatus:
-            supportedTransitions:
+            transitions:
             - source:
                 controlPlaneTopology: SingleReplica
                 infrastructureTopology: SingleReplica
               target:
                 controlPlaneTopology: HighlyAvailable
                 infrastructureTopology: HighlyAvailable
-              reason: PreflightCheckFailed
-            currentTransition:
-              state: Partial
+              evaluations:
+              - type: TopologyTransitionAvailable
+                status: "False"
+                lastTransitionTime: "2025-01-01T00:00:00Z"
+                reason: PreflightCheckFailed
+                message: A preflight check failed
+              - type: PreflightCheckPassed
+                status: "False"
+                lastTransitionTime: "2025-01-01T00:00:00Z"
+                reason: PrerequisiteMissing
+                message: A prerequisite is missing
+            conditions:
+            - type: TopologyTransitionCompleted
+              status: "False"
+              lastTransitionTime: "2025-01-01T00:00:00Z"
               reason: TransitionInProgress
               message: Applying topology changes
-              startedTime: "2025-01-01T00:00:00Z"
       expected: |
         apiVersion: config.openshift.io/v1
         kind: Infrastructure
@@ -356,20 +357,77 @@ tests:
           infrastructureTopology: SingleReplica
           cpuPartitioning: None
           topologyTransitionStatus:
-            supportedTransitions:
+            transitions:
             - source:
                 controlPlaneTopology: SingleReplica
                 infrastructureTopology: SingleReplica
               target:
                 controlPlaneTopology: HighlyAvailable
                 infrastructureTopology: HighlyAvailable
+              evaluations:
+              - type: TopologyTransitionAvailable
+                status: "False"
+                lastTransitionTime: "2025-01-01T00:00:00Z"
+                reason: PreflightCheckFailed
+                message: A preflight check failed
+              - type: PreflightCheckPassed
+                status: "False"
+                lastTransitionTime: "2025-01-01T00:00:00Z"
+                reason: PrerequisiteMissing
+                message: A prerequisite is missing
+            conditions:
+            - type: TopologyTransitionCompleted
+              status: "False"
+              lastTransitionTime: "2025-01-01T00:00:00Z"
+              reason: TransitionInProgress
+              message: Applying topology changes
+    - name: Should reject an unsupported topology transition condition status
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        spec: {}
+        status:
+          controlPlaneTopology: SingleReplica
+          infrastructureTopology: SingleReplica
+      updated: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        spec: {}
+        status:
+          controlPlaneTopology: SingleReplica
+          infrastructureTopology: SingleReplica
+          topologyTransitionStatus:
+            conditions:
+            - type: TopologyTransitionCompleted
+              status: InProgress
+              lastTransitionTime: "2025-01-01T00:00:00Z"
+              reason: TransitionInProgress
+              message: Applying topology changes
+      expectedStatusError: 'status.topologyTransitionStatus.conditions[0].status: Unsupported value: "InProgress": supported values: "True", "False", "Unknown"'
+    - name: Should reject an unsupported top-level condition type
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        spec: {}
+        status:
+          controlPlaneTopology: SingleReplica
+          infrastructureTopology: SingleReplica
+      updated: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        spec: {}
+        status:
+          controlPlaneTopology: SingleReplica
+          infrastructureTopology: SingleReplica
+          topologyTransitionStatus:
+            conditions:
+            - type: TopologyTransitionAvailable
+              status: "False"
+              lastTransitionTime: "2025-01-01T00:00:00Z"
               reason: PreflightCheckFailed
-            currentTransition:
-              state: Partial
-              reason: TransitionInProgress
-              message: Applying topology changes
-              startedTime: "2025-01-01T00:00:00Z"
-    - name: Should reject an unsupported current transition state
+              message: A preflight check failed
+      expectedStatusError: "conditions may only contain TopologyTransitionsEvaluated and TopologyTransitionCompleted"
+    - name: Should allow stale transition evaluations until the evaluation condition is reported
       initial: |
         apiVersion: config.openshift.io/v1
         kind: Infrastructure
@@ -377,61 +435,20 @@ tests:
         status:
           controlPlaneTopology: SingleReplica
           infrastructureTopology: SingleReplica
-      updated: |
-        apiVersion: config.openshift.io/v1
-        kind: Infrastructure
-        spec: {}
-        status:
-          controlPlaneTopology: SingleReplica
-          infrastructureTopology: SingleReplica
           topologyTransitionStatus:
-            supportedTransitions: []
-            currentTransition:
-              state: InProgress
-              reason: TransitionInProgress
-              message: Applying topology changes
-      expectedStatusError: 'status.topologyTransitionStatus.currentTransition.state: Unsupported value: "InProgress": supported values: "Completed", "Partial", "Failed"'
-    - name: Should reject a topology transition reason that is not CamelCase
-      initial: |
-        apiVersion: config.openshift.io/v1
-        kind: Infrastructure
-        spec: {}
-        status:
-          controlPlaneTopology: SingleReplica
-          infrastructureTopology: SingleReplica
-      updated: |
-        apiVersion: config.openshift.io/v1
-        kind: Infrastructure
-        spec: {}
-        status:
-          controlPlaneTopology: SingleReplica
-          infrastructureTopology: SingleReplica
-          topologyTransitionStatus:
-            supportedTransitions:
+            transitions:
             - source:
                 controlPlaneTopology: SingleReplica
                 infrastructureTopology: SingleReplica
               target:
                 controlPlaneTopology: HighlyAvailable
                 infrastructureTopology: HighlyAvailable
-              reason: preflightCheckFailed
-      expectedStatusError: "reason must be CamelCase, matching ^[A-Z][A-Za-z0-9]*$"
-    - name: Should allow topology status to change before supported transitions are refreshed
-      initial: |
-        apiVersion: config.openshift.io/v1
-        kind: Infrastructure
-        spec: {}
-        status:
-          controlPlaneTopology: SingleReplica
-          infrastructureTopology: SingleReplica
-          topologyTransitionStatus:
-            supportedTransitions:
-            - source:
-                controlPlaneTopology: SingleReplica
-                infrastructureTopology: SingleReplica
-              target:
-                controlPlaneTopology: HighlyAvailable
-                infrastructureTopology: HighlyAvailable
+              evaluations:
+              - type: TopologyTransitionAvailable
+                status: "True"
+                lastTransitionTime: "2025-01-01T00:00:00Z"
+                reason: EvaluationComplete
+                message: The transition is available
       updated: |
         apiVersion: config.openshift.io/v1
         kind: Infrastructure
@@ -440,13 +457,19 @@ tests:
           controlPlaneTopology: HighlyAvailable
           infrastructureTopology: HighlyAvailable
           topologyTransitionStatus:
-            supportedTransitions:
+            transitions:
             - source:
                 controlPlaneTopology: SingleReplica
                 infrastructureTopology: SingleReplica
               target:
                 controlPlaneTopology: HighlyAvailable
                 infrastructureTopology: HighlyAvailable
+              evaluations:
+              - type: TopologyTransitionAvailable
+                status: "True"
+                lastTransitionTime: "2025-01-01T00:00:00Z"
+                reason: EvaluationComplete
+                message: The transition is available
       expected: |
         apiVersion: config.openshift.io/v1
         kind: Infrastructure
@@ -456,14 +479,20 @@ tests:
           infrastructureTopology: HighlyAvailable
           cpuPartitioning: None
           topologyTransitionStatus:
-            supportedTransitions:
+            transitions:
             - source:
                 controlPlaneTopology: SingleReplica
                 infrastructureTopology: SingleReplica
               target:
                 controlPlaneTopology: HighlyAvailable
                 infrastructureTopology: HighlyAvailable
-    - name: Should enforce the maximum supported transition count
+              evaluations:
+              - type: TopologyTransitionAvailable
+                status: "True"
+                lastTransitionTime: "2025-01-01T00:00:00Z"
+                reason: EvaluationComplete
+                message: The transition is available
+    - name: Should enforce the maximum transition count
       initial: |
         apiVersion: config.openshift.io/v1
         kind: Infrastructure
@@ -479,21 +508,33 @@ tests:
           controlPlaneTopology: SingleReplica
           infrastructureTopology: SingleReplica
           topologyTransitionStatus:
-            supportedTransitions:
+            transitions:
             - source:
                 controlPlaneTopology: SingleReplica
                 infrastructureTopology: SingleReplica
               target:
                 controlPlaneTopology: HighlyAvailable
                 infrastructureTopology: HighlyAvailable
+              evaluations:
+              - type: TopologyTransitionAvailable
+                status: "True"
+                lastTransitionTime: "2025-01-01T00:00:00Z"
+                reason: EvaluationComplete
+                message: The transition is available
             - source:
                 controlPlaneTopology: SingleReplica
                 infrastructureTopology: SingleReplica
               target:
                 controlPlaneTopology: HighlyAvailable
                 infrastructureTopology: HighlyAvailable
+              evaluations:
+              - type: TopologyTransitionAvailable
+                status: "True"
+                lastTransitionTime: "2025-01-01T00:00:00Z"
+                reason: EvaluationComplete
+                message: The transition is available
       expectedStatusError: "Too many: 2: must have at most 1 items"
-    - name: Should require supportedTransitions when topologyTransitionStatus is set
+    - name: Should allow omitting transitions when topologyTransitionStatus is set
       initial: |
         apiVersion: config.openshift.io/v1
         kind: Infrastructure
@@ -508,8 +549,17 @@ tests:
           controlPlaneTopology: SingleReplica
           topologyTransitionStatus:
             conditions: []
-      expectedStatusError: "Required value"
-    - name: Should require state on currentTransition
+      expected: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        spec: {}
+        status:
+          controlPlaneTopology: SingleReplica
+          infrastructureTopology: HighlyAvailable
+          cpuPartitioning: None
+          topologyTransitionStatus:
+            conditions: []
+    - name: Should require a target on transitions
       initial: |
         apiVersion: config.openshift.io/v1
         kind: Infrastructure
@@ -523,8 +573,223 @@ tests:
         status:
           controlPlaneTopology: SingleReplica
           topologyTransitionStatus:
-            supportedTransitions: []
-            currentTransition:
-              reason: TransitionInProgress
-              message: Applying topology changes
-      expectedStatusError: "Required value"
+            transitions:
+            - source:
+                controlPlaneTopology: SingleReplica
+                infrastructureTopology: SingleReplica
+              evaluations:
+              - type: TopologyTransitionAvailable
+                status: "False"
+                lastTransitionTime: "2025-01-01T00:00:00Z"
+                reason: PreflightCheckFailed
+                message: The transition is unavailable
+      expectedStatusError: "status.topologyTransitionStatus.transitions[0].target: Required value"
+    - name: Should require a source on transitions
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        spec: {}
+        status:
+          controlPlaneTopology: SingleReplica
+      updated: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        spec: {}
+        status:
+          controlPlaneTopology: SingleReplica
+          topologyTransitionStatus:
+            transitions:
+            - target:
+                controlPlaneTopology: HighlyAvailable
+                infrastructureTopology: HighlyAvailable
+              evaluations:
+              - type: TopologyTransitionAvailable
+                status: "False"
+                lastTransitionTime: "2025-01-01T00:00:00Z"
+                reason: PreflightCheckFailed
+                message: The transition is unavailable
+      expectedStatusError: "status.topologyTransitionStatus.transitions[0].source: Required value"
+    - name: Should require an availability condition among transition evaluations
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        spec: {}
+        status:
+          controlPlaneTopology: SingleReplica
+      updated: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        spec: {}
+        status:
+          controlPlaneTopology: SingleReplica
+          topologyTransitionStatus:
+            transitions:
+            - source:
+                controlPlaneTopology: SingleReplica
+                infrastructureTopology: SingleReplica
+              target:
+                controlPlaneTopology: HighlyAvailable
+                infrastructureTopology: HighlyAvailable
+              evaluations:
+              - type: PreflightCheckPassed
+                status: "False"
+                lastTransitionTime: "2025-01-01T00:00:00Z"
+                reason: PrerequisiteMissing
+                message: A prerequisite is missing
+      expectedStatusError: "evaluations must contain TopologyTransitionAvailable"
+    - name: Should require evaluations on a transition
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        spec: {}
+        status:
+          controlPlaneTopology: SingleReplica
+      updated: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        spec: {}
+        status:
+          controlPlaneTopology: SingleReplica
+          topologyTransitionStatus:
+            transitions:
+            - source:
+                controlPlaneTopology: SingleReplica
+                infrastructureTopology: SingleReplica
+              target:
+                controlPlaneTopology: HighlyAvailable
+                infrastructureTopology: HighlyAvailable
+      expectedStatusError: "status.topologyTransitionStatus.transitions[0].evaluations: Required value"
+    - name: Should allow evaluation and completion conditions with an available transition
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        spec: {}
+        status:
+          controlPlaneTopology: SingleReplica
+      updated: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        spec: {}
+        status:
+          controlPlaneTopology: SingleReplica
+          topologyTransitionStatus:
+            conditions:
+            - type: TopologyTransitionsEvaluated
+              status: "True"
+              lastTransitionTime: "2025-01-01T00:00:00Z"
+              reason: EvaluationComplete
+              message: Transition checks finished
+            - type: TopologyTransitionCompleted
+              status: "True"
+              lastTransitionTime: "2025-01-02T00:00:00Z"
+              reason: TransitionComplete
+              message: Transition completed
+            transitions:
+            - source:
+                controlPlaneTopology: SingleReplica
+                infrastructureTopology: SingleReplica
+              target:
+                controlPlaneTopology: HighlyAvailable
+                infrastructureTopology: HighlyAvailable
+              evaluations:
+              - type: TopologyTransitionAvailable
+                status: "True"
+                lastTransitionTime: "2025-01-01T00:00:00Z"
+                reason: EvaluationComplete
+                message: The transition is available
+      expected: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        spec: {}
+        status:
+          controlPlaneTopology: SingleReplica
+          infrastructureTopology: HighlyAvailable
+          cpuPartitioning: None
+          topologyTransitionStatus:
+            conditions:
+            - type: TopologyTransitionsEvaluated
+              status: "True"
+              lastTransitionTime: "2025-01-01T00:00:00Z"
+              reason: EvaluationComplete
+              message: Transition checks finished
+            - type: TopologyTransitionCompleted
+              status: "True"
+              lastTransitionTime: "2025-01-02T00:00:00Z"
+              reason: TransitionComplete
+              message: Transition completed
+            transitions:
+            - source:
+                controlPlaneTopology: SingleReplica
+                infrastructureTopology: SingleReplica
+              target:
+                controlPlaneTopology: HighlyAvailable
+                infrastructureTopology: HighlyAvailable
+              evaluations:
+              - type: TopologyTransitionAvailable
+                status: "True"
+                lastTransitionTime: "2025-01-01T00:00:00Z"
+                reason: EvaluationComplete
+                message: The transition is available
+    - name: Should allow updating a transition from unavailable to available
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        spec: {}
+        status:
+          controlPlaneTopology: SingleReplica
+          topologyTransitionStatus:
+            transitions:
+            - source:
+                controlPlaneTopology: SingleReplica
+                infrastructureTopology: SingleReplica
+              target:
+                controlPlaneTopology: HighlyAvailable
+                infrastructureTopology: HighlyAvailable
+              evaluations:
+              - type: TopologyTransitionAvailable
+                status: "False"
+                lastTransitionTime: "2025-01-01T00:00:00Z"
+                reason: PreflightCheckFailed
+                message: The transition is unavailable
+      updated: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        spec: {}
+        status:
+          controlPlaneTopology: SingleReplica
+          topologyTransitionStatus:
+            transitions:
+            - source:
+                controlPlaneTopology: SingleReplica
+                infrastructureTopology: SingleReplica
+              target:
+                controlPlaneTopology: HighlyAvailable
+                infrastructureTopology: HighlyAvailable
+              evaluations:
+              - type: TopologyTransitionAvailable
+                status: "True"
+                lastTransitionTime: "2025-01-02T00:00:00Z"
+                reason: EvaluationComplete
+                message: The transition is available
+      expected: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        spec: {}
+        status:
+          controlPlaneTopology: SingleReplica
+          infrastructureTopology: HighlyAvailable
+          cpuPartitioning: None
+          topologyTransitionStatus:
+            transitions:
+            - source:
+                controlPlaneTopology: SingleReplica
+                infrastructureTopology: SingleReplica
+              target:
+                controlPlaneTopology: HighlyAvailable
+                infrastructureTopology: HighlyAvailable
+              evaluations:
+              - type: TopologyTransitionAvailable
+                status: "True"
+                lastTransitionTime: "2025-01-02T00:00:00Z"
+                reason: EvaluationComplete
+                message: The transition is available

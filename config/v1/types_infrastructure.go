@@ -138,11 +138,12 @@ type InfrastructureStatus struct {
 	// +optional
 	InfrastructureTopology TopologyMode `json:"infrastructureTopology,omitempty"`
 
-	// topologyTransitionStatus reports available topology transitions and current progress, if any.
-	// It is omitted until the topology controller evaluates transitions.
+	// topologyTransitionStatus reports evaluations of supported topology transitions
+	// and the status of a requested transition, if any.
+	// It is omitted until the topology controller reports transition status.
 	// +openshift:enable:FeatureGate=MutableTopology
 	// +optional
-	TopologyTransitionStatus *TopologyTransitionStatus `json:"topologyTransitionStatus,omitempty"`
+	TopologyTransitionStatus *TopologyTransitionStatus `json:"topologyTransitionStatus,omitempty,omitzero"`
 
 	// cpuPartitioning expresses if CPU partitioning is a currently enabled feature in the cluster.
 	// CPU Partitioning means that this cluster can support partitioning workloads to specific CPU Sets.

@@ -26,82 +26,57 @@ type TopologyState struct {
 	InfrastructureTopology TopologyMode `json:"infrastructureTopology,omitempty"`
 }
 
-type TopologyTransitionStatus struct {
-	// conditions reports whether supported transitions have been evaluated.
+const (
+	// TopologyTransitionsEvaluatedConditionType indicates whether supported transition types have been evaluated.
+	//
 	// TopologyTransitionsEvaluated is Unknown before evaluation, True when evaluation
 	// succeeds (even if no transitions are supported), and False when evaluation fails.
-	// An absent condition means evaluation has not completed.
-	// At most one condition is present.
-	// +kubebuilder:validation:MaxItems=1
+	// An absent condition means the transitions list must be treated as stale.
+	TopologyTransitionsEvaluatedConditionType = "TopologyTransitionsEvaluated"
+
+	// TopologyTransitionCompletedConditionType indicates the status of the current or most recent transition.
+	//
+	// TopologyTransitionCompletedConditionType is Unknown before a transition is requested, True when
+	// a requested transition has completed successfully, and False while it is in progress or if it was blocked.
+	TopologyTransitionCompletedConditionType = "TopologyTransitionCompleted"
+
+	// TopologyTransitionAvailableConditionType indicates if a type of transition is available based on
+	// the most recently evaluated state of the cluster.
+	//
+	// TopologyTransitionAvailableConditionType is Unknown before evaluation, True when evaluations
+	// for the given transition succeed, and False when one or more evaluations for a transition fail.
+	TopologyTransitionAvailableConditionType = "TopologyTransitionAvailable"
+)
+
+// TopologyTransitionStatus reports availability of each type of topology transition and contains the
+// status of any initiated transition.
+// When present, it must include conditions or transitions; either list may be empty.
+// +kubebuilder:validation:MinProperties=1
+type TopologyTransitionStatus struct {
+	// conditions provides information on topology transition progress and the
+	// evaluation of supported transition types. When omitted, or when the
+	// TopologyTransitionsEvaluated condition is absent, transitions is stale.
+	//
+	// TopologyTransitionsEvaluatedConditionType and TopologyTransitionCompletedConditionType are the
+	// only valid conditions at this scope. At most two conditions can be present.
+	//
+	// +kubebuilder:validation:MaxItems=2
+	// +kubebuilder:validation:XValidation:rule="self.all(c, c.type in ['TopologyTransitionsEvaluated', 'TopologyTransitionCompleted'])",message="conditions may only contain TopologyTransitionsEvaluated and TopologyTransitionCompleted"
 	// +optional
 	// +listType=map
 	// +listMapKey=type
 	Conditions []metav1.Condition `json:"conditions,omitempty"`
 
-	// supportedTransitions represents the transitions that are valid for this cluster.
-	// An empty list means that no transitions are currently supported from the current topology.
+	// transitions contains each supported transition type and its availability.
+	// An empty or omitted list means no transition evaluations have been reported.
+	// Entries are stale when the TopologyTransitionsEvaluated condition is absent.
+	//
 	// At most one transition is supported currently (SNO to HA Compact)
 	// +kubebuilder:validation:MaxItems=1
-	// +required
+	// +optional
 	// +listType=atomic
-	SupportedTransitions []TopologyTransition `json:"supportedTransitions"`
-
-	// currentTransition is omitted until a topology transition starts.
-	// +optional
-	CurrentTransition *TopologyTransitionProgress `json:"currentTransition,omitempty"`
+	Transitions []TopologyTransition `json:"transitions,omitempty"`
 }
-
-const (
-	// TopologyTransitionsEvaluatedConditionType indicates whether available transitions have been evaluated.
-	TopologyTransitionsEvaluatedConditionType = "TopologyTransitionsEvaluated"
-)
-
-// TopologyTransitionProgress describes a topology transition that has started.
-type TopologyTransitionProgress struct {
-	// state indicates the current state of a triggered transition.
-	// Valid values are "Completed" when the transition was successfully applied,
-	// "Partial" when it was not completely applied or is still in progress, and
-	// "Failed" when it failed to apply.
-	// +kubebuilder:validation:Enum=Completed;Partial;Failed
-	// +required
-	State TransitionState `json:"state,omitempty"`
-
-	// reason indicates why current state is as reported.
-	// It must be between 1 and 128 characters long.
-	// +kubebuilder:validation:MinLength=1
-	// +kubebuilder:validation:MaxLength=128
-	// +required
-	Reason string `json:"reason,omitempty"`
-
-	// message is human-readable information about the reason for the current state.
-	// It must be between 1 and 2048 characters long.
-	// +kubebuilder:validation:MinLength=1
-	// +kubebuilder:validation:MaxLength=2048
-	// +required
-	Message string `json:"message,omitempty"`
-
-	// startedTime is the time at which the transition was started. When omitted, the start time is not available.
-	// +optional
-	StartedTime *metav1.Time `json:"startedTime,omitempty"`
-
-	// completionTime is when the transition was fully applied. It is omitted while a transition is being applied.
-	// +optional
-	CompletionTime *metav1.Time `json:"completionTime,omitempty"`
-}
-
-// TransitionState tracks the last observed state of a requested transition.
-type TransitionState string
-
-const (
-	// CompletedTransition indicates an transition was successfully
-	// completed on the cluster.
-	CompletedTransition TransitionState = "Completed"
-	// PartialTransition indicates a transition was never completely applied
-	// or is currently being applied.
-	PartialTransition TransitionState = "Partial"
-	// FailedTransition indicates a transition failed to be applied.
-	FailedTransition TransitionState = "Failed"
-)
 
 type TopologyTransition struct {
 	// source is the control-plane and infrastructure topology this transition was
@@ -115,24 +90,17 @@ type TopologyTransition struct {
 	// +required
 	Target TopologyState `json:"target,omitempty,omitzero"`
 
-	// reason is a CamelCase machine-readable explanation of the availability, e.g.
-	// PreflightCheckFailed. The set of reasons is diagnostic and not exhaustive.
-	// When omitted, no machine-readable explanation is available.
-	// Must start with an uppercase letter and contain only alphanumeric characters,
-	// and must be between 1 and 128 characters long.
-	// +kubebuilder:validation:MinLength=1
-	// +kubebuilder:validation:MaxLength=128
-	// +kubebuilder:validation:XValidation:rule=`self.matches('^[A-Z][A-Za-z0-9]*$')`,message="reason must be CamelCase, matching ^[A-Z][A-Za-z0-9]*$"
-	// +optional
-	Reason string `json:"reason,omitempty"`
-
-	// message is a human-readable explanation, primarily for Unavailable
-	// transitions (e.g. a concise summary of the failing preconditions). It is for
-	// humans only and must not be parsed. It may be truncated by the controller.
-	// When omitted, no human-readable explanation is available for the transition.
-	// When set, it must be between 1 and 2048 characters long.
-	// +kubebuilder:validation:MinLength=1
-	// +kubebuilder:validation:MaxLength=2048
-	// +optional
-	Message string `json:"message,omitempty"`
+	// evaluations contains the availability condition for this transition and
+	// conditions for the checks run against the cluster to determine availability.
+	//
+	// TopologyTransitionAvailableConditionType is required; other condition types
+	// report individual checks. Between one and 32 conditions must be present.
+	//
+	// +kubebuilder:validation:MaxItems=32
+	// +kubebuilder:validation:MinItems=1
+	// +kubebuilder:validation:XValidation:rule="self.exists(c, c.type == 'TopologyTransitionAvailable')",message="evaluations must contain TopologyTransitionAvailable"
+	// +required
+	// +listType=map
+	// +listMapKey=type
+	Evaluations []metav1.Condition `json:"evaluations,omitempty"`
 }

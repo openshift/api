@@ -1890,7 +1890,7 @@ var map_InfrastructureStatus = map[string]string{
 	"apiServerInternalURI":     "apiServerInternalURL is a valid URI with scheme 'https', address and optionally a port (defaulting to 443).  apiServerInternalURL can be used by components like kubelets, to contact the Kubernetes API server using the infrastructure provider rather than Kubernetes networking.",
 	"controlPlaneTopology":     "controlPlaneTopology expresses the expectations for operands that normally run on control nodes. The default is 'HighlyAvailable', which represents the behavior operators have in a \"normal\" cluster. The 'SingleReplica' mode will be used in single-node deployments and the operators should not configure the operand for highly-available operation The 'External' mode indicates that the control plane is hosted externally to the cluster and that its components are not visible within the cluster. The 'HighlyAvailableArbiter' mode indicates that the control plane will consist of 2 control-plane nodes that run conventional services and 1 smaller sized arbiter node that runs a bare minimum of services to maintain quorum.",
 	"infrastructureTopology":   "infrastructureTopology expresses the expectations for infrastructure services that do not run on control plane nodes, usually indicated by a node selector for a `role` value other than `master`. The default is 'HighlyAvailable', which represents the behavior operators have in a \"normal\" cluster. The 'SingleReplica' mode will be used in single-node deployments and the operators should not configure the operand for highly-available operation NOTE: External topology mode is not applicable for this field.",
-	"topologyTransitionStatus": "topologyTransitionStatus reports available topology transitions and current progress, if any. It is omitted until the topology controller evaluates transitions.",
+	"topologyTransitionStatus": "topologyTransitionStatus reports evaluations of supported topology transitions and the status of a requested transition, if any. It is omitted until the topology controller reports transition status.",
 	"cpuPartitioning":          "cpuPartitioning expresses if CPU partitioning is a currently enabled feature in the cluster. CPU Partitioning means that this cluster can support partitioning workloads to specific CPU Sets. Valid values are \"None\" and \"AllNodes\". When omitted, the default value is \"None\". The default value of \"None\" indicates that no nodes will be setup with CPU partitioning. The \"AllNodes\" value indicates that all nodes have been setup with CPU partitioning, and can then be further configured via the PerformanceProfile API.",
 }
 
@@ -2282,33 +2282,19 @@ func (TopologyState) SwaggerDoc() map[string]string {
 }
 
 var map_TopologyTransition = map[string]string{
-	"source":  "source is the control-plane and infrastructure topology this transition was evaluated from. It may differ from the current topology while status is being refreshed. source is required.",
-	"target":  "target is the control-plane and infrastructure topology this transition would move to. target is required.",
-	"reason":  "reason is a CamelCase machine-readable explanation of the availability, e.g. PreflightCheckFailed. The set of reasons is diagnostic and not exhaustive. When omitted, no machine-readable explanation is available. Must start with an uppercase letter and contain only alphanumeric characters, and must be between 1 and 128 characters long.",
-	"message": "message is a human-readable explanation, primarily for Unavailable transitions (e.g. a concise summary of the failing preconditions). It is for humans only and must not be parsed. It may be truncated by the controller. When omitted, no human-readable explanation is available for the transition. When set, it must be between 1 and 2048 characters long.",
+	"source":      "source is the control-plane and infrastructure topology this transition was evaluated from. It may differ from the current topology while status is being refreshed. source is required.",
+	"target":      "target is the control-plane and infrastructure topology this transition would move to. target is required.",
+	"evaluations": "evaluations contains the availability condition for this transition and conditions for the checks run against the cluster to determine availability.\n\nTopologyTransitionAvailableConditionType is required; other condition types report individual checks. Between one and 32 conditions must be present.",
 }
 
 func (TopologyTransition) SwaggerDoc() map[string]string {
 	return map_TopologyTransition
 }
 
-var map_TopologyTransitionProgress = map[string]string{
-	"":               "TopologyTransitionProgress describes a topology transition that has started.",
-	"state":          "state indicates the current state of a triggered transition. Valid values are \"Completed\" when the transition was successfully applied, \"Partial\" when it was not completely applied or is still in progress, and \"Failed\" when it failed to apply.",
-	"reason":         "reason indicates why current state is as reported. It must be between 1 and 128 characters long.",
-	"message":        "message is human-readable information about the reason for the current state. It must be between 1 and 2048 characters long.",
-	"startedTime":    "startedTime is the time at which the transition was started. When omitted, the start time is not available.",
-	"completionTime": "completionTime is when the transition was fully applied. It is omitted while a transition is being applied.",
-}
-
-func (TopologyTransitionProgress) SwaggerDoc() map[string]string {
-	return map_TopologyTransitionProgress
-}
-
 var map_TopologyTransitionStatus = map[string]string{
-	"conditions":           "conditions reports whether supported transitions have been evaluated. TopologyTransitionsEvaluated is Unknown before evaluation, True when evaluation succeeds (even if no transitions are supported), and False when evaluation fails. An absent condition means evaluation has not completed. At most one condition is present.",
-	"supportedTransitions": "supportedTransitions represents the transitions that are valid for this cluster. An empty list means that no transitions are currently supported from the current topology. At most one transition is supported currently (SNO to HA Compact)",
-	"currentTransition":    "currentTransition is omitted until a topology transition starts.",
+	"":            "TopologyTransitionStatus reports availability of each type of topology transition and contains the status of any initiated transition. When present, it must include conditions or transitions; either list may be empty.",
+	"conditions":  "conditions provides information on topology transition progress and the evaluation of supported transition types. When omitted, or when the TopologyTransitionsEvaluated condition is absent, transitions is stale.\n\nTopologyTransitionsEvaluatedConditionType and TopologyTransitionCompletedConditionType are the only valid conditions at this scope. At most two conditions can be present.",
+	"transitions": "transitions contains each supported transition type and its availability. An empty or omitted list means no transition evaluations have been reported. Entries are stale when the TopologyTransitionsEvaluated condition is absent.\n\nAt most one transition is supported currently (SNO to HA Compact)",
 }
 
 func (TopologyTransitionStatus) SwaggerDoc() map[string]string {

@@ -9,6 +9,7 @@ import (
 	v1alpha1 "github.com/openshift/api/apiextensions/v1alpha1"
 	v1 "github.com/openshift/api/apiserver/v1"
 	appsv1 "github.com/openshift/api/apps/v1"
+	authenticationv1alpha1 "github.com/openshift/api/authentication/v1alpha1"
 	authorizationv1 "github.com/openshift/api/authorization/v1"
 	buildv1 "github.com/openshift/api/build/v1"
 	cloudnetworkv1 "github.com/openshift/api/cloudnetwork/v1"
@@ -107,6 +108,22 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		appsv1.RecreateDeploymentStrategyParams{}.OpenAPIModelName():                           schema_openshift_api_apps_v1_RecreateDeploymentStrategyParams(ref),
 		appsv1.RollingDeploymentStrategyParams{}.OpenAPIModelName():                            schema_openshift_api_apps_v1_RollingDeploymentStrategyParams(ref),
 		appsv1.TagImageHook{}.OpenAPIModelName():                                               schema_openshift_api_apps_v1_TagImageHook(ref),
+		authenticationv1alpha1.Authentication{}.OpenAPIModelName():                             schema_openshift_api_authentication_v1alpha1_Authentication(ref),
+		authenticationv1alpha1.AuthenticationConfiguration{}.OpenAPIModelName():                schema_openshift_api_authentication_v1alpha1_AuthenticationConfiguration(ref),
+		authenticationv1alpha1.ClaimMappings{}.OpenAPIModelName():                              schema_openshift_api_authentication_v1alpha1_ClaimMappings(ref),
+		authenticationv1alpha1.ClaimOrExpression{}.OpenAPIModelName():                          schema_openshift_api_authentication_v1alpha1_ClaimOrExpression(ref),
+		authenticationv1alpha1.ClaimValidationRule{}.OpenAPIModelName():                        schema_openshift_api_authentication_v1alpha1_ClaimValidationRule(ref),
+		authenticationv1alpha1.ClientCredentialConfig{}.OpenAPIModelName():                     schema_openshift_api_authentication_v1alpha1_ClientCredentialConfig(ref),
+		authenticationv1alpha1.ExternalClaimsSource{}.OpenAPIModelName():                       schema_openshift_api_authentication_v1alpha1_ExternalClaimsSource(ref),
+		authenticationv1alpha1.ExternalSourceCondition{}.OpenAPIModelName():                    schema_openshift_api_authentication_v1alpha1_ExternalSourceCondition(ref),
+		authenticationv1alpha1.ExtraMapping{}.OpenAPIModelName():                               schema_openshift_api_authentication_v1alpha1_ExtraMapping(ref),
+		authenticationv1alpha1.Issuer{}.OpenAPIModelName():                                     schema_openshift_api_authentication_v1alpha1_Issuer(ref),
+		authenticationv1alpha1.JWTAuthenticator{}.OpenAPIModelName():                           schema_openshift_api_authentication_v1alpha1_JWTAuthenticator(ref),
+		authenticationv1alpha1.PrefixedClaimOrExpression{}.OpenAPIModelName():                  schema_openshift_api_authentication_v1alpha1_PrefixedClaimOrExpression(ref),
+		authenticationv1alpha1.SourceURL{}.OpenAPIModelName():                                  schema_openshift_api_authentication_v1alpha1_SourceURL(ref),
+		authenticationv1alpha1.SourcedClaimMapping{}.OpenAPIModelName():                        schema_openshift_api_authentication_v1alpha1_SourcedClaimMapping(ref),
+		authenticationv1alpha1.TLS{}.OpenAPIModelName():                                        schema_openshift_api_authentication_v1alpha1_TLS(ref),
+		authenticationv1alpha1.UserValidationRule{}.OpenAPIModelName():                         schema_openshift_api_authentication_v1alpha1_UserValidationRule(ref),
 		authorizationv1.Action{}.OpenAPIModelName():                                            schema_openshift_api_authorization_v1_Action(ref),
 		authorizationv1.ClusterRole{}.OpenAPIModelName():                                       schema_openshift_api_authorization_v1_ClusterRole(ref),
 		authorizationv1.ClusterRoleBinding{}.OpenAPIModelName():                                schema_openshift_api_authorization_v1_ClusterRoleBinding(ref),
@@ -3871,6 +3888,671 @@ func schema_openshift_api_apps_v1_TagImageHook(ref common.ReferenceCallback) com
 		},
 		Dependencies: []string{
 			corev1.ObjectReference{}.OpenAPIModelName()},
+	}
+}
+
+func schema_openshift_api_authentication_v1alpha1_Authentication(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "Authentication configures how the apiserver should attempt to authenticate with an external claims source.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"type": {
+						SchemaProps: spec.SchemaProps{
+							Description: "type is a required field that sets the type of authentication method used by the authenticator when fetching external claims.\n\nAllowed values are 'RequestProvidedToken' and 'ClientCredential'.\n\nWhen set to 'RequestProvidedToken', the authenticator will use the token provided to the kube-apiserver as part of the request to authenticate with the external claims source.\n\nWhen set to 'ClientCredential', the authenticator will use the configured client-id, client-secret, and token endpoint to fetch an access token using the OAuth2 client credentials grant flow. The fetched access token will then be used to authenticate with the external claims source.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"clientCredential": {
+						SchemaProps: spec.SchemaProps{
+							Description: "clientCredential configures the client credentials and token endpoint to use to get an access token. This field must be set when type is ClientCredential. This field must not be set when type is not ClientCredential.",
+							Ref:         ref(authenticationv1alpha1.ClientCredentialConfig{}.OpenAPIModelName()),
+						},
+					},
+				},
+				Required: []string{"type"},
+			},
+		},
+		Dependencies: []string{
+			authenticationv1alpha1.ClientCredentialConfig{}.OpenAPIModelName()},
+	}
+}
+
+func schema_openshift_api_authentication_v1alpha1_AuthenticationConfiguration(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "AuthenticationConfiguration is the configuration-file API read by the oauth-apiserver when it runs in External OIDC mode.\n\nThe cluster-authentication-operator is the only component that writes this configuration file. It generates the file from the user-facing config.openshift.io/v1, Kind=Authentication API. This type is not a CRD and must not be configured directly.\n\nThe oauth-apiserver performs semantic validation when it reads this file. See https://github.com/openshift/oauth-apiserver/blob/97a820bd5412/pkg/externaloidc/apis/authentication/validation/validation.go.\n\n\nCompatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"kind": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"apiVersion": {
+						SchemaProps: spec.SchemaProps{
+							Description: "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"jwt": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-type": "atomic",
+							},
+						},
+						SchemaProps: spec.SchemaProps{
+							Description: "jwt is a list of authenticator to authenticate Kubernetes users using JWT compliant tokens. The authenticator will attempt to parse a raw ID token, verify it's been signed by the configured issuer. The public key to verify the signature is discovered from the issuer's public endpoint using OIDC discovery. For an incoming token, each JWT authenticator will be attempted in the order in which it is specified in this list.  Note however that other authenticators may run before or after the JWT authenticators. The specific position of JWT authenticators in relation to other authenticators is neither defined nor stable across releases.  Since each JWT authenticator must have a unique issuer URL, at most one JWT authenticator will attempt to cryptographically validate the token.\n\nThe minimum valid JWT payload must contain the following claims: {\n\t\t\"iss\": \"https://issuer.example.com\",\n\t\t\"aud\": [\"audience\"],\n\t\t\"exp\": 1234567890,\n\t\t\"<username claim>\": \"username\"\n}",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Ref: ref(authenticationv1alpha1.JWTAuthenticator{}.OpenAPIModelName()),
+									},
+								},
+							},
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			authenticationv1alpha1.JWTAuthenticator{}.OpenAPIModelName()},
+	}
+}
+
+func schema_openshift_api_authentication_v1alpha1_ClaimMappings(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "ClaimMappings provides the configuration for claim mapping",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"username": {
+						SchemaProps: spec.SchemaProps{
+							Description: "username represents an option for the username attribute. The claim's value must be a singular string. Same as the --oidc-username-claim and --oidc-username-prefix flags. If username.expression is set, the expression must produce a string value. If username.expression uses 'claims.email', then 'claims.email_verified' must be used in username.expression or extra[*].valueExpression or claimValidationRules[*].expression. An example claim validation rule expression that matches the validation automatically applied when username.claim is set to 'email' is 'claims.?email_verified.orValue(true) == true'. By explicitly comparing the value to true, we let type-checking see the result will be a boolean, and to make sure a non-boolean email_verified claim will be caught at runtime.\n\nIn the flag based approach, the --oidc-username-claim and --oidc-username-prefix are optional. If --oidc-username-claim is not set, the default value is \"sub\". For the authentication config, there is no defaulting for claim or prefix. The claim and prefix must be set explicitly. For claim, if --oidc-username-claim was not set with legacy flag approach, configure username.claim=\"sub\" in the authentication config. For prefix:\n    (1) --oidc-username-prefix=\"-\", no prefix was added to the username. For the same behavior using authentication config,\n        set username.prefix=\"\"\n    (2) --oidc-username-prefix=\"\" and  --oidc-username-claim != \"email\", prefix was \"<value of --oidc-issuer-url>#\". For the same\n        behavior using authentication config, set username.prefix=\"<value of issuer.url>#\"\n    (3) --oidc-username-prefix=\"<value>\". For the same behavior using authentication config, set username.prefix=\"<value>\"",
+							Default:     map[string]interface{}{},
+							Ref:         ref(authenticationv1alpha1.PrefixedClaimOrExpression{}.OpenAPIModelName()),
+						},
+					},
+					"groups": {
+						SchemaProps: spec.SchemaProps{
+							Description: "groups represents an option for the groups attribute. The claim's value must be a string or string array claim. If groups.claim is set, the prefix must be specified (and can be the empty string). If groups.expression is set, the expression must produce a string or string array value.\n \"\", [], and null values are treated as the group mapping not being present.",
+							Default:     map[string]interface{}{},
+							Ref:         ref(authenticationv1alpha1.PrefixedClaimOrExpression{}.OpenAPIModelName()),
+						},
+					},
+					"uid": {
+						SchemaProps: spec.SchemaProps{
+							Description: "uid represents an option for the uid attribute. Claim must be a singular string claim. If uid.expression is set, the expression must produce a string value.",
+							Default:     map[string]interface{}{},
+							Ref:         ref(authenticationv1alpha1.ClaimOrExpression{}.OpenAPIModelName()),
+						},
+					},
+					"extra": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-type": "atomic",
+							},
+						},
+						SchemaProps: spec.SchemaProps{
+							Description: "extra represents an option for the extra attribute. expression must produce a string or string array value. If the value is empty, the extra mapping will not be present.\n\nhard-coded extra key/value - key: \"foo\"\n  valueExpression: \"'bar'\"\nThis will result in an extra attribute - foo: [\"bar\"]\n\nhard-coded key, value copying claim value - key: \"foo\"\n  valueExpression: \"claims.some_claim\"\nThis will result in an extra attribute - foo: [value of some_claim]\n\nhard-coded key, value derived from claim value - key: \"admin\"\n  valueExpression: '(has(claims.is_admin) && claims.is_admin) ? \"true\":\"\"'\nThis will result in:\n - if is_admin claim is present and true, extra attribute - admin: [\"true\"]\n - if is_admin claim is present and false or is_admin claim is not present, no extra attribute will be added",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Ref: ref(authenticationv1alpha1.ExtraMapping{}.OpenAPIModelName()),
+									},
+								},
+							},
+						},
+					},
+				},
+				Required: []string{"username"},
+			},
+		},
+		Dependencies: []string{
+			authenticationv1alpha1.ClaimOrExpression{}.OpenAPIModelName(), authenticationv1alpha1.ExtraMapping{}.OpenAPIModelName(), authenticationv1alpha1.PrefixedClaimOrExpression{}.OpenAPIModelName()},
+	}
+}
+
+func schema_openshift_api_authentication_v1alpha1_ClaimOrExpression(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "ClaimOrExpression provides the configuration for a single claim or expression.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"claim": {
+						SchemaProps: spec.SchemaProps{
+							Description: "claim is the JWT claim to use. Either claim or expression must be set. Mutually exclusive with expression.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"expression": {
+						SchemaProps: spec.SchemaProps{
+							Description: "expression represents the expression which will be evaluated by CEL.\n\nCEL expressions have access to the contents of the token claims, organized into CEL variable: - 'claims' is a map of claim names to claim values.\n  For example, a variable named 'sub' can be accessed as 'claims.sub'.\n  Nested claims can be accessed using dot notation, e.g. 'claims.foo.bar'.\n\nDocumentation on CEL: https://kubernetes.io/docs/reference/using-api/cel/\n\nMutually exclusive with claim.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+				},
+			},
+		},
+	}
+}
+
+func schema_openshift_api_authentication_v1alpha1_ClaimValidationRule(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "ClaimValidationRule provides the configuration for a single claim validation rule.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"claim": {
+						SchemaProps: spec.SchemaProps{
+							Description: "claim is the name of a required claim. Same as --oidc-required-claim flag. Only string claim keys are supported. Mutually exclusive with expression and message.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"requiredValue": {
+						SchemaProps: spec.SchemaProps{
+							Description: "requiredValue is the value of a required claim. Same as --oidc-required-claim flag. Only string claim values are supported. If claim is set and requiredValue is not set, the claim must be present with a value set to the empty string. Mutually exclusive with expression and message.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"expression": {
+						SchemaProps: spec.SchemaProps{
+							Description: "expression represents the expression which will be evaluated by CEL. Must produce a boolean.\n\nCEL expressions have access to the contents of the token claims, organized into CEL variable: - 'claims' is a map of claim names to claim values.\n  For example, a variable named 'sub' can be accessed as 'claims.sub'.\n  Nested claims can be accessed using dot notation, e.g. 'claims.foo.bar'.\nMust return true for the validation to pass.\n\nDocumentation on CEL: https://kubernetes.io/docs/reference/using-api/cel/\n\nMutually exclusive with claim and requiredValue.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"message": {
+						SchemaProps: spec.SchemaProps{
+							Description: "message customizes the returned error message when expression returns false. message is a literal string. Mutually exclusive with claim and requiredValue.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+				},
+			},
+		},
+	}
+}
+
+func schema_openshift_api_authentication_v1alpha1_ClientCredentialConfig(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "ClientCredentialConfig configures the client credentials and token endpoint to use to get an access token via the OAuth2 client credentials grant flow.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"clientID": {
+						SchemaProps: spec.SchemaProps{
+							Description: "clientID is the client identifier to use during the OAuth2 client credentials flow. clientID must not be an empty string (\"\"). clientID must only contain printable ASCII characters.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"clientSecret": {
+						SchemaProps: spec.SchemaProps{
+							Description: "clientSecret is the client secret to use during the OAuth2 client credentials flow. clientSecret is the literal string value of the client secret. clientSecret must not be an empty string (\"\"). clientSecret must only contain printable ASCII characters.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"tokenEndpoint": {
+						SchemaProps: spec.SchemaProps{
+							Description: "tokenEndpoint is a required URL to query for an access token using the client credential OAuth2 flow. tokenEndpoint must not be an empty string (\"\"). tokenEndpoint must be a valid HTTPS URL. tokenEndpoint must have a host and a path. tokenEndpoint must not contain query parameters, fragments, or user information (e.g., \"user:password@host\").",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"scopes": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-type": "atomic",
+							},
+						},
+						SchemaProps: spec.SchemaProps{
+							Description: "scopes is an optional list of OAuth2 scopes to request when obtaining an access token. If not specified, the token endpoint's default scopes will be used. Each scope must not be an empty string (\"\").",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Type:   []string{"string"},
+										Format: "",
+									},
+								},
+							},
+						},
+					},
+					"tls": {
+						SchemaProps: spec.SchemaProps{
+							Description: "tls is an optional field that configures the http client TLS settings when fetching an access token for this source. At least one subfield must be set when this field is specified.",
+							Ref:         ref(authenticationv1alpha1.TLS{}.OpenAPIModelName()),
+						},
+					},
+				},
+				Required: []string{"clientID", "clientSecret", "tokenEndpoint"},
+			},
+		},
+		Dependencies: []string{
+			authenticationv1alpha1.TLS{}.OpenAPIModelName()},
+	}
+}
+
+func schema_openshift_api_authentication_v1alpha1_ExternalClaimsSource(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "ExternalClaimsSource provides the configuration for a single external claim source.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"authentication": {
+						SchemaProps: spec.SchemaProps{
+							Description: "authentication is an optional field that configures how the apiserver authenticates with an external claims source. When not specified, anonymous authentication is used.",
+							Ref:         ref(authenticationv1alpha1.Authentication{}.OpenAPIModelName()),
+						},
+					},
+					"tls": {
+						SchemaProps: spec.SchemaProps{
+							Description: "tls is an optional field that configures the http client TLS settings when fetching external claims from this source. At least one subfield must be set when this field is specified.",
+							Ref:         ref(authenticationv1alpha1.TLS{}.OpenAPIModelName()),
+						},
+					},
+					"url": {
+						SchemaProps: spec.SchemaProps{
+							Description: "url is a required configuration of the URL for which the external claims are located.",
+							Ref:         ref(authenticationv1alpha1.SourceURL{}.OpenAPIModelName()),
+						},
+					},
+					"mappings": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-type": "atomic",
+							},
+						},
+						SchemaProps: spec.SchemaProps{
+							Description: "mappings is a required list of the claim and response handling expression pairs that produces the claims from the external source.\n\nmappings must have at least 1 entry and must not exceed 16 entries. Entries must have a unique name across all external claim sources.\n\nWARNING: claims sourced using these mappings will override any claims that exist within the token during the claim-to-identity mapping process. Use caution when sourcing external claims to avoid unintentionally overriding token claims. To help guard against this, sourcing external claims can have guard conditions defined in the 'conditions' field.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Ref: ref(authenticationv1alpha1.SourcedClaimMapping{}.OpenAPIModelName()),
+									},
+								},
+							},
+						},
+					},
+					"conditions": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-type": "atomic",
+							},
+						},
+						SchemaProps: spec.SchemaProps{
+							Description: "conditions is an optional list of conditions in which claims should attempt to be fetched from this external source. When omitted or empty, claims are always attempted to be fetched from this external source. When specified, all conditions must evaluate to 'true' before claims are attempted to be fetched from this external source. conditions must not exceed 16 entries. Entries must have unique expressions.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Ref: ref(authenticationv1alpha1.ExternalSourceCondition{}.OpenAPIModelName()),
+									},
+								},
+							},
+						},
+					},
+				},
+				Required: []string{"url", "mappings"},
+			},
+		},
+		Dependencies: []string{
+			authenticationv1alpha1.Authentication{}.OpenAPIModelName(), authenticationv1alpha1.ExternalSourceCondition{}.OpenAPIModelName(), authenticationv1alpha1.SourceURL{}.OpenAPIModelName(), authenticationv1alpha1.SourcedClaimMapping{}.OpenAPIModelName(), authenticationv1alpha1.TLS{}.OpenAPIModelName()},
+	}
+}
+
+func schema_openshift_api_authentication_v1alpha1_ExternalSourceCondition(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "ExternalSourceCondition configures a singular condition that must return true before the external source is queried to retrieve external claims.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"expression": {
+						SchemaProps: spec.SchemaProps{
+							Description: "expression is a required CEL expression that is used to determine whether or not an external source should be used to fetch external claims. The expression must return a boolean value, where true means that the source should be consulted and false means that it should not. Claims from the token used for the request to the kube-apiserver are made available via the `claims` variable. expression must not be an empty string (\"\").",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+				},
+				Required: []string{"expression"},
+			},
+		},
+	}
+}
+
+func schema_openshift_api_authentication_v1alpha1_ExtraMapping(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "ExtraMapping provides the configuration for a single extra mapping.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"key": {
+						SchemaProps: spec.SchemaProps{
+							Description: "key is a string to use as the extra attribute key. key must be a domain-prefix path (e.g. example.org/foo). All characters before the first \"/\" must be a valid subdomain as defined by RFC 1123. All characters trailing the first \"/\" must be valid HTTP Path characters as defined by RFC 3986. key must be lowercase. Required to be unique.",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"valueExpression": {
+						SchemaProps: spec.SchemaProps{
+							Description: "valueExpression is a CEL expression to extract extra attribute value. valueExpression must produce a string or string array value. \"\", [], and null values are treated as the extra mapping not being present. Empty string values contained within a string array are filtered out.\n\nCEL expressions have access to the contents of the token claims, organized into CEL variable: - 'claims' is a map of claim names to claim values.\n  For example, a variable named 'sub' can be accessed as 'claims.sub'.\n  Nested claims can be accessed using dot notation, e.g. 'claims.foo.bar'.\n\nDocumentation on CEL: https://kubernetes.io/docs/reference/using-api/cel/",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+				},
+				Required: []string{"key", "valueExpression"},
+			},
+		},
+	}
+}
+
+func schema_openshift_api_authentication_v1alpha1_Issuer(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "Issuer provides the configuration for an external provider's specific settings.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"url": {
+						SchemaProps: spec.SchemaProps{
+							Description: "url points to the issuer URL in a format https://url or https://url/path. This must match the \"iss\" claim in the presented JWT, and the issuer returned from discovery. Same value as the --oidc-issuer-url flag. Discovery information is fetched from \"{url}/.well-known/openid-configuration\" unless overridden by discoveryURL. Required to be unique across all JWT authenticators. Note that egress selection configuration is not used for this network connection.",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"discoveryURL": {
+						SchemaProps: spec.SchemaProps{
+							Description: "discoveryURL, if specified, overrides the URL used to fetch discovery information instead of using \"{url}/.well-known/openid-configuration\". The exact value specified is used, so \"/.well-known/openid-configuration\" must be included in discoveryURL if needed.\n\nThe \"issuer\" field in the fetched discovery information must match the \"issuer.url\" field in the AuthenticationConfiguration and will be used to validate the \"iss\" claim in the presented JWT. This is for scenarios where the well-known and jwks endpoints are hosted at a different location than the issuer (such as locally in the cluster).\n\nExample: A discovery url that is exposed using kubernetes service 'oidc' in namespace 'oidc-namespace' and discovery information is available at '/.well-known/openid-configuration'. discoveryURL: \"https://oidc.oidc-namespace/.well-known/openid-configuration\" certificateAuthority is used to verify the TLS connection and the hostname on the leaf certificate must be set to 'oidc.oidc-namespace'.\n\ncurl https://oidc.oidc-namespace/.well-known/openid-configuration (.discoveryURL field) {\n    issuer: \"https://oidc.example.com\" (.url field)\n}\n\ndiscoveryURL must be different from url. Required to be unique across all JWT authenticators. Note that egress selection configuration is not used for this network connection.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"certificateAuthority": {
+						SchemaProps: spec.SchemaProps{
+							Description: "certificateAuthority contains PEM-encoded certificate authority certificates used to validate the connection when fetching discovery information. If unset, the system verifier is used. Same value as the content of the file referenced by the --oidc-ca-file flag.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"audiences": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-type": "atomic",
+							},
+						},
+						SchemaProps: spec.SchemaProps{
+							Description: "audiences is the set of acceptable audiences the JWT must be issued to. At least one of the entries must match the \"aud\" claim in presented JWTs. Same value as the --oidc-client-id flag (though this field supports an array). Required to be non-empty.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Type:   []string{"string"},
+										Format: "",
+									},
+								},
+							},
+						},
+					},
+					"audienceMatchPolicy": {
+						SchemaProps: spec.SchemaProps{
+							Description: "audienceMatchPolicy defines how the \"audiences\" field is used to match the \"aud\" claim in the presented JWT. Allowed values are: 1. \"MatchAny\" when multiple audiences are specified and 2. empty (or unset) or \"MatchAny\" when a single audience is specified.\n\n- MatchAny: the \"aud\" claim in the presented JWT must match at least one of the entries in the \"audiences\" field. For example, if \"audiences\" is [\"foo\", \"bar\"], the \"aud\" claim in the presented JWT must contain either \"foo\" or \"bar\" (and may contain both).\n\n- \"\": The match policy can be empty (or unset) when a single audience is specified in the \"audiences\" field. The \"aud\" claim in the presented JWT must contain the single audience (and may contain others).\n\nFor more nuanced audience validation, use claimValidationRules.\n  example: claimValidationRule[].expression: 'sets.equivalent(claims.aud, [\"bar\", \"foo\", \"baz\"])' to require an exact match.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+				},
+				Required: []string{"url", "audiences"},
+			},
+		},
+	}
+}
+
+func schema_openshift_api_authentication_v1alpha1_JWTAuthenticator(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "JWTAuthenticator configures one JWT authenticator.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"issuer": {
+						SchemaProps: spec.SchemaProps{
+							Description: "issuer contains the basic OIDC provider connection options.",
+							Ref:         ref(authenticationv1alpha1.Issuer{}.OpenAPIModelName()),
+						},
+					},
+					"claimValidationRules": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-type": "atomic",
+							},
+						},
+						SchemaProps: spec.SchemaProps{
+							Description: "claimValidationRules are rules that are applied to validate token claims to authenticate users.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Ref: ref(authenticationv1alpha1.ClaimValidationRule{}.OpenAPIModelName()),
+									},
+								},
+							},
+						},
+					},
+					"claimMappings": {
+						SchemaProps: spec.SchemaProps{
+							Description: "claimMappings points claims of a token to be treated as user attributes.",
+							Ref:         ref(authenticationv1alpha1.ClaimMappings{}.OpenAPIModelName()),
+						},
+					},
+					"userValidationRules": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-type": "atomic",
+							},
+						},
+						SchemaProps: spec.SchemaProps{
+							Description: "userValidationRules are rules that are applied to final user before completing authentication. These allow invariants to be applied to incoming identities such as preventing the use of the system: prefix that is commonly used by Kubernetes components. The validation rules are logically ANDed together and must all return true for the validation to pass.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Ref: ref(authenticationv1alpha1.UserValidationRule{}.OpenAPIModelName()),
+									},
+								},
+							},
+						},
+					},
+					"externalClaimsSources": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-type": "atomic",
+							},
+						},
+						SchemaProps: spec.SchemaProps{
+							Description: "externalClaimsSources is an optional field that can be used to configure sources, external to the token provided in a request, in which claims should be fetched from and made available to the claim mapping process that is used to build the identity of a token holder. For example, fetching additional user metadata from an OIDC provider's UserInfo endpoint. externalClaimsSources must not exceed 5 entries.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Ref: ref(authenticationv1alpha1.ExternalClaimsSource{}.OpenAPIModelName()),
+									},
+								},
+							},
+						},
+					},
+				},
+				Required: []string{"issuer", "claimMappings"},
+			},
+		},
+		Dependencies: []string{
+			authenticationv1alpha1.ClaimMappings{}.OpenAPIModelName(), authenticationv1alpha1.ClaimValidationRule{}.OpenAPIModelName(), authenticationv1alpha1.ExternalClaimsSource{}.OpenAPIModelName(), authenticationv1alpha1.Issuer{}.OpenAPIModelName(), authenticationv1alpha1.UserValidationRule{}.OpenAPIModelName()},
+	}
+}
+
+func schema_openshift_api_authentication_v1alpha1_PrefixedClaimOrExpression(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "PrefixedClaimOrExpression provides the configuration for a single prefixed claim or expression.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"claim": {
+						SchemaProps: spec.SchemaProps{
+							Description: "claim is the JWT claim to use. Mutually exclusive with expression.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"prefix": {
+						SchemaProps: spec.SchemaProps{
+							Description: "prefix is prepended to claim's value to prevent clashes with existing names. prefix needs to be set if claim is set and can be the empty string. Mutually exclusive with expression.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"expression": {
+						SchemaProps: spec.SchemaProps{
+							Description: "expression represents the expression which will be evaluated by CEL.\n\nCEL expressions have access to the contents of the token claims, organized into CEL variable: - 'claims' is a map of claim names to claim values.\n  For example, a variable named 'sub' can be accessed as 'claims.sub'.\n  Nested claims can be accessed using dot notation, e.g. 'claims.foo.bar'.\n\nDocumentation on CEL: https://kubernetes.io/docs/reference/using-api/cel/\n\nMutually exclusive with claim and prefix.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+				},
+			},
+		},
+	}
+}
+
+func schema_openshift_api_authentication_v1alpha1_SourceURL(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "SourceURL configures the options used to build the URL that is queried for external claims.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"hostname": {
+						SchemaProps: spec.SchemaProps{
+							Description: "hostname is a required hostname for which the external claims are located. It must be a valid DNS subdomain name as per RFC1123. This means that it must start and end with a lowercase alphanumeric character, must only consist of lowercase alphanumeric characters, '-', and '.'. hostname must not be an empty string (\"\") and must not exceed 253 characters in length. hostname may optionally specify a port in the format ':{port}'.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"pathExpression": {
+						SchemaProps: spec.SchemaProps{
+							Description: "pathExpression is a required CEL expression that returns a list of string values used to construct the URL path. Claims from the token used for the request to the kube-apiserver are made available via the `claims` variable. expression must not be an empty string (\"\").",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+				},
+				Required: []string{"hostname", "pathExpression"},
+			},
+		},
+	}
+}
+
+func schema_openshift_api_authentication_v1alpha1_SourcedClaimMapping(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "SourcedClaimMapping configures the mapping behavior for a single external claim from the response the apiserver received from the external claim source.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"name": {
+						SchemaProps: spec.SchemaProps{
+							Description: "name is a required name of the claim that will be produced and made available during the claim-to-identity mapping process. name must consist of only lowercase alpha characters and underscores ('_'). name must not be an empty string (\"\") and must not exceed 256 characters in length.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"expression": {
+						SchemaProps: spec.SchemaProps{
+							Description: "expression is a required CEL expression that will produce a value to be assigned to the claim. The full response body from the request to the external claim source is provided via the `response` variable. expression must not be an empty string (\"\").",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+				},
+				Required: []string{"name", "expression"},
+			},
+		},
+	}
+}
+
+func schema_openshift_api_authentication_v1alpha1_TLS(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "TLS configures the TLS options that the apiserver uses as a client when making a request to the external claim source. At least one field must be set when specified.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"certificateAuthority": {
+						SchemaProps: spec.SchemaProps{
+							Description: "certificateAuthority is an optional field that configures the certificate authority used to validate TLS connections with the external claims source. Must not be empty and must be a valid PEM-encoded certificate.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+				},
+			},
+		},
+	}
+}
+
+func schema_openshift_api_authentication_v1alpha1_UserValidationRule(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "UserValidationRule provides the configuration for a single user info validation rule.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"expression": {
+						SchemaProps: spec.SchemaProps{
+							Description: "expression represents the expression which will be evaluated by CEL. Must return true for the validation to pass.\n\nCEL expressions have access to the contents of UserInfo, organized into CEL variable: - 'user' - authentication.k8s.io/v1, Kind=UserInfo object\n   Refer to https://github.com/kubernetes/api/blob/release-1.28/authentication/v1/types.go#L105-L122 for the definition.\n   API documentation: https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.28/#userinfo-v1-authentication-k8s-io\n\nDocumentation on CEL: https://kubernetes.io/docs/reference/using-api/cel/",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"message": {
+						SchemaProps: spec.SchemaProps{
+							Description: "message customizes the returned error message when rule returns false. message is a literal string.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+				},
+				Required: []string{"expression"},
+			},
+		},
 	}
 }
 

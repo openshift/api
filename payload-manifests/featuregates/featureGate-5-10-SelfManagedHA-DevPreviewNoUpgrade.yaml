@@ -262,6 +262,9 @@
                         "name": "KarpenterOperator"
                     },
                     {
+                        "name": "MACSecurity"
+                    },
+                    {
                         "name": "MachineAPIMigration"
                     },
                     {

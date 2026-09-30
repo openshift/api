@@ -107,10 +107,16 @@
                         "name": "OLMLifecycleAndCompatibility"
                     },
                     {
+                        "name": "OVNKubernetesUplinkMode"
+                    },
+                    {
                         "name": "ProvisioningRequestAvailable"
                     },
                     {
                         "name": "ShortCertRotation"
+                    },
+                    {
+                        "name": "UnifiedClusterManagedDNSAndLB"
                     },
                     {
                         "name": "VSpherePerComponentScopedCreds"
@@ -146,12 +152,6 @@
                     },
                     {
                         "name": "AzureMultiDisk"
-                    },
-                    {
-                        "name": "AzureWorkloadIdentity"
-                    },
-                    {
-                        "name": "BootImageSkewEnforcement"
                     },
                     {
                         "name": "BootcNodeManagement"
@@ -233,6 +233,9 @@
                     },
                     {
                         "name": "ExternalOIDC"
+                    },
+                    {
+                        "name": "ExternalOIDCAsWebhook"
                     },
                     {
                         "name": "ExternalOIDCExternalClaimsSourcing"
@@ -395,9 +398,6 @@
                     },
                     {
                         "name": "VSphereMultiVCenterDay2"
-                    },
-                    {
-                        "name": "VolumeGroupSnapshot"
                     }
                 ],
                 "version": ""

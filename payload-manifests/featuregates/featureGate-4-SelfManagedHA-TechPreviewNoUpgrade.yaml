@@ -5,7 +5,7 @@
         "annotations": {
             "include.release.openshift.io/self-managed-high-availability": "false-except-for-the-config-operator",
             "release.openshift.io/feature-set": "TechPreviewNoUpgrade",
-            "release.openshift.io/major-version": "4,5,6,7,8,9,10"
+            "release.openshift.io/major-version": "4"
         },
         "name": "cluster"
     },
@@ -80,10 +80,19 @@
                         "name": "NetworkConnect"
                     },
                     {
+                        "name": "OLMLifecycleAndCompatibility"
+                    },
+                    {
+                        "name": "OVNKubernetesUplinkMode"
+                    },
+                    {
                         "name": "ProvisioningRequestAvailable"
                     },
                     {
                         "name": "ShortCertRotation"
+                    },
+                    {
+                        "name": "UnifiedClusterManagedDNSAndLB"
                     },
                     {
                         "name": "VSpherePerComponentScopedCreds"
@@ -122,12 +131,6 @@
                     },
                     {
                         "name": "AzureMultiDisk"
-                    },
-                    {
-                        "name": "AzureWorkloadIdentity"
-                    },
-                    {
-                        "name": "BootImageSkewEnforcement"
                     },
                     {
                         "name": "BootcNodeManagement"
@@ -212,6 +215,9 @@
                     },
                     {
                         "name": "ExternalOIDC"
+                    },
+                    {
+                        "name": "ExternalOIDCAsWebhook"
                     },
                     {
                         "name": "ExternalOIDCExternalClaimsSourcing"
@@ -346,9 +352,6 @@
                         "name": "NutanixMultiSubnets"
                     },
                     {
-                        "name": "OLMLifecycleAndCompatibility"
-                    },
-                    {
                         "name": "OSStreams"
                     },
                     {
@@ -395,9 +398,6 @@
                     },
                     {
                         "name": "VSphereMultiVCenterDay2"
-                    },
-                    {
-                        "name": "VolumeGroupSnapshot"
                     }
                 ],
                 "version": ""

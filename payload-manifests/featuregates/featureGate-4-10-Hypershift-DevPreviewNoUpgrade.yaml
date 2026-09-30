@@ -84,6 +84,9 @@
                     },
                     {
                         "name": "ShortCertRotation"
+                    },
+                    {
+                        "name": "UnifiedClusterManagedDNSAndLB"
                     }
                 ],
                 "enabled": [
@@ -118,13 +121,7 @@
                         "name": "AzureMultiDisk"
                     },
                     {
-                        "name": "AzureWorkloadIdentity"
-                    },
-                    {
                         "name": "BGPBasedVIPManagement"
-                    },
-                    {
-                        "name": "BootImageSkewEnforcement"
                     },
                     {
                         "name": "BootcNodeManagement"
@@ -221,6 +218,9 @@
                     },
                     {
                         "name": "ExternalOIDC"
+                    },
+                    {
+                        "name": "ExternalOIDCAsWebhook"
                     },
                     {
                         "name": "ExternalOIDCExternalClaimsSourcing"
@@ -346,6 +346,9 @@
                         "name": "OSStreams"
                     },
                     {
+                        "name": "OVNKubernetesUplinkMode"
+                    },
+                    {
                         "name": "OVNObservability"
                     },
                     {
@@ -395,9 +398,6 @@
                     },
                     {
                         "name": "VSpherePerComponentScopedCreds"
-                    },
-                    {
-                        "name": "VolumeGroupSnapshot"
                     }
                 ],
                 "version": ""

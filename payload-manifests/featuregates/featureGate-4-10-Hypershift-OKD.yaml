@@ -137,6 +137,9 @@
                         "name": "Example2"
                     },
                     {
+                        "name": "ExternalOIDCAsWebhook"
+                    },
+                    {
                         "name": "ExternalOIDCExternalClaimsSourcing"
                     },
                     {
@@ -257,6 +260,9 @@
                         "name": "OLMLifecycleAndCompatibility"
                     },
                     {
+                        "name": "OVNKubernetesUplinkMode"
+                    },
+                    {
                         "name": "OVNObservability"
                     },
                     {
@@ -275,6 +281,9 @@
                         "name": "TLSGroupPreferences"
                     },
                     {
+                        "name": "UnifiedClusterManagedDNSAndLB"
+                    },
+                    {
                         "name": "VSphereConfigurableMaxAllowedBlockVolumesPerNode"
                     },
                     {
@@ -290,12 +299,6 @@
                     },
                     {
                         "name": "AdditionalStorageConfig"
-                    },
-                    {
-                        "name": "AzureWorkloadIdentity"
-                    },
-                    {
-                        "name": "BootImageSkewEnforcement"
                     },
                     {
                         "name": "BuildCSIVolumes"
@@ -395,9 +398,6 @@
                     },
                     {
                         "name": "VSphereMultiVCenterDay2"
-                    },
-                    {
-                        "name": "VolumeGroupSnapshot"
                     }
                 ],
                 "version": ""

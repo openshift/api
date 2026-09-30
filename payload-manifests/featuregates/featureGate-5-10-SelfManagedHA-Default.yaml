@@ -3,9 +3,9 @@
     "kind": "FeatureGate",
     "metadata": {
         "annotations": {
-            "include.release.openshift.io/ibm-cloud-managed": "false-except-for-the-config-operator",
+            "include.release.openshift.io/self-managed-high-availability": "false-except-for-the-config-operator",
             "release.openshift.io/feature-set": "Default",
-            "release.openshift.io/major-version": "4,5,6,7,8,9,10"
+            "release.openshift.io/major-version": "5,6,7,8,9,10"
         },
         "name": "cluster"
     },
@@ -49,9 +49,6 @@
                     },
                     {
                         "name": "CRDCompatibilityRequirementOperator"
-                    },
-                    {
-                        "name": "CRIOCredentialProviderConfig"
                     },
                     {
                         "name": "ClientsAllowCBOR"
@@ -159,6 +156,9 @@
                         "name": "GomaxprocsInjection"
                     },
                     {
+                        "name": "HyperShiftOnlyDynamicResourceAllocation"
+                    },
+                    {
                         "name": "ImageModeStatusReporting"
                     },
                     {
@@ -228,9 +228,6 @@
                         "name": "NetworkObservabilityInstall"
                     },
                     {
-                        "name": "NewOLM"
-                    },
-                    {
                         "name": "NewOLMBoxCutterRuntime"
                     },
                     {
@@ -243,19 +240,10 @@
                         "name": "NewOLMOwnSingleNamespace"
                     },
                     {
-                        "name": "NewOLMWebhookProviderOpenshiftServiceCA"
-                    },
-                    {
                         "name": "NoOverlayMode"
                     },
                     {
-                        "name": "NoRegistryClusterInstall"
-                    },
-                    {
                         "name": "NutanixMultiSubnets"
-                    },
-                    {
-                        "name": "OLMLifecycleAndCompatibility"
                     },
                     {
                         "name": "OVNKubernetesUplinkMode"
@@ -302,6 +290,9 @@
                         "name": "BuildCSIVolumes"
                     },
                     {
+                        "name": "CRIOCredentialProviderConfig"
+                    },
+                    {
                         "name": "DualReplica"
                     },
                     {
@@ -327,9 +318,6 @@
                     },
                     {
                         "name": "GatewayAPIWithoutOLM"
-                    },
-                    {
-                        "name": "HyperShiftOnlyDynamicResourceAllocation"
                     },
                     {
                         "name": "ImageStreamImportMode"
@@ -363,6 +351,18 @@
                     },
                     {
                         "name": "MutatingAdmissionPolicy"
+                    },
+                    {
+                        "name": "NewOLM"
+                    },
+                    {
+                        "name": "NewOLMWebhookProviderOpenshiftServiceCA"
+                    },
+                    {
+                        "name": "NoRegistryClusterInstall"
+                    },
+                    {
+                        "name": "OLMLifecycleAndCompatibility"
                     },
                     {
                         "name": "OSStreams"

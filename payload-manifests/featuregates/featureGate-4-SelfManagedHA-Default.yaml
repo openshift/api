@@ -4,14 +4,12 @@
     "metadata": {
         "annotations": {
             "include.release.openshift.io/self-managed-high-availability": "false-except-for-the-config-operator",
-            "release.openshift.io/feature-set": "OKD",
-            "release.openshift.io/major-version": "4,5,6,7,8,9,10"
+            "release.openshift.io/feature-set": "Default",
+            "release.openshift.io/major-version": "4"
         },
         "name": "cluster"
     },
-    "spec": {
-        "featureSet": "OKD"
-    },
+    "spec": {},
     "status": {
         "featureGates": [
             {
@@ -134,6 +132,9 @@
                         "name": "Example2"
                     },
                     {
+                        "name": "ExternalOIDCAsWebhook"
+                    },
+                    {
                         "name": "ExternalOIDCExternalClaimsSourcing"
                     },
                     {
@@ -245,6 +246,12 @@
                         "name": "NutanixMultiSubnets"
                     },
                     {
+                        "name": "OLMLifecycleAndCompatibility"
+                    },
+                    {
+                        "name": "OVNKubernetesUplinkMode"
+                    },
+                    {
                         "name": "OVNObservability"
                     },
                     {
@@ -263,6 +270,9 @@
                         "name": "TLSGroupPreferences"
                     },
                     {
+                        "name": "UnifiedClusterManagedDNSAndLB"
+                    },
+                    {
                         "name": "VSphereConfigurableMaxAllowedBlockVolumesPerNode"
                     },
                     {
@@ -278,12 +288,6 @@
                     },
                     {
                         "name": "AdditionalStorageConfig"
-                    },
-                    {
-                        "name": "AzureWorkloadIdentity"
-                    },
-                    {
-                        "name": "BootImageSkewEnforcement"
                     },
                     {
                         "name": "BuildCSIVolumes"
@@ -361,9 +365,6 @@
                         "name": "NoRegistryClusterInstall"
                     },
                     {
-                        "name": "OLMLifecycleAndCompatibility"
-                    },
-                    {
                         "name": "OSStreams"
                     },
                     {
@@ -395,9 +396,6 @@
                     },
                     {
                         "name": "VSphereMultiVCenterDay2"
-                    },
-                    {
-                        "name": "VolumeGroupSnapshot"
                     }
                 ],
                 "version": ""

@@ -70,6 +70,10 @@ etcdbackups.operator.openshift.io:
     jsonPath: .status.conditions[?(@.status=="True")].type
     name: Status
     type: string
+  - description: Completion time of the EtcdBackup
+    jsonPath: .status.conditions[?(@.type=="Completed")].lastTransitionTime
+    name: Completed At
+    type: date
   - description: Age of the EtcdBackup
     jsonPath: .metadata.creationTimestamp
     name: Age
@@ -115,12 +119,8 @@ etcdbackuppolicies.operator.openshift.io:
     jsonPath: .spec.schedule
     name: Schedule
     type: string
-  - description: Time zone in which the schedule is evaluated
-    jsonPath: .spec.timeZone
-    name: Time Zone
-    type: string
   - description: Last time the schedule was executed
-    jsonPath: .status.lastScheduleTime
+    jsonPath: .status.conditions[?(@.type=="LastScheduled")].lastTransitionTime
     name: Last Schedule
     type: date
   - description: Age of the EtcdBackupPolicy

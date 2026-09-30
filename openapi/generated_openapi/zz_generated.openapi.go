@@ -1386,14 +1386,17 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		operatorv1alpha1.DelegatedAuthorization{}.OpenAPIModelName():                           schema_openshift_api_operator_v1alpha1_DelegatedAuthorization(ref),
 		operatorv1alpha1.EtcdBackup{}.OpenAPIModelName():                                       schema_openshift_api_operator_v1alpha1_EtcdBackup(ref),
 		operatorv1alpha1.EtcdBackupFile{}.OpenAPIModelName():                                   schema_openshift_api_operator_v1alpha1_EtcdBackupFile(ref),
-		operatorv1alpha1.EtcdBackupJobReference{}.OpenAPIModelName():                           schema_openshift_api_operator_v1alpha1_EtcdBackupJobReference(ref),
 		operatorv1alpha1.EtcdBackupList{}.OpenAPIModelName():                                   schema_openshift_api_operator_v1alpha1_EtcdBackupList(ref),
 		operatorv1alpha1.EtcdBackupPolicy{}.OpenAPIModelName():                                 schema_openshift_api_operator_v1alpha1_EtcdBackupPolicy(ref),
 		operatorv1alpha1.EtcdBackupPolicyList{}.OpenAPIModelName():                             schema_openshift_api_operator_v1alpha1_EtcdBackupPolicyList(ref),
+		operatorv1alpha1.EtcdBackupPolicyRetentionQuantity{}.OpenAPIModelName():                schema_openshift_api_operator_v1alpha1_EtcdBackupPolicyRetentionQuantity(ref),
 		operatorv1alpha1.EtcdBackupPolicyRetentionRule{}.OpenAPIModelName():                    schema_openshift_api_operator_v1alpha1_EtcdBackupPolicyRetentionRule(ref),
+		operatorv1alpha1.EtcdBackupPolicyRetentionSize{}.OpenAPIModelName():                    schema_openshift_api_operator_v1alpha1_EtcdBackupPolicyRetentionSize(ref),
 		operatorv1alpha1.EtcdBackupPolicySpec{}.OpenAPIModelName():                             schema_openshift_api_operator_v1alpha1_EtcdBackupPolicySpec(ref),
 		operatorv1alpha1.EtcdBackupPolicyStatus{}.OpenAPIModelName():                           schema_openshift_api_operator_v1alpha1_EtcdBackupPolicyStatus(ref),
-		operatorv1alpha1.EtcdBackupReference{}.OpenAPIModelName():                              schema_openshift_api_operator_v1alpha1_EtcdBackupReference(ref),
+		operatorv1alpha1.EtcdBackupPolicyStorage{}.OpenAPIModelName():                          schema_openshift_api_operator_v1alpha1_EtcdBackupPolicyStorage(ref),
+		operatorv1alpha1.EtcdBackupPolicyStorageLocal{}.OpenAPIModelName():                     schema_openshift_api_operator_v1alpha1_EtcdBackupPolicyStorageLocal(ref),
+		operatorv1alpha1.EtcdBackupPolicyStoragePvc{}.OpenAPIModelName():                       schema_openshift_api_operator_v1alpha1_EtcdBackupPolicyStoragePvc(ref),
 		operatorv1alpha1.EtcdBackupSpec{}.OpenAPIModelName():                                   schema_openshift_api_operator_v1alpha1_EtcdBackupSpec(ref),
 		operatorv1alpha1.EtcdBackupStatus{}.OpenAPIModelName():                                 schema_openshift_api_operator_v1alpha1_EtcdBackupStatus(ref),
 		operatorv1alpha1.EtcdBackupStorage{}.OpenAPIModelName():                                schema_openshift_api_operator_v1alpha1_EtcdBackupStorage(ref),
@@ -67062,7 +67065,7 @@ func schema_openshift_api_operator_v1alpha1_EtcdBackup(ref common.ReferenceCallb
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
-				Description: "# EtcdBackup provides configuration options and status for a one-time backup attempt of the etcd cluster\n\nCompatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.",
+				Description: "# EtcdBackup provides configuration options and status for a one-time backup attempt of the etcd cluster. # When an EtcdBackup is deleted the files created by it will be deleted as well, as long as the storage backend is still accessible.\n\nCompatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.",
 				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
 					"kind": {
@@ -67081,8 +67084,9 @@ func schema_openshift_api_operator_v1alpha1_EtcdBackup(ref common.ReferenceCallb
 					},
 					"metadata": {
 						SchemaProps: spec.SchemaProps{
-							Default: map[string]interface{}{},
-							Ref:     ref(metav1.ObjectMeta{}.OpenAPIModelName()),
+							Description: "metadata is the standard object's metadata. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata",
+							Default:     map[string]interface{}{},
+							Ref:         ref(metav1.ObjectMeta{}.OpenAPIModelName()),
 						},
 					},
 					"spec": {
@@ -67100,7 +67104,7 @@ func schema_openshift_api_operator_v1alpha1_EtcdBackup(ref common.ReferenceCallb
 						},
 					},
 				},
-				Required: []string{"spec"},
+				Required: []string{"metadata", "spec"},
 			},
 		},
 		Dependencies: []string{
@@ -67116,59 +67120,20 @@ func schema_openshift_api_operator_v1alpha1_EtcdBackupFile(ref common.ReferenceC
 				Properties: map[string]spec.Schema{
 					"path": {
 						SchemaProps: spec.SchemaProps{
-							Description: "path to the backup file on the storage backend.",
-							Default:     "",
+							Description: "path to the backup file on the storage backend. Must be an absolute filepath between 1 and 4096 characters containing only alphanumeric characters, '/', '.', '_', or '-', starting with a '/'. This field is required.",
 							Type:        []string{"string"},
 							Format:      "",
 						},
 					},
 					"sizeBytes": {
 						SchemaProps: spec.SchemaProps{
-							Description: "sizeBytes is the size of the backup file on the storage backend in bytes.",
-							Default:     0,
+							Description: "sizeBytes is the size of the backup file on the storage backend in bytes. If omitted, then the file specified by path is an empty file. When specified, must be between 1 and 1000000000000 (1 TB). This field is optional.",
 							Type:        []string{"integer"},
 							Format:      "int64",
 						},
 					},
 				},
-				Required: []string{"path", "sizeBytes"},
-			},
-		},
-	}
-}
-
-func schema_openshift_api_operator_v1alpha1_EtcdBackupJobReference(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Type: []string{"object"},
-				Properties: map[string]spec.Schema{
-					"name": {
-						SchemaProps: spec.SchemaProps{
-							Description: "name of the backup job",
-							Default:     "",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"namespace": {
-						SchemaProps: spec.SchemaProps{
-							Description: "namespace of the backup job",
-							Default:     "",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"uid": {
-						SchemaProps: spec.SchemaProps{
-							Description: "uid of the backup job",
-							Default:     "",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-				},
-				Required: []string{"name", "namespace", "uid"},
+				Required: []string{"path"},
 			},
 		},
 	}
@@ -67245,8 +67210,9 @@ func schema_openshift_api_operator_v1alpha1_EtcdBackupPolicy(ref common.Referenc
 					},
 					"metadata": {
 						SchemaProps: spec.SchemaProps{
-							Default: map[string]interface{}{},
-							Ref:     ref(metav1.ObjectMeta{}.OpenAPIModelName()),
+							Description: "metadata is the standard object's metadata. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata",
+							Default:     map[string]interface{}{},
+							Ref:         ref(metav1.ObjectMeta{}.OpenAPIModelName()),
 						},
 					},
 					"spec": {
@@ -67264,7 +67230,7 @@ func schema_openshift_api_operator_v1alpha1_EtcdBackupPolicy(ref common.Referenc
 						},
 					},
 				},
-				Required: []string{"spec"},
+				Required: []string{"metadata", "spec"},
 			},
 		},
 		Dependencies: []string{
@@ -67320,6 +67286,26 @@ func schema_openshift_api_operator_v1alpha1_EtcdBackupPolicyList(ref common.Refe
 	}
 }
 
+func schema_openshift_api_operator_v1alpha1_EtcdBackupPolicyRetentionQuantity(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"maxQuantity": {
+						SchemaProps: spec.SchemaProps{
+							Description: "maxQuantity enforces the deletion of backups that exceed the total count. Must be between 1 and 1000. Thius field is required.",
+							Type:        []string{"integer"},
+							Format:      "int32",
+						},
+					},
+				},
+				Required: []string{"maxQuantity"},
+			},
+		},
+	}
+}
+
 func schema_openshift_api_operator_v1alpha1_EtcdBackupPolicyRetentionRule(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -67328,24 +67314,23 @@ func schema_openshift_api_operator_v1alpha1_EtcdBackupPolicyRetentionRule(ref co
 				Properties: map[string]spec.Schema{
 					"type": {
 						SchemaProps: spec.SchemaProps{
-							Description: "type defined which rule field is set",
-							Default:     "",
+							Description: "type defined which rule field is set Allowed values are Quantity and Size. When set to Quantity, this rule deletes old EtcdBackups based on the total count. When set to Size, this rule deletes old EtcdBackups based on the total aggregate size of backup files. This field is required.",
 							Type:        []string{"string"},
 							Format:      "",
 						},
 					},
-					"maxQuantity": {
+					"quantity": {
 						SchemaProps: spec.SchemaProps{
-							Description: "maxQuantity enforces the deletion of backups that exceed the given count.",
-							Default:     0,
-							Type:        []string{"integer"},
-							Format:      "int32",
+							Description: "quantity enforces the deletion of EtcdBackups belonging to the EtcdBackupPolicy based on total count. This field is required when the rule type is \"Quantity\", and forbidden otherwise.",
+							Default:     map[string]interface{}{},
+							Ref:         ref(operatorv1alpha1.EtcdBackupPolicyRetentionQuantity{}.OpenAPIModelName()),
 						},
 					},
-					"maxSize": {
+					"size": {
 						SchemaProps: spec.SchemaProps{
-							Description: "maxSize enforces the deletion of backups by the total size of backups on the storage backend. This is a soft threshold. The total size of backups may temporarily exceed the limit when new backups are created.",
-							Ref:         ref(resource.Quantity{}.OpenAPIModelName()),
+							Description: "size enforces the deletion of EtcdBackups belonging to the EtcdBackupPolicy based on total backup file size. This field is required when the rule type is \"Size\", and forbidden otherwise.",
+							Default:     map[string]interface{}{},
+							Ref:         ref(operatorv1alpha1.EtcdBackupPolicyRetentionSize{}.OpenAPIModelName()),
 						},
 					},
 				},
@@ -67357,8 +67342,8 @@ func schema_openshift_api_operator_v1alpha1_EtcdBackupPolicyRetentionRule(ref co
 						map[string]interface{}{
 							"discriminator": "type",
 							"fields-to-discriminateBy": map[string]interface{}{
-								"maxQuantity": "MaxQuantity",
-								"maxSize":     "MaxSize",
+								"quantity": "Quantity",
+								"size":     "Size",
 							},
 						},
 					},
@@ -67366,7 +67351,27 @@ func schema_openshift_api_operator_v1alpha1_EtcdBackupPolicyRetentionRule(ref co
 			},
 		},
 		Dependencies: []string{
-			resource.Quantity{}.OpenAPIModelName()},
+			operatorv1alpha1.EtcdBackupPolicyRetentionQuantity{}.OpenAPIModelName(), operatorv1alpha1.EtcdBackupPolicyRetentionSize{}.OpenAPIModelName()},
+	}
+}
+
+func schema_openshift_api_operator_v1alpha1_EtcdBackupPolicyRetentionSize(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"maxTotalSizeGiB": {
+						SchemaProps: spec.SchemaProps{
+							Description: "maxTotalSizeGiB enforces the deletion of backups by the total size of backups on the storage backend (in GiB). This is a soft threshold. The total size of backups may temporarily exceed the limit when new backups are created. Must be between 1 and 10240 (10 TiB). This field is required.",
+							Type:        []string{"integer"},
+							Format:      "int32",
+						},
+					},
+				},
+				Required: []string{"maxTotalSizeGiB"},
+			},
+		},
 	}
 }
 
@@ -67378,8 +67383,7 @@ func schema_openshift_api_operator_v1alpha1_EtcdBackupPolicySpec(ref common.Refe
 				Properties: map[string]spec.Schema{
 					"schedule": {
 						SchemaProps: spec.SchemaProps{
-							Description: "schedule sets the backup schedule in Cron format, see https://en.wikipedia.org/wiki/Cron.",
-							Default:     "",
+							Description: "schedule sets the backup schedule in Cron format, see https://en.wikipedia.org/wiki/Cron. The value must be one of the following forms: a predefined macro \"@yearly\", \"@annually\", \"@monthly\", \"@weekly\", \"@daily\" or \"@hourly\"; an \"@every <duration>\" expression where duration is a sequence of decimal numbers each with a unit of \"ns\", \"us\", \"ms\", \"s\", \"m\" or \"h\" (for example \"@every 2h\" or \"@every 1h30m\"); or a standard cron expression of five space separated fields (minute, hour, day-of-month, month and day-of-week), where each field may only contain digits, the names used for months and days of the week, and the cron special characters \"*\", \"/\", \"-\" and \",\". This validation only checks the overall shape of the value; the individual field values are validated when the schedule is parsed by the controller, which reports parsing failures via the schedule's status condition. Must be between 1 and 1024 characters long. This field is required.",
 							Type:        []string{"string"},
 							Format:      "",
 						},
@@ -67391,9 +67395,28 @@ func schema_openshift_api_operator_v1alpha1_EtcdBackupPolicySpec(ref common.Refe
 							Format:      "",
 						},
 					},
+					"assets": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-type": "set",
+							},
+						},
+						SchemaProps: spec.SchemaProps{
+							Description: "assets specifies the type of files to be backed up. If Snapshot is present, the etcd database will be snapshotted and saved to the storage backend. If StaticKubeResources is present, static pod manifests for the control plane will be bundled and saved to the storage backend. If etcd is encrypted, this will include the encryption keys. When specified, must contain between 1 and 2 entries, with at most 1 of each type. When omitted, all assets types will be backed up. This field is optional.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Type:   []string{"string"},
+										Format: "",
+									},
+								},
+							},
+						},
+					},
 					"nodeSelector": {
 						SchemaProps: spec.SchemaProps{
-							Description: "nodeSelector specifies which master node(s) to run backup jobs on. If no selector is specified, the default node-role.kubernetes.io/master label will be used. If no nodes are matched, then no backups will run.",
+							Description: "nodeSelector specifies which control plane nodes to select from for running backup jobs. The default node-role.kubernetes.io/control-plane label will always be required in addition to any labels set here. If no nodes are matched, then no EtcdBackups will be created. When specified, must contain between 1 and 10 entries. This field is optional.",
 							Type:        []string{"object"},
 							AdditionalProperties: &spec.SchemaOrBool{
 								Allows: true,
@@ -67408,9 +67431,9 @@ func schema_openshift_api_operator_v1alpha1_EtcdBackupPolicySpec(ref common.Refe
 					},
 					"storage": {
 						SchemaProps: spec.SchemaProps{
-							Description: "storage specifies the location where etcd backup files will be saved.",
+							Description: "storage specifies the location where etcd backup files will be saved. This field is required.",
 							Default:     map[string]interface{}{},
-							Ref:         ref(operatorv1alpha1.EtcdBackupStorage{}.OpenAPIModelName()),
+							Ref:         ref(operatorv1alpha1.EtcdBackupPolicyStorage{}.OpenAPIModelName()),
 						},
 					},
 					"retentionRules": {
@@ -67423,7 +67446,7 @@ func schema_openshift_api_operator_v1alpha1_EtcdBackupPolicySpec(ref common.Refe
 							},
 						},
 						SchemaProps: spec.SchemaProps{
-							Description: "retentionRules defines the policy for retaining and deleting existing backups. Backups are deleted from the oldest first until all rules are satisfied. If no rules are specified then backups created by this policy will not be automatically deleted.",
+							Description: "retentionRules defines the policy for retaining and deleting existing backups. Backups are deleted from the oldest first until all rules are satisfied. If no rules are specified then backups created by this policy will not be automatically deleted. When an EtcdBackup is deleted the files created by it will be deleted as well, as long as the storage backend is still accessible. When specified, must contain between 1 and 2 entries. Must not have more than 1 entry of each rule type. This field is optional.",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -67436,8 +67459,7 @@ func schema_openshift_api_operator_v1alpha1_EtcdBackupPolicySpec(ref common.Refe
 					},
 					"failedBackupsHistoryLimit": {
 						SchemaProps: spec.SchemaProps{
-							Description: "failedBackupsHistoryLimit defined the number of failed etcdbackups to retain. Value must be non-negative integer. Defaults to 1.",
-							Default:     0,
+							Description: "failedBackupsHistoryLimit defined the number of failed etcdbackups to retain. Failed backups are deleted from the oldest first. Must be non-negative integer. If set to to 0, then failed backups will be deleted immediately. If unset, defaults to 1. Must be a positive integer no greater than 100. This field is optional.",
 							Type:        []string{"integer"},
 							Format:      "int32",
 						},
@@ -67447,7 +67469,7 @@ func schema_openshift_api_operator_v1alpha1_EtcdBackupPolicySpec(ref common.Refe
 			},
 		},
 		Dependencies: []string{
-			operatorv1alpha1.EtcdBackupPolicyRetentionRule{}.OpenAPIModelName(), operatorv1alpha1.EtcdBackupStorage{}.OpenAPIModelName()},
+			operatorv1alpha1.EtcdBackupPolicyRetentionRule{}.OpenAPIModelName(), operatorv1alpha1.EtcdBackupPolicyStorage{}.OpenAPIModelName()},
 	}
 }
 
@@ -67457,42 +67479,112 @@ func schema_openshift_api_operator_v1alpha1_EtcdBackupPolicyStatus(ref common.Re
 			SchemaProps: spec.SchemaProps{
 				Type: []string{"object"},
 				Properties: map[string]spec.Schema{
-					"active": {
+					"conditions": {
 						VendorExtensible: spec.VendorExtensible{
 							Extensions: spec.Extensions{
 								"x-kubernetes-list-map-keys": []interface{}{
-									"name",
+									"type",
 								},
 								"x-kubernetes-list-type": "map",
 							},
 						},
 						SchemaProps: spec.SchemaProps{
-							Description: "active is a list of references to in progress backups controlled by this policy",
+							Description: "conditions provide details on the status of the etcd backup policy. Supported conditions include Scheduled. If Scheduled is true, scheduling the policy succeeded. If Scheduled is false, an error occurred while attempting to schedule the policy. The condition reason and message will provide addition details.\n\nWhen specified, must contain between 1 and 10 entries, with no more than 1 of each type. This field is optional.",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
 									SchemaProps: spec.SchemaProps{
-										Ref: ref(operatorv1alpha1.EtcdBackupReference{}.OpenAPIModelName()),
+										Ref: ref(metav1.Condition{}.OpenAPIModelName()),
 									},
 								},
 							},
-						},
-					},
-					"lastScheduleTime": {
-						SchemaProps: spec.SchemaProps{
-							Description: "lastScheduleTime is the time when the last scheduled backup was triggered. This is used by the controller to track when backups have been executed and to prevent duplicate executions on controller restart.",
-							Ref:         ref(metav1.Time{}.OpenAPIModelName()),
 						},
 					},
 				},
 			},
 		},
 		Dependencies: []string{
-			operatorv1alpha1.EtcdBackupReference{}.OpenAPIModelName(), metav1.Time{}.OpenAPIModelName()},
+			metav1.Condition{}.OpenAPIModelName()},
 	}
 }
 
-func schema_openshift_api_operator_v1alpha1_EtcdBackupReference(ref common.ReferenceCallback) common.OpenAPIDefinition {
+func schema_openshift_api_operator_v1alpha1_EtcdBackupPolicyStorage(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"type": {
+						SchemaProps: spec.SchemaProps{
+							Description: "type of storage backend to use for storing the etcd backup. Allowed values are Local and PVC. When set to Local, the backup will be saved to a host path directory on the control plane node it was taken on. When set to PVC, the backup will be saved to a volume bound by a PersistentVolumeClaim. This field is required.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"pvc": {
+						SchemaProps: spec.SchemaProps{
+							Description: "pvc specifies the PersistentVolumeClaim (PVC) which binds a PersistentVolume where the etcd backup file will be saved. The PVC must always be created in the \"openshift-etcd\" namespace. This field is required when the storage type is \"PVC\", and forbidden otherwise.",
+							Default:     map[string]interface{}{},
+							Ref:         ref(operatorv1alpha1.EtcdBackupPolicyStoragePvc{}.OpenAPIModelName()),
+						},
+					},
+					"local": {
+						SchemaProps: spec.SchemaProps{
+							Description: "local specifies a host path directory on the control plane node where the etcd backup file will be saved. This field is required when storage type is \"Local\", and forbidden otherwise.",
+							Default:     map[string]interface{}{},
+							Ref:         ref(operatorv1alpha1.EtcdBackupPolicyStorageLocal{}.OpenAPIModelName()),
+						},
+					},
+				},
+				Required: []string{"type"},
+			},
+			VendorExtensible: spec.VendorExtensible{
+				Extensions: spec.Extensions{
+					"x-kubernetes-unions": []interface{}{
+						map[string]interface{}{
+							"discriminator": "type",
+							"fields-to-discriminateBy": map[string]interface{}{
+								"local": "Local",
+								"pvc":   "PVC",
+							},
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			operatorv1alpha1.EtcdBackupPolicyStorageLocal{}.OpenAPIModelName(), operatorv1alpha1.EtcdBackupPolicyStoragePvc{}.OpenAPIModelName()},
+	}
+}
+
+func schema_openshift_api_operator_v1alpha1_EtcdBackupPolicyStorageLocal(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"hostPath": {
+						SchemaProps: spec.SchemaProps{
+							Description: "hostPath is a local directory on the control plane node where the etcd backup file will be saved. hostPath must be an absolute filepath between 1 and 2048 characters containing only alphanumeric characters, '/', '.', '_', or '-', starting with a '/'. This field is required.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"nodeCount": {
+						SchemaProps: spec.SchemaProps{
+							Description: "nodeCount enables creating multiple local backups per schedule distributed across control plane nodes. Control plane nodes will be iterated in lexicographical order when backups are created, with preference for nodes that already have backups for this policy. The number of created EtcdBackups may be less than nodeCount if there are fewer control plane nodes selected. When specified, must be an integer between 1 and 10. If omitted, defaults to 1. This field is optional.",
+							Type:        []string{"integer"},
+							Format:      "int32",
+						},
+					},
+				},
+				Required: []string{"hostPath"},
+			},
+		},
+	}
+}
+
+func schema_openshift_api_operator_v1alpha1_EtcdBackupPolicyStoragePvc(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
@@ -67500,22 +67592,20 @@ func schema_openshift_api_operator_v1alpha1_EtcdBackupReference(ref common.Refer
 				Properties: map[string]spec.Schema{
 					"name": {
 						SchemaProps: spec.SchemaProps{
-							Description: "name of the backup",
-							Default:     "",
+							Description: "name is a reference to a PVC in the \"openshift-etcd\" namespace where the etcd backup file will be saved. name must be between 1 and 253 characters and conform to RFC 1123 subdomain format: lowercase alphanumeric characters, '-' or '.', starting and ending with alphanumeric characters. This field is required.",
 							Type:        []string{"string"},
 							Format:      "",
 						},
 					},
-					"uid": {
+					"path": {
 						SchemaProps: spec.SchemaProps{
-							Description: "uid of the backup",
-							Default:     "",
+							Description: "path is a directory on the volume where the etcd backup file will be saved. When present, path must be an absolute filepath between 1 and 2048 characters containing only alphanumeric characters, '/', '.', '_', or '-', starting with a '/'. This field is optional.",
 							Type:        []string{"string"},
 							Format:      "",
 						},
 					},
 				},
-				Required: []string{"name", "uid"},
+				Required: []string{"name"},
 			},
 		},
 	}
@@ -67527,9 +67617,28 @@ func schema_openshift_api_operator_v1alpha1_EtcdBackupSpec(ref common.ReferenceC
 			SchemaProps: spec.SchemaProps{
 				Type: []string{"object"},
 				Properties: map[string]spec.Schema{
+					"assets": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-type": "set",
+							},
+						},
+						SchemaProps: spec.SchemaProps{
+							Description: "assets specifies the type of files to be backed up. If Snapshot is present, the etcd database will be snapshotted and saved to the storage backend. If StaticKubeResources is present, static pod manifests for the control plane will be bundled and saved to the storage backend. If etcd is encrypted, this will include the encryption keys. When specified, must contain between 1 and 2 entries, with at most 1 of each type. When omitted, all assets types will be backed up. This field is optional.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Type:   []string{"string"},
+										Format: "",
+									},
+								},
+							},
+						},
+					},
 					"nodeSelector": {
 						SchemaProps: spec.SchemaProps{
-							Description: "nodeSelector specifies which master node(s) to run the backup job on. If no selector is specified, the default node-role.kubernetes.io/control-plane label will be used. If no nodes are matched, then no backup will run.",
+							Description: "nodeSelector specifies which control plane nodes to select from for running the backup job. Only one backup job is run per EtcdBackup. The default node-role.kubernetes.io/control-plane label will always be selected for in addition to any labels set here. If no nodes are matched, then the backup will be marked failed. For Local storage type, this may be used to target a specific node to take and store the backup. For PVC storage type, this may be used to control where the backup is taken from. When specified, must contain between 1 and 10 entries. This field is optional.",
 							Type:        []string{"object"},
 							AdditionalProperties: &spec.SchemaOrBool{
 								Allows: true,
@@ -67544,7 +67653,7 @@ func schema_openshift_api_operator_v1alpha1_EtcdBackupSpec(ref common.ReferenceC
 					},
 					"storage": {
 						SchemaProps: spec.SchemaProps{
-							Description: "storage specifies the location where etcd backup files will be saved.",
+							Description: "storage specifies the location where etcd backup files will be saved. This field is required.",
 							Default:     map[string]interface{}{},
 							Ref:         ref(operatorv1alpha1.EtcdBackupStorage{}.OpenAPIModelName()),
 						},
@@ -67574,7 +67683,7 @@ func schema_openshift_api_operator_v1alpha1_EtcdBackupStatus(ref common.Referenc
 							},
 						},
 						SchemaProps: spec.SchemaProps{
-							Description: "conditions provide details on the status of the etcd backup job.",
+							Description: "conditions provide details on the status of the etcd backup job. Supported conditions include Running, Completed, and Failed. If Running is true, the backup job is currently active. If Completed is true, the backup job succeeded and has saved backup files to its storage location. If Failed is true, the backup job failed and did not create valid backup files.\n\nWhen specified, must contain between 1 and 5 entries, with no more than 1 of each type. This field is optional.",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -67585,15 +67694,16 @@ func schema_openshift_api_operator_v1alpha1_EtcdBackupStatus(ref common.Referenc
 							},
 						},
 					},
-					"job": {
+					"jobName": {
 						SchemaProps: spec.SchemaProps{
-							Description: "job is a reference to the Job created for the backup.",
-							Ref:         ref(operatorv1alpha1.EtcdBackupJobReference{}.OpenAPIModelName()),
+							Description: "jobName is a reference to the Job created for the backup. It always runs in the openshift-etcd namespace. Must be between 1 and 253 characters and conform to RFC 1123 subdomain format: lowercase alphanumeric characters, '-' or '.', starting and ending with alphanumeric characters. This field is optional.",
+							Type:        []string{"string"},
+							Format:      "",
 						},
 					},
 					"nodeName": {
 						SchemaProps: spec.SchemaProps{
-							Description: "nodeName is used for Local backups to bind the control plane node where the snapshot will be taken.",
+							Description: "nodeName is used for Local EtcdBackups to bind the control plane node where the snapshot will be taken. It is set by the cluster-etcd-operator before the Local backup runs to ensure the file location is known for garbage collection. Must be between 1 and 63 characters and conform to RFC 1123 subdomain format: lowercase alphanumeric characters, '-' or '.', starting and ending with alphanumeric characters. This field is optional.",
 							Type:        []string{"string"},
 							Format:      "",
 						},
@@ -67608,7 +67718,7 @@ func schema_openshift_api_operator_v1alpha1_EtcdBackupStatus(ref common.Referenc
 							},
 						},
 						SchemaProps: spec.SchemaProps{
-							Description: "files tracks the path and size of files generated by the etcd backup. Includes both etcd snapshots and static manifests.",
+							Description: "files tracks the path and size of files generated by the etcd backup. Includes both etcd snapshots and static manifests. When specified, must contain between 1 and 10 entries. This field is optional.",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -67623,7 +67733,7 @@ func schema_openshift_api_operator_v1alpha1_EtcdBackupStatus(ref common.Referenc
 			},
 		},
 		Dependencies: []string{
-			operatorv1alpha1.EtcdBackupFile{}.OpenAPIModelName(), operatorv1alpha1.EtcdBackupJobReference{}.OpenAPIModelName(), metav1.Condition{}.OpenAPIModelName()},
+			operatorv1alpha1.EtcdBackupFile{}.OpenAPIModelName(), metav1.Condition{}.OpenAPIModelName()},
 	}
 }
 
@@ -67635,20 +67745,22 @@ func schema_openshift_api_operator_v1alpha1_EtcdBackupStorage(ref common.Referen
 				Properties: map[string]spec.Schema{
 					"type": {
 						SchemaProps: spec.SchemaProps{
-							Default: "",
-							Type:    []string{"string"},
-							Format:  "",
+							Description: "type of storage backend to use for storing the etcd backup. Allowed values are Local and PVC. When set to Local, the backup will be saved to a host path directory on the control plane node it was taken on. When set to PVC, the backup will be saved to a volume bound by a PersistentVolumeClaim. This field is required.",
+							Type:        []string{"string"},
+							Format:      "",
 						},
 					},
 					"pvc": {
 						SchemaProps: spec.SchemaProps{
-							Description: "pvc specifies the PersistentVolumeClaim (PVC) which binds a PersistentVolume where the etcd backup file will be saved. The PVC must always be created in the \"openshift-etcd\" namespace. This field is required when the storage type is \"PVC\"",
+							Description: "pvc specifies the PersistentVolumeClaim (PVC) which binds a PersistentVolume where the etcd backup file will be saved. The PVC must always be created in the \"openshift-etcd\" namespace. This field is required when the storage type is \"PVC\", and forbidden otherwise.",
+							Default:     map[string]interface{}{},
 							Ref:         ref(operatorv1alpha1.EtcdBackupStoragePvc{}.OpenAPIModelName()),
 						},
 					},
 					"local": {
 						SchemaProps: spec.SchemaProps{
-							Description: "local specifies a host path directory on the master node where the etcd backup file will be saved. This field is required when storage type is \"Local\"",
+							Description: "local specifies a host path directory on the control plane node where the etcd backup file will be saved. This field is required when storage type is \"Local\", and forbidden otherwise.",
+							Default:     map[string]interface{}{},
 							Ref:         ref(operatorv1alpha1.EtcdBackupStorageLocal{}.OpenAPIModelName()),
 						},
 					},
@@ -67682,8 +67794,7 @@ func schema_openshift_api_operator_v1alpha1_EtcdBackupStorageLocal(ref common.Re
 				Properties: map[string]spec.Schema{
 					"hostPath": {
 						SchemaProps: spec.SchemaProps{
-							Description: "hostPath is a local directory on the master node where the etcd backup file will be saved.",
-							Default:     "",
+							Description: "hostPath is a local directory on the control plane node where the etcd backup file will be saved. hostPath must be an absolute filepath between 1 and 2048 characters containing only alphanumeric characters, '/', '.', '_', or '-', starting with a '/'. This field is required.",
 							Type:        []string{"string"},
 							Format:      "",
 						},
@@ -67703,15 +67814,14 @@ func schema_openshift_api_operator_v1alpha1_EtcdBackupStoragePvc(ref common.Refe
 				Properties: map[string]spec.Schema{
 					"name": {
 						SchemaProps: spec.SchemaProps{
-							Description: "name is a reference to a PVC in the \"openshift-etcd\" namespace where the etcd backup file will be saved.",
-							Default:     "",
+							Description: "name is a reference to a PVC in the \"openshift-etcd\" namespace where the etcd backup file will be saved. name must be between 1 and 253 characters and conform to RFC 1123 subdomain format: lowercase alphanumeric characters, '-' or '.', starting and ending with alphanumeric characters. This field is required.",
 							Type:        []string{"string"},
 							Format:      "",
 						},
 					},
 					"path": {
 						SchemaProps: spec.SchemaProps{
-							Description: "path is a directory on the volume where the etcd backup file will be saved.",
+							Description: "path is a directory on the volume where the etcd backup file will be saved. When present, path must be an absolute filepath between 1 and 2048 characters containing only alphanumeric characters, '/', '.', '_', or '-', starting with a '/'. This field is optional.",
 							Type:        []string{"string"},
 							Format:      "",
 						},

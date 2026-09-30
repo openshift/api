@@ -70,20 +70,14 @@ etcdbackups.operator.openshift.io:
     jsonPath: .status.conditions[?(@.status=="True")].type
     name: Status
     type: string
+  - description: Completion time of the EtcdBackup
+    jsonPath: .status.conditions[?(@.type=="Completed")].lastTransitionTime
+    name: Completed At
+    type: date
   - description: Age of the EtcdBackup
     jsonPath: .metadata.creationTimestamp
     name: Age
     type: date
-  - description: Name of the node where the backup was executed
-    jsonPath: .status.nodeName
-    name: Node
-    priority: 1
-    type: string
-  - description: Name of the PVC where the backup is stored
-    jsonPath: .spec.storage.pvc.name
-    name: PVC
-    priority: 1
-    type: string
   Scope: Cluster
   ShortNames: null
   TopLevelFeatureGates:
@@ -115,14 +109,14 @@ etcdbackuppolicies.operator.openshift.io:
     jsonPath: .spec.schedule
     name: Schedule
     type: string
-  - description: Time zone in which the schedule is evaluated
+  - description: Cron time zone for executing backups
     jsonPath: .spec.timeZone
-    name: Time Zone
+    name: TimeZone
     type: string
-  - description: Last time the schedule was executed
-    jsonPath: .status.lastScheduleTime
-    name: Last Schedule
-    type: date
+  - description: Status of the EtcdBackupPolicy
+    jsonPath: .status.conditions[?(@.type=="Scheduled")].reason
+    name: Status
+    type: string
   - description: Age of the EtcdBackupPolicy
     jsonPath: .metadata.creationTimestamp
     name: Age

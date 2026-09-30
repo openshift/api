@@ -280,14 +280,6 @@ var (
 						enable(inDefault(), inOKD(), inTechPreviewNoUpgrade(), inDevPreviewNoUpgrade()).
 						mustRegister()
 
-	FeatureGateBootImageSkewEnforcement = newFeatureGate("BootImageSkewEnforcement").
-						reportProblemsToJiraComponent("MachineConfigOperator").
-						contactPerson("djoshy").
-						productScope(ocpSpecific).
-						enhancementPR("https://github.com/openshift/enhancements/pull/1761").
-						enable(inDefault(), inOKD(), inTechPreviewNoUpgrade(), inDevPreviewNoUpgrade()).
-						mustRegister()
-
 	FeatureGateBootcNodeManagement = newFeatureGate("BootcNodeManagement").
 					reportProblemsToJiraComponent("MachineConfigOperator").
 					contactPerson("inesqyx").

@@ -310,7 +310,6 @@ machineconfigurations.operator.openshift.io:
   Capability: ""
   Category: ""
   FeatureGates:
-  - BootImageSkewEnforcement
   - IrreconcilableMachineConfig
   - ManagedBootImagesCPMS
   FilenameOperatorName: machine-config

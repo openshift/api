@@ -684,6 +684,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		consolev1.Link{}.OpenAPIModelName():                                                    schema_openshift_api_console_v1_Link(ref),
 		consolev1.NamespaceDashboardSpec{}.OpenAPIModelName():                                  schema_openshift_api_console_v1_NamespaceDashboardSpec(ref),
 		etcdv1.PacemakerCluster{}.OpenAPIModelName():                                           schema_openshift_api_etcd_v1_PacemakerCluster(ref),
+		etcdv1.PacemakerClusterAlertAgentStatus{}.OpenAPIModelName():                           schema_openshift_api_etcd_v1_PacemakerClusterAlertAgentStatus(ref),
 		etcdv1.PacemakerClusterFencingAgentStatus{}.OpenAPIModelName():                         schema_openshift_api_etcd_v1_PacemakerClusterFencingAgentStatus(ref),
 		etcdv1.PacemakerClusterList{}.OpenAPIModelName():                                       schema_openshift_api_etcd_v1_PacemakerClusterList(ref),
 		etcdv1.PacemakerClusterNodeStatus{}.OpenAPIModelName():                                 schema_openshift_api_etcd_v1_PacemakerClusterNodeStatus(ref),
@@ -691,6 +692,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		etcdv1.PacemakerClusterStatus{}.OpenAPIModelName():                                     schema_openshift_api_etcd_v1_PacemakerClusterStatus(ref),
 		etcdv1.PacemakerNodeAddress{}.OpenAPIModelName():                                       schema_openshift_api_etcd_v1_PacemakerNodeAddress(ref),
 		etcdv1alpha1.PacemakerCluster{}.OpenAPIModelName():                                     schema_openshift_api_etcd_v1alpha1_PacemakerCluster(ref),
+		etcdv1alpha1.PacemakerClusterAlertAgentStatus{}.OpenAPIModelName():                     schema_openshift_api_etcd_v1alpha1_PacemakerClusterAlertAgentStatus(ref),
 		etcdv1alpha1.PacemakerClusterFencingAgentStatus{}.OpenAPIModelName():                   schema_openshift_api_etcd_v1alpha1_PacemakerClusterFencingAgentStatus(ref),
 		etcdv1alpha1.PacemakerClusterList{}.OpenAPIModelName():                                 schema_openshift_api_etcd_v1alpha1_PacemakerClusterList(ref),
 		etcdv1alpha1.PacemakerClusterNodeStatus{}.OpenAPIModelName():                           schema_openshift_api_etcd_v1alpha1_PacemakerClusterNodeStatus(ref),
@@ -30452,6 +30454,52 @@ func schema_openshift_api_etcd_v1_PacemakerCluster(ref common.ReferenceCallback)
 	}
 }
 
+func schema_openshift_api_etcd_v1_PacemakerClusterAlertAgentStatus(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "PacemakerClusterAlertAgentStatus represents the status of a pacemaker alert agent tracked on a node. Unlike a pacemaker resource, an alert agent is registered in the CIB's <alerts> section rather than its <resources> section: pacemaker does not start, stop, monitor, or move it. Its delivery chain (script, helper script, systemd unit, sudoers entry) is delivered to each node independently by MCO.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"conditions": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-map-keys": []interface{}{
+									"type",
+								},
+								"x-kubernetes-list-type": "map",
+							},
+						},
+						SchemaProps: spec.SchemaProps{
+							Description: "conditions represent the observations of the alert agent's current state. Known condition types are: \"Healthy\", \"Configured\", \"Available\". The \"Healthy\" condition is an aggregate that tracks the overall health of the alert agent. The \"Configured\" condition tracks whether the alert agent is registered in the CIB as expected. The \"Available\" condition tracks whether the agent's full delivery chain is present on this node. Each of these conditions is required, so the array must contain at least 3 items.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref(metav1.Condition{}.OpenAPIModelName()),
+									},
+								},
+							},
+						},
+					},
+					"name": {
+						SchemaProps: spec.SchemaProps{
+							Description: "name is the name of the alert agent. Valid values are \"TaintAlertAgent\" and \"UntaintAlertAgent\".\n\nPossible enum values:\n - `\"TaintAlertAgent\"` is the alert agent that taints a node after it is fenced.\n - `\"UntaintAlertAgent\"` is the alert agent that removes a node's taint once it rejoins the cluster.",
+							Type:        []string{"string"},
+							Format:      "",
+							Enum:        []interface{}{"TaintAlertAgent", "UntaintAlertAgent"},
+						},
+					},
+				},
+				Required: []string{"conditions", "name"},
+			},
+		},
+		Dependencies: []string{
+			metav1.Condition{}.OpenAPIModelName()},
+	}
+}
+
 func schema_openshift_api_etcd_v1_PacemakerClusterFencingAgentStatus(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -30571,7 +30619,7 @@ func schema_openshift_api_etcd_v1_PacemakerClusterNodeStatus(ref common.Referenc
 							},
 						},
 						SchemaProps: spec.SchemaProps{
-							Description: "conditions represent the observations of the node's current state. Known condition types are: \"Healthy\", \"Online\", \"InService\", \"Active\", \"Ready\", \"Clean\", \"Member\", \"FencingAvailable\", \"FencingHealthy\". The \"Healthy\" condition is an aggregate that tracks the overall health of the node. The \"Online\" condition tracks whether the node is online. The \"InService\" condition tracks whether the node is in service (not in maintenance mode). The \"Active\" condition tracks whether the node is active (not in standby mode). The \"Ready\" condition tracks whether the node is ready (not in a pending state). The \"Clean\" condition tracks whether the node is in a clean (status known) state. The \"Member\" condition tracks whether the node is a member of the cluster. The \"FencingAvailable\" condition tracks whether this node can be fenced by at least one healthy agent. The \"FencingHealthy\" condition tracks whether all fencing agents for this node are healthy. Each of these conditions is required, so the array must contain at least 9 items.",
+							Description: "conditions represent the observations of the node's current state. Known condition types are: \"Healthy\", \"Online\", \"InService\", \"Active\", \"Ready\", \"Clean\", \"Member\", \"FencingAvailable\", \"FencingHealthy\". The \"Healthy\" condition is an aggregate that tracks the overall health of the node. The \"Online\" condition tracks whether the node is online. The \"InService\" condition tracks whether the node is in service (not in maintenance mode). The \"Active\" condition tracks whether the node is active (not in standby mode). The \"Ready\" condition tracks whether the node is ready (not in a pending state). The \"Clean\" condition tracks whether the node is in a clean (status known) state. The \"Member\" condition tracks whether the node is a member of the cluster. The \"FencingAvailable\" condition tracks whether this node can be fenced by at least one healthy agent. The \"FencingHealthy\" condition tracks whether all fencing agents for this node are healthy. Each of these conditions is required, so the array must contain at least 9 items. An optional \"AlertAgentsHealthy\" condition (see NodeAlertAgentsHealthyConditionType) may also be present; it is not one of the required 9 and its absence does not affect validation.",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -30649,12 +30697,34 @@ func schema_openshift_api_etcd_v1_PacemakerClusterNodeStatus(ref common.Referenc
 							},
 						},
 					},
+					"alertAgents": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-map-keys": []interface{}{
+									"name",
+								},
+								"x-kubernetes-list-type": "map",
+							},
+						},
+						SchemaProps: spec.SchemaProps{
+							Description: "alertAgents contains the status of pacemaker alert agents tracked for this node. Unlike resources, an alert agent is not managed by pacemaker: it is a script registered in the CIB's <alerts> section, delivered to this node independently by MCO. Valid alert agent names are \"TaintAlertAgent\" and \"UntaintAlertAgent\". Names must be unique within this array. Unlike resources and fencingAgents, this field is optional rather than required: it is omitted by status collector versions that predate alert-agent tracking, so it cannot be required without breaking status updates from those collectors during an upgrade.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref(etcdv1.PacemakerClusterAlertAgentStatus{}.OpenAPIModelName()),
+									},
+								},
+							},
+						},
+					},
 				},
 				Required: []string{"conditions", "nodeName", "addresses", "resources", "fencingAgents"},
 			},
 		},
 		Dependencies: []string{
-			etcdv1.PacemakerClusterFencingAgentStatus{}.OpenAPIModelName(), etcdv1.PacemakerClusterResourceStatus{}.OpenAPIModelName(), etcdv1.PacemakerNodeAddress{}.OpenAPIModelName(), metav1.Condition{}.OpenAPIModelName()},
+			etcdv1.PacemakerClusterAlertAgentStatus{}.OpenAPIModelName(), etcdv1.PacemakerClusterFencingAgentStatus{}.OpenAPIModelName(), etcdv1.PacemakerClusterResourceStatus{}.OpenAPIModelName(), etcdv1.PacemakerNodeAddress{}.OpenAPIModelName(), metav1.Condition{}.OpenAPIModelName()},
 	}
 }
 
@@ -30720,7 +30790,7 @@ func schema_openshift_api_etcd_v1_PacemakerClusterStatus(ref common.ReferenceCal
 							},
 						},
 						SchemaProps: spec.SchemaProps{
-							Description: "conditions represent the observations of the pacemaker cluster's current state. Known condition types are: \"Healthy\", \"InService\", \"NodeCountAsExpected\". The \"Healthy\" condition is an aggregate that tracks the overall health of the cluster. The \"InService\" condition tracks whether the cluster is in service (not in maintenance mode). The \"NodeCountAsExpected\" condition tracks whether the expected number of nodes are present. Each of these conditions is required, so the array must contain at least 3 items.",
+							Description: "conditions represent the observations of the pacemaker cluster's current state. Known condition types are: \"Healthy\", \"InService\", \"NodeCountAsExpected\". The \"Healthy\" condition is an aggregate that tracks the overall health of the cluster. The \"InService\" condition tracks whether the cluster is in service (not in maintenance mode). The \"NodeCountAsExpected\" condition tracks whether the expected number of nodes are present. Each of these three conditions is required, so the array must contain at least 3 items.",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -30837,6 +30907,52 @@ func schema_openshift_api_etcd_v1alpha1_PacemakerCluster(ref common.ReferenceCal
 		},
 		Dependencies: []string{
 			etcdv1alpha1.PacemakerClusterStatus{}.OpenAPIModelName(), metav1.ObjectMeta{}.OpenAPIModelName()},
+	}
+}
+
+func schema_openshift_api_etcd_v1alpha1_PacemakerClusterAlertAgentStatus(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "PacemakerClusterAlertAgentStatus represents the status of a pacemaker alert agent tracked on a node. Unlike a pacemaker resource, an alert agent is registered in the CIB's <alerts> section rather than its <resources> section: pacemaker does not start, stop, monitor, or move it. Its delivery chain (script, helper script, systemd unit, sudoers entry) is delivered to each node independently by MCO.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"conditions": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-map-keys": []interface{}{
+									"type",
+								},
+								"x-kubernetes-list-type": "map",
+							},
+						},
+						SchemaProps: spec.SchemaProps{
+							Description: "conditions represent the observations of the alert agent's current state. Known condition types are: \"Healthy\", \"Configured\", \"Available\". The \"Healthy\" condition is an aggregate that tracks the overall health of the alert agent. The \"Configured\" condition tracks whether the alert agent is registered in the CIB as expected. The \"Available\" condition tracks whether the agent's full delivery chain is present on this node. Each of these conditions is required, so the array must contain at least 3 items.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref(metav1.Condition{}.OpenAPIModelName()),
+									},
+								},
+							},
+						},
+					},
+					"name": {
+						SchemaProps: spec.SchemaProps{
+							Description: "name is the name of the alert agent. Valid values are \"TaintAlertAgent\" and \"UntaintAlertAgent\".\n\nPossible enum values:\n - `\"TaintAlertAgent\"` is the alert agent that taints a node after it is fenced.\n - `\"UntaintAlertAgent\"` is the alert agent that removes a node's taint once it rejoins the cluster.",
+							Type:        []string{"string"},
+							Format:      "",
+							Enum:        []interface{}{"TaintAlertAgent", "UntaintAlertAgent"},
+						},
+					},
+				},
+				Required: []string{"conditions", "name"},
+			},
+		},
+		Dependencies: []string{
+			metav1.Condition{}.OpenAPIModelName()},
 	}
 }
 
@@ -30959,7 +31075,7 @@ func schema_openshift_api_etcd_v1alpha1_PacemakerClusterNodeStatus(ref common.Re
 							},
 						},
 						SchemaProps: spec.SchemaProps{
-							Description: "conditions represent the observations of the node's current state. Known condition types are: \"Healthy\", \"Online\", \"InService\", \"Active\", \"Ready\", \"Clean\", \"Member\", \"FencingAvailable\", \"FencingHealthy\". The \"Healthy\" condition is an aggregate that tracks the overall health of the node. The \"Online\" condition tracks whether the node is online. The \"InService\" condition tracks whether the node is in service (not in maintenance mode). The \"Active\" condition tracks whether the node is active (not in standby mode). The \"Ready\" condition tracks whether the node is ready (not in a pending state). The \"Clean\" condition tracks whether the node is in a clean (status known) state. The \"Member\" condition tracks whether the node is a member of the cluster. The \"FencingAvailable\" condition tracks whether this node can be fenced by at least one healthy agent. The \"FencingHealthy\" condition tracks whether all fencing agents for this node are healthy. Each of these conditions is required, so the array must contain at least 9 items.",
+							Description: "conditions represent the observations of the node's current state. Known condition types are: \"Healthy\", \"Online\", \"InService\", \"Active\", \"Ready\", \"Clean\", \"Member\", \"FencingAvailable\", \"FencingHealthy\". The \"Healthy\" condition is an aggregate that tracks the overall health of the node. The \"Online\" condition tracks whether the node is online. The \"InService\" condition tracks whether the node is in service (not in maintenance mode). The \"Active\" condition tracks whether the node is active (not in standby mode). The \"Ready\" condition tracks whether the node is ready (not in a pending state). The \"Clean\" condition tracks whether the node is in a clean (status known) state. The \"Member\" condition tracks whether the node is a member of the cluster. The \"FencingAvailable\" condition tracks whether this node can be fenced by at least one healthy agent. The \"FencingHealthy\" condition tracks whether all fencing agents for this node are healthy. Each of these conditions is required, so the array must contain at least 9 items. An optional \"AlertAgentsHealthy\" condition (see NodeAlertAgentsHealthyConditionType) may also be present; it is not one of the required 9 and its absence does not affect validation.",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -31037,12 +31153,34 @@ func schema_openshift_api_etcd_v1alpha1_PacemakerClusterNodeStatus(ref common.Re
 							},
 						},
 					},
+					"alertAgents": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-map-keys": []interface{}{
+									"name",
+								},
+								"x-kubernetes-list-type": "map",
+							},
+						},
+						SchemaProps: spec.SchemaProps{
+							Description: "alertAgents contains the status of pacemaker alert agents tracked for this node. Unlike resources, an alert agent is not managed by pacemaker: it is a script registered in the CIB's <alerts> section, delivered to this node independently by MCO. Valid alert agent names are \"TaintAlertAgent\" and \"UntaintAlertAgent\". Names must be unique within this array. Unlike resources and fencingAgents, this field is optional rather than required: it is omitted by status collector versions that predate alert-agent tracking, so it cannot be required without breaking status updates from those collectors during an upgrade.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref(etcdv1alpha1.PacemakerClusterAlertAgentStatus{}.OpenAPIModelName()),
+									},
+								},
+							},
+						},
+					},
 				},
 				Required: []string{"conditions", "nodeName", "addresses", "resources", "fencingAgents"},
 			},
 		},
 		Dependencies: []string{
-			etcdv1alpha1.PacemakerClusterFencingAgentStatus{}.OpenAPIModelName(), etcdv1alpha1.PacemakerClusterResourceStatus{}.OpenAPIModelName(), etcdv1alpha1.PacemakerNodeAddress{}.OpenAPIModelName(), metav1.Condition{}.OpenAPIModelName()},
+			etcdv1alpha1.PacemakerClusterAlertAgentStatus{}.OpenAPIModelName(), etcdv1alpha1.PacemakerClusterFencingAgentStatus{}.OpenAPIModelName(), etcdv1alpha1.PacemakerClusterResourceStatus{}.OpenAPIModelName(), etcdv1alpha1.PacemakerNodeAddress{}.OpenAPIModelName(), metav1.Condition{}.OpenAPIModelName()},
 	}
 }
 

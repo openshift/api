@@ -1133,6 +1133,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		operatorv1.Console{}.OpenAPIModelName():                                                schema_openshift_api_operator_v1_Console(ref),
 		operatorv1.ConsoleConfigRoute{}.OpenAPIModelName():                                     schema_openshift_api_operator_v1_ConsoleConfigRoute(ref),
 		operatorv1.ConsoleCustomization{}.OpenAPIModelName():                                   schema_openshift_api_operator_v1_ConsoleCustomization(ref),
+		operatorv1.ConsoleIngress{}.OpenAPIModelName():                                         schema_openshift_api_operator_v1_ConsoleIngress(ref),
 		operatorv1.ConsoleList{}.OpenAPIModelName():                                            schema_openshift_api_operator_v1_ConsoleList(ref),
 		operatorv1.ConsoleProviders{}.OpenAPIModelName():                                       schema_openshift_api_operator_v1_ConsoleProviders(ref),
 		operatorv1.ConsoleSpec{}.OpenAPIModelName():                                            schema_openshift_api_operator_v1_ConsoleSpec(ref),
@@ -1183,7 +1184,6 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		operatorv1.IPv4OVNKubernetesConfig{}.OpenAPIModelName():                                schema_openshift_api_operator_v1_IPv4OVNKubernetesConfig(ref),
 		operatorv1.IPv6GatewayConfig{}.OpenAPIModelName():                                      schema_openshift_api_operator_v1_IPv6GatewayConfig(ref),
 		operatorv1.IPv6OVNKubernetesConfig{}.OpenAPIModelName():                                schema_openshift_api_operator_v1_IPv6OVNKubernetesConfig(ref),
-		operatorv1.Ingress{}.OpenAPIModelName():                                                schema_openshift_api_operator_v1_Ingress(ref),
 		operatorv1.IngressController{}.OpenAPIModelName():                                      schema_openshift_api_operator_v1_IngressController(ref),
 		operatorv1.IngressControllerCaptureHTTPCookie{}.OpenAPIModelName():                     schema_openshift_api_operator_v1_IngressControllerCaptureHTTPCookie(ref),
 		operatorv1.IngressControllerCaptureHTTPCookieUnion{}.OpenAPIModelName():                schema_openshift_api_operator_v1_IngressControllerCaptureHTTPCookieUnion(ref),
@@ -55427,6 +55427,35 @@ func schema_openshift_api_operator_v1_ConsoleCustomization(ref common.ReferenceC
 	}
 }
 
+func schema_openshift_api_operator_v1_ConsoleIngress(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "Ingress allows cluster admin to configure alternative ingress for the console.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"consoleURL": {
+						SchemaProps: spec.SchemaProps{
+							Description: "consoleURL is a URL to be used as the base console address. If not specified, the console route hostname will be used. This field is required for clusters without ingress capability, where access to routes is not possible. Make sure that appropriate ingress is set up at this URL. The console operator will monitor the URL and may go degraded if it's unreachable for an extended period. Must use the HTTPS scheme.",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"clientDownloadsURL": {
+						SchemaProps: spec.SchemaProps{
+							Description: "clientDownloadsURL is a URL to be used as the address to download client binaries. If not specified, the downloads route hostname will be used. This field is required for clusters without ingress capability, where access to routes is not possible. The console operator will monitor the URL and may go degraded if it's unreachable for an extended period. Must use the HTTPS scheme.",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+				},
+			},
+		},
+	}
+}
+
 func schema_openshift_api_operator_v1_ConsoleList(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -55579,7 +55608,7 @@ func schema_openshift_api_operator_v1_ConsoleSpec(ref common.ReferenceCallback) 
 						SchemaProps: spec.SchemaProps{
 							Description: "ingress allows to configure the alternative ingress for the console. This field is intended for clusters without ingress capability, where access to routes is not possible.",
 							Default:     map[string]interface{}{},
-							Ref:         ref(operatorv1.Ingress{}.OpenAPIModelName()),
+							Ref:         ref(operatorv1.ConsoleIngress{}.OpenAPIModelName()),
 						},
 					},
 				},
@@ -55587,7 +55616,7 @@ func schema_openshift_api_operator_v1_ConsoleSpec(ref common.ReferenceCallback) 
 			},
 		},
 		Dependencies: []string{
-			operatorv1.ConsoleConfigRoute{}.OpenAPIModelName(), operatorv1.ConsoleCustomization{}.OpenAPIModelName(), operatorv1.ConsoleProviders{}.OpenAPIModelName(), operatorv1.Ingress{}.OpenAPIModelName(), runtime.RawExtension{}.OpenAPIModelName()},
+			operatorv1.ConsoleConfigRoute{}.OpenAPIModelName(), operatorv1.ConsoleCustomization{}.OpenAPIModelName(), operatorv1.ConsoleIngress{}.OpenAPIModelName(), operatorv1.ConsoleProviders{}.OpenAPIModelName(), runtime.RawExtension{}.OpenAPIModelName()},
 	}
 }
 
@@ -57588,35 +57617,6 @@ func schema_openshift_api_operator_v1_IPv6OVNKubernetesConfig(ref common.Referen
 					"internalJoinSubnet": {
 						SchemaProps: spec.SchemaProps{
 							Description: "internalJoinSubnet is a v6 subnet used internally by ovn-kubernetes in case the default one is being already used by something else. It must not overlap with any other subnet being used by OpenShift or by the node network. The size of the subnet must be larger than the number of nodes. The subnet must be large enough to accommodate one IP per node in your cluster The current default value is fd98::/64 The value must be in proper IPV6 CIDR format Note that IPV6 dual addresses are not permitted",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-				},
-			},
-		},
-	}
-}
-
-func schema_openshift_api_operator_v1_Ingress(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Description: "Ingress allows cluster admin to configure alternative ingress for the console.",
-				Type:        []string{"object"},
-				Properties: map[string]spec.Schema{
-					"consoleURL": {
-						SchemaProps: spec.SchemaProps{
-							Description: "consoleURL is a URL to be used as the base console address. If not specified, the console route hostname will be used. This field is required for clusters without ingress capability, where access to routes is not possible. Make sure that appropriate ingress is set up at this URL. The console operator will monitor the URL and may go degraded if it's unreachable for an extended period. Must use the HTTPS scheme.",
-							Default:     "",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"clientDownloadsURL": {
-						SchemaProps: spec.SchemaProps{
-							Description: "clientDownloadsURL is a URL to be used as the address to download client binaries. If not specified, the downloads route hostname will be used. This field is required for clusters without ingress capability, where access to routes is not possible. The console operator will monitor the URL and may go degraded if it's unreachable for an extended period. Must use the HTTPS scheme.",
-							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
 						},

@@ -1341,7 +1341,6 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		operatorv1alpha1.DelegatedAuthorization{}.OpenAPIModelName():                           schema_openshift_api_operator_v1alpha1_DelegatedAuthorization(ref),
 		operatorv1alpha1.EtcdBackup{}.OpenAPIModelName():                                       schema_openshift_api_operator_v1alpha1_EtcdBackup(ref),
 		operatorv1alpha1.EtcdBackupFile{}.OpenAPIModelName():                                   schema_openshift_api_operator_v1alpha1_EtcdBackupFile(ref),
-		operatorv1alpha1.EtcdBackupJobReference{}.OpenAPIModelName():                           schema_openshift_api_operator_v1alpha1_EtcdBackupJobReference(ref),
 		operatorv1alpha1.EtcdBackupList{}.OpenAPIModelName():                                   schema_openshift_api_operator_v1alpha1_EtcdBackupList(ref),
 		operatorv1alpha1.EtcdBackupPolicy{}.OpenAPIModelName():                                 schema_openshift_api_operator_v1alpha1_EtcdBackupPolicy(ref),
 		operatorv1alpha1.EtcdBackupPolicyList{}.OpenAPIModelName():                             schema_openshift_api_operator_v1alpha1_EtcdBackupPolicyList(ref),
@@ -65986,8 +65985,9 @@ func schema_openshift_api_operator_v1alpha1_EtcdBackup(ref common.ReferenceCallb
 					},
 					"metadata": {
 						SchemaProps: spec.SchemaProps{
-							Default: map[string]interface{}{},
-							Ref:     ref(metav1.ObjectMeta{}.OpenAPIModelName()),
+							Description: "metadata is the standard object's metadata. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata",
+							Default:     map[string]interface{}{},
+							Ref:         ref(metav1.ObjectMeta{}.OpenAPIModelName()),
 						},
 					},
 					"spec": {
@@ -66005,7 +66005,7 @@ func schema_openshift_api_operator_v1alpha1_EtcdBackup(ref common.ReferenceCallb
 						},
 					},
 				},
-				Required: []string{"spec"},
+				Required: []string{"metadata", "spec"},
 			},
 		},
 		Dependencies: []string{
@@ -66022,58 +66022,19 @@ func schema_openshift_api_operator_v1alpha1_EtcdBackupFile(ref common.ReferenceC
 					"path": {
 						SchemaProps: spec.SchemaProps{
 							Description: "path to the backup file on the storage backend.",
-							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
 						},
 					},
 					"sizeBytes": {
 						SchemaProps: spec.SchemaProps{
-							Description: "sizeBytes is the size of the backup file on the storage backend in bytes.",
-							Default:     0,
+							Description: "sizeBytes is the size of the backup file on the storage backend in bytes. If omitted, then the file specified by path is an empty file.",
 							Type:        []string{"integer"},
 							Format:      "int64",
 						},
 					},
 				},
-				Required: []string{"path", "sizeBytes"},
-			},
-		},
-	}
-}
-
-func schema_openshift_api_operator_v1alpha1_EtcdBackupJobReference(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Type: []string{"object"},
-				Properties: map[string]spec.Schema{
-					"name": {
-						SchemaProps: spec.SchemaProps{
-							Description: "name of the backup job",
-							Default:     "",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"namespace": {
-						SchemaProps: spec.SchemaProps{
-							Description: "namespace of the backup job",
-							Default:     "",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"uid": {
-						SchemaProps: spec.SchemaProps{
-							Description: "uid of the backup job",
-							Default:     "",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-				},
-				Required: []string{"name", "namespace", "uid"},
+				Required: []string{"path"},
 			},
 		},
 	}
@@ -66151,8 +66112,9 @@ func schema_openshift_api_operator_v1alpha1_EtcdBackupPolicy(ref common.Referenc
 					},
 					"metadata": {
 						SchemaProps: spec.SchemaProps{
-							Default: map[string]interface{}{},
-							Ref:     ref(metav1.ObjectMeta{}.OpenAPIModelName()),
+							Description: "metadata is the standard object's metadata. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata",
+							Default:     map[string]interface{}{},
+							Ref:         ref(metav1.ObjectMeta{}.OpenAPIModelName()),
 						},
 					},
 					"spec": {
@@ -66170,7 +66132,7 @@ func schema_openshift_api_operator_v1alpha1_EtcdBackupPolicy(ref common.Referenc
 						},
 					},
 				},
-				Required: []string{"spec"},
+				Required: []string{"metadata", "spec"},
 			},
 		},
 		Dependencies: []string{
@@ -66236,7 +66198,6 @@ func schema_openshift_api_operator_v1alpha1_EtcdBackupPolicyRetentionRule(ref co
 					"type": {
 						SchemaProps: spec.SchemaProps{
 							Description: "type defined which rule field is set",
-							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
 						},
@@ -66244,7 +66205,6 @@ func schema_openshift_api_operator_v1alpha1_EtcdBackupPolicyRetentionRule(ref co
 					"maxQuantity": {
 						SchemaProps: spec.SchemaProps{
 							Description: "maxQuantity enforces the deletion of backups that exceed the given count.",
-							Default:     0,
 							Type:        []string{"integer"},
 							Format:      "int32",
 						},
@@ -66286,7 +66246,6 @@ func schema_openshift_api_operator_v1alpha1_EtcdBackupPolicySpec(ref common.Refe
 					"schedule": {
 						SchemaProps: spec.SchemaProps{
 							Description: "schedule sets the backup schedule in Cron format, see https://en.wikipedia.org/wiki/Cron.",
-							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
 						},
@@ -66300,7 +66259,7 @@ func schema_openshift_api_operator_v1alpha1_EtcdBackupPolicySpec(ref common.Refe
 					},
 					"nodeSelector": {
 						SchemaProps: spec.SchemaProps{
-							Description: "nodeSelector specifies which master node(s) to run backup jobs on. If no selector is specified, the default node-role.kubernetes.io/master label will be used. If no nodes are matched, then no backups will run.",
+							Description: "nodeSelector specifies which control plane nodes to select from for running backup jobs. The default node-role.kubernetes.io/control-plane label will always be required in addition to any labels set here. If no nodes are matched, then no EtcdBackups will be created. For Local storage type, an EtcdBackup will be created for each selected control plane node every time the schedule is triggered. This is a special case to provide some resiliancy in the event of control plane node loss. For PVC storage type, a single EtcdBackup will be created with the given nodeSelector every time the schedule is triggered. When specified, nodeSelector must contain at least 1 entry and must not contain more than 10 entries.",
 							Type:        []string{"object"},
 							AdditionalProperties: &spec.SchemaOrBool{
 								Allows: true,
@@ -66346,7 +66305,6 @@ func schema_openshift_api_operator_v1alpha1_EtcdBackupPolicySpec(ref common.Refe
 					"failedBackupsHistoryLimit": {
 						SchemaProps: spec.SchemaProps{
 							Description: "failedBackupsHistoryLimit defined the number of failed etcdbackups to retain. Value must be non-negative integer. Defaults to 1.",
-							Default:     0,
 							Type:        []string{"integer"},
 							Format:      "int32",
 						},
@@ -66366,6 +66324,28 @@ func schema_openshift_api_operator_v1alpha1_EtcdBackupPolicyStatus(ref common.Re
 			SchemaProps: spec.SchemaProps{
 				Type: []string{"object"},
 				Properties: map[string]spec.Schema{
+					"conditions": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-map-keys": []interface{}{
+									"type",
+								},
+								"x-kubernetes-list-type": "map",
+							},
+						},
+						SchemaProps: spec.SchemaProps{
+							Description: "conditions provide details on the status of the etcd backup policy.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref(metav1.Condition{}.OpenAPIModelName()),
+									},
+								},
+							},
+						},
+					},
 					"active": {
 						VendorExtensible: spec.VendorExtensible{
 							Extensions: spec.Extensions{
@@ -66398,7 +66378,7 @@ func schema_openshift_api_operator_v1alpha1_EtcdBackupPolicyStatus(ref common.Re
 			},
 		},
 		Dependencies: []string{
-			operatorv1alpha1.EtcdBackupReference{}.OpenAPIModelName(), metav1.Time{}.OpenAPIModelName()},
+			operatorv1alpha1.EtcdBackupReference{}.OpenAPIModelName(), metav1.Condition{}.OpenAPIModelName(), metav1.Time{}.OpenAPIModelName()},
 	}
 }
 
@@ -66411,7 +66391,6 @@ func schema_openshift_api_operator_v1alpha1_EtcdBackupReference(ref common.Refer
 					"name": {
 						SchemaProps: spec.SchemaProps{
 							Description: "name of the backup",
-							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
 						},
@@ -66419,7 +66398,6 @@ func schema_openshift_api_operator_v1alpha1_EtcdBackupReference(ref common.Refer
 					"uid": {
 						SchemaProps: spec.SchemaProps{
 							Description: "uid of the backup",
-							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
 						},
@@ -66439,7 +66417,7 @@ func schema_openshift_api_operator_v1alpha1_EtcdBackupSpec(ref common.ReferenceC
 				Properties: map[string]spec.Schema{
 					"nodeSelector": {
 						SchemaProps: spec.SchemaProps{
-							Description: "nodeSelector specifies which master node(s) to run the backup job on. If no selector is specified, the default node-role.kubernetes.io/control-plane label will be used. If no nodes are matched, then no backup will run.",
+							Description: "nodeSelector specifies which control plane nodes to select from for running the backup job. Only one backup job is run per EtcdBackup. The default node-role.kubernetes.io/control-plane label will always be required in addition to any labels set here. If no nodes are matched, then the backup will be marked failed. For Local storage type, this may be used to target a specific node to take and store the backup. For PVC storage type, this may be used to control where the backup is taken from. When specified, nodeSelector must contain at least 1 entry and must not contain more than 10 entries.",
 							Type:        []string{"object"},
 							AdditionalProperties: &spec.SchemaOrBool{
 								Allows: true,
@@ -66497,10 +66475,11 @@ func schema_openshift_api_operator_v1alpha1_EtcdBackupStatus(ref common.Referenc
 							},
 						},
 					},
-					"job": {
+					"jobName": {
 						SchemaProps: spec.SchemaProps{
-							Description: "job is a reference to the Job created for the backup.",
-							Ref:         ref(operatorv1alpha1.EtcdBackupJobReference{}.OpenAPIModelName()),
+							Description: "jobName is a reference to the Job created for the backup. It always runs in the openshift-etcd namespace.",
+							Type:        []string{"string"},
+							Format:      "",
 						},
 					},
 					"nodeName": {
@@ -66536,7 +66515,7 @@ func schema_openshift_api_operator_v1alpha1_EtcdBackupStatus(ref common.Referenc
 			},
 		},
 		Dependencies: []string{
-			operatorv1alpha1.EtcdBackupFile{}.OpenAPIModelName(), operatorv1alpha1.EtcdBackupJobReference{}.OpenAPIModelName(), metav1.Condition{}.OpenAPIModelName()},
+			operatorv1alpha1.EtcdBackupFile{}.OpenAPIModelName(), metav1.Condition{}.OpenAPIModelName()},
 	}
 }
 
@@ -66548,20 +66527,22 @@ func schema_openshift_api_operator_v1alpha1_EtcdBackupStorage(ref common.Referen
 				Properties: map[string]spec.Schema{
 					"type": {
 						SchemaProps: spec.SchemaProps{
-							Default: "",
-							Type:    []string{"string"},
-							Format:  "",
+							Description: "type of storage backend to use for storing the etcd backup. When set to Local, the backup will be saved to a host path directory on the control plane node it was taken on. When set to PVC, the backup will be saved to a volume bound by a PersistentVolumeClaim.",
+							Type:        []string{"string"},
+							Format:      "",
 						},
 					},
 					"pvc": {
 						SchemaProps: spec.SchemaProps{
-							Description: "pvc specifies the PersistentVolumeClaim (PVC) which binds a PersistentVolume where the etcd backup file will be saved. The PVC must always be created in the \"openshift-etcd\" namespace. This field is required when the storage type is \"PVC\"",
+							Description: "pvc specifies the PersistentVolumeClaim (PVC) which binds a PersistentVolume where the etcd backup file will be saved. The PVC must always be created in the \"openshift-etcd\" namespace. This field is required when the storage type is \"PVC\", and forbidden otherwise.",
+							Default:     map[string]interface{}{},
 							Ref:         ref(operatorv1alpha1.EtcdBackupStoragePvc{}.OpenAPIModelName()),
 						},
 					},
 					"local": {
 						SchemaProps: spec.SchemaProps{
-							Description: "local specifies a host path directory on the master node where the etcd backup file will be saved. This field is required when storage type is \"Local\"",
+							Description: "local specifies a host path directory on the master node where the etcd backup file will be saved. This field is required when storage type is \"Local\", and forbidden otherwise.",
+							Default:     map[string]interface{}{},
 							Ref:         ref(operatorv1alpha1.EtcdBackupStorageLocal{}.OpenAPIModelName()),
 						},
 					},
@@ -66596,7 +66577,6 @@ func schema_openshift_api_operator_v1alpha1_EtcdBackupStorageLocal(ref common.Re
 					"hostPath": {
 						SchemaProps: spec.SchemaProps{
 							Description: "hostPath is a local directory on the master node where the etcd backup file will be saved.",
-							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
 						},
@@ -66617,7 +66597,6 @@ func schema_openshift_api_operator_v1alpha1_EtcdBackupStoragePvc(ref common.Refe
 					"name": {
 						SchemaProps: spec.SchemaProps{
 							Description: "name is a reference to a PVC in the \"openshift-etcd\" namespace where the etcd backup file will be saved.",
-							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
 						},

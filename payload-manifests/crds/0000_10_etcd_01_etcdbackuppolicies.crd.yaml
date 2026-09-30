@@ -70,15 +70,21 @@ spec:
                 description: failedBackupsHistoryLimit defined the number of failed
                   etcdbackups to retain. Value must be non-negative integer. Defaults
                   to 1.
+                format: int32
                 minimum: 0
                 type: integer
               nodeSelector:
                 additionalProperties:
                   type: string
                 description: |-
-                  nodeSelector specifies which master node(s) to run backup jobs on.
-                  If no selector is specified, the default node-role.kubernetes.io/master label will be used.
-                  If no nodes are matched, then no backups will run.
+                  nodeSelector specifies which control plane nodes to select from for running backup jobs.
+                  The default node-role.kubernetes.io/control-plane label will always be required in addition to any labels set here.
+                  If no nodes are matched, then no EtcdBackups will be created.
+                  For Local storage type, an EtcdBackup will be created for each selected control plane node every time the schedule is triggered. This is a special case to provide some resiliancy in the event of control plane node loss.
+                  For PVC storage type, a single EtcdBackup will be created with the given nodeSelector every time the schedule is triggered.
+                  When specified, nodeSelector must contain at least 1 entry and must not contain more than 10 entries.
+                maxProperties: 10
+                minProperties: 1
                 type: object
               retentionRules:
                 description: |-
@@ -90,7 +96,8 @@ spec:
                     maxQuantity:
                       description: maxQuantity enforces the deletion of backups that
                         exceed the given count.
-                      minimum: 0
+                      format: int32
+                      minimum: 1
                       type: integer
                     maxSize:
                       anyOf:
@@ -99,8 +106,13 @@ spec:
                       description: |-
                         maxSize enforces the deletion of backups by the total size of backups on the storage backend.
                         This is a soft threshold. The total size of backups may temporarily exceed the limit when new backups are created.
+                      maxLength: 20
+                      minLength: 1
                       pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
                       x-kubernetes-int-or-string: true
+                      x-kubernetes-validations:
+                      - message: request must be a positive, non-zero quantity
+                        rule: quantity(self).isGreaterThan(quantity('0'))
                     type:
                       description: type defined which rule field is set
                       enum:
@@ -118,6 +130,8 @@ spec:
                   - message: maxSize is required when type is MaxSize, and forbidden
                       otherwise
                     rule: '(self.type == ''MaxSize'') ? has(self.maxSize) : !has(self.maxSize)'
+                maxItems: 2
+                minItems: 1
                 type: array
                 x-kubernetes-list-map-keys:
                 - type
@@ -125,6 +139,8 @@ spec:
               schedule:
                 description: schedule sets the backup schedule in Cron format, see
                   https://en.wikipedia.org/wiki/Cron.
+                maxLength: 1024
+                minLength: 1
                 type: string
               storage:
                 description: storage specifies the location where etcd backup files
@@ -133,15 +149,17 @@ spec:
                   local:
                     description: |-
                       local specifies a host path directory on the master node where the etcd backup file will be saved.
-                      This field is required when storage type is "Local"
+                      This field is required when storage type is "Local", and forbidden otherwise.
                     properties:
                       hostPath:
                         description: hostPath is a local directory on the master node
                           where the etcd backup file will be saved.
+                        maxLength: 2048
+                        minLength: 1
                         type: string
                         x-kubernetes-validations:
-                        - message: hostPath is immutable once set
-                          rule: self == oldSelf
+                        - message: hostPath must be a valid absolute filepath
+                          rule: self.matches('^/[a-zA-Z0-9/._-]+$')
                     required:
                     - hostPath
                     type: object
@@ -149,7 +167,7 @@ spec:
                     description: |-
                       pvc specifies the PersistentVolumeClaim (PVC) which binds a PersistentVolume where the etcd backup file will be saved.
                       The PVC must always be created in the "openshift-etcd" namespace.
-                      This field is required when the storage type is "PVC"
+                      This field is required when the storage type is "PVC", and forbidden otherwise.
                     properties:
                       name:
                         description: name is a reference to a PVC in the "openshift-etcd"
@@ -158,28 +176,31 @@ spec:
                         minLength: 1
                         type: string
                         x-kubernetes-validations:
-                        - message: name is immutable once set
-                          rule: self == oldSelf
+                        - message: name must be a lowercase RFC 1123 subdomain consisting
+                            of lowercase alphanumeric characters, '-' or '.', and
+                            must start and end with an alphanumeric character
+                          rule: '!format.dns1123Subdomain().validate(self).hasValue()'
                       path:
                         description: path is a directory on the volume where the etcd
                           backup file will be saved.
+                        maxLength: 2048
+                        minLength: 1
                         type: string
                         x-kubernetes-validations:
-                        - message: path is immutable once set
-                          rule: self == oldSelf
+                        - message: path must be a valid absolute filepath
+                          rule: self.matches('^/[a-zA-Z0-9/._-]+$')
                     required:
                     - name
                     type: object
                   type:
-                    description: EtcdBackupStorageType is an enum of the supported
-                      storage backends for backup files
+                    description: |-
+                      type of storage backend to use for storing the etcd backup.
+                      When set to Local, the backup will be saved to a host path directory on the control plane node it was taken on.
+                      When set to PVC, the backup will be saved to a volume bound by a PersistentVolumeClaim.
                     enum:
                     - PVC
                     - Local
                     type: string
-                    x-kubernetes-validations:
-                    - message: type is immutable once set
-                      rule: self == oldSelf
                 required:
                 - type
                 type: object
@@ -192,6 +213,8 @@ spec:
                 description: |-
                   timeZone name for the given schedule, see https://en.wikipedia.org/wiki/List_of_tz_database_time_zones.
                   If not specified, this will default to the time zone of the cluster-etcd-operator process.
+                maxLength: 64
+                minLength: 1
                 type: string
             required:
             - schedule
@@ -200,6 +223,7 @@ spec:
           status:
             description: status holds observed values from the cluster. They may not
               be overridden.
+            minProperties: 1
             properties:
               active:
                 description: active is a list of references to in progress backups
@@ -221,9 +245,74 @@ spec:
                   - name
                   - uid
                   type: object
+                maxItems: 20
+                minItems: 1
                 type: array
                 x-kubernetes-list-map-keys:
                 - name
+                x-kubernetes-list-type: map
+              conditions:
+                description: conditions provide details on the status of the etcd
+                  backup policy.
+                items:
+                  description: Condition contains details for one aspect of the current
+                    state of this API Resource.
+                  properties:
+                    lastTransitionTime:
+                      description: |-
+                        lastTransitionTime is the last time the condition transitioned from one status to another.
+                        This should be when the underlying condition changed.  If that is not known, then using the time when the API field changed is acceptable.
+                      format: date-time
+                      type: string
+                    message:
+                      description: |-
+                        message is a human readable message indicating details about the transition.
+                        This may be an empty string.
+                      maxLength: 32768
+                      type: string
+                    observedGeneration:
+                      description: |-
+                        observedGeneration represents the .metadata.generation that the condition was set based upon.
+                        For instance, if .metadata.generation is currently 12, but the .status.conditions[x].observedGeneration is 9, the condition is out of date
+                        with respect to the current state of the instance.
+                      format: int64
+                      minimum: 0
+                      type: integer
+                    reason:
+                      description: |-
+                        reason contains a programmatic identifier indicating the reason for the condition's last transition.
+                        Producers of specific condition types may define expected values and meanings for this field,
+                        and whether the values are considered a guaranteed API.
+                        The value should be a CamelCase string.
+                        This field may not be empty.
+                      maxLength: 1024
+                      minLength: 1
+                      pattern: ^[A-Za-z]([A-Za-z0-9_,:]*[A-Za-z0-9_])?$
+                      type: string
+                    status:
+                      description: status of the condition, one of True, False, Unknown.
+                      enum:
+                      - "True"
+                      - "False"
+                      - Unknown
+                      type: string
+                    type:
+                      description: type of condition in CamelCase or in foo.example.com/CamelCase.
+                      maxLength: 316
+                      pattern: ^([a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*/)?(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])$
+                      type: string
+                  required:
+                  - lastTransitionTime
+                  - message
+                  - reason
+                  - status
+                  - type
+                  type: object
+                maxItems: 10
+                minItems: 1
+                type: array
+                x-kubernetes-list-map-keys:
+                - type
                 x-kubernetes-list-type: map
               lastScheduleTime:
                 description: |-
@@ -234,6 +323,7 @@ spec:
                 type: string
             type: object
         required:
+        - metadata
         - spec
         type: object
     served: true

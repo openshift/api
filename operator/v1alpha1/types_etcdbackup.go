@@ -24,57 +24,70 @@ import (
 // +openshift:file-pattern=cvoRunLevel=0000_10,operatorName=etcd,operatorOrdering=01
 // +openshift:enable:FeatureGate=AutomatedEtcdBackup
 type EtcdBackup struct {
-	metav1.TypeMeta   `json:",inline"`
+	metav1.TypeMeta `json:",inline"`
+	// metadata is the standard object's metadata.
+	// More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata
+	// +required
 	metav1.ObjectMeta `json:"metadata,omitempty"`
 
 	// spec holds user settable values for configuration
+	// +kubebuilder:validation:XValidation:rule="self == oldSelf",message="spec is immutable"
 	// +required
-	Spec EtcdBackupSpec `json:"spec"`
+	Spec EtcdBackupSpec `json:"spec,omitzero"`
 	// status holds observed values from the cluster. They may not be overridden.
 	// +optional
-	Status EtcdBackupStatus `json:"status"`
+	Status EtcdBackupStatus `json:"status,omitzero"`
 }
 
 type EtcdBackupSpec struct {
-	// nodeSelector specifies which master node(s) to run the backup job on.
-	// If no selector is specified, the default node-role.kubernetes.io/control-plane label will be used.
-	// If no nodes are matched, then no backup will run.
-	// +kubebuilder:validation:XValidation:rule="self == oldSelf",message="nodeSelector is immutable once set"
-	// +kubebuilder:validation:Optional
+	// nodeSelector specifies which control plane nodes to select from for running the backup job. Only one backup job is run per EtcdBackup.
+	// The default node-role.kubernetes.io/control-plane label will always be required in addition to any labels set here.
+	// If no nodes are matched, then the backup will be marked failed.
+	// For Local storage type, this may be used to target a specific node to take and store the backup.
+	// For PVC storage type, this may be used to control where the backup is taken from.
+	// When specified, nodeSelector must contain at least 1 entry and must not contain more than 10 entries.
+	// +kubebuilder:validation:MinProperties=1
+	// +kubebuilder:validation:MaxProperties=10
 	// +optional
 	NodeSelector map[string]string `json:"nodeSelector,omitempty"`
 
 	// storage specifies the location where etcd backup files will be saved.
-	// +kubebuilder:validation:Required
 	// +required
-	Storage EtcdBackupStorage `json:"storage"`
+	Storage EtcdBackupStorage `json:"storage,omitzero"`
+
+	// --- TOMBSTONE ---
+	// pvcName was the name of a PersistentVolumeClaim used to store the backup.
+	// The field has been replaced by the storage field, which supports multiple types of storage backends including PVC.
+	// The field name is reserved to prevent reuse.
+	//
+	// +optional
+	// PVCName string `json:"pvcName"`
 }
 
 // +kubebuilder:validation:XValidation:rule="self.type == 'PVC' ? has(self.pvc) : !has(self.pvc)",message="pvc is required when type is PVC, and forbidden otherwise"
 // +kubebuilder:validation:XValidation:rule="self.type == 'Local' ? has(self.local) : !has(self.local)",message="local is required when type is Local, and forbidden otherwise"
 // +union
 type EtcdBackupStorage struct {
+	// type of storage backend to use for storing the etcd backup.
+	// When set to Local, the backup will be saved to a host path directory on the control plane node it was taken on.
+	// When set to PVC, the backup will be saved to a volume bound by a PersistentVolumeClaim.
 	// +kubebuilder:validation:Enum=PVC;Local
-	// +kubebuilder:validation:Required
-	// +kubebuilder:validation:XValidation:rule="self == oldSelf",message="type is immutable once set"
 	// +required
 	// +unionDiscriminator
-	Type EtcdBackupStorageType `json:"type"`
+	Type EtcdBackupStorageType `json:"type,omitempty"`
 
 	// pvc specifies the PersistentVolumeClaim (PVC) which binds a PersistentVolume where the etcd backup file will be saved.
 	// The PVC must always be created in the "openshift-etcd" namespace.
-	// This field is required when the storage type is "PVC"
-	// +kubebuilder:validation:Optional
+	// This field is required when the storage type is "PVC", and forbidden otherwise.
 	// +optional
 	// +unionMember
-	PVC *EtcdBackupStoragePvc `json:"pvc,omitempty"`
+	PVC EtcdBackupStoragePvc `json:"pvc,omitzero"`
 
 	// local specifies a host path directory on the master node where the etcd backup file will be saved.
-	// This field is required when storage type is "Local"
-	// +kubebuilder:validation:Optional
+	// This field is required when storage type is "Local", and forbidden otherwise.
 	// +optional
 	// +unionMember
-	Local *EtcdBackupStorageLocal `json:"local,omitempty"`
+	Local EtcdBackupStorageLocal `json:"local,omitzero"`
 }
 
 // EtcdBackupStorageType is an enum of the supported storage backends for backup files
@@ -87,90 +100,84 @@ const (
 
 type EtcdBackupStoragePvc struct {
 	// name is a reference to a PVC in the "openshift-etcd" namespace where the etcd backup file will be saved.
-	// +kubebuilder:validation:XValidation:rule="self == oldSelf",message="name is immutable once set"
 	// +kubebuilder:validation:MinLength=1
 	// +kubebuilder:validation:MaxLength=253
-	// +kubebuilder:validation:Required
+	// +kubebuilder:validation:XValidation:rule="!format.dns1123Subdomain().validate(self).hasValue()",message="name must be a lowercase RFC 1123 subdomain consisting of lowercase alphanumeric characters, '-' or '.', and must start and end with an alphanumeric character"
 	// +required
-	Name string `json:"name"`
+	Name string `json:"name,omitempty"`
 
 	// path is a directory on the volume where the etcd backup file will be saved.
-	// +kubebuilder:validation:XValidation:rule="self == oldSelf",message="path is immutable once set"
-	// +kubebuilder:validation:Optional
+	// +kubebuilder:validation:MinLength=1
+	// +kubebuilder:validation:MaxLength=2048
+	// +kubebuilder:validation:XValidation:rule=`self.matches('^/[a-zA-Z0-9/._-]+$')`,message="path must be a valid absolute filepath"
 	// +optional
 	Path string `json:"path,omitempty"`
 }
 
 type EtcdBackupStorageLocal struct {
 	// hostPath is a local directory on the master node where the etcd backup file will be saved.
-	// +kubebuilder:validation:XValidation:rule="self == oldSelf",message="hostPath is immutable once set"
-	// +kubebuilder:validation:Required
+	// +kubebuilder:validation:MinLength=1
+	// +kubebuilder:validation:MaxLength=2048
+	// +kubebuilder:validation:XValidation:rule=`self.matches('^/[a-zA-Z0-9/._-]+$')`,message="hostPath must be a valid absolute filepath"
 	// +required
-	HostPath string `json:"hostPath"`
+	HostPath string `json:"hostPath,omitempty"`
 }
 
+// +kubebuilder:validation:MinProperties=1
 type EtcdBackupStatus struct {
 	// conditions provide details on the status of the etcd backup job.
+	// +kubebuilder:validation:MinItems=1
+	// +kubebuilder:validation:MaxItems=10
 	// +listType=map
 	// +listMapKey=type
-	// +kubebuilder:validation:Optional
 	// +optional
 	Conditions []metav1.Condition `json:"conditions,omitempty"`
 
-	// job is a reference to the Job created for the backup.
-	// +kubebuilder:validation:Optional
+	// jobName is a reference to the Job created for the backup. It always runs in the openshift-etcd namespace.
+	// +kubebuilder:validation:MinLength=1
+	// +kubebuilder:validation:MaxLength=253
+	// +kubebuilder:validation:XValidation:rule="!format.dns1123Subdomain().validate(self).hasValue()",message="jobName must be a lowercase RFC 1123 subdomain consisting of lowercase alphanumeric characters, '-' or '.', and must start and end with an alphanumeric character"
 	// +optional
-	Job *EtcdBackupJobReference `json:"job,omitempty"`
+	JobName string `json:"jobName,omitempty"`
 
 	// nodeName is used for Local backups to bind the control plane node where the snapshot will be taken.
 	// +kubebuilder:validation:MinLength=1
 	// +kubebuilder:validation:MaxLength=63
-	// +kubebuilder:validation:Optional
+	// +kubebuilder:validation:XValidation:rule="!format.dns1123Subdomain().validate(self).hasValue()",message="nodeName must be a lowercase RFC 1123 subdomain consisting of lowercase alphanumeric characters, '-' or '.', and must start and end with an alphanumeric character"
 	// +optional
 	NodeName string `json:"nodeName,omitempty"`
 
 	// files tracks the path and size of files generated by the etcd backup.
 	// Includes both etcd snapshots and static manifests.
+	// +kubebuilder:validation:MinItems=1
+	// +kubebuilder:validation:MaxItems=10
 	// +listType=map
 	// +listMapKey=path
-	// +kubebuilder:validation:Optional
 	// +optional
 	Files []EtcdBackupFile `json:"files,omitempty"`
-}
 
-type EtcdBackupJobReference struct {
-	// name of the backup job
-	// +kubebuilder:validation:MinLength=1
-	// +kubebuilder:validation:MaxLength=253
-	// +kubebuilder:validation:Required
-	// +required
-	Name string `json:"name"`
-	// namespace of the backup job
-	// +kubebuilder:validation:MinLength=1
-	// +kubebuilder:validation:MaxLength=63
-	// +kubebuilder:validation:Required
-	// +required
-	Namespace string `json:"namespace"`
-	// uid of the backup job
-	// +kubebuilder:validation:MinLength=36
-	// +kubebuilder:validation:MaxLength=36
-	// +kubebuilder:validation:Format=uuid
-	// +kubebuilder:validation:Required
-	// +required
-	UID string `json:"uid"`
+	// --- TOMBSTONE ---
+	// backupJob was a reference to the Job that executes the backup.
+	// The field has been replaced by jobName.
+	// The field name is reserved to prevent reuse.
+	//
+	// +optional
+	// BackupJob *BackupJobReference `json:"backupJob"`
 }
 
 type EtcdBackupFile struct {
 	// path to the backup file on the storage backend.
-	// +kubebuilder:validation:Required
+	// +kubebuilder:validation:MinLength=1
+	// +kubebuilder:validation:MaxLength=4096
+	// +kubebuilder:validation:XValidation:rule=`self.matches('^/[a-zA-Z0-9/._-]+$')`,message="path must be a valid absolute filepath"
 	// +required
-	Path string `json:"path"`
+	Path string `json:"path,omitempty"`
 
 	// sizeBytes is the size of the backup file on the storage backend in bytes.
-	// +kubebuilder:validation:Minimum=0
-	// +kubebuilder:validation:Required
-	// +required
-	SizeBytes int64 `json:"sizeBytes"`
+	// If omitted, then the file specified by path is an empty file.
+	// +kubebuilder:validation:Minimum=1
+	// +optional
+	SizeBytes int64 `json:"sizeBytes,omitempty"`
 }
 
 // BackupConditionType enumerates the Condition types added to EtcdBackupStatus at different points in its lifecycle

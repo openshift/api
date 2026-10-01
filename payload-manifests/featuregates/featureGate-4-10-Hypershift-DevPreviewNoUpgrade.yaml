@@ -29,7 +29,13 @@
                         "name": "ClusterAPIInstall"
                     },
                     {
+                        "name": "ControllerManagerConfig"
+                    },
+                    {
                         "name": "DRADeviceTaintRules"
+                    },
+                    {
+                        "name": "DisableForceDetachOnTimeout"
                     },
                     {
                         "name": "EventedPLEG"

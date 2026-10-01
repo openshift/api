@@ -111,10 +111,16 @@
                         "name": "ConfigurablePKI"
                     },
                     {
+                        "name": "ControllerManagerConfig"
+                    },
+                    {
                         "name": "DNSNameResolver"
                     },
                     {
                         "name": "DRADeviceTaintRules"
+                    },
+                    {
+                        "name": "DisableForceDetachOnTimeout"
                     },
                     {
                         "name": "DyanmicServiceEndpointIBMCloud"

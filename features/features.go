@@ -1073,5 +1073,6 @@ var (
 					contactPerson("haircommander").
 					productScope(kubernetes).
 					enhancementPR("https://github.com/kubernetes/enhancements/issues/5055").
+					enable(inTechPreviewNoUpgrade(), inDevPreviewNoUpgrade()).
 					mustRegister()
 )

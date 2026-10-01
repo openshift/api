@@ -39,6 +39,8 @@ The brief window where status is empty is acceptable since the healthcheck contr
 
 A **pacemaker resource** is a unit of work managed by pacemaker. In pacemaker terminology, resources are services
 or applications that pacemaker monitors, starts, stops, and moves between nodes to maintain high availability.
+This is distinct from fencing agents and alert agents, which pacemaker does not manage as resources (see the
+[Fencing Agents](#fencing-agents) and [Alert Agents](#alert-agents) sections below).
 
 For Two Node OpenShift with Fencing, we manage two resource types:
 - **Kubelet**: The Kubernetes node agent and a prerequisite for etcd
@@ -135,7 +137,9 @@ The `alertAgents` field itself is optional: it is omitted by status collector ve
 that predate alert-agent tracking, so it cannot be required without breaking status updates from
 those collectors during an upgrade. For the same reason, `AlertAgentsHealthy` has no `MinItems` bump or
 `self.exists()` rule backing it - it stays truly optional in the schema, while the cluster-etcd-operator
-treats its absence strictly.
+treats its absence strictly. Once a status collector reports `alertAgents` for a node, it may not be
+removed on a later update, and if `alertAgents` is non-empty, both `TaintAlertAgent` and `UntaintAlertAgent`
+must be present.
 
 ### Cluster-Level Conditions
 
@@ -228,7 +232,7 @@ Each entry in the `alertAgents` array has the following 3 conditions.
 - `conditions` - Required (min 9 items with specific types enforced via XValidation)
 - `resources` - Required (min 2 items: Kubelet and Etcd)
 - `fencingAgents` - Required (min 1, max 8 items)
-- `alertAgents` - Optional (min 0, max 8 items); omitted by status collectors that predate alert-agent tracking
+- `alertAgents` - Optional (min 0, max 8 items); omitted by status collectors that predate alert-agent tracking; once present, may not be removed; when non-empty, both `TaintAlertAgent` and `UntaintAlertAgent` are required
 
 **Conditions validation:**
 - Cluster-level: MinItems=3 (Healthy, InService, NodeCountAsExpected)
@@ -245,8 +249,10 @@ All condition arrays have XValidation rules to ensure specific condition types a
 
 **Alert agent names:**
 - Valid values are: `TaintAlertAgent`, `UntaintAlertAgent`
-- Both are optional; when present, neither is required to appear
+- The `alertAgents` array itself is optional and may be empty or omitted
+- If `alertAgents` is non-empty, both `TaintAlertAgent` and `UntaintAlertAgent` must be present (enforced via XValidation)
 - Names must be unique within the `alertAgents` array (enforced via the `name` list-map key)
+- Once `alertAgents` is reported for a node, it may not be removed on a later update (enforced via XValidation on `PacemakerClusterNodeStatus`)
 
 **Fencing agent fields:**
 - `name`: Unique identifier for the fencing agent (e.g., "master-0_redfish")

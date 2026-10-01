@@ -143,7 +143,9 @@ spec:
                 items:
                   description: |-
                     PacemakerClusterNodeStatus represents the status of a single node in the pacemaker cluster including
-                    the node's conditions and the health of critical resources running on that node.
+                    the node's conditions and the health of critical resources running on that node. Once a status collector
+                    reports alertAgents for a node, later updates may not remove it, since the only reason it is optional is
+                    to tolerate collector versions that predate alert-agent tracking, not to allow it to disappear once observed.
                   properties:
                     addresses:
                       description: |-
@@ -192,7 +194,8 @@ spec:
                         alertAgents contains the status of pacemaker alert agents tracked for this node.
                         Unlike resources, an alert agent is not managed by pacemaker: it is a script registered in the
                         CIB's <alerts> section, delivered to this node independently by MCO. Valid alert agent names are
-                        "TaintAlertAgent" and "UntaintAlertAgent". Names must be unique within this array.
+                        "TaintAlertAgent" and "UntaintAlertAgent". Names must be unique within this array. If this array is
+                        non-empty, both TaintAlertAgent and UntaintAlertAgent must be present.
                         Unlike resources and fencingAgents, this field is optional rather than required: it is omitted
                         by status collector versions that predate alert-agent tracking, so it cannot be required without
                         breaking status updates from those collectors during an upgrade.
@@ -304,6 +307,10 @@ spec:
                       x-kubernetes-validations:
                       - message: alert agent names must be unique
                         rule: self.all(x, self.exists_one(y, x.name == y.name))
+                      - message: alert agents must contain both TaintAlertAgent and
+                          UntaintAlertAgent when present
+                        rule: size(self) == 0 || (self.exists(x, x.name == 'TaintAlertAgent')
+                          && self.exists(x, x.name == 'UntaintAlertAgent'))
                     conditions:
                       description: |-
                         conditions represent the observations of the node's current state.
@@ -724,6 +731,9 @@ spec:
                   - nodeName
                   - resources
                   type: object
+                  x-kubernetes-validations:
+                  - message: alertAgents may not be removed once set
+                    rule: '!has(oldSelf.alertAgents) || has(self.alertAgents)'
                 maxItems: 5
                 minItems: 0
                 type: array

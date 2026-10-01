@@ -612,7 +612,7 @@ type PacemakerClusterStatus struct {
 	// The "Healthy" condition is an aggregate that tracks the overall health of the cluster.
 	// The "InService" condition tracks whether the cluster is in service (not in maintenance mode).
 	// The "NodeCountAsExpected" condition tracks whether the expected number of nodes are present.
-	// Each of these three conditions is required, so the array must contain at least 3 items.
+	// Each of these conditions is required, so the array must contain at least 3 items.
 	// +listType=map
 	// +listMapKey=type
 	// +kubebuilder:validation:MinItems=3
@@ -643,7 +643,10 @@ type PacemakerClusterStatus struct {
 }
 
 // PacemakerClusterNodeStatus represents the status of a single node in the pacemaker cluster including
-// the node's conditions and the health of critical resources running on that node.
+// the node's conditions and the health of critical resources running on that node. Once a status collector
+// reports alertAgents for a node, later updates may not remove it, since the only reason it is optional is
+// to tolerate collector versions that predate alert-agent tracking, not to allow it to disappear once observed.
+// +kubebuilder:validation:XValidation:rule="!has(oldSelf.alertAgents) || has(self.alertAgents)",message="alertAgents may not be removed once set"
 type PacemakerClusterNodeStatus struct {
 	// conditions represent the observations of the node's current state.
 	// Known condition types are: "Healthy", "Online", "InService", "Active", "Ready", "Clean", "Member",
@@ -731,7 +734,8 @@ type PacemakerClusterNodeStatus struct {
 	// alertAgents contains the status of pacemaker alert agents tracked for this node.
 	// Unlike resources, an alert agent is not managed by pacemaker: it is a script registered in the
 	// CIB's <alerts> section, delivered to this node independently by MCO. Valid alert agent names are
-	// "TaintAlertAgent" and "UntaintAlertAgent". Names must be unique within this array.
+	// "TaintAlertAgent" and "UntaintAlertAgent". Names must be unique within this array. If this array is
+	// non-empty, both TaintAlertAgent and UntaintAlertAgent must be present.
 	// Unlike resources and fencingAgents, this field is optional rather than required: it is omitted
 	// by status collector versions that predate alert-agent tracking, so it cannot be required without
 	// breaking status updates from those collectors during an upgrade.
@@ -740,6 +744,7 @@ type PacemakerClusterNodeStatus struct {
 	// +kubebuilder:validation:MinItems=0
 	// +kubebuilder:validation:MaxItems=8
 	// +kubebuilder:validation:XValidation:rule="self.all(x, self.exists_one(y, x.name == y.name))",message="alert agent names must be unique"
+	// +kubebuilder:validation:XValidation:rule="size(self) == 0 || (self.exists(x, x.name == 'TaintAlertAgent') && self.exists(x, x.name == 'UntaintAlertAgent'))",message="alert agents must contain both TaintAlertAgent and UntaintAlertAgent when present"
 	// +optional
 	AlertAgents []PacemakerClusterAlertAgentStatus `json:"alertAgents,omitempty"`
 }

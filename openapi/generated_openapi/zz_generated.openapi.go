@@ -59926,7 +59926,7 @@ func schema_openshift_api_operator_v1_MachineManagerSelector(ref common.Referenc
 				Properties: map[string]spec.Schema{
 					"mode": {
 						SchemaProps: spec.SchemaProps{
-							Description: "mode determines how machine managers will be selected for updates. Valid values are All, Partial and None. All means that every resource matched by the machine manager will be updated. Partial requires specified selector(s) and allows customisation of which resources matched by the machine manager will be updated. Partial is not permitted for the controlplanemachinesets resource type as they are a singleton within the cluster. None means that every resource matched by the machine manager will not be updated.",
+							Description: "mode determines how machine managers will be selected for updates. Valid values are All, Partial and None. All means that every resource matched by the machine manager will be updated. Partial requires specified selector(s) and allows customisation of which resources matched by the machine manager will be updated. Partial is not permitted for the controlplanemachinesets resource type as they are a singleton within the cluster. None means that every resource matched by the machine manager will not be updated. When boot image skew enforcement is in Automatic mode, only All is permitted for the machinesets and machinedeployments resource types, in any API group.",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",

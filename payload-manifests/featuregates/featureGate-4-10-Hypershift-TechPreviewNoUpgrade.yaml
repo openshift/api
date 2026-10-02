@@ -307,6 +307,9 @@
                         "name": "KMSv1"
                     },
                     {
+                        "name": "MACSecurity"
+                    },
+                    {
                         "name": "MachineAPIMigration"
                     },
                     {

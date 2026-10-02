@@ -17051,36 +17051,6 @@
         }
       }
     },
-    "com.github.openshift.api.etcd.v1alpha1.PacemakerClusterAlertAgentStatus": {
-      "description": "PacemakerClusterAlertAgentStatus represents the status of a pacemaker alert agent tracked on a node. Unlike a pacemaker resource, an alert agent is registered in the CIB's <alerts> section rather than its <resources> section: pacemaker does not start, stop, monitor, or move it. Its delivery chain (script, helper script, systemd unit, sudoers entry) is delivered to each node independently by MCO.",
-      "type": "object",
-      "required": [
-        "conditions",
-        "name"
-      ],
-      "properties": {
-        "conditions": {
-          "description": "conditions represent the observations of the alert agent's current state. Known condition types are: \"Healthy\", \"Configured\", \"Available\". The \"Healthy\" condition is an aggregate that tracks the overall health of the alert agent. The \"Configured\" condition tracks whether the alert agent is registered in the CIB as expected. The \"Available\" condition tracks whether the agent's full delivery chain is present on this node. Each of these conditions is required, so the array must contain at least 3 items.",
-          "type": "array",
-          "items": {
-            "default": {},
-            "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Condition"
-          },
-          "x-kubernetes-list-map-keys": [
-            "type"
-          ],
-          "x-kubernetes-list-type": "map"
-        },
-        "name": {
-          "description": "name is the name of the alert agent. Valid values are \"TaintAlertAgent\" and \"UntaintAlertAgent\".\n\nPossible enum values:\n - `\"TaintAlertAgent\"` is the alert agent that taints a node after it is fenced.\n - `\"UntaintAlertAgent\"` is the alert agent that removes a node's taint once it rejoins the cluster.",
-          "type": "string",
-          "enum": [
-            "TaintAlertAgent",
-            "UntaintAlertAgent"
-          ]
-        }
-      }
-    },
     "com.github.openshift.api.etcd.v1alpha1.PacemakerClusterFencingAgentStatus": {
       "description": "PacemakerClusterFencingAgentStatus represents the status of a fencing agent that can fence a node. Fencing agents are STONITH (Shoot The Other Node In The Head) devices used to isolate failed nodes. Unlike regular pacemaker resources, fencing agents are mapped to their target node (the node they can fence), not the node where their monitoring operations are scheduled.",
       "type": "object",
@@ -17145,7 +17115,7 @@
       }
     },
     "com.github.openshift.api.etcd.v1alpha1.PacemakerClusterNodeStatus": {
-      "description": "PacemakerClusterNodeStatus represents the status of a single node in the pacemaker cluster including the node's conditions and the health of critical resources running on that node. Once a status collector reports alertAgents for a node, later updates may not remove it, since the only reason it is optional is to tolerate collector versions that predate alert-agent tracking, not to allow it to disappear once observed.",
+      "description": "PacemakerClusterNodeStatus represents the status of a single node in the pacemaker cluster including the node's conditions and the health of critical resources running on that node.",
       "type": "object",
       "required": [
         "conditions",
@@ -17163,20 +17133,8 @@
           },
           "x-kubernetes-list-type": "atomic"
         },
-        "alertAgents": {
-          "description": "alertAgents contains the status of pacemaker alert agents tracked for this node. Unlike resources, an alert agent is not managed by pacemaker: it is a script registered in the CIB's <alerts> section, delivered to this node independently by MCO. Valid alert agent names are \"TaintAlertAgent\" and \"UntaintAlertAgent\". Names must be unique within this array. If this array is non-empty, both TaintAlertAgent and UntaintAlertAgent must be present. Unlike resources and fencingAgents, this field is optional rather than required: it is omitted by status collector versions that predate alert-agent tracking, so it cannot be required without breaking status updates from those collectors during an upgrade.",
-          "type": "array",
-          "items": {
-            "default": {},
-            "$ref": "#/definitions/com.github.openshift.api.etcd.v1alpha1.PacemakerClusterAlertAgentStatus"
-          },
-          "x-kubernetes-list-map-keys": [
-            "name"
-          ],
-          "x-kubernetes-list-type": "map"
-        },
         "conditions": {
-          "description": "conditions represent the observations of the node's current state. Known condition types are: \"Healthy\", \"Online\", \"InService\", \"Active\", \"Ready\", \"Clean\", \"Member\", \"FencingAvailable\", \"FencingHealthy\". The \"Healthy\" condition is an aggregate that tracks the overall health of the node. The \"Online\" condition tracks whether the node is online. The \"InService\" condition tracks whether the node is in service (not in maintenance mode). The \"Active\" condition tracks whether the node is active (not in standby mode). The \"Ready\" condition tracks whether the node is ready (not in a pending state). The \"Clean\" condition tracks whether the node is in a clean (status known) state. The \"Member\" condition tracks whether the node is a member of the cluster. The \"FencingAvailable\" condition tracks whether this node can be fenced by at least one healthy agent. The \"FencingHealthy\" condition tracks whether all fencing agents for this node are healthy. Each of these conditions is required, so the array must contain at least 9 items. An optional \"AlertAgentsHealthy\" condition (see NodeAlertAgentsHealthyConditionType) may also be present; it is not one of the required 9 and its absence does not affect validation.",
+          "description": "conditions represent the observations of the node's current state. Known condition types are: \"Healthy\", \"Online\", \"InService\", \"Active\", \"Ready\", \"Clean\", \"Member\", \"FencingAvailable\", \"FencingHealthy\". The \"Healthy\" condition is an aggregate that tracks the overall health of the node. The \"Online\" condition tracks whether the node is online. The \"InService\" condition tracks whether the node is in service (not in maintenance mode). The \"Active\" condition tracks whether the node is active (not in standby mode). The \"Ready\" condition tracks whether the node is ready (not in a pending state). The \"Clean\" condition tracks whether the node is in a clean (status known) state. The \"Member\" condition tracks whether the node is a member of the cluster. The \"FencingAvailable\" condition tracks whether this node can be fenced by at least one healthy agent. The \"FencingHealthy\" condition tracks whether all fencing agents for this node are healthy. Each of these conditions is required, so the array must contain at least 9 items.",
           "type": "array",
           "items": {
             "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Condition"

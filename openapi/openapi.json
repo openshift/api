@@ -8775,6 +8775,10 @@
         "platformStatus": {
           "description": "platformStatus holds status information specific to the underlying infrastructure provider.",
           "$ref": "#/definitions/com.github.openshift.api.config.v1.PlatformStatus"
+        },
+        "topologyTransitionStatus": {
+          "description": "topologyTransitionStatus reports evaluations of supported topology transitions and the status of a requested transition, if any. It is omitted until the topology controller reports transition status.",
+          "$ref": "#/definitions/com.github.openshift.api.config.v1.TopologyTransitionStatus"
         }
       }
     },
@@ -12119,6 +12123,83 @@
         "message": {
           "description": "message is a required human-readable message to be logged by the Kubernetes API server if the CEL expression defined in 'expression' fails. message must be at least 1 character in length and must not exceed 256 characters.",
           "type": "string"
+        }
+      }
+    },
+    "com.github.openshift.api.config.v1.TopologyState": {
+      "description": "TopologyState describes the control-plane and infrastructure topology at one end of a topology transition.",
+      "type": "object",
+      "required": [
+        "controlPlaneTopology",
+        "infrastructureTopology"
+      ],
+      "properties": {
+        "controlPlaneTopology": {
+          "description": "controlPlaneTopology is the topology of the control-plane nodes. Valid values are SingleReplica and HighlyAvailable. When set to SingleReplica, operators avoid spending resources for high availability. When set to HighlyAvailable, operators configure high availability as much as possible. controlPlaneTopology is required.",
+          "type": "string"
+        },
+        "infrastructureTopology": {
+          "description": "infrastructureTopology is the topology of infrastructure services. Valid values are SingleReplica and HighlyAvailable. When set to SingleReplica, operators avoid spending resources for high availability. When set to HighlyAvailable, operators configure high availability as much as possible. infrastructureTopology is required.",
+          "type": "string"
+        }
+      }
+    },
+    "com.github.openshift.api.config.v1.TopologyTransition": {
+      "type": "object",
+      "required": [
+        "source",
+        "target",
+        "evaluations"
+      ],
+      "properties": {
+        "evaluations": {
+          "description": "evaluations contains the availability condition for this transition and conditions for the checks run against the cluster to determine availability.\n\nTopologyTransitionAvailableConditionType is required; other condition types report individual checks. Between one and 32 conditions must be present.",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Condition"
+          },
+          "x-kubernetes-list-map-keys": [
+            "type"
+          ],
+          "x-kubernetes-list-type": "map"
+        },
+        "source": {
+          "description": "source is the control-plane and infrastructure topology this transition was evaluated from. It may differ from the current topology while status is being refreshed. source is required.",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.config.v1.TopologyState"
+        },
+        "target": {
+          "description": "target is the control-plane and infrastructure topology this transition would move to. target is required.",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.config.v1.TopologyState"
+        }
+      }
+    },
+    "com.github.openshift.api.config.v1.TopologyTransitionStatus": {
+      "description": "TopologyTransitionStatus reports availability of each type of topology transition and contains the status of any initiated transition. When present, it must include conditions or transitions; either list may be empty.",
+      "type": "object",
+      "properties": {
+        "conditions": {
+          "description": "conditions provides information on topology transition progress and the evaluation of supported transition types. When omitted, or when the TopologyTransitionsEvaluated condition is absent, transitions is stale.\n\nTopologyTransitionsEvaluatedConditionType and TopologyTransitionCompletedConditionType are the only valid conditions at this scope. At most two conditions can be present.",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Condition"
+          },
+          "x-kubernetes-list-map-keys": [
+            "type"
+          ],
+          "x-kubernetes-list-type": "map"
+        },
+        "transitions": {
+          "description": "transitions contains each supported transition type and its availability. An empty or omitted list means no transition evaluations have been reported. Entries are stale when the TopologyTransitionsEvaluated condition is absent.\n\nAt most one transition is supported currently (SNO to HA Compact)",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/com.github.openshift.api.config.v1.TopologyTransition"
+          },
+          "x-kubernetes-list-type": "atomic"
         }
       }
     },

@@ -510,6 +510,9 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		configv1.TokenIssuer{}.OpenAPIModelName():                                              schema_openshift_api_config_v1_TokenIssuer(ref),
 		configv1.TokenRequiredClaim{}.OpenAPIModelName():                                       schema_openshift_api_config_v1_TokenRequiredClaim(ref),
 		configv1.TokenUserValidationRule{}.OpenAPIModelName():                                  schema_openshift_api_config_v1_TokenUserValidationRule(ref),
+		configv1.TopologyState{}.OpenAPIModelName():                                            schema_openshift_api_config_v1_TopologyState(ref),
+		configv1.TopologyTransition{}.OpenAPIModelName():                                       schema_openshift_api_config_v1_TopologyTransition(ref),
+		configv1.TopologyTransitionStatus{}.OpenAPIModelName():                                 schema_openshift_api_config_v1_TopologyTransitionStatus(ref),
 		configv1.Update{}.OpenAPIModelName():                                                   schema_openshift_api_config_v1_Update(ref),
 		configv1.UpdateHistory{}.OpenAPIModelName():                                            schema_openshift_api_config_v1_UpdateHistory(ref),
 		configv1.UsernameClaimMapping{}.OpenAPIModelName():                                     schema_openshift_api_config_v1_UsernameClaimMapping(ref),
@@ -16901,6 +16904,12 @@ func schema_openshift_api_config_v1_InfrastructureStatus(ref common.ReferenceCal
 							Format:      "",
 						},
 					},
+					"topologyTransitionStatus": {
+						SchemaProps: spec.SchemaProps{
+							Description: "topologyTransitionStatus reports evaluations of supported topology transitions and the status of a requested transition, if any. It is omitted until the topology controller reports transition status.",
+							Ref:         ref(configv1.TopologyTransitionStatus{}.OpenAPIModelName()),
+						},
+					},
 					"cpuPartitioning": {
 						SchemaProps: spec.SchemaProps{
 							Description: "cpuPartitioning expresses if CPU partitioning is a currently enabled feature in the cluster. CPU Partitioning means that this cluster can support partitioning workloads to specific CPU Sets. Valid values are \"None\" and \"AllNodes\". When omitted, the default value is \"None\". The default value of \"None\" indicates that no nodes will be setup with CPU partitioning. The \"AllNodes\" value indicates that all nodes have been setup with CPU partitioning, and can then be further configured via the PerformanceProfile API.",
@@ -16913,7 +16922,7 @@ func schema_openshift_api_config_v1_InfrastructureStatus(ref common.ReferenceCal
 			},
 		},
 		Dependencies: []string{
-			configv1.PlatformStatus{}.OpenAPIModelName()},
+			configv1.PlatformStatus{}.OpenAPIModelName(), configv1.TopologyTransitionStatus{}.OpenAPIModelName()},
 	}
 }
 
@@ -22670,6 +22679,141 @@ func schema_openshift_api_config_v1_TokenUserValidationRule(ref common.Reference
 				Required: []string{"expression", "message"},
 			},
 		},
+	}
+}
+
+func schema_openshift_api_config_v1_TopologyState(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "TopologyState describes the control-plane and infrastructure topology at one end of a topology transition.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"controlPlaneTopology": {
+						SchemaProps: spec.SchemaProps{
+							Description: "controlPlaneTopology is the topology of the control-plane nodes. Valid values are SingleReplica and HighlyAvailable. When set to SingleReplica, operators avoid spending resources for high availability. When set to HighlyAvailable, operators configure high availability as much as possible. controlPlaneTopology is required.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"infrastructureTopology": {
+						SchemaProps: spec.SchemaProps{
+							Description: "infrastructureTopology is the topology of infrastructure services. Valid values are SingleReplica and HighlyAvailable. When set to SingleReplica, operators avoid spending resources for high availability. When set to HighlyAvailable, operators configure high availability as much as possible. infrastructureTopology is required.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+				},
+				Required: []string{"controlPlaneTopology", "infrastructureTopology"},
+			},
+		},
+	}
+}
+
+func schema_openshift_api_config_v1_TopologyTransition(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"source": {
+						SchemaProps: spec.SchemaProps{
+							Description: "source is the control-plane and infrastructure topology this transition was evaluated from. It may differ from the current topology while status is being refreshed. source is required.",
+							Default:     map[string]interface{}{},
+							Ref:         ref(configv1.TopologyState{}.OpenAPIModelName()),
+						},
+					},
+					"target": {
+						SchemaProps: spec.SchemaProps{
+							Description: "target is the control-plane and infrastructure topology this transition would move to. target is required.",
+							Default:     map[string]interface{}{},
+							Ref:         ref(configv1.TopologyState{}.OpenAPIModelName()),
+						},
+					},
+					"evaluations": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-map-keys": []interface{}{
+									"type",
+								},
+								"x-kubernetes-list-type": "map",
+							},
+						},
+						SchemaProps: spec.SchemaProps{
+							Description: "evaluations contains the availability condition for this transition and conditions for the checks run against the cluster to determine availability.\n\nTopologyTransitionAvailableConditionType is required; other condition types report individual checks. Between one and 32 conditions must be present.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref(metav1.Condition{}.OpenAPIModelName()),
+									},
+								},
+							},
+						},
+					},
+				},
+				Required: []string{"source", "target", "evaluations"},
+			},
+		},
+		Dependencies: []string{
+			configv1.TopologyState{}.OpenAPIModelName(), metav1.Condition{}.OpenAPIModelName()},
+	}
+}
+
+func schema_openshift_api_config_v1_TopologyTransitionStatus(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "TopologyTransitionStatus reports availability of each type of topology transition and contains the status of any initiated transition. When present, it must include conditions or transitions; either list may be empty.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"conditions": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-map-keys": []interface{}{
+									"type",
+								},
+								"x-kubernetes-list-type": "map",
+							},
+						},
+						SchemaProps: spec.SchemaProps{
+							Description: "conditions provides information on topology transition progress and the evaluation of supported transition types. When omitted, or when the TopologyTransitionsEvaluated condition is absent, transitions is stale.\n\nTopologyTransitionsEvaluatedConditionType and TopologyTransitionCompletedConditionType are the only valid conditions at this scope. At most two conditions can be present.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref(metav1.Condition{}.OpenAPIModelName()),
+									},
+								},
+							},
+						},
+					},
+					"transitions": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-type": "atomic",
+							},
+						},
+						SchemaProps: spec.SchemaProps{
+							Description: "transitions contains each supported transition type and its availability. An empty or omitted list means no transition evaluations have been reported. Entries are stale when the TopologyTransitionsEvaluated condition is absent.\n\nAt most one transition is supported currently (SNO to HA Compact)",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref(configv1.TopologyTransition{}.OpenAPIModelName()),
+									},
+								},
+							},
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			configv1.TopologyTransition{}.OpenAPIModelName(), metav1.Condition{}.OpenAPIModelName()},
 	}
 }
 

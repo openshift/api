@@ -16783,7 +16783,7 @@
       ],
       "properties": {
         "conditions": {
-          "description": "conditions represent the observations of the alert agent's current state. Known condition types are: \"Healthy\", \"Configured\", \"Available\". The \"Healthy\" condition is an aggregate that tracks the overall health of the alert agent. The \"Configured\" condition tracks whether the alert agent is registered in the CIB as expected. The \"Available\" condition tracks whether the agent's full delivery chain is present on this node. Each of these conditions is required, so the array must contain at least 3 items.",
+          "description": "conditions represent the observations of the alert agent's current state. Known condition types are: \"Healthy\", \"Configured\", \"Available\". The \"Healthy\" condition is an aggregate that tracks the overall health of the alert agent. The \"Configured\" condition tracks whether the alert agent is registered in the CIB as expected. The \"Available\" condition tracks whether the agent's full delivery chain is present on this node. Each of these conditions is required, so the array must contain at least 3 items. The array must contain no more than 8 items.",
           "type": "array",
           "items": {
             "default": {},
@@ -16795,7 +16795,7 @@
           "x-kubernetes-list-type": "map"
         },
         "name": {
-          "description": "name is the name of the alert agent. Valid values are \"TaintAlertAgent\" and \"UntaintAlertAgent\".\n\nPossible enum values:\n - `\"TaintAlertAgent\"` is the alert agent that taints a node after it is fenced.\n - `\"UntaintAlertAgent\"` is the alert agent that removes a node's taint once it rejoins the cluster.",
+          "description": "name is the name of the alert agent. Valid values are \"TaintAlertAgent\" and \"UntaintAlertAgent\". The TaintAlertAgent taints a node after it is fenced. The UntaintAlertAgent removes a node's taint once it rejoins the cluster.\n\nPossible enum values:\n - `\"TaintAlertAgent\"` is the alert agent that taints a node after it is fenced.\n - `\"UntaintAlertAgent\"` is the alert agent that removes a node's taint once it rejoins the cluster.",
           "type": "string",
           "enum": [
             "TaintAlertAgent",
@@ -16887,7 +16887,7 @@
           "x-kubernetes-list-type": "atomic"
         },
         "alertAgents": {
-          "description": "alertAgents contains the status of pacemaker alert agents tracked for this node. Unlike resources, an alert agent is not managed by pacemaker: it is a script registered in the CIB's <alerts> section, delivered to this node independently by MCO. Valid alert agent names are \"TaintAlertAgent\" and \"UntaintAlertAgent\". Names must be unique within this array. If this array is non-empty, both TaintAlertAgent and UntaintAlertAgent must be present. Unlike resources and fencingAgents, this field is optional rather than required: it is omitted by status collector versions that predate alert-agent tracking, so it cannot be required without breaking status updates from those collectors during an upgrade.",
+          "description": "alertAgents contains the status of pacemaker alert agents tracked for this node. Unlike resources, an alert agent is not managed by pacemaker: it is a script registered in the CIB's <alerts> section, delivered to this node independently by MCO. Valid alert agent names are \"TaintAlertAgent\" and \"UntaintAlertAgent\". Names must be unique within this array. If this array is non-empty, both TaintAlertAgent and UntaintAlertAgent must be present. Unlike resources and fencingAgents, this field is optional rather than required: it is omitted by status collector versions that predate alert-agent tracking, so it cannot be required without breaking status updates from those collectors during an upgrade. The array must contain no more than 8 items.",
           "type": "array",
           "items": {
             "default": {},

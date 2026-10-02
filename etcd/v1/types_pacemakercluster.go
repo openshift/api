@@ -739,6 +739,7 @@ type PacemakerClusterNodeStatus struct {
 	// Unlike resources and fencingAgents, this field is optional rather than required: it is omitted
 	// by status collector versions that predate alert-agent tracking, so it cannot be required without
 	// breaking status updates from those collectors during an upgrade.
+	// The array must contain no more than 8 items.
 	// +listType=map
 	// +listMapKey=name
 	// +kubebuilder:validation:MinItems=0
@@ -857,6 +858,7 @@ type PacemakerClusterAlertAgentStatus struct {
 	// The "Configured" condition tracks whether the alert agent is registered in the CIB as expected.
 	// The "Available" condition tracks whether the agent's full delivery chain is present on this node.
 	// Each of these conditions is required, so the array must contain at least 3 items.
+	// The array must contain no more than 8 items.
 	// +listType=map
 	// +listMapKey=type
 	// +kubebuilder:validation:MinItems=3
@@ -869,6 +871,8 @@ type PacemakerClusterAlertAgentStatus struct {
 
 	// name is the name of the alert agent.
 	// Valid values are "TaintAlertAgent" and "UntaintAlertAgent".
+	// The TaintAlertAgent taints a node after it is fenced.
+	// The UntaintAlertAgent removes a node's taint once it rejoins the cluster.
 	// +required
 	Name PacemakerClusterAlertAgentName `json:"name,omitempty"`
 }

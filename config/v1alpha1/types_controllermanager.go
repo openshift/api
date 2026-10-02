@@ -34,40 +34,44 @@ type ControllerManager struct {
 // ControllerManagerSpec defines the desired state of the controller managers
 // +kubebuilder:validation:MinProperties=0
 type ControllerManagerSpec struct {
-	// forceDetachOnTimeout controls whether kube-controller-manager force detaches
-	// volumes from a node that is not healthy once the volumes have not been
-	// unmounted within the maximum unmount time (6 minutes).
-	// Valid values are "Enabled" and "Disabled".
-	// When set to "Enabled", volumes are force detached from unhealthy nodes after
-	// the maximum unmount time, so that workloads using them can start on other nodes.
-	// Force detaching a volume that is still in use by the node can corrupt its data.
-	// When set to "Disabled", volumes are not force detached based on the maximum
-	// unmount time. Volumes remain attached to an unhealthy node until it recovers,
-	// or until the node is tainted with "node.kubernetes.io/out-of-service"
-	// as part of the non-graceful node shutdown procedure.
+	// volumeForceDetach controls the conditions under which kube-controller-manager
+	// force detaches volumes from a node that is not healthy.
+	// Volumes are always force detached when a node is marked out-of-service via the
+	// "node.kubernetes.io/out-of-service" taint, as part of the non-graceful node
+	// shutdown procedure. This field controls whether force detach is also triggered
+	// when the maximum unmount time is exceeded (6 minutes).
+	// Valid values are "OnUnmountTimeout" and "OnOutOfServiceTaintOnly".
+	// When set to "OnUnmountTimeout", volumes are force detached from unhealthy nodes
+	// once the maximum unmount time is exceeded, so that workloads using them can start
+	// on other nodes. Force detaching a volume that is still in use by the node can
+	// corrupt its data.
+	// When set to "OnOutOfServiceTaintOnly", volumes are force detached only via the
+	// out-of-service taint, and remain attached to an unhealthy node until it recovers
+	// or the "node.kubernetes.io/out-of-service" taint is applied as part of the
+	// non-graceful node shutdown procedure.
 	// When omitted, this means the user has no opinion and the platform is left
 	// to choose a reasonable default, which is subject to change over time.
-	// The current default is "Enabled".
+	// The current default is "OnUnmountTimeout".
 	// Changing this field causes kube-controller-manager to be redeployed with the new setting.
 	// Rollout progress is reported by the kube-controller-manager cluster operator.
 	// +optional
-	ForceDetachOnTimeout ForceDetachOnTimeoutPolicy `json:"forceDetachOnTimeout,omitempty"`
+	VolumeForceDetach VolumeForceDetachPolicy `json:"volumeForceDetach,omitempty"`
 }
 
-// ForceDetachOnTimeoutPolicy describes the policy for force detaching volumes
-// when the maximum unmount time is exceeded.
-// Valid values are "Enabled" and "Disabled".
+// VolumeForceDetachPolicy describes the conditions under which volumes are
+// force detached from an unhealthy node.
+// Valid values are "OnUnmountTimeout" and "OnOutOfServiceTaintOnly".
 // +enum
-// +kubebuilder:validation:Enum=Enabled;Disabled
-type ForceDetachOnTimeoutPolicy string
+// +kubebuilder:validation:Enum=OnUnmountTimeout;OnOutOfServiceTaintOnly
+type VolumeForceDetachPolicy string
 
 const (
-	// ForceDetachOnTimeoutEnabled allows kube-controller-manager to force detach
-	// volumes from unhealthy nodes once the maximum unmount time is exceeded.
-	ForceDetachOnTimeoutEnabled ForceDetachOnTimeoutPolicy = "Enabled"
-	// ForceDetachOnTimeoutDisabled prevents kube-controller-manager from force
-	// detaching volumes based on the maximum unmount time.
-	ForceDetachOnTimeoutDisabled ForceDetachOnTimeoutPolicy = "Disabled"
+	// VolumeForceDetachOnUnmountTimeout force detaches volumes from unhealthy nodes
+	// once the maximum unmount time is exceeded.
+	VolumeForceDetachOnUnmountTimeout VolumeForceDetachPolicy = "OnUnmountTimeout"
+	// VolumeForceDetachOnOutOfServiceTaintOnly force detaches volumes only when
+	// the node is marked out-of-service, never based on the maximum unmount time.
+	VolumeForceDetachOnOutOfServiceTaintOnly VolumeForceDetachPolicy = "OnOutOfServiceTaintOnly"
 )
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object

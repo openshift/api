@@ -33,50 +33,50 @@ tests:
         metadata:
           name: cluster
       expectedError: "spec: Required value"
-    - name: Should be able to create with force detach disabled
+    - name: Should be able to create with force detach limited to the out-of-service taint
       initial: |
         apiVersion: config.openshift.io/v1alpha1
         kind: ControllerManager
         metadata:
           name: cluster
         spec:
-          forceDetachOnTimeout: Disabled
+          volumeForceDetach: OnOutOfServiceTaintOnly
       expected: |
         apiVersion: config.openshift.io/v1alpha1
         kind: ControllerManager
         metadata:
           name: cluster
         spec:
-          forceDetachOnTimeout: Disabled
-    - name: Should reject unsupported value of forceDetachOnTimeout
+          volumeForceDetach: OnOutOfServiceTaintOnly
+    - name: Should reject unsupported value of volumeForceDetach
       initial: |
         apiVersion: config.openshift.io/v1alpha1
         kind: ControllerManager
         metadata:
           name: cluster
         spec:
-          forceDetachOnTimeout: INVALID
-      expectedError: "spec.forceDetachOnTimeout: Unsupported value: \"INVALID\": supported values: \"Enabled\", \"Disabled\""
+          volumeForceDetach: INVALID
+      expectedError: "spec.volumeForceDetach: Unsupported value: \"INVALID\": supported values: \"OnUnmountTimeout\", \"OnOutOfServiceTaintOnly\""
   onUpdate:
-    - name: Enabled to Disabled
+    - name: OnUnmountTimeout to OnOutOfServiceTaintOnly
       initial: |
         apiVersion: config.openshift.io/v1alpha1
         kind: ControllerManager
         metadata:
           name: cluster
         spec:
-          forceDetachOnTimeout: Enabled
+          volumeForceDetach: OnUnmountTimeout
       updated: |
         apiVersion: config.openshift.io/v1alpha1
         kind: ControllerManager
         metadata:
           name: cluster
         spec:
-          forceDetachOnTimeout: Disabled
+          volumeForceDetach: OnOutOfServiceTaintOnly
       expected: |
         apiVersion: config.openshift.io/v1alpha1
         kind: ControllerManager
         metadata:
           name: cluster
         spec:
-          forceDetachOnTimeout: Disabled
+          volumeForceDetach: OnOutOfServiceTaintOnly

@@ -50,27 +50,31 @@ spec:
               This field is required but the spec may be empty to express no opinion.
             minProperties: 0
             properties:
-              forceDetachOnTimeout:
+              volumeForceDetach:
                 description: |-
-                  forceDetachOnTimeout controls whether kube-controller-manager force detaches
-                  volumes from a node that is not healthy once the volumes have not been
-                  unmounted within the maximum unmount time (6 minutes).
-                  Valid values are "Enabled" and "Disabled".
-                  When set to "Enabled", volumes are force detached from unhealthy nodes after
-                  the maximum unmount time, so that workloads using them can start on other nodes.
-                  Force detaching a volume that is still in use by the node can corrupt its data.
-                  When set to "Disabled", volumes are not force detached based on the maximum
-                  unmount time. Volumes remain attached to an unhealthy node until it recovers,
-                  or until the node is tainted with "node.kubernetes.io/out-of-service"
-                  as part of the non-graceful node shutdown procedure.
+                  volumeForceDetach controls the conditions under which kube-controller-manager
+                  force detaches volumes from a node that is not healthy.
+                  Volumes are always force detached when a node is marked out-of-service via the
+                  "node.kubernetes.io/out-of-service" taint, as part of the non-graceful node
+                  shutdown procedure. This field controls whether force detach is also triggered
+                  when the maximum unmount time is exceeded (6 minutes).
+                  Valid values are "OnUnmountTimeout" and "OnOutOfServiceTaintOnly".
+                  When set to "OnUnmountTimeout", volumes are force detached from unhealthy nodes
+                  once the maximum unmount time is exceeded, so that workloads using them can start
+                  on other nodes. Force detaching a volume that is still in use by the node can
+                  corrupt its data.
+                  When set to "OnOutOfServiceTaintOnly", volumes are force detached only via the
+                  out-of-service taint, and remain attached to an unhealthy node until it recovers
+                  or the "node.kubernetes.io/out-of-service" taint is applied as part of the
+                  non-graceful node shutdown procedure.
                   When omitted, this means the user has no opinion and the platform is left
                   to choose a reasonable default, which is subject to change over time.
-                  The current default is "Enabled".
+                  The current default is "OnUnmountTimeout".
                   Changing this field causes kube-controller-manager to be redeployed with the new setting.
                   Rollout progress is reported by the kube-controller-manager cluster operator.
                 enum:
-                - Enabled
-                - Disabled
+                - OnUnmountTimeout
+                - OnOutOfServiceTaintOnly
                 type: string
             type: object
         required:

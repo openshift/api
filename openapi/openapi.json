@@ -35488,6 +35488,11 @@
           "description": "routeAdvertisements determines if the functionality to advertise cluster network routes through a dynamic routing protocol, such as BGP, is enabled or not. This functionality is configured through the ovn-kubernetes RouteAdvertisements CRD. Requires the 'FRR' routing capability provider to be enabled as an additional routing capability. Allowed values are \"Enabled\", \"Disabled\" and ommited. When omitted, this means the user has no opinion and the platform is left to choose reasonable defaults. These defaults are subject to change over time. The current default is \"Disabled\".",
           "type": "string"
         },
+        "startupReadinessTimeoutSeconds": {
+          "description": "startupReadinessTimeoutSeconds is the number of seconds ovnkube-node waits at startup for its node's gateway and management port to be created in OVN before it exits and restarts. Clusters with many user-defined networks or network policies may need a higher value, because a newly added node creates them only after it has synced every network. When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time. The current default is 300 seconds. When set, the value must be between 1 and 3600 seconds, inclusive. Changing this value restarts the ovnkube-node pods.",
+          "type": "integer",
+          "format": "int32"
+        },
         "transport": {
           "description": "transport sets the transport mode for pods on the default network. Allowed values are \"NoOverlay\" and \"Geneve\". \"NoOverlay\" avoids tunnel encapsulation, routing pod traffic directly between nodes. \"Geneve\" encapsulates pod traffic using Geneve tunnels between nodes. When omitted, this means the user has no opinion and the platform chooses a reasonable default which is subject to change over time. The current default is \"Geneve\". \"NoOverlay\" can only be set at installation time and cannot be changed afterwards. \"Geneve\" may be set explicitly at any time to lock in the current default.",
           "type": "string"

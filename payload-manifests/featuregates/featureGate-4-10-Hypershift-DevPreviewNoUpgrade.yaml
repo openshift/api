@@ -346,6 +346,9 @@
                         "name": "OSStreams"
                     },
                     {
+                        "name": "OVNKubernetesStartupReadinessTimeout"
+                    },
+                    {
                         "name": "OVNKubernetesUplinkMode"
                     },
                     {

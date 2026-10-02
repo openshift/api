@@ -61682,6 +61682,13 @@ func schema_openshift_api_operator_v1_OVNKubernetesConfig(ref common.ReferenceCa
 							Ref:         ref(operatorv1.BGPManagedConfig{}.OpenAPIModelName()),
 						},
 					},
+					"startupReadinessTimeoutSeconds": {
+						SchemaProps: spec.SchemaProps{
+							Description: "startupReadinessTimeoutSeconds is the number of seconds ovnkube-node waits at startup for its node's gateway and management port to be created in OVN before it exits and restarts. Clusters with many user-defined networks or network policies may need a higher value, because a newly added node creates them only after it has synced every network. When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time. The current default is 300 seconds. When set, the value must be between 1 and 3600 seconds, inclusive. Changing this value restarts the ovnkube-node pods.",
+							Type:        []string{"integer"},
+							Format:      "int32",
+						},
+					},
 				},
 			},
 		},

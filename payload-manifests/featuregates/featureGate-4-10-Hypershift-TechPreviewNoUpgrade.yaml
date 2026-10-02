@@ -355,6 +355,9 @@
                         "name": "OSStreams"
                     },
                     {
+                        "name": "OVNKubernetesStartupReadinessTimeout"
+                    },
+                    {
                         "name": "OVNObservability"
                     },
                     {

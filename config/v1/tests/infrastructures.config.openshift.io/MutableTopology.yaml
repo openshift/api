@@ -64,6 +64,55 @@ tests:
         spec:
           controlPlaneTopology: HighlyAvailableArbiter
       expectedError: 'spec.controlPlaneTopology: Unsupported value: "HighlyAvailableArbiter": supported values: "HighlyAvailable", "SingleReplica"'
+    - name: Should be able to create Infrastructure with spec infrastructureTopology set to HighlyAvailable
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        spec:
+          infrastructureTopology: HighlyAvailable
+      expected: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        spec:
+          infrastructureTopology: HighlyAvailable
+    - name: Should be able to create Infrastructure with spec infrastructureTopology set to SingleReplica
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        spec:
+          infrastructureTopology: SingleReplica
+      expected: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        spec:
+          infrastructureTopology: SingleReplica
+    - name: Should not allow creating Infrastructure with spec infrastructureTopology set to an invalid value
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        spec:
+          infrastructureTopology: InvalidValue
+      expectedError: 'spec.infrastructureTopology: Unsupported value: "InvalidValue": supported values: "HighlyAvailable", "SingleReplica"'
+    - name: Should not allow creating Infrastructure with spec infrastructureTopology set to External
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        spec:
+          infrastructureTopology: External
+      expectedError: 'spec.infrastructureTopology: Unsupported value: "External": supported values: "HighlyAvailable", "SingleReplica"'
+    - name: Should be able to create Infrastructure with both controlPlaneTopology and infrastructureTopology set
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        spec:
+          controlPlaneTopology: HighlyAvailable
+          infrastructureTopology: HighlyAvailable
+      expected: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        spec:
+          controlPlaneTopology: HighlyAvailable
+          infrastructureTopology: HighlyAvailable
   onUpdate:
     - name: Should allow updating spec controlPlaneTopology from SingleReplica to HighlyAvailable when status controlPlaneTopology is SingleReplica
       initial: |
@@ -259,3 +308,307 @@ tests:
         spec:
           controlPlaneTopology: InvalidValue
       expectedError: 'spec.controlPlaneTopology: Unsupported value: "InvalidValue": supported values: "HighlyAvailable", "SingleReplica"'
+    - name: Should allow setting spec infrastructureTopology when not previously set
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        spec: {}
+        status:
+          controlPlaneTopology: HighlyAvailable
+          infrastructureTopology: SingleReplica
+          cpuPartitioning: None
+      updated: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        spec:
+          infrastructureTopology: HighlyAvailable
+        status:
+          controlPlaneTopology: HighlyAvailable
+          infrastructureTopology: SingleReplica
+          cpuPartitioning: None
+      expected: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        spec:
+          infrastructureTopology: HighlyAvailable
+        status:
+          controlPlaneTopology: HighlyAvailable
+          infrastructureTopology: SingleReplica
+          cpuPartitioning: None
+    - name: Should allow setting spec infrastructureTopology to match status
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        spec: {}
+        status:
+          controlPlaneTopology: HighlyAvailable
+          infrastructureTopology: HighlyAvailable
+          cpuPartitioning: None
+      updated: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        spec:
+          infrastructureTopology: HighlyAvailable
+        status:
+          controlPlaneTopology: HighlyAvailable
+          infrastructureTopology: HighlyAvailable
+          cpuPartitioning: None
+      expected: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        spec:
+          infrastructureTopology: HighlyAvailable
+        status:
+          controlPlaneTopology: HighlyAvailable
+          infrastructureTopology: HighlyAvailable
+          cpuPartitioning: None
+    - name: Should allow changing spec infrastructureTopology when no transition is in progress
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        spec:
+          infrastructureTopology: SingleReplica
+        status:
+          controlPlaneTopology: HighlyAvailable
+          infrastructureTopology: SingleReplica
+          cpuPartitioning: None
+      updated: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        spec:
+          infrastructureTopology: HighlyAvailable
+        status:
+          controlPlaneTopology: HighlyAvailable
+          infrastructureTopology: SingleReplica
+          cpuPartitioning: None
+      expected: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        spec:
+          infrastructureTopology: HighlyAvailable
+        status:
+          controlPlaneTopology: HighlyAvailable
+          infrastructureTopology: SingleReplica
+          cpuPartitioning: None
+    - name: Should allow setting spec infrastructureTopology to any valid enum value without direction restriction
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        spec:
+          infrastructureTopology: HighlyAvailable
+        status:
+          controlPlaneTopology: HighlyAvailable
+          infrastructureTopology: HighlyAvailable
+          cpuPartitioning: None
+      updated: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        spec:
+          infrastructureTopology: SingleReplica
+        status:
+          controlPlaneTopology: HighlyAvailable
+          infrastructureTopology: HighlyAvailable
+          cpuPartitioning: None
+      expected: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        spec:
+          infrastructureTopology: SingleReplica
+        status:
+          controlPlaneTopology: HighlyAvailable
+          infrastructureTopology: HighlyAvailable
+          cpuPartitioning: None
+    - name: Should allow keeping spec infrastructureTopology unchanged
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        spec:
+          infrastructureTopology: HighlyAvailable
+        status:
+          controlPlaneTopology: HighlyAvailable
+          infrastructureTopology: SingleReplica
+          cpuPartitioning: None
+      updated: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        spec:
+          infrastructureTopology: HighlyAvailable
+        status:
+          controlPlaneTopology: HighlyAvailable
+          infrastructureTopology: SingleReplica
+          cpuPartitioning: None
+      expected: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        spec:
+          infrastructureTopology: HighlyAvailable
+        status:
+          controlPlaneTopology: HighlyAvailable
+          infrastructureTopology: SingleReplica
+          cpuPartitioning: None
+    - name: Should allow removing spec infrastructureTopology
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        spec:
+          infrastructureTopology: HighlyAvailable
+        status:
+          controlPlaneTopology: HighlyAvailable
+          infrastructureTopology: SingleReplica
+          cpuPartitioning: None
+      updated: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        spec: {}
+        status:
+          controlPlaneTopology: HighlyAvailable
+          infrastructureTopology: SingleReplica
+          cpuPartitioning: None
+      expected: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        spec: {}
+        status:
+          controlPlaneTopology: HighlyAvailable
+          infrastructureTopology: SingleReplica
+          cpuPartitioning: None
+    - name: Should not allow updating spec infrastructureTopology to an invalid value
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        spec:
+          infrastructureTopology: HighlyAvailable
+      updated: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        spec:
+          infrastructureTopology: InvalidValue
+      expectedError: 'spec.infrastructureTopology: Unsupported value: "InvalidValue": supported values: "HighlyAvailable", "SingleReplica"'
+    - name: Should not allow changing spec controlPlaneTopology while infrastructure topology transition is in progress
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        spec:
+          controlPlaneTopology: SingleReplica
+          infrastructureTopology: HighlyAvailable
+        status:
+          controlPlaneTopology: SingleReplica
+          infrastructureTopology: SingleReplica
+          cpuPartitioning: None
+      updated: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        spec:
+          controlPlaneTopology: HighlyAvailable
+          infrastructureTopology: HighlyAvailable
+        status:
+          controlPlaneTopology: SingleReplica
+          infrastructureTopology: SingleReplica
+          cpuPartitioning: None
+      expectedError: "spec.controlPlaneTopology is immutable while a topology transition is in progress"
+    - name: Should not allow changing spec infrastructureTopology while control plane topology transition is in progress
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        spec:
+          controlPlaneTopology: HighlyAvailable
+          infrastructureTopology: SingleReplica
+        status:
+          controlPlaneTopology: SingleReplica
+          infrastructureTopology: SingleReplica
+          cpuPartitioning: None
+      updated: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        spec:
+          controlPlaneTopology: HighlyAvailable
+          infrastructureTopology: HighlyAvailable
+        status:
+          controlPlaneTopology: SingleReplica
+          infrastructureTopology: SingleReplica
+          cpuPartitioning: None
+      expectedError: "spec.infrastructureTopology is immutable while a topology transition is in progress"
+    - name: Should not allow changing spec infrastructureTopology while infrastructure topology transition is already in progress
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        spec:
+          controlPlaneTopology: HighlyAvailable
+          infrastructureTopology: HighlyAvailable
+        status:
+          controlPlaneTopology: HighlyAvailable
+          infrastructureTopology: SingleReplica
+          cpuPartitioning: None
+      updated: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        spec:
+          controlPlaneTopology: HighlyAvailable
+          infrastructureTopology: SingleReplica
+        status:
+          controlPlaneTopology: HighlyAvailable
+          infrastructureTopology: SingleReplica
+          cpuPartitioning: None
+      expectedError: "spec.infrastructureTopology is immutable while a topology transition is in progress"
+    - name: Should allow setting both topology fields in a single write when no transition is in progress
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        spec:
+          controlPlaneTopology: SingleReplica
+          infrastructureTopology: SingleReplica
+        status:
+          controlPlaneTopology: SingleReplica
+          infrastructureTopology: SingleReplica
+          cpuPartitioning: None
+      updated: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        spec:
+          controlPlaneTopology: HighlyAvailable
+          infrastructureTopology: HighlyAvailable
+        status:
+          controlPlaneTopology: SingleReplica
+          infrastructureTopology: SingleReplica
+          cpuPartitioning: None
+      expected: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        spec:
+          controlPlaneTopology: HighlyAvailable
+          infrastructureTopology: HighlyAvailable
+        status:
+          controlPlaneTopology: SingleReplica
+          infrastructureTopology: SingleReplica
+          cpuPartitioning: None
+    - name: Should allow keeping both topology fields unchanged during a transition
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        spec:
+          controlPlaneTopology: HighlyAvailable
+          infrastructureTopology: HighlyAvailable
+        status:
+          controlPlaneTopology: SingleReplica
+          infrastructureTopology: SingleReplica
+          cpuPartitioning: None
+      updated: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        spec:
+          controlPlaneTopology: HighlyAvailable
+          infrastructureTopology: HighlyAvailable
+        status:
+          controlPlaneTopology: SingleReplica
+          infrastructureTopology: SingleReplica
+          cpuPartitioning: None
+      expected: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        spec:
+          controlPlaneTopology: HighlyAvailable
+          infrastructureTopology: HighlyAvailable
+        status:
+          controlPlaneTopology: SingleReplica
+          infrastructureTopology: SingleReplica
+          cpuPartitioning: None

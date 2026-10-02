@@ -20,6 +20,8 @@ import (
 // +kubebuilder:subresource:status
 // +kubebuilder:metadata:annotations=release.openshift.io/bootstrap-required=true
 // +openshift:validation:FeatureGateAwareXValidation:featureGate=MutableTopology,rule="!has(self.spec.controlPlaneTopology) || (has(oldSelf.spec.controlPlaneTopology) && self.spec.controlPlaneTopology == oldSelf.spec.controlPlaneTopology) || (has(self.status.controlPlaneTopology) && self.spec.controlPlaneTopology == self.status.controlPlaneTopology) || (has(self.status.controlPlaneTopology) && self.status.controlPlaneTopology == 'SingleReplica' && self.spec.controlPlaneTopology == 'HighlyAvailable')",message="spec.controlPlaneTopology must match status.controlPlaneTopology or be set to HighlyAvailable when status.controlPlaneTopology is SingleReplica"
+// +openshift:validation:FeatureGateAwareXValidation:featureGate=MutableTopology,rule="!has(self.spec.controlPlaneTopology) || !has(oldSelf.spec.controlPlaneTopology) || self.spec.controlPlaneTopology == oldSelf.spec.controlPlaneTopology || (oldSelf.spec.controlPlaneTopology == oldSelf.status.controlPlaneTopology && (!has(oldSelf.spec.infrastructureTopology) || oldSelf.spec.infrastructureTopology == oldSelf.status.infrastructureTopology))",message="spec.controlPlaneTopology is immutable while a topology transition is in progress"
+// +openshift:validation:FeatureGateAwareXValidation:featureGate=MutableTopology,rule="!has(self.spec.infrastructureTopology) || !has(oldSelf.spec.infrastructureTopology) || self.spec.infrastructureTopology == oldSelf.spec.infrastructureTopology || ((!has(oldSelf.spec.controlPlaneTopology) || oldSelf.spec.controlPlaneTopology == oldSelf.status.controlPlaneTopology) && oldSelf.spec.infrastructureTopology == oldSelf.status.infrastructureTopology)",message="spec.infrastructureTopology is immutable while a topology transition is in progress"
 type Infrastructure struct {
 	metav1.TypeMeta `json:",inline"`
 
@@ -71,6 +73,26 @@ type InfrastructureSpec struct {
 	// +kubebuilder:validation:Enum=HighlyAvailable;SingleReplica
 	// +optional
 	ControlPlaneTopology TopologyMode `json:"controlPlaneTopology,omitempty"`
+
+	// infrastructureTopology expresses the desired topology for infrastructure
+	// services that do not run on control plane nodes, indicating how
+	// infrastructure workloads are distributed across nodes.
+	//
+	// When omitted, no topology transition override has been expressed.
+	// When the MutableTopology feature gate is enabled, the cluster-config-operator
+	// populates this field to match status.infrastructureTopology if it is omitted.
+	// Once set, the field represents the desired topology state.
+	//
+	// When the value differs from status.infrastructureTopology, the topology
+	// transition controller in cluster-config-operator evaluates whether the
+	// transition is allowed based on the available transitions list. Transition
+	// eligibility is enforced by the cluster-config-operator, not by API-level
+	// validation rules.
+	//
+	// +openshift:enable:FeatureGate=MutableTopology
+	// +kubebuilder:validation:Enum=HighlyAvailable;SingleReplica
+	// +optional
+	InfrastructureTopology TopologyMode `json:"infrastructureTopology,omitempty"`
 }
 
 // InfrastructureStatus describes the infrastructure the cluster is leveraging.

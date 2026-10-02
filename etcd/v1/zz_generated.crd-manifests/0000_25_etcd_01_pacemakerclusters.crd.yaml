@@ -142,7 +142,9 @@ spec:
                 items:
                   description: |-
                     PacemakerClusterNodeStatus represents the status of a single node in the pacemaker cluster including
-                    the node's conditions and the health of critical resources running on that node.
+                    the node's conditions and the health of critical resources running on that node. Once a status collector
+                    reports alertAgents for a node, later updates may not remove it, since the only reason it is optional is
+                    to tolerate collector versions that predate alert-agent tracking, not to allow it to disappear once observed.
                   properties:
                     addresses:
                       description: |-
@@ -186,6 +188,132 @@ spec:
                       minItems: 1
                       type: array
                       x-kubernetes-list-type: atomic
+                    alertAgents:
+                      description: |-
+                        alertAgents contains the status of pacemaker alert agents tracked for this node.
+                        Unlike resources, an alert agent is not managed by pacemaker: it is a script registered in the
+                        CIB's <alerts> section, delivered to this node independently by MCO. Valid alert agent names are
+                        "TaintAlertAgent" and "UntaintAlertAgent". Names must be unique within this array. If this array is
+                        non-empty, both TaintAlertAgent and UntaintAlertAgent must be present.
+                        Unlike resources and fencingAgents, this field is optional rather than required: it is omitted
+                        by status collector versions that predate alert-agent tracking, so it cannot be required without
+                        breaking status updates from those collectors during an upgrade.
+                        The array must contain no more than 8 items.
+                      items:
+                        description: |-
+                          PacemakerClusterAlertAgentStatus represents the status of a pacemaker alert agent tracked on a node.
+                          Unlike a pacemaker resource, an alert agent is registered in the CIB's <alerts> section rather than
+                          its <resources> section: pacemaker does not start, stop, monitor, or move it. Its delivery chain
+                          (script, helper script, systemd unit, sudoers entry) is delivered to each node independently by MCO.
+                        properties:
+                          conditions:
+                            description: |-
+                              conditions represent the observations of the alert agent's current state.
+                              Known condition types are: "Healthy", "Configured", "Available".
+                              The "Healthy" condition is an aggregate that tracks the overall health of the alert agent.
+                              The "Configured" condition tracks whether the alert agent is registered in the CIB as expected.
+                              The "Available" condition tracks whether the agent's full delivery chain is present on this node.
+                              Each of these conditions is required, so the array must contain at least 3 items.
+                              The array must contain no more than 8 items.
+                            items:
+                              description: Condition contains details for one aspect
+                                of the current state of this API Resource.
+                              properties:
+                                lastTransitionTime:
+                                  description: |-
+                                    lastTransitionTime is the last time the condition transitioned from one status to another.
+                                    This should be when the underlying condition changed.  If that is not known, then using the time when the API field changed is acceptable.
+                                  format: date-time
+                                  type: string
+                                message:
+                                  description: |-
+                                    message is a human readable message indicating details about the transition.
+                                    This may be an empty string.
+                                  maxLength: 32768
+                                  type: string
+                                observedGeneration:
+                                  description: |-
+                                    observedGeneration represents the .metadata.generation that the condition was set based upon.
+                                    For instance, if .metadata.generation is currently 12, but the .status.conditions[x].observedGeneration is 9, the condition is out of date
+                                    with respect to the current state of the instance.
+                                  format: int64
+                                  minimum: 0
+                                  type: integer
+                                reason:
+                                  description: |-
+                                    reason contains a programmatic identifier indicating the reason for the condition's last transition.
+                                    Producers of specific condition types may define expected values and meanings for this field,
+                                    and whether the values are considered a guaranteed API.
+                                    The value should be a CamelCase string.
+                                    This field may not be empty.
+                                  maxLength: 1024
+                                  minLength: 1
+                                  pattern: ^[A-Za-z]([A-Za-z0-9_,:]*[A-Za-z0-9_])?$
+                                  type: string
+                                status:
+                                  description: status of the condition, one of True,
+                                    False, Unknown.
+                                  enum:
+                                  - "True"
+                                  - "False"
+                                  - Unknown
+                                  type: string
+                                type:
+                                  description: type of condition in CamelCase or in
+                                    foo.example.com/CamelCase.
+                                  maxLength: 316
+                                  pattern: ^([a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*/)?(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])$
+                                  type: string
+                              required:
+                              - lastTransitionTime
+                              - message
+                              - reason
+                              - status
+                              - type
+                              type: object
+                            maxItems: 8
+                            minItems: 3
+                            type: array
+                            x-kubernetes-list-map-keys:
+                            - type
+                            x-kubernetes-list-type: map
+                            x-kubernetes-validations:
+                            - message: conditions must contain a condition of type
+                                Healthy
+                              rule: self.exists(c, c.type == 'Healthy')
+                            - message: conditions must contain a condition of type
+                                Configured
+                              rule: self.exists(c, c.type == 'Configured')
+                            - message: conditions must contain a condition of type
+                                Available
+                              rule: self.exists(c, c.type == 'Available')
+                          name:
+                            description: |-
+                              name is the name of the alert agent.
+                              Valid values are "TaintAlertAgent" and "UntaintAlertAgent".
+                              The TaintAlertAgent taints a node after it is fenced.
+                              The UntaintAlertAgent removes a node's taint once it rejoins the cluster.
+                            enum:
+                            - TaintAlertAgent
+                            - UntaintAlertAgent
+                            type: string
+                        required:
+                        - conditions
+                        - name
+                        type: object
+                      maxItems: 8
+                      minItems: 0
+                      type: array
+                      x-kubernetes-list-map-keys:
+                      - name
+                      x-kubernetes-list-type: map
+                      x-kubernetes-validations:
+                      - message: alert agent names must be unique
+                        rule: self.all(x, self.exists_one(y, x.name == y.name))
+                      - message: alert agents must contain both TaintAlertAgent and
+                          UntaintAlertAgent when present
+                        rule: size(self) == 0 || (self.exists(x, x.name == 'TaintAlertAgent')
+                          && self.exists(x, x.name == 'UntaintAlertAgent'))
                     conditions:
                       description: |-
                         conditions represent the observations of the node's current state.
@@ -201,6 +329,8 @@ spec:
                         The "FencingAvailable" condition tracks whether this node can be fenced by at least one healthy agent.
                         The "FencingHealthy" condition tracks whether all fencing agents for this node are healthy.
                         Each of these conditions is required, so the array must contain at least 9 items.
+                        An optional "AlertAgentsHealthy" condition (see NodeAlertAgentsHealthyConditionType) may also be
+                        present; it is not one of the required 9 and its absence does not affect validation.
                       items:
                         description: Condition contains details for one aspect of
                           the current state of this API Resource.
@@ -604,6 +734,9 @@ spec:
                   - nodeName
                   - resources
                   type: object
+                  x-kubernetes-validations:
+                  - message: alertAgents may not be removed once set
+                    rule: '!has(oldSelf.alertAgents) || has(self.alertAgents)'
                 maxItems: 5
                 minItems: 0
                 type: array

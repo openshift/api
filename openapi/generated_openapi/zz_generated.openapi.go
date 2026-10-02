@@ -1148,10 +1148,12 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		operatorv1.ConfigSpec{}.OpenAPIModelName():                                             schema_openshift_api_operator_v1_ConfigSpec(ref),
 		operatorv1.ConfigStatus{}.OpenAPIModelName():                                           schema_openshift_api_operator_v1_ConfigStatus(ref),
 		operatorv1.Console{}.OpenAPIModelName():                                                schema_openshift_api_operator_v1_Console(ref),
+		operatorv1.ConsoleConfigMapReference{}.OpenAPIModelName():                              schema_openshift_api_operator_v1_ConsoleConfigMapReference(ref),
 		operatorv1.ConsoleConfigRoute{}.OpenAPIModelName():                                     schema_openshift_api_operator_v1_ConsoleConfigRoute(ref),
 		operatorv1.ConsoleCustomization{}.OpenAPIModelName():                                   schema_openshift_api_operator_v1_ConsoleCustomization(ref),
 		operatorv1.ConsoleList{}.OpenAPIModelName():                                            schema_openshift_api_operator_v1_ConsoleList(ref),
 		operatorv1.ConsoleProviders{}.OpenAPIModelName():                                       schema_openshift_api_operator_v1_ConsoleProviders(ref),
+		operatorv1.ConsoleProxyConfig{}.OpenAPIModelName():                                     schema_openshift_api_operator_v1_ConsoleProxyConfig(ref),
 		operatorv1.ConsoleSpec{}.OpenAPIModelName():                                            schema_openshift_api_operator_v1_ConsoleSpec(ref),
 		operatorv1.ConsoleStatus{}.OpenAPIModelName():                                          schema_openshift_api_operator_v1_ConsoleStatus(ref),
 		operatorv1.ContainerLoggingDestinationParameters{}.OpenAPIModelName():                  schema_openshift_api_operator_v1_ContainerLoggingDestinationParameters(ref),
@@ -55224,6 +55226,27 @@ func schema_openshift_api_operator_v1_Console(ref common.ReferenceCallback) comm
 	}
 }
 
+func schema_openshift_api_operator_v1_ConsoleConfigMapReference(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "ConsoleConfigMapReference references a ConfigMap in the openshift-config namespace.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"name": {
+						SchemaProps: spec.SchemaProps{
+							Description: "name is the metadata.name of the referenced ConfigMap. Must be a valid DNS subdomain name (RFC 1123): at most 253 characters, only lowercase alphanumeric characters, '-' or '.', starting and ending with an alphanumeric character.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+				},
+				Required: []string{"name"},
+			},
+		},
+	}
+}
+
 func schema_openshift_api_operator_v1_ConsoleConfigRoute(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -55459,6 +55482,61 @@ func schema_openshift_api_operator_v1_ConsoleProviders(ref common.ReferenceCallb
 	}
 }
 
+func schema_openshift_api_operator_v1_ConsoleProxyConfig(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "ConsoleProxyConfig holds proxy configuration scoped to Console's OIDC login clients. At least one of httpProxy or httpsProxy must be specified.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"httpProxy": {
+						SchemaProps: spec.SchemaProps{
+							Description: "httpProxy is the URL of the proxy for HTTP requests. Must be a valid URL with http or https scheme, a non-empty hostname, and no path, query parameters, or fragment. Userinfo (e.g. user:password@host) is allowed for proxy authentication. Maximum length is 2048 characters.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"httpsProxy": {
+						SchemaProps: spec.SchemaProps{
+							Description: "httpsProxy is the URL of the proxy for HTTPS requests. Must be a valid URL with http or https scheme, a non-empty hostname, and no path, query parameters, or fragment. Userinfo (e.g. user:password@host) is allowed for proxy authentication. Maximum length is 2048 characters.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"noProxy": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-type": "set",
+							},
+						},
+						SchemaProps: spec.SchemaProps{
+							Description: "noProxy is a list of hostnames and/or CIDRs and/or IPs for which the proxy should not be used. Must contain at least one entry when set. Each entry must be between 1 and 253 characters long and at most 64 entries are allowed. Duplicate entries are not permitted. Entries that are not valid hostnames, CIDRs, or IPs are silently ignored. Cluster-internal defaults (.cluster.local, .svc, 127.0.0.1, localhost) are always appended automatically and do not need to be included.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Type:   []string{"string"},
+										Format: "",
+									},
+								},
+							},
+						},
+					},
+					"trustedCA": {
+						SchemaProps: spec.SchemaProps{
+							Description: "trustedCA is a reference to a ConfigMap in the openshift-config namespace containing a CA certificate bundle under the key \"ca-bundle.crt\". This bundle is appended to the system trust store used by Console's OIDC login clients for proxy TLS connections. When omitted, only the system trust store is used.",
+							Default:     map[string]interface{}{},
+							Ref:         ref(operatorv1.ConsoleConfigMapReference{}.OpenAPIModelName()),
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			operatorv1.ConsoleConfigMapReference{}.OpenAPIModelName()},
+	}
+}
+
 func schema_openshift_api_operator_v1_ConsoleSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -55498,6 +55576,13 @@ func schema_openshift_api_operator_v1_ConsoleSpec(ref common.ReferenceCallback) 
 						SchemaProps: spec.SchemaProps{
 							Description: "observedConfig holds a sparse config that controller has observed from the cluster state.  It exists in spec because it is an input to the level for the operator",
 							Ref:         ref(runtime.RawExtension{}.OpenAPIModelName()),
+						},
+					},
+					"authProxy": {
+						SchemaProps: spec.SchemaProps{
+							Description: "authProxy configures proxy settings for outbound connections made by Console's OIDC login clients, including discovery, JWKS retrieval, code exchange, and token refresh. When set, it replaces the cluster-wide proxy (proxy.config.openshift.io/cluster) entirely for these connections; individual fields are not inherited from the cluster-wide configuration. At least one of httpProxy or httpsProxy must be specified. When omitted, the cluster-wide proxy is used if configured; otherwise no proxy is used. Other Console clients retain their existing proxy settings.",
+							Default:     map[string]interface{}{},
+							Ref:         ref(operatorv1.ConsoleProxyConfig{}.OpenAPIModelName()),
 						},
 					},
 					"customization": {
@@ -55547,7 +55632,7 @@ func schema_openshift_api_operator_v1_ConsoleSpec(ref common.ReferenceCallback) 
 			},
 		},
 		Dependencies: []string{
-			operatorv1.ConsoleConfigRoute{}.OpenAPIModelName(), operatorv1.ConsoleCustomization{}.OpenAPIModelName(), operatorv1.ConsoleProviders{}.OpenAPIModelName(), operatorv1.Ingress{}.OpenAPIModelName(), runtime.RawExtension{}.OpenAPIModelName()},
+			operatorv1.ConsoleConfigRoute{}.OpenAPIModelName(), operatorv1.ConsoleCustomization{}.OpenAPIModelName(), operatorv1.ConsoleProviders{}.OpenAPIModelName(), operatorv1.ConsoleProxyConfig{}.OpenAPIModelName(), operatorv1.Ingress{}.OpenAPIModelName(), runtime.RawExtension{}.OpenAPIModelName()},
 	}
 }
 

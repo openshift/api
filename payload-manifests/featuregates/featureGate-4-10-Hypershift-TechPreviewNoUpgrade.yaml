@@ -44,9 +44,6 @@
                         "name": "ConfidentialCluster"
                     },
                     {
-                        "name": "DRADeviceTaintRules"
-                    },
-                    {
                         "name": "EventedPLEG"
                     },
                     {
@@ -209,6 +206,9 @@
                     },
                     {
                         "name": "DNSNameResolver"
+                    },
+                    {
+                        "name": "DRADeviceTaintRules"
                     },
                     {
                         "name": "DualReplica"

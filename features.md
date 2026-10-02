@@ -11,6 +11,7 @@
 | MachineAPIOperatorDisableMachineHealthCheckController| | | | | | | |  |
 | MultiArchInstallAzure| | | | | | | |  |
 | ShortCertRotation| | | | | | | |  |
+| ControllerManagerConfig| | | | <span style="background-color: #519450">Enabled</span> | | | |  |
 | KarpenterOperator| | | | <span style="background-color: #519450">Enabled</span> | | | |  |
 | MutableTopology| | | | <span style="background-color: #519450">Enabled</span> | | | |  |
 | UnifiedClusterManagedDNSAndLB| | | | <span style="background-color: #519450">Enabled</span> | | | |  |

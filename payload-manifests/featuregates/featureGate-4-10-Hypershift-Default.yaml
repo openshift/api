@@ -114,6 +114,9 @@
                         "name": "ConfigurablePKI"
                     },
                     {
+                        "name": "ControllerManagerConfig"
+                    },
+                    {
                         "name": "DNSNameResolver"
                     },
                     {

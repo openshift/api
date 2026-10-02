@@ -504,6 +504,23 @@ type OVNKubernetesConfig struct {
 	// +openshift:enable:FeatureGate=NoOverlayMode
 	// +optional
 	BGPManagedConfig BGPManagedConfig `json:"bgpManagedConfig,omitzero,omitempty"`
+
+	// startupReadinessTimeoutSeconds is the number of seconds ovnkube-node waits
+	// at startup for its node's gateway and management port to be created in OVN
+	// before it exits and restarts.
+	// Clusters with many user-defined networks or network policies may need a
+	// higher value, because a newly added node creates them only after it has
+	// synced every network.
+	// When omitted, this means no opinion and the platform is left to choose a
+	// reasonable default, which is subject to change over time.
+	// The current default is 300 seconds.
+	// When set, the value must be between 1 and 3600 seconds, inclusive.
+	// Changing this value restarts the ovnkube-node pods.
+	// +openshift:enable:FeatureGate=OVNKubernetesStartupReadinessTimeout
+	// +kubebuilder:validation:Minimum=1
+	// +kubebuilder:validation:Maximum=3600
+	// +optional
+	StartupReadinessTimeoutSeconds int32 `json:"startupReadinessTimeoutSeconds,omitempty"`
 }
 
 type IPv4OVNKubernetesConfig struct {

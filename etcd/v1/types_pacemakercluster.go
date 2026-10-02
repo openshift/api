@@ -545,7 +545,8 @@ type PacemakerFenceEvent struct {
 	// delegate is the name of the node that executed the fencing operation. In a two-node cluster,
 	// this is typically the surviving node that fenced its peer. This field is optional and is
 	// omitted when the delegate is not reported by Pacemaker, which can occur for pending
-	// operations. The value must not exceed 253 characters.
+	// operations. When provided, the value must be between 1 and 253 characters.
+	// +kubebuilder:validation:MinLength=1
 	// +kubebuilder:validation:MaxLength=253
 	// +optional
 	Delegate string `json:"delegate,omitempty"`
@@ -555,14 +556,16 @@ type PacemakerFenceEvent struct {
 	// "stonith_admin" for manual fencing initiated by an operator. This is useful for
 	// distinguishing "the cluster fenced itself for cause" from "someone fenced a node manually"
 	// during incident review. This field is optional and is omitted when the client is not
-	// reported by Pacemaker.
+	// reported by Pacemaker. When provided, the value must be between 1 and 256 characters.
+	// +kubebuilder:validation:MinLength=1
 	// +kubebuilder:validation:MaxLength=256
 	// +optional
 	Client string `json:"client,omitempty"`
 
 	// origin is the name of the node from which the fencing request originated. This field is
-	// optional and is omitted when the origin is not reported by Pacemaker. The value must not
-	// exceed 253 characters.
+	// optional and is omitted when the origin is not reported by Pacemaker. When provided, the
+	// value must be between 1 and 253 characters.
+	// +kubebuilder:validation:MinLength=1
 	// +kubebuilder:validation:MaxLength=253
 	// +optional
 	Origin string `json:"origin,omitempty"`
@@ -572,7 +575,7 @@ type PacemakerFenceEvent struct {
 	// where completedTime is not yet set. It must be a valid timestamp in RFC3339 format.
 	// +kubebuilder:validation:Format=date-time
 	// +required
-	LastUpdated metav1.Time `json:"lastUpdated,omitempty,omitzero"`
+	LastUpdated *metav1.Time `json:"lastUpdated,omitempty"`
 
 	// completedTime is the timestamp when the fencing operation completed. This field is optional
 	// and is omitted when the fencing operation is still in progress (status "pending") or when
@@ -749,7 +752,7 @@ type PacemakerClusterNodeStatus struct {
 	// concrete fencing context behind the unclean state. This field is optional and is omitted
 	// when no fencing event has been observed for this node.
 	// +optional
-	LastFenceEvent *PacemakerFenceEvent `json:"lastFenceEvent,omitempty"`
+	LastFenceEvent PacemakerFenceEvent `json:"lastFenceEvent,omitempty,omitzero"`
 }
 
 // PacemakerClusterFencingAgentStatus represents the status of a fencing agent that can fence a node.

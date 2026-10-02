@@ -16903,6 +16903,7 @@
         },
         "lastFenceEvent": {
           "description": "lastFenceEvent is the most recent fencing event targeting this node, as recorded in Pacemaker's fence history in the CIB. This captures the last time this node was fenced (or a fence attempt was made), including the action taken, the outcome, and which node executed the fence operation. When the Clean condition is False, this field provides the concrete fencing context behind the unclean state. This field is optional and is omitted when no fencing event has been observed for this node.",
+          "default": {},
           "$ref": "#/definitions/com.github.openshift.api.etcd.v1.PacemakerFenceEvent"
         },
         "nodeName": {
@@ -17033,7 +17034,7 @@
           ]
         },
         "client": {
-          "description": "client identifies the daemon or tool that requested the fencing operation. Typical values are \"crmd\" for automatic recovery initiated by the cluster resource manager, or \"stonith_admin\" for manual fencing initiated by an operator. This is useful for distinguishing \"the cluster fenced itself for cause\" from \"someone fenced a node manually\" during incident review. This field is optional and is omitted when the client is not reported by Pacemaker.",
+          "description": "client identifies the daemon or tool that requested the fencing operation. Typical values are \"crmd\" for automatic recovery initiated by the cluster resource manager, or \"stonith_admin\" for manual fencing initiated by an operator. This is useful for distinguishing \"the cluster fenced itself for cause\" from \"someone fenced a node manually\" during incident review. This field is optional and is omitted when the client is not reported by Pacemaker. When provided, the value must be between 1 and 256 characters.",
           "type": "string"
         },
         "completedTime": {
@@ -17041,7 +17042,7 @@
           "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Time"
         },
         "delegate": {
-          "description": "delegate is the name of the node that executed the fencing operation. In a two-node cluster, this is typically the surviving node that fenced its peer. This field is optional and is omitted when the delegate is not reported by Pacemaker, which can occur for pending operations. The value must not exceed 253 characters.",
+          "description": "delegate is the name of the node that executed the fencing operation. In a two-node cluster, this is typically the surviving node that fenced its peer. This field is optional and is omitted when the delegate is not reported by Pacemaker, which can occur for pending operations. When provided, the value must be between 1 and 253 characters.",
           "type": "string"
         },
         "lastUpdated": {
@@ -17049,7 +17050,7 @@
           "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Time"
         },
         "origin": {
-          "description": "origin is the name of the node from which the fencing request originated. This field is optional and is omitted when the origin is not reported by Pacemaker. The value must not exceed 253 characters.",
+          "description": "origin is the name of the node from which the fencing request originated. This field is optional and is omitted when the origin is not reported by Pacemaker. When provided, the value must be between 1 and 253 characters.",
           "type": "string"
         },
         "status": {
@@ -17236,6 +17237,7 @@
         },
         "lastFenceEvent": {
           "description": "lastFenceEvent is the most recent fencing event targeting this node, as recorded in Pacemaker's fence history in the CIB. This captures the last time this node was fenced (or a fence attempt was made), including the action taken, the outcome, and which node executed the fence operation. When the Clean condition is False, this field provides the concrete fencing context behind the unclean state. This field is optional and is omitted when no fencing event has been observed for this node.",
+          "default": {},
           "$ref": "#/definitions/com.github.openshift.api.etcd.v1alpha1.PacemakerFenceEvent"
         },
         "nodeName": {
@@ -17366,7 +17368,7 @@
           ]
         },
         "client": {
-          "description": "client identifies the daemon or tool that requested the fencing operation. Typical values are \"crmd\" for automatic recovery initiated by the cluster resource manager, or \"stonith_admin\" for manual fencing initiated by an operator. This is useful for distinguishing \"the cluster fenced itself for cause\" from \"someone fenced a node manually\" during incident review. This field is optional and is omitted when the client is not reported by Pacemaker.",
+          "description": "client identifies the daemon or tool that requested the fencing operation. Typical values are \"crmd\" for automatic recovery initiated by the cluster resource manager, or \"stonith_admin\" for manual fencing initiated by an operator. This is useful for distinguishing \"the cluster fenced itself for cause\" from \"someone fenced a node manually\" during incident review. This field is optional and is omitted when the client is not reported by Pacemaker. When provided, the value must be between 1 and 256 characters.",
           "type": "string"
         },
         "completedTime": {
@@ -17374,7 +17376,7 @@
           "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Time"
         },
         "delegate": {
-          "description": "delegate is the name of the node that executed the fencing operation. In a two-node cluster, this is typically the surviving node that fenced its peer. This field is optional and is omitted when the delegate is not reported by Pacemaker, which can occur for pending operations. The value must not exceed 253 characters.",
+          "description": "delegate is the name of the node that executed the fencing operation. In a two-node cluster, this is typically the surviving node that fenced its peer. This field is optional and is omitted when the delegate is not reported by Pacemaker, which can occur for pending operations. When provided, the value must be between 1 and 253 characters.",
           "type": "string"
         },
         "lastUpdated": {
@@ -17382,7 +17384,7 @@
           "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Time"
         },
         "origin": {
-          "description": "origin is the name of the node from which the fencing request originated. This field is optional and is omitted when the origin is not reported by Pacemaker. The value must not exceed 253 characters.",
+          "description": "origin is the name of the node from which the fencing request originated. This field is optional and is omitted when the origin is not reported by Pacemaker. When provided, the value must be between 1 and 253 characters.",
           "type": "string"
         },
         "status": {

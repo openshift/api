@@ -30362,6 +30362,7 @@ func schema_openshift_api_etcd_v1_PacemakerClusterNodeStatus(ref common.Referenc
 					"lastFenceEvent": {
 						SchemaProps: spec.SchemaProps{
 							Description: "lastFenceEvent is the most recent fencing event targeting this node, as recorded in Pacemaker's fence history in the CIB. This captures the last time this node was fenced (or a fence attempt was made), including the action taken, the outcome, and which node executed the fence operation. When the Clean condition is False, this field provides the concrete fencing context behind the unclean state. This field is optional and is omitted when no fencing event has been observed for this node.",
+							Default:     map[string]interface{}{},
 							Ref:         ref(etcdv1.PacemakerFenceEvent{}.OpenAPIModelName()),
 						},
 					},
@@ -30543,21 +30544,21 @@ func schema_openshift_api_etcd_v1_PacemakerFenceEvent(ref common.ReferenceCallba
 					},
 					"delegate": {
 						SchemaProps: spec.SchemaProps{
-							Description: "delegate is the name of the node that executed the fencing operation. In a two-node cluster, this is typically the surviving node that fenced its peer. This field is optional and is omitted when the delegate is not reported by Pacemaker, which can occur for pending operations. The value must not exceed 253 characters.",
+							Description: "delegate is the name of the node that executed the fencing operation. In a two-node cluster, this is typically the surviving node that fenced its peer. This field is optional and is omitted when the delegate is not reported by Pacemaker, which can occur for pending operations. When provided, the value must be between 1 and 253 characters.",
 							Type:        []string{"string"},
 							Format:      "",
 						},
 					},
 					"client": {
 						SchemaProps: spec.SchemaProps{
-							Description: "client identifies the daemon or tool that requested the fencing operation. Typical values are \"crmd\" for automatic recovery initiated by the cluster resource manager, or \"stonith_admin\" for manual fencing initiated by an operator. This is useful for distinguishing \"the cluster fenced itself for cause\" from \"someone fenced a node manually\" during incident review. This field is optional and is omitted when the client is not reported by Pacemaker.",
+							Description: "client identifies the daemon or tool that requested the fencing operation. Typical values are \"crmd\" for automatic recovery initiated by the cluster resource manager, or \"stonith_admin\" for manual fencing initiated by an operator. This is useful for distinguishing \"the cluster fenced itself for cause\" from \"someone fenced a node manually\" during incident review. This field is optional and is omitted when the client is not reported by Pacemaker. When provided, the value must be between 1 and 256 characters.",
 							Type:        []string{"string"},
 							Format:      "",
 						},
 					},
 					"origin": {
 						SchemaProps: spec.SchemaProps{
-							Description: "origin is the name of the node from which the fencing request originated. This field is optional and is omitted when the origin is not reported by Pacemaker. The value must not exceed 253 characters.",
+							Description: "origin is the name of the node from which the fencing request originated. This field is optional and is omitted when the origin is not reported by Pacemaker. When provided, the value must be between 1 and 253 characters.",
 							Type:        []string{"string"},
 							Format:      "",
 						},
@@ -30882,6 +30883,7 @@ func schema_openshift_api_etcd_v1alpha1_PacemakerClusterNodeStatus(ref common.Re
 					"lastFenceEvent": {
 						SchemaProps: spec.SchemaProps{
 							Description: "lastFenceEvent is the most recent fencing event targeting this node, as recorded in Pacemaker's fence history in the CIB. This captures the last time this node was fenced (or a fence attempt was made), including the action taken, the outcome, and which node executed the fence operation. When the Clean condition is False, this field provides the concrete fencing context behind the unclean state. This field is optional and is omitted when no fencing event has been observed for this node.",
+							Default:     map[string]interface{}{},
 							Ref:         ref(etcdv1alpha1.PacemakerFenceEvent{}.OpenAPIModelName()),
 						},
 					},
@@ -31063,21 +31065,21 @@ func schema_openshift_api_etcd_v1alpha1_PacemakerFenceEvent(ref common.Reference
 					},
 					"delegate": {
 						SchemaProps: spec.SchemaProps{
-							Description: "delegate is the name of the node that executed the fencing operation. In a two-node cluster, this is typically the surviving node that fenced its peer. This field is optional and is omitted when the delegate is not reported by Pacemaker, which can occur for pending operations. The value must not exceed 253 characters.",
+							Description: "delegate is the name of the node that executed the fencing operation. In a two-node cluster, this is typically the surviving node that fenced its peer. This field is optional and is omitted when the delegate is not reported by Pacemaker, which can occur for pending operations. When provided, the value must be between 1 and 253 characters.",
 							Type:        []string{"string"},
 							Format:      "",
 						},
 					},
 					"client": {
 						SchemaProps: spec.SchemaProps{
-							Description: "client identifies the daemon or tool that requested the fencing operation. Typical values are \"crmd\" for automatic recovery initiated by the cluster resource manager, or \"stonith_admin\" for manual fencing initiated by an operator. This is useful for distinguishing \"the cluster fenced itself for cause\" from \"someone fenced a node manually\" during incident review. This field is optional and is omitted when the client is not reported by Pacemaker.",
+							Description: "client identifies the daemon or tool that requested the fencing operation. Typical values are \"crmd\" for automatic recovery initiated by the cluster resource manager, or \"stonith_admin\" for manual fencing initiated by an operator. This is useful for distinguishing \"the cluster fenced itself for cause\" from \"someone fenced a node manually\" during incident review. This field is optional and is omitted when the client is not reported by Pacemaker. When provided, the value must be between 1 and 256 characters.",
 							Type:        []string{"string"},
 							Format:      "",
 						},
 					},
 					"origin": {
 						SchemaProps: spec.SchemaProps{
-							Description: "origin is the name of the node from which the fencing request originated. This field is optional and is omitted when the origin is not reported by Pacemaker. The value must not exceed 253 characters.",
+							Description: "origin is the name of the node from which the fencing request originated. This field is optional and is omitted when the origin is not reported by Pacemaker. When provided, the value must be between 1 and 253 characters.",
 							Type:        []string{"string"},
 							Format:      "",
 						},

@@ -1082,12 +1082,4 @@ var (
 						enhancementPR("https://github.com/openshift/enhancements/pull/2095").
 						enable(inClusterProfile(SelfManaged), inDevPreviewNoUpgrade()).
 						mustRegister()
-
-	FeatureGateDisableForceDetachOnTimeout = newFeatureGate("DisableForceDetachOnTimeout").
-						reportProblemsToJiraComponent("Storage / Kubernetes").
-						contactPerson("jdobson").
-						productScope(ocpSpecific).
-						enhancementPR("https://github.com/openshift/enhancements/pull/2095").
-						enable(inClusterProfile(SelfManaged), inDevPreviewNoUpgrade()).
-						mustRegister()
 )

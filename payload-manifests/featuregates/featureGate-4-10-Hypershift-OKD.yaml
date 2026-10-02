@@ -125,9 +125,6 @@
                         "name": "DRADeviceTaintRules"
                     },
                     {
-                        "name": "DisableForceDetachOnTimeout"
-                    },
-                    {
                         "name": "DyanmicServiceEndpointIBMCloud"
                     },
                     {

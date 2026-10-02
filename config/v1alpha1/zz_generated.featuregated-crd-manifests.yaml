@@ -76,7 +76,6 @@ controllermanagers.config.openshift.io:
   Category: ""
   FeatureGates:
   - ControllerManagerConfig
-  - DisableForceDetachOnTimeout
   FilenameOperatorName: config-operator
   FilenameOperatorOrdering: "01"
   FilenameRunLevel: "0000_10"

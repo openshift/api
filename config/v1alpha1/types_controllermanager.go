@@ -51,7 +51,6 @@ type ControllerManagerSpec struct {
 	// Changing this field causes kube-controller-manager to be redeployed with the new setting.
 	// Rollout progress is reported by the kube-controller-manager cluster operator.
 	// +optional
-	// +openshift:enable:FeatureGate=DisableForceDetachOnTimeout
 	ForceDetachOnTimeout ForceDetachOnTimeoutPolicy `json:"forceDetachOnTimeout,omitempty"`
 }
 

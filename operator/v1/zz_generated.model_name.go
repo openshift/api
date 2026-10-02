@@ -241,6 +241,11 @@ func (in Console) OpenAPIModelName() string {
 }
 
 // OpenAPIModelName returns the OpenAPI model name for this type.
+func (in ConsoleConfigMapReference) OpenAPIModelName() string {
+	return "com.github.openshift.api.operator.v1.ConsoleConfigMapReference"
+}
+
+// OpenAPIModelName returns the OpenAPI model name for this type.
 func (in ConsoleConfigRoute) OpenAPIModelName() string {
 	return "com.github.openshift.api.operator.v1.ConsoleConfigRoute"
 }
@@ -258,6 +263,11 @@ func (in ConsoleList) OpenAPIModelName() string {
 // OpenAPIModelName returns the OpenAPI model name for this type.
 func (in ConsoleProviders) OpenAPIModelName() string {
 	return "com.github.openshift.api.operator.v1.ConsoleProviders"
+}
+
+// OpenAPIModelName returns the OpenAPI model name for this type.
+func (in ConsoleProxyConfig) OpenAPIModelName() string {
+	return "com.github.openshift.api.operator.v1.ConsoleProxyConfig"
 }
 
 // OpenAPIModelName returns the OpenAPI model name for this type.

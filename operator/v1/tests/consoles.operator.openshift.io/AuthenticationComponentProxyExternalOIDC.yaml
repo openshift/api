@@ -1,0 +1,475 @@
+apiVersion: apiextensions.k8s.io/v1 # Hack because controller-gen complains if we don't have this
+name: "Console"
+crdName: consoles.operator.openshift.io
+featureGates:
+  - AuthenticationComponentProxyExternalOIDC
+tests:
+  onCreate:
+    - name: Should accept a valid proxy configuration with httpProxy only
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: Console
+        metadata:
+          name: cluster
+        spec:
+          authProxy:
+            httpProxy: "http://proxy.example.com:3128"
+      expected: |
+        apiVersion: operator.openshift.io/v1
+        kind: Console
+        metadata:
+          name: cluster
+        spec:
+          logLevel: Normal
+          operatorLogLevel: Normal
+          authProxy:
+            httpProxy: "http://proxy.example.com:3128"
+    - name: Should accept a valid proxy configuration with httpsProxy only
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: Console
+        metadata:
+          name: cluster
+        spec:
+          authProxy:
+            httpsProxy: "http://proxy.example.com:3129"
+      expected: |
+        apiVersion: operator.openshift.io/v1
+        kind: Console
+        metadata:
+          name: cluster
+        spec:
+          logLevel: Normal
+          operatorLogLevel: Normal
+          authProxy:
+            httpsProxy: "http://proxy.example.com:3129"
+    - name: Should accept a valid proxy configuration with both httpProxy and httpsProxy
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: Console
+        metadata:
+          name: cluster
+        spec:
+          authProxy:
+            httpProxy: "http://proxy.example.com:3128"
+            httpsProxy: "http://proxy.example.com:3129"
+      expected: |
+        apiVersion: operator.openshift.io/v1
+        kind: Console
+        metadata:
+          name: cluster
+        spec:
+          logLevel: Normal
+          operatorLogLevel: Normal
+          authProxy:
+            httpProxy: "http://proxy.example.com:3128"
+            httpsProxy: "http://proxy.example.com:3129"
+    - name: Should accept a valid proxy configuration with noProxy
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: Console
+        metadata:
+          name: cluster
+        spec:
+          authProxy:
+            httpsProxy: "http://proxy.example.com:3128"
+            noProxy:
+              - "idp.internal.example.com"
+              - ".corp.example.com"
+      expected: |
+        apiVersion: operator.openshift.io/v1
+        kind: Console
+        metadata:
+          name: cluster
+        spec:
+          logLevel: Normal
+          operatorLogLevel: Normal
+          authProxy:
+            httpsProxy: "http://proxy.example.com:3128"
+            noProxy:
+              - "idp.internal.example.com"
+              - ".corp.example.com"
+    - name: Should accept a valid proxy configuration with trustedCA
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: Console
+        metadata:
+          name: cluster
+        spec:
+          authProxy:
+            httpsProxy: "http://proxy.example.com:3128"
+            trustedCA:
+              name: "proxy-ca-bundle"
+      expected: |
+        apiVersion: operator.openshift.io/v1
+        kind: Console
+        metadata:
+          name: cluster
+        spec:
+          logLevel: Normal
+          operatorLogLevel: Normal
+          authProxy:
+            httpsProxy: "http://proxy.example.com:3128"
+            trustedCA:
+              name: "proxy-ca-bundle"
+    - name: Should reject proxy with neither httpProxy nor httpsProxy
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: Console
+        metadata:
+          name: cluster
+        spec:
+          authProxy:
+            noProxy:
+              - "example.com"
+      expectedError: "at least one of httpProxy or httpsProxy must be specified"
+    - name: Should reject httpProxy that is not a valid URL
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: Console
+        metadata:
+          name: cluster
+        spec:
+          authProxy:
+            httpProxy: "not-a-url"
+      expectedError: "httpProxy must be a valid URL"
+    - name: Should reject httpProxy without a hostname
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: Console
+        metadata:
+          name: cluster
+        spec:
+          authProxy:
+            httpProxy: "http://:3128"
+      expectedError: "httpProxy must contain a hostname"
+    - name: Should reject httpProxy with invalid scheme
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: Console
+        metadata:
+          name: cluster
+        spec:
+          authProxy:
+            httpProxy: "ftp://proxy.example.com:3128"
+      expectedError: "httpProxy must use http or https scheme"
+    - name: Should reject httpProxy with a path
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: Console
+        metadata:
+          name: cluster
+        spec:
+          authProxy:
+            httpProxy: "http://proxy.example.com:3128/path"
+      expectedError: "httpProxy must not contain a path"
+    - name: Should reject httpProxy with query parameters
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: Console
+        metadata:
+          name: cluster
+        spec:
+          authProxy:
+            httpProxy: "http://proxy.example.com:3128?key=value"
+      expectedError: "httpProxy must not contain query parameters"
+    - name: Should reject httpProxy with a fragment
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: Console
+        metadata:
+          name: cluster
+        spec:
+          authProxy:
+            httpProxy: "http://proxy.example.com:3128#frag"
+      expectedError: "httpProxy must not contain a fragment"
+    - name: Should reject httpsProxy that is not a valid URL
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: Console
+        metadata:
+          name: cluster
+        spec:
+          authProxy:
+            httpsProxy: "not-a-url"
+      expectedError: "httpsProxy must be a valid URL"
+    - name: Should reject httpsProxy without a hostname
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: Console
+        metadata:
+          name: cluster
+        spec:
+          authProxy:
+            httpsProxy: "http://:3128"
+      expectedError: "httpsProxy must contain a hostname"
+    - name: Should reject httpsProxy with invalid scheme
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: Console
+        metadata:
+          name: cluster
+        spec:
+          authProxy:
+            httpsProxy: "ftp://proxy.example.com:3128"
+      expectedError: "httpsProxy must use http or https scheme"
+    - name: Should reject httpsProxy with a path
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: Console
+        metadata:
+          name: cluster
+        spec:
+          authProxy:
+            httpsProxy: "http://proxy.example.com:3128/path"
+      expectedError: "httpsProxy must not contain a path"
+    - name: Should reject httpsProxy with query parameters
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: Console
+        metadata:
+          name: cluster
+        spec:
+          authProxy:
+            httpsProxy: "http://proxy.example.com:3128?key=value"
+      expectedError: "httpsProxy must not contain query parameters"
+    - name: Should reject httpsProxy with a fragment
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: Console
+        metadata:
+          name: cluster
+        spec:
+          authProxy:
+            httpsProxy: "http://proxy.example.com:3128#frag"
+      expectedError: "httpsProxy must not contain a fragment"
+    - name: Should reject duplicate noProxy entries
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: Console
+        metadata:
+          name: cluster
+        spec:
+          authProxy:
+            httpProxy: "http://proxy.example.com:3128"
+            noProxy:
+              - "example.com"
+              - "example.com"
+      expectedError: "Duplicate value"
+    - name: Should reject empty noProxy entry
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: Console
+        metadata:
+          name: cluster
+        spec:
+          authProxy:
+            httpProxy: "http://proxy.example.com:3128"
+            noProxy:
+              - ""
+      expectedError: "should be at least 1 chars long"
+    - name: Should reject empty noProxy list
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: Console
+        metadata:
+          name: cluster
+        spec:
+          authProxy:
+            httpProxy: "http://proxy.example.com:3128"
+            noProxy: []
+      expectedError: "should have at least 1 items"
+    - name: Should accept proxy URLs with credentials and a trailing slash
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: Console
+        spec:
+          logLevel: Normal
+          operatorLogLevel: Normal
+          authProxy: {"httpProxy": "http://user:password@proxy.example.com:3128/", "httpsProxy": "https://proxy.example.com:3129/"}
+      expected: |
+        apiVersion: operator.openshift.io/v1
+        kind: Console
+        spec:
+          logLevel: Normal
+          operatorLogLevel: Normal
+          authProxy: {"httpProxy": "http://user:password@proxy.example.com:3128/", "httpsProxy": "https://proxy.example.com:3129/"}
+    - name: Should reject an empty authProxy configuration
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: Console
+        spec:
+          logLevel: Normal
+          operatorLogLevel: Normal
+          authProxy: {}
+      expectedError: "should have at least 1 properties"
+    - name: Should reject an empty httpProxy URL
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: Console
+        spec:
+          logLevel: Normal
+          operatorLogLevel: Normal
+          authProxy: {"httpProxy": ""}
+      expectedError: "should be at least 1 chars long"
+    - name: Should reject an empty httpsProxy URL
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: Console
+        spec:
+          logLevel: Normal
+          operatorLogLevel: Normal
+          authProxy: {"httpsProxy": ""}
+      expectedError: "should be at least 1 chars long"
+    - name: Should reject an httpProxy URL exceeding 2048 characters
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: Console
+        spec:
+          logLevel: Normal
+          operatorLogLevel: Normal
+          authProxy: {"httpProxy": "http://aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"}
+      expectedError: "should be at most 2048 chars long"
+    - name: Should reject an httpsProxy URL exceeding 2048 characters
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: Console
+        spec:
+          logLevel: Normal
+          operatorLogLevel: Normal
+          authProxy: {"httpsProxy": "http://aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"}
+      expectedError: "should be at most 2048 chars long"
+    - name: Should reject a noProxy entry exceeding 253 characters
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: Console
+        spec:
+          logLevel: Normal
+          operatorLogLevel: Normal
+          authProxy: {"httpsProxy": "http://proxy.example.com:3128", "noProxy": ["aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"]}
+      expectedError: "should be at most 253 chars long"
+    - name: Should reject more than 64 noProxy entries
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: Console
+        spec:
+          logLevel: Normal
+          operatorLogLevel: Normal
+          authProxy: {"httpsProxy": "http://proxy.example.com:3128", "noProxy": ["host0.example.com", "host1.example.com", "host2.example.com", "host3.example.com", "host4.example.com", "host5.example.com", "host6.example.com", "host7.example.com", "host8.example.com", "host9.example.com", "host10.example.com", "host11.example.com", "host12.example.com", "host13.example.com", "host14.example.com", "host15.example.com", "host16.example.com", "host17.example.com", "host18.example.com", "host19.example.com", "host20.example.com", "host21.example.com", "host22.example.com", "host23.example.com", "host24.example.com", "host25.example.com", "host26.example.com", "host27.example.com", "host28.example.com", "host29.example.com", "host30.example.com", "host31.example.com", "host32.example.com", "host33.example.com", "host34.example.com", "host35.example.com", "host36.example.com", "host37.example.com", "host38.example.com", "host39.example.com", "host40.example.com", "host41.example.com", "host42.example.com", "host43.example.com", "host44.example.com", "host45.example.com", "host46.example.com", "host47.example.com", "host48.example.com", "host49.example.com", "host50.example.com", "host51.example.com", "host52.example.com", "host53.example.com", "host54.example.com", "host55.example.com", "host56.example.com", "host57.example.com", "host58.example.com", "host59.example.com", "host60.example.com", "host61.example.com", "host62.example.com", "host63.example.com", "host64.example.com"]}
+      expectedError: "should have at most 64 items"
+    - name: Should reject a trustedCA reference without a name
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: Console
+        spec:
+          logLevel: Normal
+          operatorLogLevel: Normal
+          authProxy: {"httpsProxy": "http://proxy.example.com:3128", "trustedCA": {}}
+      expectedError: "spec.authProxy.trustedCA.name: Required value"
+    - name: Should reject an empty trustedCA reference name
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: Console
+        spec:
+          logLevel: Normal
+          operatorLogLevel: Normal
+          authProxy: {"httpsProxy": "http://proxy.example.com:3128", "trustedCA": {"name": ""}}
+      expectedError: "should be at least 1 chars long"
+    - name: Should reject an invalid trustedCA reference name
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: Console
+        spec:
+          logLevel: Normal
+          operatorLogLevel: Normal
+          authProxy: {"httpsProxy": "http://proxy.example.com:3128", "trustedCA": {"name": "Proxy_CA"}}
+      expectedError: "name must be a valid DNS subdomain name"
+    - name: Should reject a trustedCA reference name exceeding 253 characters
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: Console
+        spec:
+          logLevel: Normal
+          operatorLogLevel: Normal
+          authProxy: {"httpsProxy": "http://proxy.example.com:3128", "trustedCA": {"name": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"}}
+      expectedError: "should be at most 253 chars long"
+  onUpdate:
+    - name: Should allow adding authProxy
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: Console
+        spec:
+          logLevel: Normal
+          operatorLogLevel: Normal
+      updated: |
+        apiVersion: operator.openshift.io/v1
+        kind: Console
+        spec:
+          logLevel: Normal
+          operatorLogLevel: Normal
+          authProxy: {"httpProxy": "http://proxy.example.com:3128", "httpsProxy": "https://proxy.example.com:3129", "noProxy": ["idp.internal.example.com"], "trustedCA": {"name": "proxy-ca"}}
+      expected: |
+        apiVersion: operator.openshift.io/v1
+        kind: Console
+        spec:
+          logLevel: Normal
+          operatorLogLevel: Normal
+          authProxy: {"httpProxy": "http://proxy.example.com:3128", "httpsProxy": "https://proxy.example.com:3129", "noProxy": ["idp.internal.example.com"], "trustedCA": {"name": "proxy-ca"}}
+    - name: Should allow replacing authProxy without retaining omitted fields
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: Console
+        spec:
+          logLevel: Normal
+          operatorLogLevel: Normal
+          authProxy: {"httpProxy": "http://proxy.example.com:3128", "httpsProxy": "https://proxy.example.com:3129", "noProxy": ["idp.internal.example.com"], "trustedCA": {"name": "proxy-ca"}}
+      updated: |
+        apiVersion: operator.openshift.io/v1
+        kind: Console
+        spec:
+          logLevel: Normal
+          operatorLogLevel: Normal
+          authProxy: {"httpsProxy": "http://proxy.example.com:3128"}
+      expected: |
+        apiVersion: operator.openshift.io/v1
+        kind: Console
+        spec:
+          logLevel: Normal
+          operatorLogLevel: Normal
+          authProxy: {"httpsProxy": "http://proxy.example.com:3128"}
+    - name: Should allow removing authProxy
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: Console
+        spec:
+          logLevel: Normal
+          operatorLogLevel: Normal
+          authProxy: {"httpProxy": "http://proxy.example.com:3128", "httpsProxy": "https://proxy.example.com:3129", "noProxy": ["idp.internal.example.com"], "trustedCA": {"name": "proxy-ca"}}
+      updated: |
+        apiVersion: operator.openshift.io/v1
+        kind: Console
+        spec:
+          logLevel: Normal
+          operatorLogLevel: Normal
+      expected: |
+        apiVersion: operator.openshift.io/v1
+        kind: Console
+        spec:
+          logLevel: Normal
+          operatorLogLevel: Normal
+    - name: Should reject updating authProxy to omit both proxy URLs
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: Console
+        spec:
+          logLevel: Normal
+          operatorLogLevel: Normal
+          authProxy: {"httpProxy": "http://proxy.example.com:3128", "httpsProxy": "https://proxy.example.com:3129", "noProxy": ["idp.internal.example.com"], "trustedCA": {"name": "proxy-ca"}}
+      updated: |
+        apiVersion: operator.openshift.io/v1
+        kind: Console
+        spec:
+          logLevel: Normal
+          operatorLogLevel: Normal
+          authProxy: {"noProxy": ["example.com"]}
+      expectedError: "at least one of httpProxy or httpsProxy must be specified"

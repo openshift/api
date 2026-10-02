@@ -277,6 +277,15 @@ func (Console) SwaggerDoc() map[string]string {
 	return map_Console
 }
 
+var map_ConsoleConfigMapReference = map[string]string{
+	"":     "ConsoleConfigMapReference references a ConfigMap in the openshift-config namespace.",
+	"name": "name is the metadata.name of the referenced ConfigMap. Must be a valid DNS subdomain name (RFC 1123): at most 253 characters, only lowercase alphanumeric characters, '-' or '.', starting and ending with an alphanumeric character.",
+}
+
+func (ConsoleConfigMapReference) SwaggerDoc() map[string]string {
+	return map_ConsoleConfigMapReference
+}
+
 var map_ConsoleConfigRoute = map[string]string{
 	"":         "ConsoleConfigRoute holds information on external route access to console. DEPRECATED",
 	"hostname": "hostname is the desired custom domain under which console will be available.",
@@ -324,8 +333,21 @@ func (ConsoleProviders) SwaggerDoc() map[string]string {
 	return map_ConsoleProviders
 }
 
+var map_ConsoleProxyConfig = map[string]string{
+	"":           "ConsoleProxyConfig holds proxy configuration scoped to Console's OIDC login clients. At least one of httpProxy or httpsProxy must be specified.",
+	"httpProxy":  "httpProxy is the URL of the proxy for HTTP requests. Must be a valid URL with http or https scheme, a non-empty hostname, and no path, query parameters, or fragment. Userinfo (e.g. user:password@host) is allowed for proxy authentication. Maximum length is 2048 characters.",
+	"httpsProxy": "httpsProxy is the URL of the proxy for HTTPS requests. Must be a valid URL with http or https scheme, a non-empty hostname, and no path, query parameters, or fragment. Userinfo (e.g. user:password@host) is allowed for proxy authentication. Maximum length is 2048 characters.",
+	"noProxy":    "noProxy is a list of hostnames and/or CIDRs and/or IPs for which the proxy should not be used. Must contain at least one entry when set. Each entry must be between 1 and 253 characters long and at most 64 entries are allowed. Duplicate entries are not permitted. Entries that are not valid hostnames, CIDRs, or IPs are silently ignored. Cluster-internal defaults (.cluster.local, .svc, 127.0.0.1, localhost) are always appended automatically and do not need to be included.",
+	"trustedCA":  "trustedCA is a reference to a ConfigMap in the openshift-config namespace containing a CA certificate bundle under the key \"ca-bundle.crt\". This bundle is appended to the system trust store used by Console's OIDC login clients for proxy TLS connections. When omitted, only the system trust store is used.",
+}
+
+func (ConsoleProxyConfig) SwaggerDoc() map[string]string {
+	return map_ConsoleProxyConfig
+}
+
 var map_ConsoleSpec = map[string]string{
 	"":              "ConsoleSpec is the specification of the desired behavior of the Console.",
+	"authProxy":     "authProxy configures proxy settings for outbound connections made by Console's OIDC login clients, including discovery, JWKS retrieval, code exchange, and token refresh. When set, it replaces the cluster-wide proxy (proxy.config.openshift.io/cluster) entirely for these connections; individual fields are not inherited from the cluster-wide configuration. At least one of httpProxy or httpsProxy must be specified. When omitted, the cluster-wide proxy is used if configured; otherwise no proxy is used. Other Console clients retain their existing proxy settings.",
 	"customization": "customization is used to optionally provide a small set of customization options to the web console.",
 	"providers":     "providers contains configuration for using specific service providers.",
 	"route":         "route contains hostname and secret reference that contains the serving certificate. If a custom route is specified, a new route will be created with the provided hostname, under which console will be available. In case of custom hostname uses the default routing suffix of the cluster, the Secret specification for a serving certificate will not be needed. In case of custom hostname points to an arbitrary domain, manual DNS configurations steps are necessary. The default console route will be maintained to reserve the default hostname for console if the custom route is removed. If not specified, default route will be used. DEPRECATED",

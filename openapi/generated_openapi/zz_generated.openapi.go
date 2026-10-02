@@ -30475,8 +30475,7 @@ func schema_openshift_api_etcd_v1_PacemakerClusterAlertAgentStatus(ref common.Re
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
 									SchemaProps: spec.SchemaProps{
-										Default: map[string]interface{}{},
-										Ref:     ref(metav1.Condition{}.OpenAPIModelName()),
+										Ref: ref(metav1.Condition{}.OpenAPIModelName()),
 									},
 								},
 							},
@@ -30711,8 +30710,7 @@ func schema_openshift_api_etcd_v1_PacemakerClusterNodeStatus(ref common.Referenc
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
 									SchemaProps: spec.SchemaProps{
-										Default: map[string]interface{}{},
-										Ref:     ref(etcdv1.PacemakerClusterAlertAgentStatus{}.OpenAPIModelName()),
+										Ref: ref(etcdv1.PacemakerClusterAlertAgentStatus{}.OpenAPIModelName()),
 									},
 								},
 							},

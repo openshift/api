@@ -2126,7 +2126,10 @@ type RelabelConfig struct {
 	// When omitted, the rule operates without extracting source labels (useful for actions like labelmap).
 	// Minimum of 1 and maximum of 10 source labels can be specified, each between 1 and 128 characters.
 	// Each entry must be unique.
-	// Label names beginning with "__" (two underscores) are reserved for internal Prometheus use and are not allowed.
+	// Labels beginning with "__" (two underscores) are Prometheus internal/meta labels
+	// (e.g., __name__, __address__) and are valid in sourceLabels because relabeling reads
+	// from them before they are stripped. Using __name__ in sourceLabels is the standard way
+	// to filter metrics by name in writeRelabelConfigs.
 	// Label names SHOULD start with a letter (a-z, A-Z) or underscore (_), followed by zero or more letters, digits (0-9), or underscores for best compatibility.
 	// While Prometheus supports UTF-8 characters in label names (since v3.0.0), using the recommended character set
 	// ensures better compatibility with the wider ecosystem (tooling, third-party instrumentation, etc.).
@@ -2135,7 +2138,6 @@ type RelabelConfig struct {
 	// +kubebuilder:validation:MaxItems=10
 	// +kubebuilder:validation:items:MinLength=1
 	// +kubebuilder:validation:items:MaxLength=128
-	// +kubebuilder:validation:items:XValidation:rule="!self.startsWith('__')",message="label names beginning with '__' (two underscores) are reserved for internal Prometheus use and are not allowed"
 	// +listType=set
 	SourceLabels []string `json:"sourceLabels,omitempty"`
 

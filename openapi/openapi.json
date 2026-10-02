@@ -16799,15 +16799,6 @@
           ],
           "x-kubernetes-list-type": "map"
         },
-        "failCount": {
-          "description": "failCount is the current failure count Pacemaker records for this fencing agent on this node, as reported by the CIB. Pacemaker increments this count each time an operation for this fencing agent fails, and resets it to zero when a `pcs resource cleanup` is performed. A flapping fencing agent is exactly what the FencingHealthy condition should be catching early. The value must be zero or greater. This field is optional and is omitted when the status collector has not yet observed a fail count for this fencing agent, for example on a freshly bootstrapped cluster or for an agent that has never failed.",
-          "type": "integer",
-          "format": "int32"
-        },
-        "lastFailureTime": {
-          "description": "lastFailureTime is the timestamp of the most recent failure observed for this fencing agent on this node, as reported by the CIB. This field is optional and is omitted when no failure has been observed for this fencing agent on this node.",
-          "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Time"
-        },
         "method": {
           "description": "method is the fencing method used by this agent. Valid values are \"Redfish\" and \"IPMI\". Redfish is a standard RESTful API for server management. IPMI (Intelligent Platform Management Interface) is a hardware management interface.\n\nPossible enum values:\n - `\"IPMI\"` uses IPMI (Intelligent Platform Management Interface), a hardware management interface.\n - `\"Redfish\"` uses Redfish, a standard RESTful API for server management.",
           "type": "string",
@@ -16815,11 +16806,6 @@
             "IPMI",
             "Redfish"
           ]
-        },
-        "migrationThreshold": {
-          "description": "migrationThreshold is the configured number of failures after which Pacemaker will no longer attempt to use this fencing agent on this node, as reported by the CIB. Without this value, failCount alone is uninterpretable — whether failCount 3 is alarming depends on whether the threshold is 5 or 1000000 (Pacemaker's default INFINITY). The value must be zero or greater. This field is optional and is omitted when the status collector has not yet observed a migration threshold for this fencing agent.",
-          "type": "integer",
-          "format": "int32"
         },
         "name": {
           "description": "name is the unique identifier for this fencing agent (e.g., \"master-0_redfish\"). The name must be unique within the fencingAgents array for this node. It may contain alphanumeric characters, dots, hyphens, and underscores. Maximum length is 300 characters, providing headroom beyond the typical format of <node_name>_<type> (253 for RFC 1123 node name + 1 underscore + type).",
@@ -16902,7 +16888,7 @@
           "x-kubernetes-list-type": "map"
         },
         "lastFenceEvent": {
-          "description": "lastFenceEvent is the most recent fencing event targeting this node, as recorded in Pacemaker's fence history in the CIB. This captures the last time this node was fenced (or a fence attempt was made), including the action taken, the outcome, and which node executed the fence operation. When the Clean condition is False, this field provides the concrete fencing context behind the unclean state. This field is optional and is omitted when no fencing event has been observed for this node.",
+          "description": "lastFenceEvent is the most recent fencing event targeting this node, as recorded in Pacemaker's fence history in the CIB. This captures the last time this node was fenced (or a fence attempt was made), including the action taken and its outcome. When the Clean condition is False, this field provides the concrete fencing context behind the unclean state. This field is optional and is omitted when no fencing event has been observed for this node.",
           "default": {},
           "$ref": "#/definitions/com.github.openshift.api.etcd.v1.PacemakerFenceEvent"
         },
@@ -16948,18 +16934,6 @@
           "description": "failCount is the current failure count Pacemaker records for this resource on this node, as reported by the CIB. Pacemaker increments this count each time an operation for this resource fails, and resets it to zero when a `pcs resource cleanup` is performed. The value must be zero or greater. This field is optional and is omitted when the status collector has not yet observed a fail count for this resource, for example on a freshly bootstrapped cluster or for a resource that has never failed.",
           "type": "integer",
           "format": "int32"
-        },
-        "lastFailureTime": {
-          "description": "lastFailureTime is the timestamp of the most recent failure observed for this resource on this node, as reported by the CIB. Semantically distinct from lastStopTime — a stop can be deliberate (planned migration, admin action), while a failure is always an error condition. This field is optional and is omitted when no failure has been observed for this resource on this node.",
-          "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Time"
-        },
-        "lastStartTime": {
-          "description": "lastStartTime is the timestamp of the most recent start operation observed for this resource on this node, as reported by the CIB. This field is optional and is omitted when no start operation has been observed for this resource on this node, or when Pacemaker has pruned the operation history entry.",
-          "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Time"
-        },
-        "lastStopTime": {
-          "description": "lastStopTime is the timestamp of the most recent stop operation observed for this resource on this node, as reported by the CIB. This field is optional and is omitted when no stop operation has been observed for this resource on this node, or when Pacemaker has pruned the operation history entry.",
-          "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Time"
         },
         "migrationThreshold": {
           "description": "migrationThreshold is the configured number of failures after which Pacemaker will no longer attempt to run this resource on this node, as reported by the CIB. Without this value, failCount alone is uninterpretable — whether failCount 3 is alarming depends on whether the threshold is 5 or 1000000 (Pacemaker's default INFINITY). The value must be zero or greater. This field is optional and is omitted when the status collector has not yet observed a migration threshold for this resource.",
@@ -17016,7 +16990,7 @@
       }
     },
     "com.github.openshift.api.etcd.v1.PacemakerFenceEvent": {
-      "description": "PacemakerFenceEvent represents the most recent fencing event observed for a node. Fencing events are recorded by Pacemaker in the CIB when STONITH operations occur — either automatically during split-brain recovery or manually via stonith_admin. This struct captures the last fence event targeting a given node, providing visibility into what happened, who initiated it, and which node executed it.",
+      "description": "PacemakerFenceEvent represents the most recent fencing event observed for a node. Fencing events are recorded by Pacemaker in the CIB when STONITH operations occur — either automatically during split-brain recovery or manually via stonith_admin. This struct captures the last fence event targeting a given node, providing visibility into what happened, its outcome, and whether it was triggered automatically by the cluster or manually by an operator.",
       "type": "object",
       "required": [
         "action",
@@ -17041,17 +17015,9 @@
           "description": "completedTime is the timestamp when the fencing operation completed. This field is optional and is omitted when the fencing operation is still in progress (status \"pending\") or when Pacemaker has not recorded a completion time.",
           "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Time"
         },
-        "delegate": {
-          "description": "delegate is the name of the node that executed the fencing operation. In a two-node cluster, this is typically the surviving node that fenced its peer. This field is optional and is omitted when the delegate is not reported by Pacemaker, which can occur for pending operations. When provided, the value must be between 1 and 253 characters.",
-          "type": "string"
-        },
         "lastUpdated": {
           "description": "lastUpdated is the timestamp when Pacemaker last updated this fence event record in the CIB. This timestamp is always present in the CIB fence history, including for pending operations where completedTime is not yet set. It must be a valid timestamp in RFC3339 format.",
           "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Time"
-        },
-        "origin": {
-          "description": "origin is the name of the node from which the fencing request originated. This field is optional and is omitted when the origin is not reported by Pacemaker. When provided, the value must be between 1 and 253 characters.",
-          "type": "string"
         },
         "status": {
           "description": "status is the outcome of the fencing operation. Valid values are \"success\" (the operation completed successfully), \"failed\" (the operation failed), and \"pending\" (the operation is currently in progress).\n\nPossible enum values:\n - `\"failed\"` means the fencing operation failed.\n - `\"pending\"` means the fencing operation is currently in progress.\n - `\"success\"` means the fencing operation completed successfully.",
@@ -17133,15 +17099,6 @@
           ],
           "x-kubernetes-list-type": "map"
         },
-        "failCount": {
-          "description": "failCount is the current failure count Pacemaker records for this fencing agent on this node, as reported by the CIB. Pacemaker increments this count each time an operation for this fencing agent fails, and resets it to zero when a `pcs resource cleanup` is performed. A flapping fencing agent is exactly what the FencingHealthy condition should be catching early. The value must be zero or greater. This field is optional and is omitted when the status collector has not yet observed a fail count for this fencing agent, for example on a freshly bootstrapped cluster or for an agent that has never failed.",
-          "type": "integer",
-          "format": "int32"
-        },
-        "lastFailureTime": {
-          "description": "lastFailureTime is the timestamp of the most recent failure observed for this fencing agent on this node, as reported by the CIB. This field is optional and is omitted when no failure has been observed for this fencing agent on this node.",
-          "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Time"
-        },
         "method": {
           "description": "method is the fencing method used by this agent. Valid values are \"Redfish\" and \"IPMI\". Redfish is a standard RESTful API for server management. IPMI (Intelligent Platform Management Interface) is a hardware management interface.\n\nPossible enum values:\n - `\"IPMI\"` uses IPMI (Intelligent Platform Management Interface), a hardware management interface.\n - `\"Redfish\"` uses Redfish, a standard RESTful API for server management.",
           "type": "string",
@@ -17149,11 +17106,6 @@
             "IPMI",
             "Redfish"
           ]
-        },
-        "migrationThreshold": {
-          "description": "migrationThreshold is the configured number of failures after which Pacemaker will no longer attempt to use this fencing agent on this node, as reported by the CIB. Without this value, failCount alone is uninterpretable — whether failCount 3 is alarming depends on whether the threshold is 5 or 1000000 (Pacemaker's default INFINITY). The value must be zero or greater. This field is optional and is omitted when the status collector has not yet observed a migration threshold for this fencing agent.",
-          "type": "integer",
-          "format": "int32"
         },
         "name": {
           "description": "name is the unique identifier for this fencing agent (e.g., \"master-0_redfish\"). The name must be unique within the fencingAgents array for this node. It may contain alphanumeric characters, dots, hyphens, and underscores. Maximum length is 300 characters, providing headroom beyond the typical format of <node_name>_<type> (253 for RFC 1123 node name + 1 underscore + type).",
@@ -17236,7 +17188,7 @@
           "x-kubernetes-list-type": "map"
         },
         "lastFenceEvent": {
-          "description": "lastFenceEvent is the most recent fencing event targeting this node, as recorded in Pacemaker's fence history in the CIB. This captures the last time this node was fenced (or a fence attempt was made), including the action taken, the outcome, and which node executed the fence operation. When the Clean condition is False, this field provides the concrete fencing context behind the unclean state. This field is optional and is omitted when no fencing event has been observed for this node.",
+          "description": "lastFenceEvent is the most recent fencing event targeting this node, as recorded in Pacemaker's fence history in the CIB. This captures the last time this node was fenced (or a fence attempt was made), including the action taken and its outcome. When the Clean condition is False, this field provides the concrete fencing context behind the unclean state. This field is optional and is omitted when no fencing event has been observed for this node.",
           "default": {},
           "$ref": "#/definitions/com.github.openshift.api.etcd.v1alpha1.PacemakerFenceEvent"
         },
@@ -17282,18 +17234,6 @@
           "description": "failCount is the current failure count Pacemaker records for this resource on this node, as reported by the CIB. Pacemaker increments this count each time an operation for this resource fails, and resets it to zero when a `pcs resource cleanup` is performed. The value must be zero or greater. This field is optional and is omitted when the status collector has not yet observed a fail count for this resource, for example on a freshly bootstrapped cluster or for a resource that has never failed.",
           "type": "integer",
           "format": "int32"
-        },
-        "lastFailureTime": {
-          "description": "lastFailureTime is the timestamp of the most recent failure observed for this resource on this node, as reported by the CIB. Semantically distinct from lastStopTime — a stop can be deliberate (planned migration, admin action), while a failure is always an error condition. This field is optional and is omitted when no failure has been observed for this resource on this node.",
-          "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Time"
-        },
-        "lastStartTime": {
-          "description": "lastStartTime is the timestamp of the most recent start operation observed for this resource on this node, as reported by the CIB. This field is optional and is omitted when no start operation has been observed for this resource on this node, or when Pacemaker has pruned the operation history entry.",
-          "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Time"
-        },
-        "lastStopTime": {
-          "description": "lastStopTime is the timestamp of the most recent stop operation observed for this resource on this node, as reported by the CIB. This field is optional and is omitted when no stop operation has been observed for this resource on this node, or when Pacemaker has pruned the operation history entry.",
-          "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Time"
         },
         "migrationThreshold": {
           "description": "migrationThreshold is the configured number of failures after which Pacemaker will no longer attempt to run this resource on this node, as reported by the CIB. Without this value, failCount alone is uninterpretable — whether failCount 3 is alarming depends on whether the threshold is 5 or 1000000 (Pacemaker's default INFINITY). The value must be zero or greater. This field is optional and is omitted when the status collector has not yet observed a migration threshold for this resource.",
@@ -17350,7 +17290,7 @@
       }
     },
     "com.github.openshift.api.etcd.v1alpha1.PacemakerFenceEvent": {
-      "description": "PacemakerFenceEvent represents the most recent fencing event observed for a node. Fencing events are recorded by Pacemaker in the CIB when STONITH operations occur — either automatically during split-brain recovery or manually via stonith_admin. This struct captures the last fence event targeting a given node, providing visibility into what happened, who initiated it, and which node executed it.",
+      "description": "PacemakerFenceEvent represents the most recent fencing event observed for a node. Fencing events are recorded by Pacemaker in the CIB when STONITH operations occur — either automatically during split-brain recovery or manually via stonith_admin. This struct captures the last fence event targeting a given node, providing visibility into what happened, its outcome, and whether it was triggered automatically by the cluster or manually by an operator.",
       "type": "object",
       "required": [
         "action",
@@ -17375,17 +17315,9 @@
           "description": "completedTime is the timestamp when the fencing operation completed. This field is optional and is omitted when the fencing operation is still in progress (status \"pending\") or when Pacemaker has not recorded a completion time.",
           "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Time"
         },
-        "delegate": {
-          "description": "delegate is the name of the node that executed the fencing operation. In a two-node cluster, this is typically the surviving node that fenced its peer. This field is optional and is omitted when the delegate is not reported by Pacemaker, which can occur for pending operations. When provided, the value must be between 1 and 253 characters.",
-          "type": "string"
-        },
         "lastUpdated": {
           "description": "lastUpdated is the timestamp when Pacemaker last updated this fence event record in the CIB. This timestamp is always present in the CIB fence history, including for pending operations where completedTime is not yet set. It must be a valid timestamp in RFC3339 format.",
           "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Time"
-        },
-        "origin": {
-          "description": "origin is the name of the node from which the fencing request originated. This field is optional and is omitted when the origin is not reported by Pacemaker. When provided, the value must be between 1 and 253 characters.",
-          "type": "string"
         },
         "status": {
           "description": "status is the outcome of the fencing operation. Valid values are \"success\" (the operation completed successfully), \"failed\" (the operation failed), and \"pending\" (the operation is currently in progress).\n\nPossible enum values:\n - `\"failed\"` means the fencing operation failed.\n - `\"pending\"` means the fencing operation is currently in progress.\n - `\"success\"` means the fencing operation completed successfully.",

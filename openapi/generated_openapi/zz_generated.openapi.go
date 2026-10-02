@@ -30180,32 +30180,12 @@ func schema_openshift_api_etcd_v1_PacemakerClusterFencingAgentStatus(ref common.
 							Enum:        []interface{}{"IPMI", "Redfish"},
 						},
 					},
-					"failCount": {
-						SchemaProps: spec.SchemaProps{
-							Description: "failCount is the current failure count Pacemaker records for this fencing agent on this node, as reported by the CIB. Pacemaker increments this count each time an operation for this fencing agent fails, and resets it to zero when a `pcs resource cleanup` is performed. A flapping fencing agent is exactly what the FencingHealthy condition should be catching early. The value must be zero or greater. This field is optional and is omitted when the status collector has not yet observed a fail count for this fencing agent, for example on a freshly bootstrapped cluster or for an agent that has never failed.",
-							Type:        []string{"integer"},
-							Format:      "int32",
-						},
-					},
-					"migrationThreshold": {
-						SchemaProps: spec.SchemaProps{
-							Description: "migrationThreshold is the configured number of failures after which Pacemaker will no longer attempt to use this fencing agent on this node, as reported by the CIB. Without this value, failCount alone is uninterpretable — whether failCount 3 is alarming depends on whether the threshold is 5 or 1000000 (Pacemaker's default INFINITY). The value must be zero or greater. This field is optional and is omitted when the status collector has not yet observed a migration threshold for this fencing agent.",
-							Type:        []string{"integer"},
-							Format:      "int32",
-						},
-					},
-					"lastFailureTime": {
-						SchemaProps: spec.SchemaProps{
-							Description: "lastFailureTime is the timestamp of the most recent failure observed for this fencing agent on this node, as reported by the CIB. This field is optional and is omitted when no failure has been observed for this fencing agent on this node.",
-							Ref:         ref(metav1.Time{}.OpenAPIModelName()),
-						},
-					},
 				},
 				Required: []string{"conditions", "name", "method"},
 			},
 		},
 		Dependencies: []string{
-			metav1.Condition{}.OpenAPIModelName(), metav1.Time{}.OpenAPIModelName()},
+			metav1.Condition{}.OpenAPIModelName()},
 	}
 }
 
@@ -30361,7 +30341,7 @@ func schema_openshift_api_etcd_v1_PacemakerClusterNodeStatus(ref common.Referenc
 					},
 					"lastFenceEvent": {
 						SchemaProps: spec.SchemaProps{
-							Description: "lastFenceEvent is the most recent fencing event targeting this node, as recorded in Pacemaker's fence history in the CIB. This captures the last time this node was fenced (or a fence attempt was made), including the action taken, the outcome, and which node executed the fence operation. When the Clean condition is False, this field provides the concrete fencing context behind the unclean state. This field is optional and is omitted when no fencing event has been observed for this node.",
+							Description: "lastFenceEvent is the most recent fencing event targeting this node, as recorded in Pacemaker's fence history in the CIB. This captures the last time this node was fenced (or a fence attempt was made), including the action taken and its outcome. When the Clean condition is False, this field provides the concrete fencing context behind the unclean state. This field is optional and is omitted when no fencing event has been observed for this node.",
 							Default:     map[string]interface{}{},
 							Ref:         ref(etcdv1.PacemakerFenceEvent{}.OpenAPIModelName()),
 						},
@@ -30419,18 +30399,6 @@ func schema_openshift_api_etcd_v1_PacemakerClusterResourceStatus(ref common.Refe
 							Format:      "int32",
 						},
 					},
-					"lastStopTime": {
-						SchemaProps: spec.SchemaProps{
-							Description: "lastStopTime is the timestamp of the most recent stop operation observed for this resource on this node, as reported by the CIB. This field is optional and is omitted when no stop operation has been observed for this resource on this node, or when Pacemaker has pruned the operation history entry.",
-							Ref:         ref(metav1.Time{}.OpenAPIModelName()),
-						},
-					},
-					"lastStartTime": {
-						SchemaProps: spec.SchemaProps{
-							Description: "lastStartTime is the timestamp of the most recent start operation observed for this resource on this node, as reported by the CIB. This field is optional and is omitted when no start operation has been observed for this resource on this node, or when Pacemaker has pruned the operation history entry.",
-							Ref:         ref(metav1.Time{}.OpenAPIModelName()),
-						},
-					},
 					"migrationThreshold": {
 						SchemaProps: spec.SchemaProps{
 							Description: "migrationThreshold is the configured number of failures after which Pacemaker will no longer attempt to run this resource on this node, as reported by the CIB. Without this value, failCount alone is uninterpretable — whether failCount 3 is alarming depends on whether the threshold is 5 or 1000000 (Pacemaker's default INFINITY). The value must be zero or greater. This field is optional and is omitted when the status collector has not yet observed a migration threshold for this resource.",
@@ -30438,18 +30406,12 @@ func schema_openshift_api_etcd_v1_PacemakerClusterResourceStatus(ref common.Refe
 							Format:      "int32",
 						},
 					},
-					"lastFailureTime": {
-						SchemaProps: spec.SchemaProps{
-							Description: "lastFailureTime is the timestamp of the most recent failure observed for this resource on this node, as reported by the CIB. Semantically distinct from lastStopTime — a stop can be deliberate (planned migration, admin action), while a failure is always an error condition. This field is optional and is omitted when no failure has been observed for this resource on this node.",
-							Ref:         ref(metav1.Time{}.OpenAPIModelName()),
-						},
-					},
 				},
 				Required: []string{"conditions", "name"},
 			},
 		},
 		Dependencies: []string{
-			metav1.Condition{}.OpenAPIModelName(), metav1.Time{}.OpenAPIModelName()},
+			metav1.Condition{}.OpenAPIModelName()},
 	}
 }
 
@@ -30523,7 +30485,7 @@ func schema_openshift_api_etcd_v1_PacemakerFenceEvent(ref common.ReferenceCallba
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
-				Description: "PacemakerFenceEvent represents the most recent fencing event observed for a node. Fencing events are recorded by Pacemaker in the CIB when STONITH operations occur — either automatically during split-brain recovery or manually via stonith_admin. This struct captures the last fence event targeting a given node, providing visibility into what happened, who initiated it, and which node executed it.",
+				Description: "PacemakerFenceEvent represents the most recent fencing event observed for a node. Fencing events are recorded by Pacemaker in the CIB when STONITH operations occur — either automatically during split-brain recovery or manually via stonith_admin. This struct captures the last fence event targeting a given node, providing visibility into what happened, its outcome, and whether it was triggered automatically by the cluster or manually by an operator.",
 				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
 					"action": {
@@ -30542,23 +30504,9 @@ func schema_openshift_api_etcd_v1_PacemakerFenceEvent(ref common.ReferenceCallba
 							Enum:        []interface{}{"failed", "pending", "success"},
 						},
 					},
-					"delegate": {
-						SchemaProps: spec.SchemaProps{
-							Description: "delegate is the name of the node that executed the fencing operation. In a two-node cluster, this is typically the surviving node that fenced its peer. This field is optional and is omitted when the delegate is not reported by Pacemaker, which can occur for pending operations. When provided, the value must be between 1 and 253 characters.",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
 					"client": {
 						SchemaProps: spec.SchemaProps{
 							Description: "client identifies the daemon or tool that requested the fencing operation. Typical values are \"crmd\" for automatic recovery initiated by the cluster resource manager, or \"stonith_admin\" for manual fencing initiated by an operator. This is useful for distinguishing \"the cluster fenced itself for cause\" from \"someone fenced a node manually\" during incident review. This field is optional and is omitted when the client is not reported by Pacemaker. When provided, the value must be between 1 and 256 characters.",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"origin": {
-						SchemaProps: spec.SchemaProps{
-							Description: "origin is the name of the node from which the fencing request originated. This field is optional and is omitted when the origin is not reported by Pacemaker. When provided, the value must be between 1 and 253 characters.",
 							Type:        []string{"string"},
 							Format:      "",
 						},
@@ -30701,32 +30649,12 @@ func schema_openshift_api_etcd_v1alpha1_PacemakerClusterFencingAgentStatus(ref c
 							Enum:        []interface{}{"IPMI", "Redfish"},
 						},
 					},
-					"failCount": {
-						SchemaProps: spec.SchemaProps{
-							Description: "failCount is the current failure count Pacemaker records for this fencing agent on this node, as reported by the CIB. Pacemaker increments this count each time an operation for this fencing agent fails, and resets it to zero when a `pcs resource cleanup` is performed. A flapping fencing agent is exactly what the FencingHealthy condition should be catching early. The value must be zero or greater. This field is optional and is omitted when the status collector has not yet observed a fail count for this fencing agent, for example on a freshly bootstrapped cluster or for an agent that has never failed.",
-							Type:        []string{"integer"},
-							Format:      "int32",
-						},
-					},
-					"migrationThreshold": {
-						SchemaProps: spec.SchemaProps{
-							Description: "migrationThreshold is the configured number of failures after which Pacemaker will no longer attempt to use this fencing agent on this node, as reported by the CIB. Without this value, failCount alone is uninterpretable — whether failCount 3 is alarming depends on whether the threshold is 5 or 1000000 (Pacemaker's default INFINITY). The value must be zero or greater. This field is optional and is omitted when the status collector has not yet observed a migration threshold for this fencing agent.",
-							Type:        []string{"integer"},
-							Format:      "int32",
-						},
-					},
-					"lastFailureTime": {
-						SchemaProps: spec.SchemaProps{
-							Description: "lastFailureTime is the timestamp of the most recent failure observed for this fencing agent on this node, as reported by the CIB. This field is optional and is omitted when no failure has been observed for this fencing agent on this node.",
-							Ref:         ref(metav1.Time{}.OpenAPIModelName()),
-						},
-					},
 				},
 				Required: []string{"conditions", "name", "method"},
 			},
 		},
 		Dependencies: []string{
-			metav1.Condition{}.OpenAPIModelName(), metav1.Time{}.OpenAPIModelName()},
+			metav1.Condition{}.OpenAPIModelName()},
 	}
 }
 
@@ -30882,7 +30810,7 @@ func schema_openshift_api_etcd_v1alpha1_PacemakerClusterNodeStatus(ref common.Re
 					},
 					"lastFenceEvent": {
 						SchemaProps: spec.SchemaProps{
-							Description: "lastFenceEvent is the most recent fencing event targeting this node, as recorded in Pacemaker's fence history in the CIB. This captures the last time this node was fenced (or a fence attempt was made), including the action taken, the outcome, and which node executed the fence operation. When the Clean condition is False, this field provides the concrete fencing context behind the unclean state. This field is optional and is omitted when no fencing event has been observed for this node.",
+							Description: "lastFenceEvent is the most recent fencing event targeting this node, as recorded in Pacemaker's fence history in the CIB. This captures the last time this node was fenced (or a fence attempt was made), including the action taken and its outcome. When the Clean condition is False, this field provides the concrete fencing context behind the unclean state. This field is optional and is omitted when no fencing event has been observed for this node.",
 							Default:     map[string]interface{}{},
 							Ref:         ref(etcdv1alpha1.PacemakerFenceEvent{}.OpenAPIModelName()),
 						},
@@ -30940,18 +30868,6 @@ func schema_openshift_api_etcd_v1alpha1_PacemakerClusterResourceStatus(ref commo
 							Format:      "int32",
 						},
 					},
-					"lastStopTime": {
-						SchemaProps: spec.SchemaProps{
-							Description: "lastStopTime is the timestamp of the most recent stop operation observed for this resource on this node, as reported by the CIB. This field is optional and is omitted when no stop operation has been observed for this resource on this node, or when Pacemaker has pruned the operation history entry.",
-							Ref:         ref(metav1.Time{}.OpenAPIModelName()),
-						},
-					},
-					"lastStartTime": {
-						SchemaProps: spec.SchemaProps{
-							Description: "lastStartTime is the timestamp of the most recent start operation observed for this resource on this node, as reported by the CIB. This field is optional and is omitted when no start operation has been observed for this resource on this node, or when Pacemaker has pruned the operation history entry.",
-							Ref:         ref(metav1.Time{}.OpenAPIModelName()),
-						},
-					},
 					"migrationThreshold": {
 						SchemaProps: spec.SchemaProps{
 							Description: "migrationThreshold is the configured number of failures after which Pacemaker will no longer attempt to run this resource on this node, as reported by the CIB. Without this value, failCount alone is uninterpretable — whether failCount 3 is alarming depends on whether the threshold is 5 or 1000000 (Pacemaker's default INFINITY). The value must be zero or greater. This field is optional and is omitted when the status collector has not yet observed a migration threshold for this resource.",
@@ -30959,18 +30875,12 @@ func schema_openshift_api_etcd_v1alpha1_PacemakerClusterResourceStatus(ref commo
 							Format:      "int32",
 						},
 					},
-					"lastFailureTime": {
-						SchemaProps: spec.SchemaProps{
-							Description: "lastFailureTime is the timestamp of the most recent failure observed for this resource on this node, as reported by the CIB. Semantically distinct from lastStopTime — a stop can be deliberate (planned migration, admin action), while a failure is always an error condition. This field is optional and is omitted when no failure has been observed for this resource on this node.",
-							Ref:         ref(metav1.Time{}.OpenAPIModelName()),
-						},
-					},
 				},
 				Required: []string{"conditions", "name"},
 			},
 		},
 		Dependencies: []string{
-			metav1.Condition{}.OpenAPIModelName(), metav1.Time{}.OpenAPIModelName()},
+			metav1.Condition{}.OpenAPIModelName()},
 	}
 }
 
@@ -31044,7 +30954,7 @@ func schema_openshift_api_etcd_v1alpha1_PacemakerFenceEvent(ref common.Reference
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
-				Description: "PacemakerFenceEvent represents the most recent fencing event observed for a node. Fencing events are recorded by Pacemaker in the CIB when STONITH operations occur — either automatically during split-brain recovery or manually via stonith_admin. This struct captures the last fence event targeting a given node, providing visibility into what happened, who initiated it, and which node executed it.",
+				Description: "PacemakerFenceEvent represents the most recent fencing event observed for a node. Fencing events are recorded by Pacemaker in the CIB when STONITH operations occur — either automatically during split-brain recovery or manually via stonith_admin. This struct captures the last fence event targeting a given node, providing visibility into what happened, its outcome, and whether it was triggered automatically by the cluster or manually by an operator.",
 				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
 					"action": {
@@ -31063,23 +30973,9 @@ func schema_openshift_api_etcd_v1alpha1_PacemakerFenceEvent(ref common.Reference
 							Enum:        []interface{}{"failed", "pending", "success"},
 						},
 					},
-					"delegate": {
-						SchemaProps: spec.SchemaProps{
-							Description: "delegate is the name of the node that executed the fencing operation. In a two-node cluster, this is typically the surviving node that fenced its peer. This field is optional and is omitted when the delegate is not reported by Pacemaker, which can occur for pending operations. When provided, the value must be between 1 and 253 characters.",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
 					"client": {
 						SchemaProps: spec.SchemaProps{
 							Description: "client identifies the daemon or tool that requested the fencing operation. Typical values are \"crmd\" for automatic recovery initiated by the cluster resource manager, or \"stonith_admin\" for manual fencing initiated by an operator. This is useful for distinguishing \"the cluster fenced itself for cause\" from \"someone fenced a node manually\" during incident review. This field is optional and is omitted when the client is not reported by Pacemaker. When provided, the value must be between 1 and 256 characters.",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"origin": {
-						SchemaProps: spec.SchemaProps{
-							Description: "origin is the name of the node from which the fencing request originated. This field is optional and is omitted when the origin is not reported by Pacemaker. When provided, the value must be between 1 and 253 characters.",
 							Type:        []string{"string"},
 							Format:      "",
 						},

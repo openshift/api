@@ -527,8 +527,8 @@ const (
 // PacemakerFenceEvent represents the most recent fencing event observed for a node. Fencing events
 // are recorded by Pacemaker in the CIB when STONITH operations occur — either automatically during
 // split-brain recovery or manually via stonith_admin. This struct captures the last fence event
-// targeting a given node, providing visibility into what happened, who initiated it, and which node
-// executed it.
+// targeting a given node, providing visibility into what happened, its outcome, and whether it was
+// triggered automatically by the cluster or manually by an operator.
 type PacemakerFenceEvent struct {
 	// action is the type of fencing action that was performed or is in progress.
 	// Valid values are "reboot" (power-cycle the node), "power-off" (power off the node),
@@ -542,15 +542,6 @@ type PacemakerFenceEvent struct {
 	// +required
 	Status PacemakerFenceEventStatus `json:"status,omitempty"`
 
-	// delegate is the name of the node that executed the fencing operation. In a two-node cluster,
-	// this is typically the surviving node that fenced its peer. This field is optional and is
-	// omitted when the delegate is not reported by Pacemaker, which can occur for pending
-	// operations. When provided, the value must be between 1 and 253 characters.
-	// +kubebuilder:validation:MinLength=1
-	// +kubebuilder:validation:MaxLength=253
-	// +optional
-	Delegate string `json:"delegate,omitempty"`
-
 	// client identifies the daemon or tool that requested the fencing operation. Typical values
 	// are "crmd" for automatic recovery initiated by the cluster resource manager, or
 	// "stonith_admin" for manual fencing initiated by an operator. This is useful for
@@ -561,14 +552,6 @@ type PacemakerFenceEvent struct {
 	// +kubebuilder:validation:MaxLength=256
 	// +optional
 	Client string `json:"client,omitempty"`
-
-	// origin is the name of the node from which the fencing request originated. This field is
-	// optional and is omitted when the origin is not reported by Pacemaker. When provided, the
-	// value must be between 1 and 253 characters.
-	// +kubebuilder:validation:MinLength=1
-	// +kubebuilder:validation:MaxLength=253
-	// +optional
-	Origin string `json:"origin,omitempty"`
 
 	// lastUpdated is the timestamp when Pacemaker last updated this fence event record in the CIB.
 	// This timestamp is always present in the CIB fence history, including for pending operations
@@ -747,10 +730,10 @@ type PacemakerClusterNodeStatus struct {
 
 	// lastFenceEvent is the most recent fencing event targeting this node, as recorded in
 	// Pacemaker's fence history in the CIB. This captures the last time this node was fenced
-	// (or a fence attempt was made), including the action taken, the outcome, and which node
-	// executed the fence operation. When the Clean condition is False, this field provides the
-	// concrete fencing context behind the unclean state. This field is optional and is omitted
-	// when no fencing event has been observed for this node.
+	// (or a fence attempt was made), including the action taken and its outcome. When the
+	// Clean condition is False, this field provides the concrete fencing context behind the
+	// unclean state. This field is optional and is omitted when no fencing event has been
+	// observed for this node.
 	// +optional
 	LastFenceEvent PacemakerFenceEvent `json:"lastFenceEvent,omitempty,omitzero"`
 }
@@ -804,36 +787,6 @@ type PacemakerClusterFencingAgentStatus struct {
 	// IPMI (Intelligent Platform Management Interface) is a hardware management interface.
 	// +required
 	Method FencingMethod `json:"method,omitempty"`
-
-	// failCount is the current failure count Pacemaker records for this fencing agent on
-	// this node, as reported by the CIB. Pacemaker increments this count each time an
-	// operation for this fencing agent fails, and resets it to zero when a `pcs resource
-	// cleanup` is performed. A flapping fencing agent is exactly what the FencingHealthy
-	// condition should be catching early. The value must be zero or greater. This field is
-	// optional and is omitted when the status collector has not yet observed a fail count for
-	// this fencing agent, for example on a freshly bootstrapped cluster or for an agent that
-	// has never failed.
-	// +kubebuilder:validation:Minimum=0
-	// +optional
-	FailCount *int32 `json:"failCount,omitempty"`
-
-	// migrationThreshold is the configured number of failures after which Pacemaker will
-	// no longer attempt to use this fencing agent on this node, as reported by the CIB.
-	// Without this value, failCount alone is uninterpretable — whether failCount 3 is
-	// alarming depends on whether the threshold is 5 or 1000000 (Pacemaker's default
-	// INFINITY). The value must be zero or greater. This field is optional and is omitted
-	// when the status collector has not yet observed a migration threshold for this fencing
-	// agent.
-	// +kubebuilder:validation:Minimum=0
-	// +optional
-	MigrationThreshold *int32 `json:"migrationThreshold,omitempty"`
-
-	// lastFailureTime is the timestamp of the most recent failure observed for this fencing
-	// agent on this node, as reported by the CIB. This field is optional and is omitted when
-	// no failure has been observed for this fencing agent on this node.
-	// +kubebuilder:validation:Format=date-time
-	// +optional
-	LastFailureTime *metav1.Time `json:"lastFailureTime,omitempty"`
 }
 
 // PacemakerClusterResourceStatus represents the status of a pacemaker resource scheduled on a node.
@@ -892,22 +845,6 @@ type PacemakerClusterResourceStatus struct {
 	// +optional
 	FailCount *int32 `json:"failCount,omitempty"`
 
-	// lastStopTime is the timestamp of the most recent stop operation observed for
-	// this resource on this node, as reported by the CIB. This field is optional and
-	// is omitted when no stop operation has been observed for this resource on this
-	// node, or when Pacemaker has pruned the operation history entry.
-	// +kubebuilder:validation:Format=date-time
-	// +optional
-	LastStopTime *metav1.Time `json:"lastStopTime,omitempty"`
-
-	// lastStartTime is the timestamp of the most recent start operation observed for
-	// this resource on this node, as reported by the CIB. This field is optional and
-	// is omitted when no start operation has been observed for this resource on this
-	// node, or when Pacemaker has pruned the operation history entry.
-	// +kubebuilder:validation:Format=date-time
-	// +optional
-	LastStartTime *metav1.Time `json:"lastStartTime,omitempty"`
-
 	// migrationThreshold is the configured number of failures after which Pacemaker
 	// will no longer attempt to run this resource on this node, as reported by the
 	// CIB. Without this value, failCount alone is uninterpretable — whether
@@ -918,15 +855,6 @@ type PacemakerClusterResourceStatus struct {
 	// +kubebuilder:validation:Minimum=0
 	// +optional
 	MigrationThreshold *int32 `json:"migrationThreshold,omitempty"`
-
-	// lastFailureTime is the timestamp of the most recent failure observed for this
-	// resource on this node, as reported by the CIB. Semantically distinct from
-	// lastStopTime — a stop can be deliberate (planned migration, admin action),
-	// while a failure is always an error condition. This field is optional and is
-	// omitted when no failure has been observed for this resource on this node.
-	// +kubebuilder:validation:Format=date-time
-	// +optional
-	LastFailureTime *metav1.Time `json:"lastFailureTime,omitempty"`
 }
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object

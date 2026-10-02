@@ -402,26 +402,6 @@ spec:
                             - message: conditions must contain a condition of type
                                 Schedulable
                               rule: self.exists(c, c.type == 'Schedulable')
-                          failCount:
-                            description: |-
-                              failCount is the current failure count Pacemaker records for this fencing agent on
-                              this node, as reported by the CIB. Pacemaker increments this count each time an
-                              operation for this fencing agent fails, and resets it to zero when a `pcs resource
-                              cleanup` is performed. A flapping fencing agent is exactly what the FencingHealthy
-                              condition should be catching early. The value must be zero or greater. This field is
-                              optional and is omitted when the status collector has not yet observed a fail count for
-                              this fencing agent, for example on a freshly bootstrapped cluster or for an agent that
-                              has never failed.
-                            format: int32
-                            minimum: 0
-                            type: integer
-                          lastFailureTime:
-                            description: |-
-                              lastFailureTime is the timestamp of the most recent failure observed for this fencing
-                              agent on this node, as reported by the CIB. This field is optional and is omitted when
-                              no failure has been observed for this fencing agent on this node.
-                            format: date-time
-                            type: string
                           method:
                             description: |-
                               method is the fencing method used by this agent.
@@ -432,18 +412,6 @@ spec:
                             - Redfish
                             - IPMI
                             type: string
-                          migrationThreshold:
-                            description: |-
-                              migrationThreshold is the configured number of failures after which Pacemaker will
-                              no longer attempt to use this fencing agent on this node, as reported by the CIB.
-                              Without this value, failCount alone is uninterpretable — whether failCount 3 is
-                              alarming depends on whether the threshold is 5 or 1000000 (Pacemaker's default
-                              INFINITY). The value must be zero or greater. This field is optional and is omitted
-                              when the status collector has not yet observed a migration threshold for this fencing
-                              agent.
-                            format: int32
-                            minimum: 0
-                            type: integer
                           name:
                             description: |-
                               name is the unique identifier for this fencing agent (e.g., "master-0_redfish").
@@ -476,10 +444,10 @@ spec:
                       description: |-
                         lastFenceEvent is the most recent fencing event targeting this node, as recorded in
                         Pacemaker's fence history in the CIB. This captures the last time this node was fenced
-                        (or a fence attempt was made), including the action taken, the outcome, and which node
-                        executed the fence operation. When the Clean condition is False, this field provides the
-                        concrete fencing context behind the unclean state. This field is optional and is omitted
-                        when no fencing event has been observed for this node.
+                        (or a fence attempt was made), including the action taken and its outcome. When the
+                        Clean condition is False, this field provides the concrete fencing context behind the
+                        unclean state. This field is optional and is omitted when no fencing event has been
+                        observed for this node.
                       properties:
                         action:
                           description: |-
@@ -509,29 +477,12 @@ spec:
                             Pacemaker has not recorded a completion time.
                           format: date-time
                           type: string
-                        delegate:
-                          description: |-
-                            delegate is the name of the node that executed the fencing operation. In a two-node cluster,
-                            this is typically the surviving node that fenced its peer. This field is optional and is
-                            omitted when the delegate is not reported by Pacemaker, which can occur for pending
-                            operations. When provided, the value must be between 1 and 253 characters.
-                          maxLength: 253
-                          minLength: 1
-                          type: string
                         lastUpdated:
                           description: |-
                             lastUpdated is the timestamp when Pacemaker last updated this fence event record in the CIB.
                             This timestamp is always present in the CIB fence history, including for pending operations
                             where completedTime is not yet set. It must be a valid timestamp in RFC3339 format.
                           format: date-time
-                          type: string
-                        origin:
-                          description: |-
-                            origin is the name of the node from which the fencing request originated. This field is
-                            optional and is omitted when the origin is not reported by Pacemaker. When provided, the
-                            value must be between 1 and 253 characters.
-                          maxLength: 253
-                          minLength: 1
                           type: string
                         status:
                           description: |-
@@ -694,31 +645,6 @@ spec:
                             format: int32
                             minimum: 0
                             type: integer
-                          lastFailureTime:
-                            description: |-
-                              lastFailureTime is the timestamp of the most recent failure observed for this
-                              resource on this node, as reported by the CIB. Semantically distinct from
-                              lastStopTime — a stop can be deliberate (planned migration, admin action),
-                              while a failure is always an error condition. This field is optional and is
-                              omitted when no failure has been observed for this resource on this node.
-                            format: date-time
-                            type: string
-                          lastStartTime:
-                            description: |-
-                              lastStartTime is the timestamp of the most recent start operation observed for
-                              this resource on this node, as reported by the CIB. This field is optional and
-                              is omitted when no start operation has been observed for this resource on this
-                              node, or when Pacemaker has pruned the operation history entry.
-                            format: date-time
-                            type: string
-                          lastStopTime:
-                            description: |-
-                              lastStopTime is the timestamp of the most recent stop operation observed for
-                              this resource on this node, as reported by the CIB. This field is optional and
-                              is omitted when no stop operation has been observed for this resource on this
-                              node, or when Pacemaker has pruned the operation history entry.
-                            format: date-time
-                            type: string
                           migrationThreshold:
                             description: |-
                               migrationThreshold is the configured number of failures after which Pacemaker

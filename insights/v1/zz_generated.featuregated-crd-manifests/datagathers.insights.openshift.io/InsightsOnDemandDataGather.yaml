@@ -464,7 +464,7 @@ spec:
                       properties:
                         advisorURI:
                           description: |-
-                            advisorURI is required field that provides the URL link to the Insights Advisor.
+                            advisorURI is a required field that provides the URL link to the Red Hat Lightspeed Advisor UI.
                             The link must be a valid HTTPS URL and the maximum length is 2048 characters.
                           maxLength: 2048
                           minLength: 1

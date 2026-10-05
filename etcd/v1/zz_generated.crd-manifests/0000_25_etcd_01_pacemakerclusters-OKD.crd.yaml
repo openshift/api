@@ -6,6 +6,7 @@ metadata:
     api.openshift.io/merged-by-featuregates: "true"
     include.release.openshift.io/ibm-cloud-managed: "true"
     include.release.openshift.io/self-managed-high-availability: "true"
+    release.openshift.io/feature-set: OKD
   name: pacemakerclusters.etcd.openshift.io
 spec:
   group: etcd.openshift.io
@@ -143,6 +144,9 @@ spec:
                   description: |-
                     PacemakerClusterNodeStatus represents the status of a single node in the pacemaker cluster including
                     the node's conditions and the health of critical resources running on that node.
+                    When the PacemakerAlertAgentStatus feature gate is enabled, once a status collector reports
+                    alertAgents for a node, later updates may not remove it. The field remains optional to tolerate
+                    collector versions that predate alert-agent tracking.
                   properties:
                     addresses:
                       description: |-
@@ -201,6 +205,11 @@ spec:
                         The "FencingAvailable" condition tracks whether this node can be fenced by at least one healthy agent.
                         The "FencingHealthy" condition tracks whether all fencing agents for this node are healthy.
                         Each of these conditions is required, so the array must contain at least 9 items.
+                        An optional "AlertAgentsHealthy" condition (see NodeAlertAgentsHealthyConditionType) may also be
+                        reported when the PacemakerAlertAgentStatus feature gate is enabled; it is not one of the
+                        required 9 and its absence does not affect validation.
+                        When reported as Unknown with reason "Pending", "AlertAgentsHealthy" means the health of
+                        the tracked alert agents has not yet been determined.
                       items:
                         description: Condition contains details for one aspect of
                           the current state of this API Resource.

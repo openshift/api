@@ -14,7 +14,6 @@
 | KarpenterOperator| | | | <span style="background-color: #519450">Enabled</span> | | | |  |
 | MutableTopology| | | | <span style="background-color: #519450">Enabled</span> | | | |  |
 | UnifiedClusterManagedDNSAndLB| | | | <span style="background-color: #519450">Enabled</span> | | | |  |
-| AuthenticationComponentProxy| | | | <span style="background-color: #519450">Enabled</span> | | | | <span style="background-color: #519450">Enabled</span>  |
 | BGPBasedVIPManagement| | | <span style="background-color: #519450">Enabled</span> | <span style="background-color: #519450">Enabled</span> | | | |  |
 | ClusterAPIComputeInstall| | | <span style="background-color: #519450">Enabled</span> | <span style="background-color: #519450">Enabled</span> | | | |  |
 | ClusterAPIControlPlaneInstall| | | <span style="background-color: #519450">Enabled</span> | <span style="background-color: #519450">Enabled</span> | | | |  |
@@ -33,6 +32,7 @@
 | AWSClusterHostedDNS| | | <span style="background-color: #519450">Enabled</span> | <span style="background-color: #519450">Enabled</span> | | | <span style="background-color: #519450">Enabled</span> | <span style="background-color: #519450">Enabled</span>  |
 | AWSDedicatedHosts| | | <span style="background-color: #519450">Enabled</span> | <span style="background-color: #519450">Enabled</span> | | | <span style="background-color: #519450">Enabled</span> | <span style="background-color: #519450">Enabled</span>  |
 | AWSEuropeanSovereignCloudInstall| | | <span style="background-color: #519450">Enabled</span> | <span style="background-color: #519450">Enabled</span> | | | <span style="background-color: #519450">Enabled</span> | <span style="background-color: #519450">Enabled</span>  |
+| AuthenticationComponentProxy| | <span style="background-color: #519450">Enabled</span> | | <span style="background-color: #519450">Enabled</span> | | <span style="background-color: #519450">Enabled</span> | | <span style="background-color: #519450">Enabled</span>  |
 | AutomatedEtcdBackup| | | <span style="background-color: #519450">Enabled</span> | <span style="background-color: #519450">Enabled</span> | | | <span style="background-color: #519450">Enabled</span> | <span style="background-color: #519450">Enabled</span>  |
 | AzureDedicatedHosts| | | <span style="background-color: #519450">Enabled</span> | <span style="background-color: #519450">Enabled</span> | | | <span style="background-color: #519450">Enabled</span> | <span style="background-color: #519450">Enabled</span>  |
 | AzureDualStackInstall| | | <span style="background-color: #519450">Enabled</span> | <span style="background-color: #519450">Enabled</span> | | | <span style="background-color: #519450">Enabled</span> | <span style="background-color: #519450">Enabled</span>  |

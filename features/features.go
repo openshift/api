@@ -349,7 +349,7 @@ var (
 						contactPerson("liouk").
 						productScope(ocpSpecific).
 						enhancementPR("https://github.com/openshift/enhancements/pull/2015").
-						enable(inClusterProfile(SelfManaged), inTechPreviewNoUpgrade(), inDevPreviewNoUpgrade()).
+						enable(inDefault(), inOKD(), inClusterProfile(SelfManaged), inTechPreviewNoUpgrade(), inDevPreviewNoUpgrade()).
 						mustRegister()
 
 	FeatureGateExternalOIDCWithAdditionalClaimMappings = newFeatureGate("ExternalOIDCWithUIDAndExtraClaimMappings").

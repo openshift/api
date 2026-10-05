@@ -26,9 +26,6 @@
                         "name": "AWSEuropeanSovereignCloudInstall"
                     },
                     {
-                        "name": "AuthenticationComponentProxy"
-                    },
-                    {
                         "name": "AutomatedEtcdBackup"
                     },
                     {
@@ -290,6 +287,9 @@
                     },
                     {
                         "name": "AdditionalStorageConfig"
+                    },
+                    {
+                        "name": "AuthenticationComponentProxy"
                     },
                     {
                         "name": "BuildCSIVolumes"

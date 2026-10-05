@@ -3767,10 +3767,13 @@ func schema_openshift_api_apps_v1_RecreateDeploymentStrategyParams(ref common.Re
 				Description: "RecreateDeploymentStrategyParams are the input to the Recreate deployment strategy.",
 				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
-					"timeoutSeconds": {
+					"timeout": {
 						SchemaProps: spec.SchemaProps{
-							Description: "timeoutSeconds is the time to wait for updates before giving up. If the value is nil, a default will be used.",
-							Type:        []string{"integer"},
+							Description: 'timeout defines the timeout for requests to Alertmanager. Valid values are Prometheus-style duration strings such as "30s" or "500ms".',
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
 							Format:      "int64",
 						},
 					},
@@ -23825,11 +23828,11 @@ func schema_openshift_api_config_v1alpha1_AdditionalAlertmanagerConfig(ref commo
 							},
 						},
 					},
-					"timeoutSeconds": {
+					"timeout": {
 						SchemaProps: spec.SchemaProps{
-							Description: "timeoutSeconds defines the timeout in seconds for requests to Alertmanager. When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time. Currently the default is 10 seconds. Minimum value is 1 second. Maximum value is 600 seconds (10 minutes).",
-							Type:        []string{"integer"},
-							Format:      "int32",
+							Description: 'timeout defines the timeout for requests to Alertmanager. Valid values are Prometheus-style duration strings such as "30s" or "500ms".',
+							Type:        []string{"string"},
+							Format:      "",
 						},
 					},
 					"tlsConfig": {
@@ -25359,10 +25362,13 @@ func schema_openshift_api_config_v1alpha1_MetadataConfigCustom(ref common.Refere
 				Description: "MetadataConfigCustom defines custom settings for sending series metadata when sendPolicy is Custom. At least one property must be set when sendPolicy is Custom (e.g. sendIntervalSeconds).",
 				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
-					"sendIntervalSeconds": {
+					"sendInterval": {
 						SchemaProps: spec.SchemaProps{
-							Description: "sendIntervalSeconds is the interval in seconds at which metadata is sent. When omitted, the platform chooses a reasonable default (e.g. 30 seconds). Minimum value is 1 second. Maximum value is 86400 seconds (24 hours).",
-							Type:        []string{"integer"},
+							Description: 'sendInterval is the interval at which metadata is sent. Valid values are Prometheus-style duration strings such as "30s".',
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
 							Format:      "int32",
 						},
 					},
@@ -27101,24 +27107,33 @@ func schema_openshift_api_config_v1alpha1_QueueConfig(ref common.ReferenceCallba
 							Format:      "int32",
 						},
 					},
-					"batchSendDeadlineSeconds": {
+					"batchSendDeadline": {
 						SchemaProps: spec.SchemaProps{
-							Description: "batchSendDeadlineSeconds is the maximum time in seconds a sample will wait in buffer before being sent. When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time. Minimum value is 1 second. Maximum value is 3600 seconds (1 hour).",
-							Type:        []string{"integer"},
+							Description: 'batchSendDeadline is the maximum time a sample will wait in buffer before being sent. Valid values are Prometheus-style duration strings such as "5s".',
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
 							Format:      "int32",
 						},
 					},
-					"minBackoffMilliseconds": {
+					"minBackoff": {
 						SchemaProps: spec.SchemaProps{
-							Description: "minBackoffMilliseconds is the minimum retry delay in milliseconds. When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time. Minimum value is 1 millisecond. Maximum value is 3600000 milliseconds (1 hour).",
-							Type:        []string{"integer"},
+							Description: 'minBackoff is the minimum retry delay. Valid values are Prometheus-style duration strings such as "30ms" or "5s".',
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
 							Format:      "int32",
 						},
 					},
-					"maxBackoffMilliseconds": {
+					"maxBackoff": {
 						SchemaProps: spec.SchemaProps{
-							Description: "maxBackoffMilliseconds is the maximum retry delay in milliseconds. When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time. Minimum value is 1 millisecond. Maximum value is 3600000 milliseconds (1 hour).",
-							Type:        []string{"integer"},
+							Description: 'maxBackoff is the maximum retry delay. Valid values are Prometheus-style duration strings such as "5s".',
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
 							Format:      "int32",
 						},
 					},
@@ -27452,10 +27467,13 @@ func schema_openshift_api_config_v1alpha1_RemoteWriteSpec(ref common.ReferenceCa
 							Ref:         ref(configv1alpha1.QueueConfig{}.OpenAPIModelName()),
 						},
 					},
-					"remoteTimeoutSeconds": {
+					"remoteTimeout": {
 						SchemaProps: spec.SchemaProps{
-							Description: "remoteTimeoutSeconds defines the timeout in seconds for requests to the remote write endpoint. When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time. Minimum value is 1 second. Maximum value is 600 seconds (10 minutes).",
-							Type:        []string{"integer"},
+							Description: 'remoteTimeout defines the timeout for requests to the remote write endpoint. Valid values are Prometheus-style duration strings such as "30s".',
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
 							Format:      "int32",
 						},
 					},

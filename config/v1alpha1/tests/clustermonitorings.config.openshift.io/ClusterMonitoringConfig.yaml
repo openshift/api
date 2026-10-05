@@ -3264,6 +3264,70 @@ tests:
             retention:
               size: "0B"
       expectedError: 'must be "0" to disable size-based retention, or a positive byte-size string'
+    - name: Should accept prometheusConfig enforcedBodySizeLimit
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: "Disabled"
+          prometheusConfig:
+            enforcedBodySizeLimit: "40MB"
+      expected: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: "Disabled"
+          prometheusConfig:
+            enforcedBodySizeLimit: "40MB"
+    - name: Should accept prometheusConfig enforcedBodySizeLimit of zero to disable the limit
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: "Disabled"
+          prometheusConfig:
+            enforcedBodySizeLimit: "0"
+      expected: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: "Disabled"
+          prometheusConfig:
+            enforcedBodySizeLimit: "0"
+    - name: Should reject invalid prometheusConfig enforcedBodySizeLimit
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: "Disabled"
+          prometheusConfig:
+            enforcedBodySizeLimit: "40M"
+      expectedError: 'must be "0" to disable the body size limit, or a positive byte-size string'
+    - name: Should reject prometheusConfig enforcedBodySizeLimit with zero-valued unit
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: "Disabled"
+          prometheusConfig:
+            enforcedBodySizeLimit: "0MB"
+      expectedError: 'must be "0" to disable the body size limit, or a positive byte-size string'
+    - name: Should reject prometheusConfig enforcedBodySizeLimitBytes
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: "Disabled"
+          prometheusConfig:
+            enforcedBodySizeLimitBytes: 41943040
+      expectedError: 'unknown field "spec.prometheusConfig.enforcedBodySizeLimitBytes"'
   onUpdate:
     - name: Should allow updating KubeStateMetricsConfig resources
       initial: |

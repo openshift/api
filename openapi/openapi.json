@@ -8333,7 +8333,7 @@
       ],
       "properties": {
         "fulcioCAData": {
-          "description": "fulcioCAData is a required field contains inline base64-encoded data for the PEM format fulcio CA. fulcioCAData must be at most 8192 characters.",
+          "description": "fulcioCAData is a required field contains inline base64-encoded data for the PEM format fulcio CA. fulcioCAData must be at most 32768 characters, which fits post-quantum (ML-DSA) certificates.",
           "type": "string",
           "format": "byte"
         },
@@ -8388,12 +8388,12 @@
       ],
       "properties": {
         "caIntermediatesData": {
-          "description": "caIntermediatesData contains base64-encoded data of a certificate bundle PEM file, which contains one or more intermediate certificates in the PEM format. The total length of the data must not exceed 8192 characters. caIntermediatesData requires caRootsData to be set.",
+          "description": "caIntermediatesData contains base64-encoded data of a certificate bundle PEM file, which contains one or more intermediate certificates in the PEM format. The total length of the data must not exceed 32768 characters, which fits post-quantum (ML-DSA) certificates. caIntermediatesData requires caRootsData to be set.",
           "type": "string",
           "format": "byte"
         },
         "caRootsData": {
-          "description": "caRootsData contains base64-encoded data of a certificate bundle PEM file, which contains one or more CA roots in the PEM format. The total length of the data must not exceed 8192 characters.",
+          "description": "caRootsData contains base64-encoded data of a certificate bundle PEM file, which contains one or more CA roots in the PEM format. The total length of the data must not exceed 32768 characters, which fits post-quantum (ML-DSA) certificates.",
           "type": "string",
           "format": "byte"
         },

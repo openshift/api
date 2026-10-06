@@ -56955,7 +56955,7 @@ func schema_openshift_api_operator_v1_GatewayAPIIngressConfig(ref common.Referen
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
-				Description: "GatewayAPIIngressConfig holds configuration for Gateway API integration in the Cluster Ingress Operator. When present, it must contain at least one property.",
+				Description: "GatewayAPIIngressConfig holds configuration for Gateway API integration in the Cluster Ingress Operator.",
 				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
 					"managementMode": {
@@ -57593,7 +57593,7 @@ func schema_openshift_api_operator_v1_Ingress(ref common.ReferenceCallback) comm
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
-				Description: "Ingress contains configuration options specific to the Ingress Operator itself, including how it manages Gateway API integration. Ingress is a cluster-scoped singleton. The only valid metadata.name is \"cluster\".\n\nCompatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).",
+				Description: "Ingress contains configuration options specific to the Ingress Operator itself, including how it manages Gateway API integration.\n\nCompatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).",
 				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
 					"kind": {
@@ -57612,21 +57612,21 @@ func schema_openshift_api_operator_v1_Ingress(ref common.ReferenceCallback) comm
 					},
 					"metadata": {
 						SchemaProps: spec.SchemaProps{
-							Description: "metadata is required and is the standard object's metadata. Its name must be \"cluster\" so that only one Ingress configuration exists in a cluster. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata",
+							Description: "metadata is the standard object's metadata. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata",
 							Default:     map[string]interface{}{},
 							Ref:         ref(metav1.ObjectMeta{}.OpenAPIModelName()),
 						},
 					},
 					"spec": {
 						SchemaProps: spec.SchemaProps{
-							Description: "spec is required and holds user settable values for configuration. It must not be omitted and must contain at least one property.",
+							Description: "spec holds user settable values for configuration.",
 							Default:     map[string]interface{}{},
 							Ref:         ref(operatorv1.IngressSpec{}.OpenAPIModelName()),
 						},
 					},
 					"status": {
 						SchemaProps: spec.SchemaProps{
-							Description: "status is optional and holds observed values from the cluster. When omitted, the operator has not reported any observed state. When present, it must contain at least one property.",
+							Description: "status holds observed values from the cluster.",
 							Default:     map[string]interface{}{},
 							Ref:         ref(operatorv1.IngressStatus{}.OpenAPIModelName()),
 						},
@@ -58571,7 +58571,7 @@ func schema_openshift_api_operator_v1_IngressList(ref common.ReferenceCallback) 
 					},
 					"items": {
 						SchemaProps: spec.SchemaProps{
-							Description: "items is an optional list of Ingresses. When omitted, the list contains no Ingress resources.",
+							Description: "items is a list of Ingresses.",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -58595,12 +58595,12 @@ func schema_openshift_api_operator_v1_IngressSpec(ref common.ReferenceCallback) 
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
-				Description: "IngressSpec is the specification of the desired behavior of the Ingress Operator. At least one property must be set.",
+				Description: "IngressSpec is the specification of the desired behavior of the Ingress Operator.",
 				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
 					"gatewayAPI": {
 						SchemaProps: spec.SchemaProps{
-							Description: "gatewayAPI holds configuration for Gateway API integration, including how the ingress operator manages Gateway API CRDs, the OpenShift Gateway API implementation, and its Gateway API controllers.\n\ngatewayAPI is optional at the field level. When omitted, no Gateway API configuration is specified. Because spec must contain at least one property and gatewayAPI is currently its only property, omitting it leaves spec invalid. When present, gatewayAPI must contain at least one property.",
+							Description: "gatewayAPI holds configuration for Gateway API integration, including how the ingress operator manages Gateway API CRDs, the OpenShift Gateway API implementation, and its Gateway API controllers.",
 							Default:     map[string]interface{}{},
 							Ref:         ref(operatorv1.GatewayAPIIngressConfig{}.OpenAPIModelName()),
 						},
@@ -58617,7 +58617,7 @@ func schema_openshift_api_operator_v1_IngressStatus(ref common.ReferenceCallback
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
-				Description: "IngressStatus defines the observed status of the Ingress Operator. When status is present, at least one property must be set. Once observedGeneration is set, it must remain set and may only stay the same or increase.",
+				Description: "IngressStatus defines the observed status of the Ingress Operator.",
 				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
 					"conditions": {
@@ -58630,7 +58630,7 @@ func schema_openshift_api_operator_v1_IngressStatus(ref common.ReferenceCallback
 							},
 						},
 						SchemaProps: spec.SchemaProps{
-							Description: "conditions is a list of conditions and their status.\n\nGateway API CRD management conditions are reported here with the \"GatewayAPI\" prefix:\n\n* \"GatewayAPICRDsManaged\" indicates whether the ingress operator is actively\n  managing Gateway API CRDs.\n* \"GatewayAPICRDsPresent\" indicates whether Gateway API CRDs exist on the\n  cluster.\n* \"GatewayAPICRDsCompliant\" indicates whether the installed CRDs match the\n  version expected by this ingress operator release.\n\nconditions is optional. When omitted, no conditions have been reported. When present, the list must contain between 1 and 32 entries, inclusive.",
+							Description: "conditions is a list of conditions and their status.\n\nGateway API CRD management conditions are reported here with the \"GatewayAPI\" prefix:\n\n* \"GatewayAPICRDsManaged\" indicates whether the ingress operator is actively\n  managing Gateway API CRDs.\n* \"GatewayAPICRDsPresent\" indicates whether Gateway API CRDs exist on the\n  cluster.\n* \"GatewayAPICRDsCompliant\" indicates whether the installed CRDs match the\n  version expected by this ingress operator release.",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -58643,7 +58643,7 @@ func schema_openshift_api_operator_v1_IngressStatus(ref common.ReferenceCallback
 					},
 					"observedGeneration": {
 						SchemaProps: spec.SchemaProps{
-							Description: "observedGeneration represents the most recent generation observed by the operator and specifies the version of the spec field currently being synced.\n\nWhen omitted, the operator has not yet observed the resource. When set, the value must be at least 1. Once set, it must remain set and may only stay the same or increase.",
+							Description: "observedGeneration represents the most recent generation observed by the operator and specifies the version of the spec field currently being synced.\n\nWhen omitted, the operator has not yet observed the resource.",
 							Type:        []string{"integer"},
 							Format:      "int64",
 						},
@@ -66452,7 +66452,7 @@ func schema_openshift_api_operator_v1alpha1_GatewayAPIIngressConfig(ref common.R
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
-				Description: "GatewayAPIIngressConfig holds configuration for Gateway API integration in the Cluster Ingress Operator. When present, it must contain at least one property.",
+				Description: "GatewayAPIIngressConfig holds configuration for Gateway API integration in the Cluster Ingress Operator.",
 				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
 					"managementMode": {
@@ -66704,7 +66704,7 @@ func schema_openshift_api_operator_v1alpha1_Ingress(ref common.ReferenceCallback
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
-				Description: "Ingress contains configuration options specific to the Ingress Operator itself, including how it manages Gateway API integration. Ingress is a cluster-scoped singleton. The only valid metadata.name is \"cluster\".\n\nCompatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.",
+				Description: "Ingress contains configuration options specific to the Ingress Operator itself, including how it manages Gateway API integration.\n\nCompatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.",
 				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
 					"kind": {
@@ -66723,21 +66723,21 @@ func schema_openshift_api_operator_v1alpha1_Ingress(ref common.ReferenceCallback
 					},
 					"metadata": {
 						SchemaProps: spec.SchemaProps{
-							Description: "metadata is required and is the standard object's metadata. Its name must be \"cluster\" so that only one Ingress configuration exists in a cluster. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata",
+							Description: "metadata is the standard object's metadata. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata",
 							Default:     map[string]interface{}{},
 							Ref:         ref(metav1.ObjectMeta{}.OpenAPIModelName()),
 						},
 					},
 					"spec": {
 						SchemaProps: spec.SchemaProps{
-							Description: "spec is required and holds user settable values for configuration. It must not be omitted and must contain at least one property.",
+							Description: "spec holds user settable values for configuration.",
 							Default:     map[string]interface{}{},
 							Ref:         ref(operatorv1alpha1.IngressSpec{}.OpenAPIModelName()),
 						},
 					},
 					"status": {
 						SchemaProps: spec.SchemaProps{
-							Description: "status is optional and holds observed values from the cluster. When omitted, the operator has not reported any observed state. When present, it must contain at least one property.",
+							Description: "status holds observed values from the cluster.",
 							Default:     map[string]interface{}{},
 							Ref:         ref(operatorv1alpha1.IngressStatus{}.OpenAPIModelName()),
 						},
@@ -66781,7 +66781,7 @@ func schema_openshift_api_operator_v1alpha1_IngressList(ref common.ReferenceCall
 					},
 					"items": {
 						SchemaProps: spec.SchemaProps{
-							Description: "items is an optional list of Ingresses. When omitted, the list contains no Ingress resources.",
+							Description: "items is a list of Ingresses.",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -66805,12 +66805,12 @@ func schema_openshift_api_operator_v1alpha1_IngressSpec(ref common.ReferenceCall
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
-				Description: "IngressSpec is the specification of the desired behavior of the Ingress Operator. At least one property must be set.",
+				Description: "IngressSpec is the specification of the desired behavior of the Ingress Operator.",
 				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
 					"gatewayAPI": {
 						SchemaProps: spec.SchemaProps{
-							Description: "gatewayAPI holds configuration for Gateway API integration, including how the ingress operator manages Gateway API CRDs, the OpenShift Gateway API implementation, and its Gateway API controllers.\n\ngatewayAPI is optional at the field level. When omitted, no Gateway API configuration is specified. Because spec must contain at least one property and gatewayAPI is currently its only property, omitting it leaves spec invalid. When present, gatewayAPI must contain at least one property.",
+							Description: "gatewayAPI holds configuration for Gateway API integration, including how the ingress operator manages Gateway API CRDs, the OpenShift Gateway API implementation, and its Gateway API controllers.",
 							Default:     map[string]interface{}{},
 							Ref:         ref(operatorv1alpha1.GatewayAPIIngressConfig{}.OpenAPIModelName()),
 						},
@@ -66827,7 +66827,7 @@ func schema_openshift_api_operator_v1alpha1_IngressStatus(ref common.ReferenceCa
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
-				Description: "IngressStatus defines the observed status of the Ingress Operator. When status is present, at least one property must be set. Once observedGeneration is set, it must remain set and may only stay the same or increase.",
+				Description: "IngressStatus defines the observed status of the Ingress Operator.",
 				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
 					"conditions": {
@@ -66840,7 +66840,7 @@ func schema_openshift_api_operator_v1alpha1_IngressStatus(ref common.ReferenceCa
 							},
 						},
 						SchemaProps: spec.SchemaProps{
-							Description: "conditions is a list of conditions and their status.\n\nGateway API CRD management conditions are reported here with the \"GatewayAPI\" prefix:\n\n* \"GatewayAPICRDsManaged\" indicates whether the ingress operator is actively\n  managing Gateway API CRDs.\n* \"GatewayAPICRDsPresent\" indicates whether Gateway API CRDs exist on the\n  cluster.\n* \"GatewayAPICRDsCompliant\" indicates whether the installed CRDs match the\n  version expected by this ingress operator release.\n\nconditions is optional. When omitted, no conditions have been reported. When present, the list must contain between 1 and 32 entries, inclusive.",
+							Description: "conditions is a list of conditions and their status.\n\nGateway API CRD management conditions are reported here with the \"GatewayAPI\" prefix:\n\n* \"GatewayAPICRDsManaged\" indicates whether the ingress operator is actively\n  managing Gateway API CRDs.\n* \"GatewayAPICRDsPresent\" indicates whether Gateway API CRDs exist on the\n  cluster.\n* \"GatewayAPICRDsCompliant\" indicates whether the installed CRDs match the\n  version expected by this ingress operator release.",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -66853,7 +66853,7 @@ func schema_openshift_api_operator_v1alpha1_IngressStatus(ref common.ReferenceCa
 					},
 					"observedGeneration": {
 						SchemaProps: spec.SchemaProps{
-							Description: "observedGeneration represents the most recent generation observed by the operator and specifies the version of the spec field currently being synced.\n\nWhen omitted, the operator has not yet observed the resource. When set, the value must be at least 1. Once set, it must remain set and may only stay the same or increase.",
+							Description: "observedGeneration represents the most recent generation observed by the operator and specifies the version of the spec field currently being synced.\n\nWhen omitted, the operator has not yet observed the resource.",
 							Type:        []string{"integer"},
 							Format:      "int64",
 						},

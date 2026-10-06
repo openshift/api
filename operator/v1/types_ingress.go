@@ -10,7 +10,6 @@ import (
 
 // Ingress contains configuration options specific to the Ingress Operator itself,
 // including how it manages Gateway API integration.
-// Ingress is a cluster-scoped singleton. The only valid metadata.name is "cluster".
 //
 // Compatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).
 // +openshift:compatibility-gen:level=1
@@ -25,44 +24,32 @@ import (
 type Ingress struct {
 	metav1.TypeMeta `json:",inline"`
 
-	// metadata is required and is the standard object's metadata. Its name must be
-	// "cluster" so that only one Ingress configuration exists in a cluster.
+	// metadata is the standard object's metadata.
 	// More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata
 	// +required
 	metav1.ObjectMeta `json:"metadata"`
 
-	// spec is required and holds user settable values for configuration. It must
-	// not be omitted and must contain at least one property.
+	// spec holds user settable values for configuration.
 	// +required
 	Spec IngressSpec `json:"spec,omitzero"`
 
-	// status is optional and holds observed values from the cluster. When omitted,
-	// the operator has not reported any observed state. When present, it must
-	// contain at least one property.
+	// status holds observed values from the cluster.
 	// +optional
 	Status IngressStatus `json:"status,omitzero"`
 }
 
 // IngressSpec is the specification of the desired behavior of the Ingress Operator.
-// At least one property must be set.
 // +kubebuilder:validation:MinProperties=1
 type IngressSpec struct {
 	// gatewayAPI holds configuration for Gateway API integration, including how the
 	// ingress operator manages Gateway API CRDs, the OpenShift Gateway API
 	// implementation, and its Gateway API controllers.
 	//
-	// gatewayAPI is optional at the field level. When omitted, no Gateway API
-	// configuration is specified. Because spec must contain at least one property
-	// and gatewayAPI is currently its only property, omitting it leaves spec invalid.
-	// When present, gatewayAPI must contain at least one property.
-	//
 	// +optional
 	GatewayAPI GatewayAPIIngressConfig `json:"gatewayAPI,omitzero"`
 }
 
-// IngressStatus defines the observed status of the Ingress Operator. When status
-// is present, at least one property must be set. Once observedGeneration is set,
-// it must remain set and may only stay the same or increase.
+// IngressStatus defines the observed status of the Ingress Operator.
 // +kubebuilder:validation:MinProperties=1
 // +kubebuilder:validation:XValidation:rule="!has(oldSelf.observedGeneration) || (has(self.observedGeneration) && self.observedGeneration >= oldSelf.observedGeneration)",message="observedGeneration must remain set and only increase once set"
 type IngressStatus struct {
@@ -77,9 +64,6 @@ type IngressStatus struct {
 	// * "GatewayAPICRDsCompliant" indicates whether the installed CRDs match the
 	//   version expected by this ingress operator release.
 	//
-	// conditions is optional. When omitted, no conditions have been reported. When
-	// present, the list must contain between 1 and 32 entries, inclusive.
-	//
 	// +listType=map
 	// +listMapKey=type
 	// +kubebuilder:validation:MinItems=1
@@ -90,16 +74,14 @@ type IngressStatus struct {
 	// observedGeneration represents the most recent generation observed by the operator and specifies the version of
 	// the spec field currently being synced.
 	//
-	// When omitted, the operator has not yet observed the resource. When set, the
-	// value must be at least 1. Once set, it must remain set and may only stay the
-	// same or increase.
+	// When omitted, the operator has not yet observed the resource.
 	// +optional
 	// +kubebuilder:validation:Minimum=1
 	ObservedGeneration int64 `json:"observedGeneration,omitempty"`
 }
 
 // GatewayAPIIngressConfig holds configuration for Gateway API integration in the
-// Cluster Ingress Operator. When present, it must contain at least one property.
+// Cluster Ingress Operator.
 // +kubebuilder:validation:MinProperties=1
 type GatewayAPIIngressConfig struct {
 	// managementMode specifies how the Cluster Ingress Operator manages Gateway API
@@ -158,8 +140,7 @@ type IngressList struct {
 	// More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata
 	metav1.ListMeta `json:"metadata"`
 
-	// items is an optional list of Ingresses. When omitted, the list contains no
-	// Ingress resources.
+	// items is a list of Ingresses.
 	// +optional
 	Items []Ingress `json:"items,omitempty"`
 }

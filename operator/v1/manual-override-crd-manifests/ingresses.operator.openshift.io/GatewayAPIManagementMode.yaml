@@ -24,7 +24,6 @@ spec:
         description: |-
           Ingress contains configuration options specific to the Ingress Operator itself,
           including how it manages Gateway API integration.
-          Ingress is a cluster-scoped singleton. The only valid metadata.name is "cluster".
 
           Compatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.
         properties:
@@ -46,9 +45,7 @@ spec:
           metadata:
             type: object
           spec:
-            description: |-
-              spec is required and holds user settable values for configuration. It must
-              not be omitted and must contain at least one property.
+            description: spec holds user settable values for configuration.
             minProperties: 1
             properties:
               gatewayAPI:
@@ -56,11 +53,6 @@ spec:
                   gatewayAPI holds configuration for Gateway API integration, including how the
                   ingress operator manages Gateway API CRDs, the OpenShift Gateway API
                   implementation, and its Gateway API controllers.
-
-                  gatewayAPI is optional at the field level. When omitted, no Gateway API
-                  configuration is specified. Because spec must contain at least one property
-                  and gatewayAPI is currently its only property, omitting it leaves spec invalid.
-                  When present, gatewayAPI must contain at least one property.
                 minProperties: 1
                 properties:
                   managementMode:
@@ -88,10 +80,7 @@ spec:
                 type: object
             type: object
           status:
-            description: |-
-              status is optional and holds observed values from the cluster. When omitted,
-              the operator has not reported any observed state. When present, it must
-              contain at least one property.
+            description: status holds observed values from the cluster.
             minProperties: 1
             properties:
               conditions:
@@ -106,9 +95,6 @@ spec:
                     cluster.
                   * "GatewayAPICRDsCompliant" indicates whether the installed CRDs match the
                     version expected by this ingress operator release.
-
-                  conditions is optional. When omitted, no conditions have been reported. When
-                  present, the list must contain between 1 and 32 entries, inclusive.
                 items:
                   description: Condition contains details for one aspect of the current
                     state of this API Resource.
@@ -174,9 +160,7 @@ spec:
                   observedGeneration represents the most recent generation observed by the operator and specifies the version of
                   the spec field currently being synced.
 
-                  When omitted, the operator has not yet observed the resource. When set, the
-                  value must be at least 1. Once set, it must remain set and may only stay the
-                  same or increase.
+                  When omitted, the operator has not yet observed the resource.
                 format: int64
                 minimum: 1
                 type: integer

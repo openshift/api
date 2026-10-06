@@ -352,7 +352,7 @@ func (RepositoryDigestMirrors) SwaggerDoc() map[string]string {
 }
 
 var map_GatewayAPIIngressConfig = map[string]string{
-	"":               "GatewayAPIIngressConfig holds configuration for Gateway API integration in the Cluster Ingress Operator. When present, it must contain at least one property.",
+	"":               "GatewayAPIIngressConfig holds configuration for Gateway API integration in the Cluster Ingress Operator.",
 	"managementMode": "managementMode specifies how the Cluster Ingress Operator manages Gateway API Custom Resource Definitions (CRDs), the OpenShift Gateway API implementation, and its Gateway API controllers.\n\nAllowed values are \"Managed\" and \"Unmanaged\".\n\nWhen omitted or set to \"Managed\", the ingress operator installs, owns, and upgrades the Gateway API CRDs, protects them with a Validating Admission Policy, and deploys the OpenShift Gateway API implementation and its Gateway API controllers.\n\nWhen set to \"Unmanaged\", the ingress operator does not install or manage Gateway API CRDs and does not deploy the OpenShift Gateway API implementation or its Gateway API controllers. The cluster administrator or a third-party product is responsible for providing their own CRDs and Gateway controller. The ingress operator reports observational status only.",
 }
 
@@ -361,10 +361,10 @@ func (GatewayAPIIngressConfig) SwaggerDoc() map[string]string {
 }
 
 var map_Ingress = map[string]string{
-	"":         "Ingress contains configuration options specific to the Ingress Operator itself, including how it manages Gateway API integration. Ingress is a cluster-scoped singleton. The only valid metadata.name is \"cluster\".\n\nCompatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.",
-	"metadata": "metadata is required and is the standard object's metadata. Its name must be \"cluster\" so that only one Ingress configuration exists in a cluster. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata",
-	"spec":     "spec is required and holds user settable values for configuration. It must not be omitted and must contain at least one property.",
-	"status":   "status is optional and holds observed values from the cluster. When omitted, the operator has not reported any observed state. When present, it must contain at least one property.",
+	"":         "Ingress contains configuration options specific to the Ingress Operator itself, including how it manages Gateway API integration.\n\nCompatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.",
+	"metadata": "metadata is the standard object's metadata. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata",
+	"spec":     "spec holds user settable values for configuration.",
+	"status":   "status holds observed values from the cluster.",
 }
 
 func (Ingress) SwaggerDoc() map[string]string {
@@ -374,7 +374,7 @@ func (Ingress) SwaggerDoc() map[string]string {
 var map_IngressList = map[string]string{
 	"":         "IngressList is a collection of Ingresses.\n\nCompatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.",
 	"metadata": "metadata is the standard list's metadata. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata",
-	"items":    "items is an optional list of Ingresses. When omitted, the list contains no Ingress resources.",
+	"items":    "items is a list of Ingresses.",
 }
 
 func (IngressList) SwaggerDoc() map[string]string {
@@ -382,8 +382,8 @@ func (IngressList) SwaggerDoc() map[string]string {
 }
 
 var map_IngressSpec = map[string]string{
-	"":           "IngressSpec is the specification of the desired behavior of the Ingress Operator. At least one property must be set.",
-	"gatewayAPI": "gatewayAPI holds configuration for Gateway API integration, including how the ingress operator manages Gateway API CRDs, the OpenShift Gateway API implementation, and its Gateway API controllers.\n\ngatewayAPI is optional at the field level. When omitted, no Gateway API configuration is specified. Because spec must contain at least one property and gatewayAPI is currently its only property, omitting it leaves spec invalid. When present, gatewayAPI must contain at least one property.",
+	"":           "IngressSpec is the specification of the desired behavior of the Ingress Operator.",
+	"gatewayAPI": "gatewayAPI holds configuration for Gateway API integration, including how the ingress operator manages Gateway API CRDs, the OpenShift Gateway API implementation, and its Gateway API controllers.",
 }
 
 func (IngressSpec) SwaggerDoc() map[string]string {
@@ -391,9 +391,9 @@ func (IngressSpec) SwaggerDoc() map[string]string {
 }
 
 var map_IngressStatus = map[string]string{
-	"":                   "IngressStatus defines the observed status of the Ingress Operator. When status is present, at least one property must be set. Once observedGeneration is set, it must remain set and may only stay the same or increase.",
-	"conditions":         "conditions is a list of conditions and their status.\n\nGateway API CRD management conditions are reported here with the \"GatewayAPI\" prefix:\n\n* \"GatewayAPICRDsManaged\" indicates whether the ingress operator is actively\n  managing Gateway API CRDs.\n* \"GatewayAPICRDsPresent\" indicates whether Gateway API CRDs exist on the\n  cluster.\n* \"GatewayAPICRDsCompliant\" indicates whether the installed CRDs match the\n  version expected by this ingress operator release.\n\nconditions is optional. When omitted, no conditions have been reported. When present, the list must contain between 1 and 32 entries, inclusive.",
-	"observedGeneration": "observedGeneration represents the most recent generation observed by the operator and specifies the version of the spec field currently being synced.\n\nWhen omitted, the operator has not yet observed the resource. When set, the value must be at least 1. Once set, it must remain set and may only stay the same or increase.",
+	"":                   "IngressStatus defines the observed status of the Ingress Operator.",
+	"conditions":         "conditions is a list of conditions and their status.\n\nGateway API CRD management conditions are reported here with the \"GatewayAPI\" prefix:\n\n* \"GatewayAPICRDsManaged\" indicates whether the ingress operator is actively\n  managing Gateway API CRDs.\n* \"GatewayAPICRDsPresent\" indicates whether Gateway API CRDs exist on the\n  cluster.\n* \"GatewayAPICRDsCompliant\" indicates whether the installed CRDs match the\n  version expected by this ingress operator release.",
+	"observedGeneration": "observedGeneration represents the most recent generation observed by the operator and specifies the version of the spec field currently being synced.\n\nWhen omitted, the operator has not yet observed the resource.",
 }
 
 func (IngressStatus) SwaggerDoc() map[string]string {

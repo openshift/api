@@ -926,14 +926,6 @@ func (CertificateConfig) SwaggerDoc() map[string]string {
 	return map_CertificateConfig
 }
 
-var map_CustomPKIPolicy = map[string]string{
-	"": "CustomPKIPolicy contains administrator-specified cryptographic configuration. Administrators must specify defaults for all certificates and may optionally override specific categories of certificates.",
-}
-
-func (CustomPKIPolicy) SwaggerDoc() map[string]string {
-	return map_CustomPKIPolicy
-}
-
 var map_DefaultCertificateConfig = map[string]string{
 	"":    "DefaultCertificateConfig specifies the default certificate configuration parameters. All fields are required to ensure that defaults are fully specified for all certificates.",
 	"key": "key specifies the cryptographic parameters for the certificate's key pair. This field is required in defaults to ensure all certificates have a well-defined key configuration.",
@@ -974,9 +966,7 @@ func (PKI) SwaggerDoc() map[string]string {
 }
 
 var map_PKICertificateManagement = map[string]string{
-	"":       "PKICertificateManagement determines whether components use hardcoded defaults (Unmanaged), follow OpenShift best practices (Default), or use administrator-specified cryptographic parameters (Custom). This provides flexibility for organizations with specific compliance requirements or security policies while maintaining backwards compatibility for existing clusters.",
-	"mode":   "mode determines how PKI configuration is managed. Valid values are \"Unmanaged\", \"Default\", and \"Custom\".\n\nWhen set to Unmanaged, components use their existing hardcoded certificate generation behavior, exactly as if this feature did not exist. Each component generates certificates using whatever parameters it was using before this feature. While most components use RSA 2048, some may use different parameters. Use of this mode might prevent upgrading to the next major OpenShift release.\n\nWhen set to Default, OpenShift-recommended best practices for certificate generation are applied. The specific parameters may evolve across OpenShift releases to adopt improved cryptographic standards. In the initial release, this matches Unmanaged behavior for each component. In future releases, this may adopt ECDSA or larger RSA keys based on industry best practices. Recommended for most customers who want to benefit from security improvements automatically.\n\nWhen set to Custom, the certificate management parameters can be set explicitly. Use the custom field to specify certificate generation parameters.",
-	"custom": "custom contains administrator-specified cryptographic configuration. Use the defaults and category override fields to specify certificate generation parameters. Required when mode is Custom, and forbidden otherwise.",
+	"": "PKICertificateManagement contains administrator-specified cryptographic configuration for internally-generated certificates, including certificate authorities, serving certificates, and client certificates. Specify defaults that apply to all certificates and optionally override specific categories.",
 }
 
 func (PKICertificateManagement) SwaggerDoc() map[string]string {

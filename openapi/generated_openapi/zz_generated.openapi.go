@@ -552,7 +552,6 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		configv1alpha1.ClusterMonitoringSpec{}.OpenAPIModelName():                              schema_openshift_api_config_v1alpha1_ClusterMonitoringSpec(ref),
 		configv1alpha1.ClusterMonitoringStatus{}.OpenAPIModelName():                            schema_openshift_api_config_v1alpha1_ClusterMonitoringStatus(ref),
 		configv1alpha1.ContainerResource{}.OpenAPIModelName():                                  schema_openshift_api_config_v1alpha1_ContainerResource(ref),
-		configv1alpha1.CustomPKIPolicy{}.OpenAPIModelName():                                    schema_openshift_api_config_v1alpha1_CustomPKIPolicy(ref),
 		configv1alpha1.DefaultCertificateConfig{}.OpenAPIModelName():                           schema_openshift_api_config_v1alpha1_DefaultCertificateConfig(ref),
 		configv1alpha1.DropEqualActionConfig{}.OpenAPIModelName():                              schema_openshift_api_config_v1alpha1_DropEqualActionConfig(ref),
 		configv1alpha1.ECDSAKeyConfig{}.OpenAPIModelName():                                     schema_openshift_api_config_v1alpha1_ECDSAKeyConfig(ref),
@@ -24668,50 +24667,6 @@ func schema_openshift_api_config_v1alpha1_ContainerResource(ref common.Reference
 	}
 }
 
-func schema_openshift_api_config_v1alpha1_CustomPKIPolicy(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Description: "CustomPKIPolicy contains administrator-specified cryptographic configuration. Administrators must specify defaults for all certificates and may optionally override specific categories of certificates.",
-				Type:        []string{"object"},
-				Properties: map[string]spec.Schema{
-					"defaults": {
-						SchemaProps: spec.SchemaProps{
-							Description: "defaults specifies the default certificate configuration that applies to all certificates unless overridden by a category override.",
-							Default:     map[string]interface{}{},
-							Ref:         ref(configv1alpha1.DefaultCertificateConfig{}.OpenAPIModelName()),
-						},
-					},
-					"signerCertificates": {
-						SchemaProps: spec.SchemaProps{
-							Description: "signerCertificates optionally overrides certificate parameters for certificate authority (CA) certificates that sign other certificates. When set, these parameters take precedence over defaults for all signer certificates. When omitted, the defaults are used for signer certificates.",
-							Default:     map[string]interface{}{},
-							Ref:         ref(configv1alpha1.CertificateConfig{}.OpenAPIModelName()),
-						},
-					},
-					"servingCertificates": {
-						SchemaProps: spec.SchemaProps{
-							Description: "servingCertificates optionally overrides certificate parameters for TLS server certificates used to serve HTTPS endpoints. When set, these parameters take precedence over defaults for all serving certificates. When omitted, the defaults are used for serving certificates.",
-							Default:     map[string]interface{}{},
-							Ref:         ref(configv1alpha1.CertificateConfig{}.OpenAPIModelName()),
-						},
-					},
-					"clientCertificates": {
-						SchemaProps: spec.SchemaProps{
-							Description: "clientCertificates optionally overrides certificate parameters for client authentication certificates used to authenticate to servers. When set, these parameters take precedence over defaults for all client certificates. When omitted, the defaults are used for client certificates.",
-							Default:     map[string]interface{}{},
-							Ref:         ref(configv1alpha1.CertificateConfig{}.OpenAPIModelName()),
-						},
-					},
-				},
-				Required: []string{"defaults"},
-			},
-		},
-		Dependencies: []string{
-			configv1alpha1.CertificateConfig{}.OpenAPIModelName(), configv1alpha1.DefaultCertificateConfig{}.OpenAPIModelName()},
-	}
-}
-
 func schema_openshift_api_config_v1alpha1_DefaultCertificateConfig(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -26480,41 +26435,43 @@ func schema_openshift_api_config_v1alpha1_PKICertificateManagement(ref common.Re
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
-				Description: "PKICertificateManagement determines whether components use hardcoded defaults (Unmanaged), follow OpenShift best practices (Default), or use administrator-specified cryptographic parameters (Custom). This provides flexibility for organizations with specific compliance requirements or security policies while maintaining backwards compatibility for existing clusters.",
+				Description: "PKICertificateManagement contains administrator-specified cryptographic configuration for internally-generated certificates, including certificate authorities, serving certificates, and client certificates. Specify defaults that apply to all certificates and optionally override specific categories.",
 				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
-					"mode": {
+					"defaults": {
 						SchemaProps: spec.SchemaProps{
-							Description: "mode determines how PKI configuration is managed. Valid values are \"Unmanaged\", \"Default\", and \"Custom\".\n\nWhen set to Unmanaged, components use their existing hardcoded certificate generation behavior, exactly as if this feature did not exist. Each component generates certificates using whatever parameters it was using before this feature. While most components use RSA 2048, some may use different parameters. Use of this mode might prevent upgrading to the next major OpenShift release.\n\nWhen set to Default, OpenShift-recommended best practices for certificate generation are applied. The specific parameters may evolve across OpenShift releases to adopt improved cryptographic standards. In the initial release, this matches Unmanaged behavior for each component. In future releases, this may adopt ECDSA or larger RSA keys based on industry best practices. Recommended for most customers who want to benefit from security improvements automatically.\n\nWhen set to Custom, the certificate management parameters can be set explicitly. Use the custom field to specify certificate generation parameters.",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"custom": {
-						SchemaProps: spec.SchemaProps{
-							Description: "custom contains administrator-specified cryptographic configuration. Use the defaults and category override fields to specify certificate generation parameters. Required when mode is Custom, and forbidden otherwise.",
+							Description: "defaults specifies the default certificate configuration that applies to all certificates unless overridden by a category override.",
 							Default:     map[string]interface{}{},
-							Ref:         ref(configv1alpha1.CustomPKIPolicy{}.OpenAPIModelName()),
+							Ref:         ref(configv1alpha1.DefaultCertificateConfig{}.OpenAPIModelName()),
+						},
+					},
+					"signerCertificates": {
+						SchemaProps: spec.SchemaProps{
+							Description: "signerCertificates optionally overrides certificate parameters for certificate authority (CA) certificates that sign other certificates. When set, these parameters take precedence over defaults for all signer certificates. When omitted, the defaults are used for signer certificates.",
+							Default:     map[string]interface{}{},
+							Ref:         ref(configv1alpha1.CertificateConfig{}.OpenAPIModelName()),
+						},
+					},
+					"servingCertificates": {
+						SchemaProps: spec.SchemaProps{
+							Description: "servingCertificates optionally overrides certificate parameters for TLS server certificates used to serve HTTPS endpoints. When set, these parameters take precedence over defaults for all serving certificates. When omitted, the defaults are used for serving certificates.",
+							Default:     map[string]interface{}{},
+							Ref:         ref(configv1alpha1.CertificateConfig{}.OpenAPIModelName()),
+						},
+					},
+					"clientCertificates": {
+						SchemaProps: spec.SchemaProps{
+							Description: "clientCertificates optionally overrides certificate parameters for client authentication certificates used to authenticate to servers. When set, these parameters take precedence over defaults for all client certificates. When omitted, the defaults are used for client certificates.",
+							Default:     map[string]interface{}{},
+							Ref:         ref(configv1alpha1.CertificateConfig{}.OpenAPIModelName()),
 						},
 					},
 				},
-				Required: []string{"mode"},
-			},
-			VendorExtensible: spec.VendorExtensible{
-				Extensions: spec.Extensions{
-					"x-kubernetes-unions": []interface{}{
-						map[string]interface{}{
-							"discriminator": "mode",
-							"fields-to-discriminateBy": map[string]interface{}{
-								"custom": "Custom",
-							},
-						},
-					},
-				},
+				Required: []string{"defaults"},
 			},
 		},
 		Dependencies: []string{
-			configv1alpha1.CustomPKIPolicy{}.OpenAPIModelName()},
+			configv1alpha1.CertificateConfig{}.OpenAPIModelName(), configv1alpha1.DefaultCertificateConfig{}.OpenAPIModelName()},
 	}
 }
 

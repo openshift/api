@@ -32700,6 +32700,16 @@
         }
       }
     },
+    "com.github.openshift.api.operator.v1.GatewayAPIIngressConfig": {
+      "description": "GatewayAPIIngressConfig holds configuration for Gateway API integration in the Cluster Ingress Operator. When present, it must contain at least one property.",
+      "type": "object",
+      "properties": {
+        "managementMode": {
+          "description": "managementMode specifies how the Cluster Ingress Operator manages Gateway API Custom Resource Definitions (CRDs), the OpenShift Gateway API implementation, and its Gateway API controllers.\n\nAllowed values are \"Managed\" and \"Unmanaged\".\n\nWhen omitted or set to \"Managed\", the ingress operator installs, owns, and upgrades the Gateway API CRDs, protects them with a Validating Admission Policy, and deploys the OpenShift Gateway API implementation and its Gateway API controllers.\n\nWhen set to \"Unmanaged\", the ingress operator does not install or manage Gateway API CRDs and does not deploy the OpenShift Gateway API implementation or its Gateway API controllers. The cluster administrator or a third-party product is responsible for providing their own CRDs and Gateway controller. The ingress operator reports observational status only.",
+          "type": "string"
+        }
+      }
+    },
     "com.github.openshift.api.operator.v1.GatewayConfig": {
       "description": "GatewayConfig holds node gateway-related parsed config file parameters and command-line overrides",
       "type": "object",
@@ -33045,6 +33055,39 @@
         "internalTransitSwitchSubnet": {
           "description": "internalTransitSwitchSubnet is a v4 subnet in IPV4 CIDR format used internally by OVN-Kubernetes for the distributed transit switch in the OVN Interconnect architecture that connects the cluster routers on each node together to enable east west traffic. The subnet chosen should not overlap with other networks specified for OVN-Kubernetes as well as other networks used on the host. When ommitted, this means no opinion and the platform is left to choose a reasonable default which is subject to change over time. The subnet must be large enough to accommodate one IP per node in your cluster The current default subnet is fd97::/64 The value must be in proper IPV6 CIDR format Note that IPV6 dual addresses are not permitted",
           "type": "string"
+        }
+      }
+    },
+    "com.github.openshift.api.operator.v1.Ingress": {
+      "description": "Ingress contains configuration options specific to the Ingress Operator itself, including how it manages Gateway API integration. Ingress is a cluster-scoped singleton. The only valid metadata.name is \"cluster\".\n\nCompatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).",
+      "type": "object",
+      "required": [
+        "metadata",
+        "spec"
+      ],
+      "properties": {
+        "apiVersion": {
+          "description": "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+          "type": "string"
+        },
+        "kind": {
+          "description": "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+          "type": "string"
+        },
+        "metadata": {
+          "description": "metadata is required and is the standard object's metadata. Its name must be \"cluster\" so that only one Ingress configuration exists in a cluster. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata",
+          "default": {},
+          "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.ObjectMeta"
+        },
+        "spec": {
+          "description": "spec is required and holds user settable values for configuration. It must not be omitted and must contain at least one property.",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.operator.v1.IngressSpec"
+        },
+        "status": {
+          "description": "status is optional and holds observed values from the cluster. When omitted, the operator has not reported any observed state. When present, it must contain at least one property.",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.operator.v1.IngressStatus"
         }
       }
     },
@@ -33583,6 +33626,68 @@
         "tunnelTimeout": {
           "description": "tunnelTimeout defines how long a tunnel connection (including websockets) will be held open while the tunnel is idle.\n\nIf unset, the default timeout is 1h",
           "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Duration"
+        }
+      }
+    },
+    "com.github.openshift.api.operator.v1.IngressList": {
+      "description": "IngressList is a collection of Ingresses.\n\nCompatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).",
+      "type": "object",
+      "required": [
+        "metadata"
+      ],
+      "properties": {
+        "apiVersion": {
+          "description": "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+          "type": "string"
+        },
+        "items": {
+          "description": "items is an optional list of Ingresses. When omitted, the list contains no Ingress resources.",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/com.github.openshift.api.operator.v1.Ingress"
+          }
+        },
+        "kind": {
+          "description": "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+          "type": "string"
+        },
+        "metadata": {
+          "description": "metadata is the standard list's metadata. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata",
+          "default": {},
+          "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.ListMeta"
+        }
+      }
+    },
+    "com.github.openshift.api.operator.v1.IngressSpec": {
+      "description": "IngressSpec is the specification of the desired behavior of the Ingress Operator. At least one property must be set.",
+      "type": "object",
+      "properties": {
+        "gatewayAPI": {
+          "description": "gatewayAPI holds configuration for Gateway API integration, including how the ingress operator manages Gateway API CRDs, the OpenShift Gateway API implementation, and its Gateway API controllers.\n\ngatewayAPI is optional at the field level. When omitted, no Gateway API configuration is specified. Because spec must contain at least one property and gatewayAPI is currently its only property, omitting it leaves spec invalid. When present, gatewayAPI must contain at least one property.",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.operator.v1.GatewayAPIIngressConfig"
+        }
+      }
+    },
+    "com.github.openshift.api.operator.v1.IngressStatus": {
+      "description": "IngressStatus defines the observed status of the Ingress Operator. When status is present, at least one property must be set. Once observedGeneration is set, it must remain set and may only stay the same or increase.",
+      "type": "object",
+      "properties": {
+        "conditions": {
+          "description": "conditions is a list of conditions and their status.\n\nGateway API CRD management conditions are reported here with the \"GatewayAPI\" prefix:\n\n* \"GatewayAPICRDsManaged\" indicates whether the ingress operator is actively\n  managing Gateway API CRDs.\n* \"GatewayAPICRDsPresent\" indicates whether Gateway API CRDs exist on the\n  cluster.\n* \"GatewayAPICRDsCompliant\" indicates whether the installed CRDs match the\n  version expected by this ingress operator release.\n\nconditions is optional. When omitted, no conditions have been reported. When present, the list must contain between 1 and 32 entries, inclusive.",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Condition"
+          },
+          "x-kubernetes-list-map-keys": [
+            "type"
+          ],
+          "x-kubernetes-list-type": "map"
+        },
+        "observedGeneration": {
+          "description": "observedGeneration represents the most recent generation observed by the operator and specifies the version of the spec field currently being synced.\n\nWhen omitted, the operator has not yet observed the resource. When set, the value must be at least 1. Once set, it must remain set and may only stay the same or increase.",
+          "type": "integer",
+          "format": "int64"
         }
       }
     },
@@ -38149,7 +38254,7 @@
       }
     },
     "com.github.openshift.api.operator.v1alpha1.GatewayAPIIngressConfig": {
-      "description": "GatewayAPIIngressConfig holds configuration for Gateway API integration in the Cluster Ingress Operator.",
+      "description": "GatewayAPIIngressConfig holds configuration for Gateway API integration in the Cluster Ingress Operator. When present, it must contain at least one property.",
       "type": "object",
       "properties": {
         "managementMode": {
@@ -38301,7 +38406,7 @@
       }
     },
     "com.github.openshift.api.operator.v1alpha1.Ingress": {
-      "description": "Ingress contains configuration options specific to the Ingress Operator itself, including how it manages Gateway API integration.\n\nCompatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.",
+      "description": "Ingress contains configuration options specific to the Ingress Operator itself, including how it manages Gateway API integration. Ingress is a cluster-scoped singleton. The only valid metadata.name is \"cluster\".\n\nCompatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.",
       "type": "object",
       "required": [
         "metadata",
@@ -38317,17 +38422,17 @@
           "type": "string"
         },
         "metadata": {
-          "description": "metadata is the standard object's metadata. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata",
+          "description": "metadata is required and is the standard object's metadata. Its name must be \"cluster\" so that only one Ingress configuration exists in a cluster. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata",
           "default": {},
           "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.ObjectMeta"
         },
         "spec": {
-          "description": "spec holds user settable values for configuration.",
+          "description": "spec is required and holds user settable values for configuration. It must not be omitted and must contain at least one property.",
           "default": {},
           "$ref": "#/definitions/com.github.openshift.api.operator.v1alpha1.IngressSpec"
         },
         "status": {
-          "description": "status holds observed values from the cluster.",
+          "description": "status is optional and holds observed values from the cluster. When omitted, the operator has not reported any observed state. When present, it must contain at least one property.",
           "default": {},
           "$ref": "#/definitions/com.github.openshift.api.operator.v1alpha1.IngressStatus"
         }
@@ -38345,7 +38450,7 @@
           "type": "string"
         },
         "items": {
-          "description": "items is a list of Ingresses.",
+          "description": "items is an optional list of Ingresses. When omitted, the list contains no Ingress resources.",
           "type": "array",
           "items": {
             "$ref": "#/definitions/com.github.openshift.api.operator.v1alpha1.Ingress"
@@ -38363,22 +38468,22 @@
       }
     },
     "com.github.openshift.api.operator.v1alpha1.IngressSpec": {
-      "description": "IngressSpec is the specification of the desired behavior of the Ingress Operator.",
+      "description": "IngressSpec is the specification of the desired behavior of the Ingress Operator. At least one property must be set.",
       "type": "object",
       "properties": {
         "gatewayAPI": {
-          "description": "gatewayAPI holds configuration for Gateway API integration, including how the ingress operator manages Gateway API CRDs, the OpenShift Gateway API implementation, and its Gateway API controllers.",
+          "description": "gatewayAPI holds configuration for Gateway API integration, including how the ingress operator manages Gateway API CRDs, the OpenShift Gateway API implementation, and its Gateway API controllers.\n\ngatewayAPI is optional at the field level. When omitted, no Gateway API configuration is specified. Because spec must contain at least one property and gatewayAPI is currently its only property, omitting it leaves spec invalid. When present, gatewayAPI must contain at least one property.",
           "default": {},
           "$ref": "#/definitions/com.github.openshift.api.operator.v1alpha1.GatewayAPIIngressConfig"
         }
       }
     },
     "com.github.openshift.api.operator.v1alpha1.IngressStatus": {
-      "description": "IngressStatus defines the observed status of the Ingress Operator.",
+      "description": "IngressStatus defines the observed status of the Ingress Operator. When status is present, at least one property must be set. Once observedGeneration is set, it must remain set and may only stay the same or increase.",
       "type": "object",
       "properties": {
         "conditions": {
-          "description": "conditions is a list of conditions and their status.\n\nGateway API CRD management conditions are reported here with the \"GatewayAPI\" prefix:\n\n* \"GatewayAPICRDsManaged\" indicates whether the ingress operator is actively\n  managing Gateway API CRDs.\n* \"GatewayAPICRDsPresent\" indicates whether Gateway API CRDs exist on the\n  cluster.\n* \"GatewayAPICRDsCompliant\" indicates whether the installed CRDs match the\n  version expected by this ingress operator release.",
+          "description": "conditions is a list of conditions and their status.\n\nGateway API CRD management conditions are reported here with the \"GatewayAPI\" prefix:\n\n* \"GatewayAPICRDsManaged\" indicates whether the ingress operator is actively\n  managing Gateway API CRDs.\n* \"GatewayAPICRDsPresent\" indicates whether Gateway API CRDs exist on the\n  cluster.\n* \"GatewayAPICRDsCompliant\" indicates whether the installed CRDs match the\n  version expected by this ingress operator release.\n\nconditions is optional. When omitted, no conditions have been reported. When present, the list must contain between 1 and 32 entries, inclusive.",
           "type": "array",
           "items": {
             "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Condition"
@@ -38389,7 +38494,7 @@
           "x-kubernetes-list-type": "map"
         },
         "observedGeneration": {
-          "description": "observedGeneration represents the most recent generation observed by the operator and specifies the version of the spec field currently being synced.\n\nWhen omitted, the operator has not yet observed the resource.",
+          "description": "observedGeneration represents the most recent generation observed by the operator and specifies the version of the spec field currently being synced.\n\nWhen omitted, the operator has not yet observed the resource. When set, the value must be at least 1. Once set, it must remain set and may only stay the same or increase.",
           "type": "integer",
           "format": "int64"
         }

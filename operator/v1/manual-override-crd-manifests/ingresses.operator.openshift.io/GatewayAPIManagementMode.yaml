@@ -193,6 +193,6 @@ spec:
         - message: Ingress is a singleton; the .metadata.name field must be 'cluster'
           rule: self.metadata.name == 'cluster'
     served: true
-    storage: true
+    storage: false
     subresources:
       status: {}

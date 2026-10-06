@@ -1,4 +1,4 @@
-package v1alpha1
+package v1
 
 import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -12,8 +12,8 @@ import (
 // including how it manages Gateway API integration.
 // Ingress is a cluster-scoped singleton. The only valid metadata.name is "cluster".
 //
-// Compatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.
-// +openshift:compatibility-gen:level=4
+// Compatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).
+// +openshift:compatibility-gen:level=1
 // +openshift:file-pattern=cvoRunLevel=0000_50,operatorName=ingress,operatorOrdering=02
 // +kubebuilder:object:root=true
 // +kubebuilder:resource:path=ingresses,scope=Cluster
@@ -149,8 +149,8 @@ const (
 
 // IngressList is a collection of Ingresses.
 //
-// Compatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.
-// +openshift:compatibility-gen:level=4
+// Compatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).
+// +openshift:compatibility-gen:level=1
 type IngressList struct {
 	metav1.TypeMeta `json:",inline"`
 

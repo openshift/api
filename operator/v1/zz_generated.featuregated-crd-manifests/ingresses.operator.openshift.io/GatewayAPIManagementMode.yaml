@@ -18,7 +18,7 @@ spec:
     singular: ingress
   scope: Cluster
   versions:
-  - name: v1alpha1
+  - name: v1
     schema:
       openAPIV3Schema:
         description: |-
@@ -26,7 +26,7 @@ spec:
           including how it manages Gateway API integration.
           Ingress is a cluster-scoped singleton. The only valid metadata.name is "cluster".
 
-          Compatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.
+          Compatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).
         properties:
           apiVersion:
             description: |-

@@ -2856,13 +2856,13 @@ spec:
                   conditions:
                     description: |-
                       conditions provides information on topology transition progress and the
-                      evaluation of supported transition types. It is optional. When omitted, or
-                      when TopologyTransitionsEvaluated is absent or not True, retained transition
-                      evaluations are stale and must not be used to determine current availability.
+                      evaluation of supported transition types. The controller always reports both
+                      conditions once topologyTransitionStatus is set.
 
                       Valid condition types are TopologyTransitionsEvaluated and
-                      TopologyTransitionCompleted. Between one and two conditions must be present
-                      when the list is set. Use Unknown when a condition's state is not yet known.
+                      TopologyTransitionCompleted. Both conditions must be present: the controller
+                      always reports each condition explicitly, using Unknown when a condition's
+                      state is not yet known, rather than omitting it.
                     items:
                       description: Condition contains details for one aspect of the
                         current state of this API Resource.
@@ -2919,7 +2919,7 @@ spec:
                       - type
                       type: object
                     maxItems: 2
-                    minItems: 1
+                    minItems: 2
                     type: array
                     x-kubernetes-list-map-keys:
                     - type
@@ -2932,13 +2932,11 @@ spec:
                   transitions:
                     description: |-
                       transitions contains each supported transition type and its availability.
-                      It is optional. When omitted and TopologyTransitionsEvaluated is True, no
-                      supported transition options were found. Otherwise, omission means no
-                      transition options have been reported.
-                      The controller can retain entries during reevaluation or an evaluation failure.
-                      Clients must not use their availability results unless TopologyTransitionsEvaluated
-                      is True. The controller manages freshness; the API allows retained results
-                      independently of the evaluation condition's current status.
+                      It is optional. The controller clears this list whenever
+                      TopologyTransitionsEvaluated is not True, so its presence always reflects
+                      current, trustworthy results: an omitted list while TopologyTransitionsEvaluated
+                      is True means no supported transition options were found, and an omitted list
+                      otherwise means no transition options have been reported yet.
 
                       Between one and eight transition options must be present when the list is set.
                       This list reports transition options, not concurrent transitions. The topology
@@ -2953,9 +2951,11 @@ spec:
                             TopologyTransitionAvailable is required; other condition types report
                             individual checks. Between one and 32 conditions must be present, allowing
                             at most 31 individual checks in addition to the availability condition.
-                            The controller defines individual check types, reasons, and messages.
-                            Results may be retained during reevaluation or an evaluation failure; clients
-                            must not use them unless the top-level TopologyTransitionsEvaluated condition is True.
+                            The controller defines individual check types, reasons, and messages, and
+                            always reports each one explicitly, using Unknown when a check's result is
+                            not yet known. Because the containing transition is only reported while
+                            TopologyTransitionsEvaluated is True, these results always reflect the
+                            current evaluation.
                           items:
                             description: Condition contains details for one aspect
                               of the current state of this API Resource.
@@ -3042,13 +3042,11 @@ spec:
                                 and a smaller arbiter node maintain quorum.
                                 See https://pkg.go.dev/github.com/openshift/api/config/v1#TopologyMode for
                                 topology definitions.
-                                controlPlaneTopology is required and must be between 1 and 22 characters.
+                                controlPlaneTopology is required.
                               enum:
                               - HighlyAvailable
                               - HighlyAvailableArbiter
                               - SingleReplica
-                              maxLength: 22
-                              minLength: 1
                               type: string
                             infrastructureTopology:
                               description: |-
@@ -3086,13 +3084,11 @@ spec:
                                 and a smaller arbiter node maintain quorum.
                                 See https://pkg.go.dev/github.com/openshift/api/config/v1#TopologyMode for
                                 topology definitions.
-                                controlPlaneTopology is required and must be between 1 and 22 characters.
+                                controlPlaneTopology is required.
                               enum:
                               - HighlyAvailable
                               - HighlyAvailableArbiter
                               - SingleReplica
-                              maxLength: 22
-                              minLength: 1
                               type: string
                             infrastructureTopology:
                               description: |-

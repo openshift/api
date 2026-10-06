@@ -367,6 +367,11 @@ tests:
               lastTransitionTime: "2025-01-01T00:00:00Z"
               reason: NotEvaluated
               message: This hypothetical transition has not been evaluated
+            - type: TopologyTransitionCompleted
+              status: Unknown
+              lastTransitionTime: "2025-01-01T00:00:00Z"
+              reason: NotRequested
+              message: No transition has been requested
             transitions:
             - source:
                 controlPlaneTopology: External
@@ -398,6 +403,17 @@ tests:
           controlPlaneTopology: SingleReplica
           infrastructureTopology: SingleReplica
           topologyTransitionStatus:
+            conditions:
+            - type: TopologyTransitionsEvaluated
+              status: "True"
+              lastTransitionTime: "2025-01-01T00:00:00Z"
+              reason: EvaluationComplete
+              message: Transition checks finished
+            - type: TopologyTransitionCompleted
+              status: Unknown
+              lastTransitionTime: "2025-01-01T00:00:00Z"
+              reason: NotRequested
+              message: No transition has been requested
             transitions:
             - source:
                 controlPlaneTopology: SingleReplica

@@ -19,9 +19,7 @@ type TopologyState struct {
 	// and a smaller arbiter node maintain quorum.
 	// See https://pkg.go.dev/github.com/openshift/api/config/v1#TopologyMode for
 	// topology definitions.
-	// controlPlaneTopology is required and must be between 1 and 22 characters.
-	// +kubebuilder:validation:MinLength=1
-	// +kubebuilder:validation:MaxLength=22
+	// controlPlaneTopology is required.
 	// +openshift:validation:FeatureGateAwareEnum:featureGate="",enum=HighlyAvailable;HighlyAvailableArbiter;SingleReplica
 	// +openshift:validation:FeatureGateAwareEnum:featureGate=MutableTopology,enum=HighlyAvailable;HighlyAvailableArbiter;SingleReplica
 	// +required
@@ -41,19 +39,20 @@ type TopologyState struct {
 const (
 	// TopologyTransitionsEvaluatedConditionType indicates whether supported transition types have been evaluated.
 	//
-	// The controller reports Unknown before evaluation and while checks are being
-	// refreshed, True when evaluation finishes successfully (even if no transitions
-	// are supported or available), and False when evaluation cannot finish.
-	// It retains the last results while refreshing checks or reporting an evaluation
-	// failure. Clients must treat those results as stale unless this condition is True.
-	// An absent condition also means the results must be treated as stale.
+	// The controller always reports this condition when topologyTransitionStatus is
+	// set. It reports Unknown before evaluation and while checks are being refreshed,
+	// True when evaluation finishes successfully (even if no transitions are supported
+	// or available), and False when evaluation cannot finish. It retains the last
+	// results while refreshing checks or reporting an evaluation failure. Clients
+	// must treat those results as stale unless this condition is True.
 	TopologyTransitionsEvaluatedConditionType = "TopologyTransitionsEvaluated"
 
 	// TopologyTransitionCompletedConditionType indicates the status of the current or most recent transition.
 	//
-	// The controller reports Unknown before a transition is requested, True after
-	// both topologies reach the requested transition's target and post-transition
-	// checks pass, and False while the transition is in progress or blocked.
+	// The controller always reports this condition when topologyTransitionStatus is
+	// set. It reports Unknown before a transition is requested, True after both
+	// topologies reach the requested transition's target and post-transition checks
+	// pass, and False while the transition is in progress or blocked.
 	// Reaching the target topology alone does not mean the transition is complete:
 	// this condition remains False while post-transition checks are pending or failing.
 	TopologyTransitionCompletedConditionType = "TopologyTransitionCompleted"
@@ -63,27 +62,25 @@ const (
 	//
 	// TopologyTransitionAvailableConditionType is Unknown before evaluation, True when evaluations
 	// for the given transition succeed, and False when one or more evaluations for a transition fail.
-	// Retained values describe the last evaluation, not necessarily current availability.
-	// Clients must not use them to determine availability unless TopologyTransitionsEvaluated is True.
+	// Because the controller clears transitions whenever TopologyTransitionsEvaluated is not True,
+	// a reported value always reflects the current evaluation, never a stale one.
 	TopologyTransitionAvailableConditionType = "TopologyTransitionAvailable"
 )
 
 // TopologyTransitionStatus reports availability of each type of topology transition and contains the
 // status of any initiated transition.
-// When present, it must include conditions or transitions. Each list must be
-// non-empty when present.
 // +kubebuilder:validation:MinProperties=1
 type TopologyTransitionStatus struct {
 	// conditions provides information on topology transition progress and the
-	// evaluation of supported transition types. It is optional. When omitted, or
-	// when TopologyTransitionsEvaluated is absent or not True, retained transition
-	// evaluations are stale and must not be used to determine current availability.
+	// evaluation of supported transition types. The controller always reports both
+	// conditions once topologyTransitionStatus is set.
 	//
 	// Valid condition types are TopologyTransitionsEvaluated and
-	// TopologyTransitionCompleted. Between one and two conditions must be present
-	// when the list is set. Use Unknown when a condition's state is not yet known.
+	// TopologyTransitionCompleted. Both conditions must be present: the controller
+	// always reports each condition explicitly, using Unknown when a condition's
+	// state is not yet known, rather than omitting it.
 	//
-	// +kubebuilder:validation:MinItems=1
+	// +kubebuilder:validation:MinItems=2
 	// +kubebuilder:validation:MaxItems=2
 	// +kubebuilder:validation:XValidation:rule="self.all(c, c.type in ['TopologyTransitionsEvaluated', 'TopologyTransitionCompleted'])",message="conditions may only contain TopologyTransitionsEvaluated and TopologyTransitionCompleted"
 	// +optional
@@ -92,13 +89,11 @@ type TopologyTransitionStatus struct {
 	Conditions []metav1.Condition `json:"conditions,omitempty"`
 
 	// transitions contains each supported transition type and its availability.
-	// It is optional. When omitted and TopologyTransitionsEvaluated is True, no
-	// supported transition options were found. Otherwise, omission means no
-	// transition options have been reported.
-	// The controller can retain entries during reevaluation or an evaluation failure.
-	// Clients must not use their availability results unless TopologyTransitionsEvaluated
-	// is True. The controller manages freshness; the API allows retained results
-	// independently of the evaluation condition's current status.
+	// It is optional. The controller clears this list whenever
+	// TopologyTransitionsEvaluated is not True, so its presence always reflects
+	// current, trustworthy results: an omitted list while TopologyTransitionsEvaluated
+	// is True means no supported transition options were found, and an omitted list
+	// otherwise means no transition options have been reported yet.
 	//
 	// Between one and eight transition options must be present when the list is set.
 	// This list reports transition options, not concurrent transitions. The topology
@@ -136,9 +131,11 @@ type TopologyTransition struct {
 	// TopologyTransitionAvailable is required; other condition types report
 	// individual checks. Between one and 32 conditions must be present, allowing
 	// at most 31 individual checks in addition to the availability condition.
-	// The controller defines individual check types, reasons, and messages.
-	// Results may be retained during reevaluation or an evaluation failure; clients
-	// must not use them unless the top-level TopologyTransitionsEvaluated condition is True.
+	// The controller defines individual check types, reasons, and messages, and
+	// always reports each one explicitly, using Unknown when a check's result is
+	// not yet known. Because the containing transition is only reported while
+	// TopologyTransitionsEvaluated is True, these results always reflect the
+	// current evaluation.
 	//
 	// +kubebuilder:validation:MaxItems=32
 	// +kubebuilder:validation:MinItems=1

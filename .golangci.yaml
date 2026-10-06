@@ -144,6 +144,16 @@ linters:
         text: '^optionalfields: field ConsoleSpec\.Ingress should have the omitempty tag\.$'
       - linters:
         - kubeapilinter
+        # TopologyState.ControlPlaneTopology is constrained by FeatureGateAwareEnum
+        # markers, which kube-api-linter does not recognize
+        path: '^config/v1/types_infrastructure_transitions\.go$'
+        text: '^(minlength|maxlength): field TopologyState\.ControlPlaneTopology type TopologyMode must have a (minimum|maximum) length, add kubebuilder:validation:(MinLength|MaxLength) marker$'
+      - linters:
+        - kubeapilinter
+        path: '^config/v1/types_infrastructure_transitions\.go$'
+        text: '^requiredfields: field TopologyState\.ControlPlaneTopology has a valid zero value \(""\), but the validation is not complete'
+      - linters:
+        - kubeapilinter
         path: features|payload-command/
 issues:
   # We have a lot of existing issues.

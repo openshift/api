@@ -36,6 +36,11 @@ func (in PacemakerClusterStatus) OpenAPIModelName() string {
 }
 
 // OpenAPIModelName returns the OpenAPI model name for this type.
+func (in PacemakerFenceEvent) OpenAPIModelName() string {
+	return "com.github.openshift.api.etcd.v1alpha1.PacemakerFenceEvent"
+}
+
+// OpenAPIModelName returns the OpenAPI model name for this type.
 func (in PacemakerNodeAddress) OpenAPIModelName() string {
 	return "com.github.openshift.api.etcd.v1alpha1.PacemakerNodeAddress"
 }

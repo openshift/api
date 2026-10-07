@@ -3,9 +3,11 @@ package main
 import (
 	"crypto/sha256"
 	"encoding/base64"
+	"errors"
 	"fmt"
 	"os"
 	"path/filepath"
+	"runtime"
 	"strings"
 	"testing"
 )
@@ -26,7 +28,7 @@ func TestGetRegistryAuthToken(t *testing.T) {
 		t.Run(tc.name, func(t *testing.T) {
 			path := filepath.Join(t.TempDir(), "pull-secret.json")
 			writeTestFile(t, path, []byte(tc.secret))
-			got, err := getRegistryAuthToken(path)
+			got, err := getRegistryAuthToken(path, "registry.ci.openshift.org/ocp/release")
 			if tc.wantError != "" {
 				requireError(t, err, tc.wantError)
 				return
@@ -37,25 +39,26 @@ func TestGetRegistryAuthToken(t *testing.T) {
 		})
 	}
 	t.Run("missing file", func(t *testing.T) {
-		_, err := getRegistryAuthToken(filepath.Join(t.TempDir(), "missing"))
-		if !os.IsNotExist(err) {
+		_, err := getRegistryAuthToken(filepath.Join(t.TempDir(), "missing"), "registry.ci.openshift.org/ocp/release")
+		if !errors.Is(err, os.ErrNotExist) {
 			t.Fatalf("error = %v, want missing file", err)
 		}
 	})
 }
 
-// TestImageReferences checks legacy repository paths and digests are
+// TestImageReferences checks legacy and Quay repository paths and digests are
 // preserved when constructing manifest and blob URLs.
 func TestImageReferences(t *testing.T) {
 	for _, repository := range []string{
 		"registry.ci.openshift.org/ocp/release",
 		"registry.ci.openshift.org/ocp/release-5",
 		"registry.ci.openshift.org/ocp/kube-artifacts",
+		quayRegistry + "/openshift/ci",
 	} {
 		t.Run(repository, func(t *testing.T) {
 			wantDigest := fixtureDigest("component")
 			image, digest := getImageStreamAndDigest(repository + "@" + wantDigest)
-			if image != strings.TrimPrefix(repository, "registry.ci.openshift.org/ocp/") || digest != wantDigest {
+			if image != repository || digest != wantDigest {
 				t.Fatalf("image = %q, digest = %q", image, digest)
 			}
 			for _, kind := range []string{"manifests", "blobs"} {
@@ -68,6 +71,54 @@ func TestImageReferences(t *testing.T) {
 		})
 	}
 }
+
+// TestVerifyAPIServerVersion checks native command execution and semantic version
+// matching. Only the dirty suffix and build metadata are ignored; other
+// prereleases must match, and invalid versions or execution failures are rejected.
+func TestVerifyAPIServerVersion(t *testing.T) {
+	for _, tc := range []struct {
+		name, expected, output, wantError string
+	}{
+		{"stable", "v1.37.1", "Kubernetes v1.37.1", ""},
+		{"dirty", "v1.37.1", "Kubernetes v1.37.1-dirty", ""},
+		{"build metadata", "v1.37.1+expected", "Kubernetes v1.37.1+actual", ""},
+		{"dirty with metadata", "v1.37.1", "Kubernetes v1.37.1-dirty+build.123", ""},
+		{"prerelease", "v1.37.1-rc.1", "Kubernetes v1.37.1-rc.1-dirty+build.123", ""},
+		{"major mismatch", "v1.37.1", "Kubernetes v2.37.1", "does not match -version"},
+		{"minor mismatch", "v1.37.1", "Kubernetes v1.38.1", "does not match -version"},
+		{"patch mismatch", "v1.37.1", "Kubernetes v1.37.2", "does not match -version"},
+		{"unexpected prerelease", "v1.37.1", "Kubernetes v1.37.1-rc.1", "does not match -version"},
+		{"different prerelease", "v1.37.1-rc.1", "Kubernetes v1.37.1-rc.2", "does not match -version"},
+		{"dirty is not a suffix", "v1.37.1", "Kubernetes v1.37.1-dirty.1", "does not match -version"},
+		{"invalid expected version", "vgarbage", "Kubernetes v1.37.1", "failed to parse Kubernetes version"},
+		{"invalid reported version", "v1.37.1", "Kubernetes unknown", "failed to parse Kubernetes version"},
+		{"invalid build metadata", "v1.37.1", "Kubernetes v1.37.1+invalid!", "failed to parse Kubernetes version"},
+		{"incomplete version", "v1.37.1", "Kubernetes v1.37", "failed to parse Kubernetes version"},
+		{"empty output", "v1.37.1", "", "failed to parse Kubernetes version"},
+	} {
+		t.Run(tc.name, func(t *testing.T) {
+			dir := t.TempDir()
+			binary := filepath.Join(dir, runtime.GOOS, runtime.GOARCH, "bin", "kube-apiserver")
+			writeTestFile(t, binary, []byte(fmt.Sprintf("#!/bin/sh\n[ \"$1\" = '--version' ] || exit 1\nprintf '%%s\\n' '%s'\n", tc.output)))
+			err := verifyAPIServerVersion(dir, tc.expected)
+			if tc.wantError != "" {
+				requireError(t, err, tc.wantError)
+			} else if err != nil {
+				t.Fatal(err)
+			}
+		})
+	}
+	t.Run("missing native binary", func(t *testing.T) {
+		requireError(t, verifyAPIServerVersion(t.TempDir(), "v1.37.1"), "failed to check kube-apiserver version")
+	})
+	t.Run("command failure", func(t *testing.T) {
+		dir := t.TempDir()
+		writeTestFile(t, filepath.Join(dir, runtime.GOOS, runtime.GOARCH, "bin", "kube-apiserver"), []byte("#!/bin/sh\nexit 2\n"))
+		requireError(t, verifyAPIServerVersion(dir, "v1.37.1"), "failed to check kube-apiserver version")
+	})
+}
+
+const quayRegistry = "quay-proxy.ci.openshift.org"
 
 const testRegistryToken = "fixture-token"
 

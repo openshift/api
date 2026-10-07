@@ -14,20 +14,25 @@ import (
 	"io"
 	"io/fs"
 	"net/http"
+	"net/url"
 	"os"
+	"os/exec"
 	"path/filepath"
 	"regexp"
+	"runtime"
 	"strings"
+	"time"
 
 	"cloud.google.com/go/storage"
 	"gopkg.in/yaml.v3"
+	utilversion "k8s.io/apimachinery/pkg/util/version"
 )
 
 func main() {
 	pullSecretFile := flag.String("pull-secret", "", "The pull secret to use for the kubebuilder tools")
 	version := flag.String("version", "", "The version of the kubebuilder tools to publish. This should be a Kubernetes version that the build is based upon.")
 	outputDir := flag.String("output-dir", "", "The output directory to write the kubebuilder tools to")
-	payload := flag.String("payload", "", "The payload to use for building the kubebuilder tools archives. This should be in the format registry.ci.openshift.org/ocp/release:<version> or registry.ci.openshift.org/ocp/release-<number>:<version>")
+	payload := flag.String("payload", "", "The CI payload: registry.ci.openshift.org/ocp/release[-<number>]:<tag> or quay-proxy.ci.openshift.org/openshift/ci:rc_payload__<version>")
 	skipUpload := flag.Bool("skip-upload", false, "Skip uploading the artifacts created to the openshift-gce-devel/openshift-kubebuilder-tools bucket")
 	indexFile := flag.String("index-file", "envtest-releases.yaml", "The index file to use for the kubebuilder tools")
 
@@ -50,22 +55,28 @@ func main() {
 		panic("Kubernetes version must begin with the v prefix. Example: v1.33.2")
 	}
 
-	// Decrypt the pull secret to get the bearer token.
-	registryAuthToken, err := getRegistryAuthToken(*pullSecretFile)
-	if err != nil {
-		panic(err)
+	// We only accept valid semver versions that Kubernetes uses.
+	if _, err := utilversion.ParseSemantic(*version); err != nil {
+		panic(fmt.Errorf("failed to parse Kubernetes version %q: %w", *version, err))
 	}
 
-	// We only expect images from the internal releases.
-	// Accept both "registry.ci.openshift.org/ocp/release:" and
-	// "registry.ci.openshift.org/ocp/release-<number>:" formats.
-	matches := regexp.MustCompile(`^registry\.ci\.openshift\.org/ocp/release(-\d+)?:(.+)$`).FindStringSubmatch(*payload)
+	// Accept both the legacy release repositories and the quay-proxy CI repository.
+	matches := regexp.MustCompile(`^((?:registry\.ci\.openshift\.org/ocp/release(?:-\d+)?|quay-proxy\.ci\.openshift\.org/openshift/ci)):(.+)$`).FindStringSubmatch(*payload)
 	if *payload == "" || matches == nil {
-		panic("payload is required and must be a valid payload starting with \"registry.ci.openshift.org/ocp/release:\" or \"registry.ci.openshift.org/ocp/release-<number>:\"")
+		panic(fmt.Errorf("failed to validate payload: payload is required and must be a valid payload: registry.ci.openshift.org/ocp/release[-<number>]:<tag> or quay-proxy.ci.openshift.org/openshift/ci:rc_payload__<version>; got %q", *payload))
 	}
 
-	releaseImage := "release" + matches[1]
+	releaseImage := matches[1]
 	payloadVersion := matches[2]
+	if strings.HasPrefix(releaseImage, "quay-proxy.ci.openshift.org/") && (!strings.HasPrefix(payloadVersion, "rc_payload__") || payloadVersion == "rc_payload__") {
+		panic(fmt.Errorf("failed to validate payload tag: Quay-proxy payload tags must start with rc_payload__ followed by a version; got %q", payloadVersion))
+	}
+
+	// Resolve credentials once; the Quay payload and artifact images share a repository.
+	registryAuthToken, err := getRegistryAuthToken(*pullSecretFile, releaseImage)
+	if err != nil {
+		panic(fmt.Errorf("failed to get registry authentication for %q: %w", releaseImage, err))
+	}
 
 	// Download the image-references and convert to a map of image name to digest
 	manifests, err := getReleaseImages(releaseImage, payloadVersion, registryAuthToken)
@@ -76,6 +87,9 @@ func main() {
 	// Extract the kube-apiserver binaries from the installer-kube-apiserver-artifacts image
 	if err := getKubeAPIServerBins(*outputDir, manifests, registryAuthToken); err != nil {
 		panic(err)
+	}
+	if err := verifyAPIServerVersion(*outputDir, *version); err != nil {
+		panic(fmt.Errorf("failed to verify extracted kube-apiserver version: %w", err))
 	}
 
 	// Extract the etcd binaries from the installer-etcd-artifacts image
@@ -106,10 +120,11 @@ func main() {
 	fmt.Printf("Archives uploaded to openshift-gce-devel/openshift-kubebuilder-tools for version %s\n", *version)
 }
 
-func getRegistryAuthToken(pullSecretFile string) (string, error) {
+func getRegistryAuthToken(pullSecretFile, image string) (string, error) {
+	registry, repository, _ := strings.Cut(image, "/")
 	pullSecretRaw, err := os.ReadFile(pullSecretFile)
 	if err != nil {
-		return "", err
+		return "", fmt.Errorf("failed to read pull secret %q: %w", pullSecretFile, err)
 	}
 
 	var secret struct {
@@ -119,24 +134,57 @@ func getRegistryAuthToken(pullSecretFile string) (string, error) {
 	}
 
 	if err := json.Unmarshal(pullSecretRaw, &secret); err != nil {
-		return "", err
+		return "", fmt.Errorf("failed to decode pull secret %q: %w", pullSecretFile, err)
 	}
 
-	registryAuth, ok := secret.Auths["registry.ci.openshift.org"]
+	registryAuth, ok := secret.Auths[registry]
 	if !ok {
-		return "", errors.New("registry.ci.openshift.org not found in pull secret")
+		return "", fmt.Errorf("failed to find registry credentials: registry %q not found in pull secret", registry)
 	}
 
 	registryAuthToken, err := base64.StdEncoding.DecodeString(registryAuth.Auth)
 	if err != nil {
-		return "", err
+		return "", fmt.Errorf("failed to decode credentials for registry %q: %w", registry, err)
 	}
 
-	if len(strings.Split(string(registryAuthToken), ":")) != 2 {
-		return "", errors.New("password not found in pull secret")
+	// Passwords may contain colons, particularly when used as Basic credentials.
+	credentials := strings.SplitN(string(registryAuthToken), ":", 2)
+	if len(credentials) != 2 {
+		return "", fmt.Errorf("failed to decode credentials: password not found in pull secret for registry %q", registry)
+	}
+	if registry != "quay-proxy.ci.openshift.org" {
+		return credentials[1], nil
 	}
 
-	return strings.Split(string(registryAuthToken), ":")[1], nil
+	// Quay-proxy requires a scoped token rather than the legacy bearer password.
+	query := url.Values{"service": {registry}, "scope": {"repository:" + repository + ":pull"}}
+	req, err := http.NewRequest("GET", "https://"+registry+"/v2/auth?"+query.Encode(), nil)
+	if err != nil {
+		return "", fmt.Errorf("failed to create token request for registry %q: %w", registry, err)
+	}
+	req.SetBasicAuth(credentials[0], credentials[1])
+	resp, err := (&http.Client{}).Do(req)
+	if err != nil {
+		return "", fmt.Errorf("failed to exchange credentials for registry %q: %w", registry, err)
+	}
+	defer resp.Body.Close()
+	if resp.StatusCode != http.StatusOK {
+		return "", fmt.Errorf("failed to exchange credentials: token exchange bad status for registry %q: %s", registry, resp.Status)
+	}
+	var token struct {
+		Token       string `json:"token"`
+		AccessToken string `json:"access_token"`
+	}
+	if err := json.NewDecoder(resp.Body).Decode(&token); err != nil {
+		return "", fmt.Errorf("failed to decode token response for registry %q: %w", registry, err)
+	}
+	if token.Token == "" {
+		token.Token = token.AccessToken
+	}
+	if token.Token == "" {
+		return "", fmt.Errorf("failed to exchange credentials: token exchange returned no token for registry %q", registry)
+	}
+	return token.Token, nil
 }
 
 func getReleaseImages(releaseImage string, version string, registryToken string) (map[string]string, error) {
@@ -195,7 +243,8 @@ func getReleaseImages(releaseImage string, version string, registryToken string)
 }
 
 func getRegistryURL(image, kind, digest string) string {
-	return fmt.Sprintf("https://registry.ci.openshift.org/v2/ocp/%s/%s/%s", image, kind, digest)
+	registry, repository, _ := strings.Cut(image, "/")
+	return fmt.Sprintf("https://%s/v2/%s/%s/%s", registry, repository, kind, digest)
 }
 
 func downloadJSON(url string, registryToken string) ([]byte, error) {
@@ -361,9 +410,35 @@ func getMultiArchBinariesFromImage(dir string, manifests map[string]string, regi
 }
 
 func getImageStreamAndDigest(image string) (string, string) {
-	streamAndDigest := strings.TrimPrefix(image, "registry.ci.openshift.org/ocp/")
-	parts := strings.Split(streamAndDigest, "@")
+	parts := strings.Split(image, "@")
 	return parts[0], parts[1]
+}
+
+// Verify the native kube-apiserver binary before creating archives or publishing them.
+// The version reported by the binary must match the one specified in -version.
+// Before comparison the version is normalized by dropping -dirty and build metadata.
+func verifyAPIServerVersion(dir, expected string) error {
+	binary := filepath.Join(dir, runtime.GOOS, runtime.GOARCH, "bin", "kube-apiserver")
+	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
+	defer cancel()
+	output, err := exec.CommandContext(ctx, binary, "--version").Output()
+	if err != nil {
+		return fmt.Errorf("failed to check kube-apiserver version for %s/%s: %w", runtime.GOOS, runtime.GOARCH, err)
+	}
+	actual := strings.TrimSpace(strings.TrimPrefix(string(output), "Kubernetes "))
+	var normalized [2]string
+	for i, value := range []string{expected, actual} {
+		parsed, err := utilversion.ParseSemantic(value)
+		if err != nil {
+			return fmt.Errorf("failed to parse Kubernetes version %q: %w", value, err)
+		}
+		withoutMetadata, _, _ := strings.Cut(parsed.String(), "+")
+		normalized[i] = strings.TrimSuffix(withoutMetadata, "-dirty")
+	}
+	if normalized[0] != normalized[1] {
+		return fmt.Errorf("failed to verify kube-apiserver version: kube-apiserver version %q does not match -version %q", actual, expected)
+	}
+	return nil
 }
 
 func buildEnvtestTars(dir string, version string) error {

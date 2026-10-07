@@ -5,6 +5,15 @@ source "$(dirname "${BASH_SOURCE}")/update-payload-crds.sh"
 
 files=""
 
+# The ingress CRD is also shipped by cluster-ingress-operator. Keep this payload
+# copy on v1alpha1 until that payload owner is updated after the v1 API promotion.
+ingress_crd="${SCRIPT_ROOT}/payload-manifests/crds/0000_50_ingress_02_ingresses.crd.yaml"
+mapfile -t ingress_versions < <(sed -n '/^  versions:/,/^[^ ]/p' "${ingress_crd}" | sed -n 's/^  - name: //p')
+if [[ "${#ingress_versions[@]}" -ne 1 || "${ingress_versions[0]}" != "v1alpha1" ]]; then
+    echo "Ingress payload CRD must remain v1alpha1-only until all payload owners are updated together."
+    exit 1
+fi
+
 # Check there's no diff between the files in their canonical location
 # and the payload-manifests location.
 for f in ${crd_globs}; do

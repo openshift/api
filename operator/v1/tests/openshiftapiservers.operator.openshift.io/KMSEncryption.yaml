@@ -211,7 +211,6 @@ tests:
               result:
                 status: Failed
                 configHash: AQAAAA==
-                remoteKeyID: vault-transit-key-v3
       expected: |
         apiVersion: operator.openshift.io/v1
         kind: OpenShiftAPIServer
@@ -225,7 +224,6 @@ tests:
               result:
                 status: Failed
                 configHash: AQAAAA==
-                remoteKeyID: vault-transit-key-v3
     - name: Should accept preflight alongside healthReports
       initial: |
         apiVersion: operator.openshift.io/v1
@@ -414,3 +412,20 @@ tests:
                 configHash: AQAAAA==
                 remoteKeyID: ""
       expectedStatusError: "should be at least 1"
+    - name: Should reject Succeeded result without remoteKeyID
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: OpenShiftAPIServer
+        spec: {}
+      updated: |
+        apiVersion: operator.openshift.io/v1
+        kind: OpenShiftAPIServer
+        spec: {}
+        status:
+          encryptionStatus:
+            preflight:
+              observedConfigHash: AQAAAA==
+              result:
+                status: Succeeded
+                configHash: AQAAAA==
+      expectedStatusError: "remoteKeyID is required when status is Succeeded"

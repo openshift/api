@@ -231,6 +231,29 @@ tests:
                   request: "500m"
                   limit: "200m"
       expectedError: 'spec.alertmanagerConfig.customConfig.resources[0]: Invalid value: "object": limit must be greater than or equal to request'
+    - name: Should accept additionalAlertmanagerConfigs with bare hostname in staticConfigs
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: "Disabled"
+          prometheusConfig:
+            additionalAlertmanagerConfigs:
+              - name: external
+                staticConfigs:
+                  - alertmanager-observability.apps.example.com
+      expected: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: "Disabled"
+          prometheusConfig:
+            additionalAlertmanagerConfigs:
+              - name: external
+                staticConfigs:
+                  - alertmanager-observability.apps.example.com
     - name: Should be able to create a minimal MetricsServerConfig
       initial: |
         apiVersion: config.openshift.io/v1alpha1

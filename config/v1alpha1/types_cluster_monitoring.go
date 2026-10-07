@@ -2153,10 +2153,10 @@ type RelabelConfig struct {
 	// Must be a valid RE2 regular expression (https://github.com/google/re2/wiki/Syntax).
 	// When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time.
 	// The default value is "(.*)" to match everything.
-	// Must be between 1 and 1000 characters in length when specified.
+	// Must be between 1 and 8192 characters in length when specified.
 	// +optional
 	// +kubebuilder:validation:MinLength=1
-	// +kubebuilder:validation:MaxLength=1000
+	// +kubebuilder:validation:MaxLength=8192
 	Regex string `json:"regex,omitempty"`
 
 	// action defines the action to perform on the matched labels and its configuration.

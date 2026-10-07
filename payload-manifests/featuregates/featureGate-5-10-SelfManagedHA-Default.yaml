@@ -252,6 +252,9 @@
                         "name": "NutanixMultiSubnets"
                     },
                     {
+                        "name": "OVNKubernetesStartupReadinessTimeout"
+                    },
+                    {
                         "name": "OVNKubernetesUplinkMode"
                     },
                     {

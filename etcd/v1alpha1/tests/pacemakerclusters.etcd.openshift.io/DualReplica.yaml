@@ -53,11 +53,6 @@ tests:
               lastTransitionTime: "2024-01-01T00:00:00Z"
               reason: AsExpected
               message: "Expected nodes present"
-            - type: FencingEnabled
-              status: "True"
-              lastTransitionTime: "2024-01-01T00:00:00Z"
-              reason: FencingEnabled
-              message: "Fencing enabled"
           lastUpdated: "2024-01-01T00:00:01Z"
           nodes:
             - nodeName: master-0.example.com
@@ -261,11 +256,6 @@ tests:
               lastTransitionTime: "2024-01-01T00:00:00Z"
               reason: AsExpected
               message: "Expected nodes present"
-            - type: FencingEnabled
-              status: "True"
-              lastTransitionTime: "2024-01-01T00:00:00Z"
-              reason: FencingEnabled
-              message: "Fencing enabled"
           lastUpdated: "2024-01-01T00:00:01Z"
           nodes:
             - nodeName: master-0.example.com
@@ -471,11 +461,6 @@ tests:
               lastTransitionTime: "2024-01-01T00:00:00Z"
               reason: AsExpected
               message: "Expected"
-            - type: FencingEnabled
-              status: "True"
-              lastTransitionTime: "2024-01-01T00:00:00Z"
-              reason: FencingEnabled
-              message: "Fencing enabled"
             - type: Extra
               status: "True"
               lastTransitionTime: "2024-01-01T00:00:00Z"
@@ -513,11 +498,6 @@ tests:
               lastTransitionTime: "2024-01-01T00:00:00Z"
               reason: AsExpected
               message: "Expected"
-            - type: FencingEnabled
-              status: "True"
-              lastTransitionTime: "2024-01-01T00:00:00Z"
-              reason: FencingEnabled
-              message: "Fencing enabled"
           lastUpdated: "2024-01-01T00:00:01Z"
           nodes:
             - nodeName: master-0.example.com
@@ -729,11 +709,6 @@ tests:
               lastTransitionTime: "2024-01-01T00:00:00Z"
               reason: AsExpected
               message: "Expected"
-            - type: FencingEnabled
-              status: "True"
-              lastTransitionTime: "2024-01-01T00:00:00Z"
-              reason: FencingEnabled
-              message: "Fencing enabled"
           lastUpdated: "2024-01-01T00:00:01Z"
           nodes:
             - nodeName: master-0.example.com
@@ -944,11 +919,6 @@ tests:
               lastTransitionTime: "2024-01-01T00:00:00Z"
               reason: AsExpected
               message: "Expected"
-            - type: FencingEnabled
-              status: "True"
-              lastTransitionTime: "2024-01-01T00:00:00Z"
-              reason: FencingEnabled
-              message: "Fencing enabled"
           lastUpdated: "2024-01-01T00:00:01Z"
           nodes:
             - nodeName: master-0.example.com
@@ -1159,11 +1129,6 @@ tests:
               lastTransitionTime: "2024-01-01T00:00:00Z"
               reason: AsExpected
               message: "Expected"
-            - type: FencingEnabled
-              status: "True"
-              lastTransitionTime: "2024-01-01T00:00:00Z"
-              reason: FencingEnabled
-              message: "Fencing enabled"
           lastUpdated: "2024-01-01T00:00:01Z"
           nodes:
             - nodeName: master-0.example.com
@@ -1367,11 +1332,6 @@ tests:
               lastTransitionTime: "2024-01-01T00:00:00Z"
               reason: AsExpected
               message: "Expected"
-            - type: FencingEnabled
-              status: "True"
-              lastTransitionTime: "2024-01-01T00:00:00Z"
-              reason: FencingEnabled
-              message: "Fencing enabled"
           lastUpdated: "2024-01-01T00:00:01Z"
           nodes:
             - nodeName: master-0.example.com
@@ -1581,11 +1541,6 @@ tests:
               lastTransitionTime: "2024-01-01T00:00:00Z"
               reason: AsExpected
               message: "Expected"
-            - type: FencingEnabled
-              status: "True"
-              lastTransitionTime: "2024-01-01T00:00:00Z"
-              reason: FencingEnabled
-              message: "Fencing enabled"
           lastUpdated: "2024-01-01T00:00:01Z"
           nodes:
             - nodeName: master-0.example.com
@@ -1796,11 +1751,6 @@ tests:
               lastTransitionTime: "2024-01-01T00:00:00Z"
               reason: AsExpected
               message: "Expected"
-            - type: FencingEnabled
-              status: "True"
-              lastTransitionTime: "2024-01-01T00:00:00Z"
-              reason: FencingEnabled
-              message: "Fencing enabled"
           lastUpdated: "2024-01-01T00:00:01Z"
           nodes:
             - nodeName: master-0.example.com

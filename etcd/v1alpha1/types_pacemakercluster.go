@@ -613,15 +613,17 @@ type PacemakerClusterStatus struct {
 	// The "InService" condition tracks whether the cluster is in service (not in maintenance mode).
 	// The "NodeCountAsExpected" condition tracks whether the expected number of nodes are present.
 	// The "FencingEnabled" condition tracks whether STONITH (fencing) is enabled in the cluster.
-	// Each of these conditions is required, so the array must contain at least 4 items.
+	// The "Healthy", "InService", and "NodeCountAsExpected" conditions are required, so the array
+	// must contain at least 3 items. The "FencingEnabled" condition is optional and is omitted
+	// when the status collector has not yet observed the stonith-enabled property, for example
+	// immediately after an upgrade from a version that does not report it.
 	// +listType=map
 	// +listMapKey=type
-	// +kubebuilder:validation:MinItems=4
+	// +kubebuilder:validation:MinItems=3
 	// +kubebuilder:validation:MaxItems=8
 	// +kubebuilder:validation:XValidation:rule="self.exists(c, c.type == 'Healthy')",message="conditions must contain a condition of type Healthy"
 	// +kubebuilder:validation:XValidation:rule="self.exists(c, c.type == 'InService')",message="conditions must contain a condition of type InService"
 	// +kubebuilder:validation:XValidation:rule="self.exists(c, c.type == 'NodeCountAsExpected')",message="conditions must contain a condition of type NodeCountAsExpected"
-	// +kubebuilder:validation:XValidation:rule="self.exists(c, c.type == 'FencingEnabled')",message="conditions must contain a condition of type FencingEnabled"
 	// +required
 	Conditions []metav1.Condition `json:"conditions,omitempty"`
 

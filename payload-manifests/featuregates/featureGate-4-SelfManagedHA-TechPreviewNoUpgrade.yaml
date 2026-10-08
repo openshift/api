@@ -259,9 +259,6 @@
                         "name": "ImageModeStatusReporting"
                     },
                     {
-                        "name": "ImageStreamImportMode"
-                    },
-                    {
                         "name": "IngressComponentRouteLabels"
                     },
                     {

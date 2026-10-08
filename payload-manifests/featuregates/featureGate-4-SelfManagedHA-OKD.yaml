@@ -331,9 +331,6 @@
                         "name": "GatewayAPIWithoutOLM"
                     },
                     {
-                        "name": "ImageStreamImportMode"
-                    },
-                    {
                         "name": "IngressControllerDynamicConfigurationManager"
                     },
                     {

@@ -33,8 +33,6 @@ var legacyFeatureGates = sets.New(
 	// never add to this list, if you think you have an exception ask @deads2k
 	"HardwareSpeed",
 	// never add to this list, if you think you have an exception ask @deads2k
-	"ImageStreamImportMode",
-	// never add to this list, if you think you have an exception ask @deads2k
 	"IngressControllerDynamicConfigurationManager",
 	// never add to this list, if you think you have an exception ask @deads2k
 	"IngressControllerLBSubnetsAWS",

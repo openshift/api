@@ -626,14 +626,6 @@ var (
 						enhancementPR(legacyFeatureGateWithoutEnhancement).
 						mustRegister()
 
-	FeatureGateImageStreamImportMode = newFeatureGate("ImageStreamImportMode").
-						reportProblemsToJiraComponent("Multi-Arch").
-						contactPerson("psundara").
-						productScope(ocpSpecific).
-						enhancementPR(legacyFeatureGateWithoutEnhancement).
-						enable(inDefault(), inOKD(), inTechPreviewNoUpgrade(), inDevPreviewNoUpgrade()).
-						mustRegister()
-
 	FeatureGateIngressControllerDynamicConfigurationManager = newFeatureGate("IngressControllerDynamicConfigurationManager").
 								reportProblemsToJiraComponent("Networking/router").
 								contactPerson("miciah").

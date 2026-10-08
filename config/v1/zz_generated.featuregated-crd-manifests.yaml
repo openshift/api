@@ -170,7 +170,6 @@ clusterversions.config.openshift.io:
   - ClusterAPIMachineManagement
   - ClusterUpdateAcceptRisks
   - ClusterUpdatePreflight
-  - ImageStreamImportMode
   - SignatureStores
   FilenameOperatorName: cluster-version-operator
   FilenameOperatorOrdering: "01"
@@ -275,8 +274,7 @@ images.config.openshift.io:
   CRDName: images.config.openshift.io
   Capability: ""
   Category: ""
-  FeatureGates:
-  - ImageStreamImportMode
+  FeatureGates: []
   FilenameOperatorName: config-operator
   FilenameOperatorOrdering: "01"
   FilenameRunLevel: "0000_10"

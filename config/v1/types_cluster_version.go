@@ -828,7 +828,6 @@ type Release struct {
 	// architecture.
 	// Valid values are 'Multi' and empty.
 	//
-	// +openshift:enable:FeatureGate=ImageStreamImportMode
 	// +optional
 	Architecture ClusterVersionArchitecture `json:"architecture,omitempty"`
 

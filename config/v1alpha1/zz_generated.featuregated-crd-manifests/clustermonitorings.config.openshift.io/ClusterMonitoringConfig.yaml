@@ -3266,17 +3266,24 @@ spec:
                           minItems: 1
                           type: array
                           x-kubernetes-list-type: set
-                        timeoutSeconds:
+                        timeout:
                           description: |-
-                            timeoutSeconds defines the timeout in seconds for requests to Alertmanager.
+                            timeout defines the timeout for requests to Alertmanager.
+                            Valid values are Prometheus-style duration strings with unit suffixes y, w, d, h, m, s, or ms
+                            (for example, "30s", "500ms", or "1m"). Each unit value must be a positive integer.
+                            Composite durations must follow the fixed unit order y, w, d, h, m, s, ms.
+                            Must be at least 1 character and at most 64 characters.
+                            When set to "0", the timeout is disabled. This is the only supported form for a zero duration;
+                            other zero-duration representations such as "0s" or "0ms" are rejected.
                             When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time.
-                            Currently the default is 10 seconds.
-                            Minimum value is 1 second.
-                            Maximum value is 600 seconds (10 minutes).
-                          format: int32
-                          maximum: 600
-                          minimum: 1
-                          type: integer
+                            The current default value is `10s`.
+                          maxLength: 64
+                          minLength: 1
+                          type: string
+                          x-kubernetes-validations:
+                          - message: must be "0" or a Prometheus duration string with
+                              only positive unit values
+                            rule: self == "0" || self.matches('^([1-9][0-9]*y)?([1-9][0-9]*w)?([1-9][0-9]*d)?([1-9][0-9]*h)?([1-9][0-9]*m)?([1-9][0-9]*s)?([1-9][0-9]*ms)?$')
                         tlsConfig:
                           description: |-
                             tlsConfig defines the TLS settings to use for Alertmanager connections.
@@ -3481,8 +3488,8 @@ spec:
                         value:
                           description: |-
                             value is the value of the label.
-                            Must be between 1 and 128 characters in length.
-                          maxLength: 128
+                            Must be between 1 and 1024 characters in length.
+                          maxLength: 1024
                           minLength: 1
                           type: string
                       required:
@@ -4066,15 +4073,23 @@ spec:
                                 one property), and forbidden when sendPolicy is Default.
                               minProperties: 1
                               properties:
-                                sendIntervalSeconds:
+                                sendInterval:
                                   description: |-
-                                    sendIntervalSeconds is the interval in seconds at which metadata is sent.
-                                    When omitted, the platform chooses a reasonable default (e.g. 30 seconds).
-                                    Minimum value is 1 second. Maximum value is 86400 seconds (24 hours).
-                                  format: int32
-                                  maximum: 86400
-                                  minimum: 1
-                                  type: integer
+                                    sendInterval is the interval at which metadata is sent.
+                                    Valid values are Prometheus-style duration strings with unit suffixes y, w, d, h, m, s, or ms
+                                    (for example, "30s" or "1m"). Each unit value must be a positive integer.
+                                    Composite durations must follow the fixed unit order y, w, d, h, m, s, ms.
+                                    Must be at least 1 character and at most 64 characters.
+                                    When set to "0", metadata is not sent on an interval. This is the only supported form for a zero duration;
+                                    other zero-duration representations such as "0s" or "0ms" are rejected.
+                                    When omitted, the platform chooses a reasonable default (e.g. `30s`).
+                                  maxLength: 64
+                                  minLength: 1
+                                  type: string
+                                  x-kubernetes-validations:
+                                  - message: must be "0" or a Prometheus duration
+                                      string with only positive unit values
+                                    rule: self == "0" || self.matches('^([1-9][0-9]*y)?([1-9][0-9]*w)?([1-9][0-9]*d)?([1-9][0-9]*h)?([1-9][0-9]*m)?([1-9][0-9]*s)?([1-9][0-9]*ms)?$')
                               type: object
                             sendPolicy:
                               description: |-
@@ -4090,8 +4105,9 @@ spec:
                           type: object
                           x-kubernetes-validations:
                           - message: custom is forbidden when sendPolicy is Default
-                            rule: 'self.sendPolicy == ''Default'' ? self.custom.sendIntervalSeconds
-                              == 0 : true'
+                            rule: 'self.sendPolicy == ''Default'' ? !has(self.custom)
+                              || !has(self.custom.sendInterval) || self.custom.sendInterval
+                              == '''' : true'
                         name:
                           description: |-
                             name is a required identifier for this remote write configuration (name is the list key for the remoteWrite list).
@@ -4126,16 +4142,23 @@ spec:
                             When omitted, default queue configuration is used.
                           minProperties: 1
                           properties:
-                            batchSendDeadlineSeconds:
+                            batchSendDeadline:
                               description: |-
-                                batchSendDeadlineSeconds is the maximum time in seconds a sample will wait in buffer before being sent.
+                                batchSendDeadline is the maximum time a sample will wait in buffer before being sent.
+                                Valid values are Prometheus-style duration strings with unit suffixes y, w, d, h, m, s, or ms
+                                (for example, "5s" or "1m"). Each unit value must be a positive integer.
+                                Composite durations must follow the fixed unit order y, w, d, h, m, s, ms.
+                                Must be at least 1 character and at most 64 characters.
+                                When set to "0", samples are not held for a deadline. This is the only supported form for a zero duration;
+                                other zero-duration representations such as "0s" or "0ms" are rejected.
                                 When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time.
-                                Minimum value is 1 second.
-                                Maximum value is 3600 seconds (1 hour).
-                              format: int32
-                              maximum: 3600
-                              minimum: 1
-                              type: integer
+                              maxLength: 64
+                              minLength: 1
+                              type: string
+                              x-kubernetes-validations:
+                              - message: must be "0" or a Prometheus duration string
+                                  with only positive unit values
+                                rule: self == "0" || self.matches('^([1-9][0-9]*y)?([1-9][0-9]*w)?([1-9][0-9]*d)?([1-9][0-9]*h)?([1-9][0-9]*m)?([1-9][0-9]*s)?([1-9][0-9]*ms)?$')
                             capacity:
                               description: |-
                                 capacity is the number of samples to buffer per shard before we start dropping them.
@@ -4147,16 +4170,23 @@ spec:
                               maximum: 1000000
                               minimum: 1
                               type: integer
-                            maxBackoffMilliseconds:
+                            maxBackoff:
                               description: |-
-                                maxBackoffMilliseconds is the maximum retry delay in milliseconds.
+                                maxBackoff is the maximum retry delay.
+                                Valid values are Prometheus-style duration strings with unit suffixes y, w, d, h, m, s, or ms
+                                (for example, "5s" or "1m"). Each unit value must be a positive integer.
+                                Composite durations must follow the fixed unit order y, w, d, h, m, s, ms.
+                                Must be at least 1 character and at most 64 characters.
+                                When set to "0", there is no maximum backoff. This is the only supported form for a zero duration;
+                                other zero-duration representations such as "0s" or "0ms" are rejected.
                                 When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time.
-                                Minimum value is 1 millisecond.
-                                Maximum value is 3600000 milliseconds (1 hour).
-                              format: int32
-                              maximum: 3600000
-                              minimum: 1
-                              type: integer
+                              maxLength: 64
+                              minLength: 1
+                              type: string
+                              x-kubernetes-validations:
+                              - message: must be "0" or a Prometheus duration string
+                                  with only positive unit values
+                                rule: self == "0" || self.matches('^([1-9][0-9]*y)?([1-9][0-9]*w)?([1-9][0-9]*d)?([1-9][0-9]*h)?([1-9][0-9]*m)?([1-9][0-9]*s)?([1-9][0-9]*ms)?$')
                             maxSamplesPerSend:
                               description: |-
                                 maxSamplesPerSend is the maximum number of samples per send.
@@ -4179,16 +4209,23 @@ spec:
                               maximum: 10000
                               minimum: 1
                               type: integer
-                            minBackoffMilliseconds:
+                            minBackoff:
                               description: |-
-                                minBackoffMilliseconds is the minimum retry delay in milliseconds.
+                                minBackoff is the minimum retry delay.
+                                Valid values are Prometheus-style duration strings with unit suffixes y, w, d, h, m, s, or ms
+                                (for example, "30ms", "1s", or "5s"). Each unit value must be a positive integer.
+                                Composite durations must follow the fixed unit order y, w, d, h, m, s, ms.
+                                Must be at least 1 character and at most 64 characters.
+                                When set to "0", there is no minimum backoff. This is the only supported form for a zero duration;
+                                other zero-duration representations such as "0s" or "0ms" are rejected.
                                 When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time.
-                                Minimum value is 1 millisecond.
-                                Maximum value is 3600000 milliseconds (1 hour).
-                              format: int32
-                              maximum: 3600000
-                              minimum: 1
-                              type: integer
+                              maxLength: 64
+                              minLength: 1
+                              type: string
+                              x-kubernetes-validations:
+                              - message: must be "0" or a Prometheus duration string
+                                  with only positive unit values
+                                rule: self == "0" || self.matches('^([1-9][0-9]*y)?([1-9][0-9]*w)?([1-9][0-9]*d)?([1-9][0-9]*h)?([1-9][0-9]*m)?([1-9][0-9]*s)?([1-9][0-9]*ms)?$')
                             minShards:
                               description: |-
                                 minShards is the minimum number of shards, i.e. amount of concurrency.
@@ -4210,16 +4247,23 @@ spec:
                               - Retry
                               type: string
                           type: object
-                        remoteTimeoutSeconds:
+                        remoteTimeout:
                           description: |-
-                            remoteTimeoutSeconds defines the timeout in seconds for requests to the remote write endpoint.
+                            remoteTimeout defines the timeout for requests to the remote write endpoint.
+                            Valid values are Prometheus-style duration strings with unit suffixes y, w, d, h, m, s, or ms
+                            (for example, "30s", "500ms", or "1m"). Each unit value must be a positive integer.
+                            Composite durations must follow the fixed unit order y, w, d, h, m, s, ms.
+                            Must be at least 1 character and at most 64 characters.
+                            When set to "0", the timeout is disabled. This is the only supported form for a zero duration;
+                            other zero-duration representations such as "0s" or "0ms" are rejected.
                             When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time.
-                            Minimum value is 1 second.
-                            Maximum value is 600 seconds (10 minutes).
-                          format: int32
-                          maximum: 600
-                          minimum: 1
-                          type: integer
+                          maxLength: 64
+                          minLength: 1
+                          type: string
+                          x-kubernetes-validations:
+                          - message: must be "0" or a Prometheus duration string with
+                              only positive unit values
+                            rule: self == "0" || self.matches('^([1-9][0-9]*y)?([1-9][0-9]*w)?([1-9][0-9]*d)?([1-9][0-9]*h)?([1-9][0-9]*m)?([1-9][0-9]*s)?([1-9][0-9]*ms)?$')
                         tlsConfig:
                           description: |-
                             tlsConfig defines TLS authentication settings for the remote write endpoint.
@@ -4619,11 +4663,11 @@ spec:
                                 description: |-
                                   regex is the regular expression to match against the concatenated source label values.
                                   Must be a valid RE2 regular expression (https://github.com/google/re2/wiki/Syntax).
+                                  An empty string is allowed and means match the empty string (same as ConfigMap / Prometheus Operator).
                                   When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time.
                                   The default value is "(.*)" to match everything.
-                                  Must be between 1 and 1000 characters in length when specified.
+                                  Must be at most 1000 characters in length when specified.
                                 maxLength: 1000
-                                minLength: 1
                                 type: string
                               separator:
                                 description: |-

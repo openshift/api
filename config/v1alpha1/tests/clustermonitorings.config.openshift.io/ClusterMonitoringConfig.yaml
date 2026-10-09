@@ -3264,6 +3264,178 @@ tests:
             retention:
               size: "0B"
       expectedError: 'must be "0" to disable size-based retention, or a positive byte-size string'
+    - name: Should accept prometheusConfig additionalAlertmanagerConfigs timeout duration
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: "Disabled"
+          prometheusConfig:
+            additionalAlertmanagerConfigs:
+              - name: am
+                staticConfigs:
+                  - "alertmanager.example.com:9093"
+                timeout: "30s"
+      expected: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: "Disabled"
+          prometheusConfig:
+            additionalAlertmanagerConfigs:
+              - name: am
+                staticConfigs:
+                  - "alertmanager.example.com:9093"
+                timeout: "30s"
+    - name: Should reject invalid prometheusConfig additionalAlertmanagerConfigs timeout
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: "Disabled"
+          prometheusConfig:
+            additionalAlertmanagerConfigs:
+              - name: am
+                staticConfigs:
+                  - "alertmanager.example.com:9093"
+                timeout: "30seconds"
+      expectedError: 'must be "0" or a Prometheus duration string with only positive unit values'
+    - name: Should accept prometheusConfig remoteWrite remoteTimeout duration
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: "Disabled"
+          prometheusConfig:
+            remoteWrite:
+              - name: rw
+                url: "https://remote.example.com/write"
+                remoteTimeout: "30s"
+      expected: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: "Disabled"
+          prometheusConfig:
+            remoteWrite:
+              - name: rw
+                url: "https://remote.example.com/write"
+                remoteTimeout: "30s"
+    - name: Should accept prometheusConfig remoteWrite queueConfig duration fields
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: "Disabled"
+          prometheusConfig:
+            remoteWrite:
+              - name: rw
+                url: "https://remote.example.com/write"
+                queueConfig:
+                  batchSendDeadline: "5s"
+                  minBackoff: "30ms"
+                  maxBackoff: "5s"
+      expected: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: "Disabled"
+          prometheusConfig:
+            remoteWrite:
+              - name: rw
+                url: "https://remote.example.com/write"
+                queueConfig:
+                  batchSendDeadline: "5s"
+                  minBackoff: "30ms"
+                  maxBackoff: "5s"
+    - name: Should accept prometheusConfig remoteWrite metadataConfig sendInterval
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: "Disabled"
+          prometheusConfig:
+            remoteWrite:
+              - name: rw
+                url: "https://remote.example.com/write"
+                metadataConfig:
+                  sendPolicy: Custom
+                  custom:
+                    sendInterval: "30s"
+      expected: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: "Disabled"
+          prometheusConfig:
+            remoteWrite:
+              - name: rw
+                url: "https://remote.example.com/write"
+                metadataConfig:
+                  sendPolicy: Custom
+                  custom:
+                    sendInterval: "30s"
+    - name: Should accept prometheusConfig writeRelabelConfigs empty regex
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: "Disabled"
+          prometheusConfig:
+            remoteWrite:
+              - name: rw
+                url: "https://remote.example.com/write"
+                writeRelabelConfigs:
+                  - name: empty-regex
+                    regex: ""
+                    action:
+                      type: Keep
+      expected: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: "Disabled"
+          prometheusConfig:
+            remoteWrite:
+              - name: rw
+                url: "https://remote.example.com/write"
+                writeRelabelConfigs:
+                  - name: empty-regex
+                    regex: ""
+                    action:
+                      type: Keep
+    - name: Should accept prometheusConfig externalLabels value up to 1024 characters
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: "Disabled"
+          prometheusConfig:
+            externalLabels:
+              - key: description
+                value: "OpenShift Cluster https://console-openshift-console.apps.cluster.example.com Prometheus https://prometheus-k8s-openshift-monitoring.apps.cluster.example.com/alerts Runbook https://confluence.example.com/wiki/spaces/OP/pages/12345/Runbooks"
+      expected: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: "Disabled"
+          prometheusConfig:
+            externalLabels:
+              - key: description
+                value: "OpenShift Cluster https://console-openshift-console.apps.cluster.example.com Prometheus https://prometheus-k8s-openshift-monitoring.apps.cluster.example.com/alerts Runbook https://confluence.example.com/wiki/spaces/OP/pages/12345/Runbooks"
   onUpdate:
     - name: Should allow updating KubeStateMetricsConfig resources
       initial: |

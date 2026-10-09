@@ -45749,6 +45749,13 @@ func schema_openshift_api_machine_v1beta1_CPUOptions(ref common.ReferenceCallbac
 							Format:      "",
 						},
 					},
+					"nestedVirtualization": {
+						SchemaProps: spec.SchemaProps{
+							Description: "nestedVirtualization allows you to run hypervisors such as Hyper-V and KVM inside virtual Amazon EC2 instances. Virtual EC2 instances are non-bare metal instances. This capability extends virtualization flexibility by adding processor-level virtualization support to virtual EC2 instances, enabling a hypervisor running in your instance to create and manage virtual machines. Requires one of the following instance types:\n  - General Purpose: M7i | M7i-flex | M8i | M8id | M8i-flex\n  - Compute Optimized: C7i | C7i-flex | C8i | C8id | C8i-flex\n  - Memory Optimized: R7i | R7iz | R8i | R8id | R8i-flex | X8i\n  - Storage Optimized: I7i | I7ie\nValid values are: Disabled, Enabled, and omitted. More details can be checked out at https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/amazon-ec2-nested-virtualization.html When omitted, nested virtualization is Disabled (AWS default).",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
 				},
 			},
 		},

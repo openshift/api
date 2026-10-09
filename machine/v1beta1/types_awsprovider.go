@@ -129,6 +129,10 @@ type AWSMachineProviderConfig struct {
 // +kubebuilder:validation:Enum=Disabled;AMDEncryptedVirtualizationNestedPaging
 type AWSConfidentialComputePolicy string
 
+// NestedVirtualizationPolicy represents the nested virtualization configuration for the instance.
+// +kubebuilder:validation:Enum=enabled;disabled
+type NestedVirtualizationPolicy string
+
 const (
 	// AWSConfidentialComputePolicyDisabled disables confidential computing for the instance.
 	AWSConfidentialComputePolicyDisabled AWSConfidentialComputePolicy = "Disabled"
@@ -136,7 +140,14 @@ const (
 	AWSConfidentialComputePolicySEVSNP AWSConfidentialComputePolicy = "AMDEncryptedVirtualizationNestedPaging"
 )
 
-// CPUOptions defines CPU-related settings for the instance, including the confidential computing policy.
+const (
+	// NestedVirtualizationDisabled explicitly disables nested virtualization.
+	NestedVirtualizationDisabled NestedVirtualizationPolicy = "disabled"
+	// NestedVirtualizationEnabled enables hardware-assisted nested virtualization on the instance.
+	NestedVirtualizationEnabled NestedVirtualizationPolicy = "enabled"
+)
+
+// CPUOptions defines CPU-related settings for the instance, including the confidential computing and nested virtualization policies.
 // If provided, it must not be empty — at least one field must be set.
 // +kubebuilder:validation:MinProperties=1
 type CPUOptions struct {
@@ -154,6 +165,16 @@ type CPUOptions struct {
 	// which is subject to change without notice. The current default is Disabled.
 	// +optional
 	ConfidentialCompute *AWSConfidentialComputePolicy `json:"confidentialCompute,omitempty"`
+
+	// nestedVirtualization allows you to run hypervisors such as Hyper-V and KVM inside virtual Amazon EC2 instances.
+	// Virtual EC2 instances are non-bare metal instances. This capability extends virtualization flexibility by adding
+	// processor-level virtualization support to virtual EC2 instances, enabling a hypervisor running in your instance
+	// to create and manage virtual machines.
+	// Valid values are: disabled, enabled, and omitted.
+	// More details can be checked out at https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/amazon-ec2-nested-virtualization.html
+	// When omitted, nested virtualization is disabled (AWS default).
+	// +optional
+	NestedVirtualization *NestedVirtualizationPolicy `json:"nestedVirtualization,omitempty"`
 }
 
 // BlockDeviceMappingSpec describes a block device mapping

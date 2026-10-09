@@ -45897,12 +45897,19 @@ func schema_openshift_api_machine_v1beta1_CPUOptions(ref common.ReferenceCallbac
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
-				Description: "CPUOptions defines CPU-related settings for the instance, including the confidential computing policy. If provided, it must not be empty — at least one field must be set.",
+				Description: "CPUOptions defines CPU-related settings for the instance, including the confidential computing and nested virtualization policies. If provided, it must not be empty — at least one field must be set.",
 				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
 					"confidentialCompute": {
 						SchemaProps: spec.SchemaProps{
 							Description: "confidentialCompute specifies whether confidential computing should be enabled for the instance, and, if so, which confidential computing technology to use. Valid values are: Disabled, AMDEncryptedVirtualizationNestedPaging and omitted. When set to Disabled, confidential computing will be disabled for the instance. When set to AMDEncryptedVirtualizationNestedPaging, AMD SEV-SNP will be used as the confidential computing technology for the instance. In this case, ensure the following conditions are met: 1) The selected instance type supports AMD SEV-SNP. 2) The selected AWS region supports AMD SEV-SNP. 3) The selected AMI supports AMD SEV-SNP. More details can be checked at https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/sev-snp.html When omitted, this means no opinion and the AWS platform is left to choose a reasonable default, which is subject to change without notice. The current default is Disabled.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"nestedVirtualization": {
+						SchemaProps: spec.SchemaProps{
+							Description: "nestedVirtualization allows you to run hypervisors such as Hyper-V and KVM inside virtual Amazon EC2 instances. Virtual EC2 instances are non-bare metal instances. This capability extends virtualization flexibility by adding processor-level virtualization support to virtual EC2 instances, enabling a hypervisor running in your instance to create and manage virtual machines. Nested virtualization is supported on C8i, M8i, and R8i instance types. Valid values are: disabled, enabled, and omitted. More details can be checked out at https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/amazon-ec2-nested-virtualization.html When omitted, nested virtualization is disabled (AWS default).",
 							Type:        []string{"string"},
 							Format:      "",
 						},

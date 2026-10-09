@@ -12944,83 +12944,6 @@
         }
       ]
     },
-    "com.github.openshift.api.config.v1alpha1.Backup": {
-      "description": "Backup provides configuration for performing backups of the openshift cluster.\n\nCompatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.",
-      "type": "object",
-      "required": [
-        "spec"
-      ],
-      "properties": {
-        "apiVersion": {
-          "description": "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
-          "type": "string"
-        },
-        "kind": {
-          "description": "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
-          "type": "string"
-        },
-        "metadata": {
-          "description": "metadata is the standard object's metadata. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata",
-          "default": {},
-          "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.ObjectMeta"
-        },
-        "spec": {
-          "description": "spec holds user settable values for configuration",
-          "default": {},
-          "$ref": "#/definitions/com.github.openshift.api.config.v1alpha1.BackupSpec"
-        },
-        "status": {
-          "description": "status holds observed values from the cluster. They may not be overridden.",
-          "default": {},
-          "$ref": "#/definitions/com.github.openshift.api.config.v1alpha1.BackupStatus"
-        }
-      }
-    },
-    "com.github.openshift.api.config.v1alpha1.BackupList": {
-      "description": "BackupList is a collection of items\n\nCompatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.",
-      "type": "object",
-      "required": [
-        "metadata",
-        "items"
-      ],
-      "properties": {
-        "apiVersion": {
-          "description": "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
-          "type": "string"
-        },
-        "items": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/com.github.openshift.api.config.v1alpha1.Backup"
-          }
-        },
-        "kind": {
-          "description": "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
-          "type": "string"
-        },
-        "metadata": {
-          "description": "metadata is the standard list's metadata. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata",
-          "default": {},
-          "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.ListMeta"
-        }
-      }
-    },
-    "com.github.openshift.api.config.v1alpha1.BackupSpec": {
-      "type": "object",
-      "required": [
-        "etcd"
-      ],
-      "properties": {
-        "etcd": {
-          "description": "etcd specifies the configuration for periodic backups of the etcd cluster",
-          "default": {},
-          "$ref": "#/definitions/com.github.openshift.api.config.v1alpha1.EtcdBackupSpec"
-        }
-      }
-    },
-    "com.github.openshift.api.config.v1alpha1.BackupStatus": {
-      "type": "object"
-    },
     "com.github.openshift.api.config.v1alpha1.BasicAuth": {
       "description": "BasicAuth defines basic authentication settings for the remote write endpoint URL.",
       "type": "object",
@@ -13428,32 +13351,6 @@
         "curve": {
           "description": "curve specifies the NIST elliptic curve for ECDSA keys. Valid values are \"P256\", \"P384\", and \"P521\".\n\nWhen set to P256, the NIST P-256 curve (also known as secp256r1) is used, providing 128-bit security.\n\nWhen set to P384, the NIST P-384 curve (also known as secp384r1) is used, providing 192-bit security.\n\nWhen set to P521, the NIST P-521 curve (also known as secp521r1) is used, providing 256-bit security.",
           "type": "string"
-        }
-      }
-    },
-    "com.github.openshift.api.config.v1alpha1.EtcdBackupSpec": {
-      "description": "EtcdBackupSpec provides configuration for automated etcd backups to the cluster-etcd-operator",
-      "type": "object",
-      "properties": {
-        "pvcName": {
-          "description": "pvcName specifies the name of the PersistentVolumeClaim (PVC) which binds a PersistentVolume where the etcd backup files would be saved The PVC itself must always be created in the \"openshift-etcd\" namespace If the PVC is left unspecified \"\" then the platform will choose a reasonable default location to save the backup. In the future this would be backups saved across the control-plane master nodes.",
-          "type": "string",
-          "default": ""
-        },
-        "retentionPolicy": {
-          "description": "retentionPolicy defines the retention policy for retaining and deleting existing backups.",
-          "default": {},
-          "$ref": "#/definitions/com.github.openshift.api.config.v1alpha1.RetentionPolicy"
-        },
-        "schedule": {
-          "description": "schedule defines the recurring backup schedule in Cron format every 2 hours: 0 */2 * * * every day at 3am: 0 3 * * * Empty string means no opinion and the platform is left to choose a reasonable default which is subject to change without notice. The current default is \"no backups\", but will change in the future.",
-          "type": "string",
-          "default": ""
-        },
-        "timeZone": {
-          "description": "The time zone name for the given schedule, see https://en.wikipedia.org/wiki/List_of_tz_database_time_zones. If not specified, this will default to the time zone of the kube-controller-manager process. See https://kubernetes.io/docs/concepts/workloads/controllers/cron-jobs/#time-zones",
-          "type": "string",
-          "default": ""
         }
       }
     },
@@ -15085,71 +14982,6 @@
         "size": {
           "description": "size is an optional field that specifies the maximum storage size that Prometheus can use for data blocks and the write-ahead log (WAL). Valid values are byte-size strings with an optional decimal prefix and a unit suffix B, KB, MB, GB, TB, EB, PB, or their binary equivalents KiB, MiB, GiB, TiB, EiB, PiB (for example, \"500MiB\", \"10GiB\"). The numeric value must be greater than zero. Must be at least 1 character and at most 32 characters. When set to \"0\", no size limit is enforced. This is the only supported form for disabling size-based retention; other zero-size representations such as \"0B\" or \"0MiB\" are rejected. When the limit is reached, Prometheus deletes oldest data first. When omitted, no size limit is enforced and Prometheus uses available PersistentVolume capacity.",
           "type": "string"
-        }
-      }
-    },
-    "com.github.openshift.api.config.v1alpha1.RetentionNumberConfig": {
-      "description": "RetentionNumberConfig specifies the configuration of the retention policy on the number of backups",
-      "type": "object",
-      "required": [
-        "maxNumberOfBackups"
-      ],
-      "properties": {
-        "maxNumberOfBackups": {
-          "description": "maxNumberOfBackups defines the maximum number of backups to retain. If the existing number of backups saved is equal to MaxNumberOfBackups then the oldest backup will be removed before a new backup is initiated.",
-          "type": "integer",
-          "format": "int32",
-          "default": 0
-        }
-      }
-    },
-    "com.github.openshift.api.config.v1alpha1.RetentionPolicy": {
-      "description": "RetentionPolicy defines the retention policy for retaining and deleting existing backups. This struct is a discriminated union that allows users to select the type of retention policy from the supported types.",
-      "type": "object",
-      "required": [
-        "retentionType"
-      ],
-      "properties": {
-        "retentionNumber": {
-          "description": "retentionNumber configures the retention policy based on the number of backups",
-          "$ref": "#/definitions/com.github.openshift.api.config.v1alpha1.RetentionNumberConfig"
-        },
-        "retentionSize": {
-          "description": "retentionSize configures the retention policy based on the size of backups",
-          "$ref": "#/definitions/com.github.openshift.api.config.v1alpha1.RetentionSizeConfig"
-        },
-        "retentionType": {
-          "description": "retentionType sets the type of retention policy. Currently, the only valid policies are retention by number of backups (RetentionNumber), by the size of backups (RetentionSize). More policies or types may be added in the future. Empty string means no opinion and the platform is left to choose a reasonable default which is subject to change without notice. The current default is RetentionNumber with 15 backups kept.\n\nPossible enum values:\n - `\"RetentionNumber\"` sets the retention policy based on the number of backup files saved\n - `\"RetentionSize\"` sets the retention policy based on the total size of the backup files saved",
-          "type": "string",
-          "default": "",
-          "enum": [
-            "RetentionNumber",
-            "RetentionSize"
-          ]
-        }
-      },
-      "x-kubernetes-unions": [
-        {
-          "discriminator": "retentionType",
-          "fields-to-discriminateBy": {
-            "retentionNumber": "RetentionNumber",
-            "retentionSize": "RetentionSize"
-          }
-        }
-      ]
-    },
-    "com.github.openshift.api.config.v1alpha1.RetentionSizeConfig": {
-      "description": "RetentionSizeConfig specifies the configuration of the retention policy on the total size of backups",
-      "type": "object",
-      "required": [
-        "maxSizeOfBackupsGb"
-      ],
-      "properties": {
-        "maxSizeOfBackupsGb": {
-          "description": "maxSizeOfBackupsGb defines the total size in GB of backups to retain. If the current total size backups exceeds MaxSizeOfBackupsGb then the oldest backup will be removed before a new backup is initiated.",
-          "type": "integer",
-          "format": "int32",
-          "default": 0
         }
       }
     },
@@ -37749,26 +37581,6 @@
         }
       }
     },
-    "com.github.openshift.api.operator.v1alpha1.BackupJobReference": {
-      "description": "BackupJobReference holds a reference to the batch/v1 Job created to run the etcd backup",
-      "type": "object",
-      "required": [
-        "namespace",
-        "name"
-      ],
-      "properties": {
-        "name": {
-          "description": "name is the name of the Job. Required",
-          "type": "string",
-          "default": ""
-        },
-        "namespace": {
-          "description": "namespace is the namespace of the Job. this is always expected to be \"openshift-etcd\" since the user provided PVC is also required to be in \"openshift-etcd\" Required",
-          "type": "string",
-          "default": ""
-        }
-      }
-    },
     "com.github.openshift.api.operator.v1alpha1.ClusterAPI": {
       "description": "ClusterAPI provides configuration for the capi-operator.\n\nCompatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.",
       "type": "object",
@@ -38129,9 +37941,10 @@
       }
     },
     "com.github.openshift.api.operator.v1alpha1.EtcdBackup": {
-      "description": "# EtcdBackup provides configuration options and status for a one-time backup attempt of the etcd cluster\n\nCompatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.",
+      "description": "# EtcdBackup provides configuration options and status for a one-time backup attempt of the etcd cluster. # When an EtcdBackup is deleted the files created by it will be deleted as well, as long as the storage backend is still accessible.\n\nCompatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.",
       "type": "object",
       "required": [
+        "metadata",
         "spec"
       ],
       "properties": {
@@ -38144,6 +37957,7 @@
           "type": "string"
         },
         "metadata": {
+          "description": "metadata is the standard object's metadata. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata",
           "default": {},
           "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.ObjectMeta"
         },
@@ -38156,6 +37970,23 @@
           "description": "status holds observed values from the cluster. They may not be overridden.",
           "default": {},
           "$ref": "#/definitions/com.github.openshift.api.operator.v1alpha1.EtcdBackupStatus"
+        }
+      }
+    },
+    "com.github.openshift.api.operator.v1alpha1.EtcdBackupFile": {
+      "type": "object",
+      "required": [
+        "path"
+      ],
+      "properties": {
+        "path": {
+          "description": "path to the backup file on the storage backend.",
+          "type": "string"
+        },
+        "sizeBytes": {
+          "description": "sizeBytes is the size of the backup file on the storage backend in bytes. If omitted, then the file specified by path is an empty file.",
+          "type": "integer",
+          "format": "int64"
         }
       }
     },
@@ -38187,23 +38018,206 @@
         }
       }
     },
-    "com.github.openshift.api.operator.v1alpha1.EtcdBackupSpec": {
+    "com.github.openshift.api.operator.v1alpha1.EtcdBackupPolicy": {
+      "description": "# EtcdBackupPolicy sets an automated schedule for taking backups of the etcd cluster\n\nCompatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.",
+      "type": "object",
+      "required": [
+        "metadata",
+        "spec"
+      ],
+      "properties": {
+        "apiVersion": {
+          "description": "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+          "type": "string"
+        },
+        "kind": {
+          "description": "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+          "type": "string"
+        },
+        "metadata": {
+          "description": "metadata is the standard object's metadata. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata",
+          "default": {},
+          "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.ObjectMeta"
+        },
+        "spec": {
+          "description": "spec holds user settable values for configuration",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.operator.v1alpha1.EtcdBackupPolicySpec"
+        },
+        "status": {
+          "description": "status holds observed values from the cluster. They may not be overridden.",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.operator.v1alpha1.EtcdBackupPolicyStatus"
+        }
+      }
+    },
+    "com.github.openshift.api.operator.v1alpha1.EtcdBackupPolicyList": {
+      "description": "EtcdBackupPolicyList is a collection of items\n\nCompatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.",
+      "type": "object",
+      "required": [
+        "metadata",
+        "items"
+      ],
+      "properties": {
+        "apiVersion": {
+          "description": "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+          "type": "string"
+        },
+        "items": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/com.github.openshift.api.operator.v1alpha1.EtcdBackupPolicy"
+          }
+        },
+        "kind": {
+          "description": "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+          "type": "string"
+        },
+        "metadata": {
+          "default": {},
+          "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.ListMeta"
+        }
+      }
+    },
+    "com.github.openshift.api.operator.v1alpha1.EtcdBackupPolicyRetentionRule": {
+      "type": "object",
+      "required": [
+        "type"
+      ],
+      "properties": {
+        "maxQuantity": {
+          "description": "maxQuantity enforces the deletion of backups that exceed the given count. Must be at least 1 and no greater than 1000.",
+          "type": "integer",
+          "format": "int32"
+        },
+        "maxSizeGb": {
+          "description": "maxSizeGb enforces the deletion of backups by the total size of backups on the storage backend (in GB). This is a soft threshold. The total size of backups may temporarily exceed the limit when new backups are created. Must be at least 1, and no greater than 10000.",
+          "type": "integer",
+          "format": "int32"
+        },
+        "type": {
+          "description": "type defined which rule field is set",
+          "type": "string"
+        }
+      },
+      "x-kubernetes-unions": [
+        {
+          "discriminator": "type",
+          "fields-to-discriminateBy": {
+            "maxQuantity": "MaxQuantity",
+            "maxSizeGb": "MaxSizeGb"
+          }
+        }
+      ]
+    },
+    "com.github.openshift.api.operator.v1alpha1.EtcdBackupPolicySpec": {
+      "type": "object",
+      "required": [
+        "schedule",
+        "storage"
+      ],
+      "properties": {
+        "failedBackupsHistoryLimit": {
+          "description": "failedBackupsHistoryLimit defined the number of failed etcdbackups to retain. Value must be non-negative integer. If set to to 0, then failed backups will be deleted immediately. If unset, defaults to 1. Must be a positive integer no greater than 1000.",
+          "type": "integer",
+          "format": "int32"
+        },
+        "nodeSelector": {
+          "description": "nodeSelector specifies which control plane nodes to select from for running backup jobs. The default node-role.kubernetes.io/control-plane label will always be required in addition to any labels set here. If no nodes are matched, then no EtcdBackups will be created. For Local storage type, an EtcdBackup will be created for each selected control plane node every time the schedule is triggered. This is a special case to provide some resiliancy in the event of control plane node loss. For PVC storage type, a single EtcdBackup will be created with the given nodeSelector every time the schedule is triggered. When specified, nodeSelector must contain at least 1 entry and must not contain more than 10 entries.",
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          }
+        },
+        "retentionRules": {
+          "description": "retentionRules defines the policy for retaining and deleting existing backups. Backups are deleted from the oldest first until all rules are satisfied. If no rules are specified then backups created by this policy will not be automatically deleted. When an EtcdBackup is deleted the files created by it will be deleted as well, as long as the storage backend is still accessible.",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/com.github.openshift.api.operator.v1alpha1.EtcdBackupPolicyRetentionRule"
+          },
+          "x-kubernetes-list-map-keys": [
+            "type"
+          ],
+          "x-kubernetes-list-type": "map"
+        },
+        "schedule": {
+          "description": "schedule sets the backup schedule in Cron format, see https://en.wikipedia.org/wiki/Cron. The value must be one of the following forms: a predefined macro \"@yearly\", \"@annually\", \"@monthly\", \"@weekly\", \"@daily\" or \"@hourly\"; an \"@every <duration>\" expression where duration is a sequence of decimal numbers each with a unit of \"ns\", \"us\", \"ms\", \"s\", \"m\" or \"h\" (for example \"@every 2h\" or \"@every 1h30m\"); or a standard cron expression of five space separated fields (minute, hour, day-of-month, month and day-of-week), where each field may only contain digits, the names used for months and days of the week, and the cron special characters \"*\", \"/\", \"-\" and \",\". This validation only checks the overall shape of the value; the individual field values are validated when the schedule is parsed by the controller, which reports parsing failures via the schedule's status condition.",
+          "type": "string"
+        },
+        "storage": {
+          "description": "storage specifies the location where etcd backup files will be saved.",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.operator.v1alpha1.EtcdBackupStorage"
+        }
+      }
+    },
+    "com.github.openshift.api.operator.v1alpha1.EtcdBackupPolicyStatus": {
       "type": "object",
       "properties": {
-        "pvcName": {
-          "description": "pvcName specifies the name of the PersistentVolumeClaim (PVC) which binds a PersistentVolume where the etcd backup file would be saved The PVC itself must always be created in the \"openshift-etcd\" namespace If the PVC is left unspecified \"\" then the platform will choose a reasonable default location to save the backup. In the future this would be backups saved across the control-plane master nodes.",
-          "type": "string",
-          "default": ""
+        "active": {
+          "description": "active is a list of references to in progress backups controlled by this policy",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/com.github.openshift.api.operator.v1alpha1.EtcdBackupReference"
+          },
+          "x-kubernetes-list-map-keys": [
+            "name"
+          ],
+          "x-kubernetes-list-type": "map"
+        },
+        "conditions": {
+          "description": "conditions provide details on the status of the etcd backup policy.",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Condition"
+          },
+          "x-kubernetes-list-map-keys": [
+            "type"
+          ],
+          "x-kubernetes-list-type": "map"
+        }
+      }
+    },
+    "com.github.openshift.api.operator.v1alpha1.EtcdBackupReference": {
+      "type": "object",
+      "required": [
+        "name",
+        "uid"
+      ],
+      "properties": {
+        "name": {
+          "description": "name of the backup",
+          "type": "string"
+        },
+        "uid": {
+          "description": "uid of the backup",
+          "type": "string"
+        }
+      }
+    },
+    "com.github.openshift.api.operator.v1alpha1.EtcdBackupSpec": {
+      "type": "object",
+      "required": [
+        "storage"
+      ],
+      "properties": {
+        "nodeSelector": {
+          "description": "nodeSelector specifies which control plane nodes to select from for running the backup job. Only one backup job is run per EtcdBackup. The default node-role.kubernetes.io/control-plane label will always be selected for in addition to any labels set here. If no nodes are matched, then the backup will be marked failed. For Local storage type, this may be used to target a specific node to take and store the backup. For PVC storage type, this may be used to control where the backup is taken from. When specified, nodeSelector must contain at least 1 entry and must not contain more than 10 entries.",
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          }
+        },
+        "storage": {
+          "description": "storage specifies the location where etcd backup files will be saved.",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.operator.v1alpha1.EtcdBackupStorage"
         }
       }
     },
     "com.github.openshift.api.operator.v1alpha1.EtcdBackupStatus": {
       "type": "object",
       "properties": {
-        "backupJob": {
-          "description": "backupJob is the reference to the Job that executes the backup. Optional",
-          "$ref": "#/definitions/com.github.openshift.api.operator.v1alpha1.BackupJobReference"
-        },
         "conditions": {
           "description": "conditions provide details on the status of the etcd backup job.",
           "type": "array",
@@ -38214,6 +38228,84 @@
             "type"
           ],
           "x-kubernetes-list-type": "map"
+        },
+        "files": {
+          "description": "files tracks the path and size of files generated by the etcd backup. Includes both etcd snapshots and static manifests.",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/com.github.openshift.api.operator.v1alpha1.EtcdBackupFile"
+          },
+          "x-kubernetes-list-map-keys": [
+            "path"
+          ],
+          "x-kubernetes-list-type": "map"
+        },
+        "jobName": {
+          "description": "jobName is a reference to the Job created for the backup. It always runs in the openshift-etcd namespace. jobName must be between 1 and 253 characters and conform to RFC 1123 subdomain format: lowercase alphanumeric characters, '-' or '.', starting and ending with alphanumeric characters.",
+          "type": "string"
+        },
+        "nodeName": {
+          "description": "nodeName is used for Local backups to bind the control plane node where the snapshot will be taken. nodeName must be between 1 and 63 characters and conform to RFC 1123 subdomain format: lowercase alphanumeric characters, '-' or '.', starting and ending with alphanumeric characters.",
+          "type": "string"
+        }
+      }
+    },
+    "com.github.openshift.api.operator.v1alpha1.EtcdBackupStorage": {
+      "type": "object",
+      "required": [
+        "type"
+      ],
+      "properties": {
+        "local": {
+          "description": "local specifies a host path directory on the master node where the etcd backup file will be saved. This field is required when storage type is \"Local\", and forbidden otherwise.",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.operator.v1alpha1.EtcdBackupStorageLocal"
+        },
+        "pvc": {
+          "description": "pvc specifies the PersistentVolumeClaim (PVC) which binds a PersistentVolume where the etcd backup file will be saved. The PVC must always be created in the \"openshift-etcd\" namespace. This field is required when the storage type is \"PVC\", and forbidden otherwise.",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.operator.v1alpha1.EtcdBackupStoragePvc"
+        },
+        "type": {
+          "description": "type of storage backend to use for storing the etcd backup. Allowed values are Local and PVC. When set to Local, the backup will be saved to a host path directory on the control plane node it was taken on. When set to PVC, the backup will be saved to a volume bound by a PersistentVolumeClaim.",
+          "type": "string"
+        }
+      },
+      "x-kubernetes-unions": [
+        {
+          "discriminator": "type",
+          "fields-to-discriminateBy": {
+            "local": "Local",
+            "pvc": "PVC"
+          }
+        }
+      ]
+    },
+    "com.github.openshift.api.operator.v1alpha1.EtcdBackupStorageLocal": {
+      "type": "object",
+      "required": [
+        "hostPath"
+      ],
+      "properties": {
+        "hostPath": {
+          "description": "hostPath is a local directory on the master node where the etcd backup file will be saved. hostPath must be an absolute filepath between 1 and 2048 characters containing only alphanumeric characters, '/', '.', '_', or '-', starting with a '/'.",
+          "type": "string"
+        }
+      }
+    },
+    "com.github.openshift.api.operator.v1alpha1.EtcdBackupStoragePvc": {
+      "type": "object",
+      "required": [
+        "name"
+      ],
+      "properties": {
+        "name": {
+          "description": "name is a reference to a PVC in the \"openshift-etcd\" namespace where the etcd backup file will be saved. name must be between 1 and 253 characters and conform to RFC 1123 subdomain format: lowercase alphanumeric characters, '-' or '.', starting and ending with alphanumeric characters.",
+          "type": "string"
+        },
+        "path": {
+          "description": "path is a directory on the volume where the etcd backup file will be saved. When present, path must be an absolute filepath between 1 and 2048 characters containing only alphanumeric characters, '/', '.', '_', or '-', starting with a '/'.",
+          "type": "string"
         }
       }
     },

@@ -30604,7 +30604,8 @@
           "type": "array",
           "items": {
             "type": "string"
-          }
+          },
+          "x-kubernetes-list-type": "atomic"
         }
       }
     },
@@ -31766,6 +31767,46 @@
         }
       }
     },
+    "com.github.openshift.api.operator.v1.ConsoleAuthProxyConfig": {
+      "description": "ConsoleAuthProxyConfig holds proxy configuration scoped to Console's OIDC login clients. At least one of httpProxy or httpsProxy must be specified.",
+      "type": "object",
+      "properties": {
+        "httpProxy": {
+          "description": "httpProxy is the URL of the proxy for HTTP requests. Must be a valid URL with http or https scheme, a non-empty hostname, and no path, query parameters, or fragment. Userinfo (e.g. user:password@host) is allowed for proxy authentication. Maximum length is 2048 characters.",
+          "type": "string"
+        },
+        "httpsProxy": {
+          "description": "httpsProxy is the URL of the proxy for HTTPS requests. Must be a valid URL with http or https scheme, a non-empty hostname, and no path, query parameters, or fragment. Userinfo (e.g. user:password@host) is allowed for proxy authentication. Maximum length is 2048 characters.",
+          "type": "string"
+        },
+        "noProxy": {
+          "description": "noProxy is a list of hostnames and/or CIDRs and/or IPs for which the proxy should not be used. Must contain at least one entry when set. Each entry must be between 1 and 253 characters long and at most 64 entries are allowed. Duplicate entries are not permitted. Entries that are not valid hostnames, CIDRs, or IPs are silently ignored. Cluster-internal defaults (.cluster.local, .svc, 127.0.0.1, localhost) are always appended automatically and do not need to be included.",
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "x-kubernetes-list-type": "set"
+        },
+        "trustedCA": {
+          "description": "trustedCA is a reference to a ConfigMap in the openshift-config namespace containing a CA certificate bundle under the key \"ca-bundle.crt\". This bundle is appended to the system trust store used by Console's OIDC login clients for proxy TLS connections. When omitted, only the system trust store is used.",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.operator.v1.ConsoleAuthProxyTrustedCAConfigMapReference"
+        }
+      }
+    },
+    "com.github.openshift.api.operator.v1.ConsoleAuthProxyTrustedCAConfigMapReference": {
+      "description": "ConsoleAuthProxyTrustedCAConfigMapReference references a ConfigMap in the openshift-config namespace.",
+      "type": "object",
+      "required": [
+        "name"
+      ],
+      "properties": {
+        "name": {
+          "description": "name is the metadata.name of the referenced ConfigMap. Must be a valid DNS subdomain name (RFC 1123): at most 253 characters, only lowercase alphanumeric characters, '-' or '.', starting and ending with an alphanumeric character.",
+          "type": "string"
+        }
+      }
+    },
     "com.github.openshift.api.operator.v1.ConsoleConfigRoute": {
       "description": "ConsoleConfigRoute holds information on external route access to console. DEPRECATED",
       "type": "object",
@@ -31924,6 +31965,11 @@
         "providers"
       ],
       "properties": {
+        "authProxy": {
+          "description": "authProxy configures proxy settings for outbound connections made by Console's OIDC login clients, including discovery, JWKS retrieval, code exchange, and token refresh. When set, it replaces the cluster-wide proxy (proxy.config.openshift.io/cluster) entirely for these connections; individual fields are not inherited from the cluster-wide configuration. At least one of httpProxy or httpsProxy must be specified. When omitted, the cluster-wide proxy is used if configured; otherwise no proxy is used. Other Console clients retain their existing proxy settings.",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.operator.v1.ConsoleAuthProxyConfig"
+        },
         "customization": {
           "description": "customization is used to optionally provide a small set of customization options to the web console.",
           "default": {},
@@ -31956,7 +32002,8 @@
           "type": "array",
           "items": {
             "type": "string"
-          }
+          },
+          "x-kubernetes-list-type": "atomic"
         },
         "providers": {
           "description": "providers contains configuration for using specific service providers.",
@@ -32293,14 +32340,16 @@
           "type": "array",
           "items": {
             "$ref": "#/definitions/com.github.openshift.api.operator.v1.DeveloperConsoleCatalogCategoryMeta"
-          }
+          },
+          "x-kubernetes-list-type": "atomic"
         },
         "tags": {
           "description": "tags is a list of strings that will match the category. A selected category show all items which has at least one overlapping tag between category and item.",
           "type": "array",
           "items": {
             "type": "string"
-          }
+          },
+          "x-kubernetes-list-type": "atomic"
         }
       }
     },
@@ -32327,7 +32376,8 @@
           "type": "array",
           "items": {
             "type": "string"
-          }
+          },
+          "x-kubernetes-list-type": "atomic"
         }
       }
     },
@@ -32340,7 +32390,8 @@
           "type": "array",
           "items": {
             "$ref": "#/definitions/com.github.openshift.api.operator.v1.DeveloperConsoleCatalogCategory"
-          }
+          },
+          "x-kubernetes-list-type": "atomic"
         },
         "types": {
           "description": "types allows enabling or disabling of sub-catalog types that user can see in the Developer catalog. When omitted, all the sub-catalog types will be shown.",
@@ -36414,7 +36465,8 @@
           "type": "array",
           "items": {
             "$ref": "#/definitions/com.github.openshift.api.operator.v1.PinnedResourceReference"
-          }
+          },
+          "x-kubernetes-list-type": "atomic"
         },
         "visibility": {
           "description": "visibility defines the state of perspective along with access review checks if needed for that perspective.",
@@ -36522,7 +36574,8 @@
           "type": "array",
           "items": {
             "type": "string"
-          }
+          },
+          "x-kubernetes-list-type": "atomic"
         }
       }
     },
@@ -36600,7 +36653,8 @@
           "type": "array",
           "items": {
             "type": "string"
-          }
+          },
+          "x-kubernetes-list-type": "atomic"
         }
       }
     },
@@ -36627,14 +36681,16 @@
           "type": "array",
           "items": {
             "$ref": "#/definitions/io.k8s.api.authorization.v1.ResourceAttributes"
-          }
+          },
+          "x-kubernetes-list-type": "atomic"
         },
         "required": {
           "description": "required defines a list of permission checks. The perspective will only be shown when all checks are successful. When omitted, the access review is skipped and the perspective will not be shown unless it is required to do so based on the configuration of the missing access review list.",
           "type": "array",
           "items": {
             "$ref": "#/definitions/io.k8s.api.authorization.v1.ResourceAttributes"
-          }
+          },
+          "x-kubernetes-list-type": "atomic"
         }
       }
     },

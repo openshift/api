@@ -20,6 +20,9 @@
                         "name": "AuthenticationComponentProxy"
                     },
                     {
+                        "name": "AuthenticationComponentProxyExternalOIDC"
+                    },
+                    {
                         "name": "BGPBasedVIPManagement"
                     },
                     {

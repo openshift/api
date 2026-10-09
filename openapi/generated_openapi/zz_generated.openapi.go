@@ -16141,7 +16141,7 @@ func schema_openshift_api_config_v1_ImagePolicyFulcioCAWithRekorRootOfTrust(ref 
 				Properties: map[string]spec.Schema{
 					"fulcioCAData": {
 						SchemaProps: spec.SchemaProps{
-							Description: "fulcioCAData is a required field contains inline base64-encoded data for the PEM format fulcio CA. fulcioCAData must be at most 8192 characters.",
+							Description: "fulcioCAData is a required field contains inline base64-encoded data for the PEM format fulcio CA. fulcioCAData must be at most 32768 characters, which fits post-quantum (ML-DSA) certificates.",
 							Type:        []string{"string"},
 							Format:      "byte",
 						},
@@ -16228,14 +16228,14 @@ func schema_openshift_api_config_v1_ImagePolicyPKIRootOfTrust(ref common.Referen
 				Properties: map[string]spec.Schema{
 					"caRootsData": {
 						SchemaProps: spec.SchemaProps{
-							Description: "caRootsData contains base64-encoded data of a certificate bundle PEM file, which contains one or more CA roots in the PEM format. The total length of the data must not exceed 8192 characters.",
+							Description: "caRootsData contains base64-encoded data of a certificate bundle PEM file, which contains one or more CA roots in the PEM format. The total length of the data must not exceed 32768 characters, which fits post-quantum (ML-DSA) certificates.",
 							Type:        []string{"string"},
 							Format:      "byte",
 						},
 					},
 					"caIntermediatesData": {
 						SchemaProps: spec.SchemaProps{
-							Description: "caIntermediatesData contains base64-encoded data of a certificate bundle PEM file, which contains one or more intermediate certificates in the PEM format. The total length of the data must not exceed 8192 characters. caIntermediatesData requires caRootsData to be set.",
+							Description: "caIntermediatesData contains base64-encoded data of a certificate bundle PEM file, which contains one or more intermediate certificates in the PEM format. The total length of the data must not exceed 32768 characters, which fits post-quantum (ML-DSA) certificates. caIntermediatesData requires caRootsData to be set.",
 							Type:        []string{"string"},
 							Format:      "byte",
 						},

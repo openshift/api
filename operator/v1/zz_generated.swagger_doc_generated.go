@@ -895,6 +895,55 @@ func (EtcdSpec) SwaggerDoc() map[string]string {
 	return map_EtcdSpec
 }
 
+var map_GatewayAPIIngressConfig = map[string]string{
+	"":               "GatewayAPIIngressConfig holds configuration for Gateway API integration in the Cluster Ingress Operator.",
+	"managementMode": "managementMode specifies how the Cluster Ingress Operator manages Gateway API Custom Resource Definitions (CRDs), the OpenShift Gateway API implementation, and its Gateway API controllers.\n\nAllowed values are \"Managed\" and \"Unmanaged\".\n\nWhen omitted or set to \"Managed\", the ingress operator installs, owns, and upgrades the Gateway API CRDs, protects them with a Validating Admission Policy, and deploys the OpenShift Gateway API implementation and its Gateway API controllers.\n\nWhen set to \"Unmanaged\", the ingress operator does not install or manage Gateway API CRDs and does not deploy the OpenShift Gateway API implementation or its Gateway API controllers. The cluster administrator or a third-party product is responsible for providing their own CRDs and Gateway controller. The ingress operator reports observational status only.",
+}
+
+func (GatewayAPIIngressConfig) SwaggerDoc() map[string]string {
+	return map_GatewayAPIIngressConfig
+}
+
+var map_Ingress = map[string]string{
+	"":         "Ingress contains configuration options specific to the Ingress Operator itself, including how it manages Gateway API integration.\n\nCompatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).",
+	"metadata": "metadata is the standard object's metadata. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata",
+	"spec":     "spec holds user settable values for configuration.",
+	"status":   "status holds observed values from the cluster.",
+}
+
+func (Ingress) SwaggerDoc() map[string]string {
+	return map_Ingress
+}
+
+var map_IngressList = map[string]string{
+	"":         "IngressList is a collection of Ingresses.\n\nCompatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).",
+	"metadata": "metadata is the standard list's metadata. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata",
+	"items":    "items is a list of Ingresses.",
+}
+
+func (IngressList) SwaggerDoc() map[string]string {
+	return map_IngressList
+}
+
+var map_IngressSpec = map[string]string{
+	"":           "IngressSpec is the specification of the desired behavior of the Ingress Operator.",
+	"gatewayAPI": "gatewayAPI holds configuration for Gateway API integration, including how the ingress operator manages Gateway API CRDs, the OpenShift Gateway API implementation, and its Gateway API controllers.",
+}
+
+func (IngressSpec) SwaggerDoc() map[string]string {
+	return map_IngressSpec
+}
+
+var map_IngressStatus = map[string]string{
+	"":                   "IngressStatus defines the observed status of the Ingress Operator.",
+	"conditions":         "conditions is a list of conditions and their status.\n\nGateway API CRD management conditions are reported here with the \"GatewayAPI\" prefix:\n\n* \"GatewayAPICRDsManaged\" indicates whether the ingress operator is actively\n  managing Gateway API CRDs.\n* \"GatewayAPICRDsPresent\" indicates whether Gateway API CRDs exist on the\n  cluster.\n* \"GatewayAPICRDsCompliant\" indicates whether the installed CRDs match the\n  version expected by this ingress operator release.",
+	"observedGeneration": "observedGeneration represents the most recent generation observed by the operator and specifies the version of the spec field currently being synced.\n\nWhen omitted, the operator has not yet observed the resource.",
+}
+
+func (IngressStatus) SwaggerDoc() map[string]string {
+	return map_IngressStatus
+}
+
 var map_AWSClassicLoadBalancerParameters = map[string]string{
 	"":                      "AWSClassicLoadBalancerParameters holds configuration parameters for an AWS Classic load balancer.",
 	"connectionIdleTimeout": "connectionIdleTimeout specifies the maximum time period that a connection may be idle before the load balancer closes the connection.  The value must be parseable as a time duration value; see <https://pkg.go.dev/time#ParseDuration>.  A nil or zero value means no opinion, in which case a default value is used.  The default value for this field is 60s.  This default is subject to change.",

@@ -429,6 +429,11 @@ func (in *CPUOptions) DeepCopyInto(out *CPUOptions) {
 		*out = new(AWSConfidentialComputePolicy)
 		**out = **in
 	}
+	if in.NestedVirtualization != nil {
+		in, out := &in.NestedVirtualization, &out.NestedVirtualization
+		*out = new(AWSNestedVirtualizationPolicy)
+		**out = **in
+	}
 	return
 }
 

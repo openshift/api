@@ -16829,6 +16829,13 @@ func schema_openshift_api_config_v1_InfrastructureSpec(ref common.ReferenceCallb
 							Format:      "",
 						},
 					},
+					"infrastructureTopology": {
+						SchemaProps: spec.SchemaProps{
+							Description: "infrastructureTopology expresses the desired topology for infrastructure services that do not run on control plane nodes, indicating how infrastructure workloads are distributed across nodes.\n\nWhen omitted, no topology transition override has been expressed. Once populated, the field represents the desired topology state.\n\nWhen the value differs from status.infrastructureTopology, the cluster evaluates whether the requested transition can proceed. Not all transitions may be permitted.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
 				},
 			},
 		},

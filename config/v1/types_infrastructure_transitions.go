@@ -16,20 +16,20 @@ type TopologyState struct {
 	// SingleReplica means a single instance of control-plane services is expected
 	// to meet cluster needs. HighlyAvailable means multiple instances are expected
 	// to provide redundancy. HighlyAvailableArbiter means two control-plane nodes
-	// and a smaller arbiter node maintain quorum.
+	// and a smaller arbiter node to maintain quorum.
 	// See https://pkg.go.dev/github.com/openshift/api/config/v1#TopologyMode for
 	// topology definitions.
 	// controlPlaneTopology is required.
-	// +openshift:validation:FeatureGateAwareEnum:featureGate="",enum=HighlyAvailable;HighlyAvailableArbiter;SingleReplica
-	// +openshift:validation:FeatureGateAwareEnum:featureGate=MutableTopology,enum=HighlyAvailable;HighlyAvailableArbiter;SingleReplica
+	// +kubebuilder:validation:Enum=HighlyAvailable;HighlyAvailableArbiter;SingleReplica
 	// +required
 	ControlPlaneTopology TopologyMode `json:"controlPlaneTopology,omitempty"`
 
 	// infrastructureTopology is the topology of infrastructure services. Valid
-	// values are SingleReplica and HighlyAvailable. When set to SingleReplica,
-	// operators expect a single instance of infrastructure services to meet
-	// cluster needs. When set to HighlyAvailable, operators expect multiple
-	// instances of infrastructure services to provide redundancy.
+	// values are SingleReplica and HighlyAvailable.
+	// SingleReplica means operators expect a single instance of infrastructure
+	// services to meet cluster needs.
+	// HighlyAvailable means operators expect multiple instances of infrastructure
+	// services to provide redundancy.
 	// infrastructureTopology is required.
 	// +kubebuilder:validation:Enum=SingleReplica;HighlyAvailable
 	// +required
@@ -108,19 +108,44 @@ type TopologyTransitionStatus struct {
 type TopologyTransition struct {
 	// source is the control-plane and infrastructure topology this transition was
 	// evaluated from. It may differ from the current topology while status is
-	// being refreshed. Valid controlPlaneTopology values are HighlyAvailable,
-	// HighlyAvailableArbiter, and SingleReplica. Valid infrastructureTopology
-	// values are SingleReplica and HighlyAvailable. Their meanings are described
-	// in TopologyState. External control planes cannot be a transition source.
+	// being refreshed. External control planes cannot be a transition source.
+	// controlPlaneTopology is the topology of the control-plane nodes. Valid values
+	// are HighlyAvailable, HighlyAvailableArbiter, and SingleReplica.
+	// External is not valid: transitions cannot involve an externally hosted control plane.
+	// SingleReplica means a single instance of control-plane services is expected
+	// to meet cluster needs.
+	// HighlyAvailable means multiple instances are expected to provide redundancy.
+	// HighlyAvailableArbiter means two control-plane nodes and a smaller arbiter
+	// node to maintain quorum. See
+	// https://pkg.go.dev/github.com/openshift/api/config/v1#TopologyMode for topology definitions.
+	// infrastructureTopology is the topology of infrastructure services. Valid
+	// values are SingleReplica and HighlyAvailable.
+	// SingleReplica means operators expect a single instance of infrastructure
+	// services to meet cluster needs.
+	// HighlyAvailable means operators expect multiple instances of infrastructure
+	// services to provide redundancy.
 	// source is required.
 	// +required
 	Source TopologyState `json:"source,omitempty,omitzero"`
 
 	// target is the control-plane and infrastructure topology this transition would
-	// move to. Valid controlPlaneTopology values are HighlyAvailable,
-	// HighlyAvailableArbiter, and SingleReplica. Valid infrastructureTopology
-	// values are SingleReplica and HighlyAvailable. Their meanings are described
-	// in TopologyState. External control planes cannot be a transition target.
+	// move to.
+	// controlPlaneTopology is the topology of the control-plane nodes. Valid values
+	// are HighlyAvailable, HighlyAvailableArbiter, and SingleReplica.
+	// External is not valid: transitions cannot involve an externally hosted control plane.
+	// SingleReplica means a single instance of control-plane services is expected
+	// to meet cluster needs.
+	// HighlyAvailable means multiple instances are expected to provide redundancy.
+	// HighlyAvailableArbiter means two control-plane nodes and a smaller arbiter
+	// node to maintain quorum. See
+	// https://pkg.go.dev/github.com/openshift/api/config/v1#TopologyMode for topology definitions.
+	// infrastructureTopology is the topology of infrastructure services. Valid
+	// values are SingleReplica and HighlyAvailable.
+	// SingleReplica means operators expect a single instance of infrastructure
+	// services to meet cluster needs.
+	// HighlyAvailable means operators expect multiple instances of infrastructure
+	// services to provide redundancy.
+	// External control planes cannot be a transition target.
 	// target is required.
 	// +required
 	Target TopologyState `json:"target,omitempty,omitzero"`
@@ -133,9 +158,7 @@ type TopologyTransition struct {
 	// at most 31 individual checks in addition to the availability condition.
 	// The controller defines individual check types, reasons, and messages, and
 	// always reports each one explicitly, using Unknown when a check's result is
-	// not yet known. Because the containing transition is only reported while
-	// TopologyTransitionsEvaluated is True, these results always reflect the
-	// current evaluation.
+	// not yet known.
 	//
 	// +kubebuilder:validation:MaxItems=32
 	// +kubebuilder:validation:MinItems=1

@@ -22692,14 +22692,14 @@ func schema_openshift_api_config_v1_TopologyState(ref common.ReferenceCallback) 
 				Properties: map[string]spec.Schema{
 					"controlPlaneTopology": {
 						SchemaProps: spec.SchemaProps{
-							Description: "controlPlaneTopology is the topology of the control-plane nodes. Valid values are HighlyAvailable, HighlyAvailableArbiter, and SingleReplica. External is not valid: transitions cannot involve an externally hosted control plane. SingleReplica means a single instance of control-plane services is expected to meet cluster needs. HighlyAvailable means multiple instances are expected to provide redundancy. HighlyAvailableArbiter means two control-plane nodes and a smaller arbiter node maintain quorum. See https://pkg.go.dev/github.com/openshift/api/config/v1#TopologyMode for topology definitions. controlPlaneTopology is required.",
+							Description: "controlPlaneTopology is the topology of the control-plane nodes. Valid values are HighlyAvailable, HighlyAvailableArbiter, and SingleReplica. External is not valid: transitions cannot involve an externally hosted control plane. SingleReplica means a single instance of control-plane services is expected to meet cluster needs. HighlyAvailable means multiple instances are expected to provide redundancy. HighlyAvailableArbiter means two control-plane nodes and a smaller arbiter node to maintain quorum. See https://pkg.go.dev/github.com/openshift/api/config/v1#TopologyMode for topology definitions. controlPlaneTopology is required.",
 							Type:        []string{"string"},
 							Format:      "",
 						},
 					},
 					"infrastructureTopology": {
 						SchemaProps: spec.SchemaProps{
-							Description: "infrastructureTopology is the topology of infrastructure services. Valid values are SingleReplica and HighlyAvailable. When set to SingleReplica, operators expect a single instance of infrastructure services to meet cluster needs. When set to HighlyAvailable, operators expect multiple instances of infrastructure services to provide redundancy. infrastructureTopology is required.",
+							Description: "infrastructureTopology is the topology of infrastructure services. Valid values are SingleReplica and HighlyAvailable. SingleReplica means operators expect a single instance of infrastructure services to meet cluster needs. HighlyAvailable means operators expect multiple instances of infrastructure services to provide redundancy. infrastructureTopology is required.",
 							Type:        []string{"string"},
 							Format:      "",
 						},
@@ -22719,14 +22719,14 @@ func schema_openshift_api_config_v1_TopologyTransition(ref common.ReferenceCallb
 				Properties: map[string]spec.Schema{
 					"source": {
 						SchemaProps: spec.SchemaProps{
-							Description: "source is the control-plane and infrastructure topology this transition was evaluated from. It may differ from the current topology while status is being refreshed. Valid controlPlaneTopology values are HighlyAvailable, HighlyAvailableArbiter, and SingleReplica. Valid infrastructureTopology values are SingleReplica and HighlyAvailable. Their meanings are described in TopologyState. External control planes cannot be a transition source. source is required.",
+							Description: "source is the control-plane and infrastructure topology this transition was evaluated from. It may differ from the current topology while status is being refreshed. External control planes cannot be a transition source. controlPlaneTopology is the topology of the control-plane nodes. Valid values are HighlyAvailable, HighlyAvailableArbiter, and SingleReplica. External is not valid: transitions cannot involve an externally hosted control plane. SingleReplica means a single instance of control-plane services is expected to meet cluster needs. HighlyAvailable means multiple instances are expected to provide redundancy. HighlyAvailableArbiter means two control-plane nodes and a smaller arbiter node to maintain quorum. See https://pkg.go.dev/github.com/openshift/api/config/v1#TopologyMode for topology definitions. infrastructureTopology is the topology of infrastructure services. Valid values are SingleReplica and HighlyAvailable. SingleReplica means operators expect a single instance of infrastructure services to meet cluster needs. HighlyAvailable means operators expect multiple instances of infrastructure services to provide redundancy. source is required.",
 							Default:     map[string]interface{}{},
 							Ref:         ref(configv1.TopologyState{}.OpenAPIModelName()),
 						},
 					},
 					"target": {
 						SchemaProps: spec.SchemaProps{
-							Description: "target is the control-plane and infrastructure topology this transition would move to. Valid controlPlaneTopology values are HighlyAvailable, HighlyAvailableArbiter, and SingleReplica. Valid infrastructureTopology values are SingleReplica and HighlyAvailable. Their meanings are described in TopologyState. External control planes cannot be a transition target. target is required.",
+							Description: "target is the control-plane and infrastructure topology this transition would move to. controlPlaneTopology is the topology of the control-plane nodes. Valid values are HighlyAvailable, HighlyAvailableArbiter, and SingleReplica. External is not valid: transitions cannot involve an externally hosted control plane. SingleReplica means a single instance of control-plane services is expected to meet cluster needs. HighlyAvailable means multiple instances are expected to provide redundancy. HighlyAvailableArbiter means two control-plane nodes and a smaller arbiter node to maintain quorum. See https://pkg.go.dev/github.com/openshift/api/config/v1#TopologyMode for topology definitions. infrastructureTopology is the topology of infrastructure services. Valid values are SingleReplica and HighlyAvailable. SingleReplica means operators expect a single instance of infrastructure services to meet cluster needs. HighlyAvailable means operators expect multiple instances of infrastructure services to provide redundancy. External control planes cannot be a transition target. target is required.",
 							Default:     map[string]interface{}{},
 							Ref:         ref(configv1.TopologyState{}.OpenAPIModelName()),
 						},
@@ -22741,7 +22741,7 @@ func schema_openshift_api_config_v1_TopologyTransition(ref common.ReferenceCallb
 							},
 						},
 						SchemaProps: spec.SchemaProps{
-							Description: "evaluations contains the availability condition for this transition and conditions for the checks run against the cluster to determine availability.\n\nTopologyTransitionAvailable is required; other condition types report individual checks. Between one and 32 conditions must be present, allowing at most 31 individual checks in addition to the availability condition. The controller defines individual check types, reasons, and messages, and always reports each one explicitly, using Unknown when a check's result is not yet known. Because the containing transition is only reported while TopologyTransitionsEvaluated is True, these results always reflect the current evaluation.",
+							Description: "evaluations contains the availability condition for this transition and conditions for the checks run against the cluster to determine availability.\n\nTopologyTransitionAvailable is required; other condition types report individual checks. Between one and 32 conditions must be present, allowing at most 31 individual checks in addition to the availability condition. The controller defines individual check types, reasons, and messages, and always reports each one explicitly, using Unknown when a check's result is not yet known.",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{

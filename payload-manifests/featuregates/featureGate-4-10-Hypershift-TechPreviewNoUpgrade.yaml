@@ -41,16 +41,25 @@
                         "name": "ClusterUpdatePreflight"
                     },
                     {
+                        "name": "CompositePodGroup"
+                    },
+                    {
                         "name": "ConfidentialCluster"
                     },
                     {
                         "name": "ControllerManagerConfig"
                     },
                     {
+                        "name": "DRAWorkloadResourceClaims"
+                    },
+                    {
                         "name": "EventedPLEG"
                     },
                     {
                         "name": "Example2"
+                    },
+                    {
+                        "name": "GenericWorkload"
                     },
                     {
                         "name": "KarpenterOperator"
@@ -110,10 +119,16 @@
                         "name": "OVNKubernetesUplinkMode"
                     },
                     {
+                        "name": "PodGroupPreemptionPolicy"
+                    },
+                    {
                         "name": "ProvisioningRequestAvailable"
                     },
                     {
                         "name": "ShortCertRotation"
+                    },
+                    {
+                        "name": "TopologyAwareWorkloadScheduling"
                     },
                     {
                         "name": "UnifiedClusterManagedDNSAndLB"
@@ -205,9 +220,6 @@
                         "name": "ClusterVersionOperatorConfiguration"
                     },
                     {
-                        "name": "CompositePodGroup"
-                    },
-                    {
                         "name": "ConfigurablePKI"
                     },
                     {
@@ -215,9 +227,6 @@
                     },
                     {
                         "name": "DRADeviceTaintRules"
-                    },
-                    {
-                        "name": "DRAWorkloadResourceClaims"
                     },
                     {
                         "name": "DualReplica"
@@ -275,9 +284,6 @@
                     },
                     {
                         "name": "GatewayAPIWithoutOLM"
-                    },
-                    {
-                        "name": "GenericWorkload"
                     },
                     {
                         "name": "GomaxprocsInjection"
@@ -379,9 +385,6 @@
                         "name": "OpenShiftPodSecurityAdmission"
                     },
                     {
-                        "name": "PodGroupPreemptionPolicy"
-                    },
-                    {
                         "name": "SELinuxMount"
                     },
                     {
@@ -401,9 +404,6 @@
                     },
                     {
                         "name": "TLSGroupPreferences"
-                    },
-                    {
-                        "name": "TopologyAwareWorkloadScheduling"
                     },
                     {
                         "name": "UpgradeStatus"

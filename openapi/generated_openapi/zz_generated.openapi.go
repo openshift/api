@@ -3946,6 +3946,13 @@ func schema_openshift_api_authentication_v1alpha1_AuthenticationConfiguration(re
 							Format:      "",
 						},
 					},
+					"trustedCAFilePath": {
+						SchemaProps: spec.SchemaProps{
+							Description: "trustedCAFilePath is an optional path to a PEM-encoded CA bundle used to verify outbound HTTPS connections including proxies and TLS-intercepting proxies for outbound issuer discovery and JWKS requests. When specified, the file is watched and updates are applied without restarting the webhook server. When omitted, connections use the system trust roots only.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
 					"jwt": {
 						VendorExtensible: spec.VendorExtensible{
 							Extensions: spec.Extensions{

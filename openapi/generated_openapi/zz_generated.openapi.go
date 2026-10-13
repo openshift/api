@@ -19712,6 +19712,13 @@ func schema_openshift_api_config_v1_OpenStackPlatformSpec(ref common.ReferenceCa
 							},
 						},
 					},
+					"maxAllowedAddressPairs": {
+						SchemaProps: spec.SchemaProps{
+							Description: "maxAllowedAddressPairs is the maximum number of allowed address pairs configured in Neutron. When set, the value must be greater than or equal to 1.",
+							Type:        []string{"integer"},
+							Format:      "int32",
+						},
+					},
 				},
 			},
 		},

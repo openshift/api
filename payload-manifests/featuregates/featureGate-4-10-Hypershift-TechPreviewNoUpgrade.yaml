@@ -382,6 +382,9 @@
                         "name": "OpenShiftPodSecurityAdmission"
                     },
                     {
+                        "name": "OpenStackMaxAllowedAddressPairs"
+                    },
+                    {
                         "name": "PodGroupPreemptionPolicy"
                     },
                     {

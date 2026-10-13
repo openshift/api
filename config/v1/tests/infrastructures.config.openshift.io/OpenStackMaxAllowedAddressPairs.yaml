@@ -1,0 +1,125 @@
+apiVersion: apiextensions.k8s.io/v1 # Hack because controller-gen complains if we don't have this
+name: "Infrastructure OpenStackMaxAllowedAddressPairs"
+crdName: infrastructures.config.openshift.io
+featureGates:
+- OpenStackMaxAllowedAddressPairs
+tests:
+  onCreate:
+    - name: Should allow omitting maxAllowedAddressPairs without materializing a value
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        spec:
+          platformSpec:
+            type: OpenStack
+            openstack: {}
+      expected: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        spec:
+          platformSpec:
+            type: OpenStack
+            openstack: {}
+    - name: Should allow maxAllowedAddressPairs at the minimum value
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        spec:
+          platformSpec:
+            type: OpenStack
+            openstack:
+              maxAllowedAddressPairs: 1
+      expected: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        spec:
+          platformSpec:
+            type: OpenStack
+            openstack:
+              maxAllowedAddressPairs: 1
+    - name: Should allow maxAllowedAddressPairs above the minimum value
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        spec:
+          platformSpec:
+            type: OpenStack
+            openstack:
+              maxAllowedAddressPairs: 20
+      expected: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        spec:
+          platformSpec:
+            type: OpenStack
+            openstack:
+              maxAllowedAddressPairs: 20
+    - name: Should reject zero maxAllowedAddressPairs
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        spec:
+          platformSpec:
+            type: OpenStack
+            openstack:
+              maxAllowedAddressPairs: 0
+      expectedError: 'spec.platformSpec.openstack.maxAllowedAddressPairs: Invalid value: 0: spec.platformSpec.openstack.maxAllowedAddressPairs in body should be greater than or equal to 1'
+    - name: Should reject negative maxAllowedAddressPairs
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        spec:
+          platformSpec:
+            type: OpenStack
+            openstack:
+              maxAllowedAddressPairs: -1
+      expectedError: 'spec.platformSpec.openstack.maxAllowedAddressPairs: Invalid value: -1: spec.platformSpec.openstack.maxAllowedAddressPairs in body should be greater than or equal to 1'
+  onUpdate:
+    - name: Should allow changing maxAllowedAddressPairs
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        spec:
+          platformSpec:
+            type: OpenStack
+            openstack:
+              maxAllowedAddressPairs: 20
+      updated: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        spec:
+          platformSpec:
+            type: OpenStack
+            openstack:
+              maxAllowedAddressPairs: 25
+      expected: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        spec:
+          platformSpec:
+            type: OpenStack
+            openstack:
+              maxAllowedAddressPairs: 25
+    - name: Should allow removing maxAllowedAddressPairs
+      initial: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        spec:
+          platformSpec:
+            type: OpenStack
+            openstack:
+              maxAllowedAddressPairs: 20
+      updated: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        spec:
+          platformSpec:
+            type: OpenStack
+            openstack: {}
+      expected: |
+        apiVersion: config.openshift.io/v1
+        kind: Infrastructure
+        spec:
+          platformSpec:
+            type: OpenStack
+            openstack: {}

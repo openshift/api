@@ -431,7 +431,7 @@ func (in *CPUOptions) DeepCopyInto(out *CPUOptions) {
 	}
 	if in.NestedVirtualization != nil {
 		in, out := &in.NestedVirtualization, &out.NestedVirtualization
-		*out = new(AWSNestedVirtualizationPolicy)
+		*out = new(NestedVirtualizationPolicy)
 		**out = **in
 	}
 	return

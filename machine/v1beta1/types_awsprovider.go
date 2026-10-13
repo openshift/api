@@ -129,9 +129,9 @@ type AWSMachineProviderConfig struct {
 // +kubebuilder:validation:Enum=Disabled;AMDEncryptedVirtualizationNestedPaging
 type AWSConfidentialComputePolicy string
 
-// AWSNestedVirtualizationPolicy represents the nested virtualization configuration for the instance.
-// +kubebuilder:validation:Enum=Disabled;Enabled
-type AWSNestedVirtualizationPolicy string
+// NestedVirtualizationPolicy represents the nested virtualization configuration for the instance.
+// +kubebuilder:validation:Enum=enabled;disabled
+type NestedVirtualizationPolicy string
 
 const (
 	// AWSConfidentialComputePolicyDisabled disables confidential computing for the instance.
@@ -141,16 +141,16 @@ const (
 )
 
 const (
-	// AWSNestedVirtualizationDisabled explicitly disables nested virtualization.
-	AWSNestedVirtualizationDisabled AWSNestedVirtualizationPolicy = "Disabled"
-	// AWSNestedVirtualizationEnabled enables hardware-assisted nested virtualization on the instance.
-	AWSNestedVirtualizationEnabled AWSNestedVirtualizationPolicy = "Enabled"
+	// NestedVirtualizationDisabled explicitly disables nested virtualization.
+	NestedVirtualizationDisabled NestedVirtualizationPolicy = "disabled"
+	// NestedVirtualizationEnabled enables hardware-assisted nested virtualization on the instance.
+	NestedVirtualizationEnabled NestedVirtualizationPolicy = "enabled"
 )
 
-// CPUOptions defines CPU-related settings for the instance, including the confidential computing policy.
+// CPUOptions defines CPU-related settings for the instance, including the confidential computing and nested virtualization policies.
 // If provided, it must not be empty — at least one field must be set.
 // +kubebuilder:validation:MinProperties=1
-// +kubebuilder:validation:XValidation:rule="!(has(self.confidentialCompute) && self.confidentialCompute == 'AMDEncryptedVirtualizationNestedPaging' && has(self.nestedVirtualization) && self.nestedVirtualization == 'Enabled')",message="confidentialCompute and nestedVirtualization cannot both be enabled"
+// +kubebuilder:validation:XValidation:rule="!(has(self.confidentialCompute) && self.confidentialCompute == 'AMDEncryptedVirtualizationNestedPaging' && has(self.nestedVirtualization) && self.nestedVirtualization == 'enabled')",message="confidentialCompute and nestedVirtualization cannot both be enabled"
 type CPUOptions struct {
 	// confidentialCompute specifies whether confidential computing should be enabled for the instance,
 	// and, if so, which confidential computing technology to use.
@@ -171,16 +171,12 @@ type CPUOptions struct {
 	// Virtual EC2 instances are non-bare metal instances. This capability extends virtualization flexibility by adding
 	// processor-level virtualization support to virtual EC2 instances, enabling a hypervisor running in your instance
 	// to create and manage virtual machines.
-	// Requires one of the following instance types:
-	//   - General Purpose: M7i | M7i-flex | M8i | M8id | M8i-flex
-	//   - Compute Optimized: C7i | C7i-flex | C8i | C8id | C8i-flex
-	//   - Memory Optimized: R7i | R7iz | R8i | R8id | R8i-flex | X8i
-	//   - Storage Optimized: I7i | I7ie
-	// Valid values are: Disabled, Enabled, and omitted.
+	// Nested virtualization is supported on C8i, M8i, and R8i instance types.
+	// Valid values are: disabled, enabled, and omitted.
 	// More details can be checked out at https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/amazon-ec2-nested-virtualization.html
-	// When omitted, nested virtualization is Disabled (AWS default).
+	// When omitted, nested virtualization is disabled (AWS default).
 	// +optional
-	NestedVirtualization *AWSNestedVirtualizationPolicy `json:"nestedVirtualization,omitempty"`
+	NestedVirtualization *NestedVirtualizationPolicy `json:"nestedVirtualization,omitempty"`
 }
 
 // BlockDeviceMappingSpec describes a block device mapping

@@ -16999,13 +16999,8 @@
       ],
       "properties": {
         "action": {
-          "description": "action is the type of fencing action that was performed or is in progress. Valid values are \"reboot\" (power-cycle the node), \"power-off\" (power off the node), and \"power-on\" (power on the node).\n\nPossible enum values:\n - `\"power-off\"` is a fence action that powers off the target node.\n - `\"power-on\"` is a fence action that powers on the target node.\n - `\"reboot\"` is a fence action that power-cycles the target node.",
-          "type": "string",
-          "enum": [
-            "power-off",
-            "power-on",
-            "reboot"
-          ]
+          "description": "action is the type of fencing action that was performed or is in progress, as reported by Pacemaker. Common values are \"reboot\" (power-cycle the node), \"off\" (power off the node), and \"on\" (power on the node), but this is not an exhaustive list: Pacemaker's fence-event schema allows any string here, and other fence agents may report different values. The value must be between 1 and 64 characters.",
+          "type": "string"
         },
         "client": {
           "description": "client identifies the daemon or tool that requested the fencing operation. Typical values are \"crmd\" for automatic recovery initiated by the cluster resource manager, or \"stonith_admin\" for manual fencing initiated by an operator. This is useful for distinguishing \"the cluster fenced itself for cause\" from \"someone fenced a node manually\" during incident review. This field is optional and is omitted when the client is not reported by Pacemaker. When provided, the value must be between 1 and 256 characters.",
@@ -17299,13 +17294,8 @@
       ],
       "properties": {
         "action": {
-          "description": "action is the type of fencing action that was performed or is in progress. Valid values are \"reboot\" (power-cycle the node), \"power-off\" (power off the node), and \"power-on\" (power on the node).\n\nPossible enum values:\n - `\"power-off\"` is a fence action that powers off the target node.\n - `\"power-on\"` is a fence action that powers on the target node.\n - `\"reboot\"` is a fence action that power-cycles the target node.",
-          "type": "string",
-          "enum": [
-            "power-off",
-            "power-on",
-            "reboot"
-          ]
+          "description": "action is the type of fencing action that was performed or is in progress, as reported by Pacemaker. Common values are \"reboot\" (power-cycle the node), \"off\" (power off the node), and \"on\" (power on the node), but this is not an exhaustive list: Pacemaker's fence-event schema allows any string here, and other fence agents may report different values. The value must be between 1 and 64 characters.",
+          "type": "string"
         },
         "client": {
           "description": "client identifies the daemon or tool that requested the fencing operation. Typical values are \"crmd\" for automatic recovery initiated by the cluster resource manager, or \"stonith_admin\" for manual fencing initiated by an operator. This is useful for distinguishing \"the cluster fenced itself for cause\" from \"someone fenced a node manually\" during incident review. This field is optional and is omitted when the client is not reported by Pacemaker. When provided, the value must be between 1 and 256 characters.",

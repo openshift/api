@@ -491,20 +491,20 @@ const (
 )
 
 // PacemakerFenceEventAction represents the type of fencing action performed.
-// Values are lowercase per Pacemaker's fence-event XML schema (fence-event-2.15.rng).
-// +kubebuilder:validation:Enum=reboot;power-off;power-on
-// +enum
+// This is not a closed set: Pacemaker's fence-event XML schema (fence-event-2.15.rng)
+// defines the action attribute as an arbitrary string, so values outside the common
+// ones below are valid and must not be rejected.
 type PacemakerFenceEventAction string
 
 const (
 	// PacemakerFenceEventActionReboot is a fence action that power-cycles the target node.
 	PacemakerFenceEventActionReboot PacemakerFenceEventAction = "reboot"
 
-	// PacemakerFenceEventActionPowerOff is a fence action that powers off the target node.
-	PacemakerFenceEventActionPowerOff PacemakerFenceEventAction = "power-off"
+	// PacemakerFenceEventActionOff is a fence action that powers off the target node.
+	PacemakerFenceEventActionOff PacemakerFenceEventAction = "off"
 
-	// PacemakerFenceEventActionPowerOn is a fence action that powers on the target node.
-	PacemakerFenceEventActionPowerOn PacemakerFenceEventAction = "power-on"
+	// PacemakerFenceEventActionOn is a fence action that powers on the target node.
+	PacemakerFenceEventActionOn PacemakerFenceEventAction = "on"
 )
 
 // PacemakerFenceEventStatus represents the outcome of a fencing operation.
@@ -530,9 +530,13 @@ const (
 // targeting a given node, providing visibility into what happened, its outcome, and whether it was
 // triggered automatically by the cluster or manually by an operator.
 type PacemakerFenceEvent struct {
-	// action is the type of fencing action that was performed or is in progress.
-	// Valid values are "reboot" (power-cycle the node), "power-off" (power off the node),
-	// and "power-on" (power on the node).
+	// action is the type of fencing action that was performed or is in progress, as
+	// reported by Pacemaker. Common values are "reboot" (power-cycle the node), "off"
+	// (power off the node), and "on" (power on the node), but this is not an exhaustive
+	// list: Pacemaker's fence-event schema allows any string here, and other fence agents
+	// may report different values. The value must be between 1 and 64 characters.
+	// +kubebuilder:validation:MinLength=1
+	// +kubebuilder:validation:MaxLength=64
 	// +required
 	Action PacemakerFenceEventAction `json:"action,omitempty"`
 

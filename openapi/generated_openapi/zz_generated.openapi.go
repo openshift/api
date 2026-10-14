@@ -30490,10 +30490,9 @@ func schema_openshift_api_etcd_v1_PacemakerFenceEvent(ref common.ReferenceCallba
 				Properties: map[string]spec.Schema{
 					"action": {
 						SchemaProps: spec.SchemaProps{
-							Description: "action is the type of fencing action that was performed or is in progress. Valid values are \"reboot\" (power-cycle the node), \"power-off\" (power off the node), and \"power-on\" (power on the node).\n\nPossible enum values:\n - `\"power-off\"` is a fence action that powers off the target node.\n - `\"power-on\"` is a fence action that powers on the target node.\n - `\"reboot\"` is a fence action that power-cycles the target node.",
+							Description: "action is the type of fencing action that was performed or is in progress, as reported by Pacemaker. Common values are \"reboot\" (power-cycle the node), \"off\" (power off the node), and \"on\" (power on the node), but this is not an exhaustive list: Pacemaker's fence-event schema allows any string here, and other fence agents may report different values. The value must be between 1 and 64 characters.",
 							Type:        []string{"string"},
 							Format:      "",
-							Enum:        []interface{}{"power-off", "power-on", "reboot"},
 						},
 					},
 					"status": {
@@ -30959,10 +30958,9 @@ func schema_openshift_api_etcd_v1alpha1_PacemakerFenceEvent(ref common.Reference
 				Properties: map[string]spec.Schema{
 					"action": {
 						SchemaProps: spec.SchemaProps{
-							Description: "action is the type of fencing action that was performed or is in progress. Valid values are \"reboot\" (power-cycle the node), \"power-off\" (power off the node), and \"power-on\" (power on the node).\n\nPossible enum values:\n - `\"power-off\"` is a fence action that powers off the target node.\n - `\"power-on\"` is a fence action that powers on the target node.\n - `\"reboot\"` is a fence action that power-cycles the target node.",
+							Description: "action is the type of fencing action that was performed or is in progress, as reported by Pacemaker. Common values are \"reboot\" (power-cycle the node), \"off\" (power off the node), and \"on\" (power on the node), but this is not an exhaustive list: Pacemaker's fence-event schema allows any string here, and other fence agents may report different values. The value must be between 1 and 64 characters.",
 							Type:        []string{"string"},
 							Format:      "",
-							Enum:        []interface{}{"power-off", "power-on", "reboot"},
 						},
 					},
 					"status": {

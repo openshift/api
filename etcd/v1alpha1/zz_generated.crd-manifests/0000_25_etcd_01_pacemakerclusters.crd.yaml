@@ -452,13 +452,13 @@ spec:
                       properties:
                         action:
                           description: |-
-                            action is the type of fencing action that was performed or is in progress.
-                            Valid values are "reboot" (power-cycle the node), "power-off" (power off the node),
-                            and "power-on" (power on the node).
-                          enum:
-                          - reboot
-                          - power-off
-                          - power-on
+                            action is the type of fencing action that was performed or is in progress, as
+                            reported by Pacemaker. Common values are "reboot" (power-cycle the node), "off"
+                            (power off the node), and "on" (power on the node), but this is not an exhaustive
+                            list: Pacemaker's fence-event schema allows any string here, and other fence agents
+                            may report different values. The value must be between 1 and 64 characters.
+                          maxLength: 64
+                          minLength: 1
                           type: string
                         client:
                           description: |-

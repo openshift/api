@@ -5,6 +5,26 @@ featureGates:
 - IngressControllerMultipleHAProxyVersions
 tests:
   onCreate:
+    - name: Should be able to configure HAProxy 3.4
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: IngressController
+        metadata:
+          name: default
+          namespace: openshift-ingress-operator
+        spec:
+          haproxyVersion: "3.4"
+      expected: |
+        apiVersion: operator.openshift.io/v1
+        kind: IngressController
+        metadata:
+          name: default
+          namespace: openshift-ingress-operator
+        spec:
+          httpEmptyRequestsPolicy: Respond
+          idleConnectionTerminationPolicy: Immediate
+          closedClientConnectionPolicy: Continue
+          haproxyVersion: "3.4"
     - name: Should be able to unset HAProxy version
       initial: |
         apiVersion: operator.openshift.io/v1

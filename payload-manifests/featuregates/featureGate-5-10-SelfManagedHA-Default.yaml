@@ -177,9 +177,6 @@
                         "name": "IngressControllerLBSecurityGroupsAWS"
                     },
                     {
-                        "name": "KMSEncryption"
-                    },
-                    {
                         "name": "KarpenterOperator"
                     },
                     {
@@ -357,6 +354,9 @@
                     },
                     {
                         "name": "IrreconcilableMachineConfig"
+                    },
+                    {
+                        "name": "KMSEncryption"
                     },
                     {
                         "name": "KMSv1"

@@ -25460,7 +25460,7 @@ func schema_openshift_api_config_v1alpha1_MetadataConfig(ref common.ReferenceCal
 				Properties: map[string]spec.Schema{
 					"sendPolicy": {
 						SchemaProps: spec.SchemaProps{
-							Description: "sendPolicy specifies whether to send metadata and how it is configured. Default: send metadata using platform-chosen defaults (e.g. send interval 30 seconds). Custom: send metadata using the settings in the custom field.",
+							Description: "sendPolicy specifies whether to send metadata and how it is configured. Default: send metadata using Prometheus Operator / Prometheus defaults when the interval is unset. Custom: send metadata using the settings in the custom field.",
 							Type:        []string{"string"},
 							Format:      "",
 						},
@@ -25485,14 +25485,14 @@ func schema_openshift_api_config_v1alpha1_MetadataConfigCustom(ref common.Refere
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
-				Description: "MetadataConfigCustom defines custom settings for sending series metadata when sendPolicy is Custom. At least one property must be set when sendPolicy is Custom (e.g. sendIntervalSeconds).",
+				Description: "MetadataConfigCustom defines custom settings for sending series metadata when sendPolicy is Custom. At least one property must be set when sendPolicy is Custom (e.g. sendInterval).",
 				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
-					"sendIntervalSeconds": {
+					"sendInterval": {
 						SchemaProps: spec.SchemaProps{
-							Description: "sendIntervalSeconds is the interval in seconds at which metadata is sent. When omitted, the platform chooses a reasonable default (e.g. 30 seconds). Minimum value is 1 second. Maximum value is 86400 seconds (24 hours).",
-							Type:        []string{"integer"},
-							Format:      "int32",
+							Description: "sendInterval is the interval at which metadata is sent. Valid values are Prometheus-style duration strings with unit suffixes h, m, s, or ms (for example, \"30s\", \"1m\", or \"500ms\"). Each unit value must be a positive integer. Composite durations must follow the fixed unit order h, m, s, ms. Must be at least 1 character and at most 64 characters. The value must be greater than 0 and at most 24h (86400s). Zero durations such as \"0\", \"0s\", or \"0ms\" are rejected: a zero interval panics Prometheus metadata watchers (time.NewTicker(0)).",
+							Type:        []string{"string"},
+							Format:      "",
 						},
 					},
 				},
@@ -27562,7 +27562,7 @@ func schema_openshift_api_config_v1alpha1_RemoteWriteSpec(ref common.ReferenceCa
 					},
 					"metadataConfig": {
 						SchemaProps: spec.SchemaProps{
-							Description: "metadataConfig configures the sending of series metadata to remote storage. When omitted, no metadata is sent. When set to sendPolicy: Default, metadata is sent using platform-chosen defaults (e.g. send interval 30 seconds). When set to sendPolicy: Custom, metadata is sent using the settings in the custom field (e.g. custom.sendIntervalSeconds).",
+							Description: "metadataConfig configures the sending of series metadata to remote storage. When omitted, no metadata is sent. When set to sendPolicy: Default, metadata is sent using platform-chosen defaults (e.g. send interval 30 seconds). When set to sendPolicy: Custom, metadata is sent using the settings in the custom field (e.g. custom.sendInterval).",
 							Default:     map[string]interface{}{},
 							Ref:         ref(configv1alpha1.MetadataConfig{}.OpenAPIModelName()),
 						},

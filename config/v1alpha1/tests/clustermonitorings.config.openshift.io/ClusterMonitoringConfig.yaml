@@ -3264,6 +3264,98 @@ tests:
             retention:
               size: "0B"
       expectedError: 'must be "0" to disable size-based retention, or a positive byte-size string'
+    - name: Should accept prometheusConfig remoteWrite metadataConfig custom sendInterval
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: "Disabled"
+          prometheusConfig:
+            remoteWrite:
+              - name: rw
+                url: "https://remote.example.com/write"
+                metadataConfig:
+                  sendPolicy: Custom
+                  custom:
+                    sendInterval: "30s"
+      expected: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: "Disabled"
+          prometheusConfig:
+            remoteWrite:
+              - name: rw
+                url: "https://remote.example.com/write"
+                metadataConfig:
+                  sendPolicy: Custom
+                  custom:
+                    sendInterval: "30s"
+    - name: Should reject zero prometheusConfig remoteWrite metadataConfig custom sendInterval
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: "Disabled"
+          prometheusConfig:
+            remoteWrite:
+              - name: rw
+                url: "https://remote.example.com/write"
+                metadataConfig:
+                  sendPolicy: Custom
+                  custom:
+                    sendInterval: "0"
+      expectedError: 'must be a Prometheus duration string with only positive unit values in h, m, s, or ms'
+    - name: Should reject prometheusConfig remoteWrite metadataConfig custom sendInterval above maximum
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: "Disabled"
+          prometheusConfig:
+            remoteWrite:
+              - name: rw
+                url: "https://remote.example.com/write"
+                metadataConfig:
+                  sendPolicy: Custom
+                  custom:
+                    sendInterval: "25h"
+      expectedError: 'sendInterval must be at most 24h'
+    - name: Should reject prometheusConfig remoteWrite metadataConfig Custom without custom
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: "Disabled"
+          prometheusConfig:
+            remoteWrite:
+              - name: rw
+                url: "https://remote.example.com/write"
+                metadataConfig:
+                  sendPolicy: Custom
+      expectedError: 'custom is required when sendPolicy is Custom, and forbidden otherwise'
+    - name: Should reject prometheusConfig remoteWrite metadataConfig Default with custom
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: "Disabled"
+          prometheusConfig:
+            remoteWrite:
+              - name: rw
+                url: "https://remote.example.com/write"
+                metadataConfig:
+                  sendPolicy: Default
+                  custom:
+                    sendInterval: "30s"
+      expectedError: 'custom is required when sendPolicy is Custom, and forbidden otherwise'
+
   onUpdate:
     - name: Should allow updating KubeStateMetricsConfig resources
       initial: |

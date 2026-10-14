@@ -29,10 +29,19 @@
                         "name": "ClusterAPIInstall"
                     },
                     {
+                        "name": "CompositePodGroup"
+                    },
+                    {
                         "name": "ControllerManagerConfig"
                     },
                     {
+                        "name": "DRAWorkloadResourceClaims"
+                    },
+                    {
                         "name": "EventedPLEG"
+                    },
+                    {
+                        "name": "GenericWorkload"
                     },
                     {
                         "name": "KarpenterOperator"
@@ -83,7 +92,13 @@
                         "name": "OLMLifecycleAndCompatibility"
                     },
                     {
+                        "name": "PodGroupPreemptionPolicy"
+                    },
+                    {
                         "name": "ShortCertRotation"
+                    },
+                    {
+                        "name": "TopologyAwareWorkloadScheduling"
                     },
                     {
                         "name": "UnifiedClusterManagedDNSAndLB"

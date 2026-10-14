@@ -23,7 +23,16 @@
                         "name": "ClusterAPIInstall"
                     },
                     {
+                        "name": "CompositePodGroup"
+                    },
+                    {
+                        "name": "DRAWorkloadResourceClaims"
+                    },
+                    {
                         "name": "EventedPLEG"
+                    },
+                    {
+                        "name": "GenericWorkload"
                     },
                     {
                         "name": "HyperShiftOnlyDynamicResourceAllocation"
@@ -50,7 +59,13 @@
                         "name": "OLMLifecycleAndCompatibility"
                     },
                     {
+                        "name": "PodGroupPreemptionPolicy"
+                    },
+                    {
                         "name": "ShortCertRotation"
+                    },
+                    {
+                        "name": "TopologyAwareWorkloadScheduling"
                     }
                 ],
                 "enabled": [

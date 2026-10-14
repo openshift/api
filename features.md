@@ -2,14 +2,19 @@
 | ------ | --- | --- | --- | --- | --- | --- | --- | ---  |
 | ClientsAllowCBOR| | | | | | | |  |
 | ClusterAPIInstall| | | | | | | |  |
+| CompositePodGroup| | | | | | | |  |
+| DRAWorkloadResourceClaims| | | | | | | |  |
 | EventedPLEG| | | | | | | |  |
+| GenericWorkload| | | | | | | |  |
 | MachineAPIMigrationAzure| | | | | | | |  |
 | MachineAPIMigrationBareMetal| | | | | | | |  |
 | MachineAPIMigrationGCP| | | | | | | |  |
 | MachineAPIMigrationPowerVS| | | | | | | |  |
 | MachineAPIOperatorDisableMachineHealthCheckController| | | | | | | |  |
 | MultiArchInstallAzure| | | | | | | |  |
+| PodGroupPreemptionPolicy| | | | | | | |  |
 | ShortCertRotation| | | | | | | |  |
+| TopologyAwareWorkloadScheduling| | | | | | | |  |
 | ControllerManagerConfig| | | | <span style="background-color: #519450">Enabled</span> | | | |  |
 | KarpenterOperator| | | | <span style="background-color: #519450">Enabled</span> | | | |  |
 | MutableTopology| | | | <span style="background-color: #519450">Enabled</span> | | | |  |

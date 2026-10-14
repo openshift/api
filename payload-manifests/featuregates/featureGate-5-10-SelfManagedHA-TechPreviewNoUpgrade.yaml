@@ -35,16 +35,25 @@
                         "name": "ClusterUpdatePreflight"
                     },
                     {
+                        "name": "CompositePodGroup"
+                    },
+                    {
                         "name": "ConfidentialCluster"
                     },
                     {
                         "name": "ControllerManagerConfig"
                     },
                     {
+                        "name": "DRAWorkloadResourceClaims"
+                    },
+                    {
                         "name": "EventedPLEG"
                     },
                     {
                         "name": "Example2"
+                    },
+                    {
+                        "name": "GenericWorkload"
                     },
                     {
                         "name": "HyperShiftOnlyDynamicResourceAllocation"
@@ -83,10 +92,16 @@
                         "name": "OVNKubernetesUplinkMode"
                     },
                     {
+                        "name": "PodGroupPreemptionPolicy"
+                    },
+                    {
                         "name": "ProvisioningRequestAvailable"
                     },
                     {
                         "name": "ShortCertRotation"
+                    },
+                    {
+                        "name": "TopologyAwareWorkloadScheduling"
                     },
                     {
                         "name": "UnifiedClusterManagedDNSAndLB"

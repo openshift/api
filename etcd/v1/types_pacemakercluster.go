@@ -329,7 +329,11 @@ const (
 	ResourceStartedConditionType = "Started"
 
 	// ResourceSchedulableConditionType tracks whether a resource is schedulable (not blocked).
-	// A resource that is not schedulable is unable to start or move to a different node.
+	// A resource that is not schedulable is unable to start or move to a different node. On a given
+	// node, this happens once that node's failCount reaches its migrationThreshold for this resource
+	// (see PacemakerClusterResourceStatus.failCount) — Pacemaker bans the resource from the node at
+	// that point. failCount/migrationThreshold expose the raw counters behind that ban; this condition
+	// surfaces the resulting verdict.
 	// In Two Node OpenShift with Fencing, we do not expect any resources to be unschedulable.
 	// When True, the resource is schedulable with reason "Schedulable". This is the normal operating state.
 	// When False, the resource is not schedulable with reason "Unschedulable". This is an unexpected state.
@@ -843,7 +847,10 @@ type PacemakerClusterResourceStatus struct {
 	// failCount is the current failure count Pacemaker records for this resource on
 	// this node, as reported by the CIB. Pacemaker increments this count each time an
 	// operation for this resource fails, and resets it to zero when a `pcs resource
-	// cleanup` is performed. The value must be between 0 and 1000000, Pacemaker's
+	// cleanup` is performed. Once failCount reaches migrationThreshold, Pacemaker bans
+	// this resource from this node; that derived state is surfaced on this resource's
+	// ResourceSchedulableConditionType, which goes False with reason "Unschedulable"
+	// at that point. The value must be between 0 and 1000000, Pacemaker's
 	// representation of INFINITY, the sentinel it uses for a permanently-failed
 	// resource. This field is optional and is omitted when the status collector has
 	// not yet observed a fail count for this resource, for example on a freshly
@@ -857,10 +864,11 @@ type PacemakerClusterResourceStatus struct {
 	// will no longer attempt to run this resource on this node, as reported by the
 	// CIB. Without this value, failCount alone is uninterpretable — whether
 	// failCount 3 is alarming depends on whether the threshold is 5 or 1000000
-	// (Pacemaker's default INFINITY). The value must be between 0 and 1000000,
-	// Pacemaker's representation of INFINITY. This field is optional and is omitted
-	// when the status collector has not yet observed a migration threshold for this
-	// resource.
+	// (Pacemaker's default INFINITY). See failCount's doc for how this threshold
+	// relates to the ResourceSchedulableConditionType. The value must be between 0
+	// and 1000000, Pacemaker's representation of INFINITY. This field is optional
+	// and is omitted when the status collector has not yet observed a migration
+	// threshold for this resource.
 	// +kubebuilder:validation:Minimum=0
 	// +kubebuilder:validation:Maximum=1000000
 	// +optional

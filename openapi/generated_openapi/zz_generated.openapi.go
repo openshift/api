@@ -30394,14 +30394,14 @@ func schema_openshift_api_etcd_v1_PacemakerClusterResourceStatus(ref common.Refe
 					},
 					"failCount": {
 						SchemaProps: spec.SchemaProps{
-							Description: "failCount is the current failure count Pacemaker records for this resource on this node, as reported by the CIB. Pacemaker increments this count each time an operation for this resource fails, and resets it to zero when a `pcs resource cleanup` is performed. The value must be between 0 and 1000000, Pacemaker's representation of INFINITY, the sentinel it uses for a permanently-failed resource. This field is optional and is omitted when the status collector has not yet observed a fail count for this resource, for example on a freshly bootstrapped cluster or for a resource that has never failed.",
+							Description: "failCount is the current failure count Pacemaker records for this resource on this node, as reported by the CIB. Pacemaker increments this count each time an operation for this resource fails, and resets it to zero when a `pcs resource cleanup` is performed. Once failCount reaches migrationThreshold, Pacemaker bans this resource from this node; that derived state is surfaced on this resource's ResourceSchedulableConditionType, which goes False with reason \"Unschedulable\" at that point. The value must be between 0 and 1000000, Pacemaker's representation of INFINITY, the sentinel it uses for a permanently-failed resource. This field is optional and is omitted when the status collector has not yet observed a fail count for this resource, for example on a freshly bootstrapped cluster or for a resource that has never failed.",
 							Type:        []string{"integer"},
 							Format:      "int32",
 						},
 					},
 					"migrationThreshold": {
 						SchemaProps: spec.SchemaProps{
-							Description: "migrationThreshold is the configured number of failures after which Pacemaker will no longer attempt to run this resource on this node, as reported by the CIB. Without this value, failCount alone is uninterpretable — whether failCount 3 is alarming depends on whether the threshold is 5 or 1000000 (Pacemaker's default INFINITY). The value must be between 0 and 1000000, Pacemaker's representation of INFINITY. This field is optional and is omitted when the status collector has not yet observed a migration threshold for this resource.",
+							Description: "migrationThreshold is the configured number of failures after which Pacemaker will no longer attempt to run this resource on this node, as reported by the CIB. Without this value, failCount alone is uninterpretable — whether failCount 3 is alarming depends on whether the threshold is 5 or 1000000 (Pacemaker's default INFINITY). See failCount's doc for how this threshold relates to the ResourceSchedulableConditionType. The value must be between 0 and 1000000, Pacemaker's representation of INFINITY. This field is optional and is omitted when the status collector has not yet observed a migration threshold for this resource.",
 							Type:        []string{"integer"},
 							Format:      "int32",
 						},
@@ -30862,14 +30862,14 @@ func schema_openshift_api_etcd_v1alpha1_PacemakerClusterResourceStatus(ref commo
 					},
 					"failCount": {
 						SchemaProps: spec.SchemaProps{
-							Description: "failCount is the current failure count Pacemaker records for this resource on this node, as reported by the CIB. Pacemaker increments this count each time an operation for this resource fails, and resets it to zero when a `pcs resource cleanup` is performed. The value must be between 0 and 1000000, Pacemaker's representation of INFINITY, the sentinel it uses for a permanently-failed resource. This field is optional and is omitted when the status collector has not yet observed a fail count for this resource, for example on a freshly bootstrapped cluster or for a resource that has never failed.",
+							Description: "failCount is the current failure count Pacemaker records for this resource on this node, as reported by the CIB. Pacemaker increments this count each time an operation for this resource fails, and resets it to zero when a `pcs resource cleanup` is performed. Once failCount reaches migrationThreshold, Pacemaker bans this resource from this node; that derived state is surfaced on this resource's ResourceSchedulableConditionType, which goes False with reason \"Unschedulable\" at that point. The value must be between 0 and 1000000, Pacemaker's representation of INFINITY, the sentinel it uses for a permanently-failed resource. This field is optional and is omitted when the status collector has not yet observed a fail count for this resource, for example on a freshly bootstrapped cluster or for a resource that has never failed.",
 							Type:        []string{"integer"},
 							Format:      "int32",
 						},
 					},
 					"migrationThreshold": {
 						SchemaProps: spec.SchemaProps{
-							Description: "migrationThreshold is the configured number of failures after which Pacemaker will no longer attempt to run this resource on this node, as reported by the CIB. Without this value, failCount alone is uninterpretable — whether failCount 3 is alarming depends on whether the threshold is 5 or 1000000 (Pacemaker's default INFINITY). The value must be between 0 and 1000000, Pacemaker's representation of INFINITY. This field is optional and is omitted when the status collector has not yet observed a migration threshold for this resource.",
+							Description: "migrationThreshold is the configured number of failures after which Pacemaker will no longer attempt to run this resource on this node, as reported by the CIB. Without this value, failCount alone is uninterpretable — whether failCount 3 is alarming depends on whether the threshold is 5 or 1000000 (Pacemaker's default INFINITY). See failCount's doc for how this threshold relates to the ResourceSchedulableConditionType. The value must be between 0 and 1000000, Pacemaker's representation of INFINITY. This field is optional and is omitted when the status collector has not yet observed a migration threshold for this resource.",
 							Type:        []string{"integer"},
 							Format:      "int32",
 						},

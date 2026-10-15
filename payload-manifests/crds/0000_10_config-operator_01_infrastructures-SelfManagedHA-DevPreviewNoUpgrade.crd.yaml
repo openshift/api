@@ -2872,20 +2872,6 @@ spec:
             == self.status.controlPlaneTopology) || (has(self.status.controlPlaneTopology)
             && self.status.controlPlaneTopology == ''SingleReplica'' && self.spec.controlPlaneTopology
             == ''HighlyAvailable'')'
-        - message: spec.controlPlaneTopology is immutable while a topology transition
-            is in progress
-          rule: '!has(self.spec.controlPlaneTopology) || !has(oldSelf.spec.controlPlaneTopology)
-            || self.spec.controlPlaneTopology == oldSelf.spec.controlPlaneTopology
-            || (oldSelf.spec.controlPlaneTopology == oldSelf.status.controlPlaneTopology
-            && (!has(oldSelf.spec.infrastructureTopology) || oldSelf.spec.infrastructureTopology
-            == oldSelf.status.infrastructureTopology))'
-        - message: spec.infrastructureTopology is immutable while a topology transition
-            is in progress
-          rule: '!has(self.spec.infrastructureTopology) || !has(oldSelf.spec.infrastructureTopology)
-            || self.spec.infrastructureTopology == oldSelf.spec.infrastructureTopology
-            || ((!has(oldSelf.spec.controlPlaneTopology) || oldSelf.spec.controlPlaneTopology
-            == oldSelf.status.controlPlaneTopology) && oldSelf.spec.infrastructureTopology
-            == oldSelf.status.infrastructureTopology)'
     served: true
     storage: true
     subresources:

@@ -27424,7 +27424,7 @@ func schema_openshift_api_config_v1alpha1_RelabelConfig(ref common.ReferenceCall
 					},
 					"regex": {
 						SchemaProps: spec.SchemaProps{
-							Description: "regex is the regular expression to match against the concatenated source label values. Must be a valid RE2 regular expression (https://github.com/google/re2/wiki/Syntax). When omitted, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time. The default value is \"(.*)\" to match everything. Must be between 1 and 1000 characters in length when specified.",
+							Description: "regex is the regular expression to match against the concatenated source label values. Must be a valid RE2 regular expression (https://github.com/google/re2/wiki/Syntax). An empty string is allowed for ConfigMap migration compatibility. In the CMO → Prometheus Operator path, an empty regex is omitted from the generated config and Prometheus falls back to its default \"(.*)\" (match everything), the same behavior as when the field is omitted. Because this field uses omitempty, an empty string cannot be distinguished from an omitted value after serialization. When omitted or empty, this means no opinion and the platform is left to choose a reasonable default, which is subject to change over time. The current default value is \"(.*)\". Must be at most 1000 characters in length when specified.",
 							Type:        []string{"string"},
 							Format:      "",
 						},

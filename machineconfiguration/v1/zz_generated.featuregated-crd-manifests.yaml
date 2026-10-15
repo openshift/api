@@ -40,7 +40,6 @@ controllerconfigs.machineconfiguration.openshift.io:
   - NutanixMultiSubnets
   - VSphereMultiNetworks
   - VSphereMultiVCenterDay2
-  - VSphereMultiVCenters
   FilenameOperatorName: machine-config
   FilenameOperatorOrdering: "01"
   FilenameRunLevel: "0000_80"

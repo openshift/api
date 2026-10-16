@@ -104,6 +104,9 @@
                         "name": "ShortCertRotation"
                     },
                     {
+                        "name": "StoragePathAlert"
+                    },
+                    {
                         "name": "TopologyAwareWorkloadScheduling"
                     },
                     {

@@ -4,13 +4,13 @@
     "metadata": {
         "annotations": {
             "include.release.openshift.io/ibm-cloud-managed": "false-except-for-the-config-operator",
-            "release.openshift.io/feature-set": "TechPreviewNoUpgrade",
-            "release.openshift.io/major-version": "4,5,6,7,8,9,10"
+            "release.openshift.io/feature-set": "DevPreviewNoUpgrade",
+            "release.openshift.io/major-version": "5,6,7,8,9,10"
         },
         "name": "cluster"
     },
     "spec": {
-        "featureSet": "TechPreviewNoUpgrade"
+        "featureSet": "DevPreviewNoUpgrade"
     },
     "status": {
         "featureGates": [
@@ -20,31 +20,16 @@
                         "name": "AuthenticationComponentProxy"
                     },
                     {
-                        "name": "BGPBasedVIPManagement"
-                    },
-                    {
                         "name": "CRIOCredentialProviderConfig"
                     },
                     {
                         "name": "ClientsAllowCBOR"
                     },
                     {
-                        "name": "ClusterAPIComputeInstall"
-                    },
-                    {
-                        "name": "ClusterAPIControlPlaneInstall"
-                    },
-                    {
                         "name": "ClusterAPIInstall"
                     },
                     {
-                        "name": "ClusterUpdatePreflight"
-                    },
-                    {
                         "name": "CompositePodGroup"
-                    },
-                    {
-                        "name": "ConfidentialCluster"
                     },
                     {
                         "name": "ControllerManagerConfig"
@@ -54,9 +39,6 @@
                     },
                     {
                         "name": "EventedPLEG"
-                    },
-                    {
-                        "name": "Example2"
                     },
                     {
                         "name": "GenericWorkload"
@@ -77,9 +59,6 @@
                         "name": "MachineAPIMigrationPowerVS"
                     },
                     {
-                        "name": "MachineAPIMigrationVSphere"
-                    },
-                    {
                         "name": "MachineAPIOperatorDisableMachineHealthCheckController"
                     },
                     {
@@ -87,9 +66,6 @@
                     },
                     {
                         "name": "MutableTopology"
-                    },
-                    {
-                        "name": "NetworkConnect"
                     },
                     {
                         "name": "NewOLM"
@@ -116,13 +92,7 @@
                         "name": "OLMLifecycleAndCompatibility"
                     },
                     {
-                        "name": "OVNKubernetesUplinkMode"
-                    },
-                    {
                         "name": "PodGroupPreemptionPolicy"
-                    },
-                    {
-                        "name": "ProvisioningRequestAvailable"
                     },
                     {
                         "name": "ShortCertRotation"
@@ -132,9 +102,6 @@
                     },
                     {
                         "name": "UnifiedClusterManagedDNSAndLB"
-                    },
-                    {
-                        "name": "VSpherePerComponentScopedCreds"
                     }
                 ],
                 "enabled": [
@@ -169,6 +136,9 @@
                         "name": "AzureMultiDisk"
                     },
                     {
+                        "name": "BGPBasedVIPManagement"
+                    },
+                    {
                         "name": "BootcNodeManagement"
                     },
                     {
@@ -182,6 +152,12 @@
                     },
                     {
                         "name": "ClientsPreferCBOR"
+                    },
+                    {
+                        "name": "ClusterAPIComputeInstall"
+                    },
+                    {
+                        "name": "ClusterAPIControlPlaneInstall"
                     },
                     {
                         "name": "ClusterAPIInstallIBMCloud"
@@ -217,7 +193,13 @@
                         "name": "ClusterUpdateAcceptRisks"
                     },
                     {
+                        "name": "ClusterUpdatePreflight"
+                    },
+                    {
                         "name": "ClusterVersionOperatorConfiguration"
+                    },
+                    {
+                        "name": "ConfidentialCluster"
                     },
                     {
                         "name": "ConfigurablePKI"
@@ -248,6 +230,9 @@
                     },
                     {
                         "name": "Example"
+                    },
+                    {
+                        "name": "Example2"
                     },
                     {
                         "name": "ExternalOIDC"
@@ -337,6 +322,9 @@
                         "name": "MachineAPIMigrationOpenStack"
                     },
                     {
+                        "name": "MachineAPIMigrationVSphere"
+                    },
+                    {
                         "name": "ManagedBootImagesAWSCAPI"
                     },
                     {
@@ -364,6 +352,9 @@
                         "name": "MutatingAdmissionPolicy"
                     },
                     {
+                        "name": "NetworkConnect"
+                    },
+                    {
                         "name": "NetworkObservabilityInstall"
                     },
                     {
@@ -376,6 +367,9 @@
                         "name": "OSStreams"
                     },
                     {
+                        "name": "OVNKubernetesUplinkMode"
+                    },
+                    {
                         "name": "OVNObservability"
                     },
                     {
@@ -383,6 +377,9 @@
                     },
                     {
                         "name": "OpenShiftPodSecurityAdmission"
+                    },
+                    {
+                        "name": "ProvisioningRequestAvailable"
                     },
                     {
                         "name": "SELinuxMount"
@@ -395,6 +392,9 @@
                     },
                     {
                         "name": "SignatureStores"
+                    },
+                    {
+                        "name": "StoragePathAlert"
                     },
                     {
                         "name": "StoragePerformantSecurityPolicy"
@@ -419,6 +419,9 @@
                     },
                     {
                         "name": "VSphereMultiVCenterDay2"
+                    },
+                    {
+                        "name": "VSpherePerComponentScopedCreds"
                     }
                 ],
                 "version": ""

@@ -31,147 +31,211 @@ type PKI struct {
 
 // PKISpec holds the specification for PKI configuration.
 type PKISpec struct {
-	// certificateManagement specifies how PKI configuration is managed for internally-generated certificates.
-	// This controls the certificate generation approach for all OpenShift components that create
-	// certificates internally, including certificate authorities, serving certificates, and client certificates.
+	// certificates specifies the cluster's certificate policy for internally-generated
+	// certificates, resolved most-specific-wins: a named certificate override, then a
+	// category override (CA, server, client), then the required defaults.
+	// This field is required so that every PKI resource specifies a certificate policy.
+	// This field names a configuration policy; it is unrelated to the X.509
+	// certificate-policies extension.
 	//
 	// +required
-	CertificateManagement PKICertificateManagement `json:"certificateManagement,omitzero"`
-}
+	Certificates PKICertificatePolicy `json:"certificates,omitzero"`
 
-// PKICertificateManagement determines whether components use hardcoded defaults (Unmanaged), follow
-// OpenShift best practices (Default), or use administrator-specified cryptographic parameters (Custom).
-// This provides flexibility for organizations with specific compliance requirements or security policies
-// while maintaining backwards compatibility for existing clusters.
-//
-// +kubebuilder:validation:XValidation:rule="self.mode == 'Custom' ? has(self.custom) : !has(self.custom)",message="custom is required when mode is Custom, and forbidden otherwise"
-// +union
-type PKICertificateManagement struct {
-	// mode determines how PKI configuration is managed.
-	// Valid values are "Unmanaged", "Default", and "Custom".
-	//
-	// When set to Unmanaged, components use their existing hardcoded certificate
-	// generation behavior, exactly as if this feature did not exist. Each component
-	// generates certificates using whatever parameters it was using before this
-	// feature. While most components use RSA 2048, some may use different
-	// parameters. Use of this mode might prevent upgrading to the next major
-	// OpenShift release.
-	//
-	// When set to Default, OpenShift-recommended best practices for certificate
-	// generation are applied. The specific parameters may evolve across OpenShift
-	// releases to adopt improved cryptographic standards. In the initial release,
-	// this matches Unmanaged behavior for each component. In future releases, this
-	// may adopt ECDSA or larger RSA keys based on industry best practices.
-	// Recommended for most customers who want to benefit from security improvements
-	// automatically.
-	//
-	// When set to Custom, the certificate management parameters can be set
-	// explicitly. Use the custom field to specify certificate generation parameters.
-	//
-	// +required
-	// +unionDiscriminator
-	Mode PKICertificateManagementMode `json:"mode,omitempty"`
-
-	// custom contains administrator-specified cryptographic configuration.
-	// Use the defaults and category override fields
-	// to specify certificate generation parameters.
-	// Required when mode is Custom, and forbidden otherwise.
+	// keys optionally configures keys generated outside of any certificate, such as
+	// the bound service-account token signing key. Entries are named and opt-in with no
+	// inherited default. When omitted, no keys are configured by this resource.
+	// When set, at least one field must be specified; an empty object is rejected.
 	//
 	// +optional
-	// +unionMember
-	Custom CustomPKIPolicy `json:"custom,omitzero"`
+	Keys PKIKeyPolicy `json:"keys,omitempty,omitzero"`
+
+	// --- TOMBSTONE ---
+	// certificateManagement was renamed to certificates (the section declares a policy;
+	// "management" named an activity rather than the artifact being configured).
+	// The field name "certificateManagement" and its json tag are reserved to prevent
+	// reuse with a different backing type.
+	//
+	// +optional
+	// CertificateManagement PKICertificateManagement `json:"certificateManagement,omitzero"`
 }
 
-// CustomPKIPolicy contains administrator-specified cryptographic configuration.
-// Administrators must specify defaults for all certificates and may optionally
-// override specific categories of certificates.
+// PKICertificatePolicy is the cluster's policy for internally-generated certificates:
+// a required defaults, optional per-category overrides, and optional overrides for
+// specific named certificates. The most-specific setting wins.
+type PKICertificatePolicy struct {
+	// defaults specifies the default certificate configuration applied to any certificate
+	// that has no more-specific (category or named) override. This field is required so
+	// that every certificate has a well-defined configuration.
+	//
+	// +required
+	Defaults PKIDefaultCertificateConfig `json:"defaults,omitzero"`
+
+	// caCertificates optionally overrides certificate parameters for certificate
+	// authority (CA) certificates that sign other certificates. When set, these
+	// parameters take precedence over defaults for all CA certificates. When omitted,
+	// defaults are used for CA certificates.
+	//
+	// +optional
+	CACertificates PKICertificateConfig `json:"caCertificates,omitempty,omitzero"`
+
+	// serverCertificates optionally overrides certificate parameters for TLS server
+	// certificates. When set, these parameters take precedence over defaults for all
+	// server certificates. When omitted, defaults are used for server certificates.
+	//
+	// +optional
+	ServerCertificates PKICertificateConfig `json:"serverCertificates,omitempty,omitzero"`
+
+	// clientCertificates optionally overrides certificate parameters for client
+	// authentication certificates. When set, these parameters take precedence over
+	// defaults for all client certificates. When omitted, defaults are used for client
+	// certificates.
+	//
+	// +optional
+	ClientCertificates PKICertificateConfig `json:"clientCertificates,omitempty,omitzero"`
+
+	// namedCertificates optionally overrides certificate parameters for specific
+	// certificates identified by their well-known name. These overrides have the highest
+	// precedence (named, then category, then defaults). Entries are keyed by name, so a
+	// given name may appear at most once. When omitted, no named overrides are applied.
+	// When present, the list must contain at least one entry. At most 32 named
+	// certificate overrides may be specified.
+	//
+	// +listType=map
+	// +listMapKey=name
+	// +kubebuilder:validation:MinItems=1
+	// +kubebuilder:validation:MaxItems=32
+	// +optional
+	NamedCertificates []PKINamedCertificateConfig `json:"namedCertificates,omitempty"`
+
+	// --- TOMBSTONE ---
+	// mode was the discriminator of a management-mode union (Unmanaged/Default/Custom).
+	// It was removed when the cryptographic configuration was flattened directly into this
+	// struct. The field name "mode" and its json tag are reserved to prevent reuse with a
+	// different backing type.
+	//
+	// +optional
+	// Mode PKICertificateManagementMode `json:"mode,omitempty"`
+
+	// --- TOMBSTONE ---
+	// custom held the administrator-specified cryptographic configuration under the former
+	// mode union; its fields (defaults and the category overrides) were flattened directly
+	// into this struct. The field name "custom" and its json tag are reserved to prevent
+	// reuse with a different backing type.
+	//
+	// +optional
+	// Custom CustomPKIPolicy `json:"custom,omitzero"`
+
+	// --- TOMBSTONE ---
+	// signerCertificates was renamed to caCertificates (signer -> CA terminology).
+	// The field name "signerCertificates" and its json tag are reserved to prevent reuse with a different backing type.
+	//
+	// +optional
+	// SignerCertificates CertificateConfig `json:"signerCertificates,omitempty,omitzero"`
+
+	// --- TOMBSTONE ---
+	// servingCertificates was renamed to serverCertificates (serving -> server terminology).
+	// The field name "servingCertificates" and its json tag are reserved to prevent reuse with a different backing type.
+	//
+	// +optional
+	// ServingCertificates CertificateConfig `json:"servingCertificates,omitempty,omitzero"`
+}
+
+// PKINamedCertificateConfig overrides certificate parameters for a specific certificate
+// identified by its well-known name.
+type PKINamedCertificateConfig struct {
+	// name is the well-known override name of the targeted certificate. It is a DNS
+	// subdomain prefix, a "/", then a name made of alphanumerics, "-", "_" and "."
+	// (for example "openshift.io/service-ca.service-serving-signer"). The prefix is at
+	// most 253 characters and the name after the "/" at most 63. The name is validated
+	// for format only; there is no registry of valid names, because certificates can be
+	// registered dynamically. Core-platform certificates use the bare "openshift.io/"
+	// prefix; names outside the core platform use an owner subdomain prefix (for example
+	// "hypershift.openshift.io/").
+	// This field is required so that every named certificate override identifies the
+	// certificate it applies to.
+	//
+	// +required
+	// +kubebuilder:validation:MinLength=1
+	// +kubebuilder:validation:MaxLength=317
+	// +kubebuilder:validation:XValidation:rule="self.contains('/') && !format.qualifiedName().validate(self).hasValue()",message="name must be a prefixed qualified name, for example openshift.io/etcd.signer"
+	Name string `json:"name,omitempty"`
+
+	// PKICertificateConfig holds the overridden parameters for this certificate. key is
+	// optional so that a future certificate-level field can be overridden without also
+	// specifying key.
+	PKICertificateConfig `json:",inline"`
+}
+
+// PKIKeyPolicy configures keys generated outside of any certificate, by well-known name.
+// When set, at least one field must be specified; an empty object is rejected.
 //
 // +kubebuilder:validation:MinProperties=1
-type CustomPKIPolicy struct {
-	PKIProfile `json:",inline"`
+type PKIKeyPolicy struct {
+	// namedKeys configures keys generated outside of any certificate, such as the bound
+	// service-account token signing key, identified by their well-known name. Entries are
+	// opt-in with no inherited default and are keyed by name, so a given name may appear at
+	// most once. When keys is set, at least one named key must be specified.
+	// At most 16 named keys may be specified.
+	//
+	// +listType=map
+	// +listMapKey=name
+	// +kubebuilder:validation:MinItems=1
+	// +kubebuilder:validation:MaxItems=16
+	// +optional
+	NamedKeys []PKINamedKeyConfig `json:"namedKeys,omitempty"`
 }
 
-// PKICertificateManagementMode specifies the mode for PKI certificate management.
-//
-// +kubebuilder:validation:Enum=Unmanaged;Default;Custom
-type PKICertificateManagementMode string
-
-const (
-	// PKICertificateManagementModeUnmanaged uses each component's existing hardcoded defaults.
-	// Most components currently use RSA 2048, but parameters may differ by component.
-	PKICertificateManagementModeUnmanaged PKICertificateManagementMode = "Unmanaged"
-
-	// PKICertificateManagementModeDefault uses OpenShift-recommended best practices.
-	// Specific parameters may evolve across OpenShift releases.
-	PKICertificateManagementModeDefault PKICertificateManagementMode = "Default"
-
-	// PKICertificateManagementModeCustom uses administrator-specified configuration.
-	PKICertificateManagementModeCustom PKICertificateManagementMode = "Custom"
-)
-
-// PKIProfile defines the certificate generation parameters that OpenShift
-// components use to create certificates. Category overrides take precedence
-// over defaults.
-type PKIProfile struct {
-	// defaults specifies the default certificate configuration that applies
-	// to all certificates unless overridden by a category override.
+// PKINamedKeyConfig configures the cryptographic parameters for a single key generated
+// outside of any certificate, identified by its well-known name.
+type PKINamedKeyConfig struct {
+	// name is the well-known name of the key. It is a DNS subdomain prefix, a
+	// "/", then a name made of alphanumerics, "-", "_" and "." (for example
+	// "openshift.io/kube-apiserver.bound-service-account-token-signer"). The prefix is at
+	// most 253 characters and the name after the "/" at most 63. The name is validated
+	// for format only, using the same rules as a named certificate override.
+	// This field is required so that every named key entry identifies the key it configures.
 	//
 	// +required
-	Defaults DefaultCertificateConfig `json:"defaults,omitzero"`
+	// +kubebuilder:validation:MinLength=1
+	// +kubebuilder:validation:MaxLength=317
+	// +kubebuilder:validation:XValidation:rule="self.contains('/') && !format.qualifiedName().validate(self).hasValue()",message="name must be a prefixed qualified name, for example openshift.io/etcd.signer"
+	Name string `json:"name,omitempty"`
 
-	// signerCertificates optionally overrides certificate parameters for
-	// certificate authority (CA) certificates that sign other certificates.
-	// When set, these parameters take precedence over defaults for all signer certificates.
-	// When omitted, the defaults are used for signer certificates.
+	// key specifies the cryptographic parameters for this key. It is required
+	// because keys configured here have no inherited default.
 	//
-	// +optional
-	SignerCertificates CertificateConfig `json:"signerCertificates,omitempty,omitzero"`
-
-	// servingCertificates optionally overrides certificate parameters for
-	// TLS server certificates used to serve HTTPS endpoints.
-	// When set, these parameters take precedence over defaults for all serving certificates.
-	// When omitted, the defaults are used for serving certificates.
-	//
-	// +optional
-	ServingCertificates CertificateConfig `json:"servingCertificates,omitempty,omitzero"`
-
-	// clientCertificates optionally overrides certificate parameters for
-	// client authentication certificates used to authenticate to servers.
-	// When set, these parameters take precedence over defaults for all client certificates.
-	// When omitted, the defaults are used for client certificates.
-	//
-	// +optional
-	ClientCertificates CertificateConfig `json:"clientCertificates,omitempty,omitzero"`
+	// +required
+	Key PKIKeyConfig `json:"key,omitzero"`
 }
 
-// DefaultCertificateConfig specifies the default certificate configuration
+// PKIDefaultCertificateConfig specifies the default certificate configuration
 // parameters. All fields are required to ensure that defaults are fully
 // specified for all certificates.
-type DefaultCertificateConfig struct {
+type PKIDefaultCertificateConfig struct {
 	// key specifies the cryptographic parameters for the certificate's key pair.
 	// This field is required in defaults to ensure all certificates have a
 	// well-defined key configuration.
 	// +required
-	Key KeyConfig `json:"key,omitzero"`
+	Key PKIKeyConfig `json:"key,omitzero"`
 }
 
-// CertificateConfig specifies configuration parameters for certificates.
+// PKICertificateConfig specifies configuration parameters for certificates.
 // At least one property must be specified.
 // +kubebuilder:validation:MinProperties=1
-type CertificateConfig struct {
+type PKICertificateConfig struct {
 	// key specifies the cryptographic parameters for the certificate's key pair.
 	// Currently this is the only configurable parameter. When omitted in an
 	// overrides entry, the key configuration from defaults is used.
 	// +optional
-	Key KeyConfig `json:"key,omitzero"`
+	Key PKIKeyConfig `json:"key,omitzero"`
 }
 
-// KeyConfig specifies cryptographic parameters for key generation.
+// PKIKeyConfig specifies cryptographic parameters for key generation.
 //
 // +kubebuilder:validation:XValidation:rule="has(self.algorithm) && self.algorithm == 'RSA' ?  has(self.rsa) : !has(self.rsa)",message="rsa is required when algorithm is RSA, and forbidden otherwise"
 // +kubebuilder:validation:XValidation:rule="has(self.algorithm) && self.algorithm == 'ECDSA' ?  has(self.ecdsa) : !has(self.ecdsa)",message="ecdsa is required when algorithm is ECDSA, and forbidden otherwise"
 // +union
-type KeyConfig struct {
+type PKIKeyConfig struct {
 	// algorithm specifies the key generation algorithm.
 	// Valid values are "RSA" and "ECDSA".
 	//
@@ -183,34 +247,34 @@ type KeyConfig struct {
 	//
 	// +required
 	// +unionDiscriminator
-	Algorithm KeyAlgorithm `json:"algorithm,omitempty"`
+	Algorithm PKIKeyAlgorithm `json:"algorithm,omitempty"`
 
 	// rsa specifies RSA key parameters.
 	// Required when algorithm is RSA, and forbidden otherwise.
 	// +optional
 	// +unionMember
-	RSA RSAKeyConfig `json:"rsa,omitzero"`
+	RSA PKIRSAKeyConfig `json:"rsa,omitzero"`
 
 	// ecdsa specifies ECDSA key parameters.
 	// Required when algorithm is ECDSA, and forbidden otherwise.
 	// +optional
 	// +unionMember
-	ECDSA ECDSAKeyConfig `json:"ecdsa,omitzero"`
+	ECDSA PKIECDSAKeyConfig `json:"ecdsa,omitzero"`
 }
 
-// RSAKeyConfig specifies parameters for RSA key generation.
-type RSAKeyConfig struct {
+// PKIRSAKeyConfig specifies parameters for RSA key generation.
+type PKIRSAKeyConfig struct {
 	// keySize specifies the size of RSA keys in bits.
-	// Valid values are multiples of 1024 from 2048 to 8192.
+	// Valid values are multiples of 1024 from 2048 to 4096.
 	// +required
 	// +kubebuilder:validation:Minimum=2048
-	// +kubebuilder:validation:Maximum=8192
+	// +kubebuilder:validation:Maximum=4096
 	// +kubebuilder:validation:MultipleOf=1024
 	KeySize int32 `json:"keySize,omitempty"`
 }
 
-// ECDSAKeyConfig specifies parameters for ECDSA key generation.
-type ECDSAKeyConfig struct {
+// PKIECDSAKeyConfig specifies parameters for ECDSA key generation.
+type PKIECDSAKeyConfig struct {
 	// curve specifies the NIST elliptic curve for ECDSA keys.
 	// Valid values are "P256", "P384", and "P521".
 	//
@@ -224,36 +288,36 @@ type ECDSAKeyConfig struct {
 	// providing 256-bit security.
 	//
 	// +required
-	Curve ECDSACurve `json:"curve,omitempty"`
+	Curve PKIECDSACurve `json:"curve,omitempty"`
 }
 
-// KeyAlgorithm specifies the cryptographic algorithm used for key generation.
+// PKIKeyAlgorithm specifies the cryptographic algorithm used for key generation.
 //
 // +kubebuilder:validation:Enum=RSA;ECDSA
-type KeyAlgorithm string
+type PKIKeyAlgorithm string
 
 const (
-	// KeyAlgorithmRSA specifies the RSA (Rivest-Shamir-Adleman) algorithm for key generation.
-	KeyAlgorithmRSA KeyAlgorithm = "RSA"
+	// PKIKeyAlgorithmRSA specifies the RSA (Rivest-Shamir-Adleman) algorithm for key generation.
+	PKIKeyAlgorithmRSA PKIKeyAlgorithm = "RSA"
 
-	// KeyAlgorithmECDSA specifies the ECDSA (Elliptic Curve Digital Signature Algorithm) for key generation.
-	KeyAlgorithmECDSA KeyAlgorithm = "ECDSA"
+	// PKIKeyAlgorithmECDSA specifies the ECDSA (Elliptic Curve Digital Signature Algorithm) for key generation.
+	PKIKeyAlgorithmECDSA PKIKeyAlgorithm = "ECDSA"
 )
 
-// ECDSACurve specifies the elliptic curve used for ECDSA key generation.
+// PKIECDSACurve specifies the elliptic curve used for ECDSA key generation.
 //
 // +kubebuilder:validation:Enum=P256;P384;P521
-type ECDSACurve string
+type PKIECDSACurve string
 
 const (
-	// ECDSACurveP256 specifies the NIST P-256 curve (also known as secp256r1), providing 128-bit security.
-	ECDSACurveP256 ECDSACurve = "P256"
+	// PKIECDSACurveP256 specifies the NIST P-256 curve (also known as secp256r1), providing 128-bit security.
+	PKIECDSACurveP256 PKIECDSACurve = "P256"
 
-	// ECDSACurveP384 specifies the NIST P-384 curve (also known as secp384r1), providing 192-bit security.
-	ECDSACurveP384 ECDSACurve = "P384"
+	// PKIECDSACurveP384 specifies the NIST P-384 curve (also known as secp384r1), providing 192-bit security.
+	PKIECDSACurveP384 PKIECDSACurve = "P384"
 
-	// ECDSACurveP521 specifies the NIST P-521 curve (also known as secp521r1), providing 256-bit security.
-	ECDSACurveP521 ECDSACurve = "P521"
+	// PKIECDSACurveP521 specifies the NIST P-521 curve (also known as secp521r1), providing 256-bit security.
+	PKIECDSACurveP521 PKIECDSACurve = "P521"
 )
 
 // PKIList is a collection of PKI resources.

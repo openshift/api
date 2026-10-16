@@ -44,6 +44,9 @@
                         "name": "GenericWorkload"
                     },
                     {
+                        "name": "IngressCanaryNodePlacement"
+                    },
+                    {
                         "name": "KarpenterOperator"
                     },
                     {

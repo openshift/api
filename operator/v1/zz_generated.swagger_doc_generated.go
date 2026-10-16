@@ -917,6 +917,15 @@ func (EtcdSpec) SwaggerDoc() map[string]string {
 	return map_EtcdSpec
 }
 
+var map_CanaryNodePlacement = map[string]string{
+	"":            "CanaryNodePlacement describes node placement configuration for the ingress canary daemonset pods.",
+	"tolerations": "tolerations is a list of tolerations that are applied to the ingress canary daemonset pods in addition to the tolerations the canary daemonset has by default. The default toleration for the node-role.kubernetes.io/infra taint is always preserved.\n\nIf unset, the canary daemonset has only its default tolerations. When specified, the list must contain at least 1 toleration; to remove all additional tolerations, omit the field rather than setting an empty list.\n\nEach toleration has the following constraints:\n\n* operator, if specified, must be \"Exists\", \"Equal\", or the empty string;\n  an omitted or empty operator means \"Equal\". The \"Lt\" and \"Gt\" operators\n  are not supported.\n* effect, if specified, must be \"NoSchedule\", \"PreferNoSchedule\",\n  \"NoExecute\", or the empty string; an omitted or empty effect means the\n  toleration matches all taint effects.\n* value must be empty when operator is \"Exists\". * key must be non-empty. A toleration with an empty key is rejected; in\n  particular, a toleration with an empty key and operator \"Exists\", which\n  tolerates all taints, is rejected.\n* tolerationSeconds may be specified only when effect is \"NoExecute\".\n\nAt least 1 and no more than 32 tolerations may be specified.\n\nDuplicate tolerations are allowed.\n\nSee https://kubernetes.io/docs/concepts/configuration/taint-and-toleration/",
+}
+
+func (CanaryNodePlacement) SwaggerDoc() map[string]string {
+	return map_CanaryNodePlacement
+}
+
 var map_GatewayAPIIngressConfig = map[string]string{
 	"":               "GatewayAPIIngressConfig holds configuration for Gateway API integration in the Cluster Ingress Operator.",
 	"managementMode": "managementMode specifies how the Cluster Ingress Operator manages Gateway API Custom Resource Definitions (CRDs), the OpenShift Gateway API implementation, and its Gateway API controllers.\n\nAllowed values are \"Managed\" and \"Unmanaged\".\n\nWhen omitted or set to \"Managed\", the ingress operator installs, owns, and upgrades the Gateway API CRDs, protects them with a Validating Admission Policy, and deploys the OpenShift Gateway API implementation and its Gateway API controllers.\n\nWhen set to \"Unmanaged\", the ingress operator does not install or manage Gateway API CRDs and does not deploy the OpenShift Gateway API implementation or its Gateway API controllers. The cluster administrator or a third-party product is responsible for providing their own CRDs and Gateway controller. The ingress operator reports observational status only.",
@@ -937,6 +946,15 @@ func (Ingress) SwaggerDoc() map[string]string {
 	return map_Ingress
 }
 
+var map_IngressCanary = map[string]string{
+	"":              "IngressCanary holds configuration for the ingress canary daemonset.",
+	"nodePlacement": "nodePlacement enables explicit control over the scheduling of the ingress canary daemonset pods.\n\nnodePlacement is optional. To leave the canary daemonset with its default scheduling configuration, which tolerates the node-role.kubernetes.io/infra taint, omit the parent canary field entirely: because canary requires at least one field, nodePlacement can only be absent when canary itself is absent. When specified, nodePlacement must set at least one of its fields; an empty object is rejected.",
+}
+
+func (IngressCanary) SwaggerDoc() map[string]string {
+	return map_IngressCanary
+}
+
 var map_IngressList = map[string]string{
 	"":         "IngressList is a collection of Ingresses.\n\nCompatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).",
 	"metadata": "metadata is the standard list's metadata. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata",
@@ -950,6 +968,7 @@ func (IngressList) SwaggerDoc() map[string]string {
 var map_IngressSpec = map[string]string{
 	"":           "IngressSpec is the specification of the desired behavior of the Ingress Operator.",
 	"gatewayAPI": "gatewayAPI holds configuration for Gateway API integration, including how the ingress operator manages Gateway API CRDs, the OpenShift Gateway API implementation, and its Gateway API controllers.",
+	"canary":     "canary holds configuration for the ingress canary daemonset (the ingress-canary DaemonSet in the openshift-ingress-canary namespace).\n\ncanary is optional. When omitted, the ingress canary daemonset keeps its default configuration. When specified, canary must set at least one of its fields; an empty object is rejected.",
 }
 
 func (IngressSpec) SwaggerDoc() map[string]string {

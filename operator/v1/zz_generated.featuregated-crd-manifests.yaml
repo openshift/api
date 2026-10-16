@@ -181,6 +181,7 @@ ingresses.operator.openshift.io:
   Category: ""
   FeatureGates:
   - GatewayAPIManagementMode
+  - IngressCanaryNodePlacement
   FilenameOperatorName: ingress
   FilenameOperatorOrdering: "02"
   FilenameRunLevel: "0000_50"

@@ -1,0 +1,753 @@
+apiVersion: apiextensions.k8s.io/v1 # Hack because controller-gen complains if we don't have this
+name: "Ingress"
+crdName: ingresses.operator.openshift.io
+version: v1
+featureGates:
+- IngressCanaryNodePlacement
+tests:
+  onCreate:
+  - name: Should be able to create an Ingress with canary nodePlacement tolerations
+    initial: |
+      apiVersion: operator.openshift.io/v1
+      kind: Ingress
+      metadata:
+        name: cluster
+      spec:
+        canary:
+          nodePlacement:
+            tolerations:
+            - key: example.com/taint
+              operator: Equal
+              value: value-1
+              effect: NoSchedule
+    expected: |
+      apiVersion: operator.openshift.io/v1
+      kind: Ingress
+      metadata:
+        name: cluster
+      spec:
+        canary:
+          nodePlacement:
+            tolerations:
+            - key: example.com/taint
+              operator: Equal
+              value: value-1
+              effect: NoSchedule
+  - name: Should not be able to create an Ingress with a wildcard toleration
+    initial: |
+      apiVersion: operator.openshift.io/v1
+      kind: Ingress
+      metadata:
+        name: cluster
+      spec:
+        canary:
+          nodePlacement:
+            tolerations:
+            - operator: Exists
+    expectedError: "tolerations key must be non-empty"
+  - name: Should be able to create an Ingress with tolerationSeconds on a NoExecute toleration
+    initial: |
+      apiVersion: operator.openshift.io/v1
+      kind: Ingress
+      metadata:
+        name: cluster
+      spec:
+        canary:
+          nodePlacement:
+            tolerations:
+            - key: node.kubernetes.io/unreachable
+              operator: Exists
+              effect: NoExecute
+              tolerationSeconds: 60
+    expected: |
+      apiVersion: operator.openshift.io/v1
+      kind: Ingress
+      metadata:
+        name: cluster
+      spec:
+        canary:
+          nodePlacement:
+            tolerations:
+            - key: node.kubernetes.io/unreachable
+              operator: Exists
+              effect: NoExecute
+              tolerationSeconds: 60
+  - name: Should be able to create an Ingress with duplicate tolerations
+    initial: |
+      apiVersion: operator.openshift.io/v1
+      kind: Ingress
+      metadata:
+        name: cluster
+      spec:
+        canary:
+          nodePlacement:
+            tolerations:
+            - key: example.com/taint
+              operator: Equal
+              value: value-1
+            - key: example.com/taint
+              operator: Equal
+              value: value-1
+    expected: |
+      apiVersion: operator.openshift.io/v1
+      kind: Ingress
+      metadata:
+        name: cluster
+      spec:
+        canary:
+          nodePlacement:
+            tolerations:
+            - key: example.com/taint
+              operator: Equal
+              value: value-1
+            - key: example.com/taint
+              operator: Equal
+              value: value-1
+  - name: Should be able to create an Ingress with both canary and gatewayAPI configuration
+    initial: |
+      apiVersion: operator.openshift.io/v1
+      kind: Ingress
+      metadata:
+        name: cluster
+      spec:
+        gatewayAPI:
+          managementMode: Managed
+        canary:
+          nodePlacement:
+            tolerations:
+            - key: example.com/taint
+              operator: Exists
+    expected: |
+      apiVersion: operator.openshift.io/v1
+      kind: Ingress
+      metadata:
+        name: cluster
+      spec:
+        gatewayAPI:
+          managementMode: Managed
+        canary:
+          nodePlacement:
+            tolerations:
+            - key: example.com/taint
+              operator: Exists
+  - name: Should not be able to create an Ingress with an unknown toleration operator
+    initial: |
+      apiVersion: operator.openshift.io/v1
+      kind: Ingress
+      metadata:
+        name: cluster
+      spec:
+        canary:
+          nodePlacement:
+            tolerations:
+            - key: example.com/taint
+              operator: Matches
+              value: value-1
+    expectedError: "tolerations operator must be 'Exists' or 'Equal'"
+  - name: Should not be able to create an Ingress with an unknown toleration effect
+    initial: |
+      apiVersion: operator.openshift.io/v1
+      kind: Ingress
+      metadata:
+        name: cluster
+      spec:
+        canary:
+          nodePlacement:
+            tolerations:
+            - key: example.com/taint
+              operator: Equal
+              value: value-1
+              effect: NoOp
+    expectedError: "tolerations effect must be 'NoSchedule', 'PreferNoSchedule', or 'NoExecute'"
+  - name: Should not be able to create an Ingress with a value on an Exists toleration
+    initial: |
+      apiVersion: operator.openshift.io/v1
+      kind: Ingress
+      metadata:
+        name: cluster
+      spec:
+        canary:
+          nodePlacement:
+            tolerations:
+            - key: example.com/taint
+              operator: Exists
+              value: value-1
+    expectedError: "tolerations value must be empty when operator is 'Exists'"
+  - name: Should not be able to create an Ingress with an empty toleration key
+    initial: |
+      apiVersion: operator.openshift.io/v1
+      kind: Ingress
+      metadata:
+        name: cluster
+      spec:
+        canary:
+          nodePlacement:
+            tolerations:
+            - operator: Equal
+              value: value-1
+    expectedError: "tolerations key must be non-empty"
+  - name: Should not be able to create an Ingress with tolerationSeconds on a non-NoExecute toleration
+    initial: |
+      apiVersion: operator.openshift.io/v1
+      kind: Ingress
+      metadata:
+        name: cluster
+      spec:
+        canary:
+          nodePlacement:
+            tolerations:
+            - key: example.com/taint
+              operator: Equal
+              value: value-1
+              effect: NoSchedule
+              tolerationSeconds: 60
+    expectedError: "tolerations effect must be 'NoExecute' when tolerationSeconds is set"
+  - name: Should not be able to create an Ingress with more than 32 tolerations
+    initial: |
+      apiVersion: operator.openshift.io/v1
+      kind: Ingress
+      metadata:
+        name: cluster
+      spec:
+        canary:
+          nodePlacement:
+            tolerations:
+            - key: example.com/taint
+              operator: Exists
+            - key: example.com/taint
+              operator: Exists
+            - key: example.com/taint
+              operator: Exists
+            - key: example.com/taint
+              operator: Exists
+            - key: example.com/taint
+              operator: Exists
+            - key: example.com/taint
+              operator: Exists
+            - key: example.com/taint
+              operator: Exists
+            - key: example.com/taint
+              operator: Exists
+            - key: example.com/taint
+              operator: Exists
+            - key: example.com/taint
+              operator: Exists
+            - key: example.com/taint
+              operator: Exists
+            - key: example.com/taint
+              operator: Exists
+            - key: example.com/taint
+              operator: Exists
+            - key: example.com/taint
+              operator: Exists
+            - key: example.com/taint
+              operator: Exists
+            - key: example.com/taint
+              operator: Exists
+            - key: example.com/taint
+              operator: Exists
+            - key: example.com/taint
+              operator: Exists
+            - key: example.com/taint
+              operator: Exists
+            - key: example.com/taint
+              operator: Exists
+            - key: example.com/taint
+              operator: Exists
+            - key: example.com/taint
+              operator: Exists
+            - key: example.com/taint
+              operator: Exists
+            - key: example.com/taint
+              operator: Exists
+            - key: example.com/taint
+              operator: Exists
+            - key: example.com/taint
+              operator: Exists
+            - key: example.com/taint
+              operator: Exists
+            - key: example.com/taint
+              operator: Exists
+            - key: example.com/taint
+              operator: Exists
+            - key: example.com/taint
+              operator: Exists
+            - key: example.com/taint
+              operator: Exists
+            - key: example.com/taint
+              operator: Exists
+            - key: example.com/taint
+              operator: Exists
+    expectedError: "must have at most 32 items"
+  - name: Should not be able to create an Ingress with an empty tolerations list
+    initial: |
+      apiVersion: operator.openshift.io/v1
+      kind: Ingress
+      metadata:
+        name: cluster
+      spec:
+        canary:
+          nodePlacement:
+            tolerations: []
+    expectedError: "should have at least 1 items"
+  - name: Should not be able to create an Ingress with an empty canary
+    initial: |
+      apiVersion: operator.openshift.io/v1
+      kind: Ingress
+      metadata:
+        name: cluster
+      spec:
+        canary: {}
+    expectedError: "spec.canary in body should have at least 1 properties"
+  - name: Should not be able to create an Ingress with an empty canary nodePlacement
+    initial: |
+      apiVersion: operator.openshift.io/v1
+      kind: Ingress
+      metadata:
+        name: cluster
+      spec:
+        canary:
+          nodePlacement: {}
+    expectedError: "spec.canary.nodePlacement in body should have at least 1 properties"
+  - name: Should be able to create an Ingress with a toleration that omits operator
+    initial: |
+      apiVersion: operator.openshift.io/v1
+      kind: Ingress
+      metadata:
+        name: cluster
+      spec:
+        canary:
+          nodePlacement:
+            tolerations:
+            - key: example.com/taint
+              value: value-1
+    expected: |
+      apiVersion: operator.openshift.io/v1
+      kind: Ingress
+      metadata:
+        name: cluster
+      spec:
+        canary:
+          nodePlacement:
+            tolerations:
+            - key: example.com/taint
+              value: value-1
+  - name: Should be able to create an Ingress with a toleration with an empty operator
+    initial: |
+      apiVersion: operator.openshift.io/v1
+      kind: Ingress
+      metadata:
+        name: cluster
+      spec:
+        canary:
+          nodePlacement:
+            tolerations:
+            - key: example.com/taint
+              operator: ""
+              value: value-1
+    expected: |
+      apiVersion: operator.openshift.io/v1
+      kind: Ingress
+      metadata:
+        name: cluster
+      spec:
+        canary:
+          nodePlacement:
+            tolerations:
+            - key: example.com/taint
+              operator: ""
+              value: value-1
+  - name: Should be able to create an Ingress with a toleration with an empty effect
+    initial: |
+      apiVersion: operator.openshift.io/v1
+      kind: Ingress
+      metadata:
+        name: cluster
+      spec:
+        canary:
+          nodePlacement:
+            tolerations:
+            - key: example.com/taint
+              operator: Equal
+              value: value-1
+              effect: ""
+    expected: |
+      apiVersion: operator.openshift.io/v1
+      kind: Ingress
+      metadata:
+        name: cluster
+      spec:
+        canary:
+          nodePlacement:
+            tolerations:
+            - key: example.com/taint
+              operator: Equal
+              value: value-1
+              effect: ""
+  - name: Should be able to create an Ingress with an Exists toleration with an empty value
+    initial: |
+      apiVersion: operator.openshift.io/v1
+      kind: Ingress
+      metadata:
+        name: cluster
+      spec:
+        canary:
+          nodePlacement:
+            tolerations:
+            - key: example.com/taint
+              operator: Exists
+              value: ""
+    expected: |
+      apiVersion: operator.openshift.io/v1
+      kind: Ingress
+      metadata:
+        name: cluster
+      spec:
+        canary:
+          nodePlacement:
+            tolerations:
+            - key: example.com/taint
+              operator: Exists
+              value: ""
+  - name: Should be able to create an Ingress with a PreferNoSchedule toleration
+    initial: |
+      apiVersion: operator.openshift.io/v1
+      kind: Ingress
+      metadata:
+        name: cluster
+      spec:
+        canary:
+          nodePlacement:
+            tolerations:
+            - key: example.com/taint
+              operator: Equal
+              value: value-1
+              effect: PreferNoSchedule
+    expected: |
+      apiVersion: operator.openshift.io/v1
+      kind: Ingress
+      metadata:
+        name: cluster
+      spec:
+        canary:
+          nodePlacement:
+            tolerations:
+            - key: example.com/taint
+              operator: Equal
+              value: value-1
+              effect: PreferNoSchedule
+  - name: Should be able to create an Ingress with exactly 32 tolerations
+    initial: |
+      apiVersion: operator.openshift.io/v1
+      kind: Ingress
+      metadata:
+        name: cluster
+      spec:
+        canary:
+          nodePlacement:
+            tolerations:
+            - key: example.com/taint
+              operator: Exists
+            - key: example.com/taint
+              operator: Exists
+            - key: example.com/taint
+              operator: Exists
+            - key: example.com/taint
+              operator: Exists
+            - key: example.com/taint
+              operator: Exists
+            - key: example.com/taint
+              operator: Exists
+            - key: example.com/taint
+              operator: Exists
+            - key: example.com/taint
+              operator: Exists
+            - key: example.com/taint
+              operator: Exists
+            - key: example.com/taint
+              operator: Exists
+            - key: example.com/taint
+              operator: Exists
+            - key: example.com/taint
+              operator: Exists
+            - key: example.com/taint
+              operator: Exists
+            - key: example.com/taint
+              operator: Exists
+            - key: example.com/taint
+              operator: Exists
+            - key: example.com/taint
+              operator: Exists
+            - key: example.com/taint
+              operator: Exists
+            - key: example.com/taint
+              operator: Exists
+            - key: example.com/taint
+              operator: Exists
+            - key: example.com/taint
+              operator: Exists
+            - key: example.com/taint
+              operator: Exists
+            - key: example.com/taint
+              operator: Exists
+            - key: example.com/taint
+              operator: Exists
+            - key: example.com/taint
+              operator: Exists
+            - key: example.com/taint
+              operator: Exists
+            - key: example.com/taint
+              operator: Exists
+            - key: example.com/taint
+              operator: Exists
+            - key: example.com/taint
+              operator: Exists
+            - key: example.com/taint
+              operator: Exists
+            - key: example.com/taint
+              operator: Exists
+            - key: example.com/taint
+              operator: Exists
+            - key: example.com/taint
+              operator: Exists
+    expected: |
+      apiVersion: operator.openshift.io/v1
+      kind: Ingress
+      metadata:
+        name: cluster
+      spec:
+        canary:
+          nodePlacement:
+            tolerations:
+            - key: example.com/taint
+              operator: Exists
+            - key: example.com/taint
+              operator: Exists
+            - key: example.com/taint
+              operator: Exists
+            - key: example.com/taint
+              operator: Exists
+            - key: example.com/taint
+              operator: Exists
+            - key: example.com/taint
+              operator: Exists
+            - key: example.com/taint
+              operator: Exists
+            - key: example.com/taint
+              operator: Exists
+            - key: example.com/taint
+              operator: Exists
+            - key: example.com/taint
+              operator: Exists
+            - key: example.com/taint
+              operator: Exists
+            - key: example.com/taint
+              operator: Exists
+            - key: example.com/taint
+              operator: Exists
+            - key: example.com/taint
+              operator: Exists
+            - key: example.com/taint
+              operator: Exists
+            - key: example.com/taint
+              operator: Exists
+            - key: example.com/taint
+              operator: Exists
+            - key: example.com/taint
+              operator: Exists
+            - key: example.com/taint
+              operator: Exists
+            - key: example.com/taint
+              operator: Exists
+            - key: example.com/taint
+              operator: Exists
+            - key: example.com/taint
+              operator: Exists
+            - key: example.com/taint
+              operator: Exists
+            - key: example.com/taint
+              operator: Exists
+            - key: example.com/taint
+              operator: Exists
+            - key: example.com/taint
+              operator: Exists
+            - key: example.com/taint
+              operator: Exists
+            - key: example.com/taint
+              operator: Exists
+            - key: example.com/taint
+              operator: Exists
+            - key: example.com/taint
+              operator: Exists
+            - key: example.com/taint
+              operator: Exists
+            - key: example.com/taint
+              operator: Exists
+  - name: Should not be able to create an Ingress with the unsupported Lt toleration operator
+    initial: |
+      apiVersion: operator.openshift.io/v1
+      kind: Ingress
+      metadata:
+        name: cluster
+      spec:
+        canary:
+          nodePlacement:
+            tolerations:
+            - key: example.com/taint
+              operator: Lt
+              value: "1"
+    expectedError: "tolerations operator must be 'Exists' or 'Equal'"
+  - name: Should not be able to create an Ingress with tolerationSeconds and no effect
+    initial: |
+      apiVersion: operator.openshift.io/v1
+      kind: Ingress
+      metadata:
+        name: cluster
+      spec:
+        canary:
+          nodePlacement:
+            tolerations:
+            - key: example.com/taint
+              operator: Exists
+              tolerationSeconds: 60
+    expectedError: "tolerations effect must be 'NoExecute' when tolerationSeconds is set"
+  - name: Should not be able to create an Ingress with a toleration that omits both key and operator
+    initial: |
+      apiVersion: operator.openshift.io/v1
+      kind: Ingress
+      metadata:
+        name: cluster
+      spec:
+        canary:
+          nodePlacement:
+            tolerations:
+            - effect: NoSchedule
+    expectedError: "tolerations key must be non-empty"
+  onUpdate:
+  - name: Should be able to update the canary tolerations of an Ingress
+    initial: |
+      apiVersion: operator.openshift.io/v1
+      kind: Ingress
+      metadata:
+        name: cluster
+      spec:
+        canary:
+          nodePlacement:
+            tolerations:
+            - key: example.com/taint
+              operator: Equal
+              value: value-1
+    updated: |
+      apiVersion: operator.openshift.io/v1
+      kind: Ingress
+      metadata:
+        name: cluster
+      spec:
+        canary:
+          nodePlacement:
+            tolerations:
+            - key: example.com/other-taint
+              operator: Exists
+              effect: NoExecute
+    expected: |
+      apiVersion: operator.openshift.io/v1
+      kind: Ingress
+      metadata:
+        name: cluster
+      spec:
+        canary:
+          nodePlacement:
+            tolerations:
+            - key: example.com/other-taint
+              operator: Exists
+              effect: NoExecute
+  - name: Should be able to add canary configuration to an Ingress
+    initial: |
+      apiVersion: operator.openshift.io/v1
+      kind: Ingress
+      metadata:
+        name: cluster
+      spec:
+        gatewayAPI:
+          managementMode: Managed
+    updated: |
+      apiVersion: operator.openshift.io/v1
+      kind: Ingress
+      metadata:
+        name: cluster
+      spec:
+        gatewayAPI:
+          managementMode: Managed
+        canary:
+          nodePlacement:
+            tolerations:
+            - key: example.com/taint
+              operator: Exists
+    expected: |
+      apiVersion: operator.openshift.io/v1
+      kind: Ingress
+      metadata:
+        name: cluster
+      spec:
+        gatewayAPI:
+          managementMode: Managed
+        canary:
+          nodePlacement:
+            tolerations:
+            - key: example.com/taint
+              operator: Exists
+  - name: Should be able to remove the canary configuration from an Ingress
+    initial: |
+      apiVersion: operator.openshift.io/v1
+      kind: Ingress
+      metadata:
+        name: cluster
+      spec:
+        gatewayAPI:
+          managementMode: Managed
+        canary:
+          nodePlacement:
+            tolerations:
+            - key: example.com/taint
+              operator: Exists
+    updated: |
+      apiVersion: operator.openshift.io/v1
+      kind: Ingress
+      metadata:
+        name: cluster
+      spec:
+        gatewayAPI:
+          managementMode: Managed
+    expected: |
+      apiVersion: operator.openshift.io/v1
+      kind: Ingress
+      metadata:
+        name: cluster
+      spec:
+        gatewayAPI:
+          managementMode: Managed
+  - name: Should not be able to update an Ingress with an unknown toleration operator
+    initial: |
+      apiVersion: operator.openshift.io/v1
+      kind: Ingress
+      metadata:
+        name: cluster
+      spec:
+        canary:
+          nodePlacement:
+            tolerations:
+            - key: example.com/taint
+              operator: Exists
+    updated: |
+      apiVersion: operator.openshift.io/v1
+      kind: Ingress
+      metadata:
+        name: cluster
+      spec:
+        canary:
+          nodePlacement:
+            tolerations:
+            - key: example.com/taint
+              operator: Matches
+              value: value-1
+    expectedError: "tolerations operator must be 'Exists' or 'Equal'"

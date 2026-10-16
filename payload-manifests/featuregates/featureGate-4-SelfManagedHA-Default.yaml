@@ -24,6 +24,9 @@
                         "name": "AWSEuropeanSovereignCloudInstall"
                     },
                     {
+                        "name": "AuthenticationComponentProxyExternalOIDC"
+                    },
+                    {
                         "name": "AutomatedEtcdBackup"
                     },
                     {

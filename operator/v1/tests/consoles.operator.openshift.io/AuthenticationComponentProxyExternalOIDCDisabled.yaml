@@ -1,0 +1,21 @@
+apiVersion: apiextensions.k8s.io/v1 # Hack because controller-gen complains if we do not have this
+name: "Console"
+crdName: consoles.operator.openshift.io
+featureGates:
+  - "-AuthenticationComponentProxyExternalOIDC"
+tests:
+  onCreate:
+    - name: Should prune authProxy when its feature gate is disabled
+      initial: |
+        apiVersion: operator.openshift.io/v1
+        kind: Console
+        spec:
+          logLevel: Normal
+          operatorLogLevel: Normal
+          authProxy: {"httpProxy": "http://proxy.example.com:3128", "httpsProxy": "https://proxy.example.com:3129", "noProxy": ["idp.internal.example.com"], "trustedCA": {"name": "proxy-ca"}}
+      expected: |
+        apiVersion: operator.openshift.io/v1
+        kind: Console
+        spec:
+          logLevel: Normal
+          operatorLogLevel: Normal

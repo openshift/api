@@ -1158,6 +1158,8 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		operatorv1.ConfigSpec{}.OpenAPIModelName():                                             schema_openshift_api_operator_v1_ConfigSpec(ref),
 		operatorv1.ConfigStatus{}.OpenAPIModelName():                                           schema_openshift_api_operator_v1_ConfigStatus(ref),
 		operatorv1.Console{}.OpenAPIModelName():                                                schema_openshift_api_operator_v1_Console(ref),
+		operatorv1.ConsoleAuthProxyConfig{}.OpenAPIModelName():                                 schema_openshift_api_operator_v1_ConsoleAuthProxyConfig(ref),
+		operatorv1.ConsoleAuthProxyTrustedCAConfigMapReference{}.OpenAPIModelName():            schema_openshift_api_operator_v1_ConsoleAuthProxyTrustedCAConfigMapReference(ref),
 		operatorv1.ConsoleConfigRoute{}.OpenAPIModelName():                                     schema_openshift_api_operator_v1_ConsoleConfigRoute(ref),
 		operatorv1.ConsoleCustomization{}.OpenAPIModelName():                                   schema_openshift_api_operator_v1_ConsoleCustomization(ref),
 		operatorv1.ConsoleIngress{}.OpenAPIModelName():                                         schema_openshift_api_operator_v1_ConsoleIngress(ref),
@@ -3952,6 +3954,13 @@ func schema_openshift_api_authentication_v1alpha1_AuthenticationConfiguration(re
 					"apiVersion": {
 						SchemaProps: spec.SchemaProps{
 							Description: "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"trustedCAFilePath": {
+						SchemaProps: spec.SchemaProps{
+							Description: "trustedCAFilePath is an optional path to a PEM-encoded CA bundle used to verify outbound HTTPS connections including proxies and TLS-intercepting proxies for outbound issuer discovery and JWKS requests. When specified, the file is watched and updates are applied without restarting the webhook server. When omitted, connections use the system trust roots only.",
 							Type:        []string{"string"},
 							Format:      "",
 						},
@@ -53761,6 +53770,11 @@ func schema_openshift_api_operator_v1_AddPage(ref common.ReferenceCallback) comm
 				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
 					"disabledActions": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-type": "atomic",
+							},
+						},
 						SchemaProps: spec.SchemaProps{
 							Description: "disabledActions is a list of actions that are not shown to users. Each action in the list is represented by its ID.",
 							Type:        []string{"array"},
@@ -55716,6 +55730,82 @@ func schema_openshift_api_operator_v1_Console(ref common.ReferenceCallback) comm
 	}
 }
 
+func schema_openshift_api_operator_v1_ConsoleAuthProxyConfig(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "ConsoleAuthProxyConfig holds proxy configuration scoped to Console's OIDC login clients. At least one of httpProxy or httpsProxy must be specified.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"httpProxy": {
+						SchemaProps: spec.SchemaProps{
+							Description: "httpProxy is the URL of the proxy for HTTP requests. Must be a valid URL with http or https scheme, a non-empty hostname, and no path, query parameters, or fragment. Userinfo (e.g. user:password@host) is allowed for proxy authentication. Maximum length is 2048 characters.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"httpsProxy": {
+						SchemaProps: spec.SchemaProps{
+							Description: "httpsProxy is the URL of the proxy for HTTPS requests. Must be a valid URL with http or https scheme, a non-empty hostname, and no path, query parameters, or fragment. Userinfo (e.g. user:password@host) is allowed for proxy authentication. Maximum length is 2048 characters.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"noProxy": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-type": "set",
+							},
+						},
+						SchemaProps: spec.SchemaProps{
+							Description: "noProxy is a list of hostnames and/or CIDRs and/or IPs for which the proxy should not be used. Must contain at least one entry when set. Each entry must be between 1 and 253 characters long and at most 64 entries are allowed. Duplicate entries are not permitted. Entries that are not valid hostnames, CIDRs, or IPs are silently ignored. Cluster-internal defaults (.cluster.local, .svc, 127.0.0.1, localhost) are always appended automatically and do not need to be included.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Type:   []string{"string"},
+										Format: "",
+									},
+								},
+							},
+						},
+					},
+					"trustedCA": {
+						SchemaProps: spec.SchemaProps{
+							Description: "trustedCA is a reference to a ConfigMap in the openshift-config namespace containing a CA certificate bundle under the key \"ca-bundle.crt\". This bundle is appended to the system trust store used by Console's OIDC login clients for proxy TLS connections. When omitted, only the system trust store is used.",
+							Default:     map[string]interface{}{},
+							Ref:         ref(operatorv1.ConsoleAuthProxyTrustedCAConfigMapReference{}.OpenAPIModelName()),
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			operatorv1.ConsoleAuthProxyTrustedCAConfigMapReference{}.OpenAPIModelName()},
+	}
+}
+
+func schema_openshift_api_operator_v1_ConsoleAuthProxyTrustedCAConfigMapReference(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "ConsoleAuthProxyTrustedCAConfigMapReference references a ConfigMap in the openshift-config namespace.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"name": {
+						SchemaProps: spec.SchemaProps{
+							Description: "name is the metadata.name of the referenced ConfigMap. Must be a valid DNS subdomain name (RFC 1123): at most 253 characters, only lowercase alphanumeric characters, '-' or '.', starting and ending with an alphanumeric character.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+				},
+				Required: []string{"name"},
+			},
+		},
+	}
+}
+
 func schema_openshift_api_operator_v1_ConsoleConfigRoute(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -56021,6 +56111,13 @@ func schema_openshift_api_operator_v1_ConsoleSpec(ref common.ReferenceCallback) 
 							Ref:         ref(runtime.RawExtension{}.OpenAPIModelName()),
 						},
 					},
+					"authProxy": {
+						SchemaProps: spec.SchemaProps{
+							Description: "authProxy configures proxy settings for outbound connections made by Console's OIDC login clients, including discovery, JWKS retrieval, code exchange, and token refresh. When set, it replaces the cluster-wide proxy (proxy.config.openshift.io/cluster) entirely for these connections; individual fields are not inherited from the cluster-wide configuration. At least one of httpProxy or httpsProxy must be specified. When omitted, the cluster-wide proxy is used if configured; otherwise no proxy is used. Other Console clients retain their existing proxy settings.",
+							Default:     map[string]interface{}{},
+							Ref:         ref(operatorv1.ConsoleAuthProxyConfig{}.OpenAPIModelName()),
+						},
+					},
 					"customization": {
 						SchemaProps: spec.SchemaProps{
 							Description: "customization is used to optionally provide a small set of customization options to the web console.",
@@ -56043,6 +56140,11 @@ func schema_openshift_api_operator_v1_ConsoleSpec(ref common.ReferenceCallback) 
 						},
 					},
 					"plugins": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-type": "atomic",
+							},
+						},
 						SchemaProps: spec.SchemaProps{
 							Description: "plugins defines a list of enabled console plugin names.",
 							Type:        []string{"array"},
@@ -56068,7 +56170,7 @@ func schema_openshift_api_operator_v1_ConsoleSpec(ref common.ReferenceCallback) 
 			},
 		},
 		Dependencies: []string{
-			operatorv1.ConsoleConfigRoute{}.OpenAPIModelName(), operatorv1.ConsoleCustomization{}.OpenAPIModelName(), operatorv1.ConsoleIngress{}.OpenAPIModelName(), operatorv1.ConsoleProviders{}.OpenAPIModelName(), runtime.RawExtension{}.OpenAPIModelName()},
+			operatorv1.ConsoleAuthProxyConfig{}.OpenAPIModelName(), operatorv1.ConsoleConfigRoute{}.OpenAPIModelName(), operatorv1.ConsoleCustomization{}.OpenAPIModelName(), operatorv1.ConsoleIngress{}.OpenAPIModelName(), operatorv1.ConsoleProviders{}.OpenAPIModelName(), runtime.RawExtension{}.OpenAPIModelName()},
 	}
 }
 
@@ -56622,6 +56724,11 @@ func schema_openshift_api_operator_v1_DeveloperConsoleCatalogCategory(ref common
 						},
 					},
 					"tags": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-type": "atomic",
+							},
+						},
 						SchemaProps: spec.SchemaProps{
 							Description: "tags is a list of strings that will match the category. A selected category show all items which has at least one overlapping tag between category and item.",
 							Type:        []string{"array"},
@@ -56636,6 +56743,11 @@ func schema_openshift_api_operator_v1_DeveloperConsoleCatalogCategory(ref common
 						},
 					},
 					"subcategories": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-type": "atomic",
+							},
+						},
 						SchemaProps: spec.SchemaProps{
 							Description: "subcategories defines a list of child categories.",
 							Type:        []string{"array"},
@@ -56681,6 +56793,11 @@ func schema_openshift_api_operator_v1_DeveloperConsoleCatalogCategoryMeta(ref co
 						},
 					},
 					"tags": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-type": "atomic",
+							},
+						},
 						SchemaProps: spec.SchemaProps{
 							Description: "tags is a list of strings that will match the category. A selected category show all items which has at least one overlapping tag between category and item.",
 							Type:        []string{"array"},
@@ -56709,6 +56826,11 @@ func schema_openshift_api_operator_v1_DeveloperConsoleCatalogCustomization(ref c
 				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
 					"categories": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-type": "atomic",
+							},
+						},
 						SchemaProps: spec.SchemaProps{
 							Description: "categories which are shown in the developer catalog.",
 							Type:        []string{"array"},
@@ -63834,6 +63956,11 @@ func schema_openshift_api_operator_v1_Perspective(ref common.ReferenceCallback) 
 						},
 					},
 					"pinnedResources": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-type": "atomic",
+							},
+						},
 						SchemaProps: spec.SchemaProps{
 							Description: "pinnedResources defines the list of default pinned resources that users will see on the perspective navigation if they have not customized these pinned resources themselves. The list of available Kubernetes resources could be read via `kubectl api-resources`. The console will also provide a configuration UI and a YAML snippet that will list the available resources that can be pinned to the navigation. Incorrect or unknown resources will be ignored.",
 							Type:        []string{"array"},
@@ -64010,6 +64137,11 @@ func schema_openshift_api_operator_v1_ProjectAccess(ref common.ReferenceCallback
 				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
 					"availableClusterRoles": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-type": "atomic",
+							},
+						},
 						SchemaProps: spec.SchemaProps{
 							Description: "availableClusterRoles is the list of ClusterRole names that are assignable to users through the project access tab.",
 							Type:        []string{"array"},
@@ -64149,6 +64281,11 @@ func schema_openshift_api_operator_v1_QuickStarts(ref common.ReferenceCallback) 
 				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
 					"disabled": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-type": "atomic",
+							},
+						},
 						SchemaProps: spec.SchemaProps{
 							Description: "disabled is a list of ConsoleQuickStart resource names that are not shown to users.",
 							Type:        []string{"array"},
@@ -64198,6 +64335,11 @@ func schema_openshift_api_operator_v1_ResourceAttributesAccessReview(ref common.
 				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
 					"required": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-type": "atomic",
+							},
+						},
 						SchemaProps: spec.SchemaProps{
 							Description: "required defines a list of permission checks. The perspective will only be shown when all checks are successful. When omitted, the access review is skipped and the perspective will not be shown unless it is required to do so based on the configuration of the missing access review list.",
 							Type:        []string{"array"},
@@ -64211,6 +64353,11 @@ func schema_openshift_api_operator_v1_ResourceAttributesAccessReview(ref common.
 						},
 					},
 					"missing": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-type": "atomic",
+							},
+						},
 						SchemaProps: spec.SchemaProps{
 							Description: "missing defines a list of permission checks. The perspective will only be shown when at least one check fails. When omitted, the access review is skipped and the perspective will not be shown unless it is required to do so based on the configuration of the required access review list.",
 							Type:        []string{"array"},

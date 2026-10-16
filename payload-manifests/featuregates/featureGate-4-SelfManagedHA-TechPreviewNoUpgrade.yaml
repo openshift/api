@@ -17,6 +17,9 @@
             {
                 "disabled": [
                     {
+                        "name": "AuthenticationComponentProxyExternalOIDC"
+                    },
+                    {
                         "name": "BGPBasedVIPManagement"
                     },
                     {

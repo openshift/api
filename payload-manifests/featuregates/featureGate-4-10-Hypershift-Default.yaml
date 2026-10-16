@@ -27,6 +27,9 @@
                         "name": "AuthenticationComponentProxy"
                     },
                     {
+                        "name": "AuthenticationComponentProxyExternalOIDC"
+                    },
+                    {
                         "name": "AutomatedEtcdBackup"
                     },
                     {
@@ -108,16 +111,25 @@
                         "name": "ClusterVersionOperatorConfiguration"
                     },
                     {
+                        "name": "CompositePodGroup"
+                    },
+                    {
                         "name": "ConfidentialCluster"
                     },
                     {
                         "name": "ConfigurablePKI"
                     },
                     {
+                        "name": "ControllerManagerConfig"
+                    },
+                    {
                         "name": "DNSNameResolver"
                     },
                     {
                         "name": "DRADeviceTaintRules"
+                    },
+                    {
+                        "name": "DRAWorkloadResourceClaims"
                     },
                     {
                         "name": "DyanmicServiceEndpointIBMCloud"
@@ -156,6 +168,9 @@
                         "name": "GatewayAPIManagementMode"
                     },
                     {
+                        "name": "GenericWorkload"
+                    },
+                    {
                         "name": "GomaxprocsInjection"
                     },
                     {
@@ -169,6 +184,9 @@
                     },
                     {
                         "name": "KarpenterOperator"
+                    },
+                    {
+                        "name": "MACSecurity"
                     },
                     {
                         "name": "MachineAPIMigration"
@@ -264,6 +282,9 @@
                         "name": "OnPremDNSRecords"
                     },
                     {
+                        "name": "PodGroupPreemptionPolicy"
+                    },
+                    {
                         "name": "ProvisioningRequestAvailable"
                     },
                     {
@@ -274,6 +295,9 @@
                     },
                     {
                         "name": "TLSGroupPreferences"
+                    },
+                    {
+                        "name": "TopologyAwareWorkloadScheduling"
                     },
                     {
                         "name": "UnifiedClusterManagedDNSAndLB"

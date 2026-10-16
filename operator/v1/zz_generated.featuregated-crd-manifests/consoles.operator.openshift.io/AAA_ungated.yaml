@@ -63,6 +63,7 @@ spec:
                           type: string
                         minItems: 1
                         type: array
+                        x-kubernetes-list-type: atomic
                     type: object
                   brand:
                     description: |-
@@ -205,11 +206,13 @@ spec:
                                     items:
                                       type: string
                                     type: array
+                                    x-kubernetes-list-type: atomic
                                 required:
                                 - id
                                 - label
                                 type: object
                               type: array
+                              x-kubernetes-list-type: atomic
                             tags:
                               description: |-
                                 tags is a list of strings that will match the category. A selected category
@@ -217,11 +220,13 @@ spec:
                               items:
                                 type: string
                               type: array
+                              x-kubernetes-list-type: atomic
                           required:
                           - id
                           - label
                           type: object
                         type: array
+                        x-kubernetes-list-type: atomic
                       types:
                         description: |-
                           types allows enabling or disabling of sub-catalog types that user can see in the Developer catalog.
@@ -459,6 +464,7 @@ spec:
                             type: object
                           maxItems: 100
                           type: array
+                          x-kubernetes-list-type: atomic
                         visibility:
                           description: visibility defines the state of perspective
                             along with access review checks if needed for that perspective.
@@ -615,6 +621,7 @@ spec:
                                         type: string
                                     type: object
                                   type: array
+                                  x-kubernetes-list-type: atomic
                                 required:
                                   description: required defines a list of permission
                                     checks. The perspective will only be shown when
@@ -762,6 +769,7 @@ spec:
                                         type: string
                                     type: object
                                   type: array
+                                  x-kubernetes-list-type: atomic
                               type: object
                             state:
                               description: state defines the perspective is enabled
@@ -805,6 +813,7 @@ spec:
                         items:
                           type: string
                         type: array
+                        x-kubernetes-list-type: atomic
                     type: object
                   quickStarts:
                     description: quickStarts allows customization of available ConsoleQuickStart
@@ -816,6 +825,7 @@ spec:
                         items:
                           type: string
                         type: array
+                        x-kubernetes-list-type: atomic
                     type: object
                 type: object
                 x-kubernetes-validations:
@@ -908,6 +918,7 @@ spec:
                 items:
                   type: string
                 type: array
+                x-kubernetes-list-type: atomic
               providers:
                 description: providers contains configuration for using specific service
                   providers.

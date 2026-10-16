@@ -29,7 +29,7 @@
                         "name": "ClusterAPIInstall"
                     },
                     {
-                        "name": "DRADeviceTaintRules"
+                        "name": "ControllerManagerConfig"
                     },
                     {
                         "name": "EventedPLEG"
@@ -109,6 +109,9 @@
                         "name": "AdditionalStorageConfig"
                     },
                     {
+                        "name": "AuthenticationComponentProxyExternalOIDC"
+                    },
+                    {
                         "name": "AutomatedEtcdBackup"
                     },
                     {
@@ -184,6 +187,9 @@
                         "name": "ClusterVersionOperatorConfiguration"
                     },
                     {
+                        "name": "CompositePodGroup"
+                    },
+                    {
                         "name": "ConfidentialCluster"
                     },
                     {
@@ -191,6 +197,12 @@
                     },
                     {
                         "name": "DNSNameResolver"
+                    },
+                    {
+                        "name": "DRADeviceTaintRules"
+                    },
+                    {
+                        "name": "DRAWorkloadResourceClaims"
                     },
                     {
                         "name": "DualReplica"
@@ -253,6 +265,9 @@
                         "name": "GatewayAPIWithoutOLM"
                     },
                     {
+                        "name": "GenericWorkload"
+                    },
+                    {
                         "name": "GomaxprocsInjection"
                     },
                     {
@@ -290,6 +305,9 @@
                     },
                     {
                         "name": "KMSv1"
+                    },
+                    {
+                        "name": "MACSecurity"
                     },
                     {
                         "name": "MachineAPIMigration"
@@ -358,6 +376,9 @@
                         "name": "OpenShiftPodSecurityAdmission"
                     },
                     {
+                        "name": "PodGroupPreemptionPolicy"
+                    },
+                    {
                         "name": "ProvisioningRequestAvailable"
                     },
                     {
@@ -380,6 +401,9 @@
                     },
                     {
                         "name": "TLSGroupPreferences"
+                    },
+                    {
+                        "name": "TopologyAwareWorkloadScheduling"
                     },
                     {
                         "name": "UpgradeStatus"

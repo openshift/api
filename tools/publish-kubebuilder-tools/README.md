@@ -9,14 +9,12 @@ The archives are then optionally published to the release buck `openshift-kubebu
 
 ## Usage
 
-`-pull-secret <string>`: The path to an OpenShift pull secret file that can pull from `registry.ci.openshift.org`
-`-payload <string>`: The payload image that should be used to create the artifacts. This should be from the CI stream. The format will be `registry.ci.openshift.org/ocp/release:<version>`
-`-version <string>`: The Kubernetes version to represent in the archives. This should be the Kubernetes release version from the payload with the `v` prefix specified. eg `v1.29.1`.
+`-pull-secret <string>`: The path to an OpenShift pull secret file containing credentials for the payload registry. New CI payloads require an entry for `quay-proxy.ci.openshift.org`; legacy payloads require `registry.ci.openshift.org`. The Quay-proxy payload and artifact images share the `openshift/ci` repository, so the tool obtains one repository-scoped bearer token before downloading them.
+`-payload <string>`: The CI payload image used to create the artifacts. Supported formats are `registry.ci.openshift.org/ocp/release:<tag>`, `registry.ci.openshift.org/ocp/release-<number>:<tag>`, and `quay-proxy.ci.openshift.org/openshift/ci:rc_payload__<version>`.
+`-version <string>`: The Kubernetes semantic version to represent in the archives, with the `v` prefix, e.g. `v1.37.1`. This is **not** the OpenShift payload version. Before creating archives or uploading, the tool runs the native extracted `kube-apiserver --version` and requires a matching version. Only the trailing `-dirty` suffix and build metadata are ignored; alpha/beta/rc prerelease identifiers must match.
 `-output-dir <string>`: A working directory to store the archives. The binaries will be extracted here and the archives will be created here.
-`-skip-upload <bool>`: Skip uploading the artifacts to the GCS bucket. This can be used if you are not authenticated to GCP.
+`-skip-upload <bool>`: Skip uploading the artifacts to GCS and updating the index file. This can be used if you are not authenticated to GCP.
 `-index-file <string>`: The path to the index file that should be updated with the new archives. This is optional and will default to `./envtest-releases.yaml`.
-
-```bash
 
 ## Archive uploads
 

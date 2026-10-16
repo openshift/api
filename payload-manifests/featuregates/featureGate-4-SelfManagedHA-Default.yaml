@@ -261,6 +261,9 @@
                         "name": "OLMLifecycleAndCompatibility"
                     },
                     {
+                        "name": "OVNKubernetesStartupReadinessTimeout"
+                    },
+                    {
                         "name": "OVNKubernetesUplinkMode"
                     },
                     {

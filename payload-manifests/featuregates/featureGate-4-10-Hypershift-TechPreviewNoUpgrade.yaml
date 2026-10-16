@@ -400,6 +400,9 @@
                         "name": "SignatureStores"
                     },
                     {
+                        "name": "StoragePathAlert"
+                    },
+                    {
                         "name": "StoragePerformantSecurityPolicy"
                     },
                     {

@@ -1013,6 +1013,14 @@ var (
 						enable(inTechPreviewNoUpgrade(), inDevPreviewNoUpgrade()).
 						mustRegister()
 
+	FeatureGateIngressCanaryNodePlacement = newFeatureGate("IngressCanaryNodePlacement").
+						reportProblemsToJiraComponent("Routing").
+						contactPerson("miciah").
+						productScope(ocpSpecific).
+						enhancementPR("https://github.com/openshift/enhancements/pull/2145").
+						enable(inTechPreviewNoUpgrade()).
+						mustRegister()
+
 	FeatureGateIngressControllerLBSecurityGroupsAWS = newFeatureGate("IngressControllerLBSecurityGroupsAWS").
 							reportProblemsToJiraComponent("Routing").
 							contactPerson("miciah").

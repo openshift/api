@@ -274,6 +274,9 @@
                         "name": "ImageStreamImportMode"
                     },
                     {
+                        "name": "IngressCanaryNodePlacement"
+                    },
+                    {
                         "name": "IngressComponentRouteLabels"
                     },
                     {

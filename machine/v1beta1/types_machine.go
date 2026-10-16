@@ -284,6 +284,43 @@ type MachineSpec struct {
 	// +openshift:enable:FeatureGate=MachineAPIMigration
 	// +optional
 	AuthoritativeAPI MachineAuthority `json:"authoritativeAPI,omitempty"`
+
+	// nodeDrainTimeoutSeconds is the total amount of time in seconds that the controller will spend
+	// draining the node backed by this Machine before the Machine is removed.
+	// This is different from `kubectl drain --timeout`, which only bounds a single drain attempt;
+	// nodeDrainTimeoutSeconds bounds the total time spent draining across all attempts.
+	// A value of 0 means that draining is not bound by a time limit and the controller will keep
+	// attempting to drain the node until it succeeds.
+	// When not set, the behaviour is the same as a value of 0. This preserves the default Machine API
+	// drain behaviour and matches Cluster API.
+	// +kubebuilder:validation:Minimum=0
+	// +openshift:enable:FeatureGate=MachineAPIMigration
+	// +optional
+	NodeDrainTimeoutSeconds *int32 `json:"nodeDrainTimeoutSeconds,omitempty"`
+
+	// nodeVolumeDetachTimeoutSeconds is the total amount of time in seconds that the controller will
+	// spend waiting for all volumes to be detached from the node backed by this Machine before the
+	// Machine is removed.
+	// A value of 0 means that the controller will wait indefinitely for all volumes to be detached.
+	// When not set, the controller does not wait for volumes to be detached before removing the
+	// Machine. This preserves the default Machine API behaviour, and differs from Cluster API, where
+	// an unset value causes the controller to wait indefinitely for all volumes to be detached.
+	// +kubebuilder:validation:Minimum=0
+	// +openshift:enable:FeatureGate=MachineAPIMigration
+	// +optional
+	NodeVolumeDetachTimeoutSeconds *int32 `json:"nodeVolumeDetachTimeoutSeconds,omitempty"`
+
+	// nodeDeletionTimeoutSeconds is the total amount of time in seconds that the controller will spend
+	// attempting to delete the node backed by this Machine after the Machine is marked for deletion.
+	// A value of 0 means that the controller will retry deleting the node indefinitely.
+	// When not set, the controller makes a single best-effort attempt to delete the node before
+	// removing the Machine. This preserves the default Machine API behaviour, and differs from
+	// Cluster API, where an unset value causes the controller to attempt node deletion for 10 seconds
+	// before continuing.
+	// +kubebuilder:validation:Minimum=0
+	// +openshift:enable:FeatureGate=MachineAPIMigration
+	// +optional
+	NodeDeletionTimeoutSeconds *int32 `json:"nodeDeletionTimeoutSeconds,omitempty"`
 }
 
 // LifecycleHooks allow users to pause operations on the machine at
@@ -433,6 +470,21 @@ type MachineStatus struct {
 	// +openshift:enable:FeatureGate=MachineAPIMigration
 	// +optional
 	SynchronizedGeneration int64 `json:"synchronizedGeneration,omitempty"`
+
+	// deletion contains information relating to the removal of the Machine.
+	// Only present when the Machine has a deletionTimestamp and the removal process has started.
+	// +openshift:enable:FeatureGate=MachineAPIMigration
+	// +optional
+	Deletion *MachineDeletionStatus `json:"deletion,omitempty"`
+}
+
+// MachineDeletionStatus is the deletion state of the Machine.
+type MachineDeletionStatus struct {
+	// nodeDrainStartTime is the time when the drain of the node backed by this Machine started,
+	// and is used to determine whether nodeDrainTimeoutSeconds is exceeded.
+	// Only present when the Machine has a deletionTimestamp and draining the node has started.
+	// +optional
+	NodeDrainStartTime *metav1.Time `json:"nodeDrainStartTime,omitempty"`
 }
 
 // LastOperation represents the detail of the last performed operation on the MachineObject.

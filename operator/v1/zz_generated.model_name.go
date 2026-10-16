@@ -141,6 +141,11 @@ func (in CSISnapshotControllerStatus) OpenAPIModelName() string {
 }
 
 // OpenAPIModelName returns the OpenAPI model name for this type.
+func (in CanaryNodePlacement) OpenAPIModelName() string {
+	return "com.github.openshift.api.operator.v1.CanaryNodePlacement"
+}
+
+// OpenAPIModelName returns the OpenAPI model name for this type.
 func (in Capability) OpenAPIModelName() string {
 	return "com.github.openshift.api.operator.v1.Capability"
 }
@@ -523,6 +528,11 @@ func (in IPv6OVNKubernetesConfig) OpenAPIModelName() string {
 // OpenAPIModelName returns the OpenAPI model name for this type.
 func (in Ingress) OpenAPIModelName() string {
 	return "com.github.openshift.api.operator.v1.Ingress"
+}
+
+// OpenAPIModelName returns the OpenAPI model name for this type.
+func (in IngressCanary) OpenAPIModelName() string {
+	return "com.github.openshift.api.operator.v1.IngressCanary"
 }
 
 // OpenAPIModelName returns the OpenAPI model name for this type.

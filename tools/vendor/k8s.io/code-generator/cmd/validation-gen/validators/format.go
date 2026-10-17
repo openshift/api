@@ -18,6 +18,8 @@ package validators
 
 import (
 	"fmt"
+	"maps"
+	"slices"
 
 	"k8s.io/apimachinery/pkg/util/sets"
 	"k8s.io/apimachinery/pkg/util/validation/field"
@@ -27,24 +29,29 @@ import (
 )
 
 const (
-	formatTagName = "k8s:format"
+	formatTagName = "format"
 )
 
 func init() {
-	RegisterTagValidator(formatTagValidator{})
+	RegisterTagValidator(&formatTagValidator{})
 }
 
-type formatTagValidator struct{}
+type formatTagValidator struct {
+	// extensions holds the formats this project declared, beyond the built-ins.
+	extensions map[string]FormatExtension
+}
 
-func (formatTagValidator) Init(_ Config) {}
+func (ftv *formatTagValidator) Init(cfg Config) {
+	ftv.extensions = cfg.Extensions.formats()
+}
 
-func (formatTagValidator) TagName() string {
+func (*formatTagValidator) TagName() string {
 	return formatTagName
 }
 
 var formatTagValidScopes = sets.New(ScopeType, ScopeField, ScopeListVal, ScopeMapKey, ScopeMapVal)
 
-func (formatTagValidator) ValidScopes() sets.Set[Scope] {
+func (*formatTagValidator) ValidScopes() sets.Set[Scope] {
 	return formatTagValidScopes
 }
 
@@ -66,23 +73,32 @@ var (
 	uuidValidator                       = types.Name{Package: libValidationPkg, Name: "UUID"}
 )
 
-func (formatTagValidator) GetValidations(context Context, tag codetags.Tag) (Validations, error) {
+func (ftv *formatTagValidator) GetValidations(context Context, tag codetags.Tag) (Validations, error) {
 	// This tag can apply to value and pointer fields, as well as typedefs
 	// (which should never be pointers). We need to check the concrete type.
 	if t := util.NonPointer(util.NativeType(context.Type)); t != types.String {
 		return Validations{}, fmt.Errorf("can only be used on string types (%s)", rootTypeString(context.Type, t))
 	}
 
-	var result Validations
-	if formatFunction, err := getFormatValidationFunction(tag.Value); err != nil {
-		return result, err
-	} else {
-		result.AddFunction(formatFunction)
+	if fn, err := getBuiltInFormatValidationFunction(tag.Value); err == nil {
+		var result Validations
+		result.AddFunction(fn)
+		return result, nil
 	}
-	return result, nil
+	if f, ok := ftv.extensions[tag.Value]; ok {
+		return f.validations(), nil
+	}
+	return Validations{}, fmt.Errorf("unsupported validation format %q", tag.Value)
 }
 
-func getFormatValidationFunction(format string) (FunctionGen, error) {
+// isBuiltInFormat defers to getBuiltInFormatValidationFunction rather than a
+// second list of names, which could drift from it.
+func isBuiltInFormat(name string) bool {
+	_, err := getBuiltInFormatValidationFunction(name)
+	return err == nil
+}
+
+func getBuiltInFormatValidationFunction(format string) (FunctionGen, error) {
 	// The naming convention for these formats follows the JSON schema style:
 	// all lower-case, dashes between words. See
 	// https://json-schema.org/draft/2020-12/json-schema-validation#name-defined-formats
@@ -93,8 +109,8 @@ func getFormatValidationFunction(format string) (FunctionGen, error) {
 	case "k8s-extended-resource-name":
 		return Function(formatTagName, DefaultFlags, extendedResourceNameValidator).
 			WithEmits(Emission{field.ErrorTypeInvalid, "format=k8s-extended-resource-name", ""}), nil
-	// TODO: uncomment the following when we've done the homework
-	// to be sure it works the current state of IP manual-ratcheting
+	// TODO: uncomment the following (and the docs for it) when we've done the
+	// homework to be sure it works the current state of IP manual-ratcheting
 	/*
 		case "k8s-ip":
 			return Function(formatTagName, DefaultFlags, ipSloppyValidator), nil
@@ -119,10 +135,18 @@ func getFormatValidationFunction(format string) (FunctionGen, error) {
 			WithEmits(Emission{field.ErrorTypeInvalid, "format=k8s-prefixed-label-key", ""}), nil
 	case "k8s-resource-fully-qualified-name":
 		return Function(formatTagName, DefaultFlags, resourceFullyQualifiedNameValidator).
-			WithEmits(Emission{field.ErrorTypeInvalid, "format=k8s-resource-fully-qualified-name", ""}), nil
+			WithEmits(
+				Emission{field.ErrorTypeInvalid, "format=k8s-resource-fully-qualified-name", ""},
+				// The domain and name parts carry their own length limits.
+				Emission{field.ErrorTypeTooLong, "format=k8s-resource-fully-qualified-name", ""},
+			), nil
 	case "k8s-resource-pool-name":
 		return Function(formatTagName, DefaultFlags, resourcePoolNameValidator).
-			WithEmits(Emission{field.ErrorTypeInvalid, "format=k8s-resource-pool-name", ""}), nil
+			WithEmits(
+				Emission{field.ErrorTypeInvalid, "format=k8s-resource-pool-name", ""},
+				// The name as a whole is limited to 253 characters.
+				Emission{field.ErrorTypeTooLong, "format=k8s-resource-pool-name", ""},
+			), nil
 	case "k8s-short-name":
 		return Function(formatTagName, DefaultFlags, shortNameValidator).
 			WithEmits(Emission{field.ErrorTypeInvalid, "format=k8s-short-name", ""}), nil
@@ -135,19 +159,22 @@ func getFormatValidationFunction(format string) (FunctionGen, error) {
 	return FunctionGen{}, fmt.Errorf("unsupported validation format %q", format)
 }
 
-func (ftv formatTagValidator) Docs() TagDoc {
+func (ftv *formatTagValidator) Docs() TagDoc {
 	return TagDoc{
 		Tag:            ftv.TagName(),
 		StabilityLevel: TagStabilityLevelStable,
 		Scopes:         sets.List(ftv.ValidScopes()),
 		Description:    "Indicates that a string field has a particular format.",
-		Payloads: []TagPayloadDoc{{ // Keep this list alphabetized.
+		Payloads: append([]TagPayloadDoc{{ // Keep this list alphabetized.
 			Description: "k8s-extended-resource-name",
 			Docs:        "This field holds a Kubernetes extended resource name. This is a domain-prefixed name that must not have a `kubernetes.io` or `requests.` prefix. When `requests.` is prepended, the result must be a valid label key, as used by quota.",
 		}, {
-			Description: "k8s-ip",
-			Docs:        "This field holds an IPv4 or IPv6 address value. IPv4 octets may have leading zeros.",
-		}, {
+			// TODO: uncomment the following (and the code for it) when we've done the
+			// homework to be sure it works the current state of IP manual-ratcheting
+			/*
+				Description: "k8s-ip",
+				Docs:        "This field holds an IPv4 or IPv6 address value. IPv4 octets may have leading zeros.",
+			}, {*/
 			Description: "k8s-label-key",
 			Docs:        "This field holds a Kubernetes label key.",
 		}, {
@@ -177,8 +204,21 @@ func (ftv formatTagValidator) Docs() TagDoc {
 		}, {
 			Description: "k8s-uuid",
 			Docs:        "This field holds a Kubernetes UUID, which conforms to RFC 4122.",
-		}},
+		}}, ftv.extensionPayloadDocs()...),
 		PayloadsType:     codetags.ValueTypeString,
 		PayloadsRequired: true,
 	}
+}
+
+// extensionPayloadDocs documents the project's formats, so "--docs" lists the
+// ones this invocation actually accepts.
+func (ftv *formatTagValidator) extensionPayloadDocs() []TagPayloadDoc {
+	docs := make([]TagPayloadDoc, 0, len(ftv.extensions))
+	for _, name := range slices.Sorted(maps.Keys(ftv.extensions)) {
+		docs = append(docs, TagPayloadDoc{
+			Description: name,
+			Docs:        ftv.extensions[name].Docs,
+		})
+	}
+	return docs
 }

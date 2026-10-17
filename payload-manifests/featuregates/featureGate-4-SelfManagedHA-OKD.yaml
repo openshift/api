@@ -275,6 +275,9 @@
                         "name": "OnPremDNSRecords"
                     },
                     {
+                        "name": "OpenShiftPodSecurityAdmission"
+                    },
+                    {
                         "name": "PodGroupPreemptionPolicy"
                     },
                     {
@@ -392,9 +395,6 @@
                     },
                     {
                         "name": "OSStreams"
-                    },
-                    {
-                        "name": "OpenShiftPodSecurityAdmission"
                     },
                     {
                         "name": "SELinuxMount"

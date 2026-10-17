@@ -13838,19 +13838,18 @@
           "$ref": "#/definitions/com.github.openshift.api.config.v1alpha1.MetadataConfigCustom"
         },
         "sendPolicy": {
-          "description": "sendPolicy specifies whether to send metadata and how it is configured. Default: send metadata using platform-chosen defaults (e.g. send interval 30 seconds). Custom: send metadata using the settings in the custom field.",
+          "description": "sendPolicy specifies whether to send metadata and how it is configured. Default: send metadata using Prometheus Operator / Prometheus defaults when the interval is unset. Custom: send metadata using the settings in the custom field.",
           "type": "string"
         }
       }
     },
     "com.github.openshift.api.config.v1alpha1.MetadataConfigCustom": {
-      "description": "MetadataConfigCustom defines custom settings for sending series metadata when sendPolicy is Custom. At least one property must be set when sendPolicy is Custom (e.g. sendIntervalSeconds).",
+      "description": "MetadataConfigCustom defines custom settings for sending series metadata when sendPolicy is Custom. At least one property must be set when sendPolicy is Custom (e.g. sendInterval).",
       "type": "object",
       "properties": {
-        "sendIntervalSeconds": {
-          "description": "sendIntervalSeconds is the interval in seconds at which metadata is sent. When omitted, the platform chooses a reasonable default (e.g. 30 seconds). Minimum value is 1 second. Maximum value is 86400 seconds (24 hours).",
-          "type": "integer",
-          "format": "int32"
+        "sendInterval": {
+          "description": "sendInterval is the interval at which metadata is sent. Valid values are Prometheus-style duration strings with unit suffixes h, m, s, or ms (for example, \"30s\", \"1m\", or \"500ms\"). Each unit value must be a positive integer. Composite durations must follow the fixed unit order h, m, s, ms. Must be at least 1 character and at most 64 characters. The value must be greater than 0 and at most 24h (86400s). Zero durations such as \"0\", \"0s\", or \"0ms\" are rejected: a zero interval panics Prometheus metadata watchers (time.NewTicker(0)).",
+          "type": "string"
         }
       }
     },
@@ -15099,7 +15098,7 @@
           "type": "string"
         },
         "metadataConfig": {
-          "description": "metadataConfig configures the sending of series metadata to remote storage. When omitted, no metadata is sent. When set to sendPolicy: Default, metadata is sent using platform-chosen defaults (e.g. send interval 30 seconds). When set to sendPolicy: Custom, metadata is sent using the settings in the custom field (e.g. custom.sendIntervalSeconds).",
+          "description": "metadataConfig configures the sending of series metadata to remote storage. When omitted, no metadata is sent. When set to sendPolicy: Default, metadata is sent using platform-chosen defaults (e.g. send interval 30 seconds). When set to sendPolicy: Custom, metadata is sent using the settings in the custom field (e.g. custom.sendInterval).",
           "default": {},
           "$ref": "#/definitions/com.github.openshift.api.config.v1alpha1.MetadataConfig"
         },

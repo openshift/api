@@ -4058,7 +4058,7 @@ spec:
                             metadataConfig configures the sending of series metadata to remote storage.
                             When omitted, no metadata is sent.
                             When set to sendPolicy: Default, metadata is sent using platform-chosen defaults (e.g. send interval 30 seconds).
-                            When set to sendPolicy: Custom, metadata is sent using the settings in the custom field (e.g. custom.sendIntervalSeconds).
+                            When set to sendPolicy: Custom, metadata is sent using the settings in the custom field (e.g. custom.sendInterval).
                           properties:
                             custom:
                               description: custom defines custom metadata send settings.
@@ -4066,20 +4066,32 @@ spec:
                                 one property), and forbidden when sendPolicy is Default.
                               minProperties: 1
                               properties:
-                                sendIntervalSeconds:
+                                sendInterval:
                                   description: |-
-                                    sendIntervalSeconds is the interval in seconds at which metadata is sent.
-                                    When omitted, the platform chooses a reasonable default (e.g. 30 seconds).
-                                    Minimum value is 1 second. Maximum value is 86400 seconds (24 hours).
-                                  format: int32
-                                  maximum: 86400
-                                  minimum: 1
-                                  type: integer
+                                    sendInterval is the interval at which metadata is sent.
+                                    Valid values are Prometheus-style duration strings with unit suffixes h, m, s, or ms
+                                    (for example, "30s", "1m", or "500ms"). Each unit value must be a positive integer.
+                                    Composite durations must follow the fixed unit order h, m, s, ms.
+                                    Must be at least 1 character and at most 64 characters.
+                                    The value must be greater than 0 and at most 24h (86400s).
+                                    Zero durations such as "0", "0s", or "0ms" are rejected: a zero interval panics
+                                    Prometheus metadata watchers (time.NewTicker(0)).
+                                  maxLength: 64
+                                  minLength: 1
+                                  type: string
+                                  x-kubernetes-validations:
+                                  - message: must be a Prometheus duration string
+                                      with only positive unit values in h, m, s, or
+                                      ms
+                                    rule: self.matches('^([1-9][0-9]*h)?([1-9][0-9]*m)?([1-9][0-9]*s)?([1-9][0-9]*ms)?$')
+                                      && self.matches('.*[0-9].*')
+                                  - message: sendInterval must be at most 24h
+                                    rule: duration(self) <= duration("24h")
                               type: object
                             sendPolicy:
                               description: |-
                                 sendPolicy specifies whether to send metadata and how it is configured.
-                                Default: send metadata using platform-chosen defaults (e.g. send interval 30 seconds).
+                                Default: send metadata using Prometheus Operator / Prometheus defaults when the interval is unset.
                                 Custom: send metadata using the settings in the custom field.
                               enum:
                               - Default
@@ -4089,9 +4101,10 @@ spec:
                           - sendPolicy
                           type: object
                           x-kubernetes-validations:
-                          - message: custom is forbidden when sendPolicy is Default
-                            rule: 'self.sendPolicy == ''Default'' ? self.custom.sendIntervalSeconds
-                              == 0 : true'
+                          - message: custom is required when sendPolicy is Custom,
+                              and forbidden otherwise
+                            rule: 'self.sendPolicy == ''Custom'' ? has(self.custom)
+                              : !has(self.custom)'
                         name:
                           description: |-
                             name is a required identifier for this remote write configuration (name is the list key for the remoteWrite list).

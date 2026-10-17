@@ -3264,6 +3264,94 @@ tests:
             retention:
               size: "0B"
       expectedError: 'must be "0" to disable size-based retention, or a positive byte-size string'
+    - name: Should accept prometheusConfig remoteWrite writeRelabelConfigs empty regex
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: "Disabled"
+          prometheusConfig:
+            remoteWrite:
+              - name: rw
+                url: "https://remote.example.com/write"
+                writeRelabelConfigs:
+                  - name: empty-regex
+                    sourceLabels:
+                      - __name__
+                    regex: ""
+                    action:
+                      type: Keep
+      expected: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: "Disabled"
+          prometheusConfig:
+            remoteWrite:
+              - name: rw
+                url: "https://remote.example.com/write"
+                writeRelabelConfigs:
+                  - name: empty-regex
+                    sourceLabels:
+                      - __name__
+                    regex: ""
+                    action:
+                      type: Keep
+    - name: Should accept prometheusConfig remoteWrite writeRelabelConfigs omitted regex
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: "Disabled"
+          prometheusConfig:
+            remoteWrite:
+              - name: rw
+                url: "https://remote.example.com/write"
+                writeRelabelConfigs:
+                  - name: omit-regex
+                    sourceLabels:
+                      - __name__
+                    action:
+                      type: Keep
+      expected: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: "Disabled"
+          prometheusConfig:
+            remoteWrite:
+              - name: rw
+                url: "https://remote.example.com/write"
+                writeRelabelConfigs:
+                  - name: omit-regex
+                    sourceLabels:
+                      - __name__
+                    action:
+                      type: Keep
+    - name: Should reject prometheusConfig remoteWrite writeRelabelConfigs regex above maxLength
+      initial: |
+        apiVersion: config.openshift.io/v1alpha1
+        kind: ClusterMonitoring
+        spec:
+          userDefined:
+            mode: "Disabled"
+          prometheusConfig:
+            remoteWrite:
+              - name: rw
+                url: "https://remote.example.com/write"
+                writeRelabelConfigs:
+                  - name: long-regex
+                    sourceLabels:
+                      - __name__
+                    regex: "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+                    action:
+                      type: Keep
+      expectedError: 'Too long: may not be more than 1000 bytes'
+
   onUpdate:
     - name: Should allow updating KubeStateMetricsConfig resources
       initial: |

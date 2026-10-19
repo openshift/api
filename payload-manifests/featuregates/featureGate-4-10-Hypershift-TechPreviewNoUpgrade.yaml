@@ -122,9 +122,6 @@
                         "name": "ShortCertRotation"
                     },
                     {
-                        "name": "TopologyAwareWorkloadScheduling"
-                    },
-                    {
                         "name": "UnifiedClusterManagedDNSAndLB"
                     },
                     {
@@ -407,6 +404,9 @@
                     },
                     {
                         "name": "TLSGroupPreferences"
+                    },
+                    {
+                        "name": "TopologyAwareWorkloadScheduling"
                     },
                     {
                         "name": "UpgradeStatus"
